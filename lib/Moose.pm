@@ -35,20 +35,9 @@ sub import {
 		));
 	});
 
-	$meta->alias_method('before' => sub {
-		my ($name, $code) = @_;
-		$meta->add_before_method_modifier($name, $code);
-	});
-	
-	$meta->alias_method('after' => sub {
-		my ($name, $code) = @_;
-		$meta->add_after_method_modifier($name, $code);
-	});	
-	
-	$meta->alias_method('around' => sub {
-		my ($name, $code) = @_;
-		$meta->add_around_method_modifier($name, $code);
-	});	
+	$meta->alias_method('before' => sub { $meta->add_before_method_modifier(@_) });
+	$meta->alias_method('after'  => sub { $meta->add_after_method_modifier(@_)  });	
+	$meta->alias_method('around' => sub { $meta->add_around_method_modifier(@_) });	
 	
 	$meta->superclasses('Moose::Object') 
 		unless $meta->superclasses();
@@ -69,27 +58,27 @@ Moose -
   package Point;
   use Moose;
   
-  has '$.x';
-  has '$.y' => (is => 'rw');
+  has '$.x' => (reader   => 'x');
+  has '$.y' => (accessor => 'y');
   
   sub clear {
       my $self = shift;
-      $self->x(0);
+      $self->{'$.x'} = 0;
       $self->y(0);    
   }
   
-  package Point::3D;
+  package Point3D;
   use Moose;
   
   use base 'Point';
   
   has '$:z';
   
-  sub clear : After {
+  after 'clear' => sub {
       my $self = shift;
       $self->{'$:z'} = 0;
-  }
-
+  };
+  
 =head1 DESCRIPTION
 
 =head1 OTHER NAMES
