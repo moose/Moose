@@ -12,6 +12,8 @@ BEGIN {
 
 {
     package BankAccount;
+	use strict;
+	use warnings;
     use Moose;
     
     has '$.balance' => (accessor => 'balance', default => 0);
@@ -30,6 +32,8 @@ BEGIN {
     }
 
 	package CheckingAccount;
+	use strict;
+	use warnings;	
 	use Moose;
 
 	use base 'BankAccount';

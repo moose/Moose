@@ -35,8 +35,16 @@ sub import {
 		));
 	});
 
-	$meta->alias_method('before' => sub { $meta->add_before_method_modifier(@_) });
-	$meta->alias_method('after'  => sub { $meta->add_after_method_modifier(@_)  });	
+	$meta->alias_method('before' => sub { 
+		my $code = pop @_;
+		$meta->add_before_method_modifier($_, $code) for @_; 
+	});
+	
+	$meta->alias_method('after'  => sub { 
+		my $code = pop @_;
+		$meta->add_after_method_modifier($_, $code)  for @_;
+	});	
+	
 	$meta->alias_method('around' => sub { $meta->add_around_method_modifier(@_) });	
 	
 	$meta->superclasses('Moose::Object') 

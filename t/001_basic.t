@@ -11,6 +11,8 @@ BEGIN {
 
 {
 	package Point;
+	use strict;
+	use warnings;	
 	use Moose;
 	
 	has '$.x' => (reader   => 'x');
@@ -23,6 +25,8 @@ BEGIN {
 	}
 	
 	package Point3D;
+	use strict;
+	use warnings;
 	use Moose;
 	
 	use base 'Point';
