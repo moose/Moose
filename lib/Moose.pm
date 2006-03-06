@@ -34,6 +34,21 @@ sub import {
 			%options,
 		));
 	});
+
+	$meta->alias_method('before' => sub {
+		my ($name, $code) = @_;
+		$meta->add_before_method_modifier($name, $code);
+	});
+	
+	$meta->alias_method('after' => sub {
+		my ($name, $code) = @_;
+		$meta->add_after_method_modifier($name, $code);
+	});	
+	
+	$meta->alias_method('around' => sub {
+		my ($name, $code) = @_;
+		$meta->add_around_method_modifier($name, $code);
+	});	
 	
 	$meta->superclasses('Moose::Object') 
 		unless $meta->superclasses();
@@ -78,6 +93,14 @@ Moose -
 =head1 DESCRIPTION
 
 =head1 OTHER NAMES
+
+Makes Other Object Systems Envious
+
+Most Other Objects Suck Eggs
+
+Makes Object Orientation So Easy
+
+Metacircular Object Oriented Systems Environment
 
 =head1 BUGS
 

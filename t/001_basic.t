@@ -29,11 +29,10 @@ BEGIN {
 	
 	has '$:z';
 	
-	sub clear {
+	after 'clear' => sub {
 	    my $self = shift;
-		$self->SUPER::clear();
 	    $self->{'$:z'} = 0;
-	}
+	};
 	
 }
 
