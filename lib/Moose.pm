@@ -25,7 +25,7 @@ sub import {
 	else {
 		$meta = Class::MOP::Class->initialize($pkg);
 	}
-
+	
 	$meta->alias_method('has' => sub {
 		my ($name, %options) = @_;
 		my ($init_arg) = ($name =~ /^[\$\@\%][\.\:](.*)$/);
@@ -41,6 +41,9 @@ sub import {
 	
 	$meta->superclasses('Moose::Object') 
 		unless $meta->superclasses();
+
+	$meta->alias_method('confess' => \&confess);			
+	$meta->alias_method('blessed' => \&blessed);				
 }
 
 1;
