@@ -10,6 +10,7 @@ our $VERSION = '0.01';
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
+use Sub::Name    'subname';
 
 use Moose::Meta::Class;
 use Moose::Meta::Attribute;
@@ -29,22 +30,29 @@ sub import {
 	else {
 		$meta = Moose::Meta::Class->initialize($pkg => (
 			':attribute_metaclass' => 'Moose::Meta::Attribute'
-		));
+		));		
 	}
 	
+	# NOTE:
+	# &alias_method will install the method, but it 
+	# will not name it with 
+	
+	# handle superclasses
+	$meta->alias_method('extends' => subname 'Moose::extends' => sub { $meta->superclasses(@_) });
+	
 	# handle attributes
-	$meta->alias_method('has' => sub { $meta->add_attribute(@_) });
+	$meta->alias_method('has' => subname 'Moose::has' => sub { $meta->add_attribute(@_) });
 
 	# handle method modifers
-	$meta->alias_method('before' => sub { 
+	$meta->alias_method('before' => subname 'Moose::before' => sub { 
 		my $code = pop @_;
 		$meta->add_before_method_modifier($_, $code) for @_; 
 	});
-	$meta->alias_method('after'  => sub { 
+	$meta->alias_method('after'  => subname 'Moose::after' => sub { 
 		my $code = pop @_;
 		$meta->add_after_method_modifier($_, $code)  for @_;
 	});	
-	$meta->alias_method('around' => sub { 
+	$meta->alias_method('around' => subname 'Moose::around' => sub { 
 		my $code = pop @_;
 		$meta->add_around_method_modifier($_, $code)  for @_;	
 	});	
@@ -72,6 +80,8 @@ Moose -
 =head1 SYNOPSIS
 
   package Point;
+  use strict;
+  use warnings;
   use Moose;
   
   has '$.x' => (reader   => 'x');
@@ -84,9 +94,11 @@ Moose -
   }
   
   package Point3D;
+  use strict;
+  use warnings;
   use Moose;
   
-  use base 'Point';
+  extends 'Point';
   
   has '$:z';
   

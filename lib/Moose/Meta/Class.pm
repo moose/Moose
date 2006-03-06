@@ -4,6 +4,8 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
+our $VERSION = '0.01';
+
 use base 'Class::MOP::Class';
 
 1;

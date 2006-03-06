@@ -36,7 +36,7 @@ BEGIN {
 	use warnings;	
 	use Moose;
 
-	use base 'BankAccount';
+ 	extends 'BankAccount';
 	
     has '$.overdraft_account' => (accessor => 'overdraft_account');	
 

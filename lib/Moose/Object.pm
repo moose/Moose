@@ -3,7 +3,12 @@ package Moose::Object;
 
 use strict;
 use warnings;
-use metaclass;
+
+use metaclass 'Moose::Meta::Class' => (
+	':attribute_metaclass' => 'Moose::Meta::Attribute'
+);
+
+our $VERSION = '0.01';
 
 sub new {
     my $class  = shift;

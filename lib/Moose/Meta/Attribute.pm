@@ -4,13 +4,15 @@ package Moose::Meta::Attribute;
 use strict;
 use warnings;
 
+our $VERSION = '0.01';
+
 use base 'Class::MOP::Attribute';
 
 Moose::Meta::Attribute->meta->add_around_method_modifier('new' => sub {
 	my $cont = shift;
     my ($class, $attribute_name, %options) = @_;
     
-    # extract the sigil and accessor name
+    # extract the init_arg
     my ($init_arg) = ($attribute_name =~ /^[\$\@\%][\.\:](.*)$/);     
     
     $cont->($class, $attribute_name, (init_arg => $init_arg, %options));
