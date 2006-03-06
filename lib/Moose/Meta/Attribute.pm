@@ -1,33 +1,21 @@
 
-package Moose::Object;
+package Moose::Meta::Attribute;
 
 use strict;
 use warnings;
-use metaclass;
 
-sub new {
-    my $class  = shift;
-	my %params = @_;
-	my $self = $class->meta->new_object(%params);
-	$self->BUILDALL(%params);
-	return $self;
-}
+use base 'Class::MOP::Attribute';
 
-sub BUILDALL {
-	my ($self, %params) = @_;
-	foreach my $method ($self->meta->find_all_methods_by_name('BUILD')) {
-		$method->{method}->($self, %params);
-	}
-}
+Moose::Meta::Attribute->meta->add_around_method_modifier('new' => sub {
+	my $cont = shift;
+    my ($class, $attribute_name, %options) = @_;
+    
+    # extract the sigil and accessor name
+    my ($init_arg) = ($attribute_name =~ /^[\$\@\%][\.\:](.*)$/);     
+    
+    $cont->($class, $attribute_name, (init_arg => $init_arg, %options));
+});
 
-sub DEMOLISHALL {
-	my $self = shift;
-	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-		$method->{method}->($self);
-	}	
-}
-
-sub DESTROY { goto &DEMOLISHALL }
 
 1;
 
@@ -37,7 +25,7 @@ __END__
 
 =head1 NAME
 
-Moose::Object - 
+Moose::Meta::Attribute - 
 
 =head1 SYNOPSIS
 
@@ -47,13 +35,7 @@ Moose::Object -
 
 =over 4
 
-=item B<meta>
-
 =item B<new>
-
-=item B<BUILDALL>
-
-=item B<DEMOLISHALL>
 
 =back
 

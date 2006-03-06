@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/CPAN/Class-MOP/Class-MOP/lib';
+
 package Moose;
 
 use strict;
@@ -9,7 +11,9 @@ our $VERSION = '0.01';
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-use Class::MOP;
+use Moose::Meta::Class;
+use Moose::Meta::Attribute;
+
 use Moose::Object;
 
 sub import {
@@ -23,33 +27,34 @@ sub import {
 			|| confess "Whoops, not møøsey enough";
 	}
 	else {
-		$meta = Class::MOP::Class->initialize($pkg);
+		$meta = Moose::Meta::Class->initialize($pkg => (
+			':attribute_metaclass' => 'Moose::Meta::Attribute'
+		));
 	}
 	
-	$meta->alias_method('has' => sub {
-		my ($name, %options) = @_;
-		my ($init_arg) = ($name =~ /^[\$\@\%][\.\:](.*)$/);
-		$meta->add_attribute($name => (
-			init_arg => $init_arg,
-			%options,
-		));
-	});
+	# handle attributes
+	$meta->alias_method('has' => sub { $meta->add_attribute(@_) });
 
+	# handle method modifers
 	$meta->alias_method('before' => sub { 
 		my $code = pop @_;
 		$meta->add_before_method_modifier($_, $code) for @_; 
 	});
-	
 	$meta->alias_method('after'  => sub { 
 		my $code = pop @_;
 		$meta->add_after_method_modifier($_, $code)  for @_;
 	});	
+	$meta->alias_method('around' => sub { 
+		my $code = pop @_;
+		$meta->add_around_method_modifier($_, $code)  for @_;	
+	});	
 	
-	$meta->alias_method('around' => sub { $meta->add_around_method_modifier(@_) });	
-	
+	# make sure they inherit from Moose::Object
 	$meta->superclasses('Moose::Object') 
 		unless $meta->superclasses();
 
+	# we recommend using these things 
+	# so export them for them
 	$meta->alias_method('confess' => \&confess);			
 	$meta->alias_method('blessed' => \&blessed);				
 }

@@ -1,33 +1,10 @@
 
-package Moose::Object;
+package Moose::Meta::Class;
 
 use strict;
 use warnings;
-use metaclass;
 
-sub new {
-    my $class  = shift;
-	my %params = @_;
-	my $self = $class->meta->new_object(%params);
-	$self->BUILDALL(%params);
-	return $self;
-}
-
-sub BUILDALL {
-	my ($self, %params) = @_;
-	foreach my $method ($self->meta->find_all_methods_by_name('BUILD')) {
-		$method->{method}->($self, %params);
-	}
-}
-
-sub DEMOLISHALL {
-	my $self = shift;
-	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-		$method->{method}->($self);
-	}	
-}
-
-sub DESTROY { goto &DEMOLISHALL }
+use base 'Class::MOP::Class';
 
 1;
 
@@ -37,7 +14,7 @@ __END__
 
 =head1 NAME
 
-Moose::Object - 
+Moose::Meta::Class - 
 
 =head1 SYNOPSIS
 
@@ -46,14 +23,6 @@ Moose::Object -
 =head1 METHODS
 
 =over 4
-
-=item B<meta>
-
-=item B<new>
-
-=item B<BUILDALL>
-
-=item B<DEMOLISHALL>
 
 =back
 
