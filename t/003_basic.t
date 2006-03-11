@@ -3,8 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 21;
 use Test::Exception;
+
+use Scalar::Util 'isweak';
 
 BEGIN {
     use_ok('Moose');           
@@ -16,19 +18,23 @@ BEGIN {
     use warnings;
     use Moose;
 
-    has '$.parent' => (
-        predicate => 'has_parent',
-        accessor  => 'parent'
+    has 'parent' => (
+        predicate       => 'has_parent',
+        accessor        => 'parent',
+		weak_ref        => 1,
+		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
     );
 
-    has '$.left' => (
-        predicate => 'has_left',         
-        accessor  => 'left',
+    has 'left' => (
+        predicate       => 'has_left',         
+        accessor        => 'left',
+		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
     );
 
-    has '$.right' => (
-        predicate => 'has_right',           
-        accessor  => 'right',
+    has 'right' => (
+        predicate       => 'has_right',           
+        accessor        => 'right',
+		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
     );
 
     before 'right', 'left' => sub {
@@ -46,6 +52,8 @@ is($root->right, undef, '... no right node yet');
 ok(!$root->has_left, '... no left node yet');
 ok(!$root->has_right, '... no right node yet');
 
+ok(!$root->has_parent, '... no parent for root node');
+
 my $left = BinaryTree->new();
 isa_ok($left, 'BinaryTree');
 
@@ -59,6 +67,8 @@ ok($root->has_left, '... we have a left node now');
 ok($left->has_parent, '... lefts has a parent');
 is($left->parent, $root, '... lefts parent is the root');
 
+ok(isweak($left->{parent}), '... parent is a weakened ref');
+
 my $right = BinaryTree->new();
 isa_ok($right, 'BinaryTree');
 
@@ -71,3 +81,5 @@ ok($root->has_right, '... we have a right node now');
 
 ok($right->has_parent, '... rights has a parent');
 is($right->parent, $root, '... rights parent is the root');
+
+ok(isweak($right->{parent}), '... parent is a weakened ref');

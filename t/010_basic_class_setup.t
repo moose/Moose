@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 16;
 use Test::Exception;
 
 BEGIN {
@@ -26,6 +26,7 @@ foreach my $function (qw(
     	                 has 
 	                     before after around
 	                     blessed confess
+						 type subtype as where
 	                     )) {
     ok(!Foo->meta->has_method($function), '... the meta does not treat "' . $function . '" as a method');
 }

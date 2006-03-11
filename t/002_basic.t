@@ -16,7 +16,11 @@ BEGIN {
 	use warnings;
     use Moose;
     
-    has '$.balance' => (accessor => 'balance', default => 0);
+    has 'balance' => (
+		accessor        => 'balance', 
+		default         => 0,
+		type_constraint => Int(),		
+	);
 
     sub deposit {
         my ($self, $amount) = @_;
@@ -38,7 +42,10 @@ BEGIN {
 
  	extends 'BankAccount';
 	
-    has '$.overdraft_account' => (accessor => 'overdraft_account');	
+    has 'overdraft_account' => (
+		accessor        => 'overdraft_account',
+		type_constraint => subtype Object => where { $_->isa('BankAccount') },		
+	);	
 
 	before 'withdraw' => sub {
 		my ($self, $amount) = @_;

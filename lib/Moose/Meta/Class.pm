@@ -4,9 +4,31 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
+use Carp 'confess';
+
 our $VERSION = '0.01';
 
 use base 'Class::MOP::Class';
+
+sub construct_instance {
+    my ($class, %params) = @_;
+    my $instance = {};
+    foreach my $attr ($class->compute_all_applicable_attributes()) {
+        my $init_arg = $attr->init_arg();
+        # try to fetch the init arg from the %params ...
+        my $val;        
+        $val = $params{$init_arg} if exists $params{$init_arg};
+        # if nothing was in the %params, we can use the 
+        # attribute's default value (if it has one)
+        $val ||= $attr->default($instance) if $attr->has_default; 
+		if (defined $val && $attr->has_type_constraint) {
+			(defined $attr->type_constraint->($val))
+				|| confess "Attribute (" . $attr->name . ") does not pass the type contraint";			
+		}
+        $instance->{$attr->name} = $val;
+    }
+    return $instance;
+}
 
 1;
 
@@ -25,6 +47,8 @@ Moose::Meta::Class -
 =head1 METHODS
 
 =over 4
+
+=item B<construct_instance>
 
 =back
 

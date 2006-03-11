@@ -17,9 +17,13 @@ use Moose::Meta::Attribute;
 
 use Moose::Object;
 
+require Moose::Util::TypeConstraints;
+
 sub import {
 	shift;
 	my $pkg = caller();
+	
+	Moose::Util::TypeConstraints->import($pkg);
 	
 	my $meta;
 	if ($pkg->can('meta')) {
@@ -78,34 +82,6 @@ __END__
 Moose - 
 
 =head1 SYNOPSIS
-
-  package Point;
-  use strict;
-  use warnings;
-  use Moose;
-  
-  has '$.x' => (reader   => 'x');
-  has '$.y' => (accessor => 'y');
-  
-  sub clear {
-      my $self = shift;
-      $self->{'$.x'} = 0;
-      $self->y(0);    
-  }
-  
-  package Point3D;
-  use strict;
-  use warnings;
-  use Moose;
-  
-  extends 'Point';
-  
-  has '$:z';
-  
-  after 'clear' => sub {
-      my $self = shift;
-      $self->{'$:z'} = 0;
-  };
   
 =head1 DESCRIPTION
 

@@ -9,6 +9,7 @@ my $build = Module::Build->new(
         'Scalar::Util' => '1.18',
         'Carp'         => '0.01',
         'Class::MOP'   => '0.20',
+        'Sub::Name'    => '0.02',
     },
     optional => {
     },
