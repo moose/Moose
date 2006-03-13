@@ -19,22 +19,22 @@ BEGIN {
     use Moose;
 
     has 'parent' => (
+		is        => 'rw',
 		isa       => 'BinaryTree',	
         predicate => 'has_parent',
-        accessor  => 'parent',
 		weak_ref  => 1,
     );
 
     has 'left' => (
+		is        => 'rw',	
 		isa       => 'BinaryTree',		
         predicate => 'has_left',         
-        accessor  => 'left',
     );
 
     has 'right' => (
+		is        => 'rw',	
 		isa       => 'BinaryTree',		
         predicate => 'has_right',           
-        accessor  => 'right',
     );
 
     before 'right', 'left' => sub {

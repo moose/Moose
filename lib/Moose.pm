@@ -8,7 +8,7 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use Scalar::Util 'blessed';
+use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Sub::Name    'subname';
 
@@ -48,12 +48,22 @@ sub import {
 	$meta->alias_method('has' => subname 'Moose::has' => sub { 
 		my ($name, %options) = @_;
 		if (exists $options{is}) {
-			$options{type_constraint} = $options{is};
+			if ($options{is} eq 'ro') {
+				$options{reader} = $name;
+			}
+			elsif ($options{is} eq 'rw') {
+				$options{accessor} = $name;				
+			}			
 		}
-		elsif (exists $options{isa}) {
-			$options{type_constraint} = Moose::Util::TypeConstraints::subtype(
-				Object => Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
-			);			
+		if (exists $options{isa}) {
+			if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
+				$options{type_constraint} = $options{isa};
+			}
+			else {
+				$options{type_constraint} = Moose::Util::TypeConstraints::subtype(
+					Object => Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+				);			
+			}
 		}
 		$meta->add_attribute($name, %options) 
 	});
