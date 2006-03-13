@@ -19,22 +19,22 @@ BEGIN {
     use Moose;
 
     has 'parent' => (
-        predicate       => 'has_parent',
-        accessor        => 'parent',
-		weak_ref        => 1,
-		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
+		isa       => 'BinaryTree',	
+        predicate => 'has_parent',
+        accessor  => 'parent',
+		weak_ref  => 1,
     );
 
     has 'left' => (
-        predicate       => 'has_left',         
-        accessor        => 'left',
-		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
+		isa       => 'BinaryTree',		
+        predicate => 'has_left',         
+        accessor  => 'left',
     );
 
     has 'right' => (
-        predicate       => 'has_right',           
-        accessor        => 'right',
-		type_constraint => subtype Object => where { $_->isa('BinaryTree') },
+		isa       => 'BinaryTree',		
+        predicate => 'has_right',           
+        accessor  => 'right',
     );
 
     before 'right', 'left' => sub {

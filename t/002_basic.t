@@ -17,9 +17,9 @@ BEGIN {
     use Moose;
     
     has 'balance' => (
-		accessor        => 'balance', 
-		default         => 0,
-		type_constraint => Int(),		
+		is       => Int(),			
+		accessor => 'balance', 
+		default  => 0,
 	);
 
     sub deposit {
@@ -43,8 +43,8 @@ BEGIN {
  	extends 'BankAccount';
 	
     has 'overdraft_account' => (
-		accessor        => 'overdraft_account',
-		type_constraint => subtype Object => where { $_->isa('BankAccount') },		
+		isa      => 'BankAccount',	
+		accessor => 'overdraft_account',		
 	);	
 
 	before 'withdraw' => sub {

@@ -15,15 +15,15 @@ BEGIN {
 	use strict;
 	use warnings;	
 	use Moose;
-	
+		
 	has 'x' => (
-		reader          => 'x',		
-		type_constraint => Int(),		
+		is => Int(),		
+		reader => 'x',				
 	);
-	
+
 	has 'y' => (
-		accessor        => 'y',
-		type_constraint => Int(),		
+		is => Int(),			
+		accessor => 'y',	
 	);
 	
 	sub clear {
@@ -39,7 +39,7 @@ BEGIN {
 	
 	extends 'Point';
 	
-	has 'z' => (type_constraint => Int());
+	has 'z' => (is => Int());
 	
 	after 'clear' => sub {
 	    my $self = shift;

@@ -32,7 +32,8 @@ Moose::Meta::Attribute->meta->add_attribute(
 Moose::Meta::Attribute->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
 	(reftype($options{type_constraint}) && reftype($options{type_constraint}) eq 'CODE')
-		|| confess "Type cosntraint parameter must be a code-ref";		
+		|| confess "Type cosntraint parameter must be a code-ref, not " . $options{type_constraint}
+			if exists $options{type_constraint};		
 });
 
 sub generate_accessor_method {

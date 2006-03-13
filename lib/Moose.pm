@@ -45,7 +45,18 @@ sub import {
 	$meta->alias_method('extends' => subname 'Moose::extends' => sub { $meta->superclasses(@_) });
 	
 	# handle attributes
-	$meta->alias_method('has' => subname 'Moose::has' => sub { $meta->add_attribute(@_) });
+	$meta->alias_method('has' => subname 'Moose::has' => sub { 
+		my ($name, %options) = @_;
+		if (exists $options{is}) {
+			$options{type_constraint} = $options{is};
+		}
+		elsif (exists $options{isa}) {
+			$options{type_constraint} = Moose::Util::TypeConstraints::subtype(
+				Object => Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+			);			
+		}
+		$meta->add_attribute($name, %options) 
+	});
 
 	# handle method modifers
 	$meta->alias_method('before' => subname 'Moose::before' => sub { 
