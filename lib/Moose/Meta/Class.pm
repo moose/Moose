@@ -12,7 +12,7 @@ use base 'Class::MOP::Class';
 
 sub construct_instance {
     my ($class, %params) = @_;
-    my $instance = {};
+    my $instance = $params{'__INSTANCE__'} || {};
     foreach my $attr ($class->compute_all_applicable_attributes()) {
         my $init_arg = $attr->init_arg();
         # try to fetch the init arg from the %params ...
@@ -38,11 +38,14 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Class - 
+Moose::Meta::Class - The Moose metaclass
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+This is a subclass of L<Class::MOP::Class> with Moose specific 
+extensions.
 
 =head1 METHODS
 
@@ -57,13 +60,6 @@ Moose::Meta::Class -
 All complex software has bugs lurking in it, and this module is no 
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
-
-=head1 CODE COVERAGE
-
-I use L<Devel::Cover> to test the code coverage of my tests, below is the 
-L<Devel::Cover> report on this module's test suite.
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 AUTHOR
 

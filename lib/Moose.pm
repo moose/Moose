@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/CPAN/Class-MOP/Class-MOP/lib';
-
 package Moose;
 
 use strict;
@@ -33,7 +31,13 @@ sub import {
 	else {
 		$meta = Moose::Meta::Class->initialize($pkg => (
 			':attribute_metaclass' => 'Moose::Meta::Attribute'
-		));		
+		));
+		$meta->add_method('meta' => sub {
+			# re-initialize so it inherits properly
+			Moose::Meta::Class->initialize($pkg => (
+				':attribute_metaclass' => 'Moose::Meta::Attribute'
+			));			
+		})		
 	}
 	
 	# NOTE:
@@ -99,30 +103,77 @@ __END__
 
 =head1 NAME
 
-Moose - 
+Moose - Moose, it's the new Camel
 
 =head1 SYNOPSIS
+
+  package Point;
+  use Moose;
+  	
+  has 'x' => (isa => Int(), is => 'rw');
+  has 'y' => (isa => Int(), is => 'rw');
   
+  sub clear {
+      my $self = shift;
+      $self->x(0);
+      $self->y(0);    
+  }
+  
+  package Point3D;
+  use Moose;
+  
+  extends 'Point';
+  
+  has 'z' => (isa => Int());
+  
+  after 'clear' => sub {
+      my $self = shift;
+      $self->{z} = 0;
+  };
+  
+=head1 CAVEAT
+
+This is a B<very> early release of this module, it still needs 
+some fine tuning and B<lots> more documentation. I am adopting 
+the I<release early and release often> approach with this module, 
+so keep an eye on your favorite CPAN mirror!
+
 =head1 DESCRIPTION
 
-=head1 OTHER NAMES
+Moose is an extension of the Perl 5 object system. 
 
-Makes Other Object Systems Envious
+=head2 Another object system!?!?
 
-Makes Object Orientation So Easy
+Yes, I know there has been an explosion recently of new ways to 
+build object's in Perl 5, most of them based on inside-out objects, 
+and other such things. Moose is different because it is not a new 
+object system for Perl 5, but instead an extension of the existing 
+object system.
+
+Moose is built on top of L<Class::MOP>, which is a metaclass system 
+for Perl 5. This means that Moose not only makes building normal 
+Perl 5 objects better, but is also provides brings with it the power 
+of metaclass programming. 
+
+=head2 What does Moose stand for??
+
+Moose doesn't stand for one thing in particular, however, if you 
+want, here are a few of my favorites, feel free to contribute 
+more :)
+
+=over 4
+
+=item Makes Other Object Systems Envious
+
+=item Makes Object Orientation So Easy
+
+=back
 
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no 
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
-
-=head1 CODE COVERAGE
-
-I use L<Devel::Cover> to test the code coverage of my tests, below is the 
-L<Devel::Cover> report on this module's test suite.
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 AUTHOR
 

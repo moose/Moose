@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More tests => 43;
 use Test::Exception;
 
 BEGIN {
@@ -127,7 +127,7 @@ is_deeply(
 	[ 'Moose::Object' ],
 	'... Point got the automagic base class');
 
-my @Point_methods = qw(x y clear);
+my @Point_methods = qw(meta x y clear);
 my @Point_attrs   = ('x', 'y');
 
 is_deeply(
@@ -151,7 +151,7 @@ is_deeply(
 	[ 'Point' ],
 	'... Point3D gets the parent given to it');
 
-my @Point3D_methods = qw(clear);
+my @Point3D_methods = qw(meta clear);
 my @Point3D_attrs   = ('z');
 
 is_deeply(

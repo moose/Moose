@@ -42,9 +42,9 @@ __END__
 
 =head1 NAME
 
-Moose::Object - 
+Moose::Object - The base object for Moose
 
-=head1 SYNOPSIS
+=head1 SYNOPSIS 
 
 =head1 DESCRIPTION
 
@@ -56,9 +56,15 @@ Moose::Object -
 
 =item B<new>
 
+This will create a new instance and call C<BUILDALL>.
+
 =item B<BUILDALL>
 
+This will call every C<BUILD> method in the inheritance hierarchy.
+
 =item B<DEMOLISHALL>
+
+This will call every C<DEMOLISH> method in the inheritance hierarchy.
 
 =back
 
@@ -67,13 +73,6 @@ Moose::Object -
 All complex software has bugs lurking in it, and this module is no 
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
-
-=head1 CODE COVERAGE
-
-I use L<Devel::Cover> to test the code coverage of my tests, below is the 
-L<Devel::Cover> report on this module's test suite.
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 AUTHOR
 

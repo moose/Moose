@@ -107,7 +107,7 @@ __END__
 
 =head1 NAME
 
-Moose::Util::TypeConstraints - 
+Moose::Util::TypeConstraints - Type constraint system for Moose
 
 =head1 SYNOPSIS
 
@@ -125,6 +125,33 @@ Moose::Util::TypeConstraints -
 
 =head1 DESCRIPTION
 
+This module provides Moose with the ability to create type contraints 
+to be are used in both attribute definitions and for method argument 
+validation. 
+
+This is B<NOT> a type system for Perl 5.
+
+The type and subtype constraints are basically functions which will 
+validate their first argument. If called with no arguments, they will 
+return themselves (this is syntactic sugar for Moose attributes).
+
+This module also provides a simple hierarchy for Perl 5 types, this 
+could probably use some work, but it works for me at the moment.
+
+  Any
+      Value
+          Int
+          Str
+      Ref
+          ScalarRef
+          ArrayRef
+          HashRef
+          CodeRef
+          RegexpRef
+          Object	
+
+Suggestions for improvement are welcome.	
+    
 =head1 FUNCTIONS
 
 =head2 Type Constraint Constructors
@@ -174,13 +201,6 @@ Moose::Util::TypeConstraints -
 All complex software has bugs lurking in it, and this module is no 
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
-
-=head1 CODE COVERAGE
-
-I use L<Devel::Cover> to test the code coverage of my tests, below is the 
-L<Devel::Cover> report on this module's test suite.
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 AUTHOR
 

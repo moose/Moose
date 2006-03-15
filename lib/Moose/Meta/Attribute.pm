@@ -124,11 +124,14 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute - 
+Moose::Meta::Attribute - The Moose attribute metaobject
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+This is a subclass of L<Class::MOP::Attribute> with Moose specific 
+extensions.
 
 =head1 METHODS
 
@@ -159,13 +162,6 @@ Moose::Meta::Attribute -
 All complex software has bugs lurking in it, and this module is no 
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
-
-=head1 CODE COVERAGE
-
-I use L<Devel::Cover> to test the code coverage of my tests, below is the 
-L<Devel::Cover> report on this module's test suite.
-
-=head1 ACKNOWLEDGEMENTS
 
 =head1 AUTHOR
 
