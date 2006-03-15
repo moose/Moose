@@ -17,7 +17,6 @@ BEGIN {
 	use Moose;
 		
 	has 'x' => (isa => Int(), is => 'ro');
-
 	has 'y' => (isa => Int(), is => 'rw');
 	
 	sub clear {

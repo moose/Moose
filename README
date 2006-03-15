@@ -16,7 +16,10 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-	None
+	Class::MOP
+	Scalar::Util
+	Carp
+	Sub::Name
 
 COPYRIGHT AND LICENCE
 

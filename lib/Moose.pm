@@ -16,8 +16,7 @@ use Moose::Meta::Class;
 use Moose::Meta::Attribute;
 
 use Moose::Object;
-
-require Moose::Util::TypeConstraints;
+use Moose::Util::TypeConstraints ':no_export';
 
 sub import {
 	shift;
@@ -110,11 +109,7 @@ Moose -
 
 Makes Other Object Systems Envious
 
-Most Other Objects Suck Eggs
-
 Makes Object Orientation So Easy
-
-Metacircular Object Oriented Systems Environment
 
 =head1 BUGS
 
