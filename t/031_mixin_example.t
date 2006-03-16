@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 5;
+use SUPER;
 
 BEGIN {
     use_ok('Moose');
@@ -13,11 +14,7 @@ BEGIN {
 
 This test demonstrates how simple it is to create Scala Style 
 Class Mixin Composition. Below is an example taken from the 
-Scala web site's example section, and trancoded to Class::MOP.
-
-NOTE:
-We require SUPER for this test to handle the issue with SUPER::
-being determined at compile time. 
+Scala web site's example section, and trancoded to Moose.
 
 L<http://scala.epfl.ch/intro/mixin.html>
 
@@ -57,58 +54,45 @@ code above is well-formed.
 
 {
     package Point2D;
-    use metaclass;
+    use Moose;
     
-    Point2D->meta->add_attribute('$x' => (
-        accessor => 'x',
-        init_arg => 'x',
-    ));
+    has 'x' => (is => 'rw');
+    has 'y' => (is => 'rw');       
     
-    Point2D->meta->add_attribute('$y' => (
-        accessor => 'y',
-        init_arg => 'y',
-    ));    
-    
-    sub new {
-        my $class = shift;
-        $class->meta->new_object(@_);
-    }    
-    
-    sub toString {
+    sub to_string {
         my $self = shift;
         "x = " . $self->x . ", y = " . $self->y;
     }
     
     package ColoredPoint2D;
-    our @ISA = ('Point2D');
+    use Moose;
     
-    ColoredPoint2D->meta->add_attribute('$color' => (
-        accessor => 'color',
-        init_arg => 'color',
-    ));    
+    extends 'Point2D';
     
-    sub toString {
+    has 'color' => (is => 'rw');    
+    
+    sub to_string {
         my $self = shift;
         $self->SUPER() . ', col = ' . $self->color;
     }
     
     package Point3D;
-    our @ISA = ('Point2D');
+    use Moose;
     
-    Point3D->meta->add_attribute('$z' => (
-        accessor => 'z',
-        init_arg => 'z',
-    ));        
+    extends 'Point2D';
+    
+    has 'z' => (is => 'rw');        
 
-    sub toString {
+    sub to_string {
         my $self = shift;
         $self->SUPER() . ', z = ' . $self->z;
     }
     
     package ColoredPoint3D;
-    our @ISA = ('Point3D');    
+    use Moose;
     
-    ::with('ColoredPoint2D');
+    extends 'Point3D';    
+       with 'ColoredPoint2D';
     
 }
 
@@ -117,7 +101,7 @@ isa_ok($colored_point_3d, 'ColoredPoint3D');
 isa_ok($colored_point_3d, 'Point3D');
 isa_ok($colored_point_3d, 'Point2D');
 
-is($colored_point_3d->toString(),
+is($colored_point_3d->to_string(),
    'x = 1, y = 2, z = 3, col = blue',
    '... got the right toString method');
 

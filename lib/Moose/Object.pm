@@ -3,12 +3,13 @@ package Moose::Object;
 
 use strict;
 use warnings;
-
 use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
 
-our $VERSION = '0.01';
+use Carp 'confess';
+
+our $VERSION = '0.02';
 
 sub new {
     my $class  = shift;
@@ -30,15 +31,6 @@ sub DEMOLISHALL {
 	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
 		$method->{method}->($self);
 	}	
-}
-
-sub NEXT {
-    my $self   = shift;
-    my $method = (caller())[3];
-    my $code   = $self->meta->find_next_method_by_name($method);
-    (defined $code)
-        || confess "Could not find the NEXT method for ($method) in ($self)";
-    return $code->($self, @_);
 }
 
 sub DESTROY { goto &DEMOLISHALL }
@@ -74,6 +66,8 @@ This will call every C<BUILD> method in the inheritance hierarchy.
 =item B<DEMOLISHALL>
 
 This will call every C<DEMOLISH> method in the inheritance hierarchy.
+
+=item B<NEXT>
 
 =back
 

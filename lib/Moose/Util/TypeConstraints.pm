@@ -34,7 +34,6 @@ sub import {
 
 my %TYPES;
 
-# might need this later
 #sub find_type_constraint { $TYPES{$_[0]} }
 
 sub type ($$) {
