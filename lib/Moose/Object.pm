@@ -32,6 +32,15 @@ sub DEMOLISHALL {
 	}	
 }
 
+sub NEXT {
+    my $self   = shift;
+    my $method = (caller())[3];
+    my $code   = $self->meta->find_next_method_by_name($method);
+    (defined $code)
+        || confess "Could not find the NEXT method for ($method) in ($self)";
+    return $code->($self, @_);
+}
+
 sub DESTROY { goto &DEMOLISHALL }
 
 1;

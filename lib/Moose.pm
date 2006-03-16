@@ -11,10 +11,14 @@ use Carp         'confess';
 use Sub::Name    'subname';
 
 use Moose::Meta::Class;
+use Moose::Meta::SafeMixin;
 use Moose::Meta::Attribute;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints ':no_export';
+
+# bootstrap the mixin module
+Moose::Meta::SafeMixin::mixin(Moose::Meta::Class->meta, 'Moose::Meta::SafeMixin');
 
 sub import {
 	shift;
@@ -46,6 +50,9 @@ sub import {
 	
 	# handle superclasses
 	$meta->alias_method('extends' => subname 'Moose::extends' => sub { $meta->superclasses(@_) });
+	
+	# handle mixins
+	$meta->alias_method('with' => subname 'Moose::with' => sub { $meta->mixin($_[0]) });	
 	
 	# handle attributes
 	$meta->alias_method('has' => subname 'Moose::has' => sub { 
@@ -152,8 +159,8 @@ object system.
 
 Moose is built on top of L<Class::MOP>, which is a metaclass system 
 for Perl 5. This means that Moose not only makes building normal 
-Perl 5 objects better, but is also provides brings with it the power 
-of metaclass programming. 
+Perl 5 objects better, but it also provides the power of metaclass 
+programming.
 
 =head2 What does Moose stand for??
 
@@ -166,6 +173,20 @@ more :)
 =item Makes Other Object Systems Envious
 
 =item Makes Object Orientation So Easy
+
+=item Makes Object Orientation Sound Easy
+
+=item Makes Object Orientation Spiffy- Er
+
+=item My Overcraft Overfilled (with) Some Eels
+
+=item Moose Often Ovulate Sorta Early
+
+=item Most Other Object Systems Emasculate
+
+=item Many Overloaded Object Systems Exists 
+
+=item Moose Offers Often Super Extensions
 
 =back
 
