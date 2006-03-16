@@ -13,6 +13,7 @@ BEGIN {
 {
     package FooMixin;   
     use Moose;
+    
     sub foo { 'FooMixin::foo' }    
 
     package Foo;

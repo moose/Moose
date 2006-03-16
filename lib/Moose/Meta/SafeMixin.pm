@@ -24,39 +24,41 @@ sub mixin {
     my ($super_meta)  = $metaclass->superclasses();
     my ($super_mixin) = $mixin->superclasses();  
     ($super_meta->isa($super_mixin))
-        || confess "The superclass ($super_meta) must extend a subclass of the superclass of the mixin ($super_mixin)"
+        || confess "The superclass ($super_meta) must extend a subclass of the " . 
+                   "superclass of the mixin ($super_mixin)"
 			if defined $super_mixin && defined $super_meta;
+    
+    # check for conflicts here ...
+    
+    $metaclass->has_attribute($_) 
+        && confess "Attribute conflict ($_)"
+            foreach $mixin->get_attribute_list;
+
+    foreach my $method_name ($mixin->get_method_list) {
+        # skip meta, cause everyone has that :)
+        next if $method_name =~ /meta/;
+        $metaclass->has_method($method_name) && confess "Method conflict ($method_name)";
+    }    
     
     # collect all the attributes
     # and clone them so they can 
-    # associate with the new class
-    my @attributes = map { 
-        $mixin->get_attribute($_)->clone() 
-    } $mixin->get_attribute_list;                     
-    
-    my %methods = map  { 
-        my $method = $mixin->get_method($_);
-        # we want to ignore accessors since
-        # they will be created with the attrs
-        (blessed($method) && $method->isa('Class::MOP::Attribute::Accessor'))
-            ? () : ($_ => $method)
-    } $mixin->get_method_list;    
-
-    # NOTE:
-    # I assume that locally defined methods 
-    # and attributes get precedence over those
-    # from the mixin.
-
+    # associate with the new class                  
     # add all the attributes in ....
-    foreach my $attr (@attributes) {
-        $metaclass->add_attribute($attr) 
-            unless $metaclass->has_attribute($attr->name);
-    }
+    foreach my $attr ($mixin->get_attribute_list) {
+        $metaclass->add_attribute(
+            $mixin->get_attribute($attr)->clone()
+        );
+    }     
 
     # add all the methods in ....    
-    foreach my $method_name (keys %methods) {
-        $metaclass->alias_method($method_name => $methods{$method_name}) 
-            unless $metaclass->has_method($method_name);
+    foreach my $method_name ($mixin->get_method_list) {
+        # no need to mess with meta
+        next if $method_name eq 'meta';
+        my $method = $mixin->get_method($method_name);
+        # and ignore accessors, the 
+        # attributes take care of that
+        next if blessed($method) && $method->isa('Class::MOP::Attribute::Accessor');
+        $metaclass->alias_method($method_name => $method);
     }    
 }
 

@@ -1,4 +1,11 @@
 Revision history for Perl extension Moose
 
+0.02 
+    * Moose
+      - added &with keyword to support class mixins
+      
+    * Moose::Meta::SafeMixin
+      - added support for mixins, see docs for info
+
 0.01 Wed. March 15, 2006
     - Moooooooooooooooooose!!!

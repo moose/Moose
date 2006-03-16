@@ -24,6 +24,9 @@ sub import {
 	shift;
 	my $pkg = caller();
 	
+	# we should never export to main
+	return if $pkg eq 'main';
+	
 	Moose::Util::TypeConstraints->import($pkg);
 	
 	my $meta;
@@ -85,12 +88,21 @@ sub import {
 	});
 	$meta->alias_method('after'  => subname 'Moose::after' => sub { 
 		my $code = pop @_;
-		$meta->add_after_method_modifier($_, $code)  for @_;
+		$meta->add_after_method_modifier($_, $code) for @_;
 	});	
 	$meta->alias_method('around' => subname 'Moose::around' => sub { 
 		my $code = pop @_;
-		$meta->add_around_method_modifier($_, $code)  for @_;	
+		$meta->add_around_method_modifier($_, $code) for @_;	
 	});	
+	
+	# next methods ...
+	$meta->alias_method('next_method' => subname 'Moose::next_method' => sub { 
+	    my $method_name = (split '::' => (caller(1))[3])[-1];
+        my $next_method = $meta->find_next_method_by_name($method_name);
+        (defined $next_method)
+            || confess "Could not find next-method for '$method_name'";
+        $next_method->(@_);
+	});
 	
 	# make sure they inherit from Moose::Object
 	$meta->superclasses('Moose::Object') 
