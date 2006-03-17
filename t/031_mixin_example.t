@@ -73,7 +73,7 @@ code above is well-formed.
     
     sub to_string {
         my $self = shift;
-        $self->SUPER() . ', col = ' . $self->color;
+        $self->SUPER . ', col = ' . $self->color;
     }
     
     package Point3D;
@@ -85,7 +85,7 @@ code above is well-formed.
 
     sub to_string {
         my $self = shift;
-        $self->SUPER() . ', z = ' . $self->z;
+        $self->SUPER . ', z = ' . $self->z;
     }
     
     package ColoredPoint3D;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 21;
 
 BEGIN {
     use_ok('Moose');
@@ -13,15 +13,11 @@ BEGIN {
 {
     package FooMixin;   
     use Moose;
-    
     sub foo { 'FooMixin::foo' }    
 
     package Foo;
     use Moose;
-    
     with 'FooMixin';
-    
-    sub new { (shift)->meta->new_object(@_) }
 }
 
 my $foo = Foo->new();
@@ -29,6 +25,11 @@ isa_ok($foo, 'Foo');
 
 can_ok($foo, 'foo');
 is($foo->foo, 'FooMixin::foo', '... got the right value from the mixin method');
+
+is_deeply(
+    [ sort map { $_->name } @{Foo->meta->mixed_in} ],
+    [ 'FooMixin' ],
+    '... got the right mixin list');
 
 ## Mixin a class who shares a common ancestor
 {   
@@ -57,6 +58,21 @@ isa_ok($foo_baz, 'Foo');
 can_ok($foo_baz, 'baz');
 is($foo_baz->baz(), 'Baz::baz', '... got the right value from the mixin method');
 
+is_deeply(
+    [ sort map { $_->name } @{Baz->meta->mixed_in} ],
+    [],
+    '... got the right mixin list');
+    
+is_deeply(
+    [ sort map { $_->name } @{Bar->meta->mixed_in} ],
+    [],
+    '... got the right mixin list');    
+
+is_deeply(
+    [ sort map { $_->name } @{Foo::Baz->meta->mixed_in} ],
+    [ 'Baz' ],
+    '... got the right mixin list');
+
 {
 	package Foo::Bar;
 	use Moose;
@@ -78,3 +94,8 @@ isa_ok($foo_bar_baz, 'Bar');
 can_ok($foo_bar_baz, 'baz');
 is($foo_bar_baz->baz(), 'Baz::baz', '... got the right value from the mixin method');
 
+is_deeply(
+    [ sort map { $_->name } @{Foo::Bar::Baz->meta->mixed_in} ],
+    [ 'Baz' ],
+    '... got the right mixin list');
+    

@@ -53,6 +53,8 @@ extensions.
 
 =item B<construct_instance>
 
+=item B<mixed_in>
+
 =back
 
 =head1 BUGS

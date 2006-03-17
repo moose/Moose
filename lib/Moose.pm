@@ -10,6 +10,8 @@ use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Sub::Name    'subname';
 
+use Class::MOP;
+
 use Moose::Meta::Class;
 use Moose::Meta::SafeMixin;
 use Moose::Meta::Attribute;
@@ -94,15 +96,6 @@ sub import {
 		my $code = pop @_;
 		$meta->add_around_method_modifier($_, $code) for @_;	
 	});	
-	
-	# next methods ...
-	$meta->alias_method('next_method' => subname 'Moose::next_method' => sub { 
-	    my $method_name = (split '::' => (caller(1))[3])[-1];
-        my $next_method = $meta->find_next_method_by_name($method_name);
-        (defined $next_method)
-            || confess "Could not find next-method for '$method_name'";
-        $next_method->(@_);
-	});
 	
 	# make sure they inherit from Moose::Object
 	$meta->superclasses('Moose::Object') 

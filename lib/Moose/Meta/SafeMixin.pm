@@ -11,6 +11,11 @@ our $VERSION = '0.01';
 
 use base 'Class::MOP::Class';
 
+Moose::Meta::SafeMixin->meta->add_attribute('mixed_in' => (
+    accessor => 'mixed_in',
+    default  => sub { [] }
+));
+
 sub mixin {
     # fetch the metaclass for the 
     # caller and the mixin arg
@@ -59,7 +64,10 @@ sub mixin {
         # attributes take care of that
         next if blessed($method) && $method->isa('Class::MOP::Attribute::Accessor');
         $metaclass->alias_method($method_name => $method);
-    }    
+    }   
+    
+    push @{$metaclass->mixed_in} => $mixin 
+        unless $metaclass->name eq 'Moose::Meta::Class';
 }
 
 1;
@@ -172,6 +180,10 @@ gives us (what I hope is) a better, safer and saner system.
 =over 4
 
 =item B<mixin ($mixin)>
+
+=item B<mixed_in>
+
+Accessor for the cache of mixed-in classes
 
 =back
 
