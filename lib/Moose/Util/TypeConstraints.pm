@@ -7,7 +7,7 @@ use warnings;
 use Sub::Name    'subname';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub import {
 	shift;
@@ -66,12 +66,12 @@ sub subtype ($$;$) {
 	else {
 		($parent, $check) = ($name, $parent);
 		$parent = $TYPES{$parent} unless $parent && ref($parent) eq 'CODE';		
-		return subname((caller() . '::__anon_subtype__') => sub { 
+		return subname '__anon_subtype__' => sub { 
 			return $TYPES{$name} unless defined $_[0];			
 			local $_ = $_[0];
 			return undef unless defined $parent->($_[0]) && $check->($_[0]);
 			$_[0];
-		});		
+		};		
 	}
 }
 

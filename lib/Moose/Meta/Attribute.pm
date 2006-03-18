@@ -9,7 +9,7 @@ use Carp         'confess';
 
 use Moose::Util::TypeConstraints ':no_export';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use base 'Class::MOP::Attribute';
 
@@ -43,7 +43,7 @@ sub generate_accessor_method {
 		    return sub {
 				if (scalar(@_) == 2) {
 					(defined $self->type_constraint->($_[1]))
-						|| confess "Attribute ($attr_name) does not pass the type contraint"
+						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 							if defined $_[1];
 			        $_[0]->{$attr_name} = $_[1];
 					weaken($_[0]->{$attr_name});
@@ -55,7 +55,7 @@ sub generate_accessor_method {
 		    return sub {
 				if (scalar(@_) == 2) {
 					(defined $self->type_constraint->($_[1]))
-						|| confess "Attribute ($attr_name) does not pass the type contraint"
+						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 							if defined $_[1];
 			        $_[0]->{$attr_name} = $_[1];
 				}
@@ -88,7 +88,7 @@ sub generate_writer_method {
 		if ($self->has_weak_ref) {
 		    return sub { 
 				(defined $self->type_constraint->($_[1]))
-					|| confess "Attribute ($attr_name) does not pass the type contraint"
+					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 						if defined $_[1];
 				$_[0]->{$attr_name} = $_[1];
 				weaken($_[0]->{$attr_name});
@@ -97,7 +97,7 @@ sub generate_writer_method {
 		else {
 		    return sub { 
 				(defined $self->type_constraint->($_[1]))
-					|| confess "Attribute ($attr_name) does not pass the type contraint"
+					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 						if defined $_[1];
 				$_[0]->{$attr_name} = $_[1];
 			};			

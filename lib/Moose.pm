@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/Projects/CPAN/Class-MOP/Class-MOP/lib';
+
 package Moose;
 
 use strict;
@@ -30,7 +32,7 @@ sub import {
 	return if $pkg eq 'main';
 	
 	Moose::Util::TypeConstraints->import($pkg);
-	
+
 	my $meta;
 	if ($pkg->can('meta')) {
 		$meta = $pkg->meta();
@@ -96,15 +98,15 @@ sub import {
 		my $code = pop @_;
 		$meta->add_around_method_modifier($_, $code) for @_;	
 	});	
-	
+
 	# make sure they inherit from Moose::Object
-	$meta->superclasses('Moose::Object') 
-		unless $meta->superclasses();
+	$meta->superclasses('Moose::Object')
+       unless $meta->superclasses();
 
 	# we recommend using these things 
 	# so export them for them
-	$meta->alias_method('confess' => \&confess);			
-	$meta->alias_method('blessed' => \&blessed);				
+	$meta->alias_method('confess' => \&Carp::confess);			
+	$meta->alias_method('blessed' => \&Scalar::Util::blessed);				
 }
 
 1;
@@ -175,23 +177,37 @@ more :)
 
 =over 4
 
-=item Makes Other Object Systems Envious
+=item Make Other Object Systems Envious
 
 =item Makes Object Orientation So Easy
 
-=item Makes Object Orientation Sound Easy
+=item Makes Object Orientation Spiffy- Er  (sorry ingy)
 
-=item Makes Object Orientation Spiffy- Er
+=item Most Other Object Systems Emasculate
 
 =item My Overcraft Overfilled (with) Some Eels
 
 =item Moose Often Ovulate Sorta Early
 
-=item Most Other Object Systems Emasculate
-
 =item Many Overloaded Object Systems Exists 
 
 =item Moose Offers Often Super Extensions
+
+=back
+
+=head1 ACKNOWLEDGEMENTS
+
+=over 4
+
+=item I blame Sam Vilain for giving me my first hit of meta-model crack.
+
+=item I blame Audrey Tang for encouraging that meta-crack habit in #perl6.
+
+=item Without the love and encouragement of Yuval "nothingmuch" Kogman, 
+this module would not be possible (and it wouldn't have a name).
+
+=item The basis of the TypeContraints module was Rob Kinyon's idea 
+originally, I just ran with it.
 
 =back
 

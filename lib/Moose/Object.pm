@@ -22,14 +22,14 @@ sub new {
 sub BUILDALL {
 	my ($self, %params) = @_;
 	foreach my $method ($self->meta->find_all_methods_by_name('BUILD')) {
-		$method->{method}->($self, %params);
+		$method->{code}->($self, %params);
 	}
 }
 
 sub DEMOLISHALL {
 	my $self = shift;
 	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-		$method->{method}->($self);
+		$method->{code}->($self);
 	}	
 }
 
