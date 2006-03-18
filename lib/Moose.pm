@@ -12,6 +12,8 @@ use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Sub::Name    'subname';
 
+use UNIVERSAL::require;
+
 use Class::MOP;
 
 use Moose::Meta::Class;
@@ -56,7 +58,10 @@ sub import {
 	# will not name it with 
 	
 	# handle superclasses
-	$meta->alias_method('extends' => subname 'Moose::extends' => sub { $meta->superclasses(@_) });
+	$meta->alias_method('extends' => subname 'Moose::extends' => sub { 
+	    $_->require for @_;
+	    $meta->superclasses(@_) 
+	});
 	
 	# handle mixins
 	$meta->alias_method('with' => subname 'Moose::with' => sub { $meta->mixin($_[0]) });	

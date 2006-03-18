@@ -6,10 +6,11 @@ my $build = Module::Build->new(
     module_name => 'Moose',
     license => 'perl',
     requires => {
-        'Scalar::Util' => '1.18',
-        'Carp'         => '0',
-        'Class::MOP'   => '0.21',
-        'Sub::Name'    => '0.02',
+        'Scalar::Util'       => '1.18',
+        'Carp'               => '0',
+        'Class::MOP'         => '0.21',
+        'Sub::Name'          => '0.02',
+        'UNIVERSAL::require' => '0'
     },
     optional => {
     },
