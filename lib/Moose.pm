@@ -17,14 +17,10 @@ use UNIVERSAL::require;
 use Class::MOP;
 
 use Moose::Meta::Class;
-use Moose::Meta::SafeMixin;
 use Moose::Meta::Attribute;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints ':no_export';
-
-# bootstrap the mixin module
-Moose::Meta::SafeMixin::mixin(Moose::Meta::Class->meta, 'Moose::Meta::SafeMixin');
 
 sub import {
 	shift;
@@ -61,10 +57,7 @@ sub import {
 	$meta->alias_method('extends' => subname 'Moose::extends' => sub { 
 	    $_->require for @_;
 	    $meta->superclasses(@_) 
-	});
-	
-	# handle mixins
-	$meta->alias_method('with' => subname 'Moose::with' => sub { $meta->mixin($_[0]) });	
+	});	
 	
 	# handle attributes
 	$meta->alias_method('has' => subname 'Moose::has' => sub { 

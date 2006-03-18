@@ -2,10 +2,16 @@ Revision history for Perl extension Moose
 
 0.02 
     * Moose
-      - added &with keyword to support class mixins
-      
-    * Moose::Meta::SafeMixin
-      - added support for mixins, see docs for info
+        - many more tests, fixing some bugs/edge 
+          and cases, general development work
+        - &extends now loads the base module with
+          UNIVERSAL::require 
+            - added UNIVERSAL::require to the 
+              dependencies list
+    
+    * Moose::Object
+        - BUILDALL and DEMOLISHALL were broken 
+          because of a mis-named hash key, Whoops :)
 
 0.01 Wed. March 15, 2006
     - Moooooooooooooooooose!!!
