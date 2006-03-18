@@ -3,8 +3,17 @@
 use strict;
 use warnings;
 
-use Test::More tests => 64;
+use Test::More; 
+
+BEGIN {
+    eval "use Regexp::Common; use Locale::US;";
+    plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
+    plan tests => 70;    
+}
+
 use Test::Exception;
+
+use Scalar::Util 'isweak';
 
 BEGIN {
     use_ok('Moose');           
@@ -151,6 +160,7 @@ is($ii->employees->[0]->middle_initial, undef, '... got the right middle initial
 is($ii->employees->[0]->full_name, 'Jeremy Shao', '... got the right full name');
 is($ii->employees->[0]->title, 'President / Senior Consultant', '... got the right title');
 is($ii->employees->[0]->company, $ii, '... got the right company');
+ok(isweak($ii->employees->[0]->{company}), '... the company is a weak-ref');
 
 isa_ok($ii->employees->[0]->address, 'Address');
 is($ii->employees->[0]->address->city, 'Manhasset', '... got the right city');
@@ -168,6 +178,7 @@ is($ii->employees->[1]->middle_initial, undef, '... got the right middle initial
 is($ii->employees->[1]->full_name, 'Tommy Lee', '... got the right full name');
 is($ii->employees->[1]->title, 'Vice President / Senior Developer', '... got the right title');
 is($ii->employees->[1]->company, $ii, '... got the right company');
+ok(isweak($ii->employees->[1]->{company}), '... the company is a weak-ref');
 
 isa_ok($ii->employees->[1]->address, 'Address');
 is($ii->employees->[1]->address->city, 'New York', '... got the right city');
@@ -185,6 +196,7 @@ is($ii->employees->[2]->middle_initial, 'C', '... got the right middle initial v
 is($ii->employees->[2]->full_name, 'Stevan C. Little', '... got the right full name');
 is($ii->employees->[2]->title, 'Senior Developer', '... got the right title');
 is($ii->employees->[2]->company, $ii, '... got the right company');
+ok(isweak($ii->employees->[2]->{company}), '... the company is a weak-ref');
 
 isa_ok($ii->employees->[2]->address, 'Address');
 is($ii->employees->[2]->address->city, 'Madison', '... got the right city');
@@ -202,12 +214,21 @@ is($ii->employees->[3]->middle_initial, undef, '... got the right middle initial
 is($ii->employees->[3]->full_name, 'Rob Kinyon', '... got the right full name');
 is($ii->employees->[3]->title, 'Developer', '... got the right title');
 is($ii->employees->[3]->company, $ii, '... got the right company');
+ok(isweak($ii->employees->[3]->{company}), '... the company is a weak-ref');
 
 isa_ok($ii->employees->[3]->address, 'Address');
 is($ii->employees->[3]->address->city, 'Marysville', '... got the right city');
 is($ii->employees->[3]->address->state, 'OH', '... got the right state');
 
 ## check some error conditions for the subtypes
+
+dies_ok {
+    Address->new(street => {}),    
+} '... we die correctly with bad args';
+
+dies_ok {
+    Address->new(city => {}),    
+} '... we die correctly with bad args';
 
 dies_ok {
     Address->new(state => 'British Columbia'),    
