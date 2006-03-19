@@ -18,6 +18,12 @@ BEGIN {
     use warnings;
     use Moose;
     
+    coerce 'HTTPHeader'
+        => as ArrayRef 
+            => to { HTTPHeader->new(array => $_[0]) }
+        => as HashRef 
+            => to { HTTPHeader->new(hash => $_[0]) };    
+    
     has 'array' => (is => 'ro');
     has 'hash'  => (is => 'ro');    
 
@@ -25,12 +31,6 @@ BEGIN {
     use strict;
     use warnings;
     use Moose;
-    
-    coerce 'HTTPHeader'
-        => as ArrayRef 
-            => to { HTTPHeader->new(array => $_[0]) }
-        => as HashRef 
-            => to { HTTPHeader->new(hash => $_[0]) };    
     
     has 'header' => (is => 'rw', isa => 'HTTPHeader', coerce => 1);    
 }
