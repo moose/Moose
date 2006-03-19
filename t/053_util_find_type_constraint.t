@@ -10,3 +10,4 @@ BEGIN {
 	use_ok('Moose::Util::TypeConstraints', (':no_export'));
 }
 
+#diag Moose::Util::TypeConstraints::dump_type_constraints();

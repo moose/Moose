@@ -15,7 +15,7 @@ sub import {
 	my $pkg = shift || caller();
 	return if $pkg eq ':no_export';
 	no strict 'refs';
-	foreach my $export (qw(type subtype coerce as where to)) {
+	foreach my $export (qw(type subtype as where to coerce)) {
 		*{"${pkg}::${export}"} = \&{"${export}"};
 	}	
 }
@@ -30,6 +30,12 @@ sub import {
     sub register_type_constraint { 
         my ($type_name, $type_constraint) = @_;
         $TYPES{$type_name} = $type_constraint;
+    }
+    
+    sub dump_type_constraints {
+        require Data::Dumper;
+        $Data::Dumper::Deparse = 1;
+        Data::Dumper::Dumper(\%TYPES);
     }
     
     sub export_type_contstraints_as_functions {
@@ -91,8 +97,10 @@ sub subtype ($$;$) {
 	}
 }
 
-sub coerce {
+sub coerce ($@) {
     my ($type_name, @coercion_map) = @_;
+    #use Data::Dumper;
+    #warn Dumper \@coercion_map;    
     my @coercions;
     while (@coercion_map) {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
@@ -205,6 +213,8 @@ Suggestions for improvement are welcome.
 =item B<register_type_coercion>
 
 =item B<export_type_contstraints_as_functions>
+
+=item B<dump_type_constraints>
 
 =back
 

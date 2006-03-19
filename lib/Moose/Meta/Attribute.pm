@@ -14,6 +14,13 @@ our $VERSION = '0.02';
 use base 'Class::MOP::Attribute';
 
 Moose::Meta::Attribute->meta->add_attribute(
+    Class::MOP::Attribute->new('coerce' => (
+        reader    => 'coerce',
+        predicate => 'has_coercion'
+    ))	
+);
+
+Moose::Meta::Attribute->meta->add_attribute(
     Class::MOP::Attribute->new('weak_ref' => (
         reader    => 'weak_ref',
         predicate => {
@@ -31,6 +38,12 @@ Moose::Meta::Attribute->meta->add_attribute(
 
 Moose::Meta::Attribute->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
+	if (exists $options{coerce} && $options{coerce}) {
+	    (exists $options{type_constraint})
+	        || confess "You cannot have coercion without specifying a type constraint";
+        confess "You cannot have a weak reference to a coerced value"
+            if $options{weak_ref};	        
+	}
 	(reftype($options{type_constraint}) && reftype($options{type_constraint}) eq 'CODE')
 		|| confess "Type cosntraint parameter must be a code-ref, not " . $options{type_constraint}
 			if exists $options{type_constraint};		
@@ -52,15 +65,29 @@ sub generate_accessor_method {
 		    };			
 		}
 		else {
-		    return sub {
-				if (scalar(@_) == 2) {
-					(defined $self->type_constraint->($_[1]))
-						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-							if defined $_[1];
-			        $_[0]->{$attr_name} = $_[1];
-				}
-		        $_[0]->{$attr_name};
-		    };	
+		    if ($self->has_coercion) {
+    		    return sub {
+    				if (scalar(@_) == 2) {
+    				    my $val = $self->coerce->($_[1]);
+    					(defined $self->type_constraint->($val))
+    						|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
+    							if defined $val;
+    			        $_[0]->{$attr_name} = $val;
+    				}
+    		        $_[0]->{$attr_name};
+    		    };		        
+		    }
+		    else {
+    		    return sub {
+    				if (scalar(@_) == 2) {
+    					(defined $self->type_constraint->($_[1]))
+    						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
+    							if defined $_[1];
+    			        $_[0]->{$attr_name} = $_[1];
+    				}
+    		        $_[0]->{$attr_name};
+    		    };
+		    }	
 		}	
 	}
 	else {
@@ -154,6 +181,10 @@ extensions.
 =item B<has_weak_ref>
 
 =item B<weak_ref>
+
+=item B<coerce>
+
+=item B<has_coercion>
 
 =back
 

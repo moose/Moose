@@ -95,6 +95,12 @@ sub import {
                 $options{type_constraint} = $constraint;
 			}
 		}
+		if (exists $options{coerce} && $options{coerce} && $options{isa}) {
+		    my $coercion = Moose::Util::TypeConstraints::find_type_coercion($options{isa});
+		    (defined $coercion)
+		        || confess "Cannot find coercion for type " . $options{isa};
+		    $options{coerce} = $coercion;
+		}
 		$meta->add_attribute($name, %options) 
 	});
 
