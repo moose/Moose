@@ -25,10 +25,10 @@ subtype Header =>
     => where { $_->isa('HTTPHeader') };
     
 coerce Header 
-    => as ArrayRef 
-        => to { HTTPHeader->new(array => $_[0]) }
-    => as HashRef 
-        => to { HTTPHeader->new(hash => $_[0]) };
+    => from ArrayRef 
+        => via { HTTPHeader->new(array => $_[0]) }
+    => from HashRef 
+        => via { HTTPHeader->new(hash => $_[0]) };
         
 Moose::Util::TypeConstraints::export_type_contstraints_as_functions();        
         

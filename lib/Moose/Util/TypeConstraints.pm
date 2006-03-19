@@ -15,7 +15,7 @@ sub import {
 	my $pkg = shift || caller();
 	return if $pkg eq ':no_export';
 	no strict 'refs';
-	foreach my $export (qw(type subtype as where to coerce)) {
+	foreach my $export (qw(type subtype as where coerce from via)) {
 		*{"${pkg}::${export}"} = \&{"${export}"};
 	}	
 }
@@ -120,8 +120,9 @@ sub coerce ($@) {
 }
 
 sub as    ($) { $_[0] }
+sub from  ($) { $_[0] }
 sub where (&) { $_[0] }
-sub to    (&) { $_[0] }
+sub via   (&) { $_[0] }
 
 # define some basic types
 
@@ -168,8 +169,8 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
       => where { $_ < 10 };
       
   coerce Num 
-      => as Str
-        => to { 0+$_ }; 
+      => from Str
+        => via { 0+$_ }; 
 
 =head1 DESCRIPTION
 
@@ -230,7 +231,9 @@ Suggestions for improvement are welcome.
 
 =item B<coerce>
 
-=item B<to>
+=item B<from>
+
+=item B<via>
 
 =back
 
