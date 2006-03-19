@@ -21,9 +21,14 @@ sub construct_instance {
         # if nothing was in the %params, we can use the 
         # attribute's default value (if it has one)
         $val ||= $attr->default($instance) if $attr->has_default; 
-		if (defined $val && $attr->has_type_constraint) {
-            (defined($attr->type_constraint->($val))) 
-                || confess "Attribute () does not pass the type contraint with";			
+		if (defined $val) {
+		    if ($attr->has_coercion) {
+		        $val = $attr->coerce->($val);
+		    }
+		    if ($attr->has_type_constraint) {
+                (defined($attr->type_constraint->($val))) 
+                    || confess "Attribute () does not pass the type contraint with";			
+            }
 		}
         $instance->{$attr->name} = $val;
     }
