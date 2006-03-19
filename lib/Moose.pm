@@ -30,6 +30,12 @@ sub import {
 	return if $pkg eq 'main';
 	
 	Moose::Util::TypeConstraints->import($pkg);
+	
+	# make a subtype for each Moose class
+    Moose::Util::TypeConstraints::subtype($pkg 
+        => Moose::Util::TypeConstraints::as Object 
+        => Moose::Util::TypeConstraints::where { $_->isa($pkg) }
+	);	
 
 	my $meta;
 	if ($pkg->can('meta')) {
@@ -71,13 +77,11 @@ sub import {
 			}			
 		}
 		if (exists $options{isa}) {
-			if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
+		    if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
 				$options{type_constraint} = $options{isa};
 			}
 			else {
-				$options{type_constraint} = Moose::Util::TypeConstraints::subtype(
-					Object => Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
-				);			
+                $options{type_constraint} = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
 			}
 		}
 		$meta->add_attribute($name, %options) 
@@ -122,8 +126,8 @@ Moose - Moose, it's the new Camel
   package Point;
   use Moose;
   	
-  has 'x' => (isa => Int(), is => 'rw');
-  has 'y' => (isa => Int(), is => 'rw');
+  has 'x' => (isa => 'Int', is => 'rw');
+  has 'y' => (isa => 'Int', is => 'rw');
   
   sub clear {
       my $self = shift;
@@ -136,7 +140,7 @@ Moose - Moose, it's the new Camel
   
   extends 'Point';
   
-  has 'z' => (isa => Int());
+  has 'z' => (isa => 'Int');
   
   after 'clear' => sub {
       my $self = shift;

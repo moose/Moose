@@ -42,17 +42,17 @@ BEGIN {
             /^$RE{zip}{US}{-extended => 'allow'}$/            
         };
     
-    has 'street'   => (is => 'rw', isa => Str());
-    has 'city'     => (is => 'rw', isa => Str());
-    has 'state'    => (is => 'rw', isa => USState());
-    has 'zip_code' => (is => 'rw', isa => USZipCode());   
+    has 'street'   => (is => 'rw', isa => 'Str');
+    has 'city'     => (is => 'rw', isa => 'Str');
+    has 'state'    => (is => 'rw', isa => 'USState');
+    has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
     
     package Company;
     use strict;
     use warnings;
     use Moose;
     
-    has 'name'      => (is => 'rw', isa => Str());
+    has 'name'      => (is => 'rw', isa => 'Str');
     has 'address'   => (is => 'rw', isa => 'Address'); 
     has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
         ($_->isa('Employee') || return) for @$_; 1 
@@ -74,9 +74,9 @@ BEGIN {
     use warnings;
     use Moose;
     
-    has 'first_name'     => (is => 'rw', isa => Str());
-    has 'last_name'      => (is => 'rw', isa => Str());       
-    has 'middle_initial' => (is => 'rw', isa => Str(), predicate => 'has_middle_initial');  
+    has 'first_name'     => (is => 'rw', isa => 'Str');
+    has 'last_name'      => (is => 'rw', isa => 'Str');       
+    has 'middle_initial' => (is => 'rw', isa => 'Str', predicate => 'has_middle_initial');  
     has 'address'        => (is => 'rw', isa => 'Address');
     
     sub full_name {
@@ -93,7 +93,7 @@ BEGIN {
     
     extends 'Person';
     
-    has 'title'   => (is => 'rw', isa => Str());
+    has 'title'   => (is => 'rw', isa => 'Str');
     has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
 }
 

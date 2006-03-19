@@ -14,60 +14,75 @@ sub import {
 	my $pkg = shift || caller();
 	return if $pkg eq ':no_export';
 	no strict 'refs';
-	foreach my $export (qw(
-		type subtype as where
-		)) {
+	foreach my $export (qw(type subtype coerce as where to)) {
 		*{"${pkg}::${export}"} = \&{"${export}"};
-	}
-	
-	foreach my $constraint (qw(
-		Any 
-		Value Ref
-		Str Int
-		ScalarRef ArrayRef HashRef CodeRef RegexpRef
-		Object
-		)) {
-		*{"${pkg}::${constraint}"} = \&{"${constraint}"};
 	}	
-	
 }
 
-my %TYPES;
+{
+    my %TYPES;
+    sub find_type_constraint { 
+        my $type_name = shift;
+        $TYPES{$type_name}; 
+    }
 
-#sub find_type_constraint { $TYPES{$_[0]} }
+    sub register_type_constraint { 
+        my ($type_name, $type_constraint) = @_;
+        $TYPES{$type_name} = $type_constraint;
+    }
+    
+    sub export_type_contstraints_as_functions {
+        my $pkg = caller();
+	    no strict 'refs';
+    	foreach my $constraint (keys %TYPES) {
+    		*{"${pkg}::${constraint}"} = $TYPES{$constraint};
+    	}        
+    }
+}
+
+{
+    my %COERCIONS;
+    sub find_type_coercion { 
+        my $type_name = shift;
+        $COERCIONS{$type_name}; 
+    }
+
+    sub register_type_coercion { 
+        my ($type_name, $type_coercion) = @_;
+        $COERCIONS{$type_name} = $type_coercion;
+    }
+}
+
 
 sub type ($$) {
 	my ($name, $check) = @_;
-	my $pkg = caller();
-	my $full_name = "${pkg}::${name}";
-	no strict 'refs';
-	*{$full_name} = $TYPES{$name} = subname $full_name => sub { 
-		return $TYPES{$name} unless defined $_[0];
+	my $full_name = caller() . "::${name}";
+	register_type_constraint($name => subname $full_name => sub { 
+		return find_type_constraint($name) unless defined $_[0];
 		local $_ = $_[0];
 		return undef unless $check->($_[0]);
 		$_[0];
-	};
+	});
 }
 
 sub subtype ($$;$) {
 	my ($name, $parent, $check) = @_;
 	if (defined $check) {
-		my $pkg = caller();
-		my $full_name = "${pkg}::${name}";		
-		no strict 'refs';
-		$parent = $TYPES{$parent} unless $parent && ref($parent) eq 'CODE';
-		*{$full_name} = $TYPES{$name} = subname $full_name => sub { 
-			return $TYPES{$name} unless defined $_[0];			
+	    my $full_name = caller() . "::${name}";
+		$parent = find_type_constraint($parent) 
+		    unless $parent && ref($parent) eq 'CODE';
+		register_type_constraint($name => subname $full_name => sub { 
+			return find_type_constraint($name) unless defined $_[0];			
 			local $_ = $_[0];
 			return undef unless defined $parent->($_[0]) && $check->($_[0]);
 			$_[0];
-		};	
+		});	
 	}
 	else {
 		($parent, $check) = ($name, $parent);
-		$parent = $TYPES{$parent} unless $parent && ref($parent) eq 'CODE';		
-		return subname '__anon_subtype__' => sub { 
-			return $TYPES{$name} unless defined $_[0];			
+		$parent = find_type_constraint($parent) 
+		    unless $parent && ref($parent) eq 'CODE';		
+		return subname '__anon_subtype__' => sub { 			
 			local $_ = $_[0];
 			return undef unless defined $parent->($_[0]) && $check->($_[0]);
 			$_[0];
@@ -75,8 +90,16 @@ sub subtype ($$;$) {
 	}
 }
 
+sub coerce {
+    my ($type_name, %coercion_map) = @_;
+    register_type_coercion($type_name, sub { 
+        %coercion_map 
+    });
+}
+
 sub as    ($) { $_[0] }
 sub where (&) { $_[0] }
+sub to    (&) { $_[0] }
 
 # define some basic types
 
@@ -153,6 +176,22 @@ Suggestions for improvement are welcome.
     
 =head1 FUNCTIONS
 
+=head2 Type Constraint Registry
+
+=over 4
+
+=item B<find_type_constraint ($type_name)>
+
+=item B<register_type_constraint ($type_name, $type_constraint)>
+
+=item B<find_type_coercion>
+
+=item B<register_type_coercion>
+
+=item B<export_type_contstraints_as_functions>
+
+=back
+
 =head2 Type Constraint Constructors
 
 =over 4
@@ -164,6 +203,10 @@ Suggestions for improvement are welcome.
 =item B<as>
 
 =item B<where>
+
+=item B<coerce>
+
+=item B<to>
 
 =back
 

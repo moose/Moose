@@ -16,7 +16,7 @@ BEGIN {
 	use warnings;
     use Moose;
     
-    has 'balance' => (isa => Int(), is => 'rw', default => 0);
+    has 'balance' => (isa => 'Int', is => 'rw', default => 0);
 
     sub deposit {
         my ($self, $amount) = @_;

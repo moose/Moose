@@ -16,8 +16,8 @@ BEGIN {
 	use warnings;	
 	use Moose;
 		
-	has 'x' => (isa => Int(), is => 'ro');
-	has 'y' => (isa => Int(), is => 'rw');
+	has 'x' => (isa => 'Int', is => 'ro');
+	has 'y' => (isa => 'Int', is => 'rw');
 	
 	sub clear {
 	    my $self = shift;
@@ -32,7 +32,7 @@ BEGIN {
 	
 	extends 'Point';
 	
-	has 'z' => (isa => Int());
+	has 'z' => (isa => 'Int');
 	
 	after 'clear' => sub {
 	    my $self = shift;
