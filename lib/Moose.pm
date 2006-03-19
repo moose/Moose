@@ -77,11 +77,22 @@ sub import {
 			}			
 		}
 		if (exists $options{isa}) {
+		    # allow for anon-subtypes here ...
 		    if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
 				$options{type_constraint} = $options{isa};
 			}
 			else {
-                $options{type_constraint} = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+			    # otherwise assume it is a constraint
+			    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+			    # if the constraing it not found ....
+			    unless (defined $constraint) {
+			        # assume it is a foreign class, and make 
+			        # an anon constraint for it 
+			        $constraint = Moose::Util::TypeConstraints::subtype(
+			            Object => Moose::Util::TypeConstraints::where { $_->isa($constraint) }
+                	);
+			    }
+                $options{type_constraint} = $constraint;
 			}
 		}
 		$meta->add_attribute($name, %options) 
@@ -210,6 +221,14 @@ this module would not be possible (and it wouldn't have a name).
 
 =item The basis of the TypeContraints module was Rob Kinyon's idea 
 originally, I just ran with it.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<http://forum2.org/moose/>
 
 =back
 

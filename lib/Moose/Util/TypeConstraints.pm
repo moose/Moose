@@ -4,6 +4,7 @@ package Moose::Util::TypeConstraints;
 use strict;
 use warnings;
 
+use Carp         'confess';
 use Sub::Name    'subname';
 use Scalar::Util 'blessed';
 
@@ -91,9 +92,24 @@ sub subtype ($$;$) {
 }
 
 sub coerce {
-    my ($type_name, %coercion_map) = @_;
+    my ($type_name, @coercion_map) = @_;
+    my @coercions;
+    while (@coercion_map) {
+        my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
+        my $constraint = find_type_constraint($constraint_name);
+        (defined $constraint)
+            || confess "Could not find the type constraint ($constraint_name)";
+        push @coercions => [  $constraint, $action ];
+    }
     register_type_coercion($type_name, sub { 
-        %coercion_map 
+        my $thing = shift;
+        foreach my $coercion (@coercions) {
+            my ($constraint, $converter) = @$coercion;
+            if (defined $constraint->($thing)) {
+                return $converter->($thing);
+            }
+        }
+        return $thing;
     });
 }
 
