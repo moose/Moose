@@ -65,7 +65,6 @@ sub type ($$) {
 	my ($name, $check) = @_;
 	my $full_name = caller() . "::${name}";
 	register_type_constraint($name => subname $full_name => sub { 
-		return find_type_constraint($name) unless defined $_[0];
 		local $_ = $_[0];
 		return undef unless $check->($_[0]);
 		$_[0];
@@ -78,8 +77,7 @@ sub subtype ($$;$) {
 	    my $full_name = caller() . "::${name}";
 		$parent = find_type_constraint($parent) 
 		    unless $parent && ref($parent) eq 'CODE';
-		register_type_constraint($name => subname $full_name => sub { 
-			return find_type_constraint($name) unless defined $_[0];			
+		register_type_constraint($name => subname $full_name => sub { 			
 			local $_ = $_[0];
 			return undef unless defined $parent->($_[0]) && $check->($_[0]);
 			$_[0];
@@ -168,6 +166,10 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
   subtype NaturalLessThanTen 
       => as Natural
       => where { $_ < 10 };
+      
+  coerce Num 
+      => as Str
+        => to { 0+$_ }; 
 
 =head1 DESCRIPTION
 
@@ -176,10 +178,6 @@ to be are used in both attribute definitions and for method argument
 validation. 
 
 This is B<NOT> a type system for Perl 5.
-
-The type and subtype constraints are basically functions which will 
-validate their first argument. If called with no arguments, they will 
-return themselves (this is syntactic sugar for Moose attributes).
 
 This module also provides a simple hierarchy for Perl 5 types, this 
 could probably use some work, but it works for me at the moment.
