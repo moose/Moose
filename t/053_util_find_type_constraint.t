@@ -10,8 +10,6 @@ BEGIN {
 	use_ok('Moose::Util::TypeConstraints', (':no_export'));
 }
 
-*find_type_constraint = \&Moose::Util::TypeConstraints::find_type_constraint;
-
 foreach my $type_name (qw(
     Any
         Value
@@ -25,5 +23,7 @@ foreach my $type_name (qw(
             RegexpRef
             Object    
     )) {
-    is(find_type_constraint($type_name)->name, $type_name, '... got the right name for ' . $type_name);
+    is(Moose::Util::TypeConstraints::find_type_constraint($type_name)->name, 
+       $type_name, 
+       '... got the right name for ' . $type_name);
 }
