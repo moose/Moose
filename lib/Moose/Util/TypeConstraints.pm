@@ -29,6 +29,8 @@ sub import {
 
     sub register_type_constraint { 
         my ($type_name, $type_constraint) = @_;
+        (not exists $TYPES{$type_name})
+            || confess "The type constraint '$type_name' has already been registered";
         $TYPES{$type_name} = $type_constraint;
     }
     
@@ -56,6 +58,8 @@ sub import {
 
     sub register_type_coercion { 
         my ($type_name, $type_coercion) = @_;
+        (not exists $COERCIONS{$type_name})
+            || confess "The type coercion for '$type_name' has already been registered";        
         $COERCIONS{$type_name} = $type_coercion;
     }
 }

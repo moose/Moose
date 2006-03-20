@@ -228,6 +228,9 @@ this module would not be possible (and it wouldn't have a name).
 =item The basis of the TypeContraints module was Rob Kinyon's idea 
 originally, I just ran with it.
 
+=item Much love to mst & chansen and the whole #moose poose for all the 
+ideas/feature-requests/encouragement
+
 =back
 
 =head1 SEE ALSO
