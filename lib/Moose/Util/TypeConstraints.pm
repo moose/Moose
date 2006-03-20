@@ -39,12 +39,6 @@ sub import {
         );
     }
     
-    sub dump_type_constraints {
-        require Data::Dumper;
-        $Data::Dumper::Deparse = 1;
-        Data::Dumper::Dumper(\%TYPES);
-    }
-    
     sub export_type_contstraints_as_functions {
         my $pkg = caller();
 	    no strict 'refs';

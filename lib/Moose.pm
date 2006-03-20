@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/CPAN/Class-MOP/Class-MOP/lib';
-
 package Moose;
 
 use strict;
@@ -18,9 +16,10 @@ use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::Attribute;
+use Moose::Meta::TypeConstraint;
 
 use Moose::Object;
-use Moose::Util::TypeConstraints ':no_export';
+use Moose::Util::TypeConstraints;
 
 sub import {
 	shift;
@@ -32,10 +31,9 @@ sub import {
 	Moose::Util::TypeConstraints->import($pkg);
 	
 	# make a subtype for each Moose class
-    Moose::Util::TypeConstraints::subtype($pkg 
-        => Moose::Util::TypeConstraints::as Object 
-        => Moose::Util::TypeConstraints::where { $_->isa($pkg) }
-	);	
+    subtype $pkg 
+        => as Object 
+        => where { $_->isa($pkg) };	
 
 	my $meta;
 	if ($pkg->can('meta')) {
@@ -79,27 +77,25 @@ sub import {
 		if (exists $options{isa}) {
 		    # allow for anon-subtypes here ...
 		    if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
-				$options{type_constraint} = $options{isa};
+				$options{type_constraint} = Moose::Meta::TypeConstraint->new(
+				    name            => '__ANON__',
+				    constraint_code => $options{isa}
+				);
 			}
 			else {
 			    # otherwise assume it is a constraint
-			    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa})->constraint_code;
+			    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
 			    # if the constraing it not found ....
 			    unless (defined $constraint) {
 			        # assume it is a foreign class, and make 
 			        # an anon constraint for it 
-			        $constraint = Moose::Util::TypeConstraints::subtype(
-			            Object => Moose::Util::TypeConstraints::where { $_->isa($constraint) }
-                	);
-			    }
+			        $constraint = Moose::Meta::TypeConstraint->new(
+    				    name            => '__ANON__',
+    				    constraint_code => subtype Object => where { $_->isa($constraint) }
+			        );
+			    }			    
                 $options{type_constraint} = $constraint;
 			}
-		}
-		if (exists $options{coerce} && $options{coerce} && $options{isa}) {
-		    my $coercion = Moose::Util::TypeConstraints::find_type_coercion($options{isa});
-		    (defined $coercion)
-		        || confess "Cannot find coercion for type " . $options{isa};
-		    $options{coerce} = $coercion;
 		}
 		$meta->add_attribute($name, %options) 
 	});

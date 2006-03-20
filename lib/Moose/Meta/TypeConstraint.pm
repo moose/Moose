@@ -25,9 +25,7 @@ Moose::Meta::TypeConstraint->meta->add_attribute(
     ))	
 );
 
-sub new    { (shift)->meta->new_object(@_)  }
-sub check  { (shift)->constraint_code->(@_) }
-sub coerce { (shift)->coercion_code->(@_)   }
+sub new { return (shift)->meta->new_object(@_)  }
 
 1;
 

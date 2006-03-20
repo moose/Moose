@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 55;
 use Test::Exception;
 
 BEGIN {
@@ -144,6 +144,14 @@ foreach my $method (@Point_methods) {
 	ok(Point->meta->has_method($method), '... Point has the method "' . $method . '"');
 }
 
+foreach my $attr_name (@Point_attrs ) {
+	ok(Point->meta->has_attribute($attr_name), '... Point has the attribute "' . $attr_name . '"');    
+    my $attr = Point->meta->get_attribute($attr_name);
+	ok($attr->has_type_constraint, '... Attribute ' . $attr_name . ' has a type constraint');
+	isa_ok($attr->type_constraint, 'Moose::Meta::TypeConstraint');	
+    is($attr->type_constraint->name, 'Int', '... Attribute ' . $attr_name . ' has an Int type constraint');	
+}
+
 # poke at Point3D
 
 is_deeply(
@@ -166,4 +174,12 @@ is_deeply(
 
 foreach my $method (@Point3D_methods) {
 	ok(Point3D->meta->has_method($method), '... Point3D has the method "' . $method . '"');
+}
+
+foreach my $attr_name (@Point3D_attrs ) {
+	ok(Point3D->meta->has_attribute($attr_name), '... Point3D has the attribute "' . $attr_name . '"');    
+    my $attr = Point3D->meta->get_attribute($attr_name);
+	ok($attr->has_type_constraint, '... Attribute ' . $attr_name . ' has a type constraint');
+	isa_ok($attr->type_constraint, 'Moose::Meta::TypeConstraint');	
+    is($attr->type_constraint->name, 'Int', '... Attribute ' . $attr_name . ' has an Int type constraint');	
 }
