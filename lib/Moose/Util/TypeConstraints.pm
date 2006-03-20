@@ -112,6 +112,7 @@ sub coerce ($@) {
         foreach my $coercion (@coercions) {
             my ($constraint, $converter) = @$coercion;
             if (defined $constraint->($thing)) {
+			    local $_ = $thing;                
                 return $converter->($thing);
             }
         }

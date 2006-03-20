@@ -122,12 +122,23 @@ sub generate_writer_method {
 			};
 		}
 		else {
-		    return sub { 
-				(defined $self->type_constraint->($_[1]))
-					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-						if defined $_[1];
-				$_[0]->{$attr_name} = $_[1];
-			};			
+		    if ($self->has_coercion) {	
+    		    return sub { 
+    		        my $val = $self->coerce->($_[1]);
+    				(defined $self->type_constraint->($val))
+    					|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
+    						if defined $val;
+    				$_[0]->{$attr_name} = $val;
+    			};		        
+		    }
+		    else {	    
+    		    return sub { 
+    				(defined $self->type_constraint->($_[1]))
+    					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
+    						if defined $_[1];
+    				$_[0]->{$attr_name} = $_[1];
+    			};	
+    		}		
 		}
 	}
 	else {

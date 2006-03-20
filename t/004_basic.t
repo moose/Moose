@@ -12,7 +12,6 @@ BEGIN {
 }
 
 use Test::Exception;
-
 use Scalar::Util 'isweak';
 
 BEGIN {
