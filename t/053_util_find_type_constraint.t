@@ -3,11 +3,27 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
 	use_ok('Moose::Util::TypeConstraints', (':no_export'));
 }
 
-#diag Moose::Util::TypeConstraints::dump_type_constraints();
+*find_type_constraint = \&Moose::Util::TypeConstraints::find_type_constraint;
+
+foreach my $type_name (qw(
+    Any
+        Value
+            Int
+            Str
+        Ref
+            ScalarRef
+            ArrayRef
+            HashRef
+            CodeRef
+            RegexpRef
+            Object    
+    )) {
+    is(find_type_constraint($type_name)->name, $type_name, '... got the right name for ' . $type_name);
+}

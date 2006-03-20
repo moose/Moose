@@ -26,7 +26,7 @@ sub import {
     my %TYPES;
     sub find_type_constraint { 
         my $type_name = shift;
-        $TYPES{$type_name}->constraint_code; 
+        $TYPES{$type_name}; 
     }
 
     sub register_type_constraint { 
@@ -82,7 +82,7 @@ sub subtype ($$;$) {
 	my ($name, $parent, $check) = @_;
 	if (defined $check) {
 	    my $full_name = caller() . "::${name}";
-		$parent = find_type_constraint($parent) 
+		$parent = find_type_constraint($parent)->constraint_code 
 		    unless $parent && ref($parent) eq 'CODE';
 		register_type_constraint($name => subname $full_name => sub { 			
 			local $_ = $_[0];
@@ -92,7 +92,7 @@ sub subtype ($$;$) {
 	}
 	else {
 		($parent, $check) = ($name, $parent);
-		$parent = find_type_constraint($parent) 
+		$parent = find_type_constraint($parent)->constraint_code 
 		    unless $parent && ref($parent) eq 'CODE';		
 		return subname '__anon_subtype__' => sub { 			
 			local $_ = $_[0];
@@ -109,7 +109,7 @@ sub coerce ($@) {
     my @coercions;
     while (@coercion_map) {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
-        my $constraint = find_type_constraint($constraint_name);
+        my $constraint = find_type_constraint($constraint_name)->constraint_code;
         (defined $constraint)
             || confess "Could not find the type constraint ($constraint_name)";
         push @coercions => [  $constraint, $action ];
