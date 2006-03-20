@@ -102,5 +102,16 @@ isa_ok($r, 'Request');
     } '... dies when it gets bad params';
 }
 
+{
+    is($r->protocol, undef, '... got nothing by default');
 
+    lives_ok {
+        $r->protocol('HTTP/1.0');
+    } '... set the protocol correctly';
+    is($r->protocol, 'HTTP/1.0', '... got nothing by default');
+            
+    dies_ok {
+        $r->protocol('http/1.0');
+    } '... the protocol died with bar params correctly';            
+}
 

@@ -10,6 +10,8 @@ use Scalar::Util 'blessed';
 
 our $VERSION = '0.02';
 
+use Moose::Meta::TypeConstraint;
+
 sub import {
 	shift;
 	my $pkg = shift || caller();
@@ -24,14 +26,17 @@ sub import {
     my %TYPES;
     sub find_type_constraint { 
         my $type_name = shift;
-        $TYPES{$type_name}; 
+        $TYPES{$type_name}->constraint_code; 
     }
 
     sub register_type_constraint { 
         my ($type_name, $type_constraint) = @_;
         (not exists $TYPES{$type_name})
             || confess "The type constraint '$type_name' has already been registered";
-        $TYPES{$type_name} = $type_constraint;
+        $TYPES{$type_name} = Moose::Meta::TypeConstraint->new(
+            name            => $type_name,
+            constraint_code => $type_constraint
+        );
     }
     
     sub dump_type_constraints {
@@ -44,23 +49,21 @@ sub import {
         my $pkg = caller();
 	    no strict 'refs';
     	foreach my $constraint (keys %TYPES) {
-    		*{"${pkg}::${constraint}"} = $TYPES{$constraint};
+    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->constraint_code;
     	}        
     }
-}
 
-{
-    my %COERCIONS;
     sub find_type_coercion { 
         my $type_name = shift;
-        $COERCIONS{$type_name}; 
+        $TYPES{$type_name}->coercion_code; 
     }
 
     sub register_type_coercion { 
         my ($type_name, $type_coercion) = @_;
-        (not exists $COERCIONS{$type_name})
+        my $type = $TYPES{$type_name};
+        (!$type->has_coercion)
             || confess "The type coercion for '$type_name' has already been registered";        
-        $COERCIONS{$type_name} = $type_coercion;
+        $type->set_coercion_code($type_coercion);
     }
 }
 
