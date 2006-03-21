@@ -76,11 +76,8 @@ sub import {
 		}
 		if (exists $options{isa}) {
 		    # allow for anon-subtypes here ...
-		    if (reftype($options{isa}) && reftype($options{isa}) eq 'CODE') {
-				$options{type_constraint} = Moose::Meta::TypeConstraint->new(
-				    name            => '__ANON__',
-				    constraint_code => $options{isa}
-				);
+		    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
+				$options{type_constraint} = $options{isa};
 			}
 			else {
 			    # otherwise assume it is a constraint
@@ -89,10 +86,7 @@ sub import {
 			    unless (defined $constraint) {
 			        # assume it is a foreign class, and make 
 			        # an anon constraint for it 
-			        $constraint = Moose::Meta::TypeConstraint->new(
-    				    name            => '__ANON__',
-    				    constraint_code => subtype Object => where { $_->isa($constraint) }
-			        );
+			        $constraint = subtype Object => where { $_->isa($options{isa}) };
 			    }			    
                 $options{type_constraint} = $constraint;
 			}

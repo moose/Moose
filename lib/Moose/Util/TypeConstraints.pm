@@ -30,21 +30,15 @@ sub import {
     }
 
     sub register_type_constraint { 
-        my ($type_name, $type_constraint) = @_;
-        (not exists $TYPES{$type_name})
-            || confess "The type constraint '$type_name' has already been registered";
-        $TYPES{$type_name} = Moose::Meta::TypeConstraint->new(
-            name            => $type_name,
-            constraint_code => $type_constraint
+        my ($name, $parent, $constraint) = @_;
+        (not exists $TYPES{$name})
+            || confess "The type constraint '$name' has already been registered";
+        $parent = find_type_constraint($parent) if defined $parent;
+        $TYPES{$name} = Moose::Meta::TypeConstraint->new(
+            name       => $name,
+            parent     => $parent,            
+            constraint => $constraint,           
         );
-    }
-    
-    sub export_type_contstraints_as_functions {
-        my $pkg = caller();
-	    no strict 'refs';
-    	foreach my $constraint (keys %TYPES) {
-    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->constraint_code;
-    	}        
     }
 
     sub find_type_coercion { 
@@ -59,47 +53,40 @@ sub import {
             || confess "The type coercion for '$type_name' has already been registered";        
         $type->set_coercion_code($type_coercion);
     }
+    
+    sub export_type_contstraints_as_functions {
+        my $pkg = caller();
+	    no strict 'refs';
+    	foreach my $constraint (keys %TYPES) {
+    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->constraint_code;
+    	}        
+    }    
 }
 
 
 sub type ($$) {
 	my ($name, $check) = @_;
-	my $full_name = caller() . "::${name}";
-	register_type_constraint($name => subname $full_name => sub { 
-		local $_ = $_[0];
-		return undef unless $check->($_[0]);
-		$_[0];
-	});
+	register_type_constraint($name, undef, $check);
 }
 
 sub subtype ($$;$) {
-	my ($name, $parent, $check) = @_;
-	if (defined $check) {
-	    my $full_name = caller() . "::${name}";
-		$parent = find_type_constraint($parent)->constraint_code 
-		    unless $parent && ref($parent) eq 'CODE';
-		register_type_constraint($name => subname $full_name => sub { 			
-			local $_ = $_[0];
-			return undef unless defined $parent->($_[0]) && $check->($_[0]);
-			$_[0];
-		});	
+	if (scalar @_ == 3) {
+	    my ($name, $parent, $check) = @_;
+		register_type_constraint($name, $parent, $check);	
 	}
 	else {
-		($parent, $check) = ($name, $parent);
-		$parent = find_type_constraint($parent)->constraint_code 
-		    unless $parent && ref($parent) eq 'CODE';		
-		return subname '__anon_subtype__' => sub { 			
-			local $_ = $_[0];
-			return undef unless defined $parent->($_[0]) && $check->($_[0]);
-			$_[0];
-		};		
+		my ($parent, $check) = @_;
+		$parent = find_type_constraint($parent);
+        return Moose::Meta::TypeConstraint->new(
+            name       => '__ANON__',
+            parent     => $parent,
+            constraint => $check,
+        );
 	}
 }
 
 sub coerce ($@) {
-    my ($type_name, @coercion_map) = @_;
-    #use Data::Dumper;
-    #warn Dumper \@coercion_map;    
+    my ($type_name, @coercion_map) = @_;   
     my @coercions;
     while (@coercion_map) {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);

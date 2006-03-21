@@ -27,7 +27,7 @@ sub construct_instance {
     		        $val = $attr->type_constraint->coercion_code->($val);
     		    }	
                 (defined($attr->type_constraint->constraint_code->($val))) 
-                    || confess "Attribute (" . $attr->name . ") does not pass the type contraint with";			
+                    || confess "Attribute (" . $attr->name . ") does not pass the type contraint with '$val'";			
             }
 		}
         $instance->{$attr->name} = $val;
