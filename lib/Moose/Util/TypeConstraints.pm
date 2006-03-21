@@ -24,15 +24,12 @@ sub import {
 
 {
     my %TYPES;
-    sub find_type_constraint { 
-        my $type_name = shift;
-        $TYPES{$type_name}; 
-    }
+    sub find_type_constraint { $TYPES{$_[0]} }
 
-    sub register_type_constraint { 
+    sub create_type_constraint { 
         my ($name, $parent, $constraint) = @_;
         (not exists $TYPES{$name})
-            || confess "The type constraint '$name' has already been registered";
+            || confess "The type constraint '$name' has already been created";
         $parent = find_type_constraint($parent) if defined $parent;
         $TYPES{$name} = Moose::Meta::TypeConstraint->new(
             name       => $name,
@@ -66,13 +63,13 @@ sub import {
 
 sub type ($$) {
 	my ($name, $check) = @_;
-	register_type_constraint($name, undef, $check);
+	create_type_constraint($name, undef, $check);
 }
 
 sub subtype ($$;$) {
 	if (scalar @_ == 3) {
 	    my ($name, $parent, $check) = @_;
-		register_type_constraint($name, $parent, $check);	
+		create_type_constraint($name, $parent, $check);	
 	}
 	else {
 		my ($parent, $check) = @_;
@@ -194,7 +191,7 @@ Suggestions for improvement are welcome.
 
 =item B<find_type_constraint ($type_name)>
 
-=item B<register_type_constraint ($type_name, $type_constraint)>
+=item B<create_type_constraint ($type_name, $type_constraint)>
 
 =item B<find_type_coercion>
 

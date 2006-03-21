@@ -7,13 +7,10 @@ use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
 
-use Carp 'confess';
-
 our $VERSION = '0.02';
 
 sub new {
-    my $class  = shift;
-	my %params = @_;
+	my ($class, %params) = @_;
 	my $self = $class->meta->new_object(%params);
 	$self->BUILDALL(%params);
 	return $self;

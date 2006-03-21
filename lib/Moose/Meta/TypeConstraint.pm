@@ -10,8 +10,6 @@ use Carp      'confess';
 
 our $VERSION = '0.01';
 
-my %TYPE_CONSTRAINT_REGISTRY;
-
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
 __PACKAGE__->meta->add_attribute('constraint' => (reader => 'constraint'));

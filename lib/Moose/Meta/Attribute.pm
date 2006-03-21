@@ -7,38 +7,26 @@ use warnings;
 use Scalar::Util 'weaken', 'reftype';
 use Carp         'confess';
 
-use Moose::Util::TypeConstraints ':no_export';
-
 our $VERSION = '0.02';
 
 use base 'Class::MOP::Attribute';
 
-Moose::Meta::Attribute->meta->add_attribute(
-    Class::MOP::Attribute->new('coerce' => (
-        reader    => 'coerce',
-        predicate => {
-			'has_coercion' => sub { $_[0]->coerce() ? 1 : 0 }
-		}
-    ))	
-);
+__PACKAGE__->meta->add_attribute('coerce' => (
+    reader    => 'coerce',
+    predicate => { 'has_coercion' => sub { $_[0]->coerce() ? 1 : 0 } }
+));
 
-Moose::Meta::Attribute->meta->add_attribute(
-    Class::MOP::Attribute->new('weak_ref' => (
-        reader    => 'weak_ref',
-        predicate => {
-			'has_weak_ref' => sub { $_[0]->weak_ref() ? 1 : 0 }
-		}
-    ))	
-);
+__PACKAGE__->meta->add_attribute('weak_ref' => (
+    reader    => 'weak_ref',
+    predicate => { 'has_weak_ref' => sub { $_[0]->weak_ref() ? 1 : 0 } }
+));
 
-Moose::Meta::Attribute->meta->add_attribute(
-    Class::MOP::Attribute->new('type_constraint' => (
-        reader    => 'type_constraint',
-        predicate => 'has_type_constraint',
-    ))	
-);
+__PACKAGE__->meta->add_attribute('type_constraint' => (
+    reader    => 'type_constraint',
+    predicate => 'has_type_constraint',
+));
 
-Moose::Meta::Attribute->meta->add_before_method_modifier('new' => sub {
+__PACKAGE__->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
 	if (exists $options{coerce} && $options{coerce}) {
 	    (exists $options{type_constraint})
