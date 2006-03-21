@@ -11,6 +11,7 @@ use Scalar::Util 'blessed';
 our $VERSION = '0.02';
 
 use Moose::Meta::TypeConstraint;
+use Moose::Meta::TypeCoercion;
 
 sub import {
 	shift;

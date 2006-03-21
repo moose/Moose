@@ -11,20 +11,15 @@ our $VERSION = '0.02';
 
 use base 'Class::MOP::Attribute';
 
-__PACKAGE__->meta->add_attribute('coerce' => (
-    reader    => 'coerce',
-    predicate => { 'has_coercion' => sub { $_[0]->coerce() ? 1 : 0 } }
-));
-
-__PACKAGE__->meta->add_attribute('weak_ref' => (
-    reader    => 'weak_ref',
-    predicate => { 'has_weak_ref' => sub { $_[0]->weak_ref() ? 1 : 0 } }
-));
-
+__PACKAGE__->meta->add_attribute('coerce'          => (reader => 'coerce'));
+__PACKAGE__->meta->add_attribute('weak_ref'        => (reader => 'weak_ref'));
 __PACKAGE__->meta->add_attribute('type_constraint' => (
     reader    => 'type_constraint',
     predicate => 'has_type_constraint',
 ));
+
+sub has_coercion { (shift)->coerce()   ? 1 : 0 }
+sub has_weak_ref { (shift)->weak_ref() ? 1 : 0 }
 
 __PACKAGE__->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
