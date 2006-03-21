@@ -23,7 +23,7 @@ sub construct_instance {
         $val ||= $attr->default($instance) if $attr->has_default; 
 		if (defined $val) {
 		    if ($attr->has_type_constraint) {
-    		    if ($attr->has_coercion && $attr->type_constraint->has_coercion) {
+    		    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
     		        $val = $attr->type_constraint->coercion->coerce($val);
     		    }	
                 (defined($attr->type_constraint->check($val))) 

@@ -15,6 +15,7 @@ use Moose::Meta::TypeCoercion;
 sub import {
 	shift;
 	my $pkg = shift || caller();
+	return if $pkg eq '-no-export';
 	no strict 'refs';
 	foreach my $export (qw(type subtype as where coerce from via find_type_constraint)) {
 		*{"${pkg}::${export}"} = \&{"${export}"};

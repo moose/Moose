@@ -18,8 +18,8 @@ __PACKAGE__->meta->add_attribute('type_constraint' => (
     predicate => 'has_type_constraint',
 ));
 
-sub has_coercion { (shift)->coerce()   ? 1 : 0 }
-sub has_weak_ref { (shift)->weak_ref() ? 1 : 0 }
+sub should_coerce { (shift)->coerce()   ? 1 : 0 }
+sub is_weak_ref   { (shift)->weak_ref() ? 1 : 0 }
 
 __PACKAGE__->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
@@ -34,7 +34,7 @@ __PACKAGE__->meta->add_before_method_modifier('new' => sub {
 sub generate_accessor_method {
     my ($self, $attr_name) = @_;
 	if ($self->has_type_constraint) {
-		if ($self->has_weak_ref) {
+		if ($self->is_weak_ref) {
 		    return sub {
 				if (scalar(@_) == 2) {
 					(defined $self->type_constraint->check($_[1]))
@@ -47,7 +47,7 @@ sub generate_accessor_method {
 		    };			
 		}
 		else {
-		    if ($self->has_coercion) {
+		    if ($self->should_coerce) {
     		    return sub {
     				if (scalar(@_) == 2) {
     				    my $val = $self->type_constraint->coercion->coerce($_[1]);
@@ -73,7 +73,7 @@ sub generate_accessor_method {
 		}	
 	}
 	else {
-		if ($self->has_weak_ref) {
+		if ($self->is_weak_ref) {
 		    return sub {
 				if (scalar(@_) == 2) {
 			        $_[0]->{$attr_name} = $_[1];
@@ -94,7 +94,7 @@ sub generate_accessor_method {
 sub generate_writer_method {
     my ($self, $attr_name) = @_; 
 	if ($self->has_type_constraint) {
-		if ($self->has_weak_ref) {
+		if ($self->is_weak_ref) {
 		    return sub { 
 				(defined $self->type_constraint->check($_[1]))
 					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
@@ -104,7 +104,7 @@ sub generate_writer_method {
 			};
 		}
 		else {
-		    if ($self->has_coercion) {	
+		    if ($self->should_coerce) {	
     		    return sub { 
     		        my $val = $self->type_constraint->coercion->coerce($_[1]);
     				(defined $self->type_constraint->check($val))
@@ -124,7 +124,7 @@ sub generate_writer_method {
 		}
 	}
 	else {
-		if ($self->has_weak_ref) {
+		if ($self->is_weak_ref) {
 		    return sub { 
 				$_[0]->{$attr_name} = $_[1];
 				weaken($_[0]->{$attr_name});
@@ -171,13 +171,13 @@ extensions.
 
 =item B<type_constraint>
 
-=item B<has_weak_ref>
+=item B<is_weak_ref>
 
 =item B<weak_ref>
 
 =item B<coerce>
 
-=item B<has_coercion>
+=item B<should_coerce>
 
 =back
 
