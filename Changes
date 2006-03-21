@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.02 
+0.02 Tues. March 21, 2006
     * Moose
       - many more tests, fixing some bugs and  
         edge cases

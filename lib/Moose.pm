@@ -250,7 +250,7 @@ few convience ones provided by Moose which are listed below:
 
 =over 4
 
-=item I<is => 'rw'|'ro'>
+=item I<is =E<gt> 'rw'|'ro'>
 
 The I<is> option accepts either I<rw> (for read/write) or I<ro> (for read 
 only). These will create either a read/write accessor or a read-only 
@@ -259,7 +259,7 @@ accessor respectively, using the same name as the C<$name> of the attribute.
 If you need more control over how your accessors are named, you can use the 
 I<reader>, I<writer> and I<accessor> options inherited from L<Moose::Meta::Attribute>.
 
-=item I<isa => $type_name>
+=item I<isa =E<gt> $type_name>
 
 The I<isa> option uses Moose's type constraint facilities to set up runtime 
 type checking for this attribute. Moose will perform the checks during class 
@@ -269,11 +269,11 @@ Moose's type defintion features.
 
 =back
 
-=item B<before $name|@names => sub { ... }>
+=item B<before $name|@names =E<gt> sub { ... }>
 
-=item B<after $name|@names => sub { ... }>
+=item B<after $name|@names =E<gt> sub { ... }>
 
-=item B<around $name|@names => sub { ... }>
+=item B<around $name|@names =E<gt> sub { ... }>
 
 This three items are syntactic sugar for the before, after and around method 
 modifier features that L<Class::MOP> provides. More information on these can 
@@ -300,13 +300,13 @@ C<ref> anywhere you need to test for an object's class name.
 
 =item I blame Audrey Tang for encouraging that meta-crack habit in #perl6.
 
-=item Without the love and encouragement of Yuval "nothingmuch" Kogman, 
-this module would not be possible (and it wouldn't have a name).
+=item Without Yuval "nothingmuch" Kogman this module would not be possible, 
+and it would certainly have a name ;P
 
 =item The basis of the TypeContraints module was Rob Kinyon's idea 
 originally, I just ran with it.
 
-=item Much love to mst & chansen and the whole #moose poose for all the 
+=item Thanks to mst & chansen and the whole #moose poose for all the 
 ideas/feature-requests/encouragement
 
 =back
