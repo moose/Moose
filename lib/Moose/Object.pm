@@ -18,7 +18,7 @@ sub new {
 
 sub BUILDALL {
 	my ($self, %params) = @_;
-	foreach my $method ($self->meta->find_all_methods_by_name('BUILD')) {
+	foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
 		$method->{code}->($self, %params);
 	}
 }
@@ -42,15 +42,24 @@ __END__
 
 Moose::Object - The base object for Moose
 
-=head1 SYNOPSIS 
-
 =head1 DESCRIPTION
+
+This serves as the base object for all Moose classes. Every 
+effort will be made to ensure that all classes which C<use Moose> 
+will inherit from this class. It provides a default constructor 
+and destructor, which run all the BUILD and DEMOLISH methods in 
+the class tree.
+
+You don't actually I<need> to inherit from this in order to 
+use Moose though. It is just here to make life easier.
 
 =head1 METHODS
 
 =over 4
 
 =item B<meta>
+
+This will return the metaclass associated with the given class.
 
 =item B<new>
 
@@ -63,8 +72,6 @@ This will call every C<BUILD> method in the inheritance hierarchy.
 =item B<DEMOLISHALL>
 
 This will call every C<DEMOLISH> method in the inheritance hierarchy.
-
-=item B<NEXT>
 
 =back
 

@@ -4,18 +4,14 @@ Revision history for Perl extension Moose
     * Moose
       - many more tests, fixing some bugs and  
         edge cases
-        
       - &extends now loads the base module with
         UNIVERSAL::require 
         - added UNIVERSAL::require to the 
           dependencies list
-
-      # API CHANGES #
-      
+      ** API CHANGES **
       - each new Moose class will also create 
         and register a subtype of Object which 
         correspond to the new Moose class.      
-      
       - the 'isa' option in &has now only 
         accepts strings, and will DWIM in 
         almost all cases
@@ -25,13 +21,15 @@ Revision history for Perl extension Moose
         - added tests for this
         - added support for this in attributes 
           and instance construction
-          
-      # API CHANGES #          
-          
+      ** API CHANGES **
       - type construction no longer creates a 
         function, it registers the type instead.
         - added several functions to get the 
           registered types 
+
+    * Moose::Object
+      - BUILDALL and DEMOLISHALL were broken 
+        because of a mis-named hash key, Whoops :)
     
     * Moose::Meta::Attribute
       - adding support for coercion in the
@@ -39,12 +37,12 @@ Revision history for Perl extension Moose
         
     * Moose::Meta::Class
       - adding support for coercion in the
-        instance construction        
-    
-    * Moose::Object
-    
-      - BUILDALL and DEMOLISHALL were broken 
-        because of a mis-named hash key, Whoops :)
+        instance construction  
+
+    * Moose::Meta::TypeConstraint
+    * Moose::Meta::TypeCoercion
+	  - type constraints and coercions are now 
+	    full fledges meta-objects
 
 0.01 Wed. March 15, 2006
     - Moooooooooooooooooose!!!

@@ -4,7 +4,8 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
-use Carp 'confess';
+use Carp         'confess';
+use Scalar::Util 'weaken';
 
 our $VERSION = '0.02';
 
@@ -31,6 +32,9 @@ sub construct_instance {
             }
 		}
         $instance->{$attr->name} = $val;
+        if (defined $val && $attr->is_weak_ref) {
+            weaken($instance->{$attr->name});
+        }
     }
     return $instance;
 }
@@ -45,12 +49,15 @@ __END__
 
 Moose::Meta::Class - The Moose metaclass
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
 
 This is a subclass of L<Class::MOP::Class> with Moose specific 
 extensions.
+
+For the most part, the only time you will ever encounter an 
+instance of this class is if you are doing some serious deep 
+introspection. To really understand this class, you need to refer 
+to the L<Class::MOP::Class> documentation.
 
 =head1 METHODS
 
@@ -58,7 +65,12 @@ extensions.
 
 =item B<construct_instance>
 
-=item B<mixed_in>
+This provides some Moose specific extensions to this method, you 
+almost never call this method directly unless you really know what 
+you are doing. 
+
+This method makes sure to handle the moose weak-ref, type-constraint
+and type coercion features. 
 
 =back
 

@@ -205,6 +205,93 @@ more :)
 
 =back
 
+=head1 BUILDING CLASSES WITH MOOSE
+
+Moose makes every attempt to provide as much convience during class 
+construction/definition, but still stay out of your way if you want 
+it to. Here are some of the features Moose provides:
+
+Unless specified with C<extends>, any class which uses Moose will 
+inherit from L<Moose::Object>.
+
+Moose will also manage all attributes (including inherited ones) that 
+are defined with C<has>. And assuming that you call C<new> which is 
+inherited from L<Moose::Object>, then this includes properly initializing 
+all instance slots, setting defaults where approprtiate and performing any 
+type constraint checking or coercion. 
+
+=head1 EXPORTED FUNCTIONS
+
+Moose will export a number of functions into the class's namespace, which 
+can then be used to set up the class. These functions all work directly 
+on the current class.
+
+=over 4
+
+=item B<meta>
+
+This is a method which provides access to the current class's metaclass.
+
+=item B<extends (@superclasses)>
+
+This function will set the superclass(es) for the current class.
+
+This approach is recommended instead of C<use base>, because C<use base> 
+actually C<push>es onto the class's C<@ISA>, whereas C<extends> will 
+replace it. This is important to ensure that classes which do not have 
+superclasses properly inherit from L<Moose::Object>.
+
+=item B<has ($name, %options)>
+
+This will install an attribute of a given C<$name> into the current class. 
+The list of C<%options> are the same as those provided by both 
+L<Class::MOP::Attribute> and L<Moose::Meta::Attribute>, in addition to a 
+few convience ones provided by Moose which are listed below:
+
+=over 4
+
+=item I<is => 'rw'|'ro'>
+
+The I<is> option accepts either I<rw> (for read/write) or I<ro> (for read 
+only). These will create either a read/write accessor or a read-only 
+accessor respectively, using the same name as the C<$name> of the attribute.
+
+If you need more control over how your accessors are named, you can use the 
+I<reader>, I<writer> and I<accessor> options inherited from L<Moose::Meta::Attribute>.
+
+=item I<isa => $type_name>
+
+The I<isa> option uses Moose's type constraint facilities to set up runtime 
+type checking for this attribute. Moose will perform the checks during class 
+construction, and within any accessors. The C<$type_name> argument must be a 
+string. The string can be either a class name, or a type defined using 
+Moose's type defintion features.
+
+=back
+
+=item B<before $name|@names => sub { ... }>
+
+=item B<after $name|@names => sub { ... }>
+
+=item B<around $name|@names => sub { ... }>
+
+This three items are syntactic sugar for the before, after and around method 
+modifier features that L<Class::MOP> provides. More information on these can 
+be found in the L<Class::MOP> documentation for now. 
+
+=item B<confess>
+
+This is the C<Carp::confess> function, and exported here beause I use it 
+all the time. This feature may change in the future, so you have been warned. 
+
+=item B<blessed>
+
+This is the C<Scalar::Uti::blessed> function, it is exported here beause I 
+use it all the time. It is highly recommended that this is used instead of 
+C<ref> anywhere you need to test for an object's class name.
+
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 =over 4
@@ -227,6 +314,10 @@ ideas/feature-requests/encouragement
 =head1 SEE ALSO
 
 =over 4
+
+=item L<Class::MOP> documentation
+
+=item The #moose channel on irc.perl.org
 
 =item L<http://forum2.org/moose/>
 

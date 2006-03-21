@@ -11,15 +11,12 @@ our $VERSION = '0.02';
 
 use base 'Class::MOP::Attribute';
 
-__PACKAGE__->meta->add_attribute('coerce'          => (reader => 'coerce'));
-__PACKAGE__->meta->add_attribute('weak_ref'        => (reader => 'weak_ref'));
+__PACKAGE__->meta->add_attribute('coerce'   => (reader => 'should_coerce'));
+__PACKAGE__->meta->add_attribute('weak_ref' => (reader => 'is_weak_ref'  ));
 __PACKAGE__->meta->add_attribute('type_constraint' => (
     reader    => 'type_constraint',
     predicate => 'has_type_constraint',
 ));
-
-sub should_coerce { (shift)->coerce()   ? 1 : 0 }
-sub is_weak_ref   { (shift)->weak_ref() ? 1 : 0 }
 
 __PACKAGE__->meta->add_before_method_modifier('new' => sub {
 	my (undef, undef, %options) = @_;
@@ -144,16 +141,25 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute - The Moose attribute metaobject
-
-=head1 SYNOPSIS
+Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 DESCRIPTION
 
 This is a subclass of L<Class::MOP::Attribute> with Moose specific 
-extensions.
+extensions. 
+
+For the most part, the only time you will ever encounter an 
+instance of this class is if you are doing some serious deep 
+introspection. To really understand this class, you need to refer 
+to the L<Class::MOP::Attribute> documentation.
 
 =head1 METHODS
+
+=head2 Overridden methods
+
+These methods override methods in L<Class::MOP::Attribute> and add 
+Moose specific features. You can safely assume though that they 
+will behave just as L<Class::MOP::Attribute> does.
 
 =over 4
 
@@ -165,19 +171,30 @@ extensions.
 
 =back
 
+=head2 Additional Moose features
+
+Moose attributes support type-contstraint checking, weak reference 
+creation and type coercion.  
+
 =over 4
 
 =item B<has_type_constraint>
 
+Returns true if this meta-attribute has a type constraint.
+
 =item B<type_constraint>
+
+A read-only accessor for this meta-attribute's type constraint. For 
+more information on what you can do with this, see the documentation 
+for L<Moose::Meta::TypeConstraint>.
 
 =item B<is_weak_ref>
 
-=item B<weak_ref>
-
-=item B<coerce>
+Returns true of this meta-attribute produces a weak reference.
 
 =item B<should_coerce>
+
+Returns true of this meta-attribute should perform type coercion.
 
 =back
 

@@ -65,11 +65,18 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint - The Moose Type Constraint metaobject
-
-=head1 SYNOPSIS
+Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 DESCRIPTION
+
+For the most part, the only time you will ever encounter an 
+instance of this class is if you are doing some serious deep 
+introspection. This API should not be considered final, but 
+it is B<highly unlikely> that this will matter to a regular 
+Moose user.
+
+If you wish to use features at this depth, please come to the 
+#moose IRC channel on irc.perl.org and we can talk :)
 
 =head1 METHODS
 
@@ -79,19 +86,19 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaobject
 
 =item B<new>
 
+=item B<compile_type_constraint>
+
+=item B<check>
+
 =item B<name>
 
 =item B<parent>
-
-=item B<check>
 
 =item B<constraint>
 
 =item B<has_coercion>
 
 =item B<coercion>
-
-=item B<compile_type_constraint>
 
 =back
 

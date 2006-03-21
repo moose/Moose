@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 27;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
@@ -41,6 +41,22 @@ BEGIN {
         my ($self, $tree) = @_;
 	    $tree->parent($self) if defined $tree;   
 	};
+	
+	sub BUILD {
+	    my ($self, %params) = @_;
+	    if ($params{parent}) {
+	        # yeah this is a little 
+	        # weird I know, but I wanted
+	        # to check the weaken stuff 
+	        # in the constructor :)
+	        if ($params{parent}->has_left) {
+	            $params{parent}->right($self);	            
+	        }
+	        else {
+	            $params{parent}->left($self);	            
+	        }
+	    }
+	}
 }
 
 my $root = BinaryTree->new();
@@ -83,3 +99,15 @@ ok($right->has_parent, '... rights has a parent');
 is($right->parent, $root, '... rights parent is the root');
 
 ok(isweak($right->{parent}), '... parent is a weakened ref');
+
+my $left_left = BinaryTree->new(parent => $left);
+isa_ok($left_left, 'BinaryTree');
+
+ok($left_left->has_parent, '... left does have a parent');
+
+is($left_left->parent, $left, '... got a parent node (and it is $left)');
+ok($left->has_left, '... we have a left node now');
+is($left->left, $left_left, '... got a left node (and it is $left_left)');
+
+ok(isweak($left_left->{parent}), '... parent is a weakened ref');
+

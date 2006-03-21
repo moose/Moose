@@ -138,7 +138,16 @@ This module provides Moose with the ability to create type contraints
 to be are used in both attribute definitions and for method argument 
 validation. 
 
-This is B<NOT> a type system for Perl 5.
+=head2 Important Caveat
+
+This is B<NOT> a type system for Perl 5. These are type constraints, 
+and they are not used by Moose unless you tell it to. No type 
+inference is performed, expression are not typed, etc. etc. etc. 
+
+This is simply a means of creating small constraint functions which 
+can be used to simply your own type-checking code.
+
+=head2 Default Type Constraints
 
 This module also provides a simple hierarchy for Perl 5 types, this 
 could probably use some work, but it works for me at the moment.
@@ -155,7 +164,7 @@ could probably use some work, but it works for me at the moment.
           RegexpRef
           Object	
 
-Suggestions for improvement are welcome.	
+Suggestions for improvement are welcome.
     
 =head1 FUNCTIONS
 
@@ -165,59 +174,72 @@ Suggestions for improvement are welcome.
 
 =item B<find_type_constraint ($type_name)>
 
-=item B<_create_type_constraint ($type_name, $type_constraint)>
-
-=item B<_install_type_coercions>
+This function can be used to locate a specific type constraint 
+meta-object. What you do with it from there is up to you :)
 
 =item B<export_type_contstraints_as_functions>
+
+This will export all the current type constraints as functions 
+into the caller's namespace. Right now, this is mostly used for 
+testing, but it might prove useful to others.
 
 =back
 
 =head2 Type Constraint Constructors
 
+The following functions are used to create type constraints. 
+They will then register the type constraints in a global store 
+where Moose can get to them if it needs to. 
+
+See the L<SYNOPOSIS> for an example of how to use these.
+
 =over 4
 
-=item B<type>
+=item B<type ($name, $where_clause)>
 
-=item B<subtype>
+This creates a base type, which has no parent. 
+
+=item B<subtype ($name, $parent, $where_clause)>
+
+This creates a named subtype. 
+
+=item B<subtype ($parent, $where_clause)>
+
+This creates an unnamed subtype and will return the type 
+constraint meta-object, which will be an instance of 
+L<Moose::Meta::TypeConstraint>. 
 
 =item B<as>
 
+This is just sugar for the type constraint construction syntax.
+
 =item B<where>
+
+This is just sugar for the type constraint construction syntax.
+
+=back
+
+=head2 Type Coercion Constructors
+
+Type constraints can also contain type coercions as well. In most 
+cases Moose will run the type-coercion code first, followed by the 
+type constraint check. This feature should be used carefully as it 
+is very powerful and could easily take off a limb if you are not 
+careful.
+
+See the L<SYNOPOSIS> for an example of how to use these.
+
+=over 4
 
 =item B<coerce>
 
 =item B<from>
 
+This is just sugar for the type coercion construction syntax.
+
 =item B<via>
 
-=back
-
-=head2 Built-in Type Constraints
-
-=over 4
-
-=item B<Any>
-
-=item B<Value>
-
-=item B<Int>
-
-=item B<Str>
-
-=item B<Ref>
-
-=item B<ArrayRef>
-
-=item B<CodeRef>
-
-=item B<HashRef>
-
-=item B<RegexpRef>
-
-=item B<ScalarRef>
-
-=item B<Object>
+This is just sugar for the type coercion construction syntax.
 
 =back
 

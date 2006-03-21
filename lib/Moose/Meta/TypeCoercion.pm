@@ -70,11 +70,18 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeCoercion - The Moose Type Coercion metaobject
-
-=head1 SYNOPSIS
+Moose::Meta::TypeCoercion - The Moose Type Coercion metaclass
 
 =head1 DESCRIPTION
+
+For the most part, the only time you will ever encounter an 
+instance of this class is if you are doing some serious deep 
+introspection. This API should not be considered final, but 
+it is B<highly unlikely> that this will matter to a regular 
+Moose user.
+
+If you wish to use features at this depth, please come to the 
+#moose IRC channel on irc.perl.org and we can talk :)
 
 =head1 METHODS
 
@@ -84,9 +91,9 @@ Moose::Meta::TypeCoercion - The Moose Type Coercion metaobject
 
 =item B<new>
 
-=item B<coerce>
-
 =item B<compile_type_coercion>
+
+=item B<coerce>
 
 =item B<type_coercion_map>
 
