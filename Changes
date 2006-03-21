@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.03
+	* Moose::Meta::Class
+	  - fixed the way attribute defaults are handled 
+	    during instance construction (bug found by chansen)
+
 0.02 Tues. March 21, 2006
     * Moose
       - many more tests, fixing some bugs and  
