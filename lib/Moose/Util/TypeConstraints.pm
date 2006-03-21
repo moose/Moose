@@ -28,35 +28,37 @@ sub import {
     sub find_type_constraint { $TYPES{$_[0]} }
 
     sub create_type_constraint { 
-        my ($name, $parent, $constraint) = @_;
-        (not exists $TYPES{$name})
-            || confess "The type constraint '$name' has already been created";
+        my ($name, $parent, $check) = @_;
+        (!exists $TYPES{$name})
+            || confess "The type constraint '$name' has already been created"
+                if defined $name;
         $parent = find_type_constraint($parent) if defined $parent;
-        $TYPES{$name} = Moose::Meta::TypeConstraint->new(
-            name       => $name,
+        my $constraint = Moose::Meta::TypeConstraint->new(
+            name       => $name || '__ANON__',
             parent     => $parent,            
-            constraint => $constraint,           
+            constraint => $check,           
         );
+        $TYPES{$name} = $constraint if defined $name;
+        return $constraint;
     }
 
-    sub find_type_coercion { 
-        my $type_name = shift;
-        $TYPES{$type_name}->coercion_code; 
-    }
-
-    sub register_type_coercion { 
-        my ($type_name, $type_coercion) = @_;
-        my $type = $TYPES{$type_name};
+    sub install_type_coercions { 
+        my ($type_name, $coercion_map) = @_;
+        my $type = find_type_constraint($type_name);
         (!$type->has_coercion)
             || confess "The type coercion for '$type_name' has already been registered";        
-        $type->set_coercion_code($type_coercion);
+        my $type_coercion = Moose::Meta::TypeCoercion->new(
+            type_coercion_map => $coercion_map,
+            type_constraint   => $type
+        );            
+        $type->coercion($type_coercion);
     }
     
     sub export_type_contstraints_as_functions {
         my $pkg = caller();
 	    no strict 'refs';
     	foreach my $constraint (keys %TYPES) {
-    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->constraint_code;
+    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->_compiled_type_constraint;
     	}        
     }    
 }
@@ -68,42 +70,13 @@ sub type ($$) {
 }
 
 sub subtype ($$;$) {
-	if (scalar @_ == 3) {
-	    my ($name, $parent, $check) = @_;
-		create_type_constraint($name, $parent, $check);	
-	}
-	else {
-		my ($parent, $check) = @_;
-		$parent = find_type_constraint($parent);
-        return Moose::Meta::TypeConstraint->new(
-            name       => '__ANON__',
-            parent     => $parent,
-            constraint => $check,
-        );
-	}
+	unshift @_ => undef if scalar @_ == 2;
+	create_type_constraint(@_);
 }
 
 sub coerce ($@) {
     my ($type_name, @coercion_map) = @_;   
-    my @coercions;
-    while (@coercion_map) {
-        my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
-        my $constraint = find_type_constraint($constraint_name)->constraint_code;
-        (defined $constraint)
-            || confess "Could not find the type constraint ($constraint_name)";
-        push @coercions => [  $constraint, $action ];
-    }
-    register_type_coercion($type_name, sub { 
-        my $thing = shift;
-        foreach my $coercion (@coercions) {
-            my ($constraint, $converter) = @$coercion;
-            if (defined $constraint->($thing)) {
-			    local $_ = $thing;                
-                return $converter->($thing);
-            }
-        }
-        return $thing;
-    });
+    install_type_coercions($type_name, \@coercion_map);
 }
 
 sub as    ($) { $_[0] }
@@ -194,13 +167,9 @@ Suggestions for improvement are welcome.
 
 =item B<create_type_constraint ($type_name, $type_constraint)>
 
-=item B<find_type_coercion>
-
-=item B<register_type_coercion>
+=item B<install_type_coercions>
 
 =item B<export_type_contstraints_as_functions>
-
-=item B<dump_type_constraints>
 
 =back
 

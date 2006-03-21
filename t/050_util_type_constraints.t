@@ -46,6 +46,9 @@ my $negative = subtype Num => where	{ $_ < 0 };
 ok(defined $negative, '... got a value back from negative');
 isa_ok($negative, 'Moose::Meta::TypeConstraint');
 
-is($negative->_compiled_type_constraint->(-5), -5, '... this is a negative number');
-ok(!defined($negative->_compiled_type_constraint->(5)), '... this is not a negative number');
-is($negative->_compiled_type_constraint->('Foo'), undef, '... this is not a negative number');	
+is($negative->check(-5), -5, '... this is a negative number');
+ok(!defined($negative->check(5)), '... this is not a negative number');
+is($negative->check('Foo'), undef, '... this is not a negative number');
+
+
+

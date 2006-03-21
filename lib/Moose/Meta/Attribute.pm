@@ -37,7 +37,7 @@ sub generate_accessor_method {
 		if ($self->has_weak_ref) {
 		    return sub {
 				if (scalar(@_) == 2) {
-					(defined $self->type_constraint->constraint_code->($_[1]))
+					(defined $self->type_constraint->check($_[1]))
 						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 							if defined $_[1];
 			        $_[0]->{$attr_name} = $_[1];
@@ -50,8 +50,8 @@ sub generate_accessor_method {
 		    if ($self->has_coercion) {
     		    return sub {
     				if (scalar(@_) == 2) {
-    				    my $val = $self->type_constraint->coercion_code->($_[1]);
-    					(defined $self->type_constraint->constraint_code->($val))
+    				    my $val = $self->type_constraint->coercion->coerce($_[1]);
+    					(defined $self->type_constraint->check($val))
     						|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
     							if defined $val;
     			        $_[0]->{$attr_name} = $val;
@@ -62,7 +62,7 @@ sub generate_accessor_method {
 		    else {
     		    return sub {
     				if (scalar(@_) == 2) {
-    					(defined $self->type_constraint->constraint_code->($_[1]))
+    					(defined $self->type_constraint->check($_[1]))
     						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
     							if defined $_[1];
     			        $_[0]->{$attr_name} = $_[1];
@@ -96,7 +96,7 @@ sub generate_writer_method {
 	if ($self->has_type_constraint) {
 		if ($self->has_weak_ref) {
 		    return sub { 
-				(defined $self->type_constraint->constraint_code->($_[1]))
+				(defined $self->type_constraint->check($_[1]))
 					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
 						if defined $_[1];
 				$_[0]->{$attr_name} = $_[1];
@@ -106,8 +106,8 @@ sub generate_writer_method {
 		else {
 		    if ($self->has_coercion) {	
     		    return sub { 
-    		        my $val = $self->type_constraint->coercion_code->($_[1]);
-    				(defined $self->type_constraint->constraint_code->($val))
+    		        my $val = $self->type_constraint->coercion->coerce($_[1]);
+    				(defined $self->type_constraint->check($val))
     					|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
     						if defined $val;
     				$_[0]->{$attr_name} = $val;
@@ -115,7 +115,7 @@ sub generate_writer_method {
 		    }
 		    else {	    
     		    return sub { 
-    				(defined $self->type_constraint->constraint_code->($_[1]))
+    				(defined $self->type_constraint->check($_[1]))
     					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
     						if defined $_[1];
     				$_[0]->{$attr_name} = $_[1];

@@ -24,9 +24,9 @@ sub construct_instance {
 		if (defined $val) {
 		    if ($attr->has_type_constraint) {
     		    if ($attr->has_coercion && $attr->type_constraint->has_coercion) {
-    		        $val = $attr->type_constraint->coercion_code->($val);
+    		        $val = $attr->type_constraint->coercion->coerce($val);
     		    }	
-                (defined($attr->type_constraint->constraint_code->($val))) 
+                (defined($attr->type_constraint->check($val))) 
                     || confess "Attribute (" . $attr->name . ") does not pass the type contraint with '$val'";			
             }
 		}

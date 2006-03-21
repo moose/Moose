@@ -39,11 +39,11 @@ ok(Header($header), '... this passed the type test');
 ok(!Header([]), '... this did not pass the type test');
 ok(!Header({}), '... this did not pass the type test');
 
-my $coercion = Moose::Util::TypeConstraints::find_type_coercion('Header');
-is(ref($coercion), 'CODE', '... got the right type of coercion');
+my $coercion = Moose::Util::TypeConstraints::find_type_constraint('Header')->coercion;
+isa_ok($coercion, 'Moose::Meta::TypeCoercion');
 
 {
-    my $coerced = $coercion->([ 1, 2, 3 ]);
+    my $coerced = $coercion->coerce([ 1, 2, 3 ]);
     isa_ok($coerced, 'HTTPHeader');
 
     is_deeply(
@@ -54,7 +54,7 @@ is(ref($coercion), 'CODE', '... got the right type of coercion');
 }
 
 {
-    my $coerced = $coercion->({ one => 1, two => 2, three => 3 });
+    my $coerced = $coercion->coerce({ one => 1, two => 2, three => 3 });
     isa_ok($coerced, 'HTTPHeader');
     
     is_deeply(
@@ -66,12 +66,12 @@ is(ref($coercion), 'CODE', '... got the right type of coercion');
 
 {
     my $scalar_ref = \(my $var);
-    my $coerced = $coercion->($scalar_ref);
+    my $coerced = $coercion->coerce($scalar_ref);
     is($coerced, $scalar_ref, '... got back what we put in');
 }
 
 {
-    my $coerced = $coercion->("Foo");
+    my $coerced = $coercion->coerce("Foo");
     is($coerced, "Foo", '... got back what we put in');
 }
 

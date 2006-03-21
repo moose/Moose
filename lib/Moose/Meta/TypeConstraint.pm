@@ -13,32 +13,31 @@ our $VERSION = '0.01';
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
 __PACKAGE__->meta->add_attribute('constraint' => (reader => 'constraint'));
+__PACKAGE__->meta->add_attribute('coercion'   => (
+    accessor  => 'coercion',
+    predicate => 'has_coercion'
+));
 
 # private accessor
 __PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
     accessor => '_compiled_type_constraint'
 ));
 
-__PACKAGE__->meta->add_attribute('coercion_code' => (
-    reader    => 'coercion_code',
-    writer    => 'set_coercion_code',        
-    predicate => 'has_coercion'
-));
-
 sub new { 
-    my $class  = shift;
-    my $self = $class->meta->new_object(@_);
+    my $class = shift;
+    my $self  = $class->meta->new_object(@_);
     $self->compile_type_constraint();
     return $self;
 }
 
 sub compile_type_constraint () {
-    my $self   = shift;
-    my $check  = $self->constraint;
+    my $self  = shift;
+    my $check = $self->constraint;
     (defined $check)
         || confess "Could not compile type constraint '" . $self->name . "' because no constraint check";
     my $parent = $self->parent;
     if (defined $parent) {
+        # we have a subtype ...
         $parent = $parent->_compiled_type_constraint;
 		$self->_compiled_type_constraint(subname $self->name => sub { 			
 			local $_ = $_[0];
@@ -47,6 +46,7 @@ sub compile_type_constraint () {
 		});        
     }
     else {
+        # we have a type ....
     	$self->_compiled_type_constraint(subname $self->name => sub { 
     		local $_ = $_[0];
     		return undef unless $check->($_[0]);
@@ -55,8 +55,7 @@ sub compile_type_constraint () {
     }
 }
 
-# backwards for now
-sub constraint_code { (shift)->_compiled_type_constraint }
+sub check { $_[0]->_compiled_type_constraint->($_[1]) }
 
 1;
 
@@ -88,15 +87,9 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaobject
 
 =item B<constraint>
 
-=item B<coerce>
-
-=item B<coercion_code>
-
-=item B<set_coercion_code>
-
-=item B<constraint_code>
-
 =item B<has_coercion>
+
+=item B<coercion>
 
 =item B<compile_type_constraint>
 
