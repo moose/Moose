@@ -23,7 +23,7 @@ subtype NaturalLessThanTen
 	=> as Natural
 	=> where { $_ < 10 };
 	
-Moose::Util::TypeConstraints::export_type_contstraints_as_functions();
+Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
 
 is(Num(5), 5, '... this is a Num');
 ok(!defined(Num('Foo')), '... this is not a Num');

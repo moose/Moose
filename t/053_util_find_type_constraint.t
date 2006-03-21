@@ -7,7 +7,7 @@ use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
-	use_ok('Moose::Util::TypeConstraints', (':no_export'));
+	use_ok('Moose::Util::TypeConstraints');
 }
 
 foreach my $type_name (qw(
@@ -23,7 +23,7 @@ foreach my $type_name (qw(
             RegexpRef
             Object    
     )) {
-    is(Moose::Util::TypeConstraints::find_type_constraint($type_name)->name, 
+    is(find_type_constraint($type_name)->name, 
        $type_name, 
        '... got the right name for ' . $type_name);
 }

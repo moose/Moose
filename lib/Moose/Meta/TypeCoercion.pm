@@ -44,7 +44,7 @@ sub compile_type_coercion {
         my $constraint = Moose::Util::TypeConstraints::find_type_constraint($constraint_name)->_compiled_type_constraint;       
         (defined $constraint)
             || confess "Could not find the type constraint ($constraint_name)";
-        push @coercions => [  $constraint, $action ];
+        push @coercions => [ $constraint, $action ];
     }
     $self->_compiled_type_coercion(sub { 
         my $thing = shift;

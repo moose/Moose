@@ -17,6 +17,7 @@ use Class::MOP;
 use Moose::Meta::Class;
 use Moose::Meta::Attribute;
 use Moose::Meta::TypeConstraint;
+use Moose::Meta::TypeCoercion;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;
@@ -81,7 +82,7 @@ sub import {
 			}
 			else {
 			    # otherwise assume it is a constraint
-			    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+			    my $constraint = find_type_constraint($options{isa});
 			    # if the constraing it not found ....
 			    unless (defined $constraint) {
 			        # assume it is a foreign class, and make 

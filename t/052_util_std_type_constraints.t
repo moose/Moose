@@ -14,7 +14,7 @@ BEGIN {
 
 my $SCALAR_REF = \(my $var);
 
-Moose::Util::TypeConstraints::export_type_contstraints_as_functions();
+Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
 
 ok(defined Any(0),               '... Any accepts anything');
 ok(defined Any(100),             '... Any accepts anything');

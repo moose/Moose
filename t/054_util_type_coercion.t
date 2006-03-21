@@ -30,7 +30,7 @@ coerce Header
     => from HashRef 
         => via { HTTPHeader->new(hash => $_[0]) };
         
-Moose::Util::TypeConstraints::export_type_contstraints_as_functions();        
+Moose::Util::TypeConstraints->export_type_contstraints_as_functions();        
         
 my $header = HTTPHeader->new();
 isa_ok($header, 'HTTPHeader');
@@ -39,7 +39,7 @@ ok(Header($header), '... this passed the type test');
 ok(!Header([]), '... this did not pass the type test');
 ok(!Header({}), '... this did not pass the type test');
 
-my $coercion = Moose::Util::TypeConstraints::find_type_constraint('Header')->coercion;
+my $coercion = find_type_constraint('Header')->coercion;
 isa_ok($coercion, 'Moose::Meta::TypeCoercion');
 
 {
