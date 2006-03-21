@@ -296,12 +296,12 @@ C<ref> anywhere you need to test for an object's class name.
 
 =over 4
 
-=item I blame Sam Vilain for giving me my first hit of meta-model crack.
+=item I blame Sam Vilain for introducing me to the insanity that is meta-models.
 
-=item I blame Audrey Tang for encouraging that meta-crack habit in #perl6.
+=item I blame Audrey Tang for then encouraging my meta-model habit in #perl6.
 
 =item Without Yuval "nothingmuch" Kogman this module would not be possible, 
-and it would certainly have a name ;P
+and it certainly wouldn't have this name ;P
 
 =item The basis of the TypeContraints module was Rob Kinyon's idea 
 originally, I just ran with it.
