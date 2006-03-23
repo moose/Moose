@@ -1,9 +1,24 @@
 Revision history for Perl extension Moose
 
 0.03
+    * Moose
+      - fixed an issue with &extends super class loading
+        it now captures errors and deals with inline 
+        packages correctly (bug found by mst, solution 
+        stolen from alias)
+    
+    * Moose::Object
+      - BUILDALL now takes a reference of the %params 
+        that are passed to &new, and passes that to 
+        each BUILD as well.
+
 	* Moose::Meta::Class
 	  - fixed the way attribute defaults are handled 
 	    during instance construction (bug found by chansen)
+
+    * Moose::Meta::Attribute
+      - read-only attributes now actually enforce their
+        read-only-ness
 
 0.02 Tues. March 21, 2006
     * Moose

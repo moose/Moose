@@ -133,6 +133,14 @@ sub generate_writer_method {
 	}
 }
 
+sub generate_reader_method {
+    my ($self, $attr_name) = @_; 
+    sub { 
+        confess "Cannot assign a value to a read-only accessor" if @_ > 1;
+        $_[0]->{$attr_name} 
+    };   
+}
+
 1;
 
 __END__
@@ -168,6 +176,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =item B<generate_accessor_method>
 
 =item B<generate_writer_method>
+
+=item B<generate_reader_method>
 
 =back
 

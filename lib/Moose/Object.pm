@@ -12,14 +12,14 @@ our $VERSION = '0.02';
 sub new {
 	my ($class, %params) = @_;
 	my $self = $class->meta->new_object(%params);
-	$self->BUILDALL(%params);
+	$self->BUILDALL(\%params);
 	return $self;
 }
 
 sub BUILDALL {
-	my ($self, %params) = @_;
+	my ($self, $params) = @_;
 	foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
-		$method->{code}->($self, %params);
+		$method->{code}->($self, $params);
 	}
 }
 
@@ -67,7 +67,8 @@ This will create a new instance and call C<BUILDALL>.
 
 =item B<BUILDALL>
 
-This will call every C<BUILD> method in the inheritance hierarchy.
+This will call every C<BUILD> method in the inheritance hierarchy, 
+and pass it a hash-ref of the the C<%params> passed to C<new>.
 
 =item B<DEMOLISHALL>
 

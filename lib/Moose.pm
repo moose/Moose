@@ -60,7 +60,14 @@ sub import {
 	
 	# handle superclasses
 	$meta->alias_method('extends' => subname 'Moose::extends' => sub { 
-	    $_->require for @_;
+	    foreach my $super (@_) {
+	        # see if this is already 
+	        # loaded in the symbol table
+            next if _is_class_already_loaded($super);
+            # otherwise require it ...
+            ($super->require)
+	            || confess "Could not load superclass '$super' because : " . $UNIVERSAL::require::ERROR;
+	    }
 	    $meta->superclasses(@_) 
 	});	
 	
@@ -117,6 +124,17 @@ sub import {
 	# so export them for them
 	$meta->alias_method('confess' => \&Carp::confess);			
 	$meta->alias_method('blessed' => \&Scalar::Util::blessed);				
+}
+
+sub _is_class_already_loaded {
+	my $name = shift;
+	no strict 'refs';
+	return 1 if defined ${"${name}::VERSION"} || defined @{"${name}::ISA"};
+	foreach (keys %{"${name}::"}) {
+		next if substr($_, -2, 2) eq '::';
+		return 1 if defined &{"${name}::$_"};
+	}
+    return 0;
 }
 
 1;

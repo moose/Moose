@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 55;
+use Test::More tests => 56;
 use Test::Exception;
 
 BEGIN {
@@ -55,7 +55,9 @@ dies_ok {
 	$point->y('Foo');
 } '... cannot assign a non-Int to y';
 
-$point->x(1000);
+dies_ok {
+    $point->x(1000);
+} '... cannot assign to a read-only method';
 is($point->x, 1, '... got the right (un-changed) value for x');
 
 $point->clear();

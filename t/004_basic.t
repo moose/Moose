@@ -58,9 +58,9 @@ BEGIN {
     });    
     
     sub BUILD {
-        my ($self, %params) = @_;
-        if ($params{employees}) {
-            foreach my $employee (@{$params{employees}}) {
+        my ($self, $params) = @_;
+        if ($params->{employees}) {
+            foreach my $employee (@{$params->{employees}}) {
                 $employee->company($self);
             }
         }

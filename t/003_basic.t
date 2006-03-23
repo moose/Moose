@@ -43,17 +43,17 @@ BEGIN {
 	};
 	
 	sub BUILD {
-	    my ($self, %params) = @_;
-	    if ($params{parent}) {
+	    my ($self, $params) = @_;
+	    if ($params->{parent}) {
 	        # yeah this is a little 
 	        # weird I know, but I wanted
 	        # to check the weaken stuff 
 	        # in the constructor :)
-	        if ($params{parent}->has_left) {
-	            $params{parent}->right($self);	            
+	        if ($params->{parent}->has_left) {
+	            $params->{parent}->right($self);	            
 	        }
 	        else {
-	            $params{parent}->left($self);	            
+	            $params->{parent}->left($self);	            
 	        }
 	    }
 	}

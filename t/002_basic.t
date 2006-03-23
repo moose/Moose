@@ -50,7 +50,6 @@ BEGIN {
 	};
 }
 
-
 my $savings_account = BankAccount->new(balance => 250);
 isa_ok($savings_account, 'BankAccount');
 
