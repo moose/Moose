@@ -94,6 +94,11 @@ BEGIN {
     
     has 'title'   => (is => 'rw', isa => 'Str');
     has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
+    
+    override 'full_name' => sub {
+        my $self = shift;
+        super() . ', ' . $self->title
+    };
 }
 
 my $ii;
@@ -156,7 +161,7 @@ is($ii->employees->[0]->first_name, 'Jeremy', '... got the right first name');
 is($ii->employees->[0]->last_name, 'Shao', '... got the right last name');
 ok(!$ii->employees->[0]->has_middle_initial, '... no middle initial');
 is($ii->employees->[0]->middle_initial, undef, '... got the right middle initial value');
-is($ii->employees->[0]->full_name, 'Jeremy Shao', '... got the right full name');
+is($ii->employees->[0]->full_name, 'Jeremy Shao, President / Senior Consultant', '... got the right full name');
 is($ii->employees->[0]->title, 'President / Senior Consultant', '... got the right title');
 is($ii->employees->[0]->company, $ii, '... got the right company');
 ok(isweak($ii->employees->[0]->{company}), '... the company is a weak-ref');
@@ -174,7 +179,7 @@ is($ii->employees->[1]->first_name, 'Tommy', '... got the right first name');
 is($ii->employees->[1]->last_name, 'Lee', '... got the right last name');
 ok(!$ii->employees->[1]->has_middle_initial, '... no middle initial');
 is($ii->employees->[1]->middle_initial, undef, '... got the right middle initial value');
-is($ii->employees->[1]->full_name, 'Tommy Lee', '... got the right full name');
+is($ii->employees->[1]->full_name, 'Tommy Lee, Vice President / Senior Developer', '... got the right full name');
 is($ii->employees->[1]->title, 'Vice President / Senior Developer', '... got the right title');
 is($ii->employees->[1]->company, $ii, '... got the right company');
 ok(isweak($ii->employees->[1]->{company}), '... the company is a weak-ref');
@@ -192,7 +197,7 @@ is($ii->employees->[2]->first_name, 'Stevan', '... got the right first name');
 is($ii->employees->[2]->last_name, 'Little', '... got the right last name');
 ok($ii->employees->[2]->has_middle_initial, '... got middle initial');
 is($ii->employees->[2]->middle_initial, 'C', '... got the right middle initial value');
-is($ii->employees->[2]->full_name, 'Stevan C. Little', '... got the right full name');
+is($ii->employees->[2]->full_name, 'Stevan C. Little, Senior Developer', '... got the right full name');
 is($ii->employees->[2]->title, 'Senior Developer', '... got the right title');
 is($ii->employees->[2]->company, $ii, '... got the right company');
 ok(isweak($ii->employees->[2]->{company}), '... the company is a weak-ref');
@@ -210,7 +215,7 @@ is($ii->employees->[3]->first_name, 'Rob', '... got the right first name');
 is($ii->employees->[3]->last_name, 'Kinyon', '... got the right last name');
 ok(!$ii->employees->[3]->has_middle_initial, '... got middle initial');
 is($ii->employees->[3]->middle_initial, undef, '... got the right middle initial value');
-is($ii->employees->[3]->full_name, 'Rob Kinyon', '... got the right full name');
+is($ii->employees->[3]->full_name, 'Rob Kinyon, Developer', '... got the right full name');
 is($ii->employees->[3]->title, 'Developer', '... got the right title');
 is($ii->employees->[3]->company, $ii, '... got the right company');
 ok(isweak($ii->employees->[3]->{company}), '... the company is a weak-ref');

@@ -115,6 +115,36 @@ sub import {
 		my $code = pop @_;
 		$meta->add_around_method_modifier($_, $code) for @_;	
 	});	
+	
+	$meta->alias_method('super' => subname 'Moose::super' => sub {});
+	$meta->alias_method('override' => subname 'Moose::override' => sub {
+	    my ($name, $method) = @_;
+	    my $super = $meta->find_next_method_by_name($name);
+	    (defined $super)
+	        || confess "You cannot override '$name' because it has no super method";
+	    $meta->add_method($name => sub {
+	        my @args = @_;
+            no strict   'refs';
+            no warnings 'redefine';
+            local *{$meta->name . '::super'} = sub { $super->(@args) };
+	        return $method->(@args);
+	    });
+	});		
+	
+	$meta->alias_method('inner' => subname 'Moose::inner' => sub {});
+	$meta->alias_method('augment' => subname 'Moose::augment' => sub {
+	    my ($name, $method) = @_;
+	    my $super = $meta->find_next_method_by_name($name);
+	    (defined $super)
+	        || confess "You cannot augment '$name' because it has no super method";
+	    $meta->add_method($name => sub {
+	        my @args = @_;
+            no strict   'refs';
+            no warnings 'redefine';
+            local *{$super->package_name . '::inner'} = sub { $method->(@args) };
+	        return $super->(@args);
+	    });
+	});	
 
 	# make sure they inherit from Moose::Object
 	$meta->superclasses('Moose::Object')
