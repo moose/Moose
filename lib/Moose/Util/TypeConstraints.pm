@@ -24,26 +24,27 @@ sub import {
 
 {
     my %TYPES;
-    sub find_type_constraint { $TYPES{$_[0]} }
+    sub find_type_constraint { $TYPES{$_[0]}->[1] }
 
     sub _create_type_constraint { 
         my ($name, $parent, $check) = @_;
-        (!exists $TYPES{$name})
+        my $pkg_defined_in = scalar(caller(1));
+        ($TYPES{$name}->[0] eq $pkg_defined_in)
             || confess "The type constraint '$name' has already been created"
-                if defined $name;
-        $parent = $TYPES{$parent} if defined $parent;
+                 if defined $name && exists $TYPES{$name};                
+        $parent = find_type_constraint($parent) if defined $parent;
         my $constraint = Moose::Meta::TypeConstraint->new(
             name       => $name || '__ANON__',
             parent     => $parent,            
             constraint => $check,           
         );
-        $TYPES{$name} = $constraint if defined $name;
+        $TYPES{$name} = [ $pkg_defined_in, $constraint ] if defined $name;
         return $constraint;
     }
 
     sub _install_type_coercions { 
         my ($type_name, $coercion_map) = @_;
-        my $type = $TYPES{$type_name};
+        my $type = find_type_constraint($type_name);
         (!$type->has_coercion)
             || confess "The type coercion for '$type_name' has already been registered";        
         my $type_coercion = Moose::Meta::TypeCoercion->new(
@@ -57,7 +58,7 @@ sub import {
         my $pkg = caller();
 	    no strict 'refs';
     	foreach my $constraint (keys %TYPES) {
-    		*{"${pkg}::${constraint}"} = $TYPES{$constraint}->_compiled_type_constraint;
+    		*{"${pkg}::${constraint}"} = find_type_constraint($constraint)->_compiled_type_constraint;
     	}        
     }    
 }

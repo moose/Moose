@@ -29,6 +29,8 @@ t/051_util_type_constraints_export.t
 t/052_util_std_type_constraints.t
 t/053_util_find_type_constraint.t
 t/054_util_type_coercion.t
+t/055_util_type_reloading.t
 t/lib/Foo.pm
+t/lib/Bar.pm
 t/pod.t
 t/pod_coverage.t
