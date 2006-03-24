@@ -6,6 +6,8 @@ Revision history for Perl extension Moose
         it now captures errors and deals with inline 
         packages correctly (bug found by mst, solution 
         stolen from alias)
+      - added super/override & inner/augment features
+        - added tests and docs for these
     
     * Moose::Object
       - BUILDALL now takes a reference of the %params 

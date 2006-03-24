@@ -327,6 +327,32 @@ This three items are syntactic sugar for the before, after and around method
 modifier features that L<Class::MOP> provides. More information on these can 
 be found in the L<Class::MOP> documentation for now. 
 
+=item B<super>
+
+The keyword C<super> is a noop when called outside of an C<override> method. In 
+the context of an C<override> method, it will call the next most appropriate 
+superclass method with the same arguments as the original method.
+
+=item B<override ($name, &sub)>
+
+An C<override> method, is a way of explictly saying "I am overriding this 
+method from my superclass". You can call C<super> within this method, and 
+it will work as expected. The same thing I<can> be accomplished with a normal 
+method call and the C<SUPER::> pseudo-package, it is really your choice. 
+
+=item B<inner>
+
+The keyword C<inner>, much like C<super>, is a no-op outside of the context of 
+an C<augment> method. You can think of C<inner> as being the inverse of 
+C<super>, the details of how C<inner> and C<augment> work is best described in 
+the L<Moose::Cookbook>.
+
+=item B<augment ($name, &sub)>
+
+An C<augment> method, is a way of explictly saying "I am augmenting this 
+method from my superclass". Once again, the details of how C<inner> and 
+C<augment> work is best described in the L<Moose::Cookbook>.
+
 =item B<confess>
 
 This is the C<Carp::confess> function, and exported here beause I use it 
@@ -368,6 +394,12 @@ ideas/feature-requests/encouragement
 =item The #moose channel on irc.perl.org
 
 =item L<http://forum2.org/moose/>
+
+=item L<http://www.cs.utah.edu/plt/publications/oopsla04-gff.pdf>
+
+This paper (suggested by lbr on #moose) was what lead to the implementation 
+of the C<super>/C<overrride> and C<inner>/C<augment> features. If you really 
+want to understand this feature, I suggest you read this.
 
 =back
 
