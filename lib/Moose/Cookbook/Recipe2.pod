@@ -1,0 +1,63 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe2
+
+=head1 SYNOPSIS
+
+  package BankAccount;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  has 'balance' => (isa => 'Int', is => 'rw', default => 0);
+  
+  sub deposit {
+      my ($self, $amount) = @_;
+      $self->balance($self->balance + $amount);
+  }
+  
+  sub withdraw {
+      my ($self, $amount) = @_;
+      my $current_balance = $self->balance();
+      ($current_balance >= $amount)
+          || confess "Account overdrawn";
+      $self->balance($current_balance - $amount);
+  }
+  
+  package CheckingAccount;
+  use strict;
+  use warnings;	
+  use Moose;
+  
+  extends 'BankAccount';
+  
+  has 'overdraft_account' => (isa => 'BankAccount', is => 'rw');	
+  
+  before 'withdraw' => sub {
+  	my ($self, $amount) = @_;
+  	my $overdraft_amount = $amount - $self->balance();
+  	if ($overdraft_amount > 0) {
+  		$self->overdraft_account->withdraw($overdraft_amount);
+  		$self->deposit($overdraft_amount);
+  	}
+  };
+
+=head1 DESCRIPTION
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

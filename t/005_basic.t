@@ -3,7 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More;
+
+BEGIN {
+    eval "use HTTP::Headers; use Params::Coerce; use URI;";
+    plan skip_all => "HTTP::Headers & Params::Coerce & URI required for this test" if $@;        
+    plan no_plan => 1;    
+}
+
 use Test::Exception;
 
 BEGIN {
@@ -11,108 +18,100 @@ BEGIN {
 }
 
 {
-    package HTTPHeader;
-    use strict;
-    use warnings;
-    use Moose;
-    
-    coerce 'HTTPHeader'
-        => from ArrayRef 
-            => via { HTTPHeader->new(array => $_[0]) }
-        => from HashRef 
-            => via { HTTPHeader->new(hash => $_[0]) };    
-    
-    has 'array' => (is => 'ro');
-    has 'hash'  => (is => 'ro');    
+	package Request;
+	use strict;
+	use warnings;
+	use Moose;
+	
+	use HTTP::Headers  ();
+	use Params::Coerce ();
+	use URI            ();
 
-    package Engine;
-    use strict;
-    use warnings;
-    use Moose;
-    
-    has 'header' => (is => 'rw', isa => 'HTTPHeader', coerce => 1);    
+	subtype Header
+	    => as Object
+	    => where { $_->isa('HTTP::Headers') };
+
+	coerce Header
+	    => from ArrayRef
+	        => via { HTTP::Headers->new( @{ $_ } ) }
+	    => from HashRef
+	        => via { HTTP::Headers->new( %{ $_ } ) };
+
+	subtype Uri
+	    => as Object
+	    => where { $_->isa('URI') };
+
+	coerce Uri
+	    => from Object
+	        => via { $_->isa('URI') ? $_ : Params::Coerce::coerce( 'URI', $_ ) }
+	    => from Str
+	        => via { URI->new( $_, 'http' ) };
+
+	subtype Protocol
+	    => as Str
+	    => where { /^HTTP\/[0-9]\.[0-9]$/ };
+
+
+	has 'base'     => (is => 'rw', isa => 'Uri', coerce  => 1);
+	has 'url'      => (is => 'rw', isa => 'Uri', coerce  => 1);	
+	has 'method'   => (is => 'rw', isa => 'Str');	
+	has 'protocol' => (is => 'rw', isa => 'Protocol');		
+	has 'headers'  => (
+	    is      => 'rw',
+	    isa     => 'Header',
+	    coerce  => 1,
+	    default => sub { HTTP::Headers->new } 
+    );
 }
 
+my $r = Request->new;
+isa_ok($r, 'Request');
+
 {
-    my $engine = Engine->new();
-    isa_ok($engine, 'Engine');
+    my $header = $r->headers;
+    isa_ok($header, 'HTTP::Headers');
 
-    # try with arrays
+    is($r->headers->content_type, '', '... got no content type in the header');
 
-    lives_ok {
-        $engine->header([ 1, 2, 3 ]);
-    } '... type was coerced without incident';
-    isa_ok($engine->header, 'HTTPHeader');
+    $r->headers( { content_type => 'text/plain' } );
 
-    is_deeply(
-        $engine->header->array,
-        [ 1, 2, 3 ],
-        '... got the right array value of the header');
-    ok(!defined($engine->header->hash), '... no hash value set');
+    my $header2 = $r->headers;
+    isa_ok($header2, 'HTTP::Headers');
+    isnt($header, $header2, '... created a new HTTP::Header object');
 
-    # try with hash
+    is($header2->content_type, 'text/plain', '... got the right content type in the header');
 
-    lives_ok {
-        $engine->header({ one => 1, two => 2, three => 3 });
-    } '... type was coerced without incident';
-    isa_ok($engine->header, 'HTTPHeader');
+    $r->headers( [ content_type => 'text/html' ] );
 
-    is_deeply(
-        $engine->header->hash,
-        { one => 1, two => 2, three => 3 },
-        '... got the right hash value of the header');
-    ok(!defined($engine->header->array), '... no array value set');
+    my $header3 = $r->headers;
+    isa_ok($header3, 'HTTP::Headers');
+    isnt($header2, $header3, '... created a new HTTP::Header object');
 
+    is($header3->content_type, 'text/html', '... got the right content type in the header');
+    
+    $r->headers( HTTP::Headers->new(content_type => 'application/pdf') );
+    
+    my $header4 = $r->headers;    
+    isa_ok($header4, 'HTTP::Headers');
+    isnt($header3, $header4, '... created a new HTTP::Header object');
+
+    is($header4->content_type, 'application/pdf', '... got the right content type in the header');    
+    
     dies_ok {
-       $engine->header("Foo"); 
-    } '... dies with the wrong type, even after coercion';
+        $r->headers('Foo')
+    } '... dies when it gets bad params';
+}
+
+{
+    is($r->protocol, undef, '... got nothing by default');
 
     lives_ok {
-       $engine->header(HTTPHeader->new); 
-    } '... lives with the right type, even after coercion';
+        $r->protocol('HTTP/1.0');
+    } '... set the protocol correctly';
+    is($r->protocol, 'HTTP/1.0', '... got nothing by default');
+            
+    dies_ok {
+        $r->protocol('http/1.0');
+    } '... the protocol died with bar params correctly';            
 }
-
-{
-    my $engine = Engine->new(header => [ 1, 2, 3 ]);
-    isa_ok($engine, 'Engine');
-
-    isa_ok($engine->header, 'HTTPHeader');
-
-    is_deeply(
-        $engine->header->array,
-        [ 1, 2, 3 ],
-        '... got the right array value of the header');
-    ok(!defined($engine->header->hash), '... no hash value set');
-}
-
-{
-    my $engine = Engine->new(header => { one => 1, two => 2, three => 3 });
-    isa_ok($engine, 'Engine');
-
-    isa_ok($engine->header, 'HTTPHeader');
-
-    is_deeply(
-        $engine->header->hash,
-        { one => 1, two => 2, three => 3 },
-        '... got the right hash value of the header');
-    ok(!defined($engine->header->array), '... no array value set');
-}
-
-{
-    my $engine = Engine->new(header => HTTPHeader->new());
-    isa_ok($engine, 'Engine');
-
-    isa_ok($engine->header, 'HTTPHeader');
-
-    ok(!defined($engine->header->hash), '... no hash value set');
-    ok(!defined($engine->header->array), '... no array value set');
-}
-
-dies_ok {
-    Engine->new(header => 'Foo');
-} '... dies correctly with bad params';
-
-dies_ok {
-    Engine->new(header => \(my $var));
-} '... dies correctly with bad params';
 

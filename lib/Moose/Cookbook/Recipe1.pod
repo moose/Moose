@@ -1,0 +1,53 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe1
+
+=head1 SYNOPSIS
+
+  package Point;
+  use strict;
+  use warnings;	
+  use Moose;
+  	
+  has 'x' => (isa => 'Int', is => 'ro');
+  has 'y' => (isa => 'Int', is => 'rw');
+  
+  sub clear {
+      my $self = shift;
+      $self->{x} = 0;
+      $self->y(0);    
+  }
+  
+  package Point3D;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  extends 'Point';
+  
+  has 'z' => (isa => 'Int');
+  
+  after 'clear' => sub {
+      my $self = shift;
+      $self->{z} = 0;
+  };
+
+=head1 DESCRIPTION
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

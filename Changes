@@ -13,6 +13,10 @@ Revision history for Perl extension Moose
       - BUILDALL now takes a reference of the %params 
         that are passed to &new, and passes that to 
         each BUILD as well.
+        
+    * Moose::Util::TypeConstraints
+      - Type constraints now survive runtime reloading
+        - added test for this
 
 	* Moose::Meta::Class
 	  - fixed the way attribute defaults are handled 

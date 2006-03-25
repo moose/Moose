@@ -1,0 +1,54 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe3
+
+=head1 SYNOPSIS
+
+  package BinaryTree;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  has 'parent' => (
+  	  is        => 'rw',
+  	  isa       => 'BinaryTree',	
+      predicate => 'has_parent',
+  	  weak_ref  => 1,
+  );
+  
+  has 'left' => (
+  	  is        => 'rw',	
+  	  isa       => 'BinaryTree',		
+      predicate => 'has_left',         
+  );
+  
+  has 'right' => (
+  	  is        => 'rw',	
+  	  isa       => 'BinaryTree',		
+      predicate => 'has_right',           
+  );
+  
+  before 'right', 'left' => sub {
+      my ($self, $tree) = @_;
+      $tree->parent($self) if defined $tree;   
+  };
+
+=head1 DESCRIPTION
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

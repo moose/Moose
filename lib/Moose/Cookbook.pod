@@ -1,0 +1,52 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook - How to cook a Moose
+
+=head1 DESCRIPTION
+
+The Moose cookbook is a series of recipies taken from the Moose 
+test suite. Each recipe presents some code, which demonstrates 
+some of the features of Moose, and then proceeds to explain the 
+details of the code. 
+
+=head1 RECIPES
+
+=over 4
+
+=item L<Moose::Cookbook::Recipe1>
+
+=item L<Moose::Cookbook::Recipe2>
+
+=item L<Moose::Cookbook::Recipe3>
+
+=item L<Moose::Cookbook::Recipe4>
+
+=item L<Moose::Cookbook::Recipe5>
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<http://www.gsph.com/gsph/index.php?ID=291&Lang=En>
+
+=back
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
