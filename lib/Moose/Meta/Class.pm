@@ -18,7 +18,16 @@ sub construct_instance {
         my $init_arg = $attr->init_arg();
         # try to fetch the init arg from the %params ...
         my $val;        
-        $val = $params{$init_arg} if exists $params{$init_arg};
+        if (exists $params{$init_arg}) {
+            $val = $params{$init_arg};
+        }
+        else {
+            # skip it if it's lazy
+            next if $attr->is_lazy;
+            # and die if it is required            
+            confess "Attribute (" . $attr->name . ") is required" 
+                if $attr->is_required
+        }
         # if nothing was in the %params, we can use the 
         # attribute's default value (if it has one)
         if (!defined $val && $attr->has_default) {

@@ -11,6 +11,8 @@ our $VERSION = '0.02';
 
 use base 'Class::MOP::Attribute';
 
+__PACKAGE__->meta->add_attribute('required' => (reader => 'is_required'  ));
+__PACKAGE__->meta->add_attribute('lazy'     => (reader => 'is_lazy'      ));
 __PACKAGE__->meta->add_attribute('coerce'   => (reader => 'should_coerce'));
 __PACKAGE__->meta->add_attribute('weak_ref' => (reader => 'is_weak_ref'  ));
 __PACKAGE__->meta->add_attribute('type_constraint' => (
@@ -25,120 +27,83 @@ __PACKAGE__->meta->add_before_method_modifier('new' => sub {
 	        || confess "You cannot have coercion without specifying a type constraint";
         confess "You cannot have a weak reference to a coerced value"
             if $options{weak_ref};	        
-	}		
+	}	
+	if (exists $options{lazy} && $options{lazy}) {
+	    (exists $options{default})
+	        || confess "You cannot have lazy attribute without specifying a default value for it";	    
+	}	
 });
 
 sub generate_accessor_method {
     my ($self, $attr_name) = @_;
-	if ($self->has_type_constraint) {
-		if ($self->is_weak_ref) {
-		    return sub {
-				if (scalar(@_) == 2) {
-					(defined $self->type_constraint->check($_[1]))
-						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-							if defined $_[1];
-			        $_[0]->{$attr_name} = $_[1];
-					weaken($_[0]->{$attr_name});
-				}
-		        $_[0]->{$attr_name};
-		    };			
-		}
-		else {
-		    if ($self->should_coerce) {
-    		    return sub {
-    				if (scalar(@_) == 2) {
-    				    my $val = $self->type_constraint->coercion->coerce($_[1]);
-    					(defined $self->type_constraint->check($val))
-    						|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
-    							if defined $val;
-    			        $_[0]->{$attr_name} = $val;
-    				}
-    		        $_[0]->{$attr_name};
-    		    };		        
-		    }
-		    else {
-    		    return sub {
-    				if (scalar(@_) == 2) {
-    					(defined $self->type_constraint->check($_[1]))
-    						|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-    							if defined $_[1];
-    			        $_[0]->{$attr_name} = $_[1];
-    				}
-    		        $_[0]->{$attr_name};
-    		    };
-		    }	
-		}	
-	}
-	else {
-		if ($self->is_weak_ref) {
-		    return sub {
-				if (scalar(@_) == 2) {
-			        $_[0]->{$attr_name} = $_[1];
-					weaken($_[0]->{$attr_name});
-				}
-		        $_[0]->{$attr_name};
-		    };			
-		}
-		else {		
-		    sub {
-			    $_[0]->{$attr_name} = $_[1] if scalar(@_) == 2;
-		        $_[0]->{$attr_name};
-		    };		
-		}
-	}
+    my $value_name = $self->should_coerce ? '$val' : '$_[1]';
+    my $code = 'sub { '
+    . 'if (scalar(@_) == 2) {'
+        . ($self->is_required ? 
+            'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
+            : '')
+        . ($self->should_coerce ? 
+            'my $val = $self->type_constraint->coercion->coerce($_[1]);'
+            : '')
+        . ($self->has_type_constraint ? 
+            ('(defined $self->type_constraint->check(' . $value_name . '))'
+            	. '|| confess "Attribute ($attr_name) does not pass the type contraint with \'' . $value_name . '\'"'
+            		. 'if defined ' . $value_name . ';')
+            : '')
+        . '$_[0]->{$attr_name} = ' . $value_name . ';'
+        . ($self->is_weak_ref ?
+            'weaken($_[0]->{$attr_name});'
+            : '')
+    . ' }'
+    . ($self->is_lazy ? 
+            '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
+            . 'unless exists $_[0]->{$attr_name};'
+            : '')    
+    . ' $_[0]->{$attr_name};'
+    . ' }';
+    my $sub = eval $code;
+    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
+    return $sub;    
 }
 
 sub generate_writer_method {
     my ($self, $attr_name) = @_; 
-	if ($self->has_type_constraint) {
-		if ($self->is_weak_ref) {
-		    return sub { 
-				(defined $self->type_constraint->check($_[1]))
-					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-						if defined $_[1];
-				$_[0]->{$attr_name} = $_[1];
-				weaken($_[0]->{$attr_name});
-			};
-		}
-		else {
-		    if ($self->should_coerce) {	
-    		    return sub { 
-    		        my $val = $self->type_constraint->coercion->coerce($_[1]);
-    				(defined $self->type_constraint->check($val))
-    					|| confess "Attribute ($attr_name) does not pass the type contraint with '$val'"
-    						if defined $val;
-    				$_[0]->{$attr_name} = $val;
-    			};		        
-		    }
-		    else {	    
-    		    return sub { 
-    				(defined $self->type_constraint->check($_[1]))
-    					|| confess "Attribute ($attr_name) does not pass the type contraint with '$_[1]'"
-    						if defined $_[1];
-    				$_[0]->{$attr_name} = $_[1];
-    			};	
-    		}		
-		}
-	}
-	else {
-		if ($self->is_weak_ref) {
-		    return sub { 
-				$_[0]->{$attr_name} = $_[1];
-				weaken($_[0]->{$attr_name});
-			};			
-		}
-		else {
-		    return sub { $_[0]->{$attr_name} = $_[1] };			
-		}
-	}
+    my $value_name = $self->should_coerce ? '$val' : '$_[1]';
+    my $code = 'sub { '
+    . ($self->is_required ? 
+        'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
+        : '')
+    . ($self->should_coerce ? 
+        'my $val = $self->type_constraint->coercion->coerce($_[1]);'
+        : '')
+    . ($self->has_type_constraint ? 
+        ('(defined $self->type_constraint->check(' . $value_name . '))'
+        	. '|| confess "Attribute ($attr_name) does not pass the type contraint with \'' . $value_name . '\'"'
+        		. 'if defined ' . $value_name . ';')
+        : '')
+    . '$_[0]->{$attr_name} = ' . $value_name . ';'
+    . ($self->is_weak_ref ?
+        'weaken($_[0]->{$attr_name});'
+        : '')
+    . ' }';
+    my $sub = eval $code;
+    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
+    return $sub;    
 }
 
 sub generate_reader_method {
     my ($self, $attr_name) = @_; 
-    sub { 
-        confess "Cannot assign a value to a read-only accessor" if @_ > 1;
-        $_[0]->{$attr_name} 
-    };   
+    my $code = 'sub {'
+    . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
+    . ($self->is_lazy ? 
+            '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
+            . 'unless exists $_[0]->{$attr_name};'
+            : '')
+    . '$_[0]->{$attr_name};'
+    . '}';
+    my $sub = eval $code;
+    confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
+    return $sub;
 }
 
 1;
@@ -201,6 +166,16 @@ for L<Moose::Meta::TypeConstraint>.
 =item B<is_weak_ref>
 
 Returns true of this meta-attribute produces a weak reference.
+
+=item B<is_required>
+
+Returns true of this meta-attribute is required to have a value.
+
+=item B<is_lazy>
+
+Returns true of this meta-attribute should be initialized lazily.
+
+NOTE: lazy attributes, B<must> have a C<default> field set.
 
 =item B<should_coerce>
 
