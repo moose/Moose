@@ -39,7 +39,7 @@ Moose::Cookbook::Recipe4
   use warnings;
   use Moose;
   
-  has 'name'      => (is => 'rw', isa => 'Str');
+  has 'name'      => (is => 'rw', isa => 'Str', required => 1);
   has 'address'   => (is => 'rw', isa => 'Address'); 
   has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
       ($_->isa('Employee') || return) for @$_; 1 
@@ -61,8 +61,8 @@ Moose::Cookbook::Recipe4
   use warnings;
   use Moose;
   
-  has 'first_name'     => (is => 'rw', isa => 'Str');
-  has 'last_name'      => (is => 'rw', isa => 'Str');       
+  has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
+  has 'last_name'      => (is => 'rw', isa => 'Str', required => 1);       
   has 'middle_initial' => (is => 'rw', isa => 'Str', predicate => 'has_middle_initial');  
   has 'address'        => (is => 'rw', isa => 'Address');
   
@@ -80,14 +80,14 @@ Moose::Cookbook::Recipe4
   
   extends 'Person';
   
-  has 'title'   => (is => 'rw', isa => 'Str');
+  has 'title'   => (is => 'rw', isa => 'Str', required => 1);
   has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
   
   override 'full_name' => sub {
       my $self = shift;
       super() . ', ' . $self->title
   };
-  
+    
 =head1 DESCRIPTION
 
 =head1 AUTHOR

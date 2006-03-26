@@ -22,13 +22,17 @@ Moose::Cookbook::Recipe3
   has 'left' => (
   	  is        => 'rw',	
   	  isa       => 'BinaryTree',		
-      predicate => 'has_left',         
+      predicate => 'has_left',  
+      lazy      => 1,
+      default   => sub { BinaryTree->new(parent => $_[0]) },       
   );
   
   has 'right' => (
   	  is        => 'rw',	
   	  isa       => 'BinaryTree',		
-      predicate => 'has_right',           
+      predicate => 'has_right',   
+      lazy      => 1,       
+      default   => sub { BinaryTree->new(parent => $_[0]) },       
   );
   
   before 'right', 'left' => sub {

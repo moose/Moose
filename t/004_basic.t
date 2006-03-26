@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use Regexp::Common; use Locale::US;";
     plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
-    plan tests => 70;    
+    plan tests => 72;    
 }
 
 use Test::Exception;
@@ -51,7 +51,7 @@ BEGIN {
     use warnings;
     use Moose;
     
-    has 'name'      => (is => 'rw', isa => 'Str');
+    has 'name'      => (is => 'rw', isa => 'Str', required => 1);
     has 'address'   => (is => 'rw', isa => 'Address'); 
     has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
         ($_->isa('Employee') || return) for @$_; 1 
@@ -73,8 +73,8 @@ BEGIN {
     use warnings;
     use Moose;
     
-    has 'first_name'     => (is => 'rw', isa => 'Str');
-    has 'last_name'      => (is => 'rw', isa => 'Str');       
+    has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
+    has 'last_name'      => (is => 'rw', isa => 'Str', required => 1);       
     has 'middle_initial' => (is => 'rw', isa => 'Str', predicate => 'has_middle_initial');  
     has 'address'        => (is => 'rw', isa => 'Address');
     
@@ -92,7 +92,7 @@ BEGIN {
     
     extends 'Person';
     
-    has 'title'   => (is => 'rw', isa => 'Str');
+    has 'title'   => (is => 'rw', isa => 'Str', required => 1);
     has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
     
     override 'full_name' => sub {
@@ -251,10 +251,18 @@ lives_ok {
 } '... we live correctly with good args';
 
 dies_ok {
-    Company->new(employees => [ Person->new ]),    
+    Company->new(),    
+} '... we die correctly without good args';
+
+lives_ok {
+    Company->new(name => 'Foo'),    
+} '... we live correctly without good args';
+
+dies_ok {
+    Company->new(name => 'Foo', employees => [ Person->new ]),    
 } '... we die correctly with good args';
 
 lives_ok {
-    Company->new(employees => []),    
+    Company->new(name => 'Foo', employees => []),    
 } '... we live correctly with good args';
 

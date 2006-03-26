@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 25;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
@@ -28,56 +28,39 @@ BEGIN {
     has 'left' => (
 		is        => 'rw',	
 		isa       => 'BinaryTree',		
-        predicate => 'has_left',         
+        predicate => 'has_left',  
+        lazy      => 1,
+        default   => sub { BinaryTree->new(parent => $_[0]) },       
     );
 
     has 'right' => (
 		is        => 'rw',	
 		isa       => 'BinaryTree',		
-        predicate => 'has_right',           
+        predicate => 'has_right',   
+        lazy      => 1,       
+        default   => sub { BinaryTree->new(parent => $_[0]) },       
     );
 
     before 'right', 'left' => sub {
         my ($self, $tree) = @_;
 	    $tree->parent($self) if defined $tree;   
 	};
-	
-	sub BUILD {
-	    my ($self, $params) = @_;
-	    if ($params->{parent}) {
-	        # yeah this is a little 
-	        # weird I know, but I wanted
-	        # to check the weaken stuff 
-	        # in the constructor :)
-	        if ($params->{parent}->has_left) {
-	            $params->{parent}->right($self);	            
-	        }
-	        else {
-	            $params->{parent}->left($self);	            
-	        }
-	    }
-	}
 }
 
 my $root = BinaryTree->new();
 isa_ok($root, 'BinaryTree');
-
-is($root->left, undef, '... no left node yet');
-is($root->right, undef, '... no right node yet');
 
 ok(!$root->has_left, '... no left node yet');
 ok(!$root->has_right, '... no right node yet');
 
 ok(!$root->has_parent, '... no parent for root node');
 
-my $left = BinaryTree->new();
+# make a left node
+
+my $left = $root->left;
 isa_ok($left, 'BinaryTree');
 
-ok(!$left->has_parent, '... left does not have a parent');
-
-$root->left($left);
-
-is($root->left, $left, '... got a left node now (and it is $left)');
+is($root->left, $left, '... got the same node (and it is $left)');
 ok($root->has_left, '... we have a left node now');
 
 ok($left->has_parent, '... lefts has a parent');
@@ -85,14 +68,15 @@ is($left->parent, $root, '... lefts parent is the root');
 
 ok(isweak($left->{parent}), '... parent is a weakened ref');
 
-my $right = BinaryTree->new();
+ok(!$left->has_left, '... $left no left node yet');
+ok(!$left->has_right, '... $left no right node yet');
+
+# make a right node
+
+my $right = $root->right;
 isa_ok($right, 'BinaryTree');
 
-ok(!$right->has_parent, '... right does not have a parent');
-
-$root->right($right);
-
-is($root->right, $right, '... got a right node now (and it is $right)');
+is($root->right, $right, '... got the same node (and it is $right)');
 ok($root->has_right, '... we have a right node now');
 
 ok($right->has_parent, '... rights has a parent');
@@ -100,7 +84,7 @@ is($right->parent, $root, '... rights parent is the root');
 
 ok(isweak($right->{parent}), '... parent is a weakened ref');
 
-my $left_left = BinaryTree->new(parent => $left);
+my $left_left = $left->left;
 isa_ok($left_left, 'BinaryTree');
 
 ok($left_left->has_parent, '... left does have a parent');
