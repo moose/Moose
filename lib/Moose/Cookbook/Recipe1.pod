@@ -176,8 +176,9 @@ attributes. It does not I<require> that you pass in the all the
 attributes, and it will politely ignore any named arguments it does 
 not recognize. 
 
-From here, you can use C<$point> and C<$point3d> just as you would 
-any other Perl 5 object. 
+From here on, you can use C<$point> and C<$point3d> just as you would 
+any other Perl 5 object. For a more detailed example of what can be 
+done, you can refer to the F<t/001_basic.t> test file.
 
 =head1 CONCLUSION
 

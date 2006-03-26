@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 24;
 use Test::Exception;
 
 BEGIN {
@@ -43,7 +43,7 @@ BEGIN {
 	before 'withdraw' => sub {
 		my ($self, $amount) = @_;
 		my $overdraft_amount = $amount - $self->balance();
-		if ($overdraft_amount > 0) {
+		if (self->overdraft_account && $overdraft_amount > 0) {
 			$self->overdraft_account->withdraw($overdraft_amount);
 			$self->deposit($overdraft_amount);
 		}
@@ -62,26 +62,52 @@ is($savings_account->balance, 200, '... got the right savings balance after with
 $savings_account->deposit(150);
 is($savings_account->balance, 350, '... got the right savings balance after deposit');
 
-my $checking_account = CheckingAccount->new(
-							balance => 100,
-							overdraft_account => $savings_account
-						);
-isa_ok($checking_account, 'CheckingAccount');
-isa_ok($checking_account, 'BankAccount');
+{
+    my $checking_account = CheckingAccount->new(
+    							balance => 100,
+    							overdraft_account => $savings_account
+    						);
+    isa_ok($checking_account, 'CheckingAccount');
+    isa_ok($checking_account, 'BankAccount');
 
-is($checking_account->overdraft_account, $savings_account, '... got the right overdraft account');
+    is($checking_account->overdraft_account, $savings_account, '... got the right overdraft account');
 
-is($checking_account->balance, 100, '... got the right checkings balance');
+    is($checking_account->balance, 100, '... got the right checkings balance');
 
-lives_ok {
-	$checking_account->withdraw(50);
-} '... withdrew from checking successfully';
-is($checking_account->balance, 50, '... got the right checkings balance after withdrawl');
-is($savings_account->balance, 350, '... got the right savings balance after checking withdrawl (no overdraft)');
+    lives_ok {
+    	$checking_account->withdraw(50);
+    } '... withdrew from checking successfully';
+    is($checking_account->balance, 50, '... got the right checkings balance after withdrawl');
+    is($savings_account->balance, 350, '... got the right savings balance after checking withdrawl (no overdraft)');
 
-lives_ok {
-	$checking_account->withdraw(200);
-} '... withdrew from checking successfully';
-is($checking_account->balance, 0, '... got the right checkings balance after withdrawl');
-is($savings_account->balance, 200, '... got the right savings balance after overdraft withdrawl');
+    lives_ok {
+    	$checking_account->withdraw(200);
+    } '... withdrew from checking successfully';
+    is($checking_account->balance, 0, '... got the right checkings balance after withdrawl');
+    is($savings_account->balance, 200, '... got the right savings balance after overdraft withdrawl');
+}
+
+{
+    my $checking_account = CheckingAccount->new(
+    							balance => 100
+    							# no overdraft account
+    						);
+    isa_ok($checking_account, 'CheckingAccount');
+    isa_ok($checking_account, 'BankAccount');
+
+    is($checking_account->overdraft_account, undef, '... no overdraft account');
+
+    is($checking_account->balance, 100, '... got the right checkings balance');
+
+    lives_ok {
+    	$checking_account->withdraw(50);
+    } '... withdrew from checking successfully';
+    is($checking_account->balance, 50, '... got the right checkings balance after withdrawl');
+
+    dies_ok {
+    	$checking_account->withdraw(200);
+    } '... withdrawl failed due to attempted overdraft';
+    is($checking_account->balance, 50, '... got the right checkings balance after withdrawl failure');
+}
+
 
