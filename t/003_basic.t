@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 34;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
@@ -17,6 +17,8 @@ BEGIN {
     use strict;
     use warnings;
     use Moose;
+
+    has 'node' => (is => 'rw', isa => 'Any');
 
     has 'parent' => (
 		is        => 'rw',
@@ -47,8 +49,10 @@ BEGIN {
 	};
 }
 
-my $root = BinaryTree->new();
+my $root = BinaryTree->new(node => 'root');
 isa_ok($root, 'BinaryTree');
+
+is($root->node, 'root', '... got the right node value');
 
 ok(!$root->has_left, '... no left node yet');
 ok(!$root->has_right, '... no right node yet');
@@ -71,10 +75,30 @@ ok(isweak($left->{parent}), '... parent is a weakened ref');
 ok(!$left->has_left, '... $left no left node yet');
 ok(!$left->has_right, '... $left no right node yet');
 
+is($left->node, undef, '... left has got no node value');
+
+lives_ok {
+    $left->node('left')
+} '... assign to lefts node';
+
+is($left->node, 'left', '... left now has a node value');
+
 # make a right node
+
+ok(!$root->has_right, '... still no right node yet');
+
+is($root->right->node, undef, '... right has got no node value');
+
+ok($root->has_right, '... now we have a right node');
 
 my $right = $root->right;
 isa_ok($right, 'BinaryTree');
+
+lives_ok {
+    $right->node('right')
+} '... assign to rights node';
+
+is($right->node, 'right', '... left now has a node value');
 
 is($root->right, $right, '... got the same node (and it is $right)');
 ok($root->has_right, '... we have a right node now');
