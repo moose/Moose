@@ -1,6 +1,10 @@
 Revision history for Perl extension Moose
 
 0.03
+    * Moose::Cookbook
+      - added the Moose::Cookbook with 5 recipes, 
+        describing all the stuff Moose can do.
+
     * Moose
       - fixed an issue with &extends super class loading
         it now captures errors and deals with inline 

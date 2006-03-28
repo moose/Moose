@@ -39,7 +39,7 @@ Moose::Cookbook::Recipe2 - A simple Bank Account example
   before 'withdraw' => sub {
       my ($self, $amount) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if (self->overdraft_account && $overdraft_amount > 0) {
+      if ($self->overdraft_account && $overdraft_amount > 0) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }
@@ -107,7 +107,7 @@ modifier.
   before 'withdraw' => sub {
       my ($self, $amount) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if (self->overdraft_account && $overdraft_amount > 0) {
+      if ($self->overdraft_account && $overdraft_amount > 0) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }
@@ -130,7 +130,7 @@ pseudo-package. So the above method is equivalent to the one here.
   sub withdraw {
       my ($self, $amount) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if ($overdraft_amount > 0 && $self->overdraft_account) {
+      if ($self->overdraft_account && $overdraft_amount > 0) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }
