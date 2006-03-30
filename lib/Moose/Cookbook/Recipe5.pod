@@ -53,7 +53,9 @@ Moose::Cookbook::Recipe5 - More subtypes, coercion in a B<Request> class
 
 =head1 DESCRIPTION
 
-Coming Soon.
+Coming Soon. 
+
+(the other 4 recipes kinda burned me out a bit)
 
 =head1 AUTHOR
 

@@ -28,7 +28,8 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Attribute
       - read-only attributes now actually enforce their
-        read-only-ness
+        read-only-ness (this corrected in Class::MOP as 
+        well)
 
 0.02 Tues. March 21, 2006
     * Moose

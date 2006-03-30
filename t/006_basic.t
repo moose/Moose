@@ -12,6 +12,9 @@ BEGIN {
 
 =pod
 
+This test will eventually be for the code shown below. 
+Moose::Role is on the TODO list for 0.04.
+
     package Constraint;
     use strict;
     use warnings;
