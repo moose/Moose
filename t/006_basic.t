@@ -12,85 +12,90 @@ BEGIN {
 
 =pod
 
-==> AtLeast.pm <==
-package BAST::Web::Model::Constraint::AtLeast;
+    package Constraint;
+    use strict;
+    use warnings;
+    use Moose;
 
-use strict;
-use warnings;
-use Moose;
-use BAST::Web::Model::Constraint;
+    sub validate      { confess "Abstract method!" }
+    sub error_message { confess "Abstract method!" }
 
-extends 'BAST::Web::Model::Constraint';
+    sub validation_value {
+        my ($self, $field) = @_;
+        return $field->value;
+    }
 
-has 'value' => (isa => 'Num', is => 'ro');
+    package Constraint::AtLeast;
+    use strict;
+    use warnings;
+    use Moose;
 
-sub validate {
-  my ($self, $field) = @_;
-  if ($self->validation_value($field) >= $self->value) {
-    return undef;
-  } else {
-    return $self->error_message;
-  }
-}
+    extends 'Constraint';
 
-sub error_message { 'must be at least '.shift->value; }
+    has 'value' => (isa => 'Num', is => 'ro');
 
-1;
+    sub validate {
+        my ($self, $field) = @_;
+        if ($self->validation_value($field) >= $self->value) {
+            return undef;
+        } 
+        else {
+            return $self->error_message;
+        }
+    }
 
-==> NoMoreThan.pm <==
-package BAST::Web::Model::Constraint::NoMoreThan;
+    sub error_message { 'must be at least ' . (shift)->value; }
 
-use strict;
-use warnings;
-use Moose;
-use BAST::Web::Model::Constraint;
+    package Constraint::NoMoreThan;
+    use strict;
+    use warnings;
+    use Moose;
 
-extends 'BAST::Web::Model::Constraint';
+    extends 'Constraint';
 
-has 'value' => (isa => 'Num', is => 'ro');
+    has 'value' => (isa => 'Num', is => 'ro');
 
-sub validate {
-  my ($self, $field) = @_;
-  if ($self->validation_value($field) <= $self->value) {
-    return undef;
-  } else {
-    return $self->error_message;
-  }
-}
+    sub validate {
+        my ($self, $field) = @_;
+        if ($self->validation_value($field) <= $self->value) {
+            return undef;
+        } else {
+            return $self->error_message;
+        }
+    }
 
-sub error_message { 'must be no more than '.shift->value; }
+    sub error_message { 'must be no more than ' . (shift)->value; }
 
-1;
+    package Constraint::OnLength;
+    use strict;
+    use warnings;
+    use Moose::Role;
 
-==> OnLength.pm <==
-package BAST::Web::Model::Constraint::OnLength;
+    has 'units' => (isa => 'Str', is => 'ro');
 
-use strict;
-use warnings;
-use Moose;
+    override 'value' => sub {
+        return length(super());
+    };
 
-has 'units' => (isa => 'Str', is => 'ro');
+    override 'error_message' => sub {
+        my $self = shift;
+        return super() . ' ' . $self->units;
+    };
 
-override 'value' => sub {
-  return length(super());
-};
+    package Constraint::LengthNoMoreThan;
+    use strict;
+    use warnings;
+    use Moose;
 
-override 'error_message' => sub {
-  my $self = shift;
-  return super().' '.$self->units;
-};
+    extends 'Constraint::NoMoreThan';
+       with 'Constraint::OnLength';
+       
+   package Constraint::LengthAtLeast;
+   use strict;
+   use warnings;
+   use Moose;
 
-1;
-
-package BAST::Web::Model::Constraint::LengthNoMoreThan;
-
-use strict;
-use warnings;
-use Moose;
-use BAST::Web::Model::Constraint::NoMoreThan;
-use BAST::Web::Model::Constraint::OnLength;
-
-extends 'BAST::Web::Model::Constraint::NoMoreThan';
-   with 'BAST::Web::Model::Constraint::OnLength';
+   extends 'Constraint::AtLeast';
+      with 'Constraint::OnLength';       
 
 =cut

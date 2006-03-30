@@ -16,15 +16,15 @@ details of the code.
 
 =over 4
 
-=item L<Moose::Cookbook::Recipe1>
+=item L<Moose::Cookbook::Recipe1> - The (always classic) B<Point> example
 
-=item L<Moose::Cookbook::Recipe2>
+=item L<Moose::Cookbook::Recipe2> - A simple B<BankAccount> example
 
-=item L<Moose::Cookbook::Recipe3>
+=item L<Moose::Cookbook::Recipe3> - A lazy B<BinaryTree> example
 
-=item L<Moose::Cookbook::Recipe4>
+=item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
 
-=item L<Moose::Cookbook::Recipe5>
+=item L<Moose::Cookbook::Recipe5> - More subtypes, coercion in a B<Request> class
 
 =back
 
