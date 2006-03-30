@@ -40,7 +40,6 @@ Moose::Cookbook::Recipe5
       => as Str
       => where { /^HTTP\/[0-9]\.[0-9]$/ };
   
-  
   has 'base'     => (is => 'rw', isa => 'Uri', coerce  => 1);
   has 'url'      => (is => 'rw', isa => 'Uri', coerce  => 1);	
   has 'method'   => (is => 'rw', isa => 'Str');	

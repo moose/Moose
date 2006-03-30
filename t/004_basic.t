@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use Regexp::Common; use Locale::US;";
     plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
-    plan tests => 72;    
+    plan tests => 81;    
 }
 
 use Test::Exception;
@@ -54,7 +54,7 @@ BEGIN {
     has 'name'      => (is => 'rw', isa => 'Str', required => 1);
     has 'address'   => (is => 'rw', isa => 'Address'); 
     has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
-        ($_->isa('Employee') || return) for @$_; 1 
+        (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
     });    
     
     sub BUILD {
@@ -67,6 +67,19 @@ BEGIN {
     }
     
     sub get_employee_count { scalar @{(shift)->employees} }
+    
+    after 'employees' => sub {
+        my ($self, $employees) = @_;
+        # if employees is defined, it 
+        # has already been type checked
+        if (defined $employees) {
+            # make sure each gets the 
+            # weak ref to the company
+            foreach my $employee (@{$employees}) {
+                $employee->company($self);
+            }            
+        }
+    };
     
     package Person;
     use strict;
@@ -223,6 +236,22 @@ ok(isweak($ii->employees->[3]->{company}), '... the company is a weak-ref');
 isa_ok($ii->employees->[3]->address, 'Address');
 is($ii->employees->[3]->address->city, 'Marysville', '... got the right city');
 is($ii->employees->[3]->address->state, 'OH', '... got the right state');
+
+# create new company
+
+my $new_company = Company->new(name => 'Infinity Interactive International');
+isa_ok($new_company, 'Company');
+
+my $ii_employees = $ii->employees;
+foreach my $employee (@$ii_employees) {
+    is($employee->company, $ii, '... has the ii company');
+}
+
+$new_company->employees($ii_employees);
+
+foreach my $employee (@{$new_company->employees}) {
+    is($employee->company, $new_company, '... has the different company now');
+}
 
 ## check some error conditions for the subtypes
 

@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe4
+Moose::Cookbook::Recipe4 - Modeling a simple B<Company> class
 
 =head1 SYNOPSIS
   
@@ -43,7 +43,7 @@ Moose::Cookbook::Recipe4
   has 'name'      => (is => 'rw', isa => 'Str', required => 1);
   has 'address'   => (is => 'rw', isa => 'Address'); 
   has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
-      ($_->isa('Employee') || return) for @$_; 1 
+      (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
   });    
   
   sub BUILD {
@@ -55,7 +55,14 @@ Moose::Cookbook::Recipe4
       }
   }
   
-  sub get_employee_count { scalar @{(shift)->employees} }
+  after 'employees' => sub {
+      my ($self, $employees) = @_;
+      if (defined $employees) {
+          foreach my $employee (@{$employees}) {
+              $employee->company($self);
+          }            
+      }
+  };  
   
   package Person;
   use strict;
@@ -168,6 +175,103 @@ the B<Company> constructor, and that the C<name> accessor cannot
 accept an undefined value for the slot. The result is that C<name> 
 should always have a value. 
 
+The next attribute option is not actually a new one, but a new varient 
+of options we have already introduced.
+  
+  has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
+      (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
+  });
+  
+Here, instead of passing a string to the C<isa> option, we are passing 
+an anyonomous subtype of the C<ArrayRef> type constraint. This subtype 
+basically checks that all the values in the ARRAY ref are instance of 
+the B<Employee> class. 
+
+Now this will assure that our employee's will all be of the correct 
+type, however, the B<Employee> object (which we will see in a moment) 
+also maintains a reference back to it's associated B<Company>. In order 
+to maintain this relationship (and preserve the referential integrity 
+of our objects), we need to do some processing of the employees over 
+and above that of the type constraint check. This is accomplished in 
+two places. First we need to be sure that any employees array passed 
+to the constructor is properly initialized. For this we can use the 
+C<BUILD> method (2).
+  
+  sub BUILD {
+      my ($self, $params) = @_;
+      if ($params->{employees}) {
+          foreach my $employee (@{$params->{employees}}) {
+              $employee->company($self);
+          }
+      }
+  }
+
+The C<BUILD> method will have run after the intial type constraint 
+check, so we can do just a basic existence check on the C<employees>
+param here, and assume that if it does exist, it is both an ARRAY ref 
+and full of I<only> instances of B<Employee>.
+
+The next place we need to address is the C<employees> read/write 
+accessor (see the C<employees> attribute declaration above). This 
+accessor will properly check the type constraint, but we need to add
+so additional behavior. For this we use an C<after> method modifier
+like so:
+
+  after 'employees' => sub {
+      my ($self, $employees) = @_;
+      if (defined $employees) {
+          foreach my $employee (@{$employees}) {
+              $employee->company($self);
+          }            
+      }
+  };
+
+Again, as with the C<BUILD> method, we know that the type constraint 
+check has already happened, so we can just check for defined-ness on the 
+C<$employees> argument.
+
+At this point, our B<Company> class is complete. Next comes our B<Person> 
+class and it's subclass the previously mentioned B<Employee> class. 
+
+The B<Person> class should be obvious to you at this point. It has a few 
+C<required> attributes, and the C<middle_intial> slot has an additional 
+C<predicate> method (which we saw in the previous recipe with the 
+B<BinaryTree> class). 
+
+Next the B<Employee> class, this too should be pretty obvious at this 
+point. It requires a C<title>, and maintains a weakend reference to a 
+B<Company> instance. The only new item, which we have seen before in 
+examples, but never in the recipe itself, is the C<override> method 
+modifier. 
+  
+  override 'full_name' => sub {
+      my $self = shift;
+      super() . ', ' . $self->title
+  };
+
+This just tells Moose that I am intetionally overriding the superclass 
+C<full_name> method here, and adding the value of the C<title> slot at 
+the end of the employee's full name.
+
+And thats about it.
+
+Once again, as with all the other recipes, you can go about using 
+these classes like any other Perl 5 class. A more detailed example of 
+usage can be found in F<t/004_basic.t>.
+
+=head1 CONCLUSION
+
+This recipe was intentionally longer and more complex to illustrate both 
+how easily Moose classes can interact (using class type constraints, etc.)
+and the shear density of information and behaviors which Moose can pack 
+into a relatively small amount of typing. Ponder for a moment how much 
+more code a non-Moose plain old Perl 5 version of this recipe would have 
+been (including all the type constraint checks, weak references, etc).
+
+And of course, this recipe also introduced the C<subtype> keyword, and 
+it's usefulness within the Moose toolkit. In the next recipe we will 
+focus more on subtypes, and introduce the idea of type coercion as well.
+    
 =head1 FOOTNOTES
 
 =over 4
@@ -177,6 +281,13 @@ should always have a value.
 The value being checked is also passed as the first argument to 
 the C<where> block as well, so it can also be accessed as C<$_[0]> 
 as well.
+
+=item (2)
+
+The C<BUILD> method is called by C<Moose::Object::BUILDALL>, which is 
+called by C<Moose::Object::new>. C<BUILDALL> will climb the object 
+inheritence graph and call the approriate C<BUILD> methods in the 
+correct order.
 
 =back
 
