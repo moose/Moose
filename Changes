@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.03
+0.03 Thurs. March 30, 2006
     * Moose::Cookbook
       - added the Moose::Cookbook with 5 recipes, 
         describing all the stuff Moose can do.
