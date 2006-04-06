@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -40,7 +40,7 @@ sub import {
 	if ($pkg->can('meta')) {
 		$meta = $pkg->meta();
 		(blessed($meta) && $meta->isa('Class::MOP::Class'))
-			|| confess "Whoops, not møøsey enough";
+			|| confess "Whoops, not mÃ¸Ã¸sey enough";
 	}
 	else {
 		$meta = Moose::Meta::Class->initialize($pkg => (

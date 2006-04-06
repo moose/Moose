@@ -8,6 +8,7 @@ README
 lib/Moose.pm
 lib/Moose/Cookbook.pod
 lib/Moose/Object.pm
+lib/Moose/Role.pm
 lib/Moose/Cookbook/Recipe1.pod
 lib/Moose/Cookbook/Recipe2.pod
 lib/Moose/Cookbook/Recipe3.pod
@@ -15,6 +16,7 @@ lib/Moose/Cookbook/Recipe4.pod
 lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
+lib/Moose/Meta/Role.pm
 lib/Moose/Meta/TypeCoercion.pm
 lib/Moose/Meta/TypeConstraint.pm
 lib/Moose/Util/TypeConstraints.pm
@@ -33,6 +35,8 @@ t/020_foreign_inheritence.t
 t/030_attribute_reader_generation.t
 t/031_attribute_writer_generation.t
 t/032_attribute_accessor_generation.t
+t/040_meta_role.t
+t/041_role.t
 t/050_util_type_constraints.t
 t/051_util_type_constraints_export.t
 t/052_util_std_type_constraints.t
