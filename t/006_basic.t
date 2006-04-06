@@ -10,11 +10,7 @@ BEGIN {
     use_ok('Moose');           
 }
 
-=pod
-
-This test will eventually be for the code shown below. 
-Moose::Role is on the TODO list for 0.04.
-
+{
     package Constraint;
     use strict;
     use warnings;
@@ -93,12 +89,11 @@ Moose::Role is on the TODO list for 0.04.
     extends 'Constraint::NoMoreThan';
        with 'Constraint::OnLength';
        
-   package Constraint::LengthAtLeast;
-   use strict;
-   use warnings;
-   use Moose;
-
-   extends 'Constraint::AtLeast';
-      with 'Constraint::OnLength';       
-
-=cut
+    package Constraint::LengthAtLeast;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    extends 'Constraint::AtLeast';
+       with 'Constraint::OnLength';       
+}

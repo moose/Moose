@@ -25,8 +25,7 @@ __PACKAGE__->meta->add_attribute('method_modifier_map' => (
             before   => {},
             after    => {},
             around   => {},
-            override => {},                            
-            augment  => {},                                        
+            override => {}                                        
         };
     }
 ));
@@ -37,6 +36,63 @@ sub new {
     $options{role_meta} = Class::MOP::Class->initialize($options{role_name});
     my $self = $class->meta->new_object(%options);
     return $self;
+}
+
+sub apply {
+    my ($self, $other) = @_;
+    
+    foreach my $attribute_name ($self->get_attribute_list) {
+        # skip it if it has one already
+        next if $other->has_attribute($attribute_name);
+        # add it, although it could be overriden 
+        $other->add_attribute(
+            $attribute_name,
+            %{$self->get_attribute($attribute_name)}
+        );
+    }
+    
+    foreach my $method_name ($self->get_method_list) {
+        # skip it if it has one already
+        next if $other->has_method($method_name);
+        # add it, although it could be overriden 
+        $other->add_method(
+            $method_name,
+            $self->get_method($method_name)
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('override')) {
+        # skip it if it has one already
+        next if $other->has_method($method_name);
+        # add it, although it could be overriden 
+        $other->add_override_method_modifier(
+            $method_name,
+            $self->get_method_modifier('override' => $method_name),
+            $self->name
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('before')) {
+        $other->add_before_method_modifier(
+            $method_name,
+            $self->get_method_modifier('before' => $method_name)
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('after')) {
+        $other->add_after_method_modifier(
+            $method_name,
+            $self->get_method_modifier('after' => $method_name)
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('around')) {
+        $other->add_around_method_modifier(
+            $method_name,
+            $self->get_method_modifier('around' => $method_name)
+        );
+    }    
+    
 }
 
 # NOTE:
@@ -134,6 +190,8 @@ Moose::Meta::Role - The Moose Role metaclass
 =item B<meta>
 
 =item B<new>
+
+=item B<apply>
 
 =back
 

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'weaken';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use base 'Class::MOP::Class';
 
@@ -50,6 +50,36 @@ sub construct_instance {
     return $instance;
 }
 
+sub add_override_method_modifier {
+    my ($self, $name, $method, $_super_package) = @_;
+    # need this for roles ...
+    $_super_package ||= $self->name;
+    my $super = $self->find_next_method_by_name($name);
+    (defined $super)
+        || confess "You cannot override '$name' because it has no super method";    
+    $self->add_method($name => sub {
+        my @args = @_;
+        no strict   'refs';
+        no warnings 'redefine';
+        local *{$_super_package . '::super'} = sub { $super->(@args) };
+        return $method->(@args);
+    });
+}
+
+sub add_augment_method_modifier {
+    my ($self, $name, $method) = @_;    
+    my $super = $self->find_next_method_by_name($name);
+    (defined $super)
+        || confess "You cannot augment '$name' because it has no super method";
+    $self->add_method($name => sub {
+        my @args = @_;
+        no strict   'refs';
+        no warnings 'redefine';
+        local *{$super->package_name . '::inner'} = sub { $method->(@args) };
+        return $super->(@args);
+    });    
+}
+
 1;
 
 __END__
@@ -82,6 +112,10 @@ you are doing.
 
 This method makes sure to handle the moose weak-ref, type-constraint
 and type coercion features. 
+
+=item B<add_override_method_modifier ($name, $method)>
+
+=item B<add_augment_method_modifier ($name, $method)>
 
 =back
 

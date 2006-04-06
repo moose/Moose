@@ -4,10 +4,12 @@ package Moose::Meta::Attribute;
 use strict;
 use warnings;
 
-use Scalar::Util 'weaken', 'reftype';
+use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
+
+use Moose::Util::TypeConstraints '-no-export';
 
 use base 'Class::MOP::Attribute';
 
@@ -20,19 +22,53 @@ __PACKAGE__->meta->add_attribute('type_constraint' => (
     predicate => 'has_type_constraint',
 ));
 
-__PACKAGE__->meta->add_before_method_modifier('new' => sub {
-	my (undef, undef, %options) = @_;
+sub new {
+	my ($class, $name, %options) = @_;
+	
+	if (exists $options{is}) {
+		if ($options{is} eq 'ro') {
+			$options{reader} = $name;
+		}
+		elsif ($options{is} eq 'rw') {
+			$options{accessor} = $name;				
+		}			
+	}
+	
+	if (exists $options{isa}) {
+	    # allow for anon-subtypes here ...
+	    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
+			$options{type_constraint} = $options{isa};
+		}
+		else {
+		    # otherwise assume it is a constraint
+		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+		    # if the constraing it not found ....
+		    unless (defined $constraint) {
+		        # assume it is a foreign class, and make 
+		        # an anon constraint for it 
+		        $constraint = Moose::Util::TypeConstraints::subtype(
+		            'Object', 
+		            Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+		        );
+		    }			    
+            $options{type_constraint} = $constraint;
+		}
+	}	
+	
 	if (exists $options{coerce} && $options{coerce}) {
 	    (exists $options{type_constraint})
 	        || confess "You cannot have coercion without specifying a type constraint";
         confess "You cannot have a weak reference to a coerced value"
             if $options{weak_ref};	        
 	}	
+	
 	if (exists $options{lazy} && $options{lazy}) {
 	    (exists $options{default})
 	        || confess "You cannot have lazy attribute without specifying a default value for it";	    
-	}	
-});
+	}
+	
+	$class->SUPER::new($name, %options);	
+}
 
 sub generate_accessor_method {
     my ($self, $attr_name) = @_;

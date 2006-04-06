@@ -28,9 +28,7 @@ sub import {
 			|| confess "Whoops, not møøsey enough";
 	}
 	else {
-		$meta = Moose::Meta::Role->new(
-		    role_name => $pkg
-		);
+		$meta = Moose::Meta::Role->new(role_name => $pkg);
 		$meta->role_meta->add_method('meta' => sub { $meta })		
 	}
 	
@@ -69,10 +67,11 @@ sub import {
 		$meta->add_method_modifier('override' => $name, $code);
 	});		
 	
-	$meta->role_meta->alias_method('inner' => subname 'Moose::Role::inner' => sub {});
+	$meta->role_meta->alias_method('inner' => subname 'Moose::Role::inner' => sub {
+        confess "Moose::Role does not currently support 'inner'";	    
+	});
 	$meta->role_meta->alias_method('augment' => subname 'Moose::Role::augment' => sub {
-        my ($name, $code) = @_;
-		$meta->add_method_modifier('augment' => $name, $code);
+        confess "Moose::Role does not currently support 'augment'";
 	});	
 
 	# we recommend using these things 
