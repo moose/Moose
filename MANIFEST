@@ -46,6 +46,7 @@ t/053_util_find_type_constraint.t
 t/054_util_type_coercion.t
 t/055_util_type_reloading.t
 t/056_util_more_type_coercion.t
+t/100_subtype_quote_bug.t
 t/pod.t
 t/pod_coverage.t
 t/lib/Bar.pm

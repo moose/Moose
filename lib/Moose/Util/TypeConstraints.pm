@@ -87,23 +87,23 @@ sub via   (&) { $_[0] }
 
 # define some basic types
 
-type Any => where { 1 };
+type 'Any' => where { 1 };
 
-type Value => where { !ref($_) };
-type Ref   => where {  ref($_) };
+type 'Value' => where { !ref($_) };
+type 'Ref'   => where {  ref($_) };
 
-subtype Int => as Value => where {  Scalar::Util::looks_like_number($_) };
-subtype Str => as Value => where { !Scalar::Util::looks_like_number($_) };
+subtype 'Int' => as 'Value' => where {  Scalar::Util::looks_like_number($_) };
+subtype 'Str' => as 'Value' => where { !Scalar::Util::looks_like_number($_) };
 
-subtype ScalarRef => as Ref => where { ref($_) eq 'SCALAR' };	
-subtype ArrayRef  => as Ref => where { ref($_) eq 'ARRAY'  };
-subtype HashRef   => as Ref => where { ref($_) eq 'HASH'   };	
-subtype CodeRef   => as Ref => where { ref($_) eq 'CODE'   };
-subtype RegexpRef => as Ref => where { ref($_) eq 'Regexp' };	
+subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };	
+subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  };
+subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   };	
+subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   };
+subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' };	
 
 # NOTE: 
 # blessed(qr/.../) returns true,.. how odd
-subtype Object => as Ref => where { blessed($_) && blessed($_) ne 'Regexp' };
+subtype 'Object' => as 'Ref' => where { blessed($_) && blessed($_) ne 'Regexp' };
 
 1;
 

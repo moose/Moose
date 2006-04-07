@@ -129,6 +129,12 @@ you are doing.
 This method makes sure to handle the moose weak-ref, type-constraint
 and type coercion features. 
 
+=item B<has_method ($name)>
+
+This accomidates Moose::Meta::Role::Method instances, which are 
+aliased, instead of added, but still need to be counted as valid 
+methods.
+
 =item B<add_override_method_modifier ($name, $method)>
 
 =item B<add_augment_method_modifier ($name, $method)>

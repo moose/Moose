@@ -33,7 +33,7 @@ sub import {
 	
 	# make a subtype for each Moose class
     subtype $pkg 
-        => as Object 
+        => as 'Object' 
         => where { $_->isa($pkg) };	
 
 	my $meta;
@@ -258,6 +258,10 @@ This approach is recommended instead of C<use base>, because C<use base>
 actually C<push>es onto the class's C<@ISA>, whereas C<extends> will 
 replace it. This is important to ensure that classes which do not have 
 superclasses properly inherit from L<Moose::Object>.
+
+=item B<with ($role)>
+
+This will apply a given C<$role> to the local class. 
 
 =item B<has ($name, %options)>
 
