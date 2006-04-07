@@ -1,0 +1,115 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe6 - The Moose::Role example
+
+=head1 SYNOPSIS
+  
+  package Constraint;
+  use strict;
+  use warnings;
+  use Moose::Role;
+  
+  has 'value' => (isa => 'Int', is => 'ro');
+  
+  around 'validate' => sub {
+      my $c = shift;
+      my ($self, $field) = @_;
+      if ($c->($self, $self->validation_value($field))) {
+          return undef;
+      } 
+      else {
+          return $self->error_message;
+      }        
+  };
+  
+  sub validation_value {
+      my ($self, $field) = @_;
+      return $field;
+  }
+  
+  sub error_message { confess "Abstract method!" }
+  
+  package Constraint::OnLength;
+  use strict;
+  use warnings;
+  use Moose::Role;
+  
+  has 'units' => (isa => 'Str', is => 'ro');
+  
+  override 'validation_value' => sub {
+      return length(super());
+  };
+  
+  override 'error_message' => sub {
+      my $self = shift;
+      return super() . ' ' . $self->units;
+  };    
+  
+  package Constraint::AtLeast;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  with 'Constraint';
+  
+  sub validate {
+      my ($self, $field) = @_;
+      ($field >= $self->value);
+  }
+  
+  sub error_message { 'must be at least ' . (shift)->value; }
+  
+  package Constraint::NoMoreThan;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  with 'Constraint';
+  
+  sub validate {
+      my ($self, $field) = @_;
+      ($field <= $self->value);
+  }
+  
+  sub error_message { 'must be no more than ' . (shift)->value; }
+  
+  package Constraint::LengthNoMoreThan;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  extends 'Constraint::NoMoreThan';
+     with 'Constraint::OnLength';
+     
+  package Constraint::LengthAtLeast;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  extends 'Constraint::AtLeast';
+     with 'Constraint::OnLength';
+  
+=head1 DESCRIPTION
+
+Coming Soon. 
+
+(the other 4 recipes kinda burned me out a bit)
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut       
+       

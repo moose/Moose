@@ -33,7 +33,10 @@ __PACKAGE__->meta->add_attribute('method_modifier_map' => (
 sub new {
     my $class   = shift;
     my %options = @_;
-    $options{role_meta} = Class::MOP::Class->initialize($options{role_name});
+    $options{role_meta} = Class::MOP::Class->initialize(
+        $options{role_name},
+        ':method_metaclass' => 'Moose::Meta::Role::Method'
+    );
     my $self = $class->meta->new_object(%options);
     return $self;
 }
@@ -55,7 +58,7 @@ sub apply {
         # skip it if it has one already
         next if $other->has_method($method_name);
         # add it, although it could be overriden 
-        $other->add_method(
+        $other->alias_method(
             $method_name,
             $self->get_method($method_name)
         );
@@ -170,6 +173,14 @@ sub get_method_modifier_list {
     keys %{$self->get_method_modifier_map->{$modifier_type}};
 }
 
+package Moose::Meta::Role::Method;
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+use base 'Class::MOP::Method';
 
 1;
 

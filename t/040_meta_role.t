@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 28;
 use Test::Exception;
 
 BEGIN {  
@@ -32,6 +32,8 @@ is($foo_role->version, '0.01', '... got the right version of FooRole');
 
 ok($foo_role->has_method('foo'), '... FooRole has the foo method');
 is($foo_role->get_method('foo'), \&FooRole::foo, '... FooRole got the foo method');
+
+isa_ok($foo_role->get_method('foo'), 'Moose::Meta::Role::Method');
 
 is_deeply(
     [ $foo_role->get_method_list() ],

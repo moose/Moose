@@ -26,6 +26,8 @@ details of the code.
 
 =item L<Moose::Cookbook::Recipe5> - More subtypes, coercion in a B<Request> class
 
+=item L<Moose::Cookbook::Recipe6> - The Moose::Role example
+
 =back
 
 =head1 SEE ALSO

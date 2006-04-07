@@ -3,44 +3,72 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 15;
 use Test::Exception;
 
 BEGIN {
     use_ok('Moose');           
 }
 
+## Roles
+
 {
     package Constraint;
     use strict;
     use warnings;
-    use Moose;
+    use Moose::Role;
 
-    sub validate      { confess "Abstract method!" }
-    sub error_message { confess "Abstract method!" }
+    has 'value' => (isa => 'Int', is => 'ro');
 
+    around 'validate' => sub {
+        my $c = shift;
+        my ($self, $field) = @_;
+        if ($c->($self, $self->validation_value($field))) {
+            return undef;
+        } 
+        else {
+            return $self->error_message;
+        }        
+    };
+    
     sub validation_value {
         my ($self, $field) = @_;
-        return $field->value;
+        return $field;
     }
+    
+    sub error_message { confess "Abstract method!" }
+    
+    package Constraint::OnLength;
+    use strict;
+    use warnings;
+    use Moose::Role;
 
+    has 'units' => (isa => 'Str', is => 'ro');
+
+    override 'validation_value' => sub {
+        return length(super());
+    };
+
+    override 'error_message' => sub {
+        my $self = shift;
+        return super() . ' ' . $self->units;
+    };    
+
+}
+
+## Classes 
+
+{
     package Constraint::AtLeast;
     use strict;
     use warnings;
     use Moose;
 
-    extends 'Constraint';
-
-    has 'value' => (isa => 'Num', is => 'ro');
+    with 'Constraint';
 
     sub validate {
         my ($self, $field) = @_;
-        if ($self->validation_value($field) >= $self->value) {
-            return undef;
-        } 
-        else {
-            return $self->error_message;
-        }
+        ($field >= $self->value);
     }
 
     sub error_message { 'must be at least ' . (shift)->value; }
@@ -50,36 +78,14 @@ BEGIN {
     use warnings;
     use Moose;
 
-    extends 'Constraint';
-
-    has 'value' => (isa => 'Num', is => 'ro');
+    with 'Constraint';
 
     sub validate {
         my ($self, $field) = @_;
-        if ($self->validation_value($field) <= $self->value) {
-            return undef;
-        } else {
-            return $self->error_message;
-        }
+        ($field <= $self->value);
     }
 
     sub error_message { 'must be no more than ' . (shift)->value; }
-
-    package Constraint::OnLength;
-    use strict;
-    use warnings;
-    use Moose::Role;
-
-    has 'units' => (isa => 'Str', is => 'ro');
-
-    override 'value' => sub {
-        return length(super());
-    };
-
-    override 'error_message' => sub {
-        my $self = shift;
-        return super() . ' ' . $self->units;
-    };
 
     package Constraint::LengthNoMoreThan;
     use strict;
@@ -97,3 +103,34 @@ BEGIN {
     extends 'Constraint::AtLeast';
        with 'Constraint::OnLength';       
 }
+
+my $no_more_than_10 = Constraint::NoMoreThan->new(value => 10);
+isa_ok($no_more_than_10, 'Constraint::NoMoreThan');
+
+ok(!defined($no_more_than_10->validate(1)), '... validated correctly');
+is($no_more_than_10->validate(11), 'must be no more than 10', '... validation failed correctly');
+
+my $at_least_10 = Constraint::AtLeast->new(value => 10);
+isa_ok($at_least_10, 'Constraint::AtLeast');
+
+ok(!defined($at_least_10->validate(11)), '... validated correctly');
+is($at_least_10->validate(1), 'must be at least 10', '... validation failed correctly');
+
+# onlength
+
+my $no_more_than_10_chars = Constraint::LengthNoMoreThan->new(value => 10, units => 'chars');
+isa_ok($no_more_than_10_chars, 'Constraint::LengthNoMoreThan');
+isa_ok($no_more_than_10_chars, 'Constraint::NoMoreThan');
+
+ok(!defined($no_more_than_10_chars->validate('foo')), '... validated correctly');
+is($no_more_than_10_chars->validate('foooooooooo'), 
+    'must be no more than 10 chars', 
+    '... validation failed correctly');
+
+my $at_least_10_chars = Constraint::LengthAtLeast->new(value => 10, units => 'chars');
+isa_ok($at_least_10_chars, 'Constraint::LengthAtLeast');
+isa_ok($at_least_10_chars, 'Constraint::AtLeast');
+
+ok(!defined($at_least_10_chars->validate('barrrrrrrrr')), '... validated correctly');
+is($at_least_10_chars->validate('bar'), 'must be at least 10 chars', '... validation failed correctly');
+

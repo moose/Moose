@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'weaken';
+use Scalar::Util 'weaken', 'blessed';
 
 our $VERSION = '0.04';
 
@@ -49,6 +49,22 @@ sub construct_instance {
     }
     return $instance;
 }
+
+sub has_method {
+    my ($self, $method_name) = @_;
+    (defined $method_name && $method_name)
+        || confess "You must define a method name";    
+
+    my $sub_name = ($self->name . '::' . $method_name);   
+    
+    no strict 'refs';
+    return 0 if !defined(&{$sub_name});        
+	my $method = \&{$sub_name};
+	
+	return 1 if blessed($method) && $method->isa('Moose::Meta::Role::Method');
+    return $self->SUPER::has_method($method_name);    
+}
+
 
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
@@ -146,7 +146,7 @@ and they are not used by Moose unless you tell it to. No type
 inference is performed, expression are not typed, etc. etc. etc. 
 
 This is simply a means of creating small constraint functions which 
-can be used to simply your own type-checking code.
+can be used to simplify your own type-checking code.
 
 =head2 Default Type Constraints
 
