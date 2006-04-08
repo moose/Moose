@@ -23,12 +23,8 @@ BEGIN {
     around 'validate' => sub {
         my $c = shift;
         my ($self, $field) = @_;
-        if ($c->($self, $self->validation_value($field))) {
-            return undef;
-        } 
-        else {
-            return $self->error_message;
-        }        
+        return undef if $c->($self, $self->validation_value($field));
+        return $self->error_message;        
     };
     
     sub validation_value {
