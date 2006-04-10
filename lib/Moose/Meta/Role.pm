@@ -194,6 +194,9 @@ Moose::Meta::Role - The Moose Role metaclass
 
 =head1 DESCRIPTION
 
+Moose's Roles are being actively developed, please see L<Moose::Role> 
+for more information. 
+
 =head1 METHODS
 
 =over 4

@@ -129,7 +129,8 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
   
   subtype NaturalLessThanTen 
       => as Natural
-      => where { $_ < 10 };
+      => where { $_ < 10 }
+      => message { "This number ($_) is not less than ten!" };
       
   coerce Num 
       => from Str
@@ -202,11 +203,11 @@ See the L<SYNOPOSIS> for an example of how to use these.
 
 This creates a base type, which has no parent. 
 
-=item B<subtype ($name, $parent, $where_clause)>
+=item B<subtype ($name, $parent, $where_clause, ?$message)>
 
 This creates a named subtype. 
 
-=item B<subtype ($parent, $where_clause)>
+=item B<subtype ($parent, $where_clause, ?$message)>
 
 This creates an unnamed subtype and will return the type 
 constraint meta-object, which will be an instance of 

@@ -92,8 +92,6 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
 
 Coming Soon. 
 
-(the other 4 recipes kinda burned me out a bit)
-
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>

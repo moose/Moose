@@ -175,7 +175,7 @@ Moose - Moose, it's the new Camel
   
 =head1 CAVEAT
 
-This is a B<very> early release of this module, it still needs 
+This is an early release of this module, it still needs 
 some fine tuning and B<lots> more documentation. I am adopting 
 the I<release early and release often> approach with this module, 
 so keep an eye on your favorite CPAN mirror!
@@ -237,6 +237,8 @@ are defined with C<has>. And assuming that you call C<new> which is
 inherited from L<Moose::Object>, then this includes properly initializing 
 all instance slots, setting defaults where approprtiate and performing any 
 type constraint checking or coercion. 
+
+For more details, see the ever expanding L<Moose::Cookbook>.
 
 =head1 EXPORTED FUNCTIONS
 
