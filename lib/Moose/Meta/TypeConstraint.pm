@@ -8,11 +8,15 @@ use metaclass;
 use Sub::Name 'subname';
 use Carp      'confess';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
 __PACKAGE__->meta->add_attribute('constraint' => (reader => 'constraint'));
+__PACKAGE__->meta->add_attribute('message'   => (
+    accessor  => 'message',
+    predicate => 'has_message'
+));
 __PACKAGE__->meta->add_attribute('coercion'   => (
     accessor  => 'coercion',
     predicate => 'has_coercion'
@@ -57,6 +61,22 @@ sub compile_type_constraint () {
 
 sub check { $_[0]->_compiled_type_constraint->($_[1]) }
 
+sub validate { 
+    my ($self, $value) = @_;
+    if ($self->_compiled_type_constraint->($value)) {
+        return undef;
+    }
+    else {
+        if ($self->has_message) {
+            local $_ = $value;
+            return $self->message->($value);
+        }
+        else {
+            return "Validation failed for '" . $self->name . "' failed.";
+        }
+    }
+}
+
 1;
 
 __END__
@@ -88,13 +108,27 @@ If you wish to use features at this depth, please come to the
 
 =item B<compile_type_constraint>
 
-=item B<check>
+=item B<check ($value)>
+
+This method will return a true (C<1>) if the C<$value> passes the 
+constraint, and false (C<0>) otherwise.
+
+=item B<validate ($value)>
+
+This method is similar to C<check>, but it deals with the error 
+message. If the C<$value> passes the constraint, C<undef> will be 
+returned. If the C<$value> does B<not> pass the constraint, then 
+the C<message> will be used to construct a custom error message.  
 
 =item B<name>
 
 =item B<parent>
 
 =item B<constraint>
+
+=item B<has_message>
+
+=item B<message>
 
 =item B<has_coercion>
 

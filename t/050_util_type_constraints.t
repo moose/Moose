@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 25;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -21,7 +21,8 @@ subtype Natural
 
 subtype NaturalLessThanTen 
 	=> as Natural
-	=> where { $_ < 10 };
+	=> where { $_ < 10 }
+	=> message { "The number '$_' is not less than 10" };
 	
 Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
 
@@ -50,5 +51,28 @@ is($negative->check(-5), -5, '... this is a negative number');
 ok(!defined($negative->check(5)), '... this is not a negative number');
 is($negative->check('Foo'), undef, '... this is not a negative number');
 
+# check some meta-details
+
+my $natural_less_than_ten = find_type_constraint('NaturalLessThanTen');
+isa_ok($natural_less_than_ten, 'Moose::Meta::TypeConstraint');
+
+ok($natural_less_than_ten->has_message, '... it has a message');
+
+ok(!defined($natural_less_than_ten->validate(5)), '... validated successfully (no error)');
+
+is($natural_less_than_ten->validate(15), 
+   "The number '15' is not less than 10", 
+   '... validated unsuccessfully (got error)');
+
+my $natural = find_type_constraint('Natural');
+isa_ok($natural, 'Moose::Meta::TypeConstraint');
+
+ok(!$natural->has_message, '... it does not have a message');
+
+ok(!defined($natural->validate(5)), '... validated successfully (no error)');
+
+is($natural->validate(-5), 
+  "Validation failed for 'Natural' failed.", 
+  '... validated unsuccessfully (got error)');
 
 

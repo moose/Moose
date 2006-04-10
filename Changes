@@ -1,8 +1,8 @@
 Revision history for Perl extension Moose
 
-0.04
+0.03_01
     * Moose::Cookbook
-      - added new Role recipe
+      - added new Role recipe (no content yet, only code)
       
     * Moose
       - added 'with' keyword for Role support
@@ -13,6 +13,10 @@ Revision history for Perl extension Moose
     * Moose::Role
       - Roles for Moose
         - added test and docs
+
+    * Moose::Util::TypeConstraints
+      - added the message keyword to add custom
+        error messages to type constraints        
       
     * Moose::Meta::Role
       - the meta role to support Moose::Role
@@ -26,6 +30,11 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - moved the attribute option macros here
         instead of putting them in Moose.pm
+
+    * Moose::Meta::TypeConstraint
+      - added the message attributes and the 
+        validate method
+        - added tests and docs for this
 
 0.03 Thurs. March 30, 2006
     * Moose::Cookbook

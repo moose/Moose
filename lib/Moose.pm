@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.03_01';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -261,7 +261,8 @@ superclasses properly inherit from L<Moose::Object>.
 
 =item B<with ($role)>
 
-This will apply a given C<$role> to the local class. 
+This will apply a given C<$role> to the local class. Role support is 
+currently very experimental, see L<Moose::Role> for more details.
 
 =item B<has ($name, %options)>
 

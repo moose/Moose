@@ -90,13 +90,82 @@ __END__
 
 Moose::Role - The Moose Role
 
+=head1 SYNOPSIS
+
+  package Eq;
+  use strict;
+  use warnings;
+  use Moose::Role;
+  
+  sub equal { confess "equal must be implemented" }
+  
+  sub no_equal { 
+      my ($self, $other) = @_;
+      !$self->equal($other);
+  }
+  
+  # ... then in your classes
+  
+  package Currency;
+  use strict;
+  use warnings;
+  use Moose;
+  
+  with 'Eq';
+  
+  sub equal {
+      my ($self, $other) = @_;
+      $other->as_float == $other->as_float;
+  }
+
 =head1 DESCRIPTION
 
-=head1 METHODS
+This is currently a very early release of Perl 6 style Roles for 
+Moose, it should be considered experimental and incomplete.
+
+This feature is being actively developed, but $work is currently 
+preventing me from paying as much attention to it as I would like. 
+So I am releasing it in hopes people will help me on this I<hint hint>.
+
+If you are interested in helping, please come to #moose on irc.perl.org
+and we can talk. 
+
+=head1 CAVEATS
+
+Currently, the role support has a number of caveats. They are as follows:
 
 =over 4
 
+=item *
+
+There is no support for Roles consuming other Roles. The details of this 
+are not totally worked out yet, but it will mostly follow what is set out 
+in the Perl 6 Synopsis 12.
+
+=item *
+
+At this time classes I<can> consume more than one Role, but they are simply 
+applied one after another in the order you ask for them. This is incorrect 
+behavior, the roles should be merged first, and conflicts determined, etc. 
+However, if your roles do not have any conflicts, then things will work just 
+fine.
+
+=item * 
+
+I want to have B<required> methods, which is unlike Perl 6 roles, and more 
+like the original Traits on which roles are based. This would be similar 
+in behavior to L<Class::Trait>. These are not yet implemented or course.
+
+=item *
+
+Roles cannot use the C<extends> keyword, it will throw an exception for now. 
+The same is true of the C<augment> and C<inner> keywords (not sure those 
+really make sense for roles). All other Moose keywords will be I<deferred> 
+so that they can be applied to the consuming class. 
+
 =back
+
+Basically thats all I can think of for now, I am sure there are more though.
 
 =head1 BUGS
 
