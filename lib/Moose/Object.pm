@@ -7,10 +7,11 @@ use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new {
-	my ($class, %params) = @_;
+    my $class  = shift;
+    my %params = (scalar @_ == 1) ? %{$_[0]} : @_;
 	my $self = $class->meta->new_object(%params);
 	$self->BUILDALL(\%params);
 	return $self;

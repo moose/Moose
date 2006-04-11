@@ -81,7 +81,7 @@ dies_ok {
 
 # Point3D
 
-my $point3d = Point3D->new(x => 10, y => 15, z => 3);
+my $point3d = Point3D->new({ x => 10, y => 15, z => 3 });
 isa_ok($point3d, 'Point3D');
 isa_ok($point3d, 'Point');
 isa_ok($point3d, 'Moose::Object');

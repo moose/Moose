@@ -29,7 +29,7 @@ sub import {
 	# we should never export to main
 	return if $pkg eq 'main';
 	
-	Moose::Util::TypeConstraints->import($pkg);
+	#Moose::Util::TypeConstraints->import($pkg);
 	
 	# make a subtype for each Moose class
     subtype $pkg 
@@ -340,6 +340,27 @@ all the time. This feature may change in the future, so you have been warned.
 This is the C<Scalar::Uti::blessed> function, it is exported here beause I 
 use it all the time. It is highly recommended that this is used instead of 
 C<ref> anywhere you need to test for an object's class name.
+
+=back
+
+=head1 CAVEATS
+
+=over 4
+
+=item *
+
+It should be noted that C<super> and C<inner> can B<not> be used in the same 
+method. However, they can be combined together with the same class hierarchy, 
+see F<t/014_override_augment_inner_super.t> for an example. 
+
+The reason that this is so is because C<super> is only valid within a method 
+with the C<override> modifier, and C<inner> will never be valid within an 
+C<override> method. In fact, C<augment> will skip over any C<override> methods 
+when searching for it's appropriate C<inner>. 
+
+This might seem like a restriction, but I am of the opinion that keeping these 
+two features seperate (but interoperable) actually makes them easy to use since 
+their behavior is then easier to predict. Time will tell if I am right or not.
 
 =back
 

@@ -11,6 +11,7 @@ Moose::Cookbook::Recipe5 - More subtypes, coercion in a B<Request> class
   use strict;
   use warnings;
   use Moose;
+  use Moose::Util::TypeConstraints;
   
   use HTTP::Headers  ();
   use Params::Coerce ();

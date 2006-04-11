@@ -11,6 +11,7 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   use strict;
   use warnings;
   use Moose;
+  use Moose::Util::TypeConstraints;
   
   use Locale::US;
   use Regexp::Common 'zip';
@@ -39,6 +40,7 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   use strict;
   use warnings;
   use Moose;
+  use Moose::Util::TypeConstraints;
   
   has 'name'      => (is => 'rw', isa => 'Str', required => 1);
   has 'address'   => (is => 'rw', isa => 'Address'); 

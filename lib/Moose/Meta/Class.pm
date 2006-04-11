@@ -73,28 +73,58 @@ sub add_override_method_modifier {
     my $super = $self->find_next_method_by_name($name);
     (defined $super)
         || confess "You cannot override '$name' because it has no super method";    
-    $self->add_method($name => sub {
+    $self->add_method($name => bless sub {
         my @args = @_;
         no strict   'refs';
         no warnings 'redefine';
         local *{$_super_package . '::super'} = sub { $super->(@args) };
         return $method->(@args);
-    });
+    } => 'Moose::Meta::Method::Overriden');
 }
 
 sub add_augment_method_modifier {
-    my ($self, $name, $method) = @_;    
+    my ($self, $name, $method) = @_;  
     my $super = $self->find_next_method_by_name($name);
     (defined $super)
-        || confess "You cannot augment '$name' because it has no super method";
+        || confess "You cannot augment '$name' because it has no super method";    
+    my $_super_package = $super->package_name;   
+    # BUT!,... if this is an overriden method ....     
+    if ($super->isa('Moose::Meta::Method::Overriden')) {
+        # we need to be sure that we actually 
+        # find the next method, which is not 
+        # an 'override' method, the reason is
+        # that an 'override' method will not 
+        # be the one calling inner()
+        my $real_super = $self->_find_next_method_by_name_which_is_not_overridden($name);        
+        $_super_package = $real_super->package_name;
+    }      
     $self->add_method($name => sub {
         my @args = @_;
         no strict   'refs';
         no warnings 'redefine';
-        local *{$super->package_name . '::inner'} = sub { $method->(@args) };
+        local *{$_super_package . '::inner'} = sub { $method->(@args) };
         return $super->(@args);
     });    
 }
+
+sub _find_next_method_by_name_which_is_not_overridden {
+    my ($self, $name) = @_;
+    my @methods = $self->find_all_methods_by_name($name);
+    foreach my $method (@methods) {
+        return $method->{code} 
+            if blessed($method->{code}) && !$method->{code}->isa('Moose::Meta::Method::Overriden');
+    }
+    return undef;
+}
+
+package Moose::Meta::Method::Overriden;
+
+use strict;
+use warnings;
+
+our $VERSION = '0.01';
+
+use base 'Class::MOP::Method';
 
 1;
 

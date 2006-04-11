@@ -23,6 +23,7 @@ BEGIN {
     use strict;
     use warnings;
     use Moose;
+    use Moose::Util::TypeConstraints;
     
     use Locale::US;
     use Regexp::Common 'zip';
@@ -50,6 +51,7 @@ BEGIN {
     use strict;
     use warnings;
     use Moose;
+    use Moose::Util::TypeConstraints;    
     
     has 'name'      => (is => 'rw', isa => 'Str', required => 1);
     has 'address'   => (is => 'rw', isa => 'Address'); 
@@ -116,7 +118,7 @@ BEGIN {
 
 my $ii;
 lives_ok {
-    $ii = Company->new(
+    $ii = Company->new({
         name    => 'Infinity Interactive',
         address => Address->new(
             street   => '565 Plandome Rd., Suite 307',
@@ -151,7 +153,7 @@ lives_ok {
                 address        => Address->new(city => 'Marysville', state => 'OH')
             ),        
         ]
-    );
+    });
 } '... created the entire company successfully';
 isa_ok($ii, 'Company');
 

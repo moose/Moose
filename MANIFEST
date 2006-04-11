@@ -32,6 +32,8 @@ t/010_basic_class_setup.t
 t/011_require_superclasses.t
 t/012_super_and_override.t
 t/013_inner_and_augment.t
+t/014_override_augment_inner_super.t
+t/015_override_and_foreign_classes.t
 t/020_foreign_inheritence.t
 t/030_attribute_reader_generation.t
 t/031_attribute_writer_generation.t

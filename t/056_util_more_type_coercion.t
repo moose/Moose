@@ -15,6 +15,7 @@ BEGIN {
     use strict;
     use warnings;
     use Moose;
+    use Moose::Util::TypeConstraints;
     
     coerce 'HTTPHeader'
         => from ArrayRef 

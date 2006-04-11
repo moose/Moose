@@ -1,6 +1,14 @@
 Revision history for Perl extension Moose
 
-0.03_01
+0.03_02
+    * Moose
+      - you must now explictly use Moose::Util::TypeConstraints
+        it no longer gets exported for you automatically
+        
+    * Moose::Object
+      - new() now accepts hash-refs as well as key/value lists
+
+0.03_01 Mon. March 10, 2006
     * Moose::Cookbook
       - added new Role recipe (no content yet, only code)
       

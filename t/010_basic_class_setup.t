@@ -13,6 +13,7 @@ BEGIN {
 {
     package Foo;
     use Moose;
+    use Moose::Util::TypeConstraints;
 }
 
 can_ok('Foo', 'meta');

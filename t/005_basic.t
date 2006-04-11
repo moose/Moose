@@ -22,6 +22,7 @@ BEGIN {
 	use strict;
 	use warnings;
 	use Moose;
+    use Moose::Util::TypeConstraints;
 	
 	use HTTP::Headers  ();
 	use Params::Coerce ();
