@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 36;
 use Test::Exception;
 
 BEGIN {  
@@ -53,6 +53,9 @@ BEGIN {
 my $foo_class_meta = FooClass->meta;
 isa_ok($foo_class_meta, 'Moose::Meta::Class');
 
+ok($foo_class_meta->does_role('FooRole'), '... the FooClass->meta does_role FooRole');
+ok(!$foo_class_meta->does_role('OtherRole'), '... the FooClass->meta !does_role OtherRole');
+
 foreach my $method_name (qw(bar baz foo boo blau goo)) {
     ok($foo_class_meta->has_method($method_name), '... FooClass has the method ' . $method_name);    
 }
@@ -61,8 +64,16 @@ foreach my $attr_name (qw(bar baz)) {
     ok($foo_class_meta->has_attribute($attr_name), '... FooClass has the attribute ' . $attr_name);    
 }
 
+can_ok('FooClass', 'does');
+ok(FooClass->does('FooRole'), '... the FooClass does FooRole');
+ok(!FooClass->does('OtherRole'), '... the FooClass does not do OtherRole');
+
 my $foo = FooClass->new();
 isa_ok($foo, 'FooClass');
+
+can_ok($foo, 'does');
+ok($foo->does('FooRole'), '... an instance of FooClass does FooRole');
+ok(!$foo->does('OtherRole'), '... and instance of FooClass does not do OtherRole');
 
 can_ok($foo, 'bar');
 can_ok($foo, 'baz');

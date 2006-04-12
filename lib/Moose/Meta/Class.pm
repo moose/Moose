@@ -11,6 +11,28 @@ our $VERSION = '0.04';
 
 use base 'Class::MOP::Class';
 
+__PACKAGE__->meta->add_attribute('@:roles' => (
+    reader  => 'roles',
+    default => sub { [] }
+));
+
+sub add_role {
+    my ($self, $role) = @_;
+    (blessed($role) && $role->isa('Moose::Meta::Role'))
+        || confess "Roles must be instances of Moose::Meta::Role";
+    push @{$self->roles} => $role;
+}
+
+sub does_role {
+    my ($self, $role_name) = @_;
+    (defined $role_name)
+        || confess "You must supply a role name to look for";
+    foreach my $role (@{$self->roles}) {
+        return 1 if $role->name eq $role_name;
+    }
+    return 0;
+}
+
 sub construct_instance {
     my ($class, %params) = @_;
     my $instance = $params{'__INSTANCE__'} || {};
@@ -168,6 +190,12 @@ methods.
 =item B<add_override_method_modifier ($name, $method)>
 
 =item B<add_augment_method_modifier ($name, $method)>
+
+=item B<roles>
+
+=item B<add_role ($role)>
+
+=item B<does_role ($role_name)>
 
 =back
 

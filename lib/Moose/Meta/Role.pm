@@ -7,7 +7,7 @@ use metaclass;
 
 use Carp 'confess';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->meta->add_attribute('role_meta' => (
     reader => 'role_meta'
@@ -96,6 +96,31 @@ sub apply {
         );
     }    
     
+    ## add the roles and set does()
+    
+    $other->add_role($self);
+    
+    # NOTE:
+    # this will not replace a locally 
+    # defined does() method, those 
+    # should work as expected since 
+    # they are working off the same 
+    # metaclass. 
+    # It will override an inherited 
+    # does() method though, since 
+    # it needs to add this new metaclass
+    # to the mix.
+    
+    $other->add_method('does' => sub { 
+        my (undef, $role_name) = @_;
+        (defined $role_name)
+            || confess "You much supply a role name to does()";
+        foreach my $class ($other->class_precedence_list) {
+            return 1 
+                if $other->initialize($class)->does_role($role_name);            
+        }
+        return 0;
+    }) unless $other->has_method('does');
 }
 
 # NOTE:

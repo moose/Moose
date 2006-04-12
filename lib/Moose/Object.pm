@@ -7,7 +7,7 @@ use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new {
     my $class  = shift;
@@ -32,6 +32,10 @@ sub DEMOLISHALL {
 }
 
 sub DESTROY { goto &DEMOLISHALL }
+
+# new does() methods will be created 
+# as approiate see Moose::Meta::Role
+sub does { 0 }
 
 1;
 
@@ -74,6 +78,8 @@ and pass it a hash-ref of the the C<%params> passed to C<new>.
 =item B<DEMOLISHALL>
 
 This will call every C<DEMOLISH> method in the inheritance hierarchy.
+
+=item B<does ($role_name)>
 
 =back
 

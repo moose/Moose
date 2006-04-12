@@ -39,7 +39,7 @@ sub import {
 	my $meta;
 	if ($pkg->can('meta')) {
 		$meta = $pkg->meta();
-		(blessed($meta) && $meta->isa('Class::MOP::Class'))
+		(blessed($meta) && $meta->isa('Moose::Meta::Class'))
 			|| confess "Whoops, not møøsey enough";
 	}
 	else {
