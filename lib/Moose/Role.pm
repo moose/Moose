@@ -48,6 +48,11 @@ sub import {
         $role->meta->apply($meta);
 	});	
 	
+	# required methods
+	$meta->alias_method('requires' => subname 'Moose::requires' => sub { 
+        $meta->add_required_methods(@_);
+	});	
+	
 	# handle attributes
 	$meta->alias_method('has' => subname 'Moose::Role::has' => sub { 
 		my ($name, %options) = @_;

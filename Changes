@@ -1,9 +1,21 @@
 Revision history for Perl extension Moose
 
 0.04
+    * Moose::Role
+      - Roles can now consume other roles
+        - added tests for this
+      - Roles can specify required methods now with 
+        the requires() keyword
+        - added tests for this
+
     * Moose::Meta::Role
       - ripped out much of it's guts ,.. much cleaner now
-        - applied the needed changs to Moose::Role too
+      - added required methods and correct handling of 
+        them in apply()
+      - no longer adds a does() method to consuming classes 
+        it relys on the one in Moose::Object
+      - added roles attribute and some methods to support 
+        roles consuming roles
 
 0.03_02 Wed. April 12, 2006
     * Moose

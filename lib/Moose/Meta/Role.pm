@@ -35,6 +35,13 @@ __PACKAGE__->meta->add_attribute('attribute_map' => (
     default  => sub { {} }
 ));
 
+## required methods
+
+__PACKAGE__->meta->add_attribute('required_methods' => (
+    reader  => 'get_required_methods_map',
+    default => sub { {} }
+));
+
 ## method modifiers
 
 __PACKAGE__->meta->add_attribute('before_method_modifiers' => (
@@ -92,6 +99,23 @@ sub does_role {
     return 0;
 }
 
+## required methods
+
+sub add_required_methods {
+    my ($self, @methods) = @_;
+    $self->get_required_methods_map->{$_} = undef foreach @methods;
+}
+
+sub get_required_method_list {
+    my ($self) = @_;
+    keys %{$self->get_required_methods_map};
+}
+
+sub requires_method {
+    my ($self, $method_name) = @_;
+    exists $self->get_required_methods_map->{$method_name} ? 1 : 0;
+}
+
 ## methods
 
 # NOTE:
@@ -114,7 +138,7 @@ sub get_method_list {
         # should not be showing up in the list at all, 
         # but they do, so we need to switch Moose::Role
         # and Moose to use Sub::Exporter to prevent this
-        !/^(meta|has|extends|blessed|confess|augment|inner|override|super|before|after|around|with)$/ 
+        !/^(meta|has|extends|blessed|confess|augment|inner|override|super|before|after|around|with|requires)$/ 
     } $self->_role_meta->get_method_list;
 }
 
@@ -211,6 +235,18 @@ sub get_method_modifier_list {
 sub apply {
     my ($self, $other) = @_;
     
+    # NOTE:
+    # we might need to move this down below the 
+    # the attributes so that we can require any 
+    # attribute accessors. However I am thinking 
+    # that maybe those are somehow exempt from 
+    # the require methods stuff.  
+    foreach my $required_method_name ($self->get_required_method_list) {
+        ($other->has_method($required_method_name))
+            || confess "Role (" . $self->name . ") requires the method '$required_method_name'" . 
+                      "is implemented by the class '" . $other->name . "'";
+    }    
+    
     foreach my $attribute_name ($self->get_attribute_list) {
         # skip it if it has one already
         next if $other->has_attribute($attribute_name);
@@ -262,8 +298,6 @@ sub apply {
             $_
         ) foreach $self->get_around_method_modifiers($method_name);
     }    
-    
-    ## add the roles and set does()
     
     $other->add_role($self);
 }
@@ -349,6 +383,18 @@ for more information.
 =item B<get_attribute_map>
 
 =item B<remove_attribute>
+
+=back
+
+=over 4
+
+=item B<add_required_methods>
+
+=item B<get_required_method_list>
+
+=item B<get_required_methods_map>
+
+=item B<requires_method>
 
 =back
 
