@@ -70,8 +70,8 @@ is_deeply(
 
 # method modifiers
 
-ok($foo_role->has_method_modifiers('before' => 'boo'), '... now we have a boo:before modifier');
-is(($foo_role->get_method_modifiers('before' => 'boo'))[0]->(), 
+ok($foo_role->has_before_method_modifiers('boo'), '... now we have a boo:before modifier');
+is(($foo_role->get_before_method_modifiers('boo'))[0]->(), 
     "FooRole::boo:before", 
     '... got the right method back');
 

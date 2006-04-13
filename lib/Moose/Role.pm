@@ -50,21 +50,21 @@ sub import {
 	# handle method modifers
 	$meta->role_meta->alias_method('before' => subname 'Moose::Role::before' => sub { 
 		my $code = pop @_;
-		$meta->add_method_modifier('before' => $_, $code) for @_;
+		$meta->add_before_method_modifier($_, $code) for @_;
 	});
 	$meta->role_meta->alias_method('after'  => subname 'Moose::Role::after' => sub { 
 		my $code = pop @_;
-		$meta->add_method_modifier('after' => $_, $code) for @_;
+		$meta->add_after_method_modifier($_, $code) for @_;
 	});	
 	$meta->role_meta->alias_method('around' => subname 'Moose::Role::around' => sub { 
 		my $code = pop @_;
-		$meta->add_method_modifier('around' => $_, $code) for @_;
+		$meta->add_around_method_modifier($_, $code) for @_;
 	});	
 	
 	$meta->role_meta->alias_method('super' => subname 'Moose::Role::super' => sub {});
 	$meta->role_meta->alias_method('override' => subname 'Moose::Role::override' => sub {
         my ($name, $code) = @_;
-		$meta->add_method_modifier('override' => $name, $code);
+		$meta->add_override_method_modifier($name, $code);
 	});		
 	
 	$meta->role_meta->alias_method('inner' => subname 'Moose::Role::inner' => sub {
