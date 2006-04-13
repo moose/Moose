@@ -60,6 +60,6 @@ BEGIN {
     use warnings;
     use Moose;
     
-    ::dies_ok { with('Foo::Role') } '... no foo method implemented by Baz::Role';
+    ::lives_ok { with('Foo::Role') } '... no foo method implemented by Baz::Role';
 }
 
