@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.03_01';
+our $VERSION = '0.03_02';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -28,8 +28,6 @@ sub import {
 	
 	# we should never export to main
 	return if $pkg eq 'main';
-	
-	#Moose::Util::TypeConstraints->import($pkg);
 	
 	# make a subtype for each Moose class
     subtype $pkg 

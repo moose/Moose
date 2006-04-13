@@ -1,14 +1,26 @@
 Revision history for Perl extension Moose
 
-0.03_02
+0.03_02 Wed. April 12, 2006
     * Moose
       - you must now explictly use Moose::Util::TypeConstraints
         it no longer gets exported for you automatically
         
     * Moose::Object
       - new() now accepts hash-refs as well as key/value lists
+      - added does() method to check for Roles
+        - added tests for this
 
-0.03_01 Mon. March 10, 2006
+    * Moose::Meta::Class
+      - added roles attribute along with the add_role() and 
+        does_role() methods
+        - added tests for this 
+
+    * Moose::Meta::Role
+      - now adds a does() method to consuming classes 
+        which tests the class's hierarchy for roles
+        - added tests for this
+
+0.03_01 Mon. April 10, 2006
     * Moose::Cookbook
       - added new Role recipe (no content yet, only code)
       

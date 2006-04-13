@@ -7,6 +7,8 @@ use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
 
+use Carp 'confess';
+
 our $VERSION = '0.04';
 
 sub new {
@@ -35,7 +37,12 @@ sub DESTROY { goto &DEMOLISHALL }
 
 # new does() methods will be created 
 # as approiate see Moose::Meta::Role
-sub does { 0 }
+sub does {
+    my (undef, $role_name) = @_;
+    (defined $role_name)
+        || confess "You much supply a role name to does()";
+    0;    
+}
 
 1;
 
