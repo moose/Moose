@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.04
+    * Moose::Meta::Role
+      - ripped out much of it's guts ,.. much cleaner now
+        - applied the needed changs to Moose::Role too
+
 0.03_02 Wed. April 12, 2006
     * Moose
       - you must now explictly use Moose::Util::TypeConstraints

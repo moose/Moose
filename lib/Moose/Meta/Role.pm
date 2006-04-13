@@ -5,14 +5,20 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp 'confess';
+use Carp         'confess';
+use Scalar::Util 'blessed';
+
+use Moose::Meta::Class;
 
 our $VERSION = '0.02';
 
+## Attributes
+
 ## the meta for the role package
 
-__PACKAGE__->meta->add_attribute('role_meta' => (
-    reader   => 'role_meta'
+__PACKAGE__->meta->add_attribute('_role_meta' => (
+    reader   => '_role_meta',
+    init_arg => ':role_meta'
 ));
 
 ## roles
@@ -33,17 +39,17 @@ __PACKAGE__->meta->add_attribute('attribute_map' => (
 
 __PACKAGE__->meta->add_attribute('before_method_modifiers' => (
     reader  => 'get_before_method_modifiers_map',
-    default => sub { {} } # keyed by method name, then arrays of method-modifiers
+    default => sub { {} } # (<name> => [ (CODE) ])
 ));
 
 __PACKAGE__->meta->add_attribute('after_method_modifiers' => (
     reader  => 'get_after_method_modifiers_map',
-    default => sub { {} } # keyed by method name, then arrays of method-modifiers
+    default => sub { {} } # (<name> => [ (CODE) ])
 ));
 
 __PACKAGE__->meta->add_attribute('around_method_modifiers' => (
     reader  => 'get_around_method_modifiers_map',
-    default => sub { {} } # keyed by method name, then arrays of method-modifiers
+    default => sub { {} } # (<name> => [ (CODE) ])
 ));
 
 __PACKAGE__->meta->add_attribute('override_method_modifiers' => (
@@ -51,99 +57,17 @@ __PACKAGE__->meta->add_attribute('override_method_modifiers' => (
     default => sub { {} } # (<name> => CODE) 
 ));
 
-## methods ...
+## Methods 
 
 sub new {
     my $class   = shift;
     my %options = @_;
-    $options{'role_meta'} = Class::MOP::Class->initialize(
+    $options{':role_meta'} = Moose::Meta::Class->initialize(
         $options{role_name},
         ':method_metaclass' => 'Moose::Meta::Role::Method'
     );
     my $self = $class->meta->new_object(%options);
     return $self;
-}
-
-sub apply {
-    my ($self, $other) = @_;
-    
-    foreach my $attribute_name ($self->get_attribute_list) {
-        # skip it if it has one already
-        next if $other->has_attribute($attribute_name);
-        # add it, although it could be overriden 
-        $other->add_attribute(
-            $attribute_name,
-            %{$self->get_attribute($attribute_name)}
-        );
-    }
-    
-    foreach my $method_name ($self->get_method_list) {
-        # skip it if it has one already
-        next if $other->has_method($method_name);
-        # add it, although it could be overriden 
-        $other->alias_method(
-            $method_name,
-            $self->get_method($method_name)
-        );
-    }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('override')) {
-        # skip it if it has one already
-        next if $other->has_method($method_name);
-        # add it, although it could be overriden 
-        $other->add_override_method_modifier(
-            $method_name,
-            $self->get_override_method_modifier($method_name),
-            $self->name
-        );
-    }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('before')) {
-        $other->add_before_method_modifier(
-            $method_name,
-            $_
-        ) foreach $self->get_before_method_modifiers($method_name);
-    }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('after')) {
-        $other->add_after_method_modifier(
-            $method_name,
-            $_
-        ) foreach $self->get_after_method_modifiers($method_name);
-    }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('around')) {
-        $other->add_around_method_modifier(
-            $method_name,
-            $_
-        ) foreach $self->get_around_method_modifiers($method_name);
-    }    
-    
-    ## add the roles and set does()
-    
-    $other->add_role($self);
-    
-    # NOTE:
-    # this will not replace a locally 
-    # defined does() method, those 
-    # should work as expected since 
-    # they are working off the same 
-    # metaclass. 
-    # It will override an inherited 
-    # does() method though, since 
-    # it needs to add this new metaclass
-    # to the mix.
-    
-    $other->add_method('does' => sub { 
-        my (undef, $role_name) = @_;
-        (defined $role_name)
-            || confess "You much supply a role name to does()";
-        foreach my $class ($other->class_precedence_list) {
-            return 1 
-                if $other->initialize($class)->does_role($role_name);            
-        }
-        return 0;
-    }) unless $other->has_method('does');
 }
 
 ## subroles
@@ -159,8 +83,11 @@ sub does_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
         || confess "You must supply a role name to look for";
+    # if we are it,.. then return true
+    return 1 if $role_name eq $self->name;
+    # otherwise.. check our children
     foreach my $role (@{$self->get_roles}) {
-        return 1 if $role->name eq $role_name;
+        return 1 if $role->does_role($role_name);
     }
     return 0;
 }
@@ -173,16 +100,22 @@ sub does_role {
 # to the underlying role package, if you want to manipulate 
 # that, just use ->role_meta
 
-sub name    { (shift)->role_meta->name    }
-sub version { (shift)->role_meta->version }
+sub name    { (shift)->_role_meta->name    }
+sub version { (shift)->_role_meta->version }
 
-sub get_method      { (shift)->role_meta->get_method(@_)  }
-sub has_method      { (shift)->role_meta->has_method(@_)  }
+sub get_method      { (shift)->_role_meta->get_method(@_)   }
+sub has_method      { (shift)->_role_meta->has_method(@_)   }
+sub alias_method    { (shift)->_role_meta->alias_method(@_) }
 sub get_method_list { 
     my ($self) = @_;
-    # meta is not applicable in this context, 
-    # if you want to see it use the ->role_meta
-    grep { !/^meta$/ } $self->role_meta->get_method_list;
+    grep { 
+        # NOTE:
+        # this is a kludge for now,... these functions 
+        # should not be showing up in the list at all, 
+        # but they do, so we need to switch Moose::Role
+        # and Moose to use Sub::Exporter to prevent this
+        !/^(meta|has|extends|blessed|confess|augment|inner|override|super|before|after|around|with)$/ 
+    } $self->_role_meta->get_method_list;
 }
 
 # ... however the items in statis (attributes & method modifiers)
@@ -273,6 +206,68 @@ sub get_method_modifier_list {
     keys %{$self->$accessor};
 }
 
+## applying a role to a class ...
+
+sub apply {
+    my ($self, $other) = @_;
+    
+    foreach my $attribute_name ($self->get_attribute_list) {
+        # skip it if it has one already
+        next if $other->has_attribute($attribute_name);
+        # add it, although it could be overriden 
+        $other->add_attribute(
+            $attribute_name,
+            %{$self->get_attribute($attribute_name)}
+        );
+    }
+    
+    foreach my $method_name ($self->get_method_list) {
+        # skip it if it has one already
+        next if $other->has_method($method_name);
+        # add it, although it could be overriden 
+        $other->alias_method(
+            $method_name,
+            $self->get_method($method_name)
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('override')) {
+        # skip it if it has one already
+        next if $other->has_method($method_name);
+        # add it, although it could be overriden 
+        $other->add_override_method_modifier(
+            $method_name,
+            $self->get_override_method_modifier($method_name),
+            $self->name
+        );
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('before')) {
+        $other->add_before_method_modifier(
+            $method_name,
+            $_
+        ) foreach $self->get_before_method_modifiers($method_name);
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('after')) {
+        $other->add_after_method_modifier(
+            $method_name,
+            $_
+        ) foreach $self->get_after_method_modifiers($method_name);
+    }    
+    
+    foreach my $method_name ($self->get_method_modifier_list('around')) {
+        $other->add_around_method_modifier(
+            $method_name,
+            $_
+        ) foreach $self->get_around_method_modifiers($method_name);
+    }    
+    
+    ## add the roles and set does()
+    
+    $other->add_role($self);
+}
+
 package Moose::Meta::Role::Method;
 
 use strict;
@@ -334,6 +329,8 @@ for more information.
 =item B<get_method>
 
 =item B<has_method>
+
+=item B<alias_method>
 
 =item B<get_method_list>
 

@@ -23,7 +23,7 @@ my $foo_role = Moose::Meta::Role->new(
 );
 isa_ok($foo_role, 'Moose::Meta::Role');
 
-isa_ok($foo_role->role_meta, 'Class::MOP::Class');
+isa_ok($foo_role->_role_meta, 'Class::MOP::Class');
 
 is($foo_role->name, 'FooRole', '... got the right name of FooRole');
 is($foo_role->version, '0.01', '... got the right version of FooRole');

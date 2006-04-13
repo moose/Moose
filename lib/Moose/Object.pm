@@ -38,10 +38,15 @@ sub DESTROY { goto &DEMOLISHALL }
 # new does() methods will be created 
 # as approiate see Moose::Meta::Role
 sub does {
-    my (undef, $role_name) = @_;
+    my ($self, $role_name) = @_;
     (defined $role_name)
         || confess "You much supply a role name to does()";
-    0;    
+    my $meta = $self->meta;
+    foreach my $class ($meta->class_precedence_list) {
+        return 1 
+            if $meta->initialize($class)->does_role($role_name);            
+    }
+    return 0;   
 }
 
 1;

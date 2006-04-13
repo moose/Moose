@@ -28,7 +28,7 @@ sub does_role {
     (defined $role_name)
         || confess "You must supply a role name to look for";
     foreach my $role (@{$self->roles}) {
-        return 1 if $role->name eq $role_name;
+        return 1 if $role->does_role($role_name);
     }
     return 0;
 }
