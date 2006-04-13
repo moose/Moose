@@ -109,7 +109,7 @@ Moose::Role - The Moose Role
   use warnings;
   use Moose::Role;
   
-  sub equal { confess "equal must be implemented" }
+  requires 'equal';
   
   sub no_equal { 
       my ($self, $other) = @_;
@@ -150,23 +150,11 @@ Currently, the role support has a number of caveats. They are as follows:
 
 =item *
 
-There is no support for Roles consuming other Roles. The details of this 
-are not totally worked out yet, but it will mostly follow what is set out 
-in the Perl 6 Synopsis 12.
-
-=item *
-
 At this time classes I<can> consume more than one Role, but they are simply 
 applied one after another in the order you ask for them. This is incorrect 
 behavior, the roles should be merged first, and conflicts determined, etc. 
 However, if your roles do not have any conflicts, then things will work just 
 fine.
-
-=item * 
-
-I want to have B<required> methods, which is unlike Perl 6 roles, and more 
-like the original Traits on which roles are based. This would be similar 
-in behavior to L<Class::Trait>. These are not yet implemented or course.
 
 =item *
 

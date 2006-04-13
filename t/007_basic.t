@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 54;
+use Test::More tests => 52;
 use Test::Exception;
 
 BEGIN {
@@ -161,15 +161,3 @@ foreach my $method_name (qw(
                         )) {
     ok($currency_meta->has_method($method_name), '... US::Currency has_method ' . $method_name);
 }
-
-# check some errors
-
-{
-    package Foo;
-    use strict;
-    use warnings;
-    use Moose;
-    ::dies_ok { with('Eq') } '... no equal_to method implemented by Foo';
-    ::dies_ok { with('Ord') } '... no compare method implemented by Foo';    
-}
-
