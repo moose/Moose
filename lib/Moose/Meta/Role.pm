@@ -70,30 +70,30 @@ sub apply {
         # add it, although it could be overriden 
         $other->add_override_method_modifier(
             $method_name,
-            $self->get_method_modifier('override' => $method_name),
+            $_,
             $self->name
-        );
+        ) foreach $self->get_method_modifiers('override' => $method_name);
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('before')) {
         $other->add_before_method_modifier(
             $method_name,
-            $self->get_method_modifier('before' => $method_name)
-        );
+            $_
+        ) foreach $self->get_method_modifiers('before' => $method_name);
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('after')) {
         $other->add_after_method_modifier(
             $method_name,
-            $self->get_method_modifier('after' => $method_name)
-        );
+            $_
+        ) foreach $self->get_method_modifiers('after' => $method_name);
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('around')) {
         $other->add_around_method_modifier(
             $method_name,
-            $self->get_method_modifier('around' => $method_name)
-        );
+            $_
+        ) foreach $self->get_method_modifiers('around' => $method_name);
     }    
     
     ## add the roles and set does()
@@ -175,20 +175,22 @@ sub get_attribute_list {
 
 sub add_method_modifier {
     my ($self, $modifier_type, $method_name, $method) = @_;
-    $self->get_method_modifier_map->{$modifier_type}->{$method_name} = $method;
+    $self->get_method_modifier_map->{$modifier_type}->{$method_name} = [] 
+        unless exists $self->get_method_modifier_map->{$modifier_type}->{$method_name};
+    push @{$self->get_method_modifier_map->{$modifier_type}->{$method_name}} => $method;
 }
 
-sub has_method_modifier {
+sub has_method_modifiers {
     my ($self, $modifier_type, $method_name) = @_;
     exists $self->get_method_modifier_map->{$modifier_type}->{$method_name} ? 1 : 0
 }
 
-sub get_method_modifier {
+sub get_method_modifiers {
     my ($self, $modifier_type, $method_name) = @_;
-    $self->get_method_modifier_map->{$modifier_type}->{$method_name};
+    @{$self->get_method_modifier_map->{$modifier_type}->{$method_name}};
 }
 
-sub remove_method_modifier {
+sub remove_method_modifiers {
     my ($self, $modifier_type, $method_name) = @_;
     delete $self->get_method_modifier_map->{$modifier_type}->{$method_name};
 }
@@ -274,15 +276,15 @@ for more information.
 
 =item B<add_method_modifier>
 
-=item B<get_method_modifier>
+=item B<get_method_modifiers>
 
-=item B<has_method_modifier>
+=item B<has_method_modifiers>
 
 =item B<get_method_modifier_list>
 
 =item B<get_method_modifier_map>
 
-=item B<remove_method_modifier>
+=item B<remove_method_modifiers>
 
 =back
 

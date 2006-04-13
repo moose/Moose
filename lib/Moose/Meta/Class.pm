@@ -11,7 +11,7 @@ our $VERSION = '0.04';
 
 use base 'Class::MOP::Class';
 
-__PACKAGE__->meta->add_attribute('@:roles' => (
+__PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
     default => sub { [] }
 ));

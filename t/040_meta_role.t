@@ -95,7 +95,7 @@ ok($foo_role->has_attribute('baz'), '... FooRole does still have the baz attribu
 
 # method modifiers
 
-ok(!$foo_role->has_method_modifier('before' => 'boo'), '... no boo:before modifier');
+ok(!$foo_role->has_method_modifiers('before' => 'boo'), '... no boo:before modifier');
 
 my $method = sub { "FooRole::boo:before" };
 lives_ok {
@@ -104,8 +104,8 @@ lives_ok {
     ));
 } '... added a method modifier okay';
 
-ok($foo_role->has_method_modifier('before' => 'boo'), '... now we have a boo:before modifier');
-is($foo_role->get_method_modifier('before' => 'boo'), $method, '... got the right method back');
+ok($foo_role->has_method_modifiers('before' => 'boo'), '... now we have a boo:before modifier');
+is(($foo_role->get_method_modifiers('before' => 'boo'))[0], $method, '... got the right method back');
 
 is_deeply(
     [ $foo_role->get_method_modifier_list('before') ],
