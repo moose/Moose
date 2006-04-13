@@ -11,7 +11,8 @@ Revision history for Perl extension Moose
     * Moose::Meta::Role
       - ripped out much of it's guts ,.. much cleaner now
       - added required methods and correct handling of 
-        them in apply()
+        them in apply() for both classes and roles
+        - added tests for this
       - no longer adds a does() method to consuming classes 
         it relys on the one in Moose::Object
       - added roles attribute and some methods to support 

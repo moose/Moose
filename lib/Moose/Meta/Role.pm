@@ -242,9 +242,15 @@ sub apply {
     # that maybe those are somehow exempt from 
     # the require methods stuff.  
     foreach my $required_method_name ($self->get_required_method_list) {
-        ($other->has_method($required_method_name))
-            || confess "Role (" . $self->name . ") requires the method '$required_method_name'" . 
-                      "is implemented by the class '" . $other->name . "'";
+        unless ($other->has_method($required_method_name)) {
+            if ($other->isa('Moose::Meta::Role')) {
+                $other->add_required_methods($required_method_name);
+            }
+            else {
+                confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                        "to be implemented by '" . $other->name . "'";
+            }
+        }
     }    
     
     foreach my $attribute_name ($self->get_attribute_list) {

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 10;
 use Test::Exception;
 
 BEGIN {  
@@ -18,6 +18,11 @@ BEGIN {
     
     requires 'foo';
 }
+
+is_deeply(
+    [ sort Foo::Role->meta->get_required_method_list ],
+    [ 'foo' ],
+    '... the Foo::Role has a required method (foo)');
 
 # classes which does not implement required method
 {
@@ -53,13 +58,46 @@ BEGIN {
     sub foo { 'Bar::Role::foo' }
 }
 
+is_deeply(
+    [ sort Bar::Role->meta->get_required_method_list ],
+    [],
+    '... the Bar::Role has not inherited the required method from Foo::Role');
+
 # role which does not implement required method
 {
     package Baz::Role;
     use strict;
     use warnings;
-    use Moose;
+    use Moose::Role;
     
     ::lives_ok { with('Foo::Role') } '... no foo method implemented by Baz::Role';
 }
+
+is_deeply(
+    [ sort Baz::Role->meta->get_required_method_list ],
+    [ 'foo' ],
+    '... the Baz::Role has inherited the required method from Foo::Role');
+    
+# classes which does not implement required method
+{
+    package Baz::Class;
+    use strict;
+    use warnings;
+    use Moose;
+
+    ::dies_ok { with('Baz::Role') } '... no foo method implemented by Baz::Class2';
+}
+
+# class which does implement required method
+{
+    package Baz::Class2;
+    use strict;
+    use warnings;
+    use Moose;
+
+    ::lives_ok { with('Baz::Role') } '... has a foo method implemented by Baz::Class2';
+
+    sub foo { 'Baz::Class2::foo' }
+}    
+    
 
