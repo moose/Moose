@@ -17,6 +17,16 @@ Revision history for Perl extension Moose
         it relys on the one in Moose::Object
       - added roles attribute and some methods to support 
         roles consuming roles
+    
+    * Moose
+      - Moose no longer creates a subtype for your class 
+        if a subtype of the same name already exists, this 
+        should DWIM in 99.9999% of all cases
+        
+    * Moose::Util::TypeConstraints
+      - fixed bug where incorrect subtype conflicts were 
+        being reported
+        - added tests for this
 
 0.03_02 Wed. April 12, 2006
     * Moose

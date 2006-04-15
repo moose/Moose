@@ -32,7 +32,7 @@ sub import {
     
     sub _dump_type_constraints {
         require Data::Dumper;        
-        Data::Dumper::Dumper \%TYPES;
+        Data::Dumper::Dumper(\%TYPES);
     }
     
     sub _create_type_constraint { 
