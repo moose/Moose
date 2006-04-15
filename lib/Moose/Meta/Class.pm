@@ -4,6 +4,8 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
+use Class::MOP;
+
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed';
 

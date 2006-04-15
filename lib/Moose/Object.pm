@@ -3,6 +3,8 @@ package Moose::Object;
 
 use strict;
 use warnings;
+
+use Moose::Meta::Class;
 use metaclass 'Moose::Meta::Class' => (
 	':attribute_metaclass' => 'Moose::Meta::Attribute'
 );
