@@ -41,7 +41,7 @@ sub new {
 		}
 		else {
 		    # otherwise assume it is a constraint
-		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});	    
 		    # if the constraing it not found ....
 		    unless (defined $constraint) {
 		        # assume it is a foreign class, and make 

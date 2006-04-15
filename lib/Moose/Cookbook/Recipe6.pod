@@ -7,86 +7,65 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
 
 =head1 SYNOPSIS
   
-  package Constraint;
+  package Eq;
   use strict;
   use warnings;
   use Moose::Role;
   
-  has 'value' => (isa => 'Int', is => 'ro');
+  requires 'equal_to';
   
-  around 'validate' => sub {
-      my $c = shift;
-      my ($self, $field) = @_;
-      return undef if $c->($self, $self->validation_value($field));
-      return $self->error_message;        
-  };
-  
-  sub validation_value {
-      my ($self, $field) = @_;
-      return $field;
+  sub not_equal_to { 
+      my ($self, $other) = @_;
+      !$self->equal_to($other);
   }
   
-  sub error_message { confess "Abstract method!" }
-  
-  package Constraint::OnLength;
+  package Ord;
   use strict;
   use warnings;
   use Moose::Role;
   
-  has 'units' => (isa => 'Str', is => 'ro');
+  with 'Eq';
   
-  override 'validation_value' => sub {
-      return length(super());
-  };
+  requires 'compare';
   
-  override 'error_message' => sub {
-      my $self = shift;
-      return super() . ' ' . $self->units;
-  };    
+  sub equal_to {
+      my ($self, $other) = @_;
+      $self->compare($other) == 0;
+  }    
   
-  package Constraint::AtLeast;
-  use strict;
-  use warnings;
-  use Moose;
+  sub greater_than {
+      my ($self, $other) = @_;
+      $self->compare($other) == 1;
+  }    
   
-  with 'Constraint';
-  
-  sub validate {
-      my ($self, $field) = @_;
-      ($field >= $self->value);
+  sub less_than {
+      my ($self, $other) = @_;
+      $self->compare($other) == -1;
   }
   
-  sub error_message { 'must be at least ' . (shift)->value; }
+  sub greater_than_or_equal_to {
+      my ($self, $other) = @_;
+      $self->greater_than($other) || $self->equal_to($other);
+  }        
   
-  package Constraint::NoMoreThan;
+  sub less_than_or_equal_to {
+      my ($self, $other) = @_;
+      $self->less_than($other) || $self->equal_to($other);
+  }    
+  
+  package US::Currency;
   use strict;
   use warnings;
   use Moose;
   
-  with 'Constraint';
+  with 'Ord';
   
-  sub validate {
-      my ($self, $field) = @_;
-      ($field <= $self->value);
+  has 'amount' => (is => 'rw', isa => 'Int', default => 0);
+  
+  sub compare {
+      my ($self, $other) = @_;
+      $self->amount <=> $other->amount;
   }
-  
-  sub error_message { 'must be no more than ' . (shift)->value; }
-  
-  package Constraint::LengthNoMoreThan;
-  use strict;
-  use warnings;
-  use Moose;
-  
-  extends 'Constraint::NoMoreThan';
-     with 'Constraint::OnLength';
-     
-  package Constraint::LengthAtLeast;
-  use strict;
-  use warnings;
-  use Moose;
-  
-  extends 'Constraint::AtLeast';
-     with 'Constraint::OnLength';
   
 =head1 DESCRIPTION
 

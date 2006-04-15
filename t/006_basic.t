@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 52;
 use Test::Exception;
 
 BEGIN {
@@ -13,130 +13,152 @@ BEGIN {
 ## Roles
 
 {
-    package Constraint;
+    package Eq;
     use strict;
     use warnings;
     use Moose::Role;
-
-    has 'value' => (isa => 'Int', is => 'ro');
-
-    around 'validate' => sub {
-        my $c = shift;
-        my ($self, $field) = @_;
-        return undef if $c->($self, $self->validation_value($field));
-        return $self->error_message;        
-    };
     
-    sub validation_value {
-        my ($self, $field) = @_;
-        return $field;
+    requires 'equal_to';
+    
+    sub not_equal_to { 
+        my ($self, $other) = @_;
+        !$self->equal_to($other);
     }
     
-    sub error_message { confess "Abstract method!" }
-    
-    package Constraint::OnLength;
+    package Ord;
     use strict;
     use warnings;
     use Moose::Role;
+    
+    with 'Eq';
+    
+    requires 'compare';
+    
+    sub equal_to {
+        my ($self, $other) = @_;
+        $self->compare($other) == 0;
+    }    
+    
+    sub greater_than {
+        my ($self, $other) = @_;
+        $self->compare($other) == 1;
+    }    
+    
+    sub less_than {
+        my ($self, $other) = @_;
+        $self->compare($other) == -1;
+    }
+    
+    sub greater_than_or_equal_to {
+        my ($self, $other) = @_;
+        $self->greater_than($other) || $self->equal_to($other);
+    }        
 
-    has 'units' => (isa => 'Str', is => 'ro');
-
-    override 'validation_value' => sub {
-        return length(super());
-    };
-
-    override 'error_message' => sub {
-        my $self = shift;
-        return super() . ' ' . $self->units;
-    };    
-
+    sub less_than_or_equal_to {
+        my ($self, $other) = @_;
+        $self->less_than($other) || $self->equal_to($other);
+    }    
 }
 
-## Classes 
+## Classes
 
 {
-    package Constraint::AtLeast;
-    use strict;
-    use warnings;
-    use Moose;
-
-    with 'Constraint';
-
-    sub validate {
-        my ($self, $field) = @_;
-        ($field >= $self->value);
-    }
-
-    sub error_message { 'must be at least ' . (shift)->value; }
-
-    package Constraint::NoMoreThan;
-    use strict;
-    use warnings;
-    use Moose;
-
-    with 'Constraint';
-
-    sub validate {
-        my ($self, $field) = @_;
-        ($field <= $self->value);
-    }
-
-    sub error_message { 'must be no more than ' . (shift)->value; }
-
-    package Constraint::LengthNoMoreThan;
-    use strict;
-    use warnings;
-    use Moose;
-
-    extends 'Constraint::NoMoreThan';
-       with 'Constraint::OnLength';
-       
-    package Constraint::LengthAtLeast;
+    package US::Currency;
     use strict;
     use warnings;
     use Moose;
     
-    extends 'Constraint::AtLeast';
-       with 'Constraint::OnLength';       
+    with 'Ord';
+    
+    has 'amount' => (is => 'rw', isa => 'Int', default => 0);
+    
+    sub compare {
+        my ($self, $other) = @_;
+        $self->amount <=> $other->amount;
+    }
 }
 
-my $no_more_than_10 = Constraint::NoMoreThan->new(value => 10);
-isa_ok($no_more_than_10, 'Constraint::NoMoreThan');
+ok(US::Currency->does('Ord'), '... US::Currency does Ord');
+ok(US::Currency->does('Eq'), '... US::Currency does Eq');
 
-ok($no_more_than_10->does('Constraint'), '... Constraint::NoMoreThan does Constraint');
+my $hundred = US::Currency->new(amount => 100.00);
+isa_ok($hundred, 'US::Currency');
 
-ok(!defined($no_more_than_10->validate(1)), '... validated correctly');
-is($no_more_than_10->validate(11), 'must be no more than 10', '... validation failed correctly');
+can_ok($hundred, 'amount');
+is($hundred->amount, 100, '... got the right amount');
 
-my $at_least_10 = Constraint::AtLeast->new(value => 10);
-isa_ok($at_least_10, 'Constraint::AtLeast');
+ok($hundred->does('Ord'), '... US::Currency does Ord');
+ok($hundred->does('Eq'), '... US::Currency does Eq');
 
-ok($at_least_10->does('Constraint'), '... Constraint::AtLeast does Constraint');
+my $fifty = US::Currency->new(amount => 50.00);
+isa_ok($fifty, 'US::Currency');
 
-ok(!defined($at_least_10->validate(11)), '... validated correctly');
-is($at_least_10->validate(1), 'must be at least 10', '... validation failed correctly');
+can_ok($fifty, 'amount');
+is($fifty->amount, 50, '... got the right amount');
 
-# onlength
+ok($hundred->greater_than($fifty),             '... 100 gt 50');
+ok($hundred->greater_than_or_equal_to($fifty), '... 100 ge 50');
+ok(!$hundred->less_than($fifty),               '... !100 lt 50');
+ok(!$hundred->less_than_or_equal_to($fifty),   '... !100 le 50');
+ok(!$hundred->equal_to($fifty),                '... !100 eq 50');
+ok($hundred->not_equal_to($fifty),             '... 100 ne 50');
 
-my $no_more_than_10_chars = Constraint::LengthNoMoreThan->new(value => 10, units => 'chars');
-isa_ok($no_more_than_10_chars, 'Constraint::LengthNoMoreThan');
-isa_ok($no_more_than_10_chars, 'Constraint::NoMoreThan');
+ok(!$fifty->greater_than($hundred),             '... !50 gt 100');
+ok(!$fifty->greater_than_or_equal_to($hundred), '... !50 ge 100');
+ok($fifty->less_than($hundred),                 '... 50 lt 100');
+ok($fifty->less_than_or_equal_to($hundred),     '... 50 le 100');
+ok(!$fifty->equal_to($hundred),                 '... !50 eq 100');
+ok($fifty->not_equal_to($hundred),              '... 50 ne 100');
 
-ok($no_more_than_10_chars->does('Constraint'), '... Constraint::LengthNoMoreThan does Constraint');
-ok($no_more_than_10_chars->does('Constraint::OnLength'), '... Constraint::LengthNoMoreThan does Constraint::OnLength');
+ok(!$fifty->greater_than($fifty),            '... !50 gt 50');
+ok($fifty->greater_than_or_equal_to($fifty), '... !50 ge 50');
+ok(!$fifty->less_than($fifty),               '... 50 lt 50');
+ok($fifty->less_than_or_equal_to($fifty),    '... 50 le 50');
+ok($fifty->equal_to($fifty),                 '... 50 eq 50');
+ok(!$fifty->not_equal_to($fifty),            '... !50 ne 50');
 
-ok(!defined($no_more_than_10_chars->validate('foo')), '... validated correctly');
-is($no_more_than_10_chars->validate('foooooooooo'), 
-    'must be no more than 10 chars', 
-    '... validation failed correctly');
+## ... check some meta-stuff
 
-my $at_least_10_chars = Constraint::LengthAtLeast->new(value => 10, units => 'chars');
-isa_ok($at_least_10_chars, 'Constraint::LengthAtLeast');
-isa_ok($at_least_10_chars, 'Constraint::AtLeast');
+# Eq
 
-ok($at_least_10_chars->does('Constraint'), '... Constraint::LengthAtLeast does Constraint');
-ok($at_least_10_chars->does('Constraint::OnLength'), '... Constraint::LengthAtLeast does Constraint::OnLength');
+my $eq_meta = Eq->meta;
+isa_ok($eq_meta, 'Moose::Meta::Role');
 
-ok(!defined($at_least_10_chars->validate('barrrrrrrrr')), '... validated correctly');
-is($at_least_10_chars->validate('bar'), 'must be at least 10 chars', '... validation failed correctly');
+ok($eq_meta->has_method('not_equal_to'), '... Eq has_method not_equal_to');
+ok($eq_meta->requires_method('equal_to'), '... Eq requires_method not_equal_to');
+
+# Ord
+
+my $ord_meta = Ord->meta;
+isa_ok($ord_meta, 'Moose::Meta::Role');
+
+ok($ord_meta->does_role('Eq'), '... Ord does Eq');
+
+foreach my $method_name (qw(
+                        equal_to not_equal_to
+                        greater_than greater_than_or_equal_to
+                        less_than less_than_or_equal_to                            
+                        )) {
+    ok($ord_meta->has_method($method_name), '... Ord has_method ' . $method_name);
+}
+
+ok($ord_meta->requires_method('compare'), '... Ord requires_method compare');
+
+# US::Currency
+
+my $currency_meta = US::Currency->meta;
+isa_ok($currency_meta, 'Moose::Meta::Class');
+
+ok($currency_meta->does_role('Ord'), '... US::Currency does Ord');
+ok($currency_meta->does_role('Eq'), '... US::Currency does Eq');
+
+foreach my $method_name (qw(
+                        amount
+                        equal_to not_equal_to
+                        compare
+                        greater_than greater_than_or_equal_to
+                        less_than less_than_or_equal_to                            
+                        )) {
+    ok($currency_meta->has_method($method_name), '... US::Currency has_method ' . $method_name);
+}
 

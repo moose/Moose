@@ -32,7 +32,8 @@ sub import {
 	# make a subtype for each Moose class
     subtype $pkg 
         => as 'Object' 
-        => where { $_->isa($pkg) };	
+        => where { $_->isa($pkg) }
+    unless find_type_constraint($pkg);	
 
 	my $meta;
 	if ($pkg->can('meta')) {
@@ -218,6 +219,8 @@ more :)
 =item Many Overloaded Object Systems Exists 
 
 =item Moose Offers Often Super Extensions
+
+=item Meta Object Orientation Syntax Extensions
 
 =back
 
