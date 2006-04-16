@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Moose::Util::TypeConstraints '-no-export';
 
@@ -21,6 +21,10 @@ __PACKAGE__->meta->add_attribute('type_constraint' => (
     reader    => 'type_constraint',
     predicate => 'has_type_constraint',
 ));
+__PACKAGE__->meta->add_attribute('trigger' => (
+    reader    => 'trigger',
+    predicate => 'has_trigger',
+));
 
 sub new {
 	my ($class, $name, %options) = @_;
@@ -28,9 +32,14 @@ sub new {
 	if (exists $options{is}) {
 		if ($options{is} eq 'ro') {
 			$options{reader} = $name;
+			(!exists $options{trigger})
+			    || confess "Cannot have a trigger on a read-only attribute";
 		}
 		elsif ($options{is} eq 'rw') {
 			$options{accessor} = $name;				
+			(reftype($options{trigger}) eq 'CODE')
+			    || confess "A trigger must be a CODE reference"
+			        if exists $options{trigger};			
 		}			
 	}
 	
@@ -90,6 +99,9 @@ sub generate_accessor_method {
         . ($self->is_weak_ref ?
             'weaken($_[0]->{$attr_name});'
             : '')
+        . ($self->has_trigger ?
+            '$self->trigger->($_[0], ' . $value_name . ');'
+            : '')            
     . ' }'
     . ($self->is_lazy ? 
             '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
@@ -121,6 +133,9 @@ sub generate_writer_method {
     . ($self->is_weak_ref ?
         'weaken($_[0]->{$attr_name});'
         : '')
+    . ($self->has_trigger ?
+        '$self->trigger->($_[0], ' . $value_name . ');'
+        : '')        
     . ' }';
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
@@ -216,6 +231,10 @@ NOTE: lazy attributes, B<must> have a C<default> field set.
 =item B<should_coerce>
 
 Returns true of this meta-attribute should perform type coercion.
+
+=item B<has_trigger>
+
+=item B<trigger>
 
 =back
 

@@ -17,6 +17,15 @@ Revision history for Perl extension Moose
         it relys on the one in Moose::Object
       - added roles attribute and some methods to support 
         roles consuming roles
+
+    * Moose::Meta::Attribute
+      - added support for triggers on attributes
+        - added tests for this
+        
+    * Moose::Meta::Class
+      - added support for attribute triggers in the 
+        object construction
+        - added tests for this
     
     * Moose
       - Moose no longer creates a subtype for your class 
@@ -26,7 +35,12 @@ Revision history for Perl extension Moose
     * Moose::Util::TypeConstraints
       - fixed bug where incorrect subtype conflicts were 
         being reported
-        - added tests for this
+        - added test for this
+        
+    * Moose::Object
+      - this class can now be extended with 'use base' if
+        you need it, it properly loads the metaclass class now
+        - added test for this
 
 0.03_02 Wed. April 12, 2006
     * Moose

@@ -35,6 +35,16 @@ sub does_role {
     return 0;
 }
 
+sub new_object {
+    my ($class, %params) = @_;
+    my $self = $class->SUPER::new_object(%params);
+    foreach my $attr ($class->compute_all_applicable_attributes()) {
+        next unless $params{$attr->name} && $attr->has_trigger;
+        $attr->trigger->($self, $params{$attr->name});
+    }
+    return $self;    
+}
+
 sub construct_instance {
     my ($class, %params) = @_;
     my $instance = $params{'__INSTANCE__'} || {};
@@ -173,6 +183,8 @@ to the L<Class::MOP::Class> documentation.
 =head1 METHODS
 
 =over 4
+
+=item B<new_object>
 
 =item B<construct_instance>
 
