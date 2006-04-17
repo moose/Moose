@@ -58,9 +58,9 @@ sub construct_instance {
         else {
             # skip it if it's lazy
             next if $attr->is_lazy;
-            # and die if it is required            
+            # and die if it's required and doesn't have a default value
             confess "Attribute (" . $attr->name . ") is required" 
-                if $attr->is_required
+                if $attr->is_required && !$attr->has_default;
         }
         # if nothing was in the %params, we can use the 
         # attribute's default value (if it has one)
