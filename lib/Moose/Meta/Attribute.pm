@@ -44,6 +44,14 @@ sub new {
 	}
 	
 	if (exists $options{isa}) {
+	    
+	    if (exists $options{does}) {
+	        if (eval { $options{isa}->can('does') }) {
+	            ($options{isa}->does($options{does}))	            
+	                || confess "Cannot have an isa option and a does option if the isa does not do the does";
+	        }
+	    }	    
+	    
 	    # allow for anon-subtypes here ...
 	    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
 			$options{type_constraint} = $options{isa};
@@ -63,6 +71,26 @@ sub new {
             $options{type_constraint} = $constraint;
 		}
 	}	
+	elsif (exists $options{does}) {	    
+	    # allow for anon-subtypes here ...
+	    if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
+			$options{type_constraint} = $options{isa};
+		}
+		else {
+		    # otherwise assume it is a constraint
+		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{does});	      
+		    # if the constraing it not found ....
+		    unless (defined $constraint) {	  		        
+		        # assume it is a foreign class, and make 
+		        # an anon constraint for it 
+		        $constraint = Moose::Util::TypeConstraints::subtype(
+		            'Role', 
+		            Moose::Util::TypeConstraints::where { $_->does($options{does}) }
+		        );
+		    }			    
+            $options{type_constraint} = $constraint;
+		}	    
+	}
 	
 	if (exists $options{coerce} && $options{coerce}) {
 	    (exists $options{type_constraint})
@@ -216,25 +244,32 @@ for L<Moose::Meta::TypeConstraint>.
 
 =item B<is_weak_ref>
 
-Returns true of this meta-attribute produces a weak reference.
+Returns true if this meta-attribute produces a weak reference.
 
 =item B<is_required>
 
-Returns true of this meta-attribute is required to have a value.
+Returns true if this meta-attribute is required to have a value.
 
 =item B<is_lazy>
 
-Returns true of this meta-attribute should be initialized lazily.
+Returns true if this meta-attribute should be initialized lazily.
 
 NOTE: lazy attributes, B<must> have a C<default> field set.
 
 =item B<should_coerce>
 
-Returns true of this meta-attribute should perform type coercion.
+Returns true if this meta-attribute should perform type coercion.
 
 =item B<has_trigger>
 
+Returns true if this meta-attribute has a trigger set.
+
 =item B<trigger>
+
+This is a CODE reference which will be executed every time the 
+value of an attribute is assigned. The CODE ref will get two values, 
+the invocant and the new value. This can be used to handle I<basic> 
+bi-directional relations.
 
 =back
 

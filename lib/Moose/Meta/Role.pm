@@ -330,7 +330,9 @@ Moose::Meta::Role - The Moose Role metaclass
 =head1 DESCRIPTION
 
 Moose's Roles are being actively developed, please see L<Moose::Role> 
-for more information. 
+for more information. For the most part, this has no user-serviceable 
+parts inside. It's API is still subject to some change (although 
+probably not that much really).
 
 =head1 METHODS
 

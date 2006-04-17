@@ -95,6 +95,9 @@ This will call every C<DEMOLISH> method in the inheritance hierarchy.
 
 =item B<does ($role_name)>
 
+This will check if the invocant's class C<does> a given C<$role_name>. 
+This is similar to C<isa> for object, but it checks the roles instead.
+
 =back
 
 =head1 BUGS

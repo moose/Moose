@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.04
+0.04 Sun. April 16th, 2006
     * Moose::Role
       - Roles can now consume other roles
         - added tests for this
@@ -20,6 +20,8 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Attribute
       - added support for triggers on attributes
+        - added tests for this
+      - added support for does option on an attribute 
         - added tests for this
         
     * Moose::Meta::Class

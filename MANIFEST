@@ -28,6 +28,7 @@ t/003_basic.t
 t/004_basic.t
 t/005_basic.t
 t/006_basic.t
+t/007_basic.t
 t/010_basic_class_setup.t
 t/011_require_superclasses.t
 t/012_super_and_override.t
@@ -38,9 +39,12 @@ t/020_foreign_inheritence.t
 t/030_attribute_reader_generation.t
 t/031_attribute_writer_generation.t
 t/032_attribute_accessor_generation.t
+t/033_attribute_triggers.t
+t/034_does_attribute_option.t
 t/040_meta_role.t
 t/041_role.t
 t/042_apply_role.t
+t/043_role_composition_errors.t
 t/050_util_type_constraints.t
 t/051_util_type_constraints_export.t
 t/052_util_std_type_constraints.t
@@ -49,7 +53,12 @@ t/054_util_type_coercion.t
 t/055_util_type_reloading.t
 t/056_util_more_type_coercion.t
 t/100_subtype_quote_bug.t
+t/101_subtype_conflict_bug.t
+t/102_Moose_Object_error.t
 t/pod.t
 t/pod_coverage.t
 t/lib/Bar.pm
 t/lib/Foo.pm
+t/lib/MyMooseA.pm
+t/lib/MyMooseB.pm
+t/lib/MyMooseObject.pm

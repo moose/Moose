@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 111;
+use Test::More tests => 122;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -136,3 +136,22 @@ ok(!defined Object(sub {}),           '... Object rejects anything which is not 
 ok(!defined Object($SCALAR_REF),      '... Object rejects anything which is not blessed');
 ok(!defined Object(qr/../),           '... Object rejects anything which is not blessed');
 ok(defined Object(bless {}, 'Foo'),   '... Object accepts anything which is blessed');
+
+{
+    package My::Role;
+    sub does { 'fake' }
+}
+
+ok(!defined Role(0),                '... Role rejects anything which is not a Role');
+ok(!defined Role(100),              '... Role rejects anything which is not a Role');
+ok(!defined Role(''),               '... Role rejects anything which is not a Role');
+ok(!defined Role('Foo'),            '... Role rejects anything which is not a Role');
+ok(!defined Role([]),               '... Role rejects anything which is not a Role');
+ok(!defined Role({}),               '... Role rejects anything which is not a Role');
+ok(!defined Role(sub {}),           '... Role rejects anything which is not a Role');
+ok(!defined Role($SCALAR_REF),      '... Role rejects anything which is not a Role');
+ok(!defined Role(qr/../),           '... Role rejects anything which is not a Role');
+ok(!defined Role(bless {}, 'Foo'),  '... Role accepts anything which is not a Role');
+ok(defined Role(bless {}, 'My::Role'),  '... Role accepts anything which is not a Role');
+
+

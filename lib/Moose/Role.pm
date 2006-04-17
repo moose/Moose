@@ -18,8 +18,6 @@ sub import {
 	
 	# we should never export to main
 	return if $pkg eq 'main';
-	
-	Moose::Util::TypeConstraints->import($pkg);
 
 	my $meta;
 	if ($pkg->can('meta')) {
@@ -133,28 +131,28 @@ Moose::Role - The Moose Role
 =head1 DESCRIPTION
 
 This is currently a very early release of Perl 6 style Roles for 
-Moose, it should be considered experimental and incomplete.
-
-This feature is being actively developed, but $work is currently 
-preventing me from paying as much attention to it as I would like. 
-So I am releasing it in hopes people will help me on this I<hint hint>.
-
-If you are interested in helping, please come to #moose on irc.perl.org
-and we can talk. 
+Moose, it is still incomplete, but getting much closer. If you are 
+interested in helping move this feature along, please come to 
+#moose on irc.perl.org and we can talk. 
 
 =head1 CAVEATS
 
-Currently, the role support has a number of caveats. They are as follows:
+Currently, the role support has a few of caveats. They are as follows:
 
 =over 4
 
 =item *
 
-At this time classes I<can> consume more than one Role, but they are simply 
-applied one after another in the order you ask for them. This is incorrect 
-behavior, the roles should be merged first, and conflicts determined, etc. 
-However, if your roles do not have any conflicts, then things will work just 
-fine.
+At this time classes I<cannot> correctly consume more than one role. The 
+role composition process, and it's conflict detection has not been added
+yet. While this should be considered a major feature, it can easily be 
+worked around, and in many cases, is not needed at all.
+ 
+A class can actually consume multiple roles, they are just applied one 
+after another in the order you ask for them. This is incorrect behavior, 
+the roles should be merged first, and conflicts determined, etc. However, 
+if your roles do not have any conflicts, then things will work just 
+fine. This actually tends to be quite sufficient for basic roles.
 
 =item *
 
@@ -164,8 +162,6 @@ really make sense for roles). All other Moose keywords will be I<deferred>
 so that they can be applied to the consuming class. 
 
 =back
-
-Basically thats all I can think of for now, I am sure there are more though.
 
 =head1 BUGS
 

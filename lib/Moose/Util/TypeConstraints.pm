@@ -116,6 +116,8 @@ subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' };
 # blessed(qr/.../) returns true,.. how odd
 subtype 'Object' => as 'Ref' => where { blessed($_) && blessed($_) ne 'Regexp' };
 
+subtype 'Role' => as 'Object' => where { $_->can('does') };
+
 1;
 
 __END__
@@ -176,6 +178,7 @@ could probably use some work, but it works for me at the moment.
           CodeRef
           RegexpRef
           Object	
+            Role
 
 Suggestions for improvement are welcome.
     
