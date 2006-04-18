@@ -65,14 +65,14 @@ use Sub::Exporter;
     my %exports = (
         extends => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::extends' => sub {
                 _load_all_classes(@_);
                 $meta->superclasses(@_)
             };
         },
         with => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::with' => sub {
                 my ($role) = @_;
                 _load_all_classes($role);
                 $role->meta->apply($meta);
@@ -80,50 +80,50 @@ use Sub::Exporter;
         },
         has => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::has' => sub {
                 my ($name, %options) = @_;
                 $meta->add_attribute($name, %options)
             };
         },
         before => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::before' => sub {
                 my $code = pop @_;
                 $meta->add_before_method_modifier($_, $code) for @_;
             };
         },
         after => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::after' => sub {
                 my $code = pop @_;
                 $meta->add_after_method_modifier($_, $code) for @_;
             };
         },
         around => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::around' => sub {
                 my $code = pop @_;
                 $meta->add_around_method_modifier($_, $code) for @_;
             };
         },
         super => sub {
             my $meta = meta();
-            return sub {};
+            return subname 'Moose::super' => sub {};
         },
         override => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::override' => sub {
                 my ($name, $method) = @_;
                 $meta->add_override_method_modifier($name => $method);
             };
         },
         inner => sub {
             my $meta = meta();
-            return sub {};
+            return subname 'Moose::inner' => sub {};
         },
         augment => sub {
             my $meta = meta();
-            return sub {
+            return subname 'Moose::augment' => sub {
                 my ($name, $method) = @_;
                 $meta->add_augment_method_modifier($name => $method);
             };
@@ -135,11 +135,7 @@ use Sub::Exporter;
             return \&Scalar::Util::blessed;
         }
     );
-    
-    foreach my $name (keys %exports) {
-        $exports{$name} = subname "Moose::${name}" => $exports{$name};
-    }
-    
+
     my $exporter = Sub::Exporter::build_exporter({ 
         exports => \%exports,
         groups  => {
