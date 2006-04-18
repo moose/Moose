@@ -136,6 +136,10 @@ use Sub::Exporter;
         }
     );
     
+    foreach my $name (keys %exports) {
+        $exports{$name} = subname "Moose::${name}" => $exports{$name};
+    }
+    
     my $exporter = Sub::Exporter::build_exporter({ 
         exports => \%exports,
         groups  => {
