@@ -21,95 +21,136 @@ use Moose::Meta::Attribute;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;
+use Sub::Exporter;
 
-sub import {
-	shift;
-	my $pkg = caller();
-	
-	# we should never export to main
-	return if $pkg eq 'main';
-	
-	# make a subtype for each Moose class
-    subtype $pkg 
-        => as 'Object' 
-        => where { $_->isa($pkg) }
-    unless find_type_constraint($pkg);	
+{
+    my ( $CALLER, %METAS );
 
-	my $meta;
-	if ($pkg->can('meta')) {
-		$meta = $pkg->meta();
-		(blessed($meta) && $meta->isa('Moose::Meta::Class'))
-			|| confess "Whoops, not møøsey enough";
-	}
-	else {
-		$meta = Moose::Meta::Class->initialize($pkg => (
-			':attribute_metaclass' => 'Moose::Meta::Attribute'
-		));
-		$meta->add_method('meta' => sub {
-			# re-initialize so it inherits properly
-			Moose::Meta::Class->initialize($pkg => (
-				':attribute_metaclass' => 'Moose::Meta::Attribute'
-			));			
-		})		
-	}
-	
-	# NOTE:
-	# &alias_method will install the method, but it 
-	# will not name it with 
-	
-	# handle superclasses
-	$meta->alias_method('extends' => subname 'Moose::extends' => sub { 
-        _load_all_classes(@_);
-	    $meta->superclasses(@_) 
-	});	
-	
-	# handle roles
-	$meta->alias_method('with' => subname 'Moose::with' => sub { 
-	    my ($role) = @_;
-        _load_all_classes($role);
-        $role->meta->apply($meta);
-	});	
-	
-	# handle attributes
-	$meta->alias_method('has' => subname 'Moose::has' => sub { 
-		my ($name, %options) = @_;
-		$meta->add_attribute($name, %options) 
-	});
+    sub meta() {
+        my $class = $CALLER;
 
-	# handle method modifers
-	$meta->alias_method('before' => subname 'Moose::before' => sub { 
-		my $code = pop @_;
-		$meta->add_before_method_modifier($_, $code) for @_; 
-	});
-	$meta->alias_method('after'  => subname 'Moose::after' => sub { 
-		my $code = pop @_;
-		$meta->add_after_method_modifier($_, $code) for @_;
-	});	
-	$meta->alias_method('around' => subname 'Moose::around' => sub { 
-		my $code = pop @_;
-		$meta->add_around_method_modifier($_, $code) for @_;	
-	});	
-	
-	$meta->alias_method('super' => subname 'Moose::super' => sub {});
-	$meta->alias_method('override' => subname 'Moose::override' => sub {
-	    my ($name, $method) = @_;
-	    $meta->add_override_method_modifier($name => $method);
-	});		
-	
-	$meta->alias_method('inner' => subname 'Moose::inner' => sub {});
-	$meta->alias_method('augment' => subname 'Moose::augment' => sub {
-	    my ($name, $method) = @_;
-	    $meta->add_augment_method_modifier($name => $method);
-	});	
+        return $METAS{$class} if exists $METAS{$class};
 
-	# make sure they inherit from Moose::Object
-	$meta->superclasses('Moose::Object')
-       unless $meta->superclasses();
+        # make a subtype for each Moose class
+        subtype $class
+            => as 'Object'
+            => where { $_->isa($class) }
+        unless find_type_constraint($class);
 
-	# we recommend using these things 
-	# so export them for them
-	$meta->alias_method('confess' => \&Carp::confess);			
-	$meta->alias_method('blessed' => \&Scalar::Util::blessed);				
+        my $meta;
+        if ($class->can('meta')) {
+            $meta = $class->meta();
+            (blessed($meta) && $meta->isa('Moose::Meta::Class'))
+                || confess "Whoops, not møøsey enough";
+        }
+        else {
+            $meta = Moose::Meta::Class->initialize($class => (
+                ':attribute_metaclass' => 'Moose::Meta::Attribute'
+            ));
+            $meta->add_method('meta' => sub {
+                # re-initialize so it inherits properly
+                Moose::Meta::Class->initialize($class => (
+                    ':attribute_metaclass' => 'Moose::Meta::Attribute'
+                ));
+            })
+        }
+
+        # make sure they inherit from Moose::Object
+        $meta->superclasses('Moose::Object')
+           unless $meta->superclasses();
+
+        return $METAS{$class} = $meta;
+    }
+
+    my %exports = (
+        extends => sub {
+            my $meta = meta();
+            return sub {
+                _load_all_classes(@_);
+                $meta->superclasses(@_)
+            };
+        },
+        with => sub {
+            my $meta = meta();
+            return sub {
+                my ($role) = @_;
+                _load_all_classes($role);
+                $role->meta->apply($meta);
+            };
+        },
+        has => sub {
+            my $meta = meta();
+            return sub {
+                my ($name, %options) = @_;
+                $meta->add_attribute($name, %options)
+            };
+        },
+        before => sub {
+            my $meta = meta();
+            return sub {
+                my $code = pop @_;
+                $meta->add_before_method_modifier($_, $code) for @_;
+            };
+        },
+        after => sub {
+            my $meta = meta();
+            return sub {
+                my $code = pop @_;
+                $meta->add_after_method_modifier($_, $code) for @_;
+            };
+        },
+        around => sub {
+            my $meta = meta();
+            return sub {
+                my $code = pop @_;
+                $meta->add_around_method_modifier($_, $code) for @_;
+            };
+        },
+        super => sub {
+            my $meta = meta();
+            return sub {};
+        },
+        override => sub {
+            my $meta = meta();
+            return sub {
+                my ($name, $method) = @_;
+                $meta->add_override_method_modifier($name => $method);
+            };
+        },
+        inner => sub {
+            my $meta = meta();
+            return sub {};
+        },
+        augment => sub {
+            my $meta = meta();
+            return sub {
+                my ($name, $method) = @_;
+                $meta->add_augment_method_modifier($name => $method);
+            };
+        },
+        confess => sub {
+            return \&Carp::confess;
+        },
+        blessed => sub {
+            return \&Scalar::Util::blessed;
+        }
+    );
+    
+    my $exporter = Sub::Exporter::build_exporter({ 
+        exports => \%exports,
+        groups  => {
+            default => [':all']
+        }
+    });
+    
+    sub import {
+        $CALLER = caller();
+
+        # we should never export to main
+        return if $CALLER eq 'main';
+
+        goto $exporter;
+    };
 }
 
 ## Utility functions

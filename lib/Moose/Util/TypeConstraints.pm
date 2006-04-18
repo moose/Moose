@@ -12,14 +12,19 @@ our $VERSION = '0.05';
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
-sub import {
-	shift;
-	my $pkg = shift || caller();
-	return if $pkg eq '-no-export';
-	no strict 'refs';
-	foreach my $export (qw(type subtype as where message coerce from via find_type_constraint)) {
-		*{"${pkg}::${export}"} = \&{"${export}"};
-	}	
+{
+    require Sub::Exporter;
+    
+    my @exports = qw[type subtype as where message coerce from via find_type_constraint];
+
+    Sub::Exporter->import( 
+        -setup => { 
+            exports => \@exports,
+            groups  => {
+                default => [':all']
+            }
+        }
+    );
 }
 
 {

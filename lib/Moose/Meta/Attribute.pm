@@ -9,7 +9,7 @@ use Carp         'confess';
 
 our $VERSION = '0.04';
 
-use Moose::Util::TypeConstraints '-no-export';
+use Moose::Util::TypeConstraints ();
 
 use base 'Class::MOP::Attribute';
 

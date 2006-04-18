@@ -8,7 +8,7 @@ use metaclass;
 use Carp 'confess';
 
 use Moose::Meta::Attribute;
-use Moose::Util::TypeConstraints '-no-export';
+use Moose::Util::TypeConstraints ();
 
 our $VERSION = '0.01';
 

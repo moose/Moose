@@ -7,7 +7,7 @@ use Test::More tests => 5;
 use Test::Exception;
 
 BEGIN {
-	use_ok('Moose::Util::TypeConstraints', ('Foo'));
+	use_ok('Moose::Util::TypeConstraints', { into => 'Foo' } );
 }
 
 {
