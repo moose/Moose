@@ -12,6 +12,8 @@ BEGIN {
 	use_ok('Moose');
 }
 
+$SIG{__WARN__} = sub { 0 };
+
 eval { require Foo; };
 ok(!$@, '... loaded Foo successfully') || diag $@;
 
