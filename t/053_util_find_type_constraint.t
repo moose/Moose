@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 15;
 use Test::Exception;
 
 BEGIN {
@@ -12,16 +12,19 @@ BEGIN {
 
 foreach my $type_name (qw(
     Any
+        Bool
         Value
             Int
             Str
         Ref
             ScalarRef
-            ArrayRef
-            HashRef
+            CollectionRef
+                ArrayRef
+                HashRef
             CodeRef
             RegexpRef
             Object    
+                Role
     )) {
     is(find_type_constraint($type_name)->name, 
        $type_name, 

@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.05
+    * Moose::Utils::TypeConstraints
+      - added Bool type and CollectionRef type
+        then made ArrayRef and HashRef into subtypes 
+        of the CollectionRef
+
 0.04 Sun. April 16th, 2006
     * Moose::Role
       - Roles can now consume other roles

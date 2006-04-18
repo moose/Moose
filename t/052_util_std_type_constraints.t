@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 122;
+use Test::More tests => 143;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -26,6 +26,18 @@ ok(defined Any(sub {}),          '... Any accepts anything');
 ok(defined Any($SCALAR_REF),     '... Any accepts anything');
 ok(defined Any(qr/../),          '... Any accepts anything');
 ok(defined Any(bless {}, 'Foo'), '... Any accepts anything');
+
+ok(defined Bool(0),                 '... Bool rejects anything which is not a 1 or 0');
+ok(defined Bool(1),                 '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool(100),              '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool(''),               '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool('Foo'),            '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool([]),               '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool({}),               '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool(sub {}),           '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool($SCALAR_REF),      '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool(qr/../),           '... Bool rejects anything which is not a 1 or 0');
+ok(!defined Bool(bless {}, 'Foo'),  '... Bool rejects anything which is not a 1 or 0');
 
 ok(defined Value(0),                 '... Value accepts anything which is not a Ref');
 ok(defined Value(100),               '... Value accepts anything which is not a Ref');
@@ -81,6 +93,17 @@ ok(!defined ScalarRef(sub {}),           '... ScalarRef rejects anything which i
 ok(defined ScalarRef($SCALAR_REF),       '... ScalarRef accepts anything which is a ScalarRef');
 ok(!defined ScalarRef(qr/../),           '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef(bless {}, 'Foo'),  '... ScalarRef rejects anything which is not a ScalarRef');
+
+ok(!defined CollectionRef(0),                '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef(100),              '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef(''),               '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef('Foo'),            '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(defined CollectionRef([]),               '... CollectionRef accepts anything which is not a HASH or ARRAY');
+ok(defined CollectionRef({}),               '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef(sub {}),           '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef($SCALAR_REF),      '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef(qr/../),           '... CollectionRef rejects anything which is not a HASH or ARRAY');
+ok(!defined CollectionRef(bless {}, 'Foo'),  '... CollectionRef rejects anything which is not a HASH or ARRAY');
 
 ok(!defined ArrayRef(0),                '... ArrayRef rejects anything which is not a ArrayRef');
 ok(!defined ArrayRef(100),              '... ArrayRef rejects anything which is not a ArrayRef');

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
@@ -103,12 +103,18 @@ type 'Any' => where { 1 };
 subtype 'Value' => as 'Any' => where { !ref($_) };
 subtype 'Ref'   => as 'Any' => where {  ref($_) };
 
+subtype 'Bool' => as 'Any' => where { "$_" eq '1' || "$_" eq '0' };
+
 subtype 'Int' => as 'Value' => where {  Scalar::Util::looks_like_number($_) };
 subtype 'Str' => as 'Value' => where { !Scalar::Util::looks_like_number($_) };
 
 subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };	
-subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  };
-subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   };	
+
+subtype 'CollectionRef' => as 'Ref' => where { ref($_) eq 'ARRAY' || ref($_) eq 'HASH' };
+
+subtype 'ArrayRef' => as 'CollectionRef' => where { ref($_) eq 'ARRAY'  };
+subtype 'HashRef'  => as 'CollectionRef' => where { ref($_) eq 'HASH'   };	
+
 subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   };
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' };	
 
@@ -168,17 +174,19 @@ This module also provides a simple hierarchy for Perl 5 types, this
 could probably use some work, but it works for me at the moment.
 
   Any
+      Bool
       Value
           Int
           Str
       Ref
           ScalarRef
-          ArrayRef
-          HashRef
+          CollectionRef
+              ArrayRef
+              HashRef
           CodeRef
           RegexpRef
           Object	
-            Role
+              Role
 
 Suggestions for improvement are welcome.
     
