@@ -10,6 +10,18 @@ BEGIN {
     use_ok('Moose');           
 }
 
+=pod
+
+This test demonstrates that Moose will respect 
+a metaclass previously set with the metaclass 
+pragma. 
+
+It also checks an error condition where that 
+metaclass must be a Moose::Meta::Class subclass
+in order to work.
+
+=cut
+
 
 {
     package Foo::Meta;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 39;
 use Test::Exception;
 
 BEGIN {  
@@ -52,6 +52,18 @@ BEGIN {
 
 my $foo_class_meta = FooClass->meta;
 isa_ok($foo_class_meta, 'Moose::Meta::Class');
+
+dies_ok {
+    $foo_class_meta->does_role()
+} '... does_role requires a role name';
+
+dies_ok {
+    $foo_class_meta->apply_role()
+} '... apply_role requires a role';
+
+dies_ok {
+    $foo_class_meta->apply_role(bless({} => 'Fail'))
+} '... apply_role requires a role';
 
 ok($foo_class_meta->does_role('FooRole'), '... the FooClass->meta does_role FooRole');
 ok(!$foo_class_meta->does_role('OtherRole'), '... the FooClass->meta !does_role OtherRole');

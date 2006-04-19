@@ -1,0 +1,60 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More tests => 14;
+use Test::Exception;
+
+BEGIN {
+    use_ok('Moose');           
+}
+
+{
+    package Foo;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    has 'bar' => (is => 'ro', required => 1);
+    has 'baz' => (is => 'rw', default => 100, required => 1); 
+
+    # NOTE:
+    # this attribute is actually kind of silly  
+    # since lazy requires default, then the 
+    # required attribute becomes void in this 
+    # case. But hey, best to test it :)
+    has 'boo' => (is => 'rw', lazy => 1, default => 50, required => 1);       
+}
+
+{
+    my $foo = Foo->new(bar => 10, baz => 20, boo => 100);
+    isa_ok($foo, 'Foo');
+    
+    is($foo->bar, 10, '... got the right bar');
+    is($foo->baz, 20, '... got the right baz');    
+    is($foo->boo, 100, '... got the right boo');        
+}
+
+{
+    my $foo = Foo->new(bar => 10, boo => 5);
+    isa_ok($foo, 'Foo');
+    
+    is($foo->bar, 10, '... got the right bar');
+    is($foo->baz, 100, '... got the right baz');    
+    is($foo->boo, 5, '... got the right boo');            
+}
+
+{
+    my $foo = Foo->new(bar => 10);
+    isa_ok($foo, 'Foo');
+    
+    is($foo->bar, 10, '... got the right bar');
+    is($foo->baz, 100, '... got the right baz');    
+    is($foo->boo, 50, '... got the right boo');            
+}
+
+throws_ok {
+    Foo->new;
+} qr/^Attribute \(bar\) is required/, '... must supply all the required attribute';
+
