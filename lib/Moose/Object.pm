@@ -5,13 +5,11 @@ use strict;
 use warnings;
 
 use Moose::Meta::Class;
-use metaclass 'Moose::Meta::Class' => (
-	':attribute_metaclass' => 'Moose::Meta::Attribute'
-);
+use metaclass 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new {
     my $class  = shift;

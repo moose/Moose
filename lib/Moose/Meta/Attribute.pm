@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Moose::Util::TypeConstraints ();
 
