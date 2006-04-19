@@ -4,13 +4,14 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Sub::Name    'subname';
 
 use UNIVERSAL::require;
+use Sub::Exporter;
 
 use Class::MOP;
 
@@ -21,12 +22,11 @@ use Moose::Meta::Attribute;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;
-use Sub::Exporter;
 
 {
     my ( $CALLER, %METAS );
 
-    sub meta() {
+    sub _find_meta {
         my $class = $CALLER;
 
         return $METAS{$class} if exists $METAS{$class};
@@ -64,14 +64,14 @@ use Sub::Exporter;
 
     my %exports = (
         extends => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::extends' => sub {
                 _load_all_classes(@_);
                 $meta->superclasses(@_)
             };
         },
         with => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::with' => sub {
                 my ($role) = @_;
                 _load_all_classes($role);
@@ -79,50 +79,50 @@ use Sub::Exporter;
             };
         },
         has => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::has' => sub {
                 my ($name, %options) = @_;
                 $meta->add_attribute($name, %options)
             };
         },
         before => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::before' => sub {
                 my $code = pop @_;
                 $meta->add_before_method_modifier($_, $code) for @_;
             };
         },
         after => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::after' => sub {
                 my $code = pop @_;
                 $meta->add_after_method_modifier($_, $code) for @_;
             };
         },
         around => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::around' => sub {
                 my $code = pop @_;
                 $meta->add_around_method_modifier($_, $code) for @_;
             };
         },
         super => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::super' => sub {};
         },
         override => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::override' => sub {
                 my ($name, $method) = @_;
                 $meta->add_override_method_modifier($name => $method);
             };
         },
         inner => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::inner' => sub {};
         },
         augment => sub {
-            my $meta = meta();
+            my $meta = _find_meta();
             return subname 'Moose::augment' => sub {
                 my ($name, $method) = @_;
                 $meta->add_augment_method_modifier($name => $method);

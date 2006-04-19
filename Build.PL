@@ -10,7 +10,8 @@ my $build = Module::Build->new(
         'Carp'               => '0',
         'Class::MOP'         => '0.22',
         'Sub::Name'          => '0.02',
-        'UNIVERSAL::require' => '0'
+        'UNIVERSAL::require' => '0',
+        'Sub::Exporter'      => '0', # update this when rjbs releases
     },
     optional => {
     },

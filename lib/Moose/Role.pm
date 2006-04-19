@@ -8,86 +8,131 @@ use Scalar::Util ();
 use Carp         'confess';
 use Sub::Name    'subname';
 
-our $VERSION = '0.02';
+use Sub::Exporter;
+
+our $VERSION = '0.03';
 
 use Moose::Meta::Role;
 
-sub import {
-	shift;
-	my $pkg = caller();
-	
-	# we should never export to main
-	return if $pkg eq 'main';
+{
+    my ( $CALLER, %METAS );
 
-	my $meta;
-	if ($pkg->can('meta')) {
-		$meta = $pkg->meta();
-		(blessed($meta) && $meta->isa('Moose::Meta::Role'))
-			|| confess "Whoops, not møøsey enough";
-	}
-	else {
-		$meta = Moose::Meta::Role->new(role_name => $pkg);
-		$meta->_role_meta->add_method('meta' => sub { $meta })		
-	}
-	
-	# NOTE:
-	# &alias_method will install the method, but it 
-	# will not name it with 
-	
-	# handle superclasses
-	$meta->alias_method('extends' => subname 'Moose::Role::extends' => sub { 
-        confess "Moose::Role does not currently support 'extends'"
-	});	
-	
-	# handle roles
-	$meta->alias_method('with' => subname 'Moose::with' => sub { 
-	    my ($role) = @_;
-        Moose::_load_all_classes($role);
-        $role->meta->apply($meta);
-	});	
-	
-	# required methods
-	$meta->alias_method('requires' => subname 'Moose::requires' => sub { 
-        $meta->add_required_methods(@_);
-	});	
-	
-	# handle attributes
-	$meta->alias_method('has' => subname 'Moose::Role::has' => sub { 
-		my ($name, %options) = @_;
-		$meta->add_attribute($name, %options) 
-	});
+    sub _find_meta {
+        my $class = $CALLER;
 
-	# handle method modifers
-	$meta->alias_method('before' => subname 'Moose::Role::before' => sub { 
-		my $code = pop @_;
-		$meta->add_before_method_modifier($_, $code) for @_;
-	});
-	$meta->alias_method('after'  => subname 'Moose::Role::after' => sub { 
-		my $code = pop @_;
-		$meta->add_after_method_modifier($_, $code) for @_;
-	});	
-	$meta->alias_method('around' => subname 'Moose::Role::around' => sub { 
-		my $code = pop @_;
-		$meta->add_around_method_modifier($_, $code) for @_;
-	});	
-	
-	$meta->alias_method('super' => subname 'Moose::Role::super' => sub {});
-	$meta->alias_method('override' => subname 'Moose::Role::override' => sub {
-        my ($name, $code) = @_;
-		$meta->add_override_method_modifier($name, $code);
-	});		
-	
-	$meta->alias_method('inner' => subname 'Moose::Role::inner' => sub {
-        confess "Moose::Role does not currently support 'inner'";	    
-	});
-	$meta->alias_method('augment' => subname 'Moose::Role::augment' => sub {
-        confess "Moose::Role does not currently support 'augment'";
-	});	
+        return $METAS{$class} if exists $METAS{$class};
 
-	# we recommend using these things 
-	# so export them for them
-	$meta->alias_method('confess' => \&Carp::confess);			
-	$meta->alias_method('blessed' => \&Scalar::Util::blessed);    
+    	my $meta;
+    	if ($class->can('meta')) {
+    		$meta = $class->meta();
+    		(blessed($meta) && $meta->isa('Moose::Meta::Role'))
+    			|| confess "Whoops, not møøsey enough";
+    	}
+    	else {
+    		$meta = Moose::Meta::Role->new(role_name => $class);
+    		$meta->_role_meta->add_method('meta' => sub { $meta })		
+    	}
+
+        return $METAS{$class} = $meta;
+    }
+ 
+	
+    my %exports = (
+        extends => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::extends' => sub { 
+                confess "Moose::Role does not currently support 'extends'"
+	        };
+	    },
+	    with => sub {
+	        my $meta = _find_meta();
+	        return subname 'Moose::Role::with' => sub { 
+	            my ($role) = @_;
+                Moose::_load_all_classes($role);
+                $role->meta->apply($meta);
+            };
+	    },	
+        requires => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::requires' => sub { 
+                $meta->add_required_methods(@_);
+	        };
+	    },	
+        has => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::has' => sub { 
+		        my ($name, %options) = @_;
+		        $meta->add_attribute($name, %options) 
+	        };
+	    },
+        before => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::before' => sub { 
+		        my $code = pop @_;
+		        $meta->add_before_method_modifier($_, $code) for @_;
+	        };
+	    },
+        after => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::after' => sub { 
+		        my $code = pop @_;
+		        $meta->add_after_method_modifier($_, $code) for @_;
+	        };
+	    },
+        around => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::around' => sub { 
+		        my $code = pop @_;
+		        $meta->add_around_method_modifier($_, $code) for @_;
+	        };
+	    },
+	    super => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::super' => sub {};
+        },
+        override => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::override' => sub {
+                my ($name, $code) = @_;
+		        $meta->add_override_method_modifier($name, $code);
+	        };
+	    },		
+        inner => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::inner' => sub {
+                confess "Moose::Role does not currently support 'inner'";	    
+	        };
+	    },
+        augment => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::augment' => sub {
+                confess "Moose::Role does not currently support 'augment'";
+	        };
+	    },
+        confess => sub {
+            return \&Carp::confess;
+        },
+        blessed => sub {
+            return \&Scalar::Util::blessed;
+        }	    
+	);	
+
+    my $exporter = Sub::Exporter::build_exporter({ 
+        exports => \%exports,
+        groups  => {
+            default => [':all']
+        }
+    });
+    
+    sub import {
+        $CALLER = caller();
+
+        # we should never export to main
+        return if $CALLER eq 'main';
+
+        goto $exporter;
+    };
+
 }
 
 1;

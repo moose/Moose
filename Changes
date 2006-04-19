@@ -1,6 +1,13 @@
 Revision history for Perl extension Moose
 
 0.05
+    * Moose
+      - keywords are now exported with Sub::Exporter
+        thanks to chansen for this commit
+        
+    * Moose::Role
+      - keywords are now exported with Sub::Exporter
+
     * Moose::Utils::TypeConstraints
       - added Bool type and CollectionRef type
         then made ArrayRef and HashRef into subtypes 
