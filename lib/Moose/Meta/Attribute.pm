@@ -37,7 +37,7 @@ sub new {
 		}
 		elsif ($options{is} eq 'rw') {
 			$options{accessor} = $name;				
-			(reftype($options{trigger}) eq 'CODE')
+			((reftype($options{trigger}) || '') eq 'CODE')
 			    || confess "A trigger must be a CODE reference"
 			        if exists $options{trigger};			
 		}			
@@ -49,6 +49,9 @@ sub new {
 	        if (eval { $options{isa}->can('does') }) {
 	            ($options{isa}->does($options{does}))	            
 	                || confess "Cannot have an isa option and a does option if the isa does not do the does";
+	        }
+	        else {
+	            confess "Cannot have an isa option which cannot ->does()";
 	        }
 	    }	    
 	    

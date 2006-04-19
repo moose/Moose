@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 BEGIN {
     use_ok('Moose');           
@@ -39,5 +39,16 @@ BEGIN {
     
     eval { extends 'Foo', 'Bar'; };
     ::ok(!$@, '... loaded Foo and (inline) Bar superclass correctly');
+}
+
+{
+    package Bling;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    eval { extends 'No::Class'; };
+    ::ok($@, '... could not find the superclass (as expected)');
+    ::like($@, qr/^Could not load superclass 'No\:\:Class' because \:/, '... and got the error we expected');
 }
 

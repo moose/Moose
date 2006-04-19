@@ -12,6 +12,8 @@ Revision history for Perl extension Moose
       - added Bool type and CollectionRef type
         then made ArrayRef and HashRef into subtypes 
         of the CollectionRef
+      - keywords are now exported with Sub::Exporter
+        thanks chansen for this commit
 
 0.04 Sun. April 16th, 2006
     * Moose::Role

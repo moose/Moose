@@ -13,27 +13,34 @@ use Sub::Exporter;
 our $VERSION = '0.03';
 
 use Moose::Meta::Role;
+use Moose::Util::TypeConstraints;
 
 {
     my ( $CALLER, %METAS );
 
     sub _find_meta {
-        my $class = $CALLER;
+        my $role = $CALLER;
 
-        return $METAS{$class} if exists $METAS{$class};
+        return $METAS{$role} if exists $METAS{$role};
+        
+        # make a subtype for each Moose class
+        subtype $role
+            => as 'Role'
+            => where { $_->does($role) }
+        unless find_type_constraint($role);        
 
     	my $meta;
-    	if ($class->can('meta')) {
-    		$meta = $class->meta();
+    	if ($role->can('meta')) {
+    		$meta = $role->meta();
     		(blessed($meta) && $meta->isa('Moose::Meta::Role'))
     			|| confess "Whoops, not møøsey enough";
     	}
     	else {
-    		$meta = Moose::Meta::Role->new(role_name => $class);
+    		$meta = Moose::Meta::Role->new(role_name => $role);
     		$meta->_role_meta->add_method('meta' => sub { $meta })		
     	}
 
-        return $METAS{$class} = $meta;
+        return $METAS{$role} = $meta;
     }
  
 	

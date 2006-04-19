@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 24;
+use Test::More tests => 27;
 use Test::Exception;
 
 BEGIN {
@@ -107,4 +107,33 @@ BEGIN {
 
     ok(isweak($baz->{foo}), '... baz.foo is a weak reference');
 }
+
+# some errors
+
+{
+    package Bling;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    ::dies_ok { 
+        has('bling' => (is => 'ro', trigger => sub { 0 }));
+    } '... cannot create trigger on a read-only attr';
+}
+
+{
+    package Bling::Bling;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    ::dies_ok { 
+        has('bling' => (is => 'rw', trigger => 'Fail'));
+    } '... a trigger must be a CODE ref';
+    
+    ::dies_ok { 
+        has('bling' => (is => 'rw', trigger => []));
+    } '... a trigger must be a CODE ref';    
+}
+
 

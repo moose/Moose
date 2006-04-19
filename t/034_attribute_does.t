@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::Exception;
 
 BEGIN {
@@ -79,4 +79,25 @@ lives_ok {
         has 'foo' => (isa => 'Foo::Class', does => 'Bar::Class');
     } '... cannot have a does() which is not done by the isa()';
 }    
+
+{
+    package Bling;
+    use strict;
+    use warnings;
+    
+    sub bling { 'Bling::bling' }
+    
+    package Bling::Bling;
+    use strict;
+    use warnings;    
+    use Moose;
+
+    # if isa and does appear together, then see if Class->does(Role)
+    # if it does not,.. we have a conflict... so we die loudly
+    ::dies_ok {
+        has 'foo' => (isa => 'Bling', does => 'Bar::Class');
+    } '... cannot have a isa() which is cannot does()';
+}
+
+
     
