@@ -82,7 +82,12 @@ use Moose::Util::TypeConstraints;
             my $meta = _find_meta();
             return subname 'Moose::has' => sub {
                 my ($name, %options) = @_;
-                $meta->add_attribute($name, %options)
+                if ($options{metaclass}) {
+                    $meta->add_attribute($options{metaclass}->new($name, %options));
+                }
+                else {
+                    $meta->add_attribute($name, %options);
+                }
             };
         },
         before => sub {
