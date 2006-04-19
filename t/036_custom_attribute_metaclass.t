@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Exception;
 
 BEGIN {
     use_ok('Moose');           
 }
 
-{
+{    
     package Foo::Meta::Attribute;
     use strict;
     use warnings;
@@ -47,3 +47,21 @@ isa_ok($foo_attr_type_constraint, 'Moose::Meta::TypeConstraint');
 
 is($foo_attr_type_constraint->name, 'Foo', '... got the right type constraint name');
 is($foo_attr_type_constraint->parent->name, 'Object', '... got the right type constraint parent name');
+
+{
+    package Bar::Meta::Attribute;
+    use strict;
+    use warnings;
+    
+    use base 'Class::MOP::Attribute';   
+    
+    package Bar;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    ::dies_ok {
+        has 'bar' => (metaclass => 'Bar::Meta::Attribute');     
+    } '... the attribute metaclass must be a subclass of Moose::Meta::Attribute';
+}
+

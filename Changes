@@ -4,6 +4,10 @@ Revision history for Perl extension Moose
     * Moose
       - keywords are now exported with Sub::Exporter
         thanks to chansen for this commit
+      - has keyword now takes a 'metaclass' option 
+        to support custom attribute meta-classes 
+        on a per-attribute basis
+        - added tests for this
         
     * Moose::Role
       - keywords are now exported with Sub::Exporter

@@ -42,16 +42,14 @@ use Moose::Util::TypeConstraints;
             $meta = $class->meta();
             (blessed($meta) && $meta->isa('Moose::Meta::Class'))
                 || confess "Whoops, not møøsey enough";
+            ($meta->attribute_metaclass->isa('Moose::Meta::Attribute'))
+                || confess "Attribute metaclass must be a subclass of Moose::Meta::Attribute";
         }
         else {
-            $meta = Moose::Meta::Class->initialize($class => (
-                ':attribute_metaclass' => 'Moose::Meta::Attribute'
-            ));
+            $meta = Moose::Meta::Class->initialize($class);
             $meta->add_method('meta' => sub {
                 # re-initialize so it inherits properly
-                Moose::Meta::Class->initialize($class => (
-                    ':attribute_metaclass' => 'Moose::Meta::Attribute'
-                ));
+                Moose::Meta::Class->initialize($class);
             })
         }
 
@@ -83,6 +81,9 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::has' => sub {
                 my ($name, %options) = @_;
                 if ($options{metaclass}) {
+                    _load_all_classes($options{metaclass});
+                    ($options{metaclass}->isa('Moose::Meta::Attribute'))
+                        || confess "Custom attribute metaclass must be a subclass of Moose::Meta::Attribute";
                     $meta->add_attribute($options{metaclass}->new($name, %options));
                 }
                 else {

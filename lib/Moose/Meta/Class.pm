@@ -18,6 +18,14 @@ __PACKAGE__->meta->add_attribute('roles' => (
     default => sub { [] }
 ));
 
+sub initialize {
+    my $class = shift;
+    my $pkg   = shift;
+    $class->SUPER::initialize($pkg,
+        ':attribute_metaclass' => 'Moose::Meta::Attribute', 
+        @_);
+}
+
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
@@ -183,6 +191,8 @@ to the L<Class::MOP::Class> documentation.
 =head1 METHODS
 
 =over 4
+
+=item B<initialize>
 
 =item B<new_object>
 
