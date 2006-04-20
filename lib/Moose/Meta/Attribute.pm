@@ -110,6 +110,41 @@ sub new {
 	$class->SUPER::new($name, %options);	
 }
 
+sub initialize_instance_slot {
+    my ($self, $class, $instance, $params) = @_;
+    my $init_arg = $self->init_arg();
+    # try to fetch the init arg from the %params ...
+    my $val;        
+    if (exists $params->{$init_arg}) {
+        $val = $params->{$init_arg};
+    }
+    else {
+        # skip it if it's lazy
+        return if $self->is_lazy;
+        # and die if it's required and doesn't have a default value
+        confess "Attribute (" . $self->name . ") is required" 
+            if $self->is_required && !$self->has_default;
+    }
+    # if nothing was in the %params, we can use the 
+    # attribute's default value (if it has one)
+    if (!defined $val && $self->has_default) {
+        $val = $self->default($instance); 
+    }
+	if (defined $val) {
+	    if ($self->has_type_constraint) {
+		    if ($self->should_coerce && $self->type_constraint->has_coercion) {
+		        $val = $self->type_constraint->coercion->coerce($val);
+		    }	
+            (defined($self->type_constraint->check($val))) 
+                || confess "Attribute (" . $self->name . ") does not pass the type contraint with '$val'";			
+        }
+	}
+    $instance->{$self->name} = $val;
+    if (defined $val && $self->is_weak_ref) {
+        weaken($instance->{$self->name});
+    }    
+}
+
 sub generate_accessor_method {
     my ($self, $attr_name) = @_;
     my $value_name = $self->should_coerce ? '$val' : '$_[1]';
@@ -219,6 +254,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =over 4
 
 =item B<new>
+
+=item B<initialize_instance_slot>
 
 =item B<generate_accessor_method>
 

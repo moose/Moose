@@ -47,7 +47,7 @@ sub new_object {
     my ($class, %params) = @_;
     my $self = $class->SUPER::new_object(%params);
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        next unless $params{$attr->name} && $attr->has_trigger;
+        next unless $params{$attr->name} && $attr->can('has_trigger') && $attr->has_trigger;
         $attr->trigger->($self, $params{$attr->name});
     }
     return $self;    
@@ -57,37 +57,7 @@ sub construct_instance {
     my ($class, %params) = @_;
     my $instance = $params{'__INSTANCE__'} || {};
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        my $init_arg = $attr->init_arg();
-        # try to fetch the init arg from the %params ...
-        my $val;        
-        if (exists $params{$init_arg}) {
-            $val = $params{$init_arg};
-        }
-        else {
-            # skip it if it's lazy
-            next if $attr->is_lazy;
-            # and die if it's required and doesn't have a default value
-            confess "Attribute (" . $attr->name . ") is required" 
-                if $attr->is_required && !$attr->has_default;
-        }
-        # if nothing was in the %params, we can use the 
-        # attribute's default value (if it has one)
-        if (!defined $val && $attr->has_default) {
-            $val = $attr->default($instance); 
-        }
-		if (defined $val) {
-		    if ($attr->has_type_constraint) {
-    		    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-    		        $val = $attr->type_constraint->coercion->coerce($val);
-    		    }	
-                (defined($attr->type_constraint->check($val))) 
-                    || confess "Attribute (" . $attr->name . ") does not pass the type contraint with '$val'";			
-            }
-		}
-        $instance->{$attr->name} = $val;
-        if (defined $val && $attr->is_weak_ref) {
-            weaken($instance->{$attr->name});
-        }
+        $attr->initialize_instance_slot($class, $instance, \%params)
     }
     return $instance;
 }

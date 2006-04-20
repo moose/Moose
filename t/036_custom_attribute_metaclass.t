@@ -14,13 +14,16 @@ BEGIN {
     package Foo::Meta::Attribute;
     use strict;
     use warnings;
+    use Moose;
     
-    use base 'Moose::Meta::Attribute';
+    extends 'Moose::Meta::Attribute';
     
-    sub new {
-        my $class = shift;
-        $class->SUPER::new(@_, (is => 'rw', isa => 'Foo'));
-    }
+    around 'new' => sub {
+        my $next = shift;
+        my $self = shift;
+        my $name = shift;
+        $next->($self, $name, (is => 'rw', isa => 'Foo'), @_);
+    };
 
     package Foo;
     use strict;
@@ -52,16 +55,17 @@ is($foo_attr_type_constraint->parent->name, 'Object', '... got the right type co
     package Bar::Meta::Attribute;
     use strict;
     use warnings;
+    use Moose;
     
-    use base 'Class::MOP::Attribute';   
+    extends 'Class::MOP::Attribute';   
     
     package Bar;
     use strict;
     use warnings;
     use Moose;
     
-    ::dies_ok {
+    ::lives_ok {
         has 'bar' => (metaclass => 'Bar::Meta::Attribute');     
-    } '... the attribute metaclass must be a subclass of Moose::Meta::Attribute';
+    } '... the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
 }
 

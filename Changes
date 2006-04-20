@@ -22,6 +22,14 @@ Revision history for Perl extension Moose
       - keywords are now exported with Sub::Exporter
         thanks chansen for this commit
 
+    * Moose::Meta::Class
+      - due to changes in Class::MOP, we had to change
+        construct_instance (for the better)
+        
+    * Moose::Meta::Attribute
+      - due to changes in Class::MOP, we had to add the 
+        initialize_instance_slot method (it's a good thing)
+
 0.04 Sun. April 16th, 2006
     * Moose::Role
       - Roles can now consume other roles
