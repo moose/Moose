@@ -60,18 +60,27 @@ sub new {
 			$options{type_constraint} = $options{isa};
 		}
 		else {
-		    # otherwise assume it is a constraint
-		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});	    
-		    # if the constraing it not found ....
-		    unless (defined $constraint) {
-		        # assume it is a foreign class, and make 
-		        # an anon constraint for it 
-		        $constraint = Moose::Util::TypeConstraints::subtype(
-		            'Object', 
-		            Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+		    
+		    if ($options{isa} =~ /\|/) {
+		        my @type_constraints = split /\s*\|\s*/ => $options{isa};
+		        $options{type_constraint} = Moose::Util::TypeConstraints::create_type_constraint_union(
+		            @type_constraints
 		        );
-		    }			    
-            $options{type_constraint} = $constraint;
+		    }
+		    else {
+    		    # otherwise assume it is a constraint
+    		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});	    
+    		    # if the constraing it not found ....
+    		    unless (defined $constraint) {
+    		        # assume it is a foreign class, and make 
+    		        # an anon constraint for it 
+    		        $constraint = Moose::Util::TypeConstraints::subtype(
+    		            'Object', 
+    		            Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+    		        );
+    		    }			    
+                $options{type_constraint} = $constraint;
+            }
 		}
 	}	
 	elsif (exists $options{does}) {	    
@@ -98,6 +107,8 @@ sub new {
 	if (exists $options{coerce} && $options{coerce}) {
 	    (exists $options{type_constraint})
 	        || confess "You cannot have coercion without specifying a type constraint";
+	    (!$options{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
+	        || confess "You cannot have coercion with a type constraint union";	        
         confess "You cannot have a weak reference to a coerced value"
             if $options{weak_ref};	        
 	}	
@@ -132,11 +143,16 @@ sub initialize_instance_slot {
     }
 	if (defined $val) {
 	    if ($self->has_type_constraint) {
-		    if ($self->should_coerce && $self->type_constraint->has_coercion) {
-		        $val = $self->type_constraint->coercion->coerce($val);
+	        my $type_constraint = $self->type_constraint;
+		    if ($self->should_coerce && $type_constraint->has_coercion) {
+		        $val = $type_constraint->coercion->coerce($val);
 		    }	
-            (defined($self->type_constraint->check($val))) 
-                || confess "Attribute (" . $self->name . ") does not pass the type contraint with '$val'";			
+            (defined($type_constraint->check($val))) 
+                || confess "Attribute (" . 
+                           $self->name . 
+                           ") does not pass the type contraint (" . 
+                           $type_constraint->name .
+                           ") with '$val'";			
         }
 	}
     $instance->{$self->name} = $val;
@@ -158,7 +174,7 @@ sub generate_accessor_method {
             : '')
         . ($self->has_type_constraint ? 
             ('(defined $self->type_constraint->check(' . $value_name . '))'
-            	. '|| confess "Attribute ($attr_name) does not pass the type contraint with \'' . $value_name . '\'"'
+            	. '|| confess "Attribute ($attr_name) does not pass the type contraint (" . $self->type_constraint->name . ") with \'' . $value_name . '\'"'
             		. 'if defined ' . $value_name . ';')
             : '')
         . '$_[0]->{$attr_name} = ' . $value_name . ';'
@@ -192,7 +208,7 @@ sub generate_writer_method {
         : '')
     . ($self->has_type_constraint ? 
         ('(defined $self->type_constraint->check(' . $value_name . '))'
-        	. '|| confess "Attribute ($attr_name) does not pass the type contraint with \'' . $value_name . '\'"'
+        	. '|| confess "Attribute ($attr_name) does not pass the type contraint (" . $self->type_constraint->name . ") with \'' . $value_name . '\'"'
         		. 'if defined ' . $value_name . ';')
         : '')
     . '$_[0]->{$attr_name} = ' . $value_name . ';'

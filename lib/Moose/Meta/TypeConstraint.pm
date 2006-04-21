@@ -5,8 +5,9 @@ use strict;
 use warnings;
 use metaclass;
 
-use Sub::Name 'subname';
-use Carp      'confess';
+use Sub::Name    'subname';
+use Carp         'confess';
+use Scalar::Util 'blessed';
 
 our $VERSION = '0.03';
 
@@ -79,6 +80,11 @@ sub validate {
 
 sub union {
     my ($class, @type_constraints) = @_;
+    (scalar @type_constraints >= 2)
+        || confess "You must pass in at least 2 Moose::Meta::TypeConstraint instances to make a union";    
+    (blessed($_) && $_->isa('Moose::Meta::TypeConstraint'))
+        || confess "You must pass in only Moose::Meta::TypeConstraint instances to make unions"
+            foreach @type_constraints;
     return Moose::Meta::TypeConstraint::Union->new(
         type_constraints => \@type_constraints
     );
@@ -104,6 +110,21 @@ sub new {
 }
 
 sub name { join ' | ' => map { $_->name } @{$_[0]->type_constraints} }
+
+# NOTE:
+# this should probably never be used
+# but we include it here for completeness
+sub constraint    { 
+    my $self = shift;
+    sub { $self->check($_[0]) }; 
+}
+
+# conform to the TypeConstraint API
+sub parent        { undef  }
+sub coercion      { undef  }
+sub has_coercion  { 0      }
+sub message       { undef  }
+sub has_message   { 0      }
 
 sub check {
     my $self  = shift;

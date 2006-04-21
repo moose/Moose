@@ -7,18 +7,15 @@ Revision history for Perl extension Moose
       - has keyword now takes a 'metaclass' option 
         to support custom attribute meta-classes 
         on a per-attribute basis
-        - Moose now enforces that your attribute 
-          metaclasses are always derived from 
-          Moose::Meta::Attribute
         - added tests for this          
         
     * Moose::Role
       - keywords are now exported with Sub::Exporter
 
     * Moose::Utils::TypeConstraints
-      - added Bool type and CollectionRef type
-        then made ArrayRef and HashRef into subtypes 
-        of the CollectionRef
+      - added several more types and restructured 
+        the hierarchy somewhat
+        - added tests for this
       - keywords are now exported with Sub::Exporter
         thanks chansen for this commit
 
@@ -29,6 +26,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - due to changes in Class::MOP, we had to add the 
         initialize_instance_slot method (it's a good thing)
+        
+    * Moose::Meta::TypeConstraints
+      - added type constraint unions 
+        - added tests for this
 
 0.04 Sun. April 16th, 2006
     * Moose::Role

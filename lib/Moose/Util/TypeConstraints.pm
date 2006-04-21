@@ -69,6 +69,15 @@ use Moose::Meta::TypeCoercion;
         $type->coercion($type_coercion);
     }
     
+    sub create_type_constraint_union {
+        my (@type_constraint_names) = @_;
+        return Moose::Meta::TypeConstraint->union(
+            map { 
+                find_type_constraint($_) 
+            } @type_constraint_names
+        );
+    }
+    
     sub export_type_contstraints_as_functions {
         my $pkg = caller();
 	    no strict 'refs';
@@ -210,6 +219,11 @@ Suggestions for improvement are welcome.
 
 This function can be used to locate a specific type constraint 
 meta-object. What you do with it from there is up to you :)
+
+=item B<create_type_constraint_union (@type_constraint_names)>
+
+Given a list of C<@type_constraint_names>, this will return a 
+B<Moose::Meta::TypeConstraint::Union> instance.
 
 =item B<export_type_contstraints_as_functions>
 
