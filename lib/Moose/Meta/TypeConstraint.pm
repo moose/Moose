@@ -8,7 +8,7 @@ use metaclass;
 use Sub::Name 'subname';
 use Carp      'confess';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
@@ -34,7 +34,7 @@ sub new {
     return $self;
 }
 
-sub compile_type_constraint () {
+sub compile_type_constraint {
     my $self  = shift;
     my $check = $self->constraint;
     (defined $check)
@@ -72,9 +72,59 @@ sub validate {
             return $self->message->($value);
         }
         else {
-            return "Validation failed for '" . $self->name . "' failed.";
+            return "Validation failed for '" . $self->name . "' failed";
         }
     }
+}
+
+sub union {
+    my ($class, @type_constraints) = @_;
+    return Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => \@type_constraints
+    );
+}
+
+package Moose::Meta::TypeConstraint::Union;
+
+use strict;
+use warnings;
+use metaclass;
+
+our $VERSION = '0.01';
+
+__PACKAGE__->meta->add_attribute('type_constraints' => (
+    accessor  => 'type_constraints',
+    default   => sub { [] }
+));
+
+sub new { 
+    my $class = shift;
+    my $self  = $class->meta->new_object(@_);
+    return $self;
+}
+
+sub name { join ' | ' => map { $_->name } @{$_[0]->type_constraints} }
+
+sub check {
+    my $self  = shift;
+    my $value = shift;
+    foreach my $type (@{$self->type_constraints}) {
+        return 1 if $type->check($value);
+    }
+    return undef;
+}
+
+sub validate {
+    my $self  = shift;
+    my $value = shift;
+    my $message;
+    foreach my $type (@{$self->type_constraints}) {
+        my $err = $type->validate($value);
+        return unless defined $err;
+        $message .= ($message ? ' and ' : '') . $err
+            if defined $err;
+    }
+    return ($message . ' in (' . $self->name . ')') ;    
 }
 
 1;
@@ -133,6 +183,12 @@ the C<message> will be used to construct a custom error message.
 =item B<has_coercion>
 
 =item B<coercion>
+
+=back
+
+=over 4
+
+=item B<union (@type_constraints)>
 
 =back
 

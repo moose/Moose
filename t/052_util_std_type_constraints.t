@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 205;
+use Test::More tests => 194;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -152,18 +152,6 @@ ok(defined ScalarRef($SCALAR_REF),       '... ScalarRef accepts anything which i
 ok(!defined ScalarRef(qr/../),           '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef(bless {}, 'Foo'),  '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef(undef),            '... ScalarRef rejects anything which is not a ScalarRef');
-
-ok(!defined CollectionRef(0),                '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(100),              '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(''),               '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef('Foo'),            '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(defined CollectionRef([]),               '... CollectionRef accepts anything which is not a HASH or ARRAY');
-ok(defined CollectionRef({}),               '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(sub {}),           '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef($SCALAR_REF),      '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(qr/../),           '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(bless {}, 'Foo'),  '... CollectionRef rejects anything which is not a HASH or ARRAY');
-ok(!defined CollectionRef(undef),            '... CollectionRef rejects anything which is not a HASH or ARRAY');
 
 ok(!defined ArrayRef(0),                '... ArrayRef rejects anything which is not a ArrayRef');
 ok(!defined ArrayRef(100),              '... ArrayRef rejects anything which is not a ArrayRef');
