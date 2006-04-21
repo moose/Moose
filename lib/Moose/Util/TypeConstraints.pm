@@ -109,12 +109,12 @@ type 'Item' => where { 1 }; # base-type
 subtype 'Undef'   => as 'Item' => where { !defined($_) };
 subtype 'Defined' => as 'Item' => where {  defined($_) };
 
-subtype 'Value' => as 'Item' => where { !ref($_) };
-subtype 'Ref'   => as 'Item' => where {  ref($_) };
-
 subtype 'Bool'  => as 'Item' => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
-subtype 'Str' => as 'Value' => where { defined($_) };
+subtype 'Value' => as 'Defined' => where { !ref($_) };
+subtype 'Ref'   => as 'Defined' => where {  ref($_) };
+
+subtype 'Str' => as 'Value' => where { 1 };
 
 subtype 'Num' => as 'Value' => where { Scalar::Util::looks_like_number($_) };
 subtype 'Int' => as 'Num'   => where { "$_" =~ /^[0-9]+$/ };
@@ -185,23 +185,23 @@ This module also provides a simple hierarchy for Perl 5 types, this
 could probably use some work, but it works for me at the moment.
 
   Any
-  
   Item 
+      Bool
       Undef
       Defined
-      Bool
-      Value
-          Int
-          Str
-      Ref
-          ScalarRef
-          CollectionRef
-              ArrayRef
-              HashRef
-          CodeRef
-          RegexpRef
-          Object	
-              Role
+          Value
+              Num
+                Int
+              Str
+          Ref
+              ScalarRef
+              CollectionRef
+                  ArrayRef
+                  HashRef
+              CodeRef
+              RegexpRef
+              Object	
+                  Role
 
 Suggestions for improvement are welcome.
     

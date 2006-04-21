@@ -46,7 +46,7 @@ sub compile_type_constraint () {
 		$self->_compiled_type_constraint(subname $self->name => sub { 			
 			local $_ = $_[0];
 			return undef unless defined $parent->($_[0]) && $check->($_[0]);
-			$_[0];
+			1;
 		});        
     }
     else {
@@ -54,7 +54,7 @@ sub compile_type_constraint () {
     	$self->_compiled_type_constraint(subname $self->name => sub { 
     		local $_ = $_[0];
     		return undef unless $check->($_[0]);
-    		$_[0];
+    		1;
     	});
     }
 }
