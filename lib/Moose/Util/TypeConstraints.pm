@@ -112,12 +112,14 @@ subtype 'Defined' => as 'Item' => where {  defined($_) };
 subtype 'Value' => as 'Item' => where { !ref($_) };
 subtype 'Ref'   => as 'Item' => where {  ref($_) };
 
-subtype 'Bool'  => as 'Item' => where { "$_" eq '1' || "$_" eq '0' };
+subtype 'Bool'  => as 'Item' => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
-subtype 'Int' => as 'Value' => where {  Scalar::Util::looks_like_number($_) };
-subtype 'Str' => as 'Value' => where { !Scalar::Util::looks_like_number($_) };
+subtype 'Str' => as 'Value' => where { defined($_) };
 
-subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };	
+subtype 'Num' => as 'Value' => where { Scalar::Util::looks_like_number($_) };
+subtype 'Int' => as 'Num'   => where { "$_" =~ /^[0-9]+$/ };
+
+subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };
 
 subtype 'CollectionRef' => as 'Ref' => where { ref($_) eq 'ARRAY' || ref($_) eq 'HASH' };
 

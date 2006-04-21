@@ -70,7 +70,7 @@ BEGIN {
     
     with 'Ord';
     
-    has 'amount' => (is => 'rw', isa => 'Int', default => 0);
+    has 'amount' => (is => 'rw', isa => 'Num', default => 0);
     
     sub compare {
         my ($self, $other) = @_;

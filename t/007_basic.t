@@ -18,7 +18,7 @@ BEGIN {
     use warnings;
     use Moose::Role;
 
-    has 'value' => (isa => 'Int', is => 'ro');
+    has 'value' => (isa => 'Num', is => 'ro');
 
     around 'validate' => sub {
         my $c = shift;
