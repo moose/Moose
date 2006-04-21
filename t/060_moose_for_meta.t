@@ -3,12 +3,19 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 use Test::Exception;
 
 BEGIN {
     use_ok('Moose');           
 }
+
+=pod
+
+This test demonstrates the ability to extend
+Moose meta-level classes using Moose itself.
+
+=cut
 
 {
     package My::Meta::Class;
@@ -17,12 +24,25 @@ BEGIN {
     use Moose;
     
     extends 'Moose::Meta::Class';
+    
+    around 'create_anon_class' => sub {
+        my $next = shift;
+        my ($self, %options) = @_;
+        $options{superclasses} = [ 'Moose::Object' ]
+            unless exists $options{superclasses};
+        $next->($self, %options);
+    };
 }
 
 my $anon = My::Meta::Class->create_anon_class();
 isa_ok($anon, 'My::Meta::Class');
 isa_ok($anon, 'Moose::Meta::Class');
 isa_ok($anon, 'Class::MOP::Class');
+
+is_deeply(
+    [ $anon->superclasses ], 
+    [ 'Moose::Object' ], 
+    '... got the default superclasses');
 
 {
     package My::Meta::Attribute::DefaultReadOnly;
@@ -34,9 +54,10 @@ isa_ok($anon, 'Class::MOP::Class');
     
     around 'new' => sub {
         my $next = shift;
-        my $self = shift;
-        my $name = shift;
-        $next->($self, $name, (is => 'ro'), @_);
+        my ($self, $name, %options) = @_;
+        $options{is} = 'ro' 
+            unless exists $options{is};
+        $next->($self, $name, %options);
     };    
 }
 
