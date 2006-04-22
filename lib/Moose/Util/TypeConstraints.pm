@@ -126,7 +126,7 @@ subtype 'Ref'   => as 'Defined' => where {  ref($_) };
 subtype 'Str' => as 'Value' => where { 1 };
 
 subtype 'Num' => as 'Value' => where { Scalar::Util::looks_like_number($_) };
-subtype 'Int' => as 'Num'   => where { "$_" =~ /^[0-9]+$/ };
+subtype 'Int' => as 'Num'   => where { "$_" =~ /^-?[0-9]+$/ };
 
 subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };
 subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  };
