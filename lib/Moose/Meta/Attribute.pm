@@ -191,7 +191,7 @@ sub generate_accessor_method {
             'weaken($_[0]->{$attr_name});'
             : '')
         . ($self->has_trigger ?
-            '$self->trigger->($_[0], ' . $value_name . ');'
+            '$self->trigger->($_[0], ' . $value_name . ', $self);'
             : '')            
     . ' }'
     . ($self->is_lazy ? 
@@ -225,7 +225,7 @@ sub generate_writer_method {
         'weaken($_[0]->{$attr_name});'
         : '')
     . ($self->has_trigger ?
-        '$self->trigger->($_[0], ' . $value_name . ');'
+        '$self->trigger->($_[0], ' . $value_name . ', $self);'
         : '')        
     . ' }';
     my $sub = eval $code;

@@ -82,8 +82,8 @@ use Moose::Util::TypeConstraints;
                     my $inherited_attr = $meta->find_attribute_by_name($1);
                     (defined $inherited_attr)
                         || confess "Could not find an attribute by the name of '$1' to inherit from";
-                    (scalar keys %options == 1 && exists $options{default})
-                        || confess "Inherited slot specifications can only alter the 'default' option";
+                    #(scalar keys %options == 1 && exists $options{default})
+                    #    || confess "Inherited slot specifications can only alter the 'default' option";
                     my $new_attr = $inherited_attr->clone(%options);
                     $meta->add_attribute($new_attr);
                 }
@@ -346,6 +346,41 @@ type checking for this attribute. Moose will perform the checks during class
 construction, and within any accessors. The C<$type_name> argument must be a 
 string. The string can be either a class name, or a type defined using 
 Moose's type defintion features.
+
+=item I<coerce =E<gt> (1|0)>
+
+This will attempt to use coercion with the supplied type constraint to change 
+the value passed into any accessors of constructors. You B<must> have supplied 
+a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
+for an example usage.
+
+=item I<does =E<gt> $role_name>
+
+This will accept the name of a role which the value stored in this attribute 
+is expected to have consumed.
+
+=item I<required =E<gt> (1|0)>
+
+This marks the attribute as being required. This means a value must be supplied 
+during class construction, and the attribute can never be set to C<undef> with 
+an accessor. 
+
+=item I<weak_ref =E<gt> (1|0)>
+
+This will tell the class to strore the value of this attribute as a weakened 
+reference. If an attribute is a weakened reference, it can B<not> also be coerced. 
+
+=item I<lazy =E<gt> (1|0)>
+
+This will tell the class to not create this slot until absolutely nessecary. 
+If an attribute is marked as lazy it B<must> have a default supplied.
+
+=item I<trigger =E<gt> $code>
+
+The trigger option is a CODE reference which will be called after the value of 
+the attribute is set. The CODE ref will be passed the instance itself, the 
+updated value and the attribute meta-object (this is for more advanced fiddling
+and can typically be ignored in most cases).
 
 =back
 

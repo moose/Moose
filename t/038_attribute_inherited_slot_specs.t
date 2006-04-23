@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -56,11 +56,10 @@ isnt(Foo->meta->get_attribute('bar'),
      Bar->meta->get_attribute('bar'), 
      '... Foo and Bar have different copies of bar');
 
+ok(Bar->meta->get_attribute('bar')->has_type_constraint, 
+   '... Bar::bar inherited the type constraint too');
 
-
-
-
-
-
+is(Bar->meta->get_attribute('bar')->type_constraint->name, 
+   'Str', '... Bar::bar inherited the right type constraint too');
 
 

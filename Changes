@@ -7,7 +7,12 @@ Revision history for Perl extension Moose
       - has keyword now takes a 'metaclass' option 
         to support custom attribute meta-classes 
         on a per-attribute basis
-        - added tests for this          
+        - added tests for this  
+      - the 'has' keyword not accepts inherited slot
+        specifications (has '+foo'). This is still an 
+        experimental feature and probably not finished
+        see t/038_attribute_inherited_slot_specs.t for 
+        more details, or ask about it on #moose
         
     * Moose::Role
       - keywords are now exported with Sub::Exporter
@@ -30,6 +35,9 @@ Revision history for Perl extension Moose
     * Moose::Meta::TypeConstraints
       - added type constraint unions 
         - added tests for this
+      - reorganized the type constraint hierarchy, thanks
+        to nothingmuch for his help and advice on this
+        - added some tests for this
 
 0.04 Sun. April 16th, 2006
     * Moose::Role
