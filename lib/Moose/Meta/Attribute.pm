@@ -28,26 +28,37 @@ __PACKAGE__->meta->add_attribute('trigger' => (
 
 sub new {
 	my ($class, $name, %options) = @_;
-	
-	if (exists $options{is}) {
-		if ($options{is} eq 'ro') {
-			$options{reader} = $name;
-			(!exists $options{trigger})
+	$class->_process_options($name, \%options);
+	$class->SUPER::new($name, %options);	
+}
+
+sub clone {
+	my ($self, %options) = @_;
+	$self->_process_options($self->name, \%options);
+	$self->SUPER::clone(%options);	
+}
+
+sub _process_options {
+    my ($class, $name, $options) = @_;
+	if (exists $options->{is}) {
+		if ($options->{is} eq 'ro') {
+			$options->{reader} = $name;
+			(!exists $options->{trigger})
 			    || confess "Cannot have a trigger on a read-only attribute";
 		}
-		elsif ($options{is} eq 'rw') {
-			$options{accessor} = $name;				
-			((reftype($options{trigger}) || '') eq 'CODE')
+		elsif ($options->{is} eq 'rw') {
+			$options->{accessor} = $name;				
+			((reftype($options->{trigger}) || '') eq 'CODE')
 			    || confess "A trigger must be a CODE reference"
-			        if exists $options{trigger};			
+			        if exists $options->{trigger};			
 		}			
 	}
 	
-	if (exists $options{isa}) {
+	if (exists $options->{isa}) {
 	    
-	    if (exists $options{does}) {
-	        if (eval { $options{isa}->can('does') }) {
-	            ($options{isa}->does($options{does}))	            
+	    if (exists $options->{does}) {
+	        if (eval { $options->{isa}->can('does') }) {
+	            ($options->{isa}->does($options->{does}))	            
 	                || confess "Cannot have an isa option and a does option if the isa does not do the does";
 	        }
 	        else {
@@ -56,69 +67,67 @@ sub new {
 	    }	    
 	    
 	    # allow for anon-subtypes here ...
-	    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
-			$options{type_constraint} = $options{isa};
+	    if (blessed($options->{isa}) && $options->{isa}->isa('Moose::Meta::TypeConstraint')) {
+			$options->{type_constraint} = $options->{isa};
 		}
 		else {
 		    
-		    if ($options{isa} =~ /\|/) {
-		        my @type_constraints = split /\s*\|\s*/ => $options{isa};
-		        $options{type_constraint} = Moose::Util::TypeConstraints::create_type_constraint_union(
+		    if ($options->{isa} =~ /\|/) {
+		        my @type_constraints = split /\s*\|\s*/ => $options->{isa};
+		        $options->{type_constraint} = Moose::Util::TypeConstraints::create_type_constraint_union(
 		            @type_constraints
 		        );
 		    }
 		    else {
     		    # otherwise assume it is a constraint
-    		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});	    
+    		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options->{isa});	    
     		    # if the constraing it not found ....
     		    unless (defined $constraint) {
     		        # assume it is a foreign class, and make 
     		        # an anon constraint for it 
     		        $constraint = Moose::Util::TypeConstraints::subtype(
     		            'Object', 
-    		            Moose::Util::TypeConstraints::where { $_->isa($options{isa}) }
+    		            Moose::Util::TypeConstraints::where { $_->isa($options->{isa}) }
     		        );
     		    }			    
-                $options{type_constraint} = $constraint;
+                $options->{type_constraint} = $constraint;
             }
 		}
 	}	
-	elsif (exists $options{does}) {	    
+	elsif (exists $options->{does}) {	    
 	    # allow for anon-subtypes here ...
-	    if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
-			$options{type_constraint} = $options{isa};
+	    if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
+			$options->{type_constraint} = $options->{isa};
 		}
 		else {
 		    # otherwise assume it is a constraint
-		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options{does});	      
+		    my $constraint = Moose::Util::TypeConstraints::find_type_constraint($options->{does});	      
 		    # if the constraing it not found ....
 		    unless (defined $constraint) {	  		        
 		        # assume it is a foreign class, and make 
 		        # an anon constraint for it 
 		        $constraint = Moose::Util::TypeConstraints::subtype(
 		            'Role', 
-		            Moose::Util::TypeConstraints::where { $_->does($options{does}) }
+		            Moose::Util::TypeConstraints::where { $_->does($options->{does}) }
 		        );
 		    }			    
-            $options{type_constraint} = $constraint;
+            $options->{type_constraint} = $constraint;
 		}	    
 	}
 	
-	if (exists $options{coerce} && $options{coerce}) {
-	    (exists $options{type_constraint})
+	if (exists $options->{coerce} && $options->{coerce}) {
+	    (exists $options->{type_constraint})
 	        || confess "You cannot have coercion without specifying a type constraint";
-	    (!$options{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
+	    (!$options->{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
 	        || confess "You cannot have coercion with a type constraint union";	        
         confess "You cannot have a weak reference to a coerced value"
-            if $options{weak_ref};	        
+            if $options->{weak_ref};	        
 	}	
 	
-	if (exists $options{lazy} && $options{lazy}) {
-	    (exists $options{default})
+	if (exists $options->{lazy} && $options->{lazy}) {
+	    (exists $options->{default})
 	        || confess "You cannot have lazy attribute without specifying a default value for it";	    
-	}
-	
-	$class->SUPER::new($name, %options);	
+	}    
 }
 
 sub initialize_instance_slot {
@@ -270,6 +279,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =over 4
 
 =item B<new>
+
+=item B<clone>
 
 =item B<initialize_instance_slot>
 
