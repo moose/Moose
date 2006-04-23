@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 19;
 use Test::Exception;
 
 BEGIN {
@@ -54,6 +54,52 @@ dies_ok {
 
 dies_ok {
     Foo->new(bar => sub {})
-} '... didnt create a new Foo with bar as a number';
+} '... didnt create a new Foo with bar as a CODE ref';
+
+{
+    package Bar;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    has 'baz' => (is => 'rw', isa => 'Str | CodeRef');
+}
+
+my $bar = Bar->new;
+isa_ok($bar, 'Bar');
+
+lives_ok {
+    $bar->baz('a string')
+} '... set baz successfully with a string';
+
+lives_ok {
+    $bar->baz(sub { 'a sub' })
+} '... set baz successfully with a CODE ref';
+
+dies_ok {
+    $bar->baz(\(my $var1))
+} '... couldnt set baz successfully with a SCALAR ref';
+
+dies_ok {
+    $bar->baz({})
+} '... couldnt set bar successfully with a HASH ref';
+
+# check the constructor
+
+lives_ok {
+    Bar->new(baz => 'a string')
+} '... created new Bar with baz successfully set with a string';
+
+lives_ok {
+    Bar->new(baz => sub { 'a sub' })
+} '... created new Bar with baz successfully set with a CODE ref';
+
+dies_ok {
+    Bar->new(baz => \(my $var2))
+} '... didnt create a new Bar with baz as a number';
+
+dies_ok {
+    Bar->new(baz => {})
+} '... didnt create a new Bar with baz as a HASH ref';
 
 

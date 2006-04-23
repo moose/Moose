@@ -78,12 +78,17 @@ use Moose::Util::TypeConstraints;
             my $meta = _find_meta();
             return subname 'Moose::has' => sub {
                 my ($name, %options) = @_;
-                if ($options{metaclass}) {
-                    _load_all_classes($options{metaclass});
-                    $meta->add_attribute($options{metaclass}->new($name, %options));
+                if ($name =~ /^\+(.*)/) {
+                    warn $1;
                 }
                 else {
-                    $meta->add_attribute($name, %options);
+                    if ($options{metaclass}) {
+                        _load_all_classes($options{metaclass});
+                        $meta->add_attribute($options{metaclass}->new($name, %options));
+                    }
+                    else {
+                        $meta->add_attribute($name, %options);
+                    }
                 }
             };
         },
