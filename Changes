@@ -18,9 +18,10 @@ Revision history for Perl extension Moose
       - keywords are now exported with Sub::Exporter
 
     * Moose::Utils::TypeConstraints
-      - added several more types and restructured 
-        the hierarchy somewhat
-        - added tests for this
+      - reorganized the type constraint hierarchy, thanks
+        to nothingmuch and chansen for his help and advice 
+        on this
+        - added some tests for this
       - keywords are now exported with Sub::Exporter
         thanks chansen for this commit
 
@@ -32,12 +33,11 @@ Revision history for Perl extension Moose
       - due to changes in Class::MOP, we had to add the 
         initialize_instance_slot method (it's a good thing)
         
-    * Moose::Meta::TypeConstraints
+    * Moose::Meta::TypeConstraint
       - added type constraint unions 
         - added tests for this
-      - reorganized the type constraint hierarchy, thanks
-        to nothingmuch for his help and advice on this
-        - added some tests for this
+      - added the is_subtype_of predicate method
+        - added tests for this
 
 0.04 Sun. April 16th, 2006
     * Moose::Role

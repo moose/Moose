@@ -380,7 +380,8 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 The trigger option is a CODE reference which will be called after the value of 
 the attribute is set. The CODE ref will be passed the instance itself, the 
 updated value and the attribute meta-object (this is for more advanced fiddling
-and can typically be ignored in most cases).
+and can typically be ignored in most cases). You can B<not> have a trigger on 
+a read-only attribute.
 
 =back
 

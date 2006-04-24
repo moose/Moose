@@ -33,3 +33,6 @@ foreach my $type_name (qw(
        $type_name, 
        '... got the right name for ' . $type_name);
 }
+
+# TODO:
+# add tests for is_subtype_of which confirm the hierarchy

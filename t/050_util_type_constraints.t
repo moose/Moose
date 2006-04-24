@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More tests => 32;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -13,7 +13,7 @@ BEGIN {
 }
 
 type Number => where { Scalar::Util::looks_like_number($_) };
-type String => where { !ref($_) && !Num($_) };
+type String => where { !ref($_) && !Number($_) };
 
 subtype Natural 
 	=> as Number 
@@ -51,10 +51,17 @@ ok($negative->check(-5), '... this is a negative number');
 ok(!defined($negative->check(5)), '... this is not a negative number');
 is($negative->check('Foo'), undef, '... this is not a negative number');
 
+ok($negative->is_subtype_of('Number'), '... $negative is a subtype of Number');
+ok(!$negative->is_subtype_of('String'), '... $negative is not a subtype of String');
+
 # check some meta-details
 
 my $natural_less_than_ten = find_type_constraint('NaturalLessThanTen');
 isa_ok($natural_less_than_ten, 'Moose::Meta::TypeConstraint');
+
+ok($natural_less_than_ten->is_subtype_of('Natural'), '... NaturalLessThanTen is subtype of Natural');
+ok($natural_less_than_ten->is_subtype_of('Number'), '... NaturalLessThanTen is subtype of Number');
+ok(!$natural_less_than_ten->is_subtype_of('String'), '... NaturalLessThanTen is not subtype of String');
 
 ok($natural_less_than_ten->has_message, '... it has a message');
 
@@ -66,6 +73,9 @@ is($natural_less_than_ten->validate(15),
 
 my $natural = find_type_constraint('Natural');
 isa_ok($natural, 'Moose::Meta::TypeConstraint');
+
+ok($natural->is_subtype_of('Number'), '... Natural is a subtype of Number');
+ok(!$natural->is_subtype_of('String'), '... Natural is not a subtype of String');
 
 ok(!$natural->has_message, '... it does not have a message');
 

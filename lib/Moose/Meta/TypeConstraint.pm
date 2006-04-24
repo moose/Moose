@@ -78,6 +78,16 @@ sub validate {
     }
 }
 
+sub is_subtype_of {
+    my ($self, $type_name) = @_;
+    my $current = $self;
+    while (my $parent = $current->parent) {
+        return 1 if $parent->name eq $type_name;
+        $current = $parent;
+    }
+    return 0;
+}
+
 sub union {
     my ($class, @type_constraints) = @_;
     (scalar @type_constraints >= 2)
@@ -176,6 +186,8 @@ If you wish to use features at this depth, please come to the
 =item B<meta>
 
 =item B<new>
+
+=item B<is_subtype_of>
 
 =item B<compile_type_constraint>
 
