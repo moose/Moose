@@ -32,10 +32,37 @@ sub new {
 	$class->SUPER::new($name, %options);	
 }
 
-sub clone {
-	my ($self, %options) = @_;
-	$self->_process_options($self->name, \%options);
-	$self->SUPER::clone(%options);	
+sub clone_and_inherit_options {
+    my ($self, %options) = @_;
+    # you can change default, required and coerce 
+    my %actual_options;
+    foreach my $legal_option (qw(default coerce required)) {
+        if (exists $options{$legal_option}) {
+            $actual_options{$legal_option} = $options{$legal_option};
+            delete $options{$legal_option};
+        }
+    }
+    # isa can be changed, but only if the new type 
+    # is a subtype    
+    if ($options{isa}) {
+        my $type_constraint;
+	    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
+			$type_constraint = $options{isa};
+		}        
+		else {
+		    $type_constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+		    (defined $type_constraint)
+		        || confess "Could not find the type constraint '" . $options{isa} . "'";
+		}
+		($type_constraint->is_subtype_of($self->type_constraint->name))
+		    || confess "New type constraint setting must be a subtype of inherited one"
+		        if $self->has_type_constraint;
+		$actual_options{type_constraint} = $type_constraint;
+        delete $options{isa};
+    }
+    (scalar keys %options == 0) 
+        || confess "Illegal inherited options => (" . (join ', ' => keys %options) . ")";
+    $self->clone(%actual_options);
 }
 
 sub _process_options {
@@ -280,7 +307,7 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<new>
 
-=item B<clone>
+=item B<clone_and_inherit_options>
 
 =item B<initialize_instance_slot>
 

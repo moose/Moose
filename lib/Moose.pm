@@ -82,9 +82,7 @@ use Moose::Util::TypeConstraints;
                     my $inherited_attr = $meta->find_attribute_by_name($1);
                     (defined $inherited_attr)
                         || confess "Could not find an attribute by the name of '$1' to inherit from";
-                    #(scalar keys %options == 1 && exists $options{default})
-                    #    || confess "Inherited slot specifications can only alter the 'default' option";
-                    my $new_attr = $inherited_attr->clone(%options);
+                    my $new_attr = $inherited_attr->clone_and_inherit_options(%options);
                     $meta->add_attribute($new_attr);
                 }
                 else {
