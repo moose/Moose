@@ -47,7 +47,7 @@ use Moose::Util::TypeConstraints;
             $meta = Moose::Meta::Class->initialize($class);
             $meta->add_method('meta' => sub {
                 # re-initialize so it inherits properly
-                Moose::Meta::Class->initialize($class);
+                Moose::Meta::Class->initialize(blessed($_[0]) || $_[0]);
             })
         }
 
@@ -154,14 +154,14 @@ use Moose::Util::TypeConstraints;
         }
     });
     
-    sub import {
+    sub import {     
         $CALLER = caller();
 
         # we should never export to main
         return if $CALLER eq 'main';
 
         goto $exporter;
-    };
+    }
 }
 
 ## Utility functions

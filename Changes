@@ -13,6 +13,7 @@ Revision history for Perl extension Moose
         experimental feature and probably not finished
         see t/038_attribute_inherited_slot_specs.t for 
         more details, or ask about it on #moose
+        - added tests for this
         
     * Moose::Role
       - keywords are now exported with Sub::Exporter

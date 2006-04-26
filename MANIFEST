@@ -40,7 +40,7 @@ t/030_attribute_reader_generation.t
 t/031_attribute_writer_generation.t
 t/032_attribute_accessor_generation.t
 t/033_attribute_triggers.t
-t/034_does_attribute_option.t
+t/034_attribute_does.t
 t/040_meta_role.t
 t/041_role.t
 t/042_apply_role.t

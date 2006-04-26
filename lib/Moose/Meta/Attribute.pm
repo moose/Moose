@@ -42,8 +42,8 @@ sub clone_and_inherit_options {
             delete $options{$legal_option};
         }
     }
-    # isa can be changed, but only if the new type 
-    # is a subtype    
+    # isa can be changed, but only if the 
+    # new type is a subtype    
     if ($options{isa}) {
         my $type_constraint;
 	    if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
