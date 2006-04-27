@@ -21,6 +21,7 @@ This module requires these other modules and libraries:
 	Carp
 	Sub::Name
 	UNIVERSAL::require
+	Sub::Exporter
 
 COPYRIGHT AND LICENCE
 

@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.05
+0.05 Thurs. April 27, 2006
     * Moose
       - keywords are now exported with Sub::Exporter
         thanks to chansen for this commit
@@ -24,7 +24,7 @@ Revision history for Perl extension Moose
         on this
         - added some tests for this
       - keywords are now exported with Sub::Exporter
-        thanks chansen for this commit
+        thanks to chansen for this commit
 
     * Moose::Meta::Class
       - due to changes in Class::MOP, we had to change
