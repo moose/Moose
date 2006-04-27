@@ -158,7 +158,7 @@ sub _process_options {
 }
 
 sub initialize_instance_slot {
-    my ($self, $class, $instance, $params) = @_;
+    my ($self, $instance, $params) = @_;
     my $init_arg = $self->init_arg();
     # try to fetch the init arg from the %params ...
     my $val;        
@@ -195,6 +195,16 @@ sub initialize_instance_slot {
     if (defined $val && $self->is_weak_ref) {
         weaken($instance->{$self->name});
     }    
+}
+
+sub _gen_required_arg {
+	my ( $self, $attr_name, $arg ) = @_;
+	return sprintf 'defined(%s) || confess "Attribute (%s) is required, so cannot be set to undef";', $arg, $attr_name;
+}
+
+sub _gen_coerce {
+	my  ( $self, $attr_name, $arg );
+	return sprintf '%s->type->type_constraint->coercion->coerce(%s)', $self->_gen_invocant, $arg;
 }
 
 sub generate_accessor_method {

@@ -55,9 +55,9 @@ sub new_object {
 
 sub construct_instance {
     my ($class, %params) = @_;
-    my $instance = $params{'__INSTANCE__'} || {};
+    my $instance = $params{'__INSTANCE__'} || $class->get_meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        $attr->initialize_instance_slot($class, $instance, \%params)
+        $attr->initialize_instance_slot($instance, \%params)
     }
     return $instance;
 }
