@@ -55,6 +55,7 @@ t/056_util_more_type_coercion.t
 t/100_subtype_quote_bug.t
 t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t
+t/103_subclass_use_base_bug.t
 t/pod.t
 t/pod_coverage.t
 t/lib/Bar.pm

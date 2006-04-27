@@ -47,8 +47,8 @@ sub new_object {
     my ($class, %params) = @_;
     my $self = $class->SUPER::new_object(%params);
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        next unless $params{$attr->name} && $attr->can('has_trigger') && $attr->has_trigger;
-        $attr->trigger->($self, $params{$attr->name}, $attr);
+        next unless $params{$attr->init_arg} && $attr->can('has_trigger') && $attr->has_trigger;
+        $attr->trigger->($self, $params{$attr->init_arg}, $attr);
     }
     return $self;    
 }
