@@ -197,73 +197,80 @@ sub initialize_instance_slot {
     }    
 }
 
-sub _gen_required_arg {
-	my ( $self, $attr_name, $arg ) = @_;
-	return sprintf 'defined(%s) || confess "Attribute (%s) is required, so cannot be set to undef";', $arg, $attr_name;
+sub _inline_check_constraint {
+	my ( $self, $value ) = @_;
+	return '' unless $self->has_type_constraint;
+	
+	# FIXME - remove 'unless defined($value) - constraint Undef
+	return sprintf <<'EOF', $value, $value, $value, $value
+defined($attr->type_constraint->check(%s))
+	|| confess "Attribute (" . $attr->name . ") does not pass the type contraint ("
+       . $attr->type_constraint->name . ") with " . (defined(%s) ? "'%s'" : "undef")
+  if defined(%s);
+EOF
 }
 
-sub _gen_coerce {
-	my  ( $self, $attr_name, $arg );
-	return sprintf '%s->type->type_constraint->coercion->coerce(%s)', $self->_gen_invocant, $arg;
+sub _inline_store {
+	my ( $self, $instance, $value ) = @_;
+
+	my $mi = $self->associated_class->get_meta_instance;
+	my $slot_name = sprintf "'%s'", $self->slot_name;
+
+	return ( $self->is_weak_ref
+		? $mi->inline_set_weak_slot_value( $instance, $slot_name, $value )
+		: $mi->inline_set_slot_value( $instance, $slot_name, $value ) ) . ";";
+}
+
+sub _inline_trigger {
+	my ( $self, $instance, $value ) = @_;
+	return '' unless $self->has_trigger;
+	return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
 }
 
 sub generate_accessor_method {
-    my ($self, $attr_name) = @_;
-    my $value_name = $self->should_coerce ? '$val' : '$_[1]';
+    my ($attr, $attr_name) = @_;
+    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
+	my $mi = $attr->associated_class->get_meta_instance;
+	my $slot_name = $attr->slot_name;
+	my $inv = '$_[0]';
     my $code = 'sub { '
     . 'if (scalar(@_) == 2) {'
-        . ($self->is_required ? 
+        . ($attr->is_required ? 
             'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
             : '')
-        . ($self->should_coerce ? 
-            'my $val = $self->type_constraint->coercion->coerce($_[1]);'
+        . ($attr->should_coerce ? 
+            'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
             : '')
-        . ($self->has_type_constraint ? 
-            ('(defined $self->type_constraint->check(' . $value_name . '))'
-            	. '|| confess "Attribute ($attr_name) does not pass the type contraint (" . $self->type_constraint->name . ") with \'' . $value_name . '\'"'
-            		. 'if defined ' . $value_name . ';')
-            : '')
-        . '$_[0]->{$attr_name} = ' . $value_name . ';'
-        . ($self->is_weak_ref ?
-            'weaken($_[0]->{$attr_name});'
-            : '')
-        . ($self->has_trigger ?
-            '$self->trigger->($_[0], ' . $value_name . ', $self);'
-            : '')            
+        . $attr->_inline_check_constraint( $value_name )
+		. $attr->_inline_store( $inv, $value_name )
+		. $attr->_inline_trigger( $inv, $value_name )
     . ' }'
-    . ($self->is_lazy ? 
-            '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
+    . ($attr->is_lazy ? 
+            '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')    
-    . ' $_[0]->{$attr_name};'
+    . 'return ' . $mi->inline_get_slot_value( '$_[0]', "'$slot_name'", $value_name ) . ';'
     . ' }';
     my $sub = eval $code;
-    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
+    warn "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
+    confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;    
 }
 
 sub generate_writer_method {
-    my ($self, $attr_name) = @_; 
-    my $value_name = $self->should_coerce ? '$val' : '$_[1]';
+    my ($attr, $attr_name) = @_; 
+    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
+	my $inv = '$_[0]';
     my $code = 'sub { '
-    . ($self->is_required ? 
+    . ($attr->is_required ? 
         'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
         : '')
-    . ($self->should_coerce ? 
-        'my $val = $self->type_constraint->coercion->coerce($_[1]);'
+    . ($attr->should_coerce ? 
+        'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
         : '')
-    . ($self->has_type_constraint ? 
-        ('(defined $self->type_constraint->check(' . $value_name . '))'
-        	. '|| confess "Attribute ($attr_name) does not pass the type contraint (" . $self->type_constraint->name . ") with \'' . $value_name . '\'"'
-        		. 'if defined ' . $value_name . ';')
-        : '')
-    . '$_[0]->{$attr_name} = ' . $value_name . ';'
-    . ($self->is_weak_ref ?
-        'weaken($_[0]->{$attr_name});'
-        : '')
-    . ($self->has_trigger ?
-        '$self->trigger->($_[0], ' . $value_name . ', $self);'
-        : '')        
+	. $attr->_inline_check_constraint( $value_name )
+	. $attr->_inline_store( $inv, $value_name )
+	. $attr->_inline_trigger( $inv, $value_name )
     . ' }';
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
