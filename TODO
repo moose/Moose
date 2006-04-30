@@ -1,0 +1,71 @@
+-------------------------------------------------------------------------------
+TODO
+-------------------------------------------------------------------------------
+
+- make way to iterate over all Moose classes
+
+- roles
+
+Need to figure out the details of composite roles
+
+- type unions
+
+Add support for doing it with Classes which do not have 
+a type constraint yet created
+
+- type intersections
+
+Mostly just for Roles
+
+- inherited slot specs
+
+[10:49] stevan	does can be added to,.. but not changed
+
+- triggers
+
+[18:18] mst	what I'd really like is just to say trigger => 'some_method'
+
+- attribute delgates
+
+http://rafb.net/paste/results/Z6FfJL34.txt
+
+- proxy attributes
+
+[15:49] 	stevan	you want a proxied attribute
+[15:49] 	stevan	which looks like an attribute, 
+                    talks like an attribute, smells 
+                    like an attribute,.. but if you 
+                    look behind the curtain,.. its 
+                    over there.. in that other object
+  
+- moosedoc
+
+We certainly have enough meta-information to make pretty complete POD docs.
+
+- compile time extends
+
+[00:39] 	sri	    but maybe a better syntax for compile time extends
+[00:39] 	stevan	I have been pondering that actually
+[00:39] 	sri	    use Moose extends => Foo::Bar
+[00:40] 	stevan	I think now that we have the Sub::Exporter stuff 
+                    in, that kinda thing should be pretty easy
+
+- default should dclone()
+
+-------------------------------------------------------------------------------
+TO PONDER
+-------------------------------------------------------------------------------
+
+- Moose "strict" mode
+
+use Moose 'strict'; This would allow us to have all sort of expensive tests
+which can be turned off in prod.     
+        
+- Moose::Philosophy.pod
+
+To explain Moose from a very high level
+
+
+        
+        
+        
