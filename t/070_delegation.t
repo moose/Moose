@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 34;
+use Test::More tests => 36;
 use Test::Exception;
 
 {
@@ -135,9 +135,23 @@ use Test::Exception;
             isa     => "ChildF",
             is      => "ro",
             default => sub { ChildF->new },
-            handles => sub { },
+            handles => qr/.*/,
         );
-    } "but not generative one";
+    } "can't use regexes on foreign classes";
+
+    my $delegate_class;
+    ::lives_ok {
+        has child_f => (
+            isa     => "ChildF",
+            is      => "ro",
+            default => sub { ChildF->new },
+            handles => sub {
+                $delegate_class = $_[1];
+            },
+        );
+    } "subrefs on non moose class give no meta";
+
+    ::is( $delegate_class, "ChildF", "plain classes are handed down to subs" );
 
     sub parent_method { "p" }
 }
@@ -146,13 +160,12 @@ use Test::Exception;
 
 isa_ok( my $p = Parent->new, "Parent" );
 isa_ok( $p->child_a, "ChildA" );
-#isa_ok( $p->child_b, "ChildB" ); # no accessor
+ok( !$p->can("child_b"), "no child b accessor" );
 isa_ok( $p->child_c, "ChildC" );
 isa_ok( $p->child_d, "ChildD" );
 isa_ok( $p->child_e, "ChildE" );
+isa_ok( $p->child_f, "ChildF" );
 
-ok( !$p->can("child_b"), "no child b accessor" );
-ok( !$p->can("child_f"), "no child f" );
 
 is( $p->parent_method, "p", "parent method" );
 is( $p->child_a->child_a_super_method, "as", "child supermethod" );

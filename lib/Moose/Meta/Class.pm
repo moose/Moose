@@ -142,6 +142,8 @@ sub generate_delegation_list {
     if ( reftype($delegation) eq "CODE" ) {
         return $delegation->( $self, $delegator_meta );
     } elsif ( blessed($delegation) eq "Regexp" ) {
+        confess "For regular expression support the delegator class/role must use a Class::MOP::Class metaclass"
+            unless $delegator_meta->isa( "Class::MOP::Class" );
         return grep { $_->{name} =~ /$delegation/ } $delegator_meta->compute_all_applicable_methods();
     } else {
         confess "The 'handles' specification '$delegation' is not supported";
@@ -156,20 +158,18 @@ sub _guess_attr_class_or_role {
     confess "Generative delegations must explicitly specify a class or a role for the attribute's type"
         unless $isa || $does;
 
-    # if it's a class/role name make it into a meta object
-    for (grep { defined && !ref($_) } $isa, $does) {
-        confess "Generative delegations must refer to Moose class/role types"
-            unless $_->can("meta");
-        $_ = $_->meta;
-    }
-
     for (grep { blessed($_) } $isa, $does) {
         confess "You must use classes/roles, not type constraints to use delegation"
             unless $_->isa( "Moose::Meta::Class" );
     }
     
     confess "Cannot have an isa option and a does option if the isa does not do the does"
-        if $isa && $does and !confess->does( $does );
+        if $isa and $does and $isa->can("does") and !$isa->does( $does );
+
+    # if it's a class/role name make it into a meta object
+    for ($isa, $does) {
+        $_ = $_->meta if defined and !ref and $_->can("meta");
+    }
 
     return $isa || $does;
 }
