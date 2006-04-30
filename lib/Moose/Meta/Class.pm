@@ -7,7 +7,7 @@ use warnings;
 use Class::MOP;
 
 use Carp         'confess';
-use Scalar::Util 'weaken', 'blessed';
+use Scalar::Util 'weaken', 'blessed', 'reftype';
 
 our $VERSION = '0.05';
 
@@ -79,6 +79,100 @@ sub has_method {
     return $self->SUPER::has_method($method_name);    
 }
 
+sub add_attribute {
+    my ($self, $name, %params) = @_;
+
+    my @delegations;
+    if ( my $delegation = delete $params{handles} ) {
+        my @method_names_or_hashes = $self->compute_delegation( $name, $delegation, \%params );
+        @delegations = $self->get_delegatable_methods( @method_names_or_hashes );
+    }
+
+    my $ret = $self->SUPER::add_attribute( $name, %params );
+
+    if ( @delegations ) {
+        my $attr = $self->get_attribute( $name );
+        $self->generate_delgate_method( $attr, $_ ) for @delegations;
+    }
+
+    return $ret;
+}
+
+sub generate_delgate_method {
+    my ( $self, $attr, $method ) = @_;
+
+    # FIXME like generated accessors these methods must be regenerated
+    # FIXME the reader may not work for subclasses with weird instances
+
+    my $reader = $attr->generate_reader_method( $attr->name ); # FIXME no need for attr name
+
+    my $method_name = $method->{name};
+    my $new_name = $method->{new_name} || $method_name;
+
+    $self->add_method( $new_name, sub {
+        if ( Scalar::Util::blessed( my $delegate = shift->$reader ) ) {
+            return $delegate->$method_name( @_ );
+        }
+        return;
+    });
+}
+
+sub compute_delegation {
+    my ( $self, $attr_name, $delegation, $params ) = @_;
+
+   
+    # either it's a concrete list of method names
+    return $delegation unless ref $delegation; # single method name
+    return @$delegation if reftype($delegation) eq "ARRAY";
+
+    # or it's a generative api
+    my $delegator_meta = $self->_guess_attr_class_or_role( $attr_name, $params );
+    $self->generate_delegation_list( $delegation, $delegator_meta );
+}
+
+sub get_delegatable_methods {
+    my ( $self, @names_or_hashes ) = @_;
+    my @hashes = map { ref($_) ? $_ : { name => $_ } } @names_or_hashes;
+    return grep { !$self->name->can( $_->{name} ) } @hashes;
+}
+
+sub generate_delegation_list {
+    my ( $self, $delegation, $delegator_meta ) = @_;
+
+    if ( reftype($delegation) eq "CODE" ) {
+        return $delegation->( $self, $delegator_meta );
+    } elsif ( blessed($delegation) eq "Regexp" ) {
+        return grep { $_->{name} =~ /$delegation/ } $delegator_meta->compute_all_applicable_methods();
+    } else {
+        confess "The 'handles' specification '$delegation' is not supported";
+    }
+}
+
+sub _guess_attr_class_or_role {
+    my ( $self, $attr, $params ) = @_;
+
+    my ( $isa, $does ) = @{ $params }{qw/isa does/};
+
+    confess "Generative delegations must explicitly specify a class or a role for the attribute's type"
+        unless $isa || $does;
+
+    # if it's a class/role name make it into a meta object
+    for (grep { defined && !ref($_) } $isa, $does) {
+        confess "Generative delegations must refer to Moose class/role types"
+            unless $_->can("meta");
+        $_ = $_->meta;
+    }
+
+    for (grep { blessed($_) } $isa, $does) {
+        confess "You must use classes/roles, not type constraints to use delegation"
+            unless $_->isa( "Moose::Meta::Class" );
+    }
+    
+    confess "Cannot have an isa option and a does option if the isa does not do the does"
+        if $isa && $does and !confess->does( $does );
+
+    return $isa || $does;
+}
 
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;

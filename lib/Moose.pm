@@ -145,6 +145,14 @@ use Moose::Util::TypeConstraints;
         },
         blessed => sub {
             return \&Scalar::Util::blessed;
+        },
+        all_methods => sub {
+            sub () {
+                sub {
+                    my ( $class, $delegate_class ) = @_;
+                    $delegate_class->compute_all_applicable_methods();
+                }
+            }
         }
     );
 
