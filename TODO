@@ -27,7 +27,9 @@ Mostly just for Roles
 
 - attribute delgates
 
-http://rafb.net/paste/results/Z6FfJL34.txt
+Introduce capability to control the generated wrapper. Useful for when you have
+a wrapper that should implement the interface of it's child, but decorate with
+more metadata.
 
 - proxy attributes
 
@@ -49,6 +51,17 @@ We certainly have enough meta-information to make pretty complete POD docs.
 [00:39] 	sri	    use Moose extends => Foo::Bar
 [00:40] 	stevan	I think now that we have the Sub::Exporter stuff 
                     in, that kinda thing should be pretty easy
+
+nothingmuch notes that all the constructs should be supported in the entirety of the use clause:
+
+    use Moose (
+        has => foo (
+            ....
+        ),
+    );
+
+and that if this usage style is used nothing is exported to the namespace.
+
 
 - default should dclone()
 
