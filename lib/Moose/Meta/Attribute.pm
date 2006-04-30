@@ -288,14 +288,15 @@ sub generate_writer_method {
 }
 
 sub generate_reader_method {
-    my ($self, $attr_name) = @_; 
+    my $self = shift;
+    my $attr_name = $self->name;
     my $code = 'sub {'
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . ($self->is_lazy ? 
             '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')
-    . '$_[0]->{$attr_name};'
+    . 'return $_[0]->{$attr_name};'
     . '}';
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;

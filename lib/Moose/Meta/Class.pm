@@ -92,10 +92,22 @@ sub add_attribute {
 
     if ( @delegations ) {
         my $attr = $self->get_attribute( $name );
-        $self->generate_delgate_method( $attr, $_ ) for @delegations;
+        $self->generate_delgate_method( $attr, $_ ) for $self->filter_delegations( $attr, @delegations );
     }
 
     return $ret;
+}
+
+sub filter_delegations {
+    my ( $self, $attr, @delegations ) = @_;
+    grep {
+        my $new_name = $_->{new_name} || $_->{name};
+        no warnings "uninitialized";
+        !$self->name->can( $new_name ) and
+        $attr->accessor ne $new_name and
+        $attr->reader ne $new_name and
+        $attr->writer ne $new_name
+    } @delegations;
 }
 
 sub generate_delgate_method {
@@ -104,17 +116,22 @@ sub generate_delgate_method {
     # FIXME like generated accessors these methods must be regenerated
     # FIXME the reader may not work for subclasses with weird instances
 
-    my $reader = $attr->generate_reader_method( $attr->name ); # FIXME no need for attr name
+    my $make = $method->{generator} || sub {
+        my ( $self, $attr, $method )  =@_;
+    
+        my $method_name = $method->{name};
+        my $reader = $attr->generate_reader_method();
 
-    my $method_name = $method->{name};
-    my $new_name = $method->{new_name} || $method_name;
+        return sub {
+            if ( Scalar::Util::blessed( my $delegate = shift->$reader ) ) {
+                return $delegate->$method_name( @_ );
+            }
+            return;
+        };
+    };
 
-    $self->add_method( $new_name, sub {
-        if ( Scalar::Util::blessed( my $delegate = shift->$reader ) ) {
-            return $delegate->$method_name( @_ );
-        }
-        return;
-    });
+    my $new_name = $method->{new_name} || $method->{name};
+    $self->add_method( $new_name, $make->( $self, $attr, $method  ) );
 }
 
 sub compute_delegation {
@@ -132,8 +149,7 @@ sub compute_delegation {
 
 sub get_delegatable_methods {
     my ( $self, @names_or_hashes ) = @_;
-    my @hashes = map { ref($_) ? $_ : { name => $_ } } @names_or_hashes;
-    return grep { !$self->name->can( $_->{name} ) } @hashes;
+    map { ref($_) ? $_ : { name => $_ } } @names_or_hashes;
 }
 
 sub generate_delegation_list {
