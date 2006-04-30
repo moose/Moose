@@ -103,10 +103,12 @@ sub filter_delegations {
     grep {
         my $new_name = $_->{new_name} || $_->{name};
         no warnings "uninitialized";
-        !$self->name->can( $new_name ) and
-        $attr->accessor ne $new_name and
-        $attr->reader ne $new_name and
-        $attr->writer ne $new_name
+        $_->{no_filter} or (
+            !$self->name->can( $new_name ) and
+            $attr->accessor ne $new_name and
+            $attr->reader ne $new_name and
+            $attr->writer ne $new_name
+        );
     } @delegations;
 }
 
