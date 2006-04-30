@@ -19,6 +19,7 @@ use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::Attribute;
+use Moose::Meta::Instance;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;

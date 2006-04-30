@@ -158,9 +158,10 @@ sub _process_options {
 }
 
 sub initialize_instance_slot {
-    my ($self, $instance, $params) = @_;
+    my ($self, $meta_instance, $instance, $params) = @_;
     my $init_arg = $self->init_arg();
     # try to fetch the init arg from the %params ...
+
     my $val;        
     if (exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
@@ -172,6 +173,7 @@ sub initialize_instance_slot {
         confess "Attribute (" . $self->name . ") is required" 
             if $self->is_required && !$self->has_default;
     }
+
     # if nothing was in the %params, we can use the 
     # attribute's default value (if it has one)
     if (!defined $val && $self->has_default) {
@@ -191,10 +193,9 @@ sub initialize_instance_slot {
                            ") with '$val'";			
         }
 	}
-    $instance->{$self->name} = $val;
-    if (defined $val && $self->is_weak_ref) {
-        weaken($instance->{$self->name});
-    }    
+
+    $meta_instance->set_slot_value( $instance, $self->name, $val );
+    $meta_instance->weaken_slot_value( $instance, $self->name ) if ( ref $val && $self->is_weak_ref );
 }
 
 sub _inline_check_constraint {
@@ -214,10 +215,10 @@ sub _inline_store {
 	my ( $self, $instance, $value ) = @_;
 
 	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->slot_name;
+	my $slot_name = sprintf "'%s'", $self->name;
 
 	return ( $self->is_weak_ref
-		? $mi->inline_set_weak_slot_value( $instance, $slot_name, $value )
+		? $mi->inline_set_slot_value_weak( $instance, $slot_name, $value )
 		: $mi->inline_set_slot_value( $instance, $slot_name, $value ) ) . ";";
 }
 
@@ -227,11 +228,20 @@ sub _inline_trigger {
 	return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
 }
 
+sub _inline_get {
+	my ( $self, $instance ) = @_;
+
+	my $mi = $self->associated_class->get_meta_instance;
+	my $slot_name = sprintf "'%s'", $self->name;
+
+    return $mi->inline_get_slot_value( $instance, $slot_name );
+}
+
 sub generate_accessor_method {
     my ($attr, $attr_name) = @_;
     my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
 	my $mi = $attr->associated_class->get_meta_instance;
-	my $slot_name = $attr->slot_name;
+	my $slot_name = sprintf "'%s'", $attr->name;
 	my $inv = '$_[0]';
     my $code = 'sub { '
     . 'if (scalar(@_) == 2) {'
@@ -249,7 +259,7 @@ sub generate_accessor_method {
             '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')    
-    . 'return ' . $mi->inline_get_slot_value( '$_[0]', "'$slot_name'", $value_name ) . ';'
+    . 'return ' . $attr->_inline_get( $inv )
     . ' }';
     my $sub = eval $code;
     warn "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;

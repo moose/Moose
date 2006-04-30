@@ -23,6 +23,7 @@ sub initialize {
     my $pkg   = shift;
     $class->SUPER::initialize($pkg,
         ':attribute_metaclass' => 'Moose::Meta::Attribute', 
+        ':instance_metaclass'  => 'Moose::Meta::Instance', 
         @_);
 }
 
@@ -55,9 +56,10 @@ sub new_object {
 
 sub construct_instance {
     my ($class, %params) = @_;
-    my $instance = $params{'__INSTANCE__'} || $class->get_meta_instance->create_instance();
+    my $meta_instance = $class->get_meta_instance;
+    my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        $attr->initialize_instance_slot($instance, \%params)
+        $attr->initialize_instance_slot($meta_instance, $instance, \%params)
     }
     return $instance;
 }
