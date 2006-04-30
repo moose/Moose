@@ -159,7 +159,7 @@ sub _guess_attr_class_or_role {
         unless $isa || $does;
 
     for (grep { blessed($_) } $isa, $does) {
-        confess "You must use classes/roles, not type constraints to use delegation"
+        confess "You must use classes/roles, not type constraints to use delegation ($_)"
             unless $_->isa( "Moose::Meta::Class" );
     }
     
@@ -170,6 +170,8 @@ sub _guess_attr_class_or_role {
     for ($isa, $does) {
         $_ = $_->meta if defined and !ref and $_->can("meta");
     }
+
+    $isa = Class::MOP::Class->initialize($isa) if $isa and !ref($isa);
 
     return $isa || $does;
 }
@@ -304,6 +306,25 @@ to the list of associated roles.
 This will test if this class C<does> a given C<$role_name>. It will 
 not only check it's local roles, but ask them as well in order to 
 cascade down the role hierarchy.
+
+=item B<add_attribute $attr_name, %params>
+
+This method does the same thing as L<Class::MOP::Class/add_attribute>, but adds
+suport for delegation.
+
+=back
+
+=head1 INTERNAL METHODS
+
+=over 4
+
+=item compute_delegation
+
+=item generate_delegation_list
+
+=item generate_delgate_method
+
+=item get_delegatable_methods
 
 =back
 

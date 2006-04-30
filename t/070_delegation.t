@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 35;
 use Test::Exception;
 
 {
@@ -130,15 +130,6 @@ use Test::Exception;
         );
     } "can delegate to non moose class using explicit method list";
 
-    ::dies_ok {
-        has child_f => (
-            isa     => "ChildF",
-            is      => "ro",
-            default => sub { ChildF->new },
-            handles => qr/.*/,
-        );
-    } "can't use regexes on foreign classes";
-
     my $delegate_class;
     ::lives_ok {
         has child_f => (
@@ -146,7 +137,7 @@ use Test::Exception;
             is      => "ro",
             default => sub { ChildF->new },
             handles => sub {
-                $delegate_class = $_[1];
+                $delegate_class = $_[1]->name;
             },
         );
     } "subrefs on non moose class give no meta";
