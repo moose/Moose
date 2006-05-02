@@ -344,6 +344,8 @@ suport for delegation.
 
 =item get_delegatable_methods
 
+=item filter_delegations
+
 =back
 
 =head1 BUGS

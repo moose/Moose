@@ -194,12 +194,13 @@ sub initialize_instance_slot {
         }
 	}
 
-    $meta_instance->set_slot_value( $instance, $self->name, $val );
-    $meta_instance->weaken_slot_value( $instance, $self->name ) if ( ref $val && $self->is_weak_ref );
+    $meta_instance->set_slot_value($instance, $self->name, $val);
+    $meta_instance->weaken_slot_value($instance, $self->name) 
+        if ref $val && $self->is_weak_ref;
 }
 
 sub _inline_check_constraint {
-	my ( $self, $value ) = @_;
+	my ($self, $value) = @_;
 	return '' unless $self->has_type_constraint;
 	
 	# FIXME - remove 'unless defined($value) - constraint Undef
@@ -212,36 +213,37 @@ EOF
 }
 
 sub _inline_store {
-	my ( $self, $instance, $value ) = @_;
+	my ($self, $instance, $value) = @_;
 
 	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->name;
+	my $slot_name = sprintf "'%s'", $self->slots;
 
-	return ( $self->is_weak_ref
-		? $mi->inline_set_slot_value_weak( $instance, $slot_name, $value )
-		: $mi->inline_set_slot_value( $instance, $slot_name, $value ) ) . ";";
+    my $code = $mi->inline_set_slot_value($instance, $slot_name, $value)    . ";";
+	$code   .= $mi->inline_weaken_slot_value($instance, $slot_name, $value) . ";"
+	    if $self->is_weak_ref;
+    return $code;
 }
 
 sub _inline_trigger {
-	my ( $self, $instance, $value ) = @_;
+	my ($self, $instance, $value) = @_;
 	return '' unless $self->has_trigger;
 	return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
 }
 
 sub _inline_get {
-	my ( $self, $instance ) = @_;
+	my ($self, $instance) = @_;
 
 	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->name;
+	my $slot_name = sprintf "'%s'", $self->slots;
 
-    return $mi->inline_get_slot_value( $instance, $slot_name );
+    return $mi->inline_get_slot_value($instance, $slot_name);
 }
 
 sub generate_accessor_method {
     my ($attr, $attr_name) = @_;
     my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
 	my $mi = $attr->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $attr->name;
+	my $slot_name = sprintf "'%s'", $attr->slots;
 	my $inv = '$_[0]';
     my $code = 'sub { '
     . 'if (scalar(@_) == 2) {'
@@ -251,9 +253,9 @@ sub generate_accessor_method {
         . ($attr->should_coerce ? 
             'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
             : '')
-        . $attr->_inline_check_constraint( $value_name )
-		. $attr->_inline_store( $inv, $value_name )
-		. $attr->_inline_trigger( $inv, $value_name )
+        . $attr->_inline_check_constraint($value_name)
+		. $attr->_inline_store($inv, $value_name)
+		. $attr->_inline_trigger($inv, $value_name)
     . ' }'
     . ($attr->is_lazy ? 
             '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
@@ -278,9 +280,9 @@ sub generate_writer_method {
     . ($attr->should_coerce ? 
         'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
         : '')
-	. $attr->_inline_check_constraint( $value_name )
-	. $attr->_inline_store( $inv, $value_name )
-	. $attr->_inline_trigger( $inv, $value_name )
+	. $attr->_inline_check_constraint($value_name)
+	. $attr->_inline_store($inv, $value_name)
+	. $attr->_inline_trigger($inv, $value_name)
     . ' }';
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
@@ -289,7 +291,7 @@ sub generate_writer_method {
 
 sub generate_reader_method {
     my $self = shift;
-    my $attr_name = $self->name;
+    my $attr_name = $self->slots;
     my $code = 'sub {'
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . ($self->is_lazy ? 
