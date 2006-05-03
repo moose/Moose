@@ -57,6 +57,10 @@ sub new_object {
 sub construct_instance {
     my ($class, %params) = @_;
     my $meta_instance = $class->get_meta_instance;
+    # FIXME:
+    # the code below is almost certainly incorrect
+    # but this is foreign inheritence, so we might
+    # have to kludge it in the end. 
     my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
         $attr->initialize_instance_slot($meta_instance, $instance, \%params)
