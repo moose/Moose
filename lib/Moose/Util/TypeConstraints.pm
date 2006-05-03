@@ -15,7 +15,7 @@ use Moose::Meta::TypeCoercion;
 {
     require Sub::Exporter;
     
-    my @exports = qw[type subtype as where message coerce from via find_type_constraint];
+    my @exports = qw[type subtype as where message coerce from via find_type_constraint enum];
 
     Sub::Exporter->import( 
         -setup => { 
@@ -109,6 +109,16 @@ sub from    ($) { $_[0] }
 sub where   (&) { $_[0] }
 sub via     (&) { $_[0] }
 sub message (&) { $_[0] }
+
+sub enum {
+    my ($type_name, @values) = @_;
+    my $regexp = join '|' => @values;
+	_create_type_constraint(
+	    $type_name,
+	    'Str',
+	    sub { qr/^$regexp$/i }
+	);    
+}
 
 # define some basic types
 
@@ -256,6 +266,8 @@ This creates a named subtype.
 This creates an unnamed subtype and will return the type 
 constraint meta-object, which will be an instance of 
 L<Moose::Meta::TypeConstraint>. 
+
+=item B<enum ($name, @values)>
 
 =item B<as>
 

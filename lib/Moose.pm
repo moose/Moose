@@ -40,11 +40,21 @@ use Moose::Util::TypeConstraints;
 
         my $meta;
         if ($class->can('meta')) {
+            # NOTE:
+            # this is the case where the metaclass pragma 
+            # was used before the 'use Moose' statement to 
+            # override a specific class
             $meta = $class->meta();
             (blessed($meta) && $meta->isa('Moose::Meta::Class'))
                 || confess "Whoops, not møøsey enough";
         }
         else {
+            # NOTE:
+            # this is broken currently, we actually need 
+            # to allow the possiblity of an inherited 
+            # meta, which will not be visible until the 
+            # user 'extends' first. This needs to have 
+            # more intelligence to it 
             $meta = Moose::Meta::Class->initialize($class);
             $meta->add_method('meta' => sub {
                 # re-initialize so it inherits properly
