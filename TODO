@@ -39,10 +39,6 @@ more metadata.
                     like an attribute,.. but if you 
                     look behind the curtain,.. its 
                     over there.. in that other object
-  
-- moosedoc
-
-We certainly have enough meta-information to make pretty complete POD docs.
 
 - compile time extends
 
@@ -62,8 +58,9 @@ nothingmuch notes that all the constructs should be supported in the entirety of
 
 and that if this usage style is used nothing is exported to the namespace.
 
-
 - default should dclone()
+
+- auto_deref => 1 for auto-de-refing ARRAY and HASH attrs
 
 -------------------------------------------------------------------------------
 TO PONDER
@@ -78,7 +75,9 @@ which can be turned off in prod.
 
 To explain Moose from a very high level
 
+- moosedoc
 
+We certainly have enough meta-information to make pretty complete POD docs.
         
         
         

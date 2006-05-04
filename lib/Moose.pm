@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/CPAN/Class-MOP/Class-MOP/lib';
-
 package Moose;
 
 use strict;
@@ -82,13 +80,20 @@ use Moose::Util::TypeConstraints;
                     # but if we have anything else, 
                     # we need to check it out ...
                     unless (# see if of our metaclass is incompatible
-                            $meta->isa(blessed($super->meta)) &&
-                            # see if our instance metaclass is incompatible
-                            $meta->instance_metaclass->isa($super->meta->instance_metaclass) &&
+                            ($meta->isa(blessed($super->meta)) &&
+                             # and see if our instance metaclass is incompatible
+                             $meta->instance_metaclass->isa($super->meta->instance_metaclass)) &&
                             # ... and if we are just a vanilla Moose
                             $meta->isa('Moose::Meta::Class')) {
                         # re-initialize the meta ...
                         my $super_meta = $super->meta;
+                        # NOTE:
+                        # We might want to consider actually 
+                        # transfering any attributes from the 
+                        # original meta into this one, but in 
+                        # general you should not have any there
+                        # at this point anyway, so it's very 
+                        # much an obscure edge case anyway
                         $meta = $super_meta->reinitialize($class => (
                             ':attribute_metaclass' => $super_meta->attribute_metaclass,                            
                             ':method_metaclass'    => $super_meta->method_metaclass,
@@ -104,6 +109,8 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::with' => sub {
                 my ($role) = @_;
                 _load_all_classes($role);
+                ($role->can('meta') && $role->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, $role is not a Moose role";
                 $role->meta->apply($class->meta);
             };
         },

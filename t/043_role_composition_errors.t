@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Exception;
 
 BEGIN {  
@@ -41,7 +41,8 @@ is_deeply(
     use warnings;
     use Moose;
     
-    ::lives_ok { with('Foo::Role') } '... has a foo method implemented by Bar::Class';
+    ::dies_ok  { with('Foo::Class') } '... cannot consume a class, it must be a role';
+    ::lives_ok { with('Foo::Role')  } '... has a foo method implemented by Bar::Class';
     
     sub foo { 'Bar::Class::foo' }
 }
