@@ -3,7 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 63;
+use Test::More;
+
+BEGIN {
+    eval "use DBM::Deep;";
+    plan skip_all => "DBM::Deep required for this test" if $@;        
+    plan tests => 63;    
+}
+
 use Test::Exception;
 
 BEGIN {
@@ -25,17 +32,19 @@ BEGIN {
         my $instance_counter = -1;
 
         my $db = DBM::Deep->new({
-            file => "newswriter.db",
-            autobless => 1
+            file      => "newswriter.db",
+            autobless => 1,
+            locking   => 1,
         });
         $db->{root} = [] unless exists $db->{root};
         
-        sub _get_db { $db }
         sub _reload_db {
+            $db = undef;
             $db = DBM::Deep->new({
-                file => "newswriter.db",
-                autobless => 1
-            })            
+                file      => "newswriter.db",
+                autobless => 1,
+                locking   => 1,
+            }); 
         }
         
         sub create_instance {
@@ -148,7 +157,7 @@ BEGIN {
       
     use DateTime::Format::MySQL;
     
-    use base 'Newswriter::Base';    
+    extends 'Newswriter::Base';    
 
     subtype 'Headline'
         => as 'Str'
