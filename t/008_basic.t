@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use DBM::Deep;";
     plan skip_all => "DBM::Deep required for this test" if $@;        
-    plan tests => 63;    
+    plan tests => 89;    
 }
 
 use Test::Exception;
@@ -16,6 +16,16 @@ use Test::Exception;
 BEGIN {
     use_ok('Moose');           
 }
+
+=pod
+
+This example creates a very basic Object Database which 
+links in the instances created with a backend store 
+(a DBM::Deep hash). It is by no means to be taken seriously
+as a real-world ODB (see Presto for that), but is a proof 
+of concept of the flexibility of the ::Instance protocol. 
+
+=cut
 
 BEGIN {
     
@@ -29,16 +39,17 @@ BEGIN {
     extends 'Moose::Meta::Instance';
     
     {
-        my $instance_counter = -1;
+        my %INSTANCE_COUNTERS;
 
         my $db = DBM::Deep->new({
             file      => "newswriter.db",
             autobless => 1,
             locking   => 1,
         });
-        $db->{root} = [] unless exists $db->{root};
         
         sub _reload_db {
+            #use Data::Dumper;
+            #warn Dumper $db;            
             $db = undef;
             $db = DBM::Deep->new({
                 file      => "newswriter.db",
@@ -48,34 +59,45 @@ BEGIN {
         }
         
         sub create_instance {
-            my $self = shift;
-            $instance_counter++;
-            $db->{root}->[$instance_counter] = {};
+            my $self  = shift;
+            my $class = $self->{meta}->name;
+            my $oid   = ++$INSTANCE_COUNTERS{$class};
+            
+            $db->{$class}->[($oid - 1)] = {};
             
             $self->bless_instance_structure({
-                oid      => $instance_counter,
-                instance => $db->{root}->[$instance_counter]
+                oid      => $oid,
+                instance => $db->{$class}->[($oid - 1)]
             });
         }
         
         sub find_instance {
             my ($self, $oid) = @_;
-            my $instance_struct = $db->{root}->[$oid];
+            my $instance = $db->{$self->{meta}->name}->[($oid - 1)];  
+            $self->bless_instance_structure({
+                oid      => $oid,
+                instance => $instance
+            });                  
+        } 
+        
+        sub clone_instance {
+            my ($self, $instance) = @_;
+            
+            my $class = $self->{meta}->name;
+            my $oid   = ++$INSTANCE_COUNTERS{$class};
+                        
+            my $clone = tied($instance)->clone;
             
             $self->bless_instance_structure({
                 oid      => $oid,
-                instance => $instance_struct
-            });            
-        }        
+                instance => $clone
+            });        
+        }               
     }
     
     sub get_instance_oid {
         my ($self, $instance) = @_;
         $instance->{oid};
-    }
-
-    sub clone_instance {
-        confess "&clone_instance is left as an exercise for the user";
     }
 
     sub get_slot_value {
@@ -182,7 +204,7 @@ BEGIN {
         my $c    = shift;
         my $self = shift;
         $c->($self, DateTime::Format::MySQL->format_datetime($_[0])) if @_;        
-        DateTime::Format::MySQL->parse_datetime($c->($self));
+        DateTime::Format::MySQL->parse_datetime($c->($self) || return undef);
     };  
 }
 
@@ -275,7 +297,49 @@ my $article_ref;
 
 Newswriter::Meta::Instance->_reload_db();
 
+my $article2_oid;
+my $article2_ref;
 {
+    my $article2;
+    lives_ok {
+        $article2 = Newswriter::Article->new(
+            headline => 'Company wins Lottery',
+            summary  => 'An email was received today that informed the company we have won the lottery',
+            article  => 'WoW',
+    
+            author => Newswriter::Author->new(
+                first_name => 'Katie',
+                last_name  => 'Couric'
+            ),
+    
+            status => 'posted'
+        );
+    } '... created my article successfully';
+    isa_ok($article2, 'Newswriter::Article');
+    isa_ok($article2, 'Newswriter::Base');
+    
+    $article2_oid = $article2->oid;
+    $article2_ref = "$article2";
+    
+    is($article2->headline,
+       'Company wins Lottery',
+       '... got the right headline');
+    is($article2->summary,
+       'An email was received today that informed the company we have won the lottery',
+       '... got the right summary');
+    is($article2->article, 'WoW', '... got the right article');   
+    
+    ok(!$article2->start_date, '... these two dates are unassigned');
+    ok(!$article2->end_date,   '... these two dates are unassigned');
+
+    isa_ok($article2->author, 'Newswriter::Author');
+    is($article2->author->first_name, 'Katie', '... got the right author first name');
+    is($article2->author->last_name, 'Couric', '... got the right author last name');
+
+    is($article2->status, 'posted', '... got the right status');
+    
+    ## orig-article
+    
     my $article;
     lives_ok {
         $article = Newswriter::Article->new(oid => $article_oid);
@@ -341,6 +405,34 @@ Newswriter::Meta::Instance->_reload_db();
     is($article->author->last_name, 'Rather', '... got the changed author last name');    
 
     is($article->status, 'pending', '... got the right status');
+    
+    my $article2;
+    lives_ok {
+        $article2 = Newswriter::Article->new(oid => $article2_oid);
+    } '... (re)-created my article successfully';
+    isa_ok($article2, 'Newswriter::Article');
+    isa_ok($article2, 'Newswriter::Base');    
+    
+    is($article2->oid, $article2_oid, '... got a oid for the article');
+    isnt($article2_ref, "$article2", '... got a new article instance');    
+
+    is($article2->headline,
+       'Company wins Lottery',
+       '... got the right headline');
+    is($article2->summary,
+       'An email was received today that informed the company we have won the lottery',
+       '... got the right summary');
+    is($article2->article, 'WoW', '... got the right article');   
+    
+    ok(!$article2->start_date, '... these two dates are unassigned');
+    ok(!$article2->end_date,   '... these two dates are unassigned');
+
+    isa_ok($article2->author, 'Newswriter::Author');
+    is($article2->author->first_name, 'Katie', '... got the right author first name');
+    is($article2->author->last_name, 'Couric', '... got the right author last name');
+
+    is($article2->status, 'posted', '... got the right status'); 
+    
 }
 
 unlink('newswriter.db') if -e 'newswriter.db';
