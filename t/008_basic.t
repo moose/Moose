@@ -135,10 +135,7 @@ BEGIN {
     
     package Newswriter::Author;
     use strict;
-    use warnings;
-    use metaclass 'Newswriter::Meta::Class' => (
-        ':instance_metaclass' => 'Newswriter::Meta::Instance'
-    );    
+    use warnings;   
     use Moose;
     
     extends 'Newswriter::Base';
@@ -149,9 +146,6 @@ BEGIN {
     package Newswriter::Article;    
     use strict;
     use warnings;
-    use metaclass 'Newswriter::Meta::Class' => (
-        ':instance_metaclass' => 'Newswriter::Meta::Instance'
-    );    
     use Moose;
     use Moose::Util::TypeConstraints;  
       
