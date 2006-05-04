@@ -183,7 +183,7 @@ use Moose::Util::TypeConstraints;
         all_methods => sub {
             subname 'Moose::all_methods' => sub () {
                 sub {
-                    my ( $class, $delegate_class ) = @_;
+                    my ($class, $delegate_class) = @_;
                     $delegate_class->compute_all_applicable_methods();
                 }
             }
@@ -204,6 +204,7 @@ use Moose::Util::TypeConstraints;
         return if $CALLER eq 'main';
     
         _init_meta();
+        
         goto $exporter;
     }
 }
