@@ -13,7 +13,15 @@ our $VERSION = '0.05';
 
 sub new {
     my $class  = shift;
-    my %params = (scalar @_ == 1) ? %{$_[0]} : @_;
+    my %params;
+    if (scalar @_ == 1) {
+        (ref($_[0]) eq 'HASH')
+            || confess "Single parameters to new() must be a HASH ref";
+        %params = %{$_[0]};
+    }
+    else {
+        %params = @_;
+    }
 	my $self = $class->meta->new_object(%params);
 	$self->BUILDALL(\%params);
 	return $self;

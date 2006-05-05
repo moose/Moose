@@ -62,6 +62,50 @@ and that if this usage style is used nothing is exported to the namespace.
 
 - auto_deref => 1 for auto-de-refing ARRAY and HASH attrs
 
+- subtype $anon_subtype => where { ... }
+
+[22:56] 	stevan	sub mst_doesnt_like_to_type { (shift)->meta->attr->type_contstraint }
+[22:57] 	mst	err
+[22:57] 	stevan	:P
+[22:57] 	stevan	are you wanting to reuse it or something?
+[22:57] 	stevan	my $subtype = subtype 'Something' => where { ... };
+[22:58] 	stevan	then you can do isa => $subtype 
+[22:58] 	mst	but I can't subtype it again
+[22:59] 	stevan	mst: ahhh... 
+[22:59] 	mst	well, I can. but it suddenly gets very "long way round" ish
+[23:00] 	stevan	my $constraint = Moose::Meta::TypeConstraint->new(
+[23:00] 	stevan	            name       => $name || '__ANON__',
+[23:00] 	stevan	            parent     => $parent,            
+[23:00] 	stevan	            constraint => $check,       
+[23:00] 	stevan	            message    => $message,    
+[23:00] 	stevan	        );
+[23:00] 	stevan	yeah thats kinda the long way
+[23:00] 	stevan	mst: what would you like it to be?
+[23:00] 	mst	$parent = find_type_constraint($parent) if defined $parent;
+[23:00] 	mst	if $parent is already a type constraint
+[23:00] 	mst	skip that bit
+[23:00] 	stevan	hmm
+[23:00] 	mst	should be all you need to change
+[23:00] 	stevan	yeah
+[23:01] 	stevan	so you can then say 
+[23:01] 	stevan	subtype $anon => where { ... };
+[23:01] 	mst	right
+[23:01] 	stevan	ok
+
+- method keyword
+
+[23:37] 	mst	more seriously, I'd still like a "method" keyword or something
+[23:37] 	mst	method 'foo' => sub { ... };
+[23:38] 	stevan	what would it do more than sub foo { ... }?
+[23:39] 	stevan	I would like multimethods actually
+[23:39] 	mst	almost exactly nothing, to begin with
+[23:39] 	stevan	but thats just cause I love CLOS and am reading a book on Dylan now
+[23:40] 	stevan	keyword squating :)
+[23:40] 	mst	but if we need to hook stuff later it's bloody handy to already have people writing it that way
+[23:40] 	mst	right
+...
+[23:49] 	mst	oh, also: method 'has' => sub { ... } could squelch the redefine warning
+
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------
