@@ -152,6 +152,13 @@ sub _process_options {
             if $options->{weak_ref};	        
 	}	
 	
+	if (exists $options->{auto_deref} && $options->{auto_deref}) {
+	    (exists $options->{type_constraint})
+	        || confess "You cannot auto-dereference without specifying a type constraint";	    
+	    ($options->{type_constraint}->name =~ /^ArrayRef|HashRef$/)
+	        || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";	        
+	}
+	
 	if (exists $options->{lazy} && $options->{lazy}) {
 	    (exists $options->{default})
 	        || confess "You cannot have lazy attribute without specifying a default value for it";	    
@@ -245,15 +252,17 @@ sub _inline_auto_deref {
 
     return $ref_value unless $self->should_auto_deref;
 
-    my $type = eval { $self->type_constraint->name } || '';
-    my $sigil;
+    my $type = $self->type_constraint->name;
 
-    if ( $type eq "ArrayRef" ) {
+    my $sigil;
+    if ($type eq "ArrayRef") {
         $sigil = '@';
-    } elsif ( $type eq 'HashRef' ) {
+    } 
+    elsif ($type eq 'HashRef') {
         $sigil = '%';
-    } else {
-        confess "Can't auto deref unless type constraint is ArrayRef or HashRef";
+    } 
+    else {
+        confess "Can not auto de-reference the type constraint '$type'";
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
@@ -281,7 +290,7 @@ sub generate_accessor_method {
             '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')    
-    . 'return ' . $attr->_inline_auto_deref( $attr->_inline_get( $inv ) )
+    . 'return ' . $attr->_inline_auto_deref($attr->_inline_get($inv))
     . ' }';
     my $sub = eval $code;
     warn "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
@@ -403,6 +412,14 @@ NOTE: lazy attributes, B<must> have a C<default> field set.
 =item B<should_coerce>
 
 Returns true if this meta-attribute should perform type coercion.
+
+=item B<should_auto_deref>
+
+Returns true if this meta-attribute should perform automatic 
+auto-dereferencing. 
+
+NOTE: This can only be done for attributes whose type constraint is 
+either I<ArrayRef> or I<HashRef>.
 
 =item B<has_trigger>
 
