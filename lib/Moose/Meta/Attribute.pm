@@ -13,10 +13,11 @@ use Moose::Util::TypeConstraints ();
 
 use base 'Class::MOP::Attribute';
 
-__PACKAGE__->meta->add_attribute('required' => (reader => 'is_required'  ));
-__PACKAGE__->meta->add_attribute('lazy'     => (reader => 'is_lazy'      ));
-__PACKAGE__->meta->add_attribute('coerce'   => (reader => 'should_coerce'));
-__PACKAGE__->meta->add_attribute('weak_ref' => (reader => 'is_weak_ref'  ));
+__PACKAGE__->meta->add_attribute('required'   => (reader => 'is_required'      ));
+__PACKAGE__->meta->add_attribute('lazy'       => (reader => 'is_lazy'          ));
+__PACKAGE__->meta->add_attribute('coerce'     => (reader => 'should_coerce'    ));
+__PACKAGE__->meta->add_attribute('weak_ref'   => (reader => 'is_weak_ref'      ));
+__PACKAGE__->meta->add_attribute('auto_deref' => (reader => 'should_auto_deref'));
 __PACKAGE__->meta->add_attribute('type_constraint' => (
     reader    => 'type_constraint',
     predicate => 'has_type_constraint',
@@ -239,6 +240,25 @@ sub _inline_get {
     return $mi->inline_get_slot_value($instance, $slot_name);
 }
 
+sub _inline_auto_deref {
+    my ( $self, $ref_value ) = @_;
+
+    return $ref_value unless $self->should_auto_deref;
+
+    my $type = eval { $self->type_constraint->name } || '';
+    my $sigil;
+
+    if ( $type eq "ArrayRef" ) {
+        $sigil = '@';
+    } elsif ( $type eq 'HashRef' ) {
+        $sigil = '%';
+    } else {
+        confess "Can't auto deref unless type constraint is ArrayRef or HashRef";
+    }
+
+    "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
+}
+
 sub generate_accessor_method {
     my ($attr, $attr_name) = @_;
     my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
@@ -261,7 +281,7 @@ sub generate_accessor_method {
             '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')    
-    . 'return ' . $attr->_inline_get( $inv )
+    . 'return ' . $attr->_inline_auto_deref( $attr->_inline_get( $inv ) )
     . ' }';
     my $sub = eval $code;
     warn "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
@@ -298,7 +318,7 @@ sub generate_reader_method {
             '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
             . 'unless exists $_[0]->{$attr_name};'
             : '')
-    . 'return $_[0]->{$attr_name};'
+    . 'return ' . $self->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
     . '}';
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;

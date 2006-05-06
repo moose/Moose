@@ -123,7 +123,7 @@ sub generate_delgate_method {
     # FIXME the reader may not work for subclasses with weird instances
 
     my $make = $method->{generator} || sub {
-        my ( $self, $attr, $method )  =@_;
+        my ( $self, $attr, $method ) = @_;
     
         my $method_name = $method->{name};
         my $reader = $attr->generate_reader_method();
@@ -372,3 +372,4 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 
 =cut
+

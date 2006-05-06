@@ -60,8 +60,6 @@ and that if this usage style is used nothing is exported to the namespace.
 
 - default should dclone()
 
-- auto_deref => 1 for auto-de-refing ARRAY and HASH attrs
-
 - subtype $anon_subtype => where { ... }
 
 [22:56] 	stevan	sub mst_doesnt_like_to_type { (shift)->meta->attr->type_contstraint }
