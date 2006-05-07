@@ -16,3 +16,4 @@ cover_db
 \.old$
 ^#.*#$
 ^\.#
+^TODO$
