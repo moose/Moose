@@ -225,6 +225,8 @@ to cpan-RT.
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
+Christian Hansen
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2006 by Infinity Interactive, Inc.

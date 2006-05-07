@@ -186,9 +186,6 @@ use Moose::Util::TypeConstraints;
         },
         blessed => sub {
             return \&Scalar::Util::blessed;
-        },
-        all_methods => sub {
-            subname 'Moose::all_methods' => sub () { qr/.*/ }
         }
     );
 
@@ -546,6 +543,8 @@ to cpan-RT.
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Christian Hansen
 
 =head1 COPYRIGHT AND LICENSE
 

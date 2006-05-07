@@ -70,7 +70,7 @@ use Test::Exception;
         has child_a => (
             is      => "ro",
             default => sub { ChildA->new },
-            handles => all_methods,
+            handles => qr/.*/,
         );
     } "all_methods requires explicit isa";
 
@@ -79,7 +79,7 @@ use Test::Exception;
             isa     => "ChildA",
             is      => "ro",
             default => sub { ChildA->new },
-            handles => all_methods,
+            handles => qr/.*/,
         );
     } "allow all_methods with explicit isa";
 

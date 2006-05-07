@@ -178,6 +178,8 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
   coerce Num 
       => from Str
         => via { 0+$_ }; 
+        
+  enum RGBColors => qw(red green blue);
 
 =head1 DESCRIPTION
 

@@ -15,18 +15,9 @@ use base 'Class::MOP::Attribute';
 
 # options which are not directly used
 # but we store them for metadata purposes
-__PACKAGE__->meta->add_attribute('isa'  => (
-    reader    => 'isa_metadata',
-    predicate => 'has_isa_metadata',    
-));
-__PACKAGE__->meta->add_attribute('does' => (
-    reader    => 'does_metadata',
-    predicate => 'has_does_metadata',    
-));
-__PACKAGE__->meta->add_attribute('is'   => (
-    reader    => 'is_metadata',
-    predicate => 'has_is_metadata',    
-));
+__PACKAGE__->meta->add_attribute('isa'  => (reader    => '_isa_metadata'));
+__PACKAGE__->meta->add_attribute('does' => (reader    => '_does_metadata'));
+__PACKAGE__->meta->add_attribute('is'   => (reader    => '_is_metadata'));
 
 # these are actual options for the attrs
 __PACKAGE__->meta->add_attribute('required'   => (reader => 'is_required'      ));
@@ -50,8 +41,7 @@ __PACKAGE__->meta->add_attribute('handles' => (
 sub new {
 	my ($class, $name, %options) = @_;
 	$class->_process_options($name, \%options);
-	my $self = $class->SUPER::new($name, %options);    
-    return $self;	
+	return $class->SUPER::new($name, %options);    
 }
 
 sub clone_and_inherit_options {
@@ -98,14 +88,14 @@ sub _process_options {
 		}
 		elsif ($options->{is} eq 'rw') {
 			$options->{accessor} = $name;						
+    	    ((reftype($options->{trigger}) || '') eq 'CODE')
+    	        || confess "Trigger must be a CODE ref"
+    	            if exists $options->{trigger};			
 		}
 		else {
 		    confess "I do not understand this option (is => " . $options->{is} . ")"
 		}			
 	}
-	
-	# process and check trigger here ...
-	
 	
 	if (exists $options->{isa}) {
 	    
@@ -403,6 +393,8 @@ sub install_accessors {
     return;
 }
 
+# private methods to help delegation ...
+
 sub _canonicalize_handles {
     my $self    = shift;
     my $handles = $self->handles;
@@ -428,8 +420,7 @@ sub _canonicalize_handles {
 
 sub _find_delegate_metaclass {
     my $self = shift;
-    if ($self->has_isa_metadata) {
-        my $class = $self->isa_metadata;
+    if (my $class = $self->_isa_metadata) {
         # if the class does have 
         # a meta method, use it
         return $class->meta if $class->can('meta');
@@ -439,10 +430,10 @@ sub _find_delegate_metaclass {
         # our own metaclass
         return Moose::Meta::Class->initialize($class);
     }
-    elsif ($self->has_does_metadata) {
+    elsif (my $role = $self->_does_metadata) {
         # our role will always have 
         # a meta method
-        return $self->does_metadata->meta;
+        return $role->meta;
     }
     else {
         confess "Cannot find delegate metaclass for attribute " . $self->name;
@@ -584,6 +575,8 @@ to cpan-RT.
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

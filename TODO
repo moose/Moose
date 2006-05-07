@@ -19,16 +19,6 @@ Mostly just for Roles
 
 [10:49] stevan	does can be added to,.. but not changed
 
-- triggers
-
-[18:18] mst	what I'd really like is just to say trigger => 'some_method'
-
-- attribute delgates
-
-Introduce capability to control the generated wrapper. Useful for when you have
-a wrapper that should implement the interface of it's child, but decorate with
-more metadata.
-
 - proxy attributes
 
 [15:49] 	stevan	you want a proxied attribute

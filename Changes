@@ -1,5 +1,38 @@
 Revision history for Perl extension Moose
 
+0.06
+    * Moose 
+      - refactored the keyword exports
+        - 'with' now checks Role validaity
+        - 'extends' makes metaclass adjustments as 
+           needed to ensure metaclass compatability
+          
+    * Moose::Util::TypeConstraints
+      - added the 'enum' keyword for simple 
+        string enumerations which can be used as 
+        type constraints
+        - see example of usage in t/008_basic.t
+        
+    * Moose::Object
+      - more careful checking of params to new()
+      
+    * Moose::Meta::Instance
+      - added new Instance metaclass to support 
+        the new Class::MOP instance protocol
+        
+    * Moose::Meta::Class
+      - some small changes to support the new 
+        instance protocol
+        
+    * Moose::Meta::Attribute
+      - some improvements to the accessor generation code
+        by nothingmuch
+      - some small changes to support the new 
+        instance protocol
+      - (still somewhat) experimental delegation support 
+        with the 'handles' option
+        - added several tests for this
+
 0.05 Thurs. April 27, 2006
     * Moose
       - keywords are now exported with Sub::Exporter
