@@ -2,8 +2,6 @@
 TODO
 -------------------------------------------------------------------------------
 
-- make way to iterate over all Moose classes
-
 - roles
 
 Need to figure out the details of composite roles

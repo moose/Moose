@@ -85,6 +85,7 @@ use Test::Exception;
 
     ::lives_ok {
         has child_b => (
+            is      => 'ro',
             default => sub { ChildB->new },
             handles => [qw/child_b_method_1/],
         );
@@ -126,7 +127,7 @@ use Test::Exception;
             isa     => "ChildE",
             is      => "ro",
             default => sub { ChildE->new },
-            handles => "child_e_method_2",
+            handles => ["child_e_method_2"],
         );
     } "can delegate to non moose class using explicit method list";
 
@@ -138,6 +139,7 @@ use Test::Exception;
             default => sub { ChildF->new },
             handles => sub {
                 $delegate_class = $_[1]->name;
+                return;
             },
         );
     } "subrefs on non moose class give no meta";
@@ -151,7 +153,7 @@ use Test::Exception;
 
 isa_ok( my $p = Parent->new, "Parent" );
 isa_ok( $p->child_a, "ChildA" );
-ok( !$p->can("child_b"), "no child b accessor" );
+isa_ok( $p->child_b, "ChildB" );
 isa_ok( $p->child_c, "ChildC" );
 isa_ok( $p->child_d, "ChildD" );
 isa_ok( $p->child_e, "ChildE" );

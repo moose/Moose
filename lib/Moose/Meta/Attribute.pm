@@ -13,6 +13,22 @@ use Moose::Util::TypeConstraints ();
 
 use base 'Class::MOP::Attribute';
 
+# options which are not directly used
+# but we store them for metadata purposes
+__PACKAGE__->meta->add_attribute('isa'  => (
+    reader    => 'isa_metadata',
+    predicate => 'has_isa_metadata',    
+));
+__PACKAGE__->meta->add_attribute('does' => (
+    reader    => 'does_metadata',
+    predicate => 'has_does_metadata',    
+));
+__PACKAGE__->meta->add_attribute('is'   => (
+    reader    => 'is_metadata',
+    predicate => 'has_is_metadata',    
+));
+
+# these are actual options for the attrs
 __PACKAGE__->meta->add_attribute('required'   => (reader => 'is_required'      ));
 __PACKAGE__->meta->add_attribute('lazy'       => (reader => 'is_lazy'          ));
 __PACKAGE__->meta->add_attribute('coerce'     => (reader => 'should_coerce'    ));
@@ -26,11 +42,16 @@ __PACKAGE__->meta->add_attribute('trigger' => (
     reader    => 'trigger',
     predicate => 'has_trigger',
 ));
+__PACKAGE__->meta->add_attribute('handles' => (
+    reader    => 'handles',
+    predicate => 'has_handles',
+));
 
 sub new {
 	my ($class, $name, %options) = @_;
 	$class->_process_options($name, \%options);
-	$class->SUPER::new($name, %options);	
+	my $self = $class->SUPER::new($name, %options);    
+    return $self;	
 }
 
 sub clone_and_inherit_options {
@@ -68,6 +89,7 @@ sub clone_and_inherit_options {
 
 sub _process_options {
     my ($class, $name, $options) = @_;
+    
 	if (exists $options->{is}) {
 		if ($options->{is} eq 'ro') {
 			$options->{reader} = $name;
@@ -75,12 +97,15 @@ sub _process_options {
 			    || confess "Cannot have a trigger on a read-only attribute";
 		}
 		elsif ($options->{is} eq 'rw') {
-			$options->{accessor} = $name;				
-			((reftype($options->{trigger}) || '') eq 'CODE')
-			    || confess "A trigger must be a CODE reference"
-			        if exists $options->{trigger};			
+			$options->{accessor} = $name;						
+		}
+		else {
+		    confess "I do not understand this option (is => " . $options->{is} . ")"
 		}			
 	}
+	
+	# process and check trigger here ...
+	
 	
 	if (exists $options->{isa}) {
 	    
@@ -334,6 +359,112 @@ sub generate_reader_method {
     return $sub;
 }
 
+sub install_accessors {
+    my $self = shift;
+    $self->SUPER::install_accessors(@_);   
+    
+    if ($self->has_handles) {
+        
+        # NOTE:
+        # Here we canonicalize the 'handles' option
+        # this will sort out any details and always 
+        # return an hash of methods which we want 
+        # to delagate to, see that method for details
+        my %handles = $self->_canonicalize_handles();
+        
+        # find the name of the accessor for this attribute
+        my $accessor_name = $self->reader || $self->accessor;
+        (defined $accessor_name)
+            || confess "You cannot install delegation without a reader or accessor for the attribute";
+        
+        # make sure we handle HASH accessors correctly
+        ($accessor_name) = keys %{$accessor_name}
+            if ref($accessor_name) eq 'HASH';
+        
+        # install the delegation ...
+        my $associated_class = $self->associated_class;
+        foreach my $handle (keys %handles) {
+            my $method_to_call = $handles{$handle};
+            
+            (!$associated_class->has_method($handle))
+                || confess "You cannot overwrite a locally defined method ($handle) with a delegation";
+            
+            if ((reftype($method_to_call) || '') eq 'CODE') {
+                $associated_class->add_method($handle => $method_to_call);                
+            }
+            else {
+                $associated_class->add_method($handle => sub {
+                    ((shift)->$accessor_name())->$method_to_call(@_);
+                });
+            }
+        }
+    }
+    
+    return;
+}
+
+sub _canonicalize_handles {
+    my $self    = shift;
+    my $handles = $self->handles;
+    if (ref($handles) eq 'HASH') {
+        return %{$handles};
+    }
+    elsif (ref($handles) eq 'ARRAY') {
+        return map { $_ => $_ } @{$handles};
+    }
+    elsif (ref($handles) eq 'Regexp') {
+        ($self->has_type_constraint)
+            || confess "Cannot delegate methods based on a RegExpr without a type constraint (isa)";
+        return map  { ($_ => $_) } 
+               grep {  $handles  } $self->_get_delegate_method_list;
+    }
+    elsif (ref($handles) eq 'CODE') {
+        return $handles->($self, $self->_find_delegate_metaclass);
+    }
+    else {
+        confess "Unable to canonicalize the 'handles' option with $handles";
+    }
+}
+
+sub _find_delegate_metaclass {
+    my $self = shift;
+    if ($self->has_isa_metadata) {
+        my $class = $self->isa_metadata;
+        # if the class does have 
+        # a meta method, use it
+        return $class->meta if $class->can('meta');
+        # otherwise we might be 
+        # dealing with a non-Moose
+        # class, and need to make 
+        # our own metaclass
+        return Moose::Meta::Class->initialize($class);
+    }
+    elsif ($self->has_does_metadata) {
+        # our role will always have 
+        # a meta method
+        return $self->does_metadata->meta;
+    }
+    else {
+        confess "Cannot find delegate metaclass for attribute " . $self->name;
+    }
+}
+
+sub _get_delegate_method_list {
+    my $self = shift;
+    my $meta = $self->_find_delegate_metaclass;
+    if ($meta->isa('Class::MOP::Class')) {
+        return map  { $_->{name}                     } 
+               grep { $_->{class} ne 'Moose::Object' } 
+                    $meta->compute_all_applicable_methods;
+    }
+    elsif ($meta->isa('Moose::Meta::Role')) {
+        return $meta->get_method_list;        
+    }
+    else {
+        confess "Unable to recognize the delegate metaclass '$meta'";
+    }
+}
+
 1;
 
 __END__
@@ -376,6 +507,8 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<generate_reader_method>
 
+=item B<install_accessors>
+
 =back
 
 =head2 Additional Moose features
@@ -394,6 +527,14 @@ Returns true if this meta-attribute has a type constraint.
 A read-only accessor for this meta-attribute's type constraint. For 
 more information on what you can do with this, see the documentation 
 for L<Moose::Meta::TypeConstraint>.
+
+=item B<has_handles>
+
+Returns true if this meta-attribute performs delegation.
+
+=item B<handles>
+
+This returns the value which was passed into the handles option.
 
 =item B<is_weak_ref>
 

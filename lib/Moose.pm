@@ -117,7 +117,7 @@ use Moose::Util::TypeConstraints;
         has => sub {
             my $class = $CALLER;
             return subname 'Moose::has' => sub {
-                my ($name, %options) = @_;
+                my ($name, %options) = @_;              
                 my $meta = $class->meta;
                 if ($name =~ /^\+(.*)/) {
                     my $inherited_attr = $meta->find_attribute_by_name($1);
@@ -188,12 +188,7 @@ use Moose::Util::TypeConstraints;
             return \&Scalar::Util::blessed;
         },
         all_methods => sub {
-            subname 'Moose::all_methods' => sub () {
-                sub {
-                    my ($class, $delegate_class) = @_;
-                    $delegate_class->compute_all_applicable_methods();
-                }
-            }
+            subname 'Moose::all_methods' => sub () { qr/.*/ }
         }
     );
 
