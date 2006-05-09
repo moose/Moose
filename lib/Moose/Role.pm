@@ -54,9 +54,19 @@ use Moose::Util::TypeConstraints;
 	    with => sub {
 	        my $meta = _find_meta();
 	        return subname 'Moose::Role::with' => sub { 
-	            my ($role) = @_;
-                Moose::_load_all_classes($role);
-                $role->meta->apply($meta);
+                my (@roles) = @_;
+                Moose::_load_all_classes(@roles);
+                ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, $_ is not a Moose role"
+                        foreach @roles;
+                if (scalar @roles == 1) {
+                    $roles[0]->meta->apply($meta);
+                }
+                else {
+                    Moose::Meta::Role->combine(
+                        map { $_->meta } @roles
+                    )->apply($meta);
+                }
             };
 	    },	
         requires => sub {

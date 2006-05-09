@@ -95,6 +95,27 @@ and that if this usage style is used nothing is exported to the namespace.
 ...
 [23:49] 	mst	oh, also: method 'has' => sub { ... } could squelch the redefine warning
 
+- Role excludes
+
+[17:00] 	stevan	I am reading the new Fortress Spec 
+[17:00] 	stevan	http://research.sun.com/projects/plrg/fortress0903.pdf
+[17:00] 	stevan	they have traits too
+[17:01] 	stevan	and they have one cool feature which we might want to steal
+[17:01] 	stevan	traits can "exclude" other traits
+[17:01] 	stevan	which means they cannot be combined with other classes/roles which does() that trait
+[17:01] 	stevan	the example they give is
+[17:01] 	stevan	trait OrganicMolecule extends Molecule 
+[17:01] 	stevan	    excludes { InorganicMolecule } 
+[17:01] 	stevan	end 
+[17:01] 	stevan	trait InorganicMolecule extends Molecule 
+[17:01] 	stevan	end 
+[17:01] 	stevan	this creates a set of mutually exclusive traits
+[17:02] 	stevan	so that this:
+[17:02] 	stevan	trait ScienceGoo extends { OrganicMolecule, InorganicMolocule } end
+[17:02] 	stevan	would fail
+[17:02] 	stevan	because OrganicMolecule, InorganicMolocule can never be used together
+[17:03] 	stevan	I am thinking this is quite sane 
+
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------

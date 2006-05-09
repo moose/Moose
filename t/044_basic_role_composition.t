@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More no_plan => 1;
+use Test::More tests => 60;
 use Test::Exception;
 
 BEGIN {
@@ -177,6 +177,9 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
 
 ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
 ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling::Bling');
+is(Role::Bling::Bling::Bling->meta->get_method('bling')->(), 
+    'Role::Bling::Bling::Bling::bling',
+    '... still got the bling method in Role::Bling::Bling::Bling');
 
 =pod
 
@@ -257,6 +260,93 @@ can_ok('My::Test10', 'ghost');
 is(My::Test8->new->ghost, 'Role::Boo::ghost', '... got the expected default attr value');
 is(My::Test9->new->ghost, 'Role::Boo::Hoo::ghost', '... got the expected default attr value');
 is(My::Test10->new->ghost, 'My::Test10::ghost', '... got the expected default attr value');
+
+=pod
+
+Role override method conflicts
+
+=cut
+
+{
+    package Role::Spliff;
+    use strict;
+    use warnings;
+    use Moose::Role;
+    
+    override 'twist' => sub {
+        super() . ' -> Role::Spliff::twist';
+    };
+    
+    package Role::Blunt;
+    use strict;
+    use warnings;
+    use Moose::Role;
+    
+    override 'twist' => sub {
+        super() . ' -> Role::Blunt::twist';
+    };
+}
+
+{
+    package My::Test::Base;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    sub twist { 'My::Test::Base::twist' }
+        
+    package My::Test11;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    extends 'My::Test::Base';
+
+    ::lives_ok {
+        with 'Role::Blunt';
+    } '... composed the role with override okay';
+       
+    package My::Test12;
+    use strict;
+    use warnings;
+    use Moose;
+
+    extends 'My::Test::Base';
+
+    ::lives_ok {    
+       with 'Role::Spliff';
+    } '... composed the role with override okay';
+              
+    package My::Test13;
+    use strict;
+    use warnings;
+    use Moose;
+
+    ::dies_ok {
+        with 'Role::Spliff';       
+    } '... cannot compose it because we have no superclass';
+    
+    package My::Test14;
+    use strict;
+    use warnings;
+    use Moose;
+
+    extends 'My::Test::Base';
+
+    ::throws_ok {
+        with 'Role::Spliff', 'Role::Blunt';       
+    } qr/Two \'override\' methods of the same name encountered/, 
+      '... cannot compose it because we have no superclass';    
+}
+
+ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
+ok(My::Test12->meta->has_method('twist'), '... the twist method has been added');
+ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
+ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
+
+is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Blunt::twist', '... got the right method return');
+is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Spliff::twist', '... got the right method return');
+
 
 
 

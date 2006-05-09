@@ -85,6 +85,8 @@ sub has_method {
 
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
+    (!$self->has_method($name))
+        || confess "Cannot add an override method if a local method is already present";
     # need this for roles ...
     $_super_package ||= $self->name;
     my $super = $self->find_next_method_by_name($name);
@@ -101,6 +103,8 @@ sub add_override_method_modifier {
 
 sub add_augment_method_modifier {
     my ($self, $name, $method) = @_;  
+    (!$self->has_method($name))
+        || confess "Cannot add an augment method if a local method is already present";    
     my $super = $self->find_next_method_by_name($name);
     (defined $super)
         || confess "You cannot augment '$name' because it has no super method";    

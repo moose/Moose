@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
+use Test::Exception;
 
 BEGIN {
     use_ok('Moose');           
@@ -62,3 +63,29 @@ isa_ok($foo, 'Foo');
 is($foo->foo(), 'Foo::foo', '... got the right value from &foo');
 is($foo->bar(), 'Foo::bar', '... got the right value from &bar');
 is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
+
+# some error cases
+
+{
+    package Bling;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    sub bling { 'Bling::bling' }
+    
+    package Bling::Bling;
+    use strict;
+    use warnings;
+    use Moose;
+    
+    extends 'Bling';
+    
+    sub bling { 'Bling::bling' }    
+    
+    ::dies_ok {
+        override 'bling' => sub {};
+    } '... cannot override a method which has a local equivalent';
+    
+}
+

@@ -268,6 +268,13 @@ sub apply {
             # see if we are being composed  
             # into a role or not
             if ($other->isa('Moose::Meta::Role')) {
+                
+                # FIXME:
+                # it is possible for these attributes
+                # to actually both be from the same 
+                # origin (some common ancestor role)
+                # so we need to find a way to check this
+                
                 # all attribute conflicts between roles 
                 # result in an immediate fatal error 
                 confess "Role '" . $self->name . "' has encountered an attribute conflict " . 
@@ -322,14 +329,52 @@ sub apply {
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('override')) {
-        # skip it if it has one already
-        next if $other->has_method($method_name);
-        # add it, although it could be overriden 
-        $other->add_override_method_modifier(
-            $method_name,
-            $self->get_override_method_modifier($method_name),
-            $self->name
-        );
+        # it if it has one already then ...
+        if ($other->has_method($method_name)) {
+            # if it is being composed into another role
+            # we have a conflict here, because you cannot 
+            # combine an overriden method with a locally
+            # defined one 
+            if ($other->isa('Moose::Meta::Role')) { 
+                confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
+                        "during composition (A local method of the same name as been found). This " . 
+                        "is fatal error.";
+            }
+            else {
+                # if it is a class, then we 
+                # just ignore this here ...
+                next;
+            }
+        }
+        else {
+            # if no local method is found, then we 
+            # must check if we are a role or class
+            if ($other->isa('Moose::Meta::Role')) { 
+                # if we are a role, we need to make sure 
+                # we dont have a conflict with the role 
+                # we are composing into
+                if ($other->has_override_method_modifier($method_name)) {
+                    confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
+                            "during composition (Two 'override' methods of the same name encountered). " . 
+                            "This is fatal error.";
+                }
+                else {
+                    $other->add_override_method_modifier(
+                        $method_name,
+                        $self->get_override_method_modifier($method_name),
+                        $self->name
+                    );                    
+                }
+            }
+            else {
+                # if it is a class, we just add it
+                $other->add_override_method_modifier(
+                    $method_name,
+                    $self->get_override_method_modifier($method_name),
+                    $self->name
+                );
+            }
+        }
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('before')) {
@@ -367,11 +412,7 @@ sub combine {
         $role->apply($combined);
     }
     
-    $combined->_clean_up_required_methods;
-
-    #warn ">>> req-methods: " . (join ", " => $combined->get_required_method_list) . "\n";    
-    #warn ">>>     methods: " . (join ", " => $combined->get_method_list) . "\n";
-    #warn ">>>       attrs: " . (join ", " => $combined->get_attribute_list) . "\n";    
+    $combined->_clean_up_required_methods;   
     
     return $combined;
 }
