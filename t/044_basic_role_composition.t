@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 60;
+use Test::More tests => 62;
 use Test::Exception;
 
 BEGIN {
@@ -336,7 +336,7 @@ Role override method conflicts
     ::throws_ok {
         with 'Role::Spliff', 'Role::Blunt';       
     } qr/Two \'override\' methods of the same name encountered/, 
-      '... cannot compose it because we have no superclass';    
+      '... cannot compose it because we have no superclass';       
 }
 
 ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
@@ -346,7 +346,6 @@ ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been ad
 
 is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Blunt::twist', '... got the right method return');
 is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Spliff::twist', '... got the right method return');
-
-
-
+ok(!My::Test13->can('twist'), '... no twist method here at all');
+is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method return (from superclass)');
 

@@ -10,7 +10,7 @@ use Scalar::Util 'blessed';
 
 use Moose::Meta::Class;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 ## Attributes
 
