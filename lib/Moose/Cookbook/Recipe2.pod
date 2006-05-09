@@ -160,7 +160,7 @@ normal process, here is an example:
   					     );
 
 And as with the first recipe, a more in-depth example of using 
-these classes can be found in the F<t/002_basic.t> test file.
+these classes can be found in the F<t/002_recipe.t> test file.
 
 =head1 CONCLUSION
 

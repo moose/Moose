@@ -3,7 +3,8 @@ Revision history for Perl extension Moose
 0.06
     * Moose 
       - refactored the keyword exports
-        - 'with' now checks Role validaity
+        - 'with' now checks Role validaity and 
+          accepts more than one Role at a time
         - 'extends' makes metaclass adjustments as 
            needed to ensure metaclass compatability
           
@@ -11,7 +12,7 @@ Revision history for Perl extension Moose
       - added the 'enum' keyword for simple 
         string enumerations which can be used as 
         type constraints
-        - see example of usage in t/008_basic.t
+        - see example of usage in t/202_example.t
         
     * Moose::Object
       - more careful checking of params to new()
@@ -32,6 +33,7 @@ Revision history for Perl extension Moose
       - (still somewhat) experimental delegation support 
         with the 'handles' option
         - added several tests for this
+        - no docs for this yet
 
 0.05 Thurs. April 27, 2006
     * Moose

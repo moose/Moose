@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use base 'Class::MOP::Class';
 

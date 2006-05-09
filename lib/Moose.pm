@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -107,11 +107,19 @@ use Moose::Util::TypeConstraints;
         with => sub {
             my $class = $CALLER;
             return subname 'Moose::with' => sub {
-                my ($role) = @_;
-                _load_all_classes($role);
-                ($role->can('meta') && $role->meta->isa('Moose::Meta::Role'))
-                    || confess "You can only consume roles, $role is not a Moose role";
-                $role->meta->apply($class->meta);
+                my (@roles) = @_;
+                _load_all_classes(@roles);
+                ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, $_ is not a Moose role"
+                        foreach @roles;
+                if (scalar @roles == 1) {
+                    $roles[0]->meta->apply($class->meta);
+                }
+                else {
+                    Moose::Meta::Role->combine(
+                        map { $_->meta } @roles
+                    )->apply($class->meta);
+                }
             };
         },
         has => sub {
@@ -544,7 +552,9 @@ to cpan-RT.
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
-Christian Hansen
+Christian Hansen E<lt>chansen@cpan.orgE<gt>
+
+Yuval Kogman E<lt>nothingmuch@woobling.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

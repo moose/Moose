@@ -17,16 +17,19 @@ Mostly just for Roles
 
 - inherited slot specs
 
-[10:49] stevan	does can be added to,.. but not changed
+'does' can be added to,.. but not changed
+(need type unions for this)
 
 - proxy attributes
 
-[15:49] 	stevan	you want a proxied attribute
-[15:49] 	stevan	which looks like an attribute, 
-                    talks like an attribute, smells 
-                    like an attribute,.. but if you 
-                    look behind the curtain,.. its 
-                    over there.. in that other object
+a proxied attribute is an attribute
+which looks like an attribute, 
+talks like an attribute, smells 
+like an attribute,.. but if you 
+look behind the curtain,.. its 
+over there.. in that other object
+
+(... probably be a custom metaclass)
 
 - compile time extends
 

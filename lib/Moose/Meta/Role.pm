@@ -72,7 +72,8 @@ sub new {
     $options{':role_meta'} = Moose::Meta::Class->initialize(
         $options{role_name},
         ':method_metaclass' => 'Moose::Meta::Role::Method'
-    );
+    ) unless defined $options{':role_meta'} && 
+             $options{':role_meta'}->isa('Moose::Meta::Class');
     my $self = $class->meta->new_object(%options);
     return $self;
 }
@@ -114,6 +115,14 @@ sub get_required_method_list {
 sub requires_method {
     my ($self, $method_name) = @_;
     exists $self->get_required_methods_map->{$method_name} ? 1 : 0;
+}
+
+sub _clean_up_required_methods {
+    my $self = shift;
+    foreach my $method ($self->get_required_method_list) {
+        delete $self->get_required_methods_map->{$method}
+            if $self->has_method($method);
+    } 
 }
 
 ## methods
@@ -254,23 +263,62 @@ sub apply {
     }    
     
     foreach my $attribute_name ($self->get_attribute_list) {
-        # skip it if it has one already
-        next if $other->has_attribute($attribute_name);
-        # add it, although it could be overriden 
-        $other->add_attribute(
-            $attribute_name,
-            %{$self->get_attribute($attribute_name)}
-        );
+        # it if it has one already
+        if ($other->has_attribute($attribute_name)) {
+            # see if we are being composed  
+            # into a role or not
+            if ($other->isa('Moose::Meta::Role')) {
+                # all attribute conflicts between roles 
+                # result in an immediate fatal error 
+                confess "Role '" . $self->name . "' has encountered an attribute conflict " . 
+                        "during composition. This is fatal error and cannot be disambiguated.";
+            }
+            else {
+                # but if this is a class, we 
+                # can safely skip adding the 
+                # attribute to the class
+                next;
+            }
+        }
+        else {
+            # add it, although it could be overriden 
+            $other->add_attribute(
+                $attribute_name,
+                %{$self->get_attribute($attribute_name)}
+            );
+        }
     }
     
     foreach my $method_name ($self->get_method_list) {
-        # skip it if it has one already
-        next if $other->has_method($method_name);
-        # add it, although it could be overriden 
-        $other->alias_method(
-            $method_name,
-            $self->get_method($method_name)
-        );
+        # it if it has one already
+        if ($other->has_method($method_name)) {
+            # see if we are composing into a role
+            if ($other->isa('Moose::Meta::Role')) { 
+                # method conflicts between roles result 
+                # in the method becoming a requirement
+                $other->add_required_methods($method_name);
+                # NOTE:
+                # we have to remove the method from our 
+                # role, if this is being called from combine()
+                # which means the meta is an anon class
+                # this *may* cause problems later, but it 
+                # is probably fairly safe to assume that 
+                # anon classes will only be used internally
+                # or by people who know what they are doing
+                $other->_role_meta->remove_method($method_name)
+                    if $other->_role_meta->name =~ /__ANON__/;
+            }
+            else {
+                next;
+            }
+        }
+        else {
+            # add it, although it could be overriden 
+            $other->alias_method(
+                $method_name,
+                $self->get_method($method_name)
+            );
+        }
     }    
     
     foreach my $method_name ($self->get_method_modifier_list('override')) {
@@ -308,6 +356,26 @@ sub apply {
     $other->add_role($self);
 }
 
+sub combine {
+    my ($class, @roles) = @_;
+    
+    my $combined = $class->new(
+        ':role_meta' => Moose::Meta::Class->create_anon_class()
+    );
+    
+    foreach my $role (@roles) {
+        $role->apply($combined);
+    }
+    
+    $combined->_clean_up_required_methods;
+
+    #warn ">>> req-methods: " . (join ", " => $combined->get_required_method_list) . "\n";    
+    #warn ">>>     methods: " . (join ", " => $combined->get_method_list) . "\n";
+    #warn ">>>       attrs: " . (join ", " => $combined->get_attribute_list) . "\n";    
+    
+    return $combined;
+}
+
 package Moose::Meta::Role::Method;
 
 use strict;
@@ -343,6 +411,8 @@ probably not that much really).
 =item B<new>
 
 =item B<apply>
+
+=item B<combine>
 
 =back
 

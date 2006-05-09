@@ -259,7 +259,7 @@ And thats about it.
 
 Once again, as with all the other recipes, you can go about using 
 these classes like any other Perl 5 class. A more detailed example of 
-usage can be found in F<t/004_basic.t>.
+usage can be found in F<t/004_recipe.t>.
 
 =head1 CONCLUSION
 

@@ -178,7 +178,7 @@ not recognize.
 
 From here on, you can use C<$point> and C<$point3d> just as you would 
 any other Perl 5 object. For a more detailed example of what can be 
-done, you can refer to the F<t/001_basic.t> test file.
+done, you can refer to the F<t/001_recipe.t> test file.
 
 =head1 CONCLUSION
 
