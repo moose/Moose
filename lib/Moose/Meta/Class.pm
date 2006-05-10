@@ -38,8 +38,10 @@ sub does_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
         || confess "You must supply a role name to look for";
-    foreach my $role (@{$self->roles}) {
-        return 1 if $role->does_role($role_name);
+    foreach my $class ($self->class_precedence_list) {
+        foreach my $role (@{$class->meta->roles}) {
+            return 1 if $role->does_role($role_name);
+        }
     }
     return 0;
 }
@@ -48,8 +50,10 @@ sub excludes_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
         || confess "You must supply a role name to look for";
-    foreach my $role (@{$self->roles}) {
-        return 1 if $role->excludes_role($role_name);
+    foreach my $class ($self->class_precedence_list) {        
+        foreach my $role (@{$class->meta->roles}) {
+            return 1 if $role->excludes_role($role_name);
+        }
     }
     return 0;
 }

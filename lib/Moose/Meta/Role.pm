@@ -275,7 +275,7 @@ sub apply {
 #    warn "... Checking " . $self->name . " for excluded methods";
     foreach my $excluded_role_name ($self->get_excluded_roles_list) {
 #        warn "... Checking if '$excluded_role_name' is done by " . $other->name . " for " . $self->name;
-        if ($other->does_role($excluded_role_name)) { # || $self->does_role($excluded_role_name) 
+        if ($other->does_role($excluded_role_name)) { 
             confess "The class " . $other->name . " does the excluded role '$excluded_role_name'";
         }
         else {
