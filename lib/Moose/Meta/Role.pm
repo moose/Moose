@@ -28,6 +28,13 @@ __PACKAGE__->meta->add_attribute('roles' => (
     default => sub { [] }
 ));
 
+## excluded roles
+
+__PACKAGE__->meta->add_attribute('excluded_roles_map' => (
+    reader  => 'get_excluded_roles_map',
+    default => sub { {} }
+));
+
 ## attributes
 
 __PACKAGE__->meta->add_attribute('attribute_map' => (
@@ -98,6 +105,23 @@ sub does_role {
         return 1 if $role->does_role($role_name);
     }
     return 0;
+}
+
+## excluded roles
+
+sub add_excluded_roles {
+    my ($self, @excluded_role_names) = @_;
+    $self->get_excluded_roles_map->{$_} = undef foreach @excluded_role_names;
+}
+
+sub get_excluded_roles_list {
+    my ($self) = @_;
+    keys %{$self->get_excluded_roles_map};
+}
+
+sub excludes_role {
+    my ($self, $role_name) = @_;
+    exists $self->get_excluded_roles_map->{$role_name} ? 1 : 0;
 }
 
 ## required methods
@@ -244,6 +268,28 @@ sub get_method_modifier_list {
 sub apply {
     my ($self, $other) = @_;
     
+    if ($other->excludes_role($self->name)) {
+        confess "Conflict detected: " . $other->name . " excludes role '" . $self->name . "'";
+    }
+    
+#    warn "... Checking " . $self->name . " for excluded methods";
+    foreach my $excluded_role_name ($self->get_excluded_roles_list) {
+#        warn "... Checking if '$excluded_role_name' is done by " . $other->name . " for " . $self->name;
+        if ($other->does_role($excluded_role_name)) { # || $self->does_role($excluded_role_name) 
+            confess "The class " . $other->name . " does the excluded role '$excluded_role_name'";
+        }
+        else {
+            if ($other->isa('Moose::Meta::Role')) {
+#                warn ">>> The role " . $other->name . " does not do the excluded role '$excluded_role_name', so we are adding it in";
+                $other->add_excluded_roles($excluded_role_name);
+            }
+            else {
+#                warn ">>> The class " . $other->name . " does not do the excluded role '$excluded_role_name', so we can just go about our business";                
+            }
+        }
+    }    
+    
+    
     # NOTE:
     # we might need to move this down below the 
     # the attributes so that we can require any 
@@ -260,7 +306,7 @@ sub apply {
                         "to be implemented by '" . $other->name . "'";
             }
         }
-    }    
+    }       
     
     foreach my $attribute_name ($self->get_attribute_list) {
         # it if it has one already
@@ -474,6 +520,18 @@ probably not that much really).
 =item B<add_role>
 
 =item B<does_role>
+
+=back
+
+=over 4
+
+=item B<add_excluded_roles>
+
+=item B<excludes_role>
+
+=item B<get_excluded_roles_list>
+
+=item B<get_excluded_roles_map>
 
 =back
 

@@ -115,7 +115,7 @@ and that if this usage style is used nothing is exported to the namespace.
 [17:02] 	stevan	would fail
 [17:02] 	stevan	because OrganicMolecule, InorganicMolocule can never be used together
 [17:03] 	stevan	I am thinking this is quite sane 
-
+ 
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------

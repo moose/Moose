@@ -44,6 +44,16 @@ sub does_role {
     return 0;
 }
 
+sub excludes_role {
+    my ($self, $role_name) = @_;
+    (defined $role_name)
+        || confess "You must supply a role name to look for";
+    foreach my $role (@{$self->roles}) {
+        return 1 if $role->excludes_role($role_name);
+    }
+    return 0;
+}
+
 sub new_object {
     my ($class, %params) = @_;
     my $self = $class->SUPER::new_object(%params);
@@ -215,6 +225,12 @@ to the list of associated roles.
 =item B<does_role ($role_name)>
 
 This will test if this class C<does> a given C<$role_name>. It will 
+not only check it's local roles, but ask them as well in order to 
+cascade down the role hierarchy.
+
+=item B<excludes_role ($role_name)>
+
+This will test if this class C<excludes> a given C<$role_name>. It will 
 not only check it's local roles, but ask them as well in order to 
 cascade down the role hierarchy.
 

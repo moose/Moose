@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 62;
+use Test::More tests => 90;
 use Test::Exception;
 
 BEGIN {
@@ -158,6 +158,15 @@ ok(My::Test4->meta->has_method('bling'), '... we did get the method when manuall
 ok(My::Test5->meta->has_method('bling'), '... we did get the method when manually dealt with');
 ok(My::Test6->meta->has_method('bling'), '... we did get the method when manually dealt with');
 
+ok(!My::Test3->does('Role::Bling'), '... our class does() the correct roles');
+ok(!My::Test3->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(My::Test4->does('Role::Bling'), '... our class does() the correct roles');
+ok(My::Test4->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(My::Test5->does('Role::Bling'), '... our class does() the correct roles');
+ok(My::Test5->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(My::Test6->does('Role::Bling'), '... our class does() the correct roles');
+ok(My::Test6->does('Role::Bling::Bling'), '... our class does() the correct roles');
+
 is(My::Test4->bling, 'Role::Bling::bling', '... and we got the first method that was added');
 is(My::Test5->bling, 'Role::Bling::Bling::bling', '... and we got the first method that was added');
 is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
@@ -176,6 +185,7 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
 }
 
 ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
+ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), '... our role correctly does() the other role');
 ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling::Bling');
 is(Role::Bling::Bling::Bling->meta->get_method('bling')->(), 
     'Role::Bling::Bling::Bling::bling',
@@ -253,6 +263,15 @@ ok(My::Test8->meta->has_attribute('ghost'), '... we did get an attributes when m
 ok(My::Test9->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
 ok(My::Test10->meta->has_attribute('ghost'), '... we did still have an attribute ghost (conflict does not mess with class)');
 
+ok(!My::Test7->does('Role::Boo'), '... our class does() the correct roles');
+ok(!My::Test7->does('Role::Boo::Hoo'), '... our class does() the correct roles');
+ok(My::Test8->does('Role::Boo'), '... our class does() the correct roles');
+ok(My::Test8->does('Role::Boo::Hoo'), '... our class does() the correct roles');
+ok(My::Test9->does('Role::Boo'), '... our class does() the correct roles');
+ok(My::Test9->does('Role::Boo::Hoo'), '... our class does() the correct roles');
+ok(!My::Test10->does('Role::Boo'), '... our class does() the correct roles');
+ok(!My::Test10->does('Role::Boo::Hoo'), '... our class does() the correct roles');
+
 can_ok('My::Test8', 'ghost');
 can_ok('My::Test9', 'ghost');
 can_ok('My::Test10', 'ghost');
@@ -268,22 +287,22 @@ Role override method conflicts
 =cut
 
 {
-    package Role::Spliff;
+    package Role::Plot;
     use strict;
     use warnings;
     use Moose::Role;
     
     override 'twist' => sub {
-        super() . ' -> Role::Spliff::twist';
+        super() . ' -> Role::Plot::twist';
     };
     
-    package Role::Blunt;
+    package Role::Truth;
     use strict;
     use warnings;
     use Moose::Role;
     
     override 'twist' => sub {
-        super() . ' -> Role::Blunt::twist';
+        super() . ' -> Role::Truth::twist';
     };
 }
 
@@ -303,7 +322,7 @@ Role override method conflicts
     extends 'My::Test::Base';
 
     ::lives_ok {
-        with 'Role::Blunt';
+        with 'Role::Truth';
     } '... composed the role with override okay';
        
     package My::Test12;
@@ -314,7 +333,7 @@ Role override method conflicts
     extends 'My::Test::Base';
 
     ::lives_ok {    
-       with 'Role::Spliff';
+       with 'Role::Plot';
     } '... composed the role with override okay';
               
     package My::Test13;
@@ -323,7 +342,7 @@ Role override method conflicts
     use Moose;
 
     ::dies_ok {
-        with 'Role::Spliff';       
+        with 'Role::Plot';       
     } '... cannot compose it because we have no superclass';
     
     package My::Test14;
@@ -334,7 +353,7 @@ Role override method conflicts
     extends 'My::Test::Base';
 
     ::throws_ok {
-        with 'Role::Spliff', 'Role::Blunt';       
+        with 'Role::Plot', 'Role::Truth';       
     } qr/Two \'override\' methods of the same name encountered/, 
       '... cannot compose it because we have no superclass';       
 }
@@ -344,8 +363,37 @@ ok(My::Test12->meta->has_method('twist'), '... the twist method has been added')
 ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
 ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
 
-is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Blunt::twist', '... got the right method return');
-is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Spliff::twist', '... got the right method return');
+ok(!My::Test11->does('Role::Plot'), '... our class does() the correct roles');
+ok(My::Test11->does('Role::Truth'), '... our class does() the correct roles');
+ok(!My::Test12->does('Role::Truth'), '... our class does() the correct roles');
+ok(My::Test12->does('Role::Plot'), '... our class does() the correct roles');
+ok(!My::Test13->does('Role::Plot'), '... our class does() the correct roles');
+ok(!My::Test14->does('Role::Truth'), '... our class does() the correct roles');
+ok(!My::Test14->does('Role::Plot'), '... our class does() the correct roles');
+
+is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Truth::twist', '... got the right method return');
+is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Plot::twist', '... got the right method return');
 ok(!My::Test13->can('twist'), '... no twist method here at all');
 is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method return (from superclass)');
 
+{
+    package Role::Reality;
+    use strict;
+    use warnings;
+    use Moose::Role;
+
+    ::throws_ok {    
+        with 'Role::Plot';
+    } qr/A local method of the same name as been found/, 
+    '... could not compose roles here, it dies';
+
+    sub twist {
+        'Role::Reality::twist';
+    }
+}    
+
+ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
+ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
+is(Role::Reality->meta->get_method('twist')->(), 
+    'Role::Reality::twist', 
+    '... the twist method returns the right value');

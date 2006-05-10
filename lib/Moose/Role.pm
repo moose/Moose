@@ -75,6 +75,12 @@ use Moose::Util::TypeConstraints;
                 $meta->add_required_methods(@_);
 	        };
 	    },	
+        excludes => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::excludes' => sub { 
+                $meta->add_excluded_roles(@_);
+	        };
+	    },	    
         has => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::has' => sub { 
