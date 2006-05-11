@@ -10,6 +10,16 @@ BEGIN {
     use_ok('Moose::Role');               
 }
 
+=pod
+
+NOTE:
+
+Should we be testing here that the has & override
+are injecting their methods correctly? In other 
+words, should 'has_method' return true for them?
+
+=cut
+
 {
     package FooRole;
     

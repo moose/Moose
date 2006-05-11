@@ -131,6 +131,11 @@ sub add_required_methods {
     $self->get_required_methods_map->{$_} = undef foreach @methods;
 }
 
+sub remove_required_methods {
+    my ($self, @methods) = @_;
+    delete $self->get_required_methods_map->{$_} foreach @methods;
+}
+
 sub get_required_method_list {
     my ($self) = @_;
     keys %{$self->get_required_methods_map};
@@ -144,7 +149,7 @@ sub requires_method {
 sub _clean_up_required_methods {
     my $self = shift;
     foreach my $method ($self->get_required_method_list) {
-        delete $self->get_required_methods_map->{$method}
+        $self->remove_required_methods($method)
             if $self->has_method($method);
     } 
 }
@@ -304,6 +309,27 @@ sub apply {
             else {
                 confess "'" . $self->name . "' requires the method '$required_method_name' " . 
                         "to be implemented by '" . $other->name . "'";
+            }
+        }
+        else {
+            # NOTE:
+            # we need to make sure that the method is 
+            # not a method modifier, because those do 
+            # not satisfy the requirements ...
+            my $method = $other->get_method($required_method_name);
+            # check if it is an override or a generated accessor ..
+            (!$method->isa('Moose::Meta::Method::Overriden') &&
+             !$method->isa('Class::MOP::Attribute::Accessor'))
+                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                           "to be implemented by '" . $other->name . "', the method is only a method modifier";
+            # before/after/around methods are a little trickier
+            # since we wrap the original local method (if applicable)
+            # so we need to check if the original wrapped method is 
+            # from the same package, and not a wrap of the super method 
+            if ($method->isa('Class::MOP::Method::Wrapped')) {
+                ($method->get_original_method->package_name eq $other->name)
+                    || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                               "to be implemented by '" . $other->name . "', the method is only a method modifier";            
             }
         }
     }       
@@ -566,6 +592,8 @@ probably not that much really).
 =over 4
 
 =item B<add_required_methods>
+
+=item B<remove_required_methods>
 
 =item B<get_required_method_list>
 
