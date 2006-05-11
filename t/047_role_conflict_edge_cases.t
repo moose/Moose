@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 34;
 use Test::Exception;
 
 BEGIN {
@@ -180,3 +180,50 @@ isa_ok(My::Test::Class3::Base->meta->get_method('foo'), 'Class::MOP::Method');
 
 is(My::Test::Class3::Base->foo, 'My::Test::Class3::Base', '... got the right value from method');
 is(My::Test::Class3->foo, 'Role::Base::foo(My::Test::Class3::Base)', '... got the right value from method');
+
+=pod
+
+Check for repeated inheritence causing 
+a attr conflict (which is not really 
+a conflict)
+
+=cut
+
+{
+    package Role::Base4;
+    use strict;
+    use warnings;
+    use Moose::Role;
+    
+    has 'foo' => (is => 'ro', default => 'Role::Base::foo');
+    
+    package Role::Derived7;
+    use strict;
+    use warnings;
+    use Moose::Role;  
+    
+    with 'Role::Base4';
+    
+    package Role::Derived8;
+    use strict;
+    use warnings;
+    use Moose::Role; 
+
+    with 'Role::Base4';
+    
+    package My::Test::Class4;
+    use strict;
+    use warnings;
+    use Moose;      
+    
+    ::lives_ok {
+        with 'Role::Derived7', 'Role::Derived8';   
+    } '... roles composed okay (no conflicts)';
+}
+
+ok(Role::Base4->meta->has_attribute('foo'), '... have the attribute foo as expected');
+ok(Role::Derived7->meta->has_attribute('foo'), '... have the attribute foo as expected');
+ok(Role::Derived8->meta->has_attribute('foo'), '... have the attribute foo as expected');
+ok(My::Test::Class4->meta->has_attribute('foo'), '... have the attribute foo as expected');
+
+is(My::Test::Class4->new->foo, 'Role::Base::foo', '... got the right value from method');

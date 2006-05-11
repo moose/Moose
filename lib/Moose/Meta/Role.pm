@@ -187,8 +187,16 @@ sub get_method_list {
 # attributes
 
 sub add_attribute {
-    my ($self, $name, %attr_desc) = @_;
-    $self->get_attribute_map->{$name} = \%attr_desc;
+    my $self = shift;
+    my $name = shift;
+    my $attr_desc;
+    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
+        $attr_desc = $_[0];
+    }
+    else {
+        $attr_desc = { @_ };
+    }
+    $self->get_attribute_map->{$name} = $attr_desc;
 }
 
 sub has_attribute {
@@ -279,31 +287,26 @@ sub get_method_modifier_list {
 
 ## applying a role to a class ...
 
-sub apply {
+sub _check_excluded_roles {
     my ($self, $other) = @_;
-    
     if ($other->excludes_role($self->name)) {
         confess "Conflict detected: " . $other->name . " excludes role '" . $self->name . "'";
     }
-    
-#    warn "... Checking " . $self->name . " for excluded methods";
     foreach my $excluded_role_name ($self->get_excluded_roles_list) {
-#        warn "... Checking if '$excluded_role_name' is done by " . $other->name . " for " . $self->name;
         if ($other->does_role($excluded_role_name)) { 
             confess "The class " . $other->name . " does the excluded role '$excluded_role_name'";
         }
         else {
             if ($other->isa('Moose::Meta::Role')) {
-#                warn ">>> The role " . $other->name . " does not do the excluded role '$excluded_role_name', so we are adding it in";
                 $other->add_excluded_roles($excluded_role_name);
             }
-            else {
-#                warn ">>> The class " . $other->name . " does not do the excluded role '$excluded_role_name', so we can just go about our business";                
-            }
+            # else -> ignore it :) 
         }
     }    
-    
-    
+}
+
+sub _check_required_methods {
+    my ($self, $other) = @_;
     # NOTE:
     # we might need to move this down below the 
     # the attributes so that we can require any 
@@ -341,21 +344,19 @@ sub apply {
                                "to be implemented by '" . $other->name . "', the method is only a method modifier";            
             }
         }
-    }       
-    
+    }    
+}
+
+sub _apply_attributes {
+    my ($self, $other) = @_;    
     foreach my $attribute_name ($self->get_attribute_list) {
         # it if it has one already
-        if ($other->has_attribute($attribute_name)) {
+        if ($other->has_attribute($attribute_name) &&
+            # make sure we haven't seen this one already too
+            $other->get_attribute($attribute_name) != $self->get_attribute($attribute_name)) {
             # see if we are being composed  
             # into a role or not
-            if ($other->isa('Moose::Meta::Role')) {
-                
-                # FIXME:
-                # it is possible for these attributes
-                # to actually both be from the same 
-                # origin (some common ancestor role)
-                # so we need to find a way to check this
-                
+            if ($other->isa('Moose::Meta::Role')) {                
                 # all attribute conflicts between roles 
                 # result in an immediate fatal error 
                 confess "Role '" . $self->name . "' has encountered an attribute conflict " . 
@@ -369,14 +370,16 @@ sub apply {
             }
         }
         else {
-            # add it, although it could be overriden 
             $other->add_attribute(
                 $attribute_name,
-                %{$self->get_attribute($attribute_name)}
+                $self->get_attribute($attribute_name)
             );
         }
-    }
-    
+    }    
+}
+
+sub _apply_methods {
+    my ($self, $other) = @_;   
     foreach my $method_name ($self->get_method_list) {
         # it if it has one already
         if ($other->has_method($method_name) &&
@@ -409,8 +412,11 @@ sub apply {
                 $self->get_method($method_name)
             );
         }
-    }    
-    
+    }     
+}
+
+sub _apply_override_method_modifiers {
+    my ($self, $other) = @_;    
     foreach my $method_name ($self->get_method_modifier_list('override')) {
         # it if it has one already then ...
         if ($other->has_method($method_name)) {
@@ -463,27 +469,37 @@ sub apply {
             }
         }
     }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('before')) {
-        $other->add_before_method_modifier(
+}
+
+sub _apply_method_modifiers {
+    my ($self, $modifier_type, $other) = @_;    
+    my $add = "add_${modifier_type}_method_modifier";
+    my $get = "get_${modifier_type}_method_modifiers";    
+    foreach my $method_name ($self->get_method_modifier_list($modifier_type)) {
+        $other->$add(
             $method_name,
             $_
-        ) foreach $self->get_before_method_modifiers($method_name);
+        ) foreach $self->$get($method_name);
     }    
+}
+
+sub _apply_before_method_modifiers { (shift)->_apply_method_modifiers('before' => @_) }
+sub _apply_around_method_modifiers { (shift)->_apply_method_modifiers('around' => @_) }
+sub _apply_after_method_modifiers  { (shift)->_apply_method_modifiers('after'  => @_) }
+
+sub apply {
+    my ($self, $other) = @_;
     
-    foreach my $method_name ($self->get_method_modifier_list('after')) {
-        $other->add_after_method_modifier(
-            $method_name,
-            $_
-        ) foreach $self->get_after_method_modifiers($method_name);
-    }    
-    
-    foreach my $method_name ($self->get_method_modifier_list('around')) {
-        $other->add_around_method_modifier(
-            $method_name,
-            $_
-        ) foreach $self->get_around_method_modifiers($method_name);
-    }    
+    $self->_check_excluded_roles($other);
+    $self->_check_required_methods($other);  
+
+    $self->_apply_attributes($other);         
+    $self->_apply_methods($other);         
+         
+    $self->_apply_override_method_modifiers($other);                  
+    $self->_apply_before_method_modifiers($other);                  
+    $self->_apply_around_method_modifiers($other);                  
+    $self->_apply_after_method_modifiers($other);                              
     
     $other->add_role($self);
 }

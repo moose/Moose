@@ -97,6 +97,22 @@ sub has_method {
     return $self->SUPER::has_method($method_name);    
 }
 
+sub add_attribute {
+    my $self = shift;
+    my $name = shift;
+    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
+        # NOTE:
+        # if it is a HASH ref, we de-ref it.        
+        # this will usually mean that it is 
+        # coming from a role
+        $self->SUPER::add_attribute($name => %{$_[0]});
+    }
+    else {
+        # otherwise we just pass the args
+        $self->SUPER::add_attribute($name => @_);
+    }
+}
+
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
     (!$self->has_method($name))
