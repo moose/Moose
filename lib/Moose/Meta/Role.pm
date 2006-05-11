@@ -7,6 +7,7 @@ use metaclass;
 
 use Carp         'confess';
 use Scalar::Util 'blessed';
+use B            'svref_2object';
 
 use Moose::Meta::Class;
 
@@ -222,7 +223,15 @@ sub _add_method_modifier {
     my $accessor = "get_${modifier_type}_method_modifiers_map";
     $self->$accessor->{$method_name} = [] 
         unless exists $self->$accessor->{$method_name};
-    push @{$self->$accessor->{$method_name}} => $method;
+    my $modifiers = $self->$accessor->{$method_name};
+    # NOTE:
+    # check to see that we aren't adding the 
+    # same code twice. We err in favor of the 
+    # first on here, this may not be as expected
+    foreach my $modifier (@{$modifiers}) {
+        return if $modifier == $method;
+    }
+    push @{$modifiers} => $method;
 }
 
 sub add_override_method_modifier {
@@ -370,7 +379,9 @@ sub apply {
     
     foreach my $method_name ($self->get_method_list) {
         # it if it has one already
-        if ($other->has_method($method_name)) {
+        if ($other->has_method($method_name) &&
+            # and if they are not the same thing ...
+            $other->get_method($method_name) != $self->get_method($method_name)) {
             # see if we are composing into a role
             if ($other->isa('Moose::Meta::Role')) { 
                 # method conflicts between roles result 
@@ -425,26 +436,30 @@ sub apply {
                 # if we are a role, we need to make sure 
                 # we dont have a conflict with the role 
                 # we are composing into
-                if ($other->has_override_method_modifier($method_name)) {
+                if ($other->has_override_method_modifier($method_name) &&
+                    $other->get_override_method_modifier($method_name) != $self->get_override_method_modifier($method_name)) {
                     confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
                             "during composition (Two 'override' methods of the same name encountered). " . 
                             "This is fatal error.";
                 }
-                else {
+                else {   
+                    # if there is no conflict,
+                    # just add it to the role  
                     $other->add_override_method_modifier(
-                        $method_name,
-                        $self->get_override_method_modifier($method_name),
-                        $self->name
+                        $method_name, 
+                        $self->get_override_method_modifier($method_name)
                     );                    
                 }
             }
             else {
+                # if this is not a role, then we need to 
+                # find the original package of the method
+                # so that we can tell the class were to 
+                # find the right super() method
+                my $method = $self->get_override_method_modifier($method_name);
+                my $package = svref_2object($method)->GV->STASH->NAME;
                 # if it is a class, we just add it
-                $other->add_override_method_modifier(
-                    $method_name,
-                    $self->get_override_method_modifier($method_name),
-                    $self->name
-                );
+                $other->add_override_method_modifier($method_name, $method, $package);
             }
         }
     }    
