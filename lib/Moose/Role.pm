@@ -44,7 +44,7 @@ use Moose::Util::TypeConstraints;
     }
  
 	
-    my %exports = (
+    my %exports = (   
         extends => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::extends' => sub { 
