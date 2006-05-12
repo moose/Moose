@@ -131,7 +131,17 @@ use Moose::Util::TypeConstraints;
                     my $inherited_attr = $meta->find_attribute_by_name($1);
                     (defined $inherited_attr)
                         || confess "Could not find an attribute by the name of '$1' to inherit from";
-                    my $new_attr = $inherited_attr->clone_and_inherit_options(%options);
+                    my $new_attr;
+                    if ($inherited_attr->isa('Moose::Meta::Attribute')) {
+                        $new_attr = $inherited_attr->clone_and_inherit_options(%options);
+                    }
+                    else {
+                        # NOTE:
+                        # kind of a kludge to handle Class::MOP::Attributes
+                        $new_attr = Moose::Meta::Attribute::clone_and_inherit_options(
+                            $inherited_attr, %options
+                        );                        
+                    }
                     $meta->add_attribute($new_attr);
                 }
                 else {

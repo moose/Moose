@@ -39,6 +39,7 @@ sub does_role {
     (defined $role_name)
         || confess "You must supply a role name to look for";
     foreach my $class ($self->class_precedence_list) {
+        next unless $class->can('meta');        
         foreach my $role (@{$class->meta->roles}) {
             return 1 if $role->does_role($role_name);
         }
@@ -50,7 +51,8 @@ sub excludes_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
         || confess "You must supply a role name to look for";
-    foreach my $class ($self->class_precedence_list) {        
+    foreach my $class ($self->class_precedence_list) {  
+        next unless $class->can('meta');      
         foreach my $role (@{$class->meta->roles}) {
             return 1 if $role->excludes_role($role_name);
         }
@@ -76,7 +78,7 @@ sub construct_instance {
     # but this is foreign inheritence, so we might
     # have to kludge it in the end. 
     my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
-    foreach my $attr ($class->compute_all_applicable_attributes()) {
+    foreach my $attr ($class->compute_all_applicable_attributes()) { 
         $attr->initialize_instance_slot($meta_instance, $instance, \%params)
     }
     return $instance;
