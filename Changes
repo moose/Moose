@@ -1,12 +1,28 @@
 Revision history for Perl extension Moose
 
-0.06
+0.09_01 Fri. May 12, 2006
+    ++ DEVELOPER RELEASE ++
+      - This release works in combination with 
+        Class::MOP 0.29_01, it is a developer 
+        release because it uses the a new 
+        instance sub-protocol and a fairly
+        complete Role implementation. It has 
+        not yet been optimized, so it slower
+        the the previous CPAN version. This 
+        release also lacks good updated docs, 
+        the official release will have updated docs.
+
     * Moose 
       - refactored the keyword exports
         - 'with' now checks Role validaity and 
           accepts more than one Role at a time
         - 'extends' makes metaclass adjustments as 
            needed to ensure metaclass compatability
+          
+    * Moose::Role
+      - refactored the keyword exports
+        - 'with' now checks Role validaity and 
+          accepts more than one Role at a time
           
     * Moose::Util::TypeConstraints
       - added the 'enum' keyword for simple 
@@ -17,6 +33,13 @@ Revision history for Perl extension Moose
     * Moose::Object
       - more careful checking of params to new()
       
+    * Moose::Meta::Role
+      - much work done on the role composition
+        - many new tests for conflict detection 
+          and composition edge cases
+        - not enough documentation, I suggest 
+          looking at the tests    
+      
     * Moose::Meta::Instance
       - added new Instance metaclass to support 
         the new Class::MOP instance protocol
@@ -24,6 +47,7 @@ Revision history for Perl extension Moose
     * Moose::Meta::Class
       - some small changes to support the new 
         instance protocol
+      - some small additions to support Roles
         
     * Moose::Meta::Attribute
       - some improvements to the accessor generation code
