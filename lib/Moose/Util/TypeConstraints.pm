@@ -7,29 +7,23 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
-{
-    require Sub::Exporter;
-    
-    my @exports = qw[type subtype as where message coerce from via find_type_constraint enum];
-
-    Sub::Exporter->import( 
-        -setup => { 
-            exports => \@exports,
-            groups  => {
-                default => [':all']
-            }
+use Sub::Exporter
+    -setup => { 
+        exports => qw[type subtype as where message coerce from via find_type_constraint enum],
+        groups  => {
+            default => [':all']
         }
-    );
-}
+    }
+);
 
 {
     my %TYPES;
-    sub find_type_constraint { 
+    sub find_type_constraint ($) { 
         return $TYPES{$_[0]}->[1] 
             if exists $TYPES{$_[0]};
         return;
@@ -40,7 +34,7 @@ use Moose::Meta::TypeCoercion;
         Data::Dumper::Dumper(\%TYPES);
     }
     
-    sub _create_type_constraint { 
+    sub _create_type_constraint ($$$;$) { 
         my ($name, $parent, $check, $message) = @_;
         my $pkg_defined_in = scalar(caller(1));
         ($TYPES{$name}->[0] eq $pkg_defined_in)
@@ -57,7 +51,7 @@ use Moose::Meta::TypeCoercion;
         return $constraint;
     }
 
-    sub _install_type_coercions { 
+    sub _install_type_coercions ($$) { 
         my ($type_name, $coercion_map) = @_;
         my $type = find_type_constraint($type_name);
         (!$type->has_coercion)
@@ -69,7 +63,7 @@ use Moose::Meta::TypeCoercion;
         $type->coercion($type_coercion);
     }
     
-    sub create_type_constraint_union {
+    sub create_type_constraint_union (@) {
         my (@type_constraint_names) = @_;
         return Moose::Meta::TypeConstraint->union(
             map { 
@@ -96,7 +90,7 @@ sub type ($$) {
 
 sub subtype ($$;$$) {
 	unshift @_ => undef if scalar @_ <= 2;
-	_create_type_constraint(@_);
+	goto &_create_type_constraint;
 }
 
 sub coerce ($@) {
@@ -110,8 +104,10 @@ sub where   (&) { $_[0] }
 sub via     (&) { $_[0] }
 sub message (&) { $_[0] }
 
-sub enum {
+sub enum ($;@) {
     my ($type_name, @values) = @_;
+    (scalar @values >= 2)
+        || confess "You must have at least two values to enumerate through";
     my $regexp = join '|' => @values;
 	_create_type_constraint(
 	    $type_name,
@@ -164,22 +160,22 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
 
   use Moose::Util::TypeConstraints;
 
-  type Num => where { Scalar::Util::looks_like_number($_) };
+  type 'Num' => where { Scalar::Util::looks_like_number($_) };
   
-  subtype Natural 
-      => as Num 
+  subtype 'Natural' 
+      => as 'Num' 
       => where { $_ > 0 };
   
-  subtype NaturalLessThanTen 
-      => as Natural
+  subtype 'NaturalLessThanTen' 
+      => as 'Natural'
       => where { $_ < 10 }
       => message { "This number ($_) is not less than ten!" };
       
-  coerce Num 
-      => from Str
+  coerce 'Num' 
+      => from 'Str'
         => via { 0+$_ }; 
         
-  enum RGBColors => qw(red green blue);
+  enum 'RGBColors' => qw(red green blue);
 
 =head1 DESCRIPTION
 
@@ -195,6 +191,30 @@ inference is performed, expression are not typed, etc. etc. etc.
 
 This is simply a means of creating small constraint functions which 
 can be used to simplify your own type-checking code.
+
+=head2 Slightly Less Important Caveat
+
+It is almost always a good idea to quote your type and subtype names. 
+This is to prevent perl from trying to create the call as an indirect 
+object call. This issue only seems to come up when you have a subtype
+the same name as a valid class, but when the issue does arise it tends 
+to be quite annoying to debug. 
+
+So for instance, this:
+  
+  subtype DateTime => as Object => where { $_->isa('DateTime') };
+
+will I<Just Work>, while this:
+
+  use DateTime;
+  subtype DateTime => as Object => where { $_->isa('DateTime') };
+
+will fail silently and cause many headaches. The simple way to solve 
+this, as well as future proof your subtypes from classes which have 
+yet to have been created yet, is to simply do this:
+
+  use DateTime;
+  subtype 'DateTime' => as Object => where { $_->isa('DateTime') };
 
 =head2 Default Type Constraints
 
@@ -220,6 +240,9 @@ could probably use some work, but it works for me at the moment.
                   Role
 
 Suggestions for improvement are welcome.
+
+B<NOTE:> The C<Undef> type constraint does not work correctly 
+in every occasion, please use it sparringly.
     
 =head1 FUNCTIONS
 
@@ -270,6 +293,14 @@ constraint meta-object, which will be an instance of
 L<Moose::Meta::TypeConstraint>. 
 
 =item B<enum ($name, @values)>
+
+This will create a basic subtype for a given set of strings. 
+The resulting constraint will be a subtype of C<Str> and 
+will match any of the items in C<@values>. See the L<SYNOPSIS> 
+for a simple example.
+
+B<NOTE:> This is not a true proper enum type, it is simple 
+a convient constraint builder.
 
 =item B<as>
 

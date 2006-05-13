@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.09_01';
+our $VERSION = '0.09_02';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -68,7 +68,7 @@ use Moose::Util::TypeConstraints;
     my %exports = (
         extends => sub {
             my $class = $CALLER;
-            return subname 'Moose::extends' => sub {
+            return subname 'Moose::extends' => sub ($;@) {
                 _load_all_classes(@_);
                 my $meta = $class->meta;
                 foreach my $super (@_) {
@@ -106,7 +106,7 @@ use Moose::Util::TypeConstraints;
         },
         with => sub {
             my $class = $CALLER;
-            return subname 'Moose::with' => sub {
+            return subname 'Moose::with' => sub ($;@) {
                 my (@roles) = @_;
                 _load_all_classes(@roles);
                 ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
@@ -124,7 +124,7 @@ use Moose::Util::TypeConstraints;
         },
         has => sub {
             my $class = $CALLER;
-            return subname 'Moose::has' => sub {
+            return subname 'Moose::has' => sub ($;%) {
                 my ($name, %options) = @_;              
                 my $meta = $class->meta;
                 if ($name =~ /^\+(.*)/) {
@@ -157,7 +157,7 @@ use Moose::Util::TypeConstraints;
         },
         before => sub {
             my $class = $CALLER;
-            return subname 'Moose::before' => sub {
+            return subname 'Moose::before' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_before_method_modifier($_, $code) for @_;
@@ -165,7 +165,7 @@ use Moose::Util::TypeConstraints;
         },
         after => sub {
             my $class = $CALLER;
-            return subname 'Moose::after' => sub {
+            return subname 'Moose::after' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_after_method_modifier($_, $code) for @_;
@@ -173,7 +173,7 @@ use Moose::Util::TypeConstraints;
         },
         around => sub {
             my $class = $CALLER;            
-            return subname 'Moose::around' => sub {
+            return subname 'Moose::around' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_around_method_modifier($_, $code) for @_;
@@ -184,7 +184,7 @@ use Moose::Util::TypeConstraints;
         },
         override => sub {
             my $class = $CALLER;
-            return subname 'Moose::override' => sub {
+            return subname 'Moose::override' => sub ($&) {
                 my ($name, $method) = @_;
                 $class->meta->add_override_method_modifier($name => $method);
             };
@@ -194,7 +194,7 @@ use Moose::Util::TypeConstraints;
         },
         augment => sub {
             my $class = $CALLER;
-            return subname 'Moose::augment' => sub {
+            return subname 'Moose::augment' => sub (@&) {
                 my ($name, $method) = @_;
                 $class->meta->add_augment_method_modifier($name => $method);
             };
@@ -288,10 +288,17 @@ Moose - Moose, it's the new Camel
   
 =head1 CAVEAT
 
-This is an early release of this module, it still needs 
-some fine tuning and B<lots> more documentation. I am adopting 
-the I<release early and release often> approach with this module, 
-so keep an eye on your favorite CPAN mirror!
+Moose is a rapidly maturing module, and is already being used by 
+a number of people. It's test suite is growing larger by the day, 
+and the docs should soon follow. 
+
+This said, Moose is not yet finished, and should still be considered 
+to be evolving. Much of the outer API is stable, but the internals 
+are still subject to change (although not without serious thought 
+given to it).  
+
+For more details, please refer to the L<FUTURE PLANS> section of 
+this document.
 
 =head1 DESCRIPTION
 
@@ -310,33 +317,24 @@ for Perl 5. This means that Moose not only makes building normal
 Perl 5 objects better, but it also provides the power of metaclass 
 programming.
 
-=head2 What does Moose stand for??
+=head2 Can I use this in production? Or is this just an experiment?
 
-Moose doesn't stand for one thing in particular, however, if you 
-want, here are a few of my favorites, feel free to contribute 
-more :)
+Moose is I<based> on the prototypes and experiments I did for the Perl 6
+meta-model, however Moose is B<NOT> an experiment/prototype, it is 
+for B<real>.
 
-=over 4
+I will be deploying Moose into production environments later this 
+year, and I have all intentions of using it as my de-facto class builder
+from now on. 
 
-=item Make Other Object Systems Envious
+=head2 Is Moose just Perl 6 in perl 5?
 
-=item Makes Object Orientation So Easy
+No. While Moose is very much inspired by Perl 6, it is not. Instead, it  
+is an OO system for Perl 5. 
 
-=item Makes Object Orientation Spiffy- Er  (sorry ingy)
-
-=item Most Other Object Systems Emasculate
-
-=item My Overcraft Overfilled (with) Some Eels
-
-=item Moose Often Ovulate Sorta Early
-
-=item Many Overloaded Object Systems Exists 
-
-=item Moose Offers Often Super Extensions
-
-=item Meta Object Orientation Syntax Extensions
-
-=back
+I built Moose because I was tired or writing the same old boring Perl 5 
+OO code, and drooling over Perl 6 OO. So instead of switching to Ruby, 
+I wrote Moose :) 
 
 =head1 BUILDING CLASSES WITH MOOSE
 
@@ -376,10 +374,10 @@ actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
 replace it. This is important to ensure that classes which do not have 
 superclasses properly inherit from L<Moose::Object>.
 
-=item B<with ($role)>
+=item B<with (@role)>
 
-This will apply a given C<$role> to the local class. Role support is 
-currently very experimental, see L<Moose::Role> for more details.
+This will apply a given set of C<@role> to the local class. Role support 
+is currently under heavy development, see L<Moose::Role> for more details.
 
 =item B<has ($name, %options)>
 
@@ -443,6 +441,11 @@ updated value and the attribute meta-object (this is for more advanced fiddling
 and can typically be ignored in most cases). You can B<not> have a trigger on 
 a read-only attribute.
 
+=item I<handles =E<gt> [ @handles ]>
+
+There is experimental support for attribute delegation using the C<handles> 
+option. More docs to come later.
+
 =back
 
 =item B<before $name|@names =E<gt> sub { ... }>
@@ -491,6 +494,53 @@ all the time. This feature may change in the future, so you have been warned.
 This is the C<Scalar::Uti::blessed> function, it is exported here beause I 
 use it all the time. It is highly recommended that this is used instead of 
 C<ref> anywhere you need to test for an object's class name.
+
+=back
+
+=head1 FUTURE PLANS
+
+Here is just a sampling of the plans we have in store for Moose:
+
+=over 4
+
+=item *
+
+Compiling Moose classes/roles into C<.pmc> files for faster loading and execution.
+
+=item * 
+
+Supporting sealed and finalized classes in Moose. This will allow greater control 
+of the extensions of frameworks and such.
+
+=back
+
+=head1 MISC.
+
+=head2 What does Moose stand for??
+
+Moose doesn't stand for one thing in particular, however, if you 
+want, here are a few of my favorites, feel free to contribute 
+more :)
+
+=over 4
+
+=item Make Other Object Systems Envious
+
+=item Makes Object Orientation So Easy
+
+=item Makes Object Orientation Spiffy- Er  (sorry ingy)
+
+=item Most Other Object Systems Emasculate
+
+=item My Overcraft Overfilled (with) Some Eels
+
+=item Moose Often Ovulate Sorta Early
+
+=item Many Overloaded Object Systems Exists 
+
+=item Moose Offers Often Super Extensions
+
+=item Meta Object Orientation Syntax Extensions
 
 =back
 

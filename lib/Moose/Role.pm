@@ -10,7 +10,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
@@ -53,7 +53,7 @@ use Moose::Util::TypeConstraints;
 	    },
 	    with => sub {
 	        my $meta = _find_meta();
-	        return subname 'Moose::Role::with' => sub { 
+	        return subname 'Moose::Role::with' => sub ($;@) { 
                 my (@roles) = @_;
                 Moose::_load_all_classes(@roles);
                 ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
@@ -71,40 +71,40 @@ use Moose::Util::TypeConstraints;
 	    },	
         requires => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::requires' => sub { 
+            return subname 'Moose::Role::requires' => sub ($;@) { 
                 $meta->add_required_methods(@_);
 	        };
 	    },	
         excludes => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::excludes' => sub { 
+            return subname 'Moose::Role::excludes' => sub ($;@) { 
                 $meta->add_excluded_roles(@_);
 	        };
 	    },	    
         has => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::has' => sub { 
+            return subname 'Moose::Role::has' => sub ($;%) { 
 		        my ($name, %options) = @_;
 		        $meta->add_attribute($name, %options) 
 	        };
 	    },
         before => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::before' => sub { 
+            return subname 'Moose::Role::before' => sub (@&) { 
 		        my $code = pop @_;
 		        $meta->add_before_method_modifier($_, $code) for @_;
 	        };
 	    },
         after => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::after' => sub { 
+            return subname 'Moose::Role::after' => sub (@&) { 
 		        my $code = pop @_;
 		        $meta->add_after_method_modifier($_, $code) for @_;
 	        };
 	    },
         around => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::around' => sub { 
+            return subname 'Moose::Role::around' => sub (@&) { 
 		        my $code = pop @_;
 		        $meta->add_around_method_modifier($_, $code) for @_;
 	        };
@@ -115,7 +115,7 @@ use Moose::Util::TypeConstraints;
         },
         override => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::override' => sub {
+            return subname 'Moose::Role::override' => sub ($&) {
                 my ($name, $code) = @_;
 		        $meta->add_override_method_modifier($name, $code);
 	        };
@@ -198,29 +198,34 @@ Moose::Role - The Moose Role
 
 =head1 DESCRIPTION
 
-This is currently a very early release of Perl 6 style Roles for 
-Moose, it is still incomplete, but getting much closer. If you are 
-interested in helping move this feature along, please come to 
-#moose on irc.perl.org and we can talk. 
+Role support in Moose is coming along quite well. It's best documentation 
+is still the the test suite, but it is fairly safe to assume Perl 6 style 
+behavior, and then either refer to the test suite, or ask questions on 
+#moose if something doesn't quite do what you expect. More complete 
+documentation is planned and will be included with the next official 
+(non-developer) release.
 
-=head1 CAVEATS
+=head1 EXPORTED FUNCTIONS
 
-Currently, the role support has a few of caveats. They are as follows:
+Currently Moose::Role supports all of the functions that L<Moose> exports, 
+but differs slightly in how some items are handled (see L<CAVEATS> below 
+for details). 
+
+Moose::Role also offers two role specific keyword exports:
 
 =over 4
 
-=item *
+=item B<requires (@method_names)>
 
-At this time classes I<cannot> correctly consume more than one role. The 
-role composition process, and it's conflict detection has not been added
-yet. While this should be considered a major feature, it can easily be 
-worked around, and in many cases, is not needed at all.
- 
-A class can actually consume multiple roles, they are just applied one 
-after another in the order you ask for them. This is incorrect behavior, 
-the roles should be merged first, and conflicts determined, etc. However, 
-if your roles do not have any conflicts, then things will work just 
-fine. This actually tends to be quite sufficient for basic roles.
+=item B<excludes (@role_names)>
+
+=back
+
+=head1 CAVEATS
+
+The role support now has only a few caveats. They are as follows:
+
+=over 4
 
 =item *
 
@@ -228,6 +233,29 @@ Roles cannot use the C<extends> keyword, it will throw an exception for now.
 The same is true of the C<augment> and C<inner> keywords (not sure those 
 really make sense for roles). All other Moose keywords will be I<deferred> 
 so that they can be applied to the consuming class. 
+
+=item * 
+
+Role composition does it's best to B<not> be order sensitive when it comes
+to conflict resolution and requirements detection. However, it is order 
+sensitive when it comes to method modifiers. All before/around/after modifiers
+are included whenever a role is composed into a class, and then are applied 
+in the order the roles are used. This too means that there is no conflict for 
+before/around/after modifiers as well. 
+
+In most cases, this will be a non issue, however it is something to keep in 
+mind when using method modifiers in a role. You should never assume any 
+ordering.
+
+=item *
+
+The C<requires> keyword currently only works with actual methods. A method 
+modifier (before/around/after and override) will not count as a fufillment 
+of the requirement, and neither will an autogenerated accessor for an attribute.
+
+It is likely that the attribute accessors will eventually be allowed to fufill 
+those requirements, either that or we will introduce a C<requires_attr> keyword
+of some kind instead. This descision has not yet been finalized.
 
 =back
 

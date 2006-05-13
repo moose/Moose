@@ -1,5 +1,15 @@
 Revision history for Perl extension Moose
 
+0.09_02
+    * Moose
+      - added prototypes to the exported subs
+      
+    * Moose::Role
+      - added prototypes to the exported subs      
+      
+    * Moose::Util::TypeConstraints
+      - cleaned up prototypes for the subs      
+
 0.09_01 Fri. May 12, 2006
     ++ DEVELOPER RELEASE ++
       - This release works in combination with 

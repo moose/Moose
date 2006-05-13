@@ -12,7 +12,7 @@ use Carp 'confess';
 our $VERSION = '0.06';
 
 sub new {
-    my $class  = shift;
+    my $class = shift;
     my %params;
     if (scalar @_ == 1) {
         (ref($_[0]) eq 'HASH')
