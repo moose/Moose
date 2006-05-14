@@ -256,26 +256,10 @@ This will test if this class C<excludes> a given C<$role_name>. It will
 not only check it's local roles, but ask them as well in order to 
 cascade down the role hierarchy.
 
-=item B<add_attribute $attr_name, %params>
+=item B<add_attribute ($attr_name, %params|$params)>
 
-This method does the same thing as L<Class::MOP::Class/add_attribute>, but adds
-suport for delegation.
-
-=back
-
-=head1 INTERNAL METHODS
-
-=over 4
-
-=item compute_delegation
-
-=item generate_delegation_list
-
-=item generate_delgate_method
-
-=item get_delegatable_methods
-
-=item filter_delegations
+This method does the same thing as L<Class::MOP::Class::add_attribute>, but adds
+support for taking the C<$params> as a HASH ref.
 
 =back
 

@@ -433,6 +433,11 @@ reference. If an attribute is a weakened reference, it can B<not> also be coerce
 This will tell the class to not create this slot until absolutely nessecary. 
 If an attribute is marked as lazy it B<must> have a default supplied.
 
+=item I<auto_deref =E<gt> (1|0)>
+
+This tells the accessor whether to automatically de-reference the value returned. 
+This is only legal if your C<isa> option is either an C<ArrayRef> or C<HashRef>.
+
 =item I<trigger =E<gt> $code>
 
 The trigger option is a CODE reference which will be called after the value of 
@@ -532,11 +537,7 @@ more :)
 
 =item Most Other Object Systems Emasculate
 
-=item My Overcraft Overfilled (with) Some Eels
-
 =item Moose Often Ovulate Sorta Early
-
-=item Many Overloaded Object Systems Exists 
 
 =item Moose Offers Often Super Extensions
 

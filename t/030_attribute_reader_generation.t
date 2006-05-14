@@ -30,7 +30,7 @@ BEGIN {
             default => sub { 10 }
         );
     };
-    ::ok(!$@, '... created the lazy reader method okay');    
+    ::ok(!$@, '... created the lazy reader method okay') or warn $@;    
 }
 
 {

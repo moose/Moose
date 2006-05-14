@@ -20,7 +20,10 @@ Moose::Meta::Instance - The Moose Instance metaclass
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+This is a stub mostly, but I know I will want to use it later on.
+
+See the L<Class::MOP::Instance> docs for details on the instance 
+protocol.
 
 =head1 BUGS
 

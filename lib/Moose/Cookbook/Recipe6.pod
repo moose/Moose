@@ -6,7 +6,7 @@
 Moose::Cookbook::Recipe6 - The Moose::Role example
 
 =head1 SYNOPSIS
-  
+
   package Eq;
   use strict;
   use warnings;
@@ -16,10 +16,10 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
   
   sub not_equal_to { 
       my ($self, $other) = @_;
-      !$self->equal_to($other);
+      not $self->equal_to($other);
   }
   
-  package Ord;
+  package Comparable;
   use strict;
   use warnings;
   use Moose::Role;
@@ -51,20 +51,32 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
   sub less_than_or_equal_to {
       my ($self, $other) = @_;
       $self->less_than($other) || $self->equal_to($other);
-  }    
+  }  
+  
+  package Printable;
+  use strict;
+  use warnings;
+  use Moose::Role;
+  
+  requires 'to_string';    
   
   package US::Currency;
   use strict;
   use warnings;
   use Moose;
   
-  with 'Ord';
+  with 'Comparable', 'Printable';
   
-  has 'amount' => (is => 'rw', isa => 'Int', default => 0);
+  has 'amount' => (is => 'rw', isa => 'Num', default => 0);
   
   sub compare {
       my ($self, $other) = @_;
       $self->amount <=> $other->amount;
+  }
+  
+  sub to_string {
+      my $self = shift;
+      sprintf '$%0.2f USD' => $self->amount
   }
   
 =head1 DESCRIPTION

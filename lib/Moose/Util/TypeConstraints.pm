@@ -12,14 +12,17 @@ our $VERSION = '0.07';
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
-use Sub::Exporter
-    -setup => { 
-        exports => qw[type subtype as where message coerce from via find_type_constraint enum],
-        groups  => {
-            default => [':all']
-        }
+use Sub::Exporter -setup => { 
+    exports => [qw/
+        type subtype as where message 
+        coerce from via 
+        enum
+        find_type_constraint
+    /],
+    groups  => {
+        default => [':all']
     }
-);
+};
 
 {
     my %TYPES;

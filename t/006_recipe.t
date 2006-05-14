@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 52;
+use Test::More tests => 62;
 use Test::Exception;
 
 BEGIN {
@@ -22,10 +22,10 @@ BEGIN {
     
     sub not_equal_to { 
         my ($self, $other) = @_;
-        !$self->equal_to($other);
+        not $self->equal_to($other);
     }
     
-    package Ord;
+    package Comparable;
     use strict;
     use warnings;
     use Moose::Role;
@@ -57,7 +57,14 @@ BEGIN {
     sub less_than_or_equal_to {
         my ($self, $other) = @_;
         $self->less_than($other) || $self->equal_to($other);
-    }    
+    }  
+    
+    package Printable;
+    use strict;
+    use warnings;
+    use Moose::Role;
+    
+    requires 'to_string';    
 }
 
 ## Classes
@@ -68,7 +75,7 @@ BEGIN {
     use warnings;
     use Moose;
     
-    with 'Ord';
+    with 'Comparable', 'Printable';
     
     has 'amount' => (is => 'rw', isa => 'Num', default => 0);
     
@@ -76,10 +83,16 @@ BEGIN {
         my ($self, $other) = @_;
         $self->amount <=> $other->amount;
     }
+    
+    sub to_string {
+        my $self = shift;
+        sprintf '$%0.2f USD' => $self->amount
+    }
 }
 
-ok(US::Currency->does('Ord'), '... US::Currency does Ord');
+ok(US::Currency->does('Comparable'), '... US::Currency does Comparable');
 ok(US::Currency->does('Eq'), '... US::Currency does Eq');
+ok(US::Currency->does('Printable'), '... US::Currency does Printable');
 
 my $hundred = US::Currency->new(amount => 100.00);
 isa_ok($hundred, 'US::Currency');
@@ -87,14 +100,21 @@ isa_ok($hundred, 'US::Currency');
 can_ok($hundred, 'amount');
 is($hundred->amount, 100, '... got the right amount');
 
-ok($hundred->does('Ord'), '... US::Currency does Ord');
+can_ok($hundred, 'to_string');
+is($hundred->to_string, '$100.00 USD', '... got the right stringified value');
+
+ok($hundred->does('Comparable'), '... US::Currency does Comparable');
 ok($hundred->does('Eq'), '... US::Currency does Eq');
+ok($hundred->does('Printable'), '... US::Currency does Printable');
 
 my $fifty = US::Currency->new(amount => 50.00);
 isa_ok($fifty, 'US::Currency');
 
 can_ok($fifty, 'amount');
 is($fifty->amount, 50, '... got the right amount');
+
+can_ok($fifty, 'to_string');
+is($fifty->to_string, '$50.00 USD', '... got the right stringified value');
 
 ok($hundred->greater_than($fifty),             '... 100 gt 50');
 ok($hundred->greater_than_or_equal_to($fifty), '... 100 ge 50');
@@ -127,37 +147,46 @@ isa_ok($eq_meta, 'Moose::Meta::Role');
 ok($eq_meta->has_method('not_equal_to'), '... Eq has_method not_equal_to');
 ok($eq_meta->requires_method('equal_to'), '... Eq requires_method not_equal_to');
 
-# Ord
+# Comparable
 
-my $ord_meta = Ord->meta;
-isa_ok($ord_meta, 'Moose::Meta::Role');
+my $comparable_meta = Comparable->meta;
+isa_ok($comparable_meta, 'Moose::Meta::Role');
 
-ok($ord_meta->does_role('Eq'), '... Ord does Eq');
+ok($comparable_meta->does_role('Eq'), '... Comparable does Eq');
 
 foreach my $method_name (qw(
                         equal_to not_equal_to
                         greater_than greater_than_or_equal_to
                         less_than less_than_or_equal_to                            
                         )) {
-    ok($ord_meta->has_method($method_name), '... Ord has_method ' . $method_name);
+    ok($comparable_meta->has_method($method_name), '... Comparable has_method ' . $method_name);
 }
 
-ok($ord_meta->requires_method('compare'), '... Ord requires_method compare');
+ok($comparable_meta->requires_method('compare'), '... Comparable requires_method compare');
+
+# Printable
+
+my $printable_meta = Printable->meta;
+isa_ok($printable_meta, 'Moose::Meta::Role');
+
+ok($printable_meta->requires_method('to_string'), '... Printable requires_method to_string');
 
 # US::Currency
 
 my $currency_meta = US::Currency->meta;
 isa_ok($currency_meta, 'Moose::Meta::Class');
 
-ok($currency_meta->does_role('Ord'), '... US::Currency does Ord');
+ok($currency_meta->does_role('Comparable'), '... US::Currency does Comparable');
 ok($currency_meta->does_role('Eq'), '... US::Currency does Eq');
+ok($currency_meta->does_role('Printable'), '... US::Currency does Printable');
 
 foreach my $method_name (qw(
                         amount
                         equal_to not_equal_to
                         compare
                         greater_than greater_than_or_equal_to
-                        less_than less_than_or_equal_to                            
+                        less_than less_than_or_equal_to     
+                        to_string                       
                         )) {
     ok($currency_meta->has_method($method_name), '... US::Currency has_method ' . $method_name);
 }

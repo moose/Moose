@@ -217,7 +217,14 @@ Moose::Role also offers two role specific keyword exports:
 
 =item B<requires (@method_names)>
 
+Roles can require that certain methods are implemented by any class which 
+C<does> the role. 
+
 =item B<excludes (@role_names)>
+
+Roles can C<exclude> other roles, in effect saying "I can never be combined
+with these C<@role_names>". This is a feature which should not be used 
+lightly. 
 
 =back
 

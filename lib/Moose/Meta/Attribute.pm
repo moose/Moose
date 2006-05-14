@@ -222,6 +222,8 @@ sub initialize_instance_slot {
         if ref $val && $self->is_weak_ref;
 }
 
+## Accessor inline subroutines
+
 sub _inline_check_constraint {
 	my ($self, $value) = @_;
 	return '' unless $self->has_type_constraint;
@@ -234,6 +236,26 @@ defined($attr->type_constraint->check(%s))
   if defined(%s);
 EOF
 }
+
+sub _inline_check_coercion {
+    my $self = shift;
+	return '' unless $self->should_coerce;
+    return 'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
+}
+
+sub _inline_check_required {
+    my $self = shift;
+	return '' unless $self->is_required;
+    return 'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";'
+}
+
+sub _inline_check_lazy {
+    my $self = shift;
+	return '' unless $self->is_lazy;
+    return '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
+         . 'unless exists $_[0]->{$attr_name};';
+}
+
 
 sub _inline_store {
 	my ($self, $instance, $value) = @_;
@@ -291,24 +313,16 @@ sub generate_accessor_method {
 	my $inv = '$_[0]';
     my $code = 'sub { '
     . 'if (scalar(@_) == 2) {'
-        . ($attr->is_required ? 
-            'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
-            : '')
-        . ($attr->should_coerce ? 
-            'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
-            : '')
+        . $attr->_inline_check_required
+        . $attr->_inline_check_coercion
         . $attr->_inline_check_constraint($value_name)
 		. $attr->_inline_store($inv, $value_name)
 		. $attr->_inline_trigger($inv, $value_name)
     . ' }'
-    . ($attr->is_lazy ? 
-            '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
-            . 'unless exists $_[0]->{$attr_name};'
-            : '')    
+    . $attr->_inline_check_lazy
     . 'return ' . $attr->_inline_auto_deref($attr->_inline_get($inv))
     . ' }';
     my $sub = eval $code;
-    warn "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;    
 }
@@ -318,12 +332,8 @@ sub generate_writer_method {
     my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
 	my $inv = '$_[0]';
     my $code = 'sub { '
-    . ($attr->is_required ? 
-        'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";' 
-        : '')
-    . ($attr->should_coerce ? 
-        'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
-        : '')
+    . $attr->_inline_check_required
+    . $attr->_inline_check_coercion
 	. $attr->_inline_check_constraint($value_name)
 	. $attr->_inline_store($inv, $value_name)
 	. $attr->_inline_trigger($inv, $value_name)
@@ -334,15 +344,12 @@ sub generate_writer_method {
 }
 
 sub generate_reader_method {
-    my $self = shift;
-    my $attr_name = $self->slots;
+    my $attr = shift;
+    my $attr_name = $attr->slots;
     my $code = 'sub {'
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
-    . ($self->is_lazy ? 
-            '$_[0]->{$attr_name} = ($self->has_default ? $self->default($_[0]) : undef)'
-            . 'unless exists $_[0]->{$attr_name};'
-            : '')
-    . 'return ' . $self->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
+    . $attr->_inline_check_lazy
+    . 'return ' . $attr->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
     . '}';
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
@@ -488,8 +495,6 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<new>
 
-=item B<clone_and_inherit_options>
-
 =item B<initialize_instance_slot>
 
 =item B<generate_accessor_method>
@@ -508,6 +513,12 @@ Moose attributes support type-contstraint checking, weak reference
 creation and type coercion.  
 
 =over 4
+
+=item B<clone_and_inherit_options>
+
+This is to support the C<has '+foo'> feature, it clones an attribute 
+from a superclass and allows a very specific set of changes to be made 
+to the attribute.
 
 =item B<has_type_constraint>
 
