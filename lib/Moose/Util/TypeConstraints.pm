@@ -198,7 +198,7 @@ can be used to simplify your own type-checking code.
 =head2 Slightly Less Important Caveat
 
 It is almost always a good idea to quote your type and subtype names. 
-This is to prevent perl from trying to create the call as an indirect 
+This is to prevent perl from trying to execute the call as an indirect 
 object call. This issue only seems to come up when you have a subtype
 the same name as a valid class, but when the issue does arise it tends 
 to be quite annoying to debug. 

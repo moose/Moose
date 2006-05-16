@@ -263,10 +263,12 @@ Moose - Moose, it's the new Camel
 =head1 SYNOPSIS
 
   package Point;
+  use strict;
+  use warnings;
   use Moose;
   	
-  has 'x' => (isa => 'Int', is => 'rw');
-  has 'y' => (isa => 'Int', is => 'rw');
+  has 'x' => (is => 'rw', isa => 'Int');
+  has 'y' => (is => 'rw', isa => 'Int');
   
   sub clear {
       my $self = shift;
@@ -275,15 +277,17 @@ Moose - Moose, it's the new Camel
   }
   
   package Point3D;
+  use strict;
+  use warnings;  
   use Moose;
   
   extends 'Point';
   
-  has 'z' => (isa => 'Int');
+  has 'z' => (is => 'rw', isa => 'Int');
   
   after 'clear' => sub {
       my $self = shift;
-      $self->{z} = 0;
+      $self->z(0);
   };
   
 =head1 CAVEAT
@@ -321,26 +325,22 @@ programming.
 
 Moose is I<based> on the prototypes and experiments I did for the Perl 6
 meta-model, however Moose is B<NOT> an experiment/prototype, it is 
-for B<real>.
+for B<real>. I will be deploying Moose into production environments later 
+this year, and I have all intentions of using it as my de-facto class 
+builderfrom now on. 
 
-I will be deploying Moose into production environments later this 
-year, and I have all intentions of using it as my de-facto class builder
-from now on. 
-
-=head2 Is Moose just Perl 6 in perl 5?
+=head2 Is Moose just Perl 6 in Perl 5?
 
 No. While Moose is very much inspired by Perl 6, it is not. Instead, it  
-is an OO system for Perl 5. 
-
-I built Moose because I was tired or writing the same old boring Perl 5 
-OO code, and drooling over Perl 6 OO. So instead of switching to Ruby, 
-I wrote Moose :) 
+is an OO system for Perl 5. I built Moose because I was tired or writing 
+the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So 
+instead of switching to Ruby, I wrote Moose :) 
 
 =head1 BUILDING CLASSES WITH MOOSE
 
 Moose makes every attempt to provide as much convience during class 
 construction/definition, but still stay out of your way if you want 
-it to. Here are some of the features Moose provides:
+it to. Here are a few items to note when building classes with Moose.
 
 Unless specified with C<extends>, any class which uses Moose will 
 inherit from L<Moose::Object>.
@@ -350,8 +350,6 @@ are defined with C<has>. And assuming that you call C<new> which is
 inherited from L<Moose::Object>, then this includes properly initializing 
 all instance slots, setting defaults where approprtiate and performing any 
 type constraint checking or coercion. 
-
-For more details, see the ever expanding L<Moose::Cookbook>.
 
 =head1 EXPORTED FUNCTIONS
 
@@ -374,17 +372,17 @@ actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
 replace it. This is important to ensure that classes which do not have 
 superclasses properly inherit from L<Moose::Object>.
 
-=item B<with (@role)>
+=item B<with (@roles)>
 
-This will apply a given set of C<@role> to the local class. Role support 
+This will apply a given set of C<@roles> to the local class. Role support 
 is currently under heavy development, see L<Moose::Role> for more details.
 
 =item B<has ($name, %options)>
 
 This will install an attribute of a given C<$name> into the current class. 
-The list of C<%options> are the same as those provided by both 
-L<Class::MOP::Attribute> and L<Moose::Meta::Attribute>, in addition to a 
-few convience ones provided by Moose which are listed below:
+The list of C<%options> are the same as those provided by 
+L<Class::MOP::Attribute>, in addition to the list below which are provided 
+by Moose (L<Moose::Meta::Attribute> to be more specific):
 
 =over 4
 
@@ -395,7 +393,7 @@ only). These will create either a read/write accessor or a read-only
 accessor respectively, using the same name as the C<$name> of the attribute.
 
 If you need more control over how your accessors are named, you can use the 
-I<reader>, I<writer> and I<accessor> options inherited from L<Moose::Meta::Attribute>.
+I<reader>, I<writer> and I<accessor> options inherited from L<Class::MOP::Attribute>.
 
 =item I<isa =E<gt> $type_name>
 
