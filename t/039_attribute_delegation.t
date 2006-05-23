@@ -16,15 +16,11 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
 
     has 'bar' => (is => 'rw', default => 10);    
 
     package Bar;
-    use strict;
-    use warnings;
     use Moose; 
     
     has 'foo' => (
@@ -65,16 +61,12 @@ is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
 
 {
     package Engine;
-    use strict;
-    use warnings;
     use Moose;
 
     sub go   { 'Engine::go'   }
     sub stop { 'Engine::stop' }    
 
     package Car;
-    use strict;
-    use warnings;
     use Moose; 
     
     has 'engine' => (
@@ -104,8 +96,6 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
 {
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
 
     sub foo { 'Baz::foo' }
@@ -113,8 +103,6 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     sub boo { 'Baz::boo' }            
 
     package Baz::Proxy1;
-    use strict;
-    use warnings;
     use Moose; 
     
     has 'baz' => (
@@ -125,8 +113,6 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     );
     
     package Baz::Proxy2;
-    use strict;
-    use warnings;
     use Moose; 
     
     has 'baz' => (
@@ -137,8 +123,6 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     );    
     
     package Baz::Proxy3;
-    use strict;
-    use warnings;
     use Moose; 
     
     has 'baz' => (

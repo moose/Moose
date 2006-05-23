@@ -22,9 +22,6 @@ words, should 'has_method' return true for them?
 
 {
     package FooRole;
-    
-    use strict;
-    use warnings;
     use Moose::Role;
     
     our $VERSION = '0.01';

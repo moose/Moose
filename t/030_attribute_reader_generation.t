@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     eval {

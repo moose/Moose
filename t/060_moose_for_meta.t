@@ -19,8 +19,6 @@ Moose meta-level classes using Moose itself.
 
 {
     package My::Meta::Class;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Moose::Meta::Class';
@@ -46,8 +44,6 @@ is_deeply(
 
 {
     package My::Meta::Attribute::DefaultReadOnly;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Moose::Meta::Attribute';

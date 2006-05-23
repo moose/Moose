@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;
     
@@ -36,8 +34,6 @@ BEGIN {
     has 'other_fail';    
     
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Foo';

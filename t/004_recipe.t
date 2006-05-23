@@ -20,8 +20,6 @@ BEGIN {
 
 {
     package Address;
-    use strict;
-    use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;
     
@@ -48,8 +46,6 @@ BEGIN {
     has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
     
     package Company;
-    use strict;
-    use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;    
     
@@ -84,8 +80,6 @@ BEGIN {
     };
     
     package Person;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
@@ -101,8 +95,6 @@ BEGIN {
     }
       
     package Employee;
-    use strict;
-    use warnings;
     use Moose;  
     
     extends 'Person';

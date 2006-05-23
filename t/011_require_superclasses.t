@@ -13,8 +13,6 @@ BEGIN {
 
 {
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     eval { extends 'Foo'; };
@@ -23,8 +21,6 @@ BEGIN {
 
 {
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
     
     eval { extends 'Bar'; };
@@ -33,8 +29,6 @@ BEGIN {
 
 {
     package Foo::Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     eval { extends 'Foo', 'Bar'; };
@@ -43,8 +37,6 @@ BEGIN {
 
 {
     package Bling;
-    use strict;
-    use warnings;
     use Moose;
     
     eval { extends 'No::Class'; };

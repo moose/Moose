@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package HTTPHeader;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'array' => (is => 'ro');

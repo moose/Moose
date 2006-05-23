@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     sub foo { 'Foo::foo' }
@@ -21,8 +19,6 @@ BEGIN {
     sub baz { 'Foo::baz' }
     
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Foo';
@@ -30,8 +26,6 @@ BEGIN {
     override bar => sub { 'Bar::bar -> ' . super() };   
     
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Bar';
@@ -68,15 +62,11 @@ is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
 
 {
     package Bling;
-    use strict;
-    use warnings;
     use Moose;
     
     sub bling { 'Bling::bling' }
     
     package Bling::Bling;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Bling';

@@ -12,8 +12,6 @@ BEGIN {
 
 {    
     package Foo::Meta::Attribute;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Moose::Meta::Attribute';
@@ -26,8 +24,6 @@ BEGIN {
     };
 
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'foo' => (metaclass => 'Foo::Meta::Attribute');
@@ -53,15 +49,11 @@ is($foo_attr_type_constraint->parent->name, 'Object', '... got the right type co
 
 {
     package Bar::Meta::Attribute;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::MOP::Attribute';   
     
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {

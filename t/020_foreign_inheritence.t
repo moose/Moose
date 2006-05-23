@@ -22,9 +22,7 @@ BEGIN {
 	
 	sub no_moose { $_[0]->{no_moose} }
 
-	package Foo::Moose;
-	use strict;
-	use warnings;	
+	package Foo::Moose;	
 	use Moose;
 	
 	extends 'Elk';

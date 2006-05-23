@@ -19,8 +19,6 @@ Mutually recursive roles.
 
 {
     package Role::Foo;
-    use strict;
-    use warnings;
     use Moose::Role;
 
     requires 'foo';
@@ -28,8 +26,6 @@ Mutually recursive roles.
     sub bar { 'Role::Foo::bar' }
     
     package Role::Bar;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     requires 'bar';
@@ -39,8 +35,6 @@ Mutually recursive roles.
 
 {
     package My::Test1;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -48,8 +42,6 @@ Mutually recursive roles.
     } '... our mutually recursive roles combine okay';
     
     package My::Test2;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -97,15 +89,11 @@ Role method conflicts
 
 {
     package Role::Bling;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     sub bling { 'Role::Bling::bling' }
     
     package Role::Bling::Bling;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     sub bling { 'Role::Bling::Bling::bling' }    
@@ -113,8 +101,6 @@ Role method conflicts
 
 {
     package My::Test3;
-    use strict;
-    use warnings;
     use Moose;
     
     ::throws_ok {
@@ -122,8 +108,6 @@ Role method conflicts
     } qr/requires the method \'bling\' to be implemented/, '... role methods conflicted and method was required';
     
     package My::Test4;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -132,8 +116,6 @@ Role method conflicts
     } '... role methods didnt conflict when manually combined';    
     
     package My::Test5;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -142,8 +124,6 @@ Role method conflicts
     } '... role methods didnt conflict when manually combined (in opposite order)';    
     
     package My::Test6;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -175,8 +155,6 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
 
 {
     package Role::Bling::Bling::Bling;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     with 'Role::Bling::Bling';
@@ -199,15 +177,11 @@ Role attribute conflicts
 
 {
     package Role::Boo;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     has 'ghost' => (is => 'ro', default => 'Role::Boo::ghost');
     
     package Role::Boo::Hoo;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     has 'ghost' => (is => 'ro', default => 'Role::Boo::Hoo::ghost');
@@ -215,8 +189,6 @@ Role attribute conflicts
 
 {
     package My::Test7;
-    use strict;
-    use warnings;
     use Moose;
     
     ::throws_ok {
@@ -225,8 +197,6 @@ Role attribute conflicts
       '... role attrs conflicted and method was required';
 
     package My::Test8;
-    use strict;
-    use warnings;
     use Moose;
 
     ::lives_ok {
@@ -235,8 +205,6 @@ Role attribute conflicts
     } '... role attrs didnt conflict when manually combined';
     
     package My::Test9;
-    use strict;
-    use warnings;
     use Moose;
 
     ::lives_ok {
@@ -245,8 +213,6 @@ Role attribute conflicts
     } '... role attrs didnt conflict when manually combined';    
 
     package My::Test10;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'ghost' => (is => 'ro', default => 'My::Test10::ghost');    
@@ -288,8 +254,6 @@ Role override method conflicts
 
 {
     package Role::Plot;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     override 'twist' => sub {
@@ -297,8 +261,6 @@ Role override method conflicts
     };
     
     package Role::Truth;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     override 'twist' => sub {
@@ -308,15 +270,11 @@ Role override method conflicts
 
 {
     package My::Test::Base;
-    use strict;
-    use warnings;
     use Moose;
     
     sub twist { 'My::Test::Base::twist' }
         
     package My::Test11;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'My::Test::Base';
@@ -326,8 +284,6 @@ Role override method conflicts
     } '... composed the role with override okay';
        
     package My::Test12;
-    use strict;
-    use warnings;
     use Moose;
 
     extends 'My::Test::Base';
@@ -337,8 +293,6 @@ Role override method conflicts
     } '... composed the role with override okay';
               
     package My::Test13;
-    use strict;
-    use warnings;
     use Moose;
 
     ::dies_ok {
@@ -346,8 +300,6 @@ Role override method conflicts
     } '... cannot compose it because we have no superclass';
     
     package My::Test14;
-    use strict;
-    use warnings;
     use Moose;
 
     extends 'My::Test::Base';
@@ -378,8 +330,6 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
 
 {
     package Role::Reality;
-    use strict;
-    use warnings;
     use Moose::Role;
 
     ::throws_ok {    

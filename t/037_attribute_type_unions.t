@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'bar' => (is => 'rw', isa => 'ArrayRef | HashRef');
@@ -58,8 +56,6 @@ dies_ok {
 
 {
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'baz' => (is => 'rw', isa => 'Str | CodeRef');

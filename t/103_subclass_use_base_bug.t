@@ -18,8 +18,6 @@ a metaclass initialized for it correctly.
 
 {
     package Foo; 
-    use strict;
-    use warnings;
     use Moose; 
 
     package Bar; 

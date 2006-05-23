@@ -27,21 +27,15 @@ trait InorganicMolecule extends Molecule end
 
 {
     package Molecule;
-    use strict;
-    use warnings;
     use Moose::Role;
 
     package Molecule::Organic;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     with 'Molecule';
     excludes 'Molecule::Inorganic';
     
     package Molecule::Inorganic;
-    use strict;
-    use warnings;
     use Moose::Role;     
     
     with 'Molecule';       
@@ -62,8 +56,6 @@ the roles into the same class
 
 {
     package My::Test1;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -71,8 +63,6 @@ the roles into the same class
     } '... adding the role (w/ excluded roles) okay';
 
     package My::Test2;
-    use strict;
-    use warnings;
     use Moose;
     
     ::throws_ok {
@@ -81,8 +71,6 @@ the roles into the same class
     '... adding the role w/ excluded role conflict dies okay';    
     
     package My::Test3;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -116,15 +104,11 @@ the roles into the a superclass
 
 {
     package Methane;
-    use strict;
-    use warnings;
     use Moose;
     
     with 'Molecule::Organic';
     
     package My::Test4;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Methane';    

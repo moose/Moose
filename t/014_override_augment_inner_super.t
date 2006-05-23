@@ -11,16 +11,12 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     sub foo { 'Foo::foo(' . (inner() || '') . ')' };
     sub bar { 'Foo::bar(' . (inner() || '') . ')' }
     
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Foo';
@@ -29,8 +25,6 @@ BEGIN {
     override 'bar' => sub { 'Bar::bar -> ' . super() };    
     
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Bar';

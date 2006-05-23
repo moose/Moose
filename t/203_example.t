@@ -23,8 +23,6 @@ sub Y {
 
 {
     package List;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     has '_list' => (
@@ -49,8 +47,6 @@ sub Y {
     }     
     
     package List::Immutable;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     requires 'head';
@@ -88,8 +84,6 @@ sub Y {
     }
     
     package My::List1;
-    use strict;
-    use warnings;
     use Moose;
     
     ::lives_ok {
@@ -97,8 +91,6 @@ sub Y {
     } '... successfully composed roles together';
     
     package My::List2;
-    use strict;
-    use warnings;
     use Moose;    
     
     ::lives_ok {

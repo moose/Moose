@@ -30,8 +30,6 @@ of concept of the flexibility of the ::Instance protocol.
 BEGIN {
     
     package Moose::POOP::Meta::Instance;
-    use strict;
-    use warnings;
     use Moose;
     
     use DBM::Deep;
@@ -125,8 +123,6 @@ BEGIN {
     }
     
     package Moose::POOP::Meta::Class;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Moose::Meta::Class';    
@@ -141,8 +137,6 @@ BEGIN {
 }
 {   
     package Moose::POOP::Object;
-    use strict;
-    use warnings;
     use metaclass 'Moose::POOP::Meta::Class' => (
         ':instance_metaclass' => 'Moose::POOP::Meta::Instance'
     );      
@@ -158,8 +152,6 @@ BEGIN {
 }
 {    
     package Newswriter::Author;
-    use strict;
-    use warnings;   
     use Moose;
     
     extends 'Moose::POOP::Object';
@@ -168,8 +160,6 @@ BEGIN {
     has 'last_name'  => (is => 'rw', isa => 'Str');    
     
     package Newswriter::Article;    
-    use strict;
-    use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;  
       

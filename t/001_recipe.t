@@ -11,9 +11,7 @@ BEGIN {
 }
 
 {
-	package Point;
-	use strict;
-	use warnings;	
+	package Point;	
 	use Moose;
 		
 	has 'x' => (isa => 'Int', is => 'ro');
@@ -26,8 +24,6 @@ BEGIN {
 	}
 	
 	package Point3D;
-	use strict;
-	use warnings;
 	use Moose;
 	
 	extends 'Point';

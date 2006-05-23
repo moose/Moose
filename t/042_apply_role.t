@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package FooRole;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     has 'bar' => (is => 'rw', isa => 'FooClass');
@@ -30,16 +28,12 @@ BEGIN {
     }; 
 
     package BarClass;
-    use strict;
-    use warnings;
     use Moose;
     
     sub boo { 'BarClass::boo' }
     sub foo { 'BarClass::foo' }  # << the role overrides this ...  
     
     package FooClass;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'BarClass';

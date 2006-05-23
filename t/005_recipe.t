@@ -19,8 +19,6 @@ BEGIN {
 
 {
 	package Request;
-	use strict;
-	use warnings;
 	use Moose;
     use Moose::Util::TypeConstraints;
 	

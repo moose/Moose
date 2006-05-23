@@ -14,8 +14,6 @@ BEGIN {
 
 {
     package BinaryTree;
-    use strict;
-    use warnings;
     use Moose;
 
     has 'node' => (is => 'rw', isa => 'Any');

@@ -14,8 +14,6 @@ BEGIN {
 
 {
     package Eq;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     requires 'equal_to';
@@ -26,8 +24,6 @@ BEGIN {
     }
     
     package Comparable;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     with 'Eq';
@@ -60,8 +56,6 @@ BEGIN {
     }  
     
     package Printable;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     requires 'to_string';    
@@ -71,8 +65,6 @@ BEGIN {
 
 {
     package US::Currency;
-    use strict;
-    use warnings;
     use Moose;
     
     with 'Comparable', 'Printable';

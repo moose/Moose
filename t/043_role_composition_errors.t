@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo::Role;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     requires 'foo';
@@ -27,8 +25,6 @@ is_deeply(
 # classes which does not implement required method
 {
     package Foo::Class;
-    use strict;
-    use warnings;
     use Moose;
     
     ::dies_ok { with('Foo::Role') } '... no foo method implemented by Foo::Class';
@@ -37,8 +33,6 @@ is_deeply(
 # class which does implement required method
 {
     package Bar::Class;
-    use strict;
-    use warnings;
     use Moose;
     
     ::dies_ok  { with('Foo::Class') } '... cannot consume a class, it must be a role';
@@ -50,8 +44,6 @@ is_deeply(
 # role which does implement required method
 {
     package Bar::Role;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     ::lives_ok { with('Foo::Role') } '... has a foo method implemented by Bar::Role';
@@ -67,8 +59,6 @@ is_deeply(
 # role which does not implement required method
 {
     package Baz::Role;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     ::lives_ok { with('Foo::Role') } '... no foo method implemented by Baz::Role';
@@ -82,8 +72,6 @@ is_deeply(
 # classes which does not implement required method
 {
     package Baz::Class;
-    use strict;
-    use warnings;
     use Moose;
 
     ::dies_ok { with('Baz::Role') } '... no foo method implemented by Baz::Class2';
@@ -92,8 +80,6 @@ is_deeply(
 # class which does implement required method
 {
     package Baz::Class2;
-    use strict;
-    use warnings;
     use Moose;
 
     ::lives_ok { with('Baz::Role') } '... has a foo method implemented by Baz::Class2';

@@ -55,15 +55,11 @@ second class citizens.
 
 {
     package Class::ProvideFoo::Base;
-    use strict;
-    use warnings;
     use Moose;
 
     sub foo { 'Class::ProvideFoo::Base::foo' }
         
     package Class::ProvideFoo::Override1;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -75,8 +71,6 @@ second class citizens.
     override 'foo' => sub { 'Class::ProvideFoo::foo' };    
     
     package Class::ProvideFoo::Override2;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -98,8 +92,6 @@ method modifier.
 
 {
     package Class::ProvideFoo::Before1;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -111,8 +103,6 @@ method modifier.
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };    
     
     package Class::ProvideFoo::Before2;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -124,8 +114,6 @@ method modifier.
     } '... the required "foo" method exists, but it is a before (and we will die)';    
     
     package Class::ProvideFoo::Before3;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -138,8 +126,6 @@ method modifier.
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };    
     
     package Class::ProvideFoo::Before4;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -156,8 +142,6 @@ method modifier.
     } '... the required "foo" method exists in the symbol table (and we will live)'; 
     
     package Class::ProvideFoo::Before5;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -183,8 +167,6 @@ method modifier.
 {
     
     package Class::ProvideFoo::Attr1;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
@@ -196,8 +178,6 @@ method modifier.
     has 'foo' => (is => 'ro');
     
     package Class::ProvideFoo::Attr2;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';

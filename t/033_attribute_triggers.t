@@ -14,8 +14,6 @@ BEGIN {
 
 {
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'bar' => (is      => 'rw', 
@@ -35,15 +33,11 @@ BEGIN {
      
                   
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);           
     
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);           
@@ -112,8 +106,6 @@ BEGIN {
 
 {
     package Bling;
-    use strict;
-    use warnings;
     use Moose;
     
     ::dies_ok { 
@@ -123,8 +115,6 @@ BEGIN {
 
 {
     package Bling::Bling;
-    use strict;
-    use warnings;
     use Moose;
     
     ::dies_ok { 

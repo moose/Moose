@@ -149,6 +149,9 @@ use Moose::Util::TypeConstraints;
     
     sub import {
         $CALLER = caller();
+        
+        strict->import;
+        warnings->import;        
 
         # we should never export to main
         return if $CALLER eq 'main';

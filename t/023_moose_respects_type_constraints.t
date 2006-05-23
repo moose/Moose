@@ -32,8 +32,6 @@ BEGIN {
 
 { # now seee if Moose will override it
     package Foo;
-    use strict;
-    use warnings;
     use Moose;
 }
 
@@ -47,8 +45,6 @@ ok(!$foo_constraint->check('Bar'), '... my constraint failed correctly');
 
 {
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     has 'foo' => (is => 'rw', isa => 'Foo');

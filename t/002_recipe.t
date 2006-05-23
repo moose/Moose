@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package BankAccount;
-	use strict;
-	use warnings;
     use Moose;
     
     has 'balance' => (isa => 'Num', is => 'rw', default => 0);
@@ -31,9 +29,7 @@ BEGIN {
         $self->balance($current_balance - $amount);
     }
 
-	package CheckingAccount;
-	use strict;
-	use warnings;	
+	package CheckingAccount;	
 	use Moose;
 
  	extends 'BankAccount';

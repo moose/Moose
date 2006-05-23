@@ -12,8 +12,6 @@ BEGIN {
 
 {
     package Foo::Role;
-    use strict;
-    use warnings;
     use Moose::Role;
 
     # if does() exists on its own, then 
@@ -22,8 +20,6 @@ BEGIN {
     has 'bar' => (is => 'rw', does => 'Bar::Role'); 
 
     package Bar::Role;
-    use strict;
-    use warnings;
     use Moose::Role;
 
     # if isa and does appear together, then see if Class->does(Role)
@@ -32,15 +28,11 @@ BEGIN {
     has 'foo' => (is => 'rw', isa => 'Foo::Class', does => 'Foo::Role');    
     
     package Foo::Class;
-    use strict;
-    use warnings;
     use Moose;
     
     with 'Foo::Role';
 
     package Bar::Class;
-    use strict;
-    use warnings;
     use Moose;
 
     with 'Bar::Role';
@@ -69,8 +61,6 @@ lives_ok {
 
 {
     package Baz::Class;
-    use strict;
-    use warnings;
     use Moose;
 
     # if isa and does appear together, then see if Class->does(Role)
@@ -88,8 +78,6 @@ lives_ok {
     sub bling { 'Bling::bling' }
     
     package Bling::Bling;
-    use strict;
-    use warnings;    
     use Moose;
 
     # if isa and does appear together, then see if Class->does(Role)

@@ -21,29 +21,21 @@ a conflict)
 
 {
     package Role::Base;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     sub foo { 'Role::Base::foo' }
     
     package Role::Derived1;
-    use strict;
-    use warnings;
     use Moose::Role;  
     
     with 'Role::Base';
     
     package Role::Derived2;
-    use strict;
-    use warnings;
     use Moose::Role; 
 
     with 'Role::Base';
     
     package My::Test::Class1;
-    use strict;
-    use warnings;
     use Moose;      
     
     ::lives_ok {
@@ -68,36 +60,26 @@ a method conflict with method modifiers
 
 {
     package Role::Base2;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     override 'foo' => sub { super() . ' -> Role::Base::foo' };
     
     package Role::Derived3;
-    use strict;
-    use warnings;
     use Moose::Role;  
     
     with 'Role::Base2';
     
     package Role::Derived4;
-    use strict;
-    use warnings;
     use Moose::Role; 
 
     with 'Role::Base2';
 
     package My::Test::Class2::Base;
-    use strict;
-    use warnings;
     use Moose;
     
     sub foo { 'My::Test::Class2::Base' }
     
     package My::Test::Class2;
-    use strict;
-    use warnings;
     use Moose;  
     
     extends 'My::Test::Class2::Base';    
@@ -131,36 +113,26 @@ same for before/afters as well
 
 {
     package Role::Base3;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     around 'foo' => sub { 'Role::Base::foo(' . (shift)->() . ')' };
     
     package Role::Derived5;
-    use strict;
-    use warnings;
     use Moose::Role;  
     
     with 'Role::Base3';
     
     package Role::Derived6;
-    use strict;
-    use warnings;
     use Moose::Role; 
 
     with 'Role::Base3';
 
     package My::Test::Class3::Base;
-    use strict;
-    use warnings;
     use Moose;
     
     sub foo { 'My::Test::Class3::Base' }
     
     package My::Test::Class3;
-    use strict;
-    use warnings;
     use Moose;  
     
     extends 'My::Test::Class3::Base';    
@@ -191,29 +163,21 @@ a conflict)
 
 {
     package Role::Base4;
-    use strict;
-    use warnings;
     use Moose::Role;
     
     has 'foo' => (is => 'ro', default => 'Role::Base::foo');
     
     package Role::Derived7;
-    use strict;
-    use warnings;
     use Moose::Role;  
     
     with 'Role::Base4';
     
     package Role::Derived8;
-    use strict;
-    use warnings;
     use Moose::Role; 
 
     with 'Role::Base4';
     
     package My::Test::Class4;
-    use strict;
-    use warnings;
     use Moose;      
     
     ::lives_ok {

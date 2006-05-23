@@ -28,19 +28,13 @@ this test also demonstrates.
     
     sub foo { 'Foo::foo' }
     
-    package Bar;
-    use strict;
-    use warnings;
-    
+    package Bar;    
     use base 'Foo';
-    
     use Moose;
     
     sub new { (shift)->meta->new_object(@_) }    
     
     package Baz;
-    use strict;
-    use warnings;
     use Moose;    
     use base 'Foo'; 
 }

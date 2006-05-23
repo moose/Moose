@@ -35,8 +35,6 @@ should be just fine.
     sub baz { 'Foo::baz' }
     
     package Bar;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Foo';
@@ -44,8 +42,6 @@ should be just fine.
     override bar => sub { 'Bar::bar -> ' . super() };   
     
     package Baz;
-    use strict;
-    use warnings;
     use Moose;
     
     extends 'Bar';
