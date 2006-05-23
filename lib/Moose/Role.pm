@@ -10,7 +10,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
