@@ -53,8 +53,9 @@ use Moose::Util::TypeConstraints;
 	    },
 	    with => sub {
 	        my $meta = _find_meta();
-	        return subname 'Moose::Role::with' => sub ($;@) { 
+	        return subname 'Moose::Role::with' => sub (@) { 
                 my (@roles) = @_;
+                confess "Must specify at least one role" unless @roles;
                 Moose::_load_all_classes(@roles);
                 ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
                     || confess "You can only consume roles, $_ is not a Moose role"
@@ -71,13 +72,15 @@ use Moose::Util::TypeConstraints;
 	    },	
         requires => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::requires' => sub ($;@) { 
+            return subname 'Moose::Role::requires' => sub (@) { 
+                confess "Must specify at least one method" unless @_;
                 $meta->add_required_methods(@_);
 	        };
 	    },	
         excludes => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::excludes' => sub ($;@) { 
+            return subname 'Moose::Role::excludes' => sub (@) { 
+                confess "Must specify at least one role" unless @_;
                 $meta->add_excluded_roles(@_);
 	        };
 	    },	    

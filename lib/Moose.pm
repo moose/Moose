@@ -68,7 +68,8 @@ use Moose::Util::TypeConstraints;
     my %exports = (
         extends => sub {
             my $class = $CALLER;
-            return subname 'Moose::extends' => sub ($;@) {
+            return subname 'Moose::extends' => sub (@) {
+                confess "Must derive at least one class" unless @_;
                 _load_all_classes(@_);
                 my $meta = $class->meta;
                 foreach my $super (@_) {
@@ -106,8 +107,9 @@ use Moose::Util::TypeConstraints;
         },
         with => sub {
             my $class = $CALLER;
-            return subname 'Moose::with' => sub ($;@) {
+            return subname 'Moose::with' => sub (@) {
                 my (@roles) = @_;
+                confess "Must specify at least one role" unless @roles;
                 _load_all_classes(@roles);
                 ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
                     || confess "You can only consume roles, $_ is not a Moose role"
