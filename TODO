@@ -97,6 +97,35 @@ and that if this usage style is used nothing is exported to the namespace.
 ...
 [23:49] 	mst	oh, also: method 'has' => sub { ... } could squelch the redefine warning
   
+- local coerce
+
+[13:16] 	mst	stevan: slight problem with coerce
+[13:16] 	mst	I only get to declare it once
+[13:17] 	mst	so if I'm trying to declare it cast-style per-source-class rather than per-target-class
+[13:17] 	mst	I am extremely screwed
+[13:17] 	stevan	yes
+[13:17] 	stevan	they are not class specific 
+[13:18] 	stevan	they are attached to the type constraint itself
+[13:18] 	*	stevan ponders anon-coercion-metaobjects
+[13:18] 	mst	yes, that's fine
+[13:19] 	mst	but when I declare a class
+[13:19] 	mst	I want to be able to say "this class coerces to X type via <this>"
+[13:19] 	stevan	yeah something like that
+[13:19] 	stevan	oh,.. hmm
+[13:20] 	stevan	sort of like inflate/deflate?
+[13:20] 	stevan	around the accessors?
+[13:25] 	*	bluefeet has quit (Remote host closed the connection)
+[13:27] 	mst	no
+[13:27] 	mst	nothing like that
+[13:27] 	mst	like a cast
+[13:31] 	mst	stevan: $obj->foo($bar); where 'foo' expects a 'Foo' object
+[13:31] 	mst	stevan: is effectively <Foo>$bar, right?
+[13:32] 	mst	stevan: I want to be able to say in package Bar
+[13:32] 	mst	stevan: coerce_to 'Foo' via { ... };
+[13:32] 	mst	etc.
+[13:53] 	stevan	hmm  
+  
+  
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------
