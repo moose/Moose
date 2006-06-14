@@ -59,7 +59,7 @@ slot, defined as such:
 
   has 'node' => (is => 'rw', isa => 'Any');
 
-If you recall from the previous recipies, this slow will have a 
+If you recall from the previous recipies, this slot will have a 
 read/write accessor generated for it, and has a type constraint on it. 
 The new item here is the type constraint of C<Any>. In the type 
 constraint heirarchy in L<Moose::Utils::TypeConstraints>, the C<Any> 
