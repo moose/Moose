@@ -21,6 +21,7 @@ Revision history for Perl extension Moose
     * Moose::Meta::Role
       - now handles an edge case for override errors
         - added tests for this
+      - added some more edge case tests
 
 0.09_02 Tues. May 16, 2006
     * Moose
