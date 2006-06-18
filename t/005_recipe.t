@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use HTTP::Headers; use Params::Coerce; use URI;";
     plan skip_all => "HTTP::Headers & Params::Coerce & URI required for this test" if $@;        
-    plan no_plan => 1;    
+    plan tests => 18;    
 }
 
 use Test::Exception;

@@ -11,7 +11,7 @@ use B            'svref_2object';
 
 use Moose::Meta::Class;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 ## Attributes
 
@@ -244,6 +244,9 @@ sub _add_method_modifier {
 
 sub add_override_method_modifier {
     my ($self, $method_name, $method) = @_;
+    (!$self->has_method($method_name))
+        || confess "Cannot add an override of method '$method_name' " . 
+                   "because there is a local version of '$method_name'";
     $self->get_override_method_modifiers_map->{$method_name} = $method;    
 }
 

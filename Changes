@@ -17,6 +17,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::Class
       - now handles some moose-specific options in 
         &create
+        
+    * Moose::Meta::Role
+      - now handles an edge case for override errors
+        - added tests for this
 
 0.09_02 Tues. May 16, 2006
     * Moose

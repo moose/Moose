@@ -3,32 +3,39 @@
 use strict;
 use warnings;
 
-use Test::More tests => 65;
+use Test::More tests => 77;
+use Test::Exception;
+
+BEGIN {
+    use_ok('Moose');           
+}
 
 {
+    # NOTE:
+    # this tests that repeated role 
+    # composition will not cause 
+    # a conflict between two methods
+    # which are actually the same anyway
+    
     {
         package RootA;
         use Moose::Role;
 
-        sub foo {
-            "foo rv";
-        }
+        sub foo { "RootA::foo" }
 
         package SubAA;
         use Moose::Role;
 
         with "RootA";
 
-        sub bar {
-            "bar rv";
-        }
+        sub bar { "SubAA::bar" }
 
         package SubAB;
         use Moose;
 
-        eval { with "SubAA" };
-
-
+        ::lives_ok { 
+            with "SubAA", "RootA"; 
+        } '... role was composed as expected';
     }
 
     ok( SubAB->does("SubAA"), "does SubAA");
@@ -37,20 +44,40 @@ use Test::More tests => 65;
     isa_ok( my $i = SubAB->new, "SubAB" );
 
     can_ok( $i, "bar" );
-    is( $i->bar, "bar rv", "bar rv" );
+    is( $i->bar, "SubAA::bar", "... got thr right bar rv" );
 
     can_ok( $i, "foo" );
-    is( eval { $i->foo }, "foo rv", "foo rv" );
+    my $foo_rv;
+    lives_ok { 
+        $foo_rv = $i->foo; 
+    } '... called foo successfully';
+    is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
 
 {
+    # NOTE:
+    # this edge cases shows the application of 
+    # an after modifier over a method which 
+    # was added during role composotion.
+    # The way this will work is as follows:
+    #    role SubBA will consume RootB and 
+    #    get a local copy of RootB::foo, it 
+    #    will also store a deferred after modifier
+    #    to be applied to whatever class SubBA is 
+    #    composed into.
+    #    When class SubBB comsumed role SubBA, the
+    #    RootB::foo method is added to SubBB, then 
+    #    the deferred after modifier from SubBA is 
+    #    applied to it.
+    # It is important to note that the application 
+    # of the after modifier does not happen until 
+    # role SubBA is composed into SubAA.
+    
     {
         package RootB;
         use Moose::Role;
 
-        sub foo {
-            "foo rv";
-        }
+        sub foo { "RootB::foo" }
 
         package SubBA;
         use Moose::Role;
@@ -70,7 +97,9 @@ use Test::More tests => 65;
         package SubBB;
         use Moose;
 
-        eval { with "SubBA" };
+        ::lives_ok { 
+            with "SubBA";
+        } '... composed the role successfully';
     }
 
     ok( SubBB->does("SubBA"), "BB does SubBA" );
@@ -79,71 +108,54 @@ use Test::More tests => 65;
     isa_ok( my $i = SubBB->new, "SubBB" );
 
     can_ok( $i, "foo" );
-    is( eval { $i->foo }, "foo rv", "foo rv" );
-
+    
+    my $foo_rv;
+    lives_ok { 
+        $foo_rv = $i->foo 
+    } '... called foo successfully';
+    is( $foo_rv, "RootB::foo", "foo rv" );
     is( $i->counter, 1, "after hook called" );
+    
+    lives_ok { $i->foo } '... called foo successfully (again)';
+    is( $i->counter, 2, "after hook called (again)" );
+    
+    can_ok('SubBA', 'foo');
+    my $subba_foo_rv;
+    lives_ok { 
+        $subba_foo_rv = SubBA::foo(); 
+    } '... called the sub as a function correctly';
+    is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
 }
 
 {
+    # NOTE:
+    # this checks that an override method
+    # does not try to trample over a locally
+    # composed in method. In this case the 
+    # RootC::foo, which is composed into 
+    # SubCA cannot be trampled with an 
+    # override of 'foo'
     {
         package RootC;
         use Moose::Role;
 
-        sub foo {
-            "foo rv";
-        }
+        sub foo { "RootC::foo" }
 
         package SubCA;
         use Moose::Role;
 
         with "RootC";
 
-        override foo => sub {
-            "overridden";
-        };
-
-        package SubCB;
-        use Moose;
-
-        eval { with "SubCA" };
-
-        package SubCC;
-        use Moose;
-
-        undef $@;
-        eval {
-            with qw/
-                SubCA
-                RootC
-            /;
-        };
-
-        ::ok( $@, "can't compose role with conflict and diamond hierarchy" );
-
-        package SubCD;
-        use Moose::Role;
-
-        with "RootC";
-
-        package SubCE;
-        use Moose;
-
-        undef $@;
-        eval { with qw/SubCD RootC/ };
-        ::ok( !$@, "can compose if appearantly conflicting method is actually the same one" );
+        ::dies_ok { 
+            override foo => sub { "overridden" };
+        } '... cannot compose an override over a local method';
     }
-
-    ok( SubCB->does("SubCA"), "CB does SubCA" );
-    ok( SubCB->does("RootC"), "CB does RootC" );
-
-    isa_ok( my $i = SubCB->new, "SubCB" );
-
-    can_ok( $i, "foo" );
-    is( eval { $i->foo }, "overridden", "overridden foo from SubCA, not RootC" );
-
-    ok( SubCE->does("RootC"), "CE does RootC" );
-    ok( SubCE->does("SubCD"), "CE does SubCD" );
 }
+
+# NOTE:
+# need to talk to Yuval about the motivation behind 
+# this test, I am not sure we are testing anything 
+# useful here (although more tests cant hurt)
 
 {
     use List::Util qw/shuffle/;
@@ -153,7 +165,6 @@ use Test::More tests => 65;
         use Moose::Role;
 
         requires "method";
-        
         requires "other";
 
         sub another { "abstract" }
@@ -162,24 +173,26 @@ use Test::More tests => 65;
         use Moose::Role;
         with "Abstract";
 
-        sub other {
-            "concrete a";
-        };
+        sub other { "concrete a" }
 
         package ConcreteB;
         use Moose::Role;
         with "Abstract";
 
-        sub method {
-            "concrete b";
-        }
+        sub method { "concrete b" }
 
         package ConcreteC;
         use Moose::Role;
         with "ConcreteA";
 
-        override other => sub {
-            return ( super() . " + c" );
+        # NOTE:
+        # this was originally override, but 
+        # that wont work (see above set of tests)
+        # so I switched it to around.
+        # However, this may not be testing the 
+        # same thing that was originally intended
+        around other => sub {
+            return ( (shift)->() . " + c" );
         };
 
         package SimpleClassWithSome;
@@ -222,14 +235,14 @@ use Test::More tests => 65;
         eval { with ::shuffle qw/ConcreteC Abstract ConcreteB/ };
         ::ok( !$@, "composition with abstract" ) || ::diag $@;
 
-        package ClassBad;
+        package ClassWithEverything;
         use Moose;
 
         eval { with ::shuffle qw/ConcreteC Abstract ConcreteA ConcreteB/ }; # this should clash
-        ::ok( $@, "can't compose ConcreteA and ConcreteC together" );
+        ::ok( !$@, "can compose ConcreteA and ConcreteC together" );
     }
 
-    foreach my $class (qw/ClassWithSome ClassWithAll/) {
+    foreach my $class (qw/ClassWithSome ClassWithAll ClassWithEverything/) {
         foreach my $role (qw/Abstract ConcreteA ConcreteB ConcreteC/) {
             ok( $class->does($role), "$class does $role");
         }
