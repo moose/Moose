@@ -71,37 +71,10 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::extends' => sub (@) {
                 confess "Must derive at least one class" unless @_;
                 _load_all_classes(@_);
-                my $meta = $class->meta;
-                foreach my $super (@_) {
-                    # don't bother if it does not have a meta.
-                    next unless $super->can('meta');
-                    # if it's meta is a vanilla Moose, 
-                    # then we can safely ignore it.
-                    next if blessed($super->meta) eq 'Moose::Meta::Class';
-                    # but if we have anything else, 
-                    # we need to check it out ...
-                    unless (# see if of our metaclass is incompatible
-                            ($meta->isa(blessed($super->meta)) &&
-                             # and see if our instance metaclass is incompatible
-                             $meta->instance_metaclass->isa($super->meta->instance_metaclass)) &&
-                            # ... and if we are just a vanilla Moose
-                            $meta->isa('Moose::Meta::Class')) {
-                        # re-initialize the meta ...
-                        my $super_meta = $super->meta;
-                        # NOTE:
-                        # We might want to consider actually 
-                        # transfering any attributes from the 
-                        # original meta into this one, but in 
-                        # general you should not have any there
-                        # at this point anyway, so it's very 
-                        # much an obscure edge case anyway
-                        $meta = $super_meta->reinitialize($class => (
-                            ':attribute_metaclass' => $super_meta->attribute_metaclass,                            
-                            ':method_metaclass'    => $super_meta->method_metaclass,
-                            ':instance_metaclass'  => $super_meta->instance_metaclass,
-                        ));
-                    }
-                }
+                # this checks the metaclass to make sure 
+                # it is correct, sometimes it can get out 
+                # of sync when the classes are being built
+                my $meta = $class->meta->_fix_metaclass_incompatability(@_);
                 $meta->superclasses(@_);
             };
         },
@@ -111,50 +84,14 @@ use Moose::Util::TypeConstraints;
                 my (@roles) = @_;
                 confess "Must specify at least one role" unless @roles;
                 _load_all_classes(@roles);
-                ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
-                    || confess "You can only consume roles, $_ is not a Moose role"
-                        foreach @roles;
-                if (scalar @roles == 1) {
-                    $roles[0]->meta->apply($class->meta);
-                }
-                else {
-                    Moose::Meta::Role->combine(
-                        map { $_->meta } @roles
-                    )->apply($class->meta);
-                }
+                $class->meta->_apply_all_roles(@roles);
             };
         },
         has => sub {
             my $class = $CALLER;
             return subname 'Moose::has' => sub ($;%) {
                 my ($name, %options) = @_;              
-                my $meta = $class->meta;
-                if ($name =~ /^\+(.*)/) {
-                    my $inherited_attr = $meta->find_attribute_by_name($1);
-                    (defined $inherited_attr)
-                        || confess "Could not find an attribute by the name of '$1' to inherit from";
-                    my $new_attr;
-                    if ($inherited_attr->isa('Moose::Meta::Attribute')) {
-                        $new_attr = $inherited_attr->clone_and_inherit_options(%options);
-                    }
-                    else {
-                        # NOTE:
-                        # kind of a kludge to handle Class::MOP::Attributes
-                        $new_attr = Moose::Meta::Attribute::clone_and_inherit_options(
-                            $inherited_attr, %options
-                        );                        
-                    }
-                    $meta->add_attribute($new_attr);
-                }
-                else {
-                    if ($options{metaclass}) {
-                        _load_all_classes($options{metaclass});
-                        $meta->add_attribute($options{metaclass}->new($name, %options));
-                    }
-                    else {
-                        $meta->add_attribute($name, %options);
-                    }
-                }
+                $class->meta->_process_attribute($name, %options);
             };
         },
         before => sub {

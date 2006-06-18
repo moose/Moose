@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use base 'Class::MOP::Class';
 
@@ -25,7 +25,7 @@ sub initialize {
         ':attribute_metaclass' => 'Moose::Meta::Attribute', 
         ':instance_metaclass'  => 'Moose::Meta::Instance', 
         @_);
-}
+}  
 
 sub add_role {
     my ($self, $role) = @_;
@@ -160,6 +160,8 @@ sub add_augment_method_modifier {
     });    
 }
 
+## Private Utility methods ...
+
 sub _find_next_method_by_name_which_is_not_overridden {
     my ($self, $name) = @_;
     my @methods = $self->find_all_methods_by_name($name);
@@ -168,6 +170,92 @@ sub _find_next_method_by_name_which_is_not_overridden {
             if blessed($method->{code}) && !$method->{code}->isa('Moose::Meta::Method::Overriden');
     }
     return undef;
+}
+
+sub _fix_metaclass_incompatability {
+    my ($self, @superclasses) = @_;
+    foreach my $super (@superclasses) {
+        # don't bother if it does not have a meta.
+        next unless $super->can('meta');
+        # if it's meta is a vanilla Moose, 
+        # then we can safely ignore it.
+        next if blessed($super->meta) eq 'Moose::Meta::Class';
+        # but if we have anything else, 
+        # we need to check it out ...
+        unless (# see if of our metaclass is incompatible
+                ($self->isa(blessed($super->meta)) &&
+                 # and see if our instance metaclass is incompatible
+                 $self->instance_metaclass->isa($super->meta->instance_metaclass)) &&
+                # ... and if we are just a vanilla Moose
+                $self->isa('Moose::Meta::Class')) {
+            # re-initialize the meta ...
+            my $super_meta = $super->meta;
+            # NOTE:
+            # We might want to consider actually 
+            # transfering any attributes from the 
+            # original meta into this one, but in 
+            # general you should not have any there
+            # at this point anyway, so it's very 
+            # much an obscure edge case anyway
+            $self = $super_meta->reinitialize($self->name => (
+                ':attribute_metaclass' => $super_meta->attribute_metaclass,                            
+                ':method_metaclass'    => $super_meta->method_metaclass,
+                ':instance_metaclass'  => $super_meta->instance_metaclass,
+            ));
+        }
+    }
+    return $self;    
+}
+
+sub _apply_all_roles {
+    my ($self, @roles) = @_;
+    ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
+        || confess "You can only consume roles, $_ is not a Moose role"
+            foreach @roles;
+    if (scalar @roles == 1) {
+        $roles[0]->meta->apply($self);
+    }
+    else {
+        Moose::Meta::Role->combine(
+            map { $_->meta } @roles
+        )->apply($self);
+    }    
+}
+
+sub _process_attribute {
+    my ($self, $name, %options) = @_;
+    if ($name =~ /^\+(.*)/) {
+        my $new_attr = $self->_process_inherited_attribute($1, %options);
+        $self->add_attribute($new_attr);
+    }
+    else {
+        if ($options{metaclass}) {
+            Moose::_load_all_classes($options{metaclass});
+            $self->add_attribute($options{metaclass}->new($name, %options));
+        }
+        else {
+            $self->add_attribute($name, %options);
+        }
+    }    
+}
+
+sub _process_inherited_attribute {
+    my ($self, $attr_name, %options) = @_;
+    my $inherited_attr = $self->find_attribute_by_name($attr_name);
+    (defined $inherited_attr)
+        || confess "Could not find an attribute by the name of '$attr_name' to inherit from";
+    my $new_attr;
+    if ($inherited_attr->isa('Moose::Meta::Attribute')) {
+        $new_attr = $inherited_attr->clone_and_inherit_options(%options);
+    }
+    else {
+        # NOTE:
+        # kind of a kludge to handle Class::MOP::Attributes
+        $new_attr = Moose::Meta::Attribute::clone_and_inherit_options(
+            $inherited_attr, %options
+        );                        
+    }    
+    return $new_attr;
 }
 
 package Moose::Meta::Method::Overriden;

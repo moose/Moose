@@ -6,11 +6,17 @@ Revision history for Perl extension Moose
          needed in Moose classes, Moose itself will 
          turn them on for you.
          - added tests for this
+      - moved code from exported subs to private methods
+        in Moose::Meta::Class
          
     * Moose::Role
       - as with Moose, strict and warnings are 
         automatically turned on for you.
          - added tests for this        
+
+    * Moose::Meta::Class
+      - now handles some moose-specific options in 
+        &create
 
 0.09_02 Tues. May 16, 2006
     * Moose
