@@ -4,13 +4,15 @@ package Moose::Role;
 use strict;
 use warnings;
 
-use Scalar::Util ();
+use Scalar::Util 'blessed';
 use Carp         'confess';
 use Sub::Name    'subname';
 
 use Sub::Exporter;
 
 our $VERSION = '0.05';
+
+use Moose ();
 
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
