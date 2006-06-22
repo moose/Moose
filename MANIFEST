@@ -35,6 +35,8 @@ t/012_super_and_override.t
 t/013_inner_and_augment.t
 t/014_override_augment_inner_super.t
 t/015_override_and_foreign_classes.t
+t/016_always_strict_warnings.t
+t/017_wrapped_method_context_propagation.t
 t/020_foreign_inheritence.t
 t/021_moose_w_metaclass.t
 t/022_moose_respects_base.t
@@ -57,6 +59,7 @@ t/044_role_conflict_detection.t
 t/045_role_exclusion.t
 t/046_roles_and_required_method_edge_cases.t
 t/047_role_conflict_edge_cases.t
+t/048_more_role_edge_cases.t
 t/050_util_type_constraints.t
 t/051_util_type_constraints_export.t
 t/052_util_std_type_constraints.t

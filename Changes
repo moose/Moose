@@ -1,6 +1,7 @@
 Revision history for Perl extension Moose
 
 0.09_03
+    ++ DEVELOPER RELEASE ++
     * Moose
       - 'use strict' and 'use warnings' are no longer
          needed in Moose classes, Moose itself will 
@@ -13,10 +14,6 @@ Revision history for Perl extension Moose
       - as with Moose, strict and warnings are 
         automatically turned on for you.
          - added tests for this        
-
-    * Moose::Meta::Class
-      - now handles some moose-specific options in 
-        &create
         
     * Moose::Meta::Role
       - now handles an edge case for override errors
@@ -24,6 +21,7 @@ Revision history for Perl extension Moose
       - added some more edge case tests
 
 0.09_02 Tues. May 16, 2006
+    ++ DEVELOPER RELEASE ++
     * Moose
       - added prototypes to the exported subs
       - updated docs

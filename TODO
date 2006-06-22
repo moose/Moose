@@ -8,6 +8,10 @@ mst: if I do "subtype 'Foo' => as 'Bar';" I get an empty condition and it dies
 TODO
 -------------------------------------------------------------------------------
 
+- should handle some moose-specific options in &Moose::Meta::Class::create
+  things like roles, and method modifiers (although those can probably be 
+  ignored if i want to)
+
 - type unions
 
 Add support for doing it with Classes which do not have 
