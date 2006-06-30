@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/Projects/CPAN/Class-MOP/Class-MOP/lib/';
+
 package Moose;
 
 use strict;
