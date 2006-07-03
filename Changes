@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.09_04
+    ++ DEVELOPER RELEASE ++
+    * Moose
+      - improved error message when loading modules so
+        it is less confusing when you load a role.
+
 0.09_03
     ++ DEVELOPER RELEASE ++
     * Moose

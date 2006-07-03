@@ -179,7 +179,7 @@ sub _load_all_classes {
         next if _is_class_already_loaded($super);
         # otherwise require it ...
         ($super->require)
-            || confess "Could not load superclass '$super' because : " . $UNIVERSAL::require::ERROR;
+            || confess "Could not load module '$super' because : " . $UNIVERSAL::require::ERROR;
     }    
 }
 
