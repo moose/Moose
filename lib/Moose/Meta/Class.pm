@@ -34,6 +34,12 @@ sub add_role {
     push @{$self->roles} => $role;
 }
 
+sub calculate_all_roles {
+    my $self = shift;
+    my %seen;
+    grep { !$seen{$_->name}++ } map { $_->calculate_all_roles } @{ $self->roles };
+}
+
 sub does_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
