@@ -599,6 +599,8 @@ probably not that much really).
 
 =item B<get_excluded_roles_map>
 
+=item B<calculate_all_roles>
+
 =back
 
 =over 4

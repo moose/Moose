@@ -1,12 +1,10 @@
 
-use lib '/Users/stevan/Projects/CPAN/Class-MOP/Class-MOP/lib/';
-
 package Moose;
 
 use strict;
 use warnings;
 
-our $VERSION = '0.09_03';
+our $VERSION = '0.10';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';

@@ -1,12 +1,19 @@
 Revision history for Perl extension Moose
 
-0.09_04
-    ++ DEVELOPER RELEASE ++
+0.10 
     * Moose
       - improved error message when loading modules so
         it is less confusing when you load a role.
+      - added &calculate_all_roles method to 
+        Moose::Meta::Class and Moose::Meta::Role
+        
+    NOTE:
+    This module has been tested against Class::MOP 0.30
+    but it does not yet utilize the optimizations 
+    it makes available. Stay tuned for that ;)
+    
 
-0.09_03
+0.09_03 Fri. June 23, 2006
     ++ DEVELOPER RELEASE ++
     * Moose
       - 'use strict' and 'use warnings' are no longer

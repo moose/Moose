@@ -332,6 +332,8 @@ it in the package.
 This will create an C<augment> method modifier for you, and install 
 it in the package.
 
+=item B<calculate_all_roles>
+
 =item B<roles>
 
 This will return an array of C<Moose::Meta::Role> instances which are 
