@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.10 
+0.10 Thurs. July 6, 2006
     * Moose
       - improved error message when loading modules so
         it is less confusing when you load a role.
