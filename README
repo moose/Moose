@@ -1,4 +1,4 @@
-Moose version 0.10
+Moose version 0.11
 ===========================
 
 See the individual module documentation for more information
@@ -22,6 +22,7 @@ This module requires these other modules and libraries:
 	Sub::Name
 	UNIVERSAL::require
 	Sub::Exporter
+	B
 
 COPYRIGHT AND LICENCE
 

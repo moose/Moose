@@ -4,11 +4,12 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Sub::Name    'subname';
+use B            'svref_2object';
 
 use UNIVERSAL::require;
 use Sub::Exporter;
@@ -166,6 +167,27 @@ use Moose::Util::TypeConstraints;
         
         goto $exporter;
     }
+    
+    sub unimport {
+        no strict 'refs';        
+        my $class = caller();
+        # loop through the exports ...
+        foreach my $name (keys %exports) {
+            
+            # if we find one ...
+            if (defined &{$class . '::' . $name}) {
+                my $keyword = \&{$class . '::' . $name};
+                
+                # make sure it is from Moose
+                my $pkg_name = eval { svref_2object($keyword)->GV->STASH->NAME };
+                next if $@;
+                next if $pkg_name ne 'Moose';
+                
+                # and if it is from Moose then undef the slot
+                delete ${$class . '::'}{$name};
+            }
+        }
+    }
 }
 
 ## Utility functions
@@ -200,7 +222,7 @@ __END__
 
 =head1 NAME
 
-Moose - Moose, it's the new Camel
+Moose - A complete modern object system for Perl 5
 
 =head1 SYNOPSIS
 
@@ -441,6 +463,27 @@ use it all the time. It is highly recommended that this is used instead of
 C<ref> anywhere you need to test for an object's class name.
 
 =back
+
+=head1 UNEXPORTING FUNCTIONS
+
+=head2 B<unimport>
+
+Moose offers a way of removing the keywords it exports though the C<unimport>
+method. You simply have to say C<no Moose> at the bottom of your code for this
+to work. Here is an example:
+
+    package Person;
+    use Moose;
+
+    has 'first_name' => (is => 'rw', isa => 'Str');
+    has 'last_name'  => (is => 'rw', isa => 'Str');
+    
+    sub full_name { 
+        my $self = shift;
+        $self->first_name . ' ' . $self->last_name 
+    }
+    
+    no Moose; # keywords are removed from the Person package    
 
 =head1 FUTURE PLANS
 

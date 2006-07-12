@@ -6,8 +6,8 @@ use warnings;
 use Test::More;
 
 BEGIN {
-    eval "use DBM::Deep;";
-    plan skip_all => "DBM::Deep required for this test" if $@;        
+    eval "use DBM::Deep 0.983; use DateTime::Format::MySQL;";
+    plan skip_all => "DBM::Deep and DateTime::Format::MySQL required for this test" if $@;        
     plan tests => 89;    
 }
 

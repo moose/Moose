@@ -37,6 +37,7 @@ t/014_override_augment_inner_super.t
 t/015_override_and_foreign_classes.t
 t/016_always_strict_warnings.t
 t/017_wrapped_method_context_propagation.t
+t/018_import_unimport.t
 t/020_foreign_inheritence.t
 t/021_moose_w_metaclass.t
 t/022_moose_respects_base.t

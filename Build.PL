@@ -12,7 +12,8 @@ my $build = Module::Build->new(
         'Sub::Name'          => '0.02',
         'UNIVERSAL::require' => '0.10',
         'Sub::Exporter'      => '0.954',
-        'Sub::Install'       => '0.92',        
+        'Sub::Install'       => '0.92',   
+        'B'                  => '0',             
     },
     optional => {
     },
