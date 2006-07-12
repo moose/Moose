@@ -323,6 +323,10 @@ sub _check_required_methods {
     # that maybe those are somehow exempt from 
     # the require methods stuff.  
     foreach my $required_method_name ($self->get_required_method_list) {
+        
+        # FIXME:
+        # This should not call has_method, instead it should
+        # call find_method_by_name (to be added to Class::MOP)
         unless ($other->has_method($required_method_name)) {
             if ($other->isa('Moose::Meta::Role')) {
                 $other->add_required_methods($required_method_name);
@@ -337,6 +341,9 @@ sub _check_required_methods {
             # we need to make sure that the method is 
             # not a method modifier, because those do 
             # not satisfy the requirements ...
+            
+            # FIXME:
+            # This should also call find_method_by_name
             my $method = $other->get_method($required_method_name);
             # check if it is an override or a generated accessor ..
             (!$method->isa('Moose::Meta::Method::Overriden') &&
