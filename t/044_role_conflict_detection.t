@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 44;
+use Test::More tests => 67;
 use Test::Exception;
 
 BEGIN {
@@ -86,8 +86,6 @@ ok(Role::Bar->meta->requires_method('bar'), '... it still has the required bar m
 Role method conflicts
 
 =cut
-
-=begin nonsense
 
 {
     package Role::Bling;
@@ -254,102 +252,3 @@ Role override method conflicts
 
 =cut
 
-=begin nonsense
-
-{
-    package Role::Plot;
-    use Moose::Role;
-    
-    override 'twist' => sub {
-        super() . ' -> Role::Plot::twist';
-    };
-    
-    package Role::Truth;
-    use Moose::Role;
-    
-    override 'twist' => sub {
-        super() . ' -> Role::Truth::twist';
-    };
-}
-
-{
-    package My::Test::Base;
-    use Moose;
-    
-    sub twist { 'My::Test::Base::twist' }
-        
-    package My::Test11;
-    use Moose;
-    
-    extends 'My::Test::Base';
-
-    ::lives_ok {
-        with 'Role::Truth';
-    } '... composed the role with override okay';
-       
-    package My::Test12;
-    use Moose;
-
-    extends 'My::Test::Base';
-
-    ::lives_ok {    
-       with 'Role::Plot';
-    } '... composed the role with override okay';
-              
-    package My::Test13;
-    use Moose;
-
-    ::dies_ok {
-        with 'Role::Plot';       
-    } '... cannot compose it because we have no superclass';
-    
-    package My::Test14;
-    use Moose;
-
-    extends 'My::Test::Base';
-
-    ::throws_ok {
-        with 'Role::Plot', 'Role::Truth';       
-    } qr/Two \'override\' methods of the same name encountered/, 
-      '... cannot compose it because we have no superclass';       
-}
-
-ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
-ok(My::Test12->meta->has_method('twist'), '... the twist method has been added');
-ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
-ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
-
-ok(!My::Test11->does('Role::Plot'), '... our class does() the correct roles');
-ok(My::Test11->does('Role::Truth'), '... our class does() the correct roles');
-ok(!My::Test12->does('Role::Truth'), '... our class does() the correct roles');
-ok(My::Test12->does('Role::Plot'), '... our class does() the correct roles');
-ok(!My::Test13->does('Role::Plot'), '... our class does() the correct roles');
-ok(!My::Test14->does('Role::Truth'), '... our class does() the correct roles');
-ok(!My::Test14->does('Role::Plot'), '... our class does() the correct roles');
-
-is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Truth::twist', '... got the right method return');
-is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Plot::twist', '... got the right method return');
-ok(!My::Test13->can('twist'), '... no twist method here at all');
-is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method return (from superclass)');
-
-{
-    package Role::Reality;
-    use Moose::Role;
-
-    ::throws_ok {    
-        with 'Role::Plot';
-    } qr/A local method of the same name as been found/, 
-    '... could not compose roles here, it dies';
-
-    sub twist {
-        'Role::Reality::twist';
-    }
-}    
-
-ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
-ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
-is(Role::Reality->meta->get_method('twist')->(), 
-    'Role::Reality::twist', 
-    '... the twist method returns the right value');
-
-=cut
