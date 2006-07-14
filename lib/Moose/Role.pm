@@ -97,24 +97,18 @@ use Moose::Util::TypeConstraints;
             my $meta = _find_meta();
             return subname 'Moose::Role::before' => sub (@&) { 
                 confess "Moose::Role does not currently support 'before'";
-		        my $code = pop @_;
-		        $meta->add_before_method_modifier($_, $code) for @_;
 	        };
 	    },
         after => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::after' => sub (@&) { 
                 confess "Moose::Role does not currently support 'after'";
-		        my $code = pop @_;
-		        $meta->add_after_method_modifier($_, $code) for @_;
 	        };
 	    },
         around => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::around' => sub (@&) { 
                 confess "Moose::Role does not currently support 'around'";
-		        my $code = pop @_;
-		        $meta->add_around_method_modifier($_, $code) for @_;
 	        };
 	    },
 	    super => sub {
