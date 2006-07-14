@@ -150,9 +150,10 @@ sub _clean_up_required_methods {
 sub name    { (shift)->_role_meta->name    }
 sub version { (shift)->_role_meta->version }
 
-sub get_method      { (shift)->_role_meta->get_method(@_)   }
-sub has_method      { (shift)->_role_meta->has_method(@_)   }
-sub alias_method    { (shift)->_role_meta->alias_method(@_) }
+sub get_method          { (shift)->_role_meta->get_method(@_)         }
+sub find_method_by_name { (shift)->_role_meta->find_method_by_name(@_) }
+sub has_method          { (shift)->_role_meta->has_method(@_)         }
+sub alias_method        { (shift)->_role_meta->alias_method(@_)       }
 sub get_method_list { 
     my ($self) = @_;
     grep { 
@@ -234,40 +235,13 @@ sub _check_required_methods {
     # the require methods stuff.  
     foreach my $required_method_name ($self->get_required_method_list) {
         
-        # FIXME:
-        # This should not call has_method, instead it should
-        # call find_method_by_name (to be added to Class::MOP)
-        unless ($other->has_method($required_method_name)) {
+        unless ($other->find_method_by_name($required_method_name)) {
             if ($other->isa('Moose::Meta::Role')) {
                 $other->add_required_methods($required_method_name);
             }
             else {
                 confess "'" . $self->name . "' requires the method '$required_method_name' " . 
                         "to be implemented by '" . $other->name . "'";
-            }
-        }
-        else {
-            # NOTE:
-            # we need to make sure that the method is 
-            # not a method modifier, because those do 
-            # not satisfy the requirements ...
-            
-            # FIXME:
-            # This should also call find_method_by_name
-            my $method = $other->get_method($required_method_name);
-            # check if it is an override or a generated accessor ..
-            (!$method->isa('Moose::Meta::Method::Overriden') &&
-             !$method->isa('Class::MOP::Attribute::Accessor'))
-                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
-                           "to be implemented by '" . $other->name . "', the method is only a method modifier";
-            # before/after/around methods are a little trickier
-            # since we wrap the original local method (if applicable)
-            # so we need to check if the original wrapped method is 
-            # from the same package, and not a wrap of the super method 
-            if ($method->isa('Class::MOP::Method::Wrapped')) {
-                ($method->get_original_method->package_name eq $other->name)
-                    || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
-                               "to be implemented by '" . $other->name . "', the method is only a method modifier";            
             }
         }
     }    
@@ -444,6 +418,8 @@ probably not that much really).
 =back
 
 =over 4
+
+=item B<find_method_by_name>
 
 =item B<get_method>
 
