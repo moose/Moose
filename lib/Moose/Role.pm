@@ -119,7 +119,9 @@ use Moose::Util::TypeConstraints;
 	    },
 	    super => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::super' => sub {};
+            return subname 'Moose::Role::super' => sub {
+                confess "Moose::Role cannot support 'super'";
+            };
         },
         override => sub {
             my $meta = _find_meta();

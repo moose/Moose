@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 33;
 use Test::Exception;
 
 BEGIN {  
     use_ok('Moose::Role');               
 }
 
-=begin nonsense
+
 
 {
     package FooRole;
@@ -21,13 +21,6 @@ BEGIN {
     
     sub goo { 'FooRole::goo' }
     sub foo { 'FooRole::foo' }
-    
-    override 'boo' => sub { 'FooRole::boo -> ' . super() };   
-    
-    around 'blau' => sub {  
-        my $c = shift;
-        'FooRole::blau -> ' . $c->();
-    }; 
 
     package BarClass;
     use Moose;
@@ -40,8 +33,6 @@ BEGIN {
     
     extends 'BarClass';
        with 'FooRole';
-    
-    sub blau { 'FooClass::blau' }
 
     sub goo { 'FooClass::goo' }  # << overrides the one from the role ... 
 }
@@ -64,7 +55,7 @@ dies_ok {
 ok($foo_class_meta->does_role('FooRole'), '... the FooClass->meta does_role FooRole');
 ok(!$foo_class_meta->does_role('OtherRole'), '... the FooClass->meta !does_role OtherRole');
 
-foreach my $method_name (qw(bar baz foo boo blau goo)) {
+foreach my $method_name (qw(bar baz foo goo)) {
     ok($foo_class_meta->has_method($method_name), '... FooClass has the method ' . $method_name);    
 }
 
@@ -86,9 +77,7 @@ ok(!$foo->does('OtherRole'), '... and instance of FooClass does not do OtherRole
 can_ok($foo, 'bar');
 can_ok($foo, 'baz');
 can_ok($foo, 'foo');
-can_ok($foo, 'boo');
 can_ok($foo, 'goo');
-can_ok($foo, 'blau');
 
 is($foo->foo, 'FooRole::foo', '... got the right value of foo');
 is($foo->goo, 'FooClass::goo', '... got the right value of goo');
@@ -113,8 +102,4 @@ lives_ok {
 
 is($foo->bar, $foo2, '... got the right value for bar now');
 
-is($foo->boo, 'FooRole::boo -> BarClass::boo', '... got the right value from ->boo');
-is($foo->blau, 'FooRole::blau -> FooClass::blau', '... got the right value from ->blau');
-
-=cut
 
