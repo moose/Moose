@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 1;
 use Test::Exception;
 
 BEGIN {  
     use_ok('Moose::Role');               
 }
+
+=begin nonsense
 
 {
     package FooRole;
@@ -113,4 +115,6 @@ is($foo->bar, $foo2, '... got the right value for bar now');
 
 is($foo->boo, 'FooRole::boo -> BarClass::boo', '... got the right value from ->boo');
 is($foo->blau, 'FooRole::blau -> FooClass::blau', '... got the right value from ->blau');
+
+=cut
 

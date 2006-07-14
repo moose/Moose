@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 15;
 use Test::Exception;
 
 BEGIN {
@@ -26,7 +26,10 @@ not remove the requirement)
     use Moose::Role;
     
     requires 'foo';
-    
+ 
+}
+
+=begin nonsense
     package Role::ProvideFoo;
     use strict;
     use warnings;
@@ -43,6 +46,8 @@ is_deeply(
     [ Role::ProvideFoo->meta->get_required_method_list ], 
     [ 'foo' ], 
     '... foo method is still required for Role::ProvideFoo');
+
+=cut
 
 =pod
 

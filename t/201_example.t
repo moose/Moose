@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 1;
 use Test::Exception;
 
 BEGIN {
@@ -11,6 +11,8 @@ BEGIN {
 }
 
 ## Roles
+
+=begin nonsense
 
 {
     package Constraint;
@@ -128,3 +130,4 @@ ok($at_least_10_chars->does('Constraint::OnLength'), '... Constraint::LengthAtLe
 ok(!defined($at_least_10_chars->validate('barrrrrrrrr')), '... validated correctly');
 is($at_least_10_chars->validate('bar'), 'must be at least 10 chars', '... validation failed correctly');
 
+=cut

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 34;
+use Test::More tests => 14;
 use Test::Exception;
 
 BEGIN {
@@ -58,6 +58,8 @@ a method conflict with method modifiers
 
 =cut
 
+=begin nonesense
+
 {
     package Role::Base2;
     use Moose::Role;
@@ -100,6 +102,8 @@ isa_ok(My::Test::Class2::Base->meta->get_method('foo'), 'Class::MOP::Method');
 is(My::Test::Class2::Base->foo, 'My::Test::Class2::Base', '... got the right value from method');
 is(My::Test::Class2->foo, 'My::Test::Class2::Base -> Role::Base::foo', '... got the right value from method');
 
+=cut
+
 =pod
 
 Check for repeated inheritence of the 
@@ -110,6 +114,8 @@ This tests around, but should work the
 same for before/afters as well
 
 =cut
+
+=begin nonesense
 
 {
     package Role::Base3;
@@ -152,6 +158,8 @@ isa_ok(My::Test::Class3::Base->meta->get_method('foo'), 'Class::MOP::Method');
 
 is(My::Test::Class3::Base->foo, 'My::Test::Class3::Base', '... got the right value from method');
 is(My::Test::Class3->foo, 'Role::Base::foo(My::Test::Class3::Base)', '... got the right value from method');
+
+=cut
 
 =pod
 

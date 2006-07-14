@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 90;
+use Test::More tests => 44;
 use Test::Exception;
 
 BEGIN {
@@ -86,6 +86,8 @@ ok(Role::Bar->meta->requires_method('bar'), '... it still has the required bar m
 Role method conflicts
 
 =cut
+
+=begin nonsense
 
 {
     package Role::Bling;
@@ -252,6 +254,8 @@ Role override method conflicts
 
 =cut
 
+=begin nonsense
+
 {
     package Role::Plot;
     use Moose::Role;
@@ -347,3 +351,5 @@ ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the corre
 is(Role::Reality->meta->get_method('twist')->(), 
     'Role::Reality::twist', 
     '... the twist method returns the right value');
+
+=cut
