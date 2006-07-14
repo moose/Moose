@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 23;
 use Test::Exception;
 
 BEGIN {  
@@ -93,19 +93,3 @@ is_deeply(
 ok(!$foo_role->has_attribute('bar'), '... FooRole does not have the bar attribute');
 ok($foo_role->has_attribute('baz'), '... FooRole does still have the baz attribute');
 
-# method modifiers
-
-ok(!$foo_role->has_before_method_modifiers('boo'), '... no boo:before modifier');
-
-my $method = sub { "FooRole::boo:before" };
-lives_ok {
-    $foo_role->add_before_method_modifier('boo' => $method);
-} '... added a method modifier okay';
-
-ok($foo_role->has_before_method_modifiers('boo'), '... now we have a boo:before modifier');
-is(($foo_role->get_before_method_modifiers('boo'))[0], $method, '... got the right method back');
-
-is_deeply(
-    [ $foo_role->get_method_modifier_list('before') ],
-    [ 'boo' ],
-    '... got the right list of before method modifiers');
