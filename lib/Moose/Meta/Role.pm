@@ -50,28 +50,6 @@ __PACKAGE__->meta->add_attribute('required_methods' => (
     default => sub { {} }
 ));
 
-## method modifiers
-
-__PACKAGE__->meta->add_attribute('before_method_modifiers' => (
-    reader  => 'get_before_method_modifiers_map',
-    default => sub { {} } # (<name> => [ (CODE) ])
-));
-
-__PACKAGE__->meta->add_attribute('after_method_modifiers' => (
-    reader  => 'get_after_method_modifiers_map',
-    default => sub { {} } # (<name> => [ (CODE) ])
-));
-
-__PACKAGE__->meta->add_attribute('around_method_modifiers' => (
-    reader  => 'get_around_method_modifiers_map',
-    default => sub { {} } # (<name> => [ (CODE) ])
-));
-
-__PACKAGE__->meta->add_attribute('override_method_modifiers' => (
-    reader  => 'get_override_method_modifiers_map',
-    default => sub { {} } # (<name> => CODE) 
-));
-
 ## Methods 
 
 sub new {
@@ -504,56 +482,6 @@ probably not that much really).
 =item B<get_required_methods_map>
 
 =item B<requires_method>
-
-=back
-
-=over 4
-
-=item B<add_after_method_modifier>
-
-=item B<add_around_method_modifier>
-
-=item B<add_before_method_modifier>
-
-=item B<add_override_method_modifier>
-
-=over 4
-
-=back
-
-=item B<has_after_method_modifiers>
-
-=item B<has_around_method_modifiers>
-
-=item B<has_before_method_modifiers>
-
-=item B<has_override_method_modifier>
-
-=over 4
-
-=back
-
-=item B<get_after_method_modifiers>
-
-=item B<get_around_method_modifiers>
-
-=item B<get_before_method_modifiers>
-
-=item B<get_method_modifier_list>
-
-=over 4
-
-=back
-
-=item B<get_override_method_modifier>
-
-=item B<get_after_method_modifiers_map>
-
-=item B<get_around_method_modifiers_map>
-
-=item B<get_before_method_modifiers_map>
-
-=item B<get_override_method_modifiers_map>
 
 =back
 
