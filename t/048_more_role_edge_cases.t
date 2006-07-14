@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 77;
+use Test::More tests => 10;
 use Test::Exception;
 
 BEGIN {
@@ -53,6 +53,8 @@ BEGIN {
     } '... called foo successfully';
     is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
+
+=begin nonsense
 
 {
     # NOTE:
@@ -157,6 +159,7 @@ BEGIN {
 # this test, I am not sure we are testing anything 
 # useful here (although more tests cant hurt)
 
+
 {
     use List::Util qw/shuffle/;
 
@@ -256,3 +259,5 @@ BEGIN {
         is( eval { $class->method }, "concrete b", "provided by concrete b" );
     }
 }
+
+=cut

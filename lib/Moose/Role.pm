@@ -96,6 +96,7 @@ use Moose::Util::TypeConstraints;
         before => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::before' => sub (@&) { 
+                confess "Moose::Role does not currently support 'before'";
 		        my $code = pop @_;
 		        $meta->add_before_method_modifier($_, $code) for @_;
 	        };
@@ -103,6 +104,7 @@ use Moose::Util::TypeConstraints;
         after => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::after' => sub (@&) { 
+                confess "Moose::Role does not currently support 'after'";
 		        my $code = pop @_;
 		        $meta->add_after_method_modifier($_, $code) for @_;
 	        };
@@ -110,6 +112,7 @@ use Moose::Util::TypeConstraints;
         around => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::around' => sub (@&) { 
+                confess "Moose::Role does not currently support 'around'";
 		        my $code = pop @_;
 		        $meta->add_around_method_modifier($_, $code) for @_;
 	        };
@@ -121,20 +124,19 @@ use Moose::Util::TypeConstraints;
         override => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::override' => sub ($&) {
-                my ($name, $code) = @_;
-		        $meta->add_override_method_modifier($name, $code);
+                confess "Moose::Role cannot support 'override'";
 	        };
 	    },		
         inner => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::inner' => sub {
-                confess "Moose::Role does not currently support 'inner'";	    
+                confess "Moose::Role cannot support 'inner'";	    
 	        };
 	    },
         augment => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::augment' => sub {
-                confess "Moose::Role does not currently support 'augment'";
+                confess "Moose::Role cannot support 'augment'";
 	        };
 	    },
         confess => sub {

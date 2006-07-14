@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 1;
 use Test::Exception;
 
 BEGIN {  
@@ -19,6 +19,8 @@ are injecting their methods correctly? In other
 words, should 'has_method' return true for them?
 
 =cut
+
+=begin nonsense
 
 {
     package FooRole;
@@ -145,3 +147,4 @@ is_deeply(
     [ 'bling', 'fling' ],
     '... got the right list of override method modifiers');
 
+=cut
