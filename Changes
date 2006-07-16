@@ -1,5 +1,7 @@
 Revision history for Perl extension Moose
 
+0.12
+
 0.11 Wed. July 12, 2006
     * Moose
       - added an &unimport method to remove all the keywords

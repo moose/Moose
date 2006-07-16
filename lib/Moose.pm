@@ -485,20 +485,50 @@ to work. Here is an example:
     
     no Moose; # keywords are removed from the Person package    
 
-=head1 FUTURE PLANS
+=head1 ROAD MAP
 
-Here is just a sampling of the plans we have in store for Moose:
+We have developed a roadmap for the next several releases of Moose.
+Development is currently moving at a rapid pace, so this roughly 
+represents the next few weeks of Moose.
 
 =over 4
 
-=item *
+=item 0.12
 
-Compiling Moose classes/roles into C<.pmc> files for faster loading and execution.
+This is the current release, it addresses some inconsistencies with 
+Role composition and method modifiers. As an intermediate step, it 
+removed method modifiers from Roles entirely, and roles can only 
+compose methods and attributes.
 
-=item * 
+=item 0.13
 
-Supporting sealed and finalized classes in Moose. This will allow greater control 
-of the extensions of frameworks and such.
+With this release will be adding a new keyword which will allow a 
+finer grained form of reuse than roles. This keyword will form the 
+basis of the features of the next few releases.
+
+=item 0.14
+
+With this release we will introduce a deferred version of method 
+modifiers and a package/class-like container to hold them. In 
+conjunction with the new keyword from 0.13, this will bring back 
+the ability to compose groups of method modifiers which was 
+removed in 0.12. 
+
+=item 0.15
+
+With this release we will attempt to return the ability for Roles
+to compose method modifiers, by using the features introduced in 
+0.13 and 0.14. 
+
+It is our intention that this release will bring Roles to a 
+fully stable level. 
+
+=item 0.16 - 0.20
+
+The focus of these releases will be to bring the optimization 
+capabilities of class immutability which we introduced in 
+Class::MOP 0.30. I will get into the details of this as we 
+get closer to it.
 
 =back
 
