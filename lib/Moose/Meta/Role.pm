@@ -318,6 +318,9 @@ sub _apply_methods {
 sub apply {
     my ($self, $other) = @_;
     
+    ($other->isa('Moose::Meta::Class') || $other->isa('Moose::Meta::Role'))
+        || confess "You must apply a role to a metaclass, not ($other)";
+    
     $self->_check_excluded_roles($other);
     $self->_check_required_methods($other);  
 
