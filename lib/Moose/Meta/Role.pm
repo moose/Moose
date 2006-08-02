@@ -1,4 +1,3 @@
-
 package Moose::Meta::Role;
 
 use strict;
@@ -171,39 +170,118 @@ sub get_method_list {
 
 # attributes
 
+my $id;
 sub add_attribute {
-    my $self = shift;
-    my $name = shift;
-    my $attr_desc;
-    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
-        $attr_desc = $_[0];
-    }
-    else {
-        $attr_desc = { @_ };
-    }
-    $self->get_attribute_map->{$name} = $attr_desc;
+    my $self      = shift;
+    # either we have an attribute object already
+    # or we need to create one from the args provided
+    require Moose::Meta::Attribute;
+    my $attribute = blessed($_[0]) ? $_[0] : $self->_role_meta->attribute_metaclass->new(@_);
+    # make sure it is derived from the correct type though
+    ($attribute->isa('Class::MOP::Attribute'))
+        || confess "Your attribute must be an instance of Class::MOP::Attribute (or a subclass)";    
+    $attribute->attach_to_class($self->_role_meta);
+    # FIXME attribute vs. method shadowing # $attribute->install_accessors();
+    $self->get_attribute_map->{$attribute->name} = $attribute;
+
+    $attribute->{__id} ||= ++$id;
+
+    $self->remove_required_methods(
+        grep { defined }
+            map { $attribute->$_ }
+                qw/accessor reader writer/
+    );
+
+	# FIXME
+	# in theory we have to tell everyone the slot structure may have changed
 }
 
 sub has_attribute {
-    my ($self, $name) = @_;
-    exists $self->get_attribute_map->{$name} ? 1 : 0;
-}
+    my ($self, $attribute_name) = @_;
+    (defined $attribute_name && $attribute_name)
+        || confess "You must define an attribute name";
+    exists $self->get_attribute_map->{$attribute_name} ? 1 : 0;    
+} 
 
 sub get_attribute {
-    my ($self, $name) = @_;
-    $self->get_attribute_map->{$name}
+    my ($self, $attribute_name) = @_;
+    (defined $attribute_name && $attribute_name)
+        || confess "You must define an attribute name";
+    return $self->get_attribute_map->{$attribute_name} 
+        if $self->has_attribute($attribute_name);   
+    return; 
 }
 
 sub remove_attribute {
-    my ($self, $name) = @_;
-    delete $self->get_attribute_map->{$name}
-}
+    my ($self, $attribute_name) = @_;
+    (defined $attribute_name && $attribute_name)
+        || confess "You must define an attribute name";
+    my $removed_attribute = $self->get_attribute_map->{$attribute_name};    
+    return unless defined $removed_attribute;
+    delete $self->get_attribute_map->{$attribute_name};        
+    $removed_attribute->remove_accessors(); 
+    $removed_attribute->detach_from_class();
+    return $removed_attribute;
+} 
 
 sub get_attribute_list {
     my ($self) = @_;
     keys %{$self->get_attribute_map};
 }
 
+sub compute_all_applicable_attributes {
+    my $self = shift;
+    my @attrs;
+
+    my %attrs;
+
+    foreach my $role (@{ $self->get_roles() }) {
+        foreach my $attr ( $role->compute_all_applicable_attributes ) {
+            push @{ $attrs{$attr->name} ||= [] }, $attr;
+        }
+    }
+
+    # remove all conflicting attributes
+    foreach my $attr_name ( keys %attrs ) {
+        if ( @{ $attrs{$attr_name} } == 1 ) {
+            $attrs{$attr_name} = $attrs{$attr_name}[0];
+        } else {
+            delete $attrs{$attr_name};
+        }
+    }
+
+    # overlay our own attributes
+    my @local_attr_list = $self->get_attribute_list;
+    @attrs{@local_attr_list} = map { $self->get_attribute($_) } @local_attr_list;
+
+    return values %attrs;
+}
+
+sub find_attribute_by_name {
+    my ($self, $attr_name) = @_;
+    # keep a record of what we have seen
+    # here, this will handle all the 
+    # inheritence issues because we are 
+    # using the &class_precedence_list
+
+    if ( $self->has_attribute( $attr_name ) ) {
+        return $self->get_attribute( $attr_name );
+    } else {
+        my @found;
+        foreach my $role ( @{ $self->get_roles } ) {
+            if ( my $attr = $role->find_attribute_by_name ) {
+                push @found, $attr;
+            }
+        }
+
+        if ( @found == 1 ) {
+            # there's no conflict
+            return $found[0];
+        } else {
+            return;
+        }
+    }
+}
 
 ## applying a role to a class ...
 
@@ -233,6 +311,10 @@ sub _check_required_methods {
     # attribute accessors. However I am thinking 
     # that maybe those are somehow exempt from 
     # the require methods stuff.  
+
+    ### FIXME
+    # attributes' accessors are not being treated as first class methods as far as role composition is concerned.
+
     foreach my $required_method_name ($self->get_required_method_list) {
         
         unless ($other->find_method_by_name($required_method_name)) {
@@ -249,16 +331,18 @@ sub _check_required_methods {
 
 sub _apply_attributes {
     my ($self, $other) = @_;    
-    foreach my $attribute_name ($self->get_attribute_list) {
+    foreach my $attr ($self->compute_all_applicable_attributes) {
         # it if it has one already
-        if ($other->has_attribute($attribute_name) &&
-            # make sure we haven't seen this one already too
-            $other->get_attribute($attribute_name) != $self->get_attribute($attribute_name)) {
+        my $other_attr = $other->find_attribute_by_name($attr->name);
+
+        # __id is a hack to allow cloned attrs to compare as equal
+        if ( $other_attr && !(( exists ($other_attr->{__id}) && exists($other_attr->{__id}) && $other_attr->{__id} == $attr->{__id} ) || $other_attr == $attr ) ) { 
             # see if we are being composed  
             # into a role or not
             if ($other->isa('Moose::Meta::Role')) {                
                 # all attribute conflicts between roles 
                 # result in an immediate fatal error 
+                # FIXME - do they
                 confess "Role '" . $self->name . "' has encountered an attribute conflict " . 
                         "during composition. This is fatal error and cannot be disambiguated.";
             }
@@ -270,10 +354,8 @@ sub _apply_attributes {
             }
         }
         else {
-            $other->add_attribute(
-                $attribute_name,
-                $self->get_attribute($attribute_name)
-            );
+            my $clone = $attr->meta->clone_object( $attr );
+            $other->add_attribute( $clone );
         }
     }    
 }
@@ -282,9 +364,8 @@ sub _apply_methods {
     my ($self, $other) = @_;   
     foreach my $method_name ($self->get_method_list) {
         # it if it has one already
-        if ($other->has_method($method_name) &&
-            # and if they are not the same thing ...
-            $other->get_method($method_name) != $self->get_method($method_name)) {
+        my $other_method = $other->find_method_by_name($method_name);
+        if ($other_method && $other_method != $self->get_method($method_name)) {
             # see if we are composing into a role
             if ($other->isa('Moose::Meta::Role')) { 
                 # method conflicts between roles result 

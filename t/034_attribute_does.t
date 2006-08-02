@@ -18,6 +18,11 @@ BEGIN {
     # we create a type constraint for 
     # it, just as we do for isa()
     has 'bar' => (is => 'rw', does => 'Bar::Role'); 
+    
+    package Foo::Class;
+    use Moose;
+    
+    with 'Foo::Role';
 
     package Bar::Role;
     use Moose::Role;
@@ -26,11 +31,6 @@ BEGIN {
     # if it does work... then the does() check is actually not needed 
     # since the isa() check will imply the does() check    
     has 'foo' => (is => 'rw', isa => 'Foo::Class', does => 'Foo::Role');    
-    
-    package Foo::Class;
-    use Moose;
-    
-    with 'Foo::Role';
 
     package Bar::Class;
     use Moose;
