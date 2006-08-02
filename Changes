@@ -1,5 +1,13 @@
 Revision history for Perl extension Moose
 
+0.12
+    * Moose::Cookbook
+      - Recipe5 (subtypes & coercion) has been written
+      
+    * Moose
+      - added ROADMAP section to detail the near term 
+        plans for Moose
+
 0.11 Wed. July 12, 2006
     * Moose
       - added an &unimport method to remove all the keywords
