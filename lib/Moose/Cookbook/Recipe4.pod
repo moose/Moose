@@ -109,9 +109,9 @@ how that can be useful for specifying specific type constraints
 without having to build an entire class to represent them. We 
 will also show how this feature can be used to leverage the 
 usefulness of CPAN modules. In addition to this, we will also 
-introduce another attribute option as well.
+introduce another attribute option.
 
-Lets first get into the C<subtype> features. In the B<Address> 
+Let's first get into the C<subtype> features. In the B<Address> 
 class we have defined two subtypes. The first C<subtype> uses 
 the L<Locale::US> module, which provides two hashes which can be 
 used to do existence checks for state names and their two letter 
@@ -159,7 +159,7 @@ and share them among many different classes (avoiding unneeded
 duplication) because type constraints are stored by string in a 
 global registry and always accessible to C<has>.
 
-With these two subtypes and some attributes, we pretty much define 
+With these two subtypes and some attributes, we have defined
 as much as we need for a basic B<Address> class. Next we define 
 a basic B<Company> class, which itself has an address. As we saw in 
 earlier recipes, we can use the C<Address> type constraint that 
@@ -177,13 +177,13 @@ the B<Company> constructor, and that the C<name> accessor cannot
 accept an undefined value for the slot. The result is that C<name> 
 should always have a value. 
 
-The next attribute option is not actually a new one, but a new varient 
+The next attribute option is not actually new, but a new variant 
 of options we have already introduced.
   
   has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
       (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
   });
-  
+
 Here, instead of passing a string to the C<isa> option, we are passing 
 an anyonomous subtype of the C<ArrayRef> type constraint. This subtype 
 basically checks that all the values in the ARRAY ref are instance of 
@@ -216,7 +216,7 @@ and full of I<only> instances of B<Employee>.
 The next place we need to address is the C<employees> read/write 
 accessor (see the C<employees> attribute declaration above). This 
 accessor will properly check the type constraint, but we need to add
-so additional behavior. For this we use an C<after> method modifier
+some additional behavior. For this we use an C<after> method modifier
 like so:
 
   after 'employees' => sub {
@@ -233,7 +233,7 @@ check has already happened, so we can just check for defined-ness on the
 C<$employees> argument.
 
 At this point, our B<Company> class is complete. Next comes our B<Person> 
-class and it's subclass the previously mentioned B<Employee> class. 
+class and its subclass the previously mentioned B<Employee> class. 
 
 The B<Person> class should be obvious to you at this point. It has a few 
 C<required> attributes, and the C<middle_intial> slot has an additional 
@@ -245,17 +245,17 @@ point. It requires a C<title>, and maintains a weakend reference to a
 B<Company> instance. The only new item, which we have seen before in 
 examples, but never in the recipe itself, is the C<override> method 
 modifier. 
-  
+
   override 'full_name' => sub {
       my $self = shift;
       super() . ', ' . $self->title
   };
 
-This just tells Moose that I am intetionally overriding the superclass 
+This just tells Moose that I am intentionally overriding the superclass 
 C<full_name> method here, and adding the value of the C<title> slot at 
 the end of the employee's full name.
 
-And thats about it.
+And that's about it.
 
 Once again, as with all the other recipes, you can go about using 
 these classes like any other Perl 5 class. A more detailed example of 
@@ -271,9 +271,9 @@ more code a non-Moose plain old Perl 5 version of this recipe would have
 been (including all the type constraint checks, weak references, etc).
 
 And of course, this recipe also introduced the C<subtype> keyword, and 
-it's usefulness within the Moose toolkit. In the next recipe we will 
+its usefulness within the Moose toolkit. In the next recipe we will 
 focus more on subtypes, and introduce the idea of type coercion as well.
-    
+
 =head1 FOOTNOTES
 
 =over 4

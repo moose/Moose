@@ -68,10 +68,10 @@ new attribute feature, that of a default value.
 
   has 'balance' => (isa => 'Int', is => 'rw', default => 0);
 
-This tells is that a B<BankAccount> has a C<balance> attribute, 
-which is has the C<Int> type constraint, a read/write accessor, 
+This tells us that a B<BankAccount> has a C<balance> attribute, 
+which has the C<Int> type constraint, a read/write accessor, 
 and a default value of C<0>. This means that every instance of 
-B<BankAccount> that is created will have it's C<balance> slot 
+B<BankAccount> that is created will have its C<balance> slot 
 initialized to C<0>. Very simple really :)
 
 Next come the methods. The C<deposit> and C<withdraw> methods 
@@ -95,7 +95,7 @@ you define, a corresponding type constraint will be created for
 that class. This means that in the first recipe, a C<Point> and 
 C<Point3D> type constraint were created, and in this recipe, both 
 a C<BankAccount> and a C<CheckingAccount> type constraint were 
-created. Moose does this as a convience for you so that your 
+created. Moose does this as a convenience for you so that your 
 class model and the type constraint model can both be kept in 
 sync with one another. In short, Moose makes sure that it will 
 just DWIM (1).
@@ -142,13 +142,13 @@ author of the B<BankAccount> subclass does not need to remember
 to call C<SUPER::withdraw> and to pass it the C<$amount> argument. 
 Instead the method modifier assures that all arguments make it 
 to the superclass method correctly. But this is actually more 
-than just a convience for forgetful programmers, it also helps 
+than just a convenience for forgetful programmers, it also helps 
 isolate subclasses from changes in the superclasses. For instance, 
 if B<BankAccount::withdraw> were to add an additional argument 
 of some kind, the version of B<CheckingAccount::withdraw> which 
 uses C<SUPER::withdraw> would not pass that extra argument 
-correctly. Whereas the method modifier version of would pass 
-all arguments along correctly automatically.
+correctly. Whereas the method modifier version would automatically pass 
+along all arguments correctly.
 
 Just as with the first recipe, object instantiation is a fairly 
 normal process, here is an example:
