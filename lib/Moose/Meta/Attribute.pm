@@ -211,7 +211,7 @@ sub initialize_instance_slot {
             (defined($type_constraint->check($val))) 
                 || confess "Attribute (" . 
                            $self->name . 
-                           ") does not pass the type contraint (" . 
+                           ") does not pass the type constraint (" . 
                            $type_constraint->name .
                            ") with '$val'";			
         }
@@ -231,7 +231,7 @@ sub _inline_check_constraint {
 	# FIXME - remove 'unless defined($value) - constraint Undef
 	return sprintf <<'EOF', $value, $value, $value, $value
 defined($attr->type_constraint->check(%s))
-	|| confess "Attribute (" . $attr->name . ") does not pass the type contraint ("
+	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
        . $attr->type_constraint->name . ") with " . (defined(%s) ? "'%s'" : "undef")
   if defined(%s);
 EOF
@@ -509,7 +509,7 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =head2 Additional Moose features
 
-Moose attributes support type-contstraint checking, weak reference 
+Moose attributes support type-constraint checking, weak reference 
 creation and type coercion.  
 
 =over 4
