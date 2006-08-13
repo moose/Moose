@@ -57,6 +57,22 @@ sub does {
     return 0;   
 }
 
+# RANT:
+# Cmon, how many times have you written 
+# the following code while debugging:
+# 
+#  use Data::Dumper; 
+#  warn Dumper \%thing;
+#
+# It can get seriously annoying, so why 
+# not just do this ...
+sub dump { 
+    my $self = shift;
+    require Data::Dumper;
+    $Data::Dumper::Maxdepth = shift if @_;
+    Data::Dumper::Dumper $self;
+}
+
 1;
 
 __END__
@@ -103,6 +119,15 @@ This will call every C<DEMOLISH> method in the inheritance hierarchy.
 
 This will check if the invocant's class C<does> a given C<$role_name>. 
 This is similar to C<isa> for object, but it checks the roles instead.
+
+=item B<dump ($maxdepth)>
+
+Cmon, how many times have you written the following code while debugging:
+
+ use Data::Dumper; 
+ warn Dumper $obj;
+
+It can get seriously annoying, so why not just use this.
 
 =back
 

@@ -7,6 +7,10 @@ Revision history for Perl extension Moose
     * Moose
       - added ROADMAP section to detail the near term 
         plans for Moose
+        
+    * Moose::Object
+      - added &dump method, cause it makes all out lives 
+        easier really.
 
 0.11 Wed. July 12, 2006
     * Moose
