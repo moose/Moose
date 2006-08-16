@@ -145,12 +145,6 @@ use Moose::Util::TypeConstraints;
         blessed => sub {
             return \&Scalar::Util::blessed;
         },
-        default => sub {
-            return subname 'Moose::default' => sub (&) {
-                my $block = shift;
-                return ('default' => $block);
-            };
-        }
     );
 
     my $exporter = Sub::Exporter::build_exporter({ 
