@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+0.13
+    * Moose
+      - fixed "bad meta" error message to be more descriptive
+
 0.12
     * Moose::Cookbook
       - Recipe5 (subtypes & coercion) has been written
