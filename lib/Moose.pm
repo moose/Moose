@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -45,7 +45,7 @@ use Moose::Util::TypeConstraints;
             # override a specific class
             $meta = $class->meta();
             (blessed($meta) && $meta->isa('Moose::Meta::Class'))
-                || confess "Whoops, not møøsey enough";
+                || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
         }
         else {
             # NOTE:
@@ -144,6 +144,12 @@ use Moose::Util::TypeConstraints;
         },
         blessed => sub {
             return \&Scalar::Util::blessed;
+        },
+        default => sub {
+            return subname 'Moose::default' => sub (&) {
+                my $block = shift;
+                return ('default' => $block);
+            };
         }
     );
 

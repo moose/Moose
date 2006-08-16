@@ -52,5 +52,7 @@ isa_ok(Foo->meta, 'Foo::Meta');
     use metaclass 'Bar::Meta';
     eval 'use Moose;';
     ::ok($@, '... could not load moose without correct metaclass');
-    ::like($@, qr/^Whoops\, not møøsey enough/, '... got the right error too');
+    ::like($@, 
+        qr/^You already have a \&meta function\, but it does not return a Moose\:\:Meta\:\:Class/, 
+        '... got the right error too');
 }
