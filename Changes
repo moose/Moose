@@ -12,6 +12,10 @@ Revision history for Perl extension Moose
     * Moose::Object
       - added &dump method, cause it makes all out lives 
         easier really.
+        
+    * Moose::Meta::TypeConstraint
+      - added the &is_a_type_of method to check both the current
+        and the subtype of a method (similar to &isa with classes)
 
 0.11 Wed. July 12, 2006
     * Moose

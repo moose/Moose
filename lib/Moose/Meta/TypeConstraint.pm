@@ -9,7 +9,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
@@ -76,6 +76,11 @@ sub validate {
             return "Validation failed for '" . $self->name . "' failed";
         }
     }
+}
+
+sub is_a_type_of {
+    my ($self, $type_name) = @_;
+    ($self->name eq $type_name || $self->is_subtype_of($type_name));
 }
 
 sub is_subtype_of {
@@ -187,7 +192,12 @@ If you wish to use features at this depth, please come to the
 
 =item B<new>
 
-=item B<is_subtype_of>
+=item B<is_a_type_of ($type_name)>
+
+This checks the current type name, and if it does not match, 
+checks if it is a subtype of it.
+
+=item B<is_subtype_of ($type_name)>
 
 =item B<compile_type_constraint>
 
