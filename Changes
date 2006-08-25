@@ -5,9 +5,9 @@ Revision history for Perl extension Moose
       - Recipe5 (subtypes & coercion) has been written
       
     * Moose
-      - added ROADMAP section to detail the near term 
-        plans for Moose
-      - fixed "bad meta" error message to be more descriptive        
+      - fixed "bad meta" error message to be more descriptive      
+      - fixed &unimport to not remove the &inner and &super  
+        keywords because we need to localize them.
         
     * Moose::Object
       - added &dump method, cause it makes all out lives 
