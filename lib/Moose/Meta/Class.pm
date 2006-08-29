@@ -101,6 +101,9 @@ sub has_method {
 
     my $sub_name = ($self->name . '::' . $method_name);   
     
+    # FIXME:
+    # this should use the ::Package code
+    # and not turn off strict refs
     no strict 'refs';
     return 0 if !defined(&{$sub_name});        
 	my $method = \&{$sub_name};
@@ -174,8 +177,7 @@ sub add_augment_method_modifier {
 
 sub _find_next_method_by_name_which_is_not_overridden {
     my ($self, $name) = @_;
-    my @methods = $self->find_all_methods_by_name($name);
-    foreach my $method (@methods) {
+    foreach my $method ($self->find_all_methods_by_name($name)) {
         return $method->{code} 
             if blessed($method->{code}) && !$method->{code}->isa('Moose::Meta::Method::Overriden');
     }
@@ -226,6 +228,10 @@ sub _apply_all_roles {
         $roles[0]->meta->apply($self);
     }
     else {
+        # FIXME
+        # we should make a Moose::Meta::Role::Composite
+        # which is a smaller version of Moose::Meta::Role
+        # which does not use any package stuff
         Moose::Meta::Role->combine(
             map { $_->meta } @roles
         )->apply($self);
@@ -318,7 +324,7 @@ and type coercion features.
 
 =item B<has_method ($name)>
 
-This accomidates Moose::Meta::Role::Method instances, which are 
+This accommodates Moose::Meta::Role::Method instances, which are 
 aliased, instead of added, but still need to be counted as valid 
 methods.
 

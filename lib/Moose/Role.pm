@@ -35,11 +35,11 @@ use Moose::Util::TypeConstraints;
     	if ($role->can('meta')) {
     		$meta = $role->meta();
     		(blessed($meta) && $meta->isa('Moose::Meta::Role'))
-    			|| confess "Whoops, not møøsey enough";
+                || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
     	}
     	else {
-    		$meta = Moose::Meta::Role->new(role_name => $role);
-    		$meta->_role_meta->add_method('meta' => sub { $meta })		
+    		$meta = Moose::Meta::Role->initialize($role);
+    		$meta->Moose::Meta::Class::add_method('meta' => sub { $meta })		
     	}
 
         return $METAS{$role} = $meta;

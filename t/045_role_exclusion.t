@@ -67,7 +67,7 @@ the roles into the same class
     
     ::throws_ok {
         with 'Molecule::Organic', 'Molecule::Inorganic';
-    } qr/Conflict detected: Class::MOP::Class::__ANON__::SERIAL::1 excludes role \'Molecule::Inorganic\'/, 
+    } qr/Conflict detected: .+ excludes role \'Molecule::Inorganic\'/, 
     '... adding the role w/ excluded role conflict dies okay';    
     
     package My::Test3;

@@ -140,6 +140,8 @@ use Moose::Util::TypeConstraints;
             };
         },
         
+        # NOTE:
+        # this is experimental for now ...
         self => sub {
             return subname 'Moose::self' => sub {};
         },        
@@ -294,7 +296,7 @@ Moose is an extension of the Perl 5 object system.
 =head2 Another object system!?!?
 
 Yes, I know there has been an explosion recently of new ways to 
-build object's in Perl 5, most of them based on inside-out objects, 
+build object's in Perl 5, most of them based on inside-out objects
 and other such things. Moose is different because it is not a new 
 object system for Perl 5, but instead an extension of the existing 
 object system.
@@ -307,36 +309,36 @@ programming.
 =head2 Can I use this in production? Or is this just an experiment?
 
 Moose is I<based> on the prototypes and experiments I did for the Perl 6
-meta-model, however Moose is B<NOT> an experiment/prototype, it is 
+meta-model; however Moose is B<NOT> an experiment/prototype, it is 
 for B<real>. I will be deploying Moose into production environments later 
-this year, and I have all intentions of using it as my de-facto class 
-builderfrom now on. 
+this year, and I have every intentions of using it as my de facto class 
+builder from now on.
 
 =head2 Is Moose just Perl 6 in Perl 5?
 
-No. While Moose is very much inspired by Perl 6, it is not. Instead, it  
-is an OO system for Perl 5. I built Moose because I was tired or writing 
-the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So 
-instead of switching to Ruby, I wrote Moose :) 
+No. While Moose is very much inspired by Perl 6, it is not itself Perl 6.
+Instead, it is an OO system for Perl 5. I built Moose because I was tired or
+writing the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So
+instead of switching to Ruby, I wrote Moose :)
 
 =head1 BUILDING CLASSES WITH MOOSE
 
-Moose makes every attempt to provide as much convience during class 
-construction/definition, but still stay out of your way if you want 
-it to. Here are a few items to note when building classes with Moose.
+Moose makes every attempt to provide as much convenience as possible during
+class construction/definition, but still stay out of your way if you want it
+to. Here are a few items to note when building classes with Moose.
 
 Unless specified with C<extends>, any class which uses Moose will 
 inherit from L<Moose::Object>.
 
 Moose will also manage all attributes (including inherited ones) that 
-are defined with C<has>. And assuming that you call C<new> which is 
+are defined with C<has>. And assuming that you call C<new>, which is 
 inherited from L<Moose::Object>, then this includes properly initializing 
-all instance slots, setting defaults where approprtiate and performing any 
+all instance slots, setting defaults where appropriate, and performing any 
 type constraint checking or coercion. 
 
 =head1 EXPORTED FUNCTIONS
 
-Moose will export a number of functions into the class's namespace, which 
+Moose will export a number of functions into the class's namespace which 
 can then be used to set up the class. These functions all work directly 
 on the current class.
 
@@ -353,12 +355,12 @@ This function will set the superclass(es) for the current class.
 This approach is recommended instead of C<use base>, because C<use base> 
 actually C<push>es onto the class's C<@ISA>, whereas C<extends> will 
 replace it. This is important to ensure that classes which do not have 
-superclasses properly inherit from L<Moose::Object>.
+superclasses still properly inherit from L<Moose::Object>.
 
 =item B<with (@roles)>
 
 This will apply a given set of C<@roles> to the local class. Role support 
-is currently under heavy development, see L<Moose::Role> for more details.
+is currently under heavy development; see L<Moose::Role> for more details.
 
 =item B<has ($name, %options)>
 
@@ -383,13 +385,13 @@ I<reader>, I<writer> and I<accessor> options inherited from L<Class::MOP::Attrib
 The I<isa> option uses Moose's type constraint facilities to set up runtime 
 type checking for this attribute. Moose will perform the checks during class 
 construction, and within any accessors. The C<$type_name> argument must be a 
-string. The string can be either a class name, or a type defined using 
-Moose's type defintion features.
+string. The string can be either a class name or a type defined using 
+Moose's type definition features.
 
 =item I<coerce =E<gt> (1|0)>
 
 This will attempt to use coercion with the supplied type constraint to change 
-the value passed into any accessors of constructors. You B<must> have supplied 
+the value passed into any accessors or constructors. You B<must> have supplied 
 a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
 for an example usage.
 
@@ -406,17 +408,18 @@ an accessor.
 
 =item I<weak_ref =E<gt> (1|0)>
 
-This will tell the class to strore the value of this attribute as a weakened 
-reference. If an attribute is a weakened reference, it can B<not> also be coerced. 
+This will tell the class to store the value of this attribute as a weakened
+reference. If an attribute is a weakened reference, it B<cannot> also be
+coerced.
 
 =item I<lazy =E<gt> (1|0)>
 
-This will tell the class to not create this slot until absolutely nessecary. 
+This will tell the class to not create this slot until absolutely necessary. 
 If an attribute is marked as lazy it B<must> have a default supplied.
 
 =item I<auto_deref =E<gt> (1|0)>
 
-This tells the accessor whether to automatically de-reference the value returned. 
+This tells the accessor whether to automatically dereference the value returned. 
 This is only legal if your C<isa> option is either an C<ArrayRef> or C<HashRef>.
 
 =item I<trigger =E<gt> $code>
@@ -424,7 +427,7 @@ This is only legal if your C<isa> option is either an C<ArrayRef> or C<HashRef>.
 The trigger option is a CODE reference which will be called after the value of 
 the attribute is set. The CODE ref will be passed the instance itself, the 
 updated value and the attribute meta-object (this is for more advanced fiddling
-and can typically be ignored in most cases). You can B<not> have a trigger on 
+and can typically be ignored in most cases). You B<cannot> have a trigger on
 a read-only attribute.
 
 =item I<handles =E<gt> [ @handles ]>
@@ -440,44 +443,44 @@ option. More docs to come later.
 
 =item B<around $name|@names =E<gt> sub { ... }>
 
-This three items are syntactic sugar for the before, after and around method 
+This three items are syntactic sugar for the before, after, and around method 
 modifier features that L<Class::MOP> provides. More information on these can 
 be found in the L<Class::MOP> documentation for now. 
 
 =item B<super>
 
-The keyword C<super> is a noop when called outside of an C<override> method. In 
+The keyword C<super> is a no-op when called outside of an C<override> method. In  
 the context of an C<override> method, it will call the next most appropriate 
 superclass method with the same arguments as the original method.
 
 =item B<override ($name, &sub)>
 
-An C<override> method, is a way of explictly saying "I am overriding this 
+An C<override> method is a way of explicitly saying "I am overriding this 
 method from my superclass". You can call C<super> within this method, and 
 it will work as expected. The same thing I<can> be accomplished with a normal 
-method call and the C<SUPER::> pseudo-package, it is really your choice. 
+method call and the C<SUPER::> pseudo-package; it is really your choice. 
 
 =item B<inner>
 
 The keyword C<inner>, much like C<super>, is a no-op outside of the context of 
 an C<augment> method. You can think of C<inner> as being the inverse of 
-C<super>, the details of how C<inner> and C<augment> work is best described in 
+C<super>; the details of how C<inner> and C<augment> work is best described in
 the L<Moose::Cookbook>.
 
 =item B<augment ($name, &sub)>
 
-An C<augment> method, is a way of explictly saying "I am augmenting this 
+An C<augment> method, is a way of explicitly saying "I am augmenting this 
 method from my superclass". Once again, the details of how C<inner> and 
 C<augment> work is best described in the L<Moose::Cookbook>.
 
 =item B<confess>
 
-This is the C<Carp::confess> function, and exported here beause I use it 
+This is the C<Carp::confess> function, and exported here because I use it
 all the time. This feature may change in the future, so you have been warned. 
 
 =item B<blessed>
 
-This is the C<Scalar::Uti::blessed> function, it is exported here beause I 
+This is the C<Scalar::Uti::blessed> function, it is exported here because I
 use it all the time. It is highly recommended that this is used instead of 
 C<ref> anywhere you need to test for an object's class name.
 
@@ -509,7 +512,7 @@ to work. Here is an example:
 =head2 What does Moose stand for??
 
 Moose doesn't stand for one thing in particular, however, if you 
-want, here are a few of my favorites, feel free to contribute 
+want, here are a few of my favorites; feel free to contribute
 more :)
 
 =over 4
@@ -536,17 +539,17 @@ more :)
 
 =item *
 
-It should be noted that C<super> and C<inner> can B<not> be used in the same 
-method. However, they can be combined together with the same class hierarchy, 
+It should be noted that C<super> and C<inner> C<cannot> be used in the same 
+method. However, they can be combined together with the same class hierarchy;
 see F<t/014_override_augment_inner_super.t> for an example. 
 
-The reason that this is so is because C<super> is only valid within a method 
+The reason for this is that C<super> is only valid within a method 
 with the C<override> modifier, and C<inner> will never be valid within an 
 C<override> method. In fact, C<augment> will skip over any C<override> methods 
-when searching for it's appropriate C<inner>. 
+when searching for its appropriate C<inner>.
 
 This might seem like a restriction, but I am of the opinion that keeping these 
-two features seperate (but interoperable) actually makes them easy to use since 
+two features separate (but interoperable) actually makes them easy to use, since 
 their behavior is then easier to predict. Time will tell if I am right or not.
 
 =back
@@ -567,6 +570,8 @@ originally, I just ran with it.
 
 =item Thanks to mst & chansen and the whole #moose poose for all the 
 ideas/feature-requests/encouragement
+
+=item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
 
 =back
 

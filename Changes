@@ -8,15 +8,24 @@ Revision history for Perl extension Moose
       - fixed "bad meta" error message to be more descriptive      
       - fixed &unimport to not remove the &inner and &super  
         keywords because we need to localize them.
+      - fixed number of spelling/grammer issues, thanks Theory :)
+      *~~ experimental feature ~~*
+      - added the method and self keywords, they are basically 
+        just sugar, and they may not stay around.
         
     * Moose::Object
-      - added &dump method, cause it makes all out lives 
-        easier really.
+      - added &dump method to easily Data::Dumper 
+        an object
         
     * Moose::Meta::TypeConstraint
       - added the &is_a_type_of method to check both the current
         and the subtype of a method (similar to &isa with classes)
 
+    * Moose::Meta::Role
+      - this is now a subclass of Class::MOP::Module, and no longer
+        creates the _role_meta ugliness of before. 
+        - fixed tests to reflect this change
+    
 0.11 Wed. July 12, 2006
     * Moose
       - added an &unimport method to remove all the keywords
