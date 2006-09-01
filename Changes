@@ -9,7 +9,8 @@ Revision history for Perl extension Moose
       - fixed &unimport to not remove the &inner and &super  
         keywords because we need to localize them.
       - fixed number of spelling/grammer issues, thanks Theory :)
-      *~~ experimental feature ~~*
+      
+      **~~ experimental & undocumented feature ~~**
       - added the method and self keywords, they are basically 
         just sugar, and they may not stay around.
         

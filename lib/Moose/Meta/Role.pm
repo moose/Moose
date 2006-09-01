@@ -45,6 +45,28 @@ __PACKAGE__->meta->add_attribute('required_methods' => (
     default => sub { {} }
 ));
 
+## method modifiers
+
+__PACKAGE__->meta->add_attribute('before_method_modifiers' => (
+    reader  => 'get_before_method_modifiers_map',
+    default => sub { {} } # (<name> => [ (CODE) ])
+));
+
+__PACKAGE__->meta->add_attribute('after_method_modifiers' => (
+    reader  => 'get_after_method_modifiers_map',
+    default => sub { {} } # (<name> => [ (CODE) ])
+));
+
+__PACKAGE__->meta->add_attribute('around_method_modifiers' => (
+    reader  => 'get_around_method_modifiers_map',
+    default => sub { {} } # (<name> => [ (CODE) ])
+));
+
+__PACKAGE__->meta->add_attribute('override_method_modifiers' => (
+    reader  => 'get_override_method_modifiers_map',
+    default => sub { {} } # (<name> => CODE) 
+));
+
 ## Methods 
 
 sub method_metaclass { 'Moose::Meta::Role::Method' }
@@ -180,6 +202,74 @@ sub get_attribute_list {
     keys %{$self->get_attribute_map};
 }
 
+# method modifiers
+
+# mimic the metaclass API
+sub add_before_method_modifier { (shift)->_add_method_modifier('before', @_) }
+sub add_around_method_modifier { (shift)->_add_method_modifier('around', @_) }
+sub add_after_method_modifier  { (shift)->_add_method_modifier('after',  @_) }
+
+sub _add_method_modifier {
+    my ($self, $modifier_type, $method_name, $method) = @_;
+    my $accessor = "get_${modifier_type}_method_modifiers_map";
+    $self->$accessor->{$method_name} = [] 
+        unless exists $self->$accessor->{$method_name};
+    my $modifiers = $self->$accessor->{$method_name};
+    # NOTE:
+    # check to see that we aren't adding the 
+    # same code twice. We err in favor of the 
+    # first on here, this may not be as expected
+    foreach my $modifier (@{$modifiers}) {
+        return if $modifier == $method;
+    }
+    push @{$modifiers} => $method;
+}
+
+sub add_override_method_modifier {
+    my ($self, $method_name, $method) = @_;
+    (!$self->has_method($method_name))
+        || confess "Cannot add an override of method '$method_name' " . 
+                   "because there is a local version of '$method_name'";
+    $self->get_override_method_modifiers_map->{$method_name} = $method;    
+}
+
+sub has_before_method_modifiers { (shift)->_has_method_modifiers('before', @_) }
+sub has_around_method_modifiers { (shift)->_has_method_modifiers('around', @_) }
+sub has_after_method_modifiers  { (shift)->_has_method_modifiers('after',  @_) }
+
+# override just checks for one,.. 
+# but we can still re-use stuff
+sub has_override_method_modifier { (shift)->_has_method_modifiers('override',  @_) }
+
+sub _has_method_modifiers {
+    my ($self, $modifier_type, $method_name) = @_;
+    my $accessor = "get_${modifier_type}_method_modifiers_map";   
+    # NOTE:
+    # for now we assume that if it exists,.. 
+    # it has at least one modifier in it
+    (exists $self->$accessor->{$method_name}) ? 1 : 0;
+}
+
+sub get_before_method_modifiers { (shift)->_get_method_modifiers('before', @_) }
+sub get_around_method_modifiers { (shift)->_get_method_modifiers('around', @_) }
+sub get_after_method_modifiers  { (shift)->_get_method_modifiers('after',  @_) }
+
+sub _get_method_modifiers {
+    my ($self, $modifier_type, $method_name) = @_;
+    my $accessor = "get_${modifier_type}_method_modifiers_map";
+    @{$self->$accessor->{$method_name}};
+}
+
+sub get_override_method_modifier {
+    my ($self, $method_name) = @_;
+    $self->get_override_method_modifiers_map->{$method_name};    
+}
+
+sub get_method_modifier_list {
+    my ($self, $modifier_type) = @_;
+    my $accessor = "get_${modifier_type}_method_modifiers_map";    
+    keys %{$self->$accessor};
+}
 
 ## applying a role to a class ...
 
@@ -220,6 +310,27 @@ sub _check_required_methods {
                         "to be implemented by '" . $other->name . "'";
             }
         }
+        else {
+            # NOTE:
+            # we need to make sure that the method is 
+            # not a method modifier, because those do 
+            # not satisfy the requirements ...
+            my $method = $other->get_method($required_method_name);
+            # check if it is an override or a generated accessor ..
+            (!$method->isa('Moose::Meta::Method::Overriden') &&
+             !$method->isa('Class::MOP::Attribute::Accessor'))
+                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                           "to be implemented by '" . $other->name . "', the method is only a method modifier";
+            # before/after/around methods are a little trickier
+            # since we wrap the original local method (if applicable)
+            # so we need to check if the original wrapped method is 
+            # from the same package, and not a wrap of the super method 
+            if ($method->isa('Class::MOP::Method::Wrapped')) {
+                ($method->get_original_method->package_name eq $other->name)
+                    || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                               "to be implemented by '" . $other->name . "', the method is only a method modifier";            
+            }
+        }        
     }    
 }
 
@@ -291,6 +402,78 @@ sub _apply_methods {
     }     
 }
 
+sub _apply_override_method_modifiers {
+    my ($self, $other) = @_;    
+    foreach my $method_name ($self->get_method_modifier_list('override')) {
+        # it if it has one already then ...
+        if ($other->has_method($method_name)) {
+            # if it is being composed into another role
+            # we have a conflict here, because you cannot 
+            # combine an overriden method with a locally
+            # defined one 
+            if ($other->isa('Moose::Meta::Role')) { 
+                confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
+                        "during composition (A local method of the same name as been found). This " . 
+                        "is fatal error.";
+            }
+            else {
+                # if it is a class, then we 
+                # just ignore this here ...
+                next;
+            }
+        }
+        else {
+            # if no local method is found, then we 
+            # must check if we are a role or class
+            if ($other->isa('Moose::Meta::Role')) { 
+                # if we are a role, we need to make sure 
+                # we dont have a conflict with the role 
+                # we are composing into
+                if ($other->has_override_method_modifier($method_name) &&
+                    $other->get_override_method_modifier($method_name) != $self->get_override_method_modifier($method_name)) {
+                    confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
+                            "during composition (Two 'override' methods of the same name encountered). " . 
+                            "This is fatal error.";
+                }
+                else {   
+                    # if there is no conflict,
+                    # just add it to the role  
+                    $other->add_override_method_modifier(
+                        $method_name, 
+                        $self->get_override_method_modifier($method_name)
+                    );                    
+                }
+            }
+            else {
+                # if this is not a role, then we need to 
+                # find the original package of the method
+                # so that we can tell the class were to 
+                # find the right super() method
+                my $method = $self->get_override_method_modifier($method_name);
+                my $package = svref_2object($method)->GV->STASH->NAME;
+                # if it is a class, we just add it
+                $other->add_override_method_modifier($method_name, $method, $package);
+            }
+        }
+    }    
+}
+
+sub _apply_method_modifiers {
+    my ($self, $modifier_type, $other) = @_;    
+    my $add = "add_${modifier_type}_method_modifier";
+    my $get = "get_${modifier_type}_method_modifiers";    
+    foreach my $method_name ($self->get_method_modifier_list($modifier_type)) {
+        $other->$add(
+            $method_name,
+            $_
+        ) foreach $self->$get($method_name);
+    }    
+}
+
+sub _apply_before_method_modifiers { (shift)->_apply_method_modifiers('before' => @_) }
+sub _apply_around_method_modifiers { (shift)->_apply_method_modifiers('around' => @_) }
+sub _apply_after_method_modifiers  { (shift)->_apply_method_modifiers('after'  => @_) }
+
 sub apply {
     my ($self, $other) = @_;
     
@@ -301,7 +484,12 @@ sub apply {
     $self->_check_required_methods($other);  
 
     $self->_apply_attributes($other);         
-    $self->_apply_methods($other);         
+    $self->_apply_methods($other);   
+    
+    $self->_apply_override_method_modifiers($other);                  
+    $self->_apply_before_method_modifiers($other);                  
+    $self->_apply_around_method_modifiers($other);                  
+    $self->_apply_after_method_modifiers($other);          
 
     $other->add_role($self);
 }
@@ -443,6 +631,56 @@ probably not that much really).
 =item B<get_required_methods_map>
 
 =item B<requires_method>
+
+=back
+
+=over 4
+
+=item B<add_after_method_modifier>
+
+=item B<add_around_method_modifier>
+
+=item B<add_before_method_modifier>
+
+=item B<add_override_method_modifier>
+
+=over 4
+
+=back
+
+=item B<has_after_method_modifiers>
+
+=item B<has_around_method_modifiers>
+
+=item B<has_before_method_modifiers>
+
+=item B<has_override_method_modifier>
+
+=over 4
+
+=back
+
+=item B<get_after_method_modifiers>
+
+=item B<get_around_method_modifiers>
+
+=item B<get_before_method_modifiers>
+
+=item B<get_method_modifier_list>
+
+=over 4
+
+=back
+
+=item B<get_override_method_modifier>
+
+=item B<get_after_method_modifiers_map>
+
+=item B<get_around_method_modifiers_map>
+
+=item B<get_before_method_modifiers_map>
+
+=item B<get_override_method_modifiers_map>
 
 =back
 

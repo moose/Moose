@@ -96,37 +96,39 @@ use Moose::Util::TypeConstraints;
         before => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::before' => sub (@&) { 
-                confess "Moose::Role does not currently support 'before'";
+                my $code = pop @_;
+                $meta->add_before_method_modifier($_, $code) for @_;
 	        };
 	    },
         after => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::after' => sub (@&) { 
-                confess "Moose::Role does not currently support 'after'";
+		        my $code = pop @_;
+		        $meta->add_after_method_modifier($_, $code) for @_;
 	        };
 	    },
         around => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::around' => sub (@&) { 
-                confess "Moose::Role does not currently support 'around'";
+		        my $code = pop @_;
+		        $meta->add_around_method_modifier($_, $code) for @_;
 	        };
 	    },
 	    super => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::super' => sub {
-                confess "Moose::Role cannot support 'super'";
-            };
+            return subname 'Moose::Role::super' => sub {};
         },
         override => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::override' => sub ($&) {
-                confess "Moose::Role cannot support 'override'";
+                my ($name, $code) = @_;
+                $meta->add_override_method_modifier($name, $code);
 	        };
 	    },		
         inner => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::inner' => sub {
-                confess "Moose::Role cannot support 'inner'";	    
+                confess "Moose::Role cannot support 'inner'";
 	        };
 	    },
         augment => sub {
