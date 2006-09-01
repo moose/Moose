@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe1 - The (always classic) B<Point> example.
 =head1 SYNOPSIS
 
   package Point;
-  use strict;
-  use warnings;	
   use Moose;
   	
   has 'x' => (isa => 'Int', is => 'ro');
@@ -22,8 +20,6 @@ Moose::Cookbook::Recipe1 - The (always classic) B<Point> example.
   }
   
   package Point3D;
-  use strict;
-  use warnings;
   use Moose;
   
   extends 'Point';
@@ -43,8 +39,8 @@ example found in the classic K&R C book as well, and many other
 places. And now, onto the code:
 
 As with all Perl 5 classes, a Moose class is defined in a package. 
-Of course we always use C<strict> and C<warnings> (don't forget 
-that a kitten will die if you don't) and then we C<use Moose>.
+Moose now handles turning C<strict> and C<warnings> on for you, so 
+all you need do is say C<use Moose>, and no kittens will die.
 
 By loading Moose, we are enabeling the Moose "environment" to be 
 loaded within our package. This means that we export some functions 

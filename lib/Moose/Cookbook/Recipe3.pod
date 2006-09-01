@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe3 - A lazy B<BinaryTree> example
 =head1 SYNOPSIS
 
   package BinaryTree;
-  use strict;
-  use warnings;
   use Moose;
   
   has 'node' => (is => 'rw', isa => 'Any');
@@ -125,15 +123,13 @@ in a CODE ref.
 In the second recipe the B<BankAccount>'s C<balance> slot had a 
 default value of C<0>. Since Perl will copy strings and numbers 
 by value, this was all we had to say. But for any other item 
-(ARRAY ref, HASH ref, object instance, etc) Perl will copy by 
-reference. This means that if I were to do this:
+(ARRAY ref, HASH ref, object instance, etc) you would need to 
+wrap this into a CODE reference, so this:
 
   has 'foo' => (is => 'rw', default => []);
 
-Every single instance of that class would get a pointer to the 
-same ARRAY ref in their C<foo> slot. This is almost certainly 
-B<not> the behavior you intended. So, the solution is to wrap 
-these defaults into an anon-sub, like so:
+is actually illegal in Moose. Instead, what you really want is 
+to do this:
 
   has 'foo' => (is => 'rw', default => sub { [] });
 

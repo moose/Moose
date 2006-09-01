@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
 =head1 SYNOPSIS
   
   package Address;
-  use strict;
-  use warnings;
   use Moose;
   use Moose::Util::TypeConstraints;
   
@@ -37,8 +35,6 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
   
   package Company;
-  use strict;
-  use warnings;
   use Moose;
   use Moose::Util::TypeConstraints;
   
@@ -67,8 +63,6 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   };  
   
   package Person;
-  use strict;
-  use warnings;
   use Moose;
   
   has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
@@ -88,8 +82,6 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   }
     
   package Employee;
-  use strict;
-  use warnings;
   use Moose;  
   
   extends 'Person';

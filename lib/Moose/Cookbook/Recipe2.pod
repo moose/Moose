@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe2 - A simple B<BankAccount> example
 =head1 SYNOPSIS
 
   package BankAccount;
-  use strict;
-  use warnings;
   use Moose;
   
   has 'balance' => (isa => 'Int', is => 'rw', default => 0);
@@ -28,8 +26,6 @@ Moose::Cookbook::Recipe2 - A simple B<BankAccount> example
   }
   
   package CheckingAccount;
-  use strict;
-  use warnings;	
   use Moose;
   
   extends 'BankAccount';

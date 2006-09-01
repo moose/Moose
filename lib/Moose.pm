@@ -219,7 +219,12 @@ sub _load_all_classes {
         # loaded in the symbol table
         next if _is_class_already_loaded($super);
         # otherwise require it ...
-        ($super->require)
+        # NOTE: 
+        # just in case the class we are 
+        # loading has a locally defined
+        # &require, we make sure that we
+        # use the on in UNIVERSAL 
+        ($super->UNIVERSAL::require)
             || confess "Could not load module '$super' because : " . $UNIVERSAL::require::ERROR;
     }    
 }

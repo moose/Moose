@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
 =head1 SYNOPSIS
 
   package Eq;
-  use strict;
-  use warnings;
   use Moose::Role;
   
   requires 'equal_to';
@@ -20,8 +18,6 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
   }
   
   package Comparable;
-  use strict;
-  use warnings;
   use Moose::Role;
   
   with 'Eq';
@@ -54,15 +50,11 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
   }  
   
   package Printable;
-  use strict;
-  use warnings;
   use Moose::Role;
   
   requires 'to_string';    
   
   package US::Currency;
-  use strict;
-  use warnings;
   use Moose;
   
   with 'Comparable', 'Printable';

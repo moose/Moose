@@ -8,8 +8,6 @@ Moose::Cookbook::Recipe5 - More subtypes, coercion in a B<Request> class
 =head1 SYNOPSIS
 
   package Request;
-  use strict;
-  use warnings;
   use Moose;
   use Moose::Util::TypeConstraints;
   
@@ -165,9 +163,9 @@ and pass it into the B<URI> constructor along with the default
 
 And of course, our coercions do nothing unless they are told to, 
 like so:
-
-  has 'base' => (is => 'rw', isa => 'Uri', coerce  => 1);
-  has 'uri'  => (is => 'rw', isa => 'Uri', coerce  => 1);
+                                                  
+  has 'base' => (is => 'rw', isa => 'Uri', coerce => 1);
+  has 'uri'  => (is => 'rw', isa => 'Uri', coerce => 1);
 
 As you can see, re-using the coercion allows us to enforce a 
 consistent and very flexible API across multiple accessors.
