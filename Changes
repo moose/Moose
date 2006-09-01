@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.12
+0.12 Sat. Sept. 1, 2006
     * Moose::Cookbook
       - Recipe5 (subtypes & coercion) has been written
       

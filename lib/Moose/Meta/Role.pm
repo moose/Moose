@@ -148,6 +148,11 @@ sub _clean_up_required_methods {
 
 ## methods
 
+# FIXME:
+# Yes, this is a really really UGLY hack
+# but it works, and until I can figure 
+# out a better way, this is gonna be it. 
+
 sub get_method          { (shift)->Moose::Meta::Class::get_method(@_)          }
 sub find_method_by_name { (shift)->Moose::Meta::Class::find_method_by_name(@_) }
 sub has_method          { (shift)->Moose::Meta::Class::has_method(@_)          }
@@ -386,7 +391,7 @@ sub _apply_methods {
                 # anon classes will only be used internally
                 # or by people who know what they are doing
                 $other->Moose::Meta::Class::remove_method($method_name)
-                    if $other->name =~ /__ANON__/;
+                    if $other->name =~ /__COMPOSITE_ROLE_SANDBOX__/;
             }
             else {
                 next;
@@ -499,7 +504,7 @@ my $anon_counter = 0;
 sub combine {
     my ($class, @roles) = @_;
     
-    my $pkg_name = __PACKAGE__ . "::__ANON__::" . $anon_counter++;
+    my $pkg_name = __PACKAGE__ . "::__COMPOSITE_ROLE_SANDBOX__::" . $anon_counter++;
     eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
     die $@ if $@;
     
