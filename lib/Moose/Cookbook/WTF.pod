@@ -1,0 +1,82 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::WTF - For when things go wrong with Moose
+
+=head1 COMMON PROBLEMS
+
+=head2 Constructors
+
+=head2 Accessors
+
+=head3 I created an attribute, where are my accessors?
+
+Accessors are B<not> created implicitly, you B<must> ask Moose 
+to create them for you. My guess is that you have this:
+
+  has 'foo' => (isa => 'Bar');
+
+when what you really want to say is:
+
+  has 'foo' => (isa => 'Bar', is => 'rw');
+
+The reason this is so, is because it is a perfectly valid use 
+case to I<not> have an accessor. The simplest one is that you 
+want to write your own. If Moose created on automatically, then
+because of the order in which classes are constructed, Moose 
+would overwrite your custom accessor. You wouldn't want that 
+would you?
+
+=head2 Method Modfiers
+
+=head3 How come I can't change C<@_> in a C<before> modifier?
+
+The C<before> modifier simply is called I<before> the main method. 
+Its return values are simply ignored, and are B<not> passed onto 
+the main method body. 
+
+There are a number of reasons for this, but those arguments are 
+too lengthy for this document. Instead, I suggest using an C<around> 
+modifier instead. Here is some sample code:
+
+  around 'foo' => sub {
+      my $next = shift;
+      my ($self, @args) = @_;
+      # do something silly here to @args 
+      $next->($self, reverse(@args));  
+  };
+
+=head3 How come I can't see return values in an C<after> modifier?
+
+As with the C<before> modifier, the C<after> modifier is simply 
+called I<after> the main method. It is passed the original contents 
+of C<@_> and B<not> the return values of the main method. 
+
+Again, the arguments are too lengthy as to why this has to be. And 
+as with C<before> I recommend using an C<around> modifier instead.
+Here is some sample code:
+
+  around 'foo' => sub {
+      my $next = shift;
+      my ($self, @args) = @_;
+      my @rv = $next->($self, @args);  
+      # do something silly with the return values
+      return reverse @rv;
+  };
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

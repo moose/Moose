@@ -114,7 +114,7 @@ BEGIN {
     }
 
     sub weaken_slot_value {
-        confess "Not sure how well DBM::Deep plays with weak refs, Rob says 'Writer a test'";
+        confess "Not sure how well DBM::Deep plays with weak refs, Rob says 'Write a test'";
     }  
     
     sub inline_slot_access {

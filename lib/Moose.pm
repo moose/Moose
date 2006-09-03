@@ -588,6 +588,8 @@ ideas/feature-requests/encouragement
 
 =item The #moose channel on irc.perl.org
 
+=item The Moose mailing list - moose@perl.org
+
 =item L<http://forum2.org/moose/>
 
 =item L<http://www.cs.utah.edu/plt/publications/oopsla04-gff.pdf>

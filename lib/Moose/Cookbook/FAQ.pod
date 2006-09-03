@@ -1,0 +1,234 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::FAQ - Frequenty asked questions about Moose
+
+=head1 FREQUENTLY ASKED QUESTIONS
+
+=head2 Constructors
+
+=head3 How do I write custom constructors with Moose?
+
+Ideally, you should never write your own C<new> method, and should
+use Moose's other features to handle your specific object construction
+needs. Here are a few scenarios, and the Moose way to solve them;
+
+If you need to call initializtion code post instance construction, 
+then use the C<BUILD> method. This feature is taken directly from 
+Perl 6. Every C<BUILD> method in your inheritence chain is called 
+(in the correct order) immediately after the instance is constructed. 
+This allows you to ensure that all your superclasses are initialized 
+properly as well. This is the best approach to take (when possible)
+because it makes subclassing your class much easier.
+
+If you need to affect the constructor's parameters prior to the 
+instance actually being constructed, you have a number of options.
+
+First, there are I<coercions> (See the L<Moose::Cookbook::Recipe5> 
+for a complete example and explaination of coercions). With 
+coercions it is possible to morph argument values into the correct 
+expected types. This approach is the most flexible and robust, but 
+does have a slightly higher learning curve.
+
+Second, using an C<around> method modifier on C<new> can be an 
+effective way to affect the contents of C<@_> prior to letting 
+Moose deal with it. This carries with it the extra burden for 
+your subclasses, in that they have to be sure to explicitly 
+call your C<new> and/or work around your C<new> to get to the 
+version from L<Moose::Object>. 
+
+The last approach is to use the standard Perl technique of calling 
+the C<SUPER::new> within your own custom version of C<new>. This 
+of course brings with it all the issues of the C<around> solution 
+along with any issues C<SUPER::> might add as well.
+
+In short, try to use C<BUILD> and coercions, they are your best 
+bets.
+
+=head3 How do I make non-Moose constuctors work with Moose? 
+
+Moose provides it's own constructor, but it does it by making all 
+Moose-based classes inherit from L<Moose::Object>. When inheriting
+from a non-Moose class, the inheritence chain to L<Moose::Object> 
+is broken. The simplest way to fix this is to simply explicitly 
+inherit from L<Moose::Object> yourself. However, this does not 
+always fix the issue of a constructor. Here is a basic example of 
+how this can be worked around:
+
+  package My::HTML::Template;
+  use Moose;
+  
+  # explict inheritence 
+  extends 'HTML::Template', 'Moose::Object';
+  
+  # explicit constructor
+  sub new {
+      my $class = shift;
+      # call HTML::Template's constructor
+      my $obj = $class->SUPER::new(@_);
+      return $class->meta->new_object(
+          # pass in the constructed object
+          # using the special key __INSTANCE__
+          __INSTANCE__ => $obj, @_
+      );
+  }
+
+Of course this only works if both your Moose class, and the 
+inherited non-Moose class use the same instance type (typically 
+HASH refs). 
+
+Other techniques can be used as well, such as creating the object 
+using C<Moose::Object::new>, but calling the inherited non-Moose 
+class's initializtion methods (if available). 
+
+It is also entirely possible to just rely on HASH autovivification 
+to create the slot's needed for Moose based attributes. Although 
+this does somewhat restrict use of construction time attribute 
+features.
+
+In short, there are several ways to go about this, it is best to 
+evaluate each case based on the class you wish to extend, and the 
+features you wish to employ. As always, both IRC and the mailing 
+list are great ways to get help finding the best approach.
+
+=head2 Accessors
+
+=head3 How do I tell Moose to use get/set accessors?
+
+The easiest way to accomplish this is to use the C<reader> and 
+C<writer> attribute options. Here is some example code:
+
+  has 'bar' => (
+      isa    => 'Baz',
+      reader => 'get_bar', 
+      writer => 'set_bar',
+  );
+
+Moose will still take advantage of type constraints, triggers, etc. 
+when creating these methods. 
+
+If you do not like this much typing, and wish it to be a default for 
+your class. Please see L<Moose::Policy>, and more specifically the 
+L<Moose::Policy::FollowPBP>. This will allow you to write this:
+
+  has 'bar' => (
+      isa => 'Baz',
+      is  => 'rw',
+  );
+
+And have Moose create C<get_bar> and C<set_bar> instead of the usual 
+C<bar>.
+
+NOTE: This B<cannot> be set globally in Moose, as this would break 
+other classes which are built with Moose.
+
+=head3 How can I get Moose to inflate/deflate values in the accessor?
+
+Well, the first question to ask is if you actually need both inflate 
+and deflate.
+
+If you only need to inflate, then I suggest using coercions. Here is 
+some basic sample code for inflating a L<DateTime> object. 
+
+  subtype 'DateTime'
+      => as 'Object'
+      => where { $_->isa('DateTime') };
+      
+  coerce 'DateTime'
+      => from 'Str'
+        => via { DateTime::Format::MySQL->parse_datetime($_) };
+        
+  has 'timestamp' => (is => 'rw', isa => 'DateTime', coerce => 1);
+
+This creates a custom subtype for L<DateTime> objects, then attaches 
+a coercion to that subtype. The C<timestamp> attribute is then told 
+to expect a C<DateTime> type, and to try and coerce it. When a C<Str>
+type is given to the C<timestamp> accessor, it will attempt to 
+coerce the value into a C<DateTime> object using the code in found 
+in the C<via> block. 
+
+For a more detailed and complete example of coercions, see the 
+L<Moose::Cookbook::Recipe5>.
+
+If you need to deflate your attribute, the current best practice is to 
+add an C<around> modifier to your accessor. Here is some example code:
+
+  # a timestamp which stores as 
+  # seconds from the epoch
+  has 'timestamp' => (is => 'rw', isa => 'Int');
+  
+  around 'timestamp' => sub {
+      my $next = shift;
+      my ($self, $timestamp) = @_;
+      # assume we get a DateTime object ...
+      $next->($self, $timestamp->epoch);
+  };
+
+It is also possible to do deflation using coercion, but this tends 
+to get quite complex and require many subtypes. An example of this 
+is outside the scope of this document, ask on #moose or send a mail 
+to the list.
+
+Still another option is to write a custom attribute metaclass, which 
+is also outside the scope of this document, but I would be happy to 
+explain it on #moose or the mailing list.
+
+=head2 Method Modfiers
+
+=head3 How can I affect the values in C<@_> using C<before>?
+
+You can't actually, C<before> only runs before the main method, 
+and it cannot easily affect the execution of it. What you want is 
+an C<around> method. 
+
+=head3 Can I use C<before> to stop execution of a method?
+
+Yes, but only if you throw an exception. If this is too drastic a 
+measure then I suggest using C<around> instead. The C<around> method 
+modifier is the only modifier which can actually stop the execution 
+of the main method. Here is an example:
+
+  around 'baz' => sub {
+      my $next = shift;
+      my ($self, %options) = @_;
+      if ($options{bar} eq 'foo') {
+          $next->($self, %options);
+      }
+      else {
+          return 'bar';
+      }
+  };
+
+By choosing not to call the C<$next> method, you can stop the 
+execution of the main method.
+
+=head2 Type Constraints
+
+=head3 How can I have a custom error message for a type constraint?
+
+Use the C<message> option when building the subtype. Like so:
+
+  subtype 'NaturalLessThanTen' 
+      => as 'Natural'
+      => where { $_ < 10 }
+      => message { "This number ($_) is not less than ten!" };
+
+This will be called when a value fails to pass the C<NaturalLessThanTen>
+constraint check. 
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
