@@ -10,7 +10,7 @@ use Carp 'confess';
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
     reader  => 'type_coercion_map',
@@ -41,10 +41,13 @@ sub compile_type_coercion {
     my @coercions;
     while (@coercion_map) {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
-        my $constraint = Moose::Util::TypeConstraints::find_type_constraint($constraint_name)->_compiled_type_constraint;       
-        (defined $constraint)
-            || confess "Could not find the type constraint ($constraint_name)";
-        push @coercions => [ $constraint, $action ];
+        my $type_constraint = Moose::Util::TypeConstraints::find_type_constraint($constraint_name);
+        (defined $type_constraint)
+            || confess "Could not find the type constraint ($constraint_name) to coerce from";
+        push @coercions => [ 
+            $type_constraint->_compiled_type_constraint, 
+            $action 
+        ];
     }
     $self->_compiled_type_coercion(sub { 
         my $thing = shift;

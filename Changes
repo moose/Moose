@@ -1,5 +1,14 @@
 Revision history for Perl extension Moose
 
+0.13
+    * Moose::Cookbook
+      - added a FAQ and WTF files to document frequently 
+        asked questions and common problems
+
+    * Moose::Meta::TypeCoercion
+      - properly capturing error when type constraint 
+        is not found
+
 0.12 Sat. Sept. 1, 2006
     * Moose::Cookbook
       - Recipe5 (subtypes & coercion) has been written

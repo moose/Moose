@@ -9,6 +9,8 @@ lib/Moose.pm
 lib/Moose/Cookbook.pod
 lib/Moose/Object.pm
 lib/Moose/Role.pm
+lib/Moose/Cookbook/FAQ.pod
+lib/Moose/Cookbook/WTF.pod
 lib/Moose/Cookbook/Recipe1.pod
 lib/Moose/Cookbook/Recipe2.pod
 lib/Moose/Cookbook/Recipe3.pod
