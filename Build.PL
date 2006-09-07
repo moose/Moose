@@ -2,15 +2,17 @@ use Module::Build;
 
 use strict;
 
+# Scalar::Util 1.18 doesn't work on Windows
+my $win32 = !! ( $^O eq 'Win32' or $^O eq 'cygwin' );
+
 my $build = Module::Build->new(
     module_name => 'Moose',
     license => 'perl',
     requires => {
-        'Scalar::Util'       => '1.18',
+        'Scalar::Util'       => $win32 ? '1.17' : '1.18',
         'Carp'               => '0',
         'Class::MOP'         => '0.34',
         'Sub::Name'          => '0.02',
-        'UNIVERSAL::require' => '0.10',
         'Sub::Exporter'      => '0.954',
         'Sub::Install'       => '0.92',   
         'B'                  => '0',             

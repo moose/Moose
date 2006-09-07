@@ -1,6 +1,10 @@
 Revision history for Perl extension Moose
 
 0.13
+    * Moose
+      - Removed the use of UNIVERSAL::require to be a better
+        symbol table citizen and remove a dependency.
+
     * Moose::Cookbook
       - added a FAQ and WTF files to document frequently 
         asked questions and common problems
@@ -8,6 +12,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::TypeCoercion
       - properly capturing error when type constraint 
         is not found
+
+    * Build.PL
+      - Scalar::Util 1.18 is bad on Win32, so temporarily
+        only require version 1.17 for Win32 and cygwin.
 
 0.12 Sat. Sept. 1, 2006
     * Moose::Cookbook

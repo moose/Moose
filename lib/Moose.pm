@@ -11,7 +11,6 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use B            'svref_2object';
 
-use UNIVERSAL::require;
 use Sub::Exporter;
 
 use Class::MOP;
@@ -224,9 +223,13 @@ sub _load_all_classes {
         # loading has a locally defined
         # &require, we make sure that we
         # use the on in UNIVERSAL 
-        ($super->UNIVERSAL::require)
-            || confess "Could not load module '$super' because : " . $UNIVERSAL::require::ERROR;
-    }    
+        my $file = $class . '.pm';
+        $file =~ s{::}{/}g;
+        eval { CORE::require($file) };
+        confess(
+            "Could not load module '$super' because : $@"
+            ) if $@;
+    }
 }
 
 sub _is_class_already_loaded {
@@ -237,7 +240,7 @@ sub _is_class_already_loaded {
 		next if substr($_, -2, 2) eq '::';
 		return 1 if defined &{"${name}::$_"};
 	}
-    return 0;
+	return 0;
 }
 
 1;
