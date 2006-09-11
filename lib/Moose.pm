@@ -218,11 +218,6 @@ sub _load_all_classes {
         # loaded in the symbol table
         next if _is_class_already_loaded($super);
         # otherwise require it ...
-        # NOTE: 
-        # just in case the class we are 
-        # loading has a locally defined
-        # &require, we make sure that we
-        # use the on in UNIVERSAL 
         my $file = $class . '.pm';
         $file =~ s{::}{/}g;
         eval { CORE::require($file) };
