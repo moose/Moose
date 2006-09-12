@@ -213,16 +213,16 @@ use Moose::Util::TypeConstraints;
 ## Utility functions
 
 sub _load_all_classes {
-    foreach my $super (@_) {
+    foreach my $class (@_) {
         # see if this is already 
         # loaded in the symbol table
-        next if _is_class_already_loaded($super);
+        next if _is_class_already_loaded($class);
         # otherwise require it ...
         my $file = $class . '.pm';
         $file =~ s{::}{/}g;
         eval { CORE::require($file) };
         confess(
-            "Could not load module '$super' because : $@"
+            "Could not load module '$class' because : $@"
             ) if $@;
     }
 }
