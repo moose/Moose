@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/trunk/lib';
-
 package Moose;
 
 use strict;
