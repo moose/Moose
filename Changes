@@ -8,6 +8,11 @@ Revision history for Perl extension Moose
     * Moose::Cookbook
       - added a FAQ and WTF files to document frequently 
         asked questions and common problems
+        
+    * Moose::Meta::Role
+      - added basic support for runtime role composition
+        but this is still highly experimental
+        - added tests for this
 
     * Moose::Meta::TypeCoercion
       - properly capturing error when type constraint 

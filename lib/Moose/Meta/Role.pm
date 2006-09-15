@@ -479,18 +479,38 @@ sub _apply_before_method_modifiers { (shift)->_apply_method_modifiers('before' =
 sub _apply_around_method_modifiers { (shift)->_apply_method_modifiers('around' => @_) }
 sub _apply_after_method_modifiers  { (shift)->_apply_method_modifiers('after'  => @_) }
 
+my $anon_counter = 0;
+
 sub apply {
     my ($self, $other) = @_;
     
-    ($other->isa('Moose::Meta::Class') || $other->isa('Moose::Meta::Role'))
-        || confess "You must apply a role to a metaclass, not ($other)";
+    unless ($other->isa('Moose::Meta::Class') || $other->isa('Moose::Meta::Role')) {
+    
+        # Runtime Role mixins
+            
+        # FIXME:
+        # We really should do this better, and 
+        # cache the results of our efforts so 
+        # that we don't need to repeat them.
+        
+        my $pkg_name = __PACKAGE__ . "::__RUNTIME_ROLE_ANON_CLASS__::" . $anon_counter++;
+        eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
+        die $@ if $@;
+
+        my $object = $other;
+
+        $other = Moose::Meta::Class->initialize($pkg_name);
+        $other->superclasses(blessed($object));     
+        
+        bless $object => $pkg_name;
+    }
     
     $self->_check_excluded_roles($other);
     $self->_check_required_methods($other);  
 
     $self->_apply_attributes($other);         
     $self->_apply_methods($other);   
-    
+
     $self->_apply_override_method_modifiers($other);                  
     $self->_apply_before_method_modifiers($other);                  
     $self->_apply_around_method_modifiers($other);                  
@@ -498,8 +518,6 @@ sub apply {
 
     $other->add_role($self);
 }
-
-my $anon_counter = 0;
 
 sub combine {
     my ($class, @roles) = @_;

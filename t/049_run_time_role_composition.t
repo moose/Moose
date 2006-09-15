@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 20;
 
 use Scalar::Util qw(blessed);
 
@@ -17,6 +17,8 @@ This test can be used as a basis for the runtime role composition.
 Apparently it is not as simple as just making an anon class. One of 
 the problems is the way that anon classes are DESTROY-ed, which is
 not very compatible with how instances are dealt with.
+
+=cut
 
 {
     package Bark;
@@ -51,7 +53,7 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
     ok(!My::Class->does('Bark'), '... the class does not do the Bark role');    
 
     isa_ok($obj, 'My::Class');
-    isnt(blessed($obj), 'My::Class', '... but it is not longer blessed into My::Class');
+    isnt(blessed($obj), 'My::Class', '... but it is no longer blessed into My::Class');
 
     ok(!My::Class->can('talk'), "... the role is not composed at the class level");
     ok($obj->can('talk'), "... the role is now composed at the object level");
@@ -62,7 +64,7 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
 {
     is($obj->sleep, 'nite-nite', '... the original method responds as expected');
 
-    ok(!$obj->does('Bark'), '... we do not do the Sleeper role');
+    ok(!$obj->does('Sleeper'), '... we do not do the Sleeper role');
 
     Sleeper->meta->apply($obj);
 
@@ -78,5 +80,3 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
     is($obj->sleep, 'snore', '... got the right return value for the newly composed method');
     is($obj->talk, 'zzz', '... got the right return value for the newly composed method');    
 }
-
-=cut

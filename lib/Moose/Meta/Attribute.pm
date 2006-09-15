@@ -391,6 +391,10 @@ sub install_accessors {
             }
             else {
                 $associated_class->add_method($handle => sub {
+                    # FIXME
+                    # we should check for lack of 
+                    # a callable return value from 
+                    # the accessor here 
                     ((shift)->$accessor_name())->$method_to_call(@_);
                 });
             }
