@@ -20,7 +20,6 @@ This module requires these other modules and libraries:
 	Scalar::Util
 	Carp
 	Sub::Name
-	UNIVERSAL::require
 	Sub::Exporter
 	B
 

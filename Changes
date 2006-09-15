@@ -1,9 +1,18 @@
 Revision history for Perl extension Moose
 
 0.13
+    ++ NOTE ++
+    This version of Moose *must* have Class::MOP 0.35 in order 
+    to work correctly. A number of small internal tweaks have 
+    been made in order to be compatible with that release.
+
     * Moose
       - Removed the use of UNIVERSAL::require to be a better
-        symbol table citizen and remove a dependency.
+        symbol table citizen and remove a dependency 
+        (thanks Adam Kennedy)
+      - unimport now returns a true value, this should allow
+        'no Moose' to be used instead of 1; at the end of a 
+        module.
 
     * Moose::Cookbook
       - added a FAQ and WTF files to document frequently 
@@ -21,6 +30,7 @@ Revision history for Perl extension Moose
     * Build.PL
       - Scalar::Util 1.18 is bad on Win32, so temporarily
         only require version 1.17 for Win32 and cygwin.
+        (thanks Adam Kennedy)        
 
 0.12 Sat. Sept. 1, 2006
     * Moose::Cookbook

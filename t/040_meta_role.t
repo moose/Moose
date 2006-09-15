@@ -28,7 +28,7 @@ is($foo_role->version, '0.01', '... got the right version of FooRole');
 # methods ...
 
 ok($foo_role->has_method('foo'), '... FooRole has the foo method');
-is($foo_role->get_method('foo'), \&FooRole::foo, '... FooRole got the foo method');
+is($foo_role->get_method('foo')->body, \&FooRole::foo, '... FooRole got the foo method');
 
 isa_ok($foo_role->get_method('foo'), 'Moose::Meta::Role::Method');
 

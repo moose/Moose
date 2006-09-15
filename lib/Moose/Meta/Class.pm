@@ -94,23 +94,62 @@ sub construct_instance {
     return $instance;
 }
 
-sub has_method {
-    my ($self, $method_name) = @_;
-    (defined $method_name && $method_name)
-        || confess "You must define a method name";    
 
-    my $sub_name = ($self->name . '::' . $method_name);   
+# FIXME:
+# This is ugly
+sub get_method_map {    
+    my $self = shift;
+    my $map  = $self->{'%:methods'}; 
     
-    # FIXME:
-    # this should use the ::Package code
-    # and not turn off strict refs
-    no strict 'refs';
-    return 0 if !defined(&{$sub_name});        
-	my $method = \&{$sub_name};
-	
-	return 1 if blessed($method) && $method->isa('Moose::Meta::Role::Method');
-    return $self->SUPER::has_method($method_name);    
+    my $class_name       = $self->name;
+    my $method_metaclass = $self->method_metaclass;
+    
+    foreach my $symbol ($self->list_all_package_symbols('CODE')) {
+        
+        my $code = $self->get_package_symbol('&' . $symbol);
+        
+        next if exists  $map->{$symbol} && 
+                defined $map->{$symbol} && 
+                        $map->{$symbol}->body == $code;        
+        
+        my $gv = B::svref_2object($code)->GV;
+        
+        my $pkg = $gv->STASH->NAME;
+        if ($pkg->can('meta') && $pkg->meta->isa('Moose::Meta::Role')) {
+            #my $role = $pkg->meta->name;
+            #next unless $self->does_role($role);
+        }
+        else {
+            next if ($gv->STASH->NAME || '') ne $class_name &&
+                    ($gv->NAME        || '') ne '__ANON__';                
+        }
+   
+        $map->{$symbol} = $method_metaclass->wrap($code);
+    }
+    
+    return $map;
 }
+
+#sub find_method_by_name {
+#    my ($self, $method_name) = @_;
+#    (defined $method_name && $method_name)
+#        || confess "You must define a method name to find";    
+#    # keep a record of what we have seen
+#    # here, this will handle all the 
+#    # inheritence issues because we are 
+#    # using the &class_precedence_list
+#    my %seen_class;
+#    foreach my $class ($self->class_precedence_list()) {
+#        next if $seen_class{$class};
+#        $seen_class{$class}++;
+#        # fetch the meta-class ...
+#        my $meta = $self->initialize($class);
+#        return $meta->get_method($method_name) 
+#            if $meta->has_method($method_name);
+#    }
+#}
+
+### ---------------------------------------------
 
 sub add_attribute {
     my $self = shift;
@@ -137,13 +176,13 @@ sub add_override_method_modifier {
     my $super = $self->find_next_method_by_name($name);
     (defined $super)
         || confess "You cannot override '$name' because it has no super method";    
-    $self->add_method($name => bless sub {
+    $self->add_method($name => Moose::Meta::Method::Overriden->wrap(sub {
         my @args = @_;
         no strict   'refs';
         no warnings 'redefine';
         local *{$_super_package . '::super'} = sub { $super->(@args) };
         return $method->(@args);
-    } => 'Moose::Meta::Method::Overriden');
+    }));
 }
 
 sub add_augment_method_modifier {
@@ -322,7 +361,7 @@ you are doing.
 This method makes sure to handle the moose weak-ref, type-constraint
 and type coercion features. 
 
-=item B<has_method ($name)>
+=item B<get_method_map>
 
 This accommodates Moose::Meta::Role::Method instances, which are 
 aliased, instead of added, but still need to be counted as valid 
