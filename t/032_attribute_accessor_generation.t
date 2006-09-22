@@ -155,7 +155,7 @@ BEGIN {
     ok(isweak($foo->{foo_weak}), '... it is a weak reference');
 
     can_ok( $foo, 'foo_deref');
-    is( $foo->foo_deref(), undef, '... unset value');
+    is_deeply( [$foo->foo_deref()], [], '... default default value');
     my @list;
     lives_ok {
         @list = $foo->foo_deref();
@@ -174,7 +174,7 @@ BEGIN {
 
 
     can_ok( $foo, 'foo_deref' );
-    is( $foo->foo_deref_ro(), undef, "... unset value" );
+    is_deeply( [$foo->foo_deref_ro()], [], "... default default value" );
 
     dies_ok {
         $foo->foo_deref_ro( [] );
@@ -186,7 +186,7 @@ BEGIN {
     is_deeply( [ $foo->foo_deref_ro() ], [qw/la la la/], "list context ro" );
 
     can_ok( $foo, 'foo_deref_hash' );
-    is( $foo->foo_deref_hash(), undef, "... unset value" );
+    is_deeply( { $foo->foo_deref_hash() }, {}, "... default default value" );
 
     my %hash;
     lives_ok {

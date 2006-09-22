@@ -18,6 +18,14 @@ Revision history for Perl extension Moose
       - added a FAQ and WTF files to document frequently 
         asked questions and common problems
         
+    * Moose::Util::TypeConstraints
+      - added GlobRef type constraint
+        - added tests for this
+        
+    * Moose::Meta::Attribute
+      - if your attribute 'isa' ArrayRef of HashRef, and you have
+        not explicitly set a default, then make the default DWIM.
+        
     * Moose::Meta::Role
       - added basic support for runtime role composition
         but this is still highly experimental

@@ -174,6 +174,13 @@ sub _process_options {
 	        || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";	        
 	}
 	
+    if (exists $options->{type_constraint} && $options->{type_constraint}->name =~ /^ArrayRef|HashRef$/) {
+        unless (exists $options->{default}) {
+            $options->{default} = sub { [] } if $options->{type_constraint}->name eq 'ArrayRef';
+            $options->{default} = sub { {} } if $options->{type_constraint}->name eq 'HashRef';            
+        }
+    }
+	
 	if (exists $options->{lazy} && $options->{lazy}) {
 	    (exists $options->{default})
 	        || confess "You cannot have lazy attribute without specifying a default value for it";	    

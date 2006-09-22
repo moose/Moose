@@ -75,6 +75,7 @@ t/056_util_more_type_coercion.t
 t/057_union_types.t
 t/060_moose_for_meta.t
 t/070_more_attr_delegation.t
+t/071_misc_attribute_tests.t
 t/100_subtype_quote_bug.t
 t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t
