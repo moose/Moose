@@ -163,6 +163,22 @@ sub validate {
     return ($message . ' in (' . $self->name . ')') ;    
 }
 
+sub is_a_type_of {
+    my ($self, $type_name) = @_;
+    foreach my $type (@{$self->type_constraints}) {
+        return 1 if $type->is_a_type_of($type_name);
+    }
+    return 0;    
+}
+
+sub is_subtype_of {
+    my ($self, $type_name) = @_;
+    foreach my $type (@{$self->type_constraints}) {
+        return 1 if $type->is_subtype_of($type_name);
+    }
+    return 0;
+}
+
 1;
 
 __END__

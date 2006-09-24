@@ -170,11 +170,14 @@ sub _process_options {
 	if (exists $options->{auto_deref} && $options->{auto_deref}) {
 	    (exists $options->{type_constraint})
 	        || confess "You cannot auto-dereference without specifying a type constraint";	    
-	    ($options->{type_constraint}->name =~ /^ArrayRef|HashRef$/)
+	    ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
+         $options->{type_constraint}->is_a_type_of('HashRef'))
 	        || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";	        
 	}
 	
-    if (exists $options->{type_constraint} && $options->{type_constraint}->name =~ /^ArrayRef|HashRef$/) {
+    if (exists $options->{type_constraint} && 
+               ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
+                $options->{type_constraint}->is_a_type_of('HashRef')  )) { 
         unless (exists $options->{default}) {
             $options->{default} = sub { [] } if $options->{type_constraint}->name eq 'ArrayRef';
             $options->{default} = sub { {} } if $options->{type_constraint}->name eq 'HashRef';            
@@ -296,17 +299,17 @@ sub _inline_auto_deref {
 
     return $ref_value unless $self->should_auto_deref;
 
-    my $type = $self->type_constraint->name;
+    my $type_constraint = $self->type_constraint;
 
     my $sigil;
-    if ($type eq "ArrayRef") {
+    if ($type_constraint->is_a_type_of('ArrayRef')) {
         $sigil = '@';
     } 
-    elsif ($type eq 'HashRef') {
+    elsif ($type_constraint->is_a_type_of('HashRef')) {
         $sigil = '%';
     } 
     else {
-        confess "Can not auto de-reference the type constraint '$type'";
+        confess "Can not auto de-reference the type constraint '" . $type_constraint->name . "'";
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";

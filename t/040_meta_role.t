@@ -3,10 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 29;
 use Test::Exception;
 
 BEGIN {  
+    use_ok('Moose'); 
     use_ok('Moose::Meta::Role');               
 }
 

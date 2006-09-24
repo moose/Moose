@@ -25,6 +25,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - if your attribute 'isa' ArrayRef of HashRef, and you have
         not explicitly set a default, then make the default DWIM.
+        This will also work for subtypes of ArrayRef and HashRef 
+        as well.
+      - you can now auto-deref subtypes of ArrayRef or HashRef too.
+        - new test added for this (thanks to ashley)
         
     * Moose::Meta::Role
       - added basic support for runtime role composition

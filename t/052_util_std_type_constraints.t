@@ -13,6 +13,8 @@ BEGIN {
 }
 
 my $SCALAR_REF = \(my $var);
+
+no warnings 'once'; # << I *hates* that warning ...
 my $GLOB_REF   = \*GLOB_REF;
 
 Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
