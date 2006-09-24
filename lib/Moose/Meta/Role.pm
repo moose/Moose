@@ -166,7 +166,7 @@ sub has_method          { (shift)->Moose::Meta::Class::has_method(@_)          }
 sub alias_method        { (shift)->Moose::Meta::Class::alias_method(@_)        }
 sub get_method_list     { 
     grep {
-        !/meta/
+        !/^meta$/
     } (shift)->Moose::Meta::Class::get_method_list(@_)     
 }
 
