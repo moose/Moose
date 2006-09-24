@@ -144,6 +144,11 @@ subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   };
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' };	
 subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   };
 
+# NOTE:
+# scalar filehandles are GLOB refs, 
+# but a GLOB ref is not always a filehandle
+subtype 'FileHandle' => as 'GlobRef' => where { Scalar::Util::openhandle($_) };
+
 # NOTE: 
 # blessed(qr/.../) returns true,.. how odd
 subtype 'Object' => as 'Ref' => where { blessed($_) && blessed($_) ne 'Regexp' };
@@ -241,6 +246,7 @@ could probably use some work, but it works for me at the moment.
               CodeRef
               RegexpRef
               GlobRef
+                FileHandle
               Object	
                   Role
 

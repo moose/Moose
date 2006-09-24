@@ -3,88 +3,158 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
+
+BEGIN {
+    eval "use IO::String; use IO::File;";
+    plan skip_all => "IO::String and IO::File are required for this test" if $@;        
+    plan tests => 29;    
+}
 
 BEGIN {
     use_ok('Moose');           
 }
 
-__END__
+{
+    package Email::Moose;
+    use Moose;
+    use Moose::Util::TypeConstraints;
 
-package Email::Moose;
+    use IO::String;
 
-use warnings;
-use strict;
+    our $VERSION = '0.01';
 
-use Moose;
-use Moose::Util::TypeConstraints;
+    # create subtype for IO::String
 
-use IO::String;
+    subtype 'IO::String'
+        => as 'Object'
+        => where { $_->isa('IO::String') };
 
-=head1 NAME
+    coerce 'IO::String'
+        => from 'Str'
+            => via { IO::String->new($_) },
+        => from 'ScalarRef',
+            => via { IO::String->new($_) };
 
-Email::Moose - Email::Simple on Moose steroids
+    # create subtype for IO::File
 
-=head1 VERSION
+    subtype 'IO::File'
+        => as 'Object'
+        => where { $_->isa('IO::File') };
 
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
-
-=head1 SYNOPSIS
-
-=head1 METHODS
-
-=head2 raw_body
-
-=cut
-
-subtype q{IO::String}
-  => as q{Object}
-  => where { $_->isa(q{IO::String}) };
-
-coerce q{IO::String}
-  => from q{Str}
-    => via { IO::String->new($_) },
-  => from q{ScalarRef},
-    => via { IO::String->new($_) };
-
-type q{FileHandle}
-  => where { Scalar::Util::openhandle($_) };
-  
-subtype q{IO::File}
-  => as q{Object}
-  => where { $_->isa(q{IO::File}) };
-
-coerce q{IO::File}
-  => from q{FileHandle}
-    => via { bless $_, q{IO::File} };
-
-subtype q{IO::Socket}
-  => as q{Object}
-  => where { $_->isa(q{IO::Socket}) };
-
-coerce q{IO::Socket}
-  => from q{CodeRef} # no test sample yet
-    => via { IO::Socket->new($_) };
-=cut
+    coerce 'IO::File'
+        => from 'FileHandle'
+            => via { bless $_, 'IO::File' };
     
-has q{raw_body} => (
-  is      => q{rw},
-  isa     => q{IO::String | IO::File | IO::Socket},
-  coerce  => 1,
-  default => sub { IO::String->new() },
-);
+    # attributes
+    
+    has 'raw_body' => (
+        is      => 'rw',
+        isa     => 'IO::String | IO::File',
+        coerce  => 1,
+        default => sub { IO::String->new() },
+    );
 
-=head2 as_string
-
-=cut
-
-sub as_string {
-  my ($self) = @_;
-  my $fh = $self->raw_body();
-  return do { local $/; <$fh> };
+    sub as_string {
+        my ($self) = @_;
+        my $fh = $self->raw_body();
+        return do { local $/; <$fh> };
+    }
 }
+
+{
+    my $email = Email::Moose->new;
+    isa_ok($email, 'Email::Moose');
+
+    isa_ok($email->raw_body, 'IO::String');
+    
+    is($email->as_string, undef, '... got correct empty string');
+}
+
+{
+    my $email = Email::Moose->new(raw_body => '... this is my body ...');
+    isa_ok($email, 'Email::Moose');
+    
+    isa_ok($email->raw_body, 'IO::String');
+    
+    is($email->as_string, '... this is my body ...', '... got correct string'); 
+    
+    lives_ok {
+        $email->raw_body('... this is the next body ...');   
+    } '... this will coerce correctly';
+    
+    isa_ok($email->raw_body, 'IO::String');
+    
+    is($email->as_string, '... this is the next body ...', '... got correct string');    
+}
+
+{
+    my $str = '... this is my body (ref) ...';
+    
+    my $email = Email::Moose->new(raw_body => \$str);
+    isa_ok($email, 'Email::Moose');
+    
+    isa_ok($email->raw_body, 'IO::String');
+    
+    is($email->as_string, $str, '... got correct string');    
+    
+    my $str2 = '... this is the next body (ref) ...';    
+    
+    lives_ok {
+        $email->raw_body(\$str2);   
+    } '... this will coerce correctly';
+    
+    isa_ok($email->raw_body, 'IO::String');
+    
+    is($email->as_string, $str2, '... got correct string');    
+}
+
+{
+    my $io_str = IO::String->new('... this is my body (IO::String) ...');
+    
+    my $email = Email::Moose->new(raw_body => $io_str);
+    isa_ok($email, 'Email::Moose');
+    
+    isa_ok($email->raw_body, 'IO::String');
+    is($email->raw_body, $io_str, '... and it is the one we expected');
+    
+    is($email->as_string, '... this is my body (IO::String) ...', '... got correct string'); 
+    
+    my $io_str2 = IO::String->new('... this is the next body (IO::String) ...');    
+    
+    lives_ok {
+        $email->raw_body($io_str2);   
+    } '... this will coerce correctly';
+    
+    isa_ok($email->raw_body, 'IO::String');
+    is($email->raw_body, $io_str2, '... and it is the one we expected');
+    
+    is($email->as_string, '... this is the next body (IO::String) ...', '... got correct string');       
+}
+
+{
+    my $fh;
+    
+    open($fh, '<', $0) || die "Could not open $0";
+    
+    my $email = Email::Moose->new(raw_body => $fh);
+    isa_ok($email, 'Email::Moose');
+    
+    isa_ok($email->raw_body, 'IO::File');
+    
+    close($fh);
+}
+
+{
+    my $fh = IO::File->new($0);
+    
+    my $email = Email::Moose->new(raw_body => $fh);
+    isa_ok($email, 'Email::Moose');
+    
+    isa_ok($email->raw_body, 'IO::File');
+    is($email->raw_body, $fh, '... and it is the one we expected');
+}
+
+
+

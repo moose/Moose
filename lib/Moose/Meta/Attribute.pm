@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Moose::Util::TypeConstraints ();
 
@@ -161,8 +161,8 @@ sub _process_options {
 	if (exists $options->{coerce} && $options->{coerce}) {
 	    (exists $options->{type_constraint})
 	        || confess "You cannot have coercion without specifying a type constraint";
-	    (!$options->{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
-	        || confess "You cannot have coercion with a type constraint union";	        
+	    #(!$options->{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
+	    #    || confess "You cannot have coercion with a type constraint union";	        
         confess "You cannot have a weak reference to a coerced value"
             if $options->{weak_ref};	        
 	}	
@@ -216,7 +216,7 @@ sub initialize_instance_slot {
 	    if ($self->has_type_constraint) {
 	        my $type_constraint = $self->type_constraint;
 		    if ($self->should_coerce && $type_constraint->has_coercion) {
-		        $val = $type_constraint->coercion->coerce($val);
+		        $val = $type_constraint->coerce($val);
 		    }	
             (defined($type_constraint->check($val))) 
                 || confess "Attribute (" . 
@@ -250,7 +250,7 @@ EOF
 sub _inline_check_coercion {
     my $self = shift;
 	return '' unless $self->should_coerce;
-    return 'my $val = $attr->type_constraint->coercion->coerce($_[1]);'
+    return 'my $val = $attr->type_constraint->coerce($_[1]);'
 }
 
 sub _inline_check_required {

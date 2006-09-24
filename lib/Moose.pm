@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/trunk/lib';
+
 package Moose;
 
 use strict;
@@ -207,11 +209,6 @@ use Moose::Util::TypeConstraints;
                 delete ${$class . '::'}{$name};
             }
         }
-        
-        # return a true value
-        # so that it can be used
-        # as a module end
-        1;
     }
 }
 

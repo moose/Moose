@@ -9,7 +9,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
@@ -33,6 +33,10 @@ sub new {
     my $self  = $class->meta->new_object(@_);
     $self->compile_type_constraint();
     return $self;
+}
+
+sub coerce { 
+    ((shift)->coercion || confess "Cannot coerce without a type coercion")->coerce(@_) 
 }
 
 sub compile_type_constraint {
@@ -101,7 +105,7 @@ sub union {
         || confess "You must pass in only Moose::Meta::TypeConstraint instances to make unions"
             foreach @type_constraints;
     return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => \@type_constraints
+        type_constraints => \@type_constraints,
     );
 }
 
@@ -111,7 +115,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',
@@ -136,10 +140,38 @@ sub constraint    {
 
 # conform to the TypeConstraint API
 sub parent        { undef  }
-sub coercion      { undef  }
-sub has_coercion  { 0      }
 sub message       { undef  }
 sub has_message   { 0      }
+
+# FIXME:
+# not sure what this should actually do here
+sub coercion { undef  }
+
+# this should probably be memoized
+sub has_coercion  {
+    my $self  = shift;
+    foreach my $type (@{$self->type_constraints}) {
+        return 1 if $type->has_coercion
+    }
+    return 0;    
+}
+
+# NOTE:
+# this feels too simple, and may not always DWIM
+# correctly, especially in the presence of 
+# close subtype relationships, however it should 
+# work for a fair percentage of the use cases
+sub coerce { 
+    my $self  = shift;
+    my $value = shift;
+    foreach my $type (@{$self->type_constraints}) {
+        if ($type->has_coercion) {
+            my $temp = $type->coerce($value);
+            return $temp if $self->check($temp);
+        }
+    }
+    return undef;    
+}
 
 sub check {
     my $self  = shift;
@@ -216,6 +248,10 @@ checks if it is a subtype of it.
 =item B<is_subtype_of ($type_name)>
 
 =item B<compile_type_constraint>
+
+=item B<coerce ($value)>
+
+This will apply the type-coercion if applicable.
 
 =item B<check ($value)>
 

@@ -10,16 +10,13 @@ Revision history for Perl extension Moose
       - Removed the use of UNIVERSAL::require to be a better
         symbol table citizen and remove a dependency 
         (thanks Adam Kennedy)
-      - unimport now returns a true value, this should allow
-        'no Moose' to be used instead of 1; at the end of a 
-        module.
 
     * Moose::Cookbook
       - added a FAQ and WTF files to document frequently 
         asked questions and common problems
         
     * Moose::Util::TypeConstraints
-      - added GlobRef type constraint
+      - added GlobRef and FileHandle type constraint
         - added tests for this
         
     * Moose::Meta::Attribute
@@ -32,8 +29,19 @@ Revision history for Perl extension Moose
         
     * Moose::Meta::Role
       - added basic support for runtime role composition
-        but this is still highly experimental
+        but this is still *highly experimental*, so feedback 
+        is much appreciated :)
         - added tests for this
+
+    * Moose::Meta::TypeConstraint
+      - the type constraint now handles the coercion process
+        through delegation, this is to support the coercion 
+        of unions
+        
+    * Moose::Meta::TypeConstraint::Union
+      - it is now possible for coercions to be performed 
+        on a type union
+        - added tests for this (thanks to konobi)
 
     * Moose::Meta::TypeCoercion
       - properly capturing error when type constraint 
