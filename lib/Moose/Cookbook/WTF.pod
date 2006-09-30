@@ -7,6 +7,27 @@ Moose::Cookbook::WTF - For when things go wrong with Moose
 
 =head1 COMMON PROBLEMS
 
+=head2 Speed
+
+=head3 Why is my code taking so long to load?
+
+Moose has a fairly heavy compile time burden, which it 
+inherits from Class::MOP. If load/compile time is a 
+concern for your application, Moose may not be the 
+right tool for you. 
+
+Although, you should note that we are exploring the 
+use of L<Module::Compile> to try and reduce this problem, 
+but nothing is ready yet.
+
+=head3 Why are my objects taking so long to construct?
+
+Moose uses a lot of introspection when constructing an 
+instance, and introspection can be slow. However, this 
+is a temporary problem, and is already solved in 
+Class::MOP by making classes immutable. However immutable 
+support in Moose is not ready yet, but will be soon.
+
 =head2 Constructors
 
 =head2 Accessors

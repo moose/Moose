@@ -10,13 +10,13 @@ lib/Moose/Cookbook.pod
 lib/Moose/Object.pm
 lib/Moose/Role.pm
 lib/Moose/Cookbook/FAQ.pod
-lib/Moose/Cookbook/WTF.pod
 lib/Moose/Cookbook/Recipe1.pod
 lib/Moose/Cookbook/Recipe2.pod
 lib/Moose/Cookbook/Recipe3.pod
 lib/Moose/Cookbook/Recipe4.pod
 lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Cookbook/Recipe6.pod
+lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
 lib/Moose/Meta/Instance.pm
@@ -73,9 +73,11 @@ t/054_util_type_coercion.t
 t/055_util_type_reloading.t
 t/056_util_more_type_coercion.t
 t/057_union_types.t
+t/058_union_types_and_coercions.t
 t/060_moose_for_meta.t
 t/070_more_attr_delegation.t
 t/071_misc_attribute_tests.t
+t/072_attr_dereference_test.t
 t/100_subtype_quote_bug.t
 t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t

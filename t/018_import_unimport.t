@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 23;
 
 BEGIN {
     use_ok('Moose');           
@@ -15,11 +15,10 @@ my @moose_exports = qw(
     before after around
     override
     augment
-    method
 );
 
 my @moose_not_unimported = qw(
-    super inner self
+    super inner
 );
 
 {

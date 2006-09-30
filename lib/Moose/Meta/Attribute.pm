@@ -66,9 +66,14 @@ sub clone_and_inherit_options {
 		    (defined $type_constraint)
 		        || confess "Could not find the type constraint '" . $options{isa} . "'";
 		}
+		# NOTE:
+		# check here to see if the new type 
+		# is a subtype of the old one
 		($type_constraint->is_subtype_of($self->type_constraint->name))
 		    || confess "New type constraint setting must be a subtype of inherited one"
+		        # iff we have a type constraint that is ...
 		        if $self->has_type_constraint;
+		# then we use it :)
 		$actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
     }

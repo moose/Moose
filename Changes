@@ -11,6 +11,10 @@ Revision history for Perl extension Moose
         symbol table citizen and remove a dependency 
         (thanks Adam Kennedy)
 
+      **~~ removed experimental & undocumented feature ~~**
+      - commented out the 'method' and 'self' keywords, see the 
+        comments for more info.
+
     * Moose::Cookbook
       - added a FAQ and WTF files to document frequently 
         asked questions and common problems

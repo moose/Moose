@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/trunk/lib';
-
 package Moose;
 
 use strict;
@@ -142,23 +140,29 @@ use Moose::Util::TypeConstraints;
         },
         
         # NOTE:
-        # this is experimental for now ...
-        self => sub {
-            return subname 'Moose::self' => sub {};
-        },        
-        method => sub {
-            my $class = $CALLER;
-            return subname 'Moose::method' => sub {
-                my ($name, $method) = @_;
-                $class->meta->add_method($name, sub {
-                    my $self = shift;
-                    no strict   'refs';
-                    no warnings 'redefine';
-                    local *{$class->meta->name . '::self'} = sub { $self };
-                    $method->(@_);
-                });
-            };
-        },                
+        # this is experimental, but I am not 
+        # happy with it. If you want to try 
+        # it, you will have to uncomment it 
+        # yourself. 
+        # There is a really good chance that 
+        # this will be deprecated, dont get 
+        # too attached
+        # self => sub {
+        #     return subname 'Moose::self' => sub {};
+        # },        
+        # method => sub {
+        #     my $class = $CALLER;
+        #     return subname 'Moose::method' => sub {
+        #         my ($name, $method) = @_;
+        #         $class->meta->add_method($name, sub {
+        #             my $self = shift;
+        #             no strict   'refs';
+        #             no warnings 'redefine';
+        #             local *{$class->meta->name . '::self'} = sub { $self };
+        #             $method->(@_);
+        #         });
+        #     };
+        # },                
         
         confess => sub {
             return \&Carp::confess;
@@ -290,9 +294,6 @@ This said, Moose is not yet finished, and should still be considered
 to be evolving. Much of the outer API is stable, but the internals 
 are still subject to change (although not without serious thought 
 given to it).  
-
-For more details, please refer to the L<FUTURE PLANS> section of 
-this document.
 
 =head1 DESCRIPTION
 

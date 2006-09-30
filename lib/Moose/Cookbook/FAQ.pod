@@ -7,6 +7,80 @@ Moose::Cookbook::FAQ - Frequenty asked questions about Moose
 
 =head1 FREQUENTLY ASKED QUESTIONS
 
+=head2 Module Stability
+
+=head3 Is Moose "production ready"?
+
+Yes and No. Currently I have one web application in production 
+using Moose, and at $work we are re-writing our core offering to 
+use Moose. Several other people on #moose either have sites in 
+production which use Moose, or are in the process of deploying 
+sites which use Moose. 
+
+The biggest barrier to widespread use of Moose in production 
+right now is speed of development and speed of execution. 
+
+Since development is still happening, regular upgrades are a 
+fact of life. This can be hairy in production, so if this makes 
+you quake with fear, you might want to wait a few months.
+
+Then comes speed of execution. Moose is actually pretty fast, 
+and makes great effort to stay out of your way when you don't 
+want it there. However, certain parts of Moose are slow, such 
+as compile time setup, introspection and object construction 
+(only because it uses introspection). See L<Is Moose slow?> 
+below for a deeper discussion on the subject.
+
+=head3 Is Moose's API stable?
+
+Yes and No. The external API, the one 90% of users will interact
+with, is B<very stable> and any changes B<will be 100% backwards 
+compatible>. The introspection API is I<mostly> stable, I still 
+reserve the right to tweak that if needed, but I will do my 
+absolute best to maintain backwards comptability here as well.
+
+=head3 Is Moose slow?
+
+Again, this one is tricky, so Yes I<and> No.
+
+First let me say that I<nothing> in life is free, and that some 
+Moose features do cost more than others. It is also the 
+policy of Moose to B<only charge you for the features you use>, 
+and to do our absolute best to not place any extra burdens on 
+the execution of your code for features you are not using. 
+
+Next, I will point out again that we are still in the "early 
+adopter" phase, so speed it not that important yet. We are 
+actually optimizing for "theoretical correctness" first, and 
+we will optimize for speed later. It has been our experience 
+that taking this approach allows for greater optimization 
+capacity. 
+
+And lastly, I want to reassure the speed junkies out there that 
+we B<are> working on it. 
+
+We have the immutable classes in Class::MOP, but which are not 
+yet integrated with Moose. These allow you to "close" a class 
+and then for many of it's more expensive methods to me memoized. 
+Our tests indicated a performance comparable (and in some 
+instances exceeding) that of hand-coded Perl.
+
+We are also discussing and experimenting with L<Module::Compile>, 
+and the idea of compiling highly optimized C<.pmc> files. And we 
+have also mapped out some core methods as canidates for conversion 
+to XS. 
+
+=head3 When will Moose be 1.0 ready?
+
+I expect (barring unforseen circumstances) that Moose will be 
+at 1.0 by the end of this year (2006). Which means that it will be 
+completely stable and provide a number of optimization options to 
+suit the need for speed. 
+
+Will I have addressed all your concerns by then? Will all the 
+features you want be included? I don't know unless you tell me, 
+so come over to #moose and we can talk.
+
 =head2 Constructors
 
 =head3 How do I write custom constructors with Moose?
