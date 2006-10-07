@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Moose::Util::TypeConstraints ();
 
@@ -267,6 +267,24 @@ sub _inline_check_required {
 sub _inline_check_lazy {
     my $self = shift;
 	return '' unless $self->is_lazy;
+	if ($self->has_type_constraint) {
+	    # NOTE:
+	    # this could probably be cleaned 
+	    # up and streamlined a little more
+	    return 'unless (exists $_[0]->{$attr_name}) {' .
+	           '    if ($attr->has_default) {' .
+	           '        my $default = $attr->default($_[0]);' .
+               '        (defined($attr->type_constraint->check($default)))' .
+               '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
+               '               . $attr->type_constraint->name . ") with " . (defined($default) ? "\'$default\'" : "undef")' .
+               '          if defined($default);' .	                
+	           '        $_[0]->{$attr_name} = $default; ' .
+	           '    }' .
+	           '    else {' .
+               '        $_[0]->{$attr_name} = undef;' .
+	           '    }' .
+	           '}';	    
+	}
     return '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
          . 'unless exists $_[0]->{$attr_name};';
 }

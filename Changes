@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.14
+
+    * Moose::Meta::Attribute
+      - fixed lazy attributes which were not getting 
+        checked with the type constraint (thanks ashley)
+        - added tests for this
+
 0.13 Sat. Sept. 30, 2006
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.35 in order 
