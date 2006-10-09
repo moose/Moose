@@ -1,11 +1,15 @@
 Revision history for Perl extension Moose
 
-0.14
+0.14 Mon. Oct. 9, 2006
 
     * Moose::Meta::Attribute
       - fixed lazy attributes which were not getting 
         checked with the type constraint (thanks ashley)
         - added tests for this
+      - removed the over-enthusiastic DWIMery of the 
+        automatic ArrayRef and HashRef defaults, it 
+        broke predicates in an ugly way.
+        - removed tests for this
 
 0.13 Sat. Sept. 30, 2006
     ++ NOTE ++

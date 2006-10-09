@@ -165,9 +165,7 @@ sub _process_options {
 	
 	if (exists $options->{coerce} && $options->{coerce}) {
 	    (exists $options->{type_constraint})
-	        || confess "You cannot have coercion without specifying a type constraint";
-	    #(!$options->{type_constraint}->isa('Moose::Meta::TypeConstraint::Union'))
-	    #    || confess "You cannot have coercion with a type constraint union";	        
+	        || confess "You cannot have coercion without specifying a type constraint";	        
         confess "You cannot have a weak reference to a coerced value"
             if $options->{weak_ref};	        
 	}	
@@ -179,15 +177,6 @@ sub _process_options {
          $options->{type_constraint}->is_a_type_of('HashRef'))
 	        || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";	        
 	}
-	
-    if (exists $options->{type_constraint} && 
-               ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
-                $options->{type_constraint}->is_a_type_of('HashRef')  )) { 
-        unless (exists $options->{default}) {
-            $options->{default} = sub { [] } if $options->{type_constraint}->name eq 'ArrayRef';
-            $options->{default} = sub { {} } if $options->{type_constraint}->name eq 'HashRef';            
-        }
-    }
 	
 	if (exists $options->{lazy} && $options->{lazy}) {
 	    (exists $options->{default})
