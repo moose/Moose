@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use base 'Class::MOP::Class';
 
@@ -115,7 +115,7 @@ sub get_method_map {
         my $gv = B::svref_2object($code)->GV;
         
         my $pkg = $gv->STASH->NAME;
-        if ($pkg->can('meta') && $pkg->meta->isa('Moose::Meta::Role')) {
+        if ($pkg->can('meta') && $pkg->meta && $pkg->meta->isa('Moose::Meta::Role')) {
             #my $role = $pkg->meta->name;
             #next unless $self->does_role($role);
         }

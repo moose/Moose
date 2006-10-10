@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.15
+    * Moose::Meta::Class
+      - fixed minor issue which occasionally 
+        comes up during global destruction 
+        (thanks omega)
+
 0.14 Mon. Oct. 9, 2006
 
     * Moose::Meta::Attribute
