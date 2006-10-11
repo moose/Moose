@@ -234,7 +234,7 @@ sub _inline_check_constraint {
 	
 	# FIXME - remove 'unless defined($value) - constraint Undef
 	return sprintf <<'EOF', $value, $value, $value, $value
-defined($attr->type_constraint->check(%s))
+defined($type_constraint->(%s))
 	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
        . $attr->type_constraint->name . ") with " . (defined(%s) ? "'%s'" : "undef")
   if defined(%s);
@@ -263,7 +263,7 @@ sub _inline_check_lazy {
 	    return 'unless (exists $_[0]->{$attr_name}) {' .
 	           '    if ($attr->has_default) {' .
 	           '        my $default = $attr->default($_[0]);' .
-               '        (defined($attr->type_constraint->check($default)))' .
+               '        (defined($type_constraint->($default)))' .
                '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
                '               . $attr->type_constraint->name . ") with " . (defined($default) ? "\'$default\'" : "undef")' .
                '          if defined($default);' .	                
@@ -344,6 +344,13 @@ sub generate_accessor_method {
     . $attr->_inline_check_lazy
     . 'return ' . $attr->_inline_auto_deref($attr->_inline_get($inv))
     . ' }';
+    
+    # NOTE:
+    # set up the environment
+    my $type_constraint = $attr->type_constraint 
+                                ? $attr->type_constraint->_compiled_type_constraint
+                                : undef;
+    
     my $sub = eval $code;
     confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;    
@@ -360,6 +367,13 @@ sub generate_writer_method {
 	. $attr->_inline_store($inv, $value_name)
 	. $attr->_inline_trigger($inv, $value_name)
     . ' }';
+    
+    # NOTE:
+    # set up the environment
+    my $type_constraint = $attr->type_constraint 
+                                ? $attr->type_constraint->_compiled_type_constraint
+                                : undef;    
+    
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;    

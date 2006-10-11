@@ -5,6 +5,17 @@ Revision history for Perl extension Moose
       - fixed minor issue which occasionally 
         comes up during global destruction 
         (thanks omega)
+        
+    * Moose::Meta::Attribute
+      - changed how we do type checks so that 
+        we reduce the overall cost by approx. 
+        factor of 5
+          
+    * Moose::Meta::TypeConstraint
+      - changed how constraints are compiled
+        so that we do less recursion and more
+        iteration. This makes the type check 
+        faster :)
 
 0.14 Mon. Oct. 9, 2006
 

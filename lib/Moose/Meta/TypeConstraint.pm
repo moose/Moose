@@ -9,7 +9,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
@@ -39,6 +39,17 @@ sub coerce {
     ((shift)->coercion || confess "Cannot coerce without a type coercion")->coerce(@_) 
 }
 
+sub _collect_all_parents {
+    my $self = shift;
+    my @parents;
+    my $current = $self->parent;
+    while (defined $current) {
+        unshift @parents => $current;
+        $current = $current->parent;
+    }
+    return @parents;
+}
+
 sub compile_type_constraint {
     my $self  = shift;
     my $check = $self->constraint;
@@ -46,13 +57,21 @@ sub compile_type_constraint {
         || confess "Could not compile type constraint '" . $self->name . "' because no constraint check";
     my $parent = $self->parent;
     if (defined $parent) {
-        # we have a subtype ...
-        $parent = $parent->_compiled_type_constraint;
+        # we have a subtype ...    
+        # so we gather all the parents in order
+        # and grab their constraints ...
+        my @parents = map { $_->constraint } $self->_collect_all_parents;
+        # then we compile them to run without
+        # having to recurse as we did before
 		$self->_compiled_type_constraint(subname $self->name => sub { 			
 			local $_ = $_[0];
-			return undef unless defined $parent->($_[0]) && $check->($_[0]);
+            foreach my $parent (@parents) {
+                return undef unless $parent->($_[0]);
+            }
+			return undef unless $check->($_[0]);
 			1;
 		});        
+                
     }
     else {
         # we have a type ....
@@ -115,7 +134,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',
@@ -173,13 +192,21 @@ sub coerce {
     return undef;    
 }
 
+sub _compiled_type_constraint {
+    my $self  = shift;
+    return sub {
+        my $value = shift;
+        foreach my $type (@{$self->type_constraints}) {
+            return 1 if $type->check($value);
+        }
+        return undef;    
+    }
+}
+
 sub check {
     my $self  = shift;
     my $value = shift;
-    foreach my $type (@{$self->type_constraints}) {
-        return 1 if $type->check($value);
-    }
-    return undef;
+    $self->_compiled_type_constraint->($value);
 }
 
 sub validate {
