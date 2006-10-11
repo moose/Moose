@@ -8,8 +8,8 @@ Revision history for Perl extension Moose
         
     * Moose::Meta::Attribute
       - changed how we do type checks so that 
-        we reduce the overall cost by approx. 
-        factor of 5
+        we reduce the overall cost, but still 
+        retain correctness.
           
     * Moose::Meta::TypeConstraint
       - changed how constraints are compiled

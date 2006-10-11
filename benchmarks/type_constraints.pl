@@ -5,6 +5,14 @@ use warnings;
 
 use Benchmark qw[cmpthese];
 
+=pod
+
+This benchmark compares the overhead of a 
+auto-created type constraint vs. none at 
+all vs. a custom-created type.
+
+=cut
+
 {
     package Foo;
     use Moose;
