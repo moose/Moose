@@ -6,23 +6,45 @@ use warnings;
 
 use Carp         'confess';
 use Scalar::Util 'blessed';
+use B            'svref_2object';
+use Sub::Exporter;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
-use Sub::Exporter -setup => { 
-    exports => [qw/
-        type subtype as where message 
-        coerce from via 
-        enum
-        find_type_constraint
-    /],
-    groups  => {
-        default => [':all']
+my @exports = qw/
+    type subtype as where message 
+    coerce from via 
+    enum
+    find_type_constraint
+/;
+
+Sub::Exporter::setup_exporter({ 
+    exports => \@exports,
+    groups  => { default => [':all'] }
+});
+
+sub unimport {
+    no strict 'refs';    
+    my $class = caller();
+    # loop through the exports ...
+    foreach my $name (@exports) {
+        # if we find one ...
+        if (defined &{$class . '::' . $name}) {
+            my $keyword = \&{$class . '::' . $name};
+            
+            # make sure it is from Moose
+            my $pkg_name = eval { svref_2object($keyword)->GV->STASH->NAME };
+            next if $@;
+            next if $pkg_name ne 'Moose::Util::TypeConstraints';
+            
+            # and if it is from Moose then undef the slot
+            delete ${$class . '::'}{$name};
+        }
     }
-};
+}
 
 {
     my %TYPES;
@@ -348,6 +370,17 @@ This is just sugar for the type coercion construction syntax.
 =item B<via>
 
 This is just sugar for the type coercion construction syntax.
+
+=back
+
+=head2 Namespace Management
+
+=over 4
+
+=item B<unimport>
+
+This will remove all the type constraint keywords from the 
+calling class namespace.
 
 =back
 

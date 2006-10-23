@@ -1,6 +1,12 @@
 Revision history for Perl extension Moose
 
 0.15
+
+    * Moose::Util::TypeConstraints
+      - added &unimport so that you can clean out 
+        your class namespace of these exported 
+        keywords
+    
     * Moose::Meta::Class
       - fixed minor issue which occasionally 
         comes up during global destruction 
