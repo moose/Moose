@@ -11,7 +11,7 @@ use B            'svref_2object';
 
 use Moose::Meta::Class;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use base 'Class::MOP::Module';
 

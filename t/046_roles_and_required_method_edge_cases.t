@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 use Test::Exception;
 
 BEGIN {
@@ -188,5 +188,44 @@ method modifier.
         with 'Role::RequireFoo';
     } '... the required "foo" method exists, but it is a before (and we will die)';    
 }    
+
+# ...
+# a method required in a role, but then 
+# implemented in the superclass (as an 
+# attribute accessor too)
     
+{
+    package Foo::Class::Base;
+    use Moose;
     
+    has 'bar' =>  ( 
+        isa     => 'Int', 
+        is      => 'rw', 
+        default => sub { 1 }
+    );
+}
+{
+    package Foo::Role;
+    use Moose::Role;
+    
+    requires 'bar';
+    
+    has 'foo' => ( 
+        isa     => 'Int', 
+        is      => 'rw', 
+        lazy    => 1, 
+        default => sub { (shift)->bar + 1 } 
+    );
+}
+{
+    package Foo::Class::Child;
+    use Moose;
+    extends 'Foo::Class::Base';
+    
+    ::dies_ok {       
+        with 'Foo::Role';
+    } '... our role combined successfully';
+}
+
+
+
