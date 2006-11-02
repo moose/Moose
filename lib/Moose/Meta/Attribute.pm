@@ -227,171 +227,27 @@ sub initialize_instance_slot {
         if ref $val && $self->is_weak_ref;
 }
 
-## Accessor inline subroutines
+## Slot management
 
-sub _inline_check_constraint {
-	my ($self, $value) = @_;
-	return '' unless $self->has_type_constraint;
-	
-	# FIXME - remove 'unless defined($value) - constraint Undef
-	return sprintf <<'EOF', $value, $value, $value, $value
-defined($type_constraint->(%s))
-	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
-       . $attr->type_constraint->name . ") with " . (defined(%s) ? "'%s'" : "undef")
-  if defined(%s);
-EOF
+sub set_value {
+    my ($self, $instance, $value) = @_;
 }
 
-sub _inline_check_coercion {
-    my $self = shift;
-	return '' unless $self->should_coerce;
-    return 'my $val = $attr->type_constraint->coerce($_[1]);'
+sub get_value {
+    my ($self, $instance) = @_;
 }
 
-sub _inline_check_required {
-    my $self = shift;
-	return '' unless $self->is_required;
-    return 'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";'
+sub has_value {
+    my ($self, $instance) = @_;   
 }
 
-sub _inline_check_lazy {
-    my $self = shift;
-	return '' unless $self->is_lazy;
-	if ($self->has_type_constraint) {
-	    # NOTE:
-	    # this could probably be cleaned 
-	    # up and streamlined a little more
-	    return 'unless (exists $_[0]->{$attr_name}) {' .
-	           '    if ($attr->has_default) {' .
-	           '        my $default = $attr->default($_[0]);' .
-               '        (defined($type_constraint->($default)))' .
-               '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
-               '               . $attr->type_constraint->name . ") with " . (defined($default) ? "\'$default\'" : "undef")' .
-               '          if defined($default);' .	                
-	           '        $_[0]->{$attr_name} = $default; ' .
-	           '    }' .
-	           '    else {' .
-               '        $_[0]->{$attr_name} = undef;' .
-	           '    }' .
-	           '}';	    
-	}
-    return '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
-         . 'unless exists $_[0]->{$attr_name};';
+sub clear_value {
+    my ($self, $instance) = @_;   
 }
 
+## installing accessors 
 
-sub _inline_store {
-	my ($self, $instance, $value) = @_;
-
-	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->slots;
-
-    my $code = $mi->inline_set_slot_value($instance, $slot_name, $value)    . ";";
-	$code   .= $mi->inline_weaken_slot_value($instance, $slot_name, $value) . ";"
-	    if $self->is_weak_ref;
-    return $code;
-}
-
-sub _inline_trigger {
-	my ($self, $instance, $value) = @_;
-	return '' unless $self->has_trigger;
-	return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
-}
-
-sub _inline_get {
-	my ($self, $instance) = @_;
-
-	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->slots;
-
-    return $mi->inline_get_slot_value($instance, $slot_name);
-}
-
-sub _inline_auto_deref {
-    my ( $self, $ref_value ) = @_;
-
-    return $ref_value unless $self->should_auto_deref;
-
-    my $type_constraint = $self->type_constraint;
-
-    my $sigil;
-    if ($type_constraint->is_a_type_of('ArrayRef')) {
-        $sigil = '@';
-    } 
-    elsif ($type_constraint->is_a_type_of('HashRef')) {
-        $sigil = '%';
-    } 
-    else {
-        confess "Can not auto de-reference the type constraint '" . $type_constraint->name . "'";
-    }
-
-    "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
-}
-
-sub generate_accessor_method {
-    my ($attr, $attr_name) = @_;
-    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
-	my $mi = $attr->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $attr->slots;
-	my $inv = '$_[0]';
-    my $code = 'sub { '
-    . 'if (scalar(@_) == 2) {'
-        . $attr->_inline_check_required
-        . $attr->_inline_check_coercion
-        . $attr->_inline_check_constraint($value_name)
-		. $attr->_inline_store($inv, $value_name)
-		. $attr->_inline_trigger($inv, $value_name)
-    . ' }'
-    . $attr->_inline_check_lazy
-    . 'return ' . $attr->_inline_auto_deref($attr->_inline_get($inv))
-    . ' }';
-    
-    # NOTE:
-    # set up the environment
-    my $type_constraint = $attr->type_constraint 
-                                ? $attr->type_constraint->_compiled_type_constraint
-                                : undef;
-    
-    my $sub = eval $code;
-    confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;    
-}
-
-sub generate_writer_method {
-    my ($attr, $attr_name) = @_; 
-    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
-	my $inv = '$_[0]';
-    my $code = 'sub { '
-    . $attr->_inline_check_required
-    . $attr->_inline_check_coercion
-	. $attr->_inline_check_constraint($value_name)
-	. $attr->_inline_store($inv, $value_name)
-	. $attr->_inline_trigger($inv, $value_name)
-    . ' }';
-    
-    # NOTE:
-    # set up the environment
-    my $type_constraint = $attr->type_constraint 
-                                ? $attr->type_constraint->_compiled_type_constraint
-                                : undef;    
-    
-    my $sub = eval $code;
-    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;    
-}
-
-sub generate_reader_method {
-    my $attr = shift;
-    my $attr_name = $attr->slots;
-    my $code = 'sub {'
-    . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
-    . $attr->_inline_check_lazy
-    . 'return ' . $attr->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
-    . '}';
-    my $sub = eval $code;
-    confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;
-}
+sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
 
 sub install_accessors {
     my $self = shift;
