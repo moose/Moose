@@ -9,9 +9,9 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use B            'svref_2object';
 
-use Moose::Meta::Class;
-
 our $VERSION = '0.05';
+
+use Moose::Meta::Class;
 
 use base 'Class::MOP::Module';
 

@@ -9,6 +9,7 @@ use Carp         'confess';
 
 our $VERSION = '0.08';
 
+use Moose::Meta::Method::Accessor;
 use Moose::Util::TypeConstraints ();
 
 use base 'Class::MOP::Attribute';

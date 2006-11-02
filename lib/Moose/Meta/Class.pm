@@ -11,6 +11,8 @@ use Scalar::Util 'weaken', 'blessed', 'reftype';
 
 our $VERSION = '0.08';
 
+use Moose::Meta::Method::Overriden;
+
 use base 'Class::MOP::Class';
 
 __PACKAGE__->meta->add_attribute('roles' => (
@@ -23,6 +25,7 @@ sub initialize {
     my $pkg   = shift;
     $class->SUPER::initialize($pkg,
         ':attribute_metaclass' => 'Moose::Meta::Attribute', 
+        ':method_metaclass'    => 'Moose::Meta::Method',
         ':instance_metaclass'  => 'Moose::Meta::Instance', 
         @_);
 }  
@@ -312,15 +315,6 @@ sub _process_inherited_attribute {
     }    
     return $new_attr;
 }
-
-package Moose::Meta::Method::Overriden;
-
-use strict;
-use warnings;
-
-our $VERSION = '0.01';
-
-use base 'Class::MOP::Method';
 
 1;
 
