@@ -173,7 +173,7 @@ subtype 'FileHandle' => as 'GlobRef' => where { Scalar::Util::openhandle($_) };
 
 # NOTE: 
 # blessed(qr/.../) returns true,.. how odd
-subtype 'Object' => as 'Ref' => where { blessed($_) && blessed($_) ne 'Regexp' };
+subtype 'Object' => as 'Ref' => where { Scalar::Util::blessed($_) && Scalar::Util::blessed($_) ne 'Regexp' };
 
 subtype 'Role' => as 'Object' => where { $_->can('does') };
 

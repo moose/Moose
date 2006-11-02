@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/Projects/Moose-CPAN/Sub-Compose/Sub-Compose/lib';
+
 package Moose::Meta::TypeConstraint;
 
 use strict;
@@ -8,6 +10,8 @@ use metaclass;
 use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
+
+use Sub::Compose::Composer;
 
 our $VERSION = '0.06';
 
@@ -63,14 +67,26 @@ sub compile_type_constraint {
         my @parents = map { $_->constraint } $self->_collect_all_parents;
         # then we compile them to run without
         # having to recurse as we did before
-		$self->_compiled_type_constraint(subname $self->name => sub { 			
-			local $_ = $_[0];
-            foreach my $parent (@parents) {
-                return undef unless $parent->($_[0]);
-            }
-			return undef unless $check->($_[0]);
-			1;
-		});        
+        
+        my $composer = Sub::Compose::Composer->new(@parents, $check);
+        my $str = $composer->conjoin_code_string(
+            prefix  => 'local $_ = $_[0]',
+            around  => [ '(', ')'],
+            postfix => ' || undef',        
+        );
+        #warn "Compiling " . $self->name . " from\n" . $str . "\n\n";
+        my $code = eval $str;
+        confess "Something went wrong when evaling : \n $str \n\n $@" if $@;
+        $self->_compiled_type_constraint(subname $self->name => $code);
+        
+		#$self->_compiled_type_constraint(subname $self->name => sub { 			
+		#	local $_ = $_[0];
+        #    foreach my $parent (@parents) {
+        #        return undef unless $parent->($_[0]);
+        #    }
+		#	return undef unless $check->($_[0]);
+		#	1;
+		#});        
                 
     }
     else {
