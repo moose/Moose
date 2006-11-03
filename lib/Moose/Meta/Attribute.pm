@@ -229,21 +229,82 @@ sub initialize_instance_slot {
 
 ## Slot management
 
-#sub set_value {
-#    my ($self, $instance, $value) = @_;
-#}
-#
-#sub get_value {
-#    my ($self, $instance) = @_;
-#}
-#
-#sub has_value {
-#    my ($self, $instance) = @_;   
-#}
-#
-#sub clear_value {
-#    my ($self, $instance) = @_;   
-#}
+sub set_value {
+    my ($self, $instance, $value) = @_;
+    
+    my $attr_name = $self->name;
+    
+    if ($self->is_required) {
+        defined($value) 
+            || confess "Attribute ($attr_name) is required, so cannot be set to undef";
+    }
+    
+    if ($self->has_type_constraint) {
+        
+        my $type_constraint = $self->type_constraint;
+        
+        if ($self->should_coerce) {
+            $value = $type_constraint->coerce($value);           
+        }
+        defined($type_constraint->_compiled_type_constraint->($value))
+        	|| confess "Attribute ($attr_name) does not pass the type constraint ("
+               . $type_constraint->name . ") with " . (defined($value) ? ("'" . $value . "'") : "undef")
+          if defined($value);
+    }
+    
+    my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
+                                         ->get_meta_instance;
+                                         
+    $meta_instance->set_slot_value($instance, $attr_name, $value);  
+      
+    if (ref $value && $self->is_weak_ref) {
+        $meta_instance->weaken_slot_value($instance, $attr_name);            
+    }
+    
+    if ($self->has_trigger) {
+        $self->trigger->($instance, $value, $self);
+    }
+}
+
+sub get_value {
+    my ($self, $instance) = @_;
+    
+    if ($self->is_lazy) {
+	    unless ($self->has_value($instance)) {
+	        if ($self->has_default) {
+	            my $default = $self->default($instance);
+	            $self->set_value($instance, $default);
+	        }
+	        else {
+                $self->set_value($instance, undef);
+	        }
+	    }   
+    }
+    
+    if ($self->should_auto_deref) {
+        
+        my $type_constraint = $self->type_constraint;
+
+        if ($type_constraint->is_a_type_of('ArrayRef')) {
+            my $rv = $self->SUPER::get_value($instance);
+            return unless defined $rv;
+            return wantarray ? @{ $rv } : $rv;
+        } 
+        elsif ($type_constraint->is_a_type_of('HashRef')) {
+            my $rv = $self->SUPER::get_value($instance);
+            return unless defined $rv;
+            return wantarray ? %{ $rv } : $rv;
+        } 
+        else {
+            confess "Can not auto de-reference the type constraint '" . $type_constraint->name . "'";
+        }
+               
+    }
+    else {
+        
+        return $self->SUPER::get_value($instance);
+    }    
+}
 
 ## installing accessors 
 
@@ -397,6 +458,10 @@ will behave just as L<Class::MOP::Attribute> does.
 =item B<install_accessors>
 
 =item B<accessor_metaclass>
+
+=item B<get_value>
+
+=item B<set_value>
 
 =back
 

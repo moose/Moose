@@ -13,9 +13,9 @@ our $VERSION = '0.01';
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
-## generators
+## Inline method generators
 
-sub generate_accessor_method {
+sub generate_accessor_method_inline {
     my $self      = shift;
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
@@ -47,7 +47,7 @@ sub generate_accessor_method {
     return $sub;    
 }
 
-sub generate_writer_method {
+sub generate_writer_method_inline {
     my $self      = shift;
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
@@ -73,7 +73,7 @@ sub generate_writer_method {
     return $sub;    
 }
 
-sub generate_reader_method {
+sub generate_reader_method_inline {
     my $self      = shift;
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
@@ -87,26 +87,6 @@ sub generate_reader_method {
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
 }
-
-#sub generate_predicate_method {
-#    my $self      = shift;
-#    my $attr      = $self->associated_attribute; 
-#    my $attr_name = $attr->name;  
-#}
-#
-#sub generate_clearer_method {
-#    my $self      = shift;
-#    my $attr      = $self->associated_attribute; 
-#    my $attr_name = $attr->name;    
-#}
-
-## Inline methods
-
-*generate_accessor_method_inline  = \&generate_accessor_method;
-*generate_reader_method_inline    = \&generate_reader_method;
-*generate_writer_method_inline    = \&generate_writer_method;
-#*generate_predicate_method_inline = \&generate_predicate_method;
-#*generate_clearer_method_inline   = \&generate_clearer_method;
 
 ## ... private helpers
 

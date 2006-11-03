@@ -1,6 +1,10 @@
 Revision history for Perl extension Moose
 
 0.15
+    ++ NOTE ++
+    This version of Moose *must* have Class::MOP 0.36 in order 
+    to work correctly. A number of small internal tweaks have 
+    been made in order to be compatible with that release.
 
     * Moose::Util::TypeConstraints
       - added &unimport so that you can clean out 
@@ -11,17 +15,43 @@ Revision history for Perl extension Moose
       - fixed minor issue which occasionally 
         comes up during global destruction 
         (thanks omega)
-        
+      - moved Moose::Meta::Method::Overriden into 
+        its own file.
+      
+    * Moose::Meta::Role      
+      - moved Moose::Meta::Role::Method into 
+        its own file.
+              
     * Moose::Meta::Attribute
       - changed how we do type checks so that 
         we reduce the overall cost, but still 
         retain correctness.
+       *** API CHANGE ***
+      - moved accessor generation methods to 
+        Moose::Meta::Method::Accessor to 
+        conform to the API changes from 
+        Class::MOP 0.36
           
     * Moose::Meta::TypeConstraint
       - changed how constraints are compiled
         so that we do less recursion and more
         iteration. This makes the type check 
         faster :)
+      - moved Moose::Meta::TypeConstraint::Union
+        into its own file
+    
+    * Moose::Meta::Method::Accessor
+      - created this from methods formerly found in 
+        Moose::Meta::Attribute
+    
+    * Moose::Meta::Role::Method
+      - moved this from Moose::Meta::Role
+          
+    * Moose::Meta::Method::Overriden
+      - moved this from Moose::Meta::Class
+      
+    * Moose::Meta::TypeConstraint::Union
+      - moved this from Moose::Meta::TypeConstraint
 
 0.14 Mon. Oct. 9, 2006
 
