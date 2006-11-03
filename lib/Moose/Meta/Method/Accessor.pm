@@ -1,27 +1,19 @@
 
+use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/trunk/lib';
+
 package Moose::Meta::Method::Accessor;
 
 use strict;
 use warnings;
 
+use Carp 'confess';
+
 our $VERSION = '0.01';
 
-use base 'Moose::Meta::Method';
+use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
 ## generators
-
-sub generate_predicate_method {
-    my $self      = shift;
-    my $attr      = $self->associated_attribute; 
-    my $attr_name = $attr->name;
-}
-
-sub generate_clearer_method {
-    my $self      = shift;
-    my $attr      = $self->associated_attribute; 
-    my $attr_name = $attr->name;
-}
 
 sub generate_accessor_method {
     my $self      = shift;
@@ -86,7 +78,6 @@ sub generate_reader_method {
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
     
-    my $attr_name = $attr->slots;
     my $code = 'sub {'
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . $self->_inline_check_lazy
@@ -97,50 +88,34 @@ sub generate_reader_method {
     return $sub;
 }
 
+#sub generate_predicate_method {
+#    my $self      = shift;
+#    my $attr      = $self->associated_attribute; 
+#    my $attr_name = $attr->name;  
+#}
+#
+#sub generate_clearer_method {
+#    my $self      = shift;
+#    my $attr      = $self->associated_attribute; 
+#    my $attr_name = $attr->name;    
+#}
+
 ## Inline methods
 
-sub generate_accessor_method_inline {
-    my $self          = shift;
-    my $attr          = $self->associated_attribute; 
-    my $attr_name     = $attr->name;
-    my $meta_instance = $attr->associated_class->instance_metaclass;
-}
+*generate_accessor_method_inline  = \&generate_accessor_method;
+*generate_reader_method_inline    = \&generate_reader_method;
+*generate_writer_method_inline    = \&generate_writer_method;
+#*generate_predicate_method_inline = \&generate_predicate_method;
+#*generate_clearer_method_inline   = \&generate_clearer_method;
 
-sub generate_reader_method_inline {
-    my $self          = shift;
-    my $attr          = $self->associated_attribute; 
-    my $attr_name     = $attr->name;
-    my $meta_instance = $attr->associated_class->instance_metaclass;
-}
-
-sub generate_writer_method_inline {
-    my $self          = shift;
-    my $attr          = $self->associated_attribute; 
-    my $attr_name     = $attr->name;
-    my $meta_instance = $attr->associated_class->instance_metaclass;
-}
-
-
-sub generate_predicate_method_inline {
-    my $self          = shift;
-    my $attr          = $self->associated_attribute; 
-    my $attr_name     = $attr->name;
-    my $meta_instance = $attr->associated_class->instance_metaclass;
-}
-
-sub generate_clearer_method_inline {
-    my $self          = shift;
-    my $attr          = $self->associated_attribute; 
-    my $attr_name     = $attr->name;
-    my $meta_instance = $attr->associated_class->instance_metaclass;
-}
-
-## 
-
+## ... private helpers
 
 sub _inline_check_constraint {
 	my ($self, $value) = @_;
-	return '' unless $self->has_type_constraint;
+	
+	my $attr = $self->associated_attribute; 
+	
+	return '' unless $attr->has_type_constraint;
 	
 	# FIXME - remove 'unless defined($value) - constraint Undef
 	return sprintf <<'EOF', $value, $value, $value, $value
@@ -152,21 +127,25 @@ EOF
 }
 
 sub _inline_check_coercion {
-    my $self = shift;
-	return '' unless $self->should_coerce;
+	my $attr = (shift)->associated_attribute; 
+	
+	return '' unless $attr->should_coerce;
     return 'my $val = $attr->type_constraint->coerce($_[1]);'
 }
 
 sub _inline_check_required {
-    my $self = shift;
-	return '' unless $self->is_required;
+	my $attr = (shift)->associated_attribute; 
+	
+	return '' unless $attr->is_required;
     return 'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";'
 }
 
 sub _inline_check_lazy {
-    my $self = shift;
-	return '' unless $self->is_lazy;
-	if ($self->has_type_constraint) {
+	my $attr = (shift)->associated_attribute; 
+	
+	return '' unless $attr->is_lazy;
+	
+	if ($attr->has_type_constraint) {
 	    # NOTE:
 	    # this could probably be cleaned 
 	    # up and streamlined a little more
@@ -191,37 +170,41 @@ sub _inline_check_lazy {
 
 sub _inline_store {
 	my ($self, $instance, $value) = @_;
+	my $attr = $self->associated_attribute; 	
 
-	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->slots;
+	my $mi = $attr->associated_class->get_meta_instance;
+	my $slot_name = sprintf "'%s'", $attr->slots;
 
     my $code = $mi->inline_set_slot_value($instance, $slot_name, $value)    . ";";
 	$code   .= $mi->inline_weaken_slot_value($instance, $slot_name, $value) . ";"
-	    if $self->is_weak_ref;
+	    if $attr->is_weak_ref;
     return $code;
 }
 
 sub _inline_trigger {
 	my ($self, $instance, $value) = @_;
-	return '' unless $self->has_trigger;
+	my $attr = $self->associated_attribute; 	
+	return '' unless $attr->has_trigger;
 	return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
 }
 
 sub _inline_get {
 	my ($self, $instance) = @_;
+	my $attr = $self->associated_attribute; 	
 
-	my $mi = $self->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $self->slots;
+	my $mi = $attr->associated_class->get_meta_instance;
+	my $slot_name = sprintf "'%s'", $attr->slots;
 
     return $mi->inline_get_slot_value($instance, $slot_name);
 }
 
 sub _inline_auto_deref {
     my ( $self, $ref_value ) = @_;
+	my $attr = $self->associated_attribute;     
 
-    return $ref_value unless $self->should_auto_deref;
+    return $ref_value unless $attr->should_auto_deref;
 
-    my $type_constraint = $self->type_constraint;
+    my $type_constraint = $attr->type_constraint;
 
     my $sigil;
     if ($type_constraint->is_a_type_of('ArrayRef')) {
@@ -242,5 +225,50 @@ sub _inline_auto_deref {
 __END__
 
 =pod
+
+=head1 NAME
+
+=head1 SYNOPOSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=over 4
+
+=item B<generate_accessor_method>
+
+=item B<generate_accessor_method_inline>
+
+=item B<generate_reader_method>
+
+=item B<generate_reader_method_inline>
+
+=item B<generate_writer_method>
+
+=item B<generate_writer_method_inline>
+
+=back
+
+=head1 BUGS
+
+All complex software has bugs lurking in it, and this module is no 
+exception. If you find a bug please either email me, or add the bug
+to cpan-RT.
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut

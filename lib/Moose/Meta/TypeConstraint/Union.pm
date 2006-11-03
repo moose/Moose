@@ -115,4 +115,67 @@ __END__
 
 =pod
 
+=head1 NAME
+
+=head1 SYNOPOSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=over 4
+
+=item B<check>
+
+=item B<coerce>
+
+=item B<coercion>
+
+=item B<constraint>
+
+=item B<has_coercion>
+
+=item B<has_message>
+
+=item B<is_a_type_of>
+
+=item B<is_subtype_of>
+
+=item B<message>
+
+=item B<meta>
+
+=item B<name>
+
+=item B<new>
+
+=item B<parent>
+
+=item B<type_constraints>
+
+=item B<validate>
+
+=back
+
+=head1 BUGS
+
+All complex software has bugs lurking in it, and this module is no 
+exception. If you find a bug please either email me, or add the bug
+to cpan-RT.
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
 =cut

@@ -229,21 +229,21 @@ sub initialize_instance_slot {
 
 ## Slot management
 
-sub set_value {
-    my ($self, $instance, $value) = @_;
-}
-
-sub get_value {
-    my ($self, $instance) = @_;
-}
-
-sub has_value {
-    my ($self, $instance) = @_;   
-}
-
-sub clear_value {
-    my ($self, $instance) = @_;   
-}
+#sub set_value {
+#    my ($self, $instance, $value) = @_;
+#}
+#
+#sub get_value {
+#    my ($self, $instance) = @_;
+#}
+#
+#sub has_value {
+#    my ($self, $instance) = @_;   
+#}
+#
+#sub clear_value {
+#    my ($self, $instance) = @_;   
+#}
 
 ## installing accessors 
 
@@ -394,13 +394,9 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<initialize_instance_slot>
 
-=item B<generate_accessor_method>
-
-=item B<generate_writer_method>
-
-=item B<generate_reader_method>
-
 =item B<install_accessors>
+
+=item B<accessor_metaclass>
 
 =back
 

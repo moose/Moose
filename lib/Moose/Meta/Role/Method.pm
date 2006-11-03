@@ -1,4 +1,5 @@
-package Moose::Meta::Method;
+
+package Moose::Meta::Role::Method;
 
 use strict;
 use warnings;
