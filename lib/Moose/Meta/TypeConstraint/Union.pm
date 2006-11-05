@@ -117,11 +117,36 @@ __END__
 
 =head1 NAME
 
-=head1 SYNOPOSIS
+Moose::Meta::TypeConstraint::Union - A union of Moose type constraints
 
 =head1 DESCRIPTION
 
+This metaclass represents a union of Moose type constraints. More 
+details to be explained later (possibly in a Cookbook::Recipe).
+
+This actually used to be part of Moose::Meta::TypeConstraint, but it 
+is now better off in it's own file. 
+
 =head1 METHODS
+
+This class is not a subclass of Moose::Meta::TypeConstraint, 
+but it does provide the same API
+
+=over 4
+
+=item B<meta>
+
+=item B<new>
+
+=item B<name>
+
+=item B<type_constraints>
+
+=item B<constraint>
+
+=back
+
+=head2 Overriden methods 
 
 =over 4
 
@@ -129,31 +154,32 @@ __END__
 
 =item B<coerce>
 
-=item B<coercion>
-
-=item B<constraint>
-
-=item B<has_coercion>
-
-=item B<has_message>
+=item B<validate>
 
 =item B<is_a_type_of>
 
 =item B<is_subtype_of>
 
-=item B<message>
+=back
 
-=item B<meta>
+=head2 Empty or Stub methods
 
-=item B<name>
+These methods tend to not be very relevant in 
+the context of a union. Either that or they are 
+just difficult to specify and not very useful 
+anyway. They are here for completeness.
 
-=item B<new>
+=over 4
 
 =item B<parent>
 
-=item B<type_constraints>
+=item B<coercion>
 
-=item B<validate>
+=item B<has_coercion>
+
+=item B<message>
+
+=item B<has_message>
 
 =back
 

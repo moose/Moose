@@ -16,15 +16,13 @@ __END__
 
 =head1 NAME
 
-=head1 SYNOPOSIS
+Moose::Meta::Role::Method - A Moose Method metaclass for Roles
 
 =head1 DESCRIPTION
 
-=head1 METHODS
-
-=over 4
-
-=back
+This is primarily used to mark methods coming from a role 
+as being different. Right now it is nothing but a subclass
+of L<Class::MOP::Method>.
 
 =head1 BUGS
 

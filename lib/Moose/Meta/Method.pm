@@ -15,15 +15,13 @@ __END__
 
 =head1 NAME
 
-=head1 SYNOPOSIS
+Moose::Meta::Method - A Moose Method metaclass
 
 =head1 DESCRIPTION
 
-=head1 METHODS
-
-=over 4
-
-=back
+For now, this is nothing but a subclass of Class::MOP::Method, 
+but with the expanding role of the method sub-protocol, it might 
+be more useful later on. 
 
 =head1 BUGS
 

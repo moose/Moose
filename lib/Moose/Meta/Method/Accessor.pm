@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/trunk/lib';
-
 package Moose::Meta::Method::Accessor;
 
 use strict;
@@ -208,23 +206,25 @@ __END__
 
 =head1 NAME
 
-=head1 SYNOPOSIS
+Moose::Meta::Method::Accessor - A Moose Method metaclass for accessors
 
 =head1 DESCRIPTION
+
+This is a subclass of L<Class::MOP::Method::Accessor> and it's primary 
+responsibility is to generate the accessor methods for attributes. It 
+can handle both closure based accessors, as well as inlined source based
+accessors. 
+
+This is a fairly new addition to the MOP, but this will play an important
+role in the optimization strategy we are currently following.
 
 =head1 METHODS
 
 =over 4
 
-=item B<generate_accessor_method>
-
 =item B<generate_accessor_method_inline>
 
-=item B<generate_reader_method>
-
 =item B<generate_reader_method_inline>
-
-=item B<generate_writer_method>
 
 =item B<generate_writer_method_inline>
 

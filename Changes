@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.15
+0.15 Sun. Nov. 5, 2006
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.36 in order 
     to work correctly. A number of small internal tweaks have 

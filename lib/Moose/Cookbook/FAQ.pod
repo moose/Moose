@@ -24,12 +24,12 @@ Since development is still happening, regular upgrades are a
 fact of life. This can be hairy in production, so if this makes 
 you quake with fear, you might want to wait a few months.
 
-Then comes speed of execution. Moose is actually pretty fast, 
-and makes great effort to stay out of your way when you don't 
-want it there. However, certain parts of Moose are slow, such 
-as compile time setup, introspection and object construction 
-(only because it uses introspection). See L<Is Moose slow?> 
-below for a deeper discussion on the subject.
+Then comes speed of execution. In some ways, Moose is actually 
+pretty fast and makes great effort to stay out of your way when 
+you don't want it there. However, certain parts of Moose are 
+slow, such as compile time setup, introspection and object 
+construction (only because it uses introspection). See 
+L<Is Moose slow?> below for a deeper discussion on the subject.
 
 =head3 Is Moose's API stable?
 

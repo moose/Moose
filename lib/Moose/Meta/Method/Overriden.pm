@@ -15,15 +15,16 @@ __END__
 
 =head1 NAME
 
-=head1 SYNOPOSIS
+Moose::Meta::Method::Overriden - A Moose Method metaclass for overriden methods
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+This is primarily used to tag methods created with the C<override> keyword. It 
+is currently just a subclass of L<Moose::Meta::Method>. 
 
-=over 4
-
-=back
+Later releases will likely encapsulate the C<super> behavior of overriden methods, 
+rather than that being the responsibility of the class. But this is low priority
+for now.
 
 =head1 BUGS
 
