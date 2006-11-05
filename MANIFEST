@@ -1,7 +1,7 @@
 Build.PL
 Changes
-Makefile.PL
 META.yml
+Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 README
@@ -20,9 +20,14 @@ lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
 lib/Moose/Meta/Instance.pm
+lib/Moose/Meta/Method.pm
 lib/Moose/Meta/Role.pm
 lib/Moose/Meta/TypeCoercion.pm
 lib/Moose/Meta/TypeConstraint.pm
+lib/Moose/Meta/Method/Accessor.pm
+lib/Moose/Meta/Method/Overriden.pm
+lib/Moose/Meta/Role/Method.pm
+lib/Moose/Meta/TypeConstraint/Union.pm
 lib/Moose/Util/TypeConstraints.pm
 t/000_load.t
 t/001_recipe.t
@@ -85,6 +90,7 @@ t/103_subclass_use_base_bug.t
 t/201_example.t
 t/202_example_Moose_POOP.t
 t/203_example.t
+t/300_immutable_moose.t
 t/pod.t
 t/pod_coverage.t
 t/lib/Bar.pm
