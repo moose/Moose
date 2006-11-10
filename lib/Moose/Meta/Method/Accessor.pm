@@ -81,6 +81,13 @@ sub generate_reader_method_inline {
     . $self->_inline_check_lazy
     . 'return ' . $self->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
     . '}';
+    
+    # NOTE:
+    # set up the environment
+    my $type_constraint = $attr->type_constraint 
+                                ? $attr->type_constraint->_compiled_type_constraint
+                                : undef;    
+    
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
