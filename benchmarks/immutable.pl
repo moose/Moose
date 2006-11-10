@@ -8,18 +8,15 @@ use Benchmark qw[cmpthese];
 
 use Moose::Util::TypeConstraints;
 
-BEGIN {
-    subtype 'Foo' => as 'Object' => where { blessed($_) && $_->isa('Foo') }; 
-
-    coerce 'Foo'
-        => from 'ArrayRef'
-        => via { Foo->new(@{$_}) };
-}
-
 {
     package Foo;
     use Moose;
+    Foo->meta->make_immutable(debug => 0);
 }
+
+coerce 'Foo'
+    => from 'ArrayRef'
+    => via { Foo->new(@{$_}) };
 
 {
     package Foo::Normal;
@@ -64,14 +61,16 @@ cmpthese(500,
             Foo::Normal->new(
                 required        => 'BAR',
                 type_constraint => $foo,
-                #coercion        => [],
+                coercion        => [],
+                weak_ref        => {},
             );
         },
         'immutable' => sub {
             Foo::Immutable->new(
                 required        => 'BAR',
                 type_constraint => $foo,
-                #coercion        => [],
+                coercion        => [],
+                weak_ref        => {},                
             );
         },
     }

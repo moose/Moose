@@ -212,13 +212,18 @@ sub _fix_metaclass_incompatability {
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
         next unless $super->can('meta');
+        # get the name, make sure we take 
+        # immutable classes into account
+        my $super_meta_name = ($super->meta->is_immutable 
+                                ? $super->meta->get_mutable_metaclass_name
+                                : blessed($super->meta));
         # if it's meta is a vanilla Moose, 
-        # then we can safely ignore it.
-        next if blessed($super->meta) eq 'Moose::Meta::Class';
+        # then we can safely ignore it.        
+        next if $super_meta_name eq 'Moose::Meta::Class';
         # but if we have anything else, 
         # we need to check it out ...
         unless (# see if of our metaclass is incompatible
-                ($self->isa(blessed($super->meta)) &&
+                ($self->isa($super_meta_name) &&
                  # and see if our instance metaclass is incompatible
                  $self->instance_metaclass->isa($super->meta->instance_metaclass)) &&
                 # ... and if we are just a vanilla Moose

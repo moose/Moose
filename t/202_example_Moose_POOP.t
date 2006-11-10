@@ -123,7 +123,7 @@ BEGIN {
     }
     
     package Moose::POOP::Meta::Class;
-    use Moose;
+    use Moose;  
     
     extends 'Moose::Meta::Class';    
     

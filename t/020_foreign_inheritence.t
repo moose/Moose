@@ -34,6 +34,8 @@ BEGIN {
 		my $super = $class->SUPER::new(@_);
 		return $class->meta->new_object('__INSTANCE__' => $super, @_);
 	}
+	
+	__PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $foo_moose = Foo::Moose->new();

@@ -103,7 +103,7 @@ sub _generate_BUILDALL {
     my $self = shift;
     my @BUILD_calls;
     foreach my $method ($self->associated_metaclass->find_all_methods_by_name('BUILD')) {
-        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params);';    
+        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params)';    
     }
     return join "\n" => @BUILD_calls; 
 }
@@ -121,20 +121,21 @@ sub _generate_slot_initializer {
                         '|| confess "Attribute (' . $attr->name . ') is required";');
     }
     
-    push @source => 'if ($params{\'' . $attr->init_arg . '\'}) {';
-    
-        push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
-        if ($attr->has_type_constraint) {
-            push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
-            
-            if ($attr->should_coerce && $attr->type_constraint->has_coercion) {                    
-                push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');        
-            }
-            push @source => $self->_generate_type_constraint_check($attr, '$type_constraint', '$val');        
-        }
-        push @source => $self->_generate_slot_assignment($attr, '$val');
-    
     if ($attr->has_default && !$attr->is_lazy) {
+        
+        push @source => 'if (exists $params{\'' . $attr->init_arg . '\'}) {';
+
+            push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
+            if ($attr->has_type_constraint) {
+                push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
+
+                if ($attr->should_coerce && $attr->type_constraint->has_coercion) {                    
+                    push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');        
+                }
+                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint', '$val');        
+            }
+            push @source => $self->_generate_slot_assignment($attr, '$val');        
+        
         
         push @source => "} else {";            
         
@@ -151,6 +152,19 @@ sub _generate_slot_initializer {
         push @source => "}";            
     }          
     else {
+        push @source => '(exists $params{\'' . $attr->init_arg . '\'}) && do {';
+
+            push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
+            if ($attr->has_type_constraint) {
+                push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
+
+                if ($attr->should_coerce && $attr->type_constraint->has_coercion) {                    
+                    push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');        
+                }
+                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint', '$val');        
+            }
+            push @source => $self->_generate_slot_assignment($attr, '$val');        
+        
         push @source => "}";            
     }
     

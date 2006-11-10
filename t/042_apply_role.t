@@ -27,11 +27,15 @@ BEGIN {
         'FooRole::blau -> ' . $c->();
     }; 
 
+}{
     package BarClass;
     use Moose;
     
     sub boo { 'BarClass::boo' }
     sub foo { 'BarClass::foo' }  # << the role overrides this ...  
+
+    __PACKAGE__->meta->make_immutable(debug => 0);
+}{
     
     package FooClass;
     use Moose;
@@ -42,6 +46,8 @@ BEGIN {
     sub blau { 'FooClass::blau' }
 
     sub goo { 'FooClass::goo' }  # << overrides the one from the role ... 
+    
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $foo_class_meta = FooClass->meta;

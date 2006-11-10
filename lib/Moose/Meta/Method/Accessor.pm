@@ -86,6 +86,10 @@ sub generate_reader_method_inline {
     return $sub;
 }
 
+*generate_reader_method   = \&generate_reader_method_inline;
+*generate_writer_method   = \&generate_writer_method_inline;
+*generate_accessor_method = \&generate_accessor_method_inline;
+
 ## ... private helpers
 
 sub _inline_check_constraint {
@@ -221,6 +225,12 @@ role in the optimization strategy we are currently following.
 =head1 METHODS
 
 =over 4
+
+=item B<generate_accessor_method>
+
+=item B<generate_reader_method>
+
+=item B<generate_writer_method>
 
 =item B<generate_accessor_method_inline>
 
