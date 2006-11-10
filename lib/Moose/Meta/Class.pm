@@ -24,9 +24,9 @@ sub initialize {
     my $class = shift;
     my $pkg   = shift;
     $class->SUPER::initialize($pkg,
-        ':attribute_metaclass' => 'Moose::Meta::Attribute', 
-        ':method_metaclass'    => 'Moose::Meta::Method',
-        ':instance_metaclass'  => 'Moose::Meta::Instance', 
+        'attribute_metaclass' => 'Moose::Meta::Attribute', 
+        'method_metaclass'    => 'Moose::Meta::Method',
+        'instance_metaclass'  => 'Moose::Meta::Instance', 
         @_);
 }  
 
@@ -102,7 +102,7 @@ sub construct_instance {
 # This is ugly
 sub get_method_map {    
     my $self = shift;
-    my $map  = $self->{'%:methods'}; 
+    my $map  = $self->{'%!methods'}; 
     
     my $class_name       = $self->name;
     my $method_metaclass = $self->method_metaclass;
@@ -132,25 +132,6 @@ sub get_method_map {
     
     return $map;
 }
-
-#sub find_method_by_name {
-#    my ($self, $method_name) = @_;
-#    (defined $method_name && $method_name)
-#        || confess "You must define a method name to find";    
-#    # keep a record of what we have seen
-#    # here, this will handle all the 
-#    # inheritence issues because we are 
-#    # using the &class_precedence_list
-#    my %seen_class;
-#    foreach my $class ($self->class_precedence_list()) {
-#        next if $seen_class{$class};
-#        $seen_class{$class}++;
-#        # fetch the meta-class ...
-#        my $meta = $self->initialize($class);
-#        return $meta->get_method($method_name) 
-#            if $meta->has_method($method_name);
-#    }
-#}
 
 ### ---------------------------------------------
 
@@ -252,9 +233,9 @@ sub _fix_metaclass_incompatability {
             # at this point anyway, so it's very 
             # much an obscure edge case anyway
             $self = $super_meta->reinitialize($self->name => (
-                ':attribute_metaclass' => $super_meta->attribute_metaclass,                            
-                ':method_metaclass'    => $super_meta->method_metaclass,
-                ':instance_metaclass'  => $super_meta->instance_metaclass,
+                'attribute_metaclass' => $super_meta->attribute_metaclass,                            
+                'method_metaclass'    => $super_meta->method_metaclass,
+                'instance_metaclass'  => $super_meta->instance_metaclass,
             ));
         }
     }
@@ -316,6 +297,52 @@ sub _process_inherited_attribute {
     return $new_attr;
 }
 
+## -------------------------------------------------
+
+use Moose::Meta::Method::Constructor;
+
+{
+    # NOTE:
+    # the immutable version of a 
+    # particular metaclass is 
+    # really class-level data so 
+    # we don't want to regenerate 
+    # it any more than we need to
+    my $IMMUTABLE_METACLASS;
+    sub make_immutable {
+        my $self = shift;
+        
+        $IMMUTABLE_METACLASS ||= Class::MOP::Immutable->new($self, {
+            read_only   => [qw/superclasses/],
+            cannot_call => [qw/
+                add_method
+                alias_method
+                remove_method
+                add_attribute
+                remove_attribute
+                add_package_symbol
+                remove_package_symbol            
+                add_role
+            /],
+            memoize     => {
+                class_precedence_list             => 'ARRAY',
+                compute_all_applicable_attributes => 'ARRAY',            
+                get_meta_instance                 => 'SCALAR',     
+                get_method_map                    => 'SCALAR', 
+                # maybe ....
+                calculate_all_roles               => 'ARRAY',    
+            }
+        });   
+        
+        $IMMUTABLE_METACLASS->make_metaclass_immutable(
+            $self,
+            constructor_class => 'Moose::Meta::Method::Constructor',
+            inline_accessors  => 0,
+            @_,
+        )     
+    }
+}
+
 1;
 
 __END__
@@ -341,6 +368,8 @@ to the L<Class::MOP::Class> documentation.
 =over 4
 
 =item B<initialize>
+
+=item B<make_immutable>
 
 =item B<new_object>
 

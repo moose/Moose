@@ -153,7 +153,7 @@ sub _clean_up_required_methods {
 # this is an UGLY hack
 sub get_method_map {    
     my $self = shift;
-    $self->{'%:methods'} ||= {}; 
+    $self->{'%!methods'} ||= {}; 
     $self->Moose::Meta::Class::get_method_map() 
 }
 

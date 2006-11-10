@@ -1,4 +1,6 @@
 
+use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/branches/Class-MOP-tranformations/lib';
+
 package Moose;
 
 use strict;
@@ -214,6 +216,8 @@ use Moose::Util::TypeConstraints;
             }
         }
     }
+    
+    
 }
 
 ## Utility functions

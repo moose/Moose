@@ -28,7 +28,9 @@ BEGIN {
             || confess "Account overdrawn";
         $self->balance($current_balance - $amount);
     }
-
+    
+	__PACKAGE__->meta->make_immutable(debug => 0);
+}{
 	package CheckingAccount;	
 	use Moose;
 
@@ -44,6 +46,8 @@ BEGIN {
 			$self->deposit($overdraft_amount);
 		}
 	};
+
+	__PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $savings_account = BankAccount->new(balance => 250);
