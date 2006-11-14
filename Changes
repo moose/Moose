@@ -1,9 +1,9 @@
 Revision history for Perl extension Moose
 
-0.16
-    ~~ NOTE:
-    ~~ some speed improvements in this release, 
-    ~~ this is only the begining, so stay tuned   
+0.16 Tues. Nov. 14, 2006
+    ++ NOTE ++
+    There are some speed improvements in this release, 
+    but they are only the begining, so stay tuned.
     
     * Moose::Object
       - BUILDALL and DEMOLISHALL no longer get 
