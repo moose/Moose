@@ -20,7 +20,6 @@ all vs. a custom-created type.
     
     has 'baz' => (is => 'rw');
     has 'bar' => (is => 'rw', isa => 'Foo');
-    #has 'boo' => (is => 'rw', isa => type 'CustomFoo' => where { blessed($_) && $_->isa('Foo') });
 }
 
 my $foo = Foo->new;
@@ -32,10 +31,7 @@ cmpthese(200_000,
         },
         'w_constraint' => sub {
             $foo->bar($foo);            
-        },
-        #'w_custom_constraint' => sub {
-        #    $foo->boo($foo);            
-        #},        
+        },        
     }
 );
 

@@ -9,13 +9,13 @@ use Scalar::Util 'blessed';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
 my @exports = qw/
-    type subtype as where message 
+    type subtype as where message optimize_as
     coerce from via 
     enum
     find_type_constraint
@@ -59,8 +59,17 @@ sub unimport {
         Data::Dumper::Dumper(\%TYPES);
     }
     
-    sub _create_type_constraint ($$$;$) { 
-        my ($name, $parent, $check, $message) = @_;
+    sub _create_type_constraint ($$$;$$) { 
+        my $name   = shift;
+        my $parent = shift;
+        my $check  = shift;;
+        
+        my ($message, $optimized);
+        for (@_) {
+            $message   = $_->{message}   if exists $_->{message};
+            $optimized = $_->{optimized} if exists $_->{optimized};            
+        }
+        
         my $pkg_defined_in = scalar(caller(1));
         ($TYPES{$name}->[0] eq $pkg_defined_in)
             || confess "The type constraint '$name' has already been created "
@@ -71,6 +80,7 @@ sub unimport {
             parent     => $parent,            
             constraint => $check,       
             message    => $message,    
+            optimized  => $optimized,
         );
         $TYPES{$name} = [ $pkg_defined_in, $constraint ] if defined $name;
         return $constraint;
@@ -113,8 +123,8 @@ sub type ($$) {
 	_create_type_constraint($name, undef, $check);
 }
 
-sub subtype ($$;$$) {
-	unshift @_ => undef if scalar @_ <= 2;
+sub subtype ($$;$$$) {
+	unshift @_ => undef if scalar @_ <= 2;	
 	goto &_create_type_constraint;
 }
 
@@ -127,7 +137,9 @@ sub as      ($) { $_[0] }
 sub from    ($) { $_[0] }
 sub where   (&) { $_[0] }
 sub via     (&) { $_[0] }
-sub message (&) { $_[0] }
+
+sub message     (&) { +{ message   => $_[0] } }
+sub optimize_as (&) { +{ optimized => $_[0] } }
 
 sub enum ($;@) {
     my ($type_name, @values) = @_;
@@ -149,33 +161,61 @@ type 'Item' => where { 1 }; # base-type
 subtype 'Undef'   => as 'Item' => where { !defined($_) };
 subtype 'Defined' => as 'Item' => where {  defined($_) };
 
-subtype 'Bool'  => as 'Item' => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
+subtype 'Bool'
+    => as 'Item' 
+    => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
-subtype 'Value' => as 'Defined' => where { !ref($_) };
-subtype 'Ref'   => as 'Defined' => where {  ref($_) };
+subtype 'Value' 
+    => as 'Defined' 
+    => where { !ref($_) } 
+    => optimize_as { defined($_[0]) && !ref($_[0]) };
+    
+subtype 'Ref'
+    => as 'Defined' 
+    => where {  ref($_) } 
+    => optimize_as { ref($_[0]) };
 
-subtype 'Str' => as 'Value' => where { 1 };
+subtype 'Str' 
+    => as 'Value' 
+    => where { 1 } 
+    => optimize_as { defined($_[0]) && !ref($_[0]) };
 
-subtype 'Num' => as 'Value' => where { Scalar::Util::looks_like_number($_) };
-subtype 'Int' => as 'Num'   => where { "$_" =~ /^-?[0-9]+$/ };
+subtype 'Num' 
+    => as 'Value' 
+    => where { Scalar::Util::looks_like_number($_) } 
+    => optimize_as { !ref($_[0]) && Scalar::Util::looks_like_number($_[0]) };
+    
+subtype 'Int' 
+    => as 'Num'   
+    => where { "$_" =~ /^-?[0-9]+$/ }
+    => optimize_as { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ };
 
-subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' };
-subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  };
-subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   };	
-subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   };
-subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' };	
-subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   };
+subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' } => optimize_as { ref($_[0]) eq 'SCALAR' };
+subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  } => optimize_as { ref($_[0]) eq 'ARRAY'  };
+subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   } => optimize_as { ref($_[0]) eq 'HASH'   };	
+subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   } => optimize_as { ref($_[0]) eq 'CODE'   };
+subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } => optimize_as { ref($_[0]) eq 'Regexp' };	
+subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as { ref($_[0]) eq 'GLOB'   };
 
 # NOTE:
 # scalar filehandles are GLOB refs, 
 # but a GLOB ref is not always a filehandle
-subtype 'FileHandle' => as 'GlobRef' => where { Scalar::Util::openhandle($_) };
+subtype 'FileHandle' 
+    => as 'GlobRef' 
+    => where { Scalar::Util::openhandle($_) }
+    => optimize_as { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) };
 
 # NOTE: 
 # blessed(qr/.../) returns true,.. how odd
-subtype 'Object' => as 'Ref' => where { blessed($_) && blessed($_) ne 'Regexp' };
+subtype 'Object' 
+    => as 'Ref' 
+    => where { blessed($_) && blessed($_) ne 'Regexp' }
+    => optimize_as { blessed($_[0]) && blessed($_[0]) ne 'Regexp' };
 
-subtype 'Role' => as 'Object' => where { $_->can('does') };
+subtype 'Role' 
+    => as 'Object' 
+    => where { $_->can('does') }
+    => optimize_as { blessed($_[0]) && $_[0]->can('does') };
 
 1;
 
@@ -346,6 +386,8 @@ This is just sugar for the type constraint construction syntax.
 =item B<message>
 
 This is just sugar for the type constraint construction syntax.
+
+=item B<optimize_as>
 
 =back
 

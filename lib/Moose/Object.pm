@@ -9,7 +9,7 @@ use metaclass 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub new {
     my $class = shift;
@@ -28,6 +28,7 @@ sub new {
 }
 
 sub BUILDALL {
+	return unless $_[0]->can('BUILD');	    
 	my ($self, $params) = @_;
 	foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
 		$method->{code}->($self, $params);
@@ -35,6 +36,7 @@ sub BUILDALL {
 }
 
 sub DEMOLISHALL {
+	return unless $_[0]->can('DEMOLISH');	    
 	my $self = shift;
 	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
 		$method->{code}->($self);

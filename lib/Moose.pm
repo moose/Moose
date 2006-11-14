@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -34,6 +34,7 @@ use Moose::Util::TypeConstraints;
         subtype $class
             => as 'Object'
             => where { $_->isa($class) }
+            => optimize_as { blessed($_[0]) && $_[0]->isa($class) }            
         unless find_type_constraint($class);
 
         my $meta;

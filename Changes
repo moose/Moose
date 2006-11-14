@@ -1,5 +1,26 @@
 Revision history for Perl extension Moose
 
+0.16
+    ~~ NOTE:
+    ~~ some speed improvements in this release, 
+    ~~ this is only the begining, so stay tuned   
+    
+    * Moose::Object
+      - BUILDALL and DEMOLISHALL no longer get 
+        called unless they actually need to be.
+        This gave us a signifigant speed boost
+        for the cases when there is no BUILD or 
+        DEMOLISH method present.
+        
+    * Moose::Util::TypeConstraints
+    * Moose::Meta::TypeConstraint
+      - added an 'optimize_as' option to the 
+        type constraint, which allows for a
+        hand optimized version of the type 
+        constraint to be used when possible.
+      - Any internally created type constraints
+        now provide an optimized version as well.
+
 0.15 Sun. Nov. 5, 2006
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.36 in order 

@@ -9,7 +9,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Moose::Meta::TypeConstraint::Union;
 
@@ -30,6 +30,12 @@ __PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
     accessor => '_compiled_type_constraint'
 ));
 
+__PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
+    init_arg  => 'optimized',
+    accessor  => 'hand_optimized_type_constraint',
+    predicate => 'has_hand_optimized_type_constraint',    
+));
+
 sub new { 
     my $class = shift;
     my $self  = $class->meta->new_object(@_);
@@ -46,7 +52,7 @@ sub _collect_all_parents {
     my @parents;
     my $current = $self->parent;
     while (defined $current) {
-        unshift @parents => $current;
+        push @parents => $current;
         $current = $current->parent;
     }
     return @parents;
@@ -54,6 +60,16 @@ sub _collect_all_parents {
 
 sub compile_type_constraint {
     my $self  = shift;
+    
+    if ($self->has_hand_optimized_type_constraint) {
+        my $type_constraint = $self->hand_optimized_type_constraint;
+        $self->_compiled_type_constraint(sub {
+            return undef unless $type_constraint->($_[0]);
+            return 1;
+        });
+        return;
+    }
+    
     my $check = $self->constraint;
     (defined $check)
         || confess "Could not compile type constraint '" . $self->name . "' because no constraint check";
@@ -62,7 +78,17 @@ sub compile_type_constraint {
         # we have a subtype ...    
         # so we gather all the parents in order
         # and grab their constraints ...
-        my @parents = map { $_->constraint } $self->_collect_all_parents;
+        my @parents;
+        foreach my $parent ($self->_collect_all_parents) {
+            if ($parent->has_hand_optimized_type_constraint) {
+                unshift @parents => $parent->hand_optimized_type_constraint;
+                last;                
+            }
+            else {
+                unshift @parents => $parent->constraint;
+            }
+        }
+        
         # then we compile them to run without
         # having to recurse as we did before
 		$self->_compiled_type_constraint(subname $self->name => sub { 			
@@ -72,8 +98,7 @@ sub compile_type_constraint {
             }
 			return undef unless $check->($_[0]);
 			1;
-		});        
-                
+		});               
     }
     else {
         # we have a type ....
@@ -197,6 +222,10 @@ the C<message> will be used to construct a custom error message.
 =item B<has_coercion>
 
 =item B<coercion>
+
+=item B<hand_optimized_type_constraint>
+
+=item B<has_hand_optimized_type_constraint>
 
 =back
 

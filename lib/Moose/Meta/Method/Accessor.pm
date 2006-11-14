@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
@@ -85,6 +85,12 @@ sub generate_reader_method_inline {
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
 }
+
+## normal method generators 
+
+*generate_reader_method   = \&generate_reader_method_inline;
+*generate_writer_method   = \&generate_writer_method_inline;
+*generate_accessor_method = \&generate_accessor_method_inline;
 
 ## ... private helpers
 
@@ -221,6 +227,12 @@ role in the optimization strategy we are currently following.
 =head1 METHODS
 
 =over 4
+
+=item B<generate_accessor_method>
+
+=item B<generate_reader_method>
+
+=item B<generate_writer_method>
 
 =item B<generate_accessor_method_inline>
 

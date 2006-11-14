@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Moose::Meta::Method::Overriden;
 
@@ -132,25 +132,6 @@ sub get_method_map {
     
     return $map;
 }
-
-#sub find_method_by_name {
-#    my ($self, $method_name) = @_;
-#    (defined $method_name && $method_name)
-#        || confess "You must define a method name to find";    
-#    # keep a record of what we have seen
-#    # here, this will handle all the 
-#    # inheritence issues because we are 
-#    # using the &class_precedence_list
-#    my %seen_class;
-#    foreach my $class ($self->class_precedence_list()) {
-#        next if $seen_class{$class};
-#        $seen_class{$class}++;
-#        # fetch the meta-class ...
-#        my $meta = $self->initialize($class);
-#        return $meta->get_method($method_name) 
-#            if $meta->has_method($method_name);
-#    }
-#}
 
 ### ---------------------------------------------
 
