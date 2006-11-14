@@ -87,6 +87,7 @@ t/100_subtype_quote_bug.t
 t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t
 t/103_subclass_use_base_bug.t
+t/104_inline_reader_bug.t
 t/201_example.t
 t/202_example_Moose_POOP.t
 t/203_example.t

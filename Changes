@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.17 Tues. Nov. 14, 2006
+    * Moose::Meta::Method::Accessor
+      - bugfix for read-only accessors which 
+        are have a type constraint and lazy.
+        Thanks to chansen for finding it.
+
 0.16 Tues. Nov. 14, 2006
     ++ NOTE ++
     There are some speed improvements in this release, 
