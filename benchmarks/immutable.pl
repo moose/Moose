@@ -30,6 +30,16 @@ coerce 'Foo'
     has 'type_constraint' => (is => 'rw', isa => 'Foo');    
     has 'coercion'        => (is => 'rw', isa => 'Foo', coerce => 1);    
     
+    package Bar::Normal;
+    use Moose;
+    
+    extends 'Foo::Normal';
+    
+    has 'default_w_type_constraint' => (
+        is      => 'rw',
+        isa     => 'Int',
+        default => 10,
+    );
 }
 
 {
@@ -48,14 +58,27 @@ coerce 'Foo'
         # ...
     }
     
-    Foo::Immutable->meta->make_immutable(debug => 1);
+    Foo::Immutable->meta->make_immutable(debug => 0);
+    
+    package Bar::Immutable;
+    use Moose;
+    
+    extends 'Foo::Immutable';    
+    
+    has 'default_w_type_constraint' => (
+        is      => 'rw',
+        isa     => 'Int',
+        default => 10,
+    );    
+    
+    Bar::Immutable->meta->make_immutable(debug => 0);    
 }
 
 #__END__
 
 my $foo = Foo->new;
 
-cmpthese(500, 
+cmpthese(10_000, 
     {
         'normal' => sub {
             Foo::Normal->new(

@@ -12,7 +12,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use Moose ();
 
@@ -31,6 +31,7 @@ use Moose::Util::TypeConstraints;
         subtype $role
             => as 'Role'
             => where { $_->does($role) }
+            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }              
         unless find_type_constraint($role);        
 
     	my $meta;

@@ -71,7 +71,11 @@ sub intialize_body {
     # requires some adaption on the part of 
     # the author, after all, nothing is free)
     my $source = 'sub {';
-    $source .= "\n" . 'my $class = shift; ';
+    $source .= "\n" . 'my $class = shift;';
+    
+    $source .= "\n" . 'return $class->Moose::Object::' . $self->options->{constructor_name} . '(@_)';
+    $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';    
+    
     $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';    
     
     $source .= "\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
@@ -102,7 +106,7 @@ sub intialize_body {
 sub _generate_BUILDALL {
     my $self = shift;
     my @BUILD_calls;
-    foreach my $method ($self->associated_metaclass->find_all_methods_by_name('BUILD')) {
+    foreach my $method (reverse $self->associated_metaclass->find_all_methods_by_name('BUILD')) {
         push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params)';    
     }
     return join "\n" => @BUILD_calls; 

@@ -305,6 +305,7 @@ sub _process_inherited_attribute {
 ## -------------------------------------------------
 
 use Moose::Meta::Method::Constructor;
+use Moose::Meta::Method::Destructor;
 
 {
     # NOTE:
@@ -342,6 +343,11 @@ use Moose::Meta::Method::Constructor;
         $IMMUTABLE_METACLASS->make_metaclass_immutable(
             $self,
             constructor_class => 'Moose::Meta::Method::Constructor',
+            destructor_class  => 'Moose::Meta::Method::Destructor',            
+            inline_destructor => 1,
+            # NOTE: 
+            # no need to do this, 
+            # Moose always does it
             inline_accessors  => 0,
             @_,
         )     
