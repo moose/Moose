@@ -54,9 +54,9 @@ coerce 'Foo'
     has 'type_constraint' => (is => 'rw', isa => 'Foo');    
     has 'coercion'        => (is => 'rw', isa => 'Foo', coerce => 1);
     
-    sub BUILD {
-        # ...
-    }
+    #sub BUILD {
+    #    # ...
+    #}
     
     Foo::Immutable->meta->make_immutable(debug => 0);
     
