@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.18_001';
+our $VERSION = '0.18_002';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
