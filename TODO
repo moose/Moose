@@ -8,6 +8,19 @@ mst: if I do "subtype 'Foo' => as 'Bar';" I get an empty condition and it dies
 TODO
 -------------------------------------------------------------------------------
 
+- DDuncan's Str types
+
+subtype 'Str' 
+    => as 'Value' 
+    => where { Encode::is_utf8( $_[0] ) or $_[0] !~ m/[^0x00-0x7F]/x } 
+    => optimize_as { defined($_[0]) && !ref($_[0]) };
+
+subtype 'Blob' 
+    => as 'Value' 
+    => where { !Encode::is_utf8( $_[0] ) } 
+    => optimize_as { defined($_[0]) && !ref($_[0]) };
+
+
 - should handle some moose-specific options in &Moose::Meta::Class::create
   things like roles, and method modifiers (although those can probably be 
   ignored if i want to)

@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/branches/Class-MOP-tranformations/lib';
-
 package Moose::Util::TypeConstraints;
 
 use strict;
@@ -11,7 +9,7 @@ use Scalar::Util 'blessed';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
@@ -71,7 +69,7 @@ sub unimport {
             $message   = $_->{message} if exists $_->{message};
             $optimized = $_->{optimized} if exists $_->{optimized};            
         }
-        
+
         my $pkg_defined_in = scalar(caller(1));
         ($TYPES{$name}->[0] eq $pkg_defined_in)
             || confess "The type constraint '$name' has already been created "
@@ -395,11 +393,11 @@ This is just sugar for the type constraint construction syntax.
 
 =head2 Type Coercion Constructors
 
-Type constraints can also contain type coercions as well. In most 
-cases Moose will run the type-coercion code first, followed by the 
-type constraint check. This feature should be used carefully as it 
-is very powerful and could easily take off a limb if you are not 
-careful.
+Type constraints can also contain type coercions as well. If you 
+ask your accessor too coerce, the Moose will run the type-coercion 
+code first, followed by the type constraint check. This feature 
+should be used carefully as it is very powerful and could easily 
+take off a limb if you are not careful.
 
 See the L<SYNOPOSIS> for an example of how to use these.
 

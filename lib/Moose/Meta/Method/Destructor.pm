@@ -82,4 +82,46 @@ __END__
 
 =pod
 
+=head1 NAME 
+
+Moose::Meta::Method::Destructor - Method Meta Object for destructors
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=over 4
+
+=item B<new>
+
+=item B<attributes>
+
+=item B<meta_instance>
+
+=item B<options>
+
+=item B<is_needed>
+
+=item B<intialize_body>
+
+=item B<associated_metaclass>
+
+=back
+
+=head1 AUTHORS
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
 =cut
+

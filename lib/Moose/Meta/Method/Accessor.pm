@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
@@ -96,8 +96,6 @@ sub generate_reader_method_inline {
 *generate_reader_method   = \&generate_reader_method_inline;
 *generate_writer_method   = \&generate_writer_method_inline;
 *generate_accessor_method = \&generate_accessor_method_inline;
-
-## ... private helpers
 
 sub _inline_check_constraint {
 	my ($self, $value) = @_;

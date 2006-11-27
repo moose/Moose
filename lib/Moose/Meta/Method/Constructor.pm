@@ -18,24 +18,14 @@ sub new {
         
     (exists $options{options} && ref $options{options} eq 'HASH')
         || confess "You must pass a hash of options"; 
-        
-    (blessed $options{meta_instance} && $options{meta_instance}->isa('Class::MOP::Instance'))
-        || confess "You must supply a meta-instance";        
-    
-    (exists $options{attributes} && ref $options{attributes} eq 'ARRAY')
-        || confess "You must pass an array of options";        
-        
-    (blessed($_) && $_->isa('Class::MOP::Attribute'))
-        || confess "You must supply a list of attributes which is a 'Class::MOP::Attribute' instance"
-            for @{$options{attributes}};    
     
     my $self = bless {
         # from our superclass
         '&!body'          => undef,
         # specific to this subclass
         '%!options'       => $options{options},
-        '$!meta_instance' => $options{meta_instance},
-        '@!attributes'    => $options{attributes}, 
+        '$!meta_instance' => $options{metaclass}->get_meta_instance,
+        '@!attributes'    => [ $options{metaclass}->compute_all_applicable_attributes ], 
         # ...
         '$!associated_metaclass' => $options{metaclass},
     } => $class;
@@ -43,7 +33,7 @@ sub new {
     # we don't want this creating 
     # a cycle in the code, if not 
     # needed
-    weaken($self->{'$!meta_instance'});
+#    weaken($self->{'$!meta_instance'});
     weaken($self->{'$!associated_metaclass'});    
 
     $self->intialize_body;
@@ -73,7 +63,7 @@ sub intialize_body {
     my $source = 'sub {';
     $source .= "\n" . 'my $class = shift;';
     
-    $source .= "\n" . 'return $class->Moose::Object::' . $self->options->{constructor_name} . '(@_)';
+    $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';    
     
     $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';    

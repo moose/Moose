@@ -1,5 +1,34 @@
 Revision history for Perl extension Moose
 
+0.18_001
+
+0.17 Tues. Nov. 14, 2006
+    * Moose::Meta::Method::Accessor
+      - bugfix for read-only accessors which 
+        are have a type constraint and lazy.
+        Thanks to chansen for finding it.
+
+0.16 Tues. Nov. 14, 2006
+    ++ NOTE ++
+    There are some speed improvements in this release, 
+    but they are only the begining, so stay tuned.
+    
+    * Moose::Object
+      - BUILDALL and DEMOLISHALL no longer get 
+        called unless they actually need to be.
+        This gave us a signifigant speed boost
+        for the cases when there is no BUILD or 
+        DEMOLISH method present.
+        
+    * Moose::Util::TypeConstraints
+    * Moose::Meta::TypeConstraint
+      - added an 'optimize_as' option to the 
+        type constraint, which allows for a
+        hand optimized version of the type 
+        constraint to be used when possible.
+      - Any internally created type constraints
+        now provide an optimized version as well.
+
 0.15 Sun. Nov. 5, 2006
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.36 in order 

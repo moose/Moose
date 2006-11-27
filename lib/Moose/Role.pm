@@ -1,6 +1,4 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/branches/Class-MOP-tranformations/lib';
-
 package Moose::Role;
 
 use strict;

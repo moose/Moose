@@ -9,7 +9,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Moose::Meta::TypeConstraint::Union;
 

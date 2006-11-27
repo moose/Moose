@@ -1,12 +1,10 @@
 
-use lib '/Users/stevan/Projects/Moose/Moose/Class-MOP/branches/Class-MOP-tranformations/lib';
-
 package Moose;
 
 use strict;
 use warnings;
 
-our $VERSION = '0.15';
+our $VERSION = '0.18_001';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
