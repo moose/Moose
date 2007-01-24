@@ -303,7 +303,7 @@ Moose is an extension of the Perl 5 object system.
 =head2 Another object system!?!?
 
 Yes, I know there has been an explosion recently of new ways to 
-build object's in Perl 5, most of them based on inside-out objects
+build objects in Perl 5, most of them based on inside-out objects
 and other such things. Moose is different because it is not a new 
 object system for Perl 5, but instead an extension of the existing 
 object system.
@@ -393,11 +393,11 @@ The I<isa> option uses Moose's type constraint facilities to set up runtime
 type checking for this attribute. Moose will perform the checks during class 
 construction, and within any accessors. The C<$type_name> argument must be a 
 string. The string can be either a class name or a type defined using 
-Moose's type definition features.
+Moose's L<type definition|Moose::Util::TypeConstraints> features.
 
 =item I<coerce =E<gt> (1|0)>
 
-This will attempt to use coercion with the supplied type constraint to change 
+This will attempt to use coercion with the supplied type constraint to convert 
 the value passed into any accessors or constructors. You B<must> have supplied 
 a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
 for an example usage.
@@ -575,7 +575,7 @@ and it certainly wouldn't have this name ;P
 =item The basis of the TypeContraints module was Rob Kinyon's idea 
 originally, I just ran with it.
 
-=item Thanks to mst & chansen and the whole #moose poose for all the 
+=item Thanks to mst & chansen and the whole #moose posse for all the 
 ideas/feature-requests/encouragement
 
 =item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
