@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 56;
+use Test::More tests => 60;
 use Test::Exception;
 
 BEGIN {
@@ -23,6 +23,8 @@ BEGIN {
 	    $self->y(0);    
 	}
 	
+	__PACKAGE__->meta->make_immutable(debug => 0);
+}{	
 	package Point3D;
 	use Moose;
 	
@@ -35,6 +37,7 @@ BEGIN {
 	    $self->{z} = 0;
 	};
 	
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $point = Point->new(x => 1, y => 2);	
@@ -125,7 +128,7 @@ is_deeply(
 	[ 'Moose::Object' ],
 	'... Point got the automagic base class');
 
-my @Point_methods = qw(meta x y clear);
+my @Point_methods = qw(meta new x y clear DESTROY);
 my @Point_attrs   = ('x', 'y');
 
 is_deeply(
@@ -157,7 +160,7 @@ is_deeply(
 	[ 'Point' ],
 	'... Point3D gets the parent given to it');
 
-my @Point3D_methods = qw(meta clear);
+my @Point3D_methods = qw(new meta clear DESTROY);
 my @Point3D_attrs   = ('z');
 
 is_deeply(

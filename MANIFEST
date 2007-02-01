@@ -1,7 +1,7 @@
 Build.PL
 Changes
-META.yml
 Makefile.PL
+META.yml
 MANIFEST
 MANIFEST.SKIP
 README
@@ -25,6 +25,8 @@ lib/Moose/Meta/Role.pm
 lib/Moose/Meta/TypeCoercion.pm
 lib/Moose/Meta/TypeConstraint.pm
 lib/Moose/Meta/Method/Accessor.pm
+lib/Moose/Meta/Method/Constructor.pm
+lib/Moose/Meta/Method/Destructor.pm
 lib/Moose/Meta/Method/Overriden.pm
 lib/Moose/Meta/Role/Method.pm
 lib/Moose/Meta/TypeConstraint/Union.pm

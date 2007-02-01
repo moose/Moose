@@ -29,7 +29,7 @@ use Moose::Util::TypeConstraints;
         subtype $role
             => as 'Role'
             => where { $_->does($role) }
-            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }  
+            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }              
         unless find_type_constraint($role);        
 
     	my $meta;

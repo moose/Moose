@@ -66,10 +66,10 @@ sub unimport {
         
         my ($message, $optimized);
         for (@_) {
-            $message   = $_->{message}   if exists $_->{message};
+            $message   = $_->{message} if exists $_->{message};
             $optimized = $_->{optimized} if exists $_->{optimized};            
         }
-        
+
         my $pkg_defined_in = scalar(caller(1));
         ($TYPES{$name}->[0] eq $pkg_defined_in)
             || confess "The type constraint '$name' has already been created "

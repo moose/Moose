@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.18_001
+    !! You must have Class::MOP 0.37_001  !!
+    !! for this developer release to work !!
+
+    Lots of changes really, too numerous to mention now,
+    I need to have people test/fiddle with this first.
+
 0.17 Tues. Nov. 14, 2006
     * Moose::Meta::Method::Accessor
       - bugfix for read-only accessors which 

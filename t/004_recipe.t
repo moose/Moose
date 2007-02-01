@@ -45,6 +45,9 @@ BEGIN {
     has 'state'    => (is => 'rw', isa => 'USState');
     has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
     
+    __PACKAGE__->meta->make_immutable(debug => 0);
+}{
+    
     package Company;
     use Moose;
     use Moose::Util::TypeConstraints;    
@@ -79,6 +82,9 @@ BEGIN {
         }
     };
     
+    __PACKAGE__->meta->make_immutable(debug => 0);
+}{    
+    
     package Person;
     use Moose;
     
@@ -93,6 +99,9 @@ BEGIN {
               ($self->has_middle_initial ? ' ' . $self->middle_initial . '. ' : ' ') .
                $self->last_name;
     }
+
+    __PACKAGE__->meta->make_immutable(debug => 0);
+}{
       
     package Employee;
     use Moose;  
@@ -106,6 +115,8 @@ BEGIN {
         my $self = shift;
         super() . ', ' . $self->title
     };
+    
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $ii;

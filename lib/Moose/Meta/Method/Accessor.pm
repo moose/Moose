@@ -93,13 +93,9 @@ sub generate_reader_method_inline {
     return $sub;
 }
 
-## normal method generators 
-
 *generate_reader_method   = \&generate_reader_method_inline;
 *generate_writer_method   = \&generate_writer_method_inline;
 *generate_accessor_method = \&generate_accessor_method_inline;
-
-## ... private helpers
 
 sub _inline_check_constraint {
 	my ($self, $value) = @_;

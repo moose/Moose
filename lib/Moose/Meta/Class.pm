@@ -24,9 +24,9 @@ sub initialize {
     my $class = shift;
     my $pkg   = shift;
     $class->SUPER::initialize($pkg,
-        ':attribute_metaclass' => 'Moose::Meta::Attribute', 
-        ':method_metaclass'    => 'Moose::Meta::Method',
-        ':instance_metaclass'  => 'Moose::Meta::Instance', 
+        'attribute_metaclass' => 'Moose::Meta::Attribute', 
+        'method_metaclass'    => 'Moose::Meta::Method',
+        'instance_metaclass'  => 'Moose::Meta::Instance', 
         @_);
 }  
 
@@ -102,7 +102,7 @@ sub construct_instance {
 # This is ugly
 sub get_method_map {    
     my $self = shift;
-    my $map  = $self->{'%:methods'}; 
+    my $map  = $self->{'%!methods'}; 
     
     my $class_name       = $self->name;
     my $method_metaclass = $self->method_metaclass;
@@ -212,13 +212,18 @@ sub _fix_metaclass_incompatability {
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
         next unless $super->can('meta');
+        # get the name, make sure we take 
+        # immutable classes into account
+        my $super_meta_name = ($super->meta->is_immutable 
+                                ? $super->meta->get_mutable_metaclass_name
+                                : blessed($super->meta));
         # if it's meta is a vanilla Moose, 
-        # then we can safely ignore it.
-        next if blessed($super->meta) eq 'Moose::Meta::Class';
+        # then we can safely ignore it.        
+        next if $super_meta_name eq 'Moose::Meta::Class';
         # but if we have anything else, 
         # we need to check it out ...
         unless (# see if of our metaclass is incompatible
-                ($self->isa(blessed($super->meta)) &&
+                ($self->isa($super_meta_name) &&
                  # and see if our instance metaclass is incompatible
                  $self->instance_metaclass->isa($super->meta->instance_metaclass)) &&
                 # ... and if we are just a vanilla Moose
@@ -233,9 +238,9 @@ sub _fix_metaclass_incompatability {
             # at this point anyway, so it's very 
             # much an obscure edge case anyway
             $self = $super_meta->reinitialize($self->name => (
-                ':attribute_metaclass' => $super_meta->attribute_metaclass,                            
-                ':method_metaclass'    => $super_meta->method_metaclass,
-                ':instance_metaclass'  => $super_meta->instance_metaclass,
+                'attribute_metaclass' => $super_meta->attribute_metaclass,                            
+                'method_metaclass'    => $super_meta->method_metaclass,
+                'instance_metaclass'  => $super_meta->instance_metaclass,
             ));
         }
     }
@@ -297,6 +302,58 @@ sub _process_inherited_attribute {
     return $new_attr;
 }
 
+## -------------------------------------------------
+
+use Moose::Meta::Method::Constructor;
+use Moose::Meta::Method::Destructor;
+
+{
+    # NOTE:
+    # the immutable version of a 
+    # particular metaclass is 
+    # really class-level data so 
+    # we don't want to regenerate 
+    # it any more than we need to
+    my $IMMUTABLE_METACLASS;
+    sub make_immutable {
+        my $self = shift;
+        
+        $IMMUTABLE_METACLASS ||= Class::MOP::Immutable->new($self, {
+            read_only   => [qw/superclasses/],
+            cannot_call => [qw/
+                add_method
+                alias_method
+                remove_method
+                add_attribute
+                remove_attribute
+                add_package_symbol
+                remove_package_symbol            
+                add_role
+            /],
+            memoize     => {
+                class_precedence_list             => 'ARRAY',
+                compute_all_applicable_attributes => 'ARRAY',            
+                get_meta_instance                 => 'SCALAR',     
+                get_method_map                    => 'SCALAR', 
+                # maybe ....
+                calculate_all_roles               => 'ARRAY',    
+            }
+        });   
+        
+        $IMMUTABLE_METACLASS->make_metaclass_immutable(
+            $self,
+            constructor_class => 'Moose::Meta::Method::Constructor',
+            destructor_class  => 'Moose::Meta::Method::Destructor',            
+            inline_destructor => 1,
+            # NOTE: 
+            # no need to do this, 
+            # Moose always does it
+            inline_accessors  => 0,
+            @_,
+        )     
+    }
+}
+
 1;
 
 __END__
@@ -322,6 +379,8 @@ to the L<Class::MOP::Class> documentation.
 =over 4
 
 =item B<initialize>
+
+=item B<make_immutable>
 
 =item B<new_object>
 

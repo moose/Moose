@@ -61,6 +61,8 @@ BEGIN {
 	    coerce  => 1,
 	    default => sub { HTTP::Headers->new } 
     );
+    
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $r = Request->new;

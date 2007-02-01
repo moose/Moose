@@ -28,7 +28,7 @@ sub new {
 }
 
 sub BUILDALL {
-	return unless $_[0]->can('BUILD');	    
+	return unless $_[0]->can('BUILD');    
 	my ($self, $params) = @_;
 	foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
 		$method->{code}->($self, $params);
@@ -36,8 +36,8 @@ sub BUILDALL {
 }
 
 sub DEMOLISHALL {
-	return unless $_[0]->can('DEMOLISH');	    
-	my $self = shift;
+	return unless $_[0]->can('DEMOLISH');    
+	my $self = shift;	
 	foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
 		$method->{code}->($self);
 	}	

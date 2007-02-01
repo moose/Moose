@@ -58,7 +58,7 @@ BEGIN {
         
         sub create_instance {
             my $self  = shift;
-            my $class = $self->{meta}->name;
+            my $class = $self->associated_metaclass->name;
             my $oid   = ++$INSTANCE_COUNTERS{$class};
             
             $db->{$class}->[($oid - 1)] = {};
@@ -71,7 +71,7 @@ BEGIN {
         
         sub find_instance {
             my ($self, $oid) = @_;
-            my $instance = $db->{$self->{meta}->name}->[($oid - 1)];  
+            my $instance = $db->{$self->associated_metaclass->name}->[($oid - 1)];  
             $self->bless_instance_structure({
                 oid      => $oid,
                 instance => $instance
@@ -123,7 +123,7 @@ BEGIN {
     }
     
     package Moose::POOP::Meta::Class;
-    use Moose;
+    use Moose;  
     
     extends 'Moose::Meta::Class';    
     
@@ -138,7 +138,7 @@ BEGIN {
 {   
     package Moose::POOP::Object;
     use metaclass 'Moose::POOP::Meta::Class' => (
-        ':instance_metaclass' => 'Moose::POOP::Meta::Instance'
+        instance_metaclass => 'Moose::POOP::Meta::Instance'
     );      
     use Moose;
     

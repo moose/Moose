@@ -22,10 +22,25 @@ all vs. a custom-created type.
     has 'bar' => (is => 'rw', isa => 'Foo');
 }
 
+{
+    package Bar;
+    
+    sub new { bless {} => __PACKAGE__ }
+    sub bar { 
+        my $self = shift;
+        $self->{bar} = shift if @_;
+        $self->{bar};
+    }
+}
+
 my $foo = Foo->new;
+my $bar = Bar->new;
 
 cmpthese(200_000, 
     {
+        'hand coded' => sub {
+            $bar->bar($bar);
+        },
         'w/out_constraint' => sub {
             $foo->baz($foo);
         },
