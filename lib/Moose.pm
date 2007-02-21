@@ -640,7 +640,7 @@ Yuval Kogman E<lt>nothingmuch@woobling.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006 by Infinity Interactive, Inc.
+Copyright 2006, 2007 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
