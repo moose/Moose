@@ -2,6 +2,9 @@ Revision history for Perl extension Moose
 
 0.18
     ~~ Many documentation updates ~~
+    
+    - We now use Class::MOP::load_class to 
+      load all classes.
 
 0.18_001
     !! You must have Class::MOP 0.37_001  !!

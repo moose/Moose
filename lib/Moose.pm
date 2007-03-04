@@ -1,4 +1,16 @@
 
+use FindBin;
+use File::Spec;
+use lib File::Spec->catdir(
+    $FindBin::Bin, 
+    File::Spec->updir,
+    File::Spec->updir,
+    File::Spec->updir,    
+    'Class-MOP',
+    'trunk',
+    'lib',
+);
+
 package Moose;
 
 use strict;
@@ -71,7 +83,7 @@ use Moose::Util::TypeConstraints;
             my $class = $CALLER;
             return subname 'Moose::extends' => sub (@) {
                 confess "Must derive at least one class" unless @_;
-                _load_all_classes(@_);
+                Class::MOP::load_class($_) for @_;
                 # this checks the metaclass to make sure 
                 # it is correct, sometimes it can get out 
                 # of sync when the classes are being built
@@ -84,7 +96,7 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::with' => sub (@) {
                 my (@roles) = @_;
                 confess "Must specify at least one role" unless @roles;
-                _load_all_classes(@roles);
+                Class::MOP::load_class($_) for @roles;
                 $class->meta->_apply_all_roles(@roles);
             };
         },
@@ -217,38 +229,6 @@ use Moose::Util::TypeConstraints;
     }
     
     
-}
-
-## Utility functions
-
-## TODO:
-## replace these two with the 
-## Class::MOP:: versions now
-
-sub _load_all_classes {
-    foreach my $class (@_) {
-        # see if this is already 
-        # loaded in the symbol table
-        next if _is_class_already_loaded($class);
-        # otherwise require it ...
-        my $file = $class . '.pm';
-        $file =~ s{::}{/}g;
-        eval { CORE::require($file) };
-        confess(
-            "Could not load module '$class' because : $@"
-            ) if $@;
-    }
-}
-
-sub _is_class_already_loaded {
-	my $name = shift;
-	no strict 'refs';
-	return 1 if defined ${"${name}::VERSION"} || defined @{"${name}::ISA"};
-	foreach (keys %{"${name}::"}) {
-		next if substr($_, -2, 2) eq '::';
-		return 1 if defined &{"${name}::$_"};
-	}
-	return 0;
 }
 
 ## make 'em all immutable

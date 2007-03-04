@@ -274,7 +274,7 @@ sub _process_attribute {
     }
     else {
         if ($options{metaclass}) {
-            Moose::_load_all_classes($options{metaclass});
+            Class::MOP::load_class($options{metaclass});
             $self->add_attribute($options{metaclass}->new($name, %options));
         }
         else {

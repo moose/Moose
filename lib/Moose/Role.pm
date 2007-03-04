@@ -59,7 +59,7 @@ use Moose::Util::TypeConstraints;
 	        return subname 'Moose::Role::with' => sub (@) { 
                 my (@roles) = @_;
                 confess "Must specify at least one role" unless @roles;
-                Moose::_load_all_classes(@roles);
+                Class::MOP::load_class($_) for @roles;
                 ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
                     || confess "You can only consume roles, $_ is not a Moose role"
                         foreach @roles;

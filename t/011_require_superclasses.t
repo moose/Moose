@@ -41,6 +41,6 @@ BEGIN {
     
     eval { extends 'No::Class'; };
     ::ok($@, '... could not find the superclass (as expected)');
-    ::like($@, qr/^Could not load module 'No\:\:Class' because \:/, '... and got the error we expected');
+    ::like($@, qr/^Could not load class \(No\:\:Class\) because \:/, '... and got the error we expected');
 }
 
