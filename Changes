@@ -10,8 +10,23 @@ Revision history for Perl extension Moose
     !! You must have Class::MOP 0.37_001  !!
     !! for this developer release to work !!
 
-    Lots of changes really, too numerous to mention now,
-    I need to have people test/fiddle with this first.
+    This release was primarily adding the immutable
+    feature to Moose. An immutable class is one which 
+    you promise not to alter. When you set the class 
+    as immutable it will perform various bits of 
+    memoization and inline certain part of the code
+    (constructors, destructors and accessors). This 
+    minimizes (and in some cases totally eliminates)
+    one of Moose's biggest performance hits. This 
+    feature is not on by default, and is 100% optional.
+    It has several configurable bits as well, so you 
+    can pick and choose to your specific needs.
+    
+    The changes involved in this were fairly wide and 
+    highly specific, but 100% backwards compatible, so 
+    I am not going to enumerate them here. If you are 
+    truely interested in what was changed, please do 
+    a diff :)
 
 0.17 Tues. Nov. 14, 2006
     * Moose::Meta::Method::Accessor

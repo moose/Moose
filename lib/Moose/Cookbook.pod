@@ -12,6 +12,9 @@ test suite. Each recipe presents some code, which demonstrates
 some of the features of Moose, and then proceeds to explain the 
 details of the code. 
 
+We also provide a L<Moose::Cookbook::FAQ> and a L<Moose::Cookbook::WTF>
+for common questions and problems people have with Moose. 
+
 =head1 RECIPES
 
 =over 4

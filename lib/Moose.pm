@@ -289,18 +289,7 @@ Moose - A complete modern object system for Perl 5
   after 'clear' => sub {
       my $self = shift;
       $self->z(0);
-  };
-  
-=head1 CAVEAT
-
-Moose is a rapidly maturing module, and is already being used by 
-a number of people. It's test suite is growing larger by the day, 
-and the docs should soon follow. 
-
-This said, Moose is not yet finished, and should still be considered 
-to be evolving. Much of the outer API is stable, but the internals 
-are still subject to change (although not without serious thought 
-given to it).  
+  }; 
 
 =head1 DESCRIPTION
 
@@ -319,13 +308,18 @@ for Perl 5. This means that Moose not only makes building normal
 Perl 5 objects better, but it also provides the power of metaclass 
 programming.
 
-=head2 Can I use this in production? Or is this just an experiment?
+=head2 Is this for real? Or is this just an experiment?
 
 Moose is I<based> on the prototypes and experiments I did for the Perl 6
 meta-model; however Moose is B<NOT> an experiment/prototype, it is 
-for B<real>. I will be deploying Moose into production environments later 
-this year, and I have every intentions of using it as my de facto class 
-builder from now on.
+for B<real>. 
+
+=head2 Can I, should I use this in production? 
+
+I have two medium-to-large-ish web applications which use Moose heavily
+and have been in production (without issue) for several months now. At 
+$work, we are re-writing our core offering in it. And several people on 
+#moose have been using it (in production) for several months now as well.
 
 =head2 Is Moose just Perl 6 in Perl 5?
 

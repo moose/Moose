@@ -23,12 +23,33 @@ but nothing is ready yet.
 =head3 Why are my objects taking so long to construct?
 
 Moose uses a lot of introspection when constructing an 
-instance, and introspection can be slow. However, this 
-is a temporary problem, and is already solved in 
-Class::MOP by making classes immutable. However immutable 
-support in Moose is not ready yet, but will be soon.
+instance, and introspection can be slow. This problem 
+can be solved by making your class immutable. This can 
+be done with the following code:
 
-=head2 Constructors
+  MyClass->meta->make_immutable();
+
+Moose will then memoize a number of meta-level methods
+and inline a constructor for you. For more information 
+on this see the L<Constructors> section below and in the 
+L<Moose::Cookbook::FAQ>.
+
+=head2 Constructors & Immutability
+
+=head3 I made my class immutable, but C<new> it is still slow!
+
+Do you have a custom C<new> method in your class? Moose 
+will not overwrite your custom C<new> method, you would 
+probably do better to try and convert this to use the 
+C<BUILD> method or possibly set C<default> values in 
+the attribute declaration. 
+
+=head3 I made my class immutable, and now my (before | after | around) C<new> is not being called?
+
+Making a I<before>, I<after> or I<around> wrap around the 
+C<new> method, will actually create a C<new> method within 
+your class. This will prevent Moose from creating one itself
+when you make the class immutable. 
 
 =head2 Accessors
 
