@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.18_002';
+our $VERSION = '0.18';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -220,6 +220,10 @@ use Moose::Util::TypeConstraints;
 }
 
 ## Utility functions
+
+## TODO:
+## replace these two with the 
+## Class::MOP:: versions now
 
 sub _load_all_classes {
     foreach my $class (@_) {
