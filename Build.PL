@@ -14,8 +14,7 @@ my $build = Module::Build->new(
         'Carp'               => '0',
         'Class::MOP'         => '0.37',
         'Sub::Name'          => '0.02',
-        'Sub::Exporter'      => '0.954',
-        'Sub::Install'       => '0.92',   
+        'Sub::Exporter'      => '0.972',   
         'B'                  => '0',             
     },
     optional => {
