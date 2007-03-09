@@ -93,6 +93,7 @@ t/104_inline_reader_bug.t
 t/201_example.t
 t/202_example_Moose_POOP.t
 t/203_example.t
+t/204_example_w_DCS.t
 t/300_immutable_moose.t
 t/pod.t
 t/pod_coverage.t
