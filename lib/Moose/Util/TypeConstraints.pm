@@ -316,6 +316,40 @@ Suggestions for improvement are welcome.
 
 B<NOTE:> The C<Undef> type constraint does not work correctly 
 in every occasion, please use it sparringly.
+
+=head2 Use with Other Constraint Modules
+
+This module should play fairly nicely with other constraint 
+modules with only some slight tweaking. The C<where> clause 
+in types is expected to be a C<CODE> reference which checks
+it's first argument and returns a bool. Since most constraint
+modules work in a similar way, it should be simple to adapt 
+them to work with Moose.
+
+For instance, this is how you could use it with 
+L<Declare::Constraint::Simple> to declare a completely new type. 
+
+  type 'HashOfArrayOfObjects' 
+      => IsHashRef(
+          -keys   => HasLength,
+          -values => IsArrayRef( IsObject ));
+
+For more examples see the F<t/204_example_w_DCS.t> test file.
+
+Here is an example of using L<Test::Deep> and it's non-test 
+related C<eq_deeply> function. 
+
+  type 'ArrayOfHashOfBarsAndRandomNumbers' 
+      => where {
+          eq_deeply($_, 
+              array_each(subhashof({
+                  bar           => isa('Bar'),
+                  random_number => ignore()
+              }))) 
+        };
+
+For a complete example see the F<t/205_example_w_TestDeep.t> 
+test file.    
     
 =head1 FUNCTIONS
 

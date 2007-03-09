@@ -5,6 +5,15 @@ use warnings;
 
 use Test::More;
 
+=pod
+
+This tests how well Moose type constraints 
+play with Declare::Constraints::Simple. 
+
+Pretty well if I do say so myself :)
+
+=cut
+
 BEGIN {
     eval "use Declare::Constraints::Simple;";
     plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;        
