@@ -16,7 +16,8 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION = '0.18';
+our $VERSION   = '0.18';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
@@ -314,12 +315,18 @@ Moose is I<based> on the prototypes and experiments I did for the Perl 6
 meta-model; however Moose is B<NOT> an experiment/prototype, it is 
 for B<real>. 
 
-=head2 Can I, should I use this in production? 
+=head2 Is this ready for use in production? 
+
+Yes, I believe that it is. 
 
 I have two medium-to-large-ish web applications which use Moose heavily
 and have been in production (without issue) for several months now. At 
 $work, we are re-writing our core offering in it. And several people on 
 #moose have been using it (in production) for several months now as well.
+
+Of course, in the end, you need to make this call yourself. If you have 
+any questions or concerns, please feel free to email me, or even the list 
+or just stop by #moose and ask away.
 
 =head2 Is Moose just Perl 6 in Perl 5?
 

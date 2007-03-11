@@ -38,24 +38,22 @@ First let me say that I<nothing> in life is free, and that some
 Moose features do cost more than others. It is also the 
 policy of Moose to B<only charge you for the features you use>, 
 and to do our absolute best to not place any extra burdens on 
-the execution of your code for features you are not using. 
-
-Next, I will point out again that we are still in the "early 
-adopter" phase, so speed it not that important yet. We are 
-actually optimizing for "theoretical correctness" first, and 
-we will optimize for speed later. It has been our experience 
-that taking this approach allows for greater optimization 
-capacity. 
+the execution of your code for features you are not using. Of 
+course using Moose itself does involve some overhead, but it 
+is mostly compile time. At this point we do have some options 
+available for getting the speed you need. 
 
 Currently we have the option of making your classes immutable 
 as a means of boosting speed. This will mean a larger compile 
 time cost, but the runtime speed increase (especially in object
-construction) is pretty signifigant. 
+construction) is pretty signifigant. This is not very well 
+documented yet, so please ask on the list of on #moose for more
+information.
 
-This is not all either, we are also discussing and experimenting 
-with L<Module::Compile>, and the idea of compiling highly 
-optimized C<.pmc> files. And we have also mapped out some core 
-methods as canidates for conversion to XS. 
+We are also discussing and experimenting with L<Module::Compile>, 
+and the idea of compiling highly optimized C<.pmc> files. And 
+we have also mapped out some core methods as canidates for 
+conversion to XS. 
 
 =head3 When will Moose be 1.0 ready?
 

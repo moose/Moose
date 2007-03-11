@@ -9,7 +9,8 @@ use Scalar::Util 'blessed';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION = '0.10';
+our $VERSION   = '0.11';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
@@ -250,9 +251,8 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
 
 =head1 DESCRIPTION
 
-This module provides Moose with the ability to create type contraints 
-to be are used in both attribute definitions and for method argument 
-validation. 
+This module provides Moose with the ability to create custom type 
+contraints to be used in attribute definition. 
 
 =head2 Important Caveat
 
@@ -285,7 +285,7 @@ this, as well as future proof your subtypes from classes which have
 yet to have been created yet, is to simply do this:
 
   use DateTime;
-  subtype 'DateTime' => as Object => where { $_->isa('DateTime') };
+  subtype 'DateTime' => as 'Object' => where { $_->isa('DateTime') };
 
 =head2 Default Type Constraints
 
@@ -422,6 +422,14 @@ This is just sugar for the type constraint construction syntax.
 This is just sugar for the type constraint construction syntax.
 
 =item B<optimize_as>
+
+This can be used to define a "hand optimized" version of your 
+type constraint which can be used to avoid traversing a subtype
+constraint heirarchy. 
+
+B<NOTE:> You should only use this if you know what you are doing, 
+all the built in types use this, so your subtypes (assuming they 
+are shallow) will not likely need to use this.
 
 =back
 

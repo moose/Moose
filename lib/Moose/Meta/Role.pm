@@ -9,7 +9,8 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use B            'svref_2object';
 
-our $VERSION = '0.05';
+our $VERSION   = '0.06';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
@@ -553,9 +554,9 @@ Moose::Meta::Role - The Moose Role metaclass
 
 =head1 DESCRIPTION
 
-Moose's Roles are being actively developed, please see L<Moose::Role> 
-for more information. For the most part, this has no user-serviceable 
-parts inside. It's API is still subject to some change (although 
+Please see L<Moose::Role> for more information about roles. 
+For the most part, this has no user-serviceable parts inside
+this module. It's API is still subject to some change (although 
 probably not that much really).
 
 =head1 METHODS

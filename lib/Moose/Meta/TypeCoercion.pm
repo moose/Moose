@@ -10,12 +10,14 @@ use Carp 'confess';
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION = '0.02';
+our $VERSION   = '0.03';
+our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
     reader  => 'type_coercion_map',
     default => sub { [] }
 ));
+
 __PACKAGE__->meta->add_attribute(
     Moose::Meta::Attribute->new('type_constraint' => (
         reader   => 'type_constraint',

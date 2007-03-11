@@ -236,9 +236,12 @@ __END__
 
 Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
+
+This is a subclass of L<Class::MOP::Method> which handles 
+constructing an approprate Constructor methods. This is primarily 
+used in the making of immutable metaclasses, otherwise it is 
+not particularly useful.
 
 =head1 METHODS
 

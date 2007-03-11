@@ -4,7 +4,8 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION   = '0.01';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use base "Class::MOP::Instance";
 

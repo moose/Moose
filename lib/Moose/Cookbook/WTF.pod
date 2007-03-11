@@ -11,10 +11,10 @@ Moose::Cookbook::WTF - For when things go wrong with Moose
 
 =head3 Why is my code taking so long to load?
 
-Moose has a fairly heavy compile time burden, which it 
-inherits from Class::MOP. If load/compile time is a 
-concern for your application, Moose may not be the 
-right tool for you. 
+Moose does have a compile time performance burden, 
+which it inherits from Class::MOP. If load/compile 
+time is a concern for your application, Moose may not 
+be the right tool for you. 
 
 Although, you should note that we are exploring the 
 use of L<Module::Compile> to try and reduce this problem, 
@@ -44,7 +44,8 @@ probably do better to try and convert this to use the
 C<BUILD> method or possibly set C<default> values in 
 the attribute declaration. 
 
-=head3 I made my class immutable, and now my (before | after | around) C<new> is not being called?
+=head3 I made my class immutable, and now my (before | after | 
+       around) C<new> is not being called?
 
 Making a I<before>, I<after> or I<around> wrap around the 
 C<new> method, will actually create a C<new> method within 

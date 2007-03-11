@@ -10,7 +10,8 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-our $VERSION = '0.06';
+our $VERSION   = '0.07';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose ();
 
@@ -207,12 +208,13 @@ Moose::Role - The Moose Role
 
 =head1 DESCRIPTION
 
-Role support in Moose is coming along quite well. It's best documentation 
-is still the the test suite, but it is fairly safe to assume Perl 6 style 
-behavior, and then either refer to the test suite, or ask questions on 
-#moose if something doesn't quite do what you expect. More complete 
-documentation is planned and will be included with the next official 
-(non-developer) release.
+Role support in Moose is pretty solid at this point. However, the best 
+documentation is still the the test suite. It is fairly safe to assume 
+Perl 6 style behavior and then either refer to the test suite, or ask 
+questions on #moose if something doesn't quite do what you expect.
+
+We are planning writing some more documentation in the near future, but
+nothing is ready yet, sorry.
 
 =head1 EXPORTED FUNCTIONS
 

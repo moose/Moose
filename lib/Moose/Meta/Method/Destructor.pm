@@ -86,9 +86,12 @@ __END__
 
 Moose::Meta::Method::Destructor - Method Meta Object for destructors
 
-=head1 SYNOPSIS
-
 =head1 DESCRIPTION
+
+This is a subclass of L<Class::MOP::Method> which handles 
+constructing an approprate Destructor method. This is primarily 
+used in the making of immutable metaclasses, otherwise it is 
+not particularly useful.
 
 =head1 METHODS
 

@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION = '0.03';
+our $VERSION   = '0.04';
+our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',
