@@ -1,7 +1,7 @@
 Revision history for Perl extension Moose
 
-0.18
-    ~~ Many documentation updates ~~
+0.18 Sat. March 10, 2007
+    ~~ Many, many documentation updates ~~
     
     - We now use Class::MOP::load_class to 
       load all classes.

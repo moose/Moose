@@ -1,16 +1,4 @@
 
-use FindBin;
-use File::Spec;
-use lib File::Spec->catdir(
-    $FindBin::Bin, 
-    File::Spec->updir,
-    File::Spec->updir,
-    File::Spec->updir,    
-    'Class-MOP',
-    'trunk',
-    'lib',
-);
-
 package Moose;
 
 use strict;
