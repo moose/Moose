@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.19
+    * Moose::Util::TypeConstraints
+      - type now supports messages as well
+        (thanks to phaylon for finding this)
+        - added tests for this
+
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~
     

@@ -9,7 +9,7 @@ use Scalar::Util 'blessed';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::TypeConstraint;

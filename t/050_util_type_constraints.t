@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 36;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -13,7 +13,9 @@ BEGIN {
 }
 
 type Number => where { Scalar::Util::looks_like_number($_) };
-type String => where { !ref($_) && !Number($_) };
+type String 
+    => where { !ref($_) && !Number($_) }
+    => message { "This is not a string ($_)" };
 
 subtype Natural 
 	=> as Number 
@@ -85,4 +87,13 @@ is($natural->validate(-5),
   "Validation failed for 'Natural' failed", 
   '... validated unsuccessfully (got error)');
 
+my $string = find_type_constraint('String');
+isa_ok($string, 'Moose::Meta::TypeConstraint');
 
+ok($string->has_message, '... it does have a message');
+
+ok(!defined($string->validate("Five")), '... validated successfully (no error)');
+
+is($string->validate(5), 
+"This is not a string (5)", 
+'... validated unsuccessfully (got error)');
