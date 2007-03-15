@@ -327,7 +327,7 @@ modules work in a similar way, it should be simple to adapt
 them to work with Moose.
 
 For instance, this is how you could use it with 
-L<Declare::Constraint::Simple> to declare a completely new type. 
+L<Declare::Constraints::Simple> to declare a completely new type. 
 
   type 'HashOfArrayOfObjects' 
       => IsHashRef(
