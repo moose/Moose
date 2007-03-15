@@ -67,7 +67,7 @@ sub unimport {
         
         my ($message, $optimized);
         for (@_) {
-            $message   = $_->{message} if exists $_->{message};
+            $message   = $_->{message}   if exists $_->{message};
             $optimized = $_->{optimized} if exists $_->{optimized};            
         }
 
@@ -119,9 +119,9 @@ sub unimport {
 
 # type constructors
 
-sub type ($$) {
-	my ($name, $check) = @_;
-	_create_type_constraint($name, undef, $check);
+sub type ($$;$$) {
+	my ($name, $check, @rest) = @_;
+	_create_type_constraint($name, undef, $check, @rest);
 }
 
 sub subtype ($$;$$$) {
