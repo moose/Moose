@@ -120,8 +120,8 @@ sub unimport {
 # type constructors
 
 sub type ($$;$$) {
-	my ($name, $check, @rest) = @_;
-	_create_type_constraint($name, undef, $check, @rest);
+    splice(@_, 1, 0, undef);
+	goto &_create_type_constraint;	
 }
 
 sub subtype ($$;$$$) {
