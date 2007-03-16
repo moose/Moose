@@ -114,7 +114,9 @@ sub unimport {
     	foreach my $constraint (keys %TYPES) {
     		*{"${pkg}::${constraint}"} = find_type_constraint($constraint)->_compiled_type_constraint;
     	}        
-    }    
+    } 
+    
+    sub list_all_type_constraints { keys %TYPES }   
 }
 
 # type constructors
@@ -372,6 +374,12 @@ B<Moose::Meta::TypeConstraint::Union> instance.
 This will export all the current type constraints as functions 
 into the caller's namespace. Right now, this is mostly used for 
 testing, but it might prove useful to others.
+
+=item B<list_all_type_constraints>
+
+This will return a list of type constraint names, you can then 
+fetch them using C<find_type_constraint ($type_name)> if you 
+want to.
 
 =back
 
