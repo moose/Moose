@@ -5,6 +5,9 @@ Revision history for Perl extension Moose
       - type now supports messages as well
         (thanks to phaylon for finding this)
         - added tests for this
+      - added list_all_type_constraints and 
+        list_all_builtin_type_constraints
+        functions to facilitate introspection.
 
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~

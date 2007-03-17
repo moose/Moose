@@ -220,6 +220,11 @@ subtype 'Role'
     => where { $_->can('does') }
     => optimize_as { blessed($_[0]) && $_[0]->can('does') };
 
+{
+    my @BUILTINS = list_all_type_constraints();
+    sub list_all_builtin_type_constraints { @BUILTINS }
+}
+
 1;
 
 __END__
@@ -380,6 +385,12 @@ testing, but it might prove useful to others.
 This will return a list of type constraint names, you can then 
 fetch them using C<find_type_constraint ($type_name)> if you 
 want to.
+
+=item B<list_all_builtin_type_constraints>
+
+This will return a list of builtin type constraints, meaning, 
+those which are defined in this module. See the section 
+labeled L<Default Type Constraints> for a complete list.
 
 =back
 
