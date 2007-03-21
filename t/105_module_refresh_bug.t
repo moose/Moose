@@ -11,7 +11,7 @@ use Test::Exception;
 BEGIN {
     eval "use Module::Refresh;";
     plan skip_all => "Module::Refresh is required for this test" if $@;        
-    plan tests => 18;    
+    plan tests => 23;    
 }
 
 =pod
@@ -34,7 +34,8 @@ do {
 
 =pod
 
-Now, lets try something a little trickier ...
+Now, lets try something a little trickier
+and actually change the module itself.
 
 =cut
 
@@ -64,6 +65,8 @@ has 'foo' => (is => 'rw', isa => 'Int');
 
 use_ok('TestBaz');
 is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
+ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
 
 {
     open FILE, ">", $test_module_file 
@@ -75,6 +78,10 @@ is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
 lives_ok {
     Module::Refresh->new->refresh_module($test_module_file)
 } '... successfully refreshed ' . $test_module_file;
+
+is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
+ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+ok(TestBaz->isa('Foo'), '... TestBaz is a Foo');
 
 unlink $test_module_file;
 
