@@ -71,10 +71,14 @@ sub unimport {
             $optimized = $_->{optimized} if exists $_->{optimized};            
         }
 
-        my $pkg_defined_in = scalar(caller(1));
+        my $pkg_defined_in = scalar(caller(0));
+        
         ($TYPES{$name}->[0] eq $pkg_defined_in)
-            || confess "The type constraint '$name' has already been created "
-                 if defined $name && exists $TYPES{$name};                
+            || confess ("The type constraint '$name' has already been created in " 
+                       . $TYPES{$name}->[0] . " and cannot be created again in "
+                       . $pkg_defined_in)
+                 if defined $name && exists $TYPES{$name};   
+                              
         $parent = find_type_constraint($parent) if defined $parent;
         my $constraint = Moose::Meta::TypeConstraint->new(
             name       => $name || '__ANON__',
