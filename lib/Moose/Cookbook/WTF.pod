@@ -109,9 +109,29 @@ Here is some sample code:
       return reverse @rv;
   };
 
+=head2 Moose and Attributes
+
+=head3 Why doesn't attributes I inherited from a superclass work?
+
+Currently when you subclass a module, this is done at runtime with
+the C<extends> keyword but attributes are checked at compile time
+by Perl. To make attributes work, you must place C<extends> in a
+C<BEGIN> block so that the attribute handlers will be available at
+compile time like this:
+
+  BEGIN { extends qw/Foo/ } 
+
+=head2 Moose and Other Modules
+
+=head3 Why can't I get Catalyst and Moose to work together?
+
+See L<Moose and Attributes>.
+
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Anders Nor Berle E<lt>debolaz@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
