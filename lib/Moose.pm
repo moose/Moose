@@ -442,7 +442,7 @@ B<NOTE:> This features is no longer experimental, but it still may have subtle
 bugs lurking in the deeper corners. So if you think you have found a bug, you 
 probably have, so please report it to me right away. 
 
-B<NOTE:> The class being delegated too does not need to be a Moose based class. 
+B<NOTE:> The class being delegated to does not need to be a Moose based class. 
 Which is why this feature is especially useful when wrapping non-Moose classes.
 
 All handles option formats share the following traits. 
