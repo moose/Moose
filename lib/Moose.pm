@@ -439,8 +439,8 @@ This is a pretty complex and powerful option, it accepts many different option
 formats, each with it's own benefits and drawbacks. 
 
 B<NOTE:> This features is no longer experimental, but it still may have subtle 
-bugs lurking in the corners. So if you thing you have found a bug, you probably 
-have and please report it to me right away. 
+bugs lurking in the deeper corners. So if you think you have found a bug, you 
+probably have, so please report it to me right away. 
 
 B<NOTE:> The class being delegated too does not need to be a Moose based class. 
 Which is why this feature is especially useful when wrapping non-Moose classes.
@@ -453,11 +453,11 @@ class, you cannot override it with a delegated C<foo>. This is almost never
 something you would want to do, and if it is, you should do it by hand and 
 not use Moose.
 
-You cannot override any of the methods found in Moose::Object or the C<BUILD> or 
-C<DEMOLISH> methods. These will not throw an exception, but will silently 
-move on to the next method in the list. My reasoning for this is that, again, 
-you would almost never want to do this because it tends to break your class. 
-And as with overriding locally defined methods, if you do want to do this, 
+You cannot override any of the methods found in Moose::Object as well as 
+C<BUILD> or C<DEMOLISH> methods. These will not throw an exception, but will 
+silently move on to the next method in the list. My reasoning for this is that 
+you would almost never want to do this because it usually tends to break your 
+class. And as with overriding locally defined methods, if you do want to do this, 
 you should do it manually and not with Moose.
 
 Below is the documentation for each option format:
@@ -475,8 +475,10 @@ for each one in the list.
 This is the second most common usage for handles. Instead of a list of 
 method names, you pass a HASH ref where the key is the method name you 
 want installed locally, and the value is the name of the original method 
-in the class being delegated too. This can be very useful for recursive 
-classes like trees, here is a quick example:
+in the class being delegated too. 
+
+This can be very useful for recursive classes like trees, here is a 
+quick example (soon to be expanded into a Moose::Cookbook::Recipe):
 
   pacakge Tree;
   use Moose;
@@ -515,11 +517,14 @@ Without an I<isa> this is just not possible.
 
 =item C<CODE>
 
-This is the option to use when you 
+This is the option to use when you really want to do something funky. You should 
+only use it if you really know what you are doing as it involves manual metaclass
+twiddling.
 
-It takes a code reference, which should expect two arguments. The first is 
-the attribute meta-object this handles is attached too. The second is the metaclass
-of the class being delegated too. It expects you to return a 
+This takes a code reference, which should expect two arguments. The first is 
+the attribute meta-object this I<handles> is attached too. The second is the metaclass
+of the class being delegated too. It expects you to return a hash (not a HASH ref)
+of the methods you want mapped. 
 
 =back
 
@@ -657,7 +662,7 @@ and it certainly wouldn't have this name ;P
 originally, I just ran with it.
 
 =item Thanks to mst & chansen and the whole #moose poose for all the 
-ideas/feature-requests/encouragement
+ideas/feature-requests/encouragement/bug-finding.
 
 =item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
 
