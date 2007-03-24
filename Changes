@@ -8,6 +8,16 @@ Revision history for Perl extension Moose
       - added list_all_type_constraints and 
         list_all_builtin_type_constraints
         functions to facilitate introspection.
+    
+    * Moose::Meta::Attribute
+      - fixed regexp 'handles' declarations 
+        to build the list of delegated methods
+        correctly (and not override important 
+        things like &new)
+        - added tests and docs for this
+
+    * misc.
+      - added test for working with Module::Refresh 
 
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~

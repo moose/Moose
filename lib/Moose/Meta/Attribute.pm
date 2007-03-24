@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -341,6 +341,13 @@ sub install_accessors {
             (!$associated_class->has_method($handle))
                 || confess "You cannot overwrite a locally defined method ($handle) with a delegation";
             
+            # NOTE:
+            # handles is not allowed to delegate
+            # any of these methods, as they will 
+            # override the ones in your class, which 
+            # is almost certainly not what you want.
+            next if $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
+            
             if ((reftype($method_to_call) || '') eq 'CODE') {
                 $associated_class->add_method($handle => $method_to_call);                
             }
@@ -374,7 +381,7 @@ sub _canonicalize_handles {
         ($self->has_type_constraint)
             || confess "Cannot delegate methods based on a RegExpr without a type constraint (isa)";
         return map  { ($_ => $_) } 
-               grep {  $handles  } $self->_get_delegate_method_list;
+               grep { /$handles/ } $self->_get_delegate_method_list;
     }
     elsif (ref($handles) eq 'CODE') {
         return $handles->($self, $self->_find_delegate_metaclass);

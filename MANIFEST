@@ -90,6 +90,8 @@ t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t
 t/103_subclass_use_base_bug.t
 t/104_inline_reader_bug.t
+t/105_module_refresh_compat.t
+t/106_handles_foreign_class_bug.t
 t/201_example.t
 t/202_example_Moose_POOP.t
 t/203_example.t

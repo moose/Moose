@@ -434,8 +434,7 @@ a read-only attribute.
 
 =item I<handles =E<gt> [ @handles ]>
 
-There is experimental support for attribute delegation using the C<handles> 
-option. More docs to come later.
+...
 
 =back
 
