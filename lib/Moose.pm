@@ -432,9 +432,96 @@ updated value and the attribute meta-object (this is for more advanced fiddling
 and can typically be ignored in most cases). You B<cannot> have a trigger on
 a read-only attribute.
 
-=item I<handles =E<gt> [ @handles ]>
+=item I<handles =E<gt> ARRAY | HASH | REGEXP | CODE>
 
-...
+The handles option provides Moose classes with automated delegation features. 
+This is a pretty complex and powerful option, it accepts many different option 
+formats, each with it's own benefits and drawbacks. 
+
+B<NOTE:> This features is no longer experimental, but it still may have subtle 
+bugs lurking in the corners. So if you thing you have found a bug, you probably 
+have and please report it to me right away. 
+
+B<NOTE:> The class being delegated too does not need to be a Moose based class. 
+Which is why this feature is especially useful when wrapping non-Moose classes.
+
+All handles option formats share the following traits. 
+
+You cannot override a locally defined method with a delegated method, an 
+exception will be thrown if you try. Meaning, if you define C<foo> in your 
+class, you cannot override it with a delegated C<foo>. This is almost never 
+something you would want to do, and if it is, you should do it by hand and 
+not use Moose.
+
+You cannot override any of the methods found in Moose::Object or the C<BUILD> or 
+C<DEMOLISH> methods. These will not throw an exception, but will silently 
+move on to the next method in the list. My reasoning for this is that, again, 
+you would almost never want to do this because it tends to break your class. 
+And as with overriding locally defined methods, if you do want to do this, 
+you should do it manually and not with Moose.
+
+Below is the documentation for each option format:
+
+=over 4
+
+=item C<ARRAY>
+
+This is the most common usage for handles. You basically pass a list of 
+method names to be delegated, and Moose will install a delegation method 
+for each one in the list.
+
+=item C<HASH>
+
+This is the second most common usage for handles. Instead of a list of 
+method names, you pass a HASH ref where the key is the method name you 
+want installed locally, and the value is the name of the original method 
+in the class being delegated too. This can be very useful for recursive 
+classes like trees, here is a quick example:
+
+  pacakge Tree;
+  use Moose;
+  
+  has 'node' => (is => 'rw', isa => 'Any');
+  
+  has 'children' => (
+      is      => 'ro',
+      isa     => 'ArrayRef',
+      default => sub { [] }
+  );
+  
+  has 'parent' => (
+      is          => 'rw',
+      isa         => 'Tree',
+      is_weak_ref => 1,
+      handles     => {
+          parent_node => 'node',
+          siblings    => 'children', 
+      }
+  );
+
+In this example, the Tree package gets the C<parent_node> and C<siblings> methods
+which delegate to the C<node> and C<children> methods of the Tree instance stored 
+in the parent slot. 
+
+=item C<REGEXP>
+
+The regexp option works very similar to the ARRAY option, except that it builds 
+the list of methods for you. It starts by collecting all possible methods of the 
+class being delegated too, then filters that list using the regexp supplied here. 
+
+B<NOTE:> An I<isa> option is required when using the regexp option format. This 
+is so that we can determine (at compile time) the method list from the class. 
+Without an I<isa> this is just not possible.
+
+=item C<CODE>
+
+This is the option to use when you 
+
+It takes a code reference, which should expect two arguments. The first is 
+the attribute meta-object this handles is attached too. The second is the metaclass
+of the class being delegated too. It expects you to return a 
+
+=back
 
 =back
 
