@@ -16,6 +16,10 @@ Revision history for Perl extension Moose
         things like &new)
         - added tests and docs for this
 
+    * Moose::Meta::TypeConstraint
+      - type constraints now stringify to their names.
+        - added test for this
+
     * misc.
       - added test for working with Module::Refresh 
 

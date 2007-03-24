@@ -5,6 +5,9 @@ use strict;
 use warnings;
 use metaclass;
 
+use overload '""'     => sub { shift->name },   # stringify to tc name
+             fallback => 1;
+
 use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';

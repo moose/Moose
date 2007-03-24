@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 37;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -30,6 +30,10 @@ Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
 
 ok(Number(5), '... this is a Num');
 ok(!defined(Number('Foo')), '... this is not a Num');
+{
+    my $number_tc = Moose::Util::TypeConstraints::find_type_constraint('Number');
+    is("$number_tc", 'Number', '... type constraint stringifies to name');
+}
 
 ok(String('Foo'), '... this is a Str');
 ok(!defined(String(5)), '... this is not a Str');
