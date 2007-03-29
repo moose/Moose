@@ -39,6 +39,10 @@ __PACKAGE__->meta->add_attribute('handles' => (
     reader    => 'handles',
     predicate => 'has_handles',
 ));
+__PACKAGE__->meta->add_attribute('documentation' => (
+    reader    => 'documentation',
+    predicate => 'has_documentation',
+));
 
 sub new {
 	my ($class, $name, %options) = @_;
@@ -48,9 +52,9 @@ sub new {
 
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
-    # you can change default, required and coerce 
+    # you can change default, required, coerce and documentation 
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required)) {
+    foreach my $legal_option (qw(default coerce required documentation)) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
@@ -540,6 +544,16 @@ This is a CODE reference which will be executed every time the
 value of an attribute is assigned. The CODE ref will get two values, 
 the invocant and the new value. This can be used to handle I<basic> 
 bi-directional relations.
+
+=item B<documentation>
+
+This is a string which contains the documentation for this attribute. 
+It serves no direct purpose right now, but it might in the future
+in some kind of automated documentation system perhaps.
+
+=item B<has_documentation>
+
+Returns true if this meta-attribute has any documentation.
 
 =back
 

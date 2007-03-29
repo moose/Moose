@@ -3,7 +3,7 @@ Revision history for Perl extension Moose
 0.19
     * Moose::Util::TypeConstraints
       - type now supports messages as well
-        (thanks to phaylon for finding this)
+        thanks to phaylon for finding this
         - added tests for this
       - added list_all_type_constraints and 
         list_all_builtin_type_constraints
@@ -13,7 +13,13 @@ Revision history for Perl extension Moose
       - fixed regexp 'handles' declarations 
         to build the list of delegated methods
         correctly (and not override important 
-        things like &new)
+        things like &new) thanks to ashleyb 
+        for finding this
+        - added tests and docs for this
+      - added the "documentation" attributes
+        so that you can actually document your 
+        attributes and inspect them through the 
+        meta-object.
         - added tests and docs for this
 
     * Moose::Meta::TypeConstraint
@@ -21,13 +27,20 @@ Revision history for Perl extension Moose
         - added test for this
 
     * misc.
-      - added test for working with Module::Refresh 
+      - added tests to assure we work with Module::Refresh 
+      - added stricter test skip logic in the Moose POOP 
+        test, ask Rob Kinyon why.
+        - *cough* DBM::Deep 1.0 backwards compatability sucks *cough* ;)
 
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~
-    
-    - We now use Class::MOP::load_class to 
-      load all classes.
+
+    * misc.
+      - We now use Class::MOP::load_class to 
+        load all classes.    
+      - added tests to show types and subtypes 
+        working with Declare::Constraints::Simple
+        and Test::Deep as constraint engines.
 
 0.18_001
     !! You must have Class::MOP 0.37_001  !!

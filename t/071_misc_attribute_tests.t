@@ -3,11 +3,35 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 use Test::Exception;
 
 BEGIN {
     use_ok('Moose');           
+}
+
+{
+    {
+        package Test::Attribute::Inline::Documentation;
+        use Moose;
+
+        has 'foo' => (
+            documentation => q{
+                The 'foo' attribute is my favorite 
+                attribute in the whole wide world.
+            }
+        );
+    }
+    
+    my $foo_attr = Test::Attribute::Inline::Documentation->meta->get_attribute('foo');
+    
+    ok($foo_attr->has_documentation, '... the foo has docs');
+    is($foo_attr->documentation,
+            q{
+                The 'foo' attribute is my favorite 
+                attribute in the whole wide world.
+            },
+    '... got the foo docs');
 }
 
 {

@@ -7,7 +7,9 @@ use Test::More;
 
 BEGIN {
     eval "use DBM::Deep 0.983; use DateTime::Format::MySQL;";
-    plan skip_all => "DBM::Deep and DateTime::Format::MySQL required for this test" if $@;        
+    if ($@ && DBM::Deep->VERSION < 1.0) {
+        plan skip_all => "DBM::Deep (< 1.0) and DateTime::Format::MySQL required for this test";        
+    }
     plan tests => 89;    
 }
 
