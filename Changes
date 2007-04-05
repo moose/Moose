@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.20
+    * Moose
+      - 'has' now also accepts an ARRAY ref
+        to create multiple attrs (see docs)
+        (thanks to konobi for this)
+         - added tests and docs 
+
 0.19 Thurs. April 5th, 2007
     ~~ More documentation updates ~~
 
