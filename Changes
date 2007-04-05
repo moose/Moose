@@ -2,11 +2,11 @@ Revision history for Perl extension Moose
 
 0.19
     * Moose::Util::TypeConstraints
-      - type now supports messages as well
+      - 'type' now supports messages as well
         thanks to phaylon for finding this
         - added tests for this
-      - added list_all_type_constraints and 
-        list_all_builtin_type_constraints
+      - added &list_all_type_constraints and 
+        &list_all_builtin_type_constraints
         functions to facilitate introspection.
     
     * Moose::Meta::Attribute
@@ -16,10 +16,17 @@ Revision history for Perl extension Moose
         things like &new) thanks to ashleyb 
         for finding this
         - added tests and docs for this
-      - added the "documentation" attributes
+      - added the 'documentation' attributes
         so that you can actually document your 
         attributes and inspect them through the 
         meta-object.
+        - added tests and docs for this
+
+    * Moose::Meta::Class
+      - when loading custom attribute metaclasses
+        it will first look in for the class in the 
+        Moose::Meta::Attribute::Custom::$name, and 
+        then default to just loading $name.
         - added tests and docs for this
 
     * Moose::Meta::TypeConstraint

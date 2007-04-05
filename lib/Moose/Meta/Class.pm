@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -275,8 +275,18 @@ sub _process_attribute {
     }
     else {
         if ($options{metaclass}) {
-            Class::MOP::load_class($options{metaclass});
-            $self->add_attribute($options{metaclass}->new($name, %options));
+            my $metaclass_name = $options{metaclass};
+            eval {
+                my $possible_full_name = 'Moose::Meta::Attribute::Custom::' . $metaclass_name;
+                Class::MOP::load_class($possible_full_name);                
+                $metaclass_name = $possible_full_name->can('register_implementation') 
+                    ? $possible_full_name->register_implementation
+                    : $possible_full_name;
+            };
+            if ($@) {
+                Class::MOP::load_class($metaclass_name);
+            }
+            $self->add_attribute($metaclass_name->new($name, %options));
         }
         else {
             $self->add_attribute($name, %options);

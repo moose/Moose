@@ -424,6 +424,22 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 This tells the accessor whether to automatically dereference the value returned. 
 This is only legal if your C<isa> option is either an C<ArrayRef> or C<HashRef>.
 
+=item I<metaclass =E<gt> $metaclass_name>
+
+This tells the class to use a custom attribute metaclass for this particular 
+attribute. Custom attribute metaclasses are useful for extending the capabilities 
+of the I<has> keyword, they are the simplest way to extend the MOP, but they are 
+still a fairly advanced topic and too much to cover here. I will try and write a 
+recipe on it soon.
+
+The default behavior here is to just load C<$metaclass_name>, however, we also 
+have a way to alias to a shorter name. This will first look to see if 
+B<Moose::Meta::Attribute::Custom::$metaclass_name> exists, if it does it will 
+then check to see if that has the method C<register_implemenetation> which 
+should return the actual name of the custom attribute metaclass. If there is 
+no C<register_implemenetation> method, it will just default to using 
+B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
+
 =item I<trigger =E<gt> $code>
 
 The trigger option is a CODE reference which will be called after the value of 
