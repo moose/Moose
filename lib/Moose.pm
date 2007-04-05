@@ -364,7 +364,7 @@ superclasses still properly inherit from L<Moose::Object>.
 This will apply a given set of C<@roles> to the local class. Role support 
 is currently under heavy development; see L<Moose::Role> for more details.
 
-=item B<has ($name, %options)>
+=item B<has $name =E<gt> %options>
 
 This will install an attribute of a given C<$name> into the current class. 
 The list of C<%options> are the same as those provided by 
@@ -543,6 +543,59 @@ of the class being delegated too. It expects you to return a hash (not a HASH re
 of the methods you want mapped. 
 
 =back
+
+=back
+
+=item B<has +$name =E<gt> %options>
+
+This is variation on the normal attibute creator C<has>, which allows you to 
+clone and extend an attribute from a superclass. Here is a quick example:
+
+  package Foo;
+  use Moose;
+  
+  has 'message' => (
+      is      => 'rw', 
+      isa     => 'Str',
+      default => 'Hello, I am a Foo'
+  );
+  
+  package My::Foo;
+  use Moose;
+  
+  extends 'Foo';
+  
+  has '+message' => (default => 'Hello I am My::Foo');
+
+What is happening here is that B<My::Foo> is cloning the C<message> attribute 
+from it's parent class B<Foo>, retaining the is =E<gt> 'rw' and isa =E<gt> 'Str'
+characteristics, but changing the value in C<default>.
+
+This feature is restricted somewhat, so as to try and enfore at least I<some>
+sanity into it. You are only allowed to change the following attributes:
+
+=over 4
+
+=item I<default> 
+
+Change the default value of an attribute.
+
+=item I<coerce> 
+
+Change whether the attribute attempts to coerce a value passed to it.
+
+=item I<required> 
+
+Change if the attribute is required to have a value.
+
+=item I<documentation>
+
+Change the documentation string associated with the attribute.
+
+=item I<isa>
+
+You I<are> allowed to change the type, but if and B<only if> the new type is
+a subtype of the old type.  
 
 =back
 
