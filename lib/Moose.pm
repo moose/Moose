@@ -92,8 +92,9 @@ use Moose::Util::TypeConstraints;
         has => sub {
             my $class = $CALLER;
             return subname 'Moose::has' => sub ($;%) {
-                my ($name, %options) = @_;              
-                $class->meta->_process_attribute($name, %options);
+                my ($name, %options) = @_;
+                my $attrs = (ref($name) eq 'ARRAY') ? $name : [($name)];
+                $class->meta->_process_attribute($_, %options) for @$attrs;
             };
         },
         before => sub {

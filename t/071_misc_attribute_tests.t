@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Test::Exception;
 
 BEGIN {
@@ -66,4 +66,21 @@ BEGIN {
     lives_ok {
         $test->good_lazy_attr;
     } '... this does not work';    
+}
+
+{
+    {
+        package Test::Arrayref::Attributes;
+        use Moose;
+
+        has [qw(foo bar baz)] => (
+            is => 'rw',
+        );
+        
+    }
+
+    my $test = Test::Arrayref::Attributes->new;
+    isa_ok($test, 'Test::Arrayref::Attributes');
+    can_ok($test, qw(foo bar baz));
+    
 }
