@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.20
+0.20 Friday, April 6th, 2007
     >> I messed up the SKIP logic in one test
        so this release is just to fix that.
 
