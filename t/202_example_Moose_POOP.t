@@ -6,10 +6,12 @@ use warnings;
 use Test::More;
 
 BEGIN {
-    eval "use DBM::Deep 0.983; use DateTime::Format::MySQL;";
-    if ($@ && DBM::Deep->VERSION < 1.0) {
-        plan skip_all => "DBM::Deep (< 1.0) and DateTime::Format::MySQL required for this test";        
-    }
+    eval "use DBM::Deep 0.983;";
+    plan skip_all => "DBM::Deep is required for this test" if $@;        
+    plan skip_all => "DBM::Deep (>= 1.0) is required for this test" 
+        if DBM::Deep->VERSION >= 1.0;        
+    eval "use DateTime::Format::MySQL;";
+    plan skip_all => "DateTime::Format::MySQL is required for this test" if $@;            
     plan tests => 89;    
 }
 

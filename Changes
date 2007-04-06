@@ -1,6 +1,9 @@
 Revision history for Perl extension Moose
 
 0.20
+    >> I messed up the SKIP logic in one test
+       so this release is just to fix that.
+
     * Moose
       - 'has' now also accepts an ARRAY ref
         to create multiple attrs (see docs)
