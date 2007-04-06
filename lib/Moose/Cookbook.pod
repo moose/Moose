@@ -7,7 +7,7 @@ Moose::Cookbook - How to cook a Moose
 
 =head1 DESCRIPTION
 
-The Moose cookbook is a series of recipies taken from the Moose 
+The Moose cookbook is a series of recipes taken from the Moose 
 test suite. Each recipe presents some code, which demonstrates 
 some of the features of Moose, and then proceeds to explain the 
 details of the code. 

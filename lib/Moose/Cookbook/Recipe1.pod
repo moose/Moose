@@ -42,7 +42,7 @@ As with all Perl 5 classes, a Moose class is defined in a package.
 Moose now handles turning C<strict> and C<warnings> on for you, so 
 all you need do is say C<use Moose>, and no kittens will die.
 
-By loading Moose, we are enabeling the Moose "environment" to be 
+By loading Moose, we are enabling the Moose "environment" to be 
 loaded within our package. This means that we export some functions 
 which serve as Moose "keywords". This is nothing fancier than that, 
 just plain old exported functions.
@@ -106,7 +106,7 @@ is my opinion that the behavior of C<extends> is more intuitive in
 that it is more explicit about defining the superclass relationship.
 
 A small digression here, both Moose and C<extends> support multiple 
-inheritence. You simply pass all the superclasses to C<extends>, 
+inheritance. You simply pass all the superclasses to C<extends>, 
 like so:
 
   extends 'Foo', 'Bar', 'Baz';
@@ -178,7 +178,7 @@ done, you can refer to the F<t/001_recipe.t> test file.
 
 =head1 CONCLUSION
 
-I hope this recipe has given you some explaination of how to use 
+I hope this recipe has given you some explanation of how to use 
 Moose to build you Perl 5 classes. The next recipe will build upon 
 the basics shown here with more complex attributes and methods. 
 Please read on :)
@@ -198,7 +198,7 @@ L<Moose::Util::TypeConstraints> documentation.
 
 Future plans for Moose include allowing for alternate instance 
 structures such as blessed ARRAY refs and such. If you want you Moose 
-classes to be interchangable, it is advised that you avoid direct 
+classes to be interchangeable, it is advised that you avoid direct 
 instance access, like that which is shown above.
 
 =back
@@ -210,7 +210,7 @@ instance access, like that which is shown above.
 =item Method Modifiers
 
 The concept of method modifiers is directly ripped off from CLOS. A 
-great explaination of them can be found by following this link.
+great explanation of them can be found by following this link.
 
 L<http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html>
 

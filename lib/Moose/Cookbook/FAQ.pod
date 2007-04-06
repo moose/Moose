@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::FAQ - Frequenty asked questions about Moose
+Moose::Cookbook::FAQ - Frequently asked questions about Moose
 
 =head1 FREQUENTLY ASKED QUESTIONS
 
@@ -28,7 +28,7 @@ Yes and No. The external API, the one 90% of users will interact
 with, is B<very stable> and any changes B<will be 100% backwards 
 compatible>. The introspection API is I<mostly> stable, I still 
 reserve the right to tweak that if needed, but I will do my 
-absolute best to maintain backwards comptability here as well.
+absolute best to maintain backwards compatibility here as well.
 
 =head3 I heard Moose is slow, is this true?
 
@@ -46,13 +46,13 @@ available for getting the speed you need.
 Currently we have the option of making your classes immutable 
 as a means of boosting speed. This will mean a larger compile 
 time cost, but the runtime speed increase (especially in object
-construction) is pretty signifigant. This is not very well 
+construction) is pretty significant. This is not very well 
 documented yet, so please ask on the list of on #moose for more
 information.
 
 We are also discussing and experimenting with L<Module::Compile>, 
 and the idea of compiling highly optimized C<.pmc> files. And 
-we have also mapped out some core methods as canidates for 
+we have also mapped out some core methods as candidates for 
 conversion to XS. 
 
 =head3 When will Moose be 1.0 ready?
@@ -74,13 +74,13 @@ Ideally, you should never write your own C<new> method, and should
 use Moose's other features to handle your specific object construction
 needs. Here are a few scenarios, and the Moose way to solve them;
 
-If you need to call initializtion code post instance construction, 
+If you need to call initialization code post instance construction, 
 then use the C<BUILD> method. This feature is taken directly from 
-Perl 6. Every C<BUILD> method in your inheritence chain is called 
+Perl 6. Every C<BUILD> method in your inheritance chain is called 
 (in the correct order) immediately after the instance is constructed. 
 This allows you to ensure that all your superclasses are initialized 
 properly as well. This is the best approach to take (when possible)
-because it makes subclassing your class much easier.
+because it makes sub classing your class much easier.
 
 If you need to affect the constructor's parameters prior to the 
 instance actually being constructed, you have a number of options.
@@ -106,11 +106,11 @@ along with any issues C<SUPER::> might add as well.
 In short, try to use C<BUILD> and coercions, they are your best 
 bets.
 
-=head3 How do I make non-Moose constuctors work with Moose? 
+=head3 How do I make non-Moose constructors work with Moose? 
 
 Moose provides it's own constructor, but it does it by making all 
 Moose-based classes inherit from L<Moose::Object>. When inheriting
-from a non-Moose class, the inheritence chain to L<Moose::Object> 
+from a non-Moose class, the inheritance chain to L<Moose::Object> 
 is broken. The simplest way to fix this is to simply explicitly 
 inherit from L<Moose::Object> yourself. However, this does not 
 always fix the issue of a constructor. Here is a basic example of 
@@ -119,7 +119,7 @@ how this can be worked around:
   package My::HTML::Template;
   use Moose;
   
-  # explict inheritence 
+  # explicit inheritance 
   extends 'HTML::Template', 'Moose::Object';
   
   # explicit constructor
@@ -140,7 +140,7 @@ HASH refs).
 
 Other techniques can be used as well, such as creating the object 
 using C<Moose::Object::new>, but calling the inherited non-Moose 
-class's initializtion methods (if available). 
+class's initialization methods (if available). 
 
 It is also entirely possible to just rely on HASH autovivification 
 to create the slot's needed for Moose based attributes. Although 
@@ -234,7 +234,7 @@ Still another option is to write a custom attribute metaclass, which
 is also outside the scope of this document, but I would be happy to 
 explain it on #moose or the mailing list.
 
-=head2 Method Modfiers
+=head2 Method Modifiers
 
 =head3 How can I affect the values in C<@_> using C<before>?
 

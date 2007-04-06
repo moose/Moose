@@ -72,7 +72,7 @@ because of the order in which classes are constructed, Moose
 would overwrite your custom accessor. You wouldn't want that 
 would you?
 
-=head2 Method Modfiers
+=head2 Method Modifiers
 
 =head3 How come I can't change C<@_> in a C<before> modifier?
 

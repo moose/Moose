@@ -176,7 +176,7 @@ This recipe illustrated the power of coercions to build a more
 flexible and open API for your accessors, while still retaining 
 all the safety that comes from using Moose's type constraints. 
 Using coercions it becomes simple to manage (from a single 
-location) a consisten API not only across multiple accessors, 
+location) a consistent API not only across multiple accessors, 
 but across multiple classes as well. 
 
 In the next recipe, we will introduce roles, a concept originally 

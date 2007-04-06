@@ -136,7 +136,7 @@ C<USState> constraint, thereby only allowing valid state names or
 state codes to be stored in the C<state> slot. 
 
 The next C<subtype>, does pretty much the same thing using the 
-L<Regexp::Common> module, and constrainting the C<zip_code> slot.
+L<Regexp::Common> module, and constraining the C<zip_code> slot.
 
   subtype USZipCode 
       => as Value
@@ -177,7 +177,7 @@ of options we have already introduced.
   });
 
 Here, instead of passing a string to the C<isa> option, we are passing 
-an anyonomous subtype of the C<ArrayRef> type constraint. This subtype 
+an anonymous subtype of the C<ArrayRef> type constraint. This subtype 
 basically checks that all the values in the ARRAY ref are instance of 
 the B<Employee> class. 
 
@@ -200,7 +200,7 @@ C<BUILD> method (2).
       }
   }
 
-The C<BUILD> method will have run after the intial type constraint 
+The C<BUILD> method will have run after the initial type constraint 
 check, so we can do just a basic existence check on the C<employees>
 param here, and assume that if it does exist, it is both an ARRAY ref 
 and full of I<only> instances of B<Employee>.
@@ -228,12 +228,12 @@ At this point, our B<Company> class is complete. Next comes our B<Person>
 class and its subclass the previously mentioned B<Employee> class. 
 
 The B<Person> class should be obvious to you at this point. It has a few 
-C<required> attributes, and the C<middle_intial> slot has an additional 
+C<required> attributes, and the C<middle_initial> slot has an additional 
 C<predicate> method (which we saw in the previous recipe with the 
 B<BinaryTree> class). 
 
 Next the B<Employee> class, this too should be pretty obvious at this 
-point. It requires a C<title>, and maintains a weakend reference to a 
+point. It requires a C<title>, and maintains a weakened reference to a 
 B<Company> instance. The only new item, which we have seen before in 
 examples, but never in the recipe itself, is the C<override> method 
 modifier. 
@@ -280,7 +280,7 @@ as well.
 
 The C<BUILD> method is called by C<Moose::Object::BUILDALL>, which is 
 called by C<Moose::Object::new>. C<BUILDALL> will climb the object 
-inheritence graph and call the approriate C<BUILD> methods in the 
+inheritance graph and call the appropriate C<BUILD> methods in the 
 correct order.
 
 =back

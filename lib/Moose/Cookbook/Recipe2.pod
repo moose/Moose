@@ -71,7 +71,7 @@ B<BankAccount> that is created will have its C<balance> slot
 initialized to C<0>. Very simple really :)
 
 Next come the methods. The C<deposit> and C<withdraw> methods 
-should be fairly self explanitory, they are nothing specific to 
+should be fairly self explanatory, they are nothing specific to 
 Moose, just your standard Perl 5 OO.
 
 Now, onto the B<CheckingAccount> class. As you know from the 
@@ -163,7 +163,7 @@ these classes can be found in the F<t/002_recipe.t> test file.
 The aim of this recipe was to take the knowledge learned in the 
 first recipe and expand upon it within a more realistic use case. 
 I hope that this recipe has accomplished this goal. The next 
-recipe will expand even more upon the capabilties of attributes
+recipe will expand even more upon the capabilities of attributes
 in Moose to create a behaviorally sophisticated class almost 
 entirely defined by attributes.
 
@@ -187,7 +187,7 @@ please refer to the L<Moose::Util::TypeConstraints> documentation.
 
 =over 4
 
-=item Acknowledgement
+=item Acknowledgment
 
 The BankAccount example in this recipe is directly taken from the 
 examples in this chapter of "Practical Common Lisp". A link to that 

@@ -48,7 +48,7 @@ complex behaviors.
 
 The class in this recipe is a classic binary tree, each node in the 
 tree is represented by an instance of the B<BinaryTree> class. Each 
-instance has a C<node> slot to hold an abitrary value, a C<right> 
+instance has a C<node> slot to hold an arbitrary value, a C<right> 
 slot to hold the right node, a C<left> slot to hold the left node, 
 and finally a C<parent> slot to hold a reference back up the tree. 
 
@@ -57,10 +57,10 @@ slot, defined as such:
 
   has 'node' => (is => 'rw', isa => 'Any');
 
-If you recall from the previous recipies, this slot will have a 
+If you recall from the previous recipes, this slot will have a 
 read/write accessor generated for it, and has a type constraint on it. 
 The new item here is the type constraint of C<Any>. In the type 
-constraint heirarchy in L<Moose::Utils::TypeConstraints>, the C<Any> 
+constraint hierarchy in L<Moose::Utils::TypeConstraints>, the C<Any> 
 constraint is the "root" of the hierarchy. It means exactly what it 
 says, it allows anything to pass. Now, you could just as easily have
 left out the C<isa>, left the C<node> slot unconstrained and gotten the 
