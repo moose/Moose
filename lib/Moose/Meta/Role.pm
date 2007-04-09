@@ -9,7 +9,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use B            'svref_2object';
 
-our $VERSION   = '0.06';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -367,10 +367,20 @@ sub _apply_attributes {
             }
         }
         else {
-            $other->add_attribute(
-                $attribute_name,
-                $self->get_attribute($attribute_name)
-            );
+            # NOTE:
+            # this is kinda ugly ...
+            if ($other->isa('Moose::Meta::Class')) { 
+                $other->_process_attribute(
+                    $attribute_name,
+                    %{$self->get_attribute($attribute_name)}
+                );             
+            }
+            else {
+                $other->add_attribute(
+                    $attribute_name,
+                    $self->get_attribute($attribute_name)
+                );                
+            }
         }
     }    
 }
