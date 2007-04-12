@@ -5,6 +5,9 @@ Revision history for Perl extension Moose
       - fixed issue where custom attribute metaclasses
         where not handled correctly in roles
         - added tests for this
+        
+    ~~ many spelling fixes in the docs ~~
+    ~~    thanks to rlb3 for this !!   ~~
 
 0.20 Friday, April 6th, 2007
     >> I messed up the SKIP logic in one test
