@@ -38,31 +38,66 @@ Well cause merlyn asked if it could :)
     BEGIN { extends 'Moose::Meta::Method::Accessor' };
     
     # customize the accessors to always grab 
-    # the ->meta->sole_instance in the accessors
+    # the correct instance in the accessors
+    
+    sub find_instance {
+        my ($self, $canidate, $accessor_type) = @_;
+        
+        my $instance = $canidate;
+        my $attr     = $self->associated_attribute;
+        
+        # if it is a class calling it ...
+        unless (blessed($instance)) {
+            # then grab the class prototype
+            $instance = $attr->associated_class->prototype_instance;
+        }
+        # if its an instance ...
+        else {
+            # and there is no value currently 
+            # associated with the instance and 
+            # we are trying to read it, then ...
+            if ($accessor_type eq 'r' && !defined($attr->get_value($instance))) {
+                # again, defer the prototype in 
+                # the class in which is was defined
+                $instance = $attr->associated_class->prototype_instance;
+            }
+            # otherwise, you want to assign 
+            # to your local copy ...
+        }
+        return $instance;
+    }
     
     sub generate_accessor_method {
-        my $attr = (shift)->associated_attribute; 
+        my $self = shift;
+        my $attr = $self->associated_attribute; 
         return sub {
-            my $self = blessed($_[0]) ? $_[0] : $_[0]->meta->sole_instance;
-            $attr->set_value($self, $_[1]) if scalar(@_) == 2;
-            $attr->get_value($self);
+            if (scalar(@_) == 2) {
+                $attr->set_value(
+                    $self->find_instance($_[0], 'w'), 
+                    $_[1]
+                );
+            }            
+            $attr->get_value($self->find_instance($_[0], 'r'));
         };
     }
 
     sub generate_reader_method {
-        my $attr = (shift)->associated_attribute; 
-        return sub { 
-            my $self = blessed($_[0]) ? $_[0] : $_[0]->meta->sole_instance;
+        my $self = shift;
+        my $attr = $self->associated_attribute; 
+        return sub {
             confess "Cannot assign a value to a read-only accessor" if @_ > 1;
-            $attr->get_value($self);
+            $attr->get_value($self->find_instance($_[0], 'r'));
         };   
     }
 
     sub generate_writer_method {
-        my $attr = (shift)->associated_attribute; 
+        my $self = shift;
+        my $attr = $self->associated_attribute; 
         return sub {
-            my $self = blessed($_[0]) ? $_[0] : $_[0]->meta->sole_instance;
-            $attr->set_value($self, $_[1]);
+            $attr->set_value(
+                $self->find_instance($_[0], 'w'), 
+                $_[1]
+            );
         };
     }
 
@@ -87,10 +122,10 @@ Well cause merlyn asked if it could :)
     
     BEGIN { extends 'Moose::Meta::Class' };
     
-    has 'sole_instance' => (
+    has 'prototype_instance' => (
         is        => 'rw',
         isa       => 'Object',
-        predicate => 'has_sole_instance',
+        predicate => 'has_prototypical_instance',
         lazy      => 1,
         default   => sub { (shift)->new_object }
     );
@@ -114,10 +149,27 @@ Well cause merlyn asked if it could :)
         # to tie-the-knot, if you take it 
         # out, then you get deep recursion 
         # several levels deep :)
-        $self->sole_instance($next->($self, @_)) 
-            unless $self->has_sole_instance;
-        return $self->sole_instance;
+        $self->prototype_instance($next->($self, @_)) 
+            unless $self->has_prototypical_instance;
+        return $self->prototype_instance;
     };
+ 
+}
+
+{
+    package ProtoMoose::Object;
+    use metaclass 'ProtoMoose::Meta::Class';
+    use Moose;
+    
+    sub new {
+        my $prototype = blessed($_[0]) 
+            ? $_[0] 
+            : $_[0]->meta->prototype_instance;
+        my (undef, %params) = @_;
+    	my $self = $prototype->meta->clone_object($prototype, %params);
+    	$self->BUILDALL(\%params);
+    	return $self;
+    }
 }
 
 ## ------------------------------------------------------------------
@@ -125,8 +177,9 @@ Well cause merlyn asked if it could :)
 
 {
     package Foo;
-    use metaclass 'ProtoMoose::Meta::Class';
     use Moose;
+    
+    extends 'ProtoMoose::Object';
     
     has 'bar' => (is => 'rw');
 }
@@ -142,9 +195,10 @@ Well cause merlyn asked if it could :)
 
 ## ------------------------------------------------------------------
 
-diag "Check that metaclasses are working/inheriting properly";
+## ------------------------------------------------------------------
+## Check that metaclasses are working/inheriting properly
 
-foreach my $class (qw/Foo Bar/) {
+foreach my $class (qw/ProtoMoose::Object Foo Bar/) {
     isa_ok($class->meta, 
     'ProtoMoose::Meta::Class', 
     '... got the right metaclass for ' . $class . ' ->');
@@ -160,35 +214,70 @@ foreach my $class (qw/Foo Bar/) {
 
 ## ------------------------------------------------------------------
 
-diag "Check the singleton-ness of them";
+# get the prototype for Foo
+my $foo_prototype = Foo->meta->prototype_instance;
+isa_ok($foo_prototype, 'Foo');
 
+# set a value in the prototype
+$foo_prototype->bar(100);
+is($foo_prototype->bar, 100, '... got the value stored in the prototype');
+
+# the "class" defers to the 
+# the prototype when asked 
+# about attributes
+is(Foo->bar, 100, '... got the value stored in the prototype (through the Foo class)');
+
+# now make an instance, which 
+# is basically a clone of the 
+# prototype
 my $foo = Foo->new;
-is($foo, Foo->meta->sole_instance, '... got the same instance of Foo');
+isa_ok($foo, 'Foo');
 
-# the sole instance can also be created lazily 
-my $sole_bar_instance = Bar->meta->sole_instance;
-isa_ok($sole_bar_instance, 'Bar');
+# the instance is *not* the prototype
+isnt($foo, $foo_prototype, '... got a new instance of Foo');
 
+# but it has the same values ...
+is($foo->bar, 100, '... got the value stored in the instance (inherited from the prototype)');
+
+# we can even change the values 
+# in the instance 
+$foo->bar(300);
+is($foo->bar, 300, '... got the value stored in the instance (overwriting the one inherited from the prototype)');
+
+# and not change the one in the prototype
+is($foo_prototype->bar, 100, '... got the value stored in the prototype');
+is(Foo->bar, 100, '... got the value stored in the prototype (through the Foo class)');
+
+## subclasses 
+
+# now we can check that the subclass
+# will seek out the correct prototypical 
+# value from it's "parent"
+is(Bar->bar, 100, '... got the value stored in the Foo prototype (through the Bar class)');
+
+# we can then also set it's local attrs
+Bar->baz(50);
+is(Bar->baz, 50, '... got the value stored in the prototype (through the Bar class)');
+
+# now we clone the Bar prototype
 my $bar = Bar->new;
-is($bar, $sole_bar_instance, '... got the same instance of Bar');
+isa_ok($bar, 'Bar');
+isa_ok($bar, 'Foo');
 
-isnt($bar, $foo, '... but foo and bar are not the same instances');
+# and we see that we got the right values
+# in the instance/clone
+is($bar->bar, 100, '... got the value stored in the instance (inherited from the Foo prototype)');
+is($bar->baz, 50, '... got the value stored in the instance (inherited from the Bar prototype)');
 
-$foo->bar(100);
-is($foo->bar, 100, '... got the value I just assigned in foo');
-is(Foo->meta->sole_instance->bar, 100, '... got the value I just assigned (in Foo meta-land)');
-is(Foo->bar, 100, '... got the value I just assigned in foo (from class style accessor)');
-
+# nowe we can change the value
 $bar->bar(200);
-is($bar->bar, 200, '... got the value I just assigned in bar');
-is(Bar->meta->sole_instance->bar, 200, '... got the value I just assigned (in Bar meta-land)');
-is(Bar->bar, 200, '... got the value I just assigned in bar (from class style accessor)');
+is($bar->bar, 200, '... got the value stored in the instance (overriding the one inherited from the Foo prototype)');
 
-is($foo->bar, 100, '... still got the value I just assigned in Foo');
-is(Foo->meta->sole_instance->bar, 100, '... still got the value I just assigned (in meta-land)');
-
-## ------------------------------------------------------------------
-
-
+# and all our original and 
+# prototypical values are still 
+# the same
+is($foo->bar, 300, '... still got the original value stored in the instance (inherited from the prototype)');
+is(Foo->bar, 100, '... still got the original value stored in the prototype (through the Foo class)');
+is(Bar->bar, 100, '... still got the original value stored in the prototype (through the Bar class)');
 
 
