@@ -492,7 +492,7 @@ for each one in the list.
 This is the second most common usage for handles. Instead of a list of 
 method names, you pass a HASH ref where the key is the method name you 
 want installed locally, and the value is the name of the original method 
-in the class being delegated too. 
+in the class being delegated to. 
 
 This can be very useful for recursive classes like trees, here is a 
 quick example (soon to be expanded into a Moose::Cookbook::Recipe):
@@ -526,7 +526,7 @@ in the parent slot.
 
 The regexp option works very similar to the ARRAY option, except that it builds 
 the list of methods for you. It starts by collecting all possible methods of the 
-class being delegated too, then filters that list using the regexp supplied here. 
+class being delegated to, then filters that list using the regexp supplied here. 
 
 B<NOTE:> An I<isa> option is required when using the regexp option format. This 
 is so that we can determine (at compile time) the method list from the class. 
@@ -539,8 +539,8 @@ only use it if you really know what you are doing as it involves manual metaclas
 twiddling.
 
 This takes a code reference, which should expect two arguments. The first is 
-the attribute meta-object this I<handles> is attached too. The second is the metaclass
-of the class being delegated too. It expects you to return a hash (not a HASH ref)
+the attribute meta-object this I<handles> is attached to. The second is the metaclass
+of the class being delegated to. It expects you to return a hash (not a HASH ref)
 of the methods you want mapped. 
 
 =back
