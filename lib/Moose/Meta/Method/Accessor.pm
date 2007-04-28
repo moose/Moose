@@ -15,7 +15,7 @@ use base 'Moose::Meta::Method',
 ## Inline method generators
 
 sub generate_accessor_method_inline {
-    my $self      = shift;
+    my $self      = $_[0];
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
 
@@ -24,7 +24,7 @@ sub generate_accessor_method_inline {
 	my $slot_name = sprintf "'%s'", $attr->slots;
 	my $inv = '$_[0]';
     my $code = 'sub { '
-    . $self->_inline_pre_body($attr)
+    . $self->_inline_pre_body(@_)
     . 'if (scalar(@_) == 2) {'
         . $self->_inline_check_required
         . $self->_inline_check_coercion
@@ -33,7 +33,7 @@ sub generate_accessor_method_inline {
 		. $self->_inline_trigger($inv, $value_name)
     . ' }'
     . $self->_inline_check_lazy
-    . $self->_inline_post_body($attr)
+    . $self->_inline_post_body(@_)
     . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv))
     . ' }';
     
@@ -49,19 +49,19 @@ sub generate_accessor_method_inline {
 }
 
 sub generate_writer_method_inline {
-    my $self      = shift;
+    my $self      = $_[0];
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
     
     my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
 	my $inv = '$_[0]';
     my $code = 'sub { '
-    . $self->_inline_pre_body($attr)
+    . $self->_inline_pre_body(@_)
     . $self->_inline_check_required
     . $self->_inline_check_coercion
 	. $self->_inline_check_constraint($value_name)
 	. $self->_inline_store($inv, $value_name)
-	. $self->_inline_post_body($attr)
+	. $self->_inline_post_body(@_)
 	. $self->_inline_trigger($inv, $value_name)
     . ' }';
     
@@ -77,15 +77,15 @@ sub generate_writer_method_inline {
 }
 
 sub generate_reader_method_inline {
-    my $self      = shift;
+    my $self      = $_[0];
     my $attr      = $self->associated_attribute; 
     my $attr_name = $attr->name;
     
     my $code = 'sub {'
-    . $self->_inline_pre_body($attr)
+    . $self->_inline_pre_body(@_)
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . $self->_inline_check_lazy
-    . $self->_inline_post_body($attr)
+    . $self->_inline_post_body(@_)
     . 'return ' . $self->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
     . '}';
     
@@ -103,6 +103,9 @@ sub generate_reader_method_inline {
 *generate_reader_method   = \&generate_reader_method_inline;
 *generate_writer_method   = \&generate_writer_method_inline;
 *generate_accessor_method = \&generate_accessor_method_inline;
+
+sub _inline_pre_body { '' }
+sub _inline_post_body { '' }
 
 sub _inline_check_constraint {
 	my ($self, $value) = @_;
