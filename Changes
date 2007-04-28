@@ -5,6 +5,11 @@ Revision history for Perl extension Moose
       - fixed issue where custom attribute metaclasses
         where not handled correctly in roles
         - added tests for this
+    
+    * Moose::Meta::Class
+      - fixed issue where extending metaclasses with 
+        roles would blow up. Thanks to Aankhen`` for
+        finding this insidious error, and it's solution.
         
     ~~ many spelling fixes in the docs ~~
     ~~    thanks to rlb3 for this !!   ~~

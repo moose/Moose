@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -63,6 +63,12 @@ sub excludes_role {
         || confess "You must supply a role name to look for";
     foreach my $class ($self->class_precedence_list) {  
         next unless $class->can('meta');      
+        # NOTE:
+        # in the pretty rare instance when a Moose metaclass
+        # is itself extended with a role, this check needs to 
+        # be done since some items in the class_precedence_list
+        # might in fact be Class::MOP based still. 
+        next unless $class->meta->can('roles');              
         foreach my $role (@{$class->meta->roles}) {
             return 1 if $role->excludes_role($role_name);
         }
