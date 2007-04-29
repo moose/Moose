@@ -32,6 +32,8 @@ BEGIN {
     
     override bar => sub { 'Baz::bar -> ' . super() };       
     override baz => sub { 'Baz::baz -> ' . super() }; 
+
+    no Moose; # ensure super() still works after unimport
 }
 
 my $baz = Baz->new();

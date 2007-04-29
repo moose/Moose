@@ -117,6 +117,10 @@ use Moose::Util::TypeConstraints;
 	        };
 	    },
 	    super => sub {
+            {
+              no strict 'refs';
+              $Moose::SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
+            }
             my $meta = _find_meta();
             return subname 'Moose::Role::super' => sub {};
         },

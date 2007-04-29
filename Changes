@@ -1,5 +1,18 @@
 Revision history for Perl extension Moose
 
+0.22
+    * Moose
+      - added SUPER_SLOT and INNER_SLOT class hashes to support unimport
+      - modified unimport to remove super and inner along with the rest
+        - altered unimport tests to handle this
+
+    * Moose::Role
+      - altered super export to populate SUPER_SLOT
+
+    * Moose::Meta::Class
+      - altered augment and override modifier application to use *_SLOT
+        - modified tests for these to unimport one test class each to test
+
 0.21
     * Moose::Meta::Role
       - fixed issue where custom attribute metaclasses

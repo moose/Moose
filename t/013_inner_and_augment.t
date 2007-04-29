@@ -25,6 +25,8 @@ BEGIN {
     
     augment foo => sub { 'Bar::foo(' . (inner() || '') . ')' };   
     augment bar => sub { 'Bar::bar' };       
+
+    no Moose; # ensure inner() still works after unimport
     
     package Baz;
     use Moose;

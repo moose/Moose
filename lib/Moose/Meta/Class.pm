@@ -169,10 +169,14 @@ sub add_override_method_modifier {
         || confess "You cannot override '$name' because it has no super method";    
     $self->add_method($name => Moose::Meta::Method::Overriden->wrap(sub {
         my @args = @_;
-        no strict   'refs';
         no warnings 'redefine';
-        local *{$_super_package . '::super'} = sub { $super->(@args) };
-        return $method->(@args);
+        if ($Moose::SUPER_SLOT{$_super_package}) {
+          local *{$Moose::SUPER_SLOT{$_super_package}}
+            = sub { $super->(@args) };
+          return $method->(@args);
+        } else {
+          confess "Trying to call override modifier'd method without super()";
+        }
     }));
 }
 
@@ -196,10 +200,14 @@ sub add_augment_method_modifier {
     }      
     $self->add_method($name => sub {
         my @args = @_;
-        no strict   'refs';
         no warnings 'redefine';
-        local *{$_super_package . '::inner'} = sub { $method->(@args) };
-        return $super->(@args);
+        if ($Moose::INNER_SLOT{$_super_package}) {
+          local *{$Moose::INNER_SLOT{$_super_package}}
+            = sub { $method->(@args) };
+          return $super->(@args);
+        } else {
+          return $super->(@args);
+        }
     });    
 }
 

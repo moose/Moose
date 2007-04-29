@@ -15,9 +15,6 @@ my @moose_exports = qw(
     before after around
     override
     augment
-);
-
-my @moose_not_unimported = qw(
     super inner
 );
 
@@ -32,7 +29,6 @@ eval q{
 ok(!$@, '... Moose succesfully exported into Foo');
 
 can_ok('Foo', $_) for @moose_exports;
-can_ok('Foo', $_) for @moose_not_unimported;
 
 eval q{
     package Foo;
@@ -41,7 +37,6 @@ eval q{
 ok(!$@, '... Moose succesfully un-exported from Foo');
 
 ok(!Foo->can($_), '... Foo can no longer do ' . $_) for @moose_exports;
-can_ok('Foo', $_) for @moose_not_unimported;
 
 # and check the type constraints as well
 

@@ -122,6 +122,11 @@ use Moose::Util::TypeConstraints;
             };
         },
         super => sub {
+            {
+              our %SUPER_SLOT;
+              no strict 'refs';
+              $SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
+            }
             return subname 'Moose::super' => sub {};
         },
         override => sub {
@@ -132,6 +137,11 @@ use Moose::Util::TypeConstraints;
             };
         },
         inner => sub {
+            {
+              our %INNER_SLOT;
+              no strict 'refs';
+              $INNER_SLOT{$CALLER} = \*{"${CALLER}::inner"};
+            }
             return subname 'Moose::inner' => sub {};
         },
         augment => sub {
@@ -201,7 +211,6 @@ use Moose::Util::TypeConstraints;
         my $class = caller();
         # loop through the exports ...
         foreach my $name (keys %exports) {
-            next if $name =~ /inner|super|self/;
             
             # if we find one ...
             if (defined &{$class . '::' . $name}) {
