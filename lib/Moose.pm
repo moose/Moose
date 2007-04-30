@@ -263,9 +263,7 @@ Moose - A complete modern object system for Perl 5
 =head1 SYNOPSIS
 
   package Point;
-  use strict;
-  use warnings;
-  use Moose;
+  use Moose; # automatically turns on strict and warnings
   	
   has 'x' => (is => 'rw', isa => 'Int');
   has 'y' => (is => 'rw', isa => 'Int');
@@ -277,8 +275,6 @@ Moose - A complete modern object system for Perl 5
   }
   
   package Point3D;
-  use strict;
-  use warnings;  
   use Moose;
   
   extends 'Point';
@@ -310,8 +306,7 @@ programming.
 =head2 Is this for real? Or is this just an experiment?
 
 Moose is I<based> on the prototypes and experiments I did for the Perl 6
-meta-model; however Moose is B<NOT> an experiment/prototype, it is 
-for B<real>. 
+meta-model. However, Moose is B<NOT> an experiment/prototype; it is for B<real>. 
 
 =head2 Is this ready for use in production? 
 
@@ -329,7 +324,7 @@ or just stop by #moose and ask away.
 =head2 Is Moose just Perl 6 in Perl 5?
 
 No. While Moose is very much inspired by Perl 6, it is not itself Perl 6.
-Instead, it is an OO system for Perl 5. I built Moose because I was tired or
+Instead, it is an OO system for Perl 5. I built Moose because I was tired of
 writing the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So
 instead of switching to Ruby, I wrote Moose :)
 
@@ -342,16 +337,16 @@ to. Here are a few items to note when building classes with Moose.
 Unless specified with C<extends>, any class which uses Moose will 
 inherit from L<Moose::Object>.
 
-Moose will also manage all attributes (including inherited ones) that 
-are defined with C<has>. And assuming that you call C<new>, which is 
-inherited from L<Moose::Object>, then this includes properly initializing 
-all instance slots, setting defaults where appropriate, and performing any 
-type constraint checking or coercion. 
+Moose will also manage all attributes (including inherited ones) that are
+defined with C<has>. And (assuming you call C<new>, which is inherited from
+L<Moose::Object>) this includes properly initializing all instance slots,
+setting defaults where appropriate, and performing any type constraint checking
+or coercion.
 
 =head1 EXPORTED FUNCTIONS
 
 Moose will export a number of functions into the class's namespace which 
-can then be used to set up the class. These functions all work directly 
+may then be used to set up the class. These functions all work directly 
 on the current class.
 
 =over 4
@@ -377,7 +372,7 @@ is currently under heavy development; see L<Moose::Role> for more details.
 =item B<has $name =E<gt> %options>
 
 This will install an attribute of a given C<$name> into the current class. 
-The list of C<%options> are the same as those provided by 
+The C<%options> are the same as those provided by 
 L<Class::MOP::Attribute>, in addition to the list below which are provided 
 by Moose (L<Moose::Meta::Attribute> to be more specific):
 
@@ -389,15 +384,16 @@ The I<is> option accepts either I<rw> (for read/write) or I<ro> (for read
 only). These will create either a read/write accessor or a read-only 
 accessor respectively, using the same name as the C<$name> of the attribute.
 
-If you need more control over how your accessors are named, you can use the 
-I<reader>, I<writer> and I<accessor> options inherited from L<Class::MOP::Attribute>.
+If you need more control over how your accessors are named, you can use the
+I<reader>, I<writer> and I<accessor> options inherited from
+L<Class::MOP::Attribute>.
 
 =item I<isa =E<gt> $type_name>
 
 The I<isa> option uses Moose's type constraint facilities to set up runtime 
 type checking for this attribute. Moose will perform the checks during class 
 construction, and within any accessors. The C<$type_name> argument must be a 
-string. The string can be either a class name or a type defined using 
+string. The string may be either a class name or a type defined using 
 Moose's type definition features.
 
 =item I<coerce =E<gt> (1|0)>
@@ -405,7 +401,7 @@ Moose's type definition features.
 This will attempt to use coercion with the supplied type constraint to change 
 the value passed into any accessors or constructors. You B<must> have supplied 
 a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
-for an example usage.
+for an example.
 
 =item I<does =E<gt> $role_name>
 
@@ -415,7 +411,7 @@ is expected to have consumed.
 =item I<required =E<gt> (1|0)>
 
 This marks the attribute as being required. This means a value must be supplied 
-during class construction, and the attribute can never be set to C<undef> with 
+during class construction, and the attribute may never be set to C<undef> with 
 an accessor. 
 
 =item I<weak_ref =E<gt> (1|0)>
@@ -432,59 +428,59 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 =item I<auto_deref =E<gt> (1|0)>
 
 This tells the accessor whether to automatically dereference the value returned. 
-This is only legal if your C<isa> option is either an C<ArrayRef> or C<HashRef>.
+This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 =item I<metaclass =E<gt> $metaclass_name>
 
-This tells the class to use a custom attribute metaclass for this particular 
-attribute. Custom attribute metaclasses are useful for extending the capabilities 
-of the I<has> keyword, they are the simplest way to extend the MOP, but they are 
-still a fairly advanced topic and too much to cover here. I will try and write a 
-recipe on it soon.
+This tells the class to use a custom attribute metaclass for this particular
+attribute. Custom attribute metaclasses are useful for extending the
+capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
+but they are still a fairly advanced topic and too much to cover here. I will
+try and write a recipe on them soon.
 
-The default behavior here is to just load C<$metaclass_name>, however, we also 
-have a way to alias to a shorter name. This will first look to see if 
-B<Moose::Meta::Attribute::Custom::$metaclass_name> exists, if it does it will 
-then check to see if that has the method C<register_implemenetation> which 
-should return the actual name of the custom attribute metaclass. If there is 
-no C<register_implemenetation> method, it will just default to using 
+The default behavior here is to just load C<$metaclass_name>; however, we also
+have a way to alias to a shorter name. This will first look to see if
+B<Moose::Meta::Attribute::Custom::$metaclass_name> exists. If it does, Moose
+will then check to see if that has the method C<register_implemenetation>, which
+should return the actual name of the custom attribute metaclass. If there is no
+C<register_implemenetation> method, it will fall back to using
 B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
 
 =item I<trigger =E<gt> $code>
 
-The trigger option is a CODE reference which will be called after the value of 
-the attribute is set. The CODE ref will be passed the instance itself, the 
+The I<trigger> option is a CODE reference which will be called after the value of
+the attribute is set. The CODE ref will be passed the instance itself, the
 updated value and the attribute meta-object (this is for more advanced fiddling
-and can typically be ignored in most cases). You B<cannot> have a trigger on
-a read-only attribute.
+and can typically be ignored). You B<cannot> have a trigger on a read-only
+attribute.
 
 =item I<handles =E<gt> ARRAY | HASH | REGEXP | CODE>
 
-The handles option provides Moose classes with automated delegation features. 
-This is a pretty complex and powerful option, it accepts many different option 
-formats, each with it's own benefits and drawbacks. 
+The I<handles> option provides Moose classes with automated delegation features. 
+This is a pretty complex and powerful option. It accepts many different option 
+formats, each with its own benefits and drawbacks. 
 
-B<NOTE:> This features is no longer experimental, but it still may have subtle 
-bugs lurking in the deeper corners. So if you think you have found a bug, you 
+B<NOTE:> This feature is no longer experimental, but it may still have subtle
+bugs lurking in the deeper corners. If you think you have found a bug, you
 probably have, so please report it to me right away. 
 
-B<NOTE:> The class being delegated to does not need to be a Moose based class. 
-Which is why this feature is especially useful when wrapping non-Moose classes.
+B<NOTE:> The class being delegated to does not need to be a Moose based class,
+which is why this feature is especially useful when wrapping non-Moose classes.
 
-All handles option formats share the following traits. 
+All I<handles> option formats share the following traits:
 
-You cannot override a locally defined method with a delegated method, an 
-exception will be thrown if you try. Meaning, if you define C<foo> in your 
-class, you cannot override it with a delegated C<foo>. This is almost never 
-something you would want to do, and if it is, you should do it by hand and 
-not use Moose.
+You cannot override a locally defined method with a delegated method; an
+exception will be thrown if you try. That is to say, if you define C<foo> in
+your class, you cannot override it with a delegated C<foo>. This is almost never
+something you would want to do, and if it is, you should do it by hand and not
+use Moose.
 
-You cannot override any of the methods found in Moose::Object as well as 
-C<BUILD> or C<DEMOLISH> methods. These will not throw an exception, but will 
-silently move on to the next method in the list. My reasoning for this is that 
-you would almost never want to do this because it usually tends to break your 
-class. And as with overriding locally defined methods, if you do want to do this, 
-you should do it manually and not with Moose.
+You cannot override any of the methods found in Moose::Object, or the C<BUILD>
+and C<DEMOLISH> methods. These will not throw an exception, but will silently
+move on to the next method in the list. My reasoning for this is that you would
+almost never want to do this, since it usually breaks your class. As with
+overriding locally defined methods, if you do want to do this, you should do it
+manually, not with Moose.
 
 Below is the documentation for each option format:
 
@@ -492,21 +488,21 @@ Below is the documentation for each option format:
 
 =item C<ARRAY>
 
-This is the most common usage for handles. You basically pass a list of 
+This is the most common usage for I<handles>. You basically pass a list of 
 method names to be delegated, and Moose will install a delegation method 
-for each one in the list.
+for each one.
 
 =item C<HASH>
 
-This is the second most common usage for handles. Instead of a list of 
-method names, you pass a HASH ref where the key is the method name you 
-want installed locally, and the value is the name of the original method 
+This is the second most common usage for I<handles>. Instead of a list of 
+method names, you pass a HASH ref where each key is the method name you 
+want installed locally, and its value is the name of the original method 
 in the class being delegated to. 
 
-This can be very useful for recursive classes like trees, here is a 
+This can be very useful for recursive classes like trees. Here is a 
 quick example (soon to be expanded into a Moose::Cookbook::Recipe):
 
-  pacakge Tree;
+  package Tree;
   use Moose;
   
   has 'node' => (is => 'rw', isa => 'Any');
@@ -527,9 +523,9 @@ quick example (soon to be expanded into a Moose::Cookbook::Recipe):
       }
   );
 
-In this example, the Tree package gets the C<parent_node> and C<siblings> methods
-which delegate to the C<node> and C<children> methods of the Tree instance stored 
-in the parent slot. 
+In this example, the Tree package gets C<parent_node> and C<siblings> methods,
+which delegate to the C<node> and C<children> methods (respectively) of the Tree
+instance stored in the C<parent> slot. 
 
 =item C<REGEXP>
 
@@ -543,14 +539,14 @@ Without an I<isa> this is just not possible.
 
 =item C<CODE>
 
-This is the option to use when you really want to do something funky. You should 
-only use it if you really know what you are doing as it involves manual metaclass
-twiddling.
+This is the option to use when you really want to do something funky. You should
+only use it if you really know what you are doing, as it involves manual
+metaclass twiddling.
 
-This takes a code reference, which should expect two arguments. The first is 
-the attribute meta-object this I<handles> is attached to. The second is the metaclass
-of the class being delegated to. It expects you to return a hash (not a HASH ref)
-of the methods you want mapped. 
+This takes a code reference, which should expect two arguments. The first is the
+attribute meta-object this I<handles> is attached to. The second is the
+metaclass of the class being delegated to. It expects you to return a hash (not
+a HASH ref) of the methods you want mapped. 
 
 =back
 
@@ -558,7 +554,7 @@ of the methods you want mapped.
 
 =item B<has +$name =E<gt> %options>
 
-This is variation on the normal attibute creator C<has>, which allows you to 
+This is variation on the normal attibute creator C<has> which allows you to 
 clone and extend an attribute from a superclass. Here is a quick example:
 
   package Foo;
@@ -577,9 +573,9 @@ clone and extend an attribute from a superclass. Here is a quick example:
   
   has '+message' => (default => 'Hello I am My::Foo');
 
-What is happening here is that B<My::Foo> is cloning the C<message> attribute 
-from it's parent class B<Foo>, retaining the is =E<gt> 'rw' and isa =E<gt> 'Str'
-characteristics, but changing the value in C<default>.
+What is happening here is that B<My::Foo> is cloning the C<message> attribute
+from its parent class B<Foo>, retaining the C<is =E<gt> 'rw'> and C<isa =E<gt>
+'Str'> characteristics, but changing the value in C<default>.
 
 This feature is restricted somewhat, so as to try and enfore at least I<some>
 sanity into it. You are only allowed to change the following attributes:
@@ -604,8 +600,8 @@ Change the documentation string associated with the attribute.
 
 =item I<isa>
 
-You I<are> allowed to change the type, but if and B<only if> the new type is
-a subtype of the old type.  
+You I<are> allowed to change the type, B<if and only if> the new type is a
+subtype of the old type.
 
 =back
 
@@ -616,7 +612,7 @@ a subtype of the old type.
 =item B<around $name|@names =E<gt> sub { ... }>
 
 This three items are syntactic sugar for the before, after, and around method 
-modifier features that L<Class::MOP> provides. More information on these can 
+modifier features that L<Class::MOP> provides. More information on these may 
 be found in the L<Class::MOP> documentation for now. 
 
 =item B<super>
@@ -652,17 +648,17 @@ all the time. This feature may change in the future, so you have been warned.
 
 =item B<blessed>
 
-This is the C<Scalar::Uti::blessed> function, it is exported here because I
+This is the C<Scalar::Util::blessed> function, it is exported here because I
 use it all the time. It is highly recommended that this is used instead of 
 C<ref> anywhere you need to test for an object's class name.
 
 =back
 
-=head1 UNEXPORTING FUNCTIONS
+=head1 UNIMPORTING FUNCTIONS
 
 =head2 B<unimport>
 
-Moose offers a way of removing the keywords it exports though the C<unimport>
+Moose offers a way to remove the keywords it exports, through the C<unimport>
 method. You simply have to say C<no Moose> at the bottom of your code for this
 to work. Here is an example:
 
@@ -683,7 +679,7 @@ to work. Here is an example:
 
 =head2 What does Moose stand for??
 
-Moose doesn't stand for one thing in particular, however, if you 
+Moose doesn't stand for one thing in particular. However, if you 
 want, here are a few of my favorites; feel free to contribute
 more :)
 
@@ -711,18 +707,19 @@ more :)
 
 =item *
 
-It should be noted that C<super> and C<inner> C<cannot> be used in the same 
-method. However, they can be combined together with the same class hierarchy;
-see F<t/014_override_augment_inner_super.t> for an example. 
+It should be noted that C<super> and C<inner> B<cannot> be used in the same
+method. However, they may be combined within the same class hierarchy; see
+F<t/014_override_augment_inner_super.t> for an example.
 
 The reason for this is that C<super> is only valid within a method 
 with the C<override> modifier, and C<inner> will never be valid within an 
 C<override> method. In fact, C<augment> will skip over any C<override> methods 
 when searching for its appropriate C<inner>.
 
-This might seem like a restriction, but I am of the opinion that keeping these 
-two features separate (but interoperable) actually makes them easy to use, since 
-their behavior is then easier to predict. Time will tell if I am right or not.
+This might seem like a restriction, but I am of the opinion that keeping these
+two features separate (yet interoperable) actually makes them easy to use, since
+their behavior is then easier to predict. Time will tell whether I am right or
+not.
 
 =back
 
@@ -762,8 +759,8 @@ ideas/feature-requests/encouragement/bug-finding.
 =item L<http://www.cs.utah.edu/plt/publications/oopsla04-gff.pdf>
 
 This paper (suggested by lbr on #moose) was what lead to the implementation 
-of the C<super>/C<overrride> and C<inner>/C<augment> features. If you really 
-want to understand this feature, I suggest you read this.
+of the C<super>/C<override> and C<inner>/C<augment> features. If you really 
+want to understand them, I suggest you read this.
 
 =back
 
