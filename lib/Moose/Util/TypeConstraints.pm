@@ -410,7 +410,7 @@ The following functions are used to create type constraints.
 They will then register the type constraints in a global store 
 where Moose can get to them if it needs to. 
 
-See the L<SYNOPOSIS> for an example of how to use these.
+See the L<SYNOPSIS> for an example of how to use these.
 
 =over 4
 
@@ -470,7 +470,7 @@ code first, followed by the type constraint check. This feature
 should be used carefully as it is very powerful and could easily 
 take off a limb if you are not careful.
 
-See the L<SYNOPOSIS> for an example of how to use these.
+See the L<SYNOPSIS> for an example of how to use these.
 
 =over 4
 
