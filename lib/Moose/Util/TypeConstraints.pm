@@ -112,13 +112,15 @@ sub unimport {
         );
     }
     
-    sub export_type_contstraints_as_functions {
+    sub export_type_constraints_as_functions {
         my $pkg = caller();
 	    no strict 'refs';
     	foreach my $constraint (keys %TYPES) {
     		*{"${pkg}::${constraint}"} = find_type_constraint($constraint)->_compiled_type_constraint;
     	}        
-    } 
+    }
+    
+    *Moose::Util::TypeConstraints::export_type_contstraints_as_functions = \&export_type_constraints_as_functions;
     
     sub list_all_type_constraints { keys %TYPES }   
 }
@@ -378,11 +380,15 @@ meta-object. What you do with it from there is up to you :)
 Given a list of C<@type_constraint_names>, this will return a 
 B<Moose::Meta::TypeConstraint::Union> instance.
 
-=item B<export_type_contstraints_as_functions>
+=item B<export_type_constraints_as_functions>
 
 This will export all the current type constraints as functions 
 into the caller's namespace. Right now, this is mostly used for 
 testing, but it might prove useful to others.
+
+=item B<export_type_contstraints_as_functions>
+
+Alias for the above function.
 
 =item B<list_all_type_constraints>
 
