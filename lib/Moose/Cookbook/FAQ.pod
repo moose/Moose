@@ -26,7 +26,7 @@ which use Moose.
 
 Yes and No. The external API, the one 90% of users will interact
 with, is B<very stable> and any changes B<will be 100% backwards 
-compatible>. The introspection API is I<mostly> stable, I still 
+compatible>. The introspection API is I<mostly> stable; I still 
 reserve the right to tweak that if needed, but I will do my 
 absolute best to maintain backwards compatibility here as well.
 
@@ -47,15 +47,15 @@ Currently we have the option of making your classes immutable
 as a means of boosting speed. This will mean a larger compile 
 time cost, but the runtime speed increase (especially in object
 construction) is pretty significant. This is not very well 
-documented yet, so please ask on the list of on #moose for more
+documented yet, so please ask on the list or on #moose for more
 information.
 
-We are also discussing and experimenting with L<Module::Compile>, 
-and the idea of compiling highly optimized C<.pmc> files. And 
-we have also mapped out some core methods as candidates for 
-conversion to XS. 
+We are also discussing and experimenting with L<Module::Compile>,
+and the idea of compiling highly optimized C<.pmc> files. In
+addition, we have mapped out some core methods as candidates for
+conversion to XS.
 
-=head3 When will Moose be 1.0 ready?
+=head3 When will Moose 1.0 be ready?
 
 I had originally said it would be end of 2006, but various bits 
 of $work kept me too busy. At this point, I think we are getting 
@@ -99,16 +99,16 @@ call your C<new> and/or work around your C<new> to get to the
 version from L<Moose::Object>. 
 
 The last approach is to use the standard Perl technique of calling 
-the C<SUPER::new> within your own custom version of C<new>. This 
-of course brings with it all the issues of the C<around> solution 
-along with any issues C<SUPER::> might add as well.
+the C<SUPER::new> within your own custom version of C<new>. This, 
+of course, brings with it all the issues of the C<around> solution 
+as well as any issues C<SUPER::> might add.
 
 In short, try to use C<BUILD> and coercions, they are your best 
 bets.
 
 =head3 How do I make non-Moose constructors work with Moose? 
 
-Moose provides it's own constructor, but it does it by making all 
+Moose provides its own constructor, but it does it by making all 
 Moose-based classes inherit from L<Moose::Object>. When inheriting
 from a non-Moose class, the inheritance chain to L<Moose::Object> 
 is broken. The simplest way to fix this is to simply explicitly 
@@ -134,7 +134,7 @@ how this can be worked around:
       );
   }
 
-Of course this only works if both your Moose class, and the 
+Of course, this only works if both your Moose class and the 
 inherited non-Moose class use the same instance type (typically 
 HASH refs). 
 
@@ -142,10 +142,9 @@ Other techniques can be used as well, such as creating the object
 using C<Moose::Object::new>, but calling the inherited non-Moose 
 class's initialization methods (if available). 
 
-It is also entirely possible to just rely on HASH autovivification 
-to create the slot's needed for Moose based attributes. Although 
-this does somewhat restrict use of construction time attribute 
-features.
+It is also entirely possible to just rely on HASH autovivification
+to create the slots needed for Moose based attributes, although this
+does restrict use of construction time attribute features somewhat.
 
 In short, there are several ways to go about this, it is best to 
 evaluate each case based on the class you wish to extend, and the 
@@ -168,19 +167,19 @@ C<writer> attribute options. Here is some example code:
 Moose will still take advantage of type constraints, triggers, etc. 
 when creating these methods. 
 
-If you do not like this much typing, and wish it to be a default for 
-your class. Please see L<Moose::Policy>, and more specifically the 
-L<Moose::Policy::FollowPBP>. This will allow you to write this:
+If you do not like this much typing, and wish it to be a default for
+your class, please see L<Moose::Policy>, and more specifically
+L<Moose::Policy::FollowPBP>. This will allow you to write:
 
   has 'bar' => (
       isa => 'Baz',
       is  => 'rw',
   );
 
-And have Moose create C<get_bar> and C<set_bar> instead of the usual 
-C<bar>.
+And have Moose create seperate C<get_bar> and C<set_bar> methods
+instead of a single C<bar> method.
 
-NOTE: This B<cannot> be set globally in Moose, as this would break 
+NOTE: This B<cannot> be set globally in Moose, as that would break 
 other classes which are built with Moose.
 
 =head3 How can I get Moose to inflate/deflate values in the accessor?
@@ -189,7 +188,7 @@ Well, the first question to ask is if you actually need both inflate
 and deflate.
 
 If you only need to inflate, then I suggest using coercions. Here is 
-some basic sample code for inflating a L<DateTime> object. 
+some basic sample code for inflating a L<DateTime> object:
 
   subtype 'DateTime'
       => as 'Object'
@@ -203,12 +202,12 @@ some basic sample code for inflating a L<DateTime> object.
 
 This creates a custom subtype for L<DateTime> objects, then attaches 
 a coercion to that subtype. The C<timestamp> attribute is then told 
-to expect a C<DateTime> type, and to try and coerce it. When a C<Str>
+to expect a C<DateTime> type, and to try to coerce it. When a C<Str>
 type is given to the C<timestamp> accessor, it will attempt to 
 coerce the value into a C<DateTime> object using the code in found 
 in the C<via> block. 
 
-For a more detailed and complete example of coercions, see the 
+For a more comprehensive example of using coercions, see the
 L<Moose::Cookbook::Recipe5>.
 
 If you need to deflate your attribute, the current best practice is to 
@@ -238,26 +237,24 @@ explain it on #moose or the mailing list.
 
 =head3 How can I affect the values in C<@_> using C<before>?
 
-You can't actually, C<before> only runs before the main method, 
-and it cannot easily affect the execution of it. What you want is 
+You can't, actually: C<before> only runs before the main method, 
+and it cannot easily affect the method's execution. What you want is 
 an C<around> method. 
 
 =head3 Can I use C<before> to stop execution of a method?
 
 Yes, but only if you throw an exception. If this is too drastic a 
 measure then I suggest using C<around> instead. The C<around> method 
-modifier is the only modifier which can actually stop the execution 
+modifier is the only modifier which can gracefully prevent execution 
 of the main method. Here is an example:
 
   around 'baz' => sub {
       my $next = shift;
       my ($self, %options) = @_;
-      if ($options{bar} eq 'foo') {
-          $next->($self, %options);
+      unless ($options->{bar} eq 'foo') {
+	return 'bar';
       }
-      else {
-          return 'bar';
-      }
+      $next->($self, %options);
   };
 
 By choosing not to call the C<$next> method, you can stop the 
@@ -267,7 +264,7 @@ execution of the main method.
 
 =head3 How can I have a custom error message for a type constraint?
 
-Use the C<message> option when building the subtype. Like so:
+Use the C<message> option when building the subtype, like so:
 
   subtype 'NaturalLessThanTen' 
       => as 'Natural'
@@ -277,7 +274,7 @@ Use the C<message> option when building the subtype. Like so:
 This will be called when a value fails to pass the C<NaturalLessThanTen>
 constraint check. 
 
-=head3 Can I turn type constraint checking off?
+=head3 Can I turn off type constraint checking?
 
 Not yet, but soon. This option will likely be coming in the next 
 release.
