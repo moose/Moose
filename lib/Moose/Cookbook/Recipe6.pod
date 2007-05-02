@@ -70,10 +70,131 @@ Moose::Cookbook::Recipe6 - The Moose::Role example
       my $self = shift;
       sprintf '$%0.2f USD' => $self->amount
   }
-  
+
 =head1 DESCRIPTION
 
-Coming Soon. 
+In this recipe we examine the role support provided in Moose. "Roles" may be
+described in many ways, but there are two main ways in which they are used: as
+interfaces, and as a means of code reuse. This recipe demonstrates the
+construction and incorporation of roles that define comparison and display of
+objects.
+
+Let's start by examining B<Eq>. You'll notice that instead of the familiar C<use
+Moose> you might be expecting, here we use C<Moose::Role> to make it clear that
+this is a role. We encounter a new keyword, C<requires>:
+
+  requires 'equal_to';
+
+What this does is to indicate that any class which "consumes" (that is to say,
+"includes using C<with>", as we'll see a little later) the B<Eq> role I<must>
+include an C<equal_to> method, whether this is provided by the class itself, one
+of its superclasses, or another role consumed by the class (1).
+
+In addition to requiring an C<equal_to> method, B<Eq> defines a C<not_equal_to>
+method, which simply inverts the result of C<equal_to>. Defining additional
+methods in this way, by using only a few base methods that target classes must
+define, is a useful pattern to provide maximum functionality with minimum
+effort.
+
+After the minimal B<Eq>, we next move on to B<Comparable>. The first thing you
+will notice is another new keyword, C<with>:
+
+  with 'Eq';
+
+C<with> is used to provide a list of roles which this class (or role) consumes.
+Here, B<Comparable> only consumes one role (B<Eq>). In effect, it is as if we
+defined a C<not_equal_to> method within Comparable, and also promised to fulfill
+the requirement of an C<equal_to> method.
+
+B<Comparable> itself states that it requires C<compare>. Again, it means that
+any classes consuming this role must implement a C<compare> method.
+
+  requires 'compare';
+
+B<Comparable> defines an C<equal_to> method which satisfies the B<Eq> role's
+requirements. This, along with a number of other methods (C<greater_than>,
+C<less_than>, C<greater_than_or_equal_to>, and C<less_than_or_equal_to>) is
+simply defined in terms of C<compare>, once again demonstrating the pattern of
+defining a number of utility methods in terms of only a single method that the
+target class need implement.
+
+  sub equal_to {
+      my ($self, $other) = @_;
+      $self->compare($other) == 0;
+  }
+  
+  sub greater_than {
+      my ($self, $other) = @_;
+      $self->compare($other) == 1;
+  }    
+  
+  sub less_than {
+      my ($self, $other) = @_;
+      $self->compare($other) == -1;
+  }
+  
+  sub greater_than_or_equal_to {
+      my ($self, $other) = @_;
+      $self->greater_than($other) || $self->equal_to($other);
+  }        
+  
+  sub less_than_or_equal_to {
+      my ($self, $other) = @_;
+      $self->less_than($other) || $self->equal_to($other);
+  }
+
+Next up is B<Printable>. This is a very simple role, akin to B<Eq>. It merely
+requires a C<to_string> method.
+
+Finally, we come to B<US::Currency>, a class that allows us to reap the benefits
+of our hard work. This is a regular Moose class, so we include the normal C<use
+Moose>. It consumes both B<Comparable> and B<Printable>, as the following line
+shows:
+
+  with 'Comparable', 'Printable';
+
+It also defines a regular Moose attribute, C<amount>, with a type constraint of
+C<Num> and a default of C<0>:
+
+  has 'amount' => (is => 'rw', isa => 'Num', default => 0);
+
+Now we come to the core of the class. First up, we define a C<compare> method:
+
+  sub compare {
+      my ($self, $other) = @_;
+      $self->amount <=> $other->amount;
+  }
+
+As you can see, it simply compares the C<amount> attribute of this object with
+the C<amount> attribute of the other object passed to it. With the single
+definition of this method, we gain the following methods for free: C<equal_to>,
+C<greater_than>, C<less_than>, C<greater_than_or_equal_to> and
+C<less_than_or_equal_to>.
+
+We end the class with a definition of the C<to_string> method, which formats the
+C<amount> attribute for display:
+
+  sub to_string {
+      my $self = shift;
+      sprintf '$%0.2f USD' => $self->amount
+  }
+
+=head1 CONCLUSION
+
+This recipe has shown that roles can be very powerful and immensely useful, and
+save a great deal of repetition.
+
+=head1 FOOTNOTES
+
+=over 4
+
+=item (1)
+
+At present, method requirements from roles cannot be satisfied by attribute
+accessors. This is a limitation of Moose, and will most likely be rectified in a
+future release.
+
+=back
 
 =head1 AUTHOR
 
