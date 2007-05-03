@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.22
+0.21
     * Moose
       - added SUPER_SLOT and INNER_SLOT class hashes to support unimport
       - modified unimport to remove super and inner along with the rest
@@ -13,7 +13,6 @@ Revision history for Perl extension Moose
       - altered augment and override modifier application to use *_SLOT
         - modified tests for these to unimport one test class each to test
 
-0.21
     * Moose::Meta::Role
       - fixed issue where custom attribute metaclasses
         where not handled correctly in roles
@@ -24,8 +23,8 @@ Revision history for Perl extension Moose
         roles would blow up. Thanks to Aankhen`` for
         finding this insidious error, and it's solution.
         
-    ~~ many spelling fixes in the docs ~~
-    ~~    thanks to rlb3 for this !!   ~~
+    ~~ lots of spelling and grammer fixes in the docs, 
+       many many thanks to rlb3 and Aankhen for these :)
 
 0.20 Friday, April 6th, 2007
     >> I messed up the SKIP logic in one test
