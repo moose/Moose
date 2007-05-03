@@ -108,18 +108,20 @@ sub _generate_slot_initializer {
     my $attr = $self->attributes->[$index];
     
     my @source = ('## ' . $attr->name);
+
+    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
     
-    if ($attr->is_required && !$attr->has_default) {
+    if ($is_moose && $attr->is_required && !$attr->has_default) {
         push @source => ('(exists $params{\'' . $attr->init_arg . '\'}) ' . 
                         '|| confess "Attribute (' . $attr->name . ') is required";');
     }
     
-    if ($attr->has_default && !$attr->is_lazy) {
+    if ($attr->has_default && !($is_moose &&$attr->is_lazy)) {
         
         push @source => 'if (exists $params{\'' . $attr->init_arg . '\'}) {';
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
-            if ($attr->has_type_constraint) {
+            if ($is_moose && $attr->has_type_constraint) {
                 push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
 
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {                    
@@ -139,7 +141,7 @@ sub _generate_slot_initializer {
                 $attr,
                 ('$attrs->[' . $index . ']->type_constraint'), 
                 '$val'
-            ) if $attr->has_type_constraint;            
+            ) if ($is_moose && $attr->has_type_constraint);            
             push @source => $self->_generate_slot_assignment($attr, $default);                
                   
         push @source => "}";            
@@ -148,7 +150,7 @@ sub _generate_slot_initializer {
         push @source => '(exists $params{\'' . $attr->init_arg . '\'}) && do {';
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
-            if ($attr->has_type_constraint) {
+            if ($is_moose && $attr->has_type_constraint) {
                 push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
 
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {                    
@@ -173,8 +175,10 @@ sub _generate_slot_assignment {
             $value
         ) . ';'
     ); 
+
+    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
     
-    if ($attr->is_weak_ref) {
+    if ($is_moose && $attr->is_weak_ref) {
         $source .= (
             "\n" .
             $self->meta_instance->inline_weaken_slot_value(

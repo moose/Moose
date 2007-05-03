@@ -60,4 +60,4 @@ is($foo_moose->no_moose, 'Elk', '... got the right value from the Elk method');
 is($foo_moose->moose, 'Foo', '... got the right value from the Foo::Moose method');
 
 lives_ok { Old::Bucket::Nose->meta->make_immutable(debug => 0); }
- => 'Immutability on Moose class extending Class::MOP class ok';
+ 'Immutability on Moose class extending Class::MOP class ok';
