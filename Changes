@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.21
+0.21 Thursday, May 2nd, 2007
     * Moose
       - added SUPER_SLOT and INNER_SLOT class hashes to support unimport
       - modified unimport to remove super and inner along with the rest
