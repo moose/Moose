@@ -50,6 +50,8 @@ BEGIN {
   use Moose;
 
   extends 'Bucket';
+
+  # XXX FIXME subclassing meta-attrs and immutable-ing the subclass fails
 }
 
 my $foo_moose = Foo::Moose->new();
