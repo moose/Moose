@@ -93,22 +93,21 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
       my $self = shift;
       super() . ', ' . $self->title
   };
-    
+
 =head1 DESCRIPTION
 
 In this recipe we introduce the C<subtype> keyword, and show 
-how that can be useful for specifying specific type constraints 
-without having to build an entire class to represent them. We 
+how it can be useful for specifying type constraints 
+without building an entire class to represent them. We 
 will also show how this feature can be used to leverage the 
-usefulness of CPAN modules. In addition to this, we will also 
+usefulness of CPAN modules. In addition to this, we will 
 introduce another attribute option.
 
-Let's first get into the C<subtype> features. In the B<Address> 
-class we have defined two subtypes. The first C<subtype> uses 
-the L<Locale::US> module, which provides two hashes which can be 
-used to do existence checks for state names and their two letter 
-state codes. It is a very simple, and very useful module, and 
-perfect to use in a C<subtype> constraint. 
+Let's first look at the C<subtype> feature. In the B<Address> class we have
+defined two subtypes. The first C<subtype> uses the L<Locale::US> module, which
+provides two hashes which can be used to perform existential checks for state
+names and their two letter state codes. It is a very simple and very useful
+module, and perfect for use in a C<subtype> constraint.
   
   my $STATES = Locale::US->new;  
   subtype USState 
@@ -120,11 +119,11 @@ perfect to use in a C<subtype> constraint.
 
 Because we know that states will be passed to us as strings, we 
 can make C<USState> a subtype of the built-in type constraint 
-C<Str>. This will assure that anything which is a C<USState> will 
+C<Str>. This will ensure that anything which is a C<USState> will 
 also pass as a C<Str>. Next, we create a constraint specializer 
 using the C<where> keyword. The value being checked against in 
 the C<where> clause can be found in the C<$_> variable (1). Our 
-constraint specializer will then look to see if the string given 
+constraint specializer will then check whether the given string 
 is either a state name or a state code. If the string meets this 
 criteria, then the constraint will pass, otherwise it will fail.
 We can now use this as we would any built-in constraint, like so:
@@ -135,8 +134,8 @@ The C<state> accessor will now check all values against the
 C<USState> constraint, thereby only allowing valid state names or 
 state codes to be stored in the C<state> slot. 
 
-The next C<subtype>, does pretty much the same thing using the 
-L<Regexp::Common> module, and constraining the C<zip_code> slot.
+The next C<subtype> does pretty much the same thing using the L<Regexp::Common>
+module, and is used as the constraint for the C<zip_code> slot.
 
   subtype USZipCode 
       => as Value
@@ -144,22 +143,21 @@ L<Regexp::Common> module, and constraining the C<zip_code> slot.
           /^$RE{zip}{US}{-extended => 'allow'}$/            
       };
 
-Using subtypes can save a lot of un-needed abstraction by not 
-requiring you to create many small classes for these relatively 
-simple values. It also allows you to define these constraints 
-and share them among many different classes (avoiding unneeded 
-duplication) because type constraints are stored by string in a 
-global registry and always accessible to C<has>.
+Using subtypes can save a lot of unnecessary abstraction by not requiring you to
+create many small classes for these relatively simple values. They also allow
+you to reuse the same constraints in a number of classes (thereby avoiding
+duplication), since all type constraints are stored in a global registry and
+always accessible to C<has>.
 
 With these two subtypes and some attributes, we have defined
-as much as we need for a basic B<Address> class. Next we define 
+as much as we need for a basic B<Address> class. Next, we define 
 a basic B<Company> class, which itself has an address. As we saw in 
 earlier recipes, we can use the C<Address> type constraint that 
-Moose automatically created for us.
+Moose automatically created for us:
 
   has 'address' => (is => 'rw', isa => 'Address');
 
-A company also needs a name, so we define that too.
+A company also needs a name, so we define that as well:
 
   has 'name' => (is => 'rw', isa => 'Str', required => 1);
 
@@ -167,10 +165,10 @@ Here we introduce another attribute option, the C<required> option.
 This option tells Moose that C<name> is a required parameter in 
 the B<Company> constructor, and that the C<name> accessor cannot 
 accept an undefined value for the slot. The result is that C<name> 
-should always have a value. 
+will always have a value. 
 
 The next attribute option is not actually new, but a new variant 
-of options we have already introduced.
+of options we have already introduced:
   
   has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
       (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
@@ -178,18 +176,17 @@ of options we have already introduced.
 
 Here, instead of passing a string to the C<isa> option, we are passing 
 an anonymous subtype of the C<ArrayRef> type constraint. This subtype 
-basically checks that all the values in the ARRAY ref are instance of 
+basically checks that all the values in the ARRAY ref are instances of 
 the B<Employee> class. 
 
-Now this will assure that our employee's will all be of the correct 
-type, however, the B<Employee> object (which we will see in a moment) 
-also maintains a reference back to it's associated B<Company>. In order 
-to maintain this relationship (and preserve the referential integrity 
-of our objects), we need to do some processing of the employees over 
-and above that of the type constraint check. This is accomplished in 
-two places. First we need to be sure that any employees array passed 
-to the constructor is properly initialized. For this we can use the 
-C<BUILD> method (2).
+This will ensure that our employees will all be of the correct type. However,
+the B<Employee> object (which we will see in a moment) also maintains a
+reference to its associated B<Company>. In order to maintain this relationship
+(and preserve the referential integrity of our objects), we need to perform some
+processing of the employees over and above that of the type constraint check.
+This is accomplished in two places. First we need to be sure that any employees
+array passed to the constructor is properly initialized. For this we can use the
+C<BUILD> method (2):
   
   sub BUILD {
       my ($self, $params) = @_;
@@ -200,15 +197,15 @@ C<BUILD> method (2).
       }
   }
 
-The C<BUILD> method will have run after the initial type constraint 
-check, so we can do just a basic existence check on the C<employees>
+The C<BUILD> method will be executed after the initial type constraint 
+check, so we can simply perform a basic existential check on the C<employees>
 param here, and assume that if it does exist, it is both an ARRAY ref 
-and full of I<only> instances of B<Employee>.
+and contains I<only> instances of B<Employee>.
 
-The next place we need to address is the C<employees> read/write 
+The next aspect we need to address is the C<employees> read/write 
 accessor (see the C<employees> attribute declaration above). This 
-accessor will properly check the type constraint, but we need to add
-some additional behavior. For this we use an C<after> method modifier
+accessor will correctly check the type constraint, but we need to extend it
+with some additional processing. For this we use an C<after> method modifier,
 like so:
 
   after 'employees' => sub {
@@ -225,18 +222,18 @@ check has already happened, so we can just check for defined-ness on the
 C<$employees> argument.
 
 At this point, our B<Company> class is complete. Next comes our B<Person> 
-class and its subclass the previously mentioned B<Employee> class. 
+class and its subclass, the previously mentioned B<Employee> class. 
 
 The B<Person> class should be obvious to you at this point. It has a few 
 C<required> attributes, and the C<middle_initial> slot has an additional 
 C<predicate> method (which we saw in the previous recipe with the 
 B<BinaryTree> class). 
 
-Next the B<Employee> class, this too should be pretty obvious at this 
+Next, the B<Employee> class, which should also be pretty obvious at this 
 point. It requires a C<title>, and maintains a weakened reference to a 
 B<Company> instance. The only new item, which we have seen before in 
 examples, but never in the recipe itself, is the C<override> method 
-modifier. 
+modifier:
 
   override 'full_name' => sub {
       my $self = shift;
@@ -257,10 +254,10 @@ usage can be found in F<t/004_recipe.t>.
 
 This recipe was intentionally longer and more complex to illustrate both 
 how easily Moose classes can interact (using class type constraints, etc.)
-and the shear density of information and behaviors which Moose can pack 
+and the sheer density of information and behaviors which Moose can pack 
 into a relatively small amount of typing. Ponder for a moment how much 
 more code a non-Moose plain old Perl 5 version of this recipe would have 
-been (including all the type constraint checks, weak references, etc).
+been (including all the type constraint checks, weak references, and so on).
 
 And of course, this recipe also introduced the C<subtype> keyword, and 
 its usefulness within the Moose toolkit. In the next recipe we will 
