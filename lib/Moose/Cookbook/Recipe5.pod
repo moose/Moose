@@ -55,24 +55,24 @@ Moose::Cookbook::Recipe5 - More subtypes, coercion in a B<Request> class
 =head1 DESCRIPTION
 
 This recipe introduces the idea of type coercions, and the C<coerce> 
-keyword. Coercions can be attached to pre-existing type constraints, 
-and can be used to transform input of one type, into input of another 
+keyword. Coercions can be attached to existing type constraints, 
+and can be used to transform input of one type into input of another 
 type. This can be an extremely powerful tool if used correctly, which 
-is why, by default, it is off. If you want your accessor to attempt 
+is why it is off by default. If you want your accessor to attempt 
 a coercion, you must specifically ask for it with the B<coerce> option.
 
 Now, onto the coercions. 
 
-First we need to create a subtype to attach our coercion too. Here we 
+First we need to create a subtype to attach our coercion to. Here we 
 create a basic I<Header> subtype, which matches any instance of the 
-class B<HTTP::Headers>. 
+class B<HTTP::Headers>:
 
   subtype 'Header'
       => as 'Object'
       => where { $_->isa('HTTP::Headers') };
-      
-The simplest thing from here would be create an accessor declaration 
-like so:
+
+The simplest thing from here would be create an accessor declaration
+like this:
 
   has 'headers'  => (
       is      => 'rw',
@@ -85,11 +85,11 @@ an empty instance of B<HTTP::Headers>. This is nice, but it is not
 ideal.
 
 The constructor for B<HTTP::Headers> accepts a list of key-value pairs
-representing the fields in an HTTP header. With Perl such a list could 
-easily be stored into an ARRAY or HASH reference. We would like our 
+representing the HTTP header fields. In Perl, such a list could 
+easily be stored in an ARRAY or HASH reference. We would like our 
 class's interface to be able to accept this list of key-value pairs 
 in place of the B<HTTP::Headers> instance, and just DWIM. This is where
-coercion can help. First, lets declare our coercion:
+coercion can help. First, let's declare our coercion:
 
   coerce 'Header'
       => from 'ArrayRef'
@@ -98,9 +98,9 @@ coercion can help. First, lets declare our coercion:
           => via { HTTP::Headers->new( %{ $_ } ) };
 
 We first tell it that we are attaching the coercion to the 'Header'
-subtype. We then give is a set of C<from> clauses which map other 
+subtype. We then give it a set of C<from> clauses which map other 
 subtypes to coercion routines (through the C<via> keyword). Fairly 
-simple really, however, this alone does nothing. We have to tell 
+simple really; however, this alone does nothing. We have to tell 
 our attribute declaration to actually use the coercion, like so:
 
   has 'headers'  => (
@@ -111,14 +111,14 @@ our attribute declaration to actually use the coercion, like so:
   );
 
 This will coerce any B<ArrayRef> or B<HashRef> which is passed into 
-the C<headers> accessor into an instance of B<HTTP::Headers>. So that 
+the C<headers> accessor into an instance of B<HTTP::Headers>. So the
 the following lines of code are all equivalent:
 
   $foo->headers(HTTP::Headers->new(bar => 1, baz => 2));
   $foo->headers([ 'bar', 1, 'baz', 2 ]);  
   $foo->headers({ bar => 1, baz => 2 });  
 
-As you can see, careful use of coercions can produce an very open 
+As you can see, careful use of coercions can produce a very open 
 interface for your class, while still retaining the "safety" of 
 your type constraint checks.
 
@@ -126,8 +126,8 @@ Our next coercion takes advantage of the power of CPAN to handle
 the details of our coercion. In this particular case it uses the 
 L<Params::Coerce> module, which fits in rather nicely with L<Moose>.
 
-Again, we create a simple subtype to represent instance of the 
-B<URI> class. 
+Again, we create a simple subtype to represent instances of the 
+B<URI> class:
 
   subtype 'Uri'
       => as 'Object'
@@ -143,22 +143,21 @@ Then we add the coercion:
       => from 'Str'
           => via { URI->new( $_, 'http' ) };
 
-The first C<from> clause we introduce is for the 'Object' subtype,
-an 'Object' is simply, anything which is C<bless>ed. This means 
-that if the coercion encounters another object, it should use this
-clause. Now we look at the C<via> block so what it does. First 
-it checks to see if its a B<URI> instance. Since the coercion 
-process happens prior to any type constraint checking, it is entirely 
-possible for this to happen. And if it does happen, we simple want 
-to pass the instance on through. However, if it is not an instance 
-of B<URI>, then we need to coerce it. This is where L<Params::Coerce> 
-can do it's magic, and we can just use it's return value. Simple 
-really, and much less work since we use a module from CPAN :)
+The first C<from> clause we introduce is for the 'Object' subtype. An 'Object'
+is simply any C<bless>ed value. This means that if the coercion encounters
+another object, it should use this clause. Now we look at the C<via> block.
+First it checks to see if the object is a B<URI> instance. Since the coercion
+process occurs prior to any type constraint checking, it is entirely possible
+for this to happen, and if it does happen, we simply want to pass the instance
+on through. However, if it is not an instance of B<URI>, then we need to coerce
+it. This is where L<Params::Coerce> can do its magic, and we can just use its
+return value. Simple really, and much less work since we used a module from CPAN
+:)
 
 The second C<from> clause is attached to the 'Str' subtype, and 
 illustrates how coercions can also be used to handle certain 
 'default' behaviors. In this coercion, we simple take any string 
-and pass it into the B<URI> constructor along with the default 
+and pass it to the B<URI> constructor along with the default 
 'http' scheme type. 
 
 And of course, our coercions do nothing unless they are told to, 
