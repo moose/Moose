@@ -611,9 +611,10 @@ subtype of the old type.
 
 =item B<around $name|@names =E<gt> sub { ... }>
 
-This three items are syntactic sugar for the before, after, and around method 
-modifier features that L<Class::MOP> provides. More information on these may 
-be found in the L<Class::MOP> documentation for now. 
+This three items are syntactic sugar for the before, after, and around method
+modifier features that L<Class::MOP> provides. More information on these may be
+found in the L<Class::MOP::Class documentation|Class::MOP::Class/"Method
+Modifiers"> for now.
 
 =item B<super>
 
