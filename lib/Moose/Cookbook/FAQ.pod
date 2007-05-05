@@ -279,6 +279,13 @@ constraint check.
 Not yet, but soon. This option will likely be coming in the next 
 release.
 
+=head2 Roles
+
+=head3 How do I get Moose to call BUILD in all my composed roles?
+
+See L<Moose::Cookbook::WTF> and specifically the B<How come BUILD 
+is not called for my composed roles?> question in the B<Roles> section.
+
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>

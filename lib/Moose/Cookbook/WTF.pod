@@ -127,6 +127,67 @@ compile time like this:
 
 See L<Moose and Attributes>.
 
+=head2 Roles
+
+=head3 How come BUILD is not called for my composed roles?
+
+BUILD is never called in composed roles. The primary reason is that 
+roles are B<not> order sensitive. Roles are composed in such a way 
+that the order of composition does not matter (for information on 
+the deeper theory of this read the original traits papers here 
+L<http://www.iam.unibe.ch/~scg/Research/Traits/>). 
+
+Because roles are essentially un-ordered, it would be impossible to 
+determine the order in which to execute the BUILD methods. 
+
+As for alternate solutions, there are a couple.
+
+=over 4
+
+=item * 
+
+Using a combination of lazy and default in your attributes to 
+defer initialization (see the Binary Tree example in the cookbook
+for a good example of lazy/default usage
+L<http://search.cpan.org/~stevan/Moose-0.21/lib/Moose/Cookbook/Recipe3.pod>)
+
+=item *
+
+Use attibutes triggers, which fire after an attribute it set, to faciliate 
+initialization. These are described in the L<Moose> docs and examples can be 
+found in the test suite.
+
+=back
+
+In general, roles should not I<require> intialization, they should either 
+provide sane defaults or should be documented as needing specific 
+initialization. One such way to "document" this is to have a seperate
+attribute initializer which is required for the role. Here is an example of 
+how to do this:
+
+  package My::Role;
+  use Moose::Role;
+  
+  has 'height' => (
+      is      => 'rw',
+      isa     => 'Int',
+      lazy    => 1,
+      default => sub {
+          my $self = shift;
+          $self->init_height;
+      } 
+  );
+  
+  requires 'init_height';
+
+In this example, the role will not compose successfully unless the class 
+provides a C<init_height> method. 
+
+If none of those solutions work, then it is possible that a role is not 
+the best tool for the job, and you really should be using classes. Or, at
+the very least, you should reduce the amount of functionality in your role
+so that it does not require initialization.
+
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
