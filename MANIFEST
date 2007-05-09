@@ -85,6 +85,7 @@ t/060_moose_for_meta.t
 t/070_more_attr_delegation.t
 t/071_misc_attribute_tests.t
 t/072_attr_dereference_test.t
+t/073_misc_attribute_coerce_lazy.t
 t/100_subtype_quote_bug.t
 t/101_subtype_conflict_bug.t
 t/102_Moose_Object_error.t

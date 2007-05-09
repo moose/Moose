@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -148,6 +148,9 @@ sub _inline_check_lazy {
 	    return 'unless (exists $_[0]->{$attr_name}) {' .
 	           '    if ($attr->has_default) {' .
 	           '        my $default = $attr->default($_[0]);' .
+	           ($attr->should_coerce
+	               ? '$default = $attr->type_constraint->coerce($default);'
+	               : '') .
                '        (defined($type_constraint->($default)))' .
                '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
                '               . $attr->type_constraint->name . ") with " . (defined($default) ? "\'$default\'" : "undef")' .

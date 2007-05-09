@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.22
+    * Moose::Meta::Method::Accessor
+      - coerce and lazy now work together correctly, thanks to 
+        merlyn for finding this bug
+        - tests added for this
+
 0.21 Thursday, May 2nd, 2007
     * Moose
       - added SUPER_SLOT and INNER_SLOT class hashes to support unimport

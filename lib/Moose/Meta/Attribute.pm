@@ -212,6 +212,7 @@ sub initialize_instance_slot {
     if (!defined $val && $self->has_default) {
         $val = $self->default($instance); 
     }
+    
 	if (defined $val) {
 	    if ($self->has_type_constraint) {
 	        my $type_constraint = $self->type_constraint;
