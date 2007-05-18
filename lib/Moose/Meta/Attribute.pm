@@ -93,7 +93,7 @@ sub _process_options {
     
 	if (exists $options->{is}) {
 		if ($options->{is} eq 'ro') {
-			$options->{reader} = $name;
+			$options->{reader} ||= $name;
 			(!exists $options->{trigger})
 			    || confess "Cannot have a trigger on a read-only attribute";
 		}
