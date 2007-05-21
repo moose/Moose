@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 37;
+use Test::More tests => 38;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -101,3 +101,6 @@ ok(!defined($string->validate("Five")), '... validated successfully (no error)')
 is($string->validate(5), 
 "This is not a string (5)", 
 '... validated unsuccessfully (got error)');
+
+lives_ok { Moose::Meta::Attribute->new('bob', isa => 'Spong') }
+  'meta-attr construction ok even when type constraint utils loaded first';

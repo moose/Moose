@@ -12,6 +12,26 @@ use Sub::Exporter;
 our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
+# Prototyped subs must be predeclared because we have a circular dependency
+# with Moose::Meta::Attribute et. al. so in case of us being use'd first the
+# predeclaration ensures the prototypes are in scope when consumers are
+# compiled
+
+sub find_type_constraint ($);
+sub _create_type_constraint ($$$;$$);
+sub _install_type_coercions ($$);
+sub create_type_constraint_union (@);
+sub type ($$;$$);
+sub subtype ($$;$$$);
+sub coerce ($@);
+sub as      ($);
+sub from    ($);
+sub where   (&);
+sub via     (&);
+sub message     (&);
+sub optimize_as (&);
+sub enum ($;@);
+
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 
