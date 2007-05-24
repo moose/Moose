@@ -1,11 +1,11 @@
 Revision history for Perl extension Moose
 
+0.22
     * Moose::Util::TypeConstraints
       - fix for prototype undecl issue when type constraint utils loaded
         before consumers (e.g. Moose::Meta::Attribute) by predeclaring
         prototypes in TC utils
 
-0.22
     * Moose::Meta::Method::Accessor
       - coerce and lazy now work together correctly, thanks to 
         merlyn for finding this bug
