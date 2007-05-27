@@ -775,9 +775,33 @@ to cpan-RT.
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
-Christian Hansen E<lt>chansen@cpan.orgE<gt>
+B<with contributions from:>
 
-Yuval Kogman E<lt>nothingmuch@woobling.orgE<gt>
+Aankhen
+
+Adam (Alias) Kennedy
+
+Anders (Debolaz) Nor Berle
+
+Christian (chansen) Hansen
+
+Eric (ewilhelm) Wilhelm
+
+Guillermo (groditi) Roditi
+
+Jess (castaway) Robinson
+
+Matt (mst) Trout
+
+Robert (phaylon) Sedlacek
+
+Robert (rlb3) Boone
+
+Scott (konobi) McWhirter
+
+Yuval (nothingmuch) Kogman
+
+... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE
 

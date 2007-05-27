@@ -5,6 +5,9 @@ Revision history for Perl extension Moose
       - fix for prototype undecl issue when type constraint utils loaded
         before consumers (e.g. Moose::Meta::Attribute) by predeclaring
         prototypes in TC utils
+      - added the ClassName type constraint, this checks for strings 
+        which will respond true to ->isa(UNIVERSAL). 
+        - added tests and docs for this
 
     * Moose::Meta::Method::Accessor
       - coerce and lazy now work together correctly, thanks to 

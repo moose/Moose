@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 254;
+use Test::More tests => 269;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -298,5 +298,21 @@ ok(!defined Role(qr/../),               '... Role rejects anything which is not 
 ok(!defined Role(bless {}, 'Foo'),      '... Role accepts anything which is not a Role');
 ok(defined Role(bless {}, 'My::Role'),  '... Role accepts anything which is not a Role');
 ok(!defined Role(undef),                 '... Role accepts anything which is not a Role');
+
+ok(!defined ClassName(0),               '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(100),             '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(''),              '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName('Baz'),           '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName([]),              '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName({}),              '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(sub {}),          '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName($SCALAR_REF),     '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName($fh),             '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName($GLOB_REF),       '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(qr/../),          '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(bless {}, 'Foo'), '... ClassName rejects anything which is not a ClassName');
+ok(!defined ClassName(undef),           '... ClassName rejects anything which is not a ClassName');
+ok(defined ClassName('UNIVERSAL'),      '... ClassName accepts anything which is a ClassName');
+ok(defined ClassName('Moose::Meta::TypeConstraint'), '... ClassName accepts anything which is a ClassName');
 
 close($fh) || die "Could not close the filehandle $0 for test";

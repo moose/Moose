@@ -34,8 +34,6 @@ to cpan-RT.
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
-Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
-
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2006, 2007 by Infinity Interactive, Inc.

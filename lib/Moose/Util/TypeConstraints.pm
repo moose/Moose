@@ -245,6 +245,11 @@ subtype 'Role'
     => as 'Object' 
     => where { $_->can('does') }
     => optimize_as { blessed($_[0]) && $_[0]->can('does') };
+    
+subtype 'ClassName' 
+    => as 'Str' 
+    => where { eval { $_->isa('UNIVERSAL') } }
+    => optimize_as { !ref($_[0]) && eval { $_[0]->isa('UNIVERSAL') } };    
 
 {
     my @BUILTINS = list_all_type_constraints();
@@ -334,6 +339,7 @@ could probably use some work, but it works for me at the moment.
               Num
                 Int
               Str
+                ClassName
           Ref
               ScalarRef
               ArrayRef
@@ -349,6 +355,12 @@ Suggestions for improvement are welcome.
 
 B<NOTE:> The C<Undef> type constraint does not work correctly 
 in every occasion, please use it sparringly.
+
+B<NOTE:> The C<ClassName> type constraint is simply a subtype 
+of string which responds true to C<isa('UNIVERSAL')>. This means
+that your class B<must> be loaded for this type constraint to 
+pass. I know this is not ideal for all, but it is a saner 
+restriction then most others. 
 
 =head2 Use with Other Constraint Modules
 
