@@ -8,12 +8,21 @@ Revision history for Perl extension Moose
       - added the ClassName type constraint, this checks for strings 
         which will respond true to ->isa(UNIVERSAL). 
         - added tests and docs for this
+      - subtyping just in name now works correctly by making the 
+        default for where be { 1 }
+        - added test for this 
 
     * Moose::Meta::Method::Accessor
       - coerce and lazy now work together correctly, thanks to 
         merlyn for finding this bug
         - tests added for this
       - fix reader presedence bug in Moose::Meta::Attribute + tests
+
+    * Moose::Object
+      - Foo->new(undef) now gets ignored, it is assumed you meant to pass
+        a HASH-ref and missed. This produces better error messages then 
+        having it die cause undef is not a HASH.
+        - added tests for this
 
 0.21 Thursday, May 2nd, 2007
     * Moose

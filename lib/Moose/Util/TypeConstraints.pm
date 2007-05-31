@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed';
+use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
@@ -83,7 +83,7 @@ sub unimport {
     sub _create_type_constraint ($$$;$$) { 
         my $name   = shift;
         my $parent = shift;
-        my $check  = shift;;
+        my $check  = shift || sub { 1 };
         
         my ($message, $optimized);
         for (@_) {
@@ -153,7 +153,16 @@ sub type ($$;$$) {
 }
 
 sub subtype ($$;$$$) {
-	unshift @_ => undef if scalar @_ <= 2;	
+    # NOTE:
+    # this adds an undef for the name
+    # if this is an anon-subtype:
+    #   subtype(Num => where { $_ % 2 == 0 }) # anon 'even' subtype
+    # but if the last arg is not a code
+    # ref then it is a subtype alias:
+    #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
+    # ... yeah I know it's ugly code 
+    # - SL
+	unshift @_ => undef if scalar @_ <= 2 && (reftype($_[1]) || '') eq 'CODE';	
 	goto &_create_type_constraint;
 }
 

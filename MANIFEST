@@ -81,6 +81,7 @@ t/055_util_type_reloading.t
 t/056_util_more_type_coercion.t
 t/057_union_types.t
 t/058_union_types_and_coercions.t
+t/059_misc_type_tests.t
 t/060_moose_for_meta.t
 t/070_more_attr_delegation.t
 t/071_misc_attribute_tests.t
@@ -94,11 +95,15 @@ t/104_inline_reader_bug.t
 t/105_module_refresh_compat.t
 t/106_handles_foreign_class_bug.t
 t/107_custom_attr_meta_with_roles.t
+t/108_custom_attr_meta_as_role.t
+t/109_reader_precedence_bug.t
+t/110_new_w_undef.t
 t/201_example.t
 t/202_example_Moose_POOP.t
 t/203_example.t
 t/204_example_w_DCS.t
 t/205_example_w_TestDeep.t
+t/206_example_Protomoose.t
 t/300_immutable_moose.t
 t/pod.t
 t/pod_coverage.t

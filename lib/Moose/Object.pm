@@ -9,16 +9,18 @@ use metaclass 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.08';
+our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
     my %params;
     if (scalar @_ == 1) {
-        (ref($_[0]) eq 'HASH')
-            || confess "Single parameters to new() must be a HASH ref";
-        %params = %{$_[0]};
+        if (defined $_[0]) {
+            (ref($_[0]) eq 'HASH')
+                || confess "Single parameters to new() must be a HASH ref";
+            %params = %{$_[0]};
+        }
     }
     else {
         %params = @_;
