@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 # Prototyped subs must be predeclared because we have a circular dependency

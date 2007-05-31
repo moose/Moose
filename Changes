@@ -1,10 +1,10 @@
 Revision history for Perl extension Moose
 
-0.22
+0.22 Thurs. May 31, 2007
     * Moose::Util::TypeConstraints
-      - fix for prototype undecl issue when type constraint utils loaded
-        before consumers (e.g. Moose::Meta::Attribute) by predeclaring
-        prototypes in TC utils
+      - fix for prototype undeclared issue when Moose::Util::TypeConstraints 
+        loaded before consumers (e.g. Moose::Meta::Attribute) by predeclaring
+        prototypes for functions
       - added the ClassName type constraint, this checks for strings 
         which will respond true to ->isa(UNIVERSAL). 
         - added tests and docs for this
