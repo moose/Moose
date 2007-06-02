@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.23
+    * Moose::Meta::Class
+      - Modify make_immutable to work with the new Class::MOP immutable
+        mechanism + POD + very basic test (groditi)
+
 0.22 Thurs. May 31, 2007
     * Moose::Util::TypeConstraints
       - fix for prototype undeclared issue when Moose::Util::TypeConstraints 
