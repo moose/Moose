@@ -12,15 +12,14 @@ BEGIN {
 }
 
 {
-    package FooRole;
-    our $VERSION = '0.01';
-    sub foo { 'FooRole::foo' }
-  }
+  package FooRole;
+  our $VERSION = '0.01';
+  sub foo { 'FooRole::foo' }
+}
 
 {
   package Foo;
   use Moose;
-
 }
 
 {

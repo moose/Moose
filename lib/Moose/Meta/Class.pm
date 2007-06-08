@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
