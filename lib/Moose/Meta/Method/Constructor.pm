@@ -98,7 +98,7 @@ sub _generate_BUILDALL {
     foreach my $method (reverse $self->associated_metaclass->find_all_methods_by_name('BUILD')) {
         push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params)';    
     }
-    return join "\n" => @BUILD_calls; 
+    return join ";\n" => @BUILD_calls; 
 }
 
 sub _generate_slot_initializer {

@@ -1,6 +1,8 @@
 Revision history for Perl extension Moose
 
 0.23
+    * Moose::Meta::Method::Constructor
+      - fix inlined constructor for hierarchy with multiple BUILD methods (mst)
     * Moose::Meta::Class
       - Modify make_immutable to work with the new Class::MOP immutable
         mechanism + POD + very basic test (groditi)
