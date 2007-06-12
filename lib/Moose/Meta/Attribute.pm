@@ -362,7 +362,9 @@ sub install_accessors {
                     # we should check for lack of 
                     # a callable return value from 
                     # the accessor here 
-                    ((shift)->$accessor_name())->$method_to_call(@_);
+                    my $proxy = (shift)->$accessor_name();
+                    @_ = ($proxy, @_);
+                    goto &{ $proxy->can($method_to_call)};
                 });
             }
         }

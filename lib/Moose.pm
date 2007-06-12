@@ -801,6 +801,8 @@ Scott (konobi) McWhirter
 
 Yuval (nothingmuch) Kogman
 
+Chris (perigrin) Prather
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE
