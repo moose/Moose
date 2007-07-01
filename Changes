@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.24
+    * Moose::Meta::Role
+      - required methods are now fetched using find_method_by_name
+        so that required methods can come from superclasses
+        - adjusted tests for this
+
 0.23 Mon. June 18, 2007
     * Moose::Meta::Method::Constructor
       - fix inlined constructor for hierarchy with multiple BUILD methods (mst)

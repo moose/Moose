@@ -9,7 +9,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use B            'svref_2object';
 
-our $VERSION   = '0.07';
+our $VERSION   = '0.08';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -172,7 +172,7 @@ sub get_method_list     {
     } (shift)->Moose::Meta::Class::get_method_list(@_)     
 }
 
-sub find_method_by_name { (shift)->has_method(@_) }
+sub find_method_by_name { (shift)->get_method(@_) }
 
 # ... however the items in statis (attributes & method modifiers)
 # can be removed and added to through this API
@@ -325,7 +325,7 @@ sub _check_required_methods {
             # we need to make sure that the method is 
             # not a method modifier, because those do 
             # not satisfy the requirements ...
-            my $method = $other->get_method($required_method_name);
+            my $method = $other->find_method_by_name($required_method_name);
             # check if it is an override or a generated accessor ..
             (!$method->isa('Moose::Meta::Method::Overriden') &&
              !$method->isa('Class::MOP::Method::Accessor'))

@@ -6,6 +6,18 @@ use warnings;
 use Test::More tests => 18;
 use Test::Exception;
 
+=pod
+
+NOTE:
+A fair amount of these tests will likely be irrelevant 
+once we have more fine grained control over the class
+building process. A lot of the edge cases tested here
+are actually related to class construction order and 
+not any real functionality.
+- SL
+
+=cut
+
 BEGIN {
     use_ok('Moose');
     use_ok('Moose::Role');    
@@ -64,9 +76,9 @@ second class citizens.
     
     extends 'Class::ProvideFoo::Base';
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (and we will die)';
+    } '... the required "foo" method will be found in the superclass';
     
     override 'foo' => sub { 'Class::ProvideFoo::foo' };    
     
@@ -96,9 +108,9 @@ method modifier.
     
     extends 'Class::ProvideFoo::Base';
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (and we will die)';
+    } '... the required "foo" method will be found in the superclass';
     
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };    
     
@@ -171,9 +183,9 @@ method modifier.
     
     extends 'Class::ProvideFoo::Base';
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (and we will die)';
+    } '... the required "foo" method will be found in the superclass (but then overriden)';
     
     has 'foo' => (is => 'ro');
     
