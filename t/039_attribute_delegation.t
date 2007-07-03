@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More tests => 54;
 use Test::Exception;
 
 BEGIN {  
@@ -174,5 +174,48 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     is($baz_proxy->bar, 'Baz::bar', '... got the right proxied return value');
     is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');    
 }
+
+{
+    package Foo::Bar;
+    use Moose::Role;
+    
+    requires 'foo';
+    requires 'bar';
+    
+    package Foo::Baz;
+    use Moose;
+    
+    sub foo { 'Foo::Baz::FOO' }
+    sub bar { 'Foo::Baz::BAR' }
+    sub baz { 'Foo::Baz::BAZ' }    
+    
+    package Foo::Thing;
+    use Moose;
+    
+    has 'thing' => (
+        is      => 'rw', 
+        isa     => 'Foo::Baz',
+        handles => 'Foo::Bar',
+    );
+
+}
+
+{
+    my $foo = Foo::Thing->new(thing => Foo::Baz->new);
+    isa_ok($foo, 'Foo::Thing');
+    isa_ok($foo->thing, 'Foo::Baz');
+    
+    ok($foo->meta->has_method('foo'), '... we have the method we expect');
+    ok($foo->meta->has_method('bar'), '... we have the method we expect');
+    ok(!$foo->meta->has_method('baz'), '... we dont have the method we expect');  
+    
+    is($foo->foo, 'Foo::Baz::FOO', '... got the right value');      
+    is($foo->bar, 'Foo::Baz::BAR', '... got the right value');
+    is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');        
+}
+
+
+
+
 
 

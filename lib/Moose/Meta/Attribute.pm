@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -378,23 +378,39 @@ sub install_accessors {
 sub _canonicalize_handles {
     my $self    = shift;
     my $handles = $self->handles;
-    if (ref($handles) eq 'HASH') {
-        return %{$handles};
-    }
-    elsif (ref($handles) eq 'ARRAY') {
-        return map { $_ => $_ } @{$handles};
-    }
-    elsif (ref($handles) eq 'Regexp') {
-        ($self->has_type_constraint)
-            || confess "Cannot delegate methods based on a RegExpr without a type constraint (isa)";
-        return map  { ($_ => $_) } 
-               grep { /$handles/ } $self->_get_delegate_method_list;
-    }
-    elsif (ref($handles) eq 'CODE') {
-        return $handles->($self, $self->_find_delegate_metaclass);
+    if (my $handle_type = ref($handles)) {
+        if ($handle_type eq 'HASH') {
+            return %{$handles};
+        }
+        elsif ($handle_type eq 'ARRAY') {
+            return map { $_ => $_ } @{$handles};
+        }
+        elsif ($handle_type eq 'Regexp') {
+            ($self->has_type_constraint)
+                || confess "Cannot delegate methods based on a RegExpr without a type constraint (isa)";
+            return map  { ($_ => $_) } 
+                   grep { /$handles/ } $self->_get_delegate_method_list;
+        }
+        elsif ($handle_type eq 'CODE') {
+            return $handles->($self, $self->_find_delegate_metaclass);
+        }
+        else {
+            confess "Unable to canonicalize the 'handles' option with $handles";
+        }
     }
     else {
-        confess "Unable to canonicalize the 'handles' option with $handles";
+        my $role_meta = eval { $handles->meta };
+        if ($@) {
+            confess "Unable to canonicalize the 'handles' option with $handles because : $@";            
+        }
+
+        (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
+            || confess "Unable to canonicalize the 'handles' option with $handles because ->meta is not a Moose::Meta::Role";
+        
+        return map { $_ => $_ } (
+            $role_meta->get_method_list, 
+            $role_meta->get_required_method_list
+        );
     }
 }
 

@@ -454,7 +454,7 @@ updated value and the attribute meta-object (this is for more advanced fiddling
 and can typically be ignored). You B<cannot> have a trigger on a read-only
 attribute.
 
-=item I<handles =E<gt> ARRAY | HASH | REGEXP | CODE>
+=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
 
 The I<handles> option provides Moose classes with automated delegation features. 
 This is a pretty complex and powerful option. It accepts many different option 
@@ -536,6 +536,14 @@ class being delegated to, then filters that list using the regexp supplied here.
 B<NOTE:> An I<isa> option is required when using the regexp option format. This 
 is so that we can determine (at compile time) the method list from the class. 
 Without an I<isa> this is just not possible.
+
+=item C<ROLE>
+
+With the role option, you specify the name of a role whose "interface" then 
+becomes the list of methods to handle. The "interface" can be defined as; the 
+methods of the role and any required methods of the role. It should be noted 
+that this does B<not> include any method modifiers or generated attribute 
+methods (which is consistent with role composition).
 
 =item C<CODE>
 
@@ -676,32 +684,6 @@ to work. Here is an example:
     
     no Moose; # keywords are removed from the Person package    
 
-=head1 MISC.
-
-=head2 What does Moose stand for??
-
-Moose doesn't stand for one thing in particular. However, if you 
-want, here are a few of my favorites; feel free to contribute
-more :)
-
-=over 4
-
-=item Make Other Object Systems Envious
-
-=item Makes Object Orientation So Easy
-
-=item Makes Object Orientation Spiffy- Er  (sorry ingy)
-
-=item Most Other Object Systems Emasculate
-
-=item Moose Often Ovulate Sorta Early
-
-=item Moose Offers Often Super Extensions
-
-=item Meta Object Orientation Syntax Extensions
-
-=back
-
 =head1 CAVEATS
 
 =over 4
@@ -720,7 +702,7 @@ when searching for its appropriate C<inner>.
 This might seem like a restriction, but I am of the opinion that keeping these
 two features separate (yet interoperable) actually makes them easy to use, since
 their behavior is then easier to predict. Time will tell whether I am right or
-not.
+not (UPDATE: so far so good).
 
 =back
 
@@ -739,7 +721,7 @@ and it certainly wouldn't have this name ;P
 originally, I just ran with it.
 
 =item Thanks to mst & chansen and the whole #moose poose for all the 
-ideas/feature-requests/encouragement/bug-finding.
+early ideas/feature-requests/encouragement/bug-finding.
 
 =item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
 
@@ -749,13 +731,25 @@ ideas/feature-requests/encouragement/bug-finding.
 
 =over 4
 
+=item L<http://www.iinteractive.com/moose>
+
+This is the official web home of Moose, it contains links to our public SVN repo
+as well as links to a number of talks and articles on Moose and Moose related 
+technologies. 
+
 =item L<Class::MOP> documentation
 
 =item The #moose channel on irc.perl.org
 
 =item The Moose mailing list - moose@perl.org
 
-=item L<http://forum2.org/moose/>
+=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/5788>
+
+=back
+
+=head2 Papers 
+
+=over 4
 
 =item L<http://www.cs.utah.edu/plt/publications/oopsla04-gff.pdf>
 

@@ -1,6 +1,13 @@
 Revision history for Perl extension Moose
 
 0.24
+    ~ doc updates ~
+
+    * Moose::Meta::Attribute
+      - added support for roles to be given as parameters 
+        to the 'handles' option.
+        - added tests and docs for this
+
     * Moose::Meta::Role
       - required methods are now fetched using find_method_by_name
         so that required methods can come from superclasses
