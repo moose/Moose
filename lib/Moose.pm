@@ -585,7 +585,7 @@ What is happening here is that B<My::Foo> is cloning the C<message> attribute
 from its parent class B<Foo>, retaining the C<is =E<gt> 'rw'> and C<isa =E<gt>
 'Str'> characteristics, but changing the value in C<default>.
 
-This feature is restricted somewhat, so as to try and enfore at least I<some>
+This feature is restricted somewhat, so as to try and force at least I<some>
 sanity into it. You are only allowed to change the following attributes:
 
 =over 4
@@ -606,10 +606,19 @@ Change if the attribute is required to have a value.
 
 Change the documentation string associated with the attribute.
 
+=item I<lazy>
+
+Change if the attribute lazily initializes the slot.
+
 =item I<isa>
 
 You I<are> allowed to change the type, B<if and only if> the new type is a
 subtype of the old type.
+
+=item I<handles>
+
+You are allowed to B<add> a new C<handles> definition, but you are B<not> 
+allowed to I<change> one. 
 
 =back
 

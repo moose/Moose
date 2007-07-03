@@ -7,6 +7,10 @@ Revision history for Perl extension Moose
       - added support for roles to be given as parameters 
         to the 'handles' option.
         - added tests and docs for this
+      - the has '+foo' attribute form now accepts changes to 
+        the lazy option, and the addition of a handles option
+        (but not changing the handles option)
+        - added tests and docs for this
 
     * Moose::Meta::Role
       - required methods are now fetched using find_method_by_name

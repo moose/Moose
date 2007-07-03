@@ -52,14 +52,23 @@ sub new {
 
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
-    # you can change default, required, coerce and documentation 
+    # you can change default, required, coerce, documentation and lazy
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required documentation)) {
+    foreach my $legal_option (qw(default coerce required documentation lazy)) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
         }
     }
+    
+    # handles can only be added, not changed
+    if ($options{handles}) {
+        confess "You can only add the 'handles' option, you cannot change it"
+            if $self->has_handles;
+        $actual_options{handles} = $options{handles};
+        delete $options{handles};
+    }
+    
     # isa can be changed, but only if the 
     # new type is a subtype    
     if ($options{isa}) {

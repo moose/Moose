@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 57;
+use Test::More tests => 72;
 use Test::Exception;
 
 BEGIN {
@@ -11,6 +11,12 @@ BEGIN {
 }
 
 {
+    package Thing;
+    use Moose;
+    
+    sub hello   { 'Hello World (from Thing)' }
+    sub goodbye { 'Goodbye World (from Thing)' }    
+    
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
@@ -27,7 +33,11 @@ BEGIN {
     has 'baz' => (is => 'rw', isa => 'Ref');   
     has 'foo' => (is => 'rw', isa => 'FooStr');       
     
-    has 'gorch' => (is => 'ro');        
+    has 'gorch' => (is => 'ro'); 
+    has 'gloum' => (is => 'ro', default => sub {[]});  
+    
+    has 'bling' => (is => 'ro', isa => 'Thing');
+    has 'blang' => (is => 'ro', isa => 'Thing', handles => ['goodbye']);         
     
     # this one will work here ....
     has 'fail' => (isa => 'CodeRef');
@@ -37,14 +47,35 @@ BEGIN {
     use Moose;
     
     extends 'Foo';
+
+    ::lives_ok {     
+        has '+bar' => (default => 'Bar::bar');  
+    } '... we can change the default attribute option';        
     
-    has '+bar' => (default => 'Bar::bar');  
-    has '+baz' => (isa     => 'ArrayRef');        
+    ::lives_ok {     
+        has '+baz' => (isa => 'ArrayRef');        
+    } '... we can add change the isa as long as it is a subtype';        
     
-    has '+foo'   => (coerce   => 1);    
-    has '+gorch' => (required => 1); 
+    ::lives_ok {     
+        has '+foo' => (coerce => 1);    
+    } '... we can change/add coerce as an attribute option';            
+
+    ::lives_ok {     
+        has '+gorch' => (required => 1); 
+    } '... we can change/add required as an attribute option';    
+    
+    ::lives_ok { 
+        has '+gloum' => (lazy => 1);           
+    } '... we can change/add lazy as an attribute option';    
+    
+    ::lives_ok {
+        has '+bling' => (handles => ['hello']);        
+    } '... we can add the handles attribute option';
     
     # this one will *not* work here ....
+    ::dies_ok {
+        has '+blang' => (handles => ['hello']);        
+    } '... we can not alter the handles attribute option';    
     ::dies_ok { 
         has '+fail' => (isa => 'Ref');           
     } '... cannot create an attribute with an improper subtype relation';    
@@ -53,9 +84,6 @@ BEGIN {
     } '... cannot create an attribute with an illegal option';    
     ::dies_ok { 
         has '+other_fail' => (weak_ref => 1);           
-    } '... cannot create an attribute with an illegal option';    
-    ::dies_ok { 
-        has '+other_fail' => (lazy => 1);           
     } '... cannot create an attribute with an illegal option';    
     
 }
@@ -134,6 +162,9 @@ ok(Bar->meta->has_attribute('foo'), '... Bar has a foo attr');
 ok(Bar->meta->has_attribute('bar'), '... Bar has a bar attr');
 ok(Bar->meta->has_attribute('baz'), '... Bar has a baz attr');
 ok(Bar->meta->has_attribute('gorch'), '... Bar has a gorch attr');
+ok(Bar->meta->has_attribute('gloum'), '... Bar has a gloum attr');
+ok(Bar->meta->has_attribute('bling'), '... Bar has a bling attr');
+ok(!Bar->meta->has_attribute('blang'), '... Bar has a blang attr');
 ok(!Bar->meta->has_attribute('fail'), '... Bar does not have a fail attr');
 ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have a fail attr');
 
@@ -148,7 +179,13 @@ isnt(Foo->meta->get_attribute('baz'),
      '... Foo and Bar have different copies of baz');          
 isnt(Foo->meta->get_attribute('gorch'), 
      Bar->meta->get_attribute('gorch'), 
-     '... Foo and Bar have different copies of gorch');     
+     '... Foo and Bar have different copies of gorch');
+isnt(Foo->meta->get_attribute('gloum'), 
+     Bar->meta->get_attribute('gloum'), 
+     '... Foo and Bar have different copies of gloum'); 
+isnt(Foo->meta->get_attribute('bling'), 
+     Bar->meta->get_attribute('bling'), 
+     '... Foo and Bar have different copies of bling');              
      
 ok(Bar->meta->get_attribute('bar')->has_type_constraint, 
    '... Bar::bar inherited the type constraint too');
@@ -168,9 +205,19 @@ ok(!Foo->meta->get_attribute('gorch')->is_required,
 ok(Bar->meta->get_attribute('gorch')->is_required, 
    '... Bar::gorch is a required attr');
    
+ok(!Foo->meta->get_attribute('gloum')->is_lazy, 
+   '... Foo::gloum is not a required attr');
+ok(Bar->meta->get_attribute('gloum')->is_lazy, 
+   '... Bar::gloum is a required attr');   
+   
 ok(!Foo->meta->get_attribute('foo')->should_coerce, 
   '... Foo::foo should not coerce');
 ok(Bar->meta->get_attribute('foo')->should_coerce, 
-   '... Bar::foo should coerce');    
+   '... Bar::foo should coerce');  
+   
+ok(!Foo->meta->get_attribute('bling')->has_handles, 
+   '... Foo::foo should not handles');
+ok(Bar->meta->get_attribute('bling')->has_handles, 
+   '... Bar::foo should handles');     
 
 
