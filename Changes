@@ -1,8 +1,9 @@
 Revision history for Perl extension Moose
 
+0.25
     * Moose
       - (Docs) referenced Moose::Util::TypeConstraints under 'isa' in 'has'
-      for how to define a new type.
+        for how to define a new type.
 
 0.24 Tues. July 3, 2007
     ~ Some doc updates/cleanup ~

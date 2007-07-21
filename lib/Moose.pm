@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.24';
+our $VERSION   = '0.25';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -802,6 +802,8 @@ Robert (phaylon) Sedlacek
 Robert (rlb3) Boone
 
 Scott (konobi) McWhirter
+
+Shlomi (rindolf) Fish
 
 Yuval (nothingmuch) Kogman
 
