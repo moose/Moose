@@ -411,9 +411,9 @@ is expected to have consumed.
 
 =item I<required =E<gt> (1|0)>
 
-This marks the attribute as being required. This means a value must be supplied 
-during class construction, and the attribute may never be set to C<undef> with 
-an accessor. 
+This marks the attribute as being required. This means a I<defined> value must be 
+supplied during class construction, and the attribute may never be set to 
+C<undef> with an accessor. 
 
 =item I<weak_ref =E<gt> (1|0)>
 

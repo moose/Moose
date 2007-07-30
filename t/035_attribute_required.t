@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 use Test::Exception;
 
 BEGIN {
@@ -16,12 +16,6 @@ BEGIN {
     
     has 'bar' => (is => 'ro', required => 1);
     has 'baz' => (is => 'rw', default => 100, required => 1); 
-
-    # NOTE:
-    # this attribute is actually kind of silly  
-    # since lazy requires default, then the 
-    # required attribute becomes void in this 
-    # case. But hey, best to test it :)
     has 'boo' => (is => 'rw', lazy => 1, default => 50, required => 1);       
 }
 
@@ -51,6 +45,14 @@ BEGIN {
     is($foo->baz, 100, '... got the right baz');    
     is($foo->boo, 50, '... got the right boo');            
 }
+
+throws_ok {
+    Foo->new(bar => 10, baz => undef);
+} qr/^Attribute \(baz\) is required and cannot be undef/, '... must supply all the required attribute';
+
+throws_ok {
+    Foo->new(bar => 10, boo => undef);
+} qr/^Attribute \(boo\) is required and cannot be undef/, '... must supply all the required attribute';
 
 throws_ok {
     Foo->new;

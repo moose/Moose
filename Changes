@@ -1,10 +1,15 @@
 Revision history for Perl extension Moose
 
 0.25
+    * Moose::Meta::Attribute
+      - required attributes now will no longer accept undef 
+        from the constructor, even if there is a default and lazy
+        - added tests for this
+
     * Moose::Meta::Role
       - massive refactoring of this code
       - added serveral more tests 
-          - tests for subtle conflict resolition bugs (thanks to kolibre)
+        - tests for subtle conflict resolition bugs (thanks to kolibre)
 
     * Moose
       - (Docs) referenced Moose::Util::TypeConstraints under 'isa' in 'has'

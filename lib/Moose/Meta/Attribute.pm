@@ -207,6 +207,10 @@ sub initialize_instance_slot {
     my $val;        
     if (exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
+        
+        if (!defined $val && $self->is_required) {
+            confess "Attribute (" . $self->name . ") is required and cannot be undef";             
+        }
     }
     else {
         # skip it if it's lazy
@@ -220,7 +224,7 @@ sub initialize_instance_slot {
     # attribute's default value (if it has one)
     if (!defined $val && $self->has_default) {
         $val = $self->default($instance); 
-    }
+    }   
     
 	if (defined $val) {
 	    if ($self->has_type_constraint) {
