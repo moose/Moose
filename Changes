@@ -1,6 +1,11 @@
 Revision history for Perl extension Moose
 
 0.25
+    * Moose::Meta::Role
+      - massive refactoring of this code
+      - added serveral more tests 
+          - tests for subtle conflict resolition bugs (thanks to kolibre)
+
     * Moose
       - (Docs) referenced Moose::Util::TypeConstraints under 'isa' in 'has'
         for how to define a new type.
