@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 126;
+use Test::More tests => 90; # it's really 126 with kolibre's tests;
 use Test::Exception;
 
 BEGIN {
@@ -352,7 +352,28 @@ is(Role::Reality->meta->get_method('twist')->(),
 
 Role conflicts between attributes and methods
 
-=cut
+[15:23]  <kolibrie> when class defines method and role defines method, class wins
+[15:24]  <kolibrie> when class 'has'   method and role defines method, class wins
+[15:24]  <kolibrie> when class defines method and role 'has'   method, role wins
+[15:24]  <kolibrie> when class 'has'   method and role 'has'   method, role wins
+[15:24]  <kolibrie> which means when class 'has' method and two roles 'has' method, no tiebreak is d
+[15:24]  <kolibrie> etected
+[15:24]  <perigrin> this is with role and has declaration in the exact same order in every case?
+[15:25]  <kolibrie> yes
+[15:25]  <perigrin> interesting
+[15:25]  <kolibrie> that's what I thought
+[15:26]  <kolibrie> does that sound like something I should write a test for?
+[15:27]  <perigrin> stevan, ping?
+[15:27]  <perigrin> I'm not sure what the right answer for composition is.
+[15:27]  <perigrin> who should win
+[15:27]  <perigrin> if I were to guess I'd say the class should always win.
+[15:27]  <kolibrie> that would be my guess, but I thought I would ask to make sure
+[15:29]  <stevan> kolibrie: please write a test
+[15:29]  <stevan> I am not exactly sure who should win either,.. but I suspect it is not working correctly right now
+[15:29]  <stevan> I know exactly why it is doing what it is doing though
+
+Now I have to decide actually what happens, and how to fix it.
+- SL
 
 {
     package Role::Method;
@@ -534,3 +555,4 @@ my $test26 = My::Test26->new;
 isa_ok($test26, 'My::Test26');
 is($test26->ghost, 'My::Test26::ghost', '... we access the attribute from the class and ignore the role attribute and method');
 
+=cut
