@@ -5,6 +5,9 @@ Revision history for Perl extension Moose
       - required attributes now will no longer accept undef 
         from the constructor, even if there is a default and lazy
         - added tests for this
+      - default subroutines must return a value which passes the 
+        type constraint
+        - added tests for this
 
     * Moose::Meta::Role
       - massive refactoring of this code

@@ -226,7 +226,7 @@ sub initialize_instance_slot {
         $val = $self->default($instance); 
     }   
     
-	if (defined $val) {
+	if (defined $val || $self->has_default) {
 	    if ($self->has_type_constraint) {
 	        my $type_constraint = $self->type_constraint;
 		    if ($self->should_coerce && $type_constraint->has_coercion) {
@@ -237,7 +237,7 @@ sub initialize_instance_slot {
                            $self->name . 
                            ") does not pass the type constraint (" . 
                            $type_constraint->name .
-                           ") with '$val'";			
+                           ") with '" . (defined $val ? $val : 'undef') . "'";			
         }
 	}
 

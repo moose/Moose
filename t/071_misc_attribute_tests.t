@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::Exception;
 
 BEGIN {
@@ -84,3 +84,23 @@ BEGIN {
     can_ok($test, qw(foo bar baz));
     
 }
+
+{
+    {
+        package Test::UndefDefault::Attributes;
+        use Moose;
+
+        has 'foo' => (
+            is      => 'ro',
+            isa     => 'Str',
+            default => sub { return }
+        );
+        
+    }
+
+    dies_ok {
+        Test::UndefDefault::Attributes->new;
+    } '... default must return a value which passes the type constraint';
+    
+}
+
