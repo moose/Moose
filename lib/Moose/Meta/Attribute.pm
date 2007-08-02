@@ -6,6 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
+use overload     ();
 
 our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -237,7 +238,13 @@ sub initialize_instance_slot {
                            $self->name . 
                            ") does not pass the type constraint (" . 
                            $type_constraint->name .
-                           ") with '" . (defined $val ? $val : 'undef') . "'";			
+                           ") with '" . 
+                           (defined $val 
+                               ? (overload::Overloaded($val) 
+                                    ? overload::StrVal($val) 
+                                    : $val) 
+                               : 'undef') . 
+                           "'";			
         }
 	}
 
@@ -267,7 +274,11 @@ sub set_value {
         }
         defined($type_constraint->_compiled_type_constraint->($value))
         	|| confess "Attribute ($attr_name) does not pass the type constraint ("
-               . $type_constraint->name . ") with " . (defined($value) ? ("'" . $value . "'") : "undef")
+               . $type_constraint->name 
+               . ") with " 
+               . (defined($value) 
+                    ? ("'" . (overload::Overloaded($value) ? overload::StrVal($value) : $value) . "'") 
+                    : "undef")
           if defined($value);
     }
     
