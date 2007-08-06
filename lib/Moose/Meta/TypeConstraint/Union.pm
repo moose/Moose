@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.04';
+our $VERSION   = '0.05';
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
@@ -109,6 +109,20 @@ sub is_subtype_of {
     }
     return 0;
 }
+
+## hand optimized constraints 
+
+# NOTE:
+# it will just use all the hand optimized 
+# type constraints from it's list of type 
+# constraints automatically, but there is 
+# no simple way to optimize it even more 
+# (without B::Deparse or something). So  
+# we just stop here.
+# - SL
+
+sub has_hand_optimized_type_constraint { 0 }
+sub hand_optimized_type_constraint     { undef }
 
 1;
 
