@@ -5,6 +5,11 @@ Revision history for Perl extension Moose
       - added new recipe for augment/inner functionality
         - added test for this
 
+    * Moose
+      - Documentation update to reference Moose::Util::TypeConstraints 
+        under 'isa' in 'has' for how to define a new type 
+        (thanks to shlomif).
+
     * Moose::Meta::Attribute
       - required attributes now will no longer accept undef 
         from the constructor, even if there is a default and lazy
@@ -20,14 +25,14 @@ Revision history for Perl extension Moose
         in the error message
         - added tests for this (thanks to EvanCarroll) 
 
+    * Moose::Meta::TypeConstraint::Union
+      - added (has_)hand_optimized_constraint to this class so that 
+        it behaves as the regular Moose::Meta::TypeConstraint does.
+
     * Moose::Meta::Role
       - massive refactoring of this code
       - added serveral more tests 
         - tests for subtle conflict resolition bugs (thanks to kolibre)
-
-    * Moose
-      - (Docs) referenced Moose::Util::TypeConstraints under 'isa' in 'has'
-        for how to define a new type.
 
 0.24 Tues. July 3, 2007
     ~ Some doc updates/cleanup ~
