@@ -37,6 +37,12 @@ Revision history for Perl extension Moose
     * Moose::Spec::Role
       - a formal definition of roles
 
+    * Moose::Util
+      - utilities for easier working with moose classes
+
+    * Test::Moose
+      - moose specific tests
+
 0.24 Tues. July 3, 2007
     ~ Some doc updates/cleanup ~
 
