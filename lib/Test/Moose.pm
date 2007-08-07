@@ -11,7 +11,7 @@ our $VERSION = '0.01';
 
 our $AUTHORITY = 'cpan:BERLE';
 
-our @EXPORT = qw/can_role/;
+our @EXPORT = qw/does_ok/;
 
 my $tester = Test::Builder->new;
 
