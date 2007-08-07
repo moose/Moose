@@ -10,7 +10,7 @@ our $VERSION = '0.01';
 
 our $AUTHORITY = 'cpan:BERLE';
 
-our @EXPORT_OK = qw/can_role/;
+our @EXPORT_OK = qw/can_role search_class_by_role/;
 
 sub can_role {
   my ($class,$does) = @_;
@@ -18,6 +18,18 @@ sub can_role {
   return ((!ref $class && eval { $class->isa ('UNIVERSAL') }) || Scalar::Util::blessed ($class))
     && $class->can ('does')
     && $class->does ($does);
+}
+
+sub search_class_by_role {
+    my ($obj, $role_name) = @_;
+
+    for my $class ($obj->meta->class_precedence_list) {
+        for my $role (@{ $class->meta->roles || [] }) {
+            return $class if $role->name eq $role_name;
+        }
+    }
+
+    return undef;
 }
 
 1;
@@ -32,11 +44,14 @@ Moose::Util - Moose utilities
 
 =head1 SYNOPSIS
 
-  use Moose::Util qw/can_role/;
+  use Moose::Util qw/can_role search_class_by_role/;
 
   if (can_role ($object,'rolename')) {
     print "The object can do rolename!\n";
   }
+
+  my $class = search_class_by_role($object, 'FooRole');
+  print "Nearest class with 'FooRole' is $class\n";
 
 =head1 FUNCTIONS
 
@@ -47,6 +62,12 @@ Moose::Util - Moose utilities
   can_role ($object,$rolename);
 
 Returns true if $object can do the role $rolename.
+
+=item search_class_by_role
+
+  my $class = search_class_by_role($object, $rolename);
+
+Returns first class in precedence list that consumed C<$rolename>.
 
 =back
 
