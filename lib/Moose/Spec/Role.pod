@@ -1,0 +1,173 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Spec::Role - Formal spec for Role behavior
+
+=head1 DESCRIPTION
+
+=head2 Components of a Role
+
+=over 4
+
+=item Excluded Roles
+
+=item Attributes
+
+=item Methods
+
+=item Required Methods
+
+=item Overriden Methods
+
+The C<override> and C<super> keywords are allowed in roles, but 
+thier behavior is different from that of it's class counterparts. 
+The C<super> in a class refers directly to that class's superclass, 
+while the C<super> in a role is deferred and only has meaning once
+the role is composed into a class. Once that composition occurs, 
+C<super> then refers to that class's superclass. 
+
+It is key to remember that roles do not have hierarchy, so they 
+can never have a I<super> role.
+
+=item Method Modifiers
+
+=back
+
+=head2 Role to Role Composition Rules
+
+When a role is added to another role (using the C<with>
+keyword) the two roles are composed symmetrically. The 
+product of the composition is a third composite role.
+
+=over 4
+
+=item Attributes
+
+Attributes with the same name will conflict and are considered
+a un-recoverable error. No other aspect of the attribute is 
+examained, it is enough that just the attribute names conflict. 
+
+The reason for such early and harsh conflicts with attributes 
+is because there is so much room for variance between two 
+attributes that the problem quickly explodes and rules get 
+very complex. It is my opinion that this complexity is not 
+worth the trouble.
+
+=item Methods
+
+Methods with the same name will conflict, but no error is 
+thrown, instead the method name is added to the list of 
+I<required> methods for the new composite role.
+
+To look at this in terms of set theory, each role can be 
+said to have a set of methods. The symmetric difference of 
+these two sets is the new set of methods for the composite 
+role, while the intersection of these two sets are the 
+conflicts. This can be illustrated like so:
+
+   Role A has method set { a, b, c }
+   Role B has method set { c, d, e }
+   
+   The composite role (A,B) has 
+       method   set { a, b, d, e }
+       conflict set { c }
+
+=item Overriden methods
+
+An overriden method can conflict in one of two ways. 
+
+The first way is with another overriden method of the same 
+name, and this is considered an un-recoverable error. This 
+is an obvious error since you cannot override a method twice
+in the same class. 
+
+The second way for conflict is for an overriden method and a 
+regular method to have the same name. This is also an un-recoverable 
+error since there is no way to combine these two, nor is it 
+okay for both items to be composed into a single class at some 
+point. 
+
+The use of override in roles can be tricky, but if used
+carefully they can be a very powerful tool.
+
+=item Method Modifiers (before, around, after)
+
+Method modifiers are the only place where the ordering of 
+role composition matters. This is due to the nature of 
+method modifiers themselves. 
+
+Since a method can have multiple method modifiers, these 
+are just collected in order to be later applied to the 
+class in that same order.
+
+In general, great care should be taken in using method 
+modifiers in roles. The order sensitivity can possibly 
+lead to subtle and difficult to find bugs if they are 
+overused. As with all good things in life, moderation 
+is the key.
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item Traits
+
+Roles are based on Traits, which originated in the Smalltalk 
+community. 
+
+=over 4 
+
+=item L<http://www.iam.unibe.ch/~scg/Research/Traits/>
+
+This is the main site for the original Traits papers.
+
+=item L<Class::Trait>
+
+I created this implementation of traits several years ago, 
+after reading the papers linked above. (This module is now 
+maintatined by Ovid and I am no longer involved with it).
+
+=back
+
+=item Roles
+
+Since they are relatively new, and the Moose implementation 
+is probably the most mature out there, roles don't have much
+to link to. However, here is some bits worth looking at (mostly
+related to Perl 6)
+
+=over 4
+
+=item L<http://www.oreillynet.com/onlamp/blog/2006/08/roles_composable_units_of_obje.html>
+
+This is chromatic's take on roles, which is worth reading since 
+he was/is one of the big proponents of them.
+
+=item L<http://svn.perl.org/perl6/doc/trunk/design/syn/S12.pod>
+
+This is Synopsis 12, which is all about the Perl 6 Object System.
+Which, of course, includes roles.
+
+=back
+
+=back
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2007 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+

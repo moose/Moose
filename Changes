@@ -31,8 +31,11 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Role
       - massive refactoring of this code
-      - added serveral more tests 
+      - added several more tests 
         - tests for subtle conflict resolition bugs (thanks to kolibre)
+
+    * Moose::Spec::Role
+      - a formal definition of roles
 
 0.24 Tues. July 3, 2007
     ~ Some doc updates/cleanup ~
