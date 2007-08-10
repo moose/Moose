@@ -48,7 +48,7 @@ Moose::Util - Moose utilities
 
 =head1 SYNOPSIS
 
-  use Moose::Util qw/can_role search_class_by_role/;
+  use Moose::Util qw/does_role search_class_by_role/;
 
   if (does_role($object, $role)) {
     print "The object can do $role!\n";
