@@ -196,6 +196,10 @@ anyway. They are here for completeness.
 
 =item B<has_message>
 
+=item B<hand_optimized_type_constraint>
+
+=item B<has_hand_optimized_type_constraint>
+
 =back
 
 =head1 BUGS
