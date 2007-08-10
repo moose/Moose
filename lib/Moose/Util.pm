@@ -1,7 +1,7 @@
 package Moose::Util;
 
 use Exporter qw/import/;
-use Scalar::Util qw/blessed/;
+use Scalar::Util;
 
 use strict;
 use warnings;
@@ -10,14 +10,18 @@ our $VERSION = '0.01';
 
 our $AUTHORITY = 'cpan:BERLE';
 
-our @EXPORT_OK = qw/can_role search_class_by_role/;
+our @EXPORT_OK = qw/does_role search_class_by_role/;
 
-sub can_role {
-  my ($class,$does) = @_;
+sub does_role {
+  my ($class, $role) = @_;
 
-  return ((!ref $class && eval { $class->isa ('UNIVERSAL') }) || Scalar::Util::blessed ($class))
-    && $class->can ('does')
-    && $class->does ($does);
+  return unless defined $class;
+
+  my $meta = Class::MOP::get_metaclass_by_name (ref $class || $class);
+
+  return unless defined $meta;
+
+  return $meta->does_role ($role);
 }
 
 sub search_class_by_role {
@@ -46,8 +50,8 @@ Moose::Util - Moose utilities
 
   use Moose::Util qw/can_role search_class_by_role/;
 
-  if (can_role ($object,'rolename')) {
-    print "The object can do rolename!\n";
+  if (does_role($object, $role)) {
+    print "The object can do $role!\n";
   }
 
   my $class = search_class_by_role($object, 'FooRole');
@@ -57,9 +61,9 @@ Moose::Util - Moose utilities
 
 =over 4
 
-=item can_role
+=item does_role
 
-  can_role ($object,$rolename);
+  does_role($object, $rolename);
 
 Returns true if $object can do the role $rolename.
 

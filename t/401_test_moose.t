@@ -1,8 +1,14 @@
-use Test::Builder::Tester tests => 1;
-use Test::Moose;
+use Test::Builder::Tester tests => 4;
+use Test::More;
 
 use strict;
 use warnings;
+
+BEGIN {
+  use_ok('Moose');
+  use_ok('Moose::Role');
+  use_ok('Test::Moose');
+}
 
 {
   package Foo;

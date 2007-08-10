@@ -1,7 +1,7 @@
 package Test::Moose;
 
 use Exporter;
-use Moose::Util qw/can_role/;
+use Moose::Util qw/does_role/;
 use Test::Builder;
 
 use strict;
@@ -34,7 +34,7 @@ sub import {
 sub does_ok ($$;$) {
   my ($class,$does,$name) = @_;
 
-  return $tester->ok (can_role ($class,$does),$name)
+  return $tester->ok (does_role ($class,$does),$name)
 }
 
 1;
