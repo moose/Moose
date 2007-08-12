@@ -11,7 +11,8 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
-    does_role 
+    find_meta 
+    does_role
     search_class_by_role   
 ];
 
@@ -22,7 +23,7 @@ Sub::Exporter::setup_exporter({
 
 ## some utils for the utils ...
 
-sub _get_meta { 
+sub find_meta { 
     return unless $_[0];
     return Class::MOP::get_metaclass_by_name(ref($_[0]) || $_[0]);
 }
@@ -32,7 +33,7 @@ sub _get_meta {
 sub does_role {
     my ($class_or_obj, $role) = @_;
 
-    my $meta = _get_meta($class_or_obj);
+    my $meta = find_meta($class_or_obj);
     
     return unless defined $meta;
 
@@ -43,13 +44,13 @@ sub does_role {
 sub search_class_by_role {
     my ($class_or_obj, $role_name) = @_;
     
-    my $meta = _get_meta($class_or_obj);
+    my $meta = find_meta($class_or_obj);
 
     return unless defined $meta;
 
     foreach my $class ($meta->class_precedence_list) {
         
-        my $_meta = _get_meta($class);        
+        my $_meta = find_meta($class);        
 
         next unless defined $_meta;
 
@@ -73,7 +74,9 @@ Moose::Util - Utilities for working with Moose classes
 
 =head1 SYNOPSIS
 
-  use Moose::Util qw/does_role search_class_by_role/;
+  use Moose::Util qw/find_meta does_role search_class_by_role/;
+
+  my $meta = find_meta($object) || die "No metaclass found";
 
   if (does_role($object, $role)) {
     print "The object can do $role!\n";
@@ -93,6 +96,11 @@ functions to write.
 =head1 EXPORTED FUNCTIONS
 
 =over 4
+
+=item B<find_meta ($class_or_obj)>
+
+This will attempt to locate a metaclass for the given C<$class_or_obj>
+and return it.
 
 =item B<does_role ($class_or_obj, $role_name)>
 

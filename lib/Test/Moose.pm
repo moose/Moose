@@ -5,6 +5,7 @@ use warnings;
 
 use Sub::Exporter;
 use Test::Builder;
+use Moose::Util 'does_role', 'find_meta';
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -20,14 +21,9 @@ Sub::Exporter::setup_exporter({
     groups  => { default => \@exports }
 });
 
+## the test builder instance ...
+
 my $Test = Test::Builder->new;
-
-## some helpers ...
-
-sub _get_meta { 
-    return unless $_[0];
-    return Class::MOP::get_metaclass_by_name(ref($_[0]) || $_[0]);
-}
 
 ## exported functions
 
@@ -36,7 +32,7 @@ sub meta_ok ($;$) {
     
     $message ||= "The object has a meta";
     
-    if (_get_meta($class_or_obj)) {
+    if (find_meta($class_or_obj)) {
         return $Test->ok(1, $message)
     }
     else {
@@ -49,9 +45,7 @@ sub does_ok ($$;$) {
     
     $message ||= "The object does $does";
     
-    my $meta = _get_meta($class_or_obj);
-    
-    if ($meta->does_role($does)) {
+    if (does_role($class_or_obj, $does)) {
         return $Test->ok(1, $message)
     }
     else {
@@ -64,7 +58,7 @@ sub has_attribute_ok ($$;$) {
     
     $message ||= "The object does has an attribute named $attr_name";
     
-    my $meta = _get_meta($class_or_obj);    
+    my $meta = find_meta($class_or_obj);    
     
     if ($meta->find_attribute_by_name($attr_name)) {
         return $Test->ok(1, $message)
