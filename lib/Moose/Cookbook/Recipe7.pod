@@ -58,6 +58,8 @@ Moose::Cookbook::Recipe7 - The augment/inner example
 
 =head1 DESCRIPTION
 
+Coming Soon.
+
 =head1 CONCLUSION
 
 =head1 FOOTNOTES
@@ -72,7 +74,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2007 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

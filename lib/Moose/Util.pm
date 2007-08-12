@@ -1,39 +1,64 @@
 package Moose::Util;
 
-use Exporter qw/import/;
-use Scalar::Util;
-
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+use Sub::Exporter;
+use Scalar::Util ();
+use Class::MOP   ();
 
-our $AUTHORITY = 'cpan:BERLE';
+our $VERSION   = '0.01';
+our $AUTHORITY = 'cpan:STEVAN';
 
-our @EXPORT_OK = qw/does_role search_class_by_role/;
+my @exports = qw[
+    does_role 
+    search_class_by_role   
+];
+
+Sub::Exporter::setup_exporter({
+    exports => \@exports,
+    groups  => { default => \@exports }
+});
+
+## some utils for the utils ...
+
+sub _get_meta { 
+    return unless $_[0];
+    return Class::MOP::get_metaclass_by_name(ref($_[0]) || $_[0]);
+}
+
+## the functions ...
 
 sub does_role {
-  my ($class, $role) = @_;
+    my ($class_or_obj, $role) = @_;
 
-  return unless defined $class;
+    my $meta = _get_meta($class_or_obj);
+    
+    return unless defined $meta;
 
-  my $meta = Class::MOP::get_metaclass_by_name (ref $class || $class);
-
-  return unless defined $meta;
-
-  return $meta->does_role ($role);
+    return 1 if $meta->does_role($role);
+    return;
 }
 
 sub search_class_by_role {
-    my ($obj, $role_name) = @_;
+    my ($class_or_obj, $role_name) = @_;
+    
+    my $meta = _get_meta($class_or_obj);
 
-    for my $class ($obj->meta->class_precedence_list) {
-        for my $role (@{ $class->meta->roles || [] }) {
+    return unless defined $meta;
+
+    foreach my $class ($meta->class_precedence_list) {
+        
+        my $_meta = _get_meta($class);        
+
+        next unless defined $_meta;
+
+        foreach my $role (@{ $_meta->roles || [] }) {
             return $class if $role->name eq $role_name;
         }
     }
 
-    return undef;
+    return;
 }
 
 1;
@@ -44,7 +69,7 @@ __END__
 
 =head1 NAME
 
-Moose::Util - Moose utilities
+Moose::Util - Utilities for working with Moose classes
 
 =head1 SYNOPSIS
 
@@ -57,21 +82,37 @@ Moose::Util - Moose utilities
   my $class = search_class_by_role($object, 'FooRole');
   print "Nearest class with 'FooRole' is $class\n";
 
-=head1 FUNCTIONS
+=head1 DESCRIPTION
+
+This is a set of utility functions to help working with Moose classes. This 
+is an experimental module, and it's not 100% clear what purpose it will serve. 
+That said, ideas, suggestions and contributions to this collection are most 
+welcome. See the L<TODO> section below for a list of ideas for possible 
+functions to write.
+
+=head1 EXPORTED FUNCTIONS
 
 =over 4
 
-=item does_role
+=item B<does_role ($class_or_obj, $role_name)>
 
-  does_role($object, $rolename);
+Returns true if C<$class_or_obj> can do the role C<$role_name>.
 
-Returns true if $object can do the role $rolename.
+=item B<search_class_by_role ($class_or_obj, $role_name)>
 
-=item search_class_by_role
+Returns first class in precedence list that consumed C<$role_name>.
 
-  my $class = search_class_by_role($object, $rolename);
+=back
 
-Returns first class in precedence list that consumed C<$rolename>.
+=head1 TODO
+
+Here is a list of possible functions to write
+
+=over 4
+
+=item discovering original method from modified method
+
+=item search for origin class of a method or attribute
 
 =back
 
@@ -84,6 +125,12 @@ to cpan-RT.
 =head1 AUTHOR
 
 Anders Nor Berle E<lt>debolaz@gmail.comE<gt>
+
+B<with contributions from:>
+
+Robert (phaylon) Sedlacek
+
+Stevan Little
 
 =head1 COPYRIGHT AND LICENSE
 

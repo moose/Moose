@@ -1,7 +1,7 @@
 Build.PL
 Changes
-Makefile.PL
 META.yml
+Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 README
@@ -9,6 +9,7 @@ lib/Moose.pm
 lib/Moose/Cookbook.pod
 lib/Moose/Object.pm
 lib/Moose/Role.pm
+lib/Moose/Util.pm
 lib/Moose/Cookbook/FAQ.pod
 lib/Moose/Cookbook/Recipe1.pod
 lib/Moose/Cookbook/Recipe2.pod
@@ -16,6 +17,7 @@ lib/Moose/Cookbook/Recipe3.pod
 lib/Moose/Cookbook/Recipe4.pod
 lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Cookbook/Recipe6.pod
+lib/Moose/Cookbook/Recipe7.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
@@ -29,8 +31,11 @@ lib/Moose/Meta/Method/Constructor.pm
 lib/Moose/Meta/Method/Destructor.pm
 lib/Moose/Meta/Method/Overriden.pm
 lib/Moose/Meta/Role/Method.pm
+lib/Moose/Meta/Role/Method/Required.pm
 lib/Moose/Meta/TypeConstraint/Union.pm
+lib/Moose/Spec/Role.pod
 lib/Moose/Util/TypeConstraints.pm
+lib/Test/Moose.pm
 t/000_load.t
 t/001_recipe.t
 t/002_recipe.t
@@ -38,6 +43,7 @@ t/003_recipe.t
 t/004_recipe.t
 t/005_recipe.t
 t/006_recipe.t
+t/007_recipe.t
 t/010_basic_class_setup.t
 t/011_require_superclasses.t
 t/012_super_and_override.t
@@ -105,6 +111,13 @@ t/204_example_w_DCS.t
 t/205_example_w_TestDeep.t
 t/206_example_Protomoose.t
 t/300_immutable_moose.t
+t/400_moose_util.t
+t/401_moose_util_does_role.t
+t/402_moose_util_search_class_by_role.t
+t/500_test_moose.t
+t/501_test_moose_does_ok.t
+t/502_test_moose_has_attribute_ok.t
+t/503_test_moose_meta_ok.t
 t/pod.t
 t/pod_coverage.t
 t/lib/Bar.pm

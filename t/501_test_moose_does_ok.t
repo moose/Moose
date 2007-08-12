@@ -1,33 +1,30 @@
-use Test::Builder::Tester tests => 4;
-use Test::More;
+#!/usr/bin/perl
 
 use strict;
 use warnings;
 
+use Test::Builder::Tester tests => 2;
+use Test::More;
+
 BEGIN {
-  use_ok('Moose');
-  use_ok('Moose::Role');
   use_ok('Test::Moose');
 }
 
 {
-  package Foo;
-
-  use Moose::Role;
+    package Foo;
+    use Moose::Role;
 }
 
 {
-  package Bar;
+    package Bar;
+    use Moose;
 
-  use Moose;
-
-  with qw/Foo/;
+    with qw/Foo/;
 }
 
 {
-  package Baz;
-
-  use Moose;
+    package Baz;
+    use Moose;
 }
 
 # class ok
@@ -39,7 +36,6 @@ does_ok('Bar','Foo','does_ok class');
 # class fail
 
 test_out ('not ok 2 - does_ok class fail');
-
 test_fail (+2);
 
 does_ok('Baz','Foo','does_ok class fail');
@@ -57,7 +53,6 @@ does_ok ($bar,'Foo','does_ok object');
 my $baz = Baz->new;
 
 test_out ('not ok 4 - does_ok object fail');
-
 test_fail (+2);
 
 does_ok ($baz,'Foo','does_ok object fail');

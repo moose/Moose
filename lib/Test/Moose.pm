@@ -1,40 +1,77 @@
 package Test::Moose;
 
-use Exporter;
-use Moose::Util qw/does_role/;
-use Test::Builder;
-
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+use Sub::Exporter;
+use Test::Builder;
 
-our $AUTHORITY = 'cpan:BERLE';
+our $VERSION   = '0.01';
+our $AUTHORITY = 'cpan:STEVAN';
 
-our @EXPORT = qw/does_ok/;
+my @exports = qw[
+    meta_ok
+    does_ok 
+    has_attribute_ok
+];
 
-my $tester = Test::Builder->new;
+Sub::Exporter::setup_exporter({
+    exports => \@exports,
+    groups  => { default => \@exports }
+});
 
-sub import {
-  my $class = shift;
+my $Test = Test::Builder->new;
 
-  if (@_) {
-    my $package = caller;
+## some helpers ...
+
+sub _get_meta { 
+    return unless $_[0];
+    return Class::MOP::get_metaclass_by_name(ref($_[0]) || $_[0]);
+}
+
+## exported functions
+
+sub meta_ok ($;$) {
+    my ($class_or_obj, $message) = @_;
     
-    $tester->exported_to ($package);
-
-    $tester->plan (@_);
-  }
-
-  @_ = ($class);
-
-  goto &Exporter::import;
+    $message ||= "The object has a meta";
+    
+    if (_get_meta($class_or_obj)) {
+        return $Test->ok(1, $message)
+    }
+    else {
+        return $Test->ok(0, $message);  
+    }
 }
 
 sub does_ok ($$;$) {
-  my ($class,$does,$name) = @_;
+    my ($class_or_obj, $does, $message) = @_;
+    
+    $message ||= "The object does $does";
+    
+    my $meta = _get_meta($class_or_obj);
+    
+    if ($meta->does_role($does)) {
+        return $Test->ok(1, $message)
+    }
+    else {
+        return $Test->ok(0, $message);  
+    }
+}
 
-  return $tester->ok (does_role ($class,$does),$name)
+sub has_attribute_ok ($$;$) {
+    my ($class_or_obj, $attr_name, $message) = @_;
+    
+    $message ||= "The object does has an attribute named $attr_name";
+    
+    my $meta = _get_meta($class_or_obj);    
+    
+    if ($meta->find_attribute_by_name($attr_name)) {
+        return $Test->ok(1, $message)
+    }
+    else {
+        return $Test->ok(0, $message);  
+    }    
 }
 
 1;
@@ -49,20 +86,57 @@ Test::Moose - Test functions for Moose specific features
 
 =head1 SYNOPSIS
 
-  use Test::Moose plan => 1;
+  use Test::More plan => 1;
+  use Test::Moose;  
 
-  does_ok ($class,$role,"Does $class do $role");
+  meta_ok($class_or_obj, "... Foo has a ->meta");
+  does_ok($class_or_obj, $role, "... Foo does the Baz role");
+  has_attribute_ok($class_or_obj, $attr_name, "... Foo has the 'bar' attribute");
 
-=head1 TESTS
+=head1 DESCRIPTION
+
+This module provides some useful test functions for Moose based classes. It 
+is an experimental first release, so comments and suggestions are very welcome.
+
+=head1 EXPORTED FUNCTIONS
 
 =over 4
 
-=item does_ok
+=item B<meta_ok ($class_or_object)>
 
-  does_ok ($class,$role,$name);
+Tests if a class or object has a metaclass.
 
-Tests if a class does a certain role, similar to what isa_ok does for
-isa.
+=item B<does_ok ($class_or_object, $role, ?$message)>
+
+Tests if a class or object does a certain role, similar to what C<isa_ok> 
+does for the C<isa> method.
+
+=item B<has_attribute_ok($class_or_object, $attr_name, ?$message)>
+
+Tests if a class or object has a certain attribute, similar to what C<can_ok> 
+does for the methods.
+
+=back
+
+=head1 TODO
+
+=over 4
+
+=item Convert the Moose test suite to use this module.
+
+=item Here is a list of possible functions to write
+
+=over 4
+
+=item immutability predicates
+
+=item anon-class predicates
+
+=item discovering original method from modified method
+
+=item attribute metaclass predicates (attribute_isa?)
+
+=back
 
 =back
 
@@ -83,6 +157,8 @@ to cpan-RT.
 =head1 AUTHOR
 
 Anders Nor Berle E<lt>debolaz@gmail.comE<gt>
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
