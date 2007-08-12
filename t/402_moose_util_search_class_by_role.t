@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 5;
 
 BEGIN {
-    use_ok('Moose::Util');
+    use_ok('Moose::Util', ':all');
 }
 
 {   package SCBR::Role;

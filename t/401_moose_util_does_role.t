@@ -6,7 +6,7 @@ use warnings;
 use Test::More tests => 7;
 
 BEGIN {
-    use_ok('Moose::Util');
+    use_ok('Moose::Util', ':all');
 }
 
 {

@@ -18,7 +18,7 @@ my @exports = qw[
 
 Sub::Exporter::setup_exporter({
     exports => \@exports,
-    groups  => { default => \@exports }
+    groups  => { all => \@exports }
 });
 
 ## some utils for the utils ...
