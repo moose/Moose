@@ -23,7 +23,7 @@
 {
     package MooseBefore;
     use Moose;
-    extends 'PlainParent';
+    extends 'MooseParent';
 
     before method => sub { "B" };
 }
@@ -38,7 +38,7 @@
 {
     package MooseAround;
     use Moose;
-    extends 'PlainParent';
+    extends 'MooseParent';
 
     around method => sub { shift->() . "A" };
 }
@@ -55,7 +55,7 @@
 {
     package MooseAllThree;
     use Moose;
-    extends 'PlainParent';
+    extends 'MooseParent';
 
     before method => sub { "B" };
     around method => sub { shift->() . "A" };
