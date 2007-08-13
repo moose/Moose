@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.25
+0.25 Mon. Aug. 13, 2007
     * Moose
       - Documentation update to reference Moose::Util::TypeConstraints 
         under 'isa' in 'has' for how to define a new type 
@@ -26,26 +26,26 @@ Revision history for Perl extension Moose
         it behaves as the regular Moose::Meta::TypeConstraint does.
 
     * Moose::Meta::Role
-      - massive refactoring of this code
+      - large refactoring of this code
       - added several more tests 
         - tests for subtle conflict resolition issues 
           added, but not currently running
           (thanks to kolibre)
 
     * Moose::Cookbook::Recipe7 
-      - added new recipe for augment/inner functionality
-        - example only, no docs yet (sorry)
+      - added new recipe for augment/inner functionality 
+        (still in progress)
         - added test for this
 
     * Moose::Spec::Role
       - a formal definition of roles (still in progress)
 
     * Moose::Util
-      - utilities for easier working with moose classes
+      - utilities for easier working with Moose classes
         - added tests for these
 
     * Test::Moose
-      - moose specific tests
+      - This contains Moose specific test functions
         - added tests for these
 
 0.24 Tues. July 3, 2007
