@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 63;
 use Test::Exception;
 
 BEGIN {  
@@ -28,6 +28,11 @@ BEGIN {
     }; 
 
 }{
+    package BarRole;
+    use Moose::Role;
+    sub woot { 'BarRole::woot' }
+ 
+}{
     package BarClass;
     use Moose;
     
@@ -48,10 +53,20 @@ BEGIN {
     sub goo { 'FooClass::goo' }  # << overrides the one from the role ... 
     
     __PACKAGE__->meta->make_immutable(debug => 0);
+}{
+    
+    package FooBarClass;
+    use Moose;
+    
+    extends 'FooClass';
+       with 'FooRole', 'BarRole';
 }
 
 my $foo_class_meta = FooClass->meta;
 isa_ok($foo_class_meta, 'Moose::Meta::Class');
+
+my $foobar_class_meta = FooBarClass->meta;
+isa_ok($foobar_class_meta, 'Moose::Meta::Class');
 
 dies_ok {
     $foo_class_meta->does_role()
@@ -68,31 +83,51 @@ dies_ok {
 ok($foo_class_meta->does_role('FooRole'), '... the FooClass->meta does_role FooRole');
 ok(!$foo_class_meta->does_role('OtherRole'), '... the FooClass->meta !does_role OtherRole');
 
+ok($foobar_class_meta->does_role('FooRole'), '... the FooBarClass->meta does_role FooRole');
+ok($foobar_class_meta->does_role('BarRole'), '... the FooBarClass->meta does_role BarRole');
+ok(!$foobar_class_meta->does_role('OtherRole'), '... the FooBarClass->meta !does_role OtherRole');
+
 foreach my $method_name (qw(bar baz foo boo blau goo)) {
     ok($foo_class_meta->has_method($method_name), '... FooClass has the method ' . $method_name);    
+    ok($foobar_class_meta->has_method($method_name), '... FooBarClass has the method ' . $method_name);
 }
+
+ok(!$foo_class_meta->has_method('woot'), '... FooClass lacks the method woot');    
+ok($foobar_class_meta->has_method('woot'), '... FooBarClass has the method woot');
 
 foreach my $attr_name (qw(bar baz)) {
     ok($foo_class_meta->has_attribute($attr_name), '... FooClass has the attribute ' . $attr_name);    
+    ok($foobar_class_meta->has_attribute($attr_name), '... FooBarClass has the attribute ' . $attr_name);    
 }
 
 can_ok('FooClass', 'does');
 ok(FooClass->does('FooRole'), '... the FooClass does FooRole');
+ok(!FooClass->does('BarRole'), '... the FooClass does not do BarRole');
 ok(!FooClass->does('OtherRole'), '... the FooClass does not do OtherRole');
+
+can_ok('FooBarClass', 'does');
+ok(FooBarClass->does('FooRole'), '... the FooClass does FooRole');
+ok(FooBarClass->does('BarRole'), '... the FooBarClass does FooBarRole');
+ok(!FooBarClass->does('OtherRole'), '... the FooBarClass does not do OtherRole');
 
 my $foo = FooClass->new();
 isa_ok($foo, 'FooClass');
+
+my $foobar = FooBarClass->new();
+isa_ok($foobar, 'FooBarClass');
 
 can_ok($foo, 'does');
 ok($foo->does('FooRole'), '... an instance of FooClass does FooRole');
 ok(!$foo->does('OtherRole'), '... and instance of FooClass does not do OtherRole');
 
-can_ok($foo, 'bar');
-can_ok($foo, 'baz');
-can_ok($foo, 'foo');
-can_ok($foo, 'boo');
-can_ok($foo, 'goo');
-can_ok($foo, 'blau');
+can_ok($foobar, 'does');
+ok($foobar->does('FooRole'), '... an instance of FooBarClass does FooRole');
+ok($foobar->does('BarRole'), '... an instance of FooBarClass does BarRole');
+ok(!$foobar->does('OtherRole'), '... and instance of FooBarClass does not do OtherRole');
+
+for my $method (qw/bar baz foo boo goo blau/) {
+    can_ok($foo, $method);
+}
 
 is($foo->foo, 'FooRole::foo', '... got the right value of foo');
 is($foo->goo, 'FooClass::goo', '... got the right value of goo');
