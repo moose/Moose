@@ -12,14 +12,18 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.08';
+our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::TypeConstraint::Union;
+use Moose::Meta::TypeConstraint::Container;
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
 __PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
-__PACKAGE__->meta->add_attribute('constraint' => (reader => 'constraint'));
+__PACKAGE__->meta->add_attribute('constraint' => (
+    reader => 'constraint',
+    writer => '_set_constraint',
+));
 __PACKAGE__->meta->add_attribute('message'   => (
     accessor  => 'message',
     predicate => 'has_message'

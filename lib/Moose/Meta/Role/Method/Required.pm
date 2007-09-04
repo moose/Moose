@@ -7,6 +7,8 @@ use warnings;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
+use base 'Moose::Meta::Role::Method';
+
 1;
 
 __END__

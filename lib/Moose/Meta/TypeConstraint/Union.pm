@@ -5,8 +5,17 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
+
+# NOTE:
+# this is not really correct, but 
+# I think it shoul be here anyway.
+# In truth, this should implement 
+# the same abstract base/interface
+# as the TC moule.
+# - SL
+use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',

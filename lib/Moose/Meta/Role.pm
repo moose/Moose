@@ -14,6 +14,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
+use Moose::Meta::Role::Method::Required;
 
 use base 'Class::MOP::Module';
 

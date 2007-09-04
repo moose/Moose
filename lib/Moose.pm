@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.25';
+our $VERSION   = '0.26';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -21,6 +21,8 @@ use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::Attribute;
 use Moose::Meta::Instance;
+
+use Moose::Meta::Role;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;
@@ -234,7 +236,7 @@ use Moose::Util::TypeConstraints;
 
 $_->meta->make_immutable(
     inline_constructor => 0,
-    inline_accessors   => 0,    
+    inline_accessors   => 1,    
 ) for (
     'Moose::Meta::Attribute',
     'Moose::Meta::Class',
@@ -242,12 +244,18 @@ $_->meta->make_immutable(
 
     'Moose::Meta::TypeConstraint',
     'Moose::Meta::TypeConstraint::Union',
+    'Moose::Meta::TypeConstraint::Container',    
     'Moose::Meta::TypeCoercion',
 
     'Moose::Meta::Method',
     'Moose::Meta::Method::Accessor',
     'Moose::Meta::Method::Constructor',
+    'Moose::Meta::Method::Destructor',    
     'Moose::Meta::Method::Overriden',
+
+    'Moose::Meta::Role',
+    'Moose::Meta::Role::Method',    
+    'Moose::Meta::Role::Method::Required',        
 );
 
 1;

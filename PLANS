@@ -1,0 +1,57 @@
+-----------------------------------------------------------
+-- Type Constraints refactor
+-----------------------------------------------------------
+
+- move the details of TC construction that are in Moose.pm and 
+  Moose::Util::TypeConstraints into the Moose::Meta::TypeConstraint module
+
+This will make it much easier to generate TCs on their own, without 
+having to use the sugar layer. This should also clean up their APIs 
+as well, which will make it easier to subclass them.
+
+- create an official TC registry API
+
+Right now the registration of the TC is a by-product of creation in the sugar 
+layer, this is bad and make extension of TCs difficult. I am not sure if this 
+registry API should exist as part of Moose::Util::TypeConstraints, or of we 
+should create a complete registry object itself. 
+
+This registry should be a singleton, but M::U::TC should enforce that lifecycle 
+choice so that you can use your own registry if you really want too.
+
+I mean parent of the registry. So that I can create my own registry
+object for a given class, and any retrieval of a type constraint from
+this object would automatically search parent registries as well.
+
+- refactor the various TC internals to make it more subclassing friendly
+
+This also includes the coercion stuff as well. This should give you what you 
+need to make your object/class bound stuff.
+
+- move the container TCs from MooseX::AttributeHelpers into Moose core
+
+These have proven so useful for me in the latest $work project that I think 
+they should really be core. 
+
+- allow a switch of some kind to optionally turn TC checking off at runtime 
+
+The type checks can get expensive and some people have suggested that allowing 
+the checks to be turned off would be helpful for deploying into performance 
+intensive systems. Perhaps this can actually be done as an option to make_immutable? 
+
+- misc. minor bits
+
+* make the errors for TCs use ->message
+* look into localizing the messages too
+* make ANON TCs be lazy, so they can possibly be subsituted for the real thing later
+* make ANON TCs more introspectable
+
+
+-----------------------------------------------------------
+-- Roles refactor
+-----------------------------------------------------------
+
+
+-----------------------------------------------------------
+-- Immutable refactor
+-----------------------------------------------------------
