@@ -369,7 +369,7 @@ B<NOTE:> The C<ClassName> type constraint is simply a subtype
 of string which responds true to C<isa('UNIVERSAL')>. This means
 that your class B<must> be loaded for this type constraint to 
 pass. I know this is not ideal for all, but it is a saner 
-restriction then most others. 
+restriction than most others. 
 
 =head2 Use with Other Constraint Modules
 
@@ -413,8 +413,9 @@ test file.
 
 =item B<find_type_constraint ($type_name)>
 
-This function can be used to locate a specific type constraint 
-meta-object. What you do with it from there is up to you :)
+This function can be used to locate a specific type constraint
+meta-object, of the class L<Moose::Meta::TypeConstraint> or a
+derivative. What you do with it from there is up to you :)
 
 =item B<create_type_constraint_union (@type_constraint_names)>
 
@@ -506,7 +507,7 @@ are shallow) will not likely need to use this.
 =head2 Type Coercion Constructors
 
 Type constraints can also contain type coercions as well. If you 
-ask your accessor too coerce, the Moose will run the type-coercion 
+ask your accessor to coerce, then Moose will run the type-coercion 
 code first, followed by the type constraint check. This feature 
 should be used carefully as it is very powerful and could easily 
 take off a limb if you are not careful.

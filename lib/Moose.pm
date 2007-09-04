@@ -403,7 +403,7 @@ type checking for this attribute. Moose will perform the checks during class
 construction, and within any accessors. The C<$type_name> argument must be a 
 string. The string may be either a class name or a type defined using 
 Moose's type definition features. (Refer to L<Moose::Util::TypeConstraints>
-for information on how to define a new type).
+for information on how to define a new type, and how to retrieve type meta-data).
 
 =item I<coerce =E<gt> (1|0)>
 
