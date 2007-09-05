@@ -111,7 +111,7 @@ Here is some sample code:
 
 =head2 Moose and Attributes
 
-=head3 Why doesn't attributes I inherited from a superclass work?
+=head3 Why don't attributes I inherited from a superclass work?
 
 Currently when you subclass a module, this is done at runtime with
 the C<extends> keyword but attributes are checked at compile time

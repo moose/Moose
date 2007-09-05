@@ -518,6 +518,25 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<set_value>
 
+  eval { $point->meta->get_attribute('x')->set_value($point, 'fourty-two') };
+  if($@) {
+    print "Oops: $@\n";
+  }
+
+I<Attribute (x) does not pass the type constraint (Int) with 'fourty-two'>
+
+Before setting the value, a check is made on the type constraint of
+the attribute, if it has one, to see if the value passes it. If the
+value fails to pass, the set operation dies with a L<Carp/confess>.
+
+Any coercion to convert values is done before checking the type constraint.
+
+To check a value against a type constraint before setting it, fetch the
+attribute instance using L<Moose::Meta::Attribute/find_attribute_by_name>,
+fetch the type_constraint from the attribute using L<Moose::Meta::Attribute/type_constraint>
+and call L<Moose::Meta::TypeConstraint/check>. See L<Moose::Cookbook::RecipeX>
+for an example.
+
 =back
 
 =head2 Additional Moose features

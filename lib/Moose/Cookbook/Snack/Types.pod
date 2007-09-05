@@ -1,0 +1,75 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Snack::Types - Snippets of code for using Types and Type Constraints
+
+=head1 SYNOPSIS
+
+  package Point;
+  use Moose;
+  	
+  has 'x' => (isa => 'Int', is => 'ro' );
+  has 'y' => (isa => 'Int', is => 'rw' );
+  
+  package main;
+
+  my $point = eval {
+    Point->new(x => 'fifty', y => 'fourty');
+  };
+
+  if($@) {
+    print "Oops: $@";
+  }
+
+  my $point;
+  my $xval = 'fourty-two';
+  my $xattribute = Point->meta->find_attribute_by_name('x');
+  my $xtype_constraint = $xattribute->type_constraint;
+  if($xtype_constraint->check($xval)) {
+    $point = Point->new(x => $xval, y => 0);
+  } else {
+    print "Value: $xval is not an " . $xtype_constraint->name . "\n";
+  }
+
+
+=head1 DESCRIPTION
+
+This is the Point example from (L<Moose::Cookbook::Recipe1>) with added
+type checking. 
+
+If we try to assign a string value to an attribute that is defined as
+being of type Int, Moose will die with an explicit error message
+saying which attribute failed which type constaint with which
+value. The eval example catches this message and displays it.
+
+The second example fetches the type constraint instance and asks it to
+check the value we are about to set, before we try and set it.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Moose::Cookbook::Recipe1>
+
+=item L<Moose::Utils::TypeConstraints>
+
+=item L<Moose::Meta::Attribute>
+
+=back
+
+=head1 AUTHOR
+
+Jess Robinson <cpan@desert-island.me.uk>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006, 2007 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
