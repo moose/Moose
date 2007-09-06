@@ -114,11 +114,11 @@ sub _inline_check_constraint {
 	
 	return '' unless $attr->has_type_constraint;
 	
-	return sprintf <<'EOF', $value, $value, $value, $value, $value, $value
+	return sprintf <<'EOF', $value, $value, $value, $value, $value, $value, $value
 defined($type_constraint->(%s))
 	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
        . $attr->type_constraint->name . ") with " 
-       . (defined(%s) ? (overload::Overloaded(%s) ? overload::StrVal(%s) : %s) : "undef")
+       . (defined(%s) ? (Scalar::Util::blessed(%s) && overload::Overloaded(%s) ? overload::StrVal(%s) : %s) : "undef")
   if defined(%s);
 EOF
 }
@@ -154,7 +154,7 @@ sub _inline_check_lazy {
 	               : '') .
                '        (defined($type_constraint->($default)))' .
                '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
-               '               . $attr->type_constraint->name . ") with " . (defined($default) ? (overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .               
+               '               . $attr->type_constraint->name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .               
                '          if defined($default);' .	                
 	           '        $_[0]->{$attr_name} = $default; ' .
 	           '    }' .
