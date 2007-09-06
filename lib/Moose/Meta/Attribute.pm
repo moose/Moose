@@ -8,7 +8,7 @@ use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
