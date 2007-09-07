@@ -1,6 +1,8 @@
 Revision history for Perl extension Moose
 
 0.26
+    ~ Several doc updates/cleanup thanks to castaway ~
+
     * Moose
       - added all the meta classes to the immutable list and 
         set it to inline the accessors
@@ -23,6 +25,11 @@ Revision history for Perl extension Moose
       - fixed issue with overload::Overloaded getting called 
         on non-blessed items.
         - added tests for this
+    
+    * Moose::Coookbook::Snacks
+      - these are bits of documentation, not quite as big as 
+        Recipes but which have no clear place in the module docs. 
+        So they are Snacks! (horray for castaway++)
 
 0.25 Mon. Aug. 13, 2007
     * Moose
