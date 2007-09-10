@@ -7,8 +7,15 @@ Revision history for Perl extension Moose
       - added all the meta classes to the immutable list and 
         set it to inline the accessors
 
+    * Moose::Util::TypeConstraint
+      - no longer uses package variable to keep track of 
+        the type constraints, now uses the an instance of
+        Moose::Meta::TypeConstraint::Registry to do it
+
     * Moose::Meta::TypeConstraint
       - some minor adjustments to make subclassing easier
+      - added the package_defined_in attribute so that we 
+        can track where the type constraints are created
       
     * Moose::Meta::TypeConstraint::Union
       - this is not a subclass of Moose::Meta::TypeConstraint      
@@ -18,6 +25,9 @@ Revision history for Perl extension Moose
       - added this module (taken from MooseX::AttributeHelpers)
         to help construct nested collection types
         - added tests for this
+    
+    * Moose::Meta::TypeConstraint::Registry
+      - added this class to keep track of type constraints
     
     * Moose::Meta::Attribute
       Moose::Meta::Method::Constructor

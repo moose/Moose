@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 # Prototyped subs must be predeclared because we have a circular dependency
@@ -34,6 +34,7 @@ sub enum ($;@);
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeCoercion;
+use Moose::Meta::TypeConstraint::Registry;
 
 my @exports = qw/
     type subtype as where message optimize_as
@@ -67,83 +68,89 @@ sub unimport {
     }
 }
 
-{
-    my %TYPES;
-    sub find_type_constraint ($) { 
-        return $TYPES{$_[0]}->[1] 
-            if exists $TYPES{$_[0]};
-        return;
-    }
-    
-    sub _dump_type_constraints {
-        require Data::Dumper;        
-        Data::Dumper::Dumper(\%TYPES);
-    }
-    
-    sub _create_type_constraint ($$$;$$) { 
-        my $name   = shift;
-        my $parent = shift;
-        my $check  = shift || sub { 1 };
-        
-        my ($message, $optimized);
-        for (@_) {
-            $message   = $_->{message}   if exists $_->{message};
-            $optimized = $_->{optimized} if exists $_->{optimized};            
-        }
+my $REGISTRY = Moose::Meta::TypeConstraint::Registry->new;
 
-        my $pkg_defined_in = scalar(caller(0));
-        
-        ($TYPES{$name}->[0] eq $pkg_defined_in)
+sub _get_type_constraint_registry { $REGISTRY }
+sub _dump_type_constraints        { $REGISTRY->dump }
+
+sub _create_type_constraint ($$$;$$) { 
+    my $name   = shift;
+    my $parent = shift;
+    my $check  = shift || sub { 1 };
+    
+    my ($message, $optimized);
+    for (@_) {
+        $message   = $_->{message}   if exists $_->{message};
+        $optimized = $_->{optimized} if exists $_->{optimized};            
+    }
+
+    my $pkg_defined_in = scalar(caller(0));
+    
+    if (defined $name) {
+        my $type = $REGISTRY->get_type_constraint($name);
+    
+        ($type->_package_defined_in eq $pkg_defined_in)
             || confess ("The type constraint '$name' has already been created in " 
-                       . $TYPES{$name}->[0] . " and cannot be created again in "
+                       . $type->_package_defined_in . " and cannot be created again in "
                        . $pkg_defined_in)
-                 if defined $name && exists $TYPES{$name};   
-                              
-        $parent = find_type_constraint($parent) if defined $parent;
-        my $constraint = Moose::Meta::TypeConstraint->new(
-            name       => $name || '__ANON__',
-            parent     => $parent,            
-            constraint => $check,       
-            message    => $message,    
-            optimized  => $optimized,
-        );
-        $TYPES{$name} = [ $pkg_defined_in, $constraint ] if defined $name;
-        return $constraint;
-    }
+                 if defined $type;   
+    }                    
+                          
+    $parent = $REGISTRY->get_type_constraint($parent) if defined $parent;
+    my $constraint = Moose::Meta::TypeConstraint->new(
+        name               => $name || '__ANON__',
+        parent             => $parent,            
+        constraint         => $check,       
+        message            => $message,    
+        optimized          => $optimized,
+        package_defined_in => $pkg_defined_in,
+    );
 
-    sub _install_type_coercions ($$) { 
-        my ($type_name, $coercion_map) = @_;
-        my $type = find_type_constraint($type_name);
-        (!$type->has_coercion)
-            || confess "The type coercion for '$type_name' has already been registered";        
-        my $type_coercion = Moose::Meta::TypeCoercion->new(
-            type_coercion_map => $coercion_map,
-            type_constraint   => $type
-        );            
-        $type->coercion($type_coercion);
-    }
-    
-    sub create_type_constraint_union (@) {
-        my (@type_constraint_names) = @_;
-        return Moose::Meta::TypeConstraint->union(
-            map { 
-                find_type_constraint($_) 
-            } @type_constraint_names
-        );
-    }
-    
-    sub export_type_constraints_as_functions {
-        my $pkg = caller();
-	    no strict 'refs';
-    	foreach my $constraint (keys %TYPES) {
-    		*{"${pkg}::${constraint}"} = find_type_constraint($constraint)->_compiled_type_constraint;
-    	}        
-    }
-    
-    *Moose::Util::TypeConstraints::export_type_contstraints_as_functions = \&export_type_constraints_as_functions;
-    
-    sub list_all_type_constraints { keys %TYPES }   
+    $REGISTRY->add_type_constraint($constraint)
+        if defined $name;
+
+    return $constraint;
 }
+
+sub _install_type_coercions ($$) { 
+    my ($type_name, $coercion_map) = @_;
+    my $type = $REGISTRY->get_type_constraint($type_name);
+    (!$type->has_coercion)
+        || confess "The type coercion for '$type_name' has already been registered";        
+    my $type_coercion = Moose::Meta::TypeCoercion->new(
+        type_coercion_map => $coercion_map,
+        type_constraint   => $type
+    );            
+    $type->coercion($type_coercion);
+}
+
+sub create_type_constraint_union (@) {
+    my (@type_constraint_names) = @_;
+    return Moose::Meta::TypeConstraint->union(
+        map { 
+            $REGISTRY->get_type_constraint($_) 
+        } @type_constraint_names
+    );
+}
+
+sub export_type_constraints_as_functions {
+    my $pkg = caller();
+    no strict 'refs';
+	foreach my $constraint (keys %{$REGISTRY->type_constraints}) {
+		*{"${pkg}::${constraint}"} = $REGISTRY->get_type_constraint($constraint)
+		                                      ->_compiled_type_constraint;
+	}        
+}
+
+*Moose::Util::TypeConstraints::export_type_contstraints_as_functions = \&export_type_constraints_as_functions;
+
+sub list_all_type_constraints { keys %{$REGISTRY->type_constraints} }   
+
+## --------------------------------------------------------
+## exported functions ...
+## --------------------------------------------------------
+
+sub find_type_constraint ($) { $REGISTRY->get_type_constraint(@_) }
 
 # type constructors
 

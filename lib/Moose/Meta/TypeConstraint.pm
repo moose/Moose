@@ -44,6 +44,10 @@ __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     predicate => 'has_hand_optimized_type_constraint',    
 ));
 
+__PACKAGE__->meta->add_attribute('package_defined_in' => (
+    accessor => '_package_defined_in'
+));
+
 sub new { 
     my $class = shift;
     my $self  = $class->meta->new_object(@_);
