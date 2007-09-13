@@ -8,9 +8,9 @@ our $VERSION   = '0.26';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
-use Carp         'confess';
-use Sub::Name    'subname';
-use B            'svref_2object';
+use Carp 'confess';
+use Sub::Name 'subname';
+use B 'svref_2object';
 
 use Sub::Exporter;
 
@@ -29,45 +29,52 @@ use Moose::Util::TypeConstraints;
 
 {
     my $CALLER;
-    
-    sub _init_meta {
-        my ($class, $base_class) = @_;
+
+    sub init_meta {
+        my ( $class, $base_class, $metaclass ) = @_;
         $base_class = $class unless defined $base_class;
+        $metaclass = 'Moose::Meta::Class' unless defined $metaclass;        
+
+        confess
+          "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
+          unless $metaclass->isa('Moose::Meta::Class');
 
         # make a subtype for each Moose class
-        subtype $class
-            => as 'Object'
-            => where { $_->isa($class) }
-            => optimize_as { blessed($_[0]) && $_[0]->isa($class) }
+        subtype $class => as 'Object' => where { $_->isa($class) } =>
+          optimize_as { blessed( $_[0] ) && $_[0]->isa($class) }
         unless find_type_constraint($class);
 
         my $meta;
-        if ($class->can('meta')) {
+        if ( $class->can('meta') ) {
             # NOTE:
-            # this is the case where the metaclass pragma 
-            # was used before the 'use Moose' statement to 
+            # this is the case where the metaclass pragma
+            # was used before the 'use Moose' statement to
             # override a specific class
             $meta = $class->meta();
-            (blessed($meta) && $meta->isa('Moose::Meta::Class'))
-                || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
+            ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
+              || confess
+"You already have a &meta function, but it does not return a Moose::Meta::Class";
         }
         else {
             # NOTE:
-            # this is broken currently, we actually need 
-            # to allow the possiblity of an inherited 
-            # meta, which will not be visible until the 
-            # user 'extends' first. This needs to have 
-            # more intelligence to it 
-            $meta = Moose::Meta::Class->initialize($class);
-            $meta->add_method('meta' => sub {
-                # re-initialize so it inherits properly
-                Moose::Meta::Class->initialize(blessed($_[0]) || $_[0]);
-            })
+            # this is broken currently, we actually need
+            # to allow the possiblity of an inherited
+            # meta, which will not be visible until the
+            # user 'extends' first. This needs to have
+            # more intelligence to it
+            $meta = $metaclass->initialize($class);
+            $meta->add_method(
+                'meta' => sub {
+
+                    # re-initialize so it inherits properly
+                    $metaclass->initialize( blessed( $_[0] ) || $_[0] );
+                }
+            );
         }
 
         # make sure they inherit from Moose::Object
         $meta->superclasses($base_class)
-           unless $meta->superclasses();
+          unless $meta->superclasses();
     }
 
     my %exports = (
@@ -76,8 +83,9 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::extends' => sub (@) {
                 confess "Must derive at least one class" unless @_;
                 Class::MOP::load_class($_) for @_;
-                # this checks the metaclass to make sure 
-                # it is correct, sometimes it can get out 
+
+                # this checks the metaclass to make sure
+                # it is correct, sometimes it can get out
                 # of sync when the classes are being built
                 my $meta = $class->meta->_fix_metaclass_incompatability(@_);
                 $meta->superclasses(@_);
@@ -95,9 +103,9 @@ use Moose::Util::TypeConstraints;
         has => sub {
             my $class = $CALLER;
             return subname 'Moose::has' => sub ($;%) {
-                my ($name, %options) = @_;
-                my $attrs = (ref($name) eq 'ARRAY') ? $name : [($name)];
-                $class->meta->_process_attribute($_, %options) for @$attrs;
+                my ( $name, %options ) = @_;
+                my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
+                $class->meta->_process_attribute( $_, %options ) for @$attrs;
             };
         },
         before => sub {
@@ -105,7 +113,7 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::before' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
-                $meta->add_before_method_modifier($_, $code) for @_;
+                $meta->add_before_method_modifier( $_, $code ) for @_;
             };
         },
         after => sub {
@@ -113,59 +121,59 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::after' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
-                $meta->add_after_method_modifier($_, $code) for @_;
+                $meta->add_after_method_modifier( $_, $code ) for @_;
             };
         },
         around => sub {
-            my $class = $CALLER;            
+            my $class = $CALLER;
             return subname 'Moose::around' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
-                $meta->add_around_method_modifier($_, $code) for @_;
+                $meta->add_around_method_modifier( $_, $code ) for @_;
             };
         },
         super => sub {
             {
-              our %SUPER_SLOT;
-              no strict 'refs';
-              $SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
+                our %SUPER_SLOT;
+                no strict 'refs';
+                $SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
             }
-            return subname 'Moose::super' => sub {};
+            return subname 'Moose::super' => sub { };
         },
         override => sub {
             my $class = $CALLER;
             return subname 'Moose::override' => sub ($&) {
-                my ($name, $method) = @_;
-                $class->meta->add_override_method_modifier($name => $method);
+                my ( $name, $method ) = @_;
+                $class->meta->add_override_method_modifier( $name => $method );
             };
         },
         inner => sub {
             {
-              our %INNER_SLOT;
-              no strict 'refs';
-              $INNER_SLOT{$CALLER} = \*{"${CALLER}::inner"};
+                our %INNER_SLOT;
+                no strict 'refs';
+                $INNER_SLOT{$CALLER} = \*{"${CALLER}::inner"};
             }
-            return subname 'Moose::inner' => sub {};
+            return subname 'Moose::inner' => sub { };
         },
         augment => sub {
             my $class = $CALLER;
             return subname 'Moose::augment' => sub (@&) {
-                my ($name, $method) = @_;
-                $class->meta->add_augment_method_modifier($name => $method);
+                my ( $name, $method ) = @_;
+                $class->meta->add_augment_method_modifier( $name => $method );
             };
         },
-        
+
         # NOTE:
-        # this is experimental, but I am not 
-        # happy with it. If you want to try 
-        # it, you will have to uncomment it 
-        # yourself. 
-        # There is a really good chance that 
-        # this will be deprecated, dont get 
+        # this is experimental, but I am not
+        # happy with it. If you want to try
+        # it, you will have to uncomment it
+        # yourself.
+        # There is a really good chance that
+        # this will be deprecated, dont get
         # too attached
         # self => sub {
         #     return subname 'Moose::self' => sub {};
-        # },        
+        # },
         # method => sub {
         #     my $class = $CALLER;
         #     return subname 'Moose::method' => sub {
@@ -178,8 +186,8 @@ use Moose::Util::TypeConstraints;
         #             $method->(@_);
         #         });
         #     };
-        # },                
-        
+        # },
+
         confess => sub {
             return \&Carp::confess;
         },
@@ -188,78 +196,81 @@ use Moose::Util::TypeConstraints;
         },
     );
 
-    my $exporter = Sub::Exporter::build_exporter({ 
-        exports => \%exports,
-        groups  => {
-            default => [':all']
+    my $exporter = Sub::Exporter::build_exporter(
+        {
+            exports => \%exports,
+            groups  => { default => [':all'] }
         }
-    });
-    
+    );
+
     sub import {
-        $CALLER
-              = ref $_[1] && defined $_[1]->{into}       ? $_[1]->{into}
-              : ref $_[1] && defined $_[1]->{into_level} ? caller($_[1]->{into_level})
-              :                                            caller();
+        $CALLER =
+            ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
+          : ref $_[1]
+          && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
+          :                                caller();
         strict->import;
-        warnings->import;        
+        warnings->import;
 
         # we should never export to main
         return if $CALLER eq 'main';
-    
-        _init_meta($CALLER, 'Moose::Object');
-        
+
+        init_meta( $CALLER, 'Moose::Object' );
+
         goto $exporter;
     }
-    
+
     sub unimport {
-        no strict 'refs';        
+        no strict 'refs';
         my $class = caller();
+
         # loop through the exports ...
-        foreach my $name (keys %exports) {
-            
+        foreach my $name ( keys %exports ) {
+
             # if we find one ...
-            if (defined &{$class . '::' . $name}) {
-                my $keyword = \&{$class . '::' . $name};
-                
+            if ( defined &{ $class . '::' . $name } ) {
+                my $keyword = \&{ $class . '::' . $name };
+
                 # make sure it is from Moose
-                my $pkg_name = eval { svref_2object($keyword)->GV->STASH->NAME };
+                my $pkg_name =
+                  eval { svref_2object($keyword)->GV->STASH->NAME };
                 next if $@;
                 next if $pkg_name ne 'Moose';
-                
+
                 # and if it is from Moose then undef the slot
-                delete ${$class . '::'}{$name};
+                delete ${ $class . '::' }{$name};
             }
         }
     }
-    
-    
+
 }
 
 ## make 'em all immutable
 
 $_->meta->make_immutable(
     inline_constructor => 0,
-    inline_accessors   => 1,    
-) for (
+    inline_accessors   => 1,
+  )
+  for (
     'Moose::Meta::Attribute',
     'Moose::Meta::Class',
     'Moose::Meta::Instance',
 
     'Moose::Meta::TypeConstraint',
     'Moose::Meta::TypeConstraint::Union',
-    'Moose::Meta::TypeConstraint::Container',    
+    'Moose::Meta::TypeConstraint::Container',
     'Moose::Meta::TypeCoercion',
 
     'Moose::Meta::Method',
     'Moose::Meta::Method::Accessor',
     'Moose::Meta::Method::Constructor',
-    'Moose::Meta::Method::Destructor',    
+    'Moose::Meta::Method::Destructor',
     'Moose::Meta::Method::Overriden',
 
     'Moose::Meta::Role',
-    'Moose::Meta::Role::Method',    
-    'Moose::Meta::Role::Method::Required',        
-);
+    'Moose::Meta::Role::Method',
+    'Moose::Meta::Role::Method::Required',
+  );
 
 1;
 
@@ -705,6 +716,44 @@ to work. Here is an example:
     
     no Moose; # keywords are removed from the Person package    
 
+=head1 EXTENDING AND EMBEDDING MOOSE
+
+Moose also offers some options for extending or embedding it into your own 
+framework. The basic premise is to have something that sets up your class'
+metaclass and export the moose declarators (C<has>, C<with>, C<extends>,...). 
+Here is an example:
+
+    package MyFramework;
+    use Moose;
+    
+    sub import {
+        my $CALLER = caller();
+
+        strict->import;
+        warnings->import;
+
+        # we should never export to main
+        return if $CALLER eq 'main';
+        Moose::init_meta( $CALLER, 'MyFramework::Base' );
+        Moose->import({into => $CALLER});
+
+        # Do my custom framework stuff
+        
+        return 1;
+    }
+    
+=head2 B<import>
+
+Moose's C<import> method supports the Sub::Exporter form of C<{into =E<gt> $pkg}>
+and C<{into_level =E<gt> 1}>
+
+=head2 B<init_meta ($class, $baseclass, $metaclass)>
+
+Moose does some boot strapping: it creates a metaclass object for your class, 
+and then injects a C<meta> accessor into your class. Then it sets a baseclass 
+unlesss one is already defined. This is all done via C<init_meta> which takes
+the name of your class and optionally a baseclass and a metaclass as arguments.
+    
 =head1 CAVEATS
 
 =over 4

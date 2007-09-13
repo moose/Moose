@@ -6,6 +6,10 @@ Revision history for Perl extension Moose
     * Moose
       - added all the meta classes to the immutable list and 
         set it to inline the accessors
+      - fix import to allow Sub::Exporter like { into => } 
+	and { into_level => } (perigrin)
+      - exposed and documented init_meta() to allow better 
+	embedding and extending of Moose (perigrin)
 
     * Moose::Util::TypeConstraint
       - no longer uses package variable to keep track of 
