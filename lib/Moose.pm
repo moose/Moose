@@ -29,9 +29,10 @@ use Moose::Util::TypeConstraints;
 
 {
     my $CALLER;
-
+    
     sub _init_meta {
-        my $class = $CALLER;
+        my ($class, $base_class) = @_;
+        $base_class = $class unless defined $base_class;
 
         # make a subtype for each Moose class
         subtype $class
@@ -65,7 +66,7 @@ use Moose::Util::TypeConstraints;
         }
 
         # make sure they inherit from Moose::Object
-        $meta->superclasses('Moose::Object')
+        $meta->superclasses($base_class)
            unless $meta->superclasses();
     }
 
@@ -194,16 +195,18 @@ use Moose::Util::TypeConstraints;
         }
     });
     
-    sub import {     
-        $CALLER = caller();
-        
+    sub import {
+        $CALLER
+              = ref $_[1] && defined $_[1]->{into}       ? $_[1]->{into}
+              : ref $_[1] && defined $_[1]->{into_level} ? caller($_[1]->{into_level})
+              :                                            caller();
         strict->import;
         warnings->import;        
 
         # we should never export to main
         return if $CALLER eq 'main';
     
-        _init_meta();
+        _init_meta($CALLER, 'Moose::Object');
         
         goto $exporter;
     }
