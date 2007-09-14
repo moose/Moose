@@ -13,6 +13,12 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Object';
 
+__PACKAGE__->meta->add_attribute('parent_registry' => (
+    reader    => 'get_parent_registry',
+    writer    => 'set_parent_registry',    
+    predicate => 'has_parent_registry',    
+));
+
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     reader  => 'type_constraints',
     default => sub { {} }
@@ -39,6 +45,15 @@ sub add_type_constraint {
     $self->type_constraints->{$type->name} = $type;
 }
 
+sub find_type_constraint {
+    my ($self, $type_name) = @_;
+    return $self->get_type_constraint($type_name)
+        if $self->has_type_constraint($type_name);
+    return $self->get_parent_registry->find_type_constraint($type_name)
+        if $self->has_parent_registry;
+    return;
+}
+
 1;
 
 __END__
@@ -60,13 +75,21 @@ Moose::Meta::TypeConstraint::Registry
 
 =item B<new>
 
+=item B<get_parent_registry>
+
+=item B<set_parent_registry ($registry)>
+    
+=item B<has_parent_registry>
+
 =item B<type_constraints>
 
-=item B<has_type_constraint>
+=item B<has_type_constraint ($type_name)>
 
-=item B<get_type_constraint>
+=item B<get_type_constraint ($type_name)>
 
-=item B<add_type_constraint>
+=item B<add_type_constraint ($type)>
+
+=item B<find_type_constraint ($type_name)>
 
 =back
 
