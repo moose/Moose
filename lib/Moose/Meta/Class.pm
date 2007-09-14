@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.14';
+our $VERSION   = '0.15';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -125,7 +125,16 @@ sub get_method_map {
         my $gv = B::svref_2object($code)->GV;
 
         my $pkg = $gv->STASH->NAME;
-        if ($pkg->can('meta') && $pkg->meta && $pkg->meta->isa('Moose::Meta::Role')) {
+        if ($pkg->can('meta') 
+            # NOTE:
+            # we don't know what ->meta we are calling
+            # here, so we need to be careful cause it 
+            # just might blow up at us, or just complain 
+            # loudly (in the case of Curses.pm) so we 
+            # just be a little overly cautious here.
+            # - SL
+            && eval { no warnings; blessed($pkg->meta) }
+            && $pkg->meta->isa('Moose::Meta::Role')) {
             #my $role = $pkg->meta->name;
             #next unless $self->does_role($role);
         }

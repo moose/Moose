@@ -73,6 +73,9 @@ my $REGISTRY = Moose::Meta::TypeConstraint::Registry->new;
 sub _get_type_constraint_registry { $REGISTRY }
 sub _dump_type_constraints        { $REGISTRY->dump }
 
+# NOTE:
+# this method breaks down the sugar 
+# from the functions below.
 sub _create_type_constraint ($$$;$$) { 
     my $name   = shift;
     my $parent = shift;
@@ -97,6 +100,7 @@ sub _create_type_constraint ($$$;$$) {
     }                    
                           
     $parent = $REGISTRY->get_type_constraint($parent) if defined $parent;
+    
     my $constraint = Moose::Meta::TypeConstraint->new(
         name               => $name || '__ANON__',
         parent             => $parent,            
