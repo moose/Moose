@@ -231,8 +231,6 @@ sub _generate_default_value {
 
 1;
 
-1;
-
 __END__
 
 =pod

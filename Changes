@@ -13,6 +13,12 @@ Revision history for Perl extension Moose
 	    
 	* t/
 	  - complete re-organization of the test suite
+	  - added some new tests as well 
+
+    * Moose::Meta::Class
+      - fixed very odd and very nasty recursion bug with 
+        inner/augment (mst)
+        - added tests for this (eilara)
 
     * Moose::Util::TypeConstraint
       - no longer uses package variable to keep track of 

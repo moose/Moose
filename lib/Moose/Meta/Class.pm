@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.15';
+our $VERSION   = '0.16';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -180,11 +180,10 @@ sub add_override_method_modifier {
         my @args = @_;
         no warnings 'redefine';
         if ($Moose::SUPER_SLOT{$_super_package}) {
-          local *{$Moose::SUPER_SLOT{$_super_package}}
-            = sub { $super->(@args) };
-          return $method->(@args);
+            local *{$Moose::SUPER_SLOT{$_super_package}} = sub { $super->(@args) };
+            return $method->(@args);
         } else {
-          confess "Trying to call override modifier'd method without super()";
+            confess "Trying to call override modifier'd method without super()";
         }
     }));
 }
@@ -211,11 +210,14 @@ sub add_augment_method_modifier {
         my @args = @_;
         no warnings 'redefine';
         if ($Moose::INNER_SLOT{$_super_package}) {
-          local *{$Moose::INNER_SLOT{$_super_package}}
-            = sub { $method->(@args) };
-          return $super->(@args);
-        } else {
-          return $super->(@args);
+            local *{$Moose::INNER_SLOT{$_super_package}} = sub { 
+                local *{$Moose::INNER_SLOT{$_super_package}} = sub {}; 
+                $method->(@args);
+            };
+            return $super->(@args);
+        } 
+        else {          
+            return $super->(@args);
         }
     });
 }
