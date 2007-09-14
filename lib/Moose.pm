@@ -750,9 +750,10 @@ and C<{into_level =E<gt> 1}>
 =head2 B<init_meta ($class, $baseclass, $metaclass)>
 
 Moose does some boot strapping: it creates a metaclass object for your class, 
-and then injects a C<meta> accessor into your class. Then it sets a baseclass 
-unlesss one is already defined. This is all done via C<init_meta> which takes
-the name of your class and optionally a baseclass and a metaclass as arguments.
+and then injects a C<meta> accessor into your class to retrieve it. Then it 
+sets your baseclass to Moose::Object or the value you pass in unless you already 
+have one. This is all done via C<init_meta> which takes the name of your class 
+and optionally a baseclass and a metaclass as arguments.
     
 =head1 CAVEATS
 
