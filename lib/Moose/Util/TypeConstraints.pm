@@ -33,7 +33,10 @@ sub optimize_as                  (&);
 sub enum                         ($;@);
 
 use Moose::Meta::TypeConstraint;
+use Moose::Meta::TypeConstraint::Union;
+use Moose::Meta::TypeConstraint::Container;
 use Moose::Meta::TypeCoercion;
+use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
 
 my @exports = qw/
@@ -130,11 +133,15 @@ sub _install_type_coercions ($$) {
 
 sub create_type_constraint_union (@) {
     my (@type_constraint_names) = @_;
-    return Moose::Meta::TypeConstraint->union(
-        map { 
-            $REGISTRY->get_type_constraint($_) 
-        } @type_constraint_names
-    );
+    (scalar @type_constraint_names >= 2)
+        || confess "You must pass in at least 2 type names to make a union";    
+    return Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => [
+            map { 
+                $REGISTRY->get_type_constraint($_) 
+            } @type_constraint_names        
+        ],
+    );    
 }
 
 sub export_type_constraints_as_functions {

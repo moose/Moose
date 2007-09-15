@@ -5,16 +5,11 @@ use strict;
 use warnings;
 use metaclass;
 
+use Moose::Meta::TypeCoercion::Union;
+
 our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
-# NOTE:
-# this is not really correct, but 
-# I think it shoul be here anyway.
-# In truth, this should implement 
-# the same abstract base/interface
-# as the TC moule.
-# - SL
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
@@ -23,76 +18,30 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 ));
 
 sub new { 
-    my $class = shift;
-    my $self  = $class->meta->new_object(@_);
+    my ($class, %options) = @_;
+    my $self = $class->SUPER::new(
+        name     => (join ' | ' => map { $_->name } @{$options{type_constraints}}),
+        parent   => undef,
+        message  => undef,
+        hand_optimized_type_constraint => undef,
+        compiled_type_constraint => sub {
+            my $value = shift;
+            foreach my $type (@{$options{type_constraints}}) {
+                return 1 if $type->check($value);
+            }
+            return undef;    
+        },
+        %options
+    );
+    $self->_set_constraint(sub { $self->check($_[0]) });
+    $self->coercion(Moose::Meta::TypeCoercion::Union->new(
+        type_constraint => $self
+    ));
     return $self;
 }
 
-sub name { join ' | ' => map { $_->name } @{$_[0]->type_constraints} }
-
-# NOTE:
-# this should probably never be used
-# but we include it here for completeness
-sub constraint    { 
-    my $self = shift;
-    sub { $self->check($_[0]) }; 
-}
-
-# conform to the TypeConstraint API
-sub parent        { undef  }
-sub message       { undef  }
-sub has_message   { 0      }
-
-# FIXME:
-# not sure what this should actually do here
-sub coercion { undef  }
-
-# this should probably be memoized
-sub has_coercion  {
-    my $self  = shift;
-    foreach my $type (@{$self->type_constraints}) {
-        return 1 if $type->has_coercion
-    }
-    return 0;    
-}
-
-# NOTE:
-# this feels too simple, and may not always DWIM
-# correctly, especially in the presence of 
-# close subtype relationships, however it should 
-# work for a fair percentage of the use cases
-sub coerce { 
-    my $self  = shift;
-    my $value = shift;
-    foreach my $type (@{$self->type_constraints}) {
-        if ($type->has_coercion) {
-            my $temp = $type->coerce($value);
-            return $temp if $self->check($temp);
-        }
-    }
-    return undef;    
-}
-
-sub _compiled_type_constraint {
-    my $self  = shift;
-    return sub {
-        my $value = shift;
-        foreach my $type (@{$self->type_constraints}) {
-            return 1 if $type->check($value);
-        }
-        return undef;    
-    }
-}
-
-sub check {
-    my $self  = shift;
-    my $value = shift;
-    $self->_compiled_type_constraint->($value);
-}
-
 sub validate {
-    my $self  = shift;
-    my $value = shift;
+    my ($self, $value) = @_;
     my $message;
     foreach my $type (@{$self->type_constraints}) {
         my $err = $type->validate($value);
@@ -118,20 +67,6 @@ sub is_subtype_of {
     }
     return 0;
 }
-
-## hand optimized constraints 
-
-# NOTE:
-# it will just use all the hand optimized 
-# type constraints from it's list of type 
-# constraints automatically, but there is 
-# no simple way to optimize it even more 
-# (without B::Deparse or something). So  
-# we just stop here.
-# - SL
-
-sub has_hand_optimized_type_constraint { 0 }
-sub hand_optimized_type_constraint     { undef }
 
 1;
 

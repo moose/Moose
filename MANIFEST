@@ -26,6 +26,7 @@ lib/Moose/Meta/Instance.pm
 lib/Moose/Meta/Method.pm
 lib/Moose/Meta/Role.pm
 lib/Moose/Meta/TypeCoercion.pm
+lib/Moose/Meta/TypeCoercion/Union.pm
 lib/Moose/Meta/TypeConstraint.pm
 lib/Moose/Meta/Method/Accessor.pm
 lib/Moose/Meta/Method/Constructor.pm

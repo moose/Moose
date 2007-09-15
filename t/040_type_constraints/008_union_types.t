@@ -21,7 +21,7 @@ ok($Str->check('String'), '... Str can accept an String value');
 ok(!$Undef->check('String'), '... Undef cannot accept an Str value');
 ok($Undef->check(undef), '... Undef can accept an Undef value');
 
-my $Str_or_Undef = Moose::Meta::TypeConstraint->union($Str, $Undef);
+my $Str_or_Undef = Moose::Meta::TypeConstraint::Union->new(type_constraints => [$Str, $Undef]);
 isa_ok($Str_or_Undef, 'Moose::Meta::TypeConstraint::Union');
 
 ok($Str_or_Undef->check(undef), '... (Str | Undef) can accept an Undef value');
@@ -40,7 +40,7 @@ ok(!$ArrayRef->check({}), '... ArrayRef cannot accept an {} value');
 ok($HashRef->check({}), '... HashRef can accept an {} value');
 ok(!$HashRef->check([]), '... HashRef cannot accept an [] value');
 
-my $HashOrArray = Moose::Meta::TypeConstraint->union($ArrayRef, $HashRef);
+my $HashOrArray = Moose::Meta::TypeConstraint::Union->new(type_constraints => [$ArrayRef, $HashRef]);
 isa_ok($HashOrArray, 'Moose::Meta::TypeConstraint::Union');
 
 ok($HashOrArray->check([]), '... (ArrayRef | HashRef) can accept []');

@@ -20,28 +20,6 @@ Revision history for Perl extension Moose
         inner/augment (mst)
         - added tests for this (eilara)
 
-    * Moose::Util::TypeConstraint
-      - no longer uses package variable to keep track of 
-        the type constraints, now uses the an instance of
-        Moose::Meta::TypeConstraint::Registry to do it
-
-    * Moose::Meta::TypeConstraint
-      - some minor adjustments to make subclassing easier
-      - added the package_defined_in attribute so that we 
-        can track where the type constraints are created
-      
-    * Moose::Meta::TypeConstraint::Union
-      - this is not a subclass of Moose::Meta::TypeConstraint      
-        which is more correct
-      
-    * Moose::Meta::TypeConstraint::Container
-      - added this module (taken from MooseX::AttributeHelpers)
-        to help construct nested collection types
-        - added tests for this
-    
-    * Moose::Meta::TypeConstraint::Registry
-      - added this class to keep track of type constraints
-    
     * Moose::Meta::Attribute
       Moose::Meta::Method::Constructor
       Moose::Meta::Method::Accessor
@@ -53,6 +31,36 @@ Revision history for Perl extension Moose
       - these are bits of documentation, not quite as big as 
         Recipes but which have no clear place in the module docs. 
         So they are Snacks! (horray for castaway++)
+
+    +++ Major Refactor of the Type Constraint system +++
+    +++       with new features added as well        +++
+
+    * Moose::Util::TypeConstraint
+      - no longer uses package variable to keep track of 
+        the type constraints, now uses the an instance of
+        Moose::Meta::TypeConstraint::Registry to do it
+
+    * Moose::Meta::TypeConstraint
+      - some minor adjustments to make subclassing easier
+      - added the package_defined_in attribute so that we 
+        can track where the type constraints are created
+      
+    * Moose::Meta::TypeConstraint::Union
+      - this is now been refactored to be a subclass of 
+        Moose::Meta::TypeConstraint
+        
+    * Moose::Meta::TypeCoercion::Union
+      - this has been added to service the newly refactored
+        Moose::Meta::TypeConstraint::Union and is itself 
+        a subclass of Moose::Meta::TypeCoercion
+      
+    * Moose::Meta::TypeConstraint::Container
+      - added this module (taken from MooseX::AttributeHelpers)
+        to help construct nested collection types
+        - added tests for this
+    
+    * Moose::Meta::TypeConstraint::Registry
+      - added this class to keep track of type constraints
 
 0.25 Mon. Aug. 13, 2007
     * Moose

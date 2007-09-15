@@ -15,11 +15,11 @@ use Scalar::Util 'blessed';
 our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::TypeConstraint::Union;
-use Moose::Meta::TypeConstraint::Container;
-
-__PACKAGE__->meta->add_attribute('name'       => (reader => 'name'      ));
-__PACKAGE__->meta->add_attribute('parent'     => (reader => 'parent'    ));
+__PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));
+__PACKAGE__->meta->add_attribute('parent'     => (
+    reader    => 'parent',
+    predicate => 'has_parent',
+));
 __PACKAGE__->meta->add_attribute('constraint' => (
     reader => 'constraint',
     writer => '_set_constraint',
@@ -32,18 +32,18 @@ __PACKAGE__->meta->add_attribute('coercion'   => (
     accessor  => 'coercion',
     predicate => 'has_coercion'
 ));
-
-# private accessor
-__PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
-    accessor => '_compiled_type_constraint'
-));
-
 __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     init_arg  => 'optimized',
     accessor  => 'hand_optimized_type_constraint',
     predicate => 'has_hand_optimized_type_constraint',    
 ));
 
+# private accessors
+
+__PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
+    accessor  => '_compiled_type_constraint',
+    predicate => '_has_compiled_type_constraint'
+));
 __PACKAGE__->meta->add_attribute('package_defined_in' => (
     accessor => '_package_defined_in'
 ));
@@ -51,79 +51,13 @@ __PACKAGE__->meta->add_attribute('package_defined_in' => (
 sub new { 
     my $class = shift;
     my $self  = $class->meta->new_object(@_);
-    $self->compile_type_constraint();
+    $self->compile_type_constraint()
+        unless $self->_has_compiled_type_constraint;
     return $self;
 }
 
-sub coerce { 
-    ((shift)->coercion || confess "Cannot coerce without a type coercion")->coerce(@_) 
-}
-
-sub _collect_all_parents {
-    my $self = shift;
-    my @parents;
-    my $current = $self->parent;
-    while (defined $current) {
-        push @parents => $current;
-        $current = $current->parent;
-    }
-    return @parents;
-}
-
-sub compile_type_constraint {
-    my $self  = shift;
-    
-    if ($self->has_hand_optimized_type_constraint) {
-        my $type_constraint = $self->hand_optimized_type_constraint;
-        $self->_compiled_type_constraint(sub {
-            return undef unless $type_constraint->($_[0]);
-            return 1;
-        });
-        return;
-    }
-    
-    my $check = $self->constraint;
-    (defined $check)
-        || confess "Could not compile type constraint '" . $self->name . "' because no constraint check";
-    my $parent = $self->parent;
-    if (defined $parent) {
-        # we have a subtype ...    
-        # so we gather all the parents in order
-        # and grab their constraints ...
-        my @parents;
-        foreach my $parent ($self->_collect_all_parents) {
-            if ($parent->has_hand_optimized_type_constraint) {
-                unshift @parents => $parent->hand_optimized_type_constraint;
-                last;                
-            }
-            else {
-                unshift @parents => $parent->constraint;
-            }
-        }
-        
-        # then we compile them to run without
-        # having to recurse as we did before
-		$self->_compiled_type_constraint(subname $self->name => sub { 			
-			local $_ = $_[0];
-            foreach my $parent (@parents) {
-                return undef unless $parent->($_[0]);
-            }
-			return undef unless $check->($_[0]);
-			1;
-		});               
-    }
-    else {
-        # we have a type ....
-    	$self->_compiled_type_constraint(subname $self->name => sub { 
-    		local $_ = $_[0];
-    		return undef unless $check->($_[0]);
-    		1;
-    	});
-    }
-}
-
-sub check { $_[0]->_compiled_type_constraint->($_[1]) }
-
+sub coerce   { ((shift)->coercion || confess "Cannot coerce without a type coercion")->coerce(@_) }
+sub check    { $_[0]->_compiled_type_constraint->($_[1]) }
 sub validate { 
     my ($self, $value) = @_;
     if ($self->_compiled_type_constraint->($value)) {
@@ -140,6 +74,8 @@ sub validate {
     }
 }
 
+## type predicates ...
+
 sub is_a_type_of {
     my ($self, $type_name) = @_;
     ($self->name eq $type_name || $self->is_subtype_of($type_name));
@@ -155,17 +91,97 @@ sub is_subtype_of {
     return 0;
 }
 
-sub union {
-    my ($class, @type_constraints) = @_;
-    (scalar @type_constraints >= 2)
-        || confess "You must pass in at least 2 Moose::Meta::TypeConstraint instances to make a union";    
-    (blessed($_) && $_->isa('Moose::Meta::TypeConstraint'))
-        || confess "You must pass in only Moose::Meta::TypeConstraint instances to make unions"
-            foreach @type_constraints;
-    return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => \@type_constraints,
-    );
+## compiling the type constraint
+
+sub compile_type_constraint {
+    my $self = shift;
+    $self->_compiled_type_constraint($self->_actually_compile_type_constraint);
 }
+
+## type compilers ...
+
+sub _actually_compile_type_constraint {
+    my $self = shift;
+    
+    return $self->_compile_hand_optimized_type_constraint
+        if $self->has_hand_optimized_type_constraint;
+    
+    my $check = $self->constraint;
+    (defined $check)
+        || confess "Could not compile type constraint '" 
+                . $self->name 
+                . "' because no constraint check";
+                
+    return $self->_compile_subtype($check)
+        if $self->has_parent;
+        
+    return $self->_compile_type($check);
+}
+
+sub _compile_hand_optimized_type_constraint {
+    my $self = shift;
+    
+    my $type_constraint = $self->hand_optimized_type_constraint;
+    
+    return sub {
+        return undef unless $type_constraint->($_[0]);
+        return 1;
+    };    
+}
+
+sub _compile_subtype {
+    my ($self, $check) = @_;
+    
+    # so we gather all the parents in order
+    # and grab their constraints ...
+    my @parents;
+    foreach my $parent ($self->_collect_all_parents) {
+        if ($parent->has_hand_optimized_type_constraint) {
+            unshift @parents => $parent->hand_optimized_type_constraint;
+            last;                
+        }
+        else {
+            unshift @parents => $parent->constraint;
+        }
+    }
+    
+    # then we compile them to run without
+    # having to recurse as we did before
+	return subname $self->name => sub { 			
+		local $_ = $_[0];
+        foreach my $parent (@parents) {
+            return undef unless $parent->($_[0]);
+        }
+		return undef unless $check->($_[0]);
+		1;
+	};    
+}
+
+sub _compile_type {
+    my ($self, $check) = @_;
+	return subname $self->name => sub { 
+		local $_ = $_[0];
+		return undef unless $check->($_[0]);
+		1;
+	};    
+}
+
+## other utils ...
+
+sub _collect_all_parents {
+    my $self = shift;
+    my @parents;
+    my $current = $self->parent;
+    while (defined $current) {
+        push @parents => $current;
+        $current = $current->parent;
+    }
+    return @parents;
+}
+
+## this should get deprecated actually ...
+
+sub union { die "DEPRECATED" }
 
 1;
 
@@ -225,6 +241,8 @@ the C<message> will be used to construct a custom error message.
 
 =item B<parent>
 
+=item B<has_parent>
+
 =item B<constraint>
 
 =item B<has_message>
@@ -241,9 +259,14 @@ the C<message> will be used to construct a custom error message.
 
 =back
 
+=head2 DEPRECATED METHOD
+
 =over 4
 
-=item B<union (@type_constraints)>
+=item B<union>
+
+This was just bad idea on my part,.. use the L<Moose::Meta::TypeConstraint::Union>
+itself instead.
 
 =back
 
