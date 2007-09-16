@@ -159,7 +159,12 @@ use Moose::Util::TypeConstraints;
     });
     
     sub import {
-        $CALLER = caller();
+        $CALLER =
+            ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
+          : ref $_[1]
+          && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
+          :                                caller();
+
         
         strict->import;
         warnings->import;        
