@@ -20,8 +20,6 @@ __PACKAGE__->meta->add_attribute('container_type' => (
 sub compile_type_constraint {
     my $self = shift;
     
-    my $parent_name = $self->parent->name;
-    
     ($self->has_container_type)
         || confess "You cannot create a Container type without one";
         
@@ -31,6 +29,8 @@ sub compile_type_constraint {
         || confess "The container type must be a Moose meta type";
     
     my $constraint;
+    
+    my $parent_name = $self->parent->name;
     
     if ($parent_name eq 'ArrayRef') {
         $constraint = sub {

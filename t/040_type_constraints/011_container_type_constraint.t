@@ -3,11 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More no_plan => 1;
+use Test::More tests => 22;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');           
+BEGIN {    
     use_ok('Moose::Util::TypeConstraints');               
     use_ok('Moose::Meta::TypeConstraint::Container');               
 }
