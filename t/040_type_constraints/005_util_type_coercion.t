@@ -43,7 +43,7 @@ coerce "Math::BigFloat"
 		=> via { Math::BigFloat->new( $_ ) };
 
         
-Moose::Util::TypeConstraints->export_type_contstraints_as_functions();        
+Moose::Util::TypeConstraints->export_type_constraints_as_functions();        
         
 my $header = HTTPHeader->new();
 isa_ok($header, 'HTTPHeader');

@@ -1,8 +1,6 @@
 -------------------------------------------------------------------------------
  BUGS
 ------------------------------------------------------------------------------- 
- 
-mst: if I do "subtype 'Foo' => as 'Bar';" I get an empty condition and it dies
 
 -------------------------------------------------------------------------------
 TODO
@@ -50,26 +48,6 @@ over there.. in that other object
 
 (... probably be a custom metaclass)
 
-- compile time extends
-
-[00:39] 	sri	    but maybe a better syntax for compile time extends
-[00:39] 	stevan	I have been pondering that actually
-[00:39] 	sri	    use Moose extends => Foo::Bar
-[00:40] 	stevan	I think now that we have the Sub::Exporter stuff 
-                    in, that kinda thing should be pretty easy
-
-nothingmuch notes that all the constructs should be supported in the entirety of the use clause:
-
-    use Moose (
-        has => foo (
-            ....
-        ),
-    );
-
-and that if this usage style is used nothing is exported to the namespace.
-
-- default should dclone()
-
 - subtype $anon_subtype => where { ... }
 
 [22:56] 	stevan	sub mst_doesnt_like_to_type { (shift)->meta->attr->type_contstraint }
@@ -100,20 +78,6 @@ and that if this usage style is used nothing is exported to the namespace.
 [23:01] 	mst	right
 [23:01] 	stevan	ok
 
-- method keyword
-
-[23:37] 	mst	more seriously, I'd still like a "method" keyword or something
-[23:37] 	mst	method 'foo' => sub { ... };
-[23:38] 	stevan	what would it do more than sub foo { ... }?
-[23:39] 	stevan	I would like multimethods actually
-[23:39] 	mst	almost exactly nothing, to begin with
-[23:39] 	stevan	but thats just cause I love CLOS and am reading a book on Dylan now
-[23:40] 	stevan	keyword squating :)
-[23:40] 	mst	but if we need to hook stuff later it's bloody handy to already have people writing it that way
-[23:40] 	mst	right
-...
-[23:49] 	mst	oh, also: method 'has' => sub { ... } could squelch the redefine warning
-  
 - local coerce
 
 [13:16] 	mst	stevan: slight problem with coerce

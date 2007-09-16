@@ -25,7 +25,7 @@ BEGIN {
 	};
 	::ok(!$@, '... successfully exported &subtype to Foo package');	
 	
-    Moose::Util::TypeConstraints->export_type_contstraints_as_functions();	
+    Moose::Util::TypeConstraints->export_type_constraints_as_functions();	
 	
 	::ok(MyRef({}), '... Ref worked correctly');
 	::ok(MyArrayRef([]), '... ArrayRef worked correctly');	

@@ -11,7 +11,7 @@ BEGIN {
     use_ok('Moose::Meta::TypeConstraint::Container');               
 }
 
-my $r = Moose::Util::TypeConstraints->_get_type_constraint_registry;
+my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
 
 # Array of Ints
 

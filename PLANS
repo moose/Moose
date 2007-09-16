@@ -9,30 +9,6 @@ This will make it much easier to generate TCs on their own, without
 having to use the sugar layer. This should also clean up their APIs 
 as well, which will make it easier to subclass them.
 
-- create an official TC registry API
-
-Right now the registration of the TC is a by-product of creation in the sugar 
-layer, this is bad and make extension of TCs difficult. I am not sure if this 
-registry API should exist as part of Moose::Util::TypeConstraints, or of we 
-should create a complete registry object itself. 
-
-This registry should be a singleton, but M::U::TC should enforce that lifecycle 
-choice so that you can use your own registry if you really want too.
-
-I mean parent of the registry. So that I can create my own registry
-object for a given class, and any retrieval of a type constraint from
-this object would automatically search parent registries as well.
-
-- refactor the various TC internals to make it more subclassing friendly
-
-This also includes the coercion stuff as well. This should give you what you 
-need to make your object/class bound stuff.
-
-- move the container TCs from MooseX::AttributeHelpers into Moose core
-
-These have proven so useful for me in the latest $work project that I think 
-they should really be core. 
-
 - allow a switch of some kind to optionally turn TC checking off at runtime 
 
 The type checks can get expensive and some people have suggested that allowing 
@@ -87,6 +63,47 @@ subtype Foo => as Bar => where { ... } => in __PACKAGE__ ;
 
 my $Foo = subtype Bar => where { ... };
 
+# ----------
+
+[17:10]  <autarch> stevan: it should do it if I pass coerce => 1 as part of the attribute definition
+[17:12]  <stevan> autarch: what I am not 100% sure of is how to tell it to deep coerce and when to not 
+[17:13]  <stevan> cause a basic coerce is from A to B
+[17:13]  <autarch> hmm
+[17:13]  <stevan> which is valid for collection types too
+[17:13]  <stevan> deep coercion is what you are asking for
+[17:13]  <autarch> yeah
+[17:13]  <stevan> so perhaps we add deep_coerce => 1
+[17:13]  <stevan> which will do it
+[17:13]  <autarch> that's fine for me
+[17:13]  <stevan> k
+
+-----------------------------------------------------------
+- TC stuff DONE
+-----------------------------------------------------------
+
+- create an official TC registry API (DONE)
+
+Right now the registration of the TC is a by-product of creation in the sugar 
+layer, this is bad and make extension of TCs difficult. I am not sure if this 
+registry API should exist as part of Moose::Util::TypeConstraints, or of we 
+should create a complete registry object itself. 
+
+This registry should be a singleton, but M::U::TC should enforce that lifecycle 
+choice so that you can use your own registry if you really want too.
+
+I mean parent of the registry. So that I can create my own registry
+object for a given class, and any retrieval of a type constraint from
+this object would automatically search parent registries as well.
+
+- refactor the various TC internals to make it more subclassing friendly (DONE)
+
+This also includes the coercion stuff as well. This should give you what you 
+need to make your object/class bound stuff.
+
+- move the container TCs from MooseX::AttributeHelpers into Moose core (DONE)
+
+These have proven so useful for me in the latest $work project that I think 
+they should really be core.
 
 -----------------------------------------------------------
 -- Roles refactor

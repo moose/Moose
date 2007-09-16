@@ -20,7 +20,7 @@ my $GLOB_REF   = \*GLOB_REF;
 my $fh;
 open($fh, '<', $0) || die "Could not open $0 for the test";
 
-Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
+Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
 ok(defined Any(0),               '... Any accepts anything');
 ok(defined Any(100),             '... Any accepts anything');

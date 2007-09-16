@@ -12,25 +12,36 @@ use Sub::Exporter;
 our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
-# Prototyped subs must be predeclared because we have a circular dependency
-# with Moose::Meta::Attribute et. al. so in case of us being use'd first the
-# predeclaration ensures the prototypes are in scope when consumers are
-# compiled
+## --------------------------------------------------------
+# Prototyped subs must be predeclared because we have a 
+# circular dependency with Moose::Meta::Attribute et. al. 
+# so in case of us being use'd first the predeclaration 
+# ensures the prototypes are in scope when consumers are
+# compiled.
 
-sub find_type_constraint         ($);
-sub _create_type_constraint      ($$$;$$);
-sub _install_type_coercions      ($$);
-sub create_type_constraint_union (@);
-sub type                         ($$;$$);
-sub subtype                      ($$;$$$);
-sub coerce                       ($@);
-sub as                           ($);
-sub from                         ($);
-sub where                        (&);
-sub via                          (&);
-sub message                      (&);
-sub optimize_as                  (&);
-sub enum                         ($;@);
+# creation and location
+sub find_type_constraint             ($);
+sub find_or_create_type_constraint   ($;$);
+sub create_type_constraint_union     (@);
+sub create_container_type_constraint ($);
+
+# dah sugah!
+sub type        ($$;$$);
+sub subtype     ($$;$$$);
+sub coerce      ($@);
+sub as          ($);
+sub from        ($);
+sub where       (&);
+sub via         (&);
+sub message     (&);
+sub optimize_as (&);
+sub enum        ($;@);
+
+## private stuff ...        
+sub _create_type_constraint ($$$;$$);
+sub _install_type_coercions ($$);
+
+## --------------------------------------------------------
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
@@ -71,79 +82,14 @@ sub unimport {
     }
 }
 
+## --------------------------------------------------------
+## type registry and some useful functions for it
+## --------------------------------------------------------
+
 my $REGISTRY = Moose::Meta::TypeConstraint::Registry->new;
 
-sub _get_type_constraint_registry { $REGISTRY }
-sub _dump_type_constraints        { $REGISTRY->dump }
-
-# NOTE:
-# this method breaks down the sugar 
-# from the functions below.
-sub _create_type_constraint ($$$;$$) { 
-    my $name   = shift;
-    my $parent = shift;
-    my $check  = shift || sub { 1 };
-    
-    my ($message, $optimized);
-    for (@_) {
-        $message   = $_->{message}   if exists $_->{message};
-        $optimized = $_->{optimized} if exists $_->{optimized};            
-    }
-
-    my $pkg_defined_in = scalar(caller(0));
-    
-    if (defined $name) {
-        my $type = $REGISTRY->get_type_constraint($name);
-    
-        ($type->_package_defined_in eq $pkg_defined_in)
-            || confess ("The type constraint '$name' has already been created in " 
-                       . $type->_package_defined_in . " and cannot be created again in "
-                       . $pkg_defined_in)
-                 if defined $type;   
-    }                    
-                          
-    $parent = $REGISTRY->get_type_constraint($parent) if defined $parent;
-    
-    my $constraint = Moose::Meta::TypeConstraint->new(
-        name               => $name || '__ANON__',
-        parent             => $parent,            
-        constraint         => $check,       
-        message            => $message,    
-        optimized          => $optimized,
-        package_defined_in => $pkg_defined_in,
-    );
-
-    $REGISTRY->add_type_constraint($constraint)
-        if defined $name;
-
-    return $constraint;
-}
-
-sub _install_type_coercions ($$) { 
-    my ($type_name, $coercion_map) = @_;
-    my $type = $REGISTRY->get_type_constraint($type_name);
-    (!$type->has_coercion)
-        || confess "The type coercion for '$type_name' has already been registered";        
-    my $type_coercion = Moose::Meta::TypeCoercion->new(
-        type_coercion_map => $coercion_map,
-        type_constraint   => $type
-    );            
-    $type->coercion($type_coercion);
-}
-
-sub create_type_constraint_union (@) {
-    my (@type_constraint_names) = @_;
-    (scalar @type_constraint_names >= 2)
-        || confess "You must pass in at least 2 type names to make a union";    
-    return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => [
-            map { 
-                $REGISTRY->get_type_constraint($_) 
-            } @type_constraint_names        
-        ],
-    );    
-}
-
+sub get_type_constraint_registry         { $REGISTRY }
+sub list_all_type_constraints            { keys %{$REGISTRY->type_constraints} }   
 sub export_type_constraints_as_functions {
     my $pkg = caller();
     no strict 'refs';
@@ -153,9 +99,84 @@ sub export_type_constraints_as_functions {
 	}        
 }
 
-*Moose::Util::TypeConstraints::export_type_contstraints_as_functions = \&export_type_constraints_as_functions;
+sub create_type_constraint_union (@) {
+    my @type_constraint_names;
+    
+    if (scalar @_ == 1 && $_[0] =~ /\|/) {
+        @type_constraint_names = (split /\s*\|\s*/ => $_[0]);
+    }
+    else {
+        @type_constraint_names = @_;
+    }
+    
+    (scalar @type_constraint_names >= 2)
+        || confess "You must pass in at least 2 type names to make a union"; 
+        
+    ($REGISTRY->has_type_constraint($_))
+        || confess "Could not locate type constraint ($_) for the union"
+            foreach @type_constraint_names;
+           
+    return Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => [
+            map { 
+                $REGISTRY->get_type_constraint($_) 
+            } @type_constraint_names        
+        ],
+    );    
+}
 
-sub list_all_type_constraints { keys %{$REGISTRY->type_constraints} }   
+sub create_container_type_constraint ($) {
+    my $type_constraint_name = shift;
+    
+    my ($base_type, $container_type) = ($type_constraint_name =~ /^(.*)\[(.*)\]$/);
+    
+    (defined $base_type && defined $container_type)
+        || confess "Could not parse type name ($type_constraint_name) correctly";
+    
+    ($REGISTRY->has_type_constraint($base_type))
+        || confess "Could not locate the base type ($base_type)";
+        
+    ($REGISTRY->has_type_constraint($container_type))
+        || confess "Could not locate the container type ($container_type)";
+    
+    return Moose::Meta::TypeConstraint::Container->new(
+        name           => $type_constraint_name,
+        parent         => $REGISTRY->get_type_constraint($base_type),
+        container_type => $REGISTRY->get_type_constraint($container_type),
+    );    
+}
+
+sub find_or_create_type_constraint ($;$) {
+    my ($type_constraint_name, $options_for_anon_type) = @_;
+    
+    return $REGISTRY->get_type_constraint($type_constraint_name)
+        if $REGISTRY->has_type_constraint($type_constraint_name);
+    
+    my $constraint;
+    
+    if ($type_constraint_name =~ /\|/) {
+        $constraint = create_type_constraint_union($type_constraint_name);
+    }
+    elsif ($type_constraint_name =~ /^.*?\[.*?\]$/) {
+        $constraint = create_container_type_constraint($type_constraint_name);       
+    }
+    else {
+        # NOTE:
+        # otherwise assume that we should create
+        # an ANON type with the $options_for_anon_type 
+        # options which can be passed in. It should
+        # be noted that these don't get registered 
+        # so we need to return it.
+        # - SL
+        return Moose::Meta::TypeConstraint->new(
+            name => '__ANON__',
+            %{$options_for_anon_type}     
+        );
+    }
+    
+    $REGISTRY->add_type_constraint($constraint);
+    return $constraint;    
+}
 
 ## --------------------------------------------------------
 ## exported functions ...
@@ -209,7 +230,65 @@ sub enum ($;@) {
 	);    
 }
 
-# define some basic types
+## --------------------------------------------------------
+## desugaring functions ...
+## --------------------------------------------------------
+
+sub _create_type_constraint ($$$;$$) { 
+    my $name   = shift;
+    my $parent = shift;
+    my $check  = shift || sub { 1 };
+    
+    my ($message, $optimized);
+    for (@_) {
+        $message   = $_->{message}   if exists $_->{message};
+        $optimized = $_->{optimized} if exists $_->{optimized};            
+    }
+
+    my $pkg_defined_in = scalar(caller(0));
+    
+    if (defined $name) {
+        my $type = $REGISTRY->get_type_constraint($name);
+    
+        ($type->_package_defined_in eq $pkg_defined_in)
+            || confess ("The type constraint '$name' has already been created in " 
+                       . $type->_package_defined_in . " and cannot be created again in "
+                       . $pkg_defined_in)
+                 if defined $type;   
+    }                    
+                          
+    $parent = $REGISTRY->get_type_constraint($parent) if defined $parent;
+    
+    my $constraint = Moose::Meta::TypeConstraint->new(
+        name               => $name || '__ANON__',
+        parent             => $parent,            
+        constraint         => $check,       
+        message            => $message,    
+        optimized          => $optimized,
+        package_defined_in => $pkg_defined_in,
+    );
+
+    $REGISTRY->add_type_constraint($constraint)
+        if defined $name;
+
+    return $constraint;
+}
+
+sub _install_type_coercions ($$) { 
+    my ($type_name, $coercion_map) = @_;
+    my $type = $REGISTRY->get_type_constraint($type_name);
+    (!$type->has_coercion)
+        || confess "The type coercion for '$type_name' has already been registered";        
+    my $type_coercion = Moose::Meta::TypeCoercion->new(
+        type_coercion_map => $coercion_map,
+        type_constraint   => $type
+    );            
+    $type->coercion($type_coercion);
+}
+
+## --------------------------------------------------------
+# define some basic built-in types
+## --------------------------------------------------------
 
 type 'Any'  => where { 1 }; # meta-type including all
 type 'Item' => where { 1 }; # base-type 
@@ -277,6 +356,10 @@ subtype 'ClassName'
     => as 'Str' 
     => where { eval { $_->isa('UNIVERSAL') } }
     => optimize_as { !ref($_[0]) && eval { $_[0]->isa('UNIVERSAL') } };    
+
+## --------------------------------------------------------
+# end of built-in types ...
+## --------------------------------------------------------
 
 {
     my @BUILTINS = list_all_type_constraints();
@@ -425,9 +508,31 @@ test file.
     
 =head1 FUNCTIONS
 
-=head2 Type Constraint Registry
+=head2 Type Constraint Construction & Locating
 
 =over 4
+
+=item B<create_type_constraint_union ($pipe_seperated_types | @type_constraint_names)>
+
+Given string with C<$pipe_seperated_types> or a list of C<@type_constraint_names>, 
+this will return a L<Moose::Meta::TypeConstraint::Union> instance.
+
+=item B<create_container_type_constraint ($type_name)>
+
+Given a C<$type_name> in the form of:
+
+  BaseType[ContainerType]
+
+this will extract the base type and container type and build an instance of 
+L<Moose::Meta::TypeConstraint::Container> for it.
+
+=item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
+
+This will attempt to find or create a type constraint given the a C<$type_name>. 
+If it cannot find it in the registry, it will see if it should be a union or 
+container type an create one if appropriate, and lastly if nothing can be 
+found or created that way, it will create an anon-type using the 
+C<$options_for_anon_type> HASH ref to populate it.
 
 =item B<find_type_constraint ($type_name)>
 
@@ -435,20 +540,10 @@ This function can be used to locate a specific type constraint
 meta-object, of the class L<Moose::Meta::TypeConstraint> or a
 derivative. What you do with it from there is up to you :)
 
-=item B<create_type_constraint_union (@type_constraint_names)>
+=item B<get_type_constraint_registry>
 
-Given a list of C<@type_constraint_names>, this will return a 
-B<Moose::Meta::TypeConstraint::Union> instance.
-
-=item B<export_type_constraints_as_functions>
-
-This will export all the current type constraints as functions 
-into the caller's namespace. Right now, this is mostly used for 
-testing, but it might prove useful to others.
-
-=item B<export_type_contstraints_as_functions>
-
-Alias for the above function.
+Fetch the L<Moose::Meta::TypeConstraint::Registry> object which 
+keeps track of all type constraints.
 
 =item B<list_all_type_constraints>
 
@@ -461,6 +556,12 @@ want to.
 This will return a list of builtin type constraints, meaning, 
 those which are defined in this module. See the section 
 labeled L<Default Type Constraints> for a complete list.
+
+=item B<export_type_constraints_as_functions>
+
+This will export all the current type constraints as functions 
+into the caller's namespace. Right now, this is mostly used for 
+testing, but it might prove useful to others.
 
 =back
 

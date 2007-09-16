@@ -26,7 +26,7 @@ subtype NaturalLessThanTen
 	=> where { $_ < 10 }
 	=> message { "The number '$_' is not less than 10" };
 	
-Moose::Util::TypeConstraints->export_type_contstraints_as_functions();
+Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
 ok(Number(5), '... this is a Num');
 ok(!defined(Number('Foo')), '... this is not a Num');
