@@ -32,6 +32,10 @@ Revision history for Perl extension Moose
         Recipes but which have no clear place in the module docs. 
         So they are Snacks! (horray for castaway++)
 
+    * Moose::Cookbook::Recipe4
+      - updated it to use the new ArrayRef[MyType] construct
+        - updated the accompanying test as well
+
     +++ Major Refactor of the Type Constraint system +++
     +++       with new features added as well        +++
 

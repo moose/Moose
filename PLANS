@@ -2,13 +2,6 @@
 -- Type Constraints refactor
 -----------------------------------------------------------
 
-- move the details of TC construction that are in Moose.pm and 
-  Moose::Util::TypeConstraints into the Moose::Meta::TypeConstraint module
-
-This will make it much easier to generate TCs on their own, without 
-having to use the sugar layer. This should also clean up their APIs 
-as well, which will make it easier to subclass them.
-
 - allow a switch of some kind to optionally turn TC checking off at runtime 
 
 The type checks can get expensive and some people have suggested that allowing 
@@ -77,6 +70,8 @@ my $Foo = subtype Bar => where { ... };
 [17:13]  <autarch> that's fine for me
 [17:13]  <stevan> k
 
+coerce_deeply => 1 # reads better
+
 -----------------------------------------------------------
 - TC stuff DONE
 -----------------------------------------------------------
@@ -104,6 +99,14 @@ need to make your object/class bound stuff.
 
 These have proven so useful for me in the latest $work project that I think 
 they should really be core.
+
+- move the details of TC construction that are in Moose.pm and 
+  Moose::Util::TypeConstraints into the Moose::Meta::TypeConstraint module
+  (DONE)
+
+This will make it much easier to generate TCs on their own, without 
+having to use the sugar layer. This should also clean up their APIs 
+as well, which will make it easier to subclass them.
 
 -----------------------------------------------------------
 -- Roles refactor

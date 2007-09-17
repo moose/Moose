@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use Regexp::Common; use Locale::US;";
     plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
-    plan tests => 81;    
+    plan tests => 82;    
 }
 
 use Test::Exception;
@@ -46,43 +46,6 @@ BEGIN {
     has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
     
     __PACKAGE__->meta->make_immutable(debug => 0);
-}{
-    
-    package Company;
-    use Moose;
-    use Moose::Util::TypeConstraints;    
-    
-    has 'name'      => (is => 'rw', isa => 'Str', required => 1);
-    has 'address'   => (is => 'rw', isa => 'Address'); 
-    has 'employees' => (is => 'rw', isa => subtype ArrayRef => where { 
-        (blessed($_) && $_->isa('Employee') || return) for @$_; 1 
-    });    
-    
-    sub BUILD {
-        my ($self, $params) = @_;
-        if ($params->{employees}) {
-            foreach my $employee (@{$params->{employees}}) {
-                $employee->company($self);
-            }
-        }
-    }
-    
-    sub get_employee_count { scalar @{(shift)->employees} }
-    
-    after 'employees' => sub {
-        my ($self, $employees) = @_;
-        # if employees is defined, it 
-        # has already been type checked
-        if (defined $employees) {
-            # make sure each gets the 
-            # weak ref to the company
-            foreach my $employee (@{$employees}) {
-                $employee->company($self);
-            }            
-        }
-    };
-    
-    __PACKAGE__->meta->make_immutable(debug => 0);
 }{    
     
     package Person;
@@ -116,6 +79,40 @@ BEGIN {
         super() . ', ' . $self->title
     };
     
+    __PACKAGE__->meta->make_immutable(debug => 0);
+}{
+
+    package Company;
+    use Moose;   
+
+    has 'name'      => (is => 'rw', isa => 'Str', required => 1);
+    has 'address'   => (is => 'rw', isa => 'Address'); 
+    has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');    
+
+    sub BUILD {
+        my ($self, $params) = @_;
+        if ($params->{employees}) {
+            foreach my $employee (@{$params->{employees}}) {
+                $employee->company($self);
+            }
+        }
+    }
+
+    sub get_employee_count { scalar @{(shift)->employees} }
+
+    after 'employees' => sub {
+        my ($self, $employees) = @_;
+        # if employees is defined, it 
+        # has already been type checked
+        if (defined $employees) {
+            # make sure each gets the 
+            # weak ref to the company
+            foreach my $employee (@{$employees}) {
+                $employee->company($self);
+            }            
+        }
+    };
+
     __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
@@ -294,6 +291,10 @@ lives_ok {
 
 dies_ok {
     Company->new(name => 'Foo', employees => [ Person->new ]),    
+} '... we die correctly with good args';
+
+dies_ok {
+    Company->new(name => 'Foo', employees => [ Employee->new, Company->new ]),    
 } '... we die correctly with good args';
 
 lives_ok {
