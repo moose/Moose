@@ -8,17 +8,17 @@ use Test::Exception;
 
 BEGIN {    
     use_ok('Moose::Util::TypeConstraints');               
-    use_ok('Moose::Meta::TypeConstraint::Container');               
+    use_ok('Moose::Meta::TypeConstraint::Parameterized');               
 }
 
 # Array of Ints
 
-my $array_of_ints = Moose::Meta::TypeConstraint::Container->new(
+my $array_of_ints = Moose::Meta::TypeConstraint::Parameterized->new(
     name           => 'ArrayRef[Int]',
     parent         => find_type_constraint('ArrayRef'),
-    container_type => find_type_constraint('Int'),
+    type_parameter => find_type_constraint('Int'),
 );
-isa_ok($array_of_ints, 'Moose::Meta::TypeConstraint::Container');
+isa_ok($array_of_ints, 'Moose::Meta::TypeConstraint::Parameterized');
 isa_ok($array_of_ints, 'Moose::Meta::TypeConstraint');
 
 ok($array_of_ints->check([ 1, 2, 3, 4 ]), '... [ 1, 2, 3, 4 ] passed successfully');
@@ -31,12 +31,12 @@ ok(!$array_of_ints->check(sub { () }), '... sub { () } failed successfully');
 
 # Hash of Ints
 
-my $hash_of_ints = Moose::Meta::TypeConstraint::Container->new(
+my $hash_of_ints = Moose::Meta::TypeConstraint::Parameterized->new(
     name           => 'HashRef[Int]',
     parent         => find_type_constraint('HashRef'),
-    container_type => find_type_constraint('Int'),
+    type_parameter => find_type_constraint('Int'),
 );
-isa_ok($hash_of_ints, 'Moose::Meta::TypeConstraint::Container');
+isa_ok($hash_of_ints, 'Moose::Meta::TypeConstraint::Parameterized');
 isa_ok($hash_of_ints, 'Moose::Meta::TypeConstraint');
 
 ok($hash_of_ints->check({ one => 1, two => 2, three => 3 }), '... { one => 1, two => 2, three => 3 } passed successfully');
@@ -49,12 +49,12 @@ ok(!$hash_of_ints->check(sub { () }), '... sub { () } failed successfully');
 
 # Array of Array of Ints
 
-my $array_of_array_of_ints = Moose::Meta::TypeConstraint::Container->new(
+my $array_of_array_of_ints = Moose::Meta::TypeConstraint::Parameterized->new(
     name           => 'ArrayRef[ArrayRef[Int]]',
     parent         => find_type_constraint('ArrayRef'),
-    container_type => $array_of_ints,
+    type_parameter => $array_of_ints,
 );
-isa_ok($array_of_array_of_ints, 'Moose::Meta::TypeConstraint::Container');
+isa_ok($array_of_array_of_ints, 'Moose::Meta::TypeConstraint::Parameterized');
 isa_ok($array_of_array_of_ints, 'Moose::Meta::TypeConstraint');
 
 ok($array_of_array_of_ints->check(

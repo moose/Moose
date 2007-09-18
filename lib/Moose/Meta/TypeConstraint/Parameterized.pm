@@ -1,4 +1,4 @@
-package Moose::Meta::TypeConstraint::Container;
+package Moose::Meta::TypeConstraint::Parameterized;
 
 use strict;
 use warnings;
@@ -12,21 +12,21 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 
-__PACKAGE__->meta->add_attribute('container_type' => (
-    accessor  => 'container_type',
-    predicate => 'has_container_type',
+__PACKAGE__->meta->add_attribute('type_parameter' => (
+    accessor  => 'type_parameter',
+    predicate => 'has_type_parameter',
 ));
 
 sub compile_type_constraint {
     my $self = shift;
     
-    ($self->has_container_type)
-        || confess "You cannot create a Container type without one";
+    ($self->has_type_parameter)
+        || confess "You cannot create a Higher Order type without a type parameter";
         
-    my $container_type = $self->container_type;
+    my $type_parameter = $self->type_parameter;
     
-    (blessed $container_type && $container_type->isa('Moose::Meta::TypeConstraint'))
-        || confess "The container type must be a Moose meta type";
+    (blessed $type_parameter && $type_parameter->isa('Moose::Meta::TypeConstraint'))
+        || confess "The type parameter must be a Moose meta type";
     
     my $constraint;
     
@@ -35,14 +35,14 @@ sub compile_type_constraint {
     if ($parent_name eq 'ArrayRef') {
         $constraint = sub {
             foreach my $x (@$_) { 
-                ($container_type->check($x)) || return 
+                ($type_parameter->check($x)) || return 
             } 1;
         };
     }
     elsif ($parent_name eq 'HashRef') {
         $constraint = sub {
             foreach my $x (values %$_) { 
-                ($container_type->check($x)) || return 
+                ($type_parameter->check($x)) || return 
             } 1;
         };          
     }
@@ -64,7 +64,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint::Container
+Moose::Meta::TypeConstraint::Parameterized - Higher Order type constraints for Moose
 
 =head1 DESCRIPTION
 
@@ -74,9 +74,9 @@ Moose::Meta::TypeConstraint::Container
 
 =item B<compile_type_constraint>
 
-=item B<container_type>
+=item B<type_parameter>
 
-=item B<has_container_type>
+=item B<has_type_parameter>
 
 =item B<meta>
 

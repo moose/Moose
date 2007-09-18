@@ -20,10 +20,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 # compiled.
 
 # creation and location
-sub find_type_constraint             ($);
-sub find_or_create_type_constraint   ($;$);
-sub create_type_constraint_union     (@);
-sub create_container_type_constraint ($);
+sub find_type_constraint                 ($);
+sub find_or_create_type_constraint       ($;$);
+sub create_type_constraint_union         (@);
+sub create_parameterized_type_constraint ($);
 
 # dah sugah!
 sub type        ($$;$$);
@@ -45,7 +45,7 @@ sub _install_type_coercions ($$);
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
-use Moose::Meta::TypeConstraint::Container;
+use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
@@ -125,24 +125,24 @@ sub create_type_constraint_union (@) {
     );    
 }
 
-sub create_container_type_constraint ($) {
+sub create_parameterized_type_constraint ($) {
     my $type_constraint_name = shift;
     
-    my ($base_type, $container_type) = _parse_container_type_constraint($type_constraint_name);
+    my ($base_type, $type_parameter) = _parse_parameterized_type_constraint($type_constraint_name);
     
-    (defined $base_type && defined $container_type)
+    (defined $base_type && defined $type_parameter)
         || confess "Could not parse type name ($type_constraint_name) correctly";
     
     ($REGISTRY->has_type_constraint($base_type))
         || confess "Could not locate the base type ($base_type)";
     
-    return Moose::Meta::TypeConstraint::Container->new(
+    return Moose::Meta::TypeConstraint::Parameterized->new(
         name           => $type_constraint_name,
         parent         => $REGISTRY->get_type_constraint($base_type),
-        container_type => find_or_create_type_constraint(
-            $container_type => {
+        type_parameter => find_or_create_type_constraint(
+            $type_parameter => {
                 parent     => $REGISTRY->get_type_constraint('Object'),
-                constraint => sub { $_[0]->isa($container_type) }
+                constraint => sub { $_[0]->isa($type_parameter) }
             }
         ),
     );    
@@ -159,8 +159,8 @@ sub find_or_create_type_constraint ($;$) {
     if (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
     }
-    elsif (_detect_container_type_constraint($type_constraint_name)) {
-        $constraint = create_container_type_constraint($type_constraint_name);       
+    elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
+        $constraint = create_parameterized_type_constraint($type_constraint_name);       
     }
     else {
         # NOTE:
@@ -313,12 +313,12 @@ sub _install_type_coercions ($$) {
 
     our $any = qr{ $type | $union }x;
 
-    sub _parse_container_type_constraint {
+    sub _parse_parameterized_type_constraint {
     	$_[0] =~ m{ $type_capture_parts }x;
     	return ($1, $2);
     }
 
-    sub _detect_container_type_constraint {
+    sub _detect_parameterized_type_constraint {
     	$_[0] =~ m{ ^ $type_with_parameter $ }x;
     }
 
@@ -573,14 +573,14 @@ test file.
 Given string with C<$pipe_seperated_types> or a list of C<@type_constraint_names>, 
 this will return a L<Moose::Meta::TypeConstraint::Union> instance.
 
-=item B<create_container_type_constraint ($type_name)>
+=item B<create_parameterized_type_constraint ($type_name)>
 
 Given a C<$type_name> in the form of:
 
   BaseType[ContainerType]
 
 this will extract the base type and container type and build an instance of 
-L<Moose::Meta::TypeConstraint::Container> for it.
+L<Moose::Meta::TypeConstraint::Parameterized> for it.
 
 =item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
 

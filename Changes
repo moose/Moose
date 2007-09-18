@@ -61,7 +61,7 @@ Revision history for Perl extension Moose
         Moose::Meta::TypeConstraint::Union and is itself 
         a subclass of Moose::Meta::TypeCoercion
       
-    * Moose::Meta::TypeConstraint::Container
+    * Moose::Meta::TypeConstraint::Parameterized
       - added this module (taken from MooseX::AttributeHelpers)
         to help construct nested collection types
         - added tests for this

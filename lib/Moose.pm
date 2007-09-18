@@ -258,7 +258,7 @@ $_->meta->make_immutable(
 
     'Moose::Meta::TypeConstraint',
     'Moose::Meta::TypeConstraint::Union',
-    'Moose::Meta::TypeConstraint::Container',
+    'Moose::Meta::TypeConstraint::Parameterized',
     'Moose::Meta::TypeCoercion',
 
     'Moose::Meta::Method',

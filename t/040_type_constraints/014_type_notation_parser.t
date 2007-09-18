@@ -11,7 +11,7 @@ BEGIN {
 
 ## check the containers
 
-ok(Moose::Util::TypeConstraints::_detect_container_type_constraint($_), 
+ok(Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_), 
    '... this correctly detected a container (' . $_ . ')')
     for (
     'ArrayRef[Foo]',
@@ -20,7 +20,7 @@ ok(Moose::Util::TypeConstraints::_detect_container_type_constraint($_),
     'ArrayRef[ArrayRef[Int | Foo]]', 
 );
 
-ok(!Moose::Util::TypeConstraints::_detect_container_type_constraint($_), 
+ok(!Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_), 
    '... this correctly detected a non-container (' . $_ . ')')
     for (
     'ArrayRef[]',
@@ -38,7 +38,7 @@ ok(!Moose::Util::TypeConstraints::_detect_container_type_constraint($_),
     );
 
     is_deeply(
-        [ Moose::Util::TypeConstraints::_parse_container_type_constraint($_) ],
+        [ Moose::Util::TypeConstraints::_parse_parameterized_type_constraint($_) ],
         $split_tests{$_},
         '... this correctly split the container (' . $_ . ')'
     ) for keys %split_tests;
