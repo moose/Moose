@@ -102,8 +102,8 @@ sub export_type_constraints_as_functions {
 sub create_type_constraint_union (@) {
     my @type_constraint_names;
     
-    if (scalar @_ == 1 && $_[0] =~ /\|/) {
-        @type_constraint_names = (split /\s*\|\s*/ => $_[0]);
+    if (scalar @_ == 1 && _detect_type_constraint_union($_[0])) {
+        @type_constraint_names = _parse_type_constraint_union($_[0]);
     }
     else {
         @type_constraint_names = @_;
@@ -128,21 +128,23 @@ sub create_type_constraint_union (@) {
 sub create_container_type_constraint ($) {
     my $type_constraint_name = shift;
     
-    my ($base_type, $container_type) = ($type_constraint_name =~ /^(.*)\[(.*)\]$/);
+    my ($base_type, $container_type) = _parse_container_type_constraint($type_constraint_name);
     
     (defined $base_type && defined $container_type)
         || confess "Could not parse type name ($type_constraint_name) correctly";
     
     ($REGISTRY->has_type_constraint($base_type))
         || confess "Could not locate the base type ($base_type)";
-        
-    ($REGISTRY->has_type_constraint($container_type))
-        || confess "Could not locate the container type ($container_type)";
     
     return Moose::Meta::TypeConstraint::Container->new(
         name           => $type_constraint_name,
         parent         => $REGISTRY->get_type_constraint($base_type),
-        container_type => $REGISTRY->get_type_constraint($container_type),
+        container_type => find_or_create_type_constraint(
+            $container_type => {
+                parent     => $REGISTRY->get_type_constraint('Object'),
+                constraint => sub { $_[0]->isa($container_type) }
+            }
+        ),
     );    
 }
 
@@ -154,10 +156,10 @@ sub find_or_create_type_constraint ($;$) {
     
     my $constraint;
     
-    if ($type_constraint_name =~ /\|/) {
+    if (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
     }
-    elsif ($type_constraint_name =~ /^.*?\[.*?\]$/) {
+    elsif (_detect_container_type_constraint($type_constraint_name)) {
         $constraint = create_container_type_constraint($type_constraint_name);       
     }
     else {
@@ -284,6 +286,60 @@ sub _install_type_coercions ($$) {
         type_constraint   => $type
     );            
     $type->coercion($type_coercion);
+}
+
+## --------------------------------------------------------
+## type notation parsing ...
+## --------------------------------------------------------
+
+{
+    # All I have to say is mugwump++ cause I know 
+    # do not even have enough regexp-fu to be able 
+    # to have written this (I can only barely 
+    # understand it as it is)
+    # - SL 
+    
+    use re "eval";
+
+    my $valid_chars = qr{[\w:|]};
+    my $type_atom   = qr{ $valid_chars+ };
+
+    my $type                = qr{  $valid_chars+  (?: \[  (??{$any})  \] )? }x;
+    my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ ((??{$any})) \] )? }x;
+    my $type_with_parameter = qr{  $valid_chars+      \[  (??{$any})  \]    }x;
+
+    my $op_union = qr{ \s+ \| \s+ }x;
+    my $union    = qr{ $type (?: $op_union $type )+ }x;
+
+    our $any = qr{ $type | $union }x;
+
+    sub _parse_container_type_constraint {
+    	$_[0] =~ m{ $type_capture_parts }x;
+    	return ($1, $2);
+    }
+
+    sub _detect_container_type_constraint {
+    	$_[0] =~ m{ ^ $type_with_parameter $ }x;
+    }
+
+    sub _parse_type_constraint_union {
+    	my $given = shift;
+    	my @rv;
+    	while ( $given =~ m{ \G (?: $op_union )? ($type) }gcx ) {
+    		push @rv => $1;
+    	}
+    	(pos($given) eq length($given))
+    	    || confess "'$given' didn't parse (parse-pos=" 
+    	             . pos($given) 
+    	             . " and str-length="
+    	             . length($given)
+    	             . ")";
+    	@rv;
+    }
+
+    sub _detect_type_constraint_union {
+    	$_[0] =~ m{^ $type $op_union $type ( $op_union .* )? $}x;
+    }
 }
 
 ## --------------------------------------------------------

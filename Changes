@@ -24,7 +24,7 @@ Revision history for Perl extension Moose
       Moose::Meta::Method::Constructor
       Moose::Meta::Method::Accessor
       - fixed issue with overload::Overloaded getting called 
-        on non-blessed items.
+        on non-blessed items. (RT #29269)
         - added tests for this
     
     * Moose::Coookbook::Snacks
@@ -43,6 +43,9 @@ Revision history for Perl extension Moose
       - no longer uses package variable to keep track of 
         the type constraints, now uses the an instance of
         Moose::Meta::TypeConstraint::Registry to do it
+      - added more sophisticated type notation parsing
+        (thanks to mugwump)
+        - added tests for this
 
     * Moose::Meta::TypeConstraint
       - some minor adjustments to make subclassing easier

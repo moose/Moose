@@ -33,7 +33,33 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
   has 'city'     => (is => 'rw', isa => 'Str');
   has 'state'    => (is => 'rw', isa => 'USState');
   has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
- 
+  
+  package Company;
+  use Moose;
+  use Moose::Util::TypeConstraints;
+  
+  has 'name'      => (is => 'rw', isa => 'Str', required => 1);
+  has 'address'   => (is => 'rw', isa => 'Address'); 
+  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');    
+  
+  sub BUILD {
+      my ($self, $params) = @_;
+      if ($params->{employees}) {
+          foreach my $employee (@{$params->{employees}}) {
+              $employee->company($self);
+          }
+      }
+  }
+  
+  after 'employees' => sub {
+      my ($self, $employees) = @_;
+      if (defined $employees) {
+          foreach my $employee (@{$employees}) {
+              $employee->company($self);
+          }            
+      }
+  };  
+  
   package Person;
   use Moose;
   
@@ -65,32 +91,6 @@ Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hier
       my $self = shift;
       super() . ', ' . $self->title
   };
-  
-  package Company;
-  use Moose;
-  
-  has 'name'      => (is => 'rw', isa => 'Str', required => 1);
-  has 'address'   => (is => 'rw', isa => 'Address'); 
-  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');    
-  
-  sub BUILD {
-      my ($self, $params) = @_;
-      if ($params->{employees}) {
-          foreach my $employee (@{$params->{employees}}) {
-              $employee->company($self);
-          }
-      }
-  }
-  
-  after 'employees' => sub {
-      my ($self, $employees) = @_;
-      if (defined $employees) {
-          foreach my $employee (@{$employees}) {
-              $employee->company($self);
-          }            
-      }
-  };  
-  
 
 =head1 DESCRIPTION
 
@@ -147,36 +147,10 @@ you to reuse the same constraints in a number of classes (thereby avoiding
 duplication), since all type constraints are stored in a global registry and
 always accessible to C<has>.
 
-With these two subtypes and some attributes, we have defined as much as we 
-need for a basic B<Address> class. Next comes our B<Person> class and its 
-subclass, the B<Employee> class. 
-
-The B<Person> class is pretty straightforward. We do introduce another attribute 
-option, the C<required> option. This option tells Moose that the attribute is 
-a required parameter in the constructor, and that the attribute's accessor cannot 
-accept an undefined value for the slot. The result is that the attribute 
-will always have a value.
-
-In B<Person>, the C<first_name> and C<last_name> attributes are C<required>, and 
-the C<middle_initial> slot has an additional C<predicate> method (which we saw 
-in the previous recipe with the B<BinaryTree> class). 
-
-Next, the B<Employee> class. It requires a C<title>, and maintains a 
-weakened reference to a B<Company> instance (which will be defined next). 
-The only new item, which we have seen before in examples, but never in 
-the recipe itself, is the C<override> method modifier:
-
-  override 'full_name' => sub {
-      my $self = shift;
-      super() . ', ' . $self->title
-  };
-
-This just tells Moose that I am intentionally overriding the superclass 
-C<full_name> method here, and adding the value of the C<title> slot at 
-the end of the employee's full name.
-
-Next, we define a basic B<Company> class, which itself has an address. 
-As we saw in earlier recipes, we can use the C<Address> type constraint that 
+With these two subtypes and some attributes, we have defined
+as much as we need for a basic B<Address> class. Next, we define 
+a basic B<Company> class, which itself has an address. As we saw in 
+earlier recipes, we can use the C<Address> type constraint that 
 Moose automatically created for us:
 
   has 'address' => (is => 'rw', isa => 'Address');
@@ -185,21 +159,25 @@ A company also needs a name, so we define that as well:
 
   has 'name' => (is => 'rw', isa => 'Str', required => 1);
 
+Here we introduce another attribute option, the C<required> option. 
+This option tells Moose that C<name> is a required parameter in 
+the B<Company> constructor, and that the C<name> accessor cannot 
+accept an undefined value for the slot. The result is that C<name> 
+will always have a value. 
+
 The next attribute option is not actually new, but a new variant 
 of options we have already introduced:
   
   has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');
 
-Here we are creating a container type constraint. Container type constraints
-can be either C<ArrayRef> or C<HashRef> and have a second type which specifies
-the kind of values they contain. In this case, we are telling Moose that 
-we expect an C<ArrayRef> of C<Employee> objects. This will ensure that our 
-employees will all be of the correct type. 
+Here, we are passing a more complex string to the C<isa> option, we 
+are passing a container type constraint. Container type constraints 
+can either be C<ArrayRef> or C<HashRef> with a contained type given 
+inside the square brackets. This basically checks that all the values 
+in the ARRAY ref are instances of the B<Employee> class. 
 
-It is important to note that container types B<must> be defined already, 
-Moose will not create an anon-type for you as it will in other situations. 
-
-However, the B<Employee> object (which we will see in a moment) also maintains a
+This will ensure that our employees will all be of the correct type. However,
+the B<Employee> object (which we will see in a moment) also maintains a
 reference to its associated B<Company>. In order to maintain this relationship
 (and preserve the referential integrity of our objects), we need to perform some
 processing of the employees over and above that of the type constraint check.
@@ -240,7 +218,28 @@ Again, as with the C<BUILD> method, we know that the type constraint
 check has already happened, so we can just check for defined-ness on the 
 C<$employees> argument.
 
-At this point, our B<Company> class is complete. 
+At this point, our B<Company> class is complete. Next comes our B<Person> 
+class and its subclass, the previously mentioned B<Employee> class. 
+
+The B<Person> class should be obvious to you at this point. It has a few 
+C<required> attributes, and the C<middle_initial> slot has an additional 
+C<predicate> method (which we saw in the previous recipe with the 
+B<BinaryTree> class). 
+
+Next, the B<Employee> class, which should also be pretty obvious at this 
+point. It requires a C<title>, and maintains a weakened reference to a 
+B<Company> instance. The only new item, which we have seen before in 
+examples, but never in the recipe itself, is the C<override> method 
+modifier:
+
+  override 'full_name' => sub {
+      my $self = shift;
+      super() . ', ' . $self->title
+  };
+
+This just tells Moose that I am intentionally overriding the superclass 
+C<full_name> method here, and adding the value of the C<title> slot at 
+the end of the employee's full name.
 
 And that's about it.
 

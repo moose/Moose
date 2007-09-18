@@ -872,6 +872,8 @@ Yuval (nothingmuch) Kogman
 
 Chris (perigrin) Prather
 
+Sam (mugwump) Vilain 
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE

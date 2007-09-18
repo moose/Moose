@@ -136,8 +136,7 @@ sub _process_options {
 		}
 		else {
 		    $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-		        $options->{isa},
-		        {
+		        $options->{isa} => {
 		            parent     => Moose::Util::TypeConstraints::find_type_constraint('Object'), 
 	                constraint => sub { $_[0]->isa($options->{isa}) }
 	            }		        
@@ -151,8 +150,7 @@ sub _process_options {
 		}
 		else {
 		    $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-		        $options->{does},
-		        {
+		        $options->{does} => {
 		            parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'), 
 	                constraint => sub { $_[0]->does($options->{does}) }
 	            }
