@@ -15,14 +15,13 @@ use base 'Moose::Meta::Method',
 ## Inline method generators
 
 sub generate_accessor_method_inline {
-    my $self      = $_[0];
-    my $attr      = $self->associated_attribute; 
-    my $attr_name = $attr->name;
+    my $self        = $_[0];
+    my $attr        = $self->associated_attribute; 
+    my $attr_name   = $attr->name;
+    my $inv         = '$_[0]';
+    my $slot_access = $self->_inline_get($inv, $attr_name);
+    my $value_name  = $attr->should_coerce ? '$val' : '$_[1]';
 
-    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
-	my $mi = $attr->associated_class->get_meta_instance;
-	my $slot_name = sprintf "'%s'", $attr->slots;
-	my $inv = '$_[0]';
     my $code = 'sub { '
     . $self->_inline_pre_body(@_)
     . 'if (scalar(@_) == 2) {'
@@ -49,12 +48,13 @@ sub generate_accessor_method_inline {
 }
 
 sub generate_writer_method_inline {
-    my $self      = $_[0];
-    my $attr      = $self->associated_attribute; 
-    my $attr_name = $attr->name;
-    
-    my $value_name = $attr->should_coerce ? '$val' : '$_[1]';
-	my $inv = '$_[0]';
+    my $self        = $_[0];
+    my $attr        = $self->associated_attribute; 
+    my $attr_name   = $attr->name;
+    my $inv         = '$_[0]';
+    my $slot_access = $self->_inline_get($inv, $attr_name);
+    my $value_name  = $attr->should_coerce ? '$val' : '$_[1]';
+
     my $code = 'sub { '
     . $self->_inline_pre_body(@_)
     . $self->_inline_check_required
@@ -77,16 +77,18 @@ sub generate_writer_method_inline {
 }
 
 sub generate_reader_method_inline {
-    my $self      = $_[0];
-    my $attr      = $self->associated_attribute; 
-    my $attr_name = $attr->name;
+    my $self        = $_[0];
+    my $attr        = $self->associated_attribute; 
+    my $attr_name   = $attr->name;
+    my $inv         = '$_[0]';
+    my $slot_access = $self->_inline_get($inv, $attr_name);
     
     my $code = 'sub {'
     . $self->_inline_pre_body(@_)
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . $self->_inline_check_lazy
     . $self->_inline_post_body(@_)
-    . 'return ' . $self->_inline_auto_deref( '$_[0]->{$attr_name}' ) . ';'
+    . 'return ' . $self->_inline_auto_deref( $slot_access ) . ';'
     . '}';
     
     # NOTE:
@@ -104,7 +106,7 @@ sub generate_reader_method_inline {
 *generate_writer_method   = \&generate_writer_method_inline;
 *generate_accessor_method = \&generate_accessor_method_inline;
 
-sub _inline_pre_body { '' }
+sub _inline_pre_body  { '' }
 sub _inline_post_body { '' }
 
 sub _inline_check_constraint {
@@ -114,6 +116,9 @@ sub _inline_check_constraint {
 	
 	return '' unless $attr->has_type_constraint;
 	
+	# FIXME
+	# This sprintf is insanely annoying, we should
+	# fix it someday - SL
 	return sprintf <<'EOF', $value, $value, $value, $value, $value, $value, $value
 defined($type_constraint->(%s))
 	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
@@ -138,17 +143,21 @@ sub _inline_check_required {
 }
 
 sub _inline_check_lazy {
-	my $attr = (shift)->associated_attribute; 
+    my $self = $_[0];
+    my $attr = $self->associated_attribute; 
 	
 	return '' unless $attr->is_lazy;
+	
+    my $inv         = '$_[0]';
+    my $slot_access = $self->_inline_get($inv, $attr->name);	
 	
 	if ($attr->has_type_constraint) {
 	    # NOTE:
 	    # this could probably be cleaned 
 	    # up and streamlined a little more
-	    return 'unless (exists $_[0]->{$attr_name}) {' .
+	    return 'unless (exists ' . $slot_access . ') {' .
 	           '    if ($attr->has_default) {' .
-	           '        my $default = $attr->default($_[0]);' .
+	           '        my $default = $attr->default(' . $inv . ');' .
 	           ($attr->should_coerce
 	               ? '$default = $attr->type_constraint->coerce($default);'
 	               : '') .
@@ -156,15 +165,15 @@ sub _inline_check_lazy {
                '        	|| confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
                '               . $attr->type_constraint->name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .               
                '          if defined($default);' .	                
-	           '        $_[0]->{$attr_name} = $default; ' .
+	           '        ' . $slot_access . ' = $default; ' .
 	           '    }' .
 	           '    else {' .
-               '        $_[0]->{$attr_name} = undef;' .
+               '        ' . $slot_access . ' = undef;' .
 	           '    }' .
 	           '}';	    
 	}
-    return '$_[0]->{$attr_name} = ($attr->has_default ? $attr->default($_[0]) : undef)'
-         . 'unless exists $_[0]->{$attr_name};';
+    return $slot_access . ' = ($attr->has_default ? $attr->default(' . $inv . ') : undef)'
+         . 'unless exists ' . $slot_access . ';';
 }
 
 

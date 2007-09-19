@@ -1,12 +1,6 @@
 -----------------------------------------------------------
 -- Type Constraints refactor
------------------------------------------------------------
-
-- allow a switch of some kind to optionally turn TC checking off at runtime 
-
-The type checks can get expensive and some people have suggested that allowing 
-the checks to be turned off would be helpful for deploying into performance 
-intensive systems. Perhaps this can actually be done as an option to make_immutable? 
+----------------------------------------------------------- 
 
 - add support for locally scoped TC
 
@@ -21,6 +15,12 @@ Use roles as sugar layer function providers (ala MooseX::AttributeHelpers). This
 would allow custom metaclasses to provide roles to extend the sugar syntax with.
 
 (NOTE: Talk to phaylon a bit more on this)
+
+- allow a switch of some kind to optionally turn TC checking off at runtime 
+
+The type checks can get expensive and some people have suggested that allowing 
+the checks to be turned off would be helpful for deploying into performance 
+intensive systems. Perhaps this can actually be done as an option to make_immutable?
 
 - misc. minor bits
 

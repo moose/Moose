@@ -27,6 +27,10 @@ Revision history for Perl extension Moose
         on non-blessed items. (RT #29269)
         - added tests for this
     
+    * Moose::Meta::Method::Accessor
+      - fixed issue with generated accessor code making 
+        assumptions about hash based classes (thanks to dexter)
+    
     * Moose::Coookbook::Snacks
       - these are bits of documentation, not quite as big as 
         Recipes but which have no clear place in the module docs. 
