@@ -102,9 +102,9 @@ sub generate_reader_method_inline {
     return $sub;
 }
 
-*generate_reader_method   = \&generate_reader_method_inline;
-*generate_writer_method   = \&generate_writer_method_inline;
-*generate_accessor_method = \&generate_accessor_method_inline;
+sub generate_reader_method { shift->generate_reader_method_inline(@_) }
+sub generate_writer_method { shift->generate_writer_method_inline(@_) }
+sub generate_accessor_method { shift->generate_accessor_method_inline(@_) }
 
 sub _inline_pre_body  { '' }
 sub _inline_post_body { '' }
