@@ -34,7 +34,7 @@ lib/Moose/Meta/Method/Destructor.pm
 lib/Moose/Meta/Method/Overriden.pm
 lib/Moose/Meta/Role/Method.pm
 lib/Moose/Meta/Role/Method/Required.pm
-lib/Moose/Meta/TypeConstraint/Container.pm
+lib/Moose/Meta/TypeConstraint/Parameterized.pm
 lib/Moose/Meta/TypeConstraint/Registry.pm
 lib/Moose/Meta/TypeConstraint/Union.pm
 lib/Moose/Spec/Role.pod
