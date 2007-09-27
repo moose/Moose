@@ -26,6 +26,9 @@ Revision history for Perl extension Moose
     
     ====
     ~ Several doc updates/cleanup thanks to castaway ~
+    
+    - converted build system to use Module::Install instead of 
+      Module::Build (thanks to jrockway)
 
     * Moose
       - added all the meta classes to the immutable list and 

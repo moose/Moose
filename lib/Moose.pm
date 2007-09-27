@@ -872,6 +872,8 @@ Yuval (nothingmuch) Kogman
 
 Chris (perigrin) Prather
 
+Jonathan (jrockway) Rockway
+
 Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain 
