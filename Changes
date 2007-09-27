@@ -1,6 +1,30 @@
 Revision history for Perl extension Moose
 
-0.26
+0.26 Thurs. Sept. 27, 2007
+    == New Features ==
+    
+    * Parameterized Types
+      We now support parameterized collection types, such as: 
+          ArrayRef[Int]    # array or integers
+          HashRef[Object]  # a hash with object values
+      They can also be nested:
+          ArrayRef[HashRef[RegExpr]] # an array of hashes with regexpr values
+      And work with the type unions as well:
+          ArrayRef[Int | Str]  # array of integers of strings
+    
+    * Better Framework Extendability
+      Moose.pm is now "extendable" such that it is now much 
+      easier to extend the framework and add your own keywords 
+      and customizations. See the "EXTENDING AND EMBEDDING MOOSE"
+      section of the Moose.pm docs.
+    
+    * Moose Snacks!
+      In an effort to begin documenting some of the various 
+      details of Moose as well as some common idioms, we have 
+      created Moose::Cookbook::Snacks as a place to find 
+      small (easily digestable) nuggets of Moose code.
+    
+    ====
     ~ Several doc updates/cleanup thanks to castaway ~
 
     * Moose
@@ -14,6 +38,9 @@ Revision history for Perl extension Moose
 	* t/
 	  - complete re-organization of the test suite
 	  - added some new tests as well 
+	  - finally re-enabled the Moose::POOP test since
+	    the new version of DBM::Deep now works again
+	    (thanks rob)
 
     * Moose::Meta::Class
       - fixed very odd and very nasty recursion bug with 

@@ -249,7 +249,7 @@ use Moose::Util::TypeConstraints;
 
 $_->meta->make_immutable(
     inline_constructor => 0,
-    inline_accessors   => 1,
+    inline_accessors   => 1,  # these are Class::MOP accessors, so they need inlining
   )
   for (
     'Moose::Meta::Attribute',
@@ -334,10 +334,10 @@ meta-model. However, Moose is B<NOT> an experiment/prototype; it is for B<real>.
 
 Yes, I believe that it is. 
 
-I have two medium-to-large-ish web applications which use Moose heavily
-and have been in production (without issue) for several months now. At 
-$work, we are re-writing our core offering in it. And several people on 
-#moose have been using it (in production) for several months now as well.
+Moose has been used successfully in production environemnts by several people 
+and companies (including the one I work for). There are Moose applications 
+which have been in production with little or no issue now for over a year. 
+I consider it highly stable and we are commited to keeping it stable. 
 
 Of course, in the end, you need to make this call yourself. If you have 
 any questions or concerns, please feel free to email me, or even the list 
@@ -744,7 +744,7 @@ Here is an example:
     
 =head2 B<import>
 
-Moose's C<import> method supports the Sub::Exporter form of C<{into =E<gt> $pkg}>
+Moose's C<import> method supports the L<Sub::Exporter> form of C<{into =E<gt> $pkg}>
 and C<{into_level =E<gt> 1}>
 
 =head2 B<init_meta ($class, $baseclass, $metaclass)>

@@ -7,7 +7,7 @@ use Test::More;
 
 BEGIN {
     eval "use DBM::Deep 1.0003;";
-    plan skip_all => "DBM::Deep is required for this test" if $@;              
+    plan skip_all => "DBM::Deep 1.0003 (or greater) is required for this test" if $@;              
     eval "use DateTime::Format::MySQL;";
     plan skip_all => "DateTime::Format::MySQL is required for this test" if $@;            
     plan tests => 89;    
@@ -24,8 +24,8 @@ BEGIN {
 This example creates a very basic Object Database which 
 links in the instances created with a backend store 
 (a DBM::Deep hash). It is by no means to be taken seriously
-as a real-world ODB (see Presto for that), but is a proof 
-of concept of the flexibility of the ::Instance protocol. 
+as a real-world ODB, but is a proof of concept of the flexibility 
+of the ::Instance protocol. 
 
 =cut
 
