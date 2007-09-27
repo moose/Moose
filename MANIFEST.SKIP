@@ -17,3 +17,6 @@ cover_db
 ^#.*#$
 ^\.#
 ^TODO$
+^PLAN$
+^benchmarks$
+^\._.*$

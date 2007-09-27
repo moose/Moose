@@ -1,10 +1,3 @@
-benchmarks/caf_vs_moose.pl
-benchmarks/immutable.pl
-benchmarks/method_modifiers.pl
-benchmarks/simple_class.pl
-benchmarks/simple_compile.pl
-benchmarks/simple_constructor.pl
-benchmarks/type_constraints.pl
 Build.PL
 Changes
 inc/Module/Install.pm
@@ -54,7 +47,6 @@ lib/Test/Moose.pm
 Makefile.PL
 MANIFEST
 META.yml
-PLANS
 README
 t/000_load.t
 t/000_recipes/001_recipe.t
