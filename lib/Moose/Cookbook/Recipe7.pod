@@ -6,7 +6,7 @@
 Moose::Cookbook::Recipe7 - The augment/inner example
 
 =head1 SYNOPSIS
-  
+    
   package Document::Page;
   use Moose;
   
@@ -24,30 +24,30 @@ Moose::Cookbook::Recipe7 - The augment/inner example
       $self->body($self->body . $appendage);
   }
   
-  sub open_page { (shift)->append_body('<page>') }
-  sub open_page { (shift)->append_body('</page>') }  
+  sub open_page  { (shift)->append_body('<page>') }
+  sub close_page { (shift)->append_body('</page>') }  
   
-  package MyDocument::PageWithHeadersAndFooters;
+  package Document::PageWithHeadersAndFooters;
   use Moose;
   
   extends 'Document::Page';
   
-  augment create => sub {
+  augment 'create' => sub {
       my $self = shift;
       $self->create_header;
       inner();
       $self->create_footer;
-  }
+  };
   
   sub create_header { (shift)->append_body('<header/>') }
   sub create_footer { (shift)->append_body('<footer/>') }  
   
-  package MyDocument::TPSReport;
+  package TPSReport;
   use Moose;
   
-  extends 'MyDocument::PageWithHeadersAndFooters';
+  extends 'Document::PageWithHeadersAndFooters';
   
-  augment create => sub {
+  augment 'create' => sub {
       my $self = shift;
       $self->create_tps_report;
   };
