@@ -10,14 +10,8 @@ Moose::Cookbook::Recipe1 - The (always classic) B<Point> example.
   package Point;
   use Moose;
   	
-  has 'x' => (isa => 'Int', is => 'ro', clearer => 'clear_x' );
-  has 'y' => (isa => 'Int', is => 'rw', clearer => 'clear_y');
-  
-  sub clear {
-      my $self = shift;
-      $self->clear_x();
-      $self->clear_y();    # or $self->y(0);
-  }
+  has 'x' => (isa => 'Int', is => 'ro');
+  has 'y' => (isa => 'Int', is => 'rw');
   
   sub clear {
       my $self = shift;
