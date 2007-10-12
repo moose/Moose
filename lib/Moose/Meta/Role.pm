@@ -9,7 +9,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use B            'svref_2object';
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -411,20 +411,23 @@ sub _check_required_methods {
             # not a method modifier, because those do 
             # not satisfy the requirements ...
             my $method = $other->find_method_by_name($required_method_name);
-            # check if it is an override or a generated accessor ..
-            ($method->isa('Class::MOP::Method::Accessor'))
-                && confess "'" . $self->name . "' requires the method '$required_method_name' " . 
-                           "to be implemented by '" . $other->name . "', the method is only an attribute";
-            # before/after/around methods are a little trickier
-            # since we wrap the original local method (if applicable)
-            # so we need to check if the original wrapped method is 
-            # from the same package, and not a wrap of the super method 
-            if ($method->isa('Class::MOP::Method::Wrapped') ||
-                $method->isa('Moose::Meta::Method::Overriden')) {
-                ($other->name->isa($method->get_original_method->package_name))
-                    || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
-                               "to be implemented by '" . $other->name . "', the method is only a method modifier";            
-            }
+            
+            # check if it is a generated accessor ...
+            (!$method->isa('Class::MOP::Method::Accessor'))
+                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                           "to be implemented by '" . $other->name . "', the method is only an attribute accessor";
+
+            # NOTE:
+            # All other tests here have been removed, they were tests 
+            # for overriden methods and before/after/around modifiers.
+            # But we realized that for classes any overriden or modified
+            # methods would be backed by a real method of that name 
+            # (and therefore meet the requirement). And for roles, the 
+            # overriden and modified methods are "in statis" and so would
+            # not show up in this test anyway (and as a side-effect they
+            # would not fufill the requirement, which is exactly what we 
+            # want them to do anyway).
+            # - SL 
         }        
     }    
 }

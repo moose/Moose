@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 17;
 use Test::Exception;
 
 =pod
@@ -89,9 +89,9 @@ second class citizens.
     
     override 'foo' => sub { 'Class::ProvideFoo::foo' };     
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, but it is an override (and we will die)';
+    } '... the required "foo" method exists, although it is overriden locally';
 
 }
 
@@ -121,21 +121,21 @@ method modifier.
     
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };     
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, but it is a before (and we will die)';    
+    } '... the required "foo" method exists, although it is a before modifier locally';    
     
     package Class::ProvideFoo::Before3;
     use Moose;
     
     extends 'Class::ProvideFoo::Base';
     
-    ::lives_ok {
-        with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (and we will die)';
-    
     sub foo { 'Class::ProvideFoo::foo' }
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };    
+    
+    ::lives_ok {
+        with 'Role::RequireFoo';
+    } '... the required "foo" method exists locally, and it is modified locally';    
     
     package Class::ProvideFoo::Before4;
     use Moose;
@@ -152,21 +152,7 @@ method modifier.
     ::lives_ok {
         with 'Role::RequireFoo';
     } '... the required "foo" method exists in the symbol table (and we will live)'; 
-    
-    package Class::ProvideFoo::Before5;
-    use Moose;
-    
-    extends 'Class::ProvideFoo::Base';
-       
-    before 'foo' => sub { 'Class::ProvideFoo::foo:before' };   
-    
-    ::isa_ok(__PACKAGE__->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
-    ::isnt(__PACKAGE__->meta->get_method('foo')->get_original_method->package_name, __PACKAGE__, 
-    '... but the original method is not from our package');      
-    
-    ::dies_ok {
-        with 'Role::RequireFoo';
-    } '... the required "foo" method exists, but it is a before wrapping the super (and we will die)';       
+           
 }    
 
 =pod
@@ -268,5 +254,33 @@ method modifier.
     extends 'Bar::Class::Child';
     ::lives_ok {
         with 'Bar::Role';
+    } 'required method exists in superclass as non-modifier, so we live';
+}
+
+{
+    package Bar2::Class::Base;
+    use Moose;
+
+    sub bar { "hello!" }
+}
+{
+    package Bar2::Role;
+    use Moose::Role;
+    requires 'bar';
+}
+{
+    package Bar2::Class::Child;
+    use Moose;
+    extends 'Bar2::Class::Base';
+    override bar => sub { "o noes" };
+    # technically we could run lives_ok here, too, but putting it into a
+    # grandchild class makes it more obvious why this matters.
+}
+{
+    package Bar2::Class::Grandchild;
+    use Moose;
+    extends 'Bar2::Class::Child';
+    ::lives_ok {
+        with 'Bar2::Role';
     } 'required method exists in superclass as non-modifier, so we live';
 }

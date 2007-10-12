@@ -3,6 +3,12 @@ Revision history for Perl extension Moose
 0.27
     * fixing some misc. bits in the docs that 
       got mentioned on CPAN Forum
+    
+    * Moose::Meta::Role
+      - fixed how required methods are handled 
+        when they encounter overriden or modified
+        methods from a class (thanks to confound).
+        - added tests for this
 
 0.26 Thurs. Sept. 27, 2007
     == New Features ==
