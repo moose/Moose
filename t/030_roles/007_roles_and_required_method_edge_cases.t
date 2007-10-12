@@ -259,6 +259,13 @@ method modifier.
     use Moose;
     extends 'Bar::Class::Base';
     after bar => sub { "o noes" };
+    # technically we could run lives_ok here, too, but putting it into a
+    # grandchild class makes it more obvious why this matters.
+}
+{
+    package Bar::Class::Grandchild;
+    use Moose;
+    extends 'Bar::Class::Child';
     ::lives_ok {
         with 'Bar::Role';
     } 'required method exists in superclass as non-modifier, so we live';
