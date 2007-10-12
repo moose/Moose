@@ -412,16 +412,16 @@ sub _check_required_methods {
             # not satisfy the requirements ...
             my $method = $other->find_method_by_name($required_method_name);
             # check if it is an override or a generated accessor ..
-            (!$method->isa('Moose::Meta::Method::Overriden') &&
-             !$method->isa('Class::MOP::Method::Accessor'))
-                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
-                           "to be implemented by '" . $other->name . "', the method is only a method modifier";
+            ($method->isa('Class::MOP::Method::Accessor'))
+                && confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                           "to be implemented by '" . $other->name . "', the method is only an attribute";
             # before/after/around methods are a little trickier
             # since we wrap the original local method (if applicable)
             # so we need to check if the original wrapped method is 
             # from the same package, and not a wrap of the super method 
-            if ($method->isa('Class::MOP::Method::Wrapped')) {
-                ($method->get_original_method->package_name eq $other->name)
+            if ($method->isa('Class::MOP::Method::Wrapped') ||
+                $method->isa('Moose::Meta::Method::Overriden')) {
+                ($other->name->isa($method->get_original_method->package_name))
                     || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
                                "to be implemented by '" . $other->name . "', the method is only a method modifier";            
             }
