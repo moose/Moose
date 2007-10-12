@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Test::Exception;
 
 =pod
@@ -239,5 +239,27 @@ method modifier.
     } '... our role combined successfully';
 }
 
+# a method required in a role and implemented in a superclass, with a method
+# modifier in the subclass.  this should live, but dies in 0.26 -- hdp,
+# 2007-10-11
 
+{
+    package Bar::Class::Base;
+    use Moose;
 
+    sub bar { "hello!" }
+}
+{
+    package Bar::Role;
+    use Moose::Role;
+    requires 'bar';
+}
+{
+    package Bar::Class::Child;
+    use Moose;
+    extends 'Bar::Class::Base';
+    after bar => sub { "o noes" };
+    ::lives_ok {
+        with 'Bar::Role';
+    } 'required method exists in superclass as non-modifier, so we live';
+}
