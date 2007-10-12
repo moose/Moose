@@ -203,15 +203,13 @@ use Moose::Util::TypeConstraints;
         }
     );
 
-    sub get_caller{
-        return ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
+  
+
+    sub import {
+        $CALLER =  ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
           : ref $_[1]
           && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
           :                                caller();
-    }
-
-    sub import {
-        $CALLER = get_caller(@_);
             
         strict->import;
         warnings->import;
@@ -226,7 +224,7 @@ use Moose::Util::TypeConstraints;
 
     sub unimport {
         no strict 'refs';
-        my $class = get_caller(@_);
+        my $class = caller();
 
         # loop through the exports ...
         foreach my $name ( keys %exports ) {
