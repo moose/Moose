@@ -203,13 +203,19 @@ use Moose::Util::TypeConstraints;
         }
     );
 
-  
+    # 1 extra level because it's called by import so there's a layer of indirection
+    sub _get_caller{
+        my $offset = 1;
+        return 
+            ref $_[1] && defined $_[1]->{into}
+            ? $_[1]->{into}
+            : ref $_[1] && defined $_[1]->{into_level}
+            ? caller($offset + $_[1]->{into_level})
+            : caller($offset);
+    }
 
     sub import {
-        $CALLER =  ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
-          : ref $_[1]
-          && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
-          :                                caller();
+        $CALLER = _get_caller(@_);
             
         strict->import;
         warnings->import;
@@ -224,7 +230,7 @@ use Moose::Util::TypeConstraints;
 
     sub unimport {
         no strict 'refs';
-        my $class = caller();
+        my $class = _get_caller(@_);
 
         # loop through the exports ...
         foreach my $name ( keys %exports ) {
