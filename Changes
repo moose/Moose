@@ -10,6 +10,14 @@ Revision history for Perl extension Moose
         methods from a class (thanks to confound).
         - added tests for this
 
+    * Moose::Util::TypeConstraint
+      - fixed the type notation parser so that 
+        the | always creates a union and so is 
+        no longer a valid type char (thanks to 
+        konobi, mugwump and #moose for working 
+        this one out.)
+        - added more tests for this
+
 0.26 Thurs. Sept. 27, 2007
     == New Features ==
     

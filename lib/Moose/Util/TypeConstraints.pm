@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.14';
+our $VERSION   = '0.15';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -301,14 +301,14 @@ sub _install_type_coercions ($$) {
     
     use re "eval";
 
-    my $valid_chars = qr{[\w:|]};
+    my $valid_chars = qr{[\w:]};
     my $type_atom   = qr{ $valid_chars+ };
 
     my $type                = qr{  $valid_chars+  (?: \[  (??{$any})  \] )? }x;
     my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ ((??{$any})) \] )? }x;
     my $type_with_parameter = qr{  $valid_chars+      \[  (??{$any})  \]    }x;
 
-    my $op_union = qr{ \s+ \| \s+ }x;
+    my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
 
     our $any = qr{ $type | $union }x;

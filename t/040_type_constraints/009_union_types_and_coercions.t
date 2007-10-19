@@ -51,7 +51,7 @@ BEGIN {
     
     has 'raw_body' => (
         is      => 'rw',
-        isa     => 'IO::String | IO::File',
+        isa     => 'IO::String|IO::File',
         coerce  => 1,
         default => sub { IO::String->new() },
     );

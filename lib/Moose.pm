@@ -8,9 +8,9 @@ our $VERSION   = '0.27';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
-use Carp 'confess';
-use Sub::Name 'subname';
-use B 'svref_2object';
+use Carp         'confess';
+use Sub::Name    'subname';
+use B            'svref_2object';
 
 use Sub::Exporter;
 

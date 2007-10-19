@@ -11,7 +11,7 @@ Moose::Cookbook::FAQ - Frequently asked questions about Moose
 
 =head3 Is Moose "production ready"?
 
-Yes. I have two medium-to-large-ish web applications in 
+Yes. I have three medium-to-large-ish web applications in 
 production using Moose, they have been running without 
 issue now for almost a year. 
 
@@ -57,14 +57,10 @@ conversion to XS.
 
 =head3 When will Moose 1.0 be ready?
 
-I had originally said it would be end of 2006, but various bits 
-of $work kept me too busy. At this point, I think we are getting 
-pretty close and I will likely declare 1.0 within the next few 
-releases. 
+It is right now, I just haven't bumped the version number up yet.
 
-When will that be? Hard to say really, but honestly, it is ready 
-to use now, the difference between now and 1.0 will be pretty 
-minimal.
+I still have some more internal TODO items I would like to complete
+before I would even consider bumping it to 1.0.
 
 =head2 Constructors
 

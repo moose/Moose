@@ -17,7 +17,7 @@ my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
 
 # Array of Ints or Strings
 
-my $array_of_ints_or_strings = Moose::Util::TypeConstraints::create_parameterized_type_constraint('ArrayRef[Int | Str]');
+my $array_of_ints_or_strings = Moose::Util::TypeConstraints::create_parameterized_type_constraint('ArrayRef[Int|Str]');
 isa_ok($array_of_ints_or_strings, 'Moose::Meta::TypeConstraint::Parameterized');
 
 ok($array_of_ints_or_strings->check([ 1, 'two', 3 ]), '... this passed the type check');
@@ -46,7 +46,7 @@ $r->add_type_constraint($array_of_ints_or_hash_ref);
 # we can't build this using the simplistic parser 
 # we have, so we have to do it by hand - SL
 
-my $pure_insanity = Moose::Util::TypeConstraints::create_type_constraint_union('ArrayRef[Int | Str] | ArrayRef[Int | HashRef]');
+my $pure_insanity = Moose::Util::TypeConstraints::create_type_constraint_union('ArrayRef[Int|Str] | ArrayRef[Int | HashRef]');
 isa_ok($pure_insanity, 'Moose::Meta::TypeConstraint::Union');
 
 ok($pure_insanity->check([ 1, {}, 3 ]), '... this passed the type check');
