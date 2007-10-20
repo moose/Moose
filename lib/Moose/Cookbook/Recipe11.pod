@@ -1,0 +1,293 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe11 - The meta-attribute example
+
+    package MyApp::Meta::Attribute::Labeled;
+    use Moose;
+    extends 'Moose::Meta::Attribute';
+
+    __PACKAGE__->meta->add_attribute('label' => (
+        reader    => 'label',
+        predicate => 'has_label',
+    ));
+
+    package Moose::Meta::Attribute::Custom::Labeled;
+    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+
+    package MyApp::Website;
+    use Moose;
+    use MyApp::Meta::Attribute::Labeled;
+
+    has url => (
+        metaclass => 'Labeled',
+        isa => 'Str',
+        is => 'rw',
+        label => "The site's URL",
+    );
+
+    has name => (
+        is => 'rw',
+        isa => 'Str',
+    );
+
+    sub dump {
+        my $self = shift;
+
+        # iterate over all the attributes in $self
+        my %attributes = %{ $self->meta->get_attribute_map };
+        while (my ($name, $meta_attribute) = each %attributes) {
+
+            # print the label if available
+            if ($meta_attribute->isa('MyApp::Meta::Attribute::Labeled')
+                && $meta_attribute->has_label) {
+                    print $meta_attribute->label;
+            }
+            # otherwise print the name
+            else {
+                print $name;
+            }
+
+            # print the attribute's value
+            my $reader = $meta_attribute->get_read_method;
+            print ": " . $self->$reader . "\n";
+        }
+    }
+
+    package main;
+    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
+    $app->dump;
+
+=head1 SUMMARY
+
+In this recipe, we begin to really delve into the wonder of meta-programming.
+Some readers may scoff and claim that this is the arena only of the most
+twisted Moose developers. Absolutely not! Any sufficiently twisted developer
+can benefit greatly from going more meta.
+
+The high-level goal of this recipe's code is to allow each attribute to have a
+human-readable "label" attached to it. Such labels would be used when showing
+data to an end user. In this recipe we label the "url" attribute with "The
+site's URL" and create a simple method to demonstrate how to use that label.
+
+=head1 REAL ATTRIBUTES 101
+
+All the attributes of a Moose-based object are actually objects themselves.
+These objects have methods and (surprisingly) attributes. Let's look at a
+concrete example.
+
+    has 'x' => (isa => 'Int', is => 'ro');
+    has 'y' => (isa => 'Int', is => 'rw');
+
+Ahh, the veritable x and y of the Point example. Internally, every Point has an
+x object and a y object. They have methods (such as "get_value") and attributes
+(such as "is_lazy"). What class are they instances of?
+L<Moose::Meta::Attribute>.  You don't normally see the objects lurking behind
+the scenes, because you usually just use C<< $point->x >> and C<< $point->y >>
+and forget that there's a lot of machinery lying in such methods.
+
+So you have a C<$point> object, which has C<x> and C<y> methods. How can you
+actually access the objects behind these attributes? Here's one way:
+
+    $point->meta->get_attribute_map()
+
+C<get_attribute_map> returns a hash reference that maps attribute names to
+their objects. In our case, C<get_attribute_map> might return something that
+looks like the following:
+
+    {
+        x => Moose::Meta::Attribute=HASH(0x196c23c),
+        y => Moose::Meta::Attribute=HASH(0x18d1690),
+    }
+
+Here's one thing you can do now that you can interact with the attribute's
+object directly:
+
+    print $point->meta->get_attribute_map->{x}->type_constraint;
+      => Int
+
+(As an aside, it's not called C<< ->isa >> because C<< $obj->isa >> is already
+taken)
+
+So to actually beef up attributes, what we need to do is:
+
+=over 4
+
+=item Create a new attribute metaclass
+
+=item Create attributes using that new metaclass
+
+=back
+
+Moose makes both of these easy!
+
+Let's start dissecting the recipe's code.
+
+=head1 DISSECTION
+
+We get the ball rolling by creating a new attribute metaclass. It starts off
+somewhat ungloriously.
+
+    package MyApp::Meta::Attribute::Labeled;
+    use Moose;
+    extends 'Moose::Meta::Attribute';
+
+You subclass metaclasses the same way you subclass regular classes. (Extra
+credit: how in the actual hell can you use the MOP to extend itself?) Moving
+on.
+
+    __PACKAGE__->meta->add_attribute('label' => (
+        reader    => 'label',
+        predicate => 'has_label',
+    ));
+
+Now things get a little icky. We're adding a attribute to the attribute
+metaclass. For clarity, I'm going to call this a meta-attribute.
+
+So. This creates a new meta-attribute in the C<MyApp::Meta::Attribute::Labeled>
+metaclass. The new meta-attribute's name is 'label'. We get reader and
+predicate methods, too. The reader method retrieves the value of this
+meta-attribute, the predicate method just asks the question "Does this
+meta-attribute even have a value?"
+
+Note the resemblance between C<add_attribute> and C<has>. C<has> actually just
+uses C<add_attribute> behind the scenes.
+
+    package Moose::Meta::Attribute::Custom::Labeled;
+    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+
+This registers the new metaclass with Moose. That way attributes can actually
+use it. More on what this is doing in a moment.
+
+Note that we're done defining the new metaclass! Only nine lines of code, and
+not particularly difficult lines, either. Now to start using the metaclass.
+
+    package MyApp::Website;
+    use Moose;
+    use MyApp::Meta::Attribute::Labeled;
+
+Nothing new here. We do have to actually load our metaclass to be able to use
+it.
+
+    has url => (
+        metaclass => 'Labeled',
+        isa => 'Str',
+        is => 'rw',
+        label => "The site's URL",
+    );
+
+Ah ha! Now we're using the metaclass. We're adding a new attribute, C<url>, to
+C<MyApp::Website>. C<has> lets you set the metaclass of the attribute. Ordinarily (as we've seen), the metaclass is C<Moose::Meta::Attribute>.
+
+When C<has> sees that you're using a new metaclass, it will take the
+metaclass's name, prepend C<Moose::Meta::Attribute::Custom::>, and call the
+C<register_implementation> function in that package. So here Moose calls
+C<Moose::Meta::Attribute::Custom::Labeled::register_implementation>. We
+definited that function earlier, it just returns our "real" metaclass' package,
+C<MyApp::Meta::Attribute::Labeled>. So Moose uses that metaclass for the
+attribute. It may seem a bit convoluted, but the alternative would be to use
+C<< metaclass => 'MyApp::Meta::Attribute::Labeled' >> on every attribute. As
+usual, Moose optimizes in favor of the end user, not the metaprogrammer. :)
+
+Finally, we see that C<has> is setting our new meta-attribute, C<label>, to
+C<"The site's URL">.
+
+    has name => (
+        is => 'rw',
+        isa => 'Str',
+    );
+
+You do not of course need to use the new metaclass for all new attributes.
+
+Now we begin defining a method that will dump the C<MyApp::Website> instance
+for human readers.
+
+    sub dump {
+        my $self = shift;
+
+        # iterate over all the attributes in $self
+        my %attributes = %{ $self->meta->get_attribute_map };
+        while (my ($name, $meta_attribute) = each %attributes) {
+
+We covered the latter two lines of code earlier.
+
+            # print the label if available
+            if ($meta_attribute->isa('MyApp::Meta::Attribute::Labeled')
+                && $meta_attribute->has_label) {
+                    print $meta_attribute->label;
+            }
+
+Note that we have two checks here. The first is "is this attribute an instance
+of C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively, even if
+all of your attributes have this metaclass. You never know when someone is
+going to subclass your work of art, poorly. The second check is "does this
+attribute have a label?". This method was defined in the new metaclass as the
+"predicate".
+
+            # otherwise print the name
+            else {
+                print $name;
+            }
+
+Another good, defensive coding practice: Provide reasonable defaults.
+
+            # print the attribute's value
+            my $reader = $meta_attribute->get_read_method;
+            print ": " . $self->$reader . "\n";
+        }
+    }
+
+Here's another example of using the attribute metaclass.
+C<< $meta_attribute->get_read_method >> returns the name of the method that can
+invoked on the original object to read the attribute's value.
+C<< $self->$reader >> is an example of "reflection". Another way to write this
+would be C<< $self->can($reader)->() >>.
+
+    package main;
+    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
+    $app->dump;
+
+And finish off the example with a script to show off our newfound magic.
+
+=head1 CONCLUSION
+
+Why oh why would you want to go through all of these contortions when you can
+just print "The site's URL" directly in the C<dump> method? For one, the DRY
+(Don't Repeat Yourself) principle. If you have it in the C<dump> method, you'll
+probably also have it in the C<as_form> method, and C<to_file>, and so on. So
+why not have a method that maps attribute names to labels? That could work, but
+why not include the label where it belongs, in the attribute's definition?
+That way you're also less likely to forget to add the label.
+
+More importantly, this was a very simple example. Your metaclasses aren't
+limited to just adding new meta-attributes. For example, you could implement
+a metaclass that expires attributes after a certain amount of time.
+
+    has site_cache => (
+        metaclass => 'Expiry',
+        expires_after => '1 hour',
+        refresh_with => sub { ... },
+        isa => 'Str',
+    );
+
+The sky's the limit!
+
+=head1 AUTHOR
+
+Shawn M Moore E<lt>sartak@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006, 2007 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+1;
+
