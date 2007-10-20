@@ -181,17 +181,18 @@ it.
     );
 
 Ah ha! Now we're using the metaclass. We're adding a new attribute, C<url>, to
-C<MyApp::Website>. C<has> lets you set the metaclass of the attribute. Ordinarily (as we've seen), the metaclass is C<Moose::Meta::Attribute>.
+C<MyApp::Website>. C<has> lets you set the metaclass of the attribute.
+Ordinarily (as we've seen), the metaclass is C<Moose::Meta::Attribute>.
 
 When C<has> sees that you're using a new metaclass, it will take the
 metaclass's name, prepend C<Moose::Meta::Attribute::Custom::>, and call the
 C<register_implementation> function in that package. So here Moose calls
-C<Moose::Meta::Attribute::Custom::Labeled::register_implementation>. We
-definited that function earlier, it just returns our "real" metaclass' package,
-C<MyApp::Meta::Attribute::Labeled>. So Moose uses that metaclass for the
-attribute. It may seem a bit convoluted, but the alternative would be to use
-C<< metaclass => 'MyApp::Meta::Attribute::Labeled' >> on every attribute. As
-usual, Moose optimizes in favor of the end user, not the metaprogrammer. :)
+C<Moose::Meta::Attribute::Custom::Labeled::register_implementation>. We defined
+that function in the beginning -- it just returns our "real" metaclass'
+package, C<MyApp::Meta::Attribute::Labeled>. So Moose uses that metaclass for
+the attribute. It may seem a bit convoluted, but the alternative would be to
+use C<< metaclass => 'MyApp::Meta::Attribute::Labeled' >> on every attribute.
+As usual, Moose optimizes in favor of the end user, not the metaprogrammer. :)
 
 Finally, we see that C<has> is setting our new meta-attribute, C<label>, to
 C<"The site's URL">.
@@ -226,7 +227,8 @@ of C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively, even if
 all of your attributes have this metaclass. You never know when someone is
 going to subclass your work of art, poorly. The second check is "does this
 attribute have a label?". This method was defined in the new metaclass as the
-"predicate".
+"predicate". If we pass both checks, we print the attribute's label. The
+C<< ->label >> method was defined in the new metaclass as the "reader".
 
             # otherwise print the name
             else {
@@ -241,11 +243,13 @@ Another good, defensive coding practice: Provide reasonable defaults.
         }
     }
 
-Here's another example of using the attribute metaclass.
-C<< $meta_attribute->get_read_method >> returns the name of the method that can
-invoked on the original object to read the attribute's value.
-C<< $self->$reader >> is an example of "reflection". Another way to write this
-would be C<< $self->can($reader)->() >>.
+Here's another example of using the attribute metaclass.  C<<
+$meta_attribute->get_read_method >> returns the name of the method that can
+invoked on the original object to read the attribute's value.  C<<
+$self->$reader >> is an example of "reflection". Instead of using the name of
+the method, we're using a variable with the name of the method in it. Perl
+doesn't mind. Another way to write this would be
+C<< $self->can($reader)->() >>.
 
     package main;
     my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
