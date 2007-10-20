@@ -41,12 +41,12 @@ Moose::Cookbook::Recipe11 - The meta-attribute example
 
         # iterate over all the attributes in $self
         my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $meta_attribute) = each %attributes) {
+        while (my ($name, $attribute) = each %attributes) {
 
             # print the label if available
-            if ($meta_attribute->isa('MyApp::Meta::Attribute::Labeled')
-                && $meta_attribute->has_label) {
-                    print $meta_attribute->label;
+            if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
+                && $attribute->has_label) {
+                    print $attribute->label;
             }
             # otherwise print the name
             else {
@@ -54,7 +54,7 @@ Moose::Cookbook::Recipe11 - The meta-attribute example
             }
 
             # print the attribute's value
-            my $reader = $meta_attribute->get_read_method;
+            my $reader = $attribute->get_read_method;
             print ": " . $self->$reader . "\n";
         }
     }
@@ -212,14 +212,14 @@ for human readers.
 
         # iterate over all the attributes in $self
         my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $meta_attribute) = each %attributes) {
+        while (my ($name, $attribute) = each %attributes) {
 
 We covered the latter two lines of code earlier.
 
             # print the label if available
-            if ($meta_attribute->isa('MyApp::Meta::Attribute::Labeled')
-                && $meta_attribute->has_label) {
-                    print $meta_attribute->label;
+            if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
+                && $attribute->has_label) {
+                    print $attribute->label;
             }
 
 Note that we have two checks here. The first is "is this attribute an instance
@@ -238,13 +238,13 @@ C<< ->label >> method was defined in the new metaclass as the "reader".
 Another good, defensive coding practice: Provide reasonable defaults.
 
             # print the attribute's value
-            my $reader = $meta_attribute->get_read_method;
+            my $reader = $attribute->get_read_method;
             print ": " . $self->$reader . "\n";
         }
     }
 
 Here's another example of using the attribute metaclass.  C<<
-$meta_attribute->get_read_method >> returns the name of the method that can
+$attribute->get_read_method >> returns the name of the method that can
 invoked on the original object to read the attribute's value.  C<<
 $self->$reader >> is an example of "reflection". Instead of using the name of
 the method, we're using a variable with the name of the method in it. Perl
