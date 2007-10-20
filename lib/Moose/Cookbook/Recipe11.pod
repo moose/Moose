@@ -5,6 +5,8 @@
 
 Moose::Cookbook::Recipe11 - The meta-attribute example
 
+=head1 SYNOPSIS
+
     package MyApp::Meta::Attribute::Labeled;
     use Moose;
     extends 'Moose::Meta::Attribute';
