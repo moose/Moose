@@ -274,7 +274,7 @@ a metaclass that expires attributes after a certain amount of time.
     has site_cache => (
         metaclass => 'Expiry',
         expires_after => '1 hour',
-        refresh_with => sub { ... },
+        refresh_with => sub { my $self = shift; get($self->url) },
         isa => 'Str',
     );
 
