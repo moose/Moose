@@ -11,10 +11,11 @@ Moose::Cookbook::Recipe11 - The meta-attribute example
     use Moose;
     extends 'Moose::Meta::Attribute';
 
-    __PACKAGE__->meta->add_attribute('label' => (
-        reader    => 'label',
+    has label => (
+        is  => 'ro',
+        isa => 'Str',
         predicate => 'has_label',
-    ));
+    );
 
     package Moose::Meta::Attribute::Custom::Labeled;
     sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
@@ -140,22 +141,21 @@ You subclass metaclasses the same way you subclass regular classes. (Extra
 credit: how in the actual hell can you use the MOP to extend itself?) Moving
 on.
 
-    __PACKAGE__->meta->add_attribute('label' => (
-        reader    => 'label',
+    has label => (
+        is        => 'ro',
+        isa       => 'Str',
         predicate => 'has_label',
-    ));
+    );
 
 Now things get a little icky. We're adding a attribute to the attribute
 metaclass. For clarity, I'm going to call this a meta-attribute.
 
-So. This creates a new meta-attribute in the C<MyApp::Meta::Attribute::Labeled>
-metaclass. The new meta-attribute's name is 'label'. We get reader and
-predicate methods, too. The reader method retrieves the value of this
-meta-attribute, the predicate method just asks the question "Does this
-meta-attribute even have a value?"
+This creates a new meta-attribute in the C<MyApp::Meta::Attribute::Labeled>
+metaclass. The new meta-attribute's name is 'label'. The predicate just creates
+a method that asks the question "Does this attribute have a value?"
 
-Note the resemblance between C<add_attribute> and C<has>. C<has> actually just
-uses C<add_attribute> behind the scenes.
+Of course, if you step a foot back, you can see that this is really just adding
+an attribute to a class. Don't be alarmed!
 
     package Moose::Meta::Attribute::Custom::Labeled;
     sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
