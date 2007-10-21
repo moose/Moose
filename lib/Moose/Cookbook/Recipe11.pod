@@ -105,11 +105,12 @@ looks like the following:
         y => Moose::Meta::Attribute=HASH(0x18d1690),
     }
 
-Here's one thing you can do now that you can interact with the attribute's
-object directly:
+Another way to get a handle on an attribute's object is
+C<< $self->meta->get_attribute('name') >>. Here's one thing you can do now that
+you can interact with the attribute's object directly:
 
-    print $point->meta->get_attribute_map->{x}->type_constraint;
-      => Int
+    print $point->meta->get_attribute('x')->type_constraint;
+       => Int
 
 (As an aside, it's not called C<< ->isa >> because C<< $obj->isa >> is already
 taken)
