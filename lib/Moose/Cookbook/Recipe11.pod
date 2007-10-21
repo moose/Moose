@@ -1,6 +1,3 @@
-
-=pod
-
 =head1 NAME
 
 Moose::Cookbook::Recipe11 - The meta-attribute example
@@ -12,7 +9,7 @@ Moose::Cookbook::Recipe11 - The meta-attribute example
     extends 'Moose::Meta::Attribute';
 
     has label => (
-        is  => 'ro',
+        is  => 'rw',
         isa => 'Str',
         predicate => 'has_label',
     );
@@ -139,29 +136,28 @@ somewhat ungloriously.
     extends 'Moose::Meta::Attribute';
 
 You subclass metaclasses the same way you subclass regular classes. (Extra
-credit: how in the actual hell can you use the MOP to extend itself?) Moving
-on.
+credit: how in the actual hell can you use the MOP to extend itself?)
 
     has label => (
-        is        => 'ro',
+        is        => 'rw',
         isa       => 'Str',
         predicate => 'has_label',
     );
 
-Now things get a little icky. We're adding a attribute to the attribute
-metaclass. For clarity, I'm going to call this a meta-attribute.
+Hey, this looks pretty reasonable! This is plain jane Moose code. Recipe 1
+fare. This is merely making a new attribute. An attribute that attributes have.
+A meta-attribute. It may sound scary, but it really isn't! Reread
+L<REAL ATTRIBUTES 101> if this really is terrifying.
 
-This creates a new meta-attribute in the C<MyApp::Meta::Attribute::Labeled>
-metaclass. The new meta-attribute's name is 'label'. The predicate just creates
-a method that asks the question "Does this attribute have a value?"
-
-Of course, if you step a foot back, you can see that this is really just adding
-an attribute to a class. Don't be alarmed!
+The name is "label", it will have a regular accessor (except of course at
+create time), and is a tring. C<predicate> is a standard part of C<has>. It
+just creates a method that asks the question "Does this attribute have a
+value?"
 
     package Moose::Meta::Attribute::Custom::Labeled;
     sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
 
-This registers the new metaclass with Moose. That way attributes can actually
+This registers our new metaclass with Moose. That way attributes can actually
 use it. More on what this is doing in a moment.
 
 Note that we're done defining the new metaclass! Only nine lines of code, and
@@ -196,7 +192,11 @@ use C<< metaclass => 'MyApp::Meta::Attribute::Labeled' >> on every attribute.
 As usual, Moose optimizes in favor of the end user, not the metaprogrammer. :)
 
 Finally, we see that C<has> is setting our new meta-attribute, C<label>, to
-C<"The site's URL">.
+C<"The site's URL">. We can access this meta-attribute with:
+
+    $website->meta->get_attribute('url')->label()
+
+Back to the code.
 
     has name => (
         is => 'rw',
@@ -215,7 +215,8 @@ for human readers.
         my %attributes = %{ $self->meta->get_attribute_map };
         while (my ($name, $attribute) = each %attributes) {
 
-We covered the latter two lines of code earlier.
+Recall that C<get_attribute_map> returns a hashref of attribute names and their
+associated objects.
 
             # print the label if available
             if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
@@ -223,13 +224,12 @@ We covered the latter two lines of code earlier.
                     print $attribute->label;
             }
 
-Note that we have two checks here. The first is "is this attribute an instance
-of C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively, even if
-all of your attributes have this metaclass. You never know when someone is
-going to subclass your work of art, poorly. The second check is "does this
+We have two checks here. The first is "is this attribute an instance of
+C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively. Even if
+all of your attributes have this metaclass, you never know when someone is
+going to subclass your work of art. Poorly. The second check is "does this
 attribute have a label?". This method was defined in the new metaclass as the
-"predicate". If we pass both checks, we print the attribute's label. The
-C<< ->label >> method was defined in the new metaclass as the "reader".
+"predicate". If we pass both checks, we print the attribute's label.
 
             # otherwise print the name
             else {
@@ -244,19 +244,19 @@ Another good, defensive coding practice: Provide reasonable defaults.
         }
     }
 
-Here's another example of using the attribute metaclass.  C<<
-$attribute->get_read_method >> returns the name of the method that can
-invoked on the original object to read the attribute's value.  C<<
-$self->$reader >> is an example of "reflection". Instead of using the name of
-the method, we're using a variable with the name of the method in it. Perl
-doesn't mind. Another way to write this would be
-C<< $self->can($reader)->() >>.
+Here's another example of using the attribute metaclass.
+C<< $attribute->get_read_method >> returns the name of the method that can
+invoked on the original object to read the attribute's value.
+C<< $self->$reader >> is an example of "reflection" -- instead of using the
+name of the method, we're using a variable with the name of the method in it.
+Perl doesn't mind. Another way to write this would be
+C<< $self->can($reader)->($self) >>.
 
     package main;
     my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
     $app->dump;
 
-And finish off the example with a script to show off our newfound magic.
+And wrap up the example with a script to show off our newfound magic.
 
 =head1 CONCLUSION
 
