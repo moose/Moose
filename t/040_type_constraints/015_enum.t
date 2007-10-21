@@ -3,13 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 97;
+use Test::More;
 
 use Scalar::Util ();
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 enum Letter => 'a'..'z', 'A'..'Z';
 enum Language => 'Perl 5', 'Perl 6', 'PASM', 'PIR'; # any others? ;)
@@ -22,12 +20,17 @@ push @invalid_letters, qw/0 4 9 ~ @ $ %/;
 push @invalid_letters, qw/l33t st3v4n 3num/;
 
 my @valid_languages = ('Perl 5', 'Perl 6', 'PASM', 'PIR');
-my @invalid_languages = ('Python', 'Ruby', 'Perl 666', 'PASM++');
+my @invalid_languages = ('perl 5', 'Python', 'Ruby', 'Perl 666', 'PASM++');
+# note that "perl 5" is invalid because case now matters
 
 my @valid_metacharacters = (qw/* + ? . | ( ) [ ] /, '\\');
 my @invalid_metacharacters = qw/< > & % $ @ ! ~ `/;
 push @invalid_metacharacters, qw/.* fish(sticks)? atreides/;
 push @invalid_metacharacters, '^1?$|^(11+?)\1+$';
+
+plan tests => @valid_letters        + @invalid_letters
+            + @valid_languages      + @invalid_languages
+            + @valid_metacharacters + @invalid_metacharacters;
 
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 

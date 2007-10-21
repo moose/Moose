@@ -649,8 +649,8 @@ L<Moose::Meta::TypeConstraint>.
 
 This will create a basic subtype for a given set of strings. 
 The resulting constraint will be a subtype of C<Str> and 
-will match any of the items in C<@values>. See the L<SYNOPSIS> 
-for a simple example.
+will match any of the items in C<@values>. It is case sensitive.
+See the L<SYNOPSIS> for a simple example.
 
 B<NOTE:> This is not a true proper enum type, it is simple 
 a convient constraint builder.
