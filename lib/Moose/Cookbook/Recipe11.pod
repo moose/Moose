@@ -149,15 +149,14 @@ fare. This is merely making a new attribute. An attribute that attributes have.
 A meta-attribute. It may sound scary, but it really isn't! Reread
 L<REAL ATTRIBUTES 101> if this really is terrifying.
 
-The name is "label", it will have a regular accessor (except of course at
-create time), and is a tring. C<predicate> is a standard part of C<has>. It
-just creates a method that asks the question "Does this attribute have a
-value?"
+The name is "label", it will have a regular accessor, and is a string.
+C<predicate> is a standard part of C<has>. It just creates a method that asks
+the question "Does this attribute have a value?"
 
     package Moose::Meta::Attribute::Custom::Labeled;
     sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
 
-This registers our new metaclass with Moose. That way attributes can actually
+This lets Moose discover our new metaclass. That way attributes can actually
 use it. More on what this is doing in a moment.
 
 Note that we're done defining the new metaclass! Only nine lines of code, and
@@ -190,20 +189,23 @@ package, C<MyApp::Meta::Attribute::Labeled>. So Moose uses that metaclass for
 the attribute. It may seem a bit convoluted, but the alternative would be to
 use C<< metaclass => 'MyApp::Meta::Attribute::Labeled' >> on every attribute.
 As usual, Moose optimizes in favor of the end user, not the metaprogrammer. :)
+We also could have just defined the metaclass in
+C<Moose::Meta::Attribute::Custom::Labeled>, but it's probably better to keep to
+your own namespaces.
 
 Finally, we see that C<has> is setting our new meta-attribute, C<label>, to
 C<"The site's URL">. We can access this meta-attribute with:
 
     $website->meta->get_attribute('url')->label()
 
-Back to the code.
+Well, back to the code.
 
     has name => (
         is => 'rw',
         isa => 'Str',
     );
 
-You do not of course need to use the new metaclass for all new attributes.
+Of course, you don't have to use the new metaclass for B<all> new attributes.
 
 Now we begin defining a method that will dump the C<MyApp::Website> instance
 for human readers.
@@ -227,9 +229,13 @@ associated objects.
 We have two checks here. The first is "is this attribute an instance of
 C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively. Even if
 all of your attributes have this metaclass, you never know when someone is
-going to subclass your work of art. Poorly. The second check is "does this
-attribute have a label?". This method was defined in the new metaclass as the
-"predicate". If we pass both checks, we print the attribute's label.
+going to subclass your work of art. Poorly. In other words, it's likely that
+there will still be (many) attributes that are instances of the default
+C<Moose::Meta::Attribute>.
+
+The second check is "does this attribute have a label?". This method was
+defined in the new metaclass as the "predicate". If we pass both checks, we
+print the attribute's label.
 
             # otherwise print the name
             else {
@@ -246,17 +252,17 @@ Another good, defensive coding practice: Provide reasonable defaults.
 
 Here's another example of using the attribute metaclass.
 C<< $attribute->get_read_method >> returns the name of the method that can
-invoked on the original object to read the attribute's value.
+be invoked on the original object to read the attribute's value.
 C<< $self->$reader >> is an example of "reflection" -- instead of using the
 name of the method, we're using a variable with the name of the method in it.
 Perl doesn't mind. Another way to write this would be
-C<< $self->can($reader)->($self) >>.
+C<< $self->can($reader)->($self) >>. Yuck. :)
 
     package main;
     my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
     $app->dump;
 
-And wrap up the example with a script to show off our newfound magic.
+And we wrap up the example with a script to show off our newfound magic.
 
 =head1 CONCLUSION
 
@@ -270,13 +276,15 @@ That way you're also less likely to forget to add the label.
 
 More importantly, this was a very simple example. Your metaclasses aren't
 limited to just adding new meta-attributes. For example, you could implement
-a metaclass that expires attributes after a certain amount of time.
+a metaclass that expires attributes after a certain amount of time. You
+might use it as such:
 
     has site_cache => (
-        metaclass => 'Expiry',
-        expires_after => '1 hour',
-        refresh_with => sub { my $self = shift; get($self->url) },
-        isa => 'Str',
+        metaclass     => 'TimedExpiry',
+        expires_after => { hours => 1 },
+        refresh_with  => sub { get($_->url) },
+        isa           => 'Str',
+        is            => 'ro',
     );
 
 The sky's the limit!
