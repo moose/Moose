@@ -224,11 +224,11 @@ sub enum ($;@) {
     my ($type_name, @values) = @_;
     (scalar @values >= 2)
         || confess "You must have at least two values to enumerate through";
-    my $regexp = join '|' => @values;
+    my %valid = map { $_ => 1 } @values;
 	_create_type_constraint(
 	    $type_name,
 	    'Str',
-	    sub { qr/^$regexp$/i }
+	    sub { $valid{$_} }
 	);    
 }
 
