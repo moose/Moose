@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.27';
+our $VERSION   = '0.28';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -33,7 +33,7 @@ use Moose::Util::TypeConstraints;
     sub init_meta {
         my ( $class, $base_class, $metaclass ) = @_;
         $base_class = $class unless defined $base_class;
-        $metaclass = 'Moose::Meta::Class' unless defined $metaclass;        
+        $metaclass = 'Moose::Meta::Class' unless defined $metaclass;
 
         confess
           "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
@@ -206,7 +206,7 @@ use Moose::Util::TypeConstraints;
     # 1 extra level because it's called by import so there's a layer of indirection
     sub _get_caller{
         my $offset = 1;
-        return 
+        return
             ref $_[1] && defined $_[1]->{into}
             ? $_[1]->{into}
             : ref $_[1] && defined $_[1]->{into_level}
@@ -216,7 +216,7 @@ use Moose::Util::TypeConstraints;
 
     sub import {
         $CALLER = _get_caller(@_);
-            
+
         strict->import;
         warnings->import;
 
@@ -294,61 +294,61 @@ Moose - A complete modern object system for Perl 5
 
   package Point;
   use Moose; # automatically turns on strict and warnings
-  	
+
   has 'x' => (is => 'rw', isa => 'Int');
   has 'y' => (is => 'rw', isa => 'Int');
-  
+
   sub clear {
       my $self = shift;
       $self->x(0);
-      $self->y(0);    
+      $self->y(0);
   }
-  
+
   package Point3D;
   use Moose;
-  
+
   extends 'Point';
-  
+
   has 'z' => (is => 'rw', isa => 'Int');
-  
+
   after 'clear' => sub {
       my $self = shift;
       $self->z(0);
-  }; 
+  };
 
 =head1 DESCRIPTION
 
-Moose is an extension of the Perl 5 object system. 
+Moose is an extension of the Perl 5 object system.
 
 =head2 Another object system!?!?
 
-Yes, I know there has been an explosion recently of new ways to 
+Yes, I know there has been an explosion recently of new ways to
 build object's in Perl 5, most of them based on inside-out objects
-and other such things. Moose is different because it is not a new 
-object system for Perl 5, but instead an extension of the existing 
+and other such things. Moose is different because it is not a new
+object system for Perl 5, but instead an extension of the existing
 object system.
 
-Moose is built on top of L<Class::MOP>, which is a metaclass system 
-for Perl 5. This means that Moose not only makes building normal 
-Perl 5 objects better, but it also provides the power of metaclass 
+Moose is built on top of L<Class::MOP>, which is a metaclass system
+for Perl 5. This means that Moose not only makes building normal
+Perl 5 objects better, but it also provides the power of metaclass
 programming.
 
 =head2 Is this for real? Or is this just an experiment?
 
 Moose is I<based> on the prototypes and experiments I did for the Perl 6
-meta-model. However, Moose is B<NOT> an experiment/prototype; it is for B<real>. 
+meta-model. However, Moose is B<NOT> an experiment/prototype; it is for B<real>.
 
-=head2 Is this ready for use in production? 
+=head2 Is this ready for use in production?
 
-Yes, I believe that it is. 
+Yes, I believe that it is.
 
-Moose has been used successfully in production environemnts by several people 
-and companies (including the one I work for). There are Moose applications 
-which have been in production with little or no issue now for over a year. 
-I consider it highly stable and we are commited to keeping it stable. 
+Moose has been used successfully in production environemnts by several people
+and companies (including the one I work for). There are Moose applications
+which have been in production with little or no issue now for over a year.
+I consider it highly stable and we are commited to keeping it stable.
 
-Of course, in the end, you need to make this call yourself. If you have 
-any questions or concerns, please feel free to email me, or even the list 
+Of course, in the end, you need to make this call yourself. If you have
+any questions or concerns, please feel free to email me, or even the list
 or just stop by #moose and ask away.
 
 =head2 Is Moose just Perl 6 in Perl 5?
@@ -364,7 +364,7 @@ Moose makes every attempt to provide as much convenience as possible during
 class construction/definition, but still stay out of your way if you want it
 to. Here are a few items to note when building classes with Moose.
 
-Unless specified with C<extends>, any class which uses Moose will 
+Unless specified with C<extends>, any class which uses Moose will
 inherit from L<Moose::Object>.
 
 Moose will also manage all attributes (including inherited ones) that are
@@ -375,8 +375,8 @@ or coercion.
 
 =head1 EXPORTED FUNCTIONS
 
-Moose will export a number of functions into the class's namespace which 
-may then be used to set up the class. These functions all work directly 
+Moose will export a number of functions into the class's namespace which
+may then be used to set up the class. These functions all work directly
 on the current class.
 
 =over 4
@@ -389,29 +389,29 @@ This is a method which provides access to the current class's metaclass.
 
 This function will set the superclass(es) for the current class.
 
-This approach is recommended instead of C<use base>, because C<use base> 
-actually C<push>es onto the class's C<@ISA>, whereas C<extends> will 
-replace it. This is important to ensure that classes which do not have 
+This approach is recommended instead of C<use base>, because C<use base>
+actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
+replace it. This is important to ensure that classes which do not have
 superclasses still properly inherit from L<Moose::Object>.
 
 =item B<with (@roles)>
 
-This will apply a given set of C<@roles> to the local class. Role support 
+This will apply a given set of C<@roles> to the local class. Role support
 is currently under heavy development; see L<Moose::Role> for more details.
 
 =item B<has $name =E<gt> %options>
 
-This will install an attribute of a given C<$name> into the current class. 
-The C<%options> are the same as those provided by 
-L<Class::MOP::Attribute>, in addition to the list below which are provided 
+This will install an attribute of a given C<$name> into the current class.
+The C<%options> are the same as those provided by
+L<Class::MOP::Attribute>, in addition to the list below which are provided
 by Moose (L<Moose::Meta::Attribute> to be more specific):
 
 =over 4
 
 =item I<is =E<gt> 'rw'|'ro'>
 
-The I<is> option accepts either I<rw> (for read/write) or I<ro> (for read 
-only). These will create either a read/write accessor or a read-only 
+The I<is> option accepts either I<rw> (for read/write) or I<ro> (for read
+only). These will create either a read/write accessor or a read-only
 accessor respectively, using the same name as the C<$name> of the attribute.
 
 If you need more control over how your accessors are named, you can use the
@@ -420,30 +420,30 @@ L<Class::MOP::Attribute>.
 
 =item I<isa =E<gt> $type_name>
 
-The I<isa> option uses Moose's type constraint facilities to set up runtime 
-type checking for this attribute. Moose will perform the checks during class 
-construction, and within any accessors. The C<$type_name> argument must be a 
-string. The string may be either a class name or a type defined using 
+The I<isa> option uses Moose's type constraint facilities to set up runtime
+type checking for this attribute. Moose will perform the checks during class
+construction, and within any accessors. The C<$type_name> argument must be a
+string. The string may be either a class name or a type defined using
 Moose's type definition features. (Refer to L<Moose::Util::TypeConstraints>
 for information on how to define a new type, and how to retrieve type meta-data).
 
 =item I<coerce =E<gt> (1|0)>
 
-This will attempt to use coercion with the supplied type constraint to change 
-the value passed into any accessors or constructors. You B<must> have supplied 
+This will attempt to use coercion with the supplied type constraint to change
+the value passed into any accessors or constructors. You B<must> have supplied
 a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
 for an example.
 
 =item I<does =E<gt> $role_name>
 
-This will accept the name of a role which the value stored in this attribute 
+This will accept the name of a role which the value stored in this attribute
 is expected to have consumed.
 
 =item I<required =E<gt> (1|0)>
 
-This marks the attribute as being required. This means a I<defined> value must be 
-supplied during class construction, and the attribute may never be set to 
-C<undef> with an accessor. 
+This marks the attribute as being required. This means a I<defined> value must be
+supplied during class construction, and the attribute may never be set to
+C<undef> with an accessor.
 
 =item I<weak_ref =E<gt> (1|0)>
 
@@ -453,12 +453,12 @@ coerced.
 
 =item I<lazy =E<gt> (1|0)>
 
-This will tell the class to not create this slot until absolutely necessary. 
+This will tell the class to not create this slot until absolutely necessary.
 If an attribute is marked as lazy it B<must> have a default supplied.
 
 =item I<auto_deref =E<gt> (1|0)>
 
-This tells the accessor whether to automatically dereference the value returned. 
+This tells the accessor whether to automatically dereference the value returned.
 This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 =item I<metaclass =E<gt> $metaclass_name>
@@ -487,13 +487,13 @@ attribute.
 
 =item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
 
-The I<handles> option provides Moose classes with automated delegation features. 
-This is a pretty complex and powerful option. It accepts many different option 
-formats, each with its own benefits and drawbacks. 
+The I<handles> option provides Moose classes with automated delegation features.
+This is a pretty complex and powerful option. It accepts many different option
+formats, each with its own benefits and drawbacks.
 
 B<NOTE:> This feature is no longer experimental, but it may still have subtle
 bugs lurking in the deeper corners. If you think you have found a bug, you
-probably have, so please report it to me right away. 
+probably have, so please report it to me right away.
 
 B<NOTE:> The class being delegated to does not need to be a Moose based class,
 which is why this feature is especially useful when wrapping non-Moose classes.
@@ -519,61 +519,61 @@ Below is the documentation for each option format:
 
 =item C<ARRAY>
 
-This is the most common usage for I<handles>. You basically pass a list of 
-method names to be delegated, and Moose will install a delegation method 
+This is the most common usage for I<handles>. You basically pass a list of
+method names to be delegated, and Moose will install a delegation method
 for each one.
 
 =item C<HASH>
 
-This is the second most common usage for I<handles>. Instead of a list of 
-method names, you pass a HASH ref where each key is the method name you 
-want installed locally, and its value is the name of the original method 
-in the class being delegated to. 
+This is the second most common usage for I<handles>. Instead of a list of
+method names, you pass a HASH ref where each key is the method name you
+want installed locally, and its value is the name of the original method
+in the class being delegated to.
 
-This can be very useful for recursive classes like trees. Here is a 
+This can be very useful for recursive classes like trees. Here is a
 quick example (soon to be expanded into a Moose::Cookbook::Recipe):
 
   package Tree;
   use Moose;
-  
+
   has 'node' => (is => 'rw', isa => 'Any');
-  
+
   has 'children' => (
       is      => 'ro',
       isa     => 'ArrayRef',
       default => sub { [] }
   );
-  
+
   has 'parent' => (
       is          => 'rw',
       isa         => 'Tree',
       is_weak_ref => 1,
       handles     => {
           parent_node => 'node',
-          siblings    => 'children', 
+          siblings    => 'children',
       }
   );
 
 In this example, the Tree package gets C<parent_node> and C<siblings> methods,
 which delegate to the C<node> and C<children> methods (respectively) of the Tree
-instance stored in the C<parent> slot. 
+instance stored in the C<parent> slot.
 
 =item C<REGEXP>
 
-The regexp option works very similar to the ARRAY option, except that it builds 
-the list of methods for you. It starts by collecting all possible methods of the 
-class being delegated to, then filters that list using the regexp supplied here. 
+The regexp option works very similar to the ARRAY option, except that it builds
+the list of methods for you. It starts by collecting all possible methods of the
+class being delegated to, then filters that list using the regexp supplied here.
 
-B<NOTE:> An I<isa> option is required when using the regexp option format. This 
-is so that we can determine (at compile time) the method list from the class. 
+B<NOTE:> An I<isa> option is required when using the regexp option format. This
+is so that we can determine (at compile time) the method list from the class.
 Without an I<isa> this is just not possible.
 
 =item C<ROLE>
 
-With the role option, you specify the name of a role whose "interface" then 
-becomes the list of methods to handle. The "interface" can be defined as; the 
-methods of the role and any required methods of the role. It should be noted 
-that this does B<not> include any method modifiers or generated attribute 
+With the role option, you specify the name of a role whose "interface" then
+becomes the list of methods to handle. The "interface" can be defined as; the
+methods of the role and any required methods of the role. It should be noted
+that this does B<not> include any method modifiers or generated attribute
 methods (which is consistent with role composition).
 
 =item C<CODE>
@@ -585,7 +585,7 @@ metaclass twiddling.
 This takes a code reference, which should expect two arguments. The first is the
 attribute meta-object this I<handles> is attached to. The second is the
 metaclass of the class being delegated to. It expects you to return a hash (not
-a HASH ref) of the methods you want mapped. 
+a HASH ref) of the methods you want mapped.
 
 =back
 
@@ -593,23 +593,23 @@ a HASH ref) of the methods you want mapped.
 
 =item B<has +$name =E<gt> %options>
 
-This is variation on the normal attibute creator C<has> which allows you to 
+This is variation on the normal attibute creator C<has> which allows you to
 clone and extend an attribute from a superclass. Here is a quick example:
 
   package Foo;
   use Moose;
-  
+
   has 'message' => (
-      is      => 'rw', 
+      is      => 'rw',
       isa     => 'Str',
       default => 'Hello, I am a Foo'
   );
-  
+
   package My::Foo;
   use Moose;
-  
+
   extends 'Foo';
-  
+
   has '+message' => (default => 'Hello I am My::Foo');
 
 What is happening here is that B<My::Foo> is cloning the C<message> attribute
@@ -621,15 +621,15 @@ sanity into it. You are only allowed to change the following attributes:
 
 =over 4
 
-=item I<default> 
+=item I<default>
 
 Change the default value of an attribute.
 
-=item I<coerce> 
+=item I<coerce>
 
 Change whether the attribute attempts to coerce a value passed to it.
 
-=item I<required> 
+=item I<required>
 
 Change if the attribute is required to have a value.
 
@@ -648,8 +648,8 @@ subtype of the old type.
 
 =item I<handles>
 
-You are allowed to B<add> a new C<handles> definition, but you are B<not> 
-allowed to I<change> one. 
+You are allowed to B<add> a new C<handles> definition, but you are B<not>
+allowed to I<change> one.
 
 =back
 
@@ -666,39 +666,39 @@ Modifiers"> for now.
 
 =item B<super>
 
-The keyword C<super> is a no-op when called outside of an C<override> method. In  
-the context of an C<override> method, it will call the next most appropriate 
+The keyword C<super> is a no-op when called outside of an C<override> method. In
+the context of an C<override> method, it will call the next most appropriate
 superclass method with the same arguments as the original method.
 
 =item B<override ($name, &sub)>
 
-An C<override> method is a way of explicitly saying "I am overriding this 
-method from my superclass". You can call C<super> within this method, and 
-it will work as expected. The same thing I<can> be accomplished with a normal 
-method call and the C<SUPER::> pseudo-package; it is really your choice. 
+An C<override> method is a way of explicitly saying "I am overriding this
+method from my superclass". You can call C<super> within this method, and
+it will work as expected. The same thing I<can> be accomplished with a normal
+method call and the C<SUPER::> pseudo-package; it is really your choice.
 
 =item B<inner>
 
-The keyword C<inner>, much like C<super>, is a no-op outside of the context of 
-an C<augment> method. You can think of C<inner> as being the inverse of 
+The keyword C<inner>, much like C<super>, is a no-op outside of the context of
+an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
 the L<Moose::Cookbook>.
 
 =item B<augment ($name, &sub)>
 
-An C<augment> method, is a way of explicitly saying "I am augmenting this 
-method from my superclass". Once again, the details of how C<inner> and 
+An C<augment> method, is a way of explicitly saying "I am augmenting this
+method from my superclass". Once again, the details of how C<inner> and
 C<augment> work is best described in the L<Moose::Cookbook>.
 
 =item B<confess>
 
 This is the C<Carp::confess> function, and exported here because I use it
-all the time. This feature may change in the future, so you have been warned. 
+all the time. This feature may change in the future, so you have been warned.
 
 =item B<blessed>
 
 This is the C<Scalar::Util::blessed> function, it is exported here because I
-use it all the time. It is highly recommended that this is used instead of 
+use it all the time. It is highly recommended that this is used instead of
 C<ref> anywhere you need to test for an object's class name.
 
 =back
@@ -716,24 +716,24 @@ to work. Here is an example:
 
     has 'first_name' => (is => 'rw', isa => 'Str');
     has 'last_name'  => (is => 'rw', isa => 'Str');
-    
-    sub full_name { 
+
+    sub full_name {
         my $self = shift;
-        $self->first_name . ' ' . $self->last_name 
+        $self->first_name . ' ' . $self->last_name
     }
-    
-    no Moose; # keywords are removed from the Person package    
+
+    no Moose; # keywords are removed from the Person package
 
 =head1 EXTENDING AND EMBEDDING MOOSE
 
-Moose also offers some options for extending or embedding it into your own 
+Moose also offers some options for extending or embedding it into your own
 framework. The basic premise is to have something that sets up your class'
-metaclass and export the moose declarators (C<has>, C<with>, C<extends>,...). 
+metaclass and export the moose declarators (C<has>, C<with>, C<extends>,...).
 Here is an example:
 
     package MyFramework;
     use Moose;
-    
+
     sub import {
         my $CALLER = caller();
 
@@ -746,10 +746,10 @@ Here is an example:
         Moose->import({into => $CALLER});
 
         # Do my custom framework stuff
-        
+
         return 1;
     }
-    
+
 =head2 B<import>
 
 Moose's C<import> method supports the L<Sub::Exporter> form of C<{into =E<gt> $pkg}>
@@ -757,12 +757,12 @@ and C<{into_level =E<gt> 1}>
 
 =head2 B<init_meta ($class, $baseclass, $metaclass)>
 
-Moose does some boot strapping: it creates a metaclass object for your class, 
-and then injects a C<meta> accessor into your class to retrieve it. Then it 
-sets your baseclass to Moose::Object or the value you pass in unless you already 
-have one. This is all done via C<init_meta> which takes the name of your class 
+Moose does some boot strapping: it creates a metaclass object for your class,
+and then injects a C<meta> accessor into your class to retrieve it. Then it
+sets your baseclass to Moose::Object or the value you pass in unless you already
+have one. This is all done via C<init_meta> which takes the name of your class
 and optionally a baseclass and a metaclass as arguments.
-    
+
 =head1 CAVEATS
 
 =over 4
@@ -773,9 +773,9 @@ It should be noted that C<super> and C<inner> B<cannot> be used in the same
 method. However, they may be combined within the same class hierarchy; see
 F<t/014_override_augment_inner_super.t> for an example.
 
-The reason for this is that C<super> is only valid within a method 
-with the C<override> modifier, and C<inner> will never be valid within an 
-C<override> method. In fact, C<augment> will skip over any C<override> methods 
+The reason for this is that C<super> is only valid within a method
+with the C<override> modifier, and C<inner> will never be valid within an
+C<override> method. In fact, C<augment> will skip over any C<override> methods
 when searching for its appropriate C<inner>.
 
 This might seem like a restriction, but I am of the opinion that keeping these
@@ -793,13 +793,13 @@ not (UPDATE: so far so good).
 
 =item I blame Audrey Tang for then encouraging my meta-model habit in #perl6.
 
-=item Without Yuval "nothingmuch" Kogman this module would not be possible, 
+=item Without Yuval "nothingmuch" Kogman this module would not be possible,
 and it certainly wouldn't have this name ;P
 
-=item The basis of the TypeContraints module was Rob Kinyon's idea 
+=item The basis of the TypeContraints module was Rob Kinyon's idea
 originally, I just ran with it.
 
-=item Thanks to mst & chansen and the whole #moose poose for all the 
+=item Thanks to mst & chansen and the whole #moose poose for all the
 early ideas/feature-requests/encouragement/bug-finding.
 
 =item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
@@ -813,8 +813,8 @@ early ideas/feature-requests/encouragement/bug-finding.
 =item L<http://www.iinteractive.com/moose>
 
 This is the official web home of Moose, it contains links to our public SVN repo
-as well as links to a number of talks and articles on Moose and Moose related 
-technologies. 
+as well as links to a number of talks and articles on Moose and Moose related
+technologies.
 
 =item L<Class::MOP> documentation
 
@@ -826,21 +826,21 @@ technologies.
 
 =back
 
-=head2 Papers 
+=head2 Papers
 
 =over 4
 
 =item L<http://www.cs.utah.edu/plt/publications/oopsla04-gff.pdf>
 
-This paper (suggested by lbr on #moose) was what lead to the implementation 
-of the C<super>/C<override> and C<inner>/C<augment> features. If you really 
+This paper (suggested by lbr on #moose) was what lead to the implementation
+of the C<super>/C<override> and C<inner>/C<augment> features. If you really
 want to understand them, I suggest you read this.
 
 =back
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -886,7 +886,7 @@ Jonathan (jrockway) Rockway
 
 Piotr (dexter) Roszatycki
 
-Sam (mugwump) Vilain 
+Sam (mugwump) Vilain
 
 ... and many other #moose folks
 
@@ -897,6 +897,6 @@ Copyright 2006, 2007 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

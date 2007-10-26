@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 40;
 use Test::Exception;
 
 BEGIN {
@@ -142,5 +142,74 @@ BEGIN {
 
 }
 
+{
+    {
+      package Test::Builder::Attribute;
+        use Moose;
 
+        has 'foo'  => ( required => 1, builder => 'build_foo', is => 'ro');
+        sub build_foo { return "works" };
+    }
+
+    my $meta = Test::Builder::Attribute->meta;
+    my $foo_attr  = $meta->get_attribute("foo");
+
+    ok($foo_attr->is_required, "foo is required");
+    ok($foo_attr->has_builder, "foo has builder");
+    is($foo_attr->builder, "build_foo",  ".. and it's named build_foo");
+
+    my $instance = Test::Builder::Attribute->new;
+    is($instance->foo, 'works', "foo builder works");
+}
+
+
+
+{
+    {
+      package Test::LazyBuild::Attribute;
+        use Moose;
+
+        has 'foo'  => ( lazy_build => 1, is => 'ro');
+        has '_foo' => ( lazy_build => 1, is => 'ro');
+        sub build_foo { return "works" };
+        sub _build_foo { return "works too" };
+    }
+
+    my $meta = Test::LazyBuild::Attribute->meta;
+    my $foo_attr  = $meta->get_attribute("foo");
+    my $_foo_attr = $meta->get_attribute("_foo");
+
+    ok($foo_attr->is_lazy, "foo is lazy");
+    ok($foo_attr->is_required, "foo is required");
+    ok($foo_attr->is_lazy_build, "foo is lazy_build");
+
+    ok($foo_attr->has_clearer, "foo has clearer");
+    is($foo_attr->clearer, "clear_foo",  ".. and it's named clear_foo");
+
+    ok($foo_attr->has_builder, "foo has builder");
+    is($foo_attr->builder, "build_foo",  ".. and it's named build_foo");
+
+    ok($foo_attr->has_predicate, "foo has predicate");
+    is($foo_attr->predicate, "has_foo",  ".. and it's named has_foo");
+
+    ok($_foo_attr->is_lazy, "_foo is lazy");
+    ok($_foo_attr->is_required, "_foo is required");
+    ok($_foo_attr->is_lazy_build, "_foo is lazy_build");
+
+    ok($_foo_attr->has_clearer, "_foo has clearer");
+    is($_foo_attr->clearer, "_clear_foo",  ".. and it's named _clear_foo");
+
+    ok($_foo_attr->has_builder, "_foo has builder");
+    is($_foo_attr->builder, "_build_foo",  ".. and it's named _build_foo");
+
+    ok($_foo_attr->has_predicate, "_foo has predicate");
+    is($_foo_attr->predicate, "_has_foo",  ".. and it's named _has_foo");
+
+    my $instance = Test::LazyBuild::Attribute->new;
+    ok(!$instance->has_foo, "noo foo value yet");
+    ok(!$instance->_has_foo, "noo _foo value yet");
+    is($instance->foo, 'works', "foo builder works");
+    is($instance->_foo, 'works too', "foo builder works too");
+
+}
 
