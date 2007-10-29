@@ -14,7 +14,7 @@ use B            'svref_2object';
 
 use Sub::Exporter;
 
-use Class::MOP 0.39;
+use Class::MOP 0.43;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
