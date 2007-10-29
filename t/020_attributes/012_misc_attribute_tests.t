@@ -171,8 +171,8 @@ BEGIN {
 
         has 'foo'  => ( lazy_build => 1, is => 'ro');
         has '_foo' => ( lazy_build => 1, is => 'ro');
-        sub build_foo { return "works" };
-        sub _build_foo { return "works too" };
+        sub _build_foo { return "works" };
+        sub _build__foo { return "works too" };
     }
 
     my $meta = Test::LazyBuild::Attribute->meta;
@@ -187,7 +187,7 @@ BEGIN {
     is($foo_attr->clearer, "clear_foo",  ".. and it's named clear_foo");
 
     ok($foo_attr->has_builder, "foo has builder");
-    is($foo_attr->builder, "build_foo",  ".. and it's named build_foo");
+    is($foo_attr->builder, "_build_foo",  ".. and it's named build_foo");
 
     ok($foo_attr->has_predicate, "foo has predicate");
     is($foo_attr->predicate, "has_foo",  ".. and it's named has_foo");
@@ -200,7 +200,7 @@ BEGIN {
     is($_foo_attr->clearer, "_clear_foo",  ".. and it's named _clear_foo");
 
     ok($_foo_attr->has_builder, "_foo has builder");
-    is($_foo_attr->builder, "_build_foo",  ".. and it's named _build_foo");
+    is($_foo_attr->builder, "_build__foo",  ".. and it's named _build_foo");
 
     ok($_foo_attr->has_predicate, "_foo has predicate");
     is($_foo_attr->predicate, "_has_foo",  ".. and it's named _has_foo");

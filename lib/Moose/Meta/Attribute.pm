@@ -179,12 +179,11 @@ sub _process_options {
               if exists $options->{default};
             $options->{lazy} = 1;
             $options->{required} = 1;
+                $options->{builder}   ||= "_build_${name}";
             if($name =~ /^_/){
-                $options->{builder}   ||= "_build${name}";
                 $options->{clearer}   ||= "_clear${name}";
                 $options->{predicate} ||= "_has${name}";
             } else {
-                $options->{builder}   ||= "build_${name}";
                 $options->{clearer}   ||= "clear_${name}";
                 $options->{predicate} ||= "has_${name}";
             }
@@ -609,17 +608,23 @@ and predicate options for you using the following convention.
    #If your attribute name starts with an underscore:
    has '_foo' => (lazy_build => 1);
    #is the same as
-   has '_foo' => (lazy => 1, required => 1, builder => '_build_foo', predicate => '_has_foo', clearer => '_clear_foo');
+   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', builder => '_build__foo);
    # or
-   has '_foo' => (lazy => 1, required => 1, builder => '_build_foo', default => sub{shift->_build_foo}, clearer => '_clear_foo');
+   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', default => sub{shift->_build__foo});
 
    #If your attribute name does not start with an underscore:
-   has 'foo' => (lazy => 1, required => 1, builder => 'build_foo', predicate => 'has_foo', clearer => 'clear_foo');
+   has 'foo' => (lazy_build => 1);
+   #is the same as
+   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', builder => '_build_foo);
    # or
-   has '_foo' => (lazy => 1, required => 1, builder => '_build_foo', default => sub{shift->build_foo}, clearer => '_clear_foo');
+   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', default => sub{shift->_build_foo});
+
+The reason for the different naming of the C<builder> is that the C<builder>
+method is a private method while the C<clearer> and C<predicate> methods
+are public methods.
 
 NOTE: This means your class should provide a method whose name matches the value
-of the builder part, in this case _build_foo or build_foo.
+of the builder part, in this case _build__foo or _build_foo.
 
 =item B<should_coerce>
 
