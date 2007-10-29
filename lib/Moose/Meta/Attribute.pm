@@ -224,9 +224,11 @@ sub initialize_instance_slot {
         $val = $self->default($instance);
     } elsif (!defined $val && $self->has_builder) {
         my $builder = $self->builder;
-        confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'")
-            unless $instance->can($builder);
-        $val = $instance->$builder;
+        if($builder = $instance->can($builder)){
+            $val = $instance->$builder;
+        } else {
+            confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
+        }
     }
 
         if (defined $val || $self->has_default) {
@@ -313,9 +315,11 @@ sub get_value {
                 }
                 if ( $self->has_builder ){
                     my $builder = $self->builder;
-                    confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'")
-                        unless $instance->can($builder);
-                    $self->set_value($instance, $instance->$builder);
+                    if($builder = $instance->can($builder)){
+                        $self->set_value($instance, $instance->$builder);
+                    } else {
+                        confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
+                    }
                 } else {
                     $self->set_value($instance, undef);
                 }

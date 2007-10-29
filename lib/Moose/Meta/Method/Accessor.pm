@@ -161,9 +161,11 @@ sub _inline_check_lazy {
                    '        $default = $attr->default(' . $inv . ')  if $attr->has_default;' .
                    '        if ( $attr->has_builder ) { '.
                    '            my $builder = $self->builder;'.
-                   '            confess(blessed('.$inv.')." does not support builder method \'$builder\' for attribute \'" . $attr->name . "\'")'.
-                   '                unless '.$inv.'->can($builder); '.
-                   '            $default = '.$inv.'->$builder;'.
+                   '            if($builder = '.$inv.'->can($builder)){ '.
+                   '                $default = '.$inv.'->$builder; '.
+                   '            } else { '.
+                   '                confess(blessed('.$inv.')." does not support builder method \'$builder\' for attribute \'" . $attr->name . "\'");'.
+                   '            }'.
                    '        }'.
                    ($attr->should_coerce
                        ? '$default = $attr->type_constraint->coerce($default);'
@@ -182,8 +184,14 @@ sub _inline_check_lazy {
 
     return  'unless (exists ' . $slot_access . ') {' .
             '    if ($attr->has_default) { ' . $slot_access . ' = $attr->default(' . $inv . '); }' .
-            '    elsif ($attr->has_builder) { my $builder = $attr->builder; ' . $slot_access . ' = ' . $inv . '->$builder; }' .
-            '    else { ' .$slot_access . ' = undef; } '.
+            '    elsif ($attr->has_builder) { '.
+            '        my $builder = $attr->builder; ' .
+            '        if($builder = '.$inv.'->can($builder)){ '.
+            '            ' . $slot_access . ' = ' . $inv . '->$builder; '.
+            '        } else { '.
+            '            confess(blessed('.$inv.')." does not support builder method \'$builder\' for attribute \'" . $attr->name . "\'");'.
+            '        }'.
+            '    } else { ' .$slot_access . ' = undef; } '.
             '}';
 }
 
