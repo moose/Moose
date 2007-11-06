@@ -35,7 +35,7 @@ __PACKAGE__->meta->add_attribute('coercion'   => (
 __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     init_arg  => 'optimized',
     accessor  => 'hand_optimized_type_constraint',
-    predicate => 'has_hand_optimized_type_constraint',    
+    predicate => 'has_hand_optimized_type_constraint',
 ));
 
 # private accessors
@@ -48,7 +48,7 @@ __PACKAGE__->meta->add_attribute('package_defined_in' => (
     accessor => '_package_defined_in'
 ));
 
-sub new { 
+sub new {
     my $class = shift;
     my $self  = $class->meta->new_object(@_);
     $self->compile_type_constraint()
@@ -58,7 +58,7 @@ sub new {
 
 sub coerce   { ((shift)->coercion || confess "Cannot coerce without a type coercion")->coerce(@_) }
 sub check    { $_[0]->_compiled_type_constraint->($_[1]) }
-sub validate { 
+sub validate {
     my ($self, $value) = @_;
     if ($self->_compiled_type_constraint->($value)) {
         return undef;
@@ -102,68 +102,69 @@ sub compile_type_constraint {
 
 sub _actually_compile_type_constraint {
     my $self = shift;
-    
+
     return $self->_compile_hand_optimized_type_constraint
         if $self->has_hand_optimized_type_constraint;
-    
+
     my $check = $self->constraint;
     (defined $check)
-        || confess "Could not compile type constraint '" 
-                . $self->name 
+        || confess "Could not compile type constraint '"
+                . $self->name
                 . "' because no constraint check";
-                
+
     return $self->_compile_subtype($check)
         if $self->has_parent;
-        
+
     return $self->_compile_type($check);
 }
 
 sub _compile_hand_optimized_type_constraint {
     my $self = shift;
-    
+
     my $type_constraint = $self->hand_optimized_type_constraint;
-    
+
     return sub {
+        confess unless ref $type_constraint;
         return undef unless $type_constraint->($_[0]);
         return 1;
-    };    
+    };
 }
 
 sub _compile_subtype {
     my ($self, $check) = @_;
-    
+
     # so we gather all the parents in order
     # and grab their constraints ...
     my @parents;
     foreach my $parent ($self->_collect_all_parents) {
         if ($parent->has_hand_optimized_type_constraint) {
             unshift @parents => $parent->hand_optimized_type_constraint;
-            last;                
+            last;
         }
         else {
             unshift @parents => $parent->constraint;
         }
     }
-    
+
     # then we compile them to run without
     # having to recurse as we did before
-	return subname $self->name => sub { 			
-		local $_ = $_[0];
+        return subname $self->name => sub {
+                local $_ = $_[0];
         foreach my $parent (@parents) {
             return undef unless $parent->($_[0]);
         }
-		return undef unless $check->($_[0]);
-		1;
-	};    
+                return undef unless $check->($_[0]);
+                1;
+        };
 }
 
 sub _compile_type {
     my ($self, $check) = @_;
-	return subname $self->name => sub { 
-		local $_ = $_[0];
-		return undef unless $check->($_[0]);
-		1;
-	};    
+        return subname $self->name => sub {
+                local $_ = $_[0];
+                return undef unless $check->($_[0]);
+                1;
+        };
 }
 
 ## other utils ...
@@ -195,13 +196,13 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 DESCRIPTION
 
-For the most part, the only time you will ever encounter an 
-instance of this class is if you are doing some serious deep 
-introspection. This API should not be considered final, but 
-it is B<highly unlikely> that this will matter to a regular 
+For the most part, the only time you will ever encounter an
+instance of this class is if you are doing some serious deep
+introspection. This API should not be considered final, but
+it is B<highly unlikely> that this will matter to a regular
 Moose user.
 
-If you wish to use features at this depth, please come to the 
+If you wish to use features at this depth, please come to the
 #moose IRC channel on irc.perl.org and we can talk :)
 
 =head1 METHODS
@@ -214,7 +215,7 @@ If you wish to use features at this depth, please come to the
 
 =item B<is_a_type_of ($type_name)>
 
-This checks the current type name, and if it does not match, 
+This checks the current type name, and if it does not match,
 checks if it is a subtype of it.
 
 =item B<is_subtype_of ($type_name)>
@@ -227,15 +228,15 @@ This will apply the type-coercion if applicable.
 
 =item B<check ($value)>
 
-This method will return a true (C<1>) if the C<$value> passes the 
+This method will return a true (C<1>) if the C<$value> passes the
 constraint, and false (C<0>) otherwise.
 
 =item B<validate ($value)>
 
-This method is similar to C<check>, but it deals with the error 
-message. If the C<$value> passes the constraint, C<undef> will be 
-returned. If the C<$value> does B<not> pass the constraint, then 
-the C<message> will be used to construct a custom error message.  
+This method is similar to C<check>, but it deals with the error
+message. If the C<$value> passes the constraint, C<undef> will be
+returned. If the C<$value> does B<not> pass the constraint, then
+the C<message> will be used to construct a custom error message.
 
 =item B<name>
 
@@ -272,7 +273,7 @@ itself instead.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -287,6 +288,6 @@ Copyright 2006, 2007 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
