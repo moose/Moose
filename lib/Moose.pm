@@ -358,6 +358,12 @@ Instead, it is an OO system for Perl 5. I built Moose because I was tired of
 writing the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So
 instead of switching to Ruby, I wrote Moose :)
 
+=head2 Moose Extensions
+
+The L<MooseX::> namespace is the official place to find Moose extensions.
+There are a number of these modules out on CPAN right now the best way to 
+find them is to search for MooseX:: on search.cpan.org. 
+
 =head1 BUILDING CLASSES WITH MOOSE
 
 Moose makes every attempt to provide as much convenience as possible during
@@ -823,6 +829,8 @@ technologies.
 =item The Moose mailing list - moose@perl.org
 
 =item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/5788>
+
+=item Several Moose extension modules in the L<MooseX::> namespace.
 
 =back
 
