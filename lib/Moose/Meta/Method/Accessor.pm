@@ -19,21 +19,21 @@ sub generate_accessor_method_inline {
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv, $attr_name);
+    my $slot_access = $self->_inline_access($inv, $attr_name);
     my $value_name  = $attr->should_coerce ? '$val' : '$_[1]';
 
-    my $code = 'sub { '
-    . $self->_inline_pre_body(@_)
-    . 'if (scalar(@_) == 2) {'
-        . $self->_inline_check_required
-        . $self->_inline_check_coercion
-        . $self->_inline_check_constraint($value_name)
-                . $self->_inline_store($inv, $value_name)
-                . $self->_inline_trigger($inv, $value_name)
-    . ' }'
-    . $self->_inline_check_lazy
-    . $self->_inline_post_body(@_)
-    . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv))
+    my $code = 'sub { ' . "\n"
+    . $self->_inline_pre_body(@_) . "\n"
+    . 'if (scalar(@_) == 2) {' . "\n"
+        . $self->_inline_check_required . "\n"
+        . $self->_inline_check_coercion . "\n"
+        . $self->_inline_check_constraint($value_name) . "\n"
+                . $self->_inline_store($inv, $value_name) . "\n"
+                . $self->_inline_trigger($inv, $value_name) . "\n"
+    . ' }' . "\n"
+    . $self->_inline_check_lazy . "\n"
+    . $self->_inline_post_body(@_) . "\n"
+    . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv)) . "\n"
     . ' }';
 
     # NOTE:
@@ -149,13 +149,13 @@ sub _inline_check_lazy {
         return '' unless $attr->is_lazy;
 
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv, $attr->name);
-
+    my $slot_access = $self->_inline_access($inv, $attr->name);
+    my $slot_exists = $self->_inline_has($inv, $attr->name);
         if ($attr->has_type_constraint) {
             # NOTE:
             # this could probably be cleaned
             # up and streamlined a little more
-            return 'unless (exists ' . $slot_access . ') {' .
+            return 'unless (' . $slot_exists . ') {' .
                    '    if ($attr->has_default || $attr->has_builder ) {' .
                    '        my $default; '.
                    '        $default = $attr->default(' . $inv . ')  if $attr->has_default;' .
@@ -182,7 +182,7 @@ sub _inline_check_lazy {
                    '}';
         }
 
-    return  'unless (exists ' . $slot_access . ') {' .
+    return  'unless ( ' . $slot_exists . ') {' .
             '    if ($attr->has_default) { ' . $slot_access . ' = $attr->default(' . $inv . '); }' .
             '    elsif ($attr->has_builder) { '.
             '        my $builder = $attr->builder; ' .
@@ -224,6 +224,26 @@ sub _inline_get {
         my $slot_name = sprintf "'%s'", $attr->slots;
 
     return $mi->inline_get_slot_value($instance, $slot_name);
+}
+
+sub _inline_access {
+        my ($self, $instance) = @_;
+        my $attr = $self->associated_attribute;
+
+        my $mi = $attr->associated_class->get_meta_instance;
+        my $slot_name = sprintf "'%s'", $attr->slots;
+
+    return $mi->inline_slot_access($instance, $slot_name);
+}
+
+sub _inline_has {
+        my ($self, $instance) = @_;
+        my $attr = $self->associated_attribute;
+
+        my $mi = $attr->associated_class->get_meta_instance;
+        my $slot_name = sprintf "'%s'", $attr->slots;
+
+    return $mi->inline_is_slot_initialized($instance, $slot_name);
 }
 
 sub _inline_auto_deref {
