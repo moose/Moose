@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+0.28 Tues. Nov. 13, 2007
+    - 0.27 packaged incorrectly (groditi)     
+
 0.27 Tues. Nov. 13, 2007
     * Moose::Meta::Attribute
       - Added support for the new builder option (groditi)
