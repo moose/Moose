@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.27
+0.27 Tues. Nov. 13, 2007
     * Moose::Meta::Attribute
       - Added support for the new builder option (groditi)
       - Added support for lazy_build option (groditi)
