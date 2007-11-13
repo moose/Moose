@@ -8,7 +8,7 @@ use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -220,12 +220,11 @@ sub initialize_instance_slot {
             $val = $self->default($instance);
             $value_is_set = 1;
         } elsif ($self->has_builder) {
-            my $builder = $self->builder;
-            if($builder = $instance->can($builder)){
+            if(my $builder = $instance->can($self->builder)){
                 $val = $instance->$builder;
                 $value_is_set = 1;
             } else {
-                confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
+                confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
             }
         }
     }
@@ -313,11 +312,10 @@ sub get_value {
                     $self->set_value($instance, $default);
                 }
                 if ( $self->has_builder ){
-                    my $builder = $self->builder;
-                    if($builder = $instance->can($builder)){
+                    if(my $builder = $instance->can($self->builder)){
                         $self->set_value($instance, $instance->$builder);
                     } else {
-                        confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
+                        confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
                     }
                 } else {
                     $self->set_value($instance, undef);

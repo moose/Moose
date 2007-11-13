@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.06';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -160,11 +160,10 @@ sub _inline_check_lazy {
                    '        my $default; '.
                    '        $default = $attr->default(' . $inv . ')  if $attr->has_default;' .
                    '        if ( $attr->has_builder ) { '.
-                   '            my $builder = $attr->builder;'.
-                   '            if($builder = '.$inv.'->can($builder)){ '.
+                   '            if(my $builder = '.$inv.'->can($attr->builder)){ '.
                    '                $default = '.$inv.'->$builder; '.
                    '            } else { '.
-                   '                confess(blessed('.$inv.')." does not support builder method \'$builder\' for attribute \'" . $attr->name . "\'");'.
+                   '                confess(Scalar::Util::blessed('.$inv.')." does not support builder method \'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'.
                    '            }'.
                    '        }'.
                    ($attr->should_coerce
@@ -185,11 +184,10 @@ sub _inline_check_lazy {
     return  'unless ( ' . $slot_exists . ') {' .
             '    if ($attr->has_default) { ' . $slot_access . ' = $attr->default(' . $inv . '); }' .
             '    elsif ($attr->has_builder) { '.
-            '        my $builder = $attr->builder; ' .
-            '        if($builder = '.$inv.'->can($builder)){ '.
+            '        if(my $builder = '.$inv.'->can($attr->builder)){ '.
             '            ' . $slot_access . ' = ' . $inv . '->$builder; '.
             '        } else { '.
-            '            confess(blessed('.$inv.')." does not support builder method \'$builder\' for attribute \'" . $attr->name . "\'");'.
+            '            confess(Scalar::Util::blessed('.$inv.')." does not support builder method \'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'.
             '        }'.
             '    } else { ' .$slot_access . ' = undef; } '.
             '}';

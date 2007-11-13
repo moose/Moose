@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 40;
+use Test::More tests => 41;
 use Test::Exception;
 
 BEGIN {
@@ -171,6 +171,7 @@ BEGIN {
 
         has 'foo'  => ( lazy_build => 1, is => 'ro');
         has '_foo' => ( lazy_build => 1, is => 'ro');
+        has 'fool' => ( lazy_build => 1, is => 'ro');
         sub _build_foo { return "works" };
         sub _build__foo { return "works too" };
     }
@@ -210,6 +211,9 @@ BEGIN {
     ok(!$instance->_has_foo, "noo _foo value yet");
     is($instance->foo, 'works', "foo builder works");
     is($instance->_foo, 'works too', "foo builder works too");
+    throws_ok { $instance->fool }
+        qr/Test::LazyBuild::Attribute does not support builder method \'_build_fool\' for attribute \'fool\'/,
+            "Correct error when a builder method is not present";
 
 }
 

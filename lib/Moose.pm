@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.28';
+our $VERSION   = '0.29';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -361,8 +361,8 @@ instead of switching to Ruby, I wrote Moose :)
 =head2 Moose Extensions
 
 The L<MooseX::> namespace is the official place to find Moose extensions.
-There are a number of these modules out on CPAN right now the best way to 
-find them is to search for MooseX:: on search.cpan.org. 
+There are a number of these modules out on CPAN right now the best way to
+find them is to search for MooseX:: on search.cpan.org.
 
 =head1 BUILDING CLASSES WITH MOOSE
 
