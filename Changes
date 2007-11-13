@@ -4,6 +4,7 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - Added support for the new builder option (groditi)
       - Added support for lazy_build option (groditi)
+      - Changed slot initialization for predicate changes (groditi)
 
     * Moose::Meta::Method::Accessor
       - Added support for lazy_build option (groditi)

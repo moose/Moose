@@ -202,12 +202,10 @@ sub initialize_instance_slot {
     # try to fetch the init arg from the %params ...
 
     my $val;
+    my $value_is_set;
     if (exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
-
-        if (!defined $val && $self->is_required) {
-            confess "Attribute (" . $self->name . ") is required and cannot be undef";
-        }
+        $value_is_set = 1;
     }
     else {
         # skip it if it's lazy
@@ -215,45 +213,47 @@ sub initialize_instance_slot {
         # and die if it's required and doesn't have a default value
         confess "Attribute (" . $self->name . ") is required"
             if $self->is_required && !$self->has_default && !$self->has_builder;
+
+        # if nothing was in the %params, we can use the
+        # attribute's default value (if it has one)
+        if ($self->has_default) {
+            $val = $self->default($instance);
+            $value_is_set = 1;
+        } elsif ($self->has_builder) {
+            my $builder = $self->builder;
+            if($builder = $instance->can($builder)){
+                $val = $instance->$builder;
+                $value_is_set = 1;
+            } else {
+                confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
+            }
+        }
     }
 
-    # if nothing was in the %params, we can use the
-    # attribute's default value (if it has one)
-    if (!defined $val && $self->has_default) {
-        $val = $self->default($instance);
-    } elsif (!defined $val && $self->has_builder) {
-        my $builder = $self->builder;
-        if($builder = $instance->can($builder)){
-            $val = $instance->$builder;
-        } else {
-            confess(blessed($instance)." does not support builder method '$builder' for attribute '" . $self->name . "'");
-        }
-    }
+    return unless $value_is_set;
 
-        if (defined $val || $self->has_default) {
-            if ($self->has_type_constraint) {
-                my $type_constraint = $self->type_constraint;
-                    if ($self->should_coerce && $type_constraint->has_coercion) {
-                        $val = $type_constraint->coerce($val);
-                    }
-            (defined($type_constraint->check($val)))
-                || confess "Attribute (" .
-                           $self->name .
-                           ") does not pass the type constraint (" .
-                           $type_constraint->name .
-                           ") with '" .
-                           (defined $val
-                               ? (blessed($val) && overload::Overloaded($val)
-                                    ? overload::StrVal($val)
-                                    : $val)
-                               : 'undef') .
-                           "'";
+    if ($self->has_type_constraint) {
+        my $type_constraint = $self->type_constraint;
+        if ($self->should_coerce && $type_constraint->has_coercion) {
+            $val = $type_constraint->coerce($val);
         }
-        }
+        (defined($type_constraint->check($val)))
+            || confess "Attribute (" .
+                       $self->name .
+                       ") does not pass the type constraint (" .
+                       $type_constraint->name .
+                       ") with '" .
+                       (defined $val
+                           ? (blessed($val) && overload::Overloaded($val)
+                                ? overload::StrVal($val)
+                                : $val)
+                           : 'undef') .
+                       "'";
+    }
 
     $meta_instance->set_slot_value($instance, $self->name, $val);
     $meta_instance->weaken_slot_value($instance, $self->name)
-        if ref $val && $self->is_weak_ref;
+      if ref $val && $self->is_weak_ref;
 }
 
 ## Slot management
