@@ -160,7 +160,7 @@ sub _inline_check_lazy {
                    '        my $default; '.
                    '        $default = $attr->default(' . $inv . ')  if $attr->has_default;' .
                    '        if ( $attr->has_builder ) { '.
-                   '            my $builder = $self->builder;'.
+                   '            my $builder = $attr->builder;'.
                    '            if($builder = '.$inv.'->can($builder)){ '.
                    '                $default = '.$inv.'->$builder; '.
                    '            } else { '.

@@ -116,7 +116,7 @@ sub _generate_slot_initializer {
                         '|| confess "Attribute (' . $attr->name . ') is required";');
     }
 
-    if ($attr->has_default && !($is_moose &&$attr->is_lazy)) {
+    if ($attr->has_default && !($is_moose && $attr->is_lazy)) {
 
         push @source => 'if (exists $params{\'' . $attr->init_arg . '\'}) {';
 
