@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -20,15 +20,27 @@ BEGIN {
 {
   package Foo;
   use Moose;
+
+  has 'foos' => (is => 'ro', lazy_build => 1);
+  sub _build_foos{ "many foos" }
+
 }
 
 {
   my $foo_role = Moose::Meta::Role->initialize('FooRole');
   my $meta = Foo->meta;
+
+  lives_ok{ Foo->new                    } "lazy_build works";
+  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'");
   lives_ok{ $meta->make_immutable       } "Foo is imutable";
   dies_ok{  $meta->add_role($foo_role)  } "Add Role is locked";
+  lives_ok{ Foo->new                    } "Inlined constructor works with lazy_build";
+  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'");
   lives_ok{ $meta->make_mutable         } "Foo is mutable";
   lives_ok{ $meta->add_role($foo_role)  } "Add Role is unlocked";
+
+
+
 }
 
 {

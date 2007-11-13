@@ -10,6 +10,9 @@ Revision history for Perl extension Moose
       - Fix inline methods to work with corrected predicate 
         behavior (groditi)
 
+    * Moose::Meta::Method::Constructor
+      - Added support for lazy_build option (groditi)
+
     * t/
       - tests for builder and lazy_build (groditi)
 
