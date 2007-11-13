@@ -13,6 +13,7 @@ lib/Moose.pm
 lib/Moose/Cookbook.pod
 lib/Moose/Cookbook/FAQ.pod
 lib/Moose/Cookbook/Recipe1.pod
+lib/Moose/Cookbook/Recipe11.pod
 lib/Moose/Cookbook/Recipe2.pod
 lib/Moose/Cookbook/Recipe3.pod
 lib/Moose/Cookbook/Recipe4.pod
@@ -47,6 +48,7 @@ lib/Test/Moose.pm
 Makefile.PL
 MANIFEST
 META.yml
+PLANS
 README
 t/000_load.t
 t/000_recipes/001_recipe.t
@@ -105,6 +107,7 @@ t/040_type_constraints/011_container_type_constraint.t
 t/040_type_constraints/012_container_type_coercion.t
 t/040_type_constraints/013_advanced_type_creation.t
 t/040_type_constraints/014_type_notation_parser.t
+t/040_type_constraints/015_enum.t
 t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
