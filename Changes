@@ -1,15 +1,18 @@
 Revision history for Perl extension Moose
 
+    * Moose::Util::TypeConstraints
+      - fix ClassName constraint to introspect symbol table
+
 0.29 Tues. Nov. 13, 2007
     * Moose::Meta::Attribute
-      -Fix error message on missing builder method (groditi)
+      - Fix error message on missing builder method (groditi)
 
     * Moose::Meta::Method::Accessor
-      -Fix error message on missing builder method (groditi)
+      - Fix error message on missing builder method (groditi)
 
     * t/ 
-      -Add test to check for the correct error message when
-       builder method is missing (groditi)
+      - Add test to check for the correct error message when
+        builder method is missing (groditi)
 
 0.28 Tues. Nov. 13, 2007
     - 0.27 packaged incorrectly (groditi)     
