@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 269;
+use Test::More tests => 270;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -303,6 +303,12 @@ ok(!defined ClassName(0),               '... ClassName rejects anything which is
 ok(!defined ClassName(100),             '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName(''),              '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName('Baz'),           '... ClassName rejects anything which is not a ClassName');
+
+{
+  package Quux::Wibble; # this makes Quux symbol table exist
+}
+
+ok(!defined ClassName('Quux'),           '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName([]),              '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName({}),              '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName(sub {}),          '... ClassName rejects anything which is not a ClassName');
