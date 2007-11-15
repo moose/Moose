@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.07';
+our $VERSION   = '0.08';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -146,51 +146,49 @@ sub _inline_check_lazy {
     my $self = $_[0];
     my $attr = $self->associated_attribute;
 
-        return '' unless $attr->is_lazy;
+    return '' unless $attr->is_lazy;
 
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_access($inv, $attr->name);
+
     my $slot_exists = $self->_inline_has($inv, $attr->name);
-        if ($attr->has_type_constraint) {
-            # NOTE:
-            # this could probably be cleaned
-            # up and streamlined a little more
-            return 'unless (' . $slot_exists . ') {' .
-                   '    if ($attr->has_default || $attr->has_builder ) {' .
-                   '        my $default; '.
-                   '        $default = $attr->default(' . $inv . ')  if $attr->has_default;' .
-                   '        if ( $attr->has_builder ) { '.
-                   '            if(my $builder = '.$inv.'->can($attr->builder)){ '.
-                   '                $default = '.$inv.'->$builder; '.
-                   '            } else { '.
-                   '                confess(Scalar::Util::blessed('.$inv.')." does not support builder method \'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'.
-                   '            }'.
-                   '        }'.
-                   ($attr->should_coerce
-                       ? '$default = $attr->type_constraint->coerce($default);'
-                       : '') .
-               '        (defined($type_constraint->($default)))' .
-               '                || confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
-               '               . $attr->type_constraint->name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .
-               '          if defined($default);' .
-                   '        ' . $slot_access . ' = $default; ' .
-                   '    }' .
-                   '    else {' .
-               '        ' . $slot_access . ' = undef;' .
-                   '    }' .
-                   '}';
+
+    my $code = 'unless (' . $slot_exists . ') {' . "\n";
+    if ($attr->has_type_constraint) {
+        if($attr->has_default || $attr->has_builder){
+            if($attr->has_default){
+                $code .= '    my $default = $attr->default(' . $inv . ');'."\n";
+            } elsif($attr->has_builder){
+                $code .= '    my $default;'."\n".
+                         '    if(my $builder = '.$inv.'->can($attr->builder)){ '."\n".
+                         '        $default = '.$inv.'->$builder; '. "\n    } else {\n" .
+                         '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
+                         '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
+            }
+            $code .= '    $default = $attr->type_constraint->coerce($default);'."\n"  if $attr->should_coerce;
+            $code .= '    (defined($type_constraint->($default)))' .
+                     '            || confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
+                     '           . $attr->type_constraint->name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .
+                     '          if defined($default);' . "\n" .
+                     '        ' . $slot_access . ' = $default; ' . "\n";
+        } else {
+            $code .= '    ' . $slot_access . " = undef; \n";
         }
 
-    return  'unless ( ' . $slot_exists . ') {' .
-            '    if ($attr->has_default) { ' . $slot_access . ' = $attr->default(' . $inv . '); }' .
-            '    elsif ($attr->has_builder) { '.
-            '        if(my $builder = '.$inv.'->can($attr->builder)){ '.
-            '            ' . $slot_access . ' = ' . $inv . '->$builder; '.
-            '        } else { '.
-            '            confess(Scalar::Util::blessed('.$inv.')." does not support builder method \'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'.
-            '        }'.
-            '    } else { ' .$slot_access . ' = undef; } '.
-            '}';
+    } else {
+        if($attr->has_default){
+            $code .= '    '.$slot_access.' = $attr->default(' . $inv . ');'."\n";
+        } elsif($attr->has_builder){
+            $code .= '    if(my $builder = '.$inv.'->can($attr->builder)){ '."\n".
+                     '        '.$slot_access.' = '.$inv.'->$builder; '. "\n    } else {\n" .
+                     '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
+                     '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
+        } else {
+            $code .= '    ' . $slot_access . " = undef; \n";
+        }
+    }
+    $code .= "}\n";
+    return $code;
 }
 
 
