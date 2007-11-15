@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 use Test::Exception;
 
 BEGIN {
@@ -25,8 +25,10 @@ BEGIN {
   #there is a TC present.
   has 'foos' => (is => 'ro', lazy_build => 1);
   has 'bars' => (isa => 'Str', is => 'ro', lazy_build => 1);
-  sub _build_foos{ "many foos" }
-  sub _build_bars{ "many bars" }
+  has 'bazes' => (isa => 'Str', is => 'ro', builder => '_build_bazes');
+  sub _build_foos  { "many foos" }
+  sub _build_bars  { "many bars" }
+  sub _build_bazes { "many bazes" }
 }
 
 {
@@ -34,13 +36,15 @@ BEGIN {
   my $meta = Foo->meta;
 
   lives_ok{ Foo->new                    } "lazy_build works";
-  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'");
-  is(Foo->new->bars, 'many bars'        , "correct value for 'bars'");
+  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'  before inlining constructor");
+  is(Foo->new->bars, 'many bars'        , "correct value for 'bars'  before inlining constructor");
+  is(Foo->new->bazes, 'many bazes'      , "correct value for 'bazes' before inlining constructor");
   lives_ok{ $meta->make_immutable       } "Foo is imutable";
   dies_ok{  $meta->add_role($foo_role)  } "Add Role is locked";
   lives_ok{ Foo->new                    } "Inlined constructor works with lazy_build";
-  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'");
-  is(Foo->new->bars, 'many bars'        , "correct value for 'bars'");
+  is(Foo->new->foos, 'many foos'        , "correct value for 'foos'  after inlining constructor");
+  is(Foo->new->bars, 'many bars'        , "correct value for 'bars'  after inlining constructor");
+  is(Foo->new->bazes, 'many bazes'      , "correct value for 'bazes' after inlining constructor");
   lives_ok{ $meta->make_mutable         } "Foo is mutable";
   lives_ok{ $meta->add_role($foo_role)  } "Add Role is unlocked";
 

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.02';
+our $VERSION   = '0.03';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method';
@@ -116,7 +116,7 @@ sub _generate_slot_initializer {
                         '|| confess "Attribute (' . $attr->name . ') is required";');
     }
 
-    if ($attr->has_default && !($is_moose && $attr->is_lazy)) {
+    if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
 
         push @source => 'if (exists $params{\'' . $attr->init_arg . '\'}) {';
 
@@ -134,8 +134,13 @@ sub _generate_slot_initializer {
 
         push @source => "} else {";
 
-            my $default = $self->_generate_default_value($attr, $index);
-
+            my $default;
+            if( $attr->has_default ){
+                $default = $self->_generate_default_value($attr, $index);
+            } else {
+               my $builder = $attr->builder;
+               $default = '$instance->' . $builder;
+            }
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_check(
                 $attr,

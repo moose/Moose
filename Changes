@@ -1,11 +1,19 @@
 Revision history for Perl extension Moose
 
+    * Moose::Meta::Method::Constructor
+      -builder related bug in inlined constructor. (groditi)
+
     * Moose::Meta::Method::Accessor
       - genereate unnecessary calls to predicates and refactor
         code generation for runtime speed (groditi)
 
     * Moose::Util::TypeConstraints
       - fix ClassName constraint to introspect symbol table
+
+    * t/ 
+      - New tests for builder bug. Upon instantiation, if an
+        attribute had a builder, no value and was not lazy the
+        builder default was not getting run, oops. (groditi)
 
 0.29 Tues. Nov. 13, 2007
     * Moose::Meta::Attribute
