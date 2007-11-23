@@ -1,5 +1,6 @@
 Revision history for Perl extension Moose
 
+0.30
     * Moose::Meta::Method::Constructor
       -builder related bug in inlined constructor. (groditi)
 
@@ -8,7 +9,7 @@ Revision history for Perl extension Moose
         code generation for runtime speed (groditi)
 
     * Moose::Util::TypeConstraints
-      - fix ClassName constraint to introspect symbol table
+      - fix ClassName constraint to introspect symbol table (mst)
 
     * t/ 
       - New tests for builder bug. Upon instantiation, if an
