@@ -14,7 +14,7 @@ use B            'svref_2object';
 
 use Sub::Exporter;
 
-use Class::MOP 0.43;
+use Class::MOP 0.46;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -52,8 +52,7 @@ use Moose::Util::TypeConstraints;
             # override a specific class
             $meta = $class->meta();
             ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
-              || confess
-"You already have a &meta function, but it does not return a Moose::Meta::Class";
+              || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
         }
         else {
             # NOTE:
@@ -162,32 +161,6 @@ use Moose::Util::TypeConstraints;
                 $class->meta->add_augment_method_modifier( $name => $method );
             };
         },
-
-        # NOTE:
-        # this is experimental, but I am not
-        # happy with it. If you want to try
-        # it, you will have to uncomment it
-        # yourself.
-        # There is a really good chance that
-        # this will be deprecated, dont get
-        # too attached
-        # self => sub {
-        #     return subname 'Moose::self' => sub {};
-        # },
-        # method => sub {
-        #     my $class = $CALLER;
-        #     return subname 'Moose::method' => sub {
-        #         my ($name, $method) = @_;
-        #         $class->meta->add_method($name, sub {
-        #             my $self = shift;
-        #             no strict   'refs';
-        #             no warnings 'redefine';
-        #             local *{$class->meta->name . '::self'} = sub { $self };
-        #             $method->(@_);
-        #         });
-        #     };
-        # },
-
         confess => sub {
             return \&Carp::confess;
         },

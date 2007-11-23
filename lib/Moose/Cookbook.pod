@@ -33,6 +33,8 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe7> - The augment/inner example
 
+=item L<Moose::Cookbook::Recipe11> - The meta-attribute example
+
 =back
 
 =head1 SEE ALSO

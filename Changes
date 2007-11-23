@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.30
+0.30 Fri. Nov. 23, 2007
     * Moose::Meta::Method::Constructor
       -builder related bug in inlined constructor. (groditi)
 
@@ -14,6 +14,10 @@ Revision history for Perl extension Moose
       - fixed it so that subtype 'Foo' => as 'HashRef[Int]' ...
         with work correctly.
         - added tests for this
+
+    * Moose::Cookbook
+      - adding the link to Recipie 11 (written by Sartak)
+        - adding test for SYNOPSIS code
 
     * t/ 
       - New tests for builder bug. Upon instantiation, if an

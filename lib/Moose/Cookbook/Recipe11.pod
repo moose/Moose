@@ -1,3 +1,6 @@
+
+=pod
+
 =head1 NAME
 
 Moose::Cookbook::Recipe11 - The meta-attribute example
@@ -303,6 +306,4 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
-
-1;
 
