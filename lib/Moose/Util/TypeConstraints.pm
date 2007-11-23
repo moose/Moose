@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.15';
+our $VERSION   = '0.16';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -93,10 +93,10 @@ sub list_all_type_constraints            { keys %{$REGISTRY->type_constraints} }
 sub export_type_constraints_as_functions {
     my $pkg = caller();
     no strict 'refs';
-        foreach my $constraint (keys %{$REGISTRY->type_constraints}) {
-                *{"${pkg}::${constraint}"} = $REGISTRY->get_type_constraint($constraint)
-                                                      ->_compiled_type_constraint;
-        }
+    foreach my $constraint (keys %{$REGISTRY->type_constraints}) {
+        *{"${pkg}::${constraint}"} = $REGISTRY->get_type_constraint($constraint)
+                                              ->_compiled_type_constraint;
+    }
 }
 
 sub create_type_constraint_union (@) {
@@ -190,7 +190,7 @@ sub find_type_constraint ($) { $REGISTRY->get_type_constraint(@_) }
 
 sub type ($$;$$) {
     splice(@_, 1, 0, undef);
-        goto &_create_type_constraint;
+    goto &_create_type_constraint;
 }
 
 sub subtype ($$;$$$) {
@@ -203,8 +203,8 @@ sub subtype ($$;$$$) {
     #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
     # ... yeah I know it's ugly code
     # - SL
-        unshift @_ => undef if scalar @_ <= 2 && (reftype($_[1]) || '') eq 'CODE';
-        goto &_create_type_constraint;
+    unshift @_ => undef if scalar @_ <= 2 && (reftype($_[1]) || '') eq 'CODE';
+    goto &_create_type_constraint;
 }
 
 sub coerce ($@) {
@@ -225,11 +225,11 @@ sub enum ($;@) {
     (scalar @values >= 2)
         || confess "You must have at least two values to enumerate through";
     my %valid = map { $_ => 1 } @values;
-        _create_type_constraint(
-            $type_name,
-            'Str',
-            sub { $valid{$_} }
-        );
+    _create_type_constraint(
+        $type_name,
+        'Str',
+        sub { $valid{$_} }
+    );
 }
 
 ## --------------------------------------------------------
@@ -259,7 +259,7 @@ sub _create_type_constraint ($$$;$$) {
                  if defined $type;
     }
 
-    $parent = $REGISTRY->get_type_constraint($parent) if defined $parent;
+    $parent = find_or_create_type_constraint($parent) if defined $parent;
 
     my $constraint = Moose::Meta::TypeConstraint->new(
         name               => $name || '__ANON__',

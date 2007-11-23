@@ -28,20 +28,6 @@ coerce Header
     => from HashRef 
         => via { HTTPHeader->new(hash => $_[0]) };
 
-
-{
-	package Math::BigFloat;
-	sub new { bless { }, shift }; # not a moose class ;-)
-}
-
-subtype "Math::BigFloat"
-	=> as "Math::BigFloat"
-	=> where { 1 };
-
-coerce "Math::BigFloat"
-	=> from Num
-		=> via { Math::BigFloat->new( $_ ) };
-
         
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();        
         

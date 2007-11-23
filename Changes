@@ -10,6 +10,10 @@ Revision history for Perl extension Moose
 
     * Moose::Util::TypeConstraints
       - fix ClassName constraint to introspect symbol table (mst)
+        - added more tests for this (mst)
+      - fixed it so that subtype 'Foo' => as 'HashRef[Int]' ...
+        with work correctly.
+        - added tests for this
 
     * t/ 
       - New tests for builder bug. Upon instantiation, if an
