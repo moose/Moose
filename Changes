@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.31
+0.31 Mon. Nov. 16, 2007
     * Moose::Meta::Attribute
       - made the +attr syntax handle extending types with 
         parameters. So "has '+foo' => (isa => 'ArrayRef[Int]')"
