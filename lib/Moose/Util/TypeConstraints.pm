@@ -164,6 +164,12 @@ sub find_or_create_type_constraint ($;$) {
     }
     else {
         # NOTE:
+        # if there is no $options_for_anon_type 
+        # specified, then we assume they don't 
+        # want to create one, and return nothing.
+        return unless defined $options_for_anon_type;        
+
+        # NOTE:
         # otherwise assume that we should create
         # an ANON type with the $options_for_anon_type
         # options which can be passed in. It should
@@ -618,7 +624,9 @@ This will attempt to find or create a type constraint given the a C<$type_name>.
 If it cannot find it in the registry, it will see if it should be a union or
 container type an create one if appropriate, and lastly if nothing can be
 found or created that way, it will create an anon-type using the
-C<$options_for_anon_type> HASH ref to populate it.
+C<$options_for_anon_type> HASH ref to populate it. If the C<$options_for_anon_type>
+is not specified (it is C<undef>), then it will not create anything and simply
+return.
 
 =item B<find_type_constraint ($type_name)>
 

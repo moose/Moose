@@ -8,7 +8,7 @@ use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.14';
+our $VERSION   = '0.15';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -47,9 +47,9 @@ __PACKAGE__->meta->add_attribute('documentation' => (
 ));
 
 sub new {
-        my ($class, $name, %options) = @_;
-        $class->_process_options($name, \%options);
-        return $class->SUPER::new($name, %options);
+    my ($class, $name, %options) = @_;
+    $class->_process_options($name, \%options);
+    return $class->SUPER::new($name, %options);
 }
 
 sub clone_and_inherit_options {
@@ -79,7 +79,9 @@ sub clone_and_inherit_options {
                         $type_constraint = $options{isa};
                 }
                 else {
-                    $type_constraint = Moose::Util::TypeConstraints::find_type_constraint($options{isa});
+                    $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                        $options{isa}
+                    );
                     (defined $type_constraint)
                         || confess "Could not find the type constraint '" . $options{isa} . "'";
                 }
@@ -101,98 +103,98 @@ sub clone_and_inherit_options {
 
 sub _process_options {
     my ($class, $name, $options) = @_;
-
-        if (exists $options->{is}) {
-                if ($options->{is} eq 'ro') {
-                        $options->{reader} ||= $name;
-                        (!exists $options->{trigger})
-                            || confess "Cannot have a trigger on a read-only attribute";
-                }
-                elsif ($options->{is} eq 'rw') {
-                        $options->{accessor} = $name;
-            ((reftype($options->{trigger}) || '') eq 'CODE')
-                || confess "Trigger must be a CODE ref"
-                    if exists $options->{trigger};
-                }
-                else {
-                    confess "I do not understand this option (is => " . $options->{is} . ")"
-                }
-        }
-
-        if (exists $options->{isa}) {
-
-            if (exists $options->{does}) {
-                if (eval { $options->{isa}->can('does') }) {
-                    ($options->{isa}->does($options->{does}))
-                        || confess "Cannot have an isa option and a does option if the isa does not do the does";
-                }
-                else {
-                    confess "Cannot have an isa option which cannot ->does()";
-                }
+    
+    if (exists $options->{is}) {
+            if ($options->{is} eq 'ro') {
+                    $options->{reader} ||= $name;
+                    (!exists $options->{trigger})
+                        || confess "Cannot have a trigger on a read-only attribute";
             }
-
-            # allow for anon-subtypes here ...
-            if (blessed($options->{isa}) && $options->{isa}->isa('Moose::Meta::TypeConstraint')) {
-                        $options->{type_constraint} = $options->{isa};
-                }
-                else {
-                    $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                        $options->{isa} => {
-                            parent     => Moose::Util::TypeConstraints::find_type_constraint('Object'),
-                        constraint => sub { $_[0]->isa($options->{isa}) }
-                    }
-                    );
-                }
-        }
-        elsif (exists $options->{does}) {
-            # allow for anon-subtypes here ...
-            if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
-                        $options->{type_constraint} = $options->{isa};
-                }
-                else {
-                    $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                        $options->{does} => {
-                            parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'),
-                        constraint => sub { $_[0]->does($options->{does}) }
-                    }
-                    );
-                }
-        }
-
-        if (exists $options->{coerce} && $options->{coerce}) {
-            (exists $options->{type_constraint})
-                || confess "You cannot have coercion without specifying a type constraint";
-        confess "You cannot have a weak reference to a coerced value"
-            if $options->{weak_ref};
-        }
-
-        if (exists $options->{auto_deref} && $options->{auto_deref}) {
-            (exists $options->{type_constraint})
-                || confess "You cannot auto-dereference without specifying a type constraint";
-            ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
-         $options->{type_constraint}->is_a_type_of('HashRef'))
-                || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";
-        }
-
-        if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
-            confess("You can not use lazy_build and default for the same attribute")
-              if exists $options->{default};
-            $options->{lazy} = 1;
-            $options->{required} = 1;
-                $options->{builder}   ||= "_build_${name}";
-            if($name =~ /^_/){
-                $options->{clearer}   ||= "_clear${name}";
-                $options->{predicate} ||= "_has${name}";
-            } else {
-                $options->{clearer}   ||= "clear_${name}";
-                $options->{predicate} ||= "has_${name}";
+            elsif ($options->{is} eq 'rw') {
+                    $options->{accessor} = $name;
+        ((reftype($options->{trigger}) || '') eq 'CODE')
+            || confess "Trigger must be a CODE ref"
+                if exists $options->{trigger};
+            }
+            else {
+                confess "I do not understand this option (is => " . $options->{is} . ")"
+            }
+    }
+    
+    if (exists $options->{isa}) {
+    
+        if (exists $options->{does}) {
+            if (eval { $options->{isa}->can('does') }) {
+                ($options->{isa}->does($options->{does}))
+                    || confess "Cannot have an isa option and a does option if the isa does not do the does";
+            }
+            else {
+                confess "Cannot have an isa option which cannot ->does()";
             }
         }
-
-        if (exists $options->{lazy} && $options->{lazy}) {
-            (exists $options->{default} || exists $options->{builder} )
-                || confess "You cannot have lazy attribute without specifying a default value for it";
+    
+        # allow for anon-subtypes here ...
+        if (blessed($options->{isa}) && $options->{isa}->isa('Moose::Meta::TypeConstraint')) {
+                    $options->{type_constraint} = $options->{isa};
+            }
+            else {
+                $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                    $options->{isa} => {
+                    parent     => Moose::Util::TypeConstraints::find_type_constraint('Object'),
+                    constraint => sub { $_[0]->isa($options->{isa}) }
+                }
+                );
+            }
+    }
+    elsif (exists $options->{does}) {
+        # allow for anon-subtypes here ...
+        if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
+                    $options->{type_constraint} = $options->{isa};
+            }
+            else {
+                $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                    $options->{does} => {
+                    parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'),
+                    constraint => sub { $_[0]->does($options->{does}) }
+                }
+                );
+            }
+    }
+    
+    if (exists $options->{coerce} && $options->{coerce}) {
+        (exists $options->{type_constraint})
+            || confess "You cannot have coercion without specifying a type constraint";
+    confess "You cannot have a weak reference to a coerced value"
+        if $options->{weak_ref};
+    }
+    
+    if (exists $options->{auto_deref} && $options->{auto_deref}) {
+        (exists $options->{type_constraint})
+            || confess "You cannot auto-dereference without specifying a type constraint";
+        ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
+     $options->{type_constraint}->is_a_type_of('HashRef'))
+            || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";
+    }
+    
+    if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
+        confess("You can not use lazy_build and default for the same attribute")
+          if exists $options->{default};
+        $options->{lazy} = 1;
+        $options->{required} = 1;
+            $options->{builder}   ||= "_build_${name}";
+        if($name =~ /^_/){
+            $options->{clearer}   ||= "_clear${name}";
+            $options->{predicate} ||= "_has${name}";
+        } else {
+            $options->{clearer}   ||= "clear_${name}";
+            $options->{predicate} ||= "has_${name}";
         }
+    }
+    
+    if (exists $options->{lazy} && $options->{lazy}) {
+        (exists $options->{default} || exists $options->{builder} )
+            || confess "You cannot have lazy attribute without specifying a default value for it";
+    }
 
 }
 
@@ -365,14 +367,10 @@ sub install_accessors {
         # to delagate to, see that method for details
         my %handles = $self->_canonicalize_handles();
 
-        # find the name of the accessor for this attribute
-        my $accessor_name = $self->reader || $self->accessor;
-        (defined $accessor_name)
-            || confess "You cannot install delegation without a reader or accessor for the attribute";
-
-        # make sure we handle HASH accessors correctly
-        ($accessor_name) = keys %{$accessor_name}
-            if ref($accessor_name) eq 'HASH';
+        # find the accessor method for this attribute
+        my $accessor = $self->get_read_method_ref;
+        # then unpack it if we need too ...
+        $accessor = $accessor->body if blessed $accessor;
 
         # install the delegation ...
         my $associated_class = $self->associated_class;
@@ -398,9 +396,9 @@ sub install_accessors {
                     # we should check for lack of
                     # a callable return value from
                     # the accessor here
-                    my $proxy = (shift)->$accessor_name();
+                    my $proxy = (shift)->$accessor();
                     @_ = ($proxy, @_);
-                    goto &{ $proxy->can($method_to_call)};
+                    goto &{ $proxy->can($method_to_call) };
                 });
             }
         }

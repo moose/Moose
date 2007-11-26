@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 72;
+use Test::More tests => 80;
 use Test::Exception;
 
 BEGIN {
@@ -39,6 +39,8 @@ BEGIN {
     has 'bling' => (is => 'ro', isa => 'Thing');
     has 'blang' => (is => 'ro', isa => 'Thing', handles => ['goodbye']);         
     
+    has 'bunch_of_stuff' => (is => 'rw', isa => 'ArrayRef');
+    
     # this one will work here ....
     has 'fail' => (isa => 'CodeRef');
     has 'other_fail';    
@@ -67,6 +69,10 @@ BEGIN {
     ::lives_ok { 
         has '+gloum' => (lazy => 1);           
     } '... we can change/add lazy as an attribute option';    
+
+    ::lives_ok {
+        has '+bunch_of_stuff' => (isa => 'ArrayRef[Int]');        
+    } '... extend an attribute with parameterized type';
     
     ::lives_ok {
         has '+bling' => (handles => ['hello']);        
@@ -115,6 +121,8 @@ is($foo->baz, undef, '... got the right undef default value');
     lives_ok { $foo->baz($scalar_ref) } '... Foo::baz accepts scalar ref';
     is($foo->baz, $scalar_ref, '... got the right value assigned to baz');
     
+    lives_ok { $foo->bunch_of_stuff([qw[one two three]]) } '... Foo::bunch_of_stuff accepts an array of strings';    
+    
     my $code_ref = sub { 1 };
     lives_ok { $foo->baz($code_ref) } '... Foo::baz accepts a code ref';
     is($foo->baz, $code_ref, '... got the right value assigned to baz');    
@@ -152,6 +160,9 @@ is($bar->baz, undef, '... got the right undef default value');
     my $scalar_ref = \(my $var);
     dies_ok { $bar->baz($scalar_ref) } '... Bar::baz does not accept a scalar ref';
     
+    lives_ok { $bar->bunch_of_stuff([1, 2, 3]) } '... Bar::bunch_of_stuff accepts an array of ints';        
+    dies_ok { $bar->bunch_of_stuff([qw[one two three]]) } '... Bar::bunch_of_stuff does not accept an array of strings';        
+    
     my $code_ref = sub { 1 };
     dies_ok { $bar->baz($code_ref) } '... Bar::baz does not accept a code ref';
 }
@@ -164,6 +175,7 @@ ok(Bar->meta->has_attribute('baz'), '... Bar has a baz attr');
 ok(Bar->meta->has_attribute('gorch'), '... Bar has a gorch attr');
 ok(Bar->meta->has_attribute('gloum'), '... Bar has a gloum attr');
 ok(Bar->meta->has_attribute('bling'), '... Bar has a bling attr');
+ok(Bar->meta->has_attribute('bunch_of_stuff'), '... Bar does have a bunch_of_stuff attr');
 ok(!Bar->meta->has_attribute('blang'), '... Bar has a blang attr');
 ok(!Bar->meta->has_attribute('fail'), '... Bar does not have a fail attr');
 ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have a fail attr');
@@ -186,6 +198,9 @@ isnt(Foo->meta->get_attribute('gloum'),
 isnt(Foo->meta->get_attribute('bling'), 
      Bar->meta->get_attribute('bling'), 
      '... Foo and Bar have different copies of bling');              
+isnt(Foo->meta->get_attribute('bunch_of_stuff'), 
+     Bar->meta->get_attribute('bunch_of_stuff'), 
+     '... Foo and Bar have different copies of bunch_of_stuff');     
      
 ok(Bar->meta->get_attribute('bar')->has_type_constraint, 
    '... Bar::bar inherited the type constraint too');
@@ -204,6 +219,13 @@ ok(!Foo->meta->get_attribute('gorch')->is_required,
   '... Foo::gorch is not a required attr');
 ok(Bar->meta->get_attribute('gorch')->is_required, 
    '... Bar::gorch is a required attr');
+   
+is(Foo->meta->get_attribute('bunch_of_stuff')->type_constraint->name, 
+  'ArrayRef',
+  '... Foo::bunch_of_stuff is an ArrayRef');
+is(Bar->meta->get_attribute('bunch_of_stuff')->type_constraint->name, 
+  'ArrayRef[Int]',
+  '... Bar::bunch_of_stuff is an ArrayRef[Int]');
    
 ok(!Foo->meta->get_attribute('gloum')->is_lazy, 
    '... Foo::gloum is not a required attr');

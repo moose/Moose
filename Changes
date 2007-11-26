@@ -1,5 +1,24 @@
 Revision history for Perl extension Moose
 
+0.31
+    * Moose::Meta::Attribute
+      - made the +attr syntax handle extending types with 
+        parameters. So "has '+foo' => (isa => 'ArrayRef[Int]')"
+        now works if the original foo is an ArrayRef.
+        - added tests for this.
+      - delegation now works even if the attribute does not
+        have a reader method using the get_read_method_ref
+        method from Class::MOP::Attribute. 
+        - added tests for this
+        - added docs for this
+    
+    * Moose::Util::TypeConstraints
+      - passing no "additional attribute info" to 
+        &find_or_create_type_constraint will no longer 
+        attempt to create an __ANON__ type for you, 
+        instead it will just return undef.
+        - added docs for this
+
 0.30 Fri. Nov. 23, 2007
     * Moose::Meta::Method::Constructor
       -builder related bug in inlined constructor. (groditi)

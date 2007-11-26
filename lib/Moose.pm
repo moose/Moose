@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.30';
+our $VERSION   = '0.31';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -491,6 +491,11 @@ move on to the next method in the list. My reasoning for this is that you would
 almost never want to do this, since it usually breaks your class. As with
 overriding locally defined methods, if you do want to do this, you should do it
 manually, not with Moose.
+
+You do not I<need> to have a reader (or accessor) for the attribute in order 
+to delegate to it. Moose will create a means of accessing the value for you, 
+however this will be several times B<less> efficient then if you had given 
+the attribute a reader (or accessor) to use.
 
 Below is the documentation for each option format:
 

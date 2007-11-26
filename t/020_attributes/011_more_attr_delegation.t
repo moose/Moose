@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 39;
 use Test::Exception;
 
 {
@@ -62,6 +62,11 @@ use Test::Exception;
     sub new { bless {}, shift }
     sub child_f_method_1 { "f1" }
     sub child_f_method_2 { "f2" }
+
+    package ChildG;
+    use Moose;
+
+    sub child_g_method_1 { "g1" }
 
     package Parent;
     use Moose;
@@ -145,6 +150,14 @@ use Test::Exception;
     } "subrefs on non moose class give no meta";
 
     ::is( $delegate_class, "ChildF", "plain classes are handed down to subs" );
+    
+    ::lives_ok {
+        has child_g => (
+            isa     => "ChildG",
+            default => sub { ChildG->new },
+            handles => ["child_g_method_1"],
+        );
+    } "can delegate to object even without explicit reader";    
 
     sub parent_method { "p" }
 }
@@ -158,6 +171,8 @@ isa_ok( $p->child_c, "ChildC" );
 isa_ok( $p->child_d, "ChildD" );
 isa_ok( $p->child_e, "ChildE" );
 isa_ok( $p->child_f, "ChildF" );
+
+ok(!$p->can('child_g'), '... no child_g accessor defined');
 
 
 is( $p->parent_method, "p", "parent method" );
@@ -189,3 +204,6 @@ can_ok( $p, "child_e_method_2" );
 ok( !$p->can("child_e_method_1"), "but not child_e_method_1");
 
 is( $p->child_e_method_2, "e2", "delegate to non moose class (child_e_method_2)" );
+
+can_ok( $p, "child_g_method_1" );
+is( $p->child_g_method_1, "g1", "delegate to moose class without reader (child_g_method_1)" );

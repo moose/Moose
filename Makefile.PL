@@ -12,7 +12,7 @@ my $win32 = !! ( $^O eq 'Win32' or $^O eq 'cygwin' );
 # prereqs
 requires 'Scalar::Util' => $win32 ? '1.17' : '1.18';
 requires 'Carp';
-requires 'Class::MOP'    => '0.46';
+requires 'Class::MOP'    => '0.47';
 requires 'Sub::Name'     => '0.02';
 requires 'Sub::Exporter' => '0.972';
 requires 'B';
