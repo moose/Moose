@@ -178,13 +178,14 @@ sub _process_options {
     if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
         confess("You can not use lazy_build and default for the same attribute")
             if exists $options->{default};
-        $options->{lazy} = 1;
-        $options->{required} = 1;
-            $options->{builder}   ||= "_build_${name}";
-        if($name =~ /^_/){
+        $options->{lazy}      = 1;
+        $options->{required}  = 1;
+        $options->{builder} ||= "_build_${name}";
+        if ($name =~ /^_/) {
             $options->{clearer}   ||= "_clear${name}";
             $options->{predicate} ||= "_has${name}";
-        } else {
+        } 
+        else {
             $options->{clearer}   ||= "clear_${name}";
             $options->{predicate} ||= "has_${name}";
         }
@@ -220,11 +221,13 @@ sub initialize_instance_slot {
         if ($self->has_default) {
             $val = $self->default($instance);
             $value_is_set = 1;
-        } elsif ($self->has_builder) {
-            if(my $builder = $instance->can($self->builder)){
+        } 
+        elsif ($self->has_builder) {
+            if (my $builder = $instance->can($self->builder)){
                 $val = $instance->$builder;
                 $value_is_set = 1;
-            } else {
+            } 
+            else {
                 confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
             }
         }
@@ -253,7 +256,7 @@ sub initialize_instance_slot {
 
     $meta_instance->set_slot_value($instance, $self->name, $val);
     $meta_instance->weaken_slot_value($instance, $self->name)
-      if ref $val && $self->is_weak_ref;
+        if ref $val && $self->is_weak_ref;
 }
 
 ## Slot management
@@ -313,12 +316,19 @@ sub get_value {
                 $self->set_value($instance, $default);
             }
             if ( $self->has_builder ){
-                if(my $builder = $instance->can($self->builder)){
+                if (my $builder = $instance->can($self->builder)){
                     $self->set_value($instance, $instance->$builder);
-                } else {
-                    confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
+                } 
+                else {
+                    confess(blessed($instance) 
+                          . " does not support builder method '"
+                          . $self->builder 
+                          . "' for attribute '" 
+                          . $self->name 
+                          . "'");
                 }
-            } else {
+            } 
+            else {
                 $self->set_value($instance, undef);
             }
         }
