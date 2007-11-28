@@ -27,7 +27,7 @@ sub compile_type_coercion {
         # in the union, and check em ...
         foreach my $type (@{$type_constraint->type_constraints}) {
             # if they have a coercion first
-            if ($type->has_coercion) {
+            if ($type->has_coercion) {    
                 # then try to coerce them ...
                 my $temp = $type->coerce($value);
                 # and if they get something 

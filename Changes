@@ -1,5 +1,16 @@
 Revision history for Perl extension Moose
 
+0.32 
+    * Moose::Util::TypeConstraints
+      - fixing how subtype aliases of unions work
+        they should inherit the parent's coercion
+        - added tests for this
+      
+    * Moose::Meta::TypeConstraint
+      - there is now a default constraint of sub { 1 }
+        instead of Moose::Util::TypeConstraints setting
+        this for us
+
 0.31 Mon. Nov. 26, 2007
     * Moose::Meta::Attribute
       - made the +attr syntax handle extending types with 

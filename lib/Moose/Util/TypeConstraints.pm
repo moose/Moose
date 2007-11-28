@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'reftype';
 use B            'svref_2object';
 use Sub::Exporter;
 
-our $VERSION   = '0.16';
+our $VERSION   = '0.17';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -245,7 +245,7 @@ sub enum ($;@) {
 sub _create_type_constraint ($$$;$$) {
     my $name   = shift;
     my $parent = shift;
-    my $check  = shift || sub { 1 };
+    my $check  = shift;
 
     my ($message, $optimized);
     for (@_) {
@@ -266,7 +266,7 @@ sub _create_type_constraint ($$$;$$) {
     }
 
     $parent = find_or_create_type_constraint($parent) if defined $parent;
-
+    
     my $constraint = Moose::Meta::TypeConstraint->new(
         name               => $name || '__ANON__',
         package_defined_in => $pkg_defined_in,
@@ -276,6 +276,21 @@ sub _create_type_constraint ($$$;$$) {
         ($message   ? (message    => $message)   : ()),
         ($optimized ? (optimized  => $optimized) : ()),
     );
+    
+    # NOTE:
+    # if we have a type constraint union, and no 
+    # type check, this means we are just aliasing
+    # the union constraint, which means we need to 
+    # handle this differently.
+    # - SL
+    if (not(defined($check))
+        && $parent->isa('Moose::Meta::TypeConstraint::Union') 
+        && $parent->has_coercion 
+        ){
+        $constraint->coercion(Moose::Meta::TypeCoercion::Union->new(
+            type_constraint => $parent
+        ));
+    }    
 
     $REGISTRY->add_type_constraint($constraint)
         if defined $name;

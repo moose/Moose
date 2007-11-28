@@ -75,25 +75,25 @@ sub clone_and_inherit_options {
     # new type is a subtype
     if ($options{isa}) {
         my $type_constraint;
-            if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
-                        $type_constraint = $options{isa};
-                }
-                else {
-                    $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                        $options{isa}
-                    );
-                    (defined $type_constraint)
-                        || confess "Could not find the type constraint '" . $options{isa} . "'";
-                }
-                # NOTE:
-                # check here to see if the new type
-                # is a subtype of the old one
-                ($type_constraint->is_subtype_of($self->type_constraint->name))
-                    || confess "New type constraint setting must be a subtype of inherited one"
-                        # iff we have a type constraint that is ...
-                        if $self->has_type_constraint;
-                # then we use it :)
-                $actual_options{type_constraint} = $type_constraint;
+        if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
+            $type_constraint = $options{isa};
+        }
+        else {
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                $options{isa}
+            );
+            (defined $type_constraint)
+                || confess "Could not find the type constraint '" . $options{isa} . "'";
+        }
+        # NOTE:
+        # check here to see if the new type
+        # is a subtype of the old one
+        ($type_constraint->is_subtype_of($self->type_constraint->name))
+            || confess "New type constraint setting must be a subtype of inherited one"
+                # iff we have a type constraint that is ...
+                if $self->has_type_constraint;
+        # then we use it :)
+        $actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
     }
     (scalar keys %options == 0)
@@ -103,26 +103,25 @@ sub clone_and_inherit_options {
 
 sub _process_options {
     my ($class, $name, $options) = @_;
-    
+
     if (exists $options->{is}) {
-            if ($options->{is} eq 'ro') {
-                    $options->{reader} ||= $name;
-                    (!exists $options->{trigger})
-                        || confess "Cannot have a trigger on a read-only attribute";
-            }
-            elsif ($options->{is} eq 'rw') {
-                    $options->{accessor} = $name;
-        ((reftype($options->{trigger}) || '') eq 'CODE')
-            || confess "Trigger must be a CODE ref"
-                if exists $options->{trigger};
-            }
-            else {
-                confess "I do not understand this option (is => " . $options->{is} . ")"
-            }
+        if ($options->{is} eq 'ro') {
+            $options->{reader} ||= $name;
+            (!exists $options->{trigger})
+                || confess "Cannot have a trigger on a read-only attribute";
+        }
+        elsif ($options->{is} eq 'rw') {
+            $options->{accessor} = $name;
+            ((reftype($options->{trigger}) || '') eq 'CODE')
+                || confess "Trigger must be a CODE ref"
+                    if exists $options->{trigger};
+        }
+        else {
+            confess "I do not understand this option (is => " . $options->{is} . ")"
+        }
     }
-    
+
     if (exists $options->{isa}) {
-    
         if (exists $options->{does}) {
             if (eval { $options->{isa}->can('does') }) {
                 ($options->{isa}->does($options->{does}))
@@ -132,53 +131,53 @@ sub _process_options {
                 confess "Cannot have an isa option which cannot ->does()";
             }
         }
-    
+
         # allow for anon-subtypes here ...
         if (blessed($options->{isa}) && $options->{isa}->isa('Moose::Meta::TypeConstraint')) {
-                    $options->{type_constraint} = $options->{isa};
-            }
-            else {
-                $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                    $options->{isa} => {
+            $options->{type_constraint} = $options->{isa};
+        }
+        else {
+            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                $options->{isa} => {
                     parent     => Moose::Util::TypeConstraints::find_type_constraint('Object'),
                     constraint => sub { $_[0]->isa($options->{isa}) }
                 }
-                );
-            }
+            );
+        }
     }
     elsif (exists $options->{does}) {
         # allow for anon-subtypes here ...
         if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
-                    $options->{type_constraint} = $options->{isa};
-            }
-            else {
-                $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                    $options->{does} => {
+                $options->{type_constraint} = $options->{isa};
+        }
+        else {
+            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                $options->{does} => {
                     parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'),
                     constraint => sub { $_[0]->does($options->{does}) }
                 }
-                );
-            }
+            );
+        }
     }
-    
+
     if (exists $options->{coerce} && $options->{coerce}) {
         (exists $options->{type_constraint})
             || confess "You cannot have coercion without specifying a type constraint";
-    confess "You cannot have a weak reference to a coerced value"
-        if $options->{weak_ref};
+        confess "You cannot have a weak reference to a coerced value"
+            if $options->{weak_ref};
     }
-    
+
     if (exists $options->{auto_deref} && $options->{auto_deref}) {
         (exists $options->{type_constraint})
             || confess "You cannot auto-dereference without specifying a type constraint";
         ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
-     $options->{type_constraint}->is_a_type_of('HashRef'))
+         $options->{type_constraint}->is_a_type_of('HashRef'))
             || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";
     }
-    
+
     if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
         confess("You can not use lazy_build and default for the same attribute")
-          if exists $options->{default};
+            if exists $options->{default};
         $options->{lazy} = 1;
         $options->{required} = 1;
             $options->{builder}   ||= "_build_${name}";
@@ -190,7 +189,7 @@ sub _process_options {
             $options->{predicate} ||= "has_${name}";
         }
     }
-    
+
     if (exists $options->{lazy} && $options->{lazy}) {
         (exists $options->{default} || exists $options->{builder} )
             || confess "You cannot have lazy attribute without specifying a default value for it";
@@ -308,21 +307,21 @@ sub get_value {
     my ($self, $instance) = @_;
 
     if ($self->is_lazy) {
-            unless ($self->has_value($instance)) {
-                if ($self->has_default) {
-                    my $default = $self->default($instance);
-                    $self->set_value($instance, $default);
-                }
-                if ( $self->has_builder ){
-                    if(my $builder = $instance->can($self->builder)){
-                        $self->set_value($instance, $instance->$builder);
-                    } else {
-                        confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
-                    }
-                } else {
-                    $self->set_value($instance, undef);
-                }
+        unless ($self->has_value($instance)) {
+            if ($self->has_default) {
+                my $default = $self->default($instance);
+                $self->set_value($instance, $default);
             }
+            if ( $self->has_builder ){
+                if(my $builder = $instance->can($self->builder)){
+                    $self->set_value($instance, $instance->$builder);
+                } else {
+                    confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
+                }
+            } else {
+                $self->set_value($instance, undef);
+            }
+        }
     }
 
     if ($self->should_auto_deref) {

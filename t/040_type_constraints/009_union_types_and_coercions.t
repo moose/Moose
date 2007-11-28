@@ -47,11 +47,15 @@ BEGIN {
         => from 'FileHandle'
             => via { bless $_, 'IO::File' };
     
+    # create the alias
+    
+    subtype 'IO::StringOrFile' => as 'IO::String | IO::File';
+    
     # attributes
     
     has 'raw_body' => (
         is      => 'rw',
-        isa     => 'IO::String|IO::File',
+        isa     => 'IO::StringOrFile',
         coerce  => 1,
         default => sub { IO::String->new() },
     );
