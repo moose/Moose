@@ -206,7 +206,7 @@ sub initialize_instance_slot {
     my $value_is_set;
     if (exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
-        $value_is_set = 1;
+        $value_is_set = 1;    
     }
     else {
         # skip it if it's lazy
