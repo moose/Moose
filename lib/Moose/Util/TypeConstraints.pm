@@ -301,13 +301,16 @@ sub _create_type_constraint ($$$;$$) {
 sub _install_type_coercions ($$) {
     my ($type_name, $coercion_map) = @_;
     my $type = $REGISTRY->get_type_constraint($type_name);
-    (!$type->has_coercion)
-        || confess "The type coercion for '$type_name' has already been registered";
-    my $type_coercion = Moose::Meta::TypeCoercion->new(
-        type_coercion_map => $coercion_map,
-        type_constraint   => $type
-    );
-    $type->coercion($type_coercion);
+    if ($type->has_coercion) {
+        $type->coercion->add_type_coercions(@$coercion_map);
+    }
+    else {
+        my $type_coercion = Moose::Meta::TypeCoercion->new(
+            type_coercion_map => $coercion_map,
+            type_constraint   => $type
+        );
+        $type->coercion($type_coercion);
+    }
 }
 
 ## --------------------------------------------------------

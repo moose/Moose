@@ -10,7 +10,7 @@ use Carp 'confess';
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
@@ -33,7 +33,7 @@ __PACKAGE__->meta->add_attribute('compiled_type_coercion' => (
 sub new { 
     my $class = shift;
     my $self  = $class->meta->new_object(@_);
-    $self->compile_type_coercion();
+    $self->compile_type_coercion;
     return $self;
 }
 
@@ -62,6 +62,31 @@ sub compile_type_coercion {
         }
         return $thing;
     });    
+}
+
+sub has_coercion_for_type {
+    my ($self, $type_name) = @_;
+    my %coercion_map = @{$self->type_coercion_map};
+    exists $coercion_map{$type_name} ? 1 : 0;
+}
+
+sub add_type_coercions {
+    my ($self, @new_coercion_map) = @_;
+        
+    my $coercion_map = $self->type_coercion_map;    
+    my %has_coercion = @$coercion_map;
+    
+    while (@new_coercion_map) {
+        my ($constraint_name, $action) = splice(@new_coercion_map, 0, 2);        
+        
+        confess "A coercion action already exists for '$constraint_name'"
+            if exists $has_coercion{$constraint_name};
+        
+        push @{$coercion_map} => ($constraint_name, $action);
+    }
+    
+    # and re-compile ...
+    $self->compile_type_coercion;
 }
 
 sub coerce { $_[0]->_compiled_type_coercion->($_[1]) }
@@ -103,6 +128,10 @@ If you wish to use features at this depth, please come to the
 =item B<type_coercion_map>
 
 =item B<type_constraint>
+
+=item B<has_coercion_for_type>
+
+=item B<add_type_coercions>
 
 =back
 

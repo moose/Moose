@@ -17,7 +17,9 @@ BEGIN {
     
     coerce 'HTTPHeader'
         => from ArrayRef 
-            => via { HTTPHeader->new(array => $_[0]) }
+            => via { HTTPHeader->new(array => $_[0]) };
+            
+    coerce 'HTTPHeader'
         => from HashRef 
             => via { HTTPHeader->new(hash => $_[0]) };    
     

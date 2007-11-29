@@ -5,11 +5,22 @@ Revision history for Perl extension Moose
       - fixing how subtype aliases of unions work
         they should inherit the parent's coercion
         - added tests for this
+      - you can now define multiple coercions on 
+        a single type at different times instead of
+        having to do it all in one place
+        - added tests for this
       
     * Moose::Meta::TypeConstraint
       - there is now a default constraint of sub { 1 }
         instead of Moose::Util::TypeConstraints setting
         this for us
+
+    * Moose::Meta::TypeCoercion 
+    * Moose::Meta::TypeCoercion::Union    
+      - added the &has_coercion_for_type and 
+        &add_type_coercions methods to support the 
+        new features above (although you cannot add
+        more type coercions for Union types)
 
 0.31 Mon. Nov. 26, 2007
     * Moose::Meta::Attribute
