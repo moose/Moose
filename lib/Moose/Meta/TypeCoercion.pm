@@ -56,7 +56,7 @@ sub compile_type_coercion {
         foreach my $coercion (@coercions) {
             my ($constraint, $converter) = @$coercion;
             if (defined $constraint->($thing)) {
-			    local $_ = $thing;                
+                local $_ = $thing;                
                 return $converter->($thing);
             }
         }

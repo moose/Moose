@@ -283,7 +283,7 @@ sub _create_type_constraint ($$$;$$) {
     # the union constraint, which means we need to 
     # handle this differently.
     # - SL
-    if (not(defined($check))
+    if (not(defined $check) 
         && $parent->isa('Moose::Meta::TypeConstraint::Union') 
         && $parent->has_coercion 
         ){
@@ -301,6 +301,8 @@ sub _create_type_constraint ($$$;$$) {
 sub _install_type_coercions ($$) {
     my ($type_name, $coercion_map) = @_;
     my $type = $REGISTRY->get_type_constraint($type_name);
+    (defined $type)
+        || confess "Cannot find type '$type_name', perhaps you forgot to load it.";
     if ($type->has_coercion) {
         $type->coercion->add_type_coercions(@$coercion_map);
     }
