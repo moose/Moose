@@ -63,9 +63,15 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint::Registry
+Moose::Meta::TypeConstraint::Registry - registry for type constraints
 
 =head1 DESCRIPTION
+
+This module is currently only use internally by L<Moose::Util::TypeConstraints>. 
+It can be used to create your own private type constraint registry as well, but 
+the details of that are currently left as an exercise to the reader. (One hint: 
+You can use the 'parent_registry' feature to connect your private version with the 
+base Moose registry and base Moose types will automagically be found too).
 
 =head1 METHODS
 
