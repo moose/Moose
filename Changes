@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.32 
+0.32 Tues. Dec. 4, 2007
     * Moose::Util::TypeConstraints
       - fixing how subtype aliases of unions work
         they should inherit the parent's coercion
