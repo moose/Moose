@@ -30,24 +30,26 @@ sub compile_type_constraint {
     
     my $constraint;
     
-    my $parent_name = $self->parent->name;
-    
-    if ($parent_name eq 'ArrayRef') {
-        $constraint = sub {
-            foreach my $x (@$_) { 
-                ($type_parameter->check($x)) || return 
-            } 1;
-        };
+    my $array_constraint = sub {
+        foreach my $x (@$_) {
+            ($type_parameter->check($x)) || return
+        } 1;
+    };
+
+    my $hash_constraint = sub {
+        foreach my $x (values %$_) {
+            ($type_parameter->check($x)) || return
+        } 1;
+    };
+
+    if ($self->is_subtype_of('ArrayRef')) {
+        $constraint = $array_constraint;
     }
-    elsif ($parent_name eq 'HashRef') {
-        $constraint = sub {
-            foreach my $x (values %$_) { 
-                ($type_parameter->check($x)) || return 
-            } 1;
-        };          
+    elsif ($self->is_subtype_of('HashRef')) {
+        $constraint = $hash_constraint;
     }
     else {
-        confess "Your isa must be either ArrayRef or HashRef (sorry no subtype support yet)";
+        confess "The " . $self->name . " constraint cannot be used, because " . $self->parent->name . " doesn't subtype ArrayRef or HashRef.";
     }
     
     $self->_set_constraint($constraint);
