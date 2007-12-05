@@ -6,6 +6,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
+use Moose::Util::TypeConstraints;
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -29,7 +30,16 @@ sub compile_type_constraint {
         || confess "The type parameter must be a Moose meta type";
     
     my $constraint;
-    
+    my $name = $self->parent->name;
+
+    my $array_coercion =
+        Moose::Util::TypeConstraints::find_type_constraint('ArrayRef')
+        ->coercion;
+
+    my $hash_coercion =
+        Moose::Util::TypeConstraints::find_type_constraint('HashRef')
+        ->coercion;
+
     my $array_constraint = sub {
         foreach my $x (@$_) {
             ($type_parameter->check($x)) || return
@@ -48,8 +58,20 @@ sub compile_type_constraint {
     elsif ($self->is_subtype_of('HashRef')) {
         $constraint = $hash_constraint;
     }
+    elsif ($array_coercion && $array_coercion->has_coercion_for_type($name)) {
+        $constraint = sub {
+            local $_ = $array_coercion->coerce($_);
+            $array_constraint->(@_);
+        };
+    }
+    elsif ($hash_coercion && $hash_coercion->has_coercion_for_type($name)) {
+        $constraint = sub {
+            local $_ = $hash_coercion->coerce($_);
+            $hash_constraint->(@_);
+        };
+    }
     else {
-        confess "The " . $self->name . " constraint cannot be used, because " . $self->parent->name . " doesn't subtype ArrayRef or HashRef.";
+        confess "The " . $self->name . " constraint cannot be used, because " . $name . " doesn't subtype or coerce ArrayRef or HashRef.";
     }
     
     $self->_set_constraint($constraint);
