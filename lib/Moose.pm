@@ -874,6 +874,8 @@ Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain
 
+Shawn (sartak) Moore
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE

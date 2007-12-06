@@ -20,11 +20,12 @@ sub generate_accessor_method_inline {
     my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_access($inv, $attr_name);
-    my $value_name  = $attr->should_coerce ? '$val' : '$_[1]';
+    my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
     my $code = 'sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
     . 'if (scalar(@_) == 2) {' . "\n"
+        . $self->_inline_copy_value . "\n"
         . $self->_inline_check_required . "\n"
         . $self->_inline_check_coercion . "\n"
         . $self->_inline_check_constraint($value_name) . "\n"
@@ -53,10 +54,11 @@ sub generate_writer_method_inline {
     my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_get($inv, $attr_name);
-    my $value_name  = $attr->should_coerce ? '$val' : '$_[1]';
+    my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
     my $code = 'sub { '
     . $self->_inline_pre_body(@_)
+    . $self->_inline_copy_value
     . $self->_inline_check_required
     . $self->_inline_check_coercion
         . $self->_inline_check_constraint($value_name)
@@ -102,6 +104,16 @@ sub generate_reader_method_inline {
     return $sub;
 }
 
+sub _inline_copy_value {
+    return '' unless shift->_value_needs_copy;
+    return 'my $val = $_[1];'
+}
+
+sub _value_needs_copy {
+    my $attr = (shift)->associated_attribute;
+    return $attr->should_coerce;
+}
+
 sub generate_reader_method { shift->generate_reader_method_inline(@_) }
 sub generate_writer_method { shift->generate_writer_method_inline(@_) }
 sub generate_accessor_method { shift->generate_accessor_method_inline(@_) }
@@ -132,7 +144,7 @@ sub _inline_check_coercion {
         my $attr = (shift)->associated_attribute;
 
         return '' unless $attr->should_coerce;
-    return 'my $val = $attr->type_constraint->coerce($_[1]);'
+    return '$val = $attr->type_constraint->coerce($_[1]);'
 }
 
 sub _inline_check_required {
