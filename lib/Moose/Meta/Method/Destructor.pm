@@ -10,7 +10,8 @@ use Scalar::Util 'blessed', 'weaken';
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method';
+use base 'Moose::Meta::Method',
+         'Class::MOP::Method::Generated';
 
 sub new {
     my $class   = shift;
