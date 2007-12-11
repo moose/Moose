@@ -4,8 +4,11 @@ Revision history for Perl extension Moose
     * Moose::Meta::TypeConstraint::Parameterized
       - allow subtypes of ArrayRef and HashRef to
         be used as a container (sartak)
+        - added tests for this 
       - basic support for coercion to ArrayRef and
         HashRef for containers (sartak)
+        - added tests for this 
+        
     * Moose::Meta::Method::Accessor
       - allow subclasses to decide whether we need
         to copy the value into a new variable (sartak)

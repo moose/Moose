@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.32';
+our $VERSION   = '0.33';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -36,12 +36,12 @@ use Moose::Util::TypeConstraints;
         $metaclass = 'Moose::Meta::Class' unless defined $metaclass;
 
         confess
-          "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
-          unless $metaclass->isa('Moose::Meta::Class');
+            "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
+            unless $metaclass->isa('Moose::Meta::Class');
 
         # make a subtype for each Moose class
         subtype $class => as 'Object' => where { $_->isa($class) } =>
-          optimize_as { blessed( $_[0] ) && $_[0]->isa($class) }
+            optimize_as { blessed( $_[0] ) && $_[0]->isa($class) }
         unless find_type_constraint($class);
 
         my $meta;
