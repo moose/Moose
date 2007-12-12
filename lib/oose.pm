@@ -32,6 +32,7 @@ and was entirely created because typing perl -e'package Foo; use Moose; ...' was
 =head1 INTERFACE 
 
 oose provides exactly one method and it's automically called by perl:
+
 =over 
 
 =item import(str)
