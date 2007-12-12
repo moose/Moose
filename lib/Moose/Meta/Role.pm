@@ -282,10 +282,11 @@ sub method_metaclass { 'Moose::Meta::Role::Method' }
 sub get_method_map {    
     my $self = shift;
     $self->{'%!methods'} ||= {}; 
-    $self->{'$!_package_cache_flag'} = undef;
+    $self->reset_package_cache_flag;
     $self->Moose::Meta::Class::get_method_map() 
 }
-sub reset_package_cache_flag { () }
+sub update_package_cache_flag { () }
+sub reset_package_cache_flag  { (shift)->{'$!_package_cache_flag'} = undef; }
 
 # FIXME:
 # Yes, this is a really really UGLY hack
@@ -341,7 +342,7 @@ sub apply {
     
     # NOTE:
     # we need a clear cache flag too ...
-    $other->{'$!_package_cache_flag'} = undef;    
+    $other->reset_package_cache_flag;    
 
     $self->_apply_override_method_modifiers($other);                  
     $self->_apply_before_method_modifiers($other);                  
@@ -667,6 +668,8 @@ probably not that much really).
 =item B<get_method_list>
 
 =item B<get_method_map>
+
+=item B<update_package_cache_flag>
 
 =item B<reset_package_cache_flag>
 
