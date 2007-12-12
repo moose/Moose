@@ -6,7 +6,6 @@ use warnings;
 
 use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
-use B            'svref_2object';
 use Sub::Exporter;
 
 our $VERSION   = '0.17';
@@ -72,7 +71,7 @@ sub unimport {
             my $keyword = \&{$class . '::' . $name};
 
             # make sure it is from Moose
-            my $pkg_name = eval { svref_2object($keyword)->GV->STASH->NAME };
+            my ($pkg_name) = Class::MOP::get_code_info($keyword);
             next if $@;
             next if $pkg_name ne 'Moose::Util::TypeConstraints';
 

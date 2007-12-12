@@ -104,11 +104,16 @@ sub construct_instance {
     return $instance;
 }
 
-
 # FIXME:
 # This is ugly
 sub get_method_map {
     my $self = shift;
+
+    if (defined $self->{'$!_package_cache_flag'} &&
+                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag()) {
+        return $self->{'%!methods'};
+    }
+
     my $map  = $self->{'%!methods'};
 
     my $class_name       = $self->name;
@@ -122,15 +127,14 @@ sub get_method_map {
                 defined $map->{$symbol} &&
                         $map->{$symbol}->body == $code;
 
-        my $gv = B::svref_2object($code)->GV;
+        my ($pkg, $name) = Class::MOP::get_code_info($code);
 
-        my $pkg = $gv->STASH->NAME;
-        if ($pkg->can('meta') 
+        if ($pkg->can('meta')
             # NOTE:
             # we don't know what ->meta we are calling
-            # here, so we need to be careful cause it 
-            # just might blow up at us, or just complain 
-            # loudly (in the case of Curses.pm) so we 
+            # here, so we need to be careful cause it
+            # just might blow up at us, or just complain
+            # loudly (in the case of Curses.pm) so we
             # just be a little overly cautious here.
             # - SL
             && eval { no warnings; blessed($pkg->meta) }
@@ -139,8 +143,9 @@ sub get_method_map {
             #next unless $self->does_role($role);
         }
         else {
-            next if ($gv->STASH->NAME || '') ne $class_name &&
-                    ($gv->NAME        || '') ne '__ANON__';
+            next if ($pkg  || '') ne $class_name &&
+                    ($name || '') ne '__ANON__';
+
         }
 
         $map->{$symbol} = $method_metaclass->wrap($code);
@@ -210,13 +215,13 @@ sub add_augment_method_modifier {
         my @args = @_;
         no warnings 'redefine';
         if ($Moose::INNER_SLOT{$_super_package}) {
-            local *{$Moose::INNER_SLOT{$_super_package}} = sub { 
-                local *{$Moose::INNER_SLOT{$_super_package}} = sub {}; 
+            local *{$Moose::INNER_SLOT{$_super_package}} = sub {
+                local *{$Moose::INNER_SLOT{$_super_package}} = sub {};
                 $method->(@args);
             };
             return $super->(@args);
-        } 
-        else {          
+        }
+        else {
             return $super->(@args);
         }
     });

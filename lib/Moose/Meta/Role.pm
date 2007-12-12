@@ -7,7 +7,6 @@ use metaclass;
 
 use Carp         'confess';
 use Scalar::Util 'blessed';
-use B            'svref_2object';
 
 our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -283,8 +282,10 @@ sub method_metaclass { 'Moose::Meta::Role::Method' }
 sub get_method_map {    
     my $self = shift;
     $self->{'%!methods'} ||= {}; 
+    $self->{'$!_package_cache_flag'} = undef;
     $self->Moose::Meta::Class::get_method_map() 
 }
+sub reset_package_cache_flag { () }
 
 # FIXME:
 # Yes, this is a really really UGLY hack
@@ -337,6 +338,10 @@ sub apply {
 
     $self->_apply_attributes($other);         
     $self->_apply_methods($other);   
+    
+    # NOTE:
+    # we need a clear cache flag too ...
+    $other->{'$!_package_cache_flag'} = undef;    
 
     $self->_apply_override_method_modifiers($other);                  
     $self->_apply_before_method_modifiers($other);                  
@@ -558,7 +563,7 @@ sub _apply_override_method_modifiers {
                 # so that we can tell the class were to 
                 # find the right super() method
                 my $method = $self->get_override_method_modifier($method_name);
-                my $package = svref_2object($method)->GV->STASH->NAME;
+                my ($package) = Class::MOP::get_code_info($method);
                 # if it is a class, we just add it
                 $other->add_override_method_modifier($method_name, $method, $package);
             }
@@ -662,6 +667,8 @@ probably not that much really).
 =item B<get_method_list>
 
 =item B<get_method_map>
+
+=item B<reset_package_cache_flag>
 
 =back
 
