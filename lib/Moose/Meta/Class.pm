@@ -110,7 +110,7 @@ sub get_method_map {
     my $self = shift;
 
     if (defined $self->{'$!_package_cache_flag'} &&
-                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag(blessed $self)) {
+                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag($self->meta->name)) {
         return $self->{'%!methods'};
     }
 
