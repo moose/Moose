@@ -13,7 +13,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-use Class::MOP 0.46;
+use Class::MOP 0.49;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
