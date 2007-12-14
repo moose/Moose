@@ -43,6 +43,7 @@ lib/Moose/Role.pm
 lib/Moose/Spec/Role.pod
 lib/Moose/Util.pm
 lib/Moose/Util/TypeConstraints.pm
+lib/oose.pm
 lib/Test/Moose.pm
 Makefile.PL
 MANIFEST

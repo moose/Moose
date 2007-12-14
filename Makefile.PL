@@ -12,10 +12,12 @@ my $win32 = !! ( $^O eq 'Win32' or $^O eq 'cygwin' );
 # prereqs
 requires 'Scalar::Util' => $win32 ? '1.17' : '1.18';
 requires 'Carp';
-requires 'Class::MOP'    => '0.48';
+requires 'Class::MOP'    => '0.49';
 requires 'Sub::Name'     => '0.02';
 requires 'Sub::Exporter' => '0.972';
-requires 'B';
+
+# only used by oose.pm, not Moose.pm :P
+requires 'Filter::Simple' => '0'; 
 
 # things the tests need
 build_requires 'Test::More'      => '0.62';
