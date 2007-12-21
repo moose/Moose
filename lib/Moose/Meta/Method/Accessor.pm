@@ -29,8 +29,8 @@ sub generate_accessor_method_inline {
         . $self->_inline_check_required . "\n"
         . $self->_inline_check_coercion . "\n"
         . $self->_inline_check_constraint($value_name) . "\n"
-                . $self->_inline_store($inv, $value_name) . "\n"
-                . $self->_inline_trigger($inv, $value_name) . "\n"
+        . $self->_inline_store($inv, $value_name) . "\n"
+        . $self->_inline_trigger($inv, $value_name) . "\n"
     . ' }' . "\n"
     . $self->_inline_check_lazy . "\n"
     . $self->_inline_post_body(@_) . "\n"
@@ -43,6 +43,7 @@ sub generate_accessor_method_inline {
                                 ? $attr->type_constraint->_compiled_type_constraint
                                 : undef;
 
+    #warn $code;
     my $sub = eval $code;
     confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
@@ -61,10 +62,10 @@ sub generate_writer_method_inline {
     . $self->_inline_copy_value
     . $self->_inline_check_required
     . $self->_inline_check_coercion
-        . $self->_inline_check_constraint($value_name)
-        . $self->_inline_store($inv, $value_name)
-        . $self->_inline_post_body(@_)
-        . $self->_inline_trigger($inv, $value_name)
+    . $self->_inline_check_constraint($value_name)
+    . $self->_inline_store($inv, $value_name)
+    . $self->_inline_post_body(@_)
+    . $self->_inline_trigger($inv, $value_name)
     . ' }';
 
     # NOTE:
@@ -99,6 +100,7 @@ sub generate_reader_method_inline {
                                 ? $attr->type_constraint->_compiled_type_constraint
                                 : undef;
 
+                                
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;

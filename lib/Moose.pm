@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.33';
+our $VERSION   = '0.34';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -449,9 +449,9 @@ try and write a recipe on them soon.
 The default behavior here is to just load C<$metaclass_name>; however, we also
 have a way to alias to a shorter name. This will first look to see if
 B<Moose::Meta::Attribute::Custom::$metaclass_name> exists. If it does, Moose
-will then check to see if that has the method C<register_implemenetation>, which
+will then check to see if that has the method C<register_implementation>, which
 should return the actual name of the custom attribute metaclass. If there is no
-C<register_implemenetation> method, it will fall back to using
+C<register_implementation> method, it will fall back to using
 B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
 
 =item I<trigger =E<gt> $code>

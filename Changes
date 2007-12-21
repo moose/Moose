@@ -1,8 +1,11 @@
 Revision history for Perl extension Moose
 
+0.34
+    ~~ some doc fixes ~~
+
 0.33 Fri. Dec. 14, 2007
-    !! Moose now loads ~45% faster !!
-    !!  with new Class::MOP 0.49   !!
+    !! Moose now loads 2 x faster !!
+    !!  with new Class::MOP 0.49  !!
 
     ++ new ooose.pm module to make command line
        Moose-ness easier (see POD docs for more)
