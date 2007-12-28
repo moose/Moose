@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 25;
 use Test::Exception;
 
 BEGIN {    
@@ -63,4 +63,22 @@ ok($array_of_array_of_ints->check(
 ok(!$array_of_array_of_ints->check(
     [[ 1, 2, 3 ], [ qw/foo bar/ ]]
 ), '... [[ 1, 2, 3 ], [ qw/foo bar/ ]] failed successfully');
+
+{
+    package AutoDeref;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    has 'bar' => (
+        is         => 'rw',
+        isa        => 'ArrayRef[Int]',
+        auto_deref => 1,
+    );
+}
+
+my $autoderef = AutoDeref->new;
+lives_ok  { $autoderef->bar(1, 2, 3) };
+is_deeply [ $autoderef->bar ], [1, 2, 3];
+
+dies_ok   { $autoderef->bar(1, "foo", 3) };
 
