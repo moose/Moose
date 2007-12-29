@@ -551,7 +551,7 @@ value fails to pass, the set operation dies with a L<Carp/confess>.
 Any coercion to convert values is done before checking the type constraint.
 
 To check a value against a type constraint before setting it, fetch the
-attribute instance using L<Moose::Meta::Attribute/find_attribute_by_name>,
+attribute instance using L<Class::MOP::Class/find_attribute_by_name>,
 fetch the type_constraint from the attribute using L<Moose::Meta::Attribute/type_constraint>
 and call L<Moose::Meta::TypeConstraint/check>. See L<Moose::Cookbook::RecipeX>
 for an example.
