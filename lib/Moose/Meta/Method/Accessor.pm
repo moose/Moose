@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.08';
+our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -24,7 +24,7 @@ sub generate_accessor_method_inline {
 
     my $code = 'sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
-    . 'if (scalar(@_) == 2) {' . "\n"
+    . 'if (scalar(@_) >= 2) {' . "\n"
         . $self->_inline_copy_value . "\n"
         . $self->_inline_check_required . "\n"
         . $self->_inline_check_coercion . "\n"

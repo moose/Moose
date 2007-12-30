@@ -1,7 +1,13 @@
 Revision history for Perl extension Moose
 
 0.34
-    ~~ some doc fixes ~~
+    ~~ more misc. doc fixes ~~
+    
+    * Moose::Meta::Method::Accessor
+      - fixed bug when passing a list of values to 
+        an accessor would get (incorrectly) ignored.
+        Thanks to Sartak for finding this ;)
+        - added tests for this (Sartak again)
 
 0.33 Fri. Dec. 14, 2007
     !! Moose now loads 2 x faster !!
