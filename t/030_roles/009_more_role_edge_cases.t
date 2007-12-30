@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 77;
+use Test::More tests => 75;
 use Test::Exception;
 
 BEGIN {
@@ -119,12 +119,12 @@ BEGIN {
     lives_ok { $i->foo } '... called foo successfully (again)';
     is( $i->counter, 2, "after hook called (again)" );
     
-    can_ok('SubBA', 'foo');
-    my $subba_foo_rv;
-    lives_ok { 
-        $subba_foo_rv = SubBA::foo(); 
-    } '... called the sub as a function correctly';
-    is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
+    ok(SubBA->meta->has_method('foo'), '... this has the foo method');
+    #my $subba_foo_rv;
+    #lives_ok { 
+    #    $subba_foo_rv = SubBA::foo(); 
+    #} '... called the sub as a function correctly';
+    #is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
 }
 
 {

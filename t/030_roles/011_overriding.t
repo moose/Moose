@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More skip_all => "provisional test";
+use Test::More no_plan => 1; #skip_all => "provisional test";
 use Test::Exception;
 
 BEGIN {
@@ -146,18 +146,6 @@ BEGIN {
     } qr/requires.*'foo'/, "defining class Class::C fails";
 
     lives_ok {
-        package Class::D;
-        use Moose;
-
-        has foo => ( default => __PACKAGE__ . "::foo", is => "rw" );
-
-        use constant;
-        BEGIN { constant->import($_ => __PACKAGE__ . "::$_") for qw(zot) };
-
-        with qw(Role::I);
-    } "resolved with attr";
-    
-    lives_ok {
         package Class::E;
         use Moose;
 
@@ -167,12 +155,29 @@ BEGIN {
         BEGIN { constant->import($_ => __PACKAGE__ . "::$_") for qw(foo zot) };
     } "resolved with method";
 
-    can_ok( Class::D->new, qw(foo bar xxy zot) );
+    # fix these later ...
+    TODO: {
+          local $TODO = "TODO: add support for attribute methods fufilling reqs";
+
+        lives_ok {
+            package Class::D;
+            use Moose;
+
+            has foo => ( default => __PACKAGE__ . "::foo", is => "rw" );
+
+            use constant;
+            BEGIN { constant->import($_ => __PACKAGE__ . "::$_") for qw(zot) };
+
+            with qw(Role::I);
+        } "resolved with attr";
+
+        can_ok( Class::D->new, qw(foo bar xxy zot) );
+        is( eval { Class::D->new->bar }, "Role::H::bar", "bar" );
+        is( eval { Class::D->new->xxy }, "Role::I::xxy", "xxy" );
+    }
 
     is( eval { Class::D->new->foo }, "Class::D::foo", "foo" );
     is( eval { Class::D->new->zot }, "Class::D::zot", "zot" );
-    is( eval { Class::D->new->bar }, "Role::H::bar", "bar" );
-    is( eval { Class::D->new->xxy }, "Role::I::xxy", "xxy" );
 
     can_ok( Class::E->new, qw(foo bar xxy zot) );
 

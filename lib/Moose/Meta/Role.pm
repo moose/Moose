@@ -5,10 +5,11 @@ use strict;
 use warnings;
 use metaclass;
 
+use Sub::Name    'subname';
 use Carp         'confess';
-use Scalar::Util 'blessed';
+use Scalar::Util 'blessed', 'reftype';
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -17,12 +18,17 @@ use Moose::Meta::Role::Method::Required;
 
 use base 'Class::MOP::Module';
 
-
-# NOTE:
-# I normally don't do this, but I am doing 
-# a whole bunch of meta-programmin in this 
-# module, so it just makes sense.
-# - SL 
+## ------------------------------------------------------------------
+## NOTE:
+## I normally don't do this, but I am doing
+## a whole bunch of meta-programmin in this
+## module, so it just makes sense. For a clearer
+## picture of what is going on in the next 
+## several lines of code, look at the really 
+## big comment at the end of this file (right
+## before the POD).
+## - SL
+## ------------------------------------------------------------------
 
 my $META = __PACKAGE__->meta;
 
@@ -31,49 +37,40 @@ my $META = __PACKAGE__->meta;
 
 # NOTE:
 # since roles are lazy, we hold all the attributes
-# of the individual role in 'statis' until which 
-# time when it is applied to a class. This means 
-# keeping a lot of things in hash maps, so we are 
+# of the individual role in 'statis' until which
+# time when it is applied to a class. This means
+# keeping a lot of things in hash maps, so we are
 # using a little of that meta-programmin' magic
-# here an saving lots of extra typin.
-# - SL
-
-$META->add_attribute($_->{name} => (
-    reader  => $_->{reader},
-    default => sub { {} }
-)) for (
-    { name => 'excluded_roles_map', reader => 'get_excluded_roles_map'   },
-    { name => 'attribute_map',      reader => 'get_attribute_map'        },
-    { name => 'required_methods',   reader => 'get_required_methods_map' },
-);
-
-# NOTE:
-# many of these attributes above require similar 
-# functionality to support them, so we again use 
-# the wonders of meta-programmin' to deliver a 
+# here an saving lots of extra typin. And since 
+# many of these attributes above require similar
+# functionality to support them, so we again use
+# the wonders of meta-programmin' to deliver a
 # very compact solution to this normally verbose
 # problem.
 # - SL
 
 foreach my $action (
-    { 
-        attr_reader => 'get_excluded_roles_map' ,   
+    {
+        name        => 'excluded_roles_map',
+        attr_reader => 'get_excluded_roles_map' ,
         methods     => {
-            add       => 'add_excluded_roles',    
-            get_list  => 'get_excluded_roles_list',  
-            existence => 'excludes_role',         
+            add       => 'add_excluded_roles',
+            get_list  => 'get_excluded_roles_list',
+            existence => 'excludes_role',
         }
     },
-    { 
+    {
+        name        => 'required_methods',
         attr_reader => 'get_required_methods_map',
         methods     => {
-            add       => 'add_required_methods', 
+            add       => 'add_required_methods',
             remove    => 'remove_required_methods',
             get_list  => 'get_required_method_list',
             existence => 'requires_method',
         }
     },
     {
+        name        => 'attribute_map',
         attr_reader => 'get_attribute_map',
         methods     => {
             get       => 'get_attribute',
@@ -83,34 +80,41 @@ foreach my $action (
         }
     }
 ) {
-    
+
     my $attr_reader = $action->{attr_reader};
     my $methods     = $action->{methods};
-    
+
+    # create the attribute
+    $META->add_attribute($action->{name} => (
+        reader  => $attr_reader,
+        default => sub { {} }
+    ));
+
+    # create some helper methods
     $META->add_method($methods->{add} => sub {
         my ($self, @values) = @_;
-        $self->$attr_reader->{$_} = undef foreach @values;    
+        $self->$attr_reader->{$_} = undef foreach @values;
     }) if exists $methods->{add};
-    
+
     $META->add_method($methods->{get_list} => sub {
         my ($self) = @_;
-        keys %{$self->$attr_reader};   
-    }) if exists $methods->{get_list}; 
-    
+        keys %{$self->$attr_reader};
+    }) if exists $methods->{get_list};
+
     $META->add_method($methods->{get} => sub {
         my ($self, $name) = @_;
-        $self->$attr_reader->{$name}  
-    }) if exists $methods->{get};    
-    
+        $self->$attr_reader->{$name}
+    }) if exists $methods->{get};
+
     $META->add_method($methods->{existence} => sub {
         my ($self, $name) = @_;
-        exists $self->$attr_reader->{$name} ? 1 : 0;   
-    }) if exists $methods->{existence};    
-    
+        exists $self->$attr_reader->{$name} ? 1 : 0;
+    }) if exists $methods->{existence};
+
     $META->add_method($methods->{remove} => sub {
         my ($self, @values) = @_;
         delete $self->$attr_reader->{$_} foreach @values;
-    }) if exists $methods->{remove};       
+    }) if exists $methods->{remove};
 }
 
 ## some things don't always fit, so they go here ...
@@ -133,24 +137,14 @@ sub _clean_up_required_methods {
     foreach my $method ($self->get_required_method_list) {
         $self->remove_required_methods($method)
             if $self->has_method($method);
-    } 
+    }
 }
 
 ## ------------------------------------------------------------------
 ## method modifiers
 
-$META->add_attribute($_->{name} => (
-    reader  => $_->{reader},
-    default => sub { {} }
-)) for (
-    { name => 'before_method_modifiers',   reader => 'get_before_method_modifiers_map'   },
-    { name => 'after_method_modifiers',    reader => 'get_after_method_modifiers_map'    },
-    { name => 'around_method_modifiers',   reader => 'get_around_method_modifiers_map'   },
-    { name => 'override_method_modifiers', reader => 'get_override_method_modifiers_map' },
-);
-
 # NOTE:
-# the before/around/after method modifiers are 
+# the before/around/after method modifiers are
 # stored by name, but there can be many methods
 # then associated with that name. So again we have
 # lots of similar functionality, so we can do some
@@ -158,48 +152,61 @@ $META->add_attribute($_->{name} => (
 # - SL
 
 foreach my $modifier_type (qw[ before around after ]) {
+
+    my $attr_reader = "get_${modifier_type}_method_modifiers_map";
     
-    my $attr_reader = "get_${modifier_type}_method_modifiers_map";    
-    
+    # create the attribute ...
+    $META->add_attribute("${modifier_type}_method_modifiers" => (
+        reader  => $attr_reader,
+        default => sub { {} }
+    ));  
+
+    # and some helper methods ...
     $META->add_method("get_${modifier_type}_method_modifiers" => sub {
         my ($self, $method_name) = @_;
+        #return () unless exists $self->$attr_reader->{$method_name};
         @{$self->$attr_reader->{$method_name}};
     });
-        
+
     $META->add_method("has_${modifier_type}_method_modifiers" => sub {
         my ($self, $method_name) = @_;
         # NOTE:
-        # for now we assume that if it exists,.. 
+        # for now we assume that if it exists,..
         # it has at least one modifier in it
         (exists $self->$attr_reader->{$method_name}) ? 1 : 0;
-    });    
-    
+    });
+
     $META->add_method("add_${modifier_type}_method_modifier" => sub {
         my ($self, $method_name, $method) = @_;
-        
-        $self->$attr_reader->{$method_name} = [] 
+
+        $self->$attr_reader->{$method_name} = []
             unless exists $self->$attr_reader->{$method_name};
-            
+
         my $modifiers = $self->$attr_reader->{$method_name};
-        
+
         # NOTE:
-        # check to see that we aren't adding the 
-        # same code twice. We err in favor of the 
+        # check to see that we aren't adding the
+        # same code twice. We err in favor of the
         # first on here, this may not be as expected
         foreach my $modifier (@{$modifiers}) {
             return if $modifier == $method;
         }
-        
+
         push @{$modifiers} => $method;
     });
-    
+
 }
 
 ## ------------------------------------------------------------------
 ## override method mofidiers
 
+$META->add_attribute('override_method_modifiers' => (
+    reader  => 'get_override_method_modifiers_map',
+    default => sub { {} }
+));
+
 # NOTE:
-# these are a little different because there 
+# these are a little different because there
 # can only be one per name, whereas the other
 # method modifiers can have multiples.
 # - SL
@@ -207,29 +214,29 @@ foreach my $modifier_type (qw[ before around after ]) {
 sub add_override_method_modifier {
     my ($self, $method_name, $method) = @_;
     (!$self->has_method($method_name))
-        || confess "Cannot add an override of method '$method_name' " . 
+        || confess "Cannot add an override of method '$method_name' " .
                    "because there is a local version of '$method_name'";
-    $self->get_override_method_modifiers_map->{$method_name} = $method;    
+    $self->get_override_method_modifiers_map->{$method_name} = $method;
 }
 
 sub has_override_method_modifier {
     my ($self, $method_name) = @_;
     # NOTE:
-    # for now we assume that if it exists,.. 
+    # for now we assume that if it exists,..
     # it has at least one modifier in it
-    (exists $self->get_override_method_modifiers_map->{$method_name}) ? 1 : 0;    
+    (exists $self->get_override_method_modifiers_map->{$method_name}) ? 1 : 0;
 }
 
 sub get_override_method_modifier {
     my ($self, $method_name) = @_;
-    $self->get_override_method_modifiers_map->{$method_name};    
+    $self->get_override_method_modifiers_map->{$method_name};
 }
 
 ## general list accessor ...
 
 sub get_method_modifier_list {
     my ($self, $modifier_type) = @_;
-    my $accessor = "get_${modifier_type}_method_modifiers_map";    
+    my $accessor = "get_${modifier_type}_method_modifiers_map";
     keys %{$self->$accessor};
 }
 
@@ -251,12 +258,11 @@ sub add_role {
 sub calculate_all_roles {
     my $self = shift;
     my %seen;
-    grep { 
-        !$seen{$_->name}++ 
-    } ($self, 
-       map { 
-           $_->calculate_all_roles 
-       } @{ $self->get_roles });
+    grep {
+        !$seen{$_->name}++
+    } ($self, map {
+                  $_->calculate_all_roles
+              } @{ $self->get_roles });
 }
 
 sub does_role {
@@ -273,55 +279,97 @@ sub does_role {
 }
 
 ## ------------------------------------------------------------------
-## methods 
+## methods
 
 sub method_metaclass { 'Moose::Meta::Role::Method' }
 
-# FIXME:
-# this is an UGLY hack
-sub get_method_map {    
+sub get_method_map {
     my $self = shift;
-    $self->{'%!methods'} ||= {}; 
-    $self->reset_package_cache_flag;
-    $self->Moose::Meta::Class::get_method_map() 
+    my $map  = {};
+
+    my $role_name        = $self->name;
+    my $method_metaclass = $self->method_metaclass;
+
+    foreach my $symbol ($self->list_all_package_symbols('CODE')) {
+
+        my $code = $self->get_package_symbol('&' . $symbol);
+
+        my ($pkg, $name) = Class::MOP::get_code_info($code);
+
+        if ($pkg->can('meta')
+            # NOTE:
+            # we don't know what ->meta we are calling
+            # here, so we need to be careful cause it
+            # just might blow up at us, or just complain
+            # loudly (in the case of Curses.pm) so we
+            # just be a little overly cautious here.
+            # - SL
+            && eval { no warnings; blessed($pkg->meta) }
+            && $pkg->meta->isa('Moose::Meta::Role')) {
+            my $role = $pkg->meta->name;
+            next unless $self->does_role($role);
+        }
+        else {
+            next if ($pkg  || '') ne $role_name &&
+                    ($name || '') ne '__ANON__';
+        }
+
+        $map->{$symbol} = $method_metaclass->wrap($code);
+    }
+
+    return $map;    
 }
-sub update_package_cache_flag { () }
-sub reset_package_cache_flag  { (shift)->{'$!_package_cache_flag'} = undef; }
 
-# FIXME:
-# Yes, this is a really really UGLY hack
-# but it works, and until I can figure 
-# out a better way, this is gonna be it. 
+sub get_method { 
+    my ($self, $name) = @_;
+    $self->get_method_map->{$name}
+}
 
-sub get_method          { (shift)->Moose::Meta::Class::get_method(@_)          }
-sub has_method          { (shift)->Moose::Meta::Class::has_method(@_)          }
-sub alias_method        { (shift)->Moose::Meta::Class::alias_method(@_)        }
-sub get_method_list     { 
-    grep {
-        !/^meta$/
-    } (shift)->Moose::Meta::Class::get_method_list(@_)     
+sub has_method {
+    my ($self, $name) = @_;
+    exists $self->get_method_map->{$name} ? 1 : 0
 }
 
 sub find_method_by_name { (shift)->get_method(@_) }
 
+sub get_method_list {
+    my $self = shift;
+    grep { !/^meta$/ } keys %{$self->get_method_map};
+}
+
+sub alias_method {
+    my ($self, $method_name, $method) = @_;
+    (defined $method_name && $method_name)
+        || confess "You must define a method name";
+
+    my $body = (blessed($method) ? $method->body : $method);
+    ('CODE' eq (reftype($body) || ''))
+        || confess "Your code block must be a CODE reference";
+
+    $self->add_package_symbol("&${method_name}" => $body);
+}
+
+sub reset_package_cache_flag  { () }
+sub update_package_cache_flag { () }
+
 ## ------------------------------------------------------------------
-## role construction 
+## role construction
 ## ------------------------------------------------------------------
 
 my $anon_counter = 0;
 
 sub apply {
     my ($self, $other) = @_;
-    
+
     unless ($other->isa('Moose::Meta::Class') || $other->isa('Moose::Meta::Role')) {
-    
+
         # Runtime Role mixins
-            
+
         # FIXME:
-        # We really should do this better, and 
-        # cache the results of our efforts so 
+        # We really should do this better, and
+        # cache the results of our efforts so
         # that we don't need to repeat them.
-        
+
         my $pkg_name = __PACKAGE__ . "::__RUNTIME_ROLE_ANON_CLASS__::" . $anon_counter++;
         eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
         die $@ if $@;
@@ -329,25 +377,26 @@ sub apply {
         my $object = $other;
 
         $other = Moose::Meta::Class->initialize($pkg_name);
-        $other->superclasses(blessed($object));     
-        
+        $other->superclasses(blessed($object));
+
         bless $object => $pkg_name;
     }
-    
-    $self->_check_excluded_roles($other);
-    $self->_check_required_methods($other);  
 
-    $self->_apply_attributes($other);         
-    $self->_apply_methods($other);   
-    
+    $self->_check_excluded_roles($other);
+    $self->_check_required_methods($other);
+
+    $self->_apply_attributes($other);
+    $self->_apply_methods($other);
+
     # NOTE:
     # we need a clear cache flag too ...
-    $other->reset_package_cache_flag;    
+    $other->reset_package_cache_flag;
 
-    $self->_apply_override_method_modifiers($other);                  
-    $self->_apply_before_method_modifiers($other);                  
-    $self->_apply_around_method_modifiers($other);                  
-    $self->_apply_after_method_modifiers($other);          
+    $self->_apply_override_method_modifiers($other);
+    
+    $self->_apply_before_method_modifiers($other);
+    $self->_apply_around_method_modifiers($other);
+    $self->_apply_after_method_modifiers($other);
 
     $other->add_role($self);
 }
@@ -355,19 +404,12 @@ sub apply {
 sub combine {
     my ($class, @roles) = @_;
     
-    my $pkg_name = __PACKAGE__ . "::__COMPOSITE_ROLE_SANDBOX__::" . $anon_counter++;
-    eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
-    die $@ if $@;
+    require Moose::Meta::Role::Application::RoleSummation;
+    require Moose::Meta::Role::Composite;    
     
-    my $combined = $class->initialize($pkg_name);
-    
-    foreach my $role (@roles) {
-        $role->apply($combined);
-    }
-    
-    $combined->_clean_up_required_methods;   
-    
-    return $combined;
+    my $c = Moose::Meta::Role::Composite->new(roles => \@roles);
+    Moose::Meta::Role::Application::RoleSummation->new->apply($c);
+    return $c;
 }
 
 ## ------------------------------------------------------------------
@@ -380,82 +422,82 @@ sub _check_excluded_roles {
         confess "Conflict detected: " . $other->name . " excludes role '" . $self->name . "'";
     }
     foreach my $excluded_role_name ($self->get_excluded_roles_list) {
-        if ($other->does_role($excluded_role_name)) { 
+        if ($other->does_role($excluded_role_name)) {
             confess "The class " . $other->name . " does the excluded role '$excluded_role_name'";
         }
         else {
             if ($other->isa('Moose::Meta::Role')) {
                 $other->add_excluded_roles($excluded_role_name);
             }
-            # else -> ignore it :) 
+            # else -> ignore it :)
         }
-    }    
+    }
 }
 
 sub _check_required_methods {
     my ($self, $other) = @_;
     # NOTE:
-    # we might need to move this down below the 
-    # the attributes so that we can require any 
-    # attribute accessors. However I am thinking 
-    # that maybe those are somehow exempt from 
-    # the require methods stuff.  
+    # we might need to move this down below the
+    # the attributes so that we can require any
+    # attribute accessors. However I am thinking
+    # that maybe those are somehow exempt from
+    # the require methods stuff.
     foreach my $required_method_name ($self->get_required_method_list) {
-        
+
         unless ($other->find_method_by_name($required_method_name)) {
             if ($other->isa('Moose::Meta::Role')) {
                 $other->add_required_methods($required_method_name);
             }
             else {
-                confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                confess "'" . $self->name . "' requires the method '$required_method_name' " .
                         "to be implemented by '" . $other->name . "'";
             }
         }
         else {
             # NOTE:
-            # we need to make sure that the method is 
-            # not a method modifier, because those do 
+            # we need to make sure that the method is
+            # not a method modifier, because those do
             # not satisfy the requirements ...
             my $method = $other->find_method_by_name($required_method_name);
-            
+
             # check if it is a generated accessor ...
             (!$method->isa('Class::MOP::Method::Accessor'))
-                || confess "'" . $self->name . "' requires the method '$required_method_name' " . 
+                || confess "'" . $self->name . "' requires the method '$required_method_name' " .
                            "to be implemented by '" . $other->name . "', the method is only an attribute accessor";
 
             # NOTE:
-            # All other tests here have been removed, they were tests 
+            # All other tests here have been removed, they were tests
             # for overriden methods and before/after/around modifiers.
             # But we realized that for classes any overriden or modified
-            # methods would be backed by a real method of that name 
-            # (and therefore meet the requirement). And for roles, the 
+            # methods would be backed by a real method of that name
+            # (and therefore meet the requirement). And for roles, the
             # overriden and modified methods are "in statis" and so would
             # not show up in this test anyway (and as a side-effect they
-            # would not fufill the requirement, which is exactly what we 
+            # would not fufill the requirement, which is exactly what we
             # want them to do anyway).
-            # - SL 
-        }        
-    }    
+            # - SL
+        }
+    }
 }
 
 sub _apply_attributes {
-    my ($self, $other) = @_;    
+    my ($self, $other) = @_;
     foreach my $attribute_name ($self->get_attribute_list) {
         # it if it has one already
         if ($other->has_attribute($attribute_name) &&
             # make sure we haven't seen this one already too
             $other->get_attribute($attribute_name) != $self->get_attribute($attribute_name)) {
-            # see if we are being composed  
+            # see if we are being composed
             # into a role or not
-            if ($other->isa('Moose::Meta::Role')) {                
-                # all attribute conflicts between roles 
-                # result in an immediate fatal error 
-                confess "Role '" . $self->name . "' has encountered an attribute conflict " . 
+            if ($other->isa('Moose::Meta::Role')) {
+                # all attribute conflicts between roles
+                # result in an immediate fatal error
+                confess "Role '" . $self->name . "' has encountered an attribute conflict " .
                         "during composition. This is fatal error and cannot be disambiguated.";
             }
             else {
-                # but if this is a class, we 
-                # can safely skip adding the 
+                # but if this is a class, we
+                # can safely skip adding the
                 # attribute to the class
                 next;
             }
@@ -463,40 +505,40 @@ sub _apply_attributes {
         else {
             # NOTE:
             # this is kinda ugly ...
-            if ($other->isa('Moose::Meta::Class')) { 
+            if ($other->isa('Moose::Meta::Class')) {
                 $other->_process_attribute(
                     $attribute_name,
                     %{$self->get_attribute($attribute_name)}
-                );             
+                );
             }
             else {
                 $other->add_attribute(
                     $attribute_name,
                     $self->get_attribute($attribute_name)
-                );                
+                );
             }
         }
-    }    
+    }
 }
 
 sub _apply_methods {
-    my ($self, $other) = @_;   
+    my ($self, $other) = @_;
     foreach my $method_name ($self->get_method_list) {
         # it if it has one already
         if ($other->has_method($method_name) &&
             # and if they are not the same thing ...
             $other->get_method($method_name)->body != $self->get_method($method_name)->body) {
             # see if we are composing into a role
-            if ($other->isa('Moose::Meta::Role')) { 
-                # method conflicts between roles result 
+            if ($other->isa('Moose::Meta::Role')) {
+                # method conflicts between roles result
                 # in the method becoming a requirement
                 $other->add_required_methods($method_name);
                 # NOTE:
-                # we have to remove the method from our 
+                # we have to remove the method from our
                 # role, if this is being called from combine()
                 # which means the meta is an anon class
-                # this *may* cause problems later, but it 
-                # is probably fairly safe to assume that 
+                # this *may* cause problems later, but it
+                # is probably fairly safe to assume that
                 # anon classes will only be used internally
                 # or by people who know what they are doing
                 $other->Moose::Meta::Class::remove_method($method_name)
@@ -507,61 +549,61 @@ sub _apply_methods {
             }
         }
         else {
-            # add it, although it could be overriden 
+            # add it, although it could be overriden
             $other->alias_method(
                 $method_name,
                 $self->get_method($method_name)
             );
         }
-    }     
+    }
 }
 
 sub _apply_override_method_modifiers {
-    my ($self, $other) = @_;    
+    my ($self, $other) = @_;
     foreach my $method_name ($self->get_method_modifier_list('override')) {
         # it if it has one already then ...
         if ($other->has_method($method_name)) {
             # if it is being composed into another role
-            # we have a conflict here, because you cannot 
+            # we have a conflict here, because you cannot
             # combine an overriden method with a locally
-            # defined one 
-            if ($other->isa('Moose::Meta::Role')) { 
-                confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
-                        "during composition (A local method of the same name as been found). This " . 
+            # defined one
+            if ($other->isa('Moose::Meta::Role')) {
+                confess "Role '" . $self->name . "' has encountered an 'override' method conflict " .
+                        "during composition (A local method of the same name as been found). This " .
                         "is fatal error.";
             }
             else {
-                # if it is a class, then we 
+                # if it is a class, then we
                 # just ignore this here ...
                 next;
             }
         }
         else {
-            # if no local method is found, then we 
+            # if no local method is found, then we
             # must check if we are a role or class
-            if ($other->isa('Moose::Meta::Role')) { 
-                # if we are a role, we need to make sure 
-                # we dont have a conflict with the role 
+            if ($other->isa('Moose::Meta::Role')) {
+                # if we are a role, we need to make sure
+                # we dont have a conflict with the role
                 # we are composing into
                 if ($other->has_override_method_modifier($method_name) &&
                     $other->get_override_method_modifier($method_name) != $self->get_override_method_modifier($method_name)) {
-                    confess "Role '" . $self->name . "' has encountered an 'override' method conflict " . 
-                            "during composition (Two 'override' methods of the same name encountered). " . 
+                    confess "Role '" . $self->name . "' has encountered an 'override' method conflict " .
+                            "during composition (Two 'override' methods of the same name encountered). " .
                             "This is fatal error.";
                 }
-                else {   
+                else {
                     # if there is no conflict,
-                    # just add it to the role  
+                    # just add it to the role
                     $other->add_override_method_modifier(
-                        $method_name, 
+                        $method_name,
                         $self->get_override_method_modifier($method_name)
-                    );                    
+                    );
                 }
             }
             else {
-                # if this is not a role, then we need to 
+                # if this is not a role, then we need to
                 # find the original package of the method
-                # so that we can tell the class were to 
+                # so that we can tell the class were to
                 # find the right super() method
                 my $method = $self->get_override_method_modifier($method_name);
                 my ($package) = Class::MOP::get_code_info($method);
@@ -569,24 +611,145 @@ sub _apply_override_method_modifiers {
                 $other->add_override_method_modifier($method_name, $method, $package);
             }
         }
-    }    
+    }
 }
 
 sub _apply_method_modifiers {
-    my ($self, $modifier_type, $other) = @_;    
+    my ($self, $modifier_type, $other) = @_;
     my $add = "add_${modifier_type}_method_modifier";
-    my $get = "get_${modifier_type}_method_modifiers";    
+    my $get = "get_${modifier_type}_method_modifiers";
     foreach my $method_name ($self->get_method_modifier_list($modifier_type)) {
         $other->$add(
             $method_name,
             $_
         ) foreach $self->$get($method_name);
-    }    
+    }
 }
 
 sub _apply_before_method_modifiers { (shift)->_apply_method_modifiers('before' => @_) }
 sub _apply_around_method_modifiers { (shift)->_apply_method_modifiers('around' => @_) }
 sub _apply_after_method_modifiers  { (shift)->_apply_method_modifiers('after'  => @_) }
+
+#####################################################################
+## NOTE:
+## This is Moose::Meta::Role as defined by Moose (plus the use of 
+## MooseX::AttributeHelpers module). It is here as a reference to 
+## make it easier to see what is happening above with all the meta
+## programming. - SL
+#####################################################################
+#
+# has 'roles' => (
+#     metaclass => 'Collection::Array',
+#     reader    => 'get_roles',
+#     isa       => 'ArrayRef[Moose::Meta::Roles]',
+#     default   => sub { [] },
+#     provides  => {
+#         'push' => 'add_role',
+#     }
+# );
+# 
+# has 'excluded_roles_map' => (
+#     metaclass => 'Collection::Hash',
+#     reader    => 'get_excluded_roles_map',
+#     isa       => 'HashRef[Str]',
+#     provides  => {
+#         # Not exactly set, cause it sets multiple
+#         'set'    => 'add_excluded_roles',
+#         'keys'   => 'get_excluded_roles_list',
+#         'exists' => 'excludes_role',
+#     }
+# );
+# 
+# has 'attribute_map' => (
+#     metaclass => 'Collection::Hash',
+#     reader    => 'get_attribute_map',
+#     isa       => 'HashRef[Str]',    
+#     provides => {
+#         # 'set'  => 'add_attribute' # has some special crap in it
+#         'get'    => 'get_attribute',
+#         'keys'   => 'get_attribute_list',
+#         'exists' => 'has_attribute',
+#         # Not exactly delete, cause it sets multiple
+#         'delete' => 'remove_attribute',    
+#     }
+# );
+# 
+# has 'required_methods' => (
+#     metaclass => 'Collection::Hash',
+#     reader    => 'get_required_methods_map',
+#     isa       => 'HashRef[Str]',
+#     provides  => {    
+#         # not exactly set, or delete since it works for multiple 
+#         'set'    => 'add_required_methods',
+#         'delete' => 'remove_required_methods',
+#         'keys'   => 'get_required_method_list',
+#         'exists' => 'requires_method',    
+#     }
+# );
+# 
+# # the before, around and after modifiers are 
+# # HASH keyed by method-name, with ARRAY of 
+# # CODE refs to apply in that order
+# 
+# has 'before_method_modifiers' => (
+#     metaclass => 'Collection::Hash',    
+#     reader    => 'get_before_method_modifiers_map',
+#     isa       => 'HashRef[ArrayRef[CodeRef]]',
+#     provides  => {
+#         'keys'   => 'get_before_method_modifiers',
+#         'exists' => 'has_before_method_modifiers',   
+#         # This actually makes sure there is an 
+#         # ARRAY at the given key, and pushed onto
+#         # it. It also checks for duplicates as well
+#         # 'add'  => 'add_before_method_modifier'     
+#     }    
+# );
+# 
+# has 'after_method_modifiers' => (
+#     metaclass => 'Collection::Hash',    
+#     reader    =>'get_after_method_modifiers_map',
+#     isa       => 'HashRef[ArrayRef[CodeRef]]',
+#     provides  => {
+#         'keys'   => 'get_after_method_modifiers',
+#         'exists' => 'has_after_method_modifiers', 
+#         # This actually makes sure there is an 
+#         # ARRAY at the given key, and pushed onto
+#         # it. It also checks for duplicates as well          
+#         # 'add'  => 'add_after_method_modifier'     
+#     }    
+# );
+#     
+# has 'around_method_modifiers' => (
+#     metaclass => 'Collection::Hash',    
+#     reader    =>'get_around_method_modifiers_map',
+#     isa       => 'HashRef[ArrayRef[CodeRef]]',
+#     provides  => {
+#         'keys'   => 'get_around_method_modifiers',
+#         'exists' => 'has_around_method_modifiers',   
+#         # This actually makes sure there is an 
+#         # ARRAY at the given key, and pushed onto
+#         # it. It also checks for duplicates as well        
+#         # 'add'  => 'add_around_method_modifier'     
+#     }    
+# );
+# 
+# # override is similar to the other modifiers
+# # except that it is not an ARRAY of code refs
+# # but instead just a single name->code mapping
+#     
+# has 'override_method_modifiers' => (
+#     metaclass => 'Collection::Hash',    
+#     reader    =>'get_override_method_modifiers_map',
+#     isa       => 'HashRef[CodeRef]',   
+#     provides  => {
+#         'keys'   => 'get_override_method_modifier',
+#         'exists' => 'has_override_method_modifier',   
+#         'add'    => 'add_override_method_modifier', # checks for local method ..     
+#     }
+# );
+#     
+#####################################################################
+
 
 1;
 
@@ -600,9 +763,9 @@ Moose::Meta::Role - The Moose Role metaclass
 
 =head1 DESCRIPTION
 
-Please see L<Moose::Role> for more information about roles. 
+Please see L<Moose::Role> for more information about roles.
 For the most part, this has no user-serviceable parts inside
-this module. It's API is still subject to some change (although 
+this module. It's API is still subject to some change (although
 probably not that much really).
 
 =head1 METHODS
@@ -757,7 +920,7 @@ probably not that much really).
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -772,6 +935,6 @@ Copyright 2006, 2007 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
