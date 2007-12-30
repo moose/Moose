@@ -8,22 +8,22 @@ our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 # no need to get fancy here ...
-sub new { bless {} => shift }
+sub new { bless {} => (shift) }
 
 sub apply {
-    my ($self, $other) = @_;
+    my $self = shift;
 
-    $self->check_role_exclusions($other);
-    $self->check_required_methods($other);
+    $self->check_role_exclusions(@_);
+    $self->check_required_methods(@_);
     
-    $self->apply_attributes($other);
-    $self->apply_methods($other);    
+    $self->apply_attributes(@_);
+    $self->apply_methods(@_);    
     
-    $self->apply_override_method_modifiers($other);
+    $self->apply_override_method_modifiers(@_);
     
-    $self->apply_before_method_modifiers($other);
-    $self->apply_around_method_modifiers($other);
-    $self->apply_after_method_modifiers($other);
+    $self->apply_before_method_modifiers(@_);
+    $self->apply_around_method_modifiers(@_);
+    $self->apply_after_method_modifiers(@_);
 }
 
 sub check_role_exclusions           { die "Abstract Method" }

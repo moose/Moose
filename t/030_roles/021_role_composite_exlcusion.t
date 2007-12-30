@@ -32,6 +32,9 @@ BEGIN {
     with 'Role::Foo';    
 }
 
+ok(Role::ExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
+ok(Role::DoesExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
+
 # test simple exclusion
 dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(

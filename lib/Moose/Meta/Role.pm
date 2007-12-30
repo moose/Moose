@@ -349,56 +349,28 @@ sub alias_method {
     $self->add_package_symbol("&${method_name}" => $body);
 }
 
-sub reset_package_cache_flag  { () }
-sub update_package_cache_flag { () }
+#sub reset_package_cache_flag  { () }
+#sub update_package_cache_flag { () }
 
 ## ------------------------------------------------------------------
 ## role construction
 ## ------------------------------------------------------------------
 
-my $anon_counter = 0;
-
 sub apply {
     my ($self, $other) = @_;
-
-    unless ($other->isa('Moose::Meta::Class') || $other->isa('Moose::Meta::Role')) {
-
-        # Runtime Role mixins
-
-        # FIXME:
-        # We really should do this better, and
-        # cache the results of our efforts so
-        # that we don't need to repeat them.
-
-        my $pkg_name = __PACKAGE__ . "::__RUNTIME_ROLE_ANON_CLASS__::" . $anon_counter++;
-        eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
-        die $@ if $@;
-
-        my $object = $other;
-
-        $other = Moose::Meta::Class->initialize($pkg_name);
-        $other->superclasses(blessed($object));
-
-        bless $object => $pkg_name;
-    }
-
-    $self->_check_excluded_roles($other);
-    $self->_check_required_methods($other);
-
-    $self->_apply_attributes($other);
-    $self->_apply_methods($other);
-
-    # NOTE:
-    # we need a clear cache flag too ...
-    $other->reset_package_cache_flag;
-
-    $self->_apply_override_method_modifiers($other);
     
-    $self->_apply_before_method_modifiers($other);
-    $self->_apply_around_method_modifiers($other);
-    $self->_apply_after_method_modifiers($other);
-
-    $other->add_role($self);
+    if ($other->isa('Moose::Meta::Role')) {
+        require Moose::Meta::Role::Application::ToRole;
+        return Moose::Meta::Role::Application::ToRole->new->apply($self, $other);
+    }
+    elsif ($other->isa('Moose::Meta::Class')) {
+        require Moose::Meta::Role::Application::ToClass;
+        return Moose::Meta::Role::Application::ToClass->new->apply($self, $other);
+    }  
+    else {
+        require Moose::Meta::Role::Application::ToInstance;
+        return Moose::Meta::Role::Application::ToInstance->new->apply($self, $other);        
+    }  
 }
 
 sub combine {
@@ -411,224 +383,6 @@ sub combine {
     Moose::Meta::Role::Application::RoleSummation->new->apply($c);
     return $c;
 }
-
-## ------------------------------------------------------------------
-
-## applying a role to a class ...
-
-sub _check_excluded_roles {
-    my ($self, $other) = @_;
-    if ($other->excludes_role($self->name)) {
-        confess "Conflict detected: " . $other->name . " excludes role '" . $self->name . "'";
-    }
-    foreach my $excluded_role_name ($self->get_excluded_roles_list) {
-        if ($other->does_role($excluded_role_name)) {
-            confess "The class " . $other->name . " does the excluded role '$excluded_role_name'";
-        }
-        else {
-            if ($other->isa('Moose::Meta::Role')) {
-                $other->add_excluded_roles($excluded_role_name);
-            }
-            # else -> ignore it :)
-        }
-    }
-}
-
-sub _check_required_methods {
-    my ($self, $other) = @_;
-    # NOTE:
-    # we might need to move this down below the
-    # the attributes so that we can require any
-    # attribute accessors. However I am thinking
-    # that maybe those are somehow exempt from
-    # the require methods stuff.
-    foreach my $required_method_name ($self->get_required_method_list) {
-
-        unless ($other->find_method_by_name($required_method_name)) {
-            if ($other->isa('Moose::Meta::Role')) {
-                $other->add_required_methods($required_method_name);
-            }
-            else {
-                confess "'" . $self->name . "' requires the method '$required_method_name' " .
-                        "to be implemented by '" . $other->name . "'";
-            }
-        }
-        else {
-            # NOTE:
-            # we need to make sure that the method is
-            # not a method modifier, because those do
-            # not satisfy the requirements ...
-            my $method = $other->find_method_by_name($required_method_name);
-
-            # check if it is a generated accessor ...
-            (!$method->isa('Class::MOP::Method::Accessor'))
-                || confess "'" . $self->name . "' requires the method '$required_method_name' " .
-                           "to be implemented by '" . $other->name . "', the method is only an attribute accessor";
-
-            # NOTE:
-            # All other tests here have been removed, they were tests
-            # for overriden methods and before/after/around modifiers.
-            # But we realized that for classes any overriden or modified
-            # methods would be backed by a real method of that name
-            # (and therefore meet the requirement). And for roles, the
-            # overriden and modified methods are "in statis" and so would
-            # not show up in this test anyway (and as a side-effect they
-            # would not fufill the requirement, which is exactly what we
-            # want them to do anyway).
-            # - SL
-        }
-    }
-}
-
-sub _apply_attributes {
-    my ($self, $other) = @_;
-    foreach my $attribute_name ($self->get_attribute_list) {
-        # it if it has one already
-        if ($other->has_attribute($attribute_name) &&
-            # make sure we haven't seen this one already too
-            $other->get_attribute($attribute_name) != $self->get_attribute($attribute_name)) {
-            # see if we are being composed
-            # into a role or not
-            if ($other->isa('Moose::Meta::Role')) {
-                # all attribute conflicts between roles
-                # result in an immediate fatal error
-                confess "Role '" . $self->name . "' has encountered an attribute conflict " .
-                        "during composition. This is fatal error and cannot be disambiguated.";
-            }
-            else {
-                # but if this is a class, we
-                # can safely skip adding the
-                # attribute to the class
-                next;
-            }
-        }
-        else {
-            # NOTE:
-            # this is kinda ugly ...
-            if ($other->isa('Moose::Meta::Class')) {
-                $other->_process_attribute(
-                    $attribute_name,
-                    %{$self->get_attribute($attribute_name)}
-                );
-            }
-            else {
-                $other->add_attribute(
-                    $attribute_name,
-                    $self->get_attribute($attribute_name)
-                );
-            }
-        }
-    }
-}
-
-sub _apply_methods {
-    my ($self, $other) = @_;
-    foreach my $method_name ($self->get_method_list) {
-        # it if it has one already
-        if ($other->has_method($method_name) &&
-            # and if they are not the same thing ...
-            $other->get_method($method_name)->body != $self->get_method($method_name)->body) {
-            # see if we are composing into a role
-            if ($other->isa('Moose::Meta::Role')) {
-                # method conflicts between roles result
-                # in the method becoming a requirement
-                $other->add_required_methods($method_name);
-                # NOTE:
-                # we have to remove the method from our
-                # role, if this is being called from combine()
-                # which means the meta is an anon class
-                # this *may* cause problems later, but it
-                # is probably fairly safe to assume that
-                # anon classes will only be used internally
-                # or by people who know what they are doing
-                $other->Moose::Meta::Class::remove_method($method_name)
-                    if $other->name =~ /__COMPOSITE_ROLE_SANDBOX__/;
-            }
-            else {
-                next;
-            }
-        }
-        else {
-            # add it, although it could be overriden
-            $other->alias_method(
-                $method_name,
-                $self->get_method($method_name)
-            );
-        }
-    }
-}
-
-sub _apply_override_method_modifiers {
-    my ($self, $other) = @_;
-    foreach my $method_name ($self->get_method_modifier_list('override')) {
-        # it if it has one already then ...
-        if ($other->has_method($method_name)) {
-            # if it is being composed into another role
-            # we have a conflict here, because you cannot
-            # combine an overriden method with a locally
-            # defined one
-            if ($other->isa('Moose::Meta::Role')) {
-                confess "Role '" . $self->name . "' has encountered an 'override' method conflict " .
-                        "during composition (A local method of the same name as been found). This " .
-                        "is fatal error.";
-            }
-            else {
-                # if it is a class, then we
-                # just ignore this here ...
-                next;
-            }
-        }
-        else {
-            # if no local method is found, then we
-            # must check if we are a role or class
-            if ($other->isa('Moose::Meta::Role')) {
-                # if we are a role, we need to make sure
-                # we dont have a conflict with the role
-                # we are composing into
-                if ($other->has_override_method_modifier($method_name) &&
-                    $other->get_override_method_modifier($method_name) != $self->get_override_method_modifier($method_name)) {
-                    confess "Role '" . $self->name . "' has encountered an 'override' method conflict " .
-                            "during composition (Two 'override' methods of the same name encountered). " .
-                            "This is fatal error.";
-                }
-                else {
-                    # if there is no conflict,
-                    # just add it to the role
-                    $other->add_override_method_modifier(
-                        $method_name,
-                        $self->get_override_method_modifier($method_name)
-                    );
-                }
-            }
-            else {
-                # if this is not a role, then we need to
-                # find the original package of the method
-                # so that we can tell the class were to
-                # find the right super() method
-                my $method = $self->get_override_method_modifier($method_name);
-                my ($package) = Class::MOP::get_code_info($method);
-                # if it is a class, we just add it
-                $other->add_override_method_modifier($method_name, $method, $package);
-            }
-        }
-    }
-}
-
-sub _apply_method_modifiers {
-    my ($self, $modifier_type, $other) = @_;
-    my $add = "add_${modifier_type}_method_modifier";
-    my $get = "get_${modifier_type}_method_modifiers";
-    foreach my $method_name ($self->get_method_modifier_list($modifier_type)) {
-        $other->$add(
-            $method_name,
-            $_
-        ) foreach $self->$get($method_name);
-    }
-}
-
-sub _apply_before_method_modifiers { (shift)->_apply_method_modifiers('before' => @_) }
-sub _apply_around_method_modifiers { (shift)->_apply_method_modifiers('around' => @_) }
-sub _apply_after_method_modifiers  { (shift)->_apply_method_modifiers('after'  => @_) }
 
 #####################################################################
 ## NOTE:
