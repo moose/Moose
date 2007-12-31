@@ -39,6 +39,10 @@ sub check_required_methods {
     }
 }
 
+sub check_required_attributes {
+    
+}
+
 sub apply_attributes {
     my ($self, $role1, $role2) = @_;
     foreach my $attribute_name ($role1->get_attribute_list) {
@@ -149,9 +153,11 @@ Moose::Meta::Role::Application::ToRole
 
 =item B<apply>
 
+=item B<check_role_exclusions>
+
 =item B<check_required_methods>
 
-=item B<check_role_exclusions>
+=item B<check_required_attributes>
 
 =item B<apply_attributes>
 

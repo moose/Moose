@@ -68,7 +68,7 @@ foreach my $action (
             get_list  => 'get_required_method_list',
             existence => 'requires_method',
         }
-    },
+    },  
     {
         name        => 'attribute_map',
         attr_reader => 'get_attribute_map',
@@ -350,9 +350,6 @@ sub alias_method {
     $self->add_package_symbol("&${method_name}" => $body);
 }
 
-#sub reset_package_cache_flag  { () }
-#sub update_package_cache_flag { () }
-
 ## ------------------------------------------------------------------
 ## role construction
 ## ------------------------------------------------------------------
@@ -365,15 +362,15 @@ sub apply {
         
     if ($other->isa('Moose::Meta::Role')) {
         require Moose::Meta::Role::Application::ToRole;
-        return Moose::Meta::Role::Application::ToRole->new->apply($self, $other, @args);
+        return Moose::Meta::Role::Application::ToRole->new(@args)->apply($self, $other);
     }
     elsif ($other->isa('Moose::Meta::Class')) {
         require Moose::Meta::Role::Application::ToClass;
-        return Moose::Meta::Role::Application::ToClass->new->apply($self, $other, @args);
+        return Moose::Meta::Role::Application::ToClass->new(@args)->apply($self, $other);
     }  
     else {
         require Moose::Meta::Role::Application::ToInstance;
-        return Moose::Meta::Role::Application::ToInstance->new->apply($self, $other, @args);        
+        return Moose::Meta::Role::Application::ToInstance->new(@args)->apply($self, $other);        
     }  
 }
 

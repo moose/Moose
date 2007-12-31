@@ -7,14 +7,14 @@ use metaclass;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-# no need to get fancy here ...
-sub new { bless {} => (shift) }
+sub new { (shift)->meta->new_object(@_) }
 
 sub apply {
     my $self = shift;
 
     $self->check_role_exclusions(@_);
     $self->check_required_methods(@_);
+    $self->check_required_attributes(@_);
     
     $self->apply_attributes(@_);
     $self->apply_methods(@_);    
@@ -28,6 +28,8 @@ sub apply {
 
 sub check_role_exclusions           { die "Abstract Method" }
 sub check_required_methods          { die "Abstract Method" }
+sub check_required_attributes       { die "Abstract Method" }
+
 sub apply_attributes                { die "Abstract Method" }
 sub apply_methods                   { die "Abstract Method" }
 sub apply_override_method_modifiers { die "Abstract Method" }
@@ -61,9 +63,11 @@ This is the abstract base class for role applications.
 
 =item B<apply>
 
+=item B<check_role_exclusions>
+
 =item B<check_required_methods>
 
-=item B<check_role_exclusions>
+=item B<check_required_attributes>
 
 =item B<apply_attributes>
 

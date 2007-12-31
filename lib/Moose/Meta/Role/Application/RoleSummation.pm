@@ -52,6 +52,10 @@ sub check_required_methods {
     $c->add_required_methods(keys %all_required_methods);
 }
 
+sub check_required_attributes {
+    
+}
+
 sub apply_attributes {
     my ($self, $c) = @_;
     
@@ -182,9 +186,11 @@ bindings and 'disabling' the conflicting bindings
 
 =item B<apply>
 
+=item B<check_role_exclusions>
+
 =item B<check_required_methods>
 
-=item B<check_role_exclusions>
+=item B<check_required_attributes>
 
 =item B<apply_attributes>
 
