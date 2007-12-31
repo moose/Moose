@@ -1,7 +1,8 @@
 Revision history for Perl extension Moose
 
 0.34
-    ~~ more misc. doc fixes ~~
+    ~~~ more misc. doc. fixes ~~~
+    ~~ updated copyright dates ~~
     
     * Moose::Meta::Method::Accessor
       - fixed bug when passing a list of values to 
