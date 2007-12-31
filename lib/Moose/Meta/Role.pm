@@ -132,13 +132,14 @@ sub add_attribute {
     $self->get_attribute_map->{$name} = $attr_desc;
 }
 
-sub _clean_up_required_methods {
-    my $self = shift;
-    foreach my $method ($self->get_required_method_list) {
-        $self->remove_required_methods($method)
-            if $self->has_method($method);
-    }
-}
+# DEPRECATED 
+# sub _clean_up_required_methods {
+#     my $self = shift;
+#     foreach my $method ($self->get_required_method_list) {
+#         $self->remove_required_methods($method)
+#             if $self->has_method($method);
+#     }
+# }
 
 ## ------------------------------------------------------------------
 ## method modifiers
@@ -357,19 +358,22 @@ sub alias_method {
 ## ------------------------------------------------------------------
 
 sub apply {
-    my ($self, $other) = @_;
-    
+    my ($self, $other, @args) = @_;
+
+    (blessed($other))
+        || confess "You must pass in an blessed instance";
+        
     if ($other->isa('Moose::Meta::Role')) {
         require Moose::Meta::Role::Application::ToRole;
-        return Moose::Meta::Role::Application::ToRole->new->apply($self, $other);
+        return Moose::Meta::Role::Application::ToRole->new->apply($self, $other, @args);
     }
     elsif ($other->isa('Moose::Meta::Class')) {
         require Moose::Meta::Role::Application::ToClass;
-        return Moose::Meta::Role::Application::ToClass->new->apply($self, $other);
+        return Moose::Meta::Role::Application::ToClass->new->apply($self, $other, @args);
     }  
     else {
         require Moose::Meta::Role::Application::ToInstance;
-        return Moose::Meta::Role::Application::ToInstance->new->apply($self, $other);        
+        return Moose::Meta::Role::Application::ToInstance->new->apply($self, $other, @args);        
     }  
 }
 

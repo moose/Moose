@@ -32,9 +32,10 @@ sub apply_attributes                { die "Abstract Method" }
 sub apply_methods                   { die "Abstract Method" }
 sub apply_override_method_modifiers { die "Abstract Method" }
 sub apply_method_modifiers          { die "Abstract Method" }
-sub apply_before_method_modifiers   { die "Abstract Method" }
-sub apply_around_method_modifiers   { die "Abstract Method" }
-sub apply_after_method_modifiers    { die "Abstract Method" }
+
+sub apply_before_method_modifiers   { (shift)->apply_method_modifiers('before' => @_) }
+sub apply_around_method_modifiers   { (shift)->apply_method_modifiers('around' => @_) }
+sub apply_after_method_modifiers    { (shift)->apply_method_modifiers('after'  => @_) }
 
 1;
 

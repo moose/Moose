@@ -126,10 +126,6 @@ sub apply_method_modifiers {
     }
 }
 
-sub apply_before_method_modifiers { (shift)->apply_method_modifiers('before' => @_) }
-sub apply_around_method_modifiers { (shift)->apply_method_modifiers('around' => @_) }
-sub apply_after_method_modifiers  { (shift)->apply_method_modifiers('after'  => @_) }
-
 
 1;
 
@@ -162,12 +158,6 @@ Moose::Meta::Role::Application::ToRole
 =item B<apply_methods>
 
 =item B<apply_method_modifiers>
-
-=item B<apply_before_method_modifiers>
-
-=item B<apply_after_method_modifiers>
-
-=item B<apply_around_method_modifiers>
 
 =item B<apply_override_method_modifiers>
 
