@@ -92,10 +92,33 @@ use Moose::Util::TypeConstraints;
         with => sub {
             my $class = $CALLER;
             return subname 'Moose::with' => sub (@) {
-                my (@roles) = @_;
-                confess "Must specify at least one role" unless @roles;
-                Class::MOP::load_class($_) for @roles;
-                $class->meta->_apply_all_roles(@roles);
+                my (@args) = @_;
+                confess "Must specify at least one role" unless @args;
+                
+                my $roles = Data::OptList::mkopt(\@args);
+                
+                #use Data::Dumper;
+                #warn Dumper $roles;
+                
+                Class::MOP::load_class($_->[0]) for @$roles;
+                
+                ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
+                        foreach @$roles;
+
+                my $meta = $class->meta;
+
+                if (scalar @$roles == 1) {
+                    my ($role, $params) = @{$roles->[0]};
+                    $role->meta->apply($meta, (defined $params ? %$params : ()));
+                }
+                else {
+                    Moose::Meta::Role->combine(
+                        map { $_->[0]->meta } @$roles
+                    )->apply($meta);
+                }
+                
+                #$class->meta->_apply_all_roles(@roles);
             };
         },
         has => sub {

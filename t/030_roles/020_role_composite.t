@@ -41,6 +41,13 @@ BEGIN {
         Role::Baz->meta,        
     ], '... got the right roles');
     
+    ok($c->does_role($_), '... our composite does the role ' . $_)
+        for qw(
+            Role::Foo
+            Role::Bar
+            Role::Baz            
+        );
+    
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
     } '... this composed okay';    

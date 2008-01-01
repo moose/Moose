@@ -15,9 +15,9 @@ our $AUTHORITY = 'cpan:STEVAN';
 use base 'Moose::Meta::Role::Application';
 
 sub apply {
-    my ($self, $role1, $role2) = @_;
-    $self->SUPER::apply($role1, $role2);
-    $role2->add_role($role1);    
+    my ($self, $role1, $role2) = @_;    
+    $self->SUPER::apply($role1, $role2);   
+    $role2->add_role($role1);     
 }
 
 sub check_role_exclusions {
@@ -65,6 +65,9 @@ sub apply_attributes {
 sub apply_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $method_name ($role1->get_method_list) {
+        
+        next if $self->is_method_excluded($method_name);
+        
         # it if it has one already
         if ($role2->has_method($method_name) &&
             # and if they are not the same thing ...

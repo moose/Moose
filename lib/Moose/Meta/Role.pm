@@ -314,7 +314,7 @@ sub get_method_map {
             next if ($pkg  || '') ne $role_name &&
                     ($name || '') ne '__ANON__';
         }
-
+        
         $map->{$symbol} = $method_metaclass->wrap($code);
     }
 
@@ -323,7 +323,7 @@ sub get_method_map {
 
 sub get_method { 
     my ($self, $name) = @_;
-    $self->get_method_map->{$name}
+    $self->get_method_map->{$name};
 }
 
 sub has_method {

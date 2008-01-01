@@ -54,11 +54,12 @@ sub alias_method {
     (defined $method_name && $method_name)
         || confess "You must define a method name";
 
-    my $body = (blessed($method) ? $method->body : $method);
-    ('CODE' eq (reftype($body) || ''))
-        || confess "Your code block must be a CODE reference";
+    # make sure to bless the 
+    # method if nessecary 
+    $method = $self->method_metaclass->wrap($method) 
+        if !blessed($method);
 
-    $self->get_method_map->{$method_name} = $body;
+    $self->get_method_map->{$method_name} = $method;
 }
 
 1;

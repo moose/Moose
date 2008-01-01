@@ -7,7 +7,32 @@ use metaclass;
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub new { (shift)->meta->new_object(@_) }
+__PACKAGE__->meta->add_attribute('method_exclusions' => (
+    init_arg => 'excludes',
+    reader   => 'get_method_exclusions',
+    default  => sub { [] }
+));
+
+sub new { 
+    my ($class, %params) = @_;
+    
+    if (exists $params{excludes}) {
+        # I wish we had coercion here :)
+        $params{excludes} = (ref $params{excludes} eq 'ARRAY' 
+                                ? $params{excludes} 
+                                : [ $params{excludes} ]);
+    }
+    
+    $class->meta->new_object(%params);
+}
+
+sub is_method_excluded {
+    my ($self, $method_name) = @_;
+    foreach (@{$self->get_method_exclusions}) {
+        return 1 if $_ eq $method_name;
+    }
+    return 0;
+}
 
 sub apply {
     my $self = shift;
@@ -60,6 +85,10 @@ This is the abstract base class for role applications.
 =item B<new>
 
 =item B<meta>
+
+=item B<get_method_exclusions>
+
+=item B<is_method_excluded>
 
 =item B<apply>
 
