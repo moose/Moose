@@ -114,25 +114,34 @@ sub apply_methods {
         
         next if $self->is_method_excluded($method_name);
         
-        my $orig_method_name = $method_name;
-        
-        if ($self->is_method_aliased($method_name)) {
-            $method_name = $self->get_method_aliases->{$method_name};
-        }
-        
         # it if it has one already
         if ($class->has_method($method_name) &&
             # and if they are not the same thing ...
             $class->get_method($method_name)->body != $role->get_method($method_name)->body) {
             next;
         }
-        else {
+        else {           
+            
             # add it, although it could be overriden
             $class->alias_method(
                 $method_name,
-                $role->get_method($orig_method_name)
-            );
+                $role->get_method($method_name)
+            );         
         }
+        
+        if ($self->is_method_aliased($method_name)) {
+            my $aliased_method_name = $self->get_method_aliases->{$method_name};
+            # it if it has one already
+            if ($class->has_method($aliased_method_name) &&
+                # and if they are not the same thing ...
+                $class->get_method($aliased_method_name)->body != $role->get_method($method_name)->body) {
+                confess "Cannot create a method alias if a local method of the same name exists";
+            }            
+            $class->alias_method(
+                $aliased_method_name,
+                $role->get_method($method_name)
+            );                
+        }        
     }
     # we must reset the cache here since
     # we are just aliasing methods, otherwise
