@@ -32,7 +32,7 @@ ok(Number(5), '... this is a Num');
 ok(!defined(Number('Foo')), '... this is not a Num');
 {
     my $number_tc = Moose::Util::TypeConstraints::find_type_constraint('Number');
-    is($number_tc->name, 'Number', '... type constraint stringifies to name');
+    is("$number_tc", 'Number', '... type constraint stringifies to name');
 }
 
 ok(String('Foo'), '... this is a Str');
