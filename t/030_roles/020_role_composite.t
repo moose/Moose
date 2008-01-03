@@ -20,7 +20,10 @@ BEGIN {
     use Moose::Role;
 
     package Role::Baz;
-    use Moose::Role;         
+    use Moose::Role;      
+    
+    package Role::Gorch;
+    use Moose::Role;       
 }
 
 {
@@ -50,5 +53,31 @@ BEGIN {
     
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this composed okay';    
+    } '... this composed okay';   
+    
+    ##... now nest 'em
+    { 
+        my $c2 = Moose::Meta::Role::Composite->new(
+            roles => [
+                $c,
+                Role::Gorch->meta,
+            ]
+        );
+        isa_ok($c2, 'Moose::Meta::Role::Composite');
+
+        is($c2->name, 'Role::Foo|Role::Bar|Role::Baz|Role::Gorch', '... got the composite role name');
+
+        is_deeply($c2->get_roles, [
+            $c,
+            Role::Gorch->meta,  
+        ], '... got the right roles');
+
+        ok($c2->does_role($_), '... our composite does the role ' . $_)
+            for qw(
+                Role::Foo
+                Role::Bar
+                Role::Baz     
+                Role::Gorch                        
+            );     
+    }
 }

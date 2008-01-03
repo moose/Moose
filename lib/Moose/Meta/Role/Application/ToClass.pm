@@ -42,7 +42,10 @@ sub check_required_methods {
     # the require methods stuff.
     foreach my $required_method_name ($role->get_required_method_list) {
 
-        unless ($class->find_method_by_name($required_method_name)) {
+        if (!$class->find_method_by_name($required_method_name)) {
+            
+            next if $self->is_aliased_method($required_method_name);
+            
             confess "'" . $role->name . "' requires the method '$required_method_name' " .
                     "to be implemented by '" . $class->name . "'";
         }
@@ -111,6 +114,12 @@ sub apply_methods {
         
         next if $self->is_method_excluded($method_name);
         
+        my $orig_method_name = $method_name;
+        
+        if ($self->is_method_aliased($method_name)) {
+            $method_name = $self->get_method_aliases->{$method_name};
+        }
+        
         # it if it has one already
         if ($class->has_method($method_name) &&
             # and if they are not the same thing ...
@@ -121,7 +130,7 @@ sub apply_methods {
             # add it, although it could be overriden
             $class->alias_method(
                 $method_name,
-                $role->get_method($method_name)
+                $role->get_method($orig_method_name)
             );
         }
     }

@@ -13,6 +13,12 @@ __PACKAGE__->meta->add_attribute('method_exclusions' => (
     default  => sub { [] }
 ));
 
+__PACKAGE__->meta->add_attribute('method_aliases' => (
+    init_arg => 'alias',
+    reader   => 'get_method_aliases',
+    default  => sub { {} }
+));
+
 sub new { 
     my ($class, %params) = @_;
     
@@ -32,6 +38,17 @@ sub is_method_excluded {
         return 1 if $_ eq $method_name;
     }
     return 0;
+}
+
+sub is_method_aliased {
+    my ($self, $method_name) = @_;
+    exists $self->get_method_aliases->{$method_name} ? 1 : 0
+}
+
+sub is_aliased_method {
+    my ($self, $method_name) = @_;
+    my %aliased_names = reverse %{$self->get_method_aliases};
+    exists $aliased_names{$method_name} ? 1 : 0;
 }
 
 sub apply {
@@ -89,6 +106,12 @@ This is the abstract base class for role applications.
 =item B<get_method_exclusions>
 
 =item B<is_method_excluded>
+
+=item B<get_method_aliases>
+
+=item B<is_aliased_method>
+
+=item B<is_method_aliased>
 
 =item B<apply>
 
