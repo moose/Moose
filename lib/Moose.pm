@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.33';
+our $VERSION   = '0.34';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -92,10 +92,33 @@ use Moose::Util::TypeConstraints;
         with => sub {
             my $class = $CALLER;
             return subname 'Moose::with' => sub (@) {
-                my (@roles) = @_;
-                confess "Must specify at least one role" unless @roles;
-                Class::MOP::load_class($_) for @roles;
-                $class->meta->_apply_all_roles(@roles);
+                my (@args) = @_;
+                confess "Must specify at least one role" unless @args;
+                
+                my $roles = Data::OptList::mkopt(\@args);
+                
+                #use Data::Dumper;
+                #warn Dumper $roles;
+                
+                Class::MOP::load_class($_->[0]) for @$roles;
+                
+                ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
+                        foreach @$roles;
+
+                my $meta = $class->meta;
+
+                if (scalar @$roles == 1) {
+                    my ($role, $params) = @{$roles->[0]};
+                    $role->meta->apply($meta, (defined $params ? %$params : ()));
+                }
+                else {
+                    Moose::Meta::Role->combine(
+                        map { $_->[0]->meta } @$roles
+                    )->apply($meta);
+                }
+                
+                #$class->meta->_apply_all_roles(@roles);
             };
         },
         has => sub {
@@ -449,9 +472,9 @@ try and write a recipe on them soon.
 The default behavior here is to just load C<$metaclass_name>; however, we also
 have a way to alias to a shorter name. This will first look to see if
 B<Moose::Meta::Attribute::Custom::$metaclass_name> exists. If it does, Moose
-will then check to see if that has the method C<register_implemenetation>, which
+will then check to see if that has the method C<register_implementation>, which
 should return the actual name of the custom attribute metaclass. If there is no
-C<register_implemenetation> method, it will fall back to using
+C<register_implementation> method, it will fall back to using
 B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
 
 =item I<trigger =E<gt> $code>
@@ -878,7 +901,7 @@ Shawn (sartak) Moore
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

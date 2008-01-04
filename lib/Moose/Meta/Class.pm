@@ -185,7 +185,7 @@ sub add_override_method_modifier {
         my @args = @_;
         no warnings 'redefine';
         if ($Moose::SUPER_SLOT{$_super_package}) {
-            local *{$Moose::SUPER_SLOT{$_super_package}} = sub { $super->(@args) };
+            local *{$Moose::SUPER_SLOT{$_super_package}} = sub { $super->body->(@args) };
             return $method->(@args);
         } else {
             confess "Trying to call override modifier'd method without super()";
@@ -219,10 +219,10 @@ sub add_augment_method_modifier {
                 local *{$Moose::INNER_SLOT{$_super_package}} = sub {};
                 $method->(@args);
             };
-            return $super->(@args);
+            return $super->body->(@args);
         }
         else {
-            return $super->(@args);
+            return $super->body->(@args);
         }
     });
 }
@@ -498,7 +498,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

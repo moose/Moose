@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.08';
+our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -27,13 +27,13 @@ sub generate_accessor_method_inline {
 
     my $code = 'sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
-    . 'if (scalar(@_) == 2) {' . "\n"
+    . 'if (scalar(@_) >= 2) {' . "\n"
         . $self->_inline_copy_value . "\n"
         . $self->_inline_check_required . "\n"
         . $self->_inline_check_coercion . "\n"
         . $self->_inline_check_constraint($value_name) . "\n"
-                . $self->_inline_store($inv, $value_name) . "\n"
-                . $self->_inline_trigger($inv, $value_name) . "\n"
+        . $self->_inline_store($inv, $value_name) . "\n"
+        . $self->_inline_trigger($inv, $value_name) . "\n"
     . ' }' . "\n"
     . $self->_inline_check_lazy . "\n"
     . $self->_inline_post_body(@_) . "\n"
@@ -50,6 +50,7 @@ sub generate_accessor_method_inline {
                                     )
                                 : undef;
 
+    #warn $code;
     my $sub = eval $code;
     confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
@@ -68,10 +69,10 @@ sub generate_writer_method_inline {
     . $self->_inline_copy_value
     . $self->_inline_check_required
     . $self->_inline_check_coercion
-        . $self->_inline_check_constraint($value_name)
-        . $self->_inline_store($inv, $value_name)
-        . $self->_inline_post_body(@_)
-        . $self->_inline_trigger($inv, $value_name)
+    . $self->_inline_check_constraint($value_name)
+    . $self->_inline_store($inv, $value_name)
+    . $self->_inline_post_body(@_)
+    . $self->_inline_trigger($inv, $value_name)
     . ' }';
 
     # NOTE:
@@ -106,6 +107,7 @@ sub generate_reader_method_inline {
                                 ? $attr->type_constraint->_compiled_type_constraint
                                 : undef;
 
+                                
     my $sub = eval $code;
     confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;
@@ -339,7 +341,7 @@ Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

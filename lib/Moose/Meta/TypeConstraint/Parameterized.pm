@@ -40,30 +40,40 @@ sub compile_type_constraint {
         Moose::Util::TypeConstraints::find_type_constraint('HashRef')
         ->coercion;
 
+    # ArrayRef[Foo] will check each element for the Foo constraint
     my $array_constraint = sub {
         foreach my $x (@$_) {
             ($type_parameter->check($x)) || return
         } 1;
     };
 
+    # HashRef[Foo] will check each value for the Foo constraint
     my $hash_constraint = sub {
         foreach my $x (values %$_) {
             ($type_parameter->check($x)) || return
         } 1;
     };
 
+    # if this is a subtype of ArrayRef, then we can use the ArrayRef[Foo]
+    # constraint directly
     if ($self->is_subtype_of('ArrayRef')) {
         $constraint = $array_constraint;
     }
+    # if this is a subtype of HashRef, then we can use the HashRef[Foo]
+    # constraint directly
     elsif ($self->is_subtype_of('HashRef')) {
         $constraint = $hash_constraint;
     }
+    # if we can coerce this type to an ArrayRef, do it and use the regular
+    # ArrayRef[Foo] constraint
     elsif ($array_coercion && $array_coercion->has_coercion_for_type($name)) {
         $constraint = sub {
             local $_ = $array_coercion->coerce($_);
             $array_constraint->(@_);
         };
     }
+    # if we can coerce this type to a HashRef, do it and use the regular
+    # HashRef[Foo] constraint
     elsif ($hash_coercion && $hash_coercion->has_coercion_for_type($name)) {
         $constraint = sub {
             local $_ = $hash_coercion->coerce($_);
@@ -118,7 +128,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

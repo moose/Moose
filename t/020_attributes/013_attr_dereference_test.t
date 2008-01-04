@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -55,4 +55,29 @@ BEGIN {
         [],
         '... got the right dereferenced value'
     );
+}
+
+{
+    package AutoDeref;
+    use Moose;
+
+    has 'bar' => (
+        is         => 'rw',
+        isa        => 'ArrayRef[Int]',
+        auto_deref => 1,
+    );
+}
+
+{
+    my $autoderef = AutoDeref->new;
+    
+    dies_ok {
+        $autoderef->bar(1, 2, 3);
+    } '... its auto-de-ref-ing, not auto-en-ref-ing';
+    
+    lives_ok  { 
+        $autoderef->bar([ 1, 2, 3 ]) 
+    } '... set the results of bar correctly';
+
+    is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], '... auto-dereffed correctly';
 }

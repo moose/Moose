@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 63;
+use Test::More tests => 87;
 use Test::Exception;
 
 BEGIN {  
@@ -48,7 +48,7 @@ BEGIN {
     extends 'BarClass';
        with 'FooRole';
     
-    sub blau { 'FooClass::blau' }
+    sub blau { 'FooClass::blau' } # << the role wraps this ...
 
     sub goo { 'FooClass::goo' }  # << overrides the one from the role ... 
     
@@ -116,42 +116,48 @@ isa_ok($foo, 'FooClass');
 my $foobar = FooBarClass->new();
 isa_ok($foobar, 'FooBarClass');
 
-can_ok($foo, 'does');
-ok($foo->does('FooRole'), '... an instance of FooClass does FooRole');
-ok(!$foo->does('OtherRole'), '... and instance of FooClass does not do OtherRole');
-
-can_ok($foobar, 'does');
-ok($foobar->does('FooRole'), '... an instance of FooBarClass does FooRole');
-ok($foobar->does('BarRole'), '... an instance of FooBarClass does BarRole');
-ok(!$foobar->does('OtherRole'), '... and instance of FooBarClass does not do OtherRole');
-
-for my $method (qw/bar baz foo boo goo blau/) {
-    can_ok($foo, $method);
-}
-
-is($foo->foo, 'FooRole::foo', '... got the right value of foo');
 is($foo->goo, 'FooClass::goo', '... got the right value of goo');
-
-ok(!defined($foo->baz), '... $foo->baz is undefined');
-ok(!defined($foo->bar), '... $foo->bar is undefined');
-
-dies_ok {
-    $foo->baz(1)
-} '... baz is a read-only accessor';
-
-dies_ok {
-    $foo->bar(1)
-} '... bar is a read-write accessor with a type constraint';
-
-my $foo2 = FooClass->new();
-isa_ok($foo2, 'FooClass');
-
-lives_ok {
-    $foo->bar($foo2)
-} '... bar is a read-write accessor with a type constraint';
-
-is($foo->bar, $foo2, '... got the right value for bar now');
+is($foobar->goo, 'FooRole::goo', '... got the right value of goo');    
 
 is($foo->boo, 'FooRole::boo -> BarClass::boo', '... got the right value from ->boo');
-is($foo->blau, 'FooRole::blau -> FooClass::blau', '... got the right value from ->blau');
+is($foobar->boo, 'FooRole::boo -> FooRole::boo -> BarClass::boo', '... got the right value from ->boo (double wrapped)');    
 
+is($foo->blau, 'FooRole::blau -> FooClass::blau', '... got the right value from ->blau');
+is($foobar->blau, 'FooRole::blau -> FooRole::blau -> FooClass::blau', '... got the right value from ->blau');
+
+foreach my $foo ($foo, $foobar) {
+    can_ok($foo, 'does');
+    ok($foo->does('FooRole'), '... an instance of FooClass does FooRole');
+    ok(!$foo->does('OtherRole'), '... and instance of FooClass does not do OtherRole');
+
+    can_ok($foobar, 'does');
+    ok($foobar->does('FooRole'), '... an instance of FooBarClass does FooRole');
+    ok($foobar->does('BarRole'), '... an instance of FooBarClass does BarRole');
+    ok(!$foobar->does('OtherRole'), '... and instance of FooBarClass does not do OtherRole');
+
+    for my $method (qw/bar baz foo boo goo blau/) {
+        can_ok($foo, $method);
+    }
+
+    is($foo->foo, 'FooRole::foo', '... got the right value of foo');
+
+    ok(!defined($foo->baz), '... $foo->baz is undefined');
+    ok(!defined($foo->bar), '... $foo->bar is undefined');
+
+    dies_ok {
+        $foo->baz(1)
+    } '... baz is a read-only accessor';
+
+    dies_ok {
+        $foo->bar(1)
+    } '... bar is a read-write accessor with a type constraint';
+
+    my $foo2 = FooClass->new();
+    isa_ok($foo2, 'FooClass');
+
+    lives_ok {
+        $foo->bar($foo2)
+    } '... bar is a read-write accessor with a type constraint';
+
+    is($foo->bar, $foo2, '... got the right value for bar now');
+}

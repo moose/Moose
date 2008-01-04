@@ -8,7 +8,7 @@ use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.15';
+our $VERSION   = '0.16';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -551,7 +551,7 @@ value fails to pass, the set operation dies with a L<Carp/confess>.
 Any coercion to convert values is done before checking the type constraint.
 
 To check a value against a type constraint before setting it, fetch the
-attribute instance using L<Moose::Meta::Attribute/find_attribute_by_name>,
+attribute instance using L<Class::MOP::Class/find_attribute_by_name>,
 fetch the type_constraint from the attribute using L<Moose::Meta::Attribute/type_constraint>
 and call L<Moose::Meta::TypeConstraint/check>. See L<Moose::Cookbook::RecipeX>
 for an example.
@@ -680,7 +680,7 @@ Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

@@ -8,6 +8,7 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Sub::Name    'subname';
 
+use Data::OptList;
 use Sub::Exporter;
 
 our $VERSION   = '0.07';
@@ -25,98 +26,107 @@ use Moose::Util::TypeConstraints;
         my $role = $CALLER;
 
         return $METAS{$role} if exists $METAS{$role};
-        
+
         # make a subtype for each Moose class
         subtype $role
             => as 'Role'
             => where { $_->does($role) }
-            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }              
-        unless find_type_constraint($role);        
+            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }
+        unless find_type_constraint($role);
 
-    	my $meta;
-    	if ($role->can('meta')) {
-    		$meta = $role->meta();
-    		(blessed($meta) && $meta->isa('Moose::Meta::Role'))
+        my $meta;
+        if ($role->can('meta')) {
+            $meta = $role->meta();
+            (blessed($meta) && $meta->isa('Moose::Meta::Role'))
                 || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
-    	}
-    	else {
-    		$meta = Moose::Meta::Role->initialize($role);
-    		$meta->Moose::Meta::Class::add_method('meta' => sub { $meta })		
-    	}
+        }
+        else {
+            $meta = Moose::Meta::Role->initialize($role);
+            $meta->alias_method('meta' => sub { $meta });
+        }
 
         return $METAS{$role} = $meta;
     }
- 
-	
-    my %exports = (   
+
+
+    my %exports = (
         extends => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::extends' => sub { 
+            return subname 'Moose::Role::extends' => sub {
                 confess "Moose::Role does not currently support 'extends'"
-	        };
-	    },
-	    with => sub {
-	        my $meta = _find_meta();
-	        return subname 'Moose::Role::with' => sub (@) { 
-                my (@roles) = @_;
-                confess "Must specify at least one role" unless @roles;
-                Class::MOP::load_class($_) for @roles;
-                ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
-                    || confess "You can only consume roles, $_ is not a Moose role"
-                        foreach @roles;
-                if (scalar @roles == 1) {
-                    $roles[0]->meta->apply($meta);
+            };
+        },
+        with => sub {
+            my $meta = _find_meta();
+            return subname 'Moose::Role::with' => sub (@) {
+                my (@args) = @_;
+                confess "Must specify at least one role" unless @args;
+                
+                my $roles = Data::OptList::mkopt(\@args);
+                
+                #use Data::Dumper;
+                #warn Dumper $roles;
+                
+                Class::MOP::load_class($_->[0]) for @$roles;
+                
+                ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
+                    || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
+                        foreach @$roles;
+
+                if (scalar @$roles == 1) {
+                    my ($role, $params) = @{$roles->[0]};
+                    $role->meta->apply($meta, (defined $params ? %$params : ()));
                 }
                 else {
                     Moose::Meta::Role->combine(
-                        map { $_->meta } @roles
+                        map { $_->[0]->meta } @$roles
                     )->apply($meta);
                 }
             };
-	    },	
+        },
         requires => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::requires' => sub (@) { 
+            return subname 'Moose::Role::requires' => sub (@) {
                 confess "Must specify at least one method" unless @_;
                 $meta->add_required_methods(@_);
-	        };
-	    },	
+            };
+        },
         excludes => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::excludes' => sub (@) { 
+            return subname 'Moose::Role::excludes' => sub (@) {
                 confess "Must specify at least one role" unless @_;
                 $meta->add_excluded_roles(@_);
-	        };
-	    },	    
+            };
+        },
         has => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::has' => sub ($;%) { 
-		        my ($name, %options) = @_;
-		        $meta->add_attribute($name, %options) 
-	        };
-	    },
+            return subname 'Moose::Role::has' => sub ($;%) {
+                my ($name, %options) = @_;
+                $meta->add_attribute($name, %options)
+            };
+        },
         before => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::before' => sub (@&) { 
+            return subname 'Moose::Role::before' => sub (@&) {
                 my $code = pop @_;
                 $meta->add_before_method_modifier($_, $code) for @_;
-	        };
-	    },
+            };
+        },
         after => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::after' => sub (@&) { 
-		        my $code = pop @_;
-		        $meta->add_after_method_modifier($_, $code) for @_;
-	        };
-	    },
+            return subname 'Moose::Role::after' => sub (@&) {
+                my $code = pop @_;
+                $meta->add_after_method_modifier($_, $code) for @_;
+            };
+        },
         around => sub {
             my $meta = _find_meta();
-            return subname 'Moose::Role::around' => sub (@&) { 
-		        my $code = pop @_;
-		        $meta->add_around_method_modifier($_, $code) for @_;
-	        };
-	    },
-	    super => sub {
+            return subname 'Moose::Role::around' => sub (@&) {
+                my $code = pop @_;
+                $meta->add_around_method_modifier($_, $code) for @_;
+            };
+        },
+        super => sub {
             {
               no strict 'refs';
               $Moose::SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
@@ -129,35 +139,35 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::Role::override' => sub ($&) {
                 my ($name, $code) = @_;
                 $meta->add_override_method_modifier($name, $code);
-	        };
-	    },		
+            };
+        },
         inner => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::inner' => sub {
                 confess "Moose::Role cannot support 'inner'";
-	        };
-	    },
+            };
+        },
         augment => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::augment' => sub {
                 confess "Moose::Role cannot support 'augment'";
-	        };
-	    },
+            };
+        },
         confess => sub {
             return \&Carp::confess;
         },
         blessed => sub {
             return \&Scalar::Util::blessed;
-        }	    
-	);	
+        }
+    );
 
-    my $exporter = Sub::Exporter::build_exporter({ 
+    my $exporter = Sub::Exporter::build_exporter({
         exports => \%exports,
         groups  => {
             default => [':all']
         }
     });
-    
+
     sub import {
         $CALLER =
             ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
@@ -165,9 +175,9 @@ use Moose::Util::TypeConstraints;
           && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
           :                                caller();
 
-        
+
         strict->import;
-        warnings->import;        
+        warnings->import;
 
         # we should never export to main
         return if $CALLER eq 'main';
@@ -191,21 +201,21 @@ Moose::Role - The Moose Role
 
   package Eq;
   use Moose::Role; # automatically turns on strict and warnings
-  
+
   requires 'equal';
-  
-  sub no_equal { 
+
+  sub no_equal {
       my ($self, $other) = @_;
       !$self->equal($other);
   }
-  
+
   # ... then in your classes
-  
+
   package Currency;
   use Moose; # automatically turns on strict and warnings
-  
+
   with 'Eq';
-  
+
   sub equal {
       my ($self, $other) = @_;
       $self->as_float == $other->as_float;
@@ -233,13 +243,13 @@ Moose::Role also offers two role-specific keyword exports:
 
 =item B<requires (@method_names)>
 
-Roles can require that certain methods are implemented by any class which 
+Roles can require that certain methods are implemented by any class which
 C<does> the role.
 
 =item B<excludes (@role_names)>
 
 Roles can C<exclude> other roles, in effect saying "I can never be combined
-with these C<@role_names>". This is a feature which should not be used 
+with these C<@role_names>". This is a feature which should not be used
 lightly.
 
 =back
@@ -252,12 +262,12 @@ Role support has only a few caveats:
 
 =item *
 
-Roles cannot use the C<extends> keyword; it will throw an exception for now. 
-The same is true of the C<augment> and C<inner> keywords (not sure those 
-really make sense for roles). All other Moose keywords will be I<deferred> 
+Roles cannot use the C<extends> keyword; it will throw an exception for now.
+The same is true of the C<augment> and C<inner> keywords (not sure those
+really make sense for roles). All other Moose keywords will be I<deferred>
 so that they can be applied to the consuming class.
 
-=item * 
+=item *
 
 Role composition does its best to B<not> be order-sensitive when it comes to
 conflict resolution and requirements detection. However, it is order-sensitive
@@ -272,8 +282,8 @@ ordering.
 
 =item *
 
-The C<requires> keyword currently only works with actual methods. A method 
-modifier (before/around/after and override) will not count as a fufillment 
+The C<requires> keyword currently only works with actual methods. A method
+modifier (before/around/after and override) will not count as a fufillment
 of the requirement, and neither will an autogenerated accessor for an attribute.
 
 It is likely that attribute accessors will eventually be allowed to fufill those
@@ -284,7 +294,7 @@ instead. This decision has not yet been finalized.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -296,11 +306,11 @@ Christian Hansen E<lt>chansen@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006, 2007 by Infinity Interactive, Inc.
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
