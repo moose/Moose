@@ -394,7 +394,10 @@ sub install_accessors {
             # any of these methods, as they will
             # override the ones in your class, which
             # is almost certainly not what you want.
-            next if $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
+
+            # FIXME warn when $handle was explicitly specified, but not if the source is a regex or something
+            #cluck("Not delegating method '$handle' because it is a core method") and
+            next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
             if ((reftype($method_to_call) || '') eq 'CODE') {
                 $associated_class->add_method($handle => $method_to_call);
