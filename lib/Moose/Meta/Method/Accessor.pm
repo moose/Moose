@@ -14,6 +14,30 @@ use base 'Moose::Meta::Method',
 
 ## Inline method generators
 
+sub _eval_code {
+    my ( $self, $code ) = @_;
+
+    # NOTE:
+    # set up the environment
+    my $attr        = $self->associated_attribute;
+    my $attr_name   = $attr->name;
+
+    my $type_constraint_obj  = $attr->type_constraint;
+    my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
+    my $type_constraint = $type_constraint_obj
+                                ? (
+                                    $type_constraint_obj->has_hand_optimized_type_constraint
+                                        ? $type_constraint_obj->hand_optimized_type_constraint
+                                        : $type_constraint_obj->_compiled_type_constraint
+                                    )
+                                : undef;
+
+    my $sub = eval $code;
+    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
+    return $sub;
+
+}
+
 sub generate_accessor_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
@@ -22,10 +46,7 @@ sub generate_accessor_method_inline {
     my $slot_access = $self->_inline_access($inv, $attr_name);
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
-    my $type_constraint_obj  = $attr->type_constraint;
-    my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
-
-    my $code = 'sub { ' . "\n"
+    $self->_eval_code('sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
     . 'if (scalar(@_) >= 2) {' . "\n"
         . $self->_inline_copy_value . "\n"
@@ -38,22 +59,7 @@ sub generate_accessor_method_inline {
     . $self->_inline_check_lazy . "\n"
     . $self->_inline_post_body(@_) . "\n"
     . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv)) . "\n"
-    . ' }';
-
-    # NOTE:
-    # set up the environment
-    my $type_constraint = $attr->type_constraint
-                                ? (
-                                    $attr->type_constraint->has_hand_optimized_type_constraint
-                                        ? $attr->type_constraint->hand_optimized_type_constraint
-                                        : $attr->type_constraint->_compiled_type_constraint
-                                    )
-                                : undef;
-
-    #warn $code;
-    my $sub = eval $code;
-    confess "Could not create accessor for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;
+    . ' }');
 }
 
 sub generate_writer_method_inline {
@@ -64,7 +70,7 @@ sub generate_writer_method_inline {
     my $slot_access = $self->_inline_get($inv, $attr_name);
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
-    my $code = 'sub { '
+    $self->_eval_code('sub { '
     . $self->_inline_pre_body(@_)
     . $self->_inline_copy_value
     . $self->_inline_check_required
@@ -73,17 +79,7 @@ sub generate_writer_method_inline {
     . $self->_inline_store($inv, $value_name)
     . $self->_inline_post_body(@_)
     . $self->_inline_trigger($inv, $value_name)
-    . ' }';
-
-    # NOTE:
-    # set up the environment
-    my $type_constraint = $attr->type_constraint
-                                ? $attr->type_constraint->_compiled_type_constraint
-                                : undef;
-
-    my $sub = eval $code;
-    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;
+    . ' }');
 }
 
 sub generate_reader_method_inline {
@@ -93,24 +89,13 @@ sub generate_reader_method_inline {
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_get($inv, $attr_name);
 
-    my $code = 'sub {'
+    $self->_eval_code('sub {'
     . $self->_inline_pre_body(@_)
     . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
     . $self->_inline_check_lazy
     . $self->_inline_post_body(@_)
     . 'return ' . $self->_inline_auto_deref( $slot_access ) . ';'
-    . '}';
-
-    # NOTE:
-    # set up the environment
-    my $type_constraint = $attr->type_constraint
-                                ? $attr->type_constraint->_compiled_type_constraint
-                                : undef;
-
-                                
-    my $sub = eval $code;
-    confess "Could not create reader for '$attr_name' because $@ \n code: $code" if $@;
-    return $sub;
+    . '}');
 }
 
 sub _inline_copy_value {
