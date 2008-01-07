@@ -6,6 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'reftype';
 use Carp         'confess';
+use Sub::Name    'subname';
 use overload     ();
 
 our $VERSION   = '0.16';
@@ -385,6 +386,8 @@ sub install_accessors {
         my $associated_class = $self->associated_class;
         foreach my $handle (keys %handles) {
             my $method_to_call = $handles{$handle};
+            my $class_name = $associated_class->name;
+            my $name = "${class_name}::${handle}";
 
             (!$associated_class->has_method($handle))
                 || confess "You cannot overwrite a locally defined method ($handle) with a delegation";
@@ -400,17 +403,13 @@ sub install_accessors {
             next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
             if ((reftype($method_to_call) || '') eq 'CODE') {
-                $associated_class->add_method($handle => $method_to_call);
+                $associated_class->add_method($handle => subname $name, $method_to_call);
             }
             else {
-                $associated_class->add_method($handle => sub {
-                    # FIXME
-                    # we should check for lack of
-                    # a callable return value from
-                    # the accessor here
+                $associated_class->add_method($handle => subname $name, sub {
                     my $proxy = (shift)->$accessor();
                     @_ = ($proxy, @_);
-                    goto &{ $proxy->can($method_to_call) };
+                    goto &{ $proxy->can($method_to_call) || return };
                 });
             }
         }
