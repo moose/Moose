@@ -248,9 +248,7 @@ sub initialize_instance_slot {
                        $type_constraint->name .
                        ") with '" .
                        (defined $val
-                           ? (blessed($val) && overload::Overloaded($val)
-                                ? overload::StrVal($val)
-                                : $val)
+                           ? overload::StrVal($val)
                            : 'undef') .
                        "'";
     }
@@ -284,11 +282,7 @@ sub set_value {
                . $type_constraint->name
                . ") with "
                . (defined($value)
-                    ? ("'" .
-                        (blessed($value) && overload::Overloaded($value)
-                            ? overload::StrVal($value)
-                            : $value)
-                        . "'")
+                    ? ("'" . overload::StrVal($value) . "'")
                     : "undef")
           if defined($value);
     }

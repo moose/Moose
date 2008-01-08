@@ -129,7 +129,7 @@ sub _inline_check_constraint {
 $type_constraint->(%s)
         || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("
        . $type_constraint_name . ") with "
-       . (defined(%s) ? (Scalar::Util::blessed(%s) && overload::Overloaded(%s) ? overload::StrVal(%s) : %s) : "undef")
+       . (defined(%s) ? overload::StrVal(%s) : "undef")
   if defined(%s);
 EOF
 }
@@ -175,7 +175,7 @@ sub _inline_check_lazy {
             $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
             $code .= '    ($type_constraint->($default))' .
                      '            || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("' .
-                     '           . $type_constraint_name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .
+                     '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef")' .
                      '          if defined($default);' . "\n" .
                      '        ' . $slot_access . ' = $default; ' . "\n";
         } 
