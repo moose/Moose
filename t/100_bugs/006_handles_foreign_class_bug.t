@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 15;
 use Test::Exception;
 
 {
@@ -40,6 +40,8 @@ isa_ok($bar, 'Bar');
 
 is($bar->a, 'Foo::a', '... got the right delgated value');
 
+my @w;
+$SIG{__WARN__} = sub { push @w, "@_" };
 {
     package Baz;
     use Moose;
@@ -56,6 +58,9 @@ is($bar->a, 'Foo::a', '... got the right delgated value');
     
 }
 
+is(@w, 0, "no warnings");
+
+
 my $baz;
 lives_ok {
     $baz = Baz->new;
@@ -68,6 +73,39 @@ is($baz->a, 'Foo::a', '... got the right delgated value');
 
 
 
+@w = ();
 
+{
+    package Blart;
+    use Moose;
+
+    ::lives_ok {
+        has 'bar' => (
+            is      => 'ro',
+            isa     => 'Foo',
+            lazy    => 1,
+            default => sub { Foo->new() },
+            handles => [qw(a new)],
+        );
+    } '... can create the attribute with delegations';
+    
+}
+
+{
+    local $TODO = "warning not yet implemented";
+
+    is(@w, 1, "one warning");
+    like($w[0], qr/not delegating.*new/i, "warned");
+}
+
+
+
+my $blart;
+lives_ok {
+    $blart = Blart->new;
+} '... created the object ok';
+isa_ok($blart, 'Blart');
+
+is($blart->a, 'Foo::a', '... got the right delgated value');
 
 
