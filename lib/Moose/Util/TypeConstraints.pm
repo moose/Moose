@@ -48,6 +48,7 @@ use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
+use Moose::Util::TypeConstraints::OptimizedConstraints;
 
 my @exports = qw/
     type subtype as where message optimize_as
@@ -385,34 +386,34 @@ subtype 'Bool'
 subtype 'Value'
     => as 'Defined'
     => where { !ref($_) }
-    => optimize_as { defined($_[0]) && !ref($_[0]) };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Value;
 
 subtype 'Ref'
     => as 'Defined'
     => where {  ref($_) }
-    => optimize_as { ref($_[0]) };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Ref;
 
 subtype 'Str'
     => as 'Value'
     => where { 1 }
-    => optimize_as { defined($_[0]) && !ref($_[0]) };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
 
 subtype 'Num'
     => as 'Value'
     => where { Scalar::Util::looks_like_number($_) }
-    => optimize_as { !ref($_[0]) && Scalar::Util::looks_like_number($_[0]) };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Num;
 
 subtype 'Int'
     => as 'Num'
     => where { "$_" =~ /^-?[0-9]+$/ }
-    => optimize_as { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
 
-subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' } => optimize_as { ref($_[0]) eq 'SCALAR' };
-subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  } => optimize_as { ref($_[0]) eq 'ARRAY'  };
-subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   } => optimize_as { ref($_[0]) eq 'HASH'   };
-subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   } => optimize_as { ref($_[0]) eq 'CODE'   };
-subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } => optimize_as { ref($_[0]) eq 'Regexp' };
-subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as { ref($_[0]) eq 'GLOB'   };
+subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef;
+subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef;
+subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef;
+subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::CodeRef;
+subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef;
+subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::GlobRef;
 
 # NOTE:
 # scalar filehandles are GLOB refs,
@@ -420,19 +421,19 @@ subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as 
 subtype 'FileHandle'
     => as 'GlobRef'
     => where { Scalar::Util::openhandle($_) }
-    => optimize_as { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::FileHandle;
 
 # NOTE:
 # blessed(qr/.../) returns true,.. how odd
 subtype 'Object'
     => as 'Ref'
     => where { blessed($_) && blessed($_) ne 'Regexp' }
-    => optimize_as { blessed($_[0]) && blessed($_[0]) ne 'Regexp' };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Object;
 
 subtype 'Role'
     => as 'Object'
     => where { $_->can('does') }
-    => optimize_as { blessed($_[0]) && $_[0]->can('does') };
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
 my $_class_name_checker = sub {
     return if ref($_[0]);
