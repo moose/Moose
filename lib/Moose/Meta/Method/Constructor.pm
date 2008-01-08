@@ -210,7 +210,7 @@ sub _generate_type_constraint_check {
         $type_constraint_cv . '->(' . $value_name . ')'
         . "\n\t" . '|| confess "Attribute (' . $attr->name . ') does not pass the type constraint ('
         . $attr->type_constraint->name
-        . ') with " . (defined(' . $value_name . ') ? (Scalar::Util::blessed(' . $value_name . ') && overload::Overloaded(' . $value_name . ') ? overload::StrVal(' . $value_name . ') : ' . $value_name . ') : "undef");'
+        . ') with " . (defined(' . $value_name . ') ? overload::StrVal(' . $value_name . ') : "undef");'
     );
 }
 
