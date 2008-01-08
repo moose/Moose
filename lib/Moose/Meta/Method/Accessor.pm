@@ -22,6 +22,9 @@ sub generate_accessor_method_inline {
     my $slot_access = $self->_inline_access($inv, $attr_name);
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
+    my $type_constraint_obj  = $attr->type_constraint;
+    my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
+
     my $code = 'sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
     . 'if (scalar(@_) >= 2) {' . "\n"
@@ -40,7 +43,11 @@ sub generate_accessor_method_inline {
     # NOTE:
     # set up the environment
     my $type_constraint = $attr->type_constraint
-                                ? $attr->type_constraint->_compiled_type_constraint
+                                ? (
+                                    $attr->type_constraint->has_hand_optimized_type_constraint
+                                        ? $attr->type_constraint->hand_optimized_type_constraint
+                                        : $attr->type_constraint->_compiled_type_constraint
+                                    )
                                 : undef;
 
     #warn $code;
@@ -134,9 +141,9 @@ sub _inline_check_constraint {
     # This sprintf is insanely annoying, we should
     # fix it someday - SL
     return sprintf <<'EOF', $value, $value, $value, $value, $value, $value, $value
-defined($type_constraint->(%s))
-        || confess "Attribute (" . $attr->name . ") does not pass the type constraint ("
-       . $attr->type_constraint->name . ") with "
+$type_constraint->(%s)
+        || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("
+       . $type_constraint_name . ") with "
        . (defined(%s) ? (Scalar::Util::blessed(%s) && overload::Overloaded(%s) ? overload::StrVal(%s) : %s) : "undef")
   if defined(%s);
 EOF
@@ -180,10 +187,10 @@ sub _inline_check_lazy {
                          '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
                          '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
             }
-            $code .= '    $default = $attr->type_constraint->coerce($default);'."\n"  if $attr->should_coerce;
-            $code .= '    (defined($type_constraint->($default)))' .
-                     '            || confess "Attribute (" . $attr->name . ") does not pass the type constraint ("' .
-                     '           . $attr->type_constraint->name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .
+            $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
+            $code .= '    ($type_constraint->($default))' .
+                     '            || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("' .
+                     '           . $type_constraint_name . ") with " . (defined($default) ? (Scalar::Util::blessed($default) && overload::Overloaded($default) ? overload::StrVal($default) : $default) : "undef")' .
                      '          if defined($default);' . "\n" .
                      '        ' . $slot_access . ' = $default; ' . "\n";
         } 

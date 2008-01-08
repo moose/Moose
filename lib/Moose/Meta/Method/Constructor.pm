@@ -87,6 +87,8 @@ sub intialize_body {
         # to be picked up in the eval
         my $attrs = $self->attributes;
 
+        my @type_constraints = map { $_->type_constraint } @$attrs;
+
         $code = eval $source;
         confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@" if $@;
     }
@@ -123,7 +125,7 @@ sub _generate_slot_initializer {
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
-                push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
+                push @source => ('my $type_constraint = $type_constraints[' . $index . '];');
             
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
                     push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');
@@ -145,7 +147,7 @@ sub _generate_slot_initializer {
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_check(
                 $attr,
-                ('$attrs->[' . $index . ']->type_constraint'),
+                ('$type_constraints[' . $index . ']'),
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
             push @source => $self->_generate_slot_assignment($attr, $default);
@@ -157,7 +159,7 @@ sub _generate_slot_initializer {
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
-                push @source => ('my $type_constraint = $attrs->[' . $index . ']->type_constraint;');
+                push @source => ('my $type_constraint = $type_constraints[' . $index . '];');
 
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
                     push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');
