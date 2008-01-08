@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+=begin comment
+
+04:09 <@konobi> nothingmuch: konobi.co.uk/code/utilsxs.tar.gz
+04:09 <@konobi> or utilxs.tar.gz iirc
+
+=cut
+
 package Moose::Util::TypeConstraints::OptimizedConstraints;
 
 use strict;
