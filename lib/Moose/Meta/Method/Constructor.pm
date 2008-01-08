@@ -88,6 +88,9 @@ sub intialize_body {
         my $attrs = $self->attributes;
 
         my @type_constraints = map { $_->type_constraint } @$attrs;
+        my @type_constraint_bodies = map {
+            $_ && ( $_->has_hand_optimized_type_constraint ? $_->hand_optimized_type_constraint : $_->_compiled_type_constraint );
+        } @type_constraints;
 
         $code = eval $source;
         confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@" if $@;
@@ -125,12 +128,10 @@ sub _generate_slot_initializer {
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
-                push @source => ('my $type_constraint = $type_constraints[' . $index . '];');
-            
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                    push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');
+                    push @source => $self->_generate_type_coercion($attr, '$type_constraints[' . $index . ']', '$val', '$val');
                 }
-                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint', '$val');
+                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint_bodies[' . $index . ']', '$val');
             }
             push @source => $self->_generate_slot_assignment($attr, '$val');
 
@@ -147,7 +148,7 @@ sub _generate_slot_initializer {
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_check(
                 $attr,
-                ('$type_constraints[' . $index . ']'),
+                ('$type_constraint_bodies[' . $index . ']'),
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
             push @source => $self->_generate_slot_assignment($attr, $default);
@@ -159,12 +160,10 @@ sub _generate_slot_initializer {
 
             push @source => ('my $val = $params{\'' . $attr->init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
-                push @source => ('my $type_constraint = $type_constraints[' . $index . '];');
-
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                    push @source => $self->_generate_type_coercion($attr, '$type_constraint', '$val', '$val');
+                    push @source => $self->_generate_type_coercion($attr, '$type_constraints[' . $index . ']', '$val', '$val');
                 }
-                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint', '$val');
+                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint_bodies[' . $index . ']', '$val');
             }
             push @source => $self->_generate_slot_assignment($attr, '$val');
 
@@ -206,9 +205,9 @@ sub _generate_type_coercion {
 }
 
 sub _generate_type_constraint_check {
-    my ($self, $attr, $type_constraint_name, $value_name) = @_;
+    my ($self, $attr, $type_constraint_cv, $value_name) = @_;
     return (
-        'defined(' . $type_constraint_name . '->_compiled_type_constraint->(' . $value_name . '))'
+        $type_constraint_cv . '->(' . $value_name . ')'
         . "\n\t" . '|| confess "Attribute (' . $attr->name . ') does not pass the type constraint ('
         . $attr->type_constraint->name
         . ') with " . (defined(' . $value_name . ') ? (Scalar::Util::blessed(' . $value_name . ') && overload::Overloaded(' . $value_name . ') ? overload::StrVal(' . $value_name . ') : ' . $value_name . ') : "undef");'
