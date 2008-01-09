@@ -4,8 +4,8 @@ package Moose::Object;
 use strict;
 use warnings;
 
-use Moose::Meta::Class;
-use metaclass 'Moose::Meta::Class';
+use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
+use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
