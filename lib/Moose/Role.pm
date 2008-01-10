@@ -79,7 +79,7 @@ use Moose::Util::TypeConstraints;
                 }
                 else {
                     Moose::Meta::Role->combine(
-                        map { $_->[0]->meta } @$roles
+                        @$roles
                     )->apply($meta);
                 }
             };

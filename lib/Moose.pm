@@ -114,7 +114,7 @@ use Moose::Util::TypeConstraints;
                 }
                 else {
                     Moose::Meta::Role->combine(
-                        map { $_->[0]->meta } @$roles
+                        @$roles
                     )->apply($meta);
                 }
                 
@@ -552,7 +552,7 @@ quick example (soon to be expanded into a Moose::Cookbook::Recipe):
   has 'parent' => (
       is          => 'rw',
       isa         => 'Tree',
-      is_weak_ref => 1,
+      weak_ref => 1,
       handles     => {
           parent_node => 'node',
           siblings    => 'children',
