@@ -89,7 +89,7 @@ sub intialize_body {
 
         my @type_constraints = map { $_->type_constraint } @$attrs;
         my @type_constraint_bodies = map {
-            $_ && ( $_->has_hand_optimized_type_constraint ? $_->hand_optimized_type_constraint : $_->_compiled_type_constraint );
+            $_ && $_->_compiled_type_constraint;
         } @type_constraints;
 
         $code = eval $source;
