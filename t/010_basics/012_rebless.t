@@ -64,14 +64,14 @@ is($foo->lazy_classname, 'Parent', "lazy attribute initialized");
 lives_ok { $foo->type_constrained(10.5) } "Num type constraint for now..";
 
 # try to rebless, except it will fail due to Child's stricter type constraint
-throws_ok { $foo->meta->rebless_instance($foo => 'Child') } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '10\.5'/;
-throws_ok { $bar->meta->rebless_instance($bar => 'Child') } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '5\.5'/;
+throws_ok { Child->meta->rebless_instance($foo) } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '10\.5'/;
+throws_ok { Child->meta->rebless_instance($bar) } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '5\.5'/;
 
 $foo->type_constrained(10);
 $bar->type_constrained(5);
 
-$foo->meta->rebless_instance($foo => 'Child');
-$bar->meta->rebless_instance($bar => 'Child');
+Child->meta->rebless_instance($foo);
+Child->meta->rebless_instance($bar);
 
 is(blessed($foo), 'Child', 'successfully reblessed into Child');
 is($foo->name, 'Junior', "Child->name's default came through");
