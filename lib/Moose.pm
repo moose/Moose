@@ -282,7 +282,7 @@ __END__
 
 =head1 NAME
 
-Moose - A complete modern object system for Perl 5
+Moose - A postmodern object system for Perl 5
 
 =head1 SYNOPSIS
 
@@ -338,7 +338,7 @@ Yes, I believe that it is.
 
 Moose has been used successfully in production environemnts by several people
 and companies (including the one I work for). There are Moose applications
-which have been in production with little or no issue now for over a year.
+which have been in production with little or no issue now for well over a year.
 I consider it highly stable and we are commited to keeping it stable.
 
 Of course, in the end, you need to make this call yourself. If you have
@@ -351,6 +351,19 @@ No. While Moose is very much inspired by Perl 6, it is not itself Perl 6.
 Instead, it is an OO system for Perl 5. I built Moose because I was tired of
 writing the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So
 instead of switching to Ruby, I wrote Moose :)
+
+=head2 Wait, I<post> modern, I thought it was just I<modern>?
+
+So I was reading Larry Wall's talk from the 1999 Linux World entitled 
+"Perl, the first postmodern computer language" in which he talks about how 
+he picked the features for Perl because he thought they were cool and he 
+threw out the ones that he thought sucked. This got me thinking about how 
+we have done the same thing in Moose. For Moose, we have "borrowed" features 
+from Perl 6, CLOS (LISP), Smalltalk, Java, BETA, OCaml, Ruby and more, and 
+the bits we didn't like (cause they sucked) we tossed aside. So for this 
+reason (and a few others) I have re-dubbed Moose a I<postmodern> object system.
+
+Nuff Said. 
 
 =head2 Moose Extensions
 

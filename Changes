@@ -4,6 +4,9 @@ Revision history for Perl extension Moose
     ~~~ more misc. doc. fixes ~~~
     ~~ updated copyright dates ~~
     
+    Moose is now a postmodern object system 
+      - (see the POD for details)
+    
     * Moose::Meta::Method::Accessor
       - fixed bug when passing a list of values to 
         an accessor would get (incorrectly) ignored.

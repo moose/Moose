@@ -41,7 +41,7 @@ for common questions and problems people have with Moose.
 
 =over 4
 
-=item L<http://www.gsph.com/gsph/index.php?ID=291&Lang=En>
+=item L<http://www.gsph.com/index.php?Lang=En&ID=291>
 
 =back
 
