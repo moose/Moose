@@ -4,11 +4,28 @@ Revision history for Perl extension Moose
     ~~~ more misc. doc. fixes ~~~
     ~~ updated copyright dates ~~
     
+    Moose is now a postmodern object system 
+      - (see the POD for details)
+    
     * Moose::Meta::Method::Accessor
       - fixed bug when passing a list of values to 
         an accessor would get (incorrectly) ignored.
         Thanks to Sartak for finding this ;)
         - added tests for this (Sartak again)
+
+    * Moose::Meta::Method::Accessor
+      Moose::Meta::Method::Constructor
+      Moose::Meta::Method::Attribute
+      - cleanup of some of the generated methods
+        (thanks to nothingmuch)
+
+    * Moose::Util::TypeConstraints
+      - all optimized type constraint subs are now 
+        pulled from the Moose::Util::TypeConstraints::OptimizedConstraints
+        module (thanks to nothingmuch)
+    
+    * Moose::Util::TypeConstraints::OptimizedConstraints
+      - added this module (see above)
 
 0.33 Fri. Dec. 14, 2007
     !! Moose now loads 2 x faster !!

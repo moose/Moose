@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
 use Sub::Exporter;
 
-our $VERSION   = '0.18';
+our $VERSION   = '0.19';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -20,13 +20,16 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 # creation and location
 sub find_type_constraint                 ($);
+sub register_type_constraint             ($);
 sub find_or_create_type_constraint       ($;$);
 sub create_type_constraint_union         (@);
 sub create_parameterized_type_constraint ($);
+sub create_class_type_constraint         ($);
 
 # dah sugah!
 sub type        ($$;$$);
 sub subtype     ($$;$$$);
+sub class_type  ($);
 sub coerce      ($@);
 sub as          ($);
 sub from        ($);
@@ -51,10 +54,11 @@ use Moose::Meta::TypeConstraint::Registry;
 use Moose::Util::TypeConstraints::OptimizedConstraints;
 
 my @exports = qw/
-    type subtype as where message optimize_as
+    type subtype class_type as where message optimize_as
     coerce from via
     enum
     find_type_constraint
+    register_type_constraint
 /;
 
 Sub::Exporter::setup_exporter({
@@ -148,6 +152,16 @@ sub create_parameterized_type_constraint ($) {
     );
 }
 
+sub create_class_type_constraint ($) {
+    my $class = shift;
+
+    # too early for this check
+    #find_type_constraint("ClassName")->check($class)
+    #    || confess "Can't create a class type constraint because '$class' is not a class name";
+
+    Moose::Meta::TypeConstraint::Class->new( name => $class );
+}
+
 sub find_or_create_type_constraint ($;$) {
     my ($type_constraint_name, $options_for_anon_type) = @_;
 
@@ -192,6 +206,12 @@ sub find_or_create_type_constraint ($;$) {
 
 sub find_type_constraint ($) { $REGISTRY->get_type_constraint(@_) }
 
+sub register_type_constraint ($) {
+    my $constraint = shift;
+    confess "can't register an unnamed type constraint" unless defined $constraint->name;
+    $REGISTRY->add_type_constraint($constraint);
+}
+
 # type constructors
 
 sub type ($$;$$) {
@@ -211,6 +231,10 @@ sub subtype ($$;$$$) {
     # - SL
     unshift @_ => undef if scalar @_ <= 2 && (reftype($_[1]) || '') eq 'CODE';
     goto &_create_type_constraint;
+}
+
+sub class_type ($) {
+    register_type_constraint( create_class_type_constraint(shift) );
 }
 
 sub coerce ($@) {
@@ -638,6 +662,11 @@ Given a C<$type_name> in the form of:
 this will extract the base type and container type and build an instance of
 L<Moose::Meta::TypeConstraint::Parameterized> for it.
 
+=item B<create_class_type_constraint ($class)>
+
+Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
+object for that class name.
+
 =item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
 
 This will attempt to find or create a type constraint given the a C<$type_name>.
@@ -653,6 +682,10 @@ return.
 This function can be used to locate a specific type constraint
 meta-object, of the class L<Moose::Meta::TypeConstraint> or a
 derivative. What you do with it from there is up to you :)
+
+=item B<register_type_constraint ($type_object)>
+
+This function will register a named type constraint with the type registry.
 
 =item B<get_type_constraint_registry>
 
@@ -702,6 +735,11 @@ This creates a named subtype.
 This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
 L<Moose::Meta::TypeConstraint>.
+
+=item B<class_type ($class)>
+
+Creates a type constraint with the name C<$class> and the metaclass
+L<Moose::Meta::TypeConstraint::Class>.
 
 =item B<enum ($name, @values)>
 

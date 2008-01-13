@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -25,11 +25,7 @@ sub _eval_code {
     my $type_constraint_obj  = $attr->type_constraint;
     my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
     my $type_constraint = $type_constraint_obj
-                                ? (
-                                    $type_constraint_obj->has_hand_optimized_type_constraint
-                                        ? $type_constraint_obj->hand_optimized_type_constraint
-                                        : $type_constraint_obj->_compiled_type_constraint
-                                    )
+                                ? $type_constraint_obj->_compiled_type_constraint
                                 : undef;
 
     my $sub = eval $code;

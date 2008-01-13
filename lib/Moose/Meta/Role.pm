@@ -375,13 +375,20 @@ sub apply {
 }
 
 sub combine {
-    my ($class, @roles) = @_;
+    my ($class, @role_specs) = @_;
     
     require Moose::Meta::Role::Application::RoleSummation;
-    require Moose::Meta::Role::Composite;    
+    require Moose::Meta::Role::Composite;  
+    
+    my @roles = map { $_->[0]->meta } @role_specs;
+    
+    my %params;
+    # how do I do this ...
     
     my $c = Moose::Meta::Role::Composite->new(roles => \@roles);
-    Moose::Meta::Role::Application::RoleSummation->new->apply($c);
+    Moose::Meta::Role::Application::RoleSummation->new(
+        %params
+    )->apply($c);
     return $c;
 }
 
