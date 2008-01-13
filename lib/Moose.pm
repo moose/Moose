@@ -17,6 +17,7 @@ use Class::MOP 0.49;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
+use Moose::Meta::TypeConstraint::Class;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::Attribute;
 use Moose::Meta::Instance;
@@ -39,9 +40,8 @@ use Moose::Util::TypeConstraints;
             unless $metaclass->isa('Moose::Meta::Class');
 
         # make a subtype for each Moose class
-        subtype $class => as 'Object' => where { $_->isa($class) } =>
-            optimize_as { blessed( $_[0] ) && $_[0]->isa($class) }
-        unless find_type_constraint($class);
+        class_type($class)
+            unless find_type_constraint($class);
 
         my $meta;
         if ( $class->can('meta') ) {
