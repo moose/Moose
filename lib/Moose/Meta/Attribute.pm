@@ -277,7 +277,7 @@ sub set_value {
         if ($self->should_coerce) {
             $value = $type_constraint->coerce($value);
         }
-        defined($type_constraint->_compiled_type_constraint->($value))
+        $type_constraint->_compiled_type_constraint->($value)
                 || confess "Attribute ($attr_name) does not pass the type constraint ("
                . $type_constraint->name
                . ") with "
