@@ -115,16 +115,18 @@ sub _inline_check_constraint {
     my ($self, $value) = @_;
     
     my $attr = $self->associated_attribute;
+    my $attr_name = $attr->name;
     
     return '' unless $attr->has_type_constraint;
     
+    my $type_constraint_name = $attr->type_constraint->name;
+
     # FIXME
     # This sprintf is insanely annoying, we should
     # fix it someday - SL
-    return sprintf <<'EOF', $value, $value, $value, $value, $value, $value, $value
+    return sprintf <<'EOF', $value, $attr_name, $type_constraint_name, $value, $value, $value, $value, $value, $value
 $type_constraint->(%s)
-        || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("
-       . $type_constraint_name . ") with "
+        || confess "Attribute (%s) does not pass the type constraint (%s) with "
        . (defined(%s) ? overload::StrVal(%s) : "undef")
   if defined(%s);
 EOF
@@ -139,9 +141,11 @@ sub _inline_check_coercion {
 
 sub _inline_check_required {
     my $attr = (shift)->associated_attribute;
+
+    my $attr_name = $attr->name;
     
     return '' unless $attr->is_required;
-    return 'defined($_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";'
+    return qq{defined(\$_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";}
 }
 
 sub _inline_check_lazy {
