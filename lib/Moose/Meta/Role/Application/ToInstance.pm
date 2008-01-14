@@ -14,26 +14,26 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application::ToClass';
 
-my $anon_counter = 0;
+my %ANON_CLASSES;
 
 sub apply {
     my ($self, $role, $object) = @_;
 
-    # FIXME:
-    # We really should do this better, and
-    # cache the results of our efforts so
-    # that we don't need to repeat them.
+    my $anon_role_key = (blessed($object) . $role->name);
 
-    my $pkg_name = __PACKAGE__ . "::__RUNTIME_ROLE_ANON_CLASS__::" . $anon_counter++;
-    eval "package " . $pkg_name . "; our \$VERSION = '0.00';";
-    die $@ if $@;
+    my $class;
+    if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
+        $class = $ANON_CLASSES{$anon_role_key};
+    }
+    else {
+        $class = Moose::Meta::Class->create_anon_class(
+            superclasses => [ blessed($object) ]
+        );
+        $ANON_CLASSES{$anon_role_key} = $class;
+        $self->SUPER::apply($role, $class);
+    }
 
-    my $class = Moose::Meta::Class->initialize($pkg_name);
-    $class->superclasses(blessed($object));
-
-    bless $object => $class->name;   
-    
-    $self->SUPER::apply($role, $class); 
+    $class->rebless_instance($object);
 }
 
 1;

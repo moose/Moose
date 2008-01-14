@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 28;
 
 use Scalar::Util qw(blessed);
 
@@ -39,11 +39,13 @@ not very compatible with how instances are dealt with.
 }
 
 my $obj = My::Class->new;
-ok(!$obj->can( 'talk' ), "... the role is not composed yet");
-
+isa_ok($obj, 'My::Class');    
+    
+my $obj2 = My::Class->new;
+isa_ok($obj2, 'My::Class');    
 
 {
-    isa_ok($obj, 'My::Class');    
+    ok(!$obj->can( 'talk' ), "... the role is not composed yet");
     
     ok(!$obj->does('Bark'), '... we do not do any roles yet');
     
@@ -62,6 +64,15 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
 }
 
 {
+    ok(!$obj2->does('Bark'), '... we do not do any roles yet');
+    
+    Bark->meta->apply($obj2);
+    
+    ok($obj2->does('Bark'), '... we now do the Bark role');
+    is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing');
+}
+
+{
     is($obj->sleep, 'nite-nite', '... the original method responds as expected');
 
     ok(!$obj->does('Sleeper'), '... we do not do the Sleeper role');
@@ -71,7 +82,9 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
     ok($obj->does('Bark'), '... we still do the Bark role');
     ok($obj->does('Sleeper'), '... we now do the Sleeper role too');   
     
-    ok(!My::Class->does('Sleeper'), '... the class does not do the Sleeper role');         
+    ok(!My::Class->does('Sleeper'), '... the class does not do the Sleeper role');     
+    
+    isnt(blessed($obj), blessed($obj2), '... they no longer share the same anon-class/role thing');        
     
     isa_ok($obj, 'My::Class');
 
@@ -80,3 +93,16 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
     is($obj->sleep, 'snore', '... got the right return value for the newly composed method');
     is($obj->talk, 'zzz', '... got the right return value for the newly composed method');    
 }
+
+{
+    ok(!$obj2->does('Sleeper'), '... we do not do any roles yet');
+    
+    Sleeper->meta->apply($obj2);
+    
+    ok($obj2->does('Sleeper'), '... we now do the Bark role');
+    is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing again');
+}
+
+
+
+
