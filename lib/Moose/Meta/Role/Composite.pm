@@ -4,10 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp            'confess';
-use Scalar::Util    'blessed', 'reftype';
-
-use Data::Dumper;
+use Carp         'confess';
+use Scalar::Util 'blessed', 'reftype';
 
 our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';

@@ -12,7 +12,7 @@ use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));

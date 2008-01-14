@@ -15,6 +15,51 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';
 
+__PACKAGE__->meta->add_attribute('role_params' => (
+    reader  => 'role_params',
+    default => sub { {} }
+));
+
+sub get_exclusions_for_role {
+    my ($self, $role) = @_;
+    $role = $role->name if blessed $role;
+    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{excludes}) {
+        if (ref $self->role_params->{$role}->{excludes} eq 'ARRAY') {
+            return $self->role_params->{$role}->{excludes};
+        }
+        return [ $self->role_params->{$role}->{excludes} ];
+    }
+    return [];
+}
+
+sub get_method_aliases_for_role {
+    my ($self, $role) = @_;
+    $role = $role->name if blessed $role;
+    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{alias}) {
+        return $self->role_params->{$role}->{alias};
+    }
+    return {};    
+}
+
+sub is_method_excluded {
+    my ($self, $role, $method_name) = @_;
+    foreach ($self->get_exclusions_for_role($role->name)) {
+        return 1 if $_ eq $method_name;
+    }
+    return 0;
+}
+
+sub is_method_aliased {
+    my ($self, $role, $method_name) = @_;
+    exists $self->get_method_aliases_for_role($role->name)->{$method_name} ? 1 : 0
+}
+
+sub is_aliased_method {
+    my ($self, $role, $method_name) = @_;
+    my %aliased_names = reverse %{$self->get_method_aliases_for_role($role->name)};    
+    exists $aliased_names{$method_name} ? 1 : 0;
+}
+
 # stolen from List::MoreUtils ...
 my $uniq = sub { my %h; map { $h{$_}++ == 0 ? $_ : () } @_ };
 
@@ -44,8 +89,10 @@ sub check_required_methods {
 
     foreach my $role (@{$c->get_roles}) {
         foreach my $required (keys %all_required_methods) {
+            
             delete $all_required_methods{$required}
-                if $role->has_method($required);
+                if $role->has_method($required)
+                || $self->is_aliased_method($role, $required);
         }
     }
 
@@ -88,13 +135,26 @@ sub apply_methods {
     my ($self, $c) = @_;
     
     my @all_methods = map {
-        my $role = $_;
-        map { 
-            +{ 
-                name   => $_,
-                method => $role->get_method($_),
-            }
-        } $role->get_method_list;
+        my $role     = $_;
+        my $aliases  = $self->get_method_aliases_for_role($role);
+        my %excludes = map { $_ => undef } @{ $self->get_exclusions_for_role($role) };
+        (
+            (map { 
+                exists $excludes{$_} ? () :
+                +{ 
+                    role   => $role,
+                    name   => $_,
+                    method => $role->get_method($_),
+                }
+            } $role->get_method_list),
+            (map { 
+                +{ 
+                    role   => $role,
+                    name   => $aliases->{$_},
+                    method => $role->get_method($_),
+                }            
+            } keys %$aliases)
+        );
     } @{$c->get_roles};
     
     my (%seen, %method_map);
@@ -105,7 +165,8 @@ sub apply_methods {
                 delete $method_map{$method->{name}};
                 next;
             }           
-        }
+        }       
+        
         $seen{$method->{name}}       = $method->{method};
         $method_map{$method->{name}} = $method->{method};
     }
@@ -183,6 +244,18 @@ bindings and 'disabling' the conflicting bindings
 =item B<new>
 
 =item B<meta>
+
+=item B<role_params>
+
+=item B<get_exclusions_for_role>
+
+=item B<get_method_aliases_for_role>
+
+=item B<is_aliased_method>
+
+=item B<is_method_aliased>
+
+=item B<is_method_excluded>
 
 =item B<apply>
 

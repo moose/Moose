@@ -380,15 +380,19 @@ sub combine {
     require Moose::Meta::Role::Application::RoleSummation;
     require Moose::Meta::Role::Composite;  
     
-    my @roles = map { $_->[0]->meta } @role_specs;
-    
-    my %params;
-    # how do I do this ...
+    my (@roles, %role_params);
+    while (@role_specs) {
+        my ($role, $params) = @{ splice @role_specs, 0, 1 };
+        push @roles => $role->meta;
+        next unless defined $params;
+        $role_params{$role} = $params; 
+    }
     
     my $c = Moose::Meta::Role::Composite->new(roles => \@roles);
     Moose::Meta::Role::Application::RoleSummation->new(
-        %params
+        role_params => \%role_params
     )->apply($c);
+    
     return $c;
 }
 

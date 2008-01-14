@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',

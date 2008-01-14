@@ -9,7 +9,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use overload     ();
 
-our $VERSION   = '0.17';
+our $VERSION   = '0.18';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -403,6 +403,9 @@ sub install_accessors {
                 $associated_class->add_method($handle => subname $name, sub {
                     my $proxy = (shift)->$accessor();
                     @_ = ($proxy, @_);
+                    (defined $proxy) 
+                        || confess "Cannot delegate $handle to $method_to_call because " . 
+                                   "the value of " . $self->name . " is not defined";
                     goto &{ $proxy->can($method_to_call) || return };
                 });
             }

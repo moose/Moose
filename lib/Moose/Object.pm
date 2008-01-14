@@ -9,7 +9,7 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.10';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {

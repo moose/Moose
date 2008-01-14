@@ -15,9 +15,14 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Method::Accessor
       Moose::Meta::Method::Constructor
-      Moose::Meta::Method::Attribute
-      - cleanup of some of the generated methods
-        (thanks to nothingmuch)
+      Moose::Meta::Attribute
+      Moose::Meta::TypeConstraint      
+      Moose::Meta::TypeCoercion      
+      - lots of cleanup of such things as: 
+        - generated methods
+        - type constraint handling
+        - error handling/messages 
+        (thanks to nothingmuch)   
 
     * Moose::Util::TypeConstraints
       - all optimized type constraint subs are now 

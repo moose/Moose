@@ -100,8 +100,6 @@ __END__
 
 Moose::Meta::TypeConstraint::Parameterized - Higher Order type constraints for Moose
 
-=head1 DESCRIPTION
-
 =head1 METHODS
 
 =over 4
