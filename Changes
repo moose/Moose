@@ -3,9 +3,29 @@ Revision history for Perl extension Moose
 0.34
     ~~~ more misc. doc. fixes ~~~
     ~~ updated copyright dates ~~
-    
-    Moose is now a postmodern object system 
+
+    Moose is now a postmodern object system :)
       - (see the POD for details)
+      
+    * <<Role System Refactoring>>    
+    - this release contains a major reworking and 
+      cleanup of the role system     
+      - 100% backwards compat.
+      - Role application now restructured into seperate
+        classes based on type of applicants
+      - Role summation (combining of more than one role)
+        is much cleaner and anon-classes are no longer 
+        used in this process
+      - new Composite role metaclass    
+      - runtime application of roles to instances
+        is now more efficient and re-uses generated
+        classes when applicable
+        
+    * <<New Role composition features>>
+      - methods can now be excluded from a given role 
+        during composition
+      - methods can now be aliased to another name (and 
+        still retain the original as well)        
     
     * Moose::Meta::Method::Accessor
       - fixed bug when passing a list of values to 
