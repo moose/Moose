@@ -48,6 +48,7 @@ sub _install_type_coercions ($$);
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
 use Moose::Meta::TypeConstraint::Parameterized;
+use Moose::Meta::TypeConstraint::Parameterizable;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
@@ -433,8 +434,6 @@ subtype 'Int'
     => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
 
 subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef;
-subtype 'ArrayRef'  => as 'Ref' => where { ref($_) eq 'ARRAY'  } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef;
-subtype 'HashRef'   => as 'Ref' => where { ref($_) eq 'HASH'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef;
 subtype 'CodeRef'   => as 'Ref' => where { ref($_) eq 'CODE'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::CodeRef;
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef;
 subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::GlobRef;
@@ -492,6 +491,73 @@ subtype 'ClassName'
     => as 'Str'
     => $_class_name_checker # where ...
     => { optimize => $_class_name_checker };
+
+## --------------------------------------------------------
+# parameterizable types ...
+
+$REGISTRY->add_type_constraint(
+    Moose::Meta::TypeConstraint::Parameterizable->new(
+        name                 => 'ArrayRef',
+        package_defined_in   => __PACKAGE__,
+        parent               => find_type_constraint('Ref'),
+        constraint           => sub { ref($_) eq 'ARRAY'  },
+        optimized            => \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef,
+        constraint_generator => sub {
+            my $type_parameter = shift;
+            return sub {
+                foreach my $x (@$_) {
+                    ($type_parameter->check($x)) || return
+                } 1;
+            }
+        }
+    )
+);
+
+$REGISTRY->add_type_constraint(
+    Moose::Meta::TypeConstraint::Parameterizable->new(
+        name                 => 'HashRef',
+        package_defined_in   => __PACKAGE__,
+        parent               => find_type_constraint('Ref'),
+        constraint           => sub { ref($_) eq 'HASH'  },
+        optimized            => \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef,
+        constraint_generator => sub {
+            my $type_parameter = shift;            
+            return sub {
+                foreach my $x (values %$_) {
+                    ($type_parameter->check($x)) || return
+                } 1;
+            }
+        }
+    )
+);
+
+$REGISTRY->add_type_constraint(
+    Moose::Meta::TypeConstraint::Parameterizable->new(
+        name                 => 'Maybe',
+        package_defined_in   => __PACKAGE__,
+        parent               => find_type_constraint('Item'),
+        constraint           => sub { 1 },
+        constraint_generator => sub {
+            my $type_parameter = shift;            
+            return sub {
+                return 1 if not(defined($_)) || $type_parameter->check($_);
+                return;
+            }
+        }
+    )
+);
+
+my @PARAMETERIZABLE_TYPES = map { 
+    $REGISTRY->get_type_constraint($_) 
+} qw[ArrayRef HashRef Maybe];
+
+sub get_all_parameterizable_types { @PARAMETERIZABLE_TYPES }
+sub add_parameterizable_type { 
+    my $type = shift;
+    (blessed $type && $type->isa('Moose::Meta::TypeConstraint::Parameterizable'))
+        || confess "Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type";
+    push @PARAMETERIZABLE_TYPES => $type;
+}    
 
 ## --------------------------------------------------------
 # end of built-in types ...
@@ -579,6 +645,7 @@ could probably use some work, but it works for me at the moment.
   Any
   Item
       Bool
+      Maybe[`a]
       Undef
       Defined
           Value
@@ -588,8 +655,8 @@ could probably use some work, but it works for me at the moment.
                 ClassName
           Ref
               ScalarRef
-              ArrayRef
-              HashRef
+              ArrayRef[`a]
+              HashRef[`a]
               CodeRef
               RegexpRef
               GlobRef
@@ -599,14 +666,21 @@ could probably use some work, but it works for me at the moment.
 
 Suggestions for improvement are welcome.
 
-B<NOTE:> The C<Undef> type constraint does not work correctly
-in every occasion, please use it sparringly.
+B<NOTE:> Any type followed by a type parameter C<[`a]> can be 
+parameterized, this means you can say:
 
-B<NOTE:> The C<ClassName> type constraint is simply a subtype
-of string which responds true to C<isa('UNIVERSAL')>. This means
-that your class B<must> be loaded for this type constraint to
-pass. I know this is not ideal for all, but it is a saner
-restriction than most others.
+  ArrayRef[Int]    # an array of intergers
+  HashRef[CodeRef] # a hash of str to CODE ref mappings
+  Maybe[Str]       # value may be a string, may be undefined
+
+B<NOTE:> The C<Undef> type constraint for the most part works 
+correctly now, but edge cases may still exist, please use it 
+sparringly.
+
+B<NOTE:> The C<ClassName> type constraint does a complex package
+existence check. This means that your class B<must> be loaded for 
+this type constraint to pass. I know this is not ideal for all, 
+but it is a saner restriction than most others.
 
 =head2 Use with Other Constraint Modules
 
@@ -660,7 +734,7 @@ Given a C<$type_name> in the form of:
   BaseType[ContainerType]
 
 this will extract the base type and container type and build an instance of
-L<Moose::Meta::TypeConstraint::Parameterized> for it.
+L<Moose::Meta::TypeConstraint::Parameterized> for it. 
 
 =item B<create_class_type_constraint ($class)>
 
@@ -709,6 +783,14 @@ labeled L<Default Type Constraints> for a complete list.
 This will export all the current type constraints as functions
 into the caller's namespace. Right now, this is mostly used for
 testing, but it might prove useful to others.
+
+=item B<get_all_parameterizable_types>
+
+This returns all the parameterizable types that have been registered.
+
+=item B<add_parameterizable_type ($type)>
+
+Adds C<$type> to the list of parameterizable types
 
 =back
 

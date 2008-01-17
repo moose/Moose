@@ -28,65 +28,18 @@ sub compile_type_constraint {
     
     (blessed $type_parameter && $type_parameter->isa('Moose::Meta::TypeConstraint'))
         || confess "The type parameter must be a Moose meta type";
-    
-    my $constraint;
-    my $name = $self->parent->name;
 
-    my $array_coercion =
-        Moose::Util::TypeConstraints::find_type_constraint('ArrayRef')
-        ->coercion;
-
-    my $hash_coercion =
-        Moose::Util::TypeConstraints::find_type_constraint('HashRef')
-        ->coercion;
-
-    # ArrayRef[Foo] will check each element for the Foo constraint
-    my $array_constraint = sub {
-        foreach my $x (@$_) {
-            ($type_parameter->check($x)) || return
-        } 1;
-    };
-
-    # HashRef[Foo] will check each value for the Foo constraint
-    my $hash_constraint = sub {
-        foreach my $x (values %$_) {
-            ($type_parameter->check($x)) || return
-        } 1;
-    };
-
-    # if this is a subtype of ArrayRef, then we can use the ArrayRef[Foo]
-    # constraint directly
-    if ($self->is_subtype_of('ArrayRef')) {
-        $constraint = $array_constraint;
-    }
-    # if this is a subtype of HashRef, then we can use the HashRef[Foo]
-    # constraint directly
-    elsif ($self->is_subtype_of('HashRef')) {
-        $constraint = $hash_constraint;
-    }
-    # if we can coerce this type to an ArrayRef, do it and use the regular
-    # ArrayRef[Foo] constraint
-    elsif ($array_coercion && $array_coercion->has_coercion_for_type($name)) {
-        $constraint = sub {
-            local $_ = $array_coercion->coerce($_);
-            $array_constraint->(@_);
-        };
-    }
-    # if we can coerce this type to a HashRef, do it and use the regular
-    # HashRef[Foo] constraint
-    elsif ($hash_coercion && $hash_coercion->has_coercion_for_type($name)) {
-        $constraint = sub {
-            local $_ = $hash_coercion->coerce($_);
-            $hash_constraint->(@_);
-        };
-    }
-    else {
-        confess "The " . $self->name . " constraint cannot be used, because " . $name . " doesn't subtype or coerce ArrayRef or HashRef.";
+    foreach my $type (Moose::Util::TypeConstraints::get_all_parameterizable_types()) {
+        if (my $constraint = $type->generate_constraint_for($self)) {
+            $self->_set_constraint($constraint);
+            return $self->SUPER::compile_type_constraint;            
+        }
     }
     
-    $self->_set_constraint($constraint);
-    
-    $self->SUPER::compile_type_constraint;
+    # if we get here, then we couldn't 
+    # find a way to parameterize this type
+    confess "The " . $self->name . " constraint cannot be used, because " 
+          . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.";
 }
 
 1;

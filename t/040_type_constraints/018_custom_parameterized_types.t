@@ -45,22 +45,14 @@ lives_ok {
     ok(!$t->check({ one1 => 1, two2 => 2 }), '... validated it correctly');
 }
 
-my $hoi = Moose::Meta::TypeConstraint::Parameterized->new(
-    name           => 'AlphaKeyHash[Int]',
-    parent         => find_type_constraint('AlphaKeyHash'),
-    type_parameter => find_type_constraint('Int'),
-);
+my $hoi = Moose::Util::TypeConstraints::find_or_create_type_constraint('AlphaKeyHash[Int]');
 
 ok($hoi->check({ one => 1, two => 2 }), '... validated it correctly');
 ok(!$hoi->check({ one1 => 1, two2 => 2 }), '... validated it correctly');
 ok(!$hoi->check({ one => 'uno', two => 'dos' }), '... validated it correctly');
 ok(!$hoi->check({ one1 => 'un', two2 => 'deux' }), '... validated it correctly');
 
-my $th = Moose::Meta::TypeConstraint::Parameterized->new(
-    name           => 'Trihash[Bool]',
-    parent         => find_type_constraint('Trihash'),
-    type_parameter => find_type_constraint('Bool'),
-);
+my $th = Moose::Util::TypeConstraints::find_or_create_type_constraint('Trihash[Bool]');
 
 ok(!$th->check({ one => 1, two => 1 }), '... validated it correctly');
 ok($th->check({ one => 1, two => 0, three => 1 }), '... validated it correctly');

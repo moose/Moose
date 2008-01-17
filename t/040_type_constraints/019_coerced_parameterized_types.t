@@ -32,15 +32,11 @@ lives_ok {
             => via { [ $_->items ] }
 } '... created the coercion okay';
 
-my $mylist = Moose::Meta::TypeConstraint::Parameterized->new(
-    name           => 'MyList[Int]',
-    parent         => find_type_constraint('MyList'),
-    type_parameter => find_type_constraint('Int'),
-);
+my $mylist = Moose::Util::TypeConstraints::find_or_create_type_constraint('MyList[Int]');
 
-ok($mylist->check(MyList->new(10, 20, 30)), '... validated it correctly');
-ok(!$mylist->check(MyList->new(10, "two")), '... validated it correctly');
-ok(!$mylist->check([10]), '... validated it correctly');
+ok($mylist->check(MyList->new(10, 20, 30)), '... validated it correctly (pass)');
+ok(!$mylist->check(MyList->new(10, "two")), '... validated it correctly (fail)');
+ok(!$mylist->check([10]), '... validated it correctly (fail)');
 
 subtype 'EvenList' => as 'MyList' => where { $_->items % 2 == 0 };
 
@@ -53,14 +49,10 @@ lives_ok {
             => via { [ $_->items ] }
 } '... created the coercion okay';
 
-my $evenlist = Moose::Meta::TypeConstraint::Parameterized->new(
-    name           => 'EvenList[Int]',
-    parent         => find_type_constraint('EvenList'),
-    type_parameter => find_type_constraint('Int'),
-);
+my $evenlist = Moose::Util::TypeConstraints::find_or_create_type_constraint('EvenList[Int]');
 
-ok(!$evenlist->check(MyList->new(10, 20, 30)), '... validated it correctly');
-ok($evenlist->check(MyList->new(10, 20, 30, 40)), '... validated it correctly');
-ok(!$evenlist->check(MyList->new(10, "two")), '... validated it correctly');
-ok(!$evenlist->check([10, 20]), '... validated it correctly');
+ok(!$evenlist->check(MyList->new(10, 20, 30)), '... validated it correctly (fail)');
+ok($evenlist->check(MyList->new(10, 20, 30, 40)), '... validated it correctly (pass)');
+ok(!$evenlist->check(MyList->new(10, "two")), '... validated it correctly (fail)');
+ok(!$evenlist->check([10, 20]), '... validated it correctly (fail)');
 
