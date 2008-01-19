@@ -27,6 +27,18 @@ Revision history for Perl extension Moose
       - methods can now be aliased to another name (and 
         still retain the original as well)        
     
+    * Moose
+      Moose::Role
+      - now uses the Moose::Util::apply_all_roles to deal 
+        with role application
+    
+    * Moose::Util
+      - added the &apply_all_roles function
+     
+    * Moose::Meta::Class
+      - fixed the &_process_attribute method to be called
+        by &add_attribute, so that the API is now correct 
+    
     * Moose::Meta::Method::Accessor
       - fixed bug when passing a list of values to 
         an accessor would get (incorrectly) ignored.

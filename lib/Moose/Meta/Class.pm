@@ -164,11 +164,11 @@ sub add_attribute {
         # if it is a HASH ref, we de-ref it.
         # this will usually mean that it is
         # coming from a role
-        $self->SUPER::add_attribute($name => %{$_[0]});
+        $self->SUPER::add_attribute($self->_process_attribute($name => %{$_[0]}));
     }
     else {
         # otherwise we just pass the args
-        $self->SUPER::add_attribute($name => @_);
+        $self->SUPER::add_attribute($self->_process_attribute($name => @_));
     }
 }
 
@@ -278,30 +278,16 @@ sub _fix_metaclass_incompatability {
     return $self;
 }
 
-sub _apply_all_roles {
-    my ($self, @roles) = @_;
-    ($_->can('meta') && $_->meta->isa('Moose::Meta::Role'))
-        || confess "You can only consume roles, $_ is not a Moose role"
-            foreach @roles;
-    if (scalar @roles == 1) {
-        $roles[0]->meta->apply($self);
-    }
-    else {
-        # FIXME
-        # we should make a Moose::Meta::Role::Composite
-        # which is a smaller version of Moose::Meta::Role
-        # which does not use any package stuff
-        Moose::Meta::Role->combine(
-            map { $_->meta } @roles
-        )->apply($self);
-    }
-}
+# NOTE:
+# this was crap anyway, see 
+# Moose::Util::apply_all_roles 
+# instead
+sub _apply_all_roles { die "DEPRECATED" }
 
 sub _process_attribute {
     my ($self, $name, %options) = @_;
     if ($name =~ /^\+(.*)/) {
-        my $new_attr = $self->_process_inherited_attribute($1, %options);
-        $self->add_attribute($new_attr);
+        return $self->_process_inherited_attribute($1, %options);
     }
     else {
         if ($options{metaclass}) {
@@ -316,10 +302,10 @@ sub _process_attribute {
             if ($@) {
                 Class::MOP::load_class($metaclass_name);
             }
-            $self->add_attribute($metaclass_name->new($name, %options));
+            return $metaclass_name->new($name, %options);
         }
         else {
-            $self->add_attribute($name, %options);
+            return $self->attribute_metaclass->new($name, %options);
         }
     }
 }
@@ -329,18 +315,14 @@ sub _process_inherited_attribute {
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
         || confess "Could not find an attribute by the name of '$attr_name' to inherit from";
-    my $new_attr;
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
-        $new_attr = $inherited_attr->clone_and_inherit_options(%options);
+        return $inherited_attr->clone_and_inherit_options(%options);
     }
     else {
         # NOTE:
         # kind of a kludge to handle Class::MOP::Attributes
-        $new_attr = Moose::Meta::Attribute::clone_and_inherit_options(
-            $inherited_attr, %options
-        );
+        return $inherited_attr->Moose::Meta::Attribute::clone_and_inherit_options(%options);
     }
-    return $new_attr;
 }
 
 ## -------------------------------------------------

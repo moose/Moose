@@ -4,16 +4,18 @@ use strict;
 use warnings;
 
 use Sub::Exporter;
-use Scalar::Util ();
+use Scalar::Util 'blessed';
+use Carp         'confess';
 use Class::MOP   ();
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
     find_meta 
     does_role
     search_class_by_role   
+    apply_all_roles
 ];
 
 Sub::Exporter::setup_exporter({
@@ -25,7 +27,7 @@ Sub::Exporter::setup_exporter({
 
 sub find_meta { 
     return unless $_[0];
-    return Class::MOP::get_metaclass_by_name(ref($_[0]) || $_[0]);
+    return Class::MOP::get_metaclass_by_name(blessed($_[0]) || $_[0]);
 }
 
 ## the functions ...
@@ -60,6 +62,43 @@ sub search_class_by_role {
     }
 
     return;
+}
+
+sub apply_all_roles {
+    my $applicant = shift;
+    
+    confess "Must specify at least one role to apply to $applicant" unless @_;
+    
+    my $roles = Data::OptList::mkopt([ @_ ]);
+    
+    #use Data::Dumper;
+    #warn Dumper $roles;
+    
+    my $meta;
+    if (blessed $applicant                     && 
+        ($applicant->isa('Class::MOP::Class')  || 
+         $applicant->isa('Moose::Meta::Role')) ){
+        $meta = $applicant;
+    }
+    else {
+        $meta = find_meta($applicant);
+    }
+    
+    Class::MOP::load_class($_->[0]) for @$roles;
+    
+    ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
+        || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
+            foreach @$roles;
+
+    if (scalar @$roles == 1) {
+        my ($role, $params) = @{$roles->[0]};
+        $role->meta->apply($meta, (defined $params ? %$params : ()));
+    }
+    else {
+        Moose::Meta::Role->combine(
+            @$roles
+        )->apply($meta);
+    }    
 }
 
 1;
@@ -109,6 +148,13 @@ Returns true if C<$class_or_obj> can do the role C<$role_name>.
 =item B<search_class_by_role ($class_or_obj, $role_name)>
 
 Returns first class in precedence list that consumed C<$role_name>.
+
+=item B<apply_all_roles ($applicant, @roles)>
+
+Given an C<$applicant> (which can somehow be turned into either a 
+metaclass or a metarole) and a list of C<@roles> this will do the 
+right thing to apply the C<@roles> to the C<$applicant>. This is 
+actually used internally by both L<Moose> and L<Moose::Role>.
 
 =back
 

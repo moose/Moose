@@ -90,20 +90,10 @@ sub apply_attributes {
             next;
         }
         else {
-            # NOTE:
-            # this is kinda ugly ...
-            if ($class->isa('Moose::Meta::Class')) {
-                $class->_process_attribute(
-                    $attribute_name,
-                    %{$role->get_attribute($attribute_name)}
-                );
-            }
-            else {
-                $class->add_attribute(
-                    $attribute_name,
-                    $role->get_attribute($attribute_name)
-                );
-            }
+            $class->add_attribute(
+                $attribute_name,
+                $role->get_attribute($attribute_name)
+            );
         }
     }
 }

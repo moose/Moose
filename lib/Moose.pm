@@ -13,7 +13,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-use Class::MOP 0.49;
+use Class::MOP 0.51;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -26,6 +26,7 @@ use Moose::Meta::Role;
 
 use Moose::Object;
 use Moose::Util::TypeConstraints;
+use Moose::Util ();
 
 {
     my $CALLER;
@@ -63,7 +64,6 @@ use Moose::Util::TypeConstraints;
             $meta = $metaclass->initialize($class);
             $meta->add_method(
                 'meta' => sub {
-
                     # re-initialize so it inherits properly
                     $metaclass->initialize( blessed( $_[0] ) || $_[0] );
                 }
@@ -92,33 +92,7 @@ use Moose::Util::TypeConstraints;
         with => sub {
             my $class = $CALLER;
             return subname 'Moose::with' => sub (@) {
-                my (@args) = @_;
-                confess "Must specify at least one role" unless @args;
-                
-                my $roles = Data::OptList::mkopt(\@args);
-                
-                #use Data::Dumper;
-                #warn Dumper $roles;
-                
-                Class::MOP::load_class($_->[0]) for @$roles;
-                
-                ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
-                    || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
-                        foreach @$roles;
-
-                my $meta = $class->meta;
-
-                if (scalar @$roles == 1) {
-                    my ($role, $params) = @{$roles->[0]};
-                    $role->meta->apply($meta, (defined $params ? %$params : ()));
-                }
-                else {
-                    Moose::Meta::Role->combine(
-                        @$roles
-                    )->apply($meta);
-                }
-                
-                #$class->meta->_apply_all_roles(@roles);
+                Moose::Util::apply_all_roles($class->meta, @_)
             };
         },
         has => sub {
@@ -126,7 +100,7 @@ use Moose::Util::TypeConstraints;
             return subname 'Moose::has' => sub ($;%) {
                 my ( $name, %options ) = @_;
                 my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-                $class->meta->_process_attribute( $_, %options ) for @$attrs;
+                $class->meta->add_attribute( $_, %options ) for @$attrs;
             };
         },
         before => sub {
