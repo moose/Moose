@@ -158,18 +158,7 @@ sub get_method_map {
 
 sub add_attribute {
     my $self = shift;
-    my $name = shift;
-    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
-        # NOTE:
-        # if it is a HASH ref, we de-ref it.
-        # this will usually mean that it is
-        # coming from a role
-        $self->SUPER::add_attribute($self->_process_attribute($name => %{$_[0]}));
-    }
-    else {
-        # otherwise we just pass the args
-        $self->SUPER::add_attribute($self->_process_attribute($name => @_));
-    }
+    $self->SUPER::add_attribute($self->_process_attribute(@_));
 }
 
 sub add_override_method_modifier {
@@ -279,17 +268,23 @@ sub _fix_metaclass_incompatability {
 }
 
 # NOTE:
-# this was crap anyway, see 
-# Moose::Util::apply_all_roles 
+# this was crap anyway, see
+# Moose::Util::apply_all_roles
 # instead
 sub _apply_all_roles { die "DEPRECATED" }
 
+my %ANON_CLASSES;
+
 sub _process_attribute {
-    my ($self, $name, %options) = @_;
+    my $self    = shift;
+    my $name    = shift;
+    my %options = ((scalar @_ == 1 && ref($_[0]) eq 'HASH') ? %{$_[0]} : @_);
+
     if ($name =~ /^\+(.*)/) {
         return $self->_process_inherited_attribute($1, %options);
     }
     else {
+        my $attr_metaclass_name;
         if ($options{metaclass}) {
             my $metaclass_name = $options{metaclass};
             eval {
@@ -302,11 +297,32 @@ sub _process_attribute {
             if ($@) {
                 Class::MOP::load_class($metaclass_name);
             }
-            return $metaclass_name->new($name, %options);
+            $attr_metaclass_name = $metaclass_name;
         }
         else {
-            return $self->attribute_metaclass->new($name, %options);
+            $attr_metaclass_name = $self->attribute_metaclass;
         }
+
+        if ($options{traits}) {
+
+            my $anon_role_key = join "|" => @{$options{traits}};
+
+            my $class;
+            if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
+                $class = $ANON_CLASSES{$anon_role_key};
+            }
+            else {
+                $class = Moose::Meta::Class->create_anon_class(
+                    superclasses => [ $attr_metaclass_name ]
+                );
+                $ANON_CLASSES{$anon_role_key} = $class;
+                Moose::Util::apply_all_roles($class, @{$options{traits}});
+            }
+            
+            $attr_metaclass_name = $class->name;
+        }
+
+        return $attr_metaclass_name->new($name, %options);
     }
 }
 

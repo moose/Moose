@@ -74,15 +74,7 @@ sub apply_all_roles {
     #use Data::Dumper;
     #warn Dumper $roles;
     
-    my $meta;
-    if (blessed $applicant                     && 
-        ($applicant->isa('Class::MOP::Class')  || 
-         $applicant->isa('Moose::Meta::Role')) ){
-        $meta = $applicant;
-    }
-    else {
-        $meta = find_meta($applicant);
-    }
+    my $meta = (blessed $applicant ? $applicant : find_meta($applicant));
     
     Class::MOP::load_class($_->[0]) for @$roles;
     
@@ -100,6 +92,7 @@ sub apply_all_roles {
         )->apply($meta);
     }    
 }
+
 
 1;
 
