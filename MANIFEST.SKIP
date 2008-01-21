@@ -4,7 +4,6 @@
 ^blib
 ~$
 \.bak$
-^MANIFEST\.SKIP$
 CVS
 \.svn
 \.DS_Store
