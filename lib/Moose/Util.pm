@@ -147,7 +147,9 @@ Returns first class in precedence list that consumed C<$role_name>.
 Given an C<$applicant> (which can somehow be turned into either a 
 metaclass or a metarole) and a list of C<@roles> this will do the 
 right thing to apply the C<@roles> to the C<$applicant>. This is 
-actually used internally by both L<Moose> and L<Moose::Role>.
+actually used internally by both L<Moose> and L<Moose::Role>, and the
+C<@roles> will be pre-processed through L<Data::OptList::mkopt>
+to allow for the additional arguments to be passed. 
 
 =back
 

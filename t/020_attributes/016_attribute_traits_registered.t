@@ -24,6 +24,9 @@ BEGIN {
             $self->get_read_method_ref
         );
     };
+    
+    package Moose::Meta::Attribute::Custom::Trait::Aliased;
+    sub register_implementation { 'My::Attribute::Trait' }
 }
 
 {
@@ -31,7 +34,7 @@ BEGIN {
     use Moose;
     
     has 'bar' => (
-        traits   => [qw/My::Attribute::Trait/],
+        traits   => [qw/Aliased/],
         is       => 'ro',
         isa      => 'Int',
         alias_to => 'baz',
@@ -47,7 +50,3 @@ can_ok($c, 'baz');
 is($c->baz, 100, '... got the right value for baz');
 
 does_ok($c->meta->get_attribute('bar'), 'My::Attribute::Trait');
-
-
-
-

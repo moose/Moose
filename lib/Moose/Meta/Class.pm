@@ -316,7 +316,22 @@ sub _process_attribute {
                     superclasses => [ $attr_metaclass_name ]
                 );
                 $ANON_CLASSES{$anon_role_key} = $class;
-                Moose::Util::apply_all_roles($class, @{$options{traits}});
+                
+                my @traits;
+                foreach my $trait (@{$options{traits}}) {
+                    eval {
+                        my $possible_full_name = 'Moose::Meta::Attribute::Custom::Trait::' . $trait;
+                        Class::MOP::load_class($possible_full_name);
+                        push @traits => $possible_full_name->can('register_implementation')
+                            ? $possible_full_name->register_implementation
+                            : $possible_full_name;
+                    };
+                    if ($@) {
+                        push @traits => $trait;
+                    }
+                }
+                
+                Moose::Util::apply_all_roles($class, @traits);
             }
             
             $attr_metaclass_name = $class->name;
