@@ -97,6 +97,7 @@ t/020_attributes/013_attr_dereference_test.t
 t/020_attributes/014_misc_attribute_coerce_lazy.t
 t/020_attributes/015_attribute_traits.t
 t/020_attributes/016_attribute_traits_registered.t
+t/020_attributes/017_attribute_traits_n_meta.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t

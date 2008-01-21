@@ -94,6 +94,9 @@ Revision history for Perl extension Moose
         are more generic and not confined to ArrayRef
         and HashRef only
 
+    * t/
+      - shortened some file names for better VMS support (RT #32381)
+
 0.33 Fri. Dec. 14, 2007
     !! Moose now loads 2 x faster !!
     !!  with new Class::MOP 0.49  !!
