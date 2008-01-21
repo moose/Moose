@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.34
+0.34 Mon. Jan. 21, 2008
     ~~~ more misc. doc. fixes ~~~
     ~~ updated copyright dates ~~
 
@@ -30,7 +30,8 @@ Revision history for Perl extension Moose
       - methods can now be aliased to another name (and
         still retain the original as well)
 
-            with 'My::Role' => { alias => {
+            with 'My::Role' => { 
+                alias => {
                     method1 => method1_aliased
                 }
             };
