@@ -443,7 +443,7 @@ subtype 'GlobRef'   => as 'Ref' => where { ref($_) eq 'GLOB'   } => optimize_as 
 # but a GLOB ref is not always a filehandle
 subtype 'FileHandle'
     => as 'GlobRef'
-    => where { Scalar::Util::openhandle($_) }
+    => where { Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") ) }
     => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::FileHandle;
 
 # NOTE:

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 271;
+use Test::More tests => 273;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -19,6 +19,8 @@ my $GLOB_REF   = \*GLOB_REF;
 
 my $fh;
 open($fh, '<', $0) || die "Could not open $0 for the test";
+
+my $fh_obj = bless {}, "IO::Handle"; # not really
 
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
@@ -247,6 +249,7 @@ ok(!defined GlobRef(sub {}),           '... GlobRef rejects anything which is no
 ok(!defined GlobRef($SCALAR_REF),      '... GlobRef rejects anything which is not a GlobRef');
 ok(defined GlobRef($GLOB_REF),         '... GlobRef accepts anything which is a GlobRef');
 ok(defined GlobRef($fh),               '... GlobRef accepts anything which is a GlobRef');
+ok(!defined GlobRef($fh_obj),          '... GlobRef rejects anything which is not a GlobRef');
 ok(!defined GlobRef(qr/../),           '... GlobRef rejects anything which is not a GlobRef');
 ok(!defined GlobRef(bless {}, 'Foo'),  '... GlobRef rejects anything which is not a GlobRef');
 ok(!defined GlobRef(undef),            '... GlobRef rejects anything which is not a GlobRef');
@@ -261,6 +264,7 @@ ok(!defined FileHandle(sub {}),           '... FileHandle rejects anything which
 ok(!defined FileHandle($SCALAR_REF),      '... FileHandle rejects anything which is not a FileHandle');
 ok(!defined FileHandle($GLOB_REF),        '... FileHandle rejects anything which is not a FileHandle');
 ok(defined FileHandle($fh),               '... FileHandle accepts anything which is a FileHandle');
+ok(defined FileHandle($fh_obj),           '... FileHandle accepts anything which is a FileHandle');
 ok(!defined FileHandle(qr/../),           '... FileHandle rejects anything which is not a FileHandle');
 ok(!defined FileHandle(bless {}, 'Foo'),  '... FileHandle rejects anything which is not a FileHandle');
 ok(!defined FileHandle(undef),            '... FileHandle rejects anything which is not a FileHandle');

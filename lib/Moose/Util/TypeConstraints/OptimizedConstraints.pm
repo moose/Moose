@@ -28,7 +28,7 @@ sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
     sub GlobRef   { ref($_[0]) eq 'GLOB'   }
 }
 
-sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) }
+sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
 
 sub Object { blessed($_[0]) && blessed($_[0]) ne 'Regexp' }
 
