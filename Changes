@@ -3,7 +3,7 @@ Revision history for Perl extension Moose
 0.35
     * Moose::Meta::Method::Constructor
       - fix to make sure even Class::MOP attributes 
-        are handled correctly (Thanks to autarch)
+        are handled correctly (Thanks to Dave Rolsky)
         - added test for this
 
 0.34 Mon. Jan. 21, 2008
