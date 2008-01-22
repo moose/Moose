@@ -166,6 +166,7 @@ t/200_examples/006_example_Protomoose.t
 t/200_examples/007_Child_Parent_attr_inherit.t
 t/300_immutable/001_immutable_moose.t
 t/300_immutable/002_apply_roles_to_immutable.t
+t/300_immutable/003_immutable_meta_class.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
