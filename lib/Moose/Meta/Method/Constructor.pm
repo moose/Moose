@@ -90,9 +90,8 @@ sub intialize_body {
         # We need to check if the attribute ->can('type_constraint')
         # since we may be trying to immutabilize a Moose meta class,
         # which in turn has attributes which are Class::MOP::Attribute
-        # objects, rather than
-        # Moose::Meta::Attribute. Class::MOP::Attribute attributes
-        # have no type constraints.
+        # objects, rather than Moose::Meta::Attribute. And 
+        # Class::MOP::Attribute attributes have no type constraints.
         my @type_constraints = map { $_->type_constraint } grep { $_->can('type_constraint') } @$attrs;
         my @type_constraint_bodies = map {
             $_ && $_->_compiled_type_constraint;
