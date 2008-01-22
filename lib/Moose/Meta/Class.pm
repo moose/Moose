@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.17';
+our $VERSION   = '0.18';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -271,7 +271,9 @@ sub _fix_metaclass_incompatability {
 # this was crap anyway, see
 # Moose::Util::apply_all_roles
 # instead
-sub _apply_all_roles { die "DEPRECATED" }
+sub _apply_all_roles { 
+    die 'DEPRECATED: use Moose::Util::apply_all_roles($meta, @roles) instead' 
+}
 
 my %ANON_CLASSES;
 

@@ -5,6 +5,12 @@ Revision history for Perl extension Moose
       - fix to make sure even Class::MOP attributes 
         are handled correctly (Thanks to Dave Rolsky)
         - added test for this (also Dave Rolsky)
+    
+    * Moose::Meta::Class
+      - improved error message on _apply_all_roles, 
+        you should now use Moose::Util::apply_all_roles
+        and you shouldnt have been using a _ prefixed
+        method in the first place ;)
 
 0.34 Mon. Jan. 21, 2008
     ~~~ more misc. doc. fixes ~~~
