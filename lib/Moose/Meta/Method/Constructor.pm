@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -93,7 +93,7 @@ sub intialize_body {
         # objects, rather than
         # Moose::Meta::Attribute. Class::MOP::Attribute attributes
         # have no type constraints.
-        my @type_constraints = map { $_->type_constraint } @$attrs;
+        my @type_constraints = map { $_->type_constraint } grep { $_->can('type_constraint') } @$attrs;
         my @type_constraint_bodies = map {
             $_ && $_->_compiled_type_constraint;
         } @type_constraints;
