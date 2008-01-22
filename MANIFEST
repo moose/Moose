@@ -112,6 +112,7 @@ t/030_roles/011_overriding.t
 t/030_roles/012_method_exclusion_in_composition.t
 t/030_roles/013_method_aliasing_in_composition.t
 t/030_roles/014_more_alias_and_exclude.t
+t/030_roles/015_runtime_roles_and_attrs.t
 t/030_roles/020_role_composite.t
 t/030_roles/021_role_composite_exclusion.t
 t/030_roles/022_role_composition_req_methods.t
