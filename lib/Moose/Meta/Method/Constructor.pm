@@ -93,7 +93,7 @@ sub intialize_body {
         # objects, rather than
         # Moose::Meta::Attribute. Class::MOP::Attribute attributes
         # have no type constraints.
-        my @type_constraints = map { $_->type_constraint } grep { $_->can('type_constraint') } @$attrs;
+        my @type_constraints = map { $_->type_constraint } @$attrs;
         my @type_constraint_bodies = map {
             $_ && $_->_compiled_type_constraint;
         } @type_constraints;
