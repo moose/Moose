@@ -11,7 +11,7 @@ use Sub::Name    'subname';
 use Data::OptList;
 use Sub::Exporter;
 
-our $VERSION   = '0.07';
+our $VERSION   = '0.08';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose       ();
@@ -31,8 +31,8 @@ use Moose::Util::TypeConstraints;
         # make a subtype for each Moose class
         subtype $role
             => as 'Role'
-            => where { $_->does($role) }
-            => optimize_as { blessed($_[0]) && $_[0]->can('does') && $_[0]->does($role) }
+            => where { Moose::Util::does_role($_, $role) }
+            => optimize_as { blessed($_[0]) && Moose::Util::does_role($_[0], $role) }
         unless find_type_constraint($role);
 
         my $meta;

@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.18';
+our $VERSION   = '0.19';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -278,7 +278,10 @@ sub _apply_all_roles {
 my %ANON_CLASSES;
 
 sub _process_attribute {
-    my $self    = shift;
+    my $self = shift;
+    
+    return $_[0] if blessed $_[0] && $_[0]->isa('Class::MOP::Attribute');
+    
     my $name    = shift;
     my %options = ((scalar @_ == 1 && ref($_[0]) eq 'HASH') ? %{$_[0]} : @_);
 

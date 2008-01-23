@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More tests => 42;
 use Test::Exception;
 
 BEGIN {
@@ -162,6 +162,18 @@ BEGIN {
     is($instance->foo, 'works', "foo builder works");
 }
 
+{    
+    {
+        package Test::Builder::Attribute::Broken;
+        use Moose;
+
+        has 'foo'  => ( required => 1, builder => 'build_foo', is => 'ro');
+    }
+    
+    dies_ok {
+        Test::Builder::Attribute::Broken->new;
+    } '... no builder, wtf';
+}
 
 
 {

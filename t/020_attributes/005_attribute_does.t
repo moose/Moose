@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Test::Exception;
 
 BEGIN {
@@ -13,11 +13,16 @@ BEGIN {
 {
     package Foo::Role;
     use Moose::Role;
+    use Moose::Util::TypeConstraints;    
 
     # if does() exists on its own, then 
     # we create a type constraint for 
     # it, just as we do for isa()
     has 'bar' => (is => 'rw', does => 'Bar::Role'); 
+    has 'baz' => (
+        is   => 'rw', 
+        does => subtype('Role', where { $_->does('Bar::Role') })
+    ); 
 
     package Bar::Role;
     use Moose::Role;
@@ -54,8 +59,18 @@ dies_ok {
 } '... foo did not pass the type constraint okay';
 
 lives_ok {
+    $foo->baz($bar);
+} '... baz passed the type constraint okay';
+
+dies_ok {
+    $foo->baz($foo);
+} '... foo did not pass the type constraint okay';
+
+lives_ok {
     $bar->foo($foo);
-} '... foo passed the type constraint okay';    
+} '... foo passed the type constraint okay';
+
+    
 
 # some error conditions
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 80;
+use Test::More tests => 84;
 use Test::Exception;
 
 BEGIN {
@@ -40,6 +40,8 @@ BEGIN {
     has 'blang' => (is => 'ro', isa => 'Thing', handles => ['goodbye']);         
     
     has 'bunch_of_stuff' => (is => 'rw', isa => 'ArrayRef');
+
+    has 'one_last_one' => (is => 'rw', isa => 'Ref');   
     
     # this one will work here ....
     has 'fail' => (isa => 'CodeRef');
@@ -47,6 +49,7 @@ BEGIN {
     
     package Bar;
     use Moose;
+    use Moose::Util::TypeConstraints;
     
     extends 'Foo';
 
@@ -75,6 +78,14 @@ BEGIN {
     } '... extend an attribute with parameterized type';
     
     ::lives_ok {
+        has '+one_last_one' => (isa => subtype('Ref', where { blessed $_ eq 'CODE' }));        
+    } '... extend an attribute with anon-subtype';    
+    
+    ::dies_ok {
+        has '+one_last_one' => (isa => 'Value');        
+    } '... cannot extend an attribute with a non-subtype';    
+    
+    ::lives_ok {
         has '+bling' => (handles => ['hello']);        
     } '... we can add the handles attribute option';
     
@@ -90,7 +101,10 @@ BEGIN {
     } '... cannot create an attribute with an illegal option';    
     ::dies_ok { 
         has '+other_fail' => (weak_ref => 1);           
-    } '... cannot create an attribute with an illegal option';    
+    } '... cannot create an attribute with an illegal option';   
+    ::dies_ok { 
+        has '+other_fail' => (isa => 'WangDoodle');           
+    } '... cannot create an attribute with a non-existent type';       
     
 }
 
@@ -122,6 +136,8 @@ is($foo->baz, undef, '... got the right undef default value');
     is($foo->baz, $scalar_ref, '... got the right value assigned to baz');
     
     lives_ok { $foo->bunch_of_stuff([qw[one two three]]) } '... Foo::bunch_of_stuff accepts an array of strings';    
+    
+    lives_ok { $foo->one_last_one(sub { 'Hello World'}) } '... Foo::one_last_one accepts a code ref';        
     
     my $code_ref = sub { 1 };
     lives_ok { $foo->baz($code_ref) } '... Foo::baz accepts a code ref';

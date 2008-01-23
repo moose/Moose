@@ -9,7 +9,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use overload     ();
 
-our $VERSION   = '0.18';
+our $VERSION   = '0.19';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -149,13 +149,15 @@ sub _process_options {
     elsif (exists $options->{does}) {
         # allow for anon-subtypes here ...
         if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
-                $options->{type_constraint} = $options->{isa};
+                $options->{type_constraint} = $options->{does};
         }
         else {
             $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
                 $options->{does} => {
                     parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'),
-                    constraint => sub { $_[0]->does($options->{does}) }
+                    constraint => sub { 
+                        Moose::Util::does_role($_[0], $options->{does})
+                    }
                 }
             );
         }

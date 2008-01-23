@@ -113,6 +113,7 @@ t/030_roles/012_method_exclusion_in_composition.t
 t/030_roles/013_method_aliasing_in_composition.t
 t/030_roles/014_more_alias_and_exclude.t
 t/030_roles/015_runtime_roles_and_attrs.t
+t/030_roles/016_runtime_roles_and_nonmoose.t
 t/030_roles/020_role_composite.t
 t/030_roles/021_role_composite_exclusion.t
 t/030_roles/022_role_composition_req_methods.t
@@ -168,6 +169,7 @@ t/200_examples/007_Child_Parent_attr_inherit.t
 t/300_immutable/001_immutable_moose.t
 t/300_immutable/002_apply_roles_to_immutable.t
 t/300_immutable/003_immutable_meta_class.t
+t/300_immutable/004_inlined_constructors_n_types.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t

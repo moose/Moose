@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.06';
+our $VERSION   = '0.07';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -92,9 +92,16 @@ sub intialize_body {
         # which in turn has attributes which are Class::MOP::Attribute
         # objects, rather than Moose::Meta::Attribute. And 
         # Class::MOP::Attribute attributes have no type constraints.
-        my @type_constraints = map { $_->type_constraint } grep { $_->can('type_constraint') } @$attrs;
+        # However we need to make sure we leave an undef value there
+        # because the inlined code is using the index of the attributes
+        # to determine where to find the type constraint
+        
+        my @type_constraints = map { 
+            $_->can('type_constraint') ? $_->type_constraint : undef
+        } @$attrs;
+        
         my @type_constraint_bodies = map {
-            $_ && $_->_compiled_type_constraint;
+            defined $_ ? $_->_compiled_type_constraint : undef;
         } @type_constraints;
 
         $code = eval $source;
