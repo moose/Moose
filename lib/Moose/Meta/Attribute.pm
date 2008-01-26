@@ -208,7 +208,7 @@ sub initialize_instance_slot {
 
     my $val;
     my $value_is_set;
-    if (exists $params->{$init_arg}) {
+    if ( defined($init_arg) and exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
         $value_is_set = 1;    
     }
