@@ -405,9 +405,10 @@ sub install_accessors {
                 $associated_class->add_method($handle => subname $name, sub {
                     my $proxy = (shift)->$accessor();
                     @_ = ($proxy, @_);
-                    (defined $proxy) 
-                        || confess "Cannot delegate $handle to $method_to_call because " . 
-                                   "the value of " . $self->name . " is not defined";
+
+                    defined($proxy)
+                        or confess "Undefined 'handles' for attribute '".$self->name."' for method '$name'.";
+
                     goto &{ $proxy->can($method_to_call) || return };
                 });
             }
