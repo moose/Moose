@@ -35,61 +35,26 @@ Revision history for Perl extension Moose
 
     Moose is now a postmodern object system :)
       - (see the POD for details)
-
-    * <<Role System Refactoring>>
-    - this release contains a major reworking and
-      cleanup of the role system
+      
+    * <<Role System Refactoring>>    
+    - this release contains a major reworking and 
+      cleanup of the role system     
       - 100% backwards compat.
       - Role application now restructured into seperate
         classes based on type of applicants
       - Role summation (combining of more than one role)
-        is much cleaner and anon-classes are no longer
+        is much cleaner and anon-classes are no longer 
         used in this process
-      - new Composite role metaclass
+      - new Composite role metaclass    
       - runtime application of roles to instances
         is now more efficient and re-uses generated
         classes when applicable
-
+        
     * <<New Role composition features>>
-      - methods can now be excluded from a given role
+      - methods can now be excluded from a given role 
         during composition
-
-            with 'My::Role' => { excludes => [qw/method1 method2/] };
-
-      - methods can now be aliased to another name (and
-        still retain the original as well)
-
-            with 'My::Role' => { 
-                alias => {
-                    method1 => method1_aliased
-                }
-            };
-            
-    * <<New Attribute traits>>
-      - allows arbitrary roles to be applied to attribute metaobjects
-        to allow better combination of custom attribute features. Docs
-        are coming soon for this feature.
-
-    * <<New Maybe[$type] parameterized type>>
-      - added this new type which basically means the value is 
-        of $type or it is undef
-
-    ====
-
-    * Moose
-      Moose::Role
-      - now uses the Moose::Util::apply_all_roles to deal
-        with role application
-
-    * Moose::Util
-      - added the &apply_all_roles function
-
-    * Moose::Util::TypeConstraints
-      - all optimized type constraint subs are now
-        pulled from the Moose::Util::TypeConstraints::OptimizedConstraints
-        module (thanks to nothingmuch)
-      - improved support for the IO:: family of modules within the
-        FileHandle type constraint
+      - methods can now be aliased to another name (and 
+        still retain the original as well)        
     
     * Moose::Util::TypeConstraints::OptimizedConstraints
       - added this module (see above)
@@ -107,13 +72,13 @@ Revision history for Perl extension Moose
     * Moose::Meta::Method::Accessor
       Moose::Meta::Method::Constructor
       Moose::Meta::Attribute
-      Moose::Meta::TypeConstraint
-      Moose::Meta::TypeCoercion
-      - lots of cleanup of such things as:
+      Moose::Meta::TypeConstraint      
+      Moose::Meta::TypeCoercion      
+      - lots of cleanup of such things as: 
         - generated methods
         - type constraint handling
-        - error handling/messages
-        (thanks to nothingmuch)
+        - error handling/messages 
+        (thanks to nothingmuch)   
     
     * Moose::Meta::TypeConstraint::Parameterizable
       - added this module to support the refactor 
