@@ -158,7 +158,11 @@ sub get_method_map {
 
 sub add_attribute {
     my $self = shift;
-    $self->SUPER::add_attribute($self->_process_attribute(@_));
+    $self->SUPER::add_attribute(
+        (blessed $_[0] && $_[0]->isa('Class::MOP::Attribute')
+            ? $_[0] 
+            : $self->_process_attribute(@_))    
+    );
 }
 
 sub add_override_method_modifier {
@@ -278,10 +282,7 @@ sub _apply_all_roles {
 my %ANON_CLASSES;
 
 sub _process_attribute {
-    my $self = shift;
-    
-    return $_[0] if blessed $_[0] && $_[0]->isa('Class::MOP::Attribute');
-    
+    my $self    = shift;
     my $name    = shift;
     my %options = ((scalar @_ == 1 && ref($_[0]) eq 'HASH') ? %{$_[0]} : @_);
 

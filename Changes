@@ -1,11 +1,12 @@
 Revision history for Perl extension Moose
 
-0.36
+0.36 Sat. Jan. 26, 2008
     * Moose::Role
       Moose::Meta::Attribute
       - role type tests now support when roles are 
         applied to non-Moose classes (found by ash)
         - added tests for this (thanks to ash)
+      - couple extra tests to boost code coverage
 
     * Moose::Meta::Method::Constructor    
       - improved fix for handling Class::MOP attributes
