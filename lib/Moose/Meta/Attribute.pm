@@ -195,8 +195,12 @@ sub _process_options {
     }
 
     if (exists $options->{lazy} && $options->{lazy}) {
-        (exists $options->{default} || exists $options->{builder} )
+        (exists $options->{default} || defined $options->{builder} )
             || confess "You cannot have lazy attribute without specifying a default value for it";
+    }
+
+    if ( $options->{required} && !( ( !exists $options->{init_arg} || defined $options->{init_arg} ) || exists $options->{default} || defined $options->{builder} ) ) {
+        confess "You cannot have a required attribute without a default, builder, or an init_arg";
     }
 
 }
