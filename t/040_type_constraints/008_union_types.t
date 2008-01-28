@@ -55,7 +55,15 @@ diag $HashOrArray->validate([]);
 ok(!defined($HashOrArray->validate([])), '... (ArrayRef | HashRef) can accept []');
 ok(!defined($HashOrArray->validate({})), '... (ArrayRef | HashRef) can accept {}');
 
-is($HashOrArray->validate(\(my $var2)), 'Validation failed for \'ArrayRef\' failed and Validation failed for \'HashRef\' failed in (ArrayRef | HashRef)', '... (ArrayRef | HashRef) cannot accept scalar refs');
-is($HashOrArray->validate(sub {}),      'Validation failed for \'ArrayRef\' failed and Validation failed for \'HashRef\' failed in (ArrayRef | HashRef)', '... (ArrayRef | HashRef) cannot accept code refs');
-is($HashOrArray->validate(50),          'Validation failed for \'ArrayRef\' failed and Validation failed for \'HashRef\' failed in (ArrayRef | HashRef)', '... (ArrayRef | HashRef) cannot accept Numbers');
+like($HashOrArray->validate(\(my $var2)), 
+qr/Validation failed for \'ArrayRef\' failed with value SCALAR\(0x.......\) and Validation failed for \'HashRef\' failed with value SCALAR\(0x.......\) in \(ArrayRef \| HashRef\)/, 
+'... (ArrayRef | HashRef) cannot accept scalar refs');
+
+like($HashOrArray->validate(sub {}),      
+qr/Validation failed for \'ArrayRef\' failed with value CODE\(0x.......\) and Validation failed for \'HashRef\' failed with value CODE\(0x.......\) in \(ArrayRef \| HashRef\)/, 
+'... (ArrayRef | HashRef) cannot accept code refs');
+
+is($HashOrArray->validate(50),
+'Validation failed for \'ArrayRef\' failed with value 50 and Validation failed for \'HashRef\' failed with value 50 in (ArrayRef | HashRef)', 
+'... (ArrayRef | HashRef) cannot accept Numbers');
 

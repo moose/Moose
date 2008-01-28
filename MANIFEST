@@ -147,6 +147,8 @@ t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
 t/050_metaclasses/004_moose_for_meta.t
+t/050_metaclasses/010_extending_and_embedding.t
+t/050_metaclasses/011_init_meta.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t

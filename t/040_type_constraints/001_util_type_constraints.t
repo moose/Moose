@@ -88,7 +88,7 @@ ok(!$natural->has_message, '... it does not have a message');
 ok(!defined($natural->validate(5)), '... validated successfully (no error)');
 
 is($natural->validate(-5), 
-  "Validation failed for 'Natural' failed", 
+  "Validation failed for 'Natural' failed with value -5", 
   '... validated unsuccessfully (got error)');
 
 my $string = find_type_constraint('String');

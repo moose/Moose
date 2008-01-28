@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.36';
+our $VERSION   = '0.37';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -33,8 +33,8 @@ use Moose::Util ();
 
     sub init_meta {
         my ( $class, $base_class, $metaclass ) = @_;
-        $base_class = $class unless defined $base_class;
-        $metaclass = 'Moose::Meta::Class' unless defined $metaclass;
+        $base_class = 'Moose::Object'      unless defined $base_class;
+        $metaclass  = 'Moose::Meta::Class' unless defined $metaclass;
 
         confess
             "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
@@ -73,6 +73,8 @@ use Moose::Util ();
         # make sure they inherit from Moose::Object
         $meta->superclasses($base_class)
           unless $meta->superclasses();
+         
+        return $meta;
     }
 
     my %exports = (

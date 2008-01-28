@@ -1,5 +1,26 @@
 Revision history for Perl extension Moose
 
+0.37
+    * Moose
+      - fixed some details in Moose::init_meta 
+        and its superclass handling (thanks thepler)
+        - added tests for this (thanks thepler)
+
+    * Moose::Meta::Class
+      Moose::Meta::Method::Constructor
+      Moose::Meta::Attribute        
+        - making (init_arg => undef) work here too
+          (thanks to nothingmuch)
+    
+    * Moose::Util::TypeConstraints
+      Moose::Util::TypeConstraints::OptimizedConstraints
+      Moose::Meta::Attribute
+      Moose::Meta::Method::Constructor
+      Moose::Meta::Method::Accessor            
+        - making type errors use the 
+          assigned message (thanks to Sartak)
+          - added tests for this
+
 0.36 Sat. Jan. 26, 2008
     * Moose::Role
       Moose::Meta::Attribute

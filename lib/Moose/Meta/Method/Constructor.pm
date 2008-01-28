@@ -143,15 +143,24 @@ sub _generate_slot_initializer {
 
                 if ($is_moose && $attr->has_type_constraint) {
                     if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                        push @source => $self->_generate_type_coercion($attr, '$type_constraints[' . $index . ']', '$val', '$val');
+                        push @source => $self->_generate_type_coercion(
+                            $attr, 
+                            '$type_constraints[' . $index . ']', 
+                            '$val', 
+                            '$val'
+                        );
                     }
-                    push @source => $self->_generate_type_constraint_check($attr, '$type_constraint_bodies[' . $index . ']', '$val');
+                    push @source => $self->_generate_type_constraint_check(
+                        $attr, 
+                        '$type_constraint_bodies[' . $index . ']', 
+                        '$type_constraints[' . $index . ']',                         
+                        '$val'
+                    );
                 }
                 push @source => $self->_generate_slot_assignment($attr, '$val');
 
             push @source => "} else {";
         }
-
             my $default;
             if ( $attr->has_default ) {
                 $default = $self->_generate_default_value($attr, $index);
@@ -160,13 +169,17 @@ sub _generate_slot_initializer {
                my $builder = $attr->builder;
                $default = '$instance->' . $builder;
             }
+            
+            push @source => '{'; # wrap this to avoid my $val overrite warnings
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_check(
                 $attr,
                 ('$type_constraint_bodies[' . $index . ']'),
+                ('$type_constraints[' . $index . ']'),                
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
             push @source => $self->_generate_slot_assignment($attr, $default);
+            push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
 
         push @source => "}" if defined $attr->init_arg;
     }
@@ -176,9 +189,19 @@ sub _generate_slot_initializer {
             push @source => ('my $val = $params{\'' . $init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                    push @source => $self->_generate_type_coercion($attr, '$type_constraints[' . $index . ']', '$val', '$val');
+                    push @source => $self->_generate_type_coercion(
+                        $attr, 
+                        '$type_constraints[' . $index . ']', 
+                        '$val', 
+                        '$val'
+                    );
                 }
-                push @source => $self->_generate_type_constraint_check($attr, '$type_constraint_bodies[' . $index . ']', '$val');
+                push @source => $self->_generate_type_constraint_check(
+                    $attr, 
+                    '$type_constraint_bodies[' . $index . ']', 
+                    '$type_constraints[' . $index . ']',                     
+                    '$val'
+                );
             }
             push @source => $self->_generate_slot_assignment($attr, '$val');
 
@@ -220,12 +243,13 @@ sub _generate_type_coercion {
 }
 
 sub _generate_type_constraint_check {
-    my ($self, $attr, $type_constraint_cv, $value_name) = @_;
+    my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
     return (
         $type_constraint_cv . '->(' . $value_name . ')'
-        . "\n\t" . '|| confess "Attribute (' . $attr->name . ') does not pass the type constraint ('
-        . $attr->type_constraint->name
-        . ') with " . (defined(' . $value_name . ') ? overload::StrVal(' . $value_name . ') : "undef");'
+        . "\n\t" . '|| confess "Attribute (' 
+        . $attr->name 
+        . ') does not pass the type constraint because: " . ' 
+        . $type_constraint_obj . '->get_message(' . $value_name . ');'
     );
 }
 

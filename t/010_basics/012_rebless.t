@@ -64,8 +64,12 @@ is($foo->lazy_classname, 'Parent', "lazy attribute initialized");
 lives_ok { $foo->type_constrained(10.5) } "Num type constraint for now..";
 
 # try to rebless, except it will fail due to Child's stricter type constraint
-throws_ok { Child->meta->rebless_instance($foo) } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '10\.5'/;
-throws_ok { Child->meta->rebless_instance($bar) } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with '5\.5'/;
+throws_ok { Child->meta->rebless_instance($foo) } 
+qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 10\.5/,
+'... this failed cause of type check';
+throws_ok { Child->meta->rebless_instance($bar) } 
+qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 5\.5/,
+'... this failed cause of type check';;
 
 $foo->type_constrained(10);
 $bar->type_constrained(5);
@@ -79,4 +83,6 @@ is($foo->name, 'Junior', "Child->name's default came through");
 is($foo->lazy_classname, 'Parent', "lazy attribute was already initialized");
 is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
 
-throws_ok { $foo->type_constrained(10.5) } qr/^Attribute \(type_constrained\) does not pass the type constraint \(Int\) with 10\.5 /;
+throws_ok { $foo->type_constrained(10.5) } 
+qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 10\.5/,
+'... this failed cause of type check';

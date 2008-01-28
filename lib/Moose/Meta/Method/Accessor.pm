@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -124,10 +124,10 @@ sub _inline_check_constraint {
     # FIXME
     # This sprintf is insanely annoying, we should
     # fix it someday - SL
-    return sprintf <<'EOF', $value, $attr_name, $type_constraint_name, $value, $value, $value, $value, $value, $value
+    return sprintf <<'EOF', $value, $attr_name, $value, $value,
 $type_constraint->(%s)
-        || confess "Attribute (%s) does not pass the type constraint (%s) with "
-       . (defined(%s) ? overload::StrVal(%s) : "undef")
+        || confess "Attribute (%s) does not pass the type constraint because: "
+       . $type_constraint_obj->get_message(%s)
   if defined(%s);
 EOF
 }

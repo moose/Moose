@@ -65,14 +65,20 @@ sub validate {
         return undef;
     }
     else {
-        if ($self->has_message) {
-            local $_ = $value;
-            return $self->message->($value);
-        }
-        else {
-            return "Validation failed for '" . $self->name . "' failed";
-        }
+        $self->get_message($value);
     }
+}
+
+sub get_message {
+    my ($self, $value) = @_;
+    $value = (defined $value ? overload::StrVal($value) : 'undef');
+    if (my $msg = $self->message) {
+        local $_ = $value;
+        return $msg->($value);
+    }
+    else {
+        return "Validation failed for '" . $self->name . "' failed with value $value";
+    }    
 }
 
 ## type predicates ...
@@ -248,6 +254,8 @@ the C<message> will be used to construct a custom error message.
 =item B<has_message>
 
 =item B<message>
+
+=item B<get_message ($value)>
 
 =item B<has_coercion>
 

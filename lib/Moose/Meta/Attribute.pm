@@ -248,15 +248,10 @@ sub initialize_instance_slot {
             $val = $type_constraint->coerce($val);
         }
         (defined($type_constraint->check($val)))
-            || confess "Attribute (" .
-                       $self->name .
-                       ") does not pass the type constraint (" .
-                       $type_constraint->name .
-                       ") with '" .
-                       (defined $val
-                           ? overload::StrVal($val)
-                           : 'undef') .
-                       "'";
+            || confess "Attribute (" 
+                     . $self->name 
+                     . ") does not pass the type constraint because: " 
+                     . $type_constraint->get_message($val);
     }
 
     $meta_instance->set_slot_value($instance, $self->name, $val);
@@ -282,15 +277,13 @@ sub set_value {
 
         if ($self->should_coerce) {
             $value = $type_constraint->coerce($value);
-        }
+        }        
         $type_constraint->_compiled_type_constraint->($value)
-                || confess "Attribute ($attr_name) does not pass the type constraint ("
-               . $type_constraint->name
-               . ") with "
-               . (defined($value)
-                    ? ("'" . overload::StrVal($value) . "'")
-                    : "undef")
-          if defined($value);
+            || confess "Attribute (" 
+                     . $self->name 
+                     . ") does not pass the type constraint because " 
+                     . $type_constraint->get_message($value)
+                if defined($value);
     }
 
     my $meta_instance = Class::MOP::Class->initialize(blessed($instance))

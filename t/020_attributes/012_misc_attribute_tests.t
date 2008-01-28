@@ -120,7 +120,8 @@ BEGIN {
 
     throws_ok {
         $moose_obj->a_str( $moose_obj )
-    } qr/Attribute \(a_str\) does not pass the type constraint \(Str\) with OverloadedStr\=HASH\(.*?\)/, '... dies without overloading the string';
+    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' failed with value OverloadedStr=HASH\(0x.......\)/, 
+    '... dies without overloading the string';
 
 }
 
@@ -134,7 +135,8 @@ BEGIN {
 
     throws_ok {
         OverloadBreaker->new;
-    } qr/Attribute \(a_num\) does not pass the type constraint \(Int\) with \'7\.5\'/, '... this doesnt trip overload to break anymore ';
+    } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 7\.5/, 
+    '... this doesnt trip overload to break anymore ';
 
     lives_ok {
         OverloadBreaker->new(a_num => 5);

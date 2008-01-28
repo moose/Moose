@@ -17,11 +17,13 @@ BEGIN {
 
     extends 'Moose::Meta::Class';
 
-    has 'meta_size' =>
-        ( is  => 'rw',
-          isa => 'Int',
-        );
+    has 'meta_size' => ( 
+        is  => 'rw',
+        isa => 'Int',
+    );
 }
 
-lives_ok { My::Meta->meta()->make_immutable() } 'can make a meta class immutable';
+lives_ok { 
+    My::Meta->meta()->make_immutable(debug => 0) 
+} '... can make a meta class immutable';
 
