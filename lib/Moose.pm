@@ -188,6 +188,11 @@ use Moose::Util ();
     sub import {
         $CALLER = _get_caller(@_);
 
+        # this works because both pragmas set $^H (see perldoc perlvar)
+        # which affects the current compilation - i.e. the file who use'd
+        # us - which is why we don't need to do anything special to make
+        # it affect that file rather than this one (which is already compiled)
+
         strict->import;
         warnings->import;
 
