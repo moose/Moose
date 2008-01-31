@@ -63,7 +63,7 @@ sub intialize_body {
         push @DEMOLISH_calls => '$_[0]->' . $method->{class} . '::DEMOLISH()';    
     }
     
-    $source .= join "\n" => @DEMOLISH_calls;
+    $source .= join ";\n" => @DEMOLISH_calls;
 
     $source .= ";\n" . '}'; 
     warn $source if $self->options->{debug};    
