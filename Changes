@@ -9,17 +9,21 @@ Revision history for Perl extension Moose
     * Moose::Meta::Class
       Moose::Meta::Method::Constructor
       Moose::Meta::Attribute        
-        - making (init_arg => undef) work here too
-          (thanks to nothingmuch)
+      - making (init_arg => undef) work here too
+        (thanks to nothingmuch)
     
     * Moose::Util::TypeConstraints
       Moose::Util::TypeConstraints::OptimizedConstraints
       Moose::Meta::Attribute
       Moose::Meta::Method::Constructor
       Moose::Meta::Method::Accessor            
-        - making type errors use the 
-          assigned message (thanks to Sartak)
-          - added tests for this
+      - making type errors use the 
+        assigned message (thanks to Sartak)
+        - added tests for this
+
+    * Moose::Meta::Method::Destructor
+      - making sure DESTROY gets inlined properly 
+        with successive DEMOLISH calls (thanks to manito)
 
 0.36 Sat. Jan. 26, 2008
     * Moose::Role
