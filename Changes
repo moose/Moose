@@ -5,6 +5,8 @@ Revision history for Perl extension Moose
       - fixed some details in Moose::init_meta 
         and its superclass handling (thanks thepler)
         - added tests for this (thanks thepler)
+      - 'has' now dies if you don't pass in name 
+        value pairs
 
     * Moose::Meta::Class
       Moose::Meta::Method::Constructor

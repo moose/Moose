@@ -100,7 +100,9 @@ use Moose::Util ();
         has => sub {
             my $class = $CALLER;
             return subname 'Moose::has' => sub ($;%) {
-                my ( $name, %options ) = @_;
+                my $name    = shift;
+                die 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+                my %options = @_;
                 my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
                 $class->meta->add_attribute( $_, %options ) for @$attrs;
             };
