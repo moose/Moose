@@ -161,6 +161,12 @@ use Moose::Util ();
                 $class->meta->add_augment_method_modifier( $name => $method );
             };
         },
+        make_immutable => sub {
+            my $class = $CALLER;
+            return subname 'Moose::make_immutable' => sub {
+                $class->meta->make_immutable(@_)
+            };            
+        },        
         confess => sub {
             return \&Carp::confess;
         },
