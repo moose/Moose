@@ -1,14 +1,13 @@
 package oose;
-
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 BEGIN {
     my $package;
-    sub import { $package = $_[1] }
+    sub import { $package = $_[1] || 'Class' }
     use Filter::Simple sub { s/^/package $package;\nuse Moose;\n/; }
 }
 
