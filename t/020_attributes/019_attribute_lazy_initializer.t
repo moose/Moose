@@ -18,7 +18,7 @@ BEGIN {
         reader => 'get_foo',
         writer => 'set_foo',
         initializer => sub {
-            my ($self, $value, $name, $callback) = @_;
+            my ($self, $value, $callback, $attr) = @_;
             $callback->($value * 2);
         },
     );
@@ -27,7 +27,7 @@ BEGIN {
         reader  => 'get_lazy_foo',
         default => 10,
         initializer => sub {
-            my ($self, $value, $name, $callback) = @_;
+            my ($self, $value, $callback, $attr) = @_;
             $callback->($value * 2);
         },
     );
