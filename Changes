@@ -15,7 +15,12 @@ Revision history for Perl extension Moose
       Moose::Meta::Attribute        
       - making (init_arg => undef) work here too
         (thanks to nothingmuch)
+        
+    * Moose::Meta::Attribute        
+      Moose::Meta::Method::Constructor
+      Moose::Meta::Method::Accessor                
       - make lazy attributes respect attr initializers (rjbs)
+        - added tests for this
     
     * Moose::Util::TypeConstraints
       Moose::Util::TypeConstraints::OptimizedConstraints

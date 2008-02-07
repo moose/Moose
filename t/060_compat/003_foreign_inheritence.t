@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6; #7;
+use Test::More tests => 7;
 use Test::Exception;
 
 BEGIN {
@@ -49,7 +49,6 @@ BEGIN {
     extends 'Bucket';
 
     package MyBase;
-
     sub foo { }
 
     package Custom::Meta1;
@@ -78,9 +77,9 @@ isa_ok($foo_moose, 'Elk');
 is($foo_moose->no_moose, 'Elk', '... got the right value from the Elk method');
 is($foo_moose->moose, 'Foo', '... got the right value from the Foo::Moose method');
 
-#lives_ok { 
-#    Old::Bucket::Nose->meta->make_immutable(debug => 0); 
-#} 'Immutability on Moose class extending Class::MOP class ok';
+lives_ok { 
+    Old::Bucket::Nose->meta->make_immutable(debug => 0); 
+} 'Immutability on Moose class extending Class::MOP class ok';
 
 lives_ok {
   SubClass2::extends('MyBase');
