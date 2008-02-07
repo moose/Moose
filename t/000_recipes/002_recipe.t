@@ -29,7 +29,7 @@ BEGIN {
         $self->balance($current_balance - $amount);
     }
     
-	__PACKAGE__->meta->make_immutable(debug => 0);
+	make_immutable(debug => 0);
 }{
 	package CheckingAccount;	
 	use Moose;
@@ -47,7 +47,7 @@ BEGIN {
 		}
 	};
 
-	__PACKAGE__->meta->make_immutable(debug => 0);
+	make_immutable(debug => 0);
 }
 
 my $savings_account = BankAccount->new(balance => 250);

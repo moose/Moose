@@ -81,7 +81,7 @@ BEGIN {
         sprintf '$%0.2f USD' => $self->amount
     }
     
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }
 
 ok(US::Currency->does('Comparable'), '... US::Currency does Comparable');

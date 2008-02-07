@@ -157,7 +157,7 @@ sub _generate_slot_initializer {
                         '$val'
                     );
                 }
-                push @source => $self->_generate_slot_assignment($attr, '$val');
+                push @source => $self->_generate_slot_assignment($attr, '$val', $index);
 
             push @source => "} else {";
         }
@@ -178,7 +178,7 @@ sub _generate_slot_initializer {
                 ('$type_constraints[' . $index . ']'),                
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
-            push @source => $self->_generate_slot_assignment($attr, $default);
+            push @source => $self->_generate_slot_assignment($attr, $default, $index);
             push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
 
         push @source => "}" if defined $attr->init_arg;
@@ -203,7 +203,7 @@ sub _generate_slot_initializer {
                     '$val'
                 );
             }
-            push @source => $self->_generate_slot_assignment($attr, '$val');
+            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
 
         push @source => "}";
     }
@@ -212,16 +212,26 @@ sub _generate_slot_initializer {
 }
 
 sub _generate_slot_assignment {
-    my ($self, $attr, $value) = @_;
-    my $source = (
-        $self->meta_instance->inline_set_slot_value(
-            '$instance',
-            ("'" . $attr->name . "'"),
-            $value
-        ) . ';'
-    );
+    my ($self, $attr, $value, $index) = @_;
 
-    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
+    my $source;
+    
+    if ($attr->has_initializer) {
+        $source = (
+            '$attrs->[' . $index . ']->set_initial_value($instance, ' . $value . ');'
+        );        
+    }
+    else {
+        $source = (
+            $self->meta_instance->inline_set_slot_value(
+                '$instance',
+                ("'" . $attr->name . "'"),
+                $value
+            ) . ';'
+        );        
+    }
+    
+    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME        
 
     if ($is_moose && $attr->is_weak_ref) {
         $source .= (

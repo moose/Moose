@@ -8,7 +8,7 @@ Revision history for Perl extension Moose
       - 'has' now dies if you don't pass in name 
         value pairs
       - added the 'make_immutable' keyword as a shortcut
-        to __PACKAGE__->meta->make_immutable
+        to make_immutable
 
     * Moose::Meta::Class
       Moose::Meta::Method::Constructor

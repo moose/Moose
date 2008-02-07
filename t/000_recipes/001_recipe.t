@@ -23,7 +23,7 @@ BEGIN {
 	    $self->y(0);    
 	}
 	
-	__PACKAGE__->meta->make_immutable(debug => 0);
+	make_immutable(debug => 0);
 }{	
 	package Point3D;
 	use Moose;
@@ -37,7 +37,7 @@ BEGIN {
 	    $self->{z} = 0;
 	};
 	
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }
 
 my $point = Point->new(x => 1, y => 2);	

@@ -45,7 +45,7 @@ BEGIN {
     has 'state'    => (is => 'rw', isa => 'USState');
     has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
     
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }{
     
     package Company;
@@ -80,7 +80,7 @@ BEGIN {
         }
     };
     
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }{    
     
     package Person;
@@ -98,7 +98,7 @@ BEGIN {
                $self->last_name;
     }
 
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }{
       
     package Employee;
@@ -114,7 +114,7 @@ BEGIN {
         super() . ', ' . $self->title
     };
     
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    make_immutable(debug => 0);
 }
 
 my $ii;

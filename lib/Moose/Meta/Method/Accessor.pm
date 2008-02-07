@@ -24,9 +24,9 @@ sub _eval_code {
 
     my $type_constraint_obj  = $attr->type_constraint;
     my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
-    my $type_constraint = $type_constraint_obj
-                                ? $type_constraint_obj->_compiled_type_constraint
-                                : undef;
+    my $type_constraint      = $type_constraint_obj
+                                   ? $type_constraint_obj->_compiled_type_constraint
+                                   : undef;
 
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
@@ -176,31 +176,41 @@ sub _inline_check_lazy {
             $code .= '    ($type_constraint->($default))' .
                      '            || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("' .
                      '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef")' .
-                     '          if defined($default);' . "\n" .
-                     '        ' . $slot_access . ' = $default; ' . "\n";
+                     '          if defined($default);' . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, '$default') . "\n";
         } 
         else {
-            $code .= '    ' . $slot_access . " = undef; \n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, 'undef') . "\n";
         }
 
     } else {
         if ($attr->has_default) {
-            $code .= '    '.$slot_access.' = $attr->default(' . $inv . ');'."\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, ('$attr->default(' . $inv . ')')) . "\n";            
         } 
         elsif ($attr->has_builder) {
-            $code .= '    if(my $builder = '.$inv.'->can($attr->builder)){ '."\n".
-                     '        '.$slot_access.' = '.$inv.'->$builder; '. "\n    } else {\n" .
+            $code .= '    if (my $builder = '.$inv.'->can($attr->builder)) { ' . "\n" 
+                  .  '       ' . $self->_inline_init_slot($attr, $inv, $slot_access, ($inv . '->$builder'))           
+                     . "\n    } else {\n" .
                      '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
                      '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
         } 
         else {
-            $code .= '    ' . $slot_access . " = undef; \n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, 'undef') . "\n";
         }
     }
     $code .= "}\n";
     return $code;
 }
 
+sub _inline_init_slot {
+    my ($self, $attr, $inv, $slot_access, $value) = @_;
+    if ($attr->has_initializer) {
+        return ('$attr->set_initial_value(' . $inv . ', ' . $value . ');');
+    }
+    else {
+        return ($slot_access . ' = ' . $value . ';');
+    }    
+}
 
 sub _inline_store {
     my ($self, $instance, $value) = @_;
