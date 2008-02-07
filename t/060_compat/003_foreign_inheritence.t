@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5; #6;
+use Test::More tests => 6; #7;
 use Test::Exception;
 
 BEGIN {
@@ -48,6 +48,26 @@ BEGIN {
     
     extends 'Bucket';
 
+    package MyBase;
+
+    sub foo { }
+
+    package Custom::Meta1;
+    use base qw(Moose::Meta::Class);
+
+    package Custom::Meta2;
+    use base qw(Moose::Meta::Class);
+
+    package SubClass1;
+    use metaclass 'Custom::Meta1';
+    use Moose;
+
+    extends 'MyBase';
+
+    package SubClass2;
+    use metaclass 'Custom::Meta2';
+    use Moose;
+
   # XXX FIXME subclassing meta-attrs and immutable-ing the subclass fails
 }
 
@@ -61,3 +81,7 @@ is($foo_moose->moose, 'Foo', '... got the right value from the Foo::Moose method
 #lives_ok { 
 #    Old::Bucket::Nose->meta->make_immutable(debug => 0); 
 #} 'Immutability on Moose class extending Class::MOP class ok';
+
+lives_ok {
+  SubClass2::extends('MyBase');
+} 'Can subclass the same non-Moose class twice with different metaclasses';
