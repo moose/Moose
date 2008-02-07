@@ -254,7 +254,7 @@ sub initialize_instance_slot {
                      . $type_constraint->get_message($val);
     }
 
-    $meta_instance->set_slot_value($instance, $self->name, $val);
+    $self->set_initial_value($instance, $val);
     $meta_instance->weaken_slot_value($instance, $self->name)
         if ref $val && $self->is_weak_ref;
 }
@@ -307,11 +307,11 @@ sub get_value {
         unless ($self->has_value($instance)) {
             if ($self->has_default) {
                 my $default = $self->default($instance);
-                $self->set_value($instance, $default);
+                $self->set_initial_value($instance, $default);
             }
             if ( $self->has_builder ){
                 if (my $builder = $instance->can($self->builder)){
-                    $self->set_value($instance, $instance->$builder);
+                    $self->set_initial_value($instance, $instance->$builder);
                 } 
                 else {
                     confess(blessed($instance) 
@@ -323,7 +323,7 @@ sub get_value {
                 }
             } 
             else {
-                $self->set_value($instance, undef);
+                $self->set_initial_value($instance, undef);
             }
         }
     }
