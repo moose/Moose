@@ -17,7 +17,7 @@ BEGIN {
     use Moose;
     
     has 'bar' => (is      => 'rw', 
-                  isa     => 'Bar',
+                  isa     => 'Maybe[Bar]',
                   trigger => sub { 
                       my ($self, $bar) = @_;
                       $bar->foo($self) if defined $bar;

@@ -16,6 +16,8 @@ my @exports = qw[
     does_role
     search_class_by_role   
     apply_all_roles
+    get_all_init_args
+    get_all_attribute_values
 ];
 
 Sub::Exporter::setup_exporter({
@@ -93,6 +95,27 @@ sub apply_all_roles {
     }    
 }
 
+# instance deconstruction ...
+
+sub get_all_attribute_values {
+    my ($class, $instance) = @_;
+    return +{
+        map { $_->name => $_->get_value($instance) }
+            grep { $_->has_value($instance) }
+                $class->compute_all_applicable_attributes
+    };
+}
+
+sub get_all_init_args {
+    my ($class, $instance) = @_;
+    return +{
+        map { $_->init_arg => $_->get_value($instance) }
+            grep { $_->has_value($instance) }
+                grep { defined($_->init_arg) } 
+                    $class->compute_all_applicable_attributes
+    };
+}
+
 
 1;
 
@@ -150,6 +173,16 @@ right thing to apply the C<@roles> to the C<$applicant>. This is
 actually used internally by both L<Moose> and L<Moose::Role>, and the
 C<@roles> will be pre-processed through L<Data::OptList::mkopt>
 to allow for the additional arguments to be passed. 
+
+=item B<get_all_attribute_values($meta, $instance)>
+
+Returns the values of the C<$instance>'s fields keyed by the attribute names.
+
+=item B<get_all_init_args($meta, $instance)>
+
+Returns a hash reference where the keys are all the attributes' C<init_arg>s
+and the values are the instance's fields. Attributes without an C<init_arg>
+will be skipped.
 
 =back
 

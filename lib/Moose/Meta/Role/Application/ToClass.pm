@@ -179,7 +179,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Application::ToClass
+Moose::Meta::Role::Application::ToClass - Compose a role into a class
 
 =head1 DESCRIPTION
 

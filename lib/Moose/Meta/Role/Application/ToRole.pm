@@ -160,7 +160,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Application::ToRole
+Moose::Meta::Role::Application::ToRole - Compose a role into another role
 
 =head1 DESCRIPTION
 

@@ -247,7 +247,7 @@ sub initialize_instance_slot {
         if ($self->should_coerce && $type_constraint->has_coercion) {
             $val = $type_constraint->coerce($val);
         }
-        (defined($type_constraint->check($val)))
+        $type_constraint->check($val)
             || confess "Attribute (" 
                      . $self->name 
                      . ") does not pass the type constraint because: " 
@@ -282,8 +282,7 @@ sub set_value {
             || confess "Attribute (" 
                      . $self->name 
                      . ") does not pass the type constraint because " 
-                     . $type_constraint->get_message($value)
-                if defined($value);
+                     . $type_constraint->get_message($value);
     }
 
     my $meta_instance = Class::MOP::Class->initialize(blessed($instance))

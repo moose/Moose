@@ -89,7 +89,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Application
+Moose::Meta::Role::Application - A base class for role application
 
 =head1 DESCRIPTION
 

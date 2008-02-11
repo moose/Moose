@@ -35,6 +35,12 @@ Revision history for Perl extension Moose
       - making sure DESTROY gets inlined properly 
         with successive DEMOLISH calls (thanks to manito)
 
+    * Moose::Meta::Attribute  
+      Moose::Meta::Method::Accessor 
+      - fixed handling of undef with type constraints 
+        (thanks to Ernesto)               
+        - added tests for this
+
 0.36 Sat. Jan. 26, 2008
     * Moose::Role
       Moose::Meta::Attribute

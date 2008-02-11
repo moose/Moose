@@ -127,8 +127,7 @@ sub _inline_check_constraint {
     return sprintf <<'EOF', $value, $attr_name, $value, $value,
 $type_constraint->(%s)
         || confess "Attribute (%s) does not pass the type constraint because: "
-       . $type_constraint_obj->get_message(%s)
-  if defined(%s);
+       . $type_constraint_obj->get_message(%s);
 EOF
 }
 
@@ -175,8 +174,8 @@ sub _inline_check_lazy {
             $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
             $code .= '    ($type_constraint->($default))' .
                      '            || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("' .
-                     '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef")' .
-                     '          if defined($default);' . "\n";
+                     '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef");' 
+                     . "\n";
             $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, '$default') . "\n";
         } 
         else {

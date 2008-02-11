@@ -230,7 +230,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Application::RoleSummation
+Moose::Meta::Role::Application::RoleSummation - Combine two or more roles
 
 =head1 DESCRIPTION
 
