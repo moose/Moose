@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Class::MOP   ();
 
-our $VERSION   = '0.02';
+our $VERSION   = '0.03';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[

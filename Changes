@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.37
+0.37 Thurs. Fri. 14, 2008
     * Moose
       - fixed some details in Moose::init_meta 
         and its superclass handling (thanks thepler)
@@ -24,6 +24,7 @@ Revision history for Perl extension Moose
     
     * Moose::Util::TypeConstraints
       Moose::Util::TypeConstraints::OptimizedConstraints
+      Moose::Meta::TypeConstraints
       Moose::Meta::Attribute
       Moose::Meta::Method::Constructor
       Moose::Meta::Method::Accessor            
@@ -40,6 +41,10 @@ Revision history for Perl extension Moose
       - fixed handling of undef with type constraints 
         (thanks to Ernesto)               
         - added tests for this
+    
+    * Moose::Util
+      - added &get_all_init_args and &get_all_attribute_values 
+        (thanks to Sartak and nothingmuch)
 
 0.36 Sat. Jan. 26, 2008
     * Moose::Role

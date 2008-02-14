@@ -5,15 +5,12 @@ use warnings;
 
 use Test::More tests => 55;
 use Test::Exception;
-use Test::Deep;
 
 BEGIN
 {
     use_ok('Moose');
 }
 
-#    A MOOSE OBJECT
-#
 {
     package Foo;
     use Moose;

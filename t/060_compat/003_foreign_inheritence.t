@@ -82,7 +82,7 @@ lives_ok {
 } 'Immutability on Moose class extending Class::MOP class ok';
 
 TODO: {
-    local $TODO = 'Needs MRO::Compat support';
+    local $TODO = 'Needs MRO::Compat support' if $] < 5.009_005;
     
     lives_ok {
       SubClass2::extends('MyBase');
