@@ -261,6 +261,45 @@ sub initialize_instance_slot {
 
 ## Slot management
 
+# FIXME:
+# this duplicates too much code from 
+# Class::MOP::Attribute, we need to 
+# refactor these bits eventually.
+# - SL
+sub _set_initial_slot_value {
+    my ($self, $meta_instance, $instance, $value) = @_;
+
+    my $slot_name = $self->name;
+
+    return $meta_instance->set_slot_value($instance, $slot_name, $value)
+        unless $self->has_initializer;
+
+    my ($type_constraint, $can_coerce);
+    if ($self->has_type_constraint) {
+        $type_constraint = $self->type_constraint;
+        $can_coerce      = ($self->should_coerce && $type_constraint->has_coercion);
+    }
+
+    my $callback = sub {
+        my $val = shift;
+        if ($type_constraint) {
+            $val = $type_constraint->coerce($val)
+                if $can_coerce;
+            $type_constraint->check($val)
+                || confess "Attribute (" 
+                         . $slot_name 
+                         . ") does not pass the type constraint because: " 
+                         . $type_constraint->get_message($val);            
+        }
+        $meta_instance->set_slot_value($instance, $slot_name, $val);
+    };
+    
+    my $initializer = $self->initializer;
+
+    # most things will just want to set a value, so make it first arg
+    $instance->$initializer($value, $callback, $self);
+}
+
 sub set_value {
     my ($self, $instance, $value) = @_;
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 24;
 use Test::Exception;
 
 BEGIN {
@@ -71,6 +71,7 @@ BEGIN {
     
     has 'lazy_foo_builder_w_type' => (
         reader      => 'get_lazy_foo_builder_w_type',
+        isa         => 'Int',        
         builder     => 'get_foo_builder_w_type',
         initializer => sub {
             my ($self, $value, $callback, $attr) = @_;
@@ -123,6 +124,31 @@ BEGIN {
 
     is($bar->get_foo, 20, 'initial value set to 2x given value');          
 }
+
+{
+    package Fail::Bar;
+    use Moose;
+    
+    has 'foo' => (
+        reader => 'get_foo',
+        writer => 'set_foo',
+        isa    => 'Int',
+        initializer => sub {
+            my ($self, $value, $callback, $attr) = @_;
+            
+            ::isa_ok($attr, 'Moose::Meta::Attribute');
+            ::is($attr->name, 'foo', '... got the right name');
+            
+            $callback->("Hello $value World");
+        },
+    );  
+    
+    make_immutable;
+}
+
+dies_ok {
+    Fail::Bar->new(foo => 10)
+} '... this fails, because initializer returns a bad type';
 
 
 
