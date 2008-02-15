@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+0.38
+    * t/
+      - fixed some finicky tests (thanks to konobi)
+
 0.37 Thurs. Fri. 14, 2008
     * Moose
       - fixed some details in Moose::init_meta 

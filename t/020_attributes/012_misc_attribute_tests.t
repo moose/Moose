@@ -120,7 +120,7 @@ BEGIN {
 
     throws_ok {
         $moose_obj->a_str( $moose_obj )
-    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' failed with value OverloadedStr=HASH\(0x.......\)/, 
+    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' failed with value OverloadedStr=HASH\(0x.+?\)/, 
     '... dies without overloading the string';
 
 }
