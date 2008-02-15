@@ -1,6 +1,12 @@
 Revision history for Perl extension Moose
 
-0.38
+0.39
+    * Moose::Meta::Attribute 
+      - fix handles so that it doesn't return nothing 
+        when the method cannot be found, not sure why 
+        it ever did this originally 
+
+0.38 Fri. Feb. 15, 2008
     * Moose::Meta::Attribute 
       - fixed initializer to correctly do 
         type checking and coercion in the 
@@ -10,7 +16,7 @@ Revision history for Perl extension Moose
     * t/
       - fixed some finicky tests (thanks to konobi)
 
-0.37 Thurs. Fri. 14, 2008
+0.37 Thurs. Feb. 14, 2008
     * Moose
       - fixed some details in Moose::init_meta 
         and its superclass handling (thanks thepler)
