@@ -150,8 +150,3 @@ dies_ok {
     Fail::Bar->new(foo => 10)
 } '... this fails, because initializer returns a bad type';
 
-
-
-
-
-

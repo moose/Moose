@@ -1,6 +1,12 @@
 Revision history for Perl extension Moose
 
 0.38
+    * Moose::Meta::Attribute 
+      - fixed initializer to correctly do 
+        type checking and coercion in the 
+        callback 
+        - added tests for this
+
     * t/
       - fixed some finicky tests (thanks to konobi)
 
