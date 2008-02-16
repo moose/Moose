@@ -3,13 +3,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 54;
+use Test::More tests => 58;
 use Test::Exception;
 
 BEGIN {  
     use_ok('Moose');               
 }
 
+# -------------------------------------------------------------------
+# HASH handles
+# -------------------------------------------------------------------
 # the canonical form of of the 'handles'
 # option is the hash ref mapping a 
 # method name to the delegated method name
@@ -41,6 +44,26 @@ is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
 can_ok($bar, 'foo_bar');
 is($bar->foo_bar, 10, '... bar->foo_bar delegated correctly');
 
+# change the value ...
+
+$bar->foo->bar(30);
+
+# and make sure the delegation picks it up
+
+is($bar->foo->bar, 30, '... bar->foo->bar returned the right (changed) value');
+is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
+
+# change the value through the delegation ...
+
+$bar->foo_bar(50);
+
+# and make sure everyone sees it 
+
+is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
+is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
+
+# change the object we are delegating too
+
 my $foo = Foo->new(bar => 25);
 isa_ok($foo, 'Foo');
 
@@ -55,6 +78,9 @@ is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
 is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
 is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
 
+# -------------------------------------------------------------------
+# ARRAY handles 
+# -------------------------------------------------------------------
 # we also support an array based format
 # which assumes that the name is the same 
 # on either end
@@ -92,6 +118,9 @@ can_ok($car, 'stop');
 is($car->go, 'Engine::go', '... got the right value from ->go');
 is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
+# -------------------------------------------------------------------
+# REGEXP handles 
+# -------------------------------------------------------------------
 # and we support regexp delegation
 
 {
@@ -175,6 +204,10 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');    
 }
 
+# -------------------------------------------------------------------
+# ROLE handles
+# -------------------------------------------------------------------
+
 {
     package Foo::Bar;
     use Moose::Role;
@@ -213,9 +246,4 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     is($foo->bar, 'Foo::Baz::BAR', '... got the right value');
     is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');        
 }
-
-
-
-
-
 

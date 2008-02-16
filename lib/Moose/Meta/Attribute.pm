@@ -439,11 +439,10 @@ sub install_accessors {
             else {
                 $associated_class->add_method($handle => subname $name, sub {
                     my $proxy = (shift)->$accessor();
-                    @_ = ($proxy, @_);
                     (defined $proxy) 
                         || confess "Cannot delegate $handle to $method_to_call because " . 
                                    "the value of " . $self->name . " is not defined";
-                    $proxy->$method_to_call;
+                    $proxy->$method_to_call(@_);
                 });
             }
         }

@@ -6,6 +6,14 @@ use warnings;
 use Test::More tests => 39;
 use Test::Exception;
 
+=pod
+
+This tests the more complex 
+delegation cases and that they 
+do not fail at compile time.
+
+=cut
+
 {
 
     package ChildASuper;

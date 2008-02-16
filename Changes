@@ -4,7 +4,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute 
       - fix handles so that it doesn't return nothing 
         when the method cannot be found, not sure why 
-        it ever did this originally 
+        it ever did this originally, this means we now
+        have slightly better support for AUTOLOADed 
+        objects
+        - added more delegation tests
 
 0.38 Fri. Feb. 15, 2008
     * Moose::Meta::Attribute 
