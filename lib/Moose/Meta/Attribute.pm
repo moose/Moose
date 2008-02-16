@@ -437,6 +437,16 @@ sub install_accessors {
                 $associated_class->add_method($handle => subname $name, $method_to_call);
             }
             else {
+                # NOTE:
+                # we used to do a goto here, but the
+                # goto didn't handle failure correctly
+                # (it just returned nothing), so I took 
+                # that out. However, the more I thought
+                # about it, the less I liked it doing 
+                # the goto, and I prefered the act of 
+                # delegation being actually represented
+                # in the stack trace. 
+                # - SL
                 $associated_class->add_method($handle => subname $name, sub {
                     my $proxy = (shift)->$accessor();
                     (defined $proxy) 
