@@ -164,7 +164,7 @@ use Moose::Util ();
         make_immutable => sub {
             my $class = $CALLER;
             return subname 'Moose::make_immutable' => sub {
-                $class->meta->make_immutable(@_)
+                $class->meta->make_immutable(@_);
             };            
         },        
         confess => sub {
