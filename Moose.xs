@@ -144,6 +144,29 @@ Object(value)
     RETVAL
 
 bool
+ObjectOfType(value, class)
+  SV* value
+  SV* class
+  PREINIT:
+    const char* classname;
+  CODE:
+    RETVAL = 0;
+
+    classname = SvPV_nolen(class);
+    if(!classname){
+      RETVAL = 0;  
+    }
+
+    if( ck_sv_is_ref(value) 
+        && sv_isobject(value)
+        && sv_derived_from(value, classname)
+      ){
+      RETVAL = 1;  
+    }
+  OUTPUT:
+    RETVAL
+
+bool
 RegexpRef(value)
   SV* value
   CODE:

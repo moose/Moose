@@ -70,6 +70,10 @@ This file contains the hand optimized versions of Moose type constraints.
 
 =item Object
 
+=item ObjectOfType
+
+Makes sure $object->isa($class). Used in anon type constraints.
+
 =item Role
 
 =back
