@@ -9,38 +9,17 @@ our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use XSLoader;
-XSLoader::load('Moose', '0.39');
+# Optimized type constraints are XS in Moose.xs
+XSLoader::load('Moose', '0.39'); # This is a pain... must use the version number of moose
+                                 # but can't refer to it since Moose may not be loaded.
 
-#sub Value { defined($_[0]) && !ref($_[0]) }
+sub Num         { !ref($_[0]) && looks_like_number($_[0]) }
 
-#sub Ref { ref($_[0]) }
+sub Int         { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
 
-#sub Str { defined($_[0]) && !ref($_[0]) }
+sub FileHandle  { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
 
-sub Num { !ref($_[0]) && looks_like_number($_[0]) }
-
-sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
-
-{
-    no warnings 'uninitialized';
-#    sub ScalarRef { ref($_[0]) eq 'SCALAR' }
-#    sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
-#    sub HashRef   { ref($_[0]) eq 'HASH'   }
-#    sub CodeRef   { ref($_[0]) eq 'CODE'   }
-#    sub RegexpRef { ref($_[0]) eq 'Regexp' }
-#    sub GlobRef   { ref($_[0]) eq 'GLOB'   }
-}
-
-sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
-
-#sub Object { blessed($_[0]) && blessed($_[0]) ne 'Regexp' }
-
-sub Role { blessed($_[0]) && $_[0]->can('does') }
-
-# NOTE:
-# we have XS versions too, ...
-# 04:09 <@konobi> nothingmuch: konobi.co.uk/code/utilsxs.tar.gz
-# 04:09 <@konobi> or utilxs.tar.gz iirc
+sub Role        { blessed($_[0]) && $_[0]->can('does') }
 
 1;
 
@@ -60,6 +39,10 @@ This file contains the hand optimized versions of Moose type constraints.
 =head1 FUNCTIONS
 
 =over 4
+
+=item Undef
+
+=item Defined
 
 =item Value
 
@@ -100,6 +83,7 @@ to cpan-RT.
 =head1 AUTHOR
 
 Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>
+Konobi E<lt>konobi@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

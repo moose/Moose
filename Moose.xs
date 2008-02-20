@@ -31,13 +31,13 @@ ck_sv_ref_type(SV* value, int sv_type){
   return retval;
 }
 
+static const char *regclass = "Regexp";
 
 MODULE = Moose	PACKAGE = Moose::Util::TypeConstraints::OptimizedConstraints
 PROTOTYPES: ENABLE
 
-#ifdef HEHEHOHOHAHA
 bool
-Undefined(value)
+Undef(value)
   SV* value
   CODE:
     RETVAL = !ck_sv_defined(value);
@@ -51,8 +51,6 @@ Defined(value)
     RETVAL = ck_sv_defined(value);
   OUTPUT:
     RETVAL
-
-#endif
 
 bool
 Value(value)
@@ -134,8 +132,6 @@ GlobRef(value)
 bool
 Object(value)
   SV* value
-  PREINIT:
-    char *regclass = "Regexp";
   CODE:
     RETVAL = 0;
     if( ck_sv_is_ref(value) 
@@ -150,8 +146,6 @@ Object(value)
 bool
 RegexpRef(value)
   SV* value
-  PREINIT:
-    char *regclass = "Regexp";
   CODE:
     RETVAL = 0;
     if( ck_sv_is_ref(value)
