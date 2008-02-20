@@ -13,13 +13,13 @@ use XSLoader;
 XSLoader::load('Moose', '0.39'); # This is a pain... must use the version number of moose
                                  # but can't refer to it since Moose may not be loaded.
 
-sub Num         { !ref($_[0]) && looks_like_number($_[0]) }
+sub Num         { !Ref($_[0]) && looks_like_number($_[0]) }
 
-sub Int         { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
+sub Int         { Defined($_[0]) && !Ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
 
-sub FileHandle  { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
+sub FileHandle  { GlobRef($_[0]) && Scalar::Util::openhandle($_[0]) or ObjectOfType($_[0], "IO::Handle")  }
 
-sub Role        { blessed($_[0]) && $_[0]->can('does') }
+sub Role        { Object($_[0]) && $_[0]->can('does') }
 
 1;
 
