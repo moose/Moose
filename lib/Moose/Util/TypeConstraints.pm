@@ -401,15 +401,8 @@ sub _install_type_coercions ($$) {
 type 'Any'  => where { 1 }; # meta-type including all
 type 'Item' => where { 1 }; # base-type
 
-subtype 'Undef'   
-    => as 'Item' 
-    => where { !defined($_) }
-    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Undef;
-
-subtype 'Defined' 
-    => as 'Item' 
-    => where {  defined($_) }
-    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Defined;
+subtype 'Undef'   => as 'Item' => where { !defined($_) };
+subtype 'Defined' => as 'Item' => where {  defined($_) };
 
 subtype 'Bool'
     => as 'Item'

@@ -39,9 +39,7 @@ sub parents {
 sub hand_optimized_type_constraint {
     my $self  = shift;
     my $class = $self->name;
-    sub {
-      Moose::Util::TypeConstraints::OptimizedConstraints::ObjectOfType($_[0], $class)
-    }
+    sub { blessed( $_[0] ) && $_[0]->isa($class) }
 }
 
 sub has_hand_optimized_type_constraint { 1 }
