@@ -8,6 +8,10 @@ Revision history for Perl extension Moose
         have slightly better support for AUTOLOADed 
         objects
         - added more delegation tests
+    
+    * Moose::Object
+      - localizing the Data::Dumper configurations so 
+        that it does not pollute others (RT #33509)
 
 0.38 Fri. Feb. 15, 2008
     * Moose::Meta::Attribute 

@@ -9,7 +9,7 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
@@ -80,7 +80,7 @@ sub does {
 sub dump { 
     my $self = shift;
     require Data::Dumper;
-    $Data::Dumper::Maxdepth = shift if @_;
+    local $Data::Dumper::Maxdepth = shift if @_;
     Data::Dumper::Dumper $self;
 }
 
