@@ -71,6 +71,14 @@ sub clone_and_inherit_options {
         $actual_options{handles} = $options{handles};
         delete $options{handles};
     }
+    
+    # handles can only be added, not changed
+    if ($options{builder}) {
+        confess "You can only add the 'builder' option, you cannot change it"
+            if $self->has_builder;
+        $actual_options{builder} = $options{builder};
+        delete $options{builder};
+    }    
 
     # isa can be changed, but only if the
     # new type is a subtype

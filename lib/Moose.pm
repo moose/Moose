@@ -601,7 +601,8 @@ a HASH ref) of the methods you want mapped.
 =item B<has +$name =E<gt> %options>
 
 This is variation on the normal attibute creator C<has> which allows you to
-clone and extend an attribute from a superclass. Here is a quick example:
+clone and extend an attribute from a superclass or from a role. Here is an 
+example of the superclass usage:
 
   package Foo;
   use Moose;
@@ -622,6 +623,27 @@ clone and extend an attribute from a superclass. Here is a quick example:
 What is happening here is that B<My::Foo> is cloning the C<message> attribute
 from its parent class B<Foo>, retaining the C<is =E<gt> 'rw'> and C<isa =E<gt>
 'Str'> characteristics, but changing the value in C<default>.
+
+Here is another example, but within the context of a role:
+
+  package Foo::Role;
+  use Moose::Role;
+  
+  has 'message' => (
+      is      => 'rw',
+      isa     => 'Str',
+      default => 'Hello, I am a Foo'
+  );
+  
+  package My::Foo;
+  use Moose;
+  
+  with 'Foo::Role';
+  
+  has '+message' => (default => 'Hello I am My::Foo');
+
+In this case, we are basically taking the attribute which the role supplied 
+and altering it within the bounds of this feature.
 
 This feature is restricted somewhat, so as to try and force at least I<some>
 sanity into it. You are only allowed to change the following attributes:
@@ -656,6 +678,11 @@ subtype of the old type.
 =item I<handles>
 
 You are allowed to B<add> a new C<handles> definition, but you are B<not>
+allowed to I<change> one.
+
+=item I<builder>
+
+You are allowed to B<add> a new C<builder> definition, but you are B<not>
 allowed to I<change> one.
 
 =back

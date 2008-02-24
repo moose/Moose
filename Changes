@@ -1,6 +1,16 @@
 Revision history for Perl extension Moose
 
 0.39
+    * Moose
+      - documenting the use of '+name' with attributes 
+        that come from recently composed roles. It makes
+        sense, people are using it, and so why not just 
+        officially support it.
+    
+    * t/
+      - making test for using '+name' on attributes consumed 
+        from a role, it works and makes sense too.    
+
     * Moose::Meta::Attribute 
       - fix handles so that it doesn't return nothing 
         when the method cannot be found, not sure why 
