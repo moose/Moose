@@ -643,10 +643,12 @@ Here is another example, but within the context of a role:
   has '+message' => (default => 'Hello I am My::Foo');
 
 In this case, we are basically taking the attribute which the role supplied 
-and altering it within the bounds of this feature.
+and altering it within the bounds of this feature. 
 
-This feature is restricted somewhat, so as to try and force at least I<some>
-sanity into it. You are only allowed to change the following attributes:
+Aside from where the attributes come from (one from superclass, the other 
+from a role), this feature works exactly the same. This feature is restricted 
+somewhat, so as to try and force at least I<some> sanity into it. You are only 
+allowed to change the following attributes:
 
 =over 4
 
