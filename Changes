@@ -13,6 +13,12 @@ Revision history for Perl extension Moose
       - fixing the 'apply_all_roles' keyword so that it will not 
         trigger Ovid's bug (http://use.perl.org/~Ovid/journal/35763)    
     
+    * Moose::Util::TypeConstraints
+      - it is now possible to make anon-enums by passing 'enum' an 
+        ARRAY ref instead of the $name => @values. Everything else 
+        works as before.
+        - added tests for this
+    
     * t/
       - making test for using '+name' on attributes consumed 
         from a role, it works and makes sense too.    

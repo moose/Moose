@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
 use Sub::Exporter;
 
-our $VERSION   = '0.21';
+our $VERSION   = '0.22';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -253,6 +253,14 @@ sub optimize_as (&) { +{ optimized => $_[0] } }
 
 sub enum ($;@) {
     my ($type_name, @values) = @_;
+    # NOTE: 
+    # if only an array-ref is passed then 
+    # you get an anon-enum
+    # - SL
+    if (ref $type_name eq 'ARRAY' && !@values) {
+        @values    = @$type_name;
+        $type_name = undef;
+    }
     (scalar @values >= 2)
         || confess "You must have at least two values to enumerate through";
     my %valid = map { $_ => 1 } @values;
@@ -832,6 +840,17 @@ See the L<SYNOPSIS> for a simple example.
 
 B<NOTE:> This is not a true proper enum type, it is simple
 a convient constraint builder.
+
+=item B<enum (\@values)>
+
+If passed an ARRAY reference instead of the C<$name>, C<@values> pair, 
+this will create an unnamed enum. This can then be used in an attribute
+definition like so:
+
+  has 'sort_order' => (
+      is  => 'ro',
+      isa => enum([qw[ ascending descending ]]),   
+  );
 
 =item B<as>
 
