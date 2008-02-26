@@ -82,13 +82,17 @@ use Moose::Util ();
             my $class = $CALLER;
             return subname 'Moose::extends' => sub (@) {
                 confess "Must derive at least one class" unless @_;
-                Class::MOP::load_class($_) for @_;
+        
+                my @supers = @_;
+                foreach my $super (@supers) {
+                    Class::MOP::load_class($super);
+                }
 
                 # this checks the metaclass to make sure
                 # it is correct, sometimes it can get out
                 # of sync when the classes are being built
-                my $meta = $class->meta->_fix_metaclass_incompatability(@_);
-                $meta->superclasses(@_);
+                my $meta = $class->meta->_fix_metaclass_incompatability(@supers);
+                $meta->superclasses(@supers);
             };
         },
         with => sub {

@@ -6,6 +6,12 @@ Revision history for Perl extension Moose
         that come from recently composed roles. It makes
         sense, people are using it, and so why not just 
         officially support it.
+      - fixing the 'extends' keyword so that it will not 
+        trigger Ovid's bug (http://use.perl.org/~Ovid/journal/35763)
+        
+    * Moose::Util
+      - fixing the 'apply_all_roles' keyword so that it will not 
+        trigger Ovid's bug (http://use.perl.org/~Ovid/journal/35763)    
     
     * t/
       - making test for using '+name' on attributes consumed 

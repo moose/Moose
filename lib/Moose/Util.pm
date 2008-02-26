@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Class::MOP   ();
 
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
@@ -78,7 +78,9 @@ sub apply_all_roles {
     
     my $meta = (blessed $applicant ? $applicant : find_meta($applicant));
     
-    Class::MOP::load_class($_->[0]) for @$roles;
+    foreach my $role_spec (@$roles) {
+        Class::MOP::load_class($role_spec->[0]);
+    }
     
     ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
         || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
