@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.20';
+our $VERSION   = '0.21';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -40,7 +40,7 @@ sub create {
     
     my $class = $self->SUPER::create($package_name, %options);
     
-    if(exists $options{roles} && defined $options{roles}){
+    if (exists $options{roles}) {
         Moose::Util::apply_all_roles($class, @{$options{roles}});
     }
     
