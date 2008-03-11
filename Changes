@@ -20,6 +20,9 @@ Revision history for Perl extension Moose
     * Moose::Meta::Class
       - added ->create method which now supports roles (thanks to jrockway)
         - added tests for this
+      - added ->create_anon_class which now supports roles and caching of 
+        the results (thanks to jrockway)
+        - added tests for this
     
     * Moose::Util::TypeConstraints
       - it is now possible to make anon-enums by passing 'enum' an 

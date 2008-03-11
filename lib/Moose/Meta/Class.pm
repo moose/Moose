@@ -53,25 +53,21 @@ sub create_anon_class {
     my ($self, %options) = @_;
 
     my $cache_ok = delete $options{cache};
-
-    my @superclasses = sort @{$options{superclasses} || []};
-    my @roles        = sort @{$options{roles}        || []};
     
     # something like Super::Class|Super::Class::2=Role|Role::1
     my $cache_key = join '=' => (
-        join('|', @superclasses),
-        join('|', @roles),
+        join('|', sort @{$options{superclasses} || []}),
+        join('|', sort @{$options{roles}        || []}),
     );
     
-    if($cache_ok && defined $ANON_CLASSES{$cache_key}){
+    if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
         return $ANON_CLASSES{$cache_key};
     }
     
     my $new_class = $self->SUPER::create_anon_class(%options);
 
-    if($cache_ok){
-        $ANON_CLASSES{$cache_key} = $new_class;
-    }
+    $ANON_CLASSES{$cache_key} = $new_class
+        if $cache_ok;
 
     return $new_class;
 }
