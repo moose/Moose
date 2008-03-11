@@ -31,6 +31,22 @@ sub initialize {
         @_);
 }
 
+sub create {
+    my ($self, $package_name, %options) = @_;
+    
+    (ref $options{roles} eq 'ARRAY')
+        || confess "You must pass an ARRAY ref of roles"
+            if exists $options{roles};
+    
+    my $class = $self->SUPER::create($package_name, %options);
+    
+    if(exists $options{roles} && defined $options{roles}){
+        Moose::Util::apply_all_roles($class, @{$options{roles}});
+    }
+    
+    return $class;
+}
+
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
@@ -434,6 +450,11 @@ to the L<Class::MOP::Class> documentation.
 =over 4
 
 =item B<initialize>
+
+=item B<create>
+
+Like C<< Class::MOP->create >> but accepts a list of roles to apply to
+the created class.
 
 =item B<make_immutable>
 
