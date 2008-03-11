@@ -2,12 +2,20 @@ package oose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.02';
+use Class::MOP;
+
+our $VERSION   = '0.03';
 our $AUTHORITY = 'cpan:STEVAN';
 
 BEGIN {
     my $package;
-    sub import { $package = $_[1] || 'Class' }
+    sub import { 
+        $package = $_[1] || 'Class';
+        if ($package =~ /^\+/) {
+            $package =~ s/^\+//;
+            Class::MOP::load_class($package);
+        }
+    }
     use Filter::Simple sub { s/^/package $package;\nuse Moose;\n/; }
 }
 
@@ -23,7 +31,13 @@ oose - syntactic sugar to make Moose one-liners easier
 
 =head1 SYNOPSIS
 
-    perl -Moose=Foo -e 'has bar => ( is=>q[ro], default => q[baz] ); print Foo->new->bar' # prints baz
+  # create a Moose class on the fly ...
+  perl -Moose=Foo -e 'has bar => ( is=>q[ro], default => q[baz] ); print Foo->new->bar' # prints baz
+  
+  # loads an existing class (Moose or non-Moose)
+  # and re-"opens" the package definition to make
+  # debugging/introspection easier
+  perl -Moose=+My::Class -e 'print join ", " => __PACKAGE__->meta->get_method_list' 
 
 =head1 DESCRIPTION
 
