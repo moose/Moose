@@ -47,6 +47,35 @@ sub create {
     return $class;
 }
 
+my %ANON_CLASSES;
+
+sub create_anon_class {
+    my ($self, %options) = @_;
+
+    my $cache_ok = delete $options{cache};
+
+    my @superclasses = sort @{$options{superclasses} || []};
+    my @roles        = sort @{$options{roles}        || []};
+    
+    # something like Super::Class|Super::Class::2=Role|Role::1
+    my $cache_key = join '=' => (
+        join('|', @superclasses),
+        join('|', @roles),
+    );
+    
+    if($cache_ok && defined $ANON_CLASSES{$cache_key}){
+        return $ANON_CLASSES{$cache_key};
+    }
+    
+    my $new_class = $self->SUPER::create_anon_class(%options);
+
+    if($cache_ok){
+        $ANON_CLASSES{$cache_key} = $new_class;
+    }
+
+    return $new_class;
+}
+
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
@@ -294,8 +323,6 @@ sub _apply_all_roles {
     die 'DEPRECATED: use Moose::Util::apply_all_roles($meta, @roles) instead' 
 }
 
-my %ANON_CLASSES;
-
 sub _process_attribute {
     my $self    = shift;
     my $name    = shift;
@@ -325,39 +352,29 @@ sub _process_attribute {
         }
 
         if ($options{traits}) {
-
-            my $anon_role_key = join "|" => @{$options{traits}};
-
-            my $class;
-            if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
-                $class = $ANON_CLASSES{$anon_role_key};
-            }
-            else {
-                $class = Moose::Meta::Class->create_anon_class(
-                    superclasses => [ $attr_metaclass_name ]
-                );
-                $ANON_CLASSES{$anon_role_key} = $class;
-                
-                my @traits;
-                foreach my $trait (@{$options{traits}}) {
-                    eval {
-                        my $possible_full_name = 'Moose::Meta::Attribute::Custom::Trait::' . $trait;
-                        Class::MOP::load_class($possible_full_name);
-                        push @traits => $possible_full_name->can('register_implementation')
-                            ? $possible_full_name->register_implementation
-                            : $possible_full_name;
-                    };
-                    if ($@) {
-                        push @traits => $trait;
-                    }
+            my @traits;
+            foreach my $trait (@{$options{traits}}) {
+                eval {
+                    my $possible_full_name = 'Moose::Meta::Attribute::Custom::Trait::' . $trait;
+                    Class::MOP::load_class($possible_full_name);
+                    push @traits => $possible_full_name->can('register_implementation')
+                      ? $possible_full_name->register_implementation
+                        : $possible_full_name;
+                };
+                if ($@) {
+                    push @traits => $trait;
                 }
-                
-                Moose::Util::apply_all_roles($class, @traits);
             }
+            
+            my $class = Moose::Meta::Class->create_anon_class(
+                superclasses => [ $attr_metaclass_name ],
+                roles        => [ @traits ],
+                cache        => 1,
+            );
             
             $attr_metaclass_name = $class->name;
         }
-
+        
         return $attr_metaclass_name->new($name, %options);
     }
 }
@@ -453,8 +470,20 @@ to the L<Class::MOP::Class> documentation.
 
 =item B<create>
 
-Like C<< Class::MOP->create >> but accepts a list of roles to apply to
+Overrides original to accept a list of roles to apply to
 the created class.
+
+   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
+
+=item B<create_anon_class>
+
+Overrides original to support roles and caching.
+
+   my $metaclass = Moose::Meta::Class->create_anon_class(
+       superclasses => ['Foo'],
+       roles        => [qw/Some Roles Go Here/],
+       cache        => 1,
+   );
 
 =item B<make_immutable>
 
