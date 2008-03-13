@@ -24,12 +24,13 @@ sub register_type_constraint             ($);
 sub find_or_create_type_constraint       ($;$);
 sub create_type_constraint_union         (@);
 sub create_parameterized_type_constraint ($);
-sub create_class_type_constraint         ($);
+sub create_class_type_constraint         ($;$);
+#sub create_class_type_constraint         ($);
 
 # dah sugah!
 sub type        ($$;$$);
 sub subtype     ($$;$$$);
-sub class_type  ($);
+sub class_type  ($;$);
 sub coerce      ($@);
 sub as          ($);
 sub from        ($);
@@ -153,14 +154,21 @@ sub create_parameterized_type_constraint ($) {
     );
 }
 
-sub create_class_type_constraint ($) {
+#should we also support optimized checks?
+sub create_class_type_constraint ($;$) {
     my $class = shift;
-
     # too early for this check
     #find_type_constraint("ClassName")->check($class)
     #    || confess "Can't create a class type constraint because '$class' is not a class name";
+    my $message;
+    if( $_[0] ){
+      $message = $_[0]->{message} if exists $_[0]->{message};
+    }
 
-    Moose::Meta::TypeConstraint::Class->new( name => $class );
+    Moose::Meta::TypeConstraint::Class->new(
+        name => $class,
+        ($message ? (message => $message) : ())
+    );
 }
 
 sub find_or_create_type_constraint ($;$) {
@@ -179,10 +187,10 @@ sub find_or_create_type_constraint ($;$) {
     }
     else {
         # NOTE:
-        # if there is no $options_for_anon_type 
-        # specified, then we assume they don't 
+        # if there is no $options_for_anon_type
+        # specified, then we assume they don't
         # want to create one, and return nothing.
-        return unless defined $options_for_anon_type;        
+        return unless defined $options_for_anon_type;
 
         # NOTE:
         # otherwise assume that we should create
@@ -234,8 +242,13 @@ sub subtype ($$;$$$) {
     goto &_create_type_constraint;
 }
 
-sub class_type ($) {
-    register_type_constraint( create_class_type_constraint(shift) );
+sub class_type ($;$) {
+    register_type_constraint(
+        create_class_type_constraint(
+            $_[0],
+            ( defined($_[1]) ? $_[1] : () ),
+        )
+    );
 }
 
 sub coerce ($@) {
@@ -253,8 +266,8 @@ sub optimize_as (&) { +{ optimized => $_[0] } }
 
 sub enum ($;@) {
     my ($type_name, @values) = @_;
-    # NOTE: 
-    # if only an array-ref is passed then 
+    # NOTE:
+    # if only an array-ref is passed then
     # you get an anon-enum
     # - SL
     if (ref $type_name eq 'ARRAY' && !@values) {
@@ -299,7 +312,7 @@ sub _create_type_constraint ($$$;$$) {
     }
 
     $parent = find_or_create_type_constraint($parent) if defined $parent;
-    
+
     my $constraint = Moose::Meta::TypeConstraint->new(
         name               => $name || '__ANON__',
         package_defined_in => $pkg_defined_in,
@@ -309,21 +322,21 @@ sub _create_type_constraint ($$$;$$) {
         ($message   ? (message    => $message)   : ()),
         ($optimized ? (optimized  => $optimized) : ()),
     );
-    
+
     # NOTE:
-    # if we have a type constraint union, and no 
+    # if we have a type constraint union, and no
     # type check, this means we are just aliasing
-    # the union constraint, which means we need to 
+    # the union constraint, which means we need to
     # handle this differently.
     # - SL
-    if (not(defined $check) 
-        && $parent->isa('Moose::Meta::TypeConstraint::Union') 
-        && $parent->has_coercion 
+    if (not(defined $check)
+        && $parent->isa('Moose::Meta::TypeConstraint::Union')
+        && $parent->has_coercion
         ){
         $constraint->coercion(Moose::Meta::TypeCoercion::Union->new(
             type_constraint => $parent
         ));
-    }    
+    }
 
     $REGISTRY->add_type_constraint($constraint)
         if defined $name;
@@ -529,7 +542,7 @@ $REGISTRY->add_type_constraint(
         constraint           => sub { ref($_) eq 'HASH'  },
         optimized            => \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef,
         constraint_generator => sub {
-            my $type_parameter = shift;            
+            my $type_parameter = shift;
             return sub {
                 foreach my $x (values %$_) {
                     ($type_parameter->check($x)) || return
@@ -546,7 +559,7 @@ $REGISTRY->add_type_constraint(
         parent               => find_type_constraint('Item'),
         constraint           => sub { 1 },
         constraint_generator => sub {
-            my $type_parameter = shift;            
+            my $type_parameter = shift;
             return sub {
                 return 1 if not(defined($_)) || $type_parameter->check($_);
                 return;
@@ -555,17 +568,17 @@ $REGISTRY->add_type_constraint(
     )
 );
 
-my @PARAMETERIZABLE_TYPES = map { 
-    $REGISTRY->get_type_constraint($_) 
+my @PARAMETERIZABLE_TYPES = map {
+    $REGISTRY->get_type_constraint($_)
 } qw[ArrayRef HashRef Maybe];
 
 sub get_all_parameterizable_types { @PARAMETERIZABLE_TYPES }
-sub add_parameterizable_type { 
+sub add_parameterizable_type {
     my $type = shift;
     (blessed $type && $type->isa('Moose::Meta::TypeConstraint::Parameterizable'))
         || confess "Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type";
     push @PARAMETERIZABLE_TYPES => $type;
-}    
+}
 
 ## --------------------------------------------------------
 # end of built-in types ...
@@ -674,20 +687,20 @@ could probably use some work, but it works for me at the moment.
 
 Suggestions for improvement are welcome.
 
-B<NOTE:> Any type followed by a type parameter C<[`a]> can be 
+B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
 
   ArrayRef[Int]    # an array of intergers
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
-B<NOTE:> The C<Undef> type constraint for the most part works 
-correctly now, but edge cases may still exist, please use it 
+B<NOTE:> The C<Undef> type constraint for the most part works
+correctly now, but edge cases may still exist, please use it
 sparringly.
 
 B<NOTE:> The C<ClassName> type constraint does a complex package
-existence check. This means that your class B<must> be loaded for 
-this type constraint to pass. I know this is not ideal for all, 
+existence check. This means that your class B<must> be loaded for
+this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
 
 =head2 Use with Other Constraint Modules
@@ -742,9 +755,9 @@ Given a C<$type_name> in the form of:
   BaseType[ContainerType]
 
 this will extract the base type and container type and build an instance of
-L<Moose::Meta::TypeConstraint::Parameterized> for it. 
+L<Moose::Meta::TypeConstraint::Parameterized> for it.
 
-=item B<create_class_type_constraint ($class)>
+=item B<create_class_type_constraint ($class, ?$message)>
 
 Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
 object for that class name.
@@ -826,7 +839,7 @@ This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
 L<Moose::Meta::TypeConstraint>.
 
-=item B<class_type ($class)>
+=item B<class_type ($class, ?$message)>
 
 Creates a type constraint with the name C<$class> and the metaclass
 L<Moose::Meta::TypeConstraint::Class>.
@@ -843,13 +856,13 @@ a convient constraint builder.
 
 =item B<enum (\@values)>
 
-If passed an ARRAY reference instead of the C<$name>, C<@values> pair, 
+If passed an ARRAY reference instead of the C<$name>, C<@values> pair,
 this will create an unnamed enum. This can then be used in an attribute
 definition like so:
 
   has 'sort_order' => (
       is  => 'ro',
-      isa => enum([qw[ ascending descending ]]),   
+      isa => enum([qw[ ascending descending ]]),
   );
 
 =item B<as>

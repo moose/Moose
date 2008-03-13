@@ -25,6 +25,9 @@ Revision history for Perl extension Moose
         - added tests for this
     
     * Moose::Util::TypeConstraints
+      - class_type now accepts an optional second argument for a
+        custom message. POD anotated accordingly (groditi)
+        - added tests for this 
       - it is now possible to make anon-enums by passing 'enum' an 
         ARRAY ref instead of the $name => @values. Everything else 
         works as before.
