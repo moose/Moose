@@ -23,6 +23,8 @@ Revision history for Perl extension Moose
       - added ->create_anon_class which now supports roles and caching of 
         the results (thanks to jrockway)
         - added tests for this
+      - made ->does_role a little more forgiving when it is
+        checking a Class::MOP era metaclasses.
     
     * Moose::Meta::Role::Application::ToInstance
       - it is now possible to pass extra params to be used when 

@@ -90,7 +90,7 @@ sub does_role {
     (defined $role_name)
         || confess "You must supply a role name to look for";
     foreach my $class ($self->class_precedence_list) {
-        next unless $class->can('meta');
+        next unless $class->can('meta') && $class->meta->can('roles');
         foreach my $role (@{$class->meta->roles}) {
             return 1 if $role->does_role($role_name);
         }
