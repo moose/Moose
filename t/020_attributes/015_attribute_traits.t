@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Test::Exception;
 use Test::Moose;
 
@@ -36,18 +36,26 @@ BEGIN {
         isa      => 'Int',
         alias_to => 'baz',
     );
+    
+    has 'gorch' => (
+        is      => 'ro',
+        isa     => 'Int',
+        default => sub { 10 }
+    );    
 }
 
 my $c = My::Class->new(bar => 100);
 isa_ok($c, 'My::Class');
 
 is($c->bar, 100, '... got the right value for bar');
+is($c->gorch, 10, '... got the right value for gorch');
 
 can_ok($c, 'baz');
 is($c->baz, 100, '... got the right value for baz');
 
 does_ok($c->meta->get_attribute('bar'), 'My::Attribute::Trait');
 
+ok(!$c->meta->get_attribute('gorch')->does('My::Attribute::Trait'), '... gorch doesnt do the trait');
 
 
 

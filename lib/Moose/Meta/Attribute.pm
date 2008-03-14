@@ -47,6 +47,14 @@ __PACKAGE__->meta->add_attribute('documentation' => (
     predicate => 'has_documentation',
 ));
 
+# NOTE:
+# we need to have a ->does method in here to 
+# more easily support traits, and the introspection 
+# of those traits. So in order to do this we 
+# just alias Moose::Object's version of it.
+# - SL
+*does = \&Moose::Object::does;
+
 sub new {
     my ($class, $name, %options) = @_;
     $class->_process_options($name, \%options);

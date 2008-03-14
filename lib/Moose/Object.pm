@@ -62,8 +62,9 @@ sub does {
         || confess "You much supply a role name to does()";
     my $meta = $self->meta;
     foreach my $class ($meta->class_precedence_list) {
+        my $m = $meta->initialize($class);
         return 1 
-            if $meta->initialize($class)->does_role($role_name);            
+            if $m->can('does_role') && $m->does_role($role_name);            
     }
     return 0;   
 }

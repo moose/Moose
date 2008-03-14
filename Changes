@@ -49,6 +49,9 @@ Revision history for Perl extension Moose
         have slightly better support for AUTOLOADed 
         objects
         - added more delegation tests
+      - adding ->does method to this so as to better 
+        support traits and their introspection.
+        - added tests for this
     
     * Moose::Object
       - localizing the Data::Dumper configurations so 
