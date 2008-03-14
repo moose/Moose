@@ -56,6 +56,8 @@ Revision history for Perl extension Moose
     * Moose::Object
       - localizing the Data::Dumper configurations so 
         that it does not pollute others (RT #33509)
+      - made ->does a little more forgiving when it is
+        passed Class::MOP era metaclasses.
 
 0.38 Fri. Feb. 15, 2008
     * Moose::Meta::Attribute 
