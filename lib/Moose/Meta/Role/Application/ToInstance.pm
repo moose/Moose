@@ -7,10 +7,15 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application::ToClass';
+
+__PACKAGE__->meta->add_attribute('rebless_params' => (
+    reader  => 'rebless_params',
+    default => sub { {} }
+));
 
 my %ANON_CLASSES;
 
@@ -31,7 +36,7 @@ sub apply {
         $self->SUPER::apply($role, $class);
     }
 
-    $class->rebless_instance($object);
+    $class->rebless_instance($object, %{$self->rebless_params});
 }
 
 1;
@@ -55,6 +60,8 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 =item B<meta>
 
 =item B<apply>
+
+=item B<rebless_params>
 
 =back
 
