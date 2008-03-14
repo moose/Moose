@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.39
+0.39 Fri. March 14, 2008
     * Moose
       - documenting the use of '+name' with attributes 
         that come from recently composed roles. It makes
