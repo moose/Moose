@@ -8,7 +8,7 @@ Revision history for Perl extension Moose
         officially support it.
       - fixing the 'extends' keyword so that it will not 
         trigger Ovid's bug (http://use.perl.org/~Ovid/journal/35763)
-       
+      
     * oose
       - added the perl -Moose=+Class::Name feature to allow 
         monkeypatching of classes in one liners
@@ -22,6 +22,11 @@ Revision history for Perl extension Moose
         - added tests for this
       - added ->create_anon_class which now supports roles and caching of 
         the results (thanks to jrockway)
+        - added tests for this
+    
+    * Moose::Meta::Role::Application::ToInstance
+      - it is now possible to pass extra params to be used when 
+        a role is applied to an the instance (rebless_params)
         - added tests for this
     
     * Moose::Util::TypeConstraints
