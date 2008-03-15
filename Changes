@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+0.40
+    - I hate Pod::Coverage
+
 0.39 Fri. March 14, 2008
     * Moose
       - documenting the use of '+name' with attributes 

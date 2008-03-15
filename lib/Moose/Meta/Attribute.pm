@@ -588,6 +588,8 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<new>
 
+=item B<does>
+
 =item B<initialize_instance_slot>
 
 =item B<install_accessors>
