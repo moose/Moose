@@ -165,6 +165,12 @@ use Moose::Util ();
                 $class->meta->add_augment_method_modifier( $name => $method );
             };
         },
+        metaclass => sub {
+            my $class = $CALLER;
+            return subname 'Moose::metaclass' => sub { 
+                $class->meta;
+            };
+        },
         make_immutable => sub {
             my $class = $CALLER;
             return subname 'Moose::make_immutable' => sub {
