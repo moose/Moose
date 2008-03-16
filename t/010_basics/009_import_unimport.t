@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 45;
+use Test::More tests => 47;
 
 BEGIN {
     use_ok('Moose');           
@@ -16,6 +16,7 @@ my @moose_exports = qw(
     override
     augment
     super inner
+    metaclass
 );
 
 {
