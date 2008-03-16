@@ -62,7 +62,7 @@ BEGIN {
 	    default => sub { HTTP::Headers->new } 
     );
     
-    make_immutable(debug => 0);
+    metaclass->make_immutable(debug => 0);
 }
 
 my $r = Request->new;

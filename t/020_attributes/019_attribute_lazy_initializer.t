@@ -115,7 +115,7 @@ BEGIN {
         },
     );  
     
-    make_immutable;
+    metaclass->make_immutable;
 }
 
 {
@@ -143,7 +143,7 @@ BEGIN {
         },
     );  
     
-    make_immutable;
+    metaclass->make_immutable;
 }
 
 dies_ok {

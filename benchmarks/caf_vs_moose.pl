@@ -11,13 +11,13 @@
     package MooseImmutable;
     use Moose;
     has foo => (is => 'rw');
-    make_immutable();
+    metaclass->make_immutable();
 }
 {
     package MooseImmutable::NoConstructor;
     use Moose;
     has foo => (is => 'rw');
-    make_immutable(inline_constructor => 0);
+    metaclass->make_immutable(inline_constructor => 0);
 }
 {
     package ClassAccessorFast;

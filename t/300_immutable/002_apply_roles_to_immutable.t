@@ -26,7 +26,7 @@ BEGIN {
     
     sub baz { 'Foo::baz' }
     
-	make_immutable(debug => 0);
+	metaclass->make_immutable(debug => 0);
 }
 
 my $foo = Foo->new;

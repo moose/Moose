@@ -35,7 +35,7 @@ BEGIN {
 		return $class->meta->new_object('__INSTANCE__' => $super, @_);
 	}
 	
-	make_immutable(debug => 0);
+	metaclass->make_immutable(debug => 0);
 
     package Bucket;
     use metaclass 'Class::MOP::Class';

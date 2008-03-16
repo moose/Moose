@@ -174,6 +174,7 @@ use Moose::Util ();
         make_immutable => sub {
             my $class = $CALLER;
             return subname 'Moose::make_immutable' => sub {
+                warn "Use of make_immutable() is deprecated, please use metaclass->make_immutable now\n";
                 $class->meta->make_immutable(@_);
             };            
         },        
