@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.41
+    ** IMPORTANT NOTE **
+    - the make_immutable keyword is now deprecated, don't
+      use it in any new code and please fix your old code
+      as well. There will be 2 releases, and then it will
+      be removed.
+
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
 

@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.40';
+our $VERSION   = '0.41';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -13,7 +13,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
-use Class::MOP 0.51;
+use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -168,7 +168,8 @@ use Moose::Util ();
         make_immutable => sub {
             my $class = $CALLER;
             return subname 'Moose::make_immutable' => sub {
-                warn "Use of make_immutable() is deprecated, please use metaclass->make_immutable now\n";
+                warn "The make_immutable keyword has been deprecated, " . 
+                     "please go back to __PACKAGE__->meta->make_immutable\n";
                 $class->meta->make_immutable(@_);
             };            
         },        
