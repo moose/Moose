@@ -39,7 +39,7 @@ BEGIN {
     sub boo { 'BarClass::boo' }
     sub foo { 'BarClass::foo' }  # << the role overrides this ...  
 
-    metaclass->make_immutable(debug => 0);
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }{
     
     package FooClass;
@@ -52,7 +52,7 @@ BEGIN {
 
     sub goo { 'FooClass::goo' }  # << overrides the one from the role ... 
     
-    metaclass->make_immutable(debug => 0);
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }{
     
     package FooBarClass;

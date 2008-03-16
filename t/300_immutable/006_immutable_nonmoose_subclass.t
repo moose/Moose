@@ -82,7 +82,7 @@ Sorry Sartak.
 
     sub child { 1 }
 
-    metaclass->make_immutable;
+    __PACKAGE__->meta->make_immutable;
 }
 
 is(blessed(Grandparent->new), "Grandparent", "got a Grandparent object out of Grandparent->new");

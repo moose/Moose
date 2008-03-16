@@ -16,7 +16,7 @@ my @moose_exports = qw(
     override
     augment
     super inner
-    metaclass
+    make_immutable
 );
 
 {

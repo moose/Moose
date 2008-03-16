@@ -46,7 +46,7 @@ BEGIN {
 	    $tree->parent($self) if defined $tree;   
 	};
 	
-    metaclass->make_immutable(debug => 0);	
+    __PACKAGE__->meta->make_immutable(debug => 0);	
 }
 
 my $root = BinaryTree->new(node => 'root');

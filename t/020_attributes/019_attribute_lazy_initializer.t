@@ -115,7 +115,7 @@ BEGIN {
         },
     );  
     
-    metaclass->make_immutable;
+    __PACKAGE__->meta->make_immutable;
 }
 
 {
@@ -143,7 +143,7 @@ BEGIN {
         },
     );  
     
-    metaclass->make_immutable;
+    __PACKAGE__->meta->make_immutable;
 }
 
 dies_ok {
