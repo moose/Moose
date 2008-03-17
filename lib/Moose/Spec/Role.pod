@@ -7,6 +7,8 @@ Moose::Spec::Role - Formal spec for Role behavior
 
 =head1 DESCRIPTION
 
+B<NOTE:> This document is currently incomplete.
+
 =head2 Components of a Role
 
 =over 4
@@ -261,6 +263,25 @@ of C<foo>. The Role::FooBar then fufills this requirement.
 It is important to note that Role::FooBar is simply fufilling the 
 required C<foo> method, and **NOT** overriding C<foo>. This is an 
 important distinction to make.
+
+Now here is another example of a (correct) type of overriding, this 
+time using the I<excludes> option.
+
+    package Role::Foo;
+    use Moose::Role;
+    
+    sub foo { ... }
+    
+    package Role::FooBar;
+    use Moose::Role;
+    
+    with 'Role::Foo' => { excludes => 'foo' };
+    
+    sub foo { ... }
+    sub bar { ... }
+
+By specifically excluding the C<foo> method during composition, 
+we allow B<Role::FooBar> to define it's own version of C<foo>.
 
 =back
 

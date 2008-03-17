@@ -632,11 +632,13 @@ and they are not used by Moose unless you tell it to. No type
 inference is performed, expression are not typed, etc. etc. etc.
 
 This is simply a means of creating small constraint functions which
-can be used to simplify your own type-checking code.
+can be used to simplify your own type-checking code, with the added 
+side benefit of making your intentions clearer through self-documentation.
 
 =head2 Slightly Less Important Caveat
 
-It is almost always a good idea to quote your type and subtype names.
+It is B<always> a good idea to quote your type and subtype names.
+
 This is to prevent perl from trying to execute the call as an indirect
 object call. This issue only seems to come up when you have a subtype
 the same name as a valid class, but when the issue does arise it tends
@@ -660,8 +662,8 @@ yet to have been created yet, is to simply do this:
 
 =head2 Default Type Constraints
 
-This module also provides a simple hierarchy for Perl 5 types, this
-could probably use some work, but it works for me at the moment.
+This module also provides a simple hierarchy for Perl 5 types, here is 
+that hierarchy represented visually.
 
   Any
   Item
@@ -685,8 +687,6 @@ could probably use some work, but it works for me at the moment.
               Object
                   Role
 
-Suggestions for improvement are welcome.
-
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
 
@@ -703,12 +703,19 @@ existence check. This means that your class B<must> be loaded for
 this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
 
+=head2 Type Constraint Naming 
+
+Since the types created by this module are global, it is suggested 
+that you namespace your types just as you would namespace your 
+modules. So instead of creating a I<Color> type for your B<My::Graphics>
+module, you would call the type I<My::Graphics::Color> instead.
+
 =head2 Use with Other Constraint Modules
 
 This module should play fairly nicely with other constraint
 modules with only some slight tweaking. The C<where> clause
 in types is expected to be a C<CODE> reference which checks
-it's first argument and returns a bool. Since most constraint
+it's first argument and returns a boolean. Since most constraint
 modules work in a similar way, it should be simple to adapt
 them to work with Moose.
 
@@ -720,7 +727,8 @@ L<Declare::Constraints::Simple> to declare a completely new type.
           -keys   => HasLength,
           -values => IsArrayRef( IsObject ));
 
-For more examples see the F<t/204_example_w_DCS.t> test file.
+For more examples see the F<t/200_examples/204_example_w_DCS.t> 
+test file.
 
 Here is an example of using L<Test::Deep> and it's non-test
 related C<eq_deeply> function.
@@ -734,86 +742,10 @@ related C<eq_deeply> function.
               })))
         };
 
-For a complete example see the F<t/205_example_w_TestDeep.t>
-test file.
+For a complete example see the 
+F<t/200_examples/205_example_w_TestDeep.t> test file.
 
 =head1 FUNCTIONS
-
-=head2 Type Constraint Construction & Locating
-
-=over 4
-
-=item B<create_type_constraint_union ($pipe_seperated_types | @type_constraint_names)>
-
-Given string with C<$pipe_seperated_types> or a list of C<@type_constraint_names>,
-this will return a L<Moose::Meta::TypeConstraint::Union> instance.
-
-=item B<create_parameterized_type_constraint ($type_name)>
-
-Given a C<$type_name> in the form of:
-
-  BaseType[ContainerType]
-
-this will extract the base type and container type and build an instance of
-L<Moose::Meta::TypeConstraint::Parameterized> for it.
-
-=item B<create_class_type_constraint ($class, ?$message)>
-
-Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
-object for that class name.
-
-=item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
-
-This will attempt to find or create a type constraint given the a C<$type_name>.
-If it cannot find it in the registry, it will see if it should be a union or
-container type an create one if appropriate, and lastly if nothing can be
-found or created that way, it will create an anon-type using the
-C<$options_for_anon_type> HASH ref to populate it. If the C<$options_for_anon_type>
-is not specified (it is C<undef>), then it will not create anything and simply
-return.
-
-=item B<find_type_constraint ($type_name)>
-
-This function can be used to locate a specific type constraint
-meta-object, of the class L<Moose::Meta::TypeConstraint> or a
-derivative. What you do with it from there is up to you :)
-
-=item B<register_type_constraint ($type_object)>
-
-This function will register a named type constraint with the type registry.
-
-=item B<get_type_constraint_registry>
-
-Fetch the L<Moose::Meta::TypeConstraint::Registry> object which
-keeps track of all type constraints.
-
-=item B<list_all_type_constraints>
-
-This will return a list of type constraint names, you can then
-fetch them using C<find_type_constraint ($type_name)> if you
-want to.
-
-=item B<list_all_builtin_type_constraints>
-
-This will return a list of builtin type constraints, meaning,
-those which are defined in this module. See the section
-labeled L<Default Type Constraints> for a complete list.
-
-=item B<export_type_constraints_as_functions>
-
-This will export all the current type constraints as functions
-into the caller's namespace. Right now, this is mostly used for
-testing, but it might prove useful to others.
-
-=item B<get_all_parameterizable_types>
-
-This returns all the parameterizable types that have been registered.
-
-=item B<add_parameterizable_type ($type)>
-
-Adds C<$type> to the list of parameterizable types
-
-=back
 
 =head2 Type Constraint Constructors
 
@@ -910,6 +842,82 @@ This is just sugar for the type coercion construction syntax.
 =item B<via>
 
 This is just sugar for the type coercion construction syntax.
+
+=back
+
+=head2 Type Constraint Construction & Locating
+
+=over 4
+
+=item B<create_type_constraint_union ($pipe_seperated_types | @type_constraint_names)>
+
+Given string with C<$pipe_seperated_types> or a list of C<@type_constraint_names>,
+this will return a L<Moose::Meta::TypeConstraint::Union> instance.
+
+=item B<create_parameterized_type_constraint ($type_name)>
+
+Given a C<$type_name> in the form of:
+
+  BaseType[ContainerType]
+
+this will extract the base type and container type and build an instance of
+L<Moose::Meta::TypeConstraint::Parameterized> for it.
+
+=item B<create_class_type_constraint ($class, ?$message)>
+
+Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
+object for that class name.
+
+=item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
+
+This will attempt to find or create a type constraint given the a C<$type_name>.
+If it cannot find it in the registry, it will see if it should be a union or
+container type an create one if appropriate, and lastly if nothing can be
+found or created that way, it will create an anon-type using the
+C<$options_for_anon_type> HASH ref to populate it. If the C<$options_for_anon_type>
+is not specified (it is C<undef>), then it will not create anything and simply
+return.
+
+=item B<find_type_constraint ($type_name)>
+
+This function can be used to locate a specific type constraint
+meta-object, of the class L<Moose::Meta::TypeConstraint> or a
+derivative. What you do with it from there is up to you :)
+
+=item B<register_type_constraint ($type_object)>
+
+This function will register a named type constraint with the type registry.
+
+=item B<get_type_constraint_registry>
+
+Fetch the L<Moose::Meta::TypeConstraint::Registry> object which
+keeps track of all type constraints.
+
+=item B<list_all_type_constraints>
+
+This will return a list of type constraint names, you can then
+fetch them using C<find_type_constraint ($type_name)> if you
+want to.
+
+=item B<list_all_builtin_type_constraints>
+
+This will return a list of builtin type constraints, meaning,
+those which are defined in this module. See the section
+labeled L<Default Type Constraints> for a complete list.
+
+=item B<export_type_constraints_as_functions>
+
+This will export all the current type constraints as functions
+into the caller's namespace. Right now, this is mostly used for
+testing, but it might prove useful to others.
+
+=item B<get_all_parameterizable_types>
+
+This returns all the parameterizable types that have been registered.
+
+=item B<add_parameterizable_type ($type)>
+
+Adds C<$type> to the list of parameterizable types
 
 =back
 

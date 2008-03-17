@@ -55,6 +55,8 @@ Moose::Cookbook::Recipe7 - The augment/inner example
   sub create_tps_report {
      (shift)->append_body('<report type="tps"/>') 
   }
+  
+  print TPSReport->new->create # <page><header/><report type="tps"/><footer/></page>
 
 =head1 DESCRIPTION
 

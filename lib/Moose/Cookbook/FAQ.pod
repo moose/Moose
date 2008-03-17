@@ -11,11 +11,11 @@ Moose::Cookbook::FAQ - Frequently asked questions about Moose
 
 =head3 Is Moose "production ready"?
 
-Yes. I have three medium-to-large-ish web applications in 
+Yes. I have several medium-to-large-ish web applications in 
 production using Moose, they have been running without 
-issue now for almost a year. 
+issue now for well over a year. 
 
-At $work we are re-writing our core offering to use Moose, 
+At C<$work> we are re-writing our core offering to use Moose, 
 so it's continued development is assured. 
 
 Several other people on #moose either have apps in production 
@@ -44,7 +44,7 @@ is mostly compile time. At this point we do have some options
 available for getting the speed you need. 
 
 Currently we have the option of making your classes immutable 
-as a means of boosting speed. This will mean a larger compile 
+as a means of boosting speed. This will mean a slightly larger compile 
 time cost, but the runtime speed increase (especially in object
 construction) is pretty significant. This is not very well 
 documented yet, so please ask on the list or on #moose for more
@@ -57,10 +57,7 @@ conversion to XS.
 
 =head3 When will Moose 1.0 be ready?
 
-It is right now, I just haven't bumped the version number up yet.
-
-I still have some more internal TODO items I would like to complete
-before I would even consider bumping it to 1.0.
+It is right now, I declared 0.18 to be "ready to use".
 
 =head2 Constructors
 

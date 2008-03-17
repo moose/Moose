@@ -5,6 +5,7 @@ use warnings;
 
 use Sub::Exporter;
 use Test::Builder;
+
 use Moose::Util 'does_role', 'find_meta';
 
 our $VERSION   = '0.01';
@@ -156,7 +157,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007 by Infinity Interactive, Inc.
+Copyright 2007-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

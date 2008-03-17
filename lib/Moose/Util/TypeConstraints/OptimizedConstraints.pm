@@ -52,7 +52,8 @@ bodies for various moose types
 
 =head1 DESCRIPTION
 
-This file contains the hand optimized versions of Moose type constraints.
+This file contains the hand optimized versions of Moose type constraints, 
+no user serviceable parts inside.
 
 =head1 FUNCTIONS
 
@@ -100,7 +101,7 @@ Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2008 by Infinity Interactive, Inc.
+Copyright 2007-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

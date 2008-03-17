@@ -144,11 +144,14 @@ Moose::Util - Utilities for working with Moose classes
 
 =head1 DESCRIPTION
 
-This is a set of utility functions to help working with Moose classes. This 
-is an experimental module, and it's not 100% clear what purpose it will serve. 
-That said, ideas, suggestions and contributions to this collection are most 
-welcome. See the L<TODO> section below for a list of ideas for possible 
-functions to write.
+This is a set of utility functions to help working with Moose classes, and 
+is used internally by Moose itself. The goal is to provide useful functions
+that for both Moose users and Moose extenders (MooseX:: authors).
+
+This is a relatively new addition to the Moose toolchest, so ideas, 
+suggestions and contributions to this collection are most welcome. 
+See the L<TODO> section below for a list of ideas for possible functions 
+to write.
 
 =head1 EXPORTED FUNCTIONS
 

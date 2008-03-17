@@ -381,6 +381,19 @@ L<Moose::Object>) this includes properly initializing all instance slots,
 setting defaults where appropriate, and performing any type constraint checking
 or coercion.
 
+=head1 PROVIDED METHODS
+
+Moose provides a number of methods to all your classes, mostly through the 
+inheritance of L<Moose::Object>. There is however, one exception.
+
+=over 4
+
+=item B<meta>
+
+This is a method which provides access to the current class's metaclass.
+
+=back
+
 =head1 EXPORTED FUNCTIONS
 
 Moose will export a number of functions into the class's namespace which
@@ -388,10 +401,6 @@ may then be used to set up the class. These functions all work directly
 on the current class.
 
 =over 4
-
-=item B<meta>
-
-This is a method which provides access to the current class's metaclass.
 
 =item B<extends (@superclasses)>
 
@@ -404,8 +413,7 @@ superclasses still properly inherit from L<Moose::Object>.
 
 =item B<with (@roles)>
 
-This will apply a given set of C<@roles> to the local class. Role support
-is currently under heavy development; see L<Moose::Role> for more details.
+This will apply a given set of C<@roles> to the local class. 
 
 =item B<has $name =E<gt> %options>
 
@@ -424,7 +432,8 @@ accessor respectively, using the same name as the C<$name> of the attribute.
 
 If you need more control over how your accessors are named, you can use the
 I<reader>, I<writer> and I<accessor> options inherited from
-L<Class::MOP::Attribute>.
+L<Class::MOP::Attribute>, however if you use those, you won't need the I<is> 
+option.
 
 =item I<isa =E<gt> $type_name>
 
@@ -469,22 +478,6 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 This tells the accessor whether to automatically dereference the value returned.
 This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
-=item I<metaclass =E<gt> $metaclass_name>
-
-This tells the class to use a custom attribute metaclass for this particular
-attribute. Custom attribute metaclasses are useful for extending the
-capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
-but they are still a fairly advanced topic and too much to cover here. I will
-try and write a recipe on them soon.
-
-The default behavior here is to just load C<$metaclass_name>; however, we also
-have a way to alias to a shorter name. This will first look to see if
-B<Moose::Meta::Attribute::Custom::$metaclass_name> exists. If it does, Moose
-will then check to see if that has the method C<register_implementation>, which
-should return the actual name of the custom attribute metaclass. If there is no
-C<register_implementation> method, it will fall back to using
-B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
-
 =item I<trigger =E<gt> $code>
 
 The I<trigger> option is a CODE reference which will be called after the value of
@@ -498,10 +491,6 @@ attribute.
 The I<handles> option provides Moose classes with automated delegation features.
 This is a pretty complex and powerful option. It accepts many different option
 formats, each with its own benefits and drawbacks.
-
-B<NOTE:> This feature is no longer experimental, but it may still have subtle
-bugs lurking in the deeper corners. If you think you have found a bug, you
-probably have, so please report it to me right away.
 
 B<NOTE:> The class being delegated to does not need to be a Moose based class,
 which is why this feature is especially useful when wrapping non-Moose classes.
@@ -601,6 +590,37 @@ metaclass of the class being delegated to. It expects you to return a hash (not
 a HASH ref) of the methods you want mapped.
 
 =back
+
+=item I<metaclass =E<gt> $metaclass_name>
+
+This tells the class to use a custom attribute metaclass for this particular
+attribute. Custom attribute metaclasses are useful for extending the
+capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
+but they are still a fairly advanced topic and too much to cover here, see 
+L<Moose::Cookbook::Recipe11> for more information.
+
+The default behavior here is to just load C<$metaclass_name>; however, we also
+have a way to alias to a shorter name. This will first look to see if
+B<Moose::Meta::Attribute::Custom::$metaclass_name> exists. If it does, Moose
+will then check to see if that has the method C<register_implementation>, which
+should return the actual name of the custom attribute metaclass. If there is no
+C<register_implementation> method, it will fall back to using
+B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
+
+=item I<traits =E<gt> [ @role_names ]>
+
+This tells Moose to take the list of C<@role_names> and apply them to the 
+attribute meta-object. This is very similar to the I<metaclass> option, but 
+allows you to use more than one extension at a time. This too is an advanced 
+topic, we don't yet have a cookbook for it though. 
+
+As with I<metaclass>, the default behavior is to just load C<$role_name>; however, 
+we also have a way to alias to a shorter name. This will first look to see if
+B<Moose::Meta::Attribute::Custom::Trait::$role_name> exists. If it does, Moose
+will then check to see if that has the method C<register_implementation>, which
+should return the actual name of the custom attribute trait. If there is no
+C<register_implementation> method, it will fall back to using
+B<Moose::Meta::Attribute::Custom::Trait::$metaclass_name> as the trait name.
 
 =back
 
@@ -724,18 +744,18 @@ method call and the C<SUPER::> pseudo-package; it is really your choice.
 The keyword C<inner>, much like C<super>, is a no-op outside of the context of
 an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
-the L<Moose::Cookbook>.
+the L<Moose::Cookbook::Recipe7>.
 
 =item B<augment ($name, &sub)>
 
 An C<augment> method, is a way of explicitly saying "I am augmenting this
 method from my superclass". Once again, the details of how C<inner> and
-C<augment> work is best described in the L<Moose::Cookbook>.
+C<augment> work is best described in the L<Moose::Cookbook::Recipe7>.
 
 =item B<confess>
 
 This is the C<Carp::confess> function, and exported here because I use it
-all the time. This feature may change in the future, so you have been warned.
+all the time. 
 
 =item B<blessed>
 
@@ -825,6 +845,13 @@ two features separate (yet interoperable) actually makes them easy to use, since
 their behavior is then easier to predict. Time will tell whether I am right or
 not (UPDATE: so far so good).
 
+=item *
+
+It is important to note that we currently have no simple way of combining 
+multiple extended versions of Moose (see L<EXTENDING AND EMBEDDING MOOSE> above), 
+and that in many cases they will conflict with one another. We are working on 
+developing a way around this issue, but in the meantime, you have been warned.
+
 =back
 
 =head1 ACKNOWLEDGEMENTS
@@ -867,6 +894,17 @@ technologies.
 =item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/5788>
 
 =item Several Moose extension modules in the L<MooseX::> namespace.
+
+=back
+
+=head2 Books
+
+=over 4
+
+=item The Art of the MetaObject Protocol
+
+I mention this in the L<Class::MOP> docs too, this book was critical in 
+the development of both modules and is highly recommended.
 
 =back
 
