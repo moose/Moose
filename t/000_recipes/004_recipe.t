@@ -8,7 +8,7 @@ use Test::More;
 BEGIN {
     eval "use Regexp::Common; use Locale::US;";
     plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
-    plan tests => 81;    
+    plan tests => 66;    
 }
 
 use Test::Exception;
@@ -146,13 +146,7 @@ lives_ok {
                 last_name      => 'Little',
                 title          => 'Senior Developer',            
                 address        => Address->new(city => 'Madison', state => 'CT')
-            ),
-            Employee->new(
-                first_name     => 'Rob',
-                last_name      => 'Kinyon',
-                title          => 'Developer',            
-                address        => Address->new(city => 'Marysville', state => 'OH')
-            ),        
+            ),          
         ]
     });
 } '... created the entire company successfully';
@@ -166,7 +160,7 @@ is($ii->address->city, 'Manhasset', '... got the right city');
 is($ii->address->state, 'NY', '... got the right state');
 is($ii->address->zip_code, 11030, '... got the zip code');
 
-is($ii->get_employee_count, 4, '... got the right employee count');
+is($ii->get_employee_count, 3, '... got the right employee count');
 
 # employee #1
 
@@ -221,24 +215,6 @@ ok(isweak($ii->employees->[2]->{company}), '... the company is a weak-ref');
 isa_ok($ii->employees->[2]->address, 'Address');
 is($ii->employees->[2]->address->city, 'Madison', '... got the right city');
 is($ii->employees->[2]->address->state, 'CT', '... got the right state');
-
-# employee #4
-
-isa_ok($ii->employees->[3], 'Employee');
-isa_ok($ii->employees->[3], 'Person');
-
-is($ii->employees->[3]->first_name, 'Rob', '... got the right first name');
-is($ii->employees->[3]->last_name, 'Kinyon', '... got the right last name');
-ok(!$ii->employees->[3]->has_middle_initial, '... got middle initial');
-is($ii->employees->[3]->middle_initial, undef, '... got the right middle initial value');
-is($ii->employees->[3]->full_name, 'Rob Kinyon, Developer', '... got the right full name');
-is($ii->employees->[3]->title, 'Developer', '... got the right title');
-is($ii->employees->[3]->company, $ii, '... got the right company');
-ok(isweak($ii->employees->[3]->{company}), '... the company is a weak-ref');
-
-isa_ok($ii->employees->[3]->address, 'Address');
-is($ii->employees->[3]->address->city, 'Marysville', '... got the right city');
-is($ii->employees->[3]->address->state, 'OH', '... got the right state');
 
 # create new company
 

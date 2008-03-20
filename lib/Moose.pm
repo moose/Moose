@@ -868,7 +868,7 @@ and it certainly wouldn't have this name ;P
 =item The basis of the TypeContraints module was Rob Kinyon's idea
 originally, I just ran with it.
 
-=item Thanks to mst & chansen and the whole #moose poose for all the
+=item Thanks to mst & chansen and the whole #moose posse for all the
 early ideas/feature-requests/encouragement/bug-finding.
 
 =item Thanks to David "Theory" Wheeler for meta-discussions and spelling fixes.
