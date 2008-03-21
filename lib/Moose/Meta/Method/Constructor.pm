@@ -178,7 +178,7 @@ sub _generate_slot_initializer {
                 ('$type_constraints[' . $index . ']'),                
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
-            push @source => $self->_generate_slot_assignment($attr, $default, $index);
+            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
             push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
 
         push @source => "}" if defined $attr->init_arg;

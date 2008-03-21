@@ -9,6 +9,12 @@ Revision history for Perl extension Moose
       as well. There will be 2 releases, and then it will
       be removed.
 
+    * Moose::Meta::Method::Constructor
+      - immutable classes which had non-lazy attributes were calling
+        the default generating sub twice in the constructor. (bug
+        found by Jesse Luehrs, fixed by Dave Rolsky)
+        - added tests for this (Dave Rolsky)
+
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
 
