@@ -170,7 +170,7 @@ sub _generate_slot_initializer {
                $default = '$instance->' . $builder;
             }
             
-            push @source => '{'; # wrap this to avoid my $val overrite warnings
+            push @source => '{'; # wrap this to avoid my $val overwrite warnings
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_check(
                 $attr,
@@ -179,7 +179,7 @@ sub _generate_slot_initializer {
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
             push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-            push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
+            push @source => '}'; # close - wrap this to avoid my $val overwrite warnings           
 
         push @source => "}" if defined $attr->init_arg;
     }
