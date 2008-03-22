@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 34;
 use Test::Exception;
 
 BEGIN {
@@ -66,4 +66,18 @@ qr/Validation failed for \'ArrayRef\' failed with value CODE\(0x.+?\) and Valida
 is($HashOrArray->validate(50),
 'Validation failed for \'ArrayRef\' failed with value 50 and Validation failed for \'HashRef\' failed with value 50 in (ArrayRef | HashRef)', 
 '... (ArrayRef | HashRef) cannot accept Numbers');
+
+my $StrOrArray = Moose::Meta::TypeConstraint::Union->new(type_constraints => [$Str, $ArrayRef]);
+isa_ok($StrOrArray, 'Moose::Meta::TypeConstraint');
+
+ok(!defined($StrOrArray->validate("hi")));
+ok(!defined($StrOrArray->validate([])));
+ok(!defined($StrOrArray->validate([1])));
+
+like($StrOrArray->validate({}),
+qr/Validation failed for \'Str\' failed with value HASH\(0x.+?\) and Validation failed for \'ArrayRef\' failed with value HASH\(0x.+?\) in \(Str \| ArrayRef\)/,
+'... (Str | ArrayRef) cannot accept HashRefs');
+
+ok($Str->is_subtype_of($StrOrArray), "Str is a subtype of (Str | ArrayRef)");
+ok($ArrayRef->is_subtype_of($StrOrArray), "ArrayRef is a subtype of (Str | ArrayRef)" );
 
