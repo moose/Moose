@@ -23,21 +23,39 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe1> - The (always classic) B<Point> example
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe2> - A simple B<BankAccount> example
+
+I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe3> - A lazy B<BinaryTree> example
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
+
+I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe5> - More subtypes, coercion in a B<Request> class
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe6> - The augment/inner example
+
+I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe7> - Making Moose fast with immutable (TODO)
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe8> - ??
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe9> - ?? 
+
+I<abstract goes here>
 
 =back
 
@@ -47,9 +65,15 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe10> - The Moose::Role example
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe11> - Advanced Role Composition (TODO)
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe12> - Runtime Role Composition (TODO)
+
+I<abstract goes here>
 
 =back
 
@@ -59,13 +83,31 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe20> - Welcome to the meta-world (TODO)
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe21> - The meta-attribute example
+
+I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe22> - The meta-attribute trait example (TODO)
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe23> - The meta-instance example (TODO)
 
+I<abstract goes here>
+
 =item L<Moose::Cookbook::Recipe24> - The meta-class example (TODO)
+
+I<abstract goes here>
+
+=back
+
+=head1 SNACKS
+
+=over 4
+
+=item L<Moose::Cookbook::Snack::Types>
 
 =back
 
