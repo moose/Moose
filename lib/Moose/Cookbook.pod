@@ -23,27 +23,32 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe1> - The (always classic) B<Point> example
 
-I<abstract goes here>
+A simple Moose-based class. Demonstrated Moose attributes and subclassing.
 
 =item L<Moose::Cookbook::Recipe2> - A simple B<BankAccount> example
 
-I<abstract goes here>
+A slightly more complex Moose class. Demonstrates using a method
+modifier in a subclass.
 
 =item L<Moose::Cookbook::Recipe3> - A lazy B<BinaryTree> example
 
-I<abstract goes here>
+Demonstrates several attribute features, including types, weak
+references, predicates ("does this object have a foo?"), defaults, and
+lazy attribute construction.
 
 =item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
 
-I<abstract goes here>
+Introduces the creation and use of custom types, a C<BUILD> method,
+and the use of C<override> in a subclass.
 
 =item L<Moose::Cookbook::Recipe5> - More subtypes, coercion in a B<Request> class
 
-I<abstract goes here>
+More type examples, including the use of type coercions.
 
 =item L<Moose::Cookbook::Recipe6> - The augment/inner example
 
-I<abstract goes here>
+Demonstrates the use of C<augment> method modifiers, a way of turning
+the usual method overriding style "inside-out".
 
 =item L<Moose::Cookbook::Recipe7> - Making Moose fast with immutable (TODO)
 
@@ -65,7 +70,9 @@ I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe10> - The Moose::Role example
 
-I<abstract goes here>
+Demonstrates roles, which are also sometimes known as traits or
+mix-ins. Roles provide a method of code re-use which is orthogonal to
+subclassing.
 
 =item L<Moose::Cookbook::Recipe11> - Advanced Role Composition (TODO)
 
@@ -87,7 +94,10 @@ I<abstract goes here>
 
 =item L<Moose::Cookbook::Recipe21> - The meta-attribute example
 
-I<abstract goes here>
+One way to extend Moose is to provide your own attribute
+metaclasses. Attribute metaclasses let you extend attribute
+declarations (with C<has>) and behavior to provide additional
+attribute functionality.
 
 =item L<Moose::Cookbook::Recipe22> - The meta-attribute trait example (TODO)
 
