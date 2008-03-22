@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe11 - The meta-attribute example
+Moose::Cookbook::Recipe21 - The meta-attribute example
 
 =head1 SYNOPSIS
 
