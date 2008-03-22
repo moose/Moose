@@ -49,6 +49,8 @@ for common questions and problems people have with Moose.
 
 =item L<Moose::Cookbook::Recipe11> - Advanced Role Composition (TODO)
 
+=item L<Moose::Cookbook::Recipe12> - Runtime Role Composition (TODO)
+
 =back
 
 =head2 Meta Moose
