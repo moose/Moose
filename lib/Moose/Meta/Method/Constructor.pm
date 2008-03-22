@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.08';
+our $VERSION   = '0.09';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -178,8 +178,9 @@ sub _generate_slot_initializer {
                 ('$type_constraints[' . $index . ']'),                
                 '$val'
             ) if ($is_moose && $attr->has_type_constraint);
+            
             push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-            push @source => '}'; # close - wrap this to avoid my $val overwrite warnings           
+            push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
 
         push @source => "}" if defined $attr->init_arg;
     }

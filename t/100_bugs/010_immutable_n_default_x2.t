@@ -3,7 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
+
+BEGIN {
+    use_ok('Moose');
+}
 
 {
     package Foo;
@@ -14,7 +18,7 @@ use Test::More tests => 2;
     has foo => (
         is      => 'rw',
         isa     => 'Str',
-        default => sub { use Devel::StackTrace; warn Devel::StackTrace->new;$foo_default_called++; 'foo' },
+        default => sub { $foo_default_called++; 'foo' },
     );
 
     our $bar_default_called = 0;
