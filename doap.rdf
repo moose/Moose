@@ -1,0 +1,31 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns="http://usefulinc.com/ns/doap#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:admin="http://webns.net/mvcb/">
+ <name>Moose</name>
+ <shortname>Moose</shortname>
+ <shortdesc>Moose is a postmodern object system for Perl5.</shortdesc>
+ <description>Moose is a postmodern object system for Perl 5 that takes the tedium out of writing object-oriented Perl. It borrows all the best features from Perl 6, CLOS (LISP), Smalltalk, Java, BETA, OCaml, Ruby and more, while still keeping true to its Perl 5 roots. </description>
+ <homepage rdf:resource="http://www.iinteractive.com/moose/" />
+ <download-page rdf:resource="http://search.cpan.org/~stevan/Moose/" />
+
+ <bug-database rdf:resource="http://rt.cpan.org/Public/Dist/Display.html?Name=Moose" />
+ <programming-language>Perl</programming-language>
+ <license rdf:resource="http://usefulinc.com/doap/licenses/artistic" />
+ <maintainer>
+  <foaf:Person>
+     <foaf:name>Stevan Little</foaf:name>
+  </foaf:Person>
+ </maintainer>
+
+ <developer>
+  <foaf:Person>
+     <foaf:name>Chris Prather</foaf:name>
+  </foaf:Person>
+ </developer>
+ <repository>
+   <SVNRepository>
+     <browse rdf:resource='http://code2.0beta.co.uk/moose/svnweb/index.cgi/moose' />
+
+     <location rdf:resource='http://code2.0beta.co.uk/moose/svn/Moose/' />
+   </SVNRepository>
+ </repository> 
+</Project>
+
