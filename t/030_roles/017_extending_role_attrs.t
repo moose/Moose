@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 10;
 use Test::Exception;
 
 BEGIN {
@@ -13,9 +13,7 @@ BEGIN {
 =pod
 
 This basically just makes sure that using +name 
-on role attributes works right. It is pretty simple
-test really, but I wanted to have one since we are 
-officially supporting the feature now.
+on role attributes works right.
 
 =cut
 
@@ -43,4 +41,35 @@ my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
 is($foo->bar, 100, '... got the extended attribute');
+
+{
+    package Bar::Role;
+    use Moose::Role;
+
+    has 'foo' => (
+        is      => 'rw',
+        isa     => 'Str | Int',
+    );
+
+    package Bar;
+    use Moose;
+
+    with 'Bar::Role';
+
+    ::lives_ok {
+        has '+foo' => (
+            isa => 'Int',
+        )
+    } "... narrowed the role's type constraint successfully";
+}
+
+
+my $bar = Bar->new(foo => 42);
+isa_ok($bar, 'Bar');
+is($bar->foo, 42, '... got the extended attribute');
+$bar->foo(100);
+is($bar->foo, 100, "... can change the attribute's value to an Int");
+
+throws_ok { $bar->foo("baz") } qr/^Attribute \(foo\) does not pass the type constraint because: Validation failed for 'Int' failed with value baz at /;
+is($bar->foo, 100, "... still has the old Int value");
 
