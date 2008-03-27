@@ -105,10 +105,14 @@ sub clone_and_inherit_options {
         # NOTE:
         # check here to see if the new type
         # is a subtype of the old one
-        ($type_constraint->is_subtype_of($self->type_constraint->name))
-            || confess "New type constraint setting must be a subtype of inherited one"
-                # iff we have a type constraint that is ...
-                if $self->has_type_constraint;
+        # or if the old one is a union and the
+        # subtype (or a supertype of it) is included
+        # in the union
+        $type_constraint->is_subtype_of($self->type_constraint->name)
+            || ($self->type_constraint->can('includes_type') && $self->type_constraint->includes_type($type_constraint))
+                || confess "New type constraint setting must be a subtype of inherited one" . ($self->type_constraint->can('includes_type') ? ", or included in the inherited constraint" : '')
+                    # iff we have a type constraint that is ...
+                    if $self->has_type_constraint;
         # then we use it :)
         $actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
