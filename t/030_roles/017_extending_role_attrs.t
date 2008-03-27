@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 29;
 use Test::Exception;
 
 BEGIN {
@@ -105,4 +105,73 @@ is_deeply($baz->baz, ["hi"], "... can change the attribute's value to an ArrayRe
 
 throws_ok { $baz->baz("quux") } qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'Int \| ArrayRef' failed with value quux at /;
 is_deeply($baz->baz, ["hi"], "... still has the old ArrayRef value");
+
+{
+    package Quux::Role;
+    use Moose::Role;
+
+    has 'quux' => (
+        is      => 'rw',
+        isa     => 'Str | Int | Ref',
+    );
+
+    package Quux;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    with 'Quux::Role';
+
+    subtype 'Positive'
+        => as 'Int'
+        => where { $_ > 0 };
+
+    ::lives_ok {
+        has '+quux' => (
+            isa => 'Positive | ArrayRef',
+        )
+    } "... narrowed the role's type constraint successfully";
+}
+
+
+my $quux = Quux->new(quux => 99);
+isa_ok($quux, 'Quux');
+is($quux->quux, 99, '... got the extended attribute');
+$quux->quux(100);
+is($quux->quux, 100, "... can change the attribute's value to an Int");
+$quux->quux(["hi"]);
+is_deeply($quux->quux, ["hi"], "... can change the attribute's value to an ArrayRef");
+
+throws_ok { $quux->quux("quux") } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'Positive \| ArrayRef' failed with value quux at /;
+is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
+
+throws_ok { $quux->quux({a => 1}) } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'Positive \| ArrayRef' failed with value HASH\(\w+\) at /;
+is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
+
+{
+    package Err::Role;
+    use Moose::Role;
+
+    has "err" => (
+        isa => 'Str | Int',
+    );
+
+    package Err;
+    use Moose;
+
+    with 'Err::Role';
+
+    my $error = qr/New type constraint setting must be a subtype of inherited one, or included in the inherited constraint/;
+
+    ::throws_ok {
+        has '+err' => (isa => 'Defined');
+    } $error, "must get more specific, not less specific";
+
+    ::throws_ok {
+        has '+err' => (isa => 'Bool');
+    } $error, "the type has to be a part of the union";
+
+    ::throws_ok {
+        has '+err' => (isa => 'Str | ArrayRef');
+    } $error, "can't add new types to the union";
+}
 
