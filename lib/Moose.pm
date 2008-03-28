@@ -700,8 +700,12 @@ Change if the attribute lazily initializes the slot.
 
 =item I<isa>
 
-You I<are> allowed to change the type, B<if and only if> the new type is a
-subtype of the old type.
+You I<are> allowed to change the type without restriction. 
+
+It is recommended that you use this freedom with caution. We used to 
+only allow for extension only if the type was a subtype of the parent's 
+type, but we felt that was too restrictive and is better left as a 
+policy descision. 
 
 =item I<handles>
 

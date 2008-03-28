@@ -68,31 +68,6 @@ sub is_subtype_of {
     return 0;
 }
 
-sub includes_type {
-    my ($self, $type) = @_;
-
-    my $has_type = sub {
-        my $subtype = shift;
-
-        for my $type (@{ $self->type_constraints }) {
-            return 1 if $subtype->is_a_type_of($type);
-        }
-
-        return 0;
-    };
-
-    if ($type->isa('Moose::Meta::TypeConstraint::Union')) {
-        for my $t (@{ $type->type_constraints }) {
-            return 0 unless $has_type->($t);
-        }
-    }
-    else {
-        return 0 unless $has_type->($type);
-    }
-
-    return 1;
-}
-
 1;
 
 __END__
