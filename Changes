@@ -19,6 +19,11 @@ Revision history for Perl extension Moose
       - inherited attributes may now be extended without restriction on type
         and some other attributes (Sartak)
 
+    * Moose::Meta::TypeConstraint::Union
+      - includes_type method for finding if a type (or a subtype of it) is
+        included in the union (Sartak)
+        - added tests for this (Sartak)
+
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
 
