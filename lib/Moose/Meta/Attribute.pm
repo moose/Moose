@@ -65,31 +65,13 @@ sub clone_and_inherit_options {
     my ($self, %options) = @_;
     # you can change default, required, coerce, documentation and lazy
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required documentation lazy)) {
+    foreach my $legal_option (qw(default coerce required documentation lazy handles builder)) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
         }
     }
 
-    # handles can only be added, not changed
-    if ($options{handles}) {
-        confess "You can only add the 'handles' option, you cannot change it"
-            if $self->has_handles;
-        $actual_options{handles} = $options{handles};
-        delete $options{handles};
-    }
-    
-    # handles can only be added, not changed
-    if ($options{builder}) {
-        confess "You can only add the 'builder' option, you cannot change it"
-            if $self->has_builder;
-        $actual_options{builder} = $options{builder};
-        delete $options{builder};
-    }    
-
-    # isa can be changed, but only if the
-    # new type is a subtype
     if ($options{isa}) {
         my $type_constraint;
         if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
@@ -102,18 +84,7 @@ sub clone_and_inherit_options {
             (defined $type_constraint)
                 || confess "Could not find the type constraint '" . $options{isa} . "'";
         }
-        # NOTE:
-        # check here to see if the new type
-        # is a subtype of the old one
-        # or if the old one is a union and the
-        # subtype (or a supertype of it) is included
-        # in the union
-        $type_constraint->is_subtype_of($self->type_constraint->name)
-            || ($self->type_constraint->can('includes_type') && $self->type_constraint->includes_type($type_constraint))
-                || confess "New type constraint setting must be a subtype of inherited one" . ($self->type_constraint->can('includes_type') ? ", or included in the inherited constraint" : '')
-                    # iff we have a type constraint that is ...
-                    if $self->has_type_constraint;
-        # then we use it :)
+
         $actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
     }

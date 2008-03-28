@@ -81,9 +81,9 @@ BEGIN {
         has '+one_last_one' => (isa => subtype('Ref', where { blessed $_ eq 'CODE' }));        
     } '... extend an attribute with anon-subtype';    
     
-    ::dies_ok {
+    ::lives_ok {
         has '+one_last_one' => (isa => 'Value');        
-    } '... cannot extend an attribute with a non-subtype';    
+    } '... now can extend an attribute with a non-subtype';    
     
     ::lives_ok {
         has '+bling' => (handles => ['hello']);        
@@ -93,9 +93,9 @@ BEGIN {
     ::dies_ok {
         has '+blang' => (handles => ['hello']);        
     } '... we can not alter the handles attribute option';    
-    ::dies_ok { 
+    ::lives_ok { 
         has '+fail' => (isa => 'Ref');           
-    } '... cannot create an attribute with an improper subtype relation';    
+    } '... can now create an attribute with an improper subtype relation';    
     ::dies_ok { 
         has '+other_fail' => (trigger => sub {});           
     } '... cannot create an attribute with an illegal option';    
@@ -193,8 +193,8 @@ ok(Bar->meta->has_attribute('gloum'), '... Bar has a gloum attr');
 ok(Bar->meta->has_attribute('bling'), '... Bar has a bling attr');
 ok(Bar->meta->has_attribute('bunch_of_stuff'), '... Bar does have a bunch_of_stuff attr');
 ok(!Bar->meta->has_attribute('blang'), '... Bar has a blang attr');
-ok(!Bar->meta->has_attribute('fail'), '... Bar does not have a fail attr');
-ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have a fail attr');
+ok(Bar->meta->has_attribute('fail'), '... Bar has a fail attr');
+ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have an other_fail attr');
 
 isnt(Foo->meta->get_attribute('foo'), 
      Bar->meta->get_attribute('foo'), 

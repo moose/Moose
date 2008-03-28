@@ -15,6 +15,10 @@ Revision history for Perl extension Moose
         found by Jesse Luehrs, fixed by Dave Rolsky)
         - added tests for this (Dave Rolsky)
 
+    * Moose::Meta::Attribute
+      - inherited attributes may now be extended without restriction on type
+        and some other attributes (Sartak)
+
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
 

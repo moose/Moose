@@ -150,27 +150,27 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
     package Err::Role;
     use Moose::Role;
 
-    has "err" => (
-        isa => 'Str | Int',
-    );
+    for (1..3) {
+        has "err$_" => (
+            isa => 'Str | Int',
+        );
+    }
 
     package Err;
     use Moose;
 
     with 'Err::Role';
 
-    my $error = qr/New type constraint setting must be a subtype of inherited one, or included in the inherited constraint/;
+    ::lives_ok {
+        has '+err1' => (isa => 'Defined');
+    } "can get less specific in the subclass";
 
-    ::throws_ok {
-        has '+err' => (isa => 'Defined');
-    } $error, "must get more specific, not less specific";
+    ::lives_ok {
+        has '+err2' => (isa => 'Bool');
+    } "or change the type completely";
 
-    ::throws_ok {
-        has '+err' => (isa => 'Bool');
-    } $error, "the type has to be a part of the union";
-
-    ::throws_ok {
-        has '+err' => (isa => 'Str | ArrayRef');
-    } $error, "can't add new types to the union";
+    ::lives_ok {
+        has '+err3' => (isa => 'Str | ArrayRef');
+    } "or add new types to the union";
 }
 
