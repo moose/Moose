@@ -100,7 +100,7 @@ sub _process_options {
         if ($options->{is} eq 'ro') {
             $options->{reader} ||= $name;
             (!exists $options->{trigger})
-                || confess "Cannot have a trigger on a read-only attribute";
+                || confess "Cannot have a trigger on a read-only attribute $name";
         }
         elsif ($options->{is} eq 'rw') {
             $options->{accessor} = $name;
@@ -109,7 +109,7 @@ sub _process_options {
                     if exists $options->{trigger};
         }
         else {
-            confess "I do not understand this option (is => " . $options->{is} . ")"
+            confess "I do not understand this option (is => " . $options->{is} . ") on attribute $name"
         }
     }
 
@@ -117,10 +117,10 @@ sub _process_options {
         if (exists $options->{does}) {
             if (eval { $options->{isa}->can('does') }) {
                 ($options->{isa}->does($options->{does}))
-                    || confess "Cannot have an isa option and a does option if the isa does not do the does";
+                    || confess "Cannot have an isa option and a does option if the isa does not do the does on attribute $name";
             }
             else {
-                confess "Cannot have an isa option which cannot ->does()";
+                confess "Cannot have an isa option which cannot ->does() on attribute $name";
             }
         }
 
@@ -156,21 +156,21 @@ sub _process_options {
 
     if (exists $options->{coerce} && $options->{coerce}) {
         (exists $options->{type_constraint})
-            || confess "You cannot have coercion without specifying a type constraint";
-        confess "You cannot have a weak reference to a coerced value"
+            || confess "You cannot have coercion without specifying a type constraint on attribute $name";
+        confess "You cannot have a weak reference to a coerced value on attribute $name"
             if $options->{weak_ref};
     }
 
     if (exists $options->{auto_deref} && $options->{auto_deref}) {
         (exists $options->{type_constraint})
-            || confess "You cannot auto-dereference without specifying a type constraint";
+            || confess "You cannot auto-dereference without specifying a type constraint on attribute $name";
         ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
          $options->{type_constraint}->is_a_type_of('HashRef'))
-            || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef";
+            || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute $name";
     }
 
     if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
-        confess("You can not use lazy_build and default for the same attribute")
+        confess("You can not use lazy_build and default for the same attribute $name")
             if exists $options->{default};
         $options->{lazy}      = 1;
         $options->{required}  = 1;
@@ -187,11 +187,11 @@ sub _process_options {
 
     if (exists $options->{lazy} && $options->{lazy}) {
         (exists $options->{default} || defined $options->{builder} )
-            || confess "You cannot have lazy attribute without specifying a default value for it";
+            || confess "You cannot have lazy attribute ($name) without specifying a default value for it";
     }
 
     if ( $options->{required} && !( ( !exists $options->{init_arg} || defined $options->{init_arg} ) || exists $options->{default} || defined $options->{builder} ) ) {
-        confess "You cannot have a required attribute without a default, builder, or an init_arg";
+        confess "You cannot have a required attribute ($name) without a default, builder, or an init_arg";
     }
 
 }
