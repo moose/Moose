@@ -187,7 +187,7 @@ sub _collect_all_parents {
 
 ## this should get deprecated actually ...
 
-sub union { die "DEPRECATED" }
+sub union { Carp::croak "DEPRECATED" }
 
 1;
 

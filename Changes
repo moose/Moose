@@ -2,6 +2,9 @@ Revision history for Perl extension Moose
 
 0.41
     ~~ numerous documentation updates ~~
+    
+    - Changed all usage of die to Carp::croak for better
+      error reporting (initial patch by Tod Hagan)
 
     ** IMPORTANT NOTE **
     - the make_immutable keyword is now deprecated, don't
@@ -19,6 +22,10 @@ Revision history for Perl extension Moose
       - inherited attributes may now be extended without 
         restriction on the type ('isa') (Sartak)
         - added tests for this (Sartak)
+      - when an attribute property is malformed (such as lazy without 
+        a default), give the name of the attribute in the error 
+        message (Sartak)
+      
 
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage

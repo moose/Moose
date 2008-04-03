@@ -8,7 +8,7 @@ our $VERSION   = '0.41';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
-use Carp         'confess';
+use Carp         'confess', 'croak';
 use Sub::Name    'subname';
 
 use Sub::Exporter;
@@ -105,7 +105,7 @@ use Moose::Util ();
             my $class = $CALLER;
             return subname 'Moose::has' => sub ($;%) {
                 my $name    = shift;
-                die 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+                croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
                 my %options = @_;
                 my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
                 $class->meta->add_attribute( $_, %options ) for @$attrs;
