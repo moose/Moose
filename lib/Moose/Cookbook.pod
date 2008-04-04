@@ -54,9 +54,11 @@ the usual method overriding style "inside-out".
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Recipe8> - ??
+=item L<Moose::Cookbook::Recipe8> - Managing complex relations with trigger (TODO)
 
 I<abstract goes here>
+
+Work off of this http://code2.0beta.co.uk/moose/svn/Moose/trunk/t/200_examples/007_Child_Parent_attr_inherit.t
 
 =item L<Moose::Cookbook::Recipe9> - ?? 
 

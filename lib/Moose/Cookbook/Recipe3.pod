@@ -84,7 +84,7 @@ is automatically created for us by Moose.
 
 The next attribute option is new, though: the C<predicate> option. 
 This option creates a method which can be used to check whether 
-a given slot (in this case C<parent>) contains a defined value. In 
+a given slot (in this case C<parent>) has been initialized. In 
 this case it will create a method called C<has_parent>. Quite simple, 
 and quite handy too.
 
