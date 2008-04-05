@@ -9,7 +9,7 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.11';
+our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
@@ -47,8 +47,11 @@ sub DEMOLISHALL {
     # extra meta level calls    
     return unless $_[0]->can('DEMOLISH');    
     my $self = shift;    
-    foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-        $method->{code}->($self);
+    {
+        local $@;
+        foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
+            $method->{code}->($self);
+        }
     }    
 }
 

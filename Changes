@@ -25,7 +25,11 @@ Revision history for Perl extension Moose
       - when an attribute property is malformed (such as lazy without 
         a default), give the name of the attribute in the error 
         message (Sartak)
-      
+     
+    * Moose::Object 
+      - localize $@ inside DEMOLISHALL to avoid it 
+        eating $@ (found by Ernesto)
+        - added test for this (thanks to Ernesto)
 
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
