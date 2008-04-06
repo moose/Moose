@@ -88,6 +88,24 @@ sub clone_and_inherit_options {
         $actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
     }
+    
+    if ($options{does}) {
+        my $type_constraint;
+        if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
+            $type_constraint = $options{does};
+        }
+        else {
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                $options{does}
+            );
+            (defined $type_constraint)
+                || confess "Could not find the type constraint '" . $options{does} . "'";
+        }
+
+        $actual_options{type_constraint} = $type_constraint;
+        delete $options{does};
+    }    
+    
     (scalar keys %options == 0)
         || confess "Illegal inherited options => (" . (join ', ' => keys %options) . ")";
     $self->clone(%actual_options);

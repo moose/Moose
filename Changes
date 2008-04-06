@@ -20,7 +20,7 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Attribute
       - inherited attributes may now be extended without 
-        restriction on the type ('isa') (Sartak)
+        restriction on the type ('isa', 'does') (Sartak)
         - added tests for this (Sartak)
       - when an attribute property is malformed (such as lazy without 
         a default), give the name of the attribute in the error 
