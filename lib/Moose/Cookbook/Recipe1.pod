@@ -197,10 +197,14 @@ L<Moose::Util::TypeConstraints> documentation.
 
 =item (2)
 
-Future plans for Moose include allowing for alternate instance 
-structures such as blessed ARRAY refs and such. If you want your
-Moose classes to be interchangeable, it is advisable to avoid
-direct instance access, like that shown above.
+Moose supports using instance structures other than blessed hash
+references (such as in a glob reference -- see
+L<MooseX::GlobRef::Object>). If you want your Moose classes to
+be interchangeable, it is advisable to avoid direct instance
+access, like that shown above. Moose does let you get and set
+attributes directly without exposing the instance structure, but
+that's an advanced topic (intrepid readers should refer to the
+L<Moose::Meta::Attribute documentation>).
 
 =back
 
