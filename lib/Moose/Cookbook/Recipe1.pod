@@ -51,9 +51,10 @@ Another important thing happens at this stage as well. Moose will
 automatically set your package's superclass to be L<Moose::Object>.
 The reason we do this, is so that we can be sure that your class
 will inherit from L<Moose::Object> and get the benefits that
-provides (see L<Moose::Object> for details). However, you don't 
-actually I<have> to inherit from L<Moose::Object> if you don't  
-want to. All Moose features will still be accessible to you.
+provides (such as a constructor; see L<Moose::Object> for details).
+However, you don't actually I<have> to inherit from L<Moose::Object>
+if you don't want to. All Moose features will still be accessible to
+you.
 
 Now, onto the keywords. The first one we see here is C<has>, which 
 defines an instance attribute in your class:
