@@ -10,7 +10,7 @@ use overload '""'     => sub { shift->name },   # stringify to tc name
 
 use Sub::Name    'subname';
 use Carp         'confess';
-use Scalar::Util 'blessed';
+use Scalar::Util qw(blessed refaddr);
 
 our $VERSION   = '0.12';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -91,19 +91,24 @@ sub get_message {
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
-    # this is so utterly broken
-    # any anon type constraint equals any other, because their names are both '__ANON__'
-    # I think the correct implementation is:
-    # refaddr == refaddr
-    #  ||
-    # constraint_coderef == constraint_coderef && parent->equals(parent)
-    # but we need tests first
-    # the Enum constraint can compare it's elements in a subclass
-    # refaddr eq will DWIM for all registered types
-    # the Class tc will already do the right thing even if the name is different
-    $self->name eq $type->name;
+    return 1 if refaddr($self) == refaddr($other);
+
+    if ( $self->has_hand_optimized_type_constraint and $other->has_hand_optimized_type_constraint ) {
+        return 1 if $self->hand_optimized_type_constraint == $other->hand_optimized_type_constraint;
+    }
+
+    return unless $self->constraint == $other->constraint;
+
+    if ( $self->has_parent ) {
+        return unless $other->has_parent;
+        return unless $self->parent->equals( $other->parent );
+    } else {
+        return if $other->has_parent;
+    }
+
+    return 1;
 }
 
 sub is_a_type_of {

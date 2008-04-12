@@ -40,6 +40,36 @@ sub new {
     return $self;
 }
 
+sub equals {
+    my ( $self, $type_or_name ) = @_;
+
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
+    return unless $other->isa(__PACKAGE__);
+
+    my @self_constraints  = @{ $self->type_constraints };
+    my @other_constraints = @{ $other->type_constraints };
+
+    return unless @self_constraints == @other_constraints;
+
+    # FIXME presort type constraints for efficiency?
+    constraint: foreach my $constraint ( @self_constraints ) {
+        for ( my $i = 0; $i < @other_constraints; $i++ ) {
+            if ( $constraint->equals($other_constraints[$i]) ) {
+                splice @other_constraints, $i, 1;
+                next constraint;
+            }
+        }
+    }
+
+    return @other_constraints == 0;
+}
+
+sub parents {
+    my $self = shift;
+    $self->type_constraints;
+}
+
 sub validate {
     my ($self, $value) = @_;
     my $message;
@@ -101,9 +131,13 @@ but it does provide the same API
 
 =item B<type_constraints>
 
+=item B<parents>
+
 =item B<constraint>
 
 =item B<includes_type>
+
+=item B<equals>
 
 =back
 

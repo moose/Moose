@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 33;
 use Test::Exception;
 
 BEGIN {
@@ -26,6 +26,14 @@ isa_ok($Str_or_Undef, 'Moose::Meta::TypeConstraint::Union');
 
 ok($Str_or_Undef->check(undef), '... (Str | Undef) can accept an Undef value');
 ok($Str_or_Undef->check('String'), '... (Str | Undef) can accept a String value');
+
+ok($Str_or_Undef->is_a_type_of($Str), "subtype of Str");
+ok($Str_or_Undef->is_a_type_of($Undef), "subtype of Undef");
+
+ok( !$Str_or_Undef->equals($Str), "not equal to Str" );
+ok( $Str_or_Undef->equals($Str_or_Undef), "equal to self" );
+ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Str, $Undef ])), "equal to clone" );
+ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Undef, $Str ])), "equal to reversed clone" );
 
 # another ....
 

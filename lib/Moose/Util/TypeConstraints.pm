@@ -25,6 +25,7 @@ sub find_or_create_type_constraint       ($;$);
 sub create_type_constraint_union         (@);
 sub create_parameterized_type_constraint ($);
 sub create_class_type_constraint         ($;$);
+sub create_enum_type_constraint          ($$);
 #sub create_class_type_constraint         ($);
 
 # dah sugah!
@@ -50,6 +51,7 @@ use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Meta::TypeConstraint::Parameterizable;
+use Moose::Meta::TypeConstraint::Enum;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
@@ -165,6 +167,7 @@ sub create_class_type_constraint ($;$) {
       $message = $_[0]->{message} if exists $_[0]->{message};
     }
 
+    # FIXME allow a different name too, and potentially handle anon
     Moose::Meta::TypeConstraint::Class->new(
         name => $class,
         ($message ? (message => $message) : ())
@@ -227,6 +230,7 @@ sub register_type_constraint ($) {
     my $constraint = shift;
     confess "can't register an unnamed type constraint" unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
+    return $constraint;
 }
 
 # type constructors
@@ -285,10 +289,21 @@ sub enum ($;@) {
     (scalar @values >= 2)
         || confess "You must have at least two values to enumerate through";
     my %valid = map { $_ => 1 } @values;
-    _create_type_constraint(
-        $type_name,
-        'Str',
-        sub { $valid{$_} }
+
+    register_type_constraint(
+        create_enum_type_constraint(
+            $type_name,
+            \@values,
+        )
+    );
+}
+
+sub create_enum_type_constraint ($$) {
+    my ( $type_name, $values ) = @_;
+    
+    Moose::Meta::TypeConstraint::Enum->new(
+        name   => $type_name || '__ANON__',
+        values => $values,
     );
 }
 
@@ -533,9 +548,10 @@ $REGISTRY->add_type_constraint(
         optimized            => \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef,
         constraint_generator => sub {
             my $type_parameter = shift;
+            my $check = $type_parameter->_compiled_type_constraint;
             return sub {
                 foreach my $x (@$_) {
-                    ($type_parameter->check($x)) || return
+                    ($check->($x)) || return
                 } 1;
             }
         }
@@ -551,9 +567,10 @@ $REGISTRY->add_type_constraint(
         optimized            => \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef,
         constraint_generator => sub {
             my $type_parameter = shift;
+            my $check = $type_parameter->_compiled_type_constraint;
             return sub {
                 foreach my $x (values %$_) {
-                    ($type_parameter->check($x)) || return
+                    ($check->($x)) || return
                 } 1;
             }
         }
@@ -568,8 +585,9 @@ $REGISTRY->add_type_constraint(
         constraint           => sub { 1 },
         constraint_generator => sub {
             my $type_parameter = shift;
+            my $check = $type_parameter->_compiled_type_constraint;
             return sub {
-                return 1 if not(defined($_)) || $type_parameter->check($_);
+                return 1 if not(defined($_)) || $check->($_);
                 return;
             }
         }
@@ -875,6 +893,8 @@ L<Moose::Meta::TypeConstraint::Parameterized> for it.
 
 Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
 object for that class name.
+
+=item B<create_enum_type_constraint ($name, $values)>
 
 =item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
 

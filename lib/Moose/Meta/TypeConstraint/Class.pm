@@ -25,10 +25,17 @@ sub new {
 
     my $self  = $class->meta->new_object(%args);
 
-    $self->compile_type_constraint()
-        unless $self->_has_compiled_type_constraint;
+    $self->_create_hand_optimized_type_constraint;
+
+    $self->compile_type_constraint();
 
     return $self;
+}
+
+sub _create_hand_optimized_type_constraint {
+    my $self = shift;
+    my $class = $self->class;
+    $self->hand_optimized_type_constraint(sub { blessed( $_[0] ) && $_[0]->isa($class) });
 }
 
 sub parents {
@@ -46,24 +53,14 @@ sub parents {
     );
 }
 
-sub hand_optimized_type_constraint {
-    my $self  = shift;
-    my $class = $self->class;
-    sub { blessed( $_[0] ) && $_[0]->isa($class) }
-}
-
-sub has_hand_optimized_type_constraint { 1 }
-
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
-    if ( $type->isa(__PACKAGE__) ) {
-        return $self->class eq $type->class;
-    } else {
-        $self->SUPER::equals($type);
-    }
+    return unless $other->isa(__PACKAGE__);
+
+    return $self->class eq $other->class;
 }
 
 sub is_a_type_of {

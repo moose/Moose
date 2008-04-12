@@ -31,7 +31,7 @@ push @invalid_metacharacters, '^1?$|^(11+?)\1+$';
 plan tests => @valid_letters        + @invalid_letters
             + @valid_languages      + @invalid_languages
             + @valid_metacharacters + @invalid_metacharacters
-            + @valid_languages      + 3;
+            + @valid_languages      + 6;
 
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
@@ -56,4 +56,6 @@ is($anon_enum->parent->name, 'Str', '... got the right parent name');
 ok($anon_enum->check($_), "'$_' is a language") for @valid_languages;
 
 
-
+ok( !$anon_enum->equals( enum [qw(foo bar)] ), "doesn't equal a diff enum" );
+ok( $anon_enum->equals( $anon_enum ), "equals itself" );
+ok( $anon_enum->equals( enum \@valid_languages ), "equals duplicate" );

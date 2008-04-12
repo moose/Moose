@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 28;
 use Test::Exception;
 
 BEGIN {
@@ -43,6 +43,9 @@ lives_ok {
 
     ok($t->check({ one => 1, two => 2 }), '... validated it correctly');
     ok(!$t->check({ one1 => 1, two2 => 2 }), '... validated it correctly');
+
+    ok( $t->equals($t), "equals to self" );
+    ok( !$t->equals($t->parent), "not equal to parent" );
 }
 
 my $hoi = Moose::Util::TypeConstraints::find_or_create_type_constraint('AlphaKeyHash[Int]');
@@ -51,6 +54,12 @@ ok($hoi->check({ one => 1, two => 2 }), '... validated it correctly');
 ok(!$hoi->check({ one1 => 1, two2 => 2 }), '... validated it correctly');
 ok(!$hoi->check({ one => 'uno', two => 'dos' }), '... validated it correctly');
 ok(!$hoi->check({ one1 => 'un', two2 => 'deux' }), '... validated it correctly');
+
+ok( $hoi->equals($hoi), "equals to self" );
+ok( !$hoi->equals($hoi->parent), "equals to self" );
+ok( !$hoi->equals(find_type_constraint('AlphaKeyHash')), "not equal to unparametrized self" );
+ok( $hoi->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "Blah", parent => find_type_constraint("AlphaKeyHash"), type_parameter => find_type_constraint("Int") ) ), "equal to clone" );
+ok( !$hoi->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "Oink", parent => find_type_constraint("AlphaKeyHash"), type_parameter => find_type_constraint("Str") ) ), "not equal to different parameter" );
 
 my $th = Moose::Util::TypeConstraints::find_or_create_type_constraint('Trihash[Bool]');
 
