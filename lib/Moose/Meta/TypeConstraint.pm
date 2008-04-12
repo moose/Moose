@@ -93,6 +93,16 @@ sub equals {
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
+    # this is so utterly broken
+    # any anon type constraint equals any other, because their names are both '__ANON__'
+    # I think the correct implementation is:
+    # refaddr == refaddr
+    #  ||
+    # constraint_coderef == constraint_coderef && parent->equals(parent)
+    # but we need tests first
+    # the Enum constraint can compare it's elements in a subclass
+    # refaddr eq will DWIM for all registered types
+    # the Class tc will already do the right thing even if the name is different
     $self->name eq $type->name;
 }
 
