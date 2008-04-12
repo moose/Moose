@@ -12,13 +12,22 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 
+__PACKAGE__->meta->add_attribute('class' => (
+    reader  => 'class',
+));
+
 sub new {
-    my $class = shift;
-    my $self  = $class->meta->new_object(@_, 
-        parent => Moose::Util::TypeConstraints::find_type_constraint('Object') 
-    );
+    my ( $class, %args ) = @_;
+
+    $args{class} = $args{name} unless exists $args{class};
+
+    $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
+
+    my $self  = $class->meta->new_object(%args);
+
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
+
     return $self;
 }
 
@@ -26,19 +35,20 @@ sub parents {
     my $self = shift;
     return (
         $self->parent,
-        map { 
-            # NOTE:
-            # Hmm, should this be find_or_create_type_constraint?
-            # What do you think nothingmuch??
-            # - SL
-            Moose::Util::TypeConstraints::find_type_constraint($_) 
-        } $self->name->meta->superclasses,
+        map {
+            # FIXME find_type_constraint might find a TC named after the class but that isn't really it
+            # I did this anyway since it's a convention that preceded TypeConstraint::Class, and it should DWIM
+            # if anybody thinks this problematic please discuss on IRC.
+            # a possible fix is to add by attr indexing to the type registry to find types of a certain property
+            # regardless of their name
+            Moose::Util::TypeConstraints::find_type_constraint($_) || __PACKAGE__->new( name => $_ )
+        } $self->class->meta->superclasses,
     );
 }
 
 sub hand_optimized_type_constraint {
     my $self  = shift;
-    my $class = $self->name;
+    my $class = $self->class;
     sub { blessed( $_[0] ) && $_[0]->isa($class) }
 }
 
