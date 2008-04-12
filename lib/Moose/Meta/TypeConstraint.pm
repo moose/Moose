@@ -83,18 +83,34 @@ sub get_message {
 
 ## type predicates ...
 
+sub equals {
+    my ( $self, $type_or_name ) = @_;
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
+    $self->name eq $type->name;
+}
+
 sub is_a_type_of {
-    my ($self, $type_name) = @_;
-    ($self->name eq $type_name || $self->is_subtype_of($type_name));
+    my ($self, $type_or_name) = @_;
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
+    ($self->equals($type) || $self->is_subtype_of($type));
 }
 
 sub is_subtype_of {
-    my ($self, $type_name) = @_;
+    my ($self, $type_or_name) = @_;
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
     my $current = $self;
+
     while (my $parent = $current->parent) {
-        return 1 if $parent->name eq $type_name;
+        return 1 if $parent->equals($type);
         $current = $parent;
     }
+
     return 0;
 }
 
@@ -218,12 +234,14 @@ If you wish to use features at this depth, please come to the
 
 =item B<new>
 
-=item B<is_a_type_of ($type_name)>
+=item B<equals ($type_name_or_object)>
+
+=item B<is_a_type_of ($type_name_or_object)>
 
 This checks the current type name, and if it does not match,
 checks if it is a subtype of it.
 
-=item B<is_subtype_of ($type_name)>
+=item B<is_subtype_of ($type_name_or_object)>
 
 =item B<compile_type_constraint>
 
@@ -248,6 +266,8 @@ the C<message> will be used to construct a custom error message.
 =item B<parent>
 
 =item B<has_parent>
+
+=item B<parents>
 
 =item B<constraint>
 

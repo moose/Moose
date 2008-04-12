@@ -54,17 +54,44 @@ sub hand_optimized_type_constraint {
 
 sub has_hand_optimized_type_constraint { 1 }
 
-sub is_a_type_of {
-    my ($self, $type_name) = @_;
+sub equals {
+    my ( $self, $type_or_name ) = @_;
 
-    return $self->name eq $type_name || $self->is_subtype_of($type_name);
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
+    if ( $type->isa(__PACKAGE__) ) {
+        return $self->class eq $type->class;
+    } else {
+        $self->SUPER::equals($type);
+    }
+}
+
+sub is_a_type_of {
+    my ($self, $type_or_name) = @_;
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+
+    ($self->equals($type) || $self->is_subtype_of($type_or_name));
 }
 
 sub is_subtype_of {
-    my ($self, $type_name) = @_;
+    my ($self, $type_or_name_or_class ) = @_;
 
-    return 1 if $type_name eq 'Object';
-    return $self->name->isa( $type_name );
+    if ( not ref $type_or_name_or_class ) {
+        # it might be a class
+        return 1 if $self->class->isa( $type_or_name_or_class );
+    }
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_class);
+
+    if ( $type->isa(__PACKAGE__) ) {
+        # if $type_or_name_or_class isn't a class, it might be the TC name of another ::Class type
+        # or it could also just be a type object in this branch
+        return $self->class->isa( $type->class );
+    } else {
+        # the only other thing we are a subtype of is Object
+        $self->SUPER::is_subtype_of($type);
+    }
 }
 
 1;
@@ -86,6 +113,8 @@ Moose::Meta::TypeConstraint::Class - Class/TypeConstraint parallel hierarchy
 =item B<hand_optimized_type_constraint>
 
 =item B<has_hand_optimized_type_constraint>
+
+=item B<equals>
 
 =item B<is_a_type_of>
 
