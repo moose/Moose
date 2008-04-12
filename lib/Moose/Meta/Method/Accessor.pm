@@ -28,6 +28,7 @@ sub _eval_code {
                                    ? $type_constraint_obj->_compiled_type_constraint
                                    : undef;
 
+    #warn "code for $attr_name =>\n" . $code . "\n";
     my $sub = eval $code;
     confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
     return $sub;

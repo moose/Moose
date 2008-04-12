@@ -17,6 +17,10 @@ Revision history for Perl extension Moose
         the default generating sub twice in the constructor. (bug
         found by Jesse Luehrs, fixed by Dave Rolsky)
         - added tests for this (Dave Rolsky)
+      - fix typo in initialize_body method (nothingmuch)
+      
+    * Moose::Meta::Method::Destructor
+      - fix typo in initialize_body method (nothingmuch)
 
     * Moose::Meta::Attribute
       - inherited attributes may now be extended without 
@@ -30,6 +34,29 @@ Revision history for Perl extension Moose
       - localize $@ inside DEMOLISHALL to avoid it 
         eating $@ (found by Ernesto)
         - added test for this (thanks to Ernesto)
+
+    * Moose::Util::TypeConstraints
+      - &find_type_constraint now DWIMs when given an 
+        type constraint object (nothingmuch)
+
+    * Moose::Meta::TypeConstraint
+      - added the &equals method for comparing two type 
+        constraints (nothingmuch)
+        - added tests for this (nothingmuch)
+      - add the &parents method, which is just an alias to &parent. 
+        Useful for polymorphism with TC::Class (nothingmuch)
+
+    * Moose::Meta::TypeConstraint::Class
+      - added the &equals method for comparing two type 
+        constraints (nothingmuch)
+      - added the class attribute for introspection purposes
+        (nothingmuch)
+        - added tests for this
+
+    * Moose::Cookbook::Recipe*
+      - fixed references to test file locations in the POD
+        and updated up some text for new Moose features
+        (Sartak) 
 
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
