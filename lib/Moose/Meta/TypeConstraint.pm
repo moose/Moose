@@ -39,6 +39,11 @@ __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     predicate => 'has_hand_optimized_type_constraint',
 ));
 
+sub parents {
+    my $self;
+    $self->parent;
+}
+
 # private accessors
 
 __PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
