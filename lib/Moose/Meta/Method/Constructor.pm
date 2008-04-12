@@ -36,7 +36,7 @@ sub new {
     # needed
     weaken($self->{'$!associated_metaclass'});
 
-    $self->intialize_body;
+    $self->initialize_body;
 
     return $self;
 }
@@ -51,7 +51,7 @@ sub associated_metaclass { (shift)->{'$!associated_metaclass'} }
 
 ## method
 
-sub intialize_body {
+sub initialize_body {
     my $self = shift;
     # TODO:
     # the %options should also include a both
@@ -315,7 +315,7 @@ not particularly useful.
 
 =item B<options>
 
-=item B<intialize_body>
+=item B<initialize_body>
 
 =item B<associated_metaclass>
 
