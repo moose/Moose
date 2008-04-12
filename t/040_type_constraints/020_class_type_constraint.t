@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 18;
 use Test::Exception;
 
 BEGIN {
@@ -47,3 +47,11 @@ my $boop = find_type_constraint("Boop");
 ok( $boop->has_message, 'Boop has a message');
 my $error = $boop->get_message(Foo->new);
 like( $error, qr/is not a Boop/,  'boop gives correct error message');
+
+
+ok( $type->equals($type), "equals self" );
+ok( $type->equals(Moose::Meta::TypeConstraint::Class->new( name => "__ANON__", class => "Foo" )), "equals anon constraint of same value" );
+ok( $type->equals(Moose::Meta::TypeConstraint::Class->new( name => "Oink", class => "Foo" )), "equals differently named constraint of same value" );
+ok( !$type->equals(Moose::Meta::TypeConstraint::Class->new( name => "__ANON__", class => "Bar" )), "doesn't equal other anon constraint" );
+ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Class->new( name => "__ANON__", class => "Bar" )), "subtype of other anon constraint" );
+
