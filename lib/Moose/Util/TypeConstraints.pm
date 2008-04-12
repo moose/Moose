@@ -213,7 +213,15 @@ sub find_or_create_type_constraint ($;$) {
 ## exported functions ...
 ## --------------------------------------------------------
 
-sub find_type_constraint ($) { $REGISTRY->get_type_constraint(@_) }
+sub find_type_constraint ($) {
+    my $type = shift;
+
+    if ( blessed $type and $type->isa("Moose::Meta::TypeConstraint") ) {
+        return $type;
+    } else {
+        return $REGISTRY->get_type_constraint($type);
+    }
+}
 
 sub register_type_constraint ($) {
     my $constraint = shift;
