@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Exception;
 
 BEGIN {
@@ -29,6 +29,8 @@ lives_ok { class_type('Boop', message { "${_} is not a Boop" }) }
   'class_type keywork works with message';
 
 my $type = find_type_constraint("Foo");
+
+is( $type->class, "Foo", "class attribute" );
 
 ok( $type->is_subtype_of("Gorch"), "subtype of gorch" );
 
