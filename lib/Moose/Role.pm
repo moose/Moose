@@ -29,11 +29,7 @@ use Moose::Util::TypeConstraints;
         return $METAS{$role} if exists $METAS{$role};
 
         # make a subtype for each Moose class
-        subtype $role
-            => as 'Role'
-            => where { Moose::Util::does_role($_, $role) }
-            => optimize_as { blessed($_[0]) && Moose::Util::does_role($_[0], $role) }
-        unless find_type_constraint($role);
+        role_type $role unless find_type_constraint($role);
 
         my $meta;
         if ($role->can('meta')) {
