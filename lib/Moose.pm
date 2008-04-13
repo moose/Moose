@@ -17,7 +17,6 @@ use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
-use Moose::Meta::TypeConstraint::Class;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::Attribute;
 use Moose::Meta::Instance;

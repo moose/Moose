@@ -11,7 +11,7 @@ BEGIN {
     use_ok('Moose::Util::TypeConstraints');
 }
 
-my $type = Moose::Util::TypeConstraints::find_or_create_type_constraint('Maybe[Int]');
+my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint('Maybe[Int]');
 isa_ok($type, 'Moose::Meta::TypeConstraint');
 isa_ok($type, 'Moose::Meta::TypeConstraint::Parameterized');
 
@@ -21,7 +21,7 @@ ok( !$type->equals(find_type_constraint("Maybe")), "not equal to Maybe" );
 ok( $type->parent->equals(find_type_constraint("Maybe")), "parent is Maybe" );
 ok( $type->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "__ANON__", parent => find_type_constraint("Maybe"), type_parameter => find_type_constraint("Int") ) ), "equal to clone" );
 ok( !$type->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "__ANON__", parent => find_type_constraint("Maybe"), type_parameter => find_type_constraint("Str") ) ), "not equal to clone with diff param" );
-ok( !$type->equals( Moose::Util::TypeConstraints::find_or_create_type_constraint('Maybe[Str]') ), "not equal to declarative version of diff param" );
+ok( !$type->equals( Moose::Util::TypeConstraints::find_or_parse_type_constraint('Maybe[Str]') ), "not equal to declarative version of diff param" );
 
 ok($type->check(10), '... checked type correctly (pass)');
 ok($type->check(undef), '... checked type correctly (pass)');

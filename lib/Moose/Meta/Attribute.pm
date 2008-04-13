@@ -78,9 +78,9 @@ sub clone_and_inherit_options {
             $type_constraint = $options{isa};
         }
         else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                $options{isa}
-            );
+            # FIXME this causes a failing test, not sure it should
+            # $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_parse_type_constraint($options{isa});
             (defined $type_constraint)
                 || confess "Could not find the type constraint '" . $options{isa} . "'";
         }
@@ -95,9 +95,9 @@ sub clone_and_inherit_options {
             $type_constraint = $options{does};
         }
         else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                $options{does}
-            );
+            # FIXME see above
+            # $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_parse_type_constraint($options{does});
             (defined $type_constraint)
                 || confess "Could not find the type constraint '" . $options{does} . "'";
         }
@@ -147,12 +147,7 @@ sub _process_options {
             $options->{type_constraint} = $options->{isa};
         }
         else {
-            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                $options->{isa} => {
-                    parent     => Moose::Util::TypeConstraints::find_type_constraint('Object'),
-                    constraint => sub { $_[0]->isa($options->{isa}) }
-                }
-            );
+            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options->{isa});
         }
     }
     elsif (exists $options->{does}) {
@@ -161,14 +156,7 @@ sub _process_options {
                 $options->{type_constraint} = $options->{does};
         }
         else {
-            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                $options->{does} => {
-                    parent     => Moose::Util::TypeConstraints::find_type_constraint('Role'),
-                    constraint => sub { 
-                        Moose::Util::does_role($_[0], $options->{does})
-                    }
-                }
-            );
+            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options->{does});
         }
     }
 

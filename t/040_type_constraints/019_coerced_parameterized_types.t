@@ -32,7 +32,7 @@ lives_ok {
             => via { [ $_->items ] }
 } '... created the coercion okay';
 
-my $mylist = Moose::Util::TypeConstraints::find_or_create_type_constraint('MyList[Int]');
+my $mylist = Moose::Util::TypeConstraints::find_or_parse_type_constraint('MyList[Int]');
 
 ok($mylist->check(MyList->new(10, 20, 30)), '... validated it correctly (pass)');
 ok(!$mylist->check(MyList->new(10, "two")), '... validated it correctly (fail)');
@@ -49,7 +49,7 @@ lives_ok {
             => via { [ $_->items ] }
 } '... created the coercion okay';
 
-my $evenlist = Moose::Util::TypeConstraints::find_or_create_type_constraint('EvenList[Int]');
+my $evenlist = Moose::Util::TypeConstraints::find_or_parse_type_constraint('EvenList[Int]');
 
 ok(!$evenlist->check(MyList->new(10, 20, 30)), '... validated it correctly (fail)');
 ok($evenlist->check(MyList->new(10, 20, 30, 40)), '... validated it correctly (pass)');

@@ -1,4 +1,4 @@
-package Moose::Meta::TypeConstraint::Class;
+package Moose::Meta::TypeConstraint::Role;
 
 use strict;
 use warnings;
@@ -12,8 +12,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 
-__PACKAGE__->meta->add_attribute('class' => (
-    reader => 'class',
+__PACKAGE__->meta->add_attribute('role' => (
+    reader => 'role',
 ));
 
 sub new {
@@ -30,11 +30,9 @@ sub new {
 
 sub _create_hand_optimized_type_constraint {
     my $self = shift;
-    my $class = $self->class;
+    my $role = $self->role;
     $self->hand_optimized_type_constraint(
-        sub { 
-            blessed( $_[0] ) && $_[0]->isa($class) 
-        }
+        sub { Moose::Util::does_role($_[0], $role) }
     );
 }
 
@@ -43,15 +41,15 @@ sub parents {
     return (
         $self->parent,
         map {
-            # FIXME find_type_constraint might find a TC named after the class but that isn't really it
-            # I did this anyway since it's a convention that preceded TypeConstraint::Class, and it should DWIM
+            # FIXME find_type_constraint might find a TC named after the role but that isn't really it
+            # I did this anyway since it's a convention that preceded TypeConstraint::Role, and it should DWIM
             # if anybody thinks this problematic please discuss on IRC.
             # a possible fix is to add by attr indexing to the type registry to find types of a certain property
             # regardless of their name
             Moose::Util::TypeConstraints::find_type_constraint($_) 
                 || 
-            __PACKAGE__->new( class => $_, name => "__ANON__" )
-        } $self->class->meta->superclasses,
+            __PACKAGE__->new( role => $_, name => "__ANON__" )
+        } @{ $self->role->meta->get_roles },
     );
 }
 
@@ -62,7 +60,7 @@ sub equals {
 
     return unless $other->isa(__PACKAGE__);
 
-    return $self->class eq $other->class;
+    return $self->role eq $other->role;
 }
 
 sub is_a_type_of {
@@ -74,19 +72,19 @@ sub is_a_type_of {
 }
 
 sub is_subtype_of {
-    my ($self, $type_or_name_or_class ) = @_;
+    my ($self, $type_or_name_or_role ) = @_;
 
-    if ( not ref $type_or_name_or_class ) {
-        # it might be a class
-        return 1 if $self->class->isa( $type_or_name_or_class );
+    if ( not ref $type_or_name_or_role ) {
+        # it might be a role
+        return 1 if $self->role->does_role( $type_or_name_or_role );
     }
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_class);
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
 
     if ( $type->isa(__PACKAGE__) ) {
-        # if $type_or_name_or_class isn't a class, it might be the TC name of another ::Class type
+        # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch
-        return $self->class->isa( $type->class );
+        return $self->role->does_role( $type->role );
     } else {
         # the only other thing we are a subtype of is Object
         $self->SUPER::is_subtype_of($type);
@@ -101,7 +99,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint::Class - Class/TypeConstraint parallel hierarchy
+Moose::Meta::TypeConstraint::Role - Role/TypeConstraint parallel hierarchy
 
 =head1 METHODS
 

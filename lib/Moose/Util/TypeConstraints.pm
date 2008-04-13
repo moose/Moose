@@ -22,11 +22,14 @@ our $AUTHORITY = 'cpan:STEVAN';
 sub find_type_constraint                 ($);
 sub register_type_constraint             ($);
 sub find_or_create_type_constraint       ($;$);
+sub find_or_parse_type_constraint        ($);
+sub find_or_create_isa_type_constraint   ($);
+sub find_or_create_does_type_constraint  ($);
 sub create_type_constraint_union         (@);
 sub create_parameterized_type_constraint ($);
 sub create_class_type_constraint         ($;$);
+sub create_role_type_constraint          ($;$);
 sub create_enum_type_constraint          ($$);
-#sub create_class_type_constraint         ($);
 
 # dah sugah!
 sub type        ($$;$$);
@@ -51,6 +54,8 @@ use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Meta::TypeConstraint::Parameterizable;
+use Moose::Meta::TypeConstraint::Class;
+use Moose::Meta::TypeConstraint::Role;
 use Moose::Meta::TypeConstraint::Enum;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
@@ -58,7 +63,7 @@ use Moose::Meta::TypeConstraint::Registry;
 use Moose::Util::TypeConstraints::OptimizedConstraints;
 
 my @exports = qw/
-    type subtype class_type as where message optimize_as
+    type subtype class_type role_type as where message optimize_as
     coerce from via
     enum
     find_type_constraint
@@ -147,35 +152,87 @@ sub create_parameterized_type_constraint ($) {
     return Moose::Meta::TypeConstraint::Parameterized->new(
         name           => $type_constraint_name,
         parent         => $REGISTRY->get_type_constraint($base_type),
-        type_parameter => find_or_create_type_constraint(
-            $type_parameter => {
-                parent     => $REGISTRY->get_type_constraint('Object'),
-                constraint => sub { $_[0]->isa($type_parameter) }
-            }
-        ),
+        type_parameter => find_or_create_isa_type_constraint($type_parameter),
     );
 }
 
 #should we also support optimized checks?
 sub create_class_type_constraint ($;$) {
-    my $class = shift;
+    my ( $class, $options ) = @_;
+
     # too early for this check
     #find_type_constraint("ClassName")->check($class)
     #    || confess "Can't create a class type constraint because '$class' is not a class name";
-    my $message;
-    if( $_[0] ){
-      $message = $_[0]->{message} if exists $_[0]->{message};
-    }
 
-    # FIXME allow a different name too, and potentially handle anon
-    Moose::Meta::TypeConstraint::Class->new(
-        name => $class,
-        ($message ? (message => $message) : ())
+    my %options = (
+        class => $class,
+        name  => $class,
+        %{ $options || {} },
     );
+
+    $options{name} ||= "__ANON__";
+
+    Moose::Meta::TypeConstraint::Class->new( %options );
 }
 
+sub create_role_type_constraint ($;$) {
+    my ( $role, $options ) = @_;
+
+    # too early for this check
+    #find_type_constraint("ClassName")->check($class)
+    #    || confess "Can't create a class type constraint because '$class' is not a class name";
+
+    my %options = (
+        role => $role,
+        name => $role,
+        %{ $options || {} },
+    );
+
+    $options{name} ||= "__ANON__";
+
+    Moose::Meta::TypeConstraint::Role->new( %options );
+}
+
+
 sub find_or_create_type_constraint ($;$) {
-    my ($type_constraint_name, $options_for_anon_type) = @_;
+    my ( $type_constraint_name, $options_for_anon_type ) = @_;
+
+    if ( my $constraint = find_or_parse_type_constraint($type_constraint_name) ) {
+        return $constraint;
+    }
+    elsif ( defined $options_for_anon_type ) {
+        # NOTE:
+        # if there is no $options_for_anon_type
+        # specified, then we assume they don't
+        # want to create one, and return nothing.
+
+        # otherwise assume that we should create
+        # an ANON type with the $options_for_anon_type
+        # options which can be passed in. It should
+        # be noted that these don't get registered
+        # so we need to return it.
+        # - SL
+        return Moose::Meta::TypeConstraint->new(
+            name => '__ANON__',
+            %{$options_for_anon_type}
+        );
+    }
+
+    return;
+}
+
+sub find_or_create_isa_type_constraint ($) {
+    my $type_constraint_name = shift;
+    find_or_parse_type_constraint($type_constraint_name) || create_class_type_constraint($type_constraint_name, { name => undef })
+}
+
+sub find_or_create_does_type_constraint ($) {
+    my $type_constraint_name = shift;
+    find_or_parse_type_constraint($type_constraint_name) || create_role_type_constraint($type_constraint_name, { name => undef })
+}
+
+sub find_or_parse_type_constraint ($) {
+    my $type_constraint_name = shift;
 
     return $REGISTRY->get_type_constraint($type_constraint_name)
         if $REGISTRY->has_type_constraint($type_constraint_name);
@@ -187,25 +244,8 @@ sub find_or_create_type_constraint ($;$) {
     }
     elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
         $constraint = create_parameterized_type_constraint($type_constraint_name);
-    }
-    else {
-        # NOTE:
-        # if there is no $options_for_anon_type
-        # specified, then we assume they don't
-        # want to create one, and return nothing.
-        return unless defined $options_for_anon_type;
-
-        # NOTE:
-        # otherwise assume that we should create
-        # an ANON type with the $options_for_anon_type
-        # options which can be passed in. It should
-        # be noted that these don't get registered
-        # so we need to return it.
-        # - SL
-        return Moose::Meta::TypeConstraint->new(
-            name => '__ANON__',
-            %{$options_for_anon_type}
-        );
+    } else {
+        return;
     }
 
     $REGISTRY->add_type_constraint($constraint);
@@ -257,6 +297,15 @@ sub subtype ($$;$$$) {
 sub class_type ($;$) {
     register_type_constraint(
         create_class_type_constraint(
+            $_[0],
+            ( defined($_[1]) ? $_[1] : () ),
+        )
+    );
+}
+
+sub role_type ($;$) {
+    register_type_constraint(
+        create_role_type_constraint(
             $_[0],
             ( defined($_[1]) ? $_[1] : () ),
         )
@@ -334,7 +383,7 @@ sub _create_type_constraint ($$$;$$) {
                  if defined $type;
     }
 
-    $parent = find_or_create_type_constraint($parent) if defined $parent;
+    $parent = find_or_parse_type_constraint($parent) if defined $parent;
 
     my $constraint = Moose::Meta::TypeConstraint->new(
         name               => $name || '__ANON__',
@@ -797,10 +846,15 @@ This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
 L<Moose::Meta::TypeConstraint>.
 
-=item B<class_type ($class, ?$message)>
+=item B<class_type ($class, ?$options)>
 
 Creates a type constraint with the name C<$class> and the metaclass
 L<Moose::Meta::TypeConstraint::Class>.
+
+=item B<role_type ($role, ?$options)>
+
+Creates a type constraint with the name C<$role> and the metaclass
+L<Moose::Meta::TypeConstraint::Role>.
 
 =item B<enum ($name, @values)>
 
@@ -889,22 +943,44 @@ Given a C<$type_name> in the form of:
 this will extract the base type and container type and build an instance of
 L<Moose::Meta::TypeConstraint::Parameterized> for it.
 
-=item B<create_class_type_constraint ($class, ?$message)>
+=item B<create_class_type_constraint ($class, ?$options)>
 
 Given a class name it will create a new L<Moose::Meta::TypeConstraint::Class>
 object for that class name.
 
+=item B<create_role_type_constraint ($role, ?$options)>
+
+Given a role name it will create a new L<Moose::Meta::TypeConstraint::Role>
+object for that role name.
+
 =item B<create_enum_type_constraint ($name, $values)>
 
-=item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
+=item B<find_or_parse_type_constraint ($type_name)>
 
 This will attempt to find or create a type constraint given the a C<$type_name>.
 If it cannot find it in the registry, it will see if it should be a union or
-container type an create one if appropriate, and lastly if nothing can be
-found or created that way, it will create an anon-type using the
-C<$options_for_anon_type> HASH ref to populate it. If the C<$options_for_anon_type>
-is not specified (it is C<undef>), then it will not create anything and simply
-return.
+container type an create one if appropriate
+
+=item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
+
+This function will first call C<find_or_parse_type_constraint> with the type name.
+
+If no type is found or created, but C<$options_for_anon_type> are provided, it
+will create the corresponding type.
+
+This was used by the C<does> and C<isa> parameters to L<Moose::Meta::Attribute>
+and are now superseded by C<find_or_create_isa_type_constraint> and
+C<find_or_create_does_type_constraint>.
+
+=item B<find_or_create_isa_type_constraint ($type_name)>
+
+=item B<find_or_create_does_type_constraint ($type_name)>
+
+Attempts to parse the type name using L<find_or_parse_type_constraint> and if
+no appropriate constraint is found will create a new anonymous one.
+
+The C<isa> variant will use C<create_class_type_constraint> and the C<does>
+variant will use C<create_role_type_constraint>.
 
 =item B<find_type_constraint ($type_name)>
 

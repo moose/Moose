@@ -48,7 +48,7 @@ lives_ok {
     ok( !$t->equals($t->parent), "not equal to parent" );
 }
 
-my $hoi = Moose::Util::TypeConstraints::find_or_create_type_constraint('AlphaKeyHash[Int]');
+my $hoi = Moose::Util::TypeConstraints::find_or_parse_type_constraint('AlphaKeyHash[Int]');
 
 ok($hoi->check({ one => 1, two => 2 }), '... validated it correctly');
 ok(!$hoi->check({ one1 => 1, two2 => 2 }), '... validated it correctly');
@@ -61,7 +61,7 @@ ok( !$hoi->equals(find_type_constraint('AlphaKeyHash')), "not equal to unparamet
 ok( $hoi->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "Blah", parent => find_type_constraint("AlphaKeyHash"), type_parameter => find_type_constraint("Int") ) ), "equal to clone" );
 ok( !$hoi->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "Oink", parent => find_type_constraint("AlphaKeyHash"), type_parameter => find_type_constraint("Str") ) ), "not equal to different parameter" );
 
-my $th = Moose::Util::TypeConstraints::find_or_create_type_constraint('Trihash[Bool]');
+my $th = Moose::Util::TypeConstraints::find_or_parse_type_constraint('Trihash[Bool]');
 
 ok(!$th->check({ one => 1, two => 1 }), '... validated it correctly');
 ok($th->check({ one => 1, two => 0, three => 1 }), '... validated it correctly');

@@ -43,7 +43,7 @@ sub compile_type_coercion {
     my @coercions;
     while (@coercion_map) {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
-        my $type_constraint = Moose::Util::TypeConstraints::find_or_create_type_constraint($constraint_name);
+        my $type_constraint = Moose::Util::TypeConstraints::find_or_parse_type_constraint($constraint_name);
         (defined $type_constraint)
             || confess "Could not find the type constraint ($constraint_name) to coerce from";
         push @coercions => [ 
