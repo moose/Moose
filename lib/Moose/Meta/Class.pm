@@ -224,23 +224,16 @@ sub add_attribute {
 
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
+
     (!$self->has_method($name))
         || confess "Cannot add an override method if a local method is already present";
-    # need this for roles ...
-    $_super_package ||= $self->name;
-    my $super = $self->find_next_method_by_name($name);
-    (defined $super)
-        || confess "You cannot override '$name' because it has no super method";
-    $self->add_method($name => Moose::Meta::Method::Overriden->wrap(sub {
-        my @args = @_;
-        no warnings 'redefine';
-        if ($Moose::SUPER_SLOT{$_super_package}) {
-            local *{$Moose::SUPER_SLOT{$_super_package}} = sub { $super->body->(@args) };
-            return $method->(@args);
-        } else {
-            confess "Trying to call override modifier'd method without super()";
-        }
-    }));
+
+    $self->add_method($name => Moose::Meta::Method::Overriden->new(
+        override => $method,
+        class    => $self,
+        package  => $_super_package, # need this for roles
+        name     => $name,
+    ));
 }
 
 sub add_augment_method_modifier {
