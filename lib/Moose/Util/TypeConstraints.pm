@@ -223,12 +223,12 @@ sub find_or_create_type_constraint ($;$) {
 
 sub find_or_create_isa_type_constraint ($) {
     my $type_constraint_name = shift;
-    find_or_parse_type_constraint($type_constraint_name) || create_class_type_constraint($type_constraint_name, { name => undef })
+    find_or_parse_type_constraint($type_constraint_name) || create_class_type_constraint($type_constraint_name)
 }
 
 sub find_or_create_does_type_constraint ($) {
     my $type_constraint_name = shift;
-    find_or_parse_type_constraint($type_constraint_name) || create_role_type_constraint($type_constraint_name, { name => undef })
+    find_or_parse_type_constraint($type_constraint_name) || create_role_type_constraint($type_constraint_name)
 }
 
 sub find_or_parse_type_constraint ($) {
