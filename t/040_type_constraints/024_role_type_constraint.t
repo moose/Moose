@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 17;
 use Test::Exception;
 
 BEGIN {
@@ -22,9 +22,16 @@ BEGIN {
 
     with qw(Bar Gorch);
 
+    package FooC;
+    use Moose;
+    with qw(Foo);
+
+    package BarC;
+    use Moose;
+    with qw(Bar);
+
 }
 
-lives_ok { role_type 'Beep' } 'role_type keywork works';
 lives_ok { role_type('Boop', message { "${_} is not a Boop" }) }
   'role_type keywork works with message';
 
@@ -37,15 +44,15 @@ ok( $type->is_subtype_of("Gorch"), "subtype of gorch" );
 ok( $type->is_subtype_of("Bar"), "subtype of bar" );
 
 ok( $type->is_subtype_of("Object"), "subtype of Object" );
+ok( $type->is_subtype_of("Role"), "subtype of Role" );
 
-ok( find_type_constraint("Bar")->check(Foo->new), "Foo passes Bar" );
-ok( find_type_constraint("Bar")->check(Bar->new), "Bar passes Bar" );
-ok( !find_type_constraint("Gorch")->check(Bar->new), "but Bar doesn't pass Gorch");
+ok( find_type_constraint("Bar")->check(FooC->new), "Foo passes Bar" );
+ok( find_type_constraint("Bar")->check(BarC->new), "Bar passes Bar" );
+ok( !find_type_constraint("Gorch")->check(BarC->new), "but Bar doesn't pass Gorch");
 
-ok( find_type_constraint("Beep")->check( bless {} => 'Beep' ), "Beep passes Beep" );
 my $boop = find_type_constraint("Boop");
 ok( $boop->has_message, 'Boop has a message');
-my $error = $boop->get_message(Foo->new);
+my $error = $boop->get_message(FooC->new);
 like( $error, qr/is not a Boop/,  'boop gives correct error message');
 
 
