@@ -12,6 +12,12 @@ Revision history for Perl extension Moose
       as well. There will be 2 releases, and then it will
       be removed.
 
+    * Moose::Meta::Class
+      - fixing &new_object to make sure trigger gets the 
+        coerced value (spotted by Charles Alderman on the 
+        mailing list)
+        - added test for this
+
     * Moose::Meta::Method::Constructor
       - immutable classes which had non-lazy attributes were calling
         the default generating sub twice in the constructor. (bug
@@ -40,18 +46,25 @@ Revision history for Perl extension Moose
         type constraint object (nothingmuch)
 
     * Moose::Meta::TypeConstraint
-      - added the &equals method for comparing two type 
-        constraints (nothingmuch)
-        - added tests for this (nothingmuch)
+      Moose::Meta::TypeConstraint::Class
+      Moose::Meta::TypeConstraint::Enum
+      Moose::Meta::TypeConstraint::Union
+      Moose::Meta::TypeConstraint::Parameterized
+        - added the &equals method for comparing two type 
+          constraints (nothingmuch)
+          - added tests for this (nothingmuch)
+
+    * Moose::Meta::TypeConstraint
       - add the &parents method, which is just an alias to &parent. 
         Useful for polymorphism with TC::Class (nothingmuch)
 
     * Moose::Meta::TypeConstraint::Class
-      - added the &equals method for comparing two type 
-        constraints (nothingmuch)
       - added the class attribute for introspection purposes
         (nothingmuch)
         - added tests for this
+        
+    * Moose::Meta::TypeConstraint::Enum
+      - broke this out into it's own class (nothingmuch)
 
     * Moose::Cookbook::Recipe*
       - fixed references to test file locations in the POD

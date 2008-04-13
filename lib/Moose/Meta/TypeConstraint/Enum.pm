@@ -1,18 +1,18 @@
-#!/usr/bin/perl
-
 package Moose::Meta::TypeConstraint::Enum;
 
 use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.06';
+use Moose::Util::TypeConstraints ();
+
+our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('values' => (
-    accessor  => 'values',
+    accessor => 'values',
 ));
 
 sub new {
@@ -66,7 +66,7 @@ sub _compile_hand_optimized_type_constraint {
     sub { defined($_[0]) && !ref($_[0]) && exists $values{$_[0]} };
 }
 
-__PACKAGE__
+1;
 
 __END__
 
@@ -88,7 +88,28 @@ Moose::Meta::TypeConstraint::Enum - Type constraint for enumerated values.
 
 =item B<values>
 
+=item B<meta>
+
 =back
+
+=head1 BUGS
+
+All complex software has bugs lurking in it, and this module is no 
+exception. If you find a bug please either email me, or add the bug
+to cpan-RT.
+
+=head1 AUTHOR
+
+Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
 

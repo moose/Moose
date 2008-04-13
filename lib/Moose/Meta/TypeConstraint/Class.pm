@@ -7,26 +7,23 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('class' => (
-    reader  => 'class',
+    reader => 'class',
 ));
 
 sub new {
     my ( $class, %args ) = @_;
 
-    $args{class} = $args{name} unless exists $args{class};
-
+    $args{class}  = $args{name} unless exists $args{class};
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
-
-    my $self  = $class->meta->new_object(%args);
+    my $self      = $class->meta->new_object(%args);
 
     $self->_create_hand_optimized_type_constraint;
-
     $self->compile_type_constraint();
 
     return $self;
@@ -35,7 +32,11 @@ sub new {
 sub _create_hand_optimized_type_constraint {
     my $self = shift;
     my $class = $self->class;
-    $self->hand_optimized_type_constraint(sub { blessed( $_[0] ) && $_[0]->isa($class) });
+    $self->hand_optimized_type_constraint(
+        sub { 
+            blessed( $_[0] ) && $_[0]->isa($class) 
+        }
+    );
 }
 
 sub parents {
@@ -48,7 +49,9 @@ sub parents {
             # if anybody thinks this problematic please discuss on IRC.
             # a possible fix is to add by attr indexing to the type registry to find types of a certain property
             # regardless of their name
-            Moose::Util::TypeConstraints::find_type_constraint($_) || __PACKAGE__->new( name => $_ )
+            Moose::Util::TypeConstraints::find_type_constraint($_) 
+                || 
+            __PACKAGE__->new( name => $_ )
         } $self->class->meta->superclasses,
     );
 }
@@ -106,6 +109,8 @@ Moose::Meta::TypeConstraint::Class - Class/TypeConstraint parallel hierarchy
 =over 4
 
 =item B<new>
+
+=item B<class>
 
 =item B<hand_optimized_type_constraint>
 

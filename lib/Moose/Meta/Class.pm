@@ -121,10 +121,27 @@ sub new_object {
     my ($class, %params) = @_;
     my $self = $class->SUPER::new_object(%params);
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        if ( defined( my $init_arg = $attr->init_arg ) ) {
-            if ( exists($params{$init_arg}) && $attr->can('has_trigger') && $attr->has_trigger ) {
-                $attr->trigger->($self, $params{$init_arg}, $attr);
-            }
+        # if we have a trigger, then ...
+        if ($attr->can('has_trigger') && $attr->has_trigger) {
+            # make sure we have an init-arg ...
+            if (defined(my $init_arg = $attr->init_arg)) {
+                # now make sure an init-arg was passes ...
+                if (exists $params{$init_arg}) {
+                    # and if get here, fire the trigger
+                    $attr->trigger->(
+                        $self, 
+                        # check if there is a coercion
+                        ($attr->should_coerce
+                            # and if so, we need to grab the 
+                            # value that is actually been stored
+                            ? $attr->get_read_method_ref->($self)
+                            # otherwise, just get the value from
+                            # the constructor params
+                            : $params{$init_arg}), 
+                        $attr
+                    );
+                }
+            }       
         }
     }
     return $self;
