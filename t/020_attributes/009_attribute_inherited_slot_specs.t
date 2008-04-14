@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 84;
+use Test::More tests => 83;
 use Test::Exception;
 
 BEGIN {
@@ -102,10 +102,6 @@ BEGIN {
     ::dies_ok { 
         has '+other_fail' => (weak_ref => 1);           
     } '... cannot create an attribute with an illegal option';   
-    ::dies_ok { 
-        has '+other_fail' => (isa => 'WangDoodle');           
-    } '... cannot create an attribute with a non-existent type';       
-    
 }
 
 my $foo = Foo->new;

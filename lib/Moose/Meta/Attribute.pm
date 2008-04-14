@@ -78,9 +78,7 @@ sub clone_and_inherit_options {
             $type_constraint = $options{isa};
         }
         else {
-            # FIXME this causes a failing test, not sure it should
-            # $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa});
-            $type_constraint = Moose::Util::TypeConstraints::find_or_parse_type_constraint($options{isa});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa});
             (defined $type_constraint)
                 || confess "Could not find the type constraint '" . $options{isa} . "'";
         }
@@ -95,9 +93,7 @@ sub clone_and_inherit_options {
             $type_constraint = $options{does};
         }
         else {
-            # FIXME see above
-            # $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does});
-            $type_constraint = Moose::Util::TypeConstraints::find_or_parse_type_constraint($options{does});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does});
             (defined $type_constraint)
                 || confess "Could not find the type constraint '" . $options{does} . "'";
         }
