@@ -16,6 +16,15 @@ BEGIN {
 use Test::Exception;
 
 BEGIN {
+    # in case there are leftovers
+    unlink('newswriter.db') if -e 'newswriter.db';
+}
+
+END {
+    unlink('newswriter.db') if -e 'newswriter.db';
+}
+
+BEGIN {
     use_ok('Moose');           
 }
 
@@ -429,4 +438,3 @@ Moose::POOP::Meta::Instance->_reload_db();
     
 }
 
-unlink('newswriter.db') if -e 'newswriter.db';
