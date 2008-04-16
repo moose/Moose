@@ -7,7 +7,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.02';
+our $VERSION   = '0.01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
@@ -107,7 +107,7 @@ Moose::Meta::TypeConstraint::Role - Role/TypeConstraint parallel hierarchy
 
 =item B<new>
 
-=item B<class>
+=item B<role>
 
 =item B<hand_optimized_type_constraint>
 

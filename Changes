@@ -12,6 +12,12 @@ Revision history for Perl extension Moose
       as well. There will be 2 releases, and then it will
       be removed.
 
+    * Moose
+      Moose::Role
+      Moose::Meta::Class
+      - refactored the way inner and super work to avoid
+        any method/@ISA cache penalty (nothingmuch)
+
     * Moose::Meta::Class
       - fixing &new_object to make sure trigger gets the 
         coerced value (spotted by Charles Alderman on the 
@@ -28,6 +34,11 @@ Revision history for Perl extension Moose
     * Moose::Meta::Method::Destructor
       - fix typo in initialize_body method (nothingmuch)
 
+    * Moose::Meta::Method::Overriden
+      Moose::Meta::Method::Augmented
+      - moved the logic for these into their own 
+        classes (nothingmuch)
+
     * Moose::Meta::Attribute
       - inherited attributes may now be extended without 
         restriction on the type ('isa', 'does') (Sartak)
@@ -43,7 +54,7 @@ Revision history for Perl extension Moose
 
     * Moose::Util::TypeConstraints
       - &find_type_constraint now DWIMs when given an 
-        type constraint object (nothingmuch)
+        type constraint object or name (nothingmuch)
 
     * Moose::Meta::TypeConstraint
       Moose::Meta::TypeConstraint::Class
@@ -64,7 +75,8 @@ Revision history for Perl extension Moose
         - added tests for this
         
     * Moose::Meta::TypeConstraint::Enum
-      - broke this out into it's own class (nothingmuch)
+      Moose::Meta::TypeConstraint::Role
+      - broke these out into their own classes (nothingmuch)      
 
     * Moose::Cookbook::Recipe*
       - fixed references to test file locations in the POD

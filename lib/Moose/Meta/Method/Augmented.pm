@@ -89,7 +89,7 @@ to cpan-RT.
 
 =head1 AUTHOR
 
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
+Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
