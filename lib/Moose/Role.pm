@@ -101,14 +101,13 @@ use Moose::Util::TypeConstraints;
                 $meta->add_around_method_modifier($_, $code) for @_;
             };
         },
+        # see Moose.pm for discussion
         super => sub {
-            {
-              no strict 'refs';
-              $Moose::SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
-            }
-            my $meta = _find_meta();
-            return subname 'Moose::Role::super' => sub {};
+            return subname 'Moose::Role::super' => sub { return unless $Moose::SUPER_BODY; $Moose::SUPER_BODY->(@Moose::SUPER_ARGS) }
         },
+        #next => sub {
+        #    return subname 'Moose::Role::next' => sub { @_ = @Moose::SUPER_ARGS; goto \&next::method };
+        #},
         override => sub {
             my $meta = _find_meta();
             return subname 'Moose::Role::override' => sub ($&) {

@@ -13,6 +13,7 @@ our $VERSION   = '0.21';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
+use Moose::Meta::Method::Augmented;
 
 use base 'Class::MOP::Class';
 
@@ -229,10 +230,10 @@ sub add_override_method_modifier {
         || confess "Cannot add an override method if a local method is already present";
 
     $self->add_method($name => Moose::Meta::Method::Overriden->new(
-        override => $method,
-        class    => $self,
-        package  => $_super_package, # need this for roles
-        name     => $name,
+        method  => $method,
+        class   => $self,
+        package => $_super_package, # need this for roles
+        name    => $name,
     ));
 }
 
@@ -240,34 +241,12 @@ sub add_augment_method_modifier {
     my ($self, $name, $method) = @_;
     (!$self->has_method($name))
         || confess "Cannot add an augment method if a local method is already present";
-    my $super = $self->find_next_method_by_name($name);
-    (defined $super)
-        || confess "You cannot augment '$name' because it has no super method";
-    my $_super_package = $super->package_name;
-    # BUT!,... if this is an overriden method ....
-    if ($super->isa('Moose::Meta::Method::Overriden')) {
-        # we need to be sure that we actually
-        # find the next method, which is not
-        # an 'override' method, the reason is
-        # that an 'override' method will not
-        # be the one calling inner()
-        my $real_super = $self->_find_next_method_by_name_which_is_not_overridden($name);
-        $_super_package = $real_super->package_name;
-    }
-    $self->add_method($name => sub {
-        my @args = @_;
-        no warnings 'redefine';
-        if ($Moose::INNER_SLOT{$_super_package}) {
-            local *{$Moose::INNER_SLOT{$_super_package}} = sub {
-                local *{$Moose::INNER_SLOT{$_super_package}} = sub {};
-                $method->(@args);
-            };
-            return $super->body->(@args);
-        }
-        else {
-            return $super->body->(@args);
-        }
-    });
+
+    $self->add_method($name => Moose::Meta::Method::Augmented->new(
+        method  => $method,
+        class   => $self,
+        name    => $name,
+    ));
 }
 
 ## Private Utility methods ...

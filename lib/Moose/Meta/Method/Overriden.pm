@@ -8,6 +8,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method';
 
+use Sub::Name;
+
 use Carp qw(confess);
 
 sub new {
@@ -28,19 +30,16 @@ sub new {
 
     my $super_body = $super->body;
 
-    my $method = $args{override};
+    my $method = $args{method};
 
     my $body = sub {
-        my @args = @_;
-        if ($Moose::SUPER_SLOT{$_super_package}) {
-            no warnings 'redefine';
-            # FIXME goto() to prevent additional stack frame?
-            local *{$Moose::SUPER_SLOT{$_super_package}} = sub { $super_body->(@args) };
-            return $method->(@args);
-        } else {
-            confess "Trying to call override modifier'd method without super()";
-        }
+        local @Moose::SUPER_ARGS = @_;
+        local $Moose::SUPER_BODY = $super_body;
+        return $method->(@_);
     };
+
+    # FIXME do we need this make sure this works for next::method?
+    # subname "${_super_package}::${name}", $method;
 
     # FIXME store additional attrs
     $class->wrap($body);

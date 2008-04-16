@@ -13,6 +13,7 @@ use Sub::Name    'subname';
 
 use Sub::Exporter;
 
+use MRO::Compat;
 use Class::MOP;
 
 use Moose::Meta::Class;
@@ -135,13 +136,12 @@ use Moose::Util ();
             };
         },
         super => sub {
-            {
-                our %SUPER_SLOT;
-                no strict 'refs';
-                $SUPER_SLOT{$CALLER} = \*{"${CALLER}::super"};
-            }
-            return subname 'Moose::super' => sub { };
+            # FIXME can be made into goto, might break caller() for existing code
+            return subname 'Moose::super' => sub { return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) }
         },
+        #next => sub {
+        #    return subname 'Moose::next' => sub { @_ = our @SUPER_ARGS; goto \&next::method };
+        #},
         override => sub {
             my $class = $CALLER;
             return subname 'Moose::override' => sub ($&) {
@@ -150,12 +150,19 @@ use Moose::Util ();
             };
         },
         inner => sub {
-            {
-                our %INNER_SLOT;
-                no strict 'refs';
-                $INNER_SLOT{$CALLER} = \*{"${CALLER}::inner"};
-            }
-            return subname 'Moose::inner' => sub { };
+            return subname 'Moose::inner' => sub {
+                my $pkg = caller();
+                our ( %INNER_BODY, %INNER_ARGS );
+
+                if ( my $body = $INNER_BODY{$pkg} ) {
+                    my @args = @{ $INNER_ARGS{$pkg} };
+                    local $INNER_ARGS{$pkg};
+                    local $INNER_BODY{$pkg};
+                    return $body->(@args);
+                } else {
+                    return;
+                }
+            };
         },
         augment => sub {
             my $class = $CALLER;
