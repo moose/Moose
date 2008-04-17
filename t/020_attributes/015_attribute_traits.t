@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Test::Exception;
 use Test::Moose;
 
@@ -55,9 +55,13 @@ is($c->baz, 100, '... got the right value for baz');
 
 my $bar_attr = $c->meta->get_attribute('bar');
 does_ok($bar_attr, 'My::Attribute::Trait');
+ok($bar_attr->has_applied_traits, '... got the applied traits');
 is_deeply($bar_attr->applied_traits, [qw/My::Attribute::Trait/], '... got the applied traits');
 
-ok(!$c->meta->get_attribute('gorch')->does('My::Attribute::Trait'), '... gorch doesnt do the trait');
+my $gorch_attr = $c->meta->get_attribute('gorch');
+ok(!$gorch_attr->does('My::Attribute::Trait'), '... gorch doesnt do the trait');
+ok(!$gorch_attr->has_applied_traits, '... no traits applied');
+is($gorch_attr->applied_traits, undef, '... no traits applied');
 
 
 

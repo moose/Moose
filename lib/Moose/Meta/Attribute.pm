@@ -708,6 +708,15 @@ in some kind of automated documentation system perhaps.
 
 Returns true if this meta-attribute has any documentation.
 
+=item B<applied_traits>
+
+This will return the ARRAY ref of all the traits applied to this 
+attribute, or if no traits have been applied, it returns C<undef>.
+
+=item B<has_applied_traits>
+
+Returns true if this meta-attribute has any traits applied.
+
 =back
 
 =head1 BUGS
