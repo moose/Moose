@@ -46,6 +46,10 @@ __PACKAGE__->meta->add_attribute('documentation' => (
     reader    => 'documentation',
     predicate => 'has_documentation',
 ));
+__PACKAGE__->meta->add_attribute('traits' => (
+    reader    => 'applied_traits',
+    predicate => 'has_applied_traits',
+));
 
 # NOTE:
 # we need to have a ->does method in here to 

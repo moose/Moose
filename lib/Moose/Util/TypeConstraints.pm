@@ -471,7 +471,7 @@ sub _install_type_coercions ($$) {
         my $given = shift;
         my @rv;
         while ( $given =~ m{ \G (?: $op_union )? ($type) }gcx ) {
-                push @rv => $1;
+            push @rv => $1;
         }
         (pos($given) eq length($given))
             || confess "'$given' didn't parse (parse-pos="

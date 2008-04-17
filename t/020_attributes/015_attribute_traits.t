@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::Exception;
 use Test::Moose;
 
@@ -53,7 +53,9 @@ is($c->gorch, 10, '... got the right value for gorch');
 can_ok($c, 'baz');
 is($c->baz, 100, '... got the right value for baz');
 
-does_ok($c->meta->get_attribute('bar'), 'My::Attribute::Trait');
+my $bar_attr = $c->meta->get_attribute('bar');
+does_ok($bar_attr, 'My::Attribute::Trait');
+is_deeply($bar_attr->applied_traits, [qw/My::Attribute::Trait/], '... got the applied traits');
 
 ok(!$c->meta->get_attribute('gorch')->does('My::Attribute::Trait'), '... gorch doesnt do the trait');
 
