@@ -67,9 +67,9 @@ sub new {
 
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
-    # you can change default, required, coerce, documentation and lazy
+    # you can change default, required, coerce, documentation, lazy, handles, builder, metaclass and traits
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required documentation lazy handles builder)) {
+    foreach my $legal_option (qw(default coerce required documentation lazy handles builder metaclass traits)) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
