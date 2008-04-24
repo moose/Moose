@@ -310,33 +310,46 @@ sub _apply_all_roles {
 
 sub _process_attribute {
     my ( $self, $name, @args ) = @_;
-    my %options = ((scalar @args == 1 && ref($args[0]) eq 'HASH') ? %{$args[0]} : @args);
+
+    @args = %{$args[0]} if scalar @args == 1 && ref($args[0]) eq 'HASH';
 
     if ($name =~ /^\+(.*)/) {
-        return $self->_process_inherited_attribute($1, %options);
+        return $self->_process_inherited_attribute($1, @args);
     }
     else {
-        my $attr_metaclass_name = $options{metaclass}
-            ? Moose::Util::resolve_metaclass_alias( Attribute => $options{metaclass} )
-            : $self->attribute_metaclass;
+        return $self->_process_new_attribute($name, @args);
+    }
+}
 
-        if (my $traits = $options{traits}) {
-            my @traits = map {
-                Moose::Util::resolve_metatrait_alias( Attribute => $_ )
-                    or
-                $_
-            } @$traits;
+sub _process_new_attribute {
+    my ( $self, $name, @args ) = @_;
+    $self->_resolve_attribute_metaclass(@args)->new($name, @args);
+}
 
-            my $class = Moose::Meta::Class->create_anon_class(
-                superclasses => [ $attr_metaclass_name ],
-                roles        => [ @traits ],
-                cache        => 1,
-            );
+sub _resolve_attribute_metaclass {
+    my ( $self, %options ) = @_;
 
-            $attr_metaclass_name = $class->name;
-        }
-        
-        return $attr_metaclass_name->new($name, %options);
+    my $attr_metaclass_name = $options{metaclass}
+        ? Moose::Util::resolve_metaclass_alias( Attribute => $options{metaclass} )
+        : $self->attribute_metaclass;
+
+    if (my $traits = $options{traits}) {
+        my @traits = map {
+            Moose::Util::resolve_metatrait_alias( Attribute => $_ )
+                or
+            $_
+        } @$traits;
+
+        my $class = Moose::Meta::Class->create_anon_class(
+            superclasses => [ $attr_metaclass_name ],
+            roles        => [ @traits ],
+            cache        => 1,
+        );
+
+        return $class->name;
+    }
+    else {
+        return $attr_metaclass_name;
     }
 }
 
