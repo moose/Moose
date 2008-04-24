@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 85;
+use Test::More tests => 83;
 use Test::Exception;
 
 BEGIN {
@@ -85,14 +85,6 @@ BEGIN {
         has '+one_last_one' => (isa => 'Value');        
     } '... now can extend an attribute with a non-subtype';    
 
-    ::lives_ok {
-        has '+foo' => ( metaclass => 'DoNotSerialize' ); 
-    } 'Can add metaclass attribute option';
-
-    ::lives_ok {
-        has '+foo' => ( traits => [ 'DoNotSerialize' ] );
-    } 'Can add traits attribute option';   
- 
     ::lives_ok {
         has '+bling' => (handles => ['hello']);        
     } '... we can add the handles attribute option';

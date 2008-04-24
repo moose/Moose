@@ -157,7 +157,7 @@ sub construct_instance {
     # have to kludge it in the end.
     my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        $attr->initialize_instance_slot($meta_instance, $instance, \%params)
+        $attr->initialize_instance_slot($meta_instance, $instance, \%params);
     }
     return $instance;
 }

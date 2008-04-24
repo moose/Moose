@@ -62,48 +62,62 @@ __PACKAGE__->meta->add_attribute('traits' => (
 
 sub new {
     my ($class, $name, %options) = @_;
-    $class->_process_options($name, \%options);
+    $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
     return $class->SUPER::new($name, %options);
 }
 
 sub interpolate_class_and_new {
     my ($class, $name, @args) = @_;
 
-    $class->interpolate_class(@args)->new($name, @args);
+    my ( $new_class, @traits ) = $class->interpolate_class(@args);
+    
+    $new_class->new($name, @args, ( scalar(@traits) ? ( traits => \@traits ) : () ) );
 }
 
 sub interpolate_class {
     my ($class, %options) = @_;
 
-    if ( my $metaclass_name = $options{metaclass} ) {
-        $class = Moose::Util::resolve_metaclass_alias( Attribute => $metaclass_name );
+    $class = ref($class) || $class;
+
+    if ( my $metaclass_name = delete $options{metaclass} ) {
+        my $new_class = Moose::Util::resolve_metaclass_alias( Attribute => $metaclass_name );
+        
+        if ( $class ne $new_class ) {
+            if ( $new_class->can("interpolate_class") ) {
+                return $new_class->interpolate_class(%options);
+            } else {
+                $class = $new_class;
+            }
+        }
     }
 
+    my @traits;
+
     if (my $traits = $options{traits}) {
-        my @traits = map {
+        if ( @traits = grep { not $class->does($_) } map {
             Moose::Util::resolve_metatrait_alias( Attribute => $_ )
                 or
             $_
-        } @$traits;
+        } @$traits ) {
+            my $anon_class = Moose::Meta::Class->create_anon_class(
+                superclasses => [ $class ],
+                roles        => [ @traits ],
+                cache        => 1,
+            );
 
-        my $anon_class = Moose::Meta::Class->create_anon_class(
-            superclasses => [ $class ],
-            roles        => [ @traits ],
-            cache        => 1,
-        );
+            $class = $anon_class->name;
+        }
+    }
 
-        return $anon_class->name;
-    }
-    else {
-        return $class;
-    }
+    return ( wantarray ? ( $class, @traits ) : $class );
 }
 
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
-    # you can change default, required, coerce, documentation, lazy, handles, builder, metaclass and traits
+    my %copy = %options;
+    # you can change default, required, coerce, documentation, lazy, handles, builder, type_constraint (explicitly or using isa/does), metaclass and traits
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required documentation lazy handles builder metaclass traits)) {
+    foreach my $legal_option (qw(default coerce required documentation lazy handles builder type_constraint)) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
@@ -139,10 +153,49 @@ sub clone_and_inherit_options {
         $actual_options{type_constraint} = $type_constraint;
         delete $options{does};
     }    
-    
+
+    ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(%options);
+
+    my %seen;
+    my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
+    $actual_options{traits} = \@all_traits if @all_traits;
+
+    delete @options{qw(metaclass traits)};
+
     (scalar keys %options == 0)
         || confess "Illegal inherited options => (" . (join ', ' => keys %options) . ")";
+
+
     $self->clone(%actual_options);
+}
+
+sub clone {
+    my ( $self, %params ) = @_;
+
+    my $class = $params{metaclass} || ref $self;
+
+    if ( 0 and $class eq ref $self ) {
+        return $self->SUPER::clone(%params);
+    } else {
+        my ( @init, @non_init );
+
+        foreach my $attr ( grep { $_->has_value($self) } $self->meta->compute_all_applicable_attributes ) {
+            push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
+        }
+
+        my %new_params = ( ( map { $_->init_arg => $_->get_value($self) } @init ), %params );
+
+        my $name = delete $new_params{name};
+
+        my $clone = $class->new($name, %new_params, __hack_no_process_options => 1 );
+
+        foreach my $attr ( @non_init ) {
+            $attr->set_value($clone, $attr->get_value($self));
+        }
+
+
+        return $clone;
+    }
 }
 
 sub _process_options {
@@ -602,6 +655,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =over 4
 
 =item B<new>
+
+=item B<clone>
 
 =item B<does>
 

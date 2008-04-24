@@ -39,7 +39,7 @@ BEGIN {
         42;
     };
 
-    has bar => ( isa => "Str", default => "oink" );
+    has the_other_attr => ( isa => "Str", is => "rw", default => "oink" );
 
     after 'install_accessors' => sub {
         my $self = shift;
@@ -100,12 +100,10 @@ does_ok($derived_bar_attr, 'My::Attribute::Trait' );
 
 is( $derived_bar_attr->foo, "blah", "attr initialized" );
 
-TODO: {
-    local $TODO = 'traits in clone_and_inherit dont work yet';
-    does_ok($derived_bar_attr, 'My::Other::Attribute::Trait' );
+does_ok($derived_bar_attr, 'My::Other::Attribute::Trait' );
 
-    is( eval { $derived_bar_attr->bar }, "oink", "attr initialized" );
+is($derived_bar_attr->the_other_attr, "oink", "attr initialized" );
 
-    can_ok($quux, 'additional_method');
-    is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
-}
+can_ok($quux, 'additional_method');
+is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
+
