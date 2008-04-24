@@ -309,54 +309,30 @@ sub _apply_all_roles {
 }
 
 sub _process_attribute {
-    my $self    = shift;
-    my $name    = shift;
-    my %options = ((scalar @_ == 1 && ref($_[0]) eq 'HASH') ? %{$_[0]} : @_);
+    my ( $self, $name, @args ) = @_;
+    my %options = ((scalar @args == 1 && ref($args[0]) eq 'HASH') ? %{$args[0]} : @args);
 
     if ($name =~ /^\+(.*)/) {
         return $self->_process_inherited_attribute($1, %options);
     }
     else {
-        my $attr_metaclass_name;
-        if ($options{metaclass}) {
-            my $metaclass_name = $options{metaclass};
-            eval {
-                my $possible_full_name = 'Moose::Meta::Attribute::Custom::' . $metaclass_name;
-                Class::MOP::load_class($possible_full_name);
-                $metaclass_name = $possible_full_name->can('register_implementation')
-                    ? $possible_full_name->register_implementation
-                    : $possible_full_name;
-            };
-            if ($@) {
-                Class::MOP::load_class($metaclass_name);
-            }
-            $attr_metaclass_name = $metaclass_name;
-        }
-        else {
-            $attr_metaclass_name = $self->attribute_metaclass;
-        }
+        my $attr_metaclass_name = $options{metaclass}
+            ? Moose::Util::resolve_metaclass_alias( Attribute => $options{metaclass} )
+            : $self->attribute_metaclass;
 
-        if ($options{traits}) {
-            my @traits;
-            foreach my $trait (@{$options{traits}}) {
-                eval {
-                    my $possible_full_name = 'Moose::Meta::Attribute::Custom::Trait::' . $trait;
-                    Class::MOP::load_class($possible_full_name);
-                    push @traits => $possible_full_name->can('register_implementation')
-                      ? $possible_full_name->register_implementation
-                        : $possible_full_name;
-                };
-                if ($@) {
-                    push @traits => $trait;
-                }
-            }
-            
+        if (my $traits = $options{traits}) {
+            my @traits = map {
+                Moose::Util::resolve_metatrait_alias( Attribute => $_ )
+                    or
+                $_
+            } @$traits;
+
             my $class = Moose::Meta::Class->create_anon_class(
                 superclasses => [ $attr_metaclass_name ],
                 roles        => [ @traits ],
                 cache        => 1,
             );
-            
+
             $attr_metaclass_name = $class->name;
         }
         
