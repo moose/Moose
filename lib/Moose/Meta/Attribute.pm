@@ -13,6 +13,7 @@ our $VERSION   = '0.22';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
+use Moose::Util ();
 use Moose::Util::TypeConstraints ();
 
 use base 'Class::MOP::Attribute';
@@ -63,6 +64,39 @@ sub new {
     my ($class, $name, %options) = @_;
     $class->_process_options($name, \%options);
     return $class->SUPER::new($name, %options);
+}
+
+sub interpolate_class_and_new {
+    my ($class, $name, @args) = @_;
+
+    $class->interpolate_class(@args)->new($name, @args);
+}
+
+sub interpolate_class {
+    my ($class, %options) = @_;
+
+    if ( my $metaclass_name = $options{metaclass} ) {
+        $class = Moose::Util::resolve_metaclass_alias( Attribute => $metaclass_name );
+    }
+
+    if (my $traits = $options{traits}) {
+        my @traits = map {
+            Moose::Util::resolve_metatrait_alias( Attribute => $_ )
+                or
+            $_
+        } @$traits;
+
+        my $anon_class = Moose::Meta::Class->create_anon_class(
+            superclasses => [ $class ],
+            roles        => [ @traits ],
+            cache        => 1,
+        );
+
+        return $anon_class->name;
+    }
+    else {
+        return $class;
+    }
 }
 
 sub clone_and_inherit_options {
@@ -608,6 +642,13 @@ Moose attributes support type-constraint checking, weak reference
 creation and type coercion.
 
 =over 4
+
+=item B<interpolate_class_and_new>
+
+=item B<interpolate_class>
+
+When called as a class method causes interpretation of the C<metaclass> and
+C<traits> options.
 
 =item B<clone_and_inherit_options>
 
