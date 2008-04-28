@@ -723,6 +723,17 @@ allowed to I<change> one.
 You are allowed to B<add> a new C<builder> definition, but you are B<not>
 allowed to I<change> one.
 
+=item I<metaclass>
+
+You are allowed to B<add> a new C<metaclass> definition, but you are
+B<not> allowed to I<change> one.
+
+=item I<traits>
+
+You are allowed to B<add> additional traits to the C<traits> definition.
+These traits will be composed into the attribute, but pre-existing traits
+B<are not> overridden, or removed.
+
 =back
 
 =item B<before $name|@names =E<gt> sub { ... }>
