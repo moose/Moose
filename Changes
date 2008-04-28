@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.41
+0.41 Mon. April 28, 2008
     ~~ numerous documentation updates ~~
     
     - Changed all usage of die to Carp::croak for better

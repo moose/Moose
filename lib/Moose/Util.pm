@@ -18,6 +18,8 @@ my @exports = qw[
     apply_all_roles
     get_all_init_args
     get_all_attribute_values
+    resolve_metatrait_alias
+    resolve_metaclass_alias
 ];
 
 Sub::Exporter::setup_exporter({

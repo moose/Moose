@@ -1,6 +1,5 @@
 ^_build
 ^Build$
-^Build.PL$
 ^blib
 ~$
 \.bak$
@@ -17,6 +16,6 @@ cover_db
 ^#.*#$
 ^\.#
 ^TODO$
-^PLAN$
-^benchmarks$
+^PLANS$
+^benchmarks
 ^\._.*$

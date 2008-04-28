@@ -1,4 +1,6 @@
+Build.PL
 Changes
+doap.rdf
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Build.pm
@@ -12,13 +14,13 @@ lib/Moose.pm
 lib/Moose/Cookbook.pod
 lib/Moose/Cookbook/FAQ.pod
 lib/Moose/Cookbook/Recipe1.pod
-lib/Moose/Cookbook/Recipe11.pod
+lib/Moose/Cookbook/Recipe10.pod
 lib/Moose/Cookbook/Recipe2.pod
+lib/Moose/Cookbook/Recipe21.pod
 lib/Moose/Cookbook/Recipe3.pod
 lib/Moose/Cookbook/Recipe4.pod
 lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Cookbook/Recipe6.pod
-lib/Moose/Cookbook/Recipe7.pod
 lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
@@ -26,6 +28,7 @@ lib/Moose/Meta/Class.pm
 lib/Moose/Meta/Instance.pm
 lib/Moose/Meta/Method.pm
 lib/Moose/Meta/Method/Accessor.pm
+lib/Moose/Meta/Method/Augmented.pm
 lib/Moose/Meta/Method/Constructor.pm
 lib/Moose/Meta/Method/Destructor.pm
 lib/Moose/Meta/Method/Overriden.pm
@@ -42,9 +45,11 @@ lib/Moose/Meta/TypeCoercion.pm
 lib/Moose/Meta/TypeCoercion/Union.pm
 lib/Moose/Meta/TypeConstraint.pm
 lib/Moose/Meta/TypeConstraint/Class.pm
+lib/Moose/Meta/TypeConstraint/Enum.pm
 lib/Moose/Meta/TypeConstraint/Parameterizable.pm
 lib/Moose/Meta/TypeConstraint/Parameterized.pm
 lib/Moose/Meta/TypeConstraint/Registry.pm
+lib/Moose/Meta/TypeConstraint/Role.pm
 lib/Moose/Meta/TypeConstraint/Union.pm
 lib/Moose/Object.pm
 lib/Moose/Role.pm
@@ -55,7 +60,6 @@ lib/Moose/Util/TypeConstraints/OptimizedConstraints.pm
 lib/oose.pm
 lib/Test/Moose.pm
 Makefile.PL
-Build.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
@@ -81,6 +85,8 @@ t/010_basics/009_import_unimport.t
 t/010_basics/010_method_keyword.t
 t/010_basics/011_moose_respects_type_constraints.t
 t/010_basics/012_rebless.t
+t/010_basics/013_create.t
+t/010_basics/014_create_anon.t
 t/020_attributes/001_attribute_reader_generation.t
 t/020_attributes/002_attribute_writer_generation.t
 t/020_attributes/003_attribute_accessor_generation.t
@@ -98,6 +104,9 @@ t/020_attributes/014_misc_attribute_coerce_lazy.t
 t/020_attributes/015_attribute_traits.t
 t/020_attributes/016_attribute_traits_registered.t
 t/020_attributes/017_attribute_traits_n_meta.t
+t/020_attributes/018_no_init_arg.t
+t/020_attributes/019_attribute_lazy_initializer.t
+t/020_attributes/020_trigger_and_coerce.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t
@@ -114,6 +123,8 @@ t/030_roles/013_method_aliasing_in_composition.t
 t/030_roles/014_more_alias_and_exclude.t
 t/030_roles/015_runtime_roles_and_attrs.t
 t/030_roles/016_runtime_roles_and_nonmoose.t
+t/030_roles/017_extending_role_attrs.t
+t/030_roles/018_runtime_roles_w_params.t
 t/030_roles/020_role_composite.t
 t/030_roles/021_role_composite_exclusion.t
 t/030_roles/022_role_composition_req_methods.t
@@ -143,6 +154,9 @@ t/040_type_constraints/018_custom_parameterized_types.t
 t/040_type_constraints/019_coerced_parameterized_types.t
 t/040_type_constraints/020_class_type_constraint.t
 t/040_type_constraints/021_maybe_type_constraint.t
+t/040_type_constraints/022_custom_type_errors.t
+t/040_type_constraints/023_types_and_undef.t
+t/040_type_constraints/024_role_type_constraint.t
 t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
@@ -161,6 +175,8 @@ t/100_bugs/006_handles_foreign_class_bug.t
 t/100_bugs/007_reader_precedence_bug.t
 t/100_bugs/008_new_w_undef.t
 t/100_bugs/009_augment_recursion_bug.t
+t/100_bugs/010_immutable_n_default_x2.t
+t/100_bugs/011_DEMOLISH_eats_exceptions.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t
@@ -168,10 +184,13 @@ t/200_examples/004_example_w_DCS.t
 t/200_examples/005_example_w_TestDeep.t
 t/200_examples/006_example_Protomoose.t
 t/200_examples/007_Child_Parent_attr_inherit.t
+t/200_examples/008_record_set_iterator.t
 t/300_immutable/001_immutable_moose.t
 t/300_immutable/002_apply_roles_to_immutable.t
 t/300_immutable/003_immutable_meta_class.t
 t/300_immutable/004_inlined_constructors_n_types.t
+t/300_immutable/005_multiple_demolish_inline.t
+t/300_immutable/006_immutable_nonmoose_subclass.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
