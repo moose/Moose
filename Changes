@@ -49,6 +49,11 @@ Revision history for Perl extension Moose
       - added the &applied_traits and &has_applied_traits methods 
         to allow introspection of traits
         - added tests for this
+      - moved 'trait' and 'metaclass' argument handling to here from
+        Moose::Meta::Class
+      - clone_and_inherit_options now handles 'trait' and 'metaclass' (has
+        '+foo' syntax) (nothingmuch)
+        - added tests for this (t0m)
      
     * Moose::Object 
       - localize $@ inside DEMOLISHALL to avoid it 
@@ -58,9 +63,14 @@ Revision history for Perl extension Moose
     * Moose::Util::TypeConstraints
       - &find_type_constraint now DWIMs when given an 
         type constraint object or name (nothingmuch)
+      - &find_or_create_type_constraint superseded with a number of more
+        specific functions:
+        - find_or_create_{isa,does}_type_constraint
+        - find_or_parse_type_constraint
 
     * Moose::Meta::TypeConstraint
       Moose::Meta::TypeConstraint::Class
+      Moose::Meta::TypeConstraint::Role
       Moose::Meta::TypeConstraint::Enum
       Moose::Meta::TypeConstraint::Union
       Moose::Meta::TypeConstraint::Parameterized
@@ -70,7 +80,7 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::TypeConstraint
       - add the &parents method, which is just an alias to &parent. 
-        Useful for polymorphism with TC::Class (nothingmuch)
+        Useful for polymorphism with TC::{Class,Role,Union} (nothingmuch)
 
     * Moose::Meta::TypeConstraint::Class
       - added the class attribute for introspection purposes
@@ -79,12 +89,16 @@ Revision history for Perl extension Moose
         
     * Moose::Meta::TypeConstraint::Enum
       Moose::Meta::TypeConstraint::Role
-      - broke these out into their own classes (nothingmuch)      
+      - broke these out into their own classes (nothingmuch)
 
     * Moose::Cookbook::Recipe*
       - fixed references to test file locations in the POD
         and updated up some text for new Moose features
-        (Sartak) 
+        (Sartak)
+
+    * Moose::Util
+      - Added &resolve_metaclass_alias, a helper function for finding an actual
+        class for a short name (e.g. in the traits list)
 
 0.40 Fri. March 14, 2008
     - I hate Pod::Coverage
