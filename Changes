@@ -1,5 +1,14 @@
 Revision history for Perl extension Moose
 
+0.43
+    * NOTE TO SELF:
+        drink more coffee before 
+        doing release engineering
+      
+    - whoops, forgot to do the smolder tests, 
+      and we broke some of the custom meta-attr
+      modules. This fixes that.
+
 0.42 Mon. April 28, 2008
     - some bad tests slipped by, nothing else 
       changed in this release (cpantesters++)

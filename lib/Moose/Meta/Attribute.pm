@@ -9,7 +9,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use overload     ();
 
-our $VERSION   = '0.22';
+our $VERSION   = '0.23';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -154,13 +154,19 @@ sub clone_and_inherit_options {
         delete $options{does};
     }    
 
-    ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(%options);
+    # NOTE:
+    # this doesn't apply to Class::MOP::Attributes, 
+    # so we can ignore it for them.
+    # - SL
+    if ($self->can('interpolate_class')) {
+        ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(%options);
 
-    my %seen;
-    my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
-    $actual_options{traits} = \@all_traits if @all_traits;
+        my %seen;
+        my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
+        $actual_options{traits} = \@all_traits if @all_traits;
 
-    delete @options{qw(metaclass traits)};
+        delete @options{qw(metaclass traits)};
+    }
 
     (scalar keys %options == 0)
         || confess "Illegal inherited options => (" . (join ', ' => keys %options) . ")";
