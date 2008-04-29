@@ -1,5 +1,13 @@
 Revision history for Perl extension Moose
 
+0.42 Mon. April 28, 2008
+    - some bad tests slipped by, nothing else 
+      changed in this release (cpantesters++)
+      
+    - upped the Class::MOP dependency to 0.55 
+      since we have tests which need the C3 
+      support
+
 0.41 Mon. April 28, 2008
     ~~ numerous documentation updates ~~
     
