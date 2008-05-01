@@ -50,9 +50,10 @@ More type examples, including the use of type coercions.
 Demonstrates the use of C<augment> method modifiers, a way of turning
 the usual method overriding style "inside-out".
 
-=item L<Moose::Cookbook::Recipe7> - Making Moose fast with immutable (TODO)
+=item L<Moose::Cookbook::Recipe7> - Making Moose fast with immutable
 
-I<abstract goes here>
+Making a class immutable greatly increases the speed of accessors and
+object construction.
 
 =item L<Moose::Cookbook::Recipe8> - Managing complex relations with trigger (TODO)
 
