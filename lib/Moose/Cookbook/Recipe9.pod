@@ -158,6 +158,11 @@ both start with an underscore. The C<builder> method I<always> starts
 with an underscore, since you will want this to be private the vast
 majority of the time.
 
+Note that the C<builder> method name is created by simply taking
+"_build_" and appending the attribute name. This means that attributes
+with a leading underscore like C<_animal> end up with a builder named
+C<_build__animal>.
+
 =head1 CONCLUSION
 
 The C<builder> option is a more OO-friendly version of the C<default>
