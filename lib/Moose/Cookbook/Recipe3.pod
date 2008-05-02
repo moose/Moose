@@ -219,6 +219,9 @@ In short, don't use them unless you know what you are doing :)
 You I<can> use the C<default> option without the C<lazy> option if 
 you like, as we showed in the second recipe.
 
+And actually, you can use C<builder> instead of C<default>. See
+L<Moose::Cookbook::Recipe9> for details.
+
 =back
 
 =head1 AUTHOR

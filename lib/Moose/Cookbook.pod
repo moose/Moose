@@ -61,9 +61,11 @@ I<abstract goes here>
 
 Work off of this http://code2.0beta.co.uk/moose/svn/Moose/trunk/t/200_examples/007_Child_Parent_attr_inherit.t
 
-=item L<Moose::Cookbook::Recipe9> - ?? 
+=item L<Moose::Cookbook::Recipe9> - Builder methods and lazy_build
 
-I<abstract goes here>
+Lazy attributes do not get set via their defaults until they are
+accessed. The builder feature provides an inheritable and
+role-composable way to provide a default attribute value.
 
 =back
 
