@@ -177,6 +177,9 @@ a coderef like C<sub { [] }>, use C<default>.
 
 Otherwise, use C<builder>.
 
+This ensures that your classes are easily subclassable, and also helps
+keep crufty code out of your attribute definition blocks.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
