@@ -4,7 +4,7 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Recipe7
       - added new recipe for immutable functionality (Dave Rolsky)
     * Moose::Cookbook::Recipe9
-      - added new recipe for builder and lazy-builder (Dave Rolsky)
+      - added new recipe for builder and lazy_build (Dave Rolsky)
 
 0.43 Wed. April, 30, 2008
     * NOTE TO SELF:
