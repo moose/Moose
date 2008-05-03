@@ -1,0 +1,121 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe11 - Advanced Role Composition - method exclusion and aliasing
+
+=head1 SYNOPSIS
+
+  package Restartable;
+  use Moose::Role;
+
+  has 'is_paused' => (
+      is      => 'rw',
+      isa     => 'Boo',
+      default => 0,
+  );
+
+  requires 'save_state', 'load_state';
+
+  sub stop { ... }
+
+  sub start { ... }
+
+  package Restartable::ButUnreliable;
+  use Moose::Role;
+
+  with 'Restartable' => { alias  => { stop  => '_stop',
+                                      start => '_start' } };
+
+  sub stop {
+      my $self = shift;
+
+      $self->explode() if rand(1) > .5;
+
+      $self->_stop();
+  }
+
+  sub start {
+      my $self = shift;
+
+      $self->explode() if rand(1) > .5;
+
+      $self->_start();
+  }
+
+  package Restartable::ButBroken;
+  use Moose::Role;
+
+  with 'Restartable' => { excludes => [ 'stop', 'start' ] };
+
+  sub stop {
+      my $self = shift;
+
+      $self->explode();
+  }
+
+  sub start {
+      my $self = shift;
+
+      $self->explode();
+  }
+
+=head1 DESCRIPTION
+
+Sometimes when you include a role in a class, you may want to leave
+out some of its methods. In this example, we have a role C<Restartable>
+which provides an C<is_paused> attribute, and two methods, C<stop> and
+C<start>. The implementation of those two methods is irrelevant.
+
+Then we have two more roles which also implement the same interface,
+each putting their own spin on the C<stop> and C<start> method.
+
+In the C<Restartable::ButUnreliable> role, we want to provide a new
+implementation of C<stop> and C<start>, but still have access to the
+original implementation. To do this, we alias the methods from
+C<Restartable> to private methods, and provide wrappers around the
+originals (1).
+
+In the C<Restartable::ButBroken> role, we want to provide an entirely
+new behavior for C<stop> and C<start>, so we exclude them when
+composing the C<Restartable> role into C<Restartable::ButBroken>.
+
+It's worth noting that the C<excludes> parameter also accepts a single
+string as an argument if you just want to exclude one method.
+
+=head1 CONCLUSION
+
+Method exclusion and renaming can come in handy, especially when
+building roles out of other roles. In this example, all of our roles
+implement the C<Restartable> role, and provide the exact same API,
+with different implementations under the hood.
+
+You can also use the method aliasing and excluding features when
+composing a role into a class.
+
+=head1 FOOTNOTES
+
+=over 4
+
+=item (1)
+
+The mention of wrapper should tell you that we could do the same thing
+using method modifiers, but for the sake of this example, we don't.
+
+=back
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

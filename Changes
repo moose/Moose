@@ -5,6 +5,8 @@ Revision history for Perl extension Moose
       - added new recipe for immutable functionality (Dave Rolsky)
     * Moose::Cookbook::Recipe9
       - added new recipe for builder and lazy_build (Dave Rolsky)
+    * Moose::Cookbook::Recipe1
+      - added new recipe for method aliasing and exclusion with Roles (Dave Rolsky)
 
 0.43 Wed. April, 30, 2008
     * NOTE TO SELF:
