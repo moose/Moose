@@ -127,8 +127,6 @@ of the role provide a builder method it.
       return Cat->new();
   }
 
-This simply could not be done using a C<default>.
-
 =head2 The lazy_build shortcut
 
 The C<lazy_build> attribute parameter can be used as sugar to specify
