@@ -89,7 +89,7 @@ the method to pass additional options to the constructor.
 Good object-oriented code should allow itself to be subclassed
 gracefully. Let's tweak C<_build_child_tree>:
 
-  sub _build_child_tree
+  sub _build_child_tree {
       my $self = shift;
 
       return (ref $self)->new( parent => $self, @_ );
