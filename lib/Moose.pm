@@ -8,7 +8,7 @@ our $VERSION   = '0.43';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
-use Carp         'confess', 'croak';
+use Carp         'confess', 'croak', 'cluck';
 use Sub::Name    'subname';
 
 use Sub::Exporter;
@@ -174,8 +174,8 @@ use Moose::Util ();
         make_immutable => sub {
             my $class = $CALLER;
             return subname 'Moose::make_immutable' => sub {
-                warn "The make_immutable keyword has been deprecated, " . 
-                     "please go back to __PACKAGE__->meta->make_immutable\n";
+                cluck "The make_immutable keyword has been deprecated, " . 
+                      "please go back to __PACKAGE__->meta->make_immutable\n";
                 $class->meta->make_immutable(@_);
             };            
         },        

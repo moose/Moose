@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+    * Moose
+      - made make_immutable warning cluck to show where the error is
+
 0.44
     * Moose::Cookbook::Recipe7
       - added new recipe for immutable functionality (Dave Rolsky)
