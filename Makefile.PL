@@ -24,7 +24,9 @@ build_requires 'Test::More'      => '0.62';
 build_requires 'Test::Exception' => '0.21';
 build_requires 'Test::LongString';
 
-tests('t/*.t t/*/*.t');
+tests_recursive;
+
+auto_install;
 
 WriteAll();
 
