@@ -12,50 +12,34 @@ L<Moose::Util::TypeConstraints::OptimizedConstraints> classes.
     package Fruit;
     use Moose;
 
-    has q(species) => ( is => q(rw), required => 1 );
+    has 'species' => ( is => 'rw', required => 1 );
 
     package ProduceStoreHash;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    has q(fruit_aisle) => ( is => q(rw), isa => q(HashRef[Fruit]) );
-
-    sub show_inventory {
-        my $self = shift;
-        foreach my $item ( keys(%{$self->fruit_aisle}) ) {
-            my $fruit = $self->{fruit_aisle}{$item};
-            print qq(Item: $item, type: ) . blessed($fruit)
-                . q( species: ) . $fruit->species . qq(\n);
-        } # foreach my $item
-    } # sub show_inventory
+    has 'fruit_aisle' => ( is => 'rw', isa => 'HashRef[Fruit]' );
 
     package main;
     use Moose;
 
     # we need something to put in the fruit aisle
-    my $orange = Fruit->new( species => q(C. sinensis) );
-    my $apple = Fruit->new( species => q(M. domestica) );
+    my $orange = Fruit->new( species => 'C. sinensis' );
+    my $apple = Fruit->new( species => 'M. domestica' );
     my %fruit = ( orange => $orange, apple => $apple );
     my $store = ProduceStoreHash->new( fruit_aisle => \%fruit );
-    print qq(First inventory:\n);
-    $store->show_inventory;
-
-    # this replaces the existing HashRef contents
-    my $grape = Fruit->new( species => q(V. vinifera) );
-    my $tomato = Fruit->new( species => q(S. lycopersicum));
-    $store->fruit_aisle( { grape => $grape, tomato => $tomato } );
-    print qq(Second inventory:\n);
-    $store->show_inventory;
-
-    # this clears the HashRef
-    $store->fruit_aisle( { } );
-    print qq(Third inventory:\n);
-    $store->show_inventory;
 
 =head1 DESCRIPTION
 
 The HashRef type constraint is used to store a reference to a Perl hash
 variable as an attribute of a Moose object.
+
+=head2 Disclaimer
+
+The code in this document will work on Moose as advertised, but the developers
+strongly recommend using something like L<Moose::Autobox> or
+L<MooseX::AttributeHelpers> when working with array references in order to
+help keep your Moose objects nice and encapsulated.
 
 =head2 Assigning hashes to a HashRef attribute
 
@@ -68,9 +52,10 @@ reference to the C<fruit_aisle> attribute:
     my %fruit = ( orange => $orange, apple => $apple );
     my $store = ProduceStoreHash->new( fruit_aisle => \%fruit );
 
-Or you can pass an anonymous hash to the C<HashRef> attribute as well.
-This is shown in the example when the grape and tomato replace the apple
-and the orange in the store's fruit aisle.
+Or you can pass an anonymous hash to the C<HashRef> attribute as well.  If you
+created two new objects, C<$grape> and C<$tomato>, and assigned them to the
+C<HashRef>, they would replace the apple and the orange in the store's fruit
+aisle:
 
     $store->fruit_aisle( { grape => $grape, tomato => $tomato } );
 
@@ -81,30 +66,6 @@ hash values for example, Moose will complain:
 
     Attribute (fruit_aisle) does not pass the type constraint (HashRef[Int])
 
-=head2 Assigning to a HashRef attribute will overwrite
-
-Once you create an object containing a C<HashRef> attribute, if you assign a
-new hash reference to that attribute, it will replace any existing hash
-reference:
-
-    print qq(First inventory:\n);
-    $store->show_inventory;
-    # First inventory:
-    # Item: apple, type: Fruit species: M. domestica
-    # Item: orange, type: Fruit species: C. sinensis
-
-
-    # this replaces the existing HashRef contents
-    my $grape = Fruit->new( species => q(V. vinifera) );
-    my $tomato = Fruit->new( species => q(S. lycopersicum));
-    $store->fruit_aisle( { grape => $grape, tomato => $tomato } );
-
-    print qq(Second inventory:\n);
-    $store->show_inventory;
-    # Second inventory:
-    # Item: tomato, type: Fruit species: S. lycopersicum
-    # Item: grape, type: Fruit species: V. vinifera
-
 =head2 Dumping the contents of the HashRef
 
 In order to dump the contents of a C<HashRef> object attribute, you must first
@@ -112,8 +73,8 @@ de-reference the C<HashRef>, and then enumerate over it's keys.
 
     foreach my $item ( keys(%{$self->fruit_aisle}) ) {
         my $fruit = $self->{fruit_aisle}{$item};
-        print qq(Item: $item, type: ) . blessed($fruit)
-            . q( species: ) . $fruit->species . qq(\n);
+        print "Item: $item, type: " . $fruit->meta->name
+            . " species: " . $fruit->species . "\n";
     } # foreach my $item
 
 If the above de-referencing of the C<fruit_aisle> C<HashRef> is a little too
@@ -125,6 +86,17 @@ noisy, you could create a copy of it, and then enumerate over that copy:
         # 'print' statement from above example goes here
     } 
 
+=head2 Assigning to a HashRef attribute will overwrite
+
+Once you create an object containing a C<HashRef> attribute, if you assign a
+new hash reference to that attribute, it will replace any existing hash
+reference:
+
+    # this replaces the existing HashRef contents
+    my $grape = Fruit->new( species => 'V. vinifera' );
+    my $tomato = Fruit->new( species => 'S. lycopersicum');
+    $store->fruit_aisle( { grape => $grape, tomato => $tomato } );
+
 =head2 Appending/Deleting key/value pairs to a HashRef
 
 In order to append or delete key/value pairs to the hash referred to by the
@@ -133,7 +105,7 @@ delete the desired key/value pairs, then assign your modified copy back to the
 C<HashRef> attribute.  Here's an example of appending new key/value pars:
 
     my %fruit_aisle_copy = %{$store->fruit_aisle};
-    my $avocado = Fruit->new( species => q(P. americana) );
+    my $avocado = Fruit->new( species => 'P. americana) );
     $fruit_aisle_copy{avocado} = $avocado;
     $store->fruit_aisle( \%fruit_aisle_copy );
 
@@ -177,7 +149,7 @@ Brian Manning <elspicyjack at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c)2008 by Brian Manning
+Copyright (c)2008 by  Infinity Interactive, Inc., Brian Manning
 
 This documentation is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

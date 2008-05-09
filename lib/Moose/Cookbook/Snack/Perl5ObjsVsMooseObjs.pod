@@ -11,16 +11,15 @@ objects and Moose objects
     package Moose::Demo;
     use Moose; # automagically sets 'strict' and 'warnings'
 
-    has q(script_name) => ( is => q(rw), required => 1);
+    has 'script_name' => ( is => 'rw', required => 1);
 
     package main;
-    use Moose; # needed for the call to 'blessed' below
     
     # '$0' is the name of this script, set automatically by Perl
     my $demo = Moose::Demo->new( script_name => $0 );
 
-    print qq(My name is ) . $demo->script_name . qq(\n);
-    print qq(I am a ) . blessed $demo . qq( type of object\n);
+    print "My name is " . $demo->script_name . "\n";
+    print "I am a " . $demo->meta->name . " type of object\n";
 
 =head1 DESCRIPTION
 
@@ -51,7 +50,7 @@ Let's take a look and find out...
         if ( exists $args{script_name} ) {
             $self->script_name($args{script_name});
         } else {
-            die q(ERROR: can't create object without 'script_name' );
+            die "ERROR: can't create object without 'script_name' ";
         } # if ( exists $args{script_name} )
 
         # return the object reference back to the caller
@@ -72,8 +71,8 @@ Let's take a look and find out...
 
     my $demo = Perl5::Demo->new( script_name => $0 );
 
-    print qq(My name is ) . $demo->script_name . qq(\n);
-    print qq(I am a ) . ref($demo) . qq( type of object\n);
+    print "My name is " . $demo->script_name . "\n";
+    print "I am a " . ref($demo) . " type of object\n";
 
 Looks more complex, right?  Moose does a lot of the labor when working with
 Perl objects, so that you don't have to.  What are some of the specific
@@ -104,14 +103,13 @@ to do this for ourselves in the Perl 5 example.
 =head3 Difference #3 - Determining an object's class name
 
 The C<ref()> function in Perl 5 is how you determine an object's class name.
-The proper way to do this with Moose is C<$object-E<gt>meta-E<gt>name>
-B<FIXME> $obj->meta->name
+The proper way to do this with Moose is C<$object-E<gt>meta-E<gt>name>;
     
     # an object's class name in Perl 5 OO
-    print qq(I am a ) . ref($demo) . qq( type of object\n);
+    print "I am a " . ref($demo) . " type of object\n";
 
     # an object's class name in Moose
-    print qq(I am a ) . blessed $demo->meta->name . qq( type of object\n);
+    print "I am a " . $demo->meta->name . " type of object\n";
 
 =head3 Difference #4 - Assigning values to Moose object attributes
 
@@ -119,7 +117,7 @@ When you wish to assign a value directly to an object attribute for a Perl 5
 object, you can either create an object method that handles the value for you;
 
     package Perl5Object;
-    sub set_x { # some code here }
+    sub set_x { # some code here that sets 'x' }
     package main;
     # later on...
     $self->set_x(0);
@@ -168,7 +166,7 @@ Brian Manning <elspicyjack at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c)2008 by Brian Manning
+Copyright (c)2008 by Infinity Interactive, Inc., Brian Manning
 
 This documentation is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
