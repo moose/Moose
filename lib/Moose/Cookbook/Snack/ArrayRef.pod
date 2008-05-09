@@ -1,0 +1,154 @@
+#!/usr/bin/env perl
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Snack::ArrayRef - (Ab)using the ArrayRef type constraint
+provided by the L<Moose::Util::TypeConstraint> and/or
+L<Moose::Util::TypeConstraints::OptimizedConstraints> classes.
+
+=head1 SYNOPSIS
+
+    package Fruit;
+    use Moose;
+
+    has q(name) => ( is => q(rw), required => 1 );
+    has q(species) => ( is => q(rw), required => 1 );
+
+    package ProduceStoreArray;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    has q(fruit_aisle) => ( is => q(rw), isa => q(ArrayRef[Fruit]) );
+
+    package main;
+
+    # we need something to put in the fruit aisle
+    my $orange = Fruit->new( 
+        name => q(orange), species => q(C. sinensis) );
+    my $apple = Fruit->new( 
+        name => q(apple), species => q(M. domestica) );
+    my @fruit = ( $apple, $orange );
+    my $store = ProduceStore->new( fruit_aisle => \@fruit );
+    
+=head1 DESCRIPTION
+
+The ArrayRef type constraint is used to store a reference to a Perl list or
+array variable as an attribute of a Moose object.
+
+=head2 Assigning arrays to an ArrayRef attribute
+
+Once a Moose-based object with an C<ArrayRef> attribute has been created, you
+can pass an array (by reference) to that object attribute using that
+attribute's accessor.  This is how we assign the apple and orange to the
+store's C<fruit_aisle> C<ArrayRef> attribute, we pass an array containing both
+objects by reference to the C<fruit_aisle> attribute:
+
+    my @fruit = ( $apple, $orange );
+    my $store = ProduceStore->new( fruit_aisle => \@fruit );
+
+Or you can pass an anonymous array to the C<ArrayRef> attribute as well.
+This is shown in the example when the grape and tomato replace the apple
+and the orange in the store's fruit aisle.
+
+    $store->fruit_aisle( [ $grape, $tomato ] );
+
+Our C<fruit_aisle> C<ArrayRef> is parameterized, meaning, that the
+C<fruit_aisle> C<ArrayRef> can contain nothing but C<Fruit> objects as array
+values.  If you try to pass in a reference to a array using C<Str> objects as
+array values for example, Moose will complain: 
+
+    Attribute (fruit_aisle) does not pass the type constraint (ArrayRef[Str])
+
+=head2 Dumping the contents of an ArrayRef
+
+In order to dump the contents of a C<ArrayRef> object attribute, you must first
+de-reference the C<ArrayRef>, and then enumerate over it's keys.  You can add
+this method for showing the store's inventory to the C<ProduceStoreArray>
+object shown in the SYNOPSIS:
+
+    sub show_inventory {
+        my $self = shift;
+        foreach my $item ( @{$self->fruit_aisle} ) {
+            # access each Fruit object
+        } # foreach my $item ( @{$self->fruit_aisle} ) 
+    }
+
+=head2 Assigning arrays to an ArrayRef will overwrite existing arrays
+
+Once you create an object containing a C<ArrayRef> attribute, if you assign a
+new array reference to that attribute, it will replace any existing array
+reference:
+
+    # replace existing inventory
+    my $grape = Fruit->new( 
+        name => q(grape), species => q(V. vinifera) );
+    my $tomato = Fruit->new( 
+        name => q(tomato), species => q(S. lycopersicum));
+    $store->fruit_aisle( [ $grape, $tomato ] ); 
+
+=head2 Appending/Deleting values to/from an ArrayRef
+
+In order to append new elements to an array referred to by the C<ArrayRef>
+attribute, you will need to make a copy of the array first, add your new array
+elements, then assign your modified copy back to the C<ArrayRef> attribute:
+
+    my @fruit_aisle_copy = @{$store->fruit_aisle};
+    my $avocado = Fruit->new( 
+        name => q(avocado), species => q(P. americana) );
+    push(@fruit_aisle_copy, $avocado);
+    $store->fruit_aisle( \@fruit_aisle_copy );
+
+And here's an example of deleting an object stored in an ArrayRef:
+
+    my @fruit_aisle_copy = @{$store->fruit_aisle};
+    # new array to hold the fruit objects that won't be deleted
+    my @reworked_fruit_aisle;
+    for my $fruit_obj ( @fruit_aisle_copy ) {
+        if ( $fruit_obj->name ne q(tomato) ) {
+            push(@reworked_fruit_aisle, $fruit_obj);
+        } # if ( $fruit_obj->name ne q(tomato) )
+    } # for my $fruit_obj ( @fruit_aisle_copy )
+    $store->fruit_aisle( \@reworked_fruit_aisle );
+
+Putting the above code into their own object methods would make appending to or deleting from an C<ArrayRef> a trivial operation.
+
+=head2 Clearing an ArrayRef
+
+Assigning C<undef> to clear an C<ArrayRef> will not work because the attribute
+was originally defined with a type constraint, meaning that attribute must have
+0 or more of that type of value to be valid.  C<undef> in Perl is not a value,
+so it won't work for clearing the C<ArrayRef>.
+
+If you assign an empty anonymous hash to a C<ArrayRef> attribute, this will
+clear out that attribute yet still satisfy the type constraint.
+
+    # this clears the ArrayRef 
+    $store->fruit_aisle( [ ] );
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple Company
+class hierarchy
+
+=item L<Moose::Cookbook::Snack::Types> - Snippets of code for using Types and
+Type Constraints
+
+=item L<Moose::Util::TypeConstraints> - Type constraints that Moose can use
+
+=back
+
+=head1 AUTHOR
+
+Brian Manning <elspicyjack at gmail dot com>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c)2008 by Brian Manning
+
+This documentation is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
