@@ -37,7 +37,7 @@ sub BUILDALL {
     return unless $_[0]->can('BUILD');    
     my ($self, $params) = @_;
     foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
-        $method->{code}->($self, $params);
+        $method->{code}->body->($self, $params);
     }
 }
 
@@ -50,7 +50,7 @@ sub DEMOLISHALL {
     {
         local $@;
         foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-            $method->{code}->($self);
+            $method->{code}->body->($self);
         }
     }    
 }
