@@ -111,6 +111,10 @@ The proper way to do this with Moose is C<$object-E<gt>meta-E<gt>name>;
     # an object's class name in Moose
     print "I am a " . $demo->meta->name . " type of object\n";
 
+Moose builds on C<Class::MOP> to provide a rich introspection API that
+goes way beyond just getting the class name. Check out the
+C<Class::MOP> documentation for more details.
+
 =head3 Difference #4 - Assigning values to Moose object attributes
 
 When you wish to assign a value directly to an object attribute for a Perl 5
@@ -137,16 +141,16 @@ labeld B<Accessors>, but briefly:
     # later on...
     $self->x(0);    
 
-The syntax shown for the Perl 5 object (C<$self-E<gt>{x} = 0>) will also work
-on the Moose object, as Moose objects are blessed hashes just like the average
-Perl object is.  However, if you access the object's hash reference directly
-via the latter syntax:
+The syntax shown for the Perl 5 object (C<$self-E<gt>{x} = 0>) will
+also work on the Moose object, as Moose objects are, by default,
+blessed hashes just like the average Perl object is.  However, if you
+access the object's hash reference directly via the latter syntax you
+will have several problems.
 
-1) Moose will no longer be to enforce having that attribute be read-only if
-you used (C<is =E<gt> ro>) in the object's declaration.
-
-2) You break that object's encapsulation, which is one of the reasons you want
-to use objects in the first place, right?
+First, Moose, will no longer be able to enforce attribute constraints,
+such as read-only or type constraints. Second, you've broken that
+object's encapsulation, and encapsulation is one of the reasons you
+want to use objects in the first place, right?
 
 =head1 SEE ALSO
 
