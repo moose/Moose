@@ -27,7 +27,7 @@ L<Moose::Util::TypeConstraints::OptimizedConstraints> classes.
     my $orange = Fruit->new(name => 'orange', species => 'C. sinensis');
     my $apple = Fruit->new(name => 'apple', species => 'M. domestica');
     my @fruit = ($apple, $orange);
-    my $store = ProduceStore->new(fruit_aisle => \@fruit);
+    my $store = ProduceStoreArray->new(fruit_aisle => \@fruit);
     
 =head1 DESCRIPTION
 
@@ -50,7 +50,7 @@ store's C<fruit_aisle> C<ArrayRef> attribute, we pass an array containing both
 objects by reference to the C<fruit_aisle> attribute:
 
     my @fruit = ($apple, $orange);
-    my $store = ProduceStore->new(fruit_aisle => \@fruit);
+    my $store = ProduceStoreArray->new(fruit_aisle => \@fruit);
 
 Or you can pass an anonymous array to the C<ArrayRef> attribute as well.  If
 you created two new objects, C<$grape> and C<$tomato>, and assigned them to
