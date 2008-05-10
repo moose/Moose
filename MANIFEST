@@ -1,11 +1,14 @@
 Build.PL
 Changes
 doap.rdf
+inc/Module/AutoInstall.pm
 inc/Module/Install.pm
+inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Build.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
+inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
@@ -180,6 +183,7 @@ t/100_bugs/008_new_w_undef.t
 t/100_bugs/009_augment_recursion_bug.t
 t/100_bugs/010_immutable_n_default_x2.t
 t/100_bugs/011_DEMOLISH_eats_exceptions.t
+t/100_bugs/012_DEMOLISH_eats_mini.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t

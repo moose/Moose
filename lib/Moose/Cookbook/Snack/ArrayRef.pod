@@ -1,11 +1,9 @@
-#!/usr/bin/env perl
+
 =pod
 
 =head1 NAME
 
-Moose::Cookbook::Snack::ArrayRef - (Ab)using the ArrayRef type constraint
-provided by the L<Moose::Util::TypeConstraint> and/or
-L<Moose::Util::TypeConstraints::OptimizedConstraints> classes.
+Moose::Cookbook::Snack::ArrayRef - Using the ArrayRef type constraint
 
 =head1 SYNOPSIS
 
@@ -76,8 +74,8 @@ object shown in the SYNOPSIS:
     sub show_inventory {
         my $self = shift;
         foreach my $item ( @{$self->fruit_aisle} ) {
-            # access each Fruit object
-        } # foreach my $item ( @{$self->fruit_aisle} ) 
+            # ... access each Fruit object
+        }
     }
 
 =head2 Assigning arrays to an ArrayRef will overwrite existing arrays
@@ -110,8 +108,8 @@ And here's an example of deleting an object stored in an ArrayRef:
     for my $fruit_obj ( @fruit_aisle_copy ) {
         if ( $fruit_obj->name ne 'tomato' ) {
             push(@reworked_fruit_aisle, $fruit_obj);
-        } # if ( $fruit_obj->name ne 'tomato' )
-    } # for my $fruit_obj ( @fruit_aisle_copy )
+        }
+    }
     $store->fruit_aisle( \@reworked_fruit_aisle );
 
 Putting the above code into their own object methods would make appending to or deleting from an C<ArrayRef> a trivial operation.
@@ -140,6 +138,7 @@ class hierarchy
 Type Constraints
 
 =item L<Moose::Util::TypeConstraints> - Type constraints that Moose can use
+and the tools to extend them or create your own.
 
 =item L<Moose::Autobox> - Autoboxed wrappers for Native Perl datatypes
 
@@ -153,9 +152,11 @@ Brian Manning <elspicyjack at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c)2008 by Infinity Interactive, Inc., Brian Manning
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
-This documentation is free software; you can redistribute it and/or modify
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut

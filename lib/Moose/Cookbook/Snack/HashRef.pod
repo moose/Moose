@@ -1,11 +1,9 @@
-#!/usr/bin/env perl
+
 =pod
 
 =head1 NAME
 
-Moose::Cookbook::Snack::HashRef - (Ab)using the HashRef type constraint
-provided by the L<Moose::Util::TypeConstraint> and/or 
-L<Moose::Util::TypeConstraints::OptimizedConstraints> classes.
+Moose::Cookbook::Snack::HashRef - Using the HashRef type constraint
 
 =head1 SYNOPSIS
 
@@ -38,7 +36,7 @@ variable as an attribute of a Moose object.
 
 The code in this document will work on Moose as advertised, but the developers
 strongly recommend using something like L<Moose::Autobox> or
-L<MooseX::AttributeHelpers> when working with array references in order to
+L<MooseX::AttributeHelpers> when working with hash references in order to
 help keep your Moose objects nice and encapsulated.
 
 =head2 Assigning hashes to a HashRef attribute
@@ -75,7 +73,7 @@ de-reference the C<HashRef>, and then enumerate over it's keys.
         my $fruit = $self->{fruit_aisle}{$item};
         print "Item: $item, type: " . $fruit->meta->name
             . " species: " . $fruit->species . "\n";
-    } # foreach my $item
+    }
 
 If the above de-referencing of the C<fruit_aisle> C<HashRef> is a little too
 noisy, you could create a copy of it, and then enumerate over that copy:
@@ -83,7 +81,8 @@ noisy, you could create a copy of it, and then enumerate over that copy:
     my %fruit_aisle_copy = %{$self->fruit_aisle};
     foreach my $item ( keys(%fruit_aisle_copy) ) {
         my $fruit = $fruit_aisle_copy{$item};
-        # 'print' statement from above example goes here
+        print "Item: $item, type: " . $fruit->meta->name
+            . " species: " . $fruit->species . "\n";
     } 
 
 =head2 Assigning to a HashRef attribute will overwrite
@@ -139,7 +138,12 @@ clear out that attribute yet still satisfy the type constraint.
 =item L<Moose::Cookbook::Snack::Types> - Snippets of code for using Types and
 Type Constraints
 
-=item L<Moose::Util::TypeConstraints> - Type constraints system for Moose
+=item L<Moose::Util::TypeConstraints> - Type constraints that Moose can use
+and the tools to extend them or create your own.
+
+=item L<Moose::Autobox> - Autoboxed wrappers for Native Perl datatypes
+
+=item L<MooseX::AttributeHelpers> - Extends attribute interfaces
 
 =back
 
@@ -149,9 +153,11 @@ Brian Manning <elspicyjack at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c)2008 by  Infinity Interactive, Inc., Brian Manning
+Copyright 2006-2008 by Infinity Interactive, Inc.
 
-This documentation is free software; you can redistribute it and/or modify
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut

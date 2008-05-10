@@ -1,15 +1,30 @@
 Revision history for Perl extension Moose
 
+0.44 Sat. May 10, 2008
     * Moose
-      - made make_immutable warning cluck to show where the error is
-
-0.44
+      - made make_immutable warning cluck to 
+        show where the error is
+    
+    * Moose::Object
+      - BUILDALL and DEMOLISHALL now call 
+        ->body when looping through the 
+        methods, to avoid the overloaded
+        method call.
+      
     * Moose::Cookbook::Recipe7
-      - added new recipe for immutable functionality (Dave Rolsky)
+      - added new recipe for immutable 
+        functionality (thanks Dave Rolsky)
+      
     * Moose::Cookbook::Recipe9
-      - added new recipe for builder and lazy_build (Dave Rolsky)
+      - added new recipe for builder and 
+        lazy_build (thanks Dave Rolsky)
+      
     * Moose::Cookbook::Recipe1
-      - added new recipe for method aliasing and exclusion with Roles (Dave Rolsky)
+      - added new recipe for method aliasing 
+        and exclusion with Roles (thanks Dave Rolsky)
+
+    * t/
+      - fixed Win32 test failure 
 
 0.43 Wed. April, 30, 2008
     * NOTE TO SELF:

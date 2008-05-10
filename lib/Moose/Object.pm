@@ -9,7 +9,7 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
@@ -42,20 +42,28 @@ sub BUILDALL {
 }
 
 sub DEMOLISHALL {
+    my $self = shift;    
+    foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
+        $method->{code}->body->($self);
+    }
+}
+
+sub DESTROY { 
     # NOTE: we ask Perl if we even 
     # need to do this first, to avoid
     # extra meta level calls    
-    return unless $_[0]->can('DEMOLISH');    
-    my $self = shift;    
-    {
-        local $@;
-        foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
-            $method->{code}->body->($self);
-        }
-    }    
+    return unless $_[0]->can('DEMOLISH');
+    # if we have an exception here ...
+    if (my $e = $@) {
+        # run DEMOLISHALL ourselves, ...
+        (shift)->DEMOLISHALL;
+        # then restore the exception ...
+        $@ = $e;
+        # and return ...
+        return;
+    }
+    goto &DEMOLISHALL 
 }
-
-sub DESTROY { goto &DEMOLISHALL }
 
 # new does() methods will be created 
 # as approiate see Moose::Meta::Role
