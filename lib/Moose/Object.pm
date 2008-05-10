@@ -62,7 +62,7 @@ sub DESTROY {
         # and return ...
         return;
     }
-    goto &DEMOLISHALL 
+    goto &DEMOLISHALL;
 }
 
 # new does() methods will be created 
