@@ -24,7 +24,7 @@ Revision history for Perl extension Moose
       - added new recipe for builder and 
         lazy_build (thanks Dave Rolsky)
       
-    * Moose::Cookbook::Recipe1
+    * Moose::Cookbook::Recipe11
       - added new recipe for method aliasing 
         and exclusion with Roles (thanks Dave Rolsky)
 
