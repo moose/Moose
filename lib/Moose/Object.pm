@@ -54,14 +54,15 @@ sub DESTROY {
     # extra meta level calls    
     return unless $_[0]->can('DEMOLISH');
     # if we have an exception here ...
-    if (my $e = $@) {
+    if ($@) {
+        # localize the $@ ...
+        local $@;
         # run DEMOLISHALL ourselves, ...
-        (shift)->DEMOLISHALL;
-        # then restore the exception ...
-        $@ = $e;
+        $_[0]->DEMOLISHALL;
         # and return ...
         return;
     }
+    # otherwise it is normal destruction
     goto &DEMOLISHALL;
 }
 

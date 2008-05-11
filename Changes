@@ -3,13 +3,18 @@ Revision history for Perl extension Moose
 0.44 Sat. May 10, 2008
     * Moose
       - made make_immutable warning cluck to 
-        show where the error is
+        show where the error is (thanks mst)
     
     * Moose::Object
       - BUILDALL and DEMOLISHALL now call 
         ->body when looping through the 
         methods, to avoid the overloaded
         method call.
+      - fixed issue where DEMOLISHALL was
+        eating the $@ values, and so not 
+        working correctly, it still kind of
+        eats them, but so does vanilla perl 
+        - added tests for this
       
     * Moose::Cookbook::Recipe7
       - added new recipe for immutable 
@@ -24,7 +29,7 @@ Revision history for Perl extension Moose
         and exclusion with Roles (thanks Dave Rolsky)
 
     * t/
-      - fixed Win32 test failure 
+      - fixed Win32 test failure (thanks spicyjack)
 
 0.43 Wed. April, 30, 2008
     * NOTE TO SELF:
