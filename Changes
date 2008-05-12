@@ -31,6 +31,9 @@ Revision history for Perl extension Moose
     * t/
       - fixed Win32 test failure (thanks spicyjack)
 
+    ~ removed Build.PL and Module::Build compat 
+      since Module::Install has done that.
+
 0.43 Wed. April, 30, 2008
     * NOTE TO SELF:
         drink more coffee before 

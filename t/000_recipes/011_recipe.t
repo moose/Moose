@@ -48,7 +48,9 @@ BEGIN {
         
         # iterate over all the attributes in $self
         my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $attribute) = each %attributes) {
+        foreach my $name (sort keys %attributes) {
+    
+            my $attribute = $attributes{$name};
             
             # print the label if available
             if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
@@ -71,8 +73,8 @@ BEGIN {
 }
 
 my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
-is($app->dump, q{The site's URL: http://google.com
-name: Google
+is($app->dump, q{name: Google
+The site's URL: http://google.com
 }, '... got the expected dump value');
 
 
