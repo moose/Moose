@@ -3,20 +3,21 @@
 
 =head1 NAME
 
-Moose::Cookbook::Snack::BUILD - Overriding the I<new()> method to customize
-the behaivor of Moose object creation
+Moose::Cookbook::Snack::BUILD - Custom initialization methods for Moose objects
 
 =head1 SYNOPSIS
 
     package Build::Demo;
     use Moose; 
 
-    has 'example_file' => ( is => 'rw', required => 1);
+    # once the object has been created, don't allow
+    # changes to 'example_file'
+    has 'example_file' => (is => 'ro', required => 1);
 
     sub BUILD {
         my $self = shift;
-        # create the object only if the file does exist
-        if ( -e $self->example_file ) {
+        # create the object only if the 'example_file' exists
+        if (-e $self->example_file) {
             return $self;
         } 
         else {
@@ -27,27 +28,26 @@ the behaivor of Moose object creation
     package main;
     use Moose;
     
-    # '$0' is the name of this script, set automatically by Perl
-    # this works
-    my $first_test = Build::Demo->new( example_file => $0 );
+    # the name of this script, which works
+    my $first_test = Build::Demo->new(example_file => $0); 
     # this should fail (unless there's a file named 'foo'
     # in the current directory)
-    my $second_test = Build::Demo->new( example_file => 'foo' );
+    my $second_test = Build::Demo->new(example_file => 'foo');
 
 =head1 DESCRIPTION
 
-The C<BUILD()> method allows you to write your own custom constructors for
+The C<BUILD()> method allows you to write your own initialization methods for
 your Moose objects. 
 
 =head2 Creating new objects in Perl and Moose
 
 By convention, most objects in Perl are created by calling a C<new()> method
-that they have created:
+inside that object:
 
     package My::Perl::Class;
 
     sub new {
-        # object initialization code goes here...
+        # object blessing and initialization code goes here...
     } 
 
     package main;
@@ -74,11 +74,16 @@ created, a good time to do that is when the object is being created.  Why
 waste resources (CPU, memory) on objects that won't work because of missing
 resources?
 
+=head2 BUILD method is run only if it is defined in the object
+
+If your object does not have a C<BUILD> method, then Moose will skip trying to
+run it.
+
 =head2 What is 'BUILDALL'?
 
 (Taken from L<Moose::Object>)  The C<BUILDALL> method will call every BUILD
 method in the inheritance hierarchy, and pass it a hash-ref of the the %params
-passed to new.
+passed to the C<new()> method.
 
 =head1 SEE ALSO
 
@@ -86,19 +91,11 @@ passed to new.
 
 =item L<Moose::Object> - The base object for Moose (BUILDALL) 
 
-=item L<Moose::Cookbook::FAQ> - Frequently asked questions about Moose (How do
-I write custom constructors with Moose?)
+=item L<Moose::Cookbook::FAQ> - Frequently asked questions about Moose (How do I write custom constructors with Moose?)
 
-=item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple Company
-class heirarchy (Example usage of BUILD in action)
+=item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple Company class heirarchy (Example usage of BUILD in action)
 
-=item L<Moose::Cookbook::WTF> - For when things go wrong with Moose ('Roles'
-ѕection describes BUILD/BUILDALL)
-
-
-
-The L<Moose::Cookbook::WTF> section entitled B<Roles> for more info about how
-the BUILD/BUILDALL methods work.
+=item L<Moose::Cookbook::WTF> - For when things go wrong with Moose ('Roles' section describes BUILD/BUILDALL)
 
 =back
 
@@ -108,7 +105,7 @@ Brian Manning <elspicyjack at gmail dot com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c)2008 by Brian Manning
+Copyright (c)2008 by Infinity Interactive, Inc.
 
 This documentation is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
