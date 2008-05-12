@@ -104,7 +104,7 @@ delete the desired key/value pairs, then assign your modified copy back to the
 C<HashRef> attribute.  Here's an example of appending new key/value pars:
 
     my %fruit_aisle_copy = %{$store->fruit_aisle};
-    my $avocado = Fruit->new( species => 'P. americana) );
+    my $avocado = Fruit->new( species => 'P. americana' );
     $fruit_aisle_copy{avocado} = $avocado;
     $store->fruit_aisle( \%fruit_aisle_copy );
 

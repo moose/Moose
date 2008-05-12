@@ -151,7 +151,7 @@ blessed hashes just like the average Perl object is.  However, if you
 access the object's hash reference directly via the latter syntax you
 will have several problems.
 
-First, Moose, will no longer be able to enforce attribute constraints,
+First, Moose will no longer be able to enforce attribute constraints,
 such as read-only or type constraints. Second, you've broken that
 object's encapsulation, and encapsulation is one of the reasons you
 want to use objects in the first place, right?
