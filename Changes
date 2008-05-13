@@ -1,5 +1,28 @@
 Revision history for Perl extension Moose
 
+0.45
+    * Moose::Meta::Method::Constructor
+      - fixed bug where trigger was not being 
+        called by the inlined immutable 
+        constructors 
+        - added test for this (thanks to Caelum)
+    
+    * Moose::Meta::Role::Application::ToInstance
+      - now uses the metaclass of the instance
+        (if possible) to create the anon-class
+        (thanks Jonathan Rockway)
+    
+    * Moose::Cookbook::Snack::ArrayRef
+      Moose::Cookbook::Snack::HashRef
+      Moose::Cookbook::Snack::Perl5ObjsVsMooseObjs
+      Moose::Cookbook::Snack::BUILD      
+      - several new Snacks added to the cookbook
+        (thanks to spicyjack)
+    
+    * t/
+      - fixed hash-ordering test bug that was 
+        causing occasional cpantester failures 
+
 0.44 Sat. May 10, 2008
     * Moose
       - made make_immutable warning cluck to 
