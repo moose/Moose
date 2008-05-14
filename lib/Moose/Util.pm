@@ -42,7 +42,7 @@ sub does_role {
     my $meta = find_meta($class_or_obj);
     
     return unless defined $meta;
-
+    return unless $meta->can('does_role');
     return 1 if $meta->does_role($role);
     return;
 }
