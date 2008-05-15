@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 use Test::Exception;
 
 BEGIN {
@@ -40,6 +40,7 @@ BEGIN {
   is(Foo->new->bars, 'many bars'        , "correct value for 'bars'  before inlining constructor");
   is(Foo->new->bazes, 'many bazes'      , "correct value for 'bazes' before inlining constructor");
   lives_ok{ $meta->make_immutable       } "Foo is imutable";
+  lives_ok{ $meta->identifier           } "->identifier on metaclass lives";
   dies_ok{  $meta->add_role($foo_role)  } "Add Role is locked";
   lives_ok{ Foo->new                    } "Inlined constructor works with lazy_build";
   is(Foo->new->foos, 'many foos'        , "correct value for 'foos'  after inlining constructor");
@@ -47,7 +48,6 @@ BEGIN {
   is(Foo->new->bazes, 'many bazes'      , "correct value for 'bazes' after inlining constructor");
   lives_ok{ $meta->make_mutable         } "Foo is mutable";
   lives_ok{ $meta->add_role($foo_role)  } "Add Role is unlocked";
-
 
 
 }
