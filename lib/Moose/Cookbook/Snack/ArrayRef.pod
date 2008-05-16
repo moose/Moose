@@ -13,7 +13,7 @@ Moose::Cookbook::Snack::ArrayRef - Using the ArrayRef type constraint
     has 'name' => (is => 'rw', required => 1);
     has 'species' => (is => 'rw', required => 1);
 
-    package ProduceStoreArray;
+    package ProduceStore;
     use Moose;
     use Moose::Util::TypeConstraints;
 
@@ -25,7 +25,7 @@ Moose::Cookbook::Snack::ArrayRef - Using the ArrayRef type constraint
     my $orange = Fruit->new(name => 'orange', species => 'C. sinensis');
     my $apple = Fruit->new(name => 'apple', species => 'M. domestica');
     my @fruit = ($apple, $orange);
-    my $store = ProduceStoreArray->new(fruit_aisle => \@fruit);
+    my $store = ProduceStore->new(fruit_aisle => \@fruit);
     
 =head1 DESCRIPTION
 
@@ -48,7 +48,7 @@ store's C<fruit_aisle> C<ArrayRef> attribute, we pass an array containing both
 objects by reference to the C<fruit_aisle> attribute:
 
     my @fruit = ($apple, $orange);
-    my $store = ProduceStoreArray->new(fruit_aisle => \@fruit);
+    my $store = ProduceStore->new(fruit_aisle => \@fruit);
 
 Or you can pass an anonymous array to the C<ArrayRef> attribute as well.  If
 you created two new objects, C<$grape> and C<$tomato>, and assigned them to
@@ -68,7 +68,7 @@ array values for example, Moose will complain:
 
 In order to dump the contents of a C<ArrayRef> object attribute, you must first
 de-reference the C<ArrayRef>, and then enumerate over it's keys.  You can add
-this method for showing the store's inventory to the C<ProduceStoreArray>
+this method for showing the store's inventory to the C<ProduceStore>
 object shown in the SYNOPSIS:
 
     sub show_inventory {
