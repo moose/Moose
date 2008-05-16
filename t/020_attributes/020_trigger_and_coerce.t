@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
@@ -55,9 +55,4 @@ ok(Mortgage->meta->is_immutable, '... Mortgage is now immutable');
     # check that coercion worked
     isa_ok($mtg->closing_date, 'Fake::DateTime');
 }
-
-
-
-
-
 
