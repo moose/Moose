@@ -9,7 +9,7 @@ use Class::MOP;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.21';
+our $VERSION   = '0.22';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -359,7 +359,6 @@ sub create_immutable_transformer {
            remove_method
            add_attribute
            remove_attribute
-           add_package_symbol
            remove_package_symbol
            add_role
        /],
@@ -370,7 +369,19 @@ sub create_immutable_transformer {
            get_method_map                    => 'SCALAR',
            # maybe ....
            calculate_all_roles               => 'ARRAY',
-       }
+       },
+       # NOTE:
+       # this is ugly, but so are typeglobs, 
+       # so whattayahgonnadoboutit
+       # - SL
+       wrapped => { 
+           add_package_symbol => sub {
+               my $original = shift;
+               confess "Cannot add package symbols to an immutable metaclass" 
+                   unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
+               goto $original->body;
+           },
+       },       
     });
     return $class;
 }

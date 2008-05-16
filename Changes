@@ -1,6 +1,15 @@
 Revision history for Perl extension Moose
 
 0.45
+    * Moose::Meta::Class
+      - added same 'add_package_symbol' fix as in 
+        Class::MOP 0.56
+
+    * Moose::Util
+      - does_role now handles non-Moose classes 
+        more gracefully
+        - added tests for this
+
     * Moose::Meta::Method::Constructor
       - fixed bug where trigger was not being 
         called by the inlined immutable 
