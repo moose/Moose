@@ -12,7 +12,7 @@ Moose::Cookbook::Snack::HashRef - Using the HashRef type constraint
 
     has 'species' => ( is => 'rw', required => 1 );
 
-    package ProduceStoreHash;
+    package ProduceStore;
     use Moose;
     use Moose::Util::TypeConstraints;
 
@@ -25,7 +25,7 @@ Moose::Cookbook::Snack::HashRef - Using the HashRef type constraint
     my $orange = Fruit->new( species => 'C. sinensis' );
     my $apple = Fruit->new( species => 'M. domestica' );
     my %fruit = ( orange => $orange, apple => $apple );
-    my $store = ProduceStoreHash->new( fruit_aisle => \%fruit );
+    my $store = ProduceStore->new( fruit_aisle => \%fruit );
 
 =head1 DESCRIPTION
 
@@ -48,7 +48,7 @@ C<fruit_aisle> C<HashRef> attribute, we pass a hash containing both objects by
 reference to the C<fruit_aisle> attribute:
 
     my %fruit = ( orange => $orange, apple => $apple );
-    my $store = ProduceStoreHash->new( fruit_aisle => \%fruit );
+    my $store = ProduceStore->new( fruit_aisle => \%fruit );
 
 Or you can pass an anonymous hash to the C<HashRef> attribute as well.  If you
 created two new objects, C<$grape> and C<$tomato>, and assigned them to the
