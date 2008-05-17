@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
 use Sub::Exporter;
 
-our $VERSION   = '0.22';
+our $VERSION   = '0.23';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -386,9 +386,9 @@ sub _create_type_constraint ($$$;$$) {
     my $class = "Moose::Meta::TypeConstraint";
 
     # FIXME should probably not be a special case
-    # FIXME also support metaclass/traits in TCs
     if ( defined $parent and $parent = find_or_parse_type_constraint($parent) ) {
-        $class = "Moose::Meta::TypeConstraint::Parameterizable" if $parent->isa("Moose::Meta::TypeConstraint::Parameterizable");
+        $class = "Moose::Meta::TypeConstraint::Parameterizable" 
+            if $parent->isa("Moose::Meta::TypeConstraint::Parameterizable");
     }
 
     my $constraint = $class->new(

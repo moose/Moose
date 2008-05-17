@@ -10,6 +10,10 @@ Revision history for Perl extension Moose
         more gracefully
         - added tests for this
 
+    * Moose::Util::TypeConstraints
+      - subtypes of parameterizable types now are 
+        themselves parameterizable types
+
     * Moose::Meta::Method::Constructor
       - fixed bug where trigger was not being 
         called by the inlined immutable 
