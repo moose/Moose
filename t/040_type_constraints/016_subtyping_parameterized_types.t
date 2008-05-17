@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 30;
 use Test::Exception;
 
 BEGIN {
@@ -60,3 +60,28 @@ lives_ok {
     ok(!$t->check({ one => "ONE", two => "TWO" }), '... validated it correctly');
 }
 
+lives_ok {
+    subtype 'MyNonSpecialHash'
+        => as "HashRef"
+        => where { keys %$_ == 3 };
+};
+
+{
+    my $t = find_type_constraint('MyNonSpecialHash');
+
+    isa_ok($t, 'Moose::Meta::TypeConstraint');
+    isa_ok($t, 'Moose::Meta::TypeConstraint::Parameterizable');
+
+    ok( $t->check({ one => 1, two => "foo", three => [] }), "validated" );
+    ok( !$t->check({ one => 1 }), "failed" );
+}
+
+{
+    my $t = Moose::Util::TypeConstraints::find_or_parse_type_constraint('MyNonSpecialHash[Int]');
+
+    isa_ok($t, 'Moose::Meta::TypeConstraint');
+
+    ok( $t->check({ one => 1, two => 2, three => 3 }), "validated" );
+    ok( !$t->check({ one => 1, two => "foo", three => [] }), "failed" );
+    ok( !$t->check({ one => 1 }), "failed" );
+}
