@@ -912,7 +912,7 @@ technologies.
 
 =item The Moose mailing list - moose@perl.org
 
-=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/5788>
+=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/moose>
 
 =item Several Moose extension modules in the L<MooseX::> namespace.
 
