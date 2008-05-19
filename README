@@ -19,7 +19,6 @@ This module requires these other modules and libraries:
 	Class::MOP
 	Scalar::Util
 	Carp
-	Sub::Name
 	Sub::Exporter
 	B
 

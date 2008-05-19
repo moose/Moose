@@ -8,11 +8,10 @@ use metaclass;
 use overload '""'     => sub { shift->name },   # stringify to tc name
              fallback => 1;
 
-use Sub::Name    'subname';
 use Carp         'confess';
 use Scalar::Util qw(blessed refaddr);
 
-our $VERSION   = '0.12';
+our $VERSION   = '0.13';
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));
@@ -189,23 +188,23 @@ sub _compile_subtype {
 
     # then we compile them to run without
     # having to recurse as we did before
-    return subname $self->name => sub {
+    return Class::MOP::subname($self->name => sub {
         local $_ = $_[0];
         foreach my $parent (@parents) {
             return undef unless $parent->($_[0]);
         }
         return undef unless $check->($_[0]);
         1;
-    };
+    });
 }
 
 sub _compile_type {
     my ($self, $check) = @_;
-    return subname $self->name => sub {
+    return Class::MOP::subname($self->name => sub {
         local $_ = $_[0];
         return undef unless $check->($_[0]);
         1;
-    };
+    });
 }
 
 ## other utils ...

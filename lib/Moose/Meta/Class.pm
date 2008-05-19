@@ -4,12 +4,12 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
-use Class::MOP;
+use Class::MOP 0.56;
 
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.22';
+our $VERSION   = '0.23';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -201,12 +201,16 @@ sub get_method_map {
             #next unless $self->does_role($role);
         }
         else {
-            next if ($pkg  || '') ne $class_name &&
-                    ($name || '') ne '__ANON__';
+            next if ($pkg  || '') ne $class_name ||
+                    (($name || '') ne '__ANON__' && ($pkg  || '') ne $class_name);
 
         }
 
-        $map->{$symbol} = $method_metaclass->wrap($code);
+        $map->{$symbol} = $method_metaclass->wrap(
+            $code,
+            package_name => $class_name,
+            name         => $symbol
+        );
     }
 
     return $map;

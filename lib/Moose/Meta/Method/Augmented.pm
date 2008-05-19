@@ -3,14 +3,12 @@ package Moose::Meta::Method::Augmented;
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
+use Carp 'confess';
+
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method';
-
-use Sub::Name;
-
-use Carp qw(confess);
 
 sub new {
     my ( $class, %args ) = @_;
@@ -50,7 +48,11 @@ sub new {
     };
 
     # FIXME store additional attrs
-    $class->wrap($body);
+    $class->wrap(
+        $body,
+        package_name => $meta->name,
+        name         => $name
+    );
 }
 
 1;

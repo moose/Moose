@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -20,9 +20,14 @@ sub new {
     (exists $options{options} && ref $options{options} eq 'HASH')
         || confess "You must pass a hash of options";
 
+    ($options{package_name} && $options{name})
+        || confess "You must supply the package_name and name parameters";
+
     my $self = bless {
         # from our superclass
-        '&!body'          => undef,
+        '&!body'          => undef, 
+        '$!package_name'  => $options{package_name},
+        '$!name'          => $options{name},
         # specific to this subclass
         '%!options'       => $options{options},
         '$!meta_instance' => $options{metaclass}->get_meta_instance,

@@ -7,7 +7,7 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role';
@@ -54,8 +54,11 @@ sub alias_method {
 
     # make sure to bless the 
     # method if nessecary 
-    $method = $self->method_metaclass->wrap($method) 
-        if !blessed($method);
+    $method = $self->method_metaclass->wrap(
+        $method,
+        package_name => $self->name,
+        name         => $method_name
+    ) if !blessed($method);
 
     $self->get_method_map->{$method_name} = $method;
 }

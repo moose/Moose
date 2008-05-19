@@ -1,6 +1,18 @@
 Revision history for Perl extension Moose
 
 0.45
+    * Moose
+      - Because of work in Class::MOP 0.56, all 
+        XS based functionality is now optional
+        and a Pure Perl version is supplied
+        - the CLASS_MOP_NO_XS environment variable
+          can now be used to force non-XS versions 
+          to always be used   
+        - several of the packages have been tweaked
+          to take care of this, mostly we added
+          support for the package_name and name 
+          variables in all the Method metaclasses
+    
     * Moose::Meta::Class
       - added same 'add_package_symbol' fix as in 
         Class::MOP 0.56

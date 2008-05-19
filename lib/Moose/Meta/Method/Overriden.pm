@@ -3,14 +3,12 @@ package Moose::Meta::Method::Overriden;
 use strict;
 use warnings;
 
-our $VERSION   = '0.01';
+use Carp 'confess';
+
+our $VERSION   = '0.02';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method';
-
-use Sub::Name;
-
-use Carp qw(confess);
 
 sub new {
     my ( $class, %args ) = @_;
@@ -42,7 +40,11 @@ sub new {
     # subname "${_super_package}::${name}", $method;
 
     # FIXME store additional attrs
-    $class->wrap($body);
+    $class->wrap(
+        $body,
+        package_name => $args{class}->name,
+        name         => $name
+    );
 }
 
 1;

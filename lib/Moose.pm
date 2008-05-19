@@ -9,12 +9,11 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess', 'croak', 'cluck';
-use Sub::Name    'subname';
 
 use Sub::Exporter;
 
 use MRO::Compat;
-use Class::MOP;
+use Class::MOP 0.56;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -80,7 +79,7 @@ use Moose::Util ();
     my %exports = (
         extends => sub {
             my $class = $CALLER;
-            return subname 'Moose::extends' => sub (@) {
+            return Class::MOP::subname('Moose::extends' => sub (@) {
                 confess "Must derive at least one class" unless @_;
         
                 my @supers = @_;
@@ -93,64 +92,64 @@ use Moose::Util ();
                 # of sync when the classes are being built
                 my $meta = $class->meta->_fix_metaclass_incompatability(@supers);
                 $meta->superclasses(@supers);
-            };
+            });
         },
         with => sub {
             my $class = $CALLER;
-            return subname 'Moose::with' => sub (@) {
+            return Class::MOP::subname('Moose::with' => sub (@) {
                 Moose::Util::apply_all_roles($class->meta, @_)
-            };
+            });
         },
         has => sub {
             my $class = $CALLER;
-            return subname 'Moose::has' => sub ($;%) {
+            return Class::MOP::subname('Moose::has' => sub ($;%) {
                 my $name    = shift;
                 croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
                 my %options = @_;
                 my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
                 $class->meta->add_attribute( $_, %options ) for @$attrs;
-            };
+            });
         },
         before => sub {
             my $class = $CALLER;
-            return subname 'Moose::before' => sub (@&) {
+            return Class::MOP::subname('Moose::before' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_before_method_modifier( $_, $code ) for @_;
-            };
+            });
         },
         after => sub {
             my $class = $CALLER;
-            return subname 'Moose::after' => sub (@&) {
+            return Class::MOP::subname('Moose::after' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_after_method_modifier( $_, $code ) for @_;
-            };
+            });
         },
         around => sub {
             my $class = $CALLER;
-            return subname 'Moose::around' => sub (@&) {
+            return Class::MOP::subname('Moose::around' => sub (@&) {
                 my $code = pop @_;
                 my $meta = $class->meta;
                 $meta->add_around_method_modifier( $_, $code ) for @_;
-            };
+            });
         },
         super => sub {
             # FIXME can be made into goto, might break caller() for existing code
-            return subname 'Moose::super' => sub { return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) }
+            return Class::MOP::subname('Moose::super' => sub { return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) })
         },
         #next => sub {
         #    return subname 'Moose::next' => sub { @_ = our @SUPER_ARGS; goto \&next::method };
         #},
         override => sub {
             my $class = $CALLER;
-            return subname 'Moose::override' => sub ($&) {
+            return Class::MOP::subname('Moose::override' => sub ($&) {
                 my ( $name, $method ) = @_;
                 $class->meta->add_override_method_modifier( $name => $method );
-            };
+            });
         },
         inner => sub {
-            return subname 'Moose::inner' => sub {
+            return Class::MOP::subname('Moose::inner' => sub {
                 my $pkg = caller();
                 our ( %INNER_BODY, %INNER_ARGS );
 
@@ -162,22 +161,22 @@ use Moose::Util ();
                 } else {
                     return;
                 }
-            };
+            });
         },
         augment => sub {
             my $class = $CALLER;
-            return subname 'Moose::augment' => sub (@&) {
+            return Class::MOP::subname('Moose::augment' => sub (@&) {
                 my ( $name, $method ) = @_;
                 $class->meta->add_augment_method_modifier( $name => $method );
-            };
+            });
         },
         make_immutable => sub {
             my $class = $CALLER;
-            return subname 'Moose::make_immutable' => sub {
+            return Class::MOP::subname('Moose::make_immutable' => sub {
                 cluck "The make_immutable keyword has been deprecated, " . 
                       "please go back to __PACKAGE__->meta->make_immutable\n";
                 $class->meta->make_immutable(@_);
-            };            
+            });            
         },        
         confess => sub {
             return \&Carp::confess;
@@ -237,7 +236,6 @@ use Moose::Util ();
 
                 # make sure it is from Moose
                 my ($pkg_name) = Class::MOP::get_code_info($keyword);
-                next if $@;
                 next if $pkg_name ne 'Moose';
 
                 # and if it is from Moose then undef the slot

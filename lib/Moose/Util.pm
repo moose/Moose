@@ -6,9 +6,9 @@ use warnings;
 use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Carp         'confess';
-use Class::MOP   ();
+use Class::MOP   0.56;
 
-our $VERSION   = '0.05';
+our $VERSION   = '0.06';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
