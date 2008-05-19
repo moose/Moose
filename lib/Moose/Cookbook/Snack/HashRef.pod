@@ -37,7 +37,9 @@ variable as an attribute of a Moose object.
 The code in this document will work on Moose as advertised, but the developers
 strongly recommend using something like L<Moose::Autobox> or
 L<MooseX::AttributeHelpers> when working with hash references in order to
-help keep your Moose objects nice and encapsulated.
+help keep your Moose objects nice and encapsulated.  The reason why this POD
+exists is to show potential users of L<Moose> that Moose objects are just like
+Plain Ol' Perl Objects (POPO), albeit with some extra metadata syntatic sugar.
 
 =head2 Assigning hashes to a HashRef attribute
 
@@ -107,6 +109,7 @@ C<HashRef> attribute.  Here's an example of appending new key/value pars:
     my $avocado = Fruit->new( species => 'P. americana' );
     $fruit_aisle_copy{avocado} = $avocado;
     $store->fruit_aisle( \%fruit_aisle_copy );
+    $store->fruit_aisle->{avocado};
 
 And here's an example of deleting existing key/value pairs:
 
@@ -114,6 +117,7 @@ And here's an example of deleting existing key/value pairs:
     %fruit_aisle_copy = %{$store->fruit_aisle};
     delete($fruit_aisle_copy{tomato});
     $store->fruit_aisle( \%fruit_aisle_copy );
+    delete $mooseObj->hashref->{foo};
 
 Putting the above code into their own object methods would make appending to
 and deleting from a C<HashRef> a trivial operation.

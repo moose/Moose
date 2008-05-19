@@ -74,6 +74,22 @@ created, a good time to do that is when the object is being created.  Why
 waste resources (CPU, memory) on objects that won't work because of missing
 resources?
 
+=head2 When would you use an Moose type constraint instead of a custom constructor?
+
+Using type constraints via L<Moose::Util::TypeConstraints>, you can verify
+simple relationships when an object is created:
+
+    package Triangle;
+    use Moose;
+
+    has 
+
+You would want to use the C<BUILD()> method in order to verify more complex
+relationships:
+
+    package IsoscelesTriangle;
+    use Moose;
+
 =head2 BUILD method is run only if it is defined in the object
 
 If your object does not have a C<BUILD> method, then Moose will skip trying to
