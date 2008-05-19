@@ -52,10 +52,21 @@ If you've already read L<Moose::Cookbook::Recipe3>, then this example
 should look awfully familiar. In fact, all we've done here is replace
 the attribute C<default> with a C<builder> method.
 
-In this particular case, the C<default> and C<builder> act exactly the
-same. When the C<left> or C<right> attribute is first accessed before
-it has been set, Moose will call the specified C<builder> method to
-populate the attribute.
+In this particular case, the C<default> and C<builder> options act in
+exactly the same way. When the C<left> or C<right> attribute get
+method is called, Moose will call the builder method to initialize the
+attribute.
+
+Note that Moose calls the builder method I<on the object which has the
+attribute>. Here's an example in code:
+
+  my $tree = BinaryTree->new();
+
+  my $left = $tree->left();
+
+At this point, Moose will call C<< $tree->_build_child_tree() >> in
+order to populate the C<left> attribute. If we had passed C<left> to
+the original constructor, the builer would not be called.
 
 =head2 Subclassable
 
