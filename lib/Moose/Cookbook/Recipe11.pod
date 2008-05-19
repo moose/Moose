@@ -88,8 +88,8 @@ string as an argument if you just want to exclude one method.
 
 Method exclusion and renaming can come in handy, especially when
 building roles out of other roles. In this example, all of our roles
-implement the C<Restartable> role, and provide the exact same API,
-with different implementations under the hood.
+implement the C<Restartable> role. Each role provides same API, but
+each has a different implementation under the hood.
 
 You can also use the method aliasing and excluding features when
 composing a role into a class.
