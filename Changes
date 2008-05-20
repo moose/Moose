@@ -16,6 +16,9 @@ Revision history for Perl extension Moose
         support regexp matching of names
         (thanks to Takatoshi Kitano)
         - tests added for this
+        - NOTE: this only works for classes, it 
+          is currently not supported in roles, 
+          but, ... patches welcome
     
     * Moose::Meta::Class
       - added same 'add_package_symbol' fix as in 
