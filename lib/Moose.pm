@@ -112,25 +112,19 @@ use Moose::Util ();
         before => sub {
             my $class = $CALLER;
             return Class::MOP::subname('Moose::before' => sub (@&) {
-                my $code = pop @_;
-                my $meta = $class->meta;
-                $meta->add_before_method_modifier( $_, $code ) for @_;
+                Moose::Util::add_method_modifier($class, 'before', \@_);
             });
         },
         after => sub {
             my $class = $CALLER;
             return Class::MOP::subname('Moose::after' => sub (@&) {
-                my $code = pop @_;
-                my $meta = $class->meta;
-                $meta->add_after_method_modifier( $_, $code ) for @_;
+                Moose::Util::add_method_modifier($class, 'after', \@_);
             });
         },
         around => sub {
             my $class = $CALLER;
             return Class::MOP::subname('Moose::around' => sub (@&) {
-                my $code = pop @_;
-                my $meta = $class->meta;
-                $meta->add_around_method_modifier( $_, $code ) for @_;
+                Moose::Util::add_method_modifier($class, 'around', \@_);
             });
         },
         super => sub {

@@ -20,6 +20,7 @@ my @exports = qw[
     get_all_attribute_values
     resolve_metatrait_alias
     resolve_metaclass_alias
+    add_method_modifier
 ];
 
 Sub::Exporter::setup_exporter({
@@ -143,6 +144,24 @@ sub resolve_metaclass_alias {
     }
 }
 
+sub add_method_modifier {
+    my ( $class_or_obj, $modifier_name, $args ) = @_;
+    my $meta                = find_meta($class_or_obj);
+    my $code                = pop @{$args};
+    my $add_modifier_method = 'add_' . $modifier_name . '_method_modifier';
+    if ( my $method_modifier_type = ref( @{$args}[0] ) ) {
+        if ( $method_modifier_type eq 'Regexp' ) {
+            my @all_methods = $meta->compute_all_applicable_methods;
+            my @matched_methods
+                = grep { $_->{name} =~ @{$args}[0] } @all_methods;
+            $meta->$add_modifier_method( $_->{name}, $code )
+                for @matched_methods;
+        }
+    }
+    else {
+        $meta->$add_modifier_method( $_, $code ) for @{$args};
+    }
+}
 
 1;
 
@@ -225,6 +244,8 @@ Resolve a short name like in e.g.
     );
 
 to a full class name.
+
+=item B<add_method_modifier ($class_or_obj, $modifier_name, $args)>
 
 =back
 
