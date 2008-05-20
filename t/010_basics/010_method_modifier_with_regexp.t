@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 10;
+use Test::Exception;
 
 BEGIN {
     use_ok('Moose');
@@ -24,14 +25,14 @@ BEGIN {
     }
 
     around qr/bark.*/ => sub {
-        'Dog::around';
+        'Dog::around(' . $_[0]->() . ')';
     };
 
 }
 
 my $dog = Dog->new;
-is( $dog->bark_once,  'Dog::around', 'around modifier is called' );
-is( $dog->bark_twice, 'Dog::around', 'around modifier is called' );
+is( $dog->bark_once,  'Dog::around(bark)', 'around modifier is called' );
+is( $dog->bark_twice, 'Dog::around(barkbark)', 'around modifier is called' );
 
 {
 
@@ -68,80 +69,20 @@ is( $Cat::BEFORE_BARK_COUNTER, 2, 'before modifier is called twice' );
 is( $Cat::AFTER_BARK_COUNTER,  2, 'after modifier is called twice' );
 
 {
+    package Dog::Role;
+    use Moose::Role;
 
-    package Animal;
-    use Moose;
-    our $BEFORE_BARK_COUNTER = 0;
-    our $AFTER_BARK_COUNTER  = 0;
+    ::dies_ok {
+        before qr/bark.*/ => sub {};
+    } '... this is not currently supported';
 
-    sub bark_once {
-        my $self = shift;
-        return 'bark';
-    }
-
-    sub bark_twice {
-        return 'barkbark';
-    }
-
-    before qr/bark.*/ => sub {
-        $BEFORE_BARK_COUNTER++;
-    };
-
-    after qr/bark.*/ => sub {
-        $AFTER_BARK_COUNTER++;
-    };
-}
-
-{
-
-    package Cow;
-    use Moose;
-    extends 'Animal';
-
-    override 'bark_once' => sub {
-        my $self = shift;
-        super();
-        return 'cow';
-    };
-
-    override 'bark_twice' => sub {
-        super();        
-        return 'cowcow';
-    };
-}
-
-{
-    my $cow = Cow->new;
-    $cow->bark_once;
-    is( $Animal::BEFORE_BARK_COUNTER, 1,
-        'before modifier is called if method is overridden' );
-    is( $Animal::AFTER_BARK_COUNTER, 1,
-        'after modifier is called if method is overridden' );
-}
-
-{
-
-    package MyDog;
-    use Moose;
-    our $BEFORE_BARK_COUNTER=0;
-    sub bark {
-        my $self = shift;
-        return 'bark';
-    }
+    ::dies_ok {
+        around qr/bark.*/ => sub {};
+    } '... this is not currently supported';    
     
-    sub bark_twice {
-        my $self = shift;
-        return 'barkbark';
-    }
-
-    before qw/bark bark_twice/ => sub {
-        $BEFORE_BARK_COUNTER++;
-    };
+    ::dies_ok {    
+        after  qr/bark.*/ => sub {};
+    } '... this is not currently supported';    
 
 }
-
-my $my_dog = MyDog->new;
-$my_dog->bark;
-$my_dog->bark_twice;
-is($MyDog::BEFORE_BARK_COUNTER, 2, "before method modifier is called twice");
 

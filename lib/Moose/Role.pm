@@ -83,30 +83,47 @@ use Moose::Util::TypeConstraints;
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::before' => sub (@&) {
                 my $code = pop @_;
-                $meta->add_before_method_modifier($_, $code) for @_;
+                do {
+                    confess "Moose::Role do not currently support " 
+                          . ref($_) 
+                          . " references for before method modifiers" 
+                    if ref $_;
+                    $meta->add_before_method_modifier($_, $code) 
+                } for @_;
             });
         },
         after => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::after' => sub (@&) {
                 my $code = pop @_;
-                $meta->add_after_method_modifier($_, $code) for @_;
+                do {
+                    confess "Moose::Role do not currently support " 
+                          . ref($_) 
+                          . " references for after method modifiers" 
+                    if ref $_;                
+                    $meta->add_after_method_modifier($_, $code) 
+                } for @_;
             });
         },
         around => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::around' => sub (@&) {
                 my $code = pop @_;
-                $meta->add_around_method_modifier($_, $code) for @_;
+                do {
+                    confess "Moose::Role do not currently support " 
+                          . ref($_) 
+                          . " references for around method modifiers" 
+                    if ref $_;                
+                    $meta->add_around_method_modifier($_, $code) 
+                } for @_;  
             });
         },
         # see Moose.pm for discussion
         super => sub {
-            return Class::MOP::subname('Moose::Role::super' => sub { return unless $Moose::SUPER_BODY; $Moose::SUPER_BODY->(@Moose::SUPER_ARGS) })
+            return Class::MOP::subname('Moose::Role::super' => sub { 
+                return unless $Moose::SUPER_BODY; $Moose::SUPER_BODY->(@Moose::SUPER_ARGS) 
+            });
         },
-        #next => sub {
-        #    return subname 'Moose::Role::next' => sub { @_ = @Moose::SUPER_ARGS; goto \&next::method };
-        #},
         override => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::override' => sub ($&) {
