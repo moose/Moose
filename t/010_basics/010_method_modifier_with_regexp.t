@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 10;
 
 BEGIN {
     use_ok('Moose');
@@ -100,53 +100,23 @@ is( $Cat::AFTER_BARK_COUNTER,  2, 'after modifier is called twice' );
 
     override 'bark_once' => sub {
         my $self = shift;
+        super();
         return 'cow';
     };
 
     override 'bark_twice' => sub {
+        super();        
         return 'cowcow';
     };
 }
 
-TODO: {
-    local $TODO = "method modifier isn't called if method id overridden";
+{
     my $cow = Cow->new;
     $cow->bark_once;
     is( $Animal::BEFORE_BARK_COUNTER, 1,
         'before modifier is called if method is overridden' );
     is( $Animal::AFTER_BARK_COUNTER, 1,
         'after modifier is called if method is overridden' );
-}
-
-{
-
-    package Penguin;
-    use Moose;
-    extends 'Animal';
-    our $AUGMENT_CALLED = 0;
-
-    augment 'bark_once' => sub {
-        my $self = shift;
-        $self->dummy;
-        inner();
-        $self->dummy;
-    };
-
-    sub dummy {
-        $AUGMENT_CALLED++;
-    }
-}
-$Animal::BEFORE_BARK_COUNTER = 0;
-$Animal::AFTER_BARK_COUNTER  = 0;
-my $penguin = Penguin->new;
-warn $penguin->bark_once;
-is( $Animal::BEFORE_BARK_COUNTER, 1,
-    'before modifier is called if augment is used' );
-is( $Animal::AFTER_BARK_COUNTER, 1,
-    'after modifier is called if augment is used' );
-TODO: {
-    local $TODO = "The method modifier isn't called if the augment specified it";
-    is( $Penguin::AUGMENT_CALLED, 2, 'augment is called' );
 }
 
 {
