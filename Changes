@@ -12,6 +12,10 @@ Revision history for Perl extension Moose
           to take care of this, mostly we added
           support for the package_name and name 
           variables in all the Method metaclasses
+      - before/around/after method modifiers now 
+        support regexp matching of names
+        (thanks to Takatoshi Kitano)
+        - tests added for this
     
     * Moose::Meta::Class
       - added same 'add_package_symbol' fix as in 
@@ -21,6 +25,8 @@ Revision history for Perl extension Moose
       - does_role now handles non-Moose classes 
         more gracefully
         - added tests for this
+      - added the 'add_method_modifier' function 
+        (thanks to Takatoshi Kitano)
 
     * Moose::Util::TypeConstraints
       - subtypes of parameterizable types now are 
@@ -36,13 +42,6 @@ Revision history for Perl extension Moose
       - now uses the metaclass of the instance
         (if possible) to create the anon-class
         (thanks Jonathan Rockway)
-    
-    * Moose::Cookbook::Snack::ArrayRef
-      Moose::Cookbook::Snack::HashRef
-      Moose::Cookbook::Snack::Perl5ObjsVsMooseObjs
-      Moose::Cookbook::Snack::BUILD      
-      - several new Snacks added to the cookbook
-        (thanks to spicyjack)
     
     * t/
       - fixed hash-ordering test bug that was 

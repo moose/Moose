@@ -128,12 +128,10 @@ use Moose::Util ();
             });
         },
         super => sub {
-            # FIXME can be made into goto, might break caller() for existing code
-            return Class::MOP::subname('Moose::super' => sub { return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) })
+            return Class::MOP::subname('Moose::super' => sub { 
+                return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) 
+            });
         },
-        #next => sub {
-        #    return subname 'Moose::next' => sub { @_ = our @SUPER_ARGS; goto \&next::method };
-        #},
         override => sub {
             my $class = $CALLER;
             return Class::MOP::subname('Moose::override' => sub ($&) {
