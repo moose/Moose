@@ -79,7 +79,7 @@ use Moose::Util ();
         extends => sub {
             my $class = $CALLER;
             return Class::MOP::subname('Moose::extends' => sub (@) {
-                confess "Must derive at least one class" unless @_;
+                croak "Must derive at least one class" unless @_;
         
                 my @supers = @_;
                 foreach my $super (@supers) {

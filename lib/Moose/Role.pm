@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed';
-use Carp         'confess';
+use Carp         'confess', 'croak';
 
 use Data::OptList;
 use Sub::Exporter;
@@ -49,7 +49,7 @@ use Moose::Util::TypeConstraints;
         extends => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::extends' => sub {
-                confess "Moose::Role does not currently support 'extends'"
+                croak "Moose::Role does not currently support 'extends'"
             });
         },
         with => sub {
@@ -61,14 +61,14 @@ use Moose::Util::TypeConstraints;
         requires => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::requires' => sub (@) {
-                confess "Must specify at least one method" unless @_;
+                croak "Must specify at least one method" unless @_;
                 $meta->add_required_methods(@_);
             });
         },
         excludes => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::excludes' => sub (@) {
-                confess "Must specify at least one role" unless @_;
+                croak "Must specify at least one role" unless @_;
                 $meta->add_excluded_roles(@_);
             });
         },
@@ -76,7 +76,7 @@ use Moose::Util::TypeConstraints;
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::has' => sub ($;%) {
                 my $name = shift;
-                confess 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+                croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
                 my %options = @_;
                 my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
                 $meta->add_attribute( $_, %options ) for @$attrs;
@@ -87,7 +87,7 @@ use Moose::Util::TypeConstraints;
             return Class::MOP::subname('Moose::Role::before' => sub (@&) {
                 my $code = pop @_;
                 do {
-                    confess "Moose::Role do not currently support " 
+                    croak "Moose::Role do not currently support " 
                           . ref($_) 
                           . " references for before method modifiers" 
                     if ref $_;
@@ -100,7 +100,7 @@ use Moose::Util::TypeConstraints;
             return Class::MOP::subname('Moose::Role::after' => sub (@&) {
                 my $code = pop @_;
                 do {
-                    confess "Moose::Role do not currently support " 
+                    croak "Moose::Role do not currently support " 
                           . ref($_) 
                           . " references for after method modifiers" 
                     if ref $_;                
@@ -113,7 +113,7 @@ use Moose::Util::TypeConstraints;
             return Class::MOP::subname('Moose::Role::around' => sub (@&) {
                 my $code = pop @_;
                 do {
-                    confess "Moose::Role do not currently support " 
+                    croak "Moose::Role do not currently support " 
                           . ref($_) 
                           . " references for around method modifiers" 
                     if ref $_;                
@@ -137,13 +137,13 @@ use Moose::Util::TypeConstraints;
         inner => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::inner' => sub {
-                confess "Moose::Role cannot support 'inner'";
+                croak "Moose::Role cannot support 'inner'";
             });
         },
         augment => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::augment' => sub {
-                confess "Moose::Role cannot support 'augment'";
+                croak "Moose::Role cannot support 'augment'";
             });
         },
         confess => sub {
