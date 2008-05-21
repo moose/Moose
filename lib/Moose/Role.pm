@@ -75,8 +75,11 @@ use Moose::Util::TypeConstraints;
         has => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::has' => sub ($;%) {
-                my ($name, %options) = @_;
-                $meta->add_attribute($name, %options)
+                my $name = shift;
+                confess 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+                my %options = @_;
+                my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
+                $meta->add_attribute( $_, %options ) for @$attrs;
             });
         },
         before => sub {

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 44;
 use Test::Exception;
 
 BEGIN {
@@ -81,6 +81,28 @@ BEGIN {
 
     my $test = Test::Arrayref::Attributes->new;
     isa_ok($test, 'Test::Arrayref::Attributes');
+    can_ok($test, qw(foo bar baz));
+
+}
+
+{
+    {
+        package Test::Arrayref::RoleAttributes::Role;
+        use Moose::Role;
+
+        has [qw(foo bar baz)] => (
+            is => 'rw',
+        );
+
+    }
+    {
+        package Test::Arrayref::RoleAttributes;
+        use Moose;
+        with 'Test::Arrayref::RoleAttributes::Role';
+    }
+
+    my $test = Test::Arrayref::RoleAttributes->new;
+    isa_ok($test, 'Test::Arrayref::RoleAttributes');
     can_ok($test, qw(foo bar baz));
 
 }
