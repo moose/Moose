@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 27;
+use Test::More tests => 26;
 use Test::Exception;
 
 BEGIN {
@@ -106,15 +106,6 @@ BEGIN {
 
 {
     package Bling;
-    use Moose;
-    
-    ::dies_ok { 
-        has('bling' => (is => 'ro', trigger => sub { 0 }));
-    } '... cannot create trigger on a read-only attr';
-}
-
-{
-    package Bling::Bling;
     use Moose;
     
     ::dies_ok { 

@@ -20,6 +20,11 @@ Revision history for Perl extension Moose
           is currently not supported in roles, 
           but, ... patches welcome
     
+    * Moose::Meta::Attribute
+      - trigger on a ro-attribute is no longer an
+        error, as it's useful to trigger off of the
+        constructor
+
     * Moose::Meta::Class
       - added same 'add_package_symbol' fix as in 
         Class::MOP 0.56

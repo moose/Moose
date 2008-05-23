@@ -209,14 +209,9 @@ sub _process_options {
     if (exists $options->{is}) {
         if ($options->{is} eq 'ro') {
             $options->{reader} ||= $name;
-            (!exists $options->{trigger})
-                || confess "Cannot have a trigger on a read-only attribute $name";
         }
         elsif ($options->{is} eq 'rw') {
             $options->{accessor} = $name;
-            ((reftype($options->{trigger}) || '') eq 'CODE')
-                || confess "Trigger must be a CODE ref"
-                    if exists $options->{trigger};
         }
         else {
             confess "I do not understand this option (is => " . $options->{is} . ") on attribute $name"
@@ -257,6 +252,11 @@ sub _process_options {
             || confess "You cannot have coercion without specifying a type constraint on attribute $name";
         confess "You cannot have a weak reference to a coerced value on attribute $name"
             if $options->{weak_ref};
+    }
+
+    if (exists $options->{trigger}) {
+        (reftype($options->{trigger}) || '') eq 'CODE'
+            || confess "Trigger must be a CODE ref";
     }
 
     if (exists $options->{auto_deref} && $options->{auto_deref}) {
