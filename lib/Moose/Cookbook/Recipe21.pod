@@ -26,13 +26,13 @@ Moose::Cookbook::Recipe21 - The meta-attribute example
 
     has url => (
         metaclass => 'Labeled',
-        isa => 'Str',
-        is => 'rw',
-        label => "The site's URL",
+        is        => 'rw',
+        isa       => 'Str',
+        label     => "The site's URL",
     );
 
     has name => (
-        is => 'rw',
+        is  => 'rw',
         isa => 'Str',
     );
 
@@ -174,9 +174,9 @@ it.
 
     has url => (
         metaclass => 'Labeled',
-        isa => 'Str',
-        is => 'rw',
-        label => "The site's URL",
+        is        => 'rw',
+        isa       => 'Str',
+        label     => "The site's URL",
     );
 
 Ah ha! Now we're using the metaclass. We're adding a new attribute, C<url>, to
@@ -204,7 +204,7 @@ C<"The site's URL">. We can access this meta-attribute with:
 Well, back to the code.
 
     has name => (
-        is => 'rw',
+        is  => 'rw',
         isa => 'Str',
     );
 
