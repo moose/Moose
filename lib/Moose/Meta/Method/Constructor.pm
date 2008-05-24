@@ -351,6 +351,8 @@ not particularly useful.
 
 =item B<options>
 
+=item B<intialize_body>
+
 =item B<initialize_body>
 
 =item B<associated_metaclass>
