@@ -69,7 +69,7 @@ lib/Moose/Util/TypeConstraints/OptimizedConstraints.pm
 lib/oose.pm
 lib/Test/Moose.pm
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
 README
@@ -92,7 +92,6 @@ t/010_basics/006_override_and_foreign_classes.t
 t/010_basics/007_always_strict_warnings.t
 t/010_basics/008_wrapped_method_cxt_propagation.t
 t/010_basics/009_import_unimport.t
-t/010_basics/010_method_keyword.t
 t/010_basics/010_method_modifier_with_regexp.t
 t/010_basics/011_moose_respects_type_constraints.t
 t/010_basics/012_rebless.t
