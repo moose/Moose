@@ -106,9 +106,12 @@ metaclasses. Attribute metaclasses let you extend attribute
 declarations (with C<has>) and behavior to provide additional
 attribute functionality.
 
-=item L<Moose::Cookbook::Recipe22> - The meta-attribute trait example (TODO)
+=item L<Moose::Cookbook::Recipe22> - The meta-attribute trait example
 
-I<abstract goes here>
+Extending Moose's attribute metaclass is a great way to add
+functionality. However, attributes can only have one metaclass.
+Applying roles to the attribute metaclass lets you provide
+composable attribute functionality.
 
 =item L<Moose::Cookbook::Recipe23> - The meta-instance example (TODO)
 

@@ -1,0 +1,186 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Recipe22 - The attribute trait example
+
+=head1 SYNOPSIS
+
+    package MyApp::Meta::Attribute::Trait::Labeled;
+    use Moose::Role;
+
+    has label => (
+        is        => 'rw',
+        isa       => 'Str',
+        predicate => 'has_label',
+    );
+
+    package Moose::Meta::Attribute::Custom::Trait::Labeled;
+    sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
+
+    package MyApp::Website;
+    use Moose;
+    use MyApp::Meta::Attribute::Trait::Labeled;
+
+    has url => (
+        traits => [qw/Labeled/],
+        isa    => 'Str',
+        is     => 'rw',
+        label  => "The site's URL",
+    );
+
+    has name => (
+        is  => 'rw',
+        isa => 'Str',
+    );
+
+    sub dump {
+        my $self = shift;
+
+        # iterate over all the attributes in $self
+        my %attributes = %{ $self->meta->get_attribute_map };
+        while (my ($name, $attribute) = each %attributes) {
+
+            # print the label if available
+            if ($attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
+                && $attribute->has_label) {
+                    print $attribute->label;
+            }
+            # otherwise print the name
+            else {
+                print $name;
+            }
+
+            # print the attribute's value
+            my $reader = $attribute->get_read_method;
+            print ": " . $self->$reader . "\n";
+        }
+    }
+
+    package main;
+    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
+    $app->dump;
+
+=head1 BUT FIRST
+
+This recipe is a continuation of L<Moose::Cookbook::Recipe21>. Please read that
+first.
+
+=head1 MOTIVATION
+
+In Recipe 21, we created an attribute metaclass that gives attributes a "label"
+that can be set in L<Moose/has>. That works well until you want a second
+meta-attribute, or until you want to adjust the behavior of the attribute. You
+could have a specialized attribute metaclass for your application that does it
+all. However, you may want different attributes to have different behaviors. So
+you may end up with a unique attribute metaclass for B<every single attribute>,
+with a lot of code copying and pasting.
+
+Or, if you've been drinking deeply of the Moose kool-aid, you'll have a role
+for each of the behaviors. One role would give a label meta-attribute. Another
+role would signify that this attribute is not directly modifiable via the
+REST interface. Another role would write to a logfile when this attribute
+was read.
+
+Unfortunately, you'd still be left with a bunch of attribute metaclasses that
+do nothing but compose a bunch of roles. If only there were some way to specify
+in L<Moose/has> a list of roles to apply to the attribute metaclass...
+
+=head1 TRAITS
+
+Roles that apply to metaclasses have a special name: traits. Don't let the
+change in nomenclature fool you, B<traits are just roles>.
+
+L<Moose/has> provides a C<traits> option. It takes a list of trait names to
+compose into an anonymous metaclass. So you do still have a bunch of attribute
+metaclasses that do nothing but compose a bunch of roles, but they're managed
+automatically by Moose. You don't need to declare them in advance, or worry
+whether changing one will affect some other attribute.
+
+What can traits do? Anything roles can do. They can add or refine attributes,
+wrap methods, provide more methods, define an interface, etc. The only
+difference is that you're now changing the attribute metaclass instead of a
+user-level class.
+
+=head1 DISSECTION
+
+A side-by-side look of the code examples in this recipe and recipe 21 should
+indicate that defining and using a trait is very similar to defining and using
+a new attribute metaclass. Only a few lines have changed.
+
+    package MyApp::Meta::Attribute::Trait::Labeled;
+    use Moose::Role;
+
+    has label => (
+        is        => 'rw',
+        isa       => 'Str',
+        predicate => 'has_label',
+    );
+
+Instead of subclassing L<Moose::Meta::Attribute>, we define a role. Traits
+don't need any special methods or attributes. You just focus on whatever it is
+you actually need to get done. Here we're adding a new meta-attribute for use
+in our application.
+
+    package Moose::Meta::Attribute::Custom::Trait::Labeled;
+    sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
+
+Much like when we define a new attribute metaclass, we can provide a shortcut
+name for the trait. Moose looks at the C<register_implementation> method in
+C<Moose::Meta::Attribute::Custom::Trait::$TRAIT_NAME> to find the full
+name of the trait.
+
+Now we begin writing our application logic. I'll only cover what has changed
+between recipe 21 and this.
+
+    has url => (
+        traits => [qw/Labeled/],
+        isa    => 'Str',
+        is     => 'rw',
+        label  => "The site's URL",
+    );
+
+L<Moose/has> provides a C<traits> option. Just pass the list of trait names and
+it will compose them together to form the (anonymous) attribute metaclass used
+by this attribute.
+
+            # print the label if available
+            if ($attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
+                && $attribute->has_label) {
+                    print $attribute->label;
+            }
+
+Previously, this asked the question "Does this attribute use our attribute
+metaclass?" But since we're now using a trait, we ask "Does this attribute's
+metaclass do the C<Labeled> role?" If not, it won't have the C<has_label>
+method, and so it would be an error to blindly call
+C<< $attribute->has_label >>.
+
+That's all. Everything else is the same!
+
+=head1 CONCLUSION
+
+If you're extending your attributes, it's easier and more flexible to provide
+composable bits of behavior, rather than subclassing L<Moose::Meta::Attribute>.
+Using traits (which are just roles applied to a metaclass!) let you choose
+exactly which behaviors each attribute will have. Moose makes it easy to create
+attribute metaclasses on the fly by providing a list of trait names to
+L<Moose/has>.
+
+=head1 AUTHOR
+
+Shawn M Moore E<lt>sartak@gmail.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+
