@@ -78,6 +78,7 @@ t/000_recipes/005_recipe.t
 t/000_recipes/006_recipe.t
 t/000_recipes/007_recipe.t
 t/000_recipes/011_recipe.t
+t/000_recipes/022_recipe.t
 t/010_basics/001_basic_class_setup.t
 t/010_basics/002_require_superclasses.t
 t/010_basics/003_super_and_override.t
