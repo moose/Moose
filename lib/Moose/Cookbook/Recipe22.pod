@@ -159,6 +159,27 @@ C<< $attribute->has_label >>.
 
 That's all. Everything else is the same!
 
+=head1 METACLASS + TRAIT
+
+"But wait!" you protest. "I've already written all of my extensions as
+attribute metaclasses. I don't want to break all that code out there."
+
+All is not lost. If you rewrite your extension as a trait, then you can
+easily get a regular metaclass extension out of it. You just compose the trait
+in the attribute metaclass, as normal.
+
+    package MyApp::Meta::Attribute::Labeled;
+    use Moose;
+    extends 'Moose::Meta::Attribute';
+    with 'MyApp::Meta::Attribute::Trait::Labeled';
+
+    package Moose::Meta::Attribute::Custom::Labeled;
+    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+
+Unfortunately, going the other way (providing a trait created from a metaclass)
+is more tricky. Thus, defining your extensions as traits is just plain better
+than defining them as subclassed metaclasses.
+
 =head1 CONCLUSION
 
 If you're extending your attributes, it's easier and more flexible to provide
