@@ -310,8 +310,17 @@ sub get_method_map {
             next unless $self->does_role($role);
         }
         else {
-            next if ($pkg  || '') ne $role_name ||
-                    (($name || '') ne '__ANON__' && ($pkg  || '') ne $role_name);
+            # NOTE:
+            # in 5.10 constant.pm the constants show up 
+            # as being in the right package, but in pre-5.10
+            # they show up as constant::__ANON__ so we 
+            # make an exception here to be sure that things
+            # work as expected in both.
+            # - SL
+            unless ($pkg eq 'constant' && $name eq '__ANON__') {
+                next if ($pkg  || '') ne $role_name ||
+                        (($name || '') ne '__ANON__' && ($pkg  || '') ne $role_name);
+            }            
         }
         
         $map->{$symbol} = $method_metaclass->wrap(
