@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.45
+0.45 Saturday, May 24, 2008
     * Moose
       - Because of work in Class::MOP 0.56, all 
         XS based functionality is now optional
