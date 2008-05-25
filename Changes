@@ -19,7 +19,19 @@ Revision history for Perl extension Moose
         - NOTE: this only works for classes, it 
           is currently not supported in roles, 
           but, ... patches welcome
-    
+      - All usage of Carp::confess have been replaced
+        by Carp::croak in the "keyword" functions since
+        the stack trace is usually not helpful
+      
+    * Moose::Role
+      - All usage of Carp::confess have been replaced
+        by Carp::croak in the "keyword" functions since
+        the stack trace is usually not helpful  
+      - The 'has' keyword for roles now accepts the 
+        same array ref form that Moose.pm does 
+        (has [qw/foo bar/] => (is => 'rw', ...))
+        - added test for this
+      
     * Moose::Meta::Attribute
       - trigger on a ro-attribute is no longer an
         error, as it's useful to trigger off of the
@@ -51,9 +63,15 @@ Revision history for Perl extension Moose
         (if possible) to create the anon-class
         (thanks Jonathan Rockway)
     
+    * Moose::Cookbook::Recipe22
+      - added the meta-attribute trait recipe
+        (thanks to Sartak)
+    
     * t/
       - fixed hash-ordering test bug that was 
-        causing occasional cpantester failures 
+        causing occasional cpantester failures
+      - renamed the t/000_recipe/*.t tests to be 
+        more descriptive (thanks to Sartak) 
 
 0.44 Sat. May 10, 2008
     * Moose
