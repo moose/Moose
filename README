@@ -1,4 +1,4 @@
-Moose version 0.44
+Moose version 0.46
 ===========================
 
 See the individual module documentation for more information
@@ -20,7 +20,6 @@ This module requires these other modules and libraries:
 	Scalar::Util
 	Carp
 	Sub::Exporter
-	B
 
 COPYRIGHT AND LICENCE
 

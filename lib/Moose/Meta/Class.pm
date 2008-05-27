@@ -4,12 +4,12 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
-use Class::MOP 0.56;
+use Class::MOP;
 
 use Carp         'confess';
 use Scalar::Util 'weaken', 'blessed', 'reftype';
 
-our $VERSION   = '0.22';
+our $VERSION   = '0.23';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -177,9 +177,10 @@ sub get_method_map {
     my $class_name       = $self->name;
     my $method_metaclass = $self->method_metaclass;
 
-    foreach my $symbol ($self->list_all_package_symbols('CODE')) {
+    my %all_code = $self->get_all_package_symbols('CODE');
 
-        my $code = $self->get_package_symbol('&' . $symbol);
+    foreach my $symbol (keys %all_code) {
+        my $code = $all_code{$symbol};
 
         next if exists  $map->{$symbol} &&
                 defined $map->{$symbol} &&

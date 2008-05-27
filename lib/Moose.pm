@@ -4,7 +4,7 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.45';
+our $VERSION   = '0.46';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed', 'reftype';
@@ -12,7 +12,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Sub::Exporter;
 
-use Class::MOP 0.56;
+use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;

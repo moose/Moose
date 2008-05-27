@@ -3,7 +3,7 @@ package oose;
 use strict;
 use warnings;
 
-use Class::MOP 0.56;
+use Class::MOP;
 
 our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';

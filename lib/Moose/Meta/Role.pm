@@ -8,7 +8,7 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype';
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -290,9 +290,10 @@ sub get_method_map {
     my $role_name        = $self->name;
     my $method_metaclass = $self->method_metaclass;
 
-    foreach my $symbol ($self->list_all_package_symbols('CODE')) {
+    my %all_code = $self->get_all_package_symbols('CODE');
 
-        my $code = $self->get_package_symbol('&' . $symbol);
+    foreach my $symbol (keys %all_code) {
+        my $code = $all_code{$symbol};
 
         my ($pkg, $name) = Class::MOP::get_code_info($code);
 
