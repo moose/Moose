@@ -6,6 +6,12 @@ Revision history for Perl extension Moose
       - now use the get_all_package_symbols from the 
         updated Class::MOP, test suite is now 10 seconds 
         faster
+    
+    * Moose::Meta::Method::Destructor
+      Moose::Meta::Method::Constructor
+      - added more descriptive error message to help 
+        keep people from wasting time tracking an error
+        that is easily fixed by upgrading.
 
 0.45 Saturday, May 24, 2008
     * Moose

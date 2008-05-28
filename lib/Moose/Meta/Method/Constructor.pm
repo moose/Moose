@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.10';
+our $VERSION   = '0.11';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -21,7 +21,7 @@ sub new {
         || confess "You must pass a hash of options";
 
     ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters";
+        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
 
     my $self = bless {
         # from our superclass
