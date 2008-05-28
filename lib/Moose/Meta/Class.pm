@@ -25,11 +25,13 @@ __PACKAGE__->meta->add_attribute('roles' => (
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
-    $class->SUPER::initialize($pkg,
-        'attribute_metaclass' => 'Moose::Meta::Attribute',
-        'method_metaclass'    => 'Moose::Meta::Method',
-        'instance_metaclass'  => 'Moose::Meta::Instance',
-        @_);
+    return Class::MOP::get_metaclass_by_name($pkg) 
+        || $class->SUPER::initialize($pkg,
+                'attribute_metaclass' => 'Moose::Meta::Attribute',
+                'method_metaclass'    => 'Moose::Meta::Method',
+                'instance_metaclass'  => 'Moose::Meta::Instance',
+                @_
+            );    
 }
 
 sub create {
