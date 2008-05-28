@@ -1,11 +1,24 @@
 Revision history for Perl extension Moose
 
-0.46
+0.46 Wed. May 28, 2008
+    !! This version now approx. 20-25% !!
+    !! faster with new Class::MOP 0.57 !!
+
+    * Moose::Meta::Class
+      - some optimizations of the &initialize method
+        since it is called so often by &meta    
+        
     * Moose::Meta::Class
       Moose::Meta::Role
       - now use the get_all_package_symbols from the 
         updated Class::MOP, test suite is now 10 seconds 
         faster
+    
+    * Moose::Meta::Method::Destructor
+      - is_needed can now also be called as a class 
+        method for immutablization to check if the 
+        destructor object even needs to be created 
+        at all
     
     * Moose::Meta::Method::Destructor
       Moose::Meta::Method::Constructor
