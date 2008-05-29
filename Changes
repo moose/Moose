@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.47 Thurs. May 29, 2008
+    (late night release engineering)--
+
+    - fixing the version is META.yml, no functional 
+      changes in this release
+
 0.46 Wed. May 28, 2008
     !! This version now approx. 20-25% !!
     !! faster with new Class::MOP 0.57 !!
