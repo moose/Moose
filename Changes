@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.48 Thurs. May 29, 2008
+    (early morning release engineering)--
+
+    - fixing the version in Moose::Meta::Method::Destructor
+      which was causing the indexer to choke
+
 0.47 Thurs. May 29, 2008
     (late night release engineering)--
 
