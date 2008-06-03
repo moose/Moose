@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 57;
+use Test::More tests => 58;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
@@ -113,9 +113,11 @@ BEGIN {
     } '... foo_required wrote successfully';
     is($foo->foo_required(), 100, '... got the correct set value');    
     
-    dies_ok {
+    lives_ok {
         $foo->foo_required(undef);
-    } '... foo_required died successfully';    
+    } '... foo_required did not die with undef';    
+
+    is($foo->foo_required, undef, "value is undef");
 
     ok(!isweak($foo->{foo_required}), '... it is not a weak reference'); 
     

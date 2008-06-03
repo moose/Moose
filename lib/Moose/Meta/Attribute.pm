@@ -390,13 +390,13 @@ sub _set_initial_slot_value {
 }
 
 sub set_value {
-    my ($self, $instance, $value) = @_;
+    my ($self, $instance, @args) = @_;
+    my $value = $args[0];
 
     my $attr_name = $self->name;
 
-    if ($self->is_required) {
-        defined($value)
-            || confess "Attribute ($attr_name) is required, so cannot be set to undef";
+    if ($self->is_required and not @args) {
+        confess "Attribute ($attr_name) is required";
     }
 
     if ($self->has_type_constraint) {

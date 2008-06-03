@@ -145,7 +145,7 @@ sub _inline_check_required {
     my $attr_name = $attr->name;
     
     return '' unless $attr->is_required;
-    return qq{defined(\$_[1]) || confess "Attribute ($attr_name) is required, so cannot be set to undef";}
+    return qq{(\@_ >= 2) || confess "Attribute ($attr_name) is required, so cannot be set to undef";} # defined $_[1] is not good enough
 }
 
 sub _inline_check_lazy {
