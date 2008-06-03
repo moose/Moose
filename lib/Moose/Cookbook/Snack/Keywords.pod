@@ -1,0 +1,132 @@
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Snack::Keywords - Restricted keywords in Moose 
+
+=cut
+
+=head1 DESCRIPTION
+
+There are several keywords exported in L<Moose> that cause clashes against 
+any barewords such as attribute names, sub names, and globs. 
+
+
+=head2 The 'meta' keyword
+
+While most of the reserved keywords collisions can be avoided, however 
+I<meta> is the only one you B<cant> override. Do not attempt to override
+I<meta>.
+
+=head2 Moose Keywords 
+
+If you are using Moose its best to avoid these keywords
+
+=over 4
+
+=item extends 
+
+=item with 
+
+=item has 
+
+=item before 
+
+=item after 
+
+=item around 
+
+=item super 
+
+=item override 
+
+=item inner 
+
+=item augment 
+
+=item make_immutable 
+
+=item confess 
+
+=item blessed 
+
+=back
+
+=head2 Moose::Util::TypeConstraints Keywords 
+
+If you are using Moose::Util::TypeConstraints its best to avoid 
+these keywords 
+
+=over 4
+
+=item type 
+
+=item subtype 
+
+=item class_type 
+
+=item role_type 
+
+=item as 
+
+=item where 
+
+=item message 
+
+=item optimize_as
+
+=item coerce 
+
+=item from 
+
+=item via
+
+=item enum
+
+=item find_type_constraint
+
+=item register_type_constraint
+
+=back
+
+=head2 Avoiding collisions
+ 
+=head3 Turning off Moose
+
+To remove the keywords Moose exports using no Moose at the bottom of your code
+
+ package Thing;
+ use Moose;
+
+ # code here
+
+ no Moose;
+
+=head3  Sub::Exporter
+
+The L<Sub::Exporter> module can rename keywords 
+
+ package LOL::Cat;
+ use Moose 'has' => { -as => 'i_can_haz' };
+
+ i_can_haz 'cheeseburger' => (
+    is      => 'rw',
+    trigger => sub { print "NOM NOM" }
+ );
+
+ LOL::Cat->new->cheeseburger('KTHNXBYE');;
+
+=head3 namespace::clean
+
+You can use L<namespace::clean> to clean up the namespace
+
+=head1 AUTHOR AND COPYRIGHT
+
+John Goulah C<E<lt>jgoulah@cpan.org<gt>>
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as perl itself.
+
+=cut
