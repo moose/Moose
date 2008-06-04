@@ -4,11 +4,11 @@ package Moose::Meta::Attribute;
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed', 'weaken', 'reftype';
+use Scalar::Util 'blessed', 'weaken';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.24';
+our $VERSION   = '0.26';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -207,11 +207,28 @@ sub _process_options {
     my ($class, $name, $options) = @_;
 
     if (exists $options->{is}) {
+
+=pod
+
+is => ro, writer => _foo    # turns into (reader => foo, writer => _foo) as before
+is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
+is => rw, accessor => _foo  # turns into (accessor => _foo)
+is => ro, accessor => _foo  # error, accesor is rw
+
+=cut        
+        
         if ($options->{is} eq 'ro') {
+            confess "Cannot define an accessor name on a read-only attribute, accessors are read/write"
+                if exists $options->{accessor};
             $options->{reader} ||= $name;
         }
         elsif ($options->{is} eq 'rw') {
-            $options->{accessor} = $name;
+            if ($options->{writer}) {
+                $options->{reader} ||= $name;
+            }
+            else {
+                $options->{accessor} ||= $name;
+            }
         }
         else {
             confess "I do not understand this option (is => " . $options->{is} . ") on attribute $name"
@@ -255,7 +272,7 @@ sub _process_options {
     }
 
     if (exists $options->{trigger}) {
-        (reftype($options->{trigger}) || '') eq 'CODE'
+        ('CODE' eq ref $options->{trigger})
             || confess "Trigger must be a CODE ref";
     }
 
@@ -522,7 +539,7 @@ sub install_accessors {
             #cluck("Not delegating method '$handle' because it is a core method") and
             next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
-            if ((reftype($method_to_call) || '') eq 'CODE') {
+            if ('CODE' eq ref($method_to_call)) {
                 $associated_class->add_method($handle => Class::MOP::subname($name, $method_to_call));
             }
             else {
@@ -628,6 +645,9 @@ sub _get_delegate_method_list {
         confess "Unable to recognize the delegate metaclass '$meta'";
     }
 }
+
+package Moose::Meta::Attribute::Custom::Moose;
+sub register_implementation { 'Moose::Meta::Attribute' }
 
 1;
 

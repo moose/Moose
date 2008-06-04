@@ -6,9 +6,9 @@ use warnings;
 use metaclass;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'reftype';
+use Scalar::Util 'blessed';
 
-our $VERSION   = '0.14';
+our $VERSION   = '0.15';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -357,7 +357,7 @@ sub alias_method {
         || confess "You must define a method name";
 
     my $body = (blessed($method) ? $method->body : $method);
-    ('CODE' eq (reftype($body) || ''))
+    ('CODE' eq ref($body))
         || confess "Your code block must be a CODE reference";
 
     $self->add_package_symbol("&${method_name}" => $body);

@@ -7,9 +7,9 @@ use warnings;
 use Class::MOP;
 
 use Carp         'confess';
-use Scalar::Util 'weaken', 'blessed', 'reftype';
+use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.23';
+our $VERSION   = '0.24';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;

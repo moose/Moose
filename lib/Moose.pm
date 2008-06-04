@@ -4,10 +4,10 @@ package Moose;
 use strict;
 use warnings;
 
-our $VERSION   = '0.48';
+our $VERSION   = '0.49';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Scalar::Util 'blessed', 'reftype';
+use Scalar::Util 'blessed';
 use Carp         'confess', 'croak', 'cluck';
 
 use Sub::Exporter;

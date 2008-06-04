@@ -5,10 +5,10 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'reftype';
+use Scalar::Util 'blessed';
 use Sub::Exporter;
 
-our $VERSION   = '0.23';
+our $VERSION   = '0.24';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -290,7 +290,7 @@ sub subtype ($$;$$$) {
     #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
     # ... yeah I know it's ugly code
     # - SL
-    unshift @_ => undef if scalar @_ <= 2 && (reftype($_[1]) || '') eq 'CODE';
+    unshift @_ => undef if scalar @_ <= 2 && ('CODE' eq ref($_[1]));
     goto &_create_type_constraint;
 }
 

@@ -1,5 +1,23 @@
 Revision history for Perl extension Moose
 
+0.49
+    * Moose::Meta::Attribute
+      - fixed how the is => (ro|rw) works with 
+        custom defined reader, writer and accessor
+        options. 
+        - added docs for this (TODO).
+        - added tests for this (Thanks to Penfold)
+      - added the custom attribute alias for regular
+        Moose attributes which is "Moose"
+
+    * Moose
+      Moose::Meta::Class
+      Moose::Meta::Attribute
+      Moose::Meta::Role
+      Moose::Meta::Role::Composite
+      Moose::Util::TypeConstraints
+      - 
+
 0.48 Thurs. May 29, 2008
     (early morning release engineering)--
 
