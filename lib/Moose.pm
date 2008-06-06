@@ -188,11 +188,11 @@ use Moose::Util ();
     sub _get_caller{
         my $offset = 1;
         return
-            ref $_[1] && defined $_[1]->{into}
-            ? $_[1]->{into}
-            : ref $_[1] && defined $_[1]->{into_level}
-            ? caller($offset + $_[1]->{into_level})
-            : caller($offset);
+            (ref $_[1] && defined $_[1]->{into})
+                ? $_[1]->{into}
+                : (ref $_[1] && defined $_[1]->{into_level})
+                    ? caller($offset + $_[1]->{into_level})
+                    : caller($offset);
     }
 
     sub import {
@@ -212,6 +212,21 @@ use Moose::Util ();
         init_meta( $CALLER, 'Moose::Object' );
 
         goto $exporter;
+    }
+    
+    # NOTE:
+    # This is for special use by 
+    # some modules and stuff, I 
+    # dont know if it is sane enough
+    # to document actually.
+    # - SL
+    sub __CURRY_EXPORTS_FOR_CLASS__ {
+        $CALLER = shift;
+        ($CALLER ne 'Moose')
+            || croak "_import_into must be called a function, not a method";
+        ($CALLER->can('meta') && $CALLER->meta->isa('Class::MOP::Class'))
+            || croak "Cannot call _import_into on a package ($CALLER) without a metaclass";        
+        return map { $_ => $exports{$_}->() } (@_ ? @_ : keys %exports);
     }
 
     sub unimport {
