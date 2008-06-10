@@ -16,7 +16,13 @@ Revision history for Perl extension Moose
       Moose::Meta::Role
       Moose::Meta::Role::Composite
       Moose::Util::TypeConstraints
-      - 
+      - switched usage of reftype to ref because 
+        it is much faster
+        
+    * Moose::Object
+      - fixed how DEMOLISHALL is called so that it 
+        can be overrided in subclasses (thanks to Sartak)
+        - added test for this (thanks to Sartak)
 
 0.48 Thurs. May 29, 2008
     (early morning release engineering)--

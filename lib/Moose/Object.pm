@@ -9,7 +9,7 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.13';
+our $VERSION   = '0.14';
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
@@ -63,7 +63,7 @@ sub DESTROY {
         return;
     }
     # otherwise it is normal destruction
-    goto &DEMOLISHALL;
+    $_[0]->DEMOLISHALL;
 }
 
 # new does() methods will be created 
