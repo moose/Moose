@@ -558,38 +558,12 @@ subtype 'Role'
     => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
 my $_class_name_checker = sub {
-    return if ref($_[0]);
-    return unless defined($_[0]) && length($_[0]);
-
-    # walk the symbol table tree to avoid autovififying
-    # \*{${main::}{"Foo::"}} == \*main::Foo::
-
-    my $pack = \*::;
-    foreach my $part (split('::', $_[0])) {
-        return unless exists ${$$pack}{"${part}::"};
-        $pack = \*{${$$pack}{"${part}::"}};
-    }
-
-    # check for $VERSION or @ISA
-    return 1 if exists ${$$pack}{VERSION}
-             && defined *{${$$pack}{VERSION}}{SCALAR};
-    return 1 if exists ${$$pack}{ISA}
-             && defined *{${$$pack}{ISA}}{ARRAY};
-
-    # check for any method
-    foreach ( keys %{$$pack} ) {
-        next if substr($_, -2, 2) eq '::';
-        return 1 if defined *{${$$pack}{$_}}{CODE};
-    }
-
-    # fail
-    return;
 };
 
 subtype 'ClassName'
     => as 'Str'
-    => $_class_name_checker # where ...
-    => { optimize => $_class_name_checker };
+    => where { Class::MOP::is_class_loaded($_) }
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
 
 ## --------------------------------------------------------
 # parameterizable types ...

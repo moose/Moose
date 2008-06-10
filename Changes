@@ -28,6 +28,10 @@ Revision history for Perl extension Moose
         can be overrided in subclasses (thanks to Sartak)
         - added test for this (thanks to Sartak)
 
+    * Moose::Util::TypeConstraints
+      - move the ClassName type check code to
+        Class::MOP::is_class_loaded (thanks to Sartak)
+
 0.48 Thurs. May 29, 2008
     (early morning release engineering)--
 
