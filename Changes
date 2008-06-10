@@ -19,6 +19,10 @@ Revision history for Perl extension Moose
       - switched usage of reftype to ref because 
         it is much faster
         
+    * Moose::Meta::Role
+      - changing add_package_symbol to use the new
+        HASH ref form
+    
     * Moose::Object
       - fixed how DEMOLISHALL is called so that it 
         can be overrided in subclasses (thanks to Sartak)

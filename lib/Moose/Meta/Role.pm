@@ -8,7 +8,7 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.15';
+our $VERSION   = '0.16';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -360,7 +360,10 @@ sub alias_method {
     ('CODE' eq ref($body))
         || confess "Your code block must be a CODE reference";
 
-    $self->add_package_symbol("&${method_name}" => $body);
+    $self->add_package_symbol(
+        { sigil => '&', type => 'CODE', name => $method_name },
+        $body
+    );
 }
 
 ## ------------------------------------------------------------------
