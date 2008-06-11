@@ -1,22 +1,21 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 5;
 
-our ($class_demolish, $child_demolish) = (0, 0);
-our ($class_demolishall, $child_demolishall) = (0, 0);
+my @called;
 
 do {
     package Class;
     use Moose;
 
     sub DEMOLISH {
-        ++$::class_demolish;
+        push @called, 'Class::DEMOLISH';
     }
 
     sub DEMOLISHALL {
         my $self = shift;
-        ++$::class_demolishall;
+        push @called, 'Class::DEMOLISHALL';
         $self->SUPER::DEMOLISHALL(@_);
     }
 
@@ -25,50 +24,31 @@ do {
     extends 'Class';
 
     sub DEMOLISH {
-        ++$::child_demolish;
+        push @called, 'Child::DEMOLISH';
     }
 
     sub DEMOLISHALL {
         my $self = shift;
-        ++$::child_demolishall;
+        push @called, 'Child::DEMOLISHALL';
         $self->SUPER::DEMOLISHALL(@_);
     }
 };
 
-is($class_demolish, 0, "no calls to Class->DEMOLISH");
-is($child_demolish, 0, "no calls to Child->DEMOLISH");
-
-is($class_demolishall, 0, "no calls to Class->DEMOLISHALL");
-is($child_demolishall, 0, "no calls to Child->DEMOLISHALL");
+is_deeply([splice @called], [], "no DEMOLISH calls yet");
 
 do {
     my $object = Class->new;
 
-    is($class_demolish, 0, "Class->new does not call Class->DEMOLISH");
-    is($child_demolish, 0, "Class->new does not call Child->DEMOLISH");
-
-    is($class_demolishall, 0, "Class->new does not call Class->DEMOLISHALL");
-    is($child_demolishall, 0, "Class->new does not call Child->DEMOLISHALL");
+    is_deeply([splice @called], [], "no DEMOLISH calls yet");
 };
 
-is($class_demolish, 1, "Class->DESTROY calls Class->DEMOLISH");
-is($child_demolish, 0, "Class->DESTROY does not call Child->DEMOLISH");
-
-is($class_demolishall, 1, "Class->DESTROY calls Class->DEMOLISHALL");
-is($child_demolishall, 0, "no calls to Child->DEMOLISHALL");
+is_deeply([splice @called], ['Class::DEMOLISHALL', 'Class::DEMOLISH']);
 
 do {
     my $child = Child->new;
+    is_deeply([splice @called], [], "no DEMOLISH calls yet");
 
-    is($class_demolish, 1, "Child->new does not call Class->DEMOLISH");
-    is($child_demolish, 0, "Child->new does not call Child->DEMOLISH");
-
-    is($class_demolishall, 1, "Child->DEMOLISHALL does not call Class->DEMOLISHALL (but not Child->new)");
-    is($child_demolishall, 0, "Child->new does not call Child->DEMOLISHALL");
 };
 
-is($child_demolish, 1, "Child->DESTROY calls Child->DEMOLISH");
-is($class_demolish, 2, "Child->DESTROY also calls Class->DEMOLISH");
+is_deeply([splice @called], ['Child::DEMOLISHALL', 'Class::DEMOLISHALL', 'Child::DEMOLISH', 'Class::DEMOLISH']);
 
-is($child_demolishall, 1, "Child->DESTROY calls Child->DEMOLISHALL");
-is($class_demolishall, 2, "Child->DEMOLISHALL calls Class->DEMOLISHALL (but not Child->DESTROY)");
