@@ -452,11 +452,10 @@ sub get_value {
             if ($self->has_default) {
                 my $default = $self->default($instance);
                 $self->set_initial_value($instance, $default);
-            }
-            if ( $self->has_builder ){
+            } elsif ( $self->has_builder ) {
                 if (my $builder = $instance->can($self->builder)){
                     $self->set_initial_value($instance, $instance->$builder);
-                } 
+                }
                 else {
                     confess(blessed($instance) 
                           . " does not support builder method '"
