@@ -26,6 +26,11 @@ lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Cookbook/Recipe6.pod
 lib/Moose/Cookbook/Recipe7.pod
 lib/Moose/Cookbook/Recipe9.pod
+lib/Moose/Cookbook/Snack/ArrayRef.pod
+lib/Moose/Cookbook/Snack/BUILD.pod
+lib/Moose/Cookbook/Snack/HashRef.pod
+lib/Moose/Cookbook/Snack/Keywords.pod
+lib/Moose/Cookbook/Snack/Perl5ObjsVsMooseObjs.pod
 lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
@@ -77,6 +82,7 @@ t/000_recipes/004_company.t
 t/000_recipes/005_coercion.t
 t/000_recipes/006_augment_inner.t
 t/000_recipes/010_roles.t
+t/000_recipes/011_advanced_role_composition.t
 t/000_recipes/021_meta_attribute.t
 t/000_recipes/022_attribute_trait.t
 t/010_basics/001_basic_class_setup.t
@@ -113,6 +119,7 @@ t/020_attributes/017_attribute_traits_n_meta.t
 t/020_attributes/018_no_init_arg.t
 t/020_attributes/019_attribute_lazy_initializer.t
 t/020_attributes/020_trigger_and_coerce.t
+t/020_attributes/021_method_generation_rules.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t
@@ -184,6 +191,8 @@ t/100_bugs/009_augment_recursion_bug.t
 t/100_bugs/010_immutable_n_default_x2.t
 t/100_bugs/011_DEMOLISH_eats_exceptions.t
 t/100_bugs/012_DEMOLISH_eats_mini.t
+t/100_bugs/013_lazybuild_required_undef.t
+t/100_bugs/014_DEMOLISHALL.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t
