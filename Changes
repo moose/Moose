@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.49
+0.49 Thurs. Jun 11, 2008
     * Moose::Meta::Attribute
       - fixed how the is => (ro|rw) works with 
         custom defined reader, writer and accessor
