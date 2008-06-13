@@ -9,6 +9,8 @@ Revision history for Perl extension Moose
         - added tests for this (Thanks to Penfold)
       - added the custom attribute alias for regular
         Moose attributes which is "Moose"
+      - fix builder and default both being used
+        (groditi)
 
     * Moose
       Moose::Meta::Class
@@ -31,6 +33,9 @@ Revision history for Perl extension Moose
     * Moose::Util::TypeConstraints
       - move the ClassName type check code to
         Class::MOP::is_class_loaded (thanks to Sartak)
+
+    * Moose::Cookbook::Recipe11
+      - add tests for this (thanks to tokuhirom)
 
 0.48 Thurs. May 29, 2008
     (early morning release engineering)--
