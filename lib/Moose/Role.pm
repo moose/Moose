@@ -10,7 +10,7 @@ use Carp         'confess', 'croak';
 use Data::OptList;
 use Sub::Exporter;
 
-our $VERSION   = '0.09';
+our $VERSION   = '0.50';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose       ();

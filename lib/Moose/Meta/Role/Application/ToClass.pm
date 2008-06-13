@@ -9,7 +9,7 @@ use Scalar::Util    'blessed';
 
 use Data::Dumper;
 
-our $VERSION   = '0.01';
+our $VERSION   = '0.50';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';

@@ -1,6 +1,13 @@
 Revision history for Perl extension Moose
 
+0.50 Thurs. Jun 11, 2008
+    - Fixed a version number issue by bumping all modules
+      to 0.50.
+
 0.49 Thurs. Jun 11, 2008
+    !! This version now approx. 20-25% !!
+    !! faster with new Class::MOP 0.59 !!
+
     * Moose::Meta::Attribute
       - fixed how the is => (ro|rw) works with 
         custom defined reader, writer and accessor
