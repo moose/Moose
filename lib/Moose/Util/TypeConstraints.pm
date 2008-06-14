@@ -455,6 +455,8 @@ sub _install_type_coercions ($$) {
     my $valid_chars = qr{[\w:]};
     my $type_atom   = qr{ $valid_chars+ };
 
+    my $any;
+
     my $type                = qr{  $valid_chars+  (?: \[  (??{$any})  \] )? }x;
     my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ ((??{$any})) \] )? }x;
     my $type_with_parameter = qr{  $valid_chars+      \[  (??{$any})  \]    }x;
@@ -462,18 +464,21 @@ sub _install_type_coercions ($$) {
     my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
 
-    our $any = qr{ $type | $union }x;
+    $any = qr{ $type | $union }x;
 
     sub _parse_parameterized_type_constraint {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
         $_[0] =~ m{ $type_capture_parts }x;
         return ($1, $2);
     }
 
     sub _detect_parameterized_type_constraint {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
         $_[0] =~ m{ ^ $type_with_parameter $ }x;
     }
 
     sub _parse_type_constraint_union {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
         my $given = shift;
         my @rv;
         while ( $given =~ m{ \G (?: $op_union )? ($type) }gcx ) {
@@ -489,6 +494,7 @@ sub _install_type_coercions ($$) {
     }
 
     sub _detect_type_constraint_union {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
         $_[0] =~ m{^ $type $op_union $type ( $op_union .* )? $}x;
     }
 }
