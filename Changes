@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+0.51
+    * Moose::Role
+      - add unimport so "no Moose::Role" actually does something
+
 0.50 Thurs. Jun 11, 2008
     - Fixed a version number issue by bumping all modules
       to 0.50.
