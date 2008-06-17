@@ -49,7 +49,7 @@ use Moose::Util::TypeConstraints;
         extends => sub {
             my $meta = _find_meta();
             return Class::MOP::subname('Moose::Role::extends' => sub {
-                croak "Moose::Role does not currently support 'extends'"
+                croak "Roles do not currently support 'extends'"
             });
         },
         with => sub {
