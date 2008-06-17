@@ -61,6 +61,16 @@
     around method => sub { shift->() . "A" };
     after  method => sub { "Z" };
 }
+{
+    package CMM::Install;
+    use Class::Method::Modifiers;
+    use base 'PlainParent';
+}
+{
+    package Moose::Install;
+    use Moose;
+    extends 'MooseParent';
+}
 
 use Benchmark qw(cmpthese);
 use Benchmark ':hireswallclock';
@@ -91,5 +101,17 @@ print "\nALL THREE\n";
 cmpthese($rounds, {
     Moose                       => sub { $moose_allthree->method() },
     ClassMethodModifiers        => sub { $cmm_allthree->method() },
+}, 'noc');
+
+print "\nINSTALL AROUND\n";
+cmpthese($rounds, {
+    Moose                       => sub {
+        package Moose::Install;
+        Moose::Install::around(method => sub {});
+    },
+    ClassMethodModifiers        => sub {
+        package CMM::Install;
+        CMM::Install::around(method => sub {});
+    },
 }, 'noc');
 
