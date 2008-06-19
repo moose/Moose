@@ -12,7 +12,7 @@ Moose::Cookbook::Recipe11 - Advanced Role Composition - method exclusion and ali
 
   has 'is_paused' => (
       is      => 'rw',
-      isa     => 'Boo',
+      isa     => 'Bool',
       default => 0,
   );
 
