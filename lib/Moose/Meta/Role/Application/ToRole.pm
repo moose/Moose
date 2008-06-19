@@ -70,6 +70,27 @@ sub apply_methods {
     foreach my $method_name ($role1->get_method_list) {
         
         next if $self->is_method_excluded($method_name);        
+
+        if ($self->is_method_aliased($method_name)) {
+            my $aliased_method_name = $self->get_method_aliases->{$method_name};
+            # it if it has one already
+            if ($role2->has_method($aliased_method_name) &&
+                # and if they are not the same thing ...
+                $role2->get_method($aliased_method_name)->body != $role1->get_method($method_name)->body) {
+                confess "Cannot create a method alias if a local method of the same name exists";
+            }
+
+            $role2->alias_method(
+                $aliased_method_name,
+                $role1->get_method($method_name)
+            );
+
+            if (!$role2->has_method($method_name)) {
+                $role2->add_required_methods($method_name);
+            }
+
+            next;
+        }        
         
         # it if it has one already
         if ($role2->has_method($method_name) &&
@@ -88,19 +109,6 @@ sub apply_methods {
                         
         }
         
-        if ($self->is_method_aliased($method_name)) {
-            my $aliased_method_name = $self->get_method_aliases->{$method_name};
-            # it if it has one already
-            if ($role2->has_method($aliased_method_name) &&
-                # and if they are not the same thing ...
-                $role2->get_method($aliased_method_name)->body != $role1->get_method($method_name)->body) {
-                confess "Cannot create a method alias if a local method of the same name exists";
-            }
-            $role2->alias_method(
-                $aliased_method_name,
-                $role1->get_method($method_name)
-            );
-        }        
     }
 }
 

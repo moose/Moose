@@ -3,6 +3,15 @@ Revision history for Perl extension Moose
 0.51
     * Moose::Role
       - add unimport so "no Moose::Role" actually does something
+    * Moose::Meta::Role::Application::ToRole
+      - when RoleA did RoleB, and RoleA aliased a method from RoleB in
+        order to provide its own implementation, that method still got
+        added to the list of required methods for consumers of
+        RoleB. Now an aliased method is only added to the list of
+        required methods if the role doing the aliasing does not
+        provide its own implementation. See Recipe 11 for an example
+        of all this. (thanks Dave Rolsky)
+        - added tests for this
 
 0.50 Thurs. Jun 11, 2008
     - Fixed a version number issue by bumping all modules

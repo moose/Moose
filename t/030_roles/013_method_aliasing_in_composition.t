@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 31;
+use Test::More tests => 36;
 use Test::Exception;
 
 BEGIN {
@@ -60,8 +60,20 @@ ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar ro
 }
 
 ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
-ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is required');
+ok(!My::OtherRole->meta->requires_method('bar'), '... and the &bar method is not required');
 ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar method is not required');
+
+{
+    package My::AliasingRole;
+    use Moose::Role;
+
+    ::lives_ok {
+        with 'My::Role' => { alias => { bar => 'role_bar' } };
+    } '... this succeeds';
+}
+
+ok(My::AliasingRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
+ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is required');
 
 {
     package Foo::Role;

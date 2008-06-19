@@ -1,16 +1,16 @@
 use strict;
 use warnings;
-use Test::More skip_all => 'not working yet';
+use Test::More tests => 5;
 use Class::MOP;
 
-# follow is original code
+# This is copied directly from recipe 11
 {
     package Restartable;
     use Moose::Role;
 
     has 'is_paused' => (
         is      => 'rw',
-        isa     => 'Boo',
+        isa     => 'Bool',
         default => 0,
     );
 
@@ -64,8 +64,8 @@ use Class::MOP;
     }
 }
 
-# follow is test
-do {
+# This is the actual tests
+{
     my $unreliable = Moose::Meta::Class->create_anon_class(
         superclasses => [],
         roles        => [qw/Restartable::ButUnreliable/],
@@ -75,11 +75,11 @@ do {
             'load_state' => sub { },
         },
     )->new_object();
-    ok $unreliable, 'Restartable::ButUnreliable based class';
-    can_ok $unreliable, qw/start stop/, '... can call start and stop';
-};
+    ok $unreliable, 'made anon class with Restartable::ButUnreliable role';
+    can_ok $unreliable, qw/start stop/;
+}
 
-do {
+{
     my $cnt = 0;
     my $broken = Moose::Meta::Class->create_anon_class(
         superclasses => [],
@@ -90,9 +90,9 @@ do {
             'load_state' => sub { },
         },
     )->new_object();
-    ok $broken, 'Restartable::ButBroken based class';
+    ok $broken, 'made anon class with Restartable::ButBroken role';
     $broken->start();
-    is $cnt, 1, '... start is exploded';
+    is $cnt, 1, '... start called explode';
     $broken->stop();
-    is $cnt, 2, '... stop is also exploeded';
-};
+    is $cnt, 2, '... stop also called explode';
+}
