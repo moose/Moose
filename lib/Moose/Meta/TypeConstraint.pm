@@ -19,10 +19,12 @@ __PACKAGE__->meta->add_attribute('parent'     => (
     reader    => 'parent',
     predicate => 'has_parent',
 ));
+
+my $null_constraint = sub { 1 };
 __PACKAGE__->meta->add_attribute('constraint' => (
     reader  => 'constraint',
     writer  => '_set_constraint',
-    default => sub { sub { 1 } }
+    default => sub { $null_constraint }
 ));
 __PACKAGE__->meta->add_attribute('message'   => (
     accessor  => 'message',
@@ -173,37 +175,54 @@ sub _compile_hand_optimized_type_constraint {
 sub _compile_subtype {
     my ($self, $check) = @_;
 
-    # so we gather all the parents in order
-    # and grab their constraints ...
+    # gather all the parent constraintss in order
     my @parents;
+    my $optimized_parent;
     foreach my $parent ($self->_collect_all_parents) {
+        # if a parent is optimized, the optimized constraint already includes
+        # all of its parents tcs, so we can break the loop
         if ($parent->has_hand_optimized_type_constraint) {
-            unshift @parents => $parent->hand_optimized_type_constraint;
+            push @parents => $optimized_parent = $parent->hand_optimized_type_constraint;
             last;
         }
         else {
-            unshift @parents => $parent->constraint;
+            push @parents => $parent->constraint;
         }
     }
 
-    # then we compile them to run without
-    # having to recurse as we did before
-    return Class::MOP::subname($self->name => sub {
-        local $_ = $_[0];
-        foreach my $parent (@parents) {
-            return undef unless $parent->($_[0]);
-        }
-        return undef unless $check->($_[0]);
-        1;
-    });
+    @parents = grep { $_ != $null_constraint } reverse @parents;
+
+    unless ( @parents ) {
+        return $self->_compile_type($check);
+    } elsif( $optimized_parent and @parents == 1 ) {
+        # the case of just one optimized parent is optimized to prevent
+        # looping and the unnecessary localization
+        return Class::MOP::subname($self->name, sub {
+            return undef unless $optimized_parent->($_[0]);
+            local $_ = $_[0];
+            $check->($_[0]);
+        });
+    } else {
+        # general case, check all the constraints, from the first parent to ourselves
+        my @checks = ( @parents, $check );
+        return Class::MOP::subname($self->name => sub {
+            local $_ = $_[0];
+            foreach my $check (@checks) {
+                return undef unless $check->($_[0]);
+            }
+            return 1;
+        });
+    }
 }
 
 sub _compile_type {
     my ($self, $check) = @_;
+
+    return $check if $check == $null_constraint; # Item, Any
+
     return Class::MOP::subname($self->name => sub {
         local $_ = $_[0];
-        return undef unless $check->($_[0]);
-        1;
+        $check->($_[0]);
     });
 }
 
