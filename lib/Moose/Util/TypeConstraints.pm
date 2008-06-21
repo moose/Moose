@@ -108,7 +108,7 @@ sub export_type_constraints_as_functions {
     no strict 'refs';
     foreach my $constraint (keys %{$REGISTRY->type_constraints}) {
         my $tc = $REGISTRY->get_type_constraint($constraint)->_compiled_type_constraint;
-        *{"${pkg}::${constraint}"} = sub { $tc->($_[0]) ? 1 : undef };
+        *{"${pkg}::${constraint}"} = sub { $tc->($_[0]) ? 1 : undef }; # the undef is for compat
     }
 }
 
