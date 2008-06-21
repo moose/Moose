@@ -197,14 +197,19 @@ sub _compile_subtype {
     } elsif( $optimized_parent and @parents == 1 ) {
         # the case of just one optimized parent is optimized to prevent
         # looping and the unnecessary localization
-        return Class::MOP::subname($self->name, sub {
-            return undef unless $optimized_parent->($_[0]);
-            local $_ = $_[0];
-            $check->($_[0]);
-        });
+        if ( $check == $null_constraint ) {
+            return $optimized_parent;
+        } else {
+            return Class::MOP::subname($self->name, sub {
+                return undef unless $optimized_parent->($_[0]);
+                local $_ = $_[0];
+                $check->($_[0]);
+            });
+        }
     } else {
         # general case, check all the constraints, from the first parent to ourselves
-        my @checks = ( @parents, $check );
+        my @checks = @parents;
+        push @checks, $check if $check != $null_constraint;
         return Class::MOP::subname($self->name => sub {
             local $_ = $_[0];
             foreach my $check (@checks) {
