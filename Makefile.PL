@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use inc::Module::Install;
+use inc::Module::Install 0.75;
 
 name 'Moose';
 all_from 'lib/Moose.pm';
