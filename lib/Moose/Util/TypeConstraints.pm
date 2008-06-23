@@ -4,7 +4,7 @@ package Moose::Util::TypeConstraints;
 use strict;
 use warnings;
 
-use Carp         'confess';
+use Carp ();
 use Scalar::Util 'blessed';
 use Sub::Exporter;
 
@@ -100,6 +100,18 @@ sub unimport {
 ## --------------------------------------------------------
 
 my $REGISTRY = Moose::Meta::TypeConstraint::Registry->new;
+
+sub confess {
+    my ($msg, @args) = @_;
+
+    my $caller = caller(2);
+    if ( $caller->can("meta") and my $throw = $caller->meta->can("throw_error") ) {
+        goto $throw;
+    } else {
+        @_ = $msg;
+        goto &Carp::confess;
+    }
+}
 
 sub get_type_constraint_registry         { $REGISTRY }
 sub list_all_type_constraints            { keys %{$REGISTRY->type_constraints} }
@@ -1008,6 +1020,17 @@ This returns all the parameterizable types that have been registered.
 =item B<add_parameterizable_type ($type)>
 
 Adds C<$type> to the list of parameterizable types
+
+=back
+
+=head1 Error Management
+
+=over 4
+
+=item B<confess>
+
+If the caller is a Moose metaclass, use its L<Moose::Meta::Class/throw_error>
+routine, otherwise use L<Carp/confess>.
 
 =back
 
