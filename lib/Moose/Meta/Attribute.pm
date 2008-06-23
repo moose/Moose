@@ -208,14 +208,12 @@ sub _process_options {
 
     if (exists $options->{is}) {
 
-=pod
-
-is => ro, writer => _foo    # turns into (reader => foo, writer => _foo) as before
-is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
-is => rw, accessor => _foo  # turns into (accessor => _foo)
-is => ro, accessor => _foo  # error, accesor is rw
-
-=cut        
+        ### -------------------------
+        ## is => ro, writer => _foo    # turns into (reader => foo, writer => _foo) as before
+        ## is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
+        ## is => rw, accessor => _foo  # turns into (accessor => _foo)
+        ## is => ro, accessor => _foo  # error, accesor is rw
+        ### -------------------------
         
         if ($options->{is} eq 'ro') {
             confess "Cannot define an accessor name on a read-only attribute, accessors are read/write"
