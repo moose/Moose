@@ -15,17 +15,18 @@ our $AUTHORITY = 'cpan:STEVAN';
 sub new {
     my $class = shift;
     my %params;
+    my $meta = $class->meta;
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
-                || confess "Single parameters to new() must be a HASH ref";
+                || $meta->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
             %params = %{$_[0]};
         }
     }
     else {
         %params = @_;
     }
-    my $self = $class->meta->new_object(%params);
+    my $self = $meta->new_object(%params);
     $self->BUILDALL(\%params);
     return $self;
 }
@@ -70,9 +71,9 @@ sub DESTROY {
 # as approiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
-    (defined $role_name)
-        || confess "You much supply a role name to does()";
     my $meta = $self->meta;
+    (defined $role_name)
+        || $meta->throw_error("You much supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
         return 1 

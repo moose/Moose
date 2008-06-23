@@ -455,7 +455,7 @@ sub create_error {
         unshift @args, "message";
     }
 
-    my %args = @args;
+    my %args = ( meta => $self, error => $@, @args );
 
     local $level = $level + 1;
 
@@ -478,7 +478,6 @@ sub create_error_object {
     my $class = delete $args{class};
 
     $class->new(
-        metaclass => $self,
         %args,
         depth => ( ($args{depth} || 1) + ( $level + 1 ) ),
     );
