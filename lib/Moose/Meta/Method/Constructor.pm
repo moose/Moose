@@ -75,6 +75,9 @@ sub initialize_body {
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
 
+    $source .= "\n" . 'confess "Single parameters to new() must be a HASH ref"';
+    $source .= "\n" . '    if scalar @_ == 1 && defined $_[0] && ref($_[0]) ne q{HASH};';
+
     $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';
 
     $source .= "\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
