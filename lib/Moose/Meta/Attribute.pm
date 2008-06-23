@@ -5,7 +5,6 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
-use Carp         'confess';
 use overload     ();
 
 our $VERSION   = '0.50';
