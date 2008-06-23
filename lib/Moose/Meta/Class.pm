@@ -379,36 +379,41 @@ use Moose::Meta::Method::Destructor;
 sub create_immutable_transformer {
     my $self = shift;
     my $class = Class::MOP::Immutable->new($self, {
-       read_only   => [qw/superclasses/],
-       cannot_call => [qw/
-           add_method
-           alias_method
-           remove_method
-           add_attribute
-           remove_attribute
-           remove_package_symbol
-           add_role
-       /],
-       memoize     => {
-           class_precedence_list             => 'ARRAY',
-           compute_all_applicable_attributes => 'ARRAY',
-           get_meta_instance                 => 'SCALAR',
-           get_method_map                    => 'SCALAR',
-           # maybe ....
-           calculate_all_roles               => 'ARRAY',
-       },
-       # NOTE:
-       # this is ugly, but so are typeglobs, 
-       # so whattayahgonnadoboutit
-       # - SL
-       wrapped => { 
-           add_package_symbol => sub {
-               my $original = shift;
-               $self->throw_error("Cannot add package symbols to an immutable metaclass") 
-                   unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
-               goto $original->body;
-           },
-       },       
+        read_only   => [qw/
+            superclasses
+            roles
+            error_class
+            error_builder
+        /],
+        cannot_call => [qw/
+            add_method
+            alias_method
+            remove_method
+            add_attribute
+            remove_attribute
+            remove_package_symbol
+            add_role
+        /],
+        memoize     => {
+            class_precedence_list             => 'ARRAY',
+            compute_all_applicable_attributes => 'ARRAY',
+            get_meta_instance                 => 'SCALAR',
+            get_method_map                    => 'SCALAR',
+            # maybe ....
+            calculate_all_roles               => 'ARRAY',
+        },
+        # NOTE:
+        # this is ugly, but so are typeglobs, 
+        # so whattayahgonnadoboutit
+        # - SL
+        wrapped => { 
+            add_package_symbol => sub {
+                my $original = shift;
+                $self->throw_error("Cannot add package symbols to an immutable metaclass") 
+                    unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
+                goto $original->body;
+            },
+        },       
     });
     return $class;
 }
