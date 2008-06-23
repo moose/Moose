@@ -6,7 +6,7 @@ use warnings;
 
 use Class::MOP;
 
-use Carp         'confess';
+use Carp ();
 use Scalar::Util 'weaken', 'blessed';
 
 our $VERSION   = '0.50';
@@ -21,6 +21,16 @@ __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
     default => sub { [] }
 ));
+
+__PACKAGE__->meta->add_attribute('error_builder' => (
+    reader  => 'error_builder',
+    default => 'confess',
+));
+
+__PACKAGE__->meta->add_attribute('error_class' => (
+    reader  => 'error_class',
+));
+
 
 sub initialize {
     my $class = shift;
@@ -38,7 +48,7 @@ sub create {
     my ($self, $package_name, %options) = @_;
     
     (ref $options{roles} eq 'ARRAY')
-        || confess "You must pass an ARRAY ref of roles"
+        || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
     
     my $class = $self->SUPER::create($package_name, %options);
@@ -78,7 +88,7 @@ sub create_anon_class {
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || confess "Roles must be instances of Moose::Meta::Role";
+        || $self->throw_error("Roles must be instances of Moose::Meta::Role", data => $role);
     push @{$self->roles} => $role;
 }
 
@@ -91,7 +101,7 @@ sub calculate_all_roles {
 sub does_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
-        || confess "You must supply a role name to look for";
+        || $self->throw_error("You must supply a role name to look for");
     foreach my $class ($self->class_precedence_list) {
         next unless $class->can('meta') && $class->meta->can('roles');
         foreach my $role (@{$class->meta->roles}) {
@@ -104,7 +114,7 @@ sub does_role {
 sub excludes_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
-        || confess "You must supply a role name to look for";
+        || $self->throw_error("You must supply a role name to look for");
     foreach my $class ($self->class_precedence_list) {
         next unless $class->can('meta');
         # NOTE:
@@ -244,7 +254,7 @@ sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
 
     (!$self->has_method($name))
-        || confess "Cannot add an override method if a local method is already present";
+        || $self->throw_error("Cannot add an override method if a local method is already present");
 
     $self->add_method($name => Moose::Meta::Method::Overriden->new(
         method  => $method,
@@ -257,7 +267,7 @@ sub add_override_method_modifier {
 sub add_augment_method_modifier {
     my ($self, $name, $method) = @_;
     (!$self->has_method($name))
-        || confess "Cannot add an augment method if a local method is already present";
+        || $self->throw_error("Cannot add an augment method if a local method is already present");
 
     $self->add_method($name => Moose::Meta::Method::Augmented->new(
         method  => $method,
@@ -348,7 +358,7 @@ sub _process_inherited_attribute {
     my ($self, $attr_name, %options) = @_;
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
-        || confess "Could not find an attribute by the name of '$attr_name' to inherit from";
+        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from", data => $attr_name);
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
         return $inherited_attr->clone_and_inherit_options(%options);
     }
@@ -394,7 +404,7 @@ sub create_immutable_transformer {
        wrapped => { 
            add_package_symbol => sub {
                my $original = shift;
-               confess "Cannot add package symbols to an immutable metaclass" 
+               $self->throw_error("Cannot add package symbols to an immutable metaclass") 
                    unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
                goto $original->body;
            },
@@ -416,6 +426,84 @@ sub make_immutable {
        inline_accessors  => 0,
        @_,
       );
+}
+
+#{ package Moose::Meta::Class::ErrorRoutines; %Carp::Internal?
+
+our $level;
+
+sub throw_error {
+    my ( $self, @args ) = @_;
+    local $level = 1;
+    $self->raise_error($self->create_error(@args));
+}
+
+sub raise_error {
+    my ( $self, @args ) = @_;
+    die @args;
+}
+
+sub create_error {
+    my ( $self, @args ) = @_;
+
+    if ( @args % 2 == 1 ) {
+        unshift @args, "message";
+    }
+
+    my %args = @args;
+
+    local $level = $level + 1;
+
+    if ( my $class = $args{class} || ( ref $self && $self->error_class ) ) {
+        return $self->create_error_object( %args, class => $class );
+    } else {
+        my $builder = $args{builder} || ( ref($self) ? $self->error_builder : "confess" );
+
+        my $builder_method = ( ( ref($builder) && ref($builder) eq 'CODE' ) 
+            ? $builder
+            : ( $self->can("create_error_$builder") || "create_error_confess" ));
+
+        return $self->$builder_method(%args);
+    }
+}
+
+sub create_error_object {
+    my ( $self, %args ) = @_;
+
+    my $class = delete $args{class};
+
+    $class->new(
+        metaclass => $self,
+        %args,
+        depth => ( ($args{depth} || 1) + ( $level + 1 ) ),
+    );
+}
+
+sub create_error_croak {
+    my ( $self, @args ) = @_;
+    $self->_create_error_carpmess( @args );
+}
+
+sub create_error_confess {
+    my ( $self, @args ) = @_;
+    $self->_create_error_carpmess( @args, longmess => 1 );
+}
+
+sub _create_error_carpmess {
+    my ( $self, %args ) = @_;
+
+    my $carp_level = $level + 1 + ( $args{depth} || 1 );
+
+    local $Carp::CarpLevel = $carp_level; # $Carp::CarpLevel + $carp_level ?
+    local $Carp::MaxArgNums = 20;         # default is 8, usually we use named args which gets messier though
+
+    my @args = exists $args{message} ? $args{message} : ();
+
+    if ( $args{longmess} ) {
+        return Carp::longmess(@args);
+    } else {
+        return Carp::shortmess(@args);
+    }
 }
 
 1;
@@ -527,6 +615,45 @@ cascade down the role hierarchy.
 
 This method does the same thing as L<Class::MOP::Class::add_attribute>, but adds
 support for taking the C<$params> as a HASH ref.
+
+=item B<throw_error $message, %extra>
+
+Throws the error created by C<create_error> using C<raise_error>
+
+=item B<create_error $message, %extra>
+
+Creates an error message or object.
+
+The default behavior is C<create_error_confess>.
+
+If C<error_class> is set uses C<create_error_object>. Otherwise uses
+C<error_builder> (a code reference or variant name), and calls the appropriate
+C<create_error_$builder> method.
+
+=item B<error_builder $builder_name>
+
+Get or set the error builder. Defaults to C<confess>.
+
+=item B<error_class $class_name>
+
+Get or set the error class. Has no default.
+
+=item B<create_error_confess %args>
+
+Creates an error using L<Carp/longmess>
+
+=item B<create_error_croak %args>
+
+Creates an error using L<Carp/shortmess>
+
+=item B<create_error_object %args>
+
+Calls C<new> on the C<class> parameter in C<%args>. Usable with C<error_class>
+to support custom error objects for your meta class.
+
+=item B<raise_error $error>
+
+Dies with an error object or string.
 
 =back
 
