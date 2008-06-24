@@ -27,7 +27,8 @@ Revision history for Perl extension Moose
         - added tests for this (sartak)
 
     * Moose::Object
-      - fix a typo in ->does (sartak)
+    * Moose::Meta::Role::Application::RoleSummation
+      - fix typos no one ever sees (sartak)
 
 0.50 Thurs. Jun 11, 2008
     - Fixed a version number issue by bumping all modules
