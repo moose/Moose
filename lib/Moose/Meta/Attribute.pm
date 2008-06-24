@@ -51,13 +51,18 @@ __PACKAGE__->meta->add_attribute('traits' => (
     predicate => 'has_applied_traits',
 ));
 
-# NOTE:
 # we need to have a ->does method in here to 
 # more easily support traits, and the introspection 
-# of those traits. So in order to do this we 
-# just alias Moose::Object's version of it.
-# - SL
-*does = \&Moose::Object::does;
+# of those traits. We extend the does check to look
+# for metatrait aliases.
+sub does {
+    my ($self, $role_name) = @_;
+    my $name = eval {
+        Moose::Util::resolve_metatrait_alias(Attribute => $role_name)
+    };
+    return 0 if !defined($name); # failed to load class
+    return Moose::Object::does($self, $name);
+}
 
 sub new {
     my ($class, $name, %options) = @_;

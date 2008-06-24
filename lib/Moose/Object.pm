@@ -71,7 +71,7 @@ sub DESTROY {
 sub does {
     my ($self, $role_name) = @_;
     (defined $role_name)
-        || confess "You much supply a role name to does()";
+        || confess "You must supply a role name to does()";
     my $meta = $self->meta;
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
