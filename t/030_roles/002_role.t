@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 37;
 use Test::Exception;
 
 BEGIN {  
@@ -72,7 +72,10 @@ is_deeply(
     [ sort $foo_role->get_method_list() ],
     [ 'boo', 'foo' ],
     '... got the right method list');
-    
+
+ok(FooRole->can('foo'), "locally defined methods are still there");
+ok(!FooRole->can('has'), "sugar was unimported");
+
 # attributes ...
 
 is_deeply(
