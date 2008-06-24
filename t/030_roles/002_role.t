@@ -45,6 +45,8 @@ words, should 'has_method' return true for them?
     ::dies_ok { extends() } '... extends() is not supported';
     ::dies_ok { augment() } '... augment() is not supported';    
     ::dies_ok { inner()   } '... inner() is not supported';        
+
+    no Moose::Role;
 }
 
 my $foo_role = FooRole->meta;
