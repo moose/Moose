@@ -12,15 +12,15 @@ Revision history for Perl extension Moose
         RoleB. Now an aliased method is only added to the list of
         required methods if the role doing the aliasing does not
         provide its own implementation. See Recipe 11 for an example
-        of all this. (thanks Dave Rolsky)
+        of all this. (Dave Rolsky)
         - added tests for this
 
     * Moose::Meta::Method::Constructor
       - when a single argument that wasn't a hashref was provided to
         an immutabilized constructor, the error message was very
         unhelpful, as opposed to the non-immutable error. Reported by
-        dew. (Thanks to Dave Rolsky)
-        - added test for this (also Dave Rolsky)
+        dew. (Dave Rolsky)
+        - added test for this (Dave Rolsky)
 
     * Moose::Meta::Attribute
       - added support for meta_attr->does("ShortAlias") (sartak)
