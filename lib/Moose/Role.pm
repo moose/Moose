@@ -184,7 +184,7 @@ use Moose::Util::TypeConstraints;
 
     sub unimport {
         no strict 'refs';
-        my $class = _get_caller(@_);
+        my $class = Moose::_get_caller(@_);
 
         # loop through the exports ...
         foreach my $name ( keys %exports ) {

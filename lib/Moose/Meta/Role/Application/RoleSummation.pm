@@ -119,7 +119,7 @@ sub apply_attributes {
     my %seen;
     foreach my $attr (@all_attributes) {
         if (exists $seen{$attr->{name}}) {
-            confess "We have encountered an attribute conflict with '" . $attr->{name} . "'" 
+            confess "We have encountered an attribute conflict with '" . $attr->{name} . "' " 
                   . "during composition. This is fatal error and cannot be disambiguated."
                 if $seen{$attr->{name}} != $attr->{attr};           
         }

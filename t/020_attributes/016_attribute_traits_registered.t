@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 24;
 use Test::Exception;
 use Test::Moose;
 
@@ -88,6 +88,11 @@ my $bar_attr = $c->meta->get_attribute('bar');
 does_ok($bar_attr, 'My::Attribute::Trait');
 is($bar_attr->foo, "blah", "attr initialized");
 
+ok(!$bar_attr->meta->does_role('Aliased'), "does_role ignores aliases for sanity");
+ok($bar_attr->does('Aliased'), "attr->does uses aliases");
+ok(!$bar_attr->meta->does_role('Fictional'), "does_role returns false for nonexistent roles");
+ok(!$bar_attr->does('Fictional'), "attr->does returns false for nonexistent roles");
+
 my $quux = My::Derived::Class->new(bar => 1000);
 
 is($quux->bar, 1000, '... got the right value for bar');
@@ -103,6 +108,11 @@ is( $derived_bar_attr->foo, "blah", "attr initialized" );
 does_ok($derived_bar_attr, 'My::Other::Attribute::Trait' );
 
 is($derived_bar_attr->the_other_attr, "oink", "attr initialized" );
+
+ok(!$derived_bar_attr->meta->does_role('Aliased'), "does_role ignores aliases for sanity");
+ok($derived_bar_attr->does('Aliased'), "attr->does uses aliases");
+ok(!$derived_bar_attr->meta->does_role('Fictional'), "does_role returns false for nonexistent roles");
+ok(!$derived_bar_attr->does('Fictional'), "attr->does returns false for nonexistent roles");
 
 can_ok($quux, 'additional_method');
 is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
