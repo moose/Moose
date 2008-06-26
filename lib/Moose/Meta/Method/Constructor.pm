@@ -75,12 +75,9 @@ sub initialize_body {
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
 
-    $source .= "\n" . 'confess "Single parameters to new() must be a HASH ref"';
-    $source .= "\n" . '    if scalar @_ == 1 && defined $_[0] && ref($_[0]) ne q{HASH};';
+    $source .= "\n" . 'my $params = ' . $self->_generate_BUILDARGS('$class', '@_');
 
-    $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';
-
-    $source .= "\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
+    $source .= ";\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
 
     $source .= ";\n" . (join ";\n" => map {
         $self->_generate_slot_initializer($_)
@@ -123,11 +120,29 @@ sub initialize_body {
     $self->{'&!body'} = $code;
 }
 
+sub _generate_BUILDARGS {
+    my ( $self, $class, $args ) = @_;
+
+    my $buildargs = $self->associated_metaclass->find_method_by_name("BUILDARGS");
+
+    if ( !$buildargs || $buildargs->body == \&Moose::Object::BUILDARGS and $args eq '@_') {
+        return join("\n",
+            'do {',
+            'confess "Single parameters to new() must be a HASH ref"',
+            '    if scalar @_ == 1 && defined $_[0] && ref($_[0]) ne q{HASH};',
+            '(scalar @_ == 1) ? {%{$_[0]}} : {@_};',
+            '}',
+        );
+    } else {
+        return $class . "->BUILDARGS($args)";
+    }
+}
+
 sub _generate_BUILDALL {
     my $self = shift;
     my @BUILD_calls;
     foreach my $method (reverse $self->associated_metaclass->find_all_methods_by_name('BUILD')) {
-        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params)';
+        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD($params)';
     }
     return join ";\n" => @BUILD_calls;
 }
@@ -140,7 +155,7 @@ sub _generate_triggers {
         if ($attr->can('has_trigger') && $attr->has_trigger) {
             if (defined(my $init_arg = $attr->init_arg)) {
                 push @trigger_calls => (
-                    '(exists $params{\'' . $init_arg . '\'}) && do {' . "\n    "
+                    '(exists $params->{\'' . $init_arg . '\'}) && do {' . "\n    "
                     .   '$attrs->[' . $i . ']->trigger->('
                     .       '$instance, ' 
                     .        $self->meta_instance->inline_get_slot_value(
@@ -169,16 +184,16 @@ sub _generate_slot_initializer {
     my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
 
     if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
-        push @source => ('(exists $params{\'' . $attr->init_arg . '\'}) ' .
+        push @source => ('(exists $params->{\'' . $attr->init_arg . '\'}) ' .
                         '|| confess "Attribute (' . $attr->name . ') is required";');
     }
 
     if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
 
         if ( defined( my $init_arg = $attr->init_arg ) ) {
-            push @source => 'if (exists $params{\'' . $init_arg . '\'}) {';
+            push @source => 'if (exists $params->{\'' . $init_arg . '\'}) {';
 
-                push @source => ('my $val = $params{\'' . $init_arg . '\'};');
+                push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
 
                 if ($is_moose && $attr->has_type_constraint) {
                     if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
@@ -224,9 +239,9 @@ sub _generate_slot_initializer {
         push @source => "}" if defined $attr->init_arg;
     }
     elsif ( defined( my $init_arg = $attr->init_arg ) ) {
-        push @source => '(exists $params{\'' . $init_arg . '\'}) && do {';
+        push @source => '(exists $params->{\'' . $init_arg . '\'}) && do {';
 
-            push @source => ('my $val = $params{\'' . $init_arg . '\'};');
+            push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
                     push @source => $self->_generate_type_coercion(
