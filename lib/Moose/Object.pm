@@ -14,20 +14,26 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-    my %params;
+    my $params = $class->BUILDARGS(@_);
+    my $self = $class->meta->new_object(%$params);
+    $self->BUILDALL($params);
+    return $self;
+}
+
+sub BUILDARGS {
+    my $class = shift;
+
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
                 || confess "Single parameters to new() must be a HASH ref";
-            %params = %{$_[0]};
+            return {%{$_[0]}};
         }
+
+        return {}; # FIXME this is compat behavior, but is it correct?
+    } else {
+        return {@_};
     }
-    else {
-        %params = @_;
-    }
-    my $self = $class->meta->new_object(%params);
-    $self->BUILDALL(\%params);
-    return $self;
 }
 
 sub BUILDALL {
@@ -128,7 +134,12 @@ This will return the metaclass associated with the given class.
 
 =item B<new>
 
-This will create a new instance and call C<BUILDALL>.
+This will call C<BUILDARGS>, create a new instance and call C<BUILDALL>.
+
+=item B<BUILDARGS>
+
+This method processes an argument list into a hash reference. It is used by
+C<new>.
 
 =item B<BUILDALL>
 
