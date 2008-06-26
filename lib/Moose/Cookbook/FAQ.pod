@@ -92,13 +92,21 @@ curve.
 
 =head3 How do I make non-Moose constructors work with Moose? 
 
-Moose provides its own constructor, but it does it by making all 
-Moose-based classes inherit from L<Moose::Object>. When inheriting
-from a non-Moose class, the inheritance chain to L<Moose::Object> 
-is broken. The simplest way to fix this is to simply explicitly 
-inherit from L<Moose::Object> yourself. However, this does not 
-always fix the issue of a constructor. Here is a basic example of 
-how this can be worked around:
+Usually the correct approach to subclassing a non Moose class is
+delegation.  Moose makes this easy using the C<handles> keyword,
+coercions, and C<lazy_build>, so subclassing is often not the
+ideal route.
+
+That said, the default Moose constructors is inherited from
+L<Moose::Object>. When inheriting from a non-Moose class, the
+inheritance chain to L<Moose::Object> is broken. The simplest way
+to fix this is to simply explicitly inherit from L<Moose::Object>
+yourself.
+
+However, this does not always fix the issue of actually calling the Moose
+constructor. Fortunately L<Class::MOP::Class/new_object>, the low level
+constructor, accepts the special C<__INSTANCE__> parameter, allowing you to
+instantiate your Moose attributes:
 
   package My::HTML::Template;
   use Moose;
@@ -114,13 +122,17 @@ how this can be worked around:
       return $class->meta->new_object(
           # pass in the constructed object
           # using the special key __INSTANCE__
-          __INSTANCE__ => $obj, @_
+          __INSTANCE__ => $obj,
+          @_, # pass in the normal args
       );
   }
 
 Of course, this only works if both your Moose class and the 
 inherited non-Moose class use the same instance type (typically 
-HASH refs). 
+HASH refs).
+
+Note that this doesn't call C<BUILDALL> automatically, you must do that
+yourself.
 
 Other techniques can be used as well, such as creating the object 
 using C<Moose::Object::new>, but calling the inherited non-Moose 
