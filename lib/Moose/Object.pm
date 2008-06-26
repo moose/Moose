@@ -25,12 +25,13 @@ sub BUILDARGS {
 
     if (scalar @_ == 1) {
         if (defined $_[0]) {
+            no warnings 'uninitialized';
             (ref($_[0]) eq 'HASH')
                 || confess "Single parameters to new() must be a HASH ref";
             return {%{$_[0]}};
+        } else {
+            return {}; # FIXME this is compat behavior, but is it correct?
         }
-
-        return {}; # FIXME this is compat behavior, but is it correct?
     } else {
         return {@_};
     }
