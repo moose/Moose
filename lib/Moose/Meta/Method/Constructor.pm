@@ -125,7 +125,7 @@ sub _generate_BUILDARGS {
 
     my $buildargs = $self->associated_metaclass->find_method_by_name("BUILDARGS");
 
-    if ( !$buildargs || $buildargs->body == \&Moose::Object::BUILDARGS and $args eq '@_') {
+    if ( $args eq '@_' and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS ) ) {
         return join("\n",
             'do {',
             'confess "Single parameters to new() must be a HASH ref"',
