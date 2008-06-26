@@ -78,26 +78,17 @@ because it makes sub classing your class much easier.
 If you need to affect the constructor's parameters prior to the 
 instance actually being constructed, you have a number of options.
 
-First, there are I<coercions> (See the L<Moose::Cookbook::Recipe5> 
-for a complete example and explaination of coercions). With 
-coercions it is possible to morph argument values into the correct 
-expected types. This approach is the most flexible and robust, but 
-does have a slightly higher learning curve.
+To change the parameter processing as a whole, you can use
+the C<BUILDARGS> method. The default implementation accepts key/value
+pairs or a hash reference. You can override it to take positional args,
+or any other format
 
-Second, using an C<around> method modifier on C<new> can be an 
-effective way to affect the contents of C<@_> prior to letting 
-Moose deal with it. This carries with it the extra burden for 
-your subclasses, in that they have to be sure to explicitly 
-call your C<new> and/or work around your C<new> to get to the 
-version from L<Moose::Object>. 
-
-The last approach is to use the standard Perl technique of calling 
-the C<SUPER::new> within your own custom version of C<new>. This, 
-of course, brings with it all the issues of the C<around> solution 
-as well as any issues C<SUPER::> might add.
-
-In short, try to use C<BUILD> and coercions, they are your best 
-bets.
+To change the handling of individual parameters, there are I<coercions>
+(See the L<Moose::Cookbook::Recipe5> for a complete example and
+explaination of coercions). With coercions it is possible to morph
+argument values into the correct expected types. This approach is the
+most flexible and robust, but does have a slightly higher learning
+curve.
 
 =head3 How do I make non-Moose constructors work with Moose? 
 
