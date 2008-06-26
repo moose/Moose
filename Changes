@@ -27,6 +27,8 @@ Revision history for Perl extension Moose
         - added tests for this (sartak)
 
     * Moose::Object
+      - Added BUILDARGS, a new step in new()
+
     * Moose::Meta::Role::Application::RoleSummation
       - fix typos no one ever sees (sartak)
 
