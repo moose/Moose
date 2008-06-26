@@ -8,6 +8,20 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Method';
 
+sub throw_error {
+    my $self = shift;
+    my $inv = ( ref $self && ( $self->associated_attribute || $self->associated_class ) ) || "Moose::Meta::Class";
+    unshift @_, "message" if @_ % 2 == 1;
+    unshift @_, method => $self if ref $self;
+    unshift @_, $inv;
+    goto $inv->can("throw_error"); # to avoid incrementing depth by 1
+}
+
+sub _inline_throw_error {
+    my ( $self, $msg, $args ) = @_;
+    "\$meta->throw_error($msg" . ($args ? ", $args" : "") . ")"; # FIXME makes deparsing *REALLY* hard
+}
+
 1;
 
 __END__
@@ -23,6 +37,16 @@ Moose::Meta::Method - A Moose Method metaclass
 For now, this is nothing but a subclass of Class::MOP::Method, 
 but with the expanding role of the method sub-protocol, it might 
 be more useful later on. 
+
+=head1 METHODS
+
+=over 4
+
+=item throw_error $msg, %args
+
+=item _inline_throw_error $msg_expr, $args_expr
+
+=back
 
 =head1 BUGS
 

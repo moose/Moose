@@ -534,7 +534,7 @@ sub install_accessors {
             my $name = "${class_name}::${handle}";
 
             (!$associated_class->has_method($handle))
-                || $self->throw_error("You cannot overwrite a locally defined method ($handle) with a delegation", method => $handle);
+                || $self->throw_error("You cannot overwrite a locally defined method ($handle) with a delegation", method_name => $handle);
 
             # NOTE:
             # handles is not allowed to delegate
@@ -565,7 +565,7 @@ sub install_accessors {
                     my $proxy = $instance->$accessor();
                     (defined $proxy) 
                         || $self->throw_error("Cannot delegate $handle to $method_to_call because " . 
-                                   "the value of " . $self->name . " is not defined", method => $method_to_call, object => $instance);
+                                   "the value of " . $self->name . " is not defined", method_name => $method_to_call, object => $instance);
                     $proxy->$method_to_call(@_);
                 }));
             }

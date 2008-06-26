@@ -4,8 +4,6 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-use Carp 'confess';
-
 our $VERSION   = '0.50';
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -21,6 +19,7 @@ sub _eval_code {
     # set up the environment
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
+    my $meta        = $self,
 
     my $type_constraint_obj  = $attr->type_constraint;
     my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
@@ -30,7 +29,7 @@ sub _eval_code {
 
     #warn "code for $attr_name =>\n" . $code . "\n";
     my $sub = eval $code;
-    confess "Could not create writer for '$attr_name' because $@ \n code: $code" if $@;
+    $self->throw_error("Could not create writer for '$attr_name' because $@ \n code: $code", error => $@, data => $code ) if $@;
     return $sub;
 
 }
@@ -88,7 +87,7 @@ sub generate_reader_method_inline {
 
     $self->_eval_code('sub {'
     . $self->_inline_pre_body(@_)
-    . 'confess "Cannot assign a value to a read-only accessor" if @_ > 1;'
+    . $self->_inline_throw_error('"Cannot assign a value to a read-only accessor"', 'data => \@_') . ' if @_ > 1;'
     . $self->_inline_check_lazy
     . $self->_inline_post_body(@_)
     . 'return ' . $self->_inline_auto_deref( $slot_access ) . ';'
@@ -122,14 +121,7 @@ sub _inline_check_constraint {
     
     my $type_constraint_name = $attr->type_constraint->name;
 
-    # FIXME
-    # This sprintf is insanely annoying, we should
-    # fix it someday - SL
-    return sprintf <<'EOF', $value, $attr_name, $value, $value,
-$type_constraint->(%s)
-        || confess "Attribute (%s) does not pass the type constraint because: "
-       . $type_constraint_obj->get_message(%s);
-EOF
+    qq{\$type_constraint->($value) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
 }
 
 sub _inline_check_coercion {
@@ -140,12 +132,13 @@ sub _inline_check_coercion {
 }
 
 sub _inline_check_required {
-    my $attr = (shift)->associated_attribute;
+    my $self = shift;
+    my $attr = $self->associated_attribute;
 
     my $attr_name = $attr->name;
     
     return '' unless $attr->is_required;
-    return qq{(\@_ >= 2) || confess "Attribute ($attr_name) is required, so cannot be set to undef";} # defined $_[1] is not good enough
+    return qq{(\@_ >= 2) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) is required, so cannot be set to undef"}) . ';' # defined $_[1] is not good enough
 }
 
 sub _inline_check_lazy {
@@ -169,13 +162,13 @@ sub _inline_check_lazy {
                 $code .= '    my $default;'."\n".
                          '    if(my $builder = '.$inv.'->can($attr->builder)){ '."\n".
                          '        $default = '.$inv.'->$builder; '. "\n    } else {\n" .
-                         '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
-                         '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
+                         '        ' . $self->_inline_throw_error('Scalar::Util::blessed('.$inv.')." does not support builder method '.
+                         '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'"') . ';'. "\n    }";
             }
             $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
             $code .= '    ($type_constraint->($default))' .
-                     '            || confess "Attribute (" . $attr_name . ") does not pass the type constraint ("' .
-                     '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef");' 
+                     '            || ' . $self->_inline_throw_error('"Attribute (" . $attr_name . ") does not pass the type constraint ("' .
+                     '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef")' ) . ';' 
                      . "\n";
             $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, '$default') . "\n";
         } 
@@ -191,8 +184,8 @@ sub _inline_check_lazy {
             $code .= '    if (my $builder = '.$inv.'->can($attr->builder)) { ' . "\n" 
                   .  '       ' . $self->_inline_init_slot($attr, $inv, $slot_access, ($inv . '->$builder'))           
                      . "\n    } else {\n" .
-                     '        confess(Scalar::Util::blessed('.$inv.')." does not support builder method '.
-                     '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
+                     '        ' . $self->_inline_throw_error('Scalar::Util::blessed('.$inv.')." does not support builder method '.
+                     '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'"') . ';'. "\n    }";
         } 
         else {
             $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, 'undef') . "\n";
@@ -278,7 +271,7 @@ sub _inline_auto_deref {
         $sigil = '%';
     }
     else {
-        confess "Can not auto de-reference the type constraint '" . $type_constraint->name . "'";
+        $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", data => $type_constraint );
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
