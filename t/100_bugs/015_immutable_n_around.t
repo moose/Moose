@@ -5,6 +5,8 @@ use warnings;
 
 use Test::More 'no_plan';
 
+# if make_immutable is removed from the following code the tests pass
+
 {
     package Foo;
     use Moose;
