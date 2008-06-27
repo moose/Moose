@@ -234,7 +234,7 @@ sub _process_options {
             }
         }
         else {
-            confess "I do not understand this option (is => " . $options->{is} . ") on attribute $name"
+            confess "I do not understand this option (is => " . $options->{is} . ") on attribute ($name)"
         }
     }
 
@@ -242,10 +242,10 @@ sub _process_options {
         if (exists $options->{does}) {
             if (eval { $options->{isa}->can('does') }) {
                 ($options->{isa}->does($options->{does}))
-                    || confess "Cannot have an isa option and a does option if the isa does not do the does on attribute $name";
+                    || confess "Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)";
             }
             else {
-                confess "Cannot have an isa option which cannot ->does() on attribute $name";
+                confess "Cannot have an isa option which cannot ->does() on attribute ($name)";
             }
         }
 
@@ -269,26 +269,26 @@ sub _process_options {
 
     if (exists $options->{coerce} && $options->{coerce}) {
         (exists $options->{type_constraint})
-            || confess "You cannot have coercion without specifying a type constraint on attribute $name";
-        confess "You cannot have a weak reference to a coerced value on attribute $name"
+            || confess "You cannot have coercion without specifying a type constraint on attribute ($name)";
+        confess "You cannot have a weak reference to a coerced value on attribute ($name)"
             if $options->{weak_ref};
     }
 
     if (exists $options->{trigger}) {
         ('CODE' eq ref $options->{trigger})
-            || confess "Trigger must be a CODE ref";
+            || confess "Trigger must be a CODE ref on attribute ($name)";
     }
 
     if (exists $options->{auto_deref} && $options->{auto_deref}) {
         (exists $options->{type_constraint})
-            || confess "You cannot auto-dereference without specifying a type constraint on attribute $name";
+            || confess "You cannot auto-dereference without specifying a type constraint on attribute ($name)";
         ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
          $options->{type_constraint}->is_a_type_of('HashRef'))
-            || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute $name";
+            || confess "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)";
     }
 
     if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
-        confess("You can not use lazy_build and default for the same attribute $name")
+        confess("You can not use lazy_build and default for the same attribute ($name)")
             if exists $options->{default};
         $options->{lazy}      = 1;
         $options->{required}  = 1;
