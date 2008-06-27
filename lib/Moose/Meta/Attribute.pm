@@ -506,67 +506,68 @@ sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
 sub install_accessors {
     my $self = shift;
     $self->SUPER::install_accessors(@_);
+    $self->install_delegation if $self->has_handles;
+    return;
+}
 
-    if ($self->has_handles) {
+sub install_delegation {
+    my $self = shift;
+
+    # NOTE:
+    # Here we canonicalize the 'handles' option
+    # this will sort out any details and always
+    # return an hash of methods which we want
+    # to delagate to, see that method for details
+    my %handles = $self->_canonicalize_handles();
+
+    # find the accessor method for this attribute
+    my $accessor = $self->get_read_method_ref;
+    # then unpack it if we need too ...
+    $accessor = $accessor->body if blessed $accessor;
+
+    # install the delegation ...
+    my $associated_class = $self->associated_class;
+    foreach my $handle (keys %handles) {
+        my $method_to_call = $handles{$handle};
+        my $class_name = $associated_class->name;
+        my $name = "${class_name}::${handle}";
+
+        (!$associated_class->has_method($handle))
+            || confess "You cannot overwrite a locally defined method ($handle) with a delegation";
 
         # NOTE:
-        # Here we canonicalize the 'handles' option
-        # this will sort out any details and always
-        # return an hash of methods which we want
-        # to delagate to, see that method for details
-        my %handles = $self->_canonicalize_handles();
+        # handles is not allowed to delegate
+        # any of these methods, as they will
+        # override the ones in your class, which
+        # is almost certainly not what you want.
 
-        # find the accessor method for this attribute
-        my $accessor = $self->get_read_method_ref;
-        # then unpack it if we need too ...
-        $accessor = $accessor->body if blessed $accessor;
+        # FIXME warn when $handle was explicitly specified, but not if the source is a regex or something
+        #cluck("Not delegating method '$handle' because it is a core method") and
+        next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
-        # install the delegation ...
-        my $associated_class = $self->associated_class;
-        foreach my $handle (keys %handles) {
-            my $method_to_call = $handles{$handle};
-            my $class_name = $associated_class->name;
-            my $name = "${class_name}::${handle}";
-
-            (!$associated_class->has_method($handle))
-                || confess "You cannot overwrite a locally defined method ($handle) with a delegation";
-
-            # NOTE:
-            # handles is not allowed to delegate
-            # any of these methods, as they will
-            # override the ones in your class, which
-            # is almost certainly not what you want.
-
-            # FIXME warn when $handle was explicitly specified, but not if the source is a regex or something
-            #cluck("Not delegating method '$handle' because it is a core method") and
-            next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
-
-            if ('CODE' eq ref($method_to_call)) {
-                $associated_class->add_method($handle => Class::MOP::subname($name, $method_to_call));
-            }
-            else {
-                # NOTE:
-                # we used to do a goto here, but the
-                # goto didn't handle failure correctly
-                # (it just returned nothing), so I took 
-                # that out. However, the more I thought
-                # about it, the less I liked it doing 
-                # the goto, and I prefered the act of 
-                # delegation being actually represented
-                # in the stack trace. 
-                # - SL
-                $associated_class->add_method($handle => Class::MOP::subname($name, sub {
-                    my $proxy = (shift)->$accessor();
-                    (defined $proxy) 
-                        || confess "Cannot delegate $handle to $method_to_call because " . 
-                                   "the value of " . $self->name . " is not defined";
-                    $proxy->$method_to_call(@_);
-                }));
-            }
+        if ('CODE' eq ref($method_to_call)) {
+            $associated_class->add_method($handle => Class::MOP::subname($name, $method_to_call));
         }
-    }
-
-    return;
+        else {
+            # NOTE:
+            # we used to do a goto here, but the
+            # goto didn't handle failure correctly
+            # (it just returned nothing), so I took 
+            # that out. However, the more I thought
+            # about it, the less I liked it doing 
+            # the goto, and I prefered the act of 
+            # delegation being actually represented
+            # in the stack trace. 
+            # - SL
+            $associated_class->add_method($handle => Class::MOP::subname($name, sub {
+                my $proxy = (shift)->$accessor();
+                (defined $proxy) 
+                    || confess "Cannot delegate $handle to $method_to_call because " . 
+                               "the value of " . $self->name . " is not defined";
+                $proxy->$method_to_call(@_);
+            }));
+        }
+    }    
 }
 
 # private methods to help delegation ...
@@ -690,6 +691,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =item B<initialize_instance_slot>
 
 =item B<install_accessors>
+
+=item B<install_delegation>
 
 =item B<accessor_metaclass>
 

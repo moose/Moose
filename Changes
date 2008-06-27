@@ -25,6 +25,8 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - added support for meta_attr->does("ShortAlias") (sartak)
         - added tests for this (sartak)
+      - moved the bulk of the `handles` handling to the new 
+        install_delegation method (Stevan)
 
     * Moose::Object
       - Added BUILDARGS, a new step in new()
