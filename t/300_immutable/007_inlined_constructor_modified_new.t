@@ -12,6 +12,11 @@ my ($around_new);
 
     around new => sub { my $o = shift; $around_new = 1; $o->(@_); };
     has 'foo' => (is => 'rw', isa => 'Int');
+
+    package Bar;
+    use Moose;
+    extends 'Foo';
+    Bar->meta->make_immutable;
 }
 
 my $orig_new = Foo->meta->find_method_by_name('new');
@@ -25,6 +30,9 @@ isa_ok($inlined_new, 'Class::MOP::Method::Wrapped');
 $inlined_new = $inlined_new->get_original_method;
 isa_ok($inlined_new, 'Moose::Meta::Method::Constructor');
 
-my $foo = Foo->new(foo => 100);
+Foo->new(foo => 100);
 ok($around_new, 'around new called');
 
+$around_new = 0;
+Bar->new(foo => 100);
+ok($around_new, 'around new called');
