@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use Sub::Exporter;
 
-our $VERSION   = '0.51';
+our $VERSION   = '0.52';
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------

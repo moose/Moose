@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+0.52
+
+
 0.51 Thurs. Jun 26, 2008
     * Moose::Role
       - add unimport so "no Moose::Role" actually does
