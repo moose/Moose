@@ -38,11 +38,14 @@ use Test::More 'no_plan';
 
 my @classes = qw(Foo Bar Gorch Zoink);
 
-do {
+tests: {
     is( Foo->new->foo, undef, "base class (" . (Foo->meta->is_immutable ? "immutable" : "mutable") . ")" );
     is( Bar->new->foo, 42, "around new called on Bar->new (" . (Bar->meta->is_immutable ? "immutable" : "mutable") . ")"  );
     is( Gorch->new->foo, 42, "around new called on Gorch->new (" . (Gorch->meta->is_immutable ? "immutable" : "mutable") . ")"  );
     is( Zoink->new->foo, 42, "around new called Zoink->new (" . (Zoink->meta->is_immutable ? "immutable" : "mutable") . ")"  );
 
-    ( shift @classes )->meta->make_immutable;
-} while @classes;
+    if ( @classes ) {
+        ( shift @classes )->meta->make_immutable;
+        redo tests;
+    }
+}
