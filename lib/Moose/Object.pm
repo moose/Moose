@@ -25,7 +25,6 @@ sub BUILDARGS {
 
     if (scalar @_ == 1) {
         if (defined $_[0]) {
-            no warnings 'uninitialized';
             (ref($_[0]) eq 'HASH')
                 || confess "Single parameters to new() must be a HASH ref";
             return {%{$_[0]}};

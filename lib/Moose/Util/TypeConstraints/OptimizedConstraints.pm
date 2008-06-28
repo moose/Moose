@@ -18,15 +18,12 @@ sub Num { !ref($_[0]) && looks_like_number($_[0]) }
 
 sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
 
-{
-    no warnings 'uninitialized';
-    sub ScalarRef { ref($_[0]) eq 'SCALAR' }
-    sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
-    sub HashRef   { ref($_[0]) eq 'HASH'   }
-    sub CodeRef   { ref($_[0]) eq 'CODE'   }
-    sub RegexpRef { ref($_[0]) eq 'Regexp' }
-    sub GlobRef   { ref($_[0]) eq 'GLOB'   }
-}
+sub ScalarRef { ref($_[0]) eq 'SCALAR' }
+sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
+sub HashRef   { ref($_[0]) eq 'HASH'   }
+sub CodeRef   { ref($_[0]) eq 'CODE'   }
+sub RegexpRef { ref($_[0]) eq 'Regexp' }
+sub GlobRef   { ref($_[0]) eq 'GLOB'   }
 
 sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
 
