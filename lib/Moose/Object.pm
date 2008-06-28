@@ -76,7 +76,7 @@ sub DESTROY {
 sub DOES {
     my ( $self, $class_or_role_name ) = @_;
 
-    $self->isa($class_or_role_name)
+    $self->SUPER::DOES($class_or_role_name)
         or
     $self->does($class_or_role_name);
 }
