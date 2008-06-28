@@ -73,6 +73,14 @@ sub DESTROY {
     $_[0]->DEMOLISHALL;
 }
 
+sub DOES {
+    my ( $self, $class_or_role_name ) = @_;
+
+    $self->isa($class_or_role_name)
+        or
+    $self->does($class_or_role_name);
+}
+
 # new does() methods will be created 
 # as approiate see Moose::Meta::Role
 sub does {
@@ -155,6 +163,12 @@ This will call every C<DEMOLISH> method in the inheritance hierarchy.
 
 This will check if the invocant's class C<does> a given C<$role_name>. 
 This is similar to C<isa> for object, but it checks the roles instead.
+
+=item B<DOES ($class_or_role_name)>
+
+A Moose Role aware implementation of L<UNIVERSAL/DOES>.
+
+C<DOES> is equivalent to C<isa> or C<does>.
 
 =item B<dump ($maxdepth)>
 

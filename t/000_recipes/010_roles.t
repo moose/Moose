@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 62;
+use Test::More tests => 64;
 use Test::Exception;
 
 BEGIN {
@@ -90,6 +90,9 @@ ok(US::Currency->does('Printable'), '... US::Currency does Printable');
 
 my $hundred = US::Currency->new(amount => 100.00);
 isa_ok($hundred, 'US::Currency');
+
+ok( $hundred->DOES("US::Currency"), "UNIVERSAL::DOES for class" );
+ok( $hundred->DOES("Comparable"), "UNIVERSAL::DOES for role" );
 
 can_ok($hundred, 'amount');
 is($hundred->amount, 100, '... got the right amount');
