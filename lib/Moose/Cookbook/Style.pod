@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Style - How to cook Moose with style
+Moose::Cookbook::Style - The latest in trendy Moose cuisine
 
 =for authors
 
