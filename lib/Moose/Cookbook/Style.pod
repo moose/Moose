@@ -134,6 +134,8 @@ Or with L<MooseX::Types>:
         where { $_->can("name") },
     );
 
+=head3 Coerce in a subtype
+
 Likewise use fully qualified subtypes of other types for defining coercions, so
 that they won't affect unrelated code, causing action at a distance.
 
