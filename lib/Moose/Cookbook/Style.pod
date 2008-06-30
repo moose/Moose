@@ -159,4 +159,16 @@ Will add a coercion to B<all> attributes like:
 
 in a specific way.
 
+=head1 Clean up your package
+
+Use C<namespace::clean> or C<no Moose> to remove the sugar exports.
+
+This will make sure the sugar isn't accidentally called as methods on your objects.
+
+For instance:
+
+    $obj->can("has");
+
+will return true, even though C<has> is not a method.
+
 
