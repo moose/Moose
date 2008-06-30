@@ -171,4 +171,14 @@ For instance:
 
 will return true, even though C<has> is not a method.
 
+=head1 Accept no hacks
+
+When you have a tricky requirement, refrain from abusing Moose or MooseX:: or
+whatever it is you are using.
+
+Instead, drop by IRC and discuss it. Most of the time a crazy idea can either
+be simplified, or it will spawn a clean, reliable feature to whatever package
+you are using.
+
+This will improve your code and also share the benefit with others.
 
