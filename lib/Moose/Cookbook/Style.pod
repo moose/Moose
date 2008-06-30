@@ -125,12 +125,14 @@ Instead, prefix type name with your project namespace, or class name:
 
 Or with L<MooseX::Types>:
 
+    use MooseX::Types::Moose qw(Object);
+
     use MooseX::Types (
         -declare => [qw(Person)],
     );
     
     subtype Person() => ( # note parenthesis, "Person" is a function, not a string
-        as 'Object',
+        as Object, # MooseX::Types::Moose exported it
         where { $_->can("name") },
     );
 
