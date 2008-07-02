@@ -16,14 +16,14 @@ sub req_or_has ($$) {
     }
 }
 
-{	
-	package Bar;
-	use Moose::Role;
+{
+    package Bar;
+    use Moose::Role;
 
     # this role eventually adds three methods, qw(foo bar xxy), but only one is
     # known when it's still a role
 
-	has foo => ( is => "rw" );
+    has foo => ( is => "rw" );
 
     has gorch => ( reader => "bar" );
 
@@ -94,10 +94,10 @@ sub req_or_has ($$) {
         ::lives_ok { with qw(Dancer::Robot) };
     }
 
-	package Foo;
-	use Moose;
+    package Foo;
+    use Moose;
 
-	with qw(Bar);
+    with qw(Bar);
 
     has oink => (
         is => "rw",
@@ -112,7 +112,7 @@ sub req_or_has ($$) {
         default => sub { Dancer::Ballerina->new },
     );
 
-	sub foo { 42 }
+    sub foo { 42 }
 
     sub bar { 33 }
 
