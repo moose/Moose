@@ -26,11 +26,7 @@ lib/Moose/Cookbook/Recipe5.pod
 lib/Moose/Cookbook/Recipe6.pod
 lib/Moose/Cookbook/Recipe7.pod
 lib/Moose/Cookbook/Recipe9.pod
-lib/Moose/Cookbook/Snack/ArrayRef.pod
-lib/Moose/Cookbook/Snack/BUILD.pod
-lib/Moose/Cookbook/Snack/HashRef.pod
 lib/Moose/Cookbook/Snack/Keywords.pod
-lib/Moose/Cookbook/Snack/Perl5ObjsVsMooseObjs.pod
 lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm

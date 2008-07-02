@@ -4,23 +4,22 @@
 
 Moose::Cookbook::Snack::Keywords - Restricted keywords in Moose 
 
-=cut
-
 =head1 DESCRIPTION
 
-There are several keywords exported in L<Moose> that cause clashes against 
-any barewords such as attribute names, sub names, and globs. 
-
+There are several keywords exported by L<Moose> that can cause clashes 
+against other user-defined barewords. The following document provides 
+a list of those keywords in a single place for easy reference.
 
 =head2 The 'meta' keyword
 
 While most of the reserved keywords collisions can be avoided, however 
-I<meta> is the only one you B<cant> override. Do not attempt to override
-I<meta>.
+I<meta> is the only one you B<can not> override. Do not attempt to override
+I<meta>, it will break the Moose internals.
 
 =head2 Moose Keywords 
 
-If you are using Moose its best to avoid these keywords
+If you are using L<Moose> or L<Moose::Role> its best to avoid these 
+keywords:
 
 =over 4
 
@@ -54,7 +53,7 @@ If you are using Moose its best to avoid these keywords
 
 =head2 Moose::Util::TypeConstraints Keywords 
 
-If you are using Moose::Util::TypeConstraints its best to avoid 
+If you are using L<Moose::Util::TypeConstraints> its best to avoid 
 these keywords 
 
 =over 4
@@ -90,43 +89,82 @@ these keywords
 =back
 
 =head2 Avoiding collisions
- 
+
 =head3 Turning off Moose
 
-To remove the keywords Moose exports using no Moose at the bottom of your code
+To remove the keywords L<Moose> exports just add C<no Moose> at the bottom of 
+your code, like so:
 
- package Thing;
- use Moose;
+  package Thing;
+  use Moose;
 
- # code here
+  # code here
 
- no Moose;
+  no Moose;
+
+This will un-export the keywords that L<Moose> originally exported. The same 
+will also work for L<Moose::Role> and L<Moose::Util::TypeConstraints>. It is 
+general L<Moose> policy that this feature is used.
 
 =head3  Sub::Exporter
 
-The L<Sub::Exporter> module can rename keywords 
+L<Moose>, L<Moose::Role> and L<Moose::Util::TypeConstraints> all use 
+L<Sub::Exporter> to handle all their exporting needs. This means that all the 
+features that L<Sub::Exporter> provides are also available to them. 
 
- package LOL::Cat;
- use Moose 'has' => { -as => 'i_can_haz' };
+For instance, with L<Sub::Exporter> you can rename keywords, like so:
 
- i_can_haz 'cheeseburger' => (
-    is      => 'rw',
-    trigger => sub { print "NOM NOM" }
- );
+  package LOL::Cat;
+  use Moose 'has' => { -as => 'i_can_haz' };
+  
+  i_can_haz 'cheeseburger' => (
+     is      => 'rw',
+     trigger => sub { print "NOM NOM" }
+  );
+  
+  LOL::Cat->new->cheeseburger('KTHNXBYE');
 
- LOL::Cat->new->cheeseburger('KTHNXBYE');;
+See the L<Sub::Exporter> docs for more information.
 
 =head3 namespace::clean
 
-You can use L<namespace::clean> to clean up the namespace
+You can also use L<namespace::clean> to clean up your namespace, but you must 
+be careful not to remove C<meta> with this. Here is an example of that usage:
 
-=head1 AUTHOR AND COPYRIGHT
+  package Foo;
+  use Moose;
+  use namespace::clean -except => 'meta';
+  # ...
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Moose>
+
+=item L<Moose::Role>
+
+=item L<Moose::Utils::TypeConstraints>
+
+=item L<Sub::Exporter>
+
+=item L<namespace::clean>
+
+=back
+
+=head1 AUTHOR
 
 John Goulah C<E<lt>jgoulah@cpan.org<gt>>
 
-=head1 LICENSE
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
-This program is free software; you can redistribute it and/or modify
-it under the same terms as perl itself.
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut

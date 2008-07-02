@@ -1,7 +1,18 @@
 Revision history for Perl extension Moose
 
 0.52
+    * Moose::Cookbook::Snacks::*
+      - removed some of the unfinished snacks that should 
+        not have been released yet. Added some more examples
+        and explination to the 'Keywords' snack. (Stevan)
+    
+    * Moose
+      - added "FEATURE REQUESTS" section to the Moose docs
+        to properly direct people (Stevan) (RT #34333)
 
+    * Moose::Cookbook::Style
+      - added general Moose "style guide" of sorts to the 
+        cookbook (nothingmuch) (RT #34335)
 
 0.51 Thurs. Jun 26, 2008
     * Moose::Role
@@ -41,6 +52,7 @@ Revision history for Perl extension Moose
     * Moose::Meta::TypeConstraint
     * Moose::Meta::TypeCoercion
       - Attempt to work around the ??{ } vs. threads issue
+        (not yet fixed)
       - Some null_constraint optimizations
 
 0.50 Thurs. Jun 11, 2008
