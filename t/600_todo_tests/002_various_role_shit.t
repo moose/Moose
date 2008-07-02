@@ -117,6 +117,24 @@ sub req_or_has ($$) {
     sub bar { 33 }
 
     sub xxy { 7 }
+
+    package Tree;
+    use Moose::Role;
+    
+    has bark => ( is => "rw" );
+
+    package Dog;
+    use Moose::Role;
+    
+    sub bark { warn "woof!" };
+
+    package EntPuppy;
+    use Moose;
+
+    {
+        local our $TODO = "attrs and methods from a role should clash";
+        ::dies_ok { with qw(Tree Dog) }
+    }
 }
 
 # these fail because of the deferral logic winning over actual methods
