@@ -4,15 +4,22 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Snacks::*
       - removed some of the unfinished snacks that should 
         not have been released yet. Added some more examples
-        and explination to the 'Keywords' snack. (Stevan)
+        and explination to the 'Keywords' snack. (stevan)
     
     * Moose
       - added "FEATURE REQUESTS" section to the Moose docs
-        to properly direct people (Stevan) (RT #34333)
+        to properly direct people (stevan) (RT #34333)
+      - making 'extends' croak if it is passed a Role since 
+        this is not ever something you want to do 
+        (fixed by stevan, found by obra)
+        - added tests for this (stevan)
 
     * Moose::Cookbook::Style
       - added general Moose "style guide" of sorts to the 
         cookbook (nothingmuch) (RT #34335)
+
+    * t/
+      - added more BUILDARGS tests (stevan)
 
 0.51 Thurs. Jun 26, 2008
     * Moose::Role

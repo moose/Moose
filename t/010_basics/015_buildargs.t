@@ -18,14 +18,10 @@ use Test::More tests => 14;
         return {@args};
     }
 
-    __PACKAGE__->meta->make_immutable;
-
     package Bar;
     use Moose;
 
     extends qw(Foo);
-    
-    __PACKAGE__->meta->make_immutable;
 }
 
 foreach my $class qw(Foo Bar) {

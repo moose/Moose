@@ -84,7 +84,13 @@ use Moose::Util ();
                 my @supers = @_;
                 foreach my $super (@supers) {
                     Class::MOP::load_class($super);
+                    croak "You cannot inherit from a Moose Role ($super)"
+                        if $super->can('meta')  && 
+                           blessed $super->meta &&
+                           $super->meta->isa('Moose::Meta::Role')
                 }
+
+
 
                 # this checks the metaclass to make sure
                 # it is correct, sometimes it can get out
