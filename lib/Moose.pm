@@ -1034,6 +1034,8 @@ Sam (mugwump) Vilain
 
 Shawn (sartak) Moore
 
+Wallace (wreis) Reis
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE

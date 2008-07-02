@@ -1,6 +1,9 @@
 Revision history for Perl extension Moose
 
 0.52
+    * Moose::Meta::Attribute
+      - added legal_options_for_inheritance (wreis)
+
     * Moose::Cookbook::Snacks::*
       - removed some of the unfinished snacks that should 
         not have been released yet. Added some more examples

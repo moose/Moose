@@ -116,12 +116,17 @@ sub interpolate_class {
     return ( wantarray ? ( $class, @traits ) : $class );
 }
 
+# you can change default, required, coerce, documentation, lazy, handles, builder, type_constraint (explicitly or using isa/does), metaclass and traits
+sub legal_options_for_inheritance {
+  return qw(default coerce required documentation lazy handles builder
+    type_constraint);
+}
+
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
     my %copy = %options;
-    # you can change default, required, coerce, documentation, lazy, handles, builder, type_constraint (explicitly or using isa/does), metaclass and traits
     my %actual_options;
-    foreach my $legal_option (qw(default coerce required documentation lazy handles builder type_constraint)) {
+    foreach my $legal_option ($self->legal_options_for_inheritance) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
@@ -740,6 +745,11 @@ C<traits> options.
 This is to support the C<has '+foo'> feature, it clones an attribute
 from a superclass and allows a very specific set of changes to be made
 to the attribute.
+
+=item B<legal_options_for_inheritance>
+
+Whitelist with options you can change. You can overload it in your custom
+metaclass to allow your options be inheritable.
 
 =item B<has_type_constraint>
 
