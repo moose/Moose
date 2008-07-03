@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Moose::Util::TypeConstraints;
 
-our $VERSION   = '0.52';
+our $VERSION   = '0.53';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';

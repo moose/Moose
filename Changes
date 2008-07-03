@@ -1,5 +1,7 @@
 Revision history for Perl extension Moose
 
+0.53
+
 0.52 Thurs. July 3, 2008
     * Moose
       - added "FEATURE REQUESTS" section to the Moose docs
