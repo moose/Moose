@@ -11,7 +11,7 @@ use overload '""'     => sub { shift->name },   # stringify to tc name
 use Carp         'confess';
 use Scalar::Util qw(blessed refaddr);
 
-our $VERSION   = '0.53';
+our $VERSION   = '0.54';
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));

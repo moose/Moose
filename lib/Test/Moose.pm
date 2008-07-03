@@ -8,7 +8,7 @@ use Test::Builder;
 
 use Moose::Util 'does_role', 'find_meta';
 
-our $VERSION   = '0.53';
+our $VERSION   = '0.54';
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
