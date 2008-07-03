@@ -74,14 +74,13 @@ sub DESTROY {
 }
 
 # support for UNIVERSAL::DOES ...
-sub DOES {
-    my ( $self, $class_or_role_name ) = @_;
-    if (my $DOES = __PACKAGE__->meta->find_next_method_by_name('DOES')) {
-        return $DOES->body->($self, $class_or_role_name) 
+BEGIN {
+    my $does = UNIVERSAL->can("DOES") ? "SUPER::DOES" : "isa";
+    eval 'sub DOES {
+        my ( $self, $class_or_role_name ) = @_;
+        return $self->'.$does.'($class_or_role_name)
             || $self->does($class_or_role_name);
-    }
-    return $self->isa($class_or_role_name) 
-        || $self->does($class_or_role_name);
+    }';
 }
 
 # new does() methods will be created 
