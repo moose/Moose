@@ -1,6 +1,11 @@
 Revision history for Perl extension Moose
 
-0.53
+0.53 Thurs. July 3, 2008
+    * Whoops, I guess I should run 'make manifest' before 
+      actually releasing the module. No actual changes 
+      in this release, except the fact that it includes
+      the changes that I didn't include in the last 
+      release. (stevan--)
 
 0.52 Thurs. July 3, 2008
     * Moose

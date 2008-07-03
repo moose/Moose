@@ -28,6 +28,7 @@ lib/Moose/Cookbook/Recipe7.pod
 lib/Moose/Cookbook/Recipe9.pod
 lib/Moose/Cookbook/Snack/Keywords.pod
 lib/Moose/Cookbook/Snack/Types.pod
+lib/Moose/Cookbook/Style.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
@@ -95,6 +96,7 @@ t/010_basics/011_moose_respects_type_constraints.t
 t/010_basics/012_rebless.t
 t/010_basics/013_create.t
 t/010_basics/014_create_anon.t
+t/010_basics/015_buildargs.t
 t/020_attributes/001_attribute_reader_generation.t
 t/020_attributes/002_attribute_writer_generation.t
 t/020_attributes/003_attribute_accessor_generation.t
@@ -116,6 +118,7 @@ t/020_attributes/018_no_init_arg.t
 t/020_attributes/019_attribute_lazy_initializer.t
 t/020_attributes/020_trigger_and_coerce.t
 t/020_attributes/021_method_generation_rules.t
+t/020_attributes/022_legal_options_for_inheritance.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t
@@ -189,6 +192,7 @@ t/100_bugs/011_DEMOLISH_eats_exceptions.t
 t/100_bugs/012_DEMOLISH_eats_mini.t
 t/100_bugs/013_lazybuild_required_undef.t
 t/100_bugs/014_DEMOLISHALL.t
+t/100_bugs/016_inheriting_from_roles.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t
@@ -204,6 +208,8 @@ t/300_immutable/004_inlined_constructors_n_types.t
 t/300_immutable/005_multiple_demolish_inline.t
 t/300_immutable/006_immutable_nonmoose_subclass.t
 t/300_immutable/007_immutable_trigger_from_constructor.t
+t/300_immutable/008_immutable_constructor_error.t
+t/300_immutable/009_buildargs.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
