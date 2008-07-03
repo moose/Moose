@@ -22,16 +22,17 @@ sub new {
 
 sub BUILDARGS {
     my $class = shift;
-
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
                 || confess "Single parameters to new() must be a HASH ref";
             return {%{$_[0]}};
-        } else {
+        } 
+        else {
             return {}; # FIXME this is compat behavior, but is it correct?
         }
-    } else {
+    } 
+    else {
         return {@_};
     }
 }
@@ -72,12 +73,15 @@ sub DESTROY {
     $_[0]->DEMOLISHALL;
 }
 
+# support for UNIVERSAL::DOES ...
 sub DOES {
     my ( $self, $class_or_role_name ) = @_;
-
-    $self->SUPER::DOES($class_or_role_name)
-        or
-    $self->does($class_or_role_name);
+    if (my $DOES = __PACKAGE__->meta->find_next_method_by_name('DOES')) {
+        return $DOES->body->($self, $class_or_role_name) 
+            || $self->does($class_or_role_name);
+    }
+    return $self->isa($class_or_role_name) 
+        || $self->does($class_or_role_name);
 }
 
 # new does() methods will be created 

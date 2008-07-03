@@ -1,14 +1,6 @@
 Revision history for Perl extension Moose
 
-0.52
-    * Moose::Meta::Attribute
-      - added legal_options_for_inheritance (wreis)
-
-    * Moose::Cookbook::Snacks::*
-      - removed some of the unfinished snacks that should 
-        not have been released yet. Added some more examples
-        and explanation to the 'Keywords' snack. (stevan)
-    
+0.52 Thurs. July 3, 2008
     * Moose
       - added "FEATURE REQUESTS" section to the Moose docs
         to properly direct people (stevan) (RT #34333)
@@ -16,6 +8,20 @@ Revision history for Perl extension Moose
         this is not ever something you want to do 
         (fixed by stevan, found by obra)
         - added tests for this (stevan)
+
+    * Moose::Object
+      - adding support for DOES (as in UNIVERSAL::DOES) 
+        (nothingmuch)
+        - added test for this
+
+    * Moose::Meta::Attribute
+      - added legal_options_for_inheritance (wreis)
+        - added tests for this (wreis)
+
+    * Moose::Cookbook::Snacks::*
+      - removed some of the unfinished snacks that should 
+        not have been released yet. Added some more examples
+        to the 'Keywords' snack. (stevan)
 
     * Moose::Cookbook::Style
       - added general Moose "style guide" of sorts to the 

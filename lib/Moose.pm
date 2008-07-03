@@ -1026,6 +1026,8 @@ Yuval (nothingmuch) Kogman
 
 Chris (perigrin) Prather
 
+Wallace (wreis) Reis
+
 Jonathan (jrockway) Rockway
 
 Piotr (dexter) Roszatycki
@@ -1033,8 +1035,6 @@ Piotr (dexter) Roszatycki
 Sam (mugwump) Vilain
 
 Shawn (sartak) Moore
-
-Wallace (wreis) Reis
 
 ... and many other #moose folks
 
