@@ -7,7 +7,7 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Snacks::*
       - removed some of the unfinished snacks that should 
         not have been released yet. Added some more examples
-        and explination to the 'Keywords' snack. (stevan)
+        and explanation to the 'Keywords' snack. (stevan)
     
     * Moose
       - added "FEATURE REQUESTS" section to the Moose docs
