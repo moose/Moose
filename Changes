@@ -1,6 +1,14 @@
 Revision history for Perl extension Moose
 
-0.54
+0.54 Thurs. July 3, 2008
+    ... this is not my day today ...
+    
+    * Moose::Meta::Attribute
+      - fixed legal_options_for_inheritance such that 
+        clone_and_inherit options still works for 
+        Class::MOP::Attribute objects and therefore 
+        does not break MooseX::AttributeHelpers
+        (stevan)
 
 0.53 Thurs. July 3, 2008
     * Whoops, I guess I should run 'make manifest' before 

@@ -116,22 +116,54 @@ sub interpolate_class {
     return ( wantarray ? ( $class, @traits ) : $class );
 }
 
-# you can change default, required, coerce, documentation, lazy, handles, builder, type_constraint (explicitly or using isa/does), metaclass and traits
-sub legal_options_for_inheritance {
-  return qw(default coerce required documentation lazy handles builder
-    type_constraint);
-}
+# ...
 
+my @legal_options_for_inheritance = qw(
+    default coerce required 
+    documentation lazy handles 
+    builder type_constraint
+);
+
+sub legal_options_for_inheritance { @legal_options_for_inheritance }
+
+# NOTE/TODO
+# This method *must* be able to handle 
+# Class::MOP::Attribute instances as 
+# well. Yes, I know that is wrong, but 
+# apparently we didn't realize it was 
+# doing that and now we have some code 
+# which is dependent on it. The real 
+# solution of course is to push this 
+# feature back up into Class::MOP::Attribute
+# but I not right now, I am too lazy.
+# However if you are reading this and 
+# looking for something to do,.. please 
+# be my guest.
+# - stevan
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
+    
     my %copy = %options;
+    
     my %actual_options;
-    foreach my $legal_option ($self->legal_options_for_inheritance) {
+    
+    # NOTE:
+    # we may want to extends a Class::MOP::Attribute
+    # in which case we need to be able to use the 
+    # core set of legal options that have always 
+    # been here. But we allows Moose::Meta::Attribute
+    # instances to changes them.
+    # - SL
+    my @legal_options = $self->can('legal_options_for_inheritance')
+        ? $self->legal_options_for_inheritance
+        : @legal_options_for_inheritance;
+    
+    foreach my $legal_option (@legal_options) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
         }
-    }
+    }    
 
     if ($options{isa}) {
         my $type_constraint;
