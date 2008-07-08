@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.55
+    
+    * Moose::Meta::Attribute
+      - breaking down the way 'handles' methods are 
+        created so that the process can be more easily 
+        overridden by subclasses (stevan)
+
 0.54 Thurs. July 3, 2008
     ... this is not my day today ...
     

@@ -8,7 +8,7 @@ use Scalar::Util 'blessed', 'weaken';
 use Carp         'confess';
 use overload     ();
 
-our $VERSION   = '0.54';
+our $VERSION   = '0.55';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -555,12 +555,10 @@ sub install_delegation {
     # this will sort out any details and always
     # return an hash of methods which we want
     # to delagate to, see that method for details
-    my %handles = $self->_canonicalize_handles();
+    my %handles = $self->_canonicalize_handles;
 
     # find the accessor method for this attribute
-    my $accessor = $self->get_read_method_ref;
-    # then unpack it if we need too ...
-    $accessor = $accessor->body if blessed $accessor;
+    my $accessor = $self->_get_delegate_accessor;
 
     # install the delegation ...
     my $associated_class = $self->associated_class;
@@ -608,6 +606,16 @@ sub install_delegation {
 }
 
 # private methods to help delegation ...
+
+sub _get_delegate_accessor {
+    my $self = shift;
+    # find the accessor method for this attribute
+    my $accessor = $self->get_read_method_ref;
+    # then unpack it if we need too ...
+    $accessor = $accessor->body if blessed $accessor;    
+    # return the accessor
+    return $accessor;
+}
 
 sub _canonicalize_handles {
     my $self    = shift;

@@ -10,7 +10,7 @@ use Data::Dumper;
 
 use Moose::Meta::Role::Composite;
 
-our $VERSION   = '0.54';
+our $VERSION   = '0.55';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';
