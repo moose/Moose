@@ -77,12 +77,12 @@ sub validate {
 
 sub get_message {
     my ($self, $value) = @_;
-    $value = (defined $value ? overload::StrVal($value) : 'undef');
     if (my $msg = $self->message) {
         local $_ = $value;
         return $msg->($value);
     }
     else {
+        $value = (defined $value ? overload::StrVal($value) : 'undef');        
         return "Validation failed for '" . $self->name . "' failed with value $value";
     }    
 }
