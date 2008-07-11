@@ -6,7 +6,8 @@ Moose::Cookbook::Style - The latest in trendy Moose cuisine
 
 =for authors
 
-Please annotate all bad examples with comments so that they won't be copied by accodent
+Please annotate all bad examples with comments so that they won't be copied by
+accident
 
 =cut
 
@@ -93,8 +94,9 @@ the C<init_arg> to C<undef> instead of overwriting it in C<BUILD>.
 
 =head2 Use C<BUILDARGS> to alter C<@_> processing
 
-If you need to change the way L<@_> is processed, use C<BUILDARGS>, instead of
-wrapping C<new>. This ensures the behavior is subclassible, it keeps this logic
+If you need to change the way C<@_> is processed, for example for
+C<< Class->new( $single_param ) >>, use C<BUILDARGS> instead of wrapping
+C<new>. This ensures the behavior is subclassible, it keeps this logic
 independent of the other aspects of construction, and can be made efficient
 using C<make_immutable>.
 
@@ -159,7 +161,7 @@ Will add a coercion to B<all> attributes like:
         coerce => 1,
     );
 
-in a specific way.
+when the actual coercion applies only to your specific cases.
 
 =head1 Clean up your package
 
@@ -196,7 +198,7 @@ Copyright 2006-2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut
