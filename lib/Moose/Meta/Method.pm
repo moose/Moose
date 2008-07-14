@@ -8,9 +8,15 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Method';
 
+sub _error_thrower {
+    my $self = shift;
+    return "Moose::Meta::Class";
+    #( $self->associated_attribute || $self->associated_class ) # FIXME move to Accessor, fix for Constructor
+}
+
 sub throw_error {
     my $self = shift;
-    my $inv = ( ref $self && ( $self->associated_attribute || $self->associated_class ) ) || "Moose::Meta::Class";
+    my $inv = $self->_error_thrower;
     unshift @_, "message" if @_ % 2 == 1;
     unshift @_, method => $self if ref $self;
     unshift @_, $inv;

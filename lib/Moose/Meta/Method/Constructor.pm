@@ -4,7 +4,6 @@ package Moose::Meta::Method::Constructor;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
 our $VERSION   = '0.50';
@@ -17,11 +16,13 @@ sub new {
     my $class   = shift;
     my %options = @_;
 
-    (exists $options{options} && ref $options{options} eq 'HASH')
-        || confess "You must pass a hash of options";
+    my $meta = $options{metaclass};
+
+    (ref $options{options} eq 'HASH')
+        || $meta->throw_error("You must pass a hash of options", data => $options{options});
 
     ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+        || $meta->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
 
     my $self = bless {
         # from our superclass
@@ -30,10 +31,10 @@ sub new {
         '$!name'          => $options{name},
         # specific to this subclass
         '%!options'       => $options{options},
-        '$!meta_instance' => $options{metaclass}->get_meta_instance,
-        '@!attributes'    => [ $options{metaclass}->compute_all_applicable_attributes ],
+        '$!meta_instance' => $meta->get_meta_instance,
+        '@!attributes'    => [ $meta->compute_all_applicable_attributes ],
         # ...
-        '$!associated_metaclass' => $options{metaclass},
+        '$!associated_metaclass' => $meta,
     } => $class;
 
     # we don't want this creating
@@ -58,7 +59,7 @@ sub associated_metaclass { (shift)->{'$!associated_metaclass'} }
 
 # this was changed in 0.41, but broke MooseX::Singleton, so try to catch
 # any other code using the original broken spelling
-sub intialize_body { confess "Please correct the spelling of 'intialize_body' to 'initialize_body'" }
+sub intialize_body { Carp::confess "Please correct the spelling of 'intialize_body' to 'initialize_body'" }
 
 sub initialize_body {
     my $self = shift;
@@ -75,8 +76,8 @@ sub initialize_body {
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
 
-    $source .= "\n" . 'confess "Single parameters to new() must be a HASH ref"';
-    $source .= "\n" . '    if scalar @_ == 1 && defined $_[0] && ref($_[0]) ne q{HASH};';
+    $source .= "\n" . $self->_inline_throw_error('"Single parameters to new() must be a HASH ref"', 'data => $_[0]');
+    $source .= "\n" . '    if scalar @_ == 1 && ref($_[0]) ne q{HASH};';
 
     $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';
 
@@ -95,6 +96,8 @@ sub initialize_body {
 
     my $code;
     {
+        my $meta = $self; # FIXME for _inline_throw_error...
+
         # NOTE:
         # create the nessecary lexicals
         # to be picked up in the eval
@@ -118,7 +121,7 @@ sub initialize_body {
         } @type_constraints;
 
         $code = eval $source;
-        confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@" if $@;
+        $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
     }
     $self->{'&!body'} = $code;
 }
@@ -170,7 +173,7 @@ sub _generate_slot_initializer {
 
     if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
         push @source => ('(exists $params{\'' . $attr->init_arg . '\'}) ' .
-                        '|| confess "Attribute (' . $attr->name . ') is required";');
+                        '|| ' . $self->_inline_throw_error('"Attribute (' . $attr->name . ') is required"') .';');
     }
 
     if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
@@ -295,11 +298,11 @@ sub _generate_type_coercion {
 sub _generate_type_constraint_check {
     my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
     return (
-        $type_constraint_cv . '->(' . $value_name . ')'
-        . "\n\t" . '|| confess "Attribute (' 
+        $self->_inline_throw_error('"Attribute (' # FIXME add 'dad'
         . $attr->name 
         . ') does not pass the type constraint because: " . ' 
-        . $type_constraint_obj . '->get_message(' . $value_name . ');'
+        . $type_constraint_obj . '->get_message(' . $value_name . ')')
+        . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'
     );
 }
 

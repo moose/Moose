@@ -23,7 +23,7 @@ sub new {
     my $super = $meta->find_next_method_by_name($name);
 
     (defined $super)
-        || confess "You cannot augment '$name' because it has no super method";
+        || $meta->throw_error("You cannot augment '$name' because it has no super method", data => $name);
 
     my $_super_package = $super->package_name;
     # BUT!,... if this is an overriden method ....
