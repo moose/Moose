@@ -955,6 +955,11 @@ value of an attribute is assigned. The CODE ref will get two values,
 the invocant and the new value. This can be used to handle I<basic>
 bi-directional relations.
 
+This can also be a HASH of CODE refs for before/around/after, much
+in the same vein as method modifiers.  After and before work just
+like the plain CODE ref case. Around first gets a CODE ref that 
+expects the rest of the args and will assign the value.
+
 =item B<documentation>
 
 This is a string which contains the documentation for this attribute.
