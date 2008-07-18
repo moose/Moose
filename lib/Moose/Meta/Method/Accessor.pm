@@ -51,7 +51,6 @@ sub generate_accessor_method_inline {
         . $self->_inline_check_coercion . "\n"
         . $self->_inline_check_constraint($value_name) . "\n"
         . $self->_inline_store($inv, $value_name) . "\n"
-        . $self->_inline_trigger($inv, $value_name) . "\n"
     . ' }' . "\n"
     . $self->_inline_check_lazy . "\n"
     . $self->_inline_post_body(@_) . "\n"
@@ -75,7 +74,6 @@ sub generate_writer_method_inline {
     . $self->_inline_check_constraint($value_name)
     . $self->_inline_store($inv, $value_name)
     . $self->_inline_post_body(@_)
-    . $self->_inline_trigger($inv, $value_name)
     . ' }');
 }
 
@@ -215,21 +213,29 @@ sub _inline_init_slot {
 sub _inline_store {
     my ($self, $instance, $value) = @_;
     my $attr = $self->associated_attribute;
-    
     my $mi = $attr->associated_class->get_meta_instance;
     my $slot_name = sprintf "'%s'", $attr->slots;
-    
-    my $code = $mi->inline_set_slot_value($instance, $slot_name, $value)    . ";";
-    $code   .= $mi->inline_weaken_slot_value($instance, $slot_name, $value) . ";"
-        if $attr->is_weak_ref;
-    return $code;
-}
 
-sub _inline_trigger {
-    my ($self, $instance, $value) = @_;
-    my $attr = $self->associated_attribute;
-    return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
+    my $gen_code = sub {
+        my ($ins_name, $val_name) = @_;
+        
+        my $code = $mi->inline_set_slot_value(
+            $ins_name, $slot_name, $val_name) . ";\n";
+
+        if ($attr->is_weak_ref) {
+            $code .= $mi->inline_weaken_slot_value(
+                $ins_name, $slot_name, $val_name) . ";\n";
+        }
+
+        return $code;
+    };
+
+    if ($attr->can('_with_inline_triggers')) {
+        return $attr->_with_inline_triggers(
+          $instance, $value, '$attr', $gen_code);
+    }
+
+    return $gen_code->($instance, $value, '$attr');
 }
 
 sub _inline_get {
