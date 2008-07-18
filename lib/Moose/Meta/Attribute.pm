@@ -312,8 +312,21 @@ sub _process_options {
     }
 
     if (exists $options->{trigger}) {
-        ('CODE' eq ref $options->{trigger})
-            || confess "Trigger must be a CODE ref on attribute ($name)";
+        my $trig = $options->{trigger};
+        if ('HASH' eq ref $trig) {
+            my $legal = qr{^(?:before|after|around)$};
+            foreach my $key (keys %$trig) {
+                ($key =~ $legal)
+                    || confess "$key is an illegal trigger specifier"
+                    . " on attribute ($name)";
+                ('CODE' eq ref $trig->{$key})
+                    || confess "$key trigger must be CODE ref"
+                    . " on attribute ($name)";
+            }
+        }
+        elsif ('CODE' ne ref $trig) {
+            confess "Trigger must be a CODE or HASH ref on attribute ($name)";
+        }
     }
 
     if (exists $options->{auto_deref} && $options->{auto_deref}) {
@@ -349,6 +362,73 @@ sub _process_options {
         confess "You cannot have a required attribute ($name) without a default, builder, or an init_arg";
     }
 
+}
+
+sub _with_inline_triggers {
+    my ($self, $instance, $value, $attr, $gen_code) = @_;
+    my @ga = ($instance, $value, $attr);
+    return $gen_code->(@ga) unless $self->has_trigger;
+
+    my $trigger_args = "$instance, $value, $attr";
+
+    if ('CODE' eq ref $self->trigger) {
+        return $gen_code->(@ga) . "$attr->trigger->($trigger_args);\n";
+    }
+
+    my $code = '';
+    my ($before, $around, $after) = @{$self->trigger}{qw(before around after)};
+
+    if ($before) {
+        $code .= "$attr->trigger->{before}->($trigger_args);\n";
+    }
+
+    if ($around) {
+        $code .= "$attr->trigger->{around}->(sub {\n"
+            . 'my ($instance, $value, $attr) = @_;' . "\n"
+            . $gen_code->('$instance', '$value', '$attr') 
+            . "}, $trigger_args);\n";
+    }
+    else {
+        $code .= $gen_code->(@ga);
+    }
+
+    if ($after) {
+        $code .= "$attr->trigger->{after}->($trigger_args);\n";
+    }
+
+    return $code;
+}
+
+sub _with_triggers {
+    my ($self, $instance, $value, $fn) = @_;
+    my @trigger_args = ($instance, $value, $self);
+    my ($before, $around, $after);
+
+    if ($self->has_trigger) {
+        my $trig = $self->trigger;
+
+        if ('HASH' eq ref $trig) {
+            ($before, $around, $after) = @{$trig}{qw(before around after)}
+        }
+        else {
+            $after = $trig;
+        }
+    }
+
+    if ($before) {
+        $before->(@trigger_args);
+    }
+
+    if ($around) {
+        $around->($fn, @trigger_args);
+    }
+    else {
+        $fn->(@trigger_args);
+    }
+
+    if ($after) {
+        $after->(@trigger_args);
+    }
 }
 
 sub initialize_instance_slot {
@@ -400,9 +480,14 @@ sub initialize_instance_slot {
                      . $type_constraint->get_message($val);
     }
 
-    $self->set_initial_value($instance, $val);
-    $meta_instance->weaken_slot_value($instance, $self->name)
-        if ref $val && $self->is_weak_ref;
+    $self->_with_triggers($instance, $val, sub {
+        my ($ins, $val, $attr) = @_;
+        my $mi = Class::MOP::Class->initialize(blessed($ins))
+                                  ->get_meta_instance;
+        $attr->set_initial_value($ins, $val);
+        $mi->weaken_slot_value($ins, $attr->name)
+            if ref $val && $attr->is_weak_ref;
+    });
 }
 
 ## Slot management
@@ -470,18 +555,14 @@ sub set_value {
                      . $type_constraint->get_message($value);
     }
 
-    my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
-                                         ->get_meta_instance;
-
-    $meta_instance->set_slot_value($instance, $attr_name, $value);
-
-    if (ref $value && $self->is_weak_ref) {
-        $meta_instance->weaken_slot_value($instance, $attr_name);
-    }
-
-    if ($self->has_trigger) {
-        $self->trigger->($instance, $value, $self);
-    }
+    $self->_with_triggers($instance, $value, sub {
+        my ($ins, $val, $attr) = @_;
+        my $mi = Class::MOP::Class->initialize(blessed($ins))
+                                  ->get_meta_instance;
+        $mi->set_slot_value($ins, $attr->name, $val);
+        $mi->weaken_slot_value($ins, $attr->name)
+            if (ref $val && $attr->is_weak_ref);
+    });
 }
 
 sub get_value {

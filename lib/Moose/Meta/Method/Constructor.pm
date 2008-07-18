@@ -83,7 +83,6 @@ sub initialize_body {
         $self->_generate_slot_initializer($_)
     } 0 .. (@{$self->attributes} - 1));
 
-    $source .= ";\n" . $self->_generate_triggers();    
     $source .= ";\n" . $self->_generate_BUILDALL();
 
     $source .= ";\n" . 'return $instance';
@@ -145,32 +144,6 @@ sub _generate_BUILDALL {
         push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD($params)';
     }
     return join ";\n" => @BUILD_calls;
-}
-
-sub _generate_triggers {
-    my $self = shift;
-    my @trigger_calls;
-    foreach my $i (0 .. $#{ $self->attributes }) {
-        my $attr = $self->attributes->[$i];
-        if ($attr->can('has_trigger') && $attr->has_trigger) {
-            if (defined(my $init_arg = $attr->init_arg)) {
-                push @trigger_calls => (
-                    '(exists $params->{\'' . $init_arg . '\'}) && do {' . "\n    "
-                    .   '$attrs->[' . $i . ']->trigger->('
-                    .       '$instance, ' 
-                    .        $self->meta_instance->inline_get_slot_value(
-                                 '$instance',
-                                 ("'" . $attr->name . "'")
-                             ) 
-                             . ', '
-                    .        '$attrs->[' . $i . ']'
-                    .   ');'
-                    ."\n}"
-                );
-            } 
-        }
-    }
-    return join ";\n" => @trigger_calls;    
 }
 
 sub _generate_slot_initializer {
@@ -269,37 +242,37 @@ sub _generate_slot_initializer {
 sub _generate_slot_assignment {
     my ($self, $attr, $value, $index) = @_;
 
-    my $source;
-    
-    if ($attr->has_initializer) {
-        $source = (
-            '$attrs->[' . $index . ']->set_initial_value($instance, ' . $value . ');'
-        );        
-    }
-    else {
-        $source = (
-            $self->meta_instance->inline_set_slot_value(
-                '$instance',
-                ("'" . $attr->name . "'"),
-                $value
-            ) . ';'
-        );        
-    }
-    
-    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME        
+    my $attr_name = "\$attrs->[$index]";
+    my $mi = $self->meta_instance;
 
-    if ($is_moose && $attr->is_weak_ref) {
-        $source .= (
-            "\n" .
-            $self->meta_instance->inline_weaken_slot_value(
-                '$instance',
-                ("'" . $attr->name . "'")
-            ) .
-            ' if ref ' . $value . ';'
-        );
+    my $gen_code = sub {
+        my ($ins_name, $val_name, $attr_name) = @_;
+        my @miargs = ($ins_name, (sprintf "'%s'", $attr->name), $val_name);
+        my $source;
+
+        if ($attr->has_initializer) {
+           $source = "$attr_name->set_initial_value($ins_name, $val_name);\n"; 
+        }
+        else {
+            $source = $mi->inline_set_slot_value(@miargs) . ";\n";
+        }
+
+        my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME        
+
+        if ($is_moose && $attr->is_weak_ref) {
+            $source .= $mi->inline_weaken_slot_value(@miargs)
+                    .  "if ref $val_name;\n";
+        }
+
+        return $source;
+    };
+    
+    if ($attr->can('_with_inline_triggers')) {
+        return $attr->_with_inline_triggers(
+            '$instance', $value, $attr_name, $gen_code);
     }
 
-    return $source;
+    return $gen_code->('$instance', $value, $attr_name);
 }
 
 sub _generate_type_coercion {
