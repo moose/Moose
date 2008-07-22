@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 27;
 use Test::Exception;
 
 BEGIN {
@@ -42,15 +42,9 @@ my $a = MyClass->new;
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
-diag join ", " => map { $_->name } @{$mc->meta->roles};
-diag join ", " => map { $_->name } $mc->meta->calculate_all_roles;
-
 lives_ok {
     MyClass->meta->make_immutable;
 } '... make MyClass immutable okay';
-
-diag join ", " => map { $_->name } @{$mc->meta->roles};
-diag join ", " => map { $_->name } $mc->meta->calculate_all_roles;
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
@@ -58,14 +52,33 @@ is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
-=pod
+lives_ok {
+    MyClass->meta->make_mutable;
+} '... make MyClass immutable okay';
 
-MyClass->meta->make_mutable;
-ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is(MyClass->meta, $mc, '... these metas are still the same thing');
+is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
-MyMetaclass->meta->make_immutable;
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
-MyClass->meta->make_immutable;
+lives_ok {
+    MyMetaclass->meta->make_immutable;
+} '... make MyClass immutable okay';
+
+is(MyClass->meta, $mc, '... these metas are still the same thing');
+is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
+
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+
+lives_ok {
+    MyClass->meta->make_immutable;
+} '... make MyClass immutable okay';
+
+is(MyClass->meta, $mc, '... these metas are still the same thing');
+is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
+
+ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
