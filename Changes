@@ -7,10 +7,6 @@ Revision history for Perl extension Moose
         created so that the process can be more easily 
         overridden by subclasses (stevan)
 
-      - implemented Sartak's idea for
-        before/after/around triggers, should be
-        backcompat with plain CODE refs. (frodwith)
-
     * Moose::Meta::TypeConstraint
       - fixing what is passed into a ->message with 
         the type constraints (RT #37569)

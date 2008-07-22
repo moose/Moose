@@ -454,16 +454,13 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 This tells the accessor whether to automatically dereference the value returned.
 This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
-=item I<trigger =E<gt> $code or $hash>
+=item I<trigger =E<gt> $code>
 
-The I<trigger> option is a CODE reference which will be called after the value
-of the attribute is set. The CODE ref will be passed the instance itself, the
-updated value and the attribute meta-object (this is for more advanced
-fiddling and can typically be ignored). You B<cannot> have a trigger on a
-read-only attribute.  It can optionally be a hashref of before/after/around to
-CODE refs, in which case after/before behave as in the plain CODE ref case,
-and around first gets a CODE ref which takes the rest of the args and sets the
-value.
+The I<trigger> option is a CODE reference which will be called after the value of
+the attribute is set. The CODE ref will be passed the instance itself, the
+updated value and the attribute meta-object (this is for more advanced fiddling
+and can typically be ignored). You B<cannot> have a trigger on a read-only
+attribute.
 
 =item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
 

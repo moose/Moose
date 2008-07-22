@@ -1,40 +1,64 @@
+#!/usr/bin/perl
 
-{
+use strict;
+use warnings;
+
+use Test::More tests => 5;
+use Test::Exception;
+
+BEGIN {
+    use_ok('Moose');
+}
+
+BEGIN {
     package MyRole;
     use Moose::Role;
-    BEGIN {
-        requires 'foo';
-    }
-    no Moose::Role;
-}
-{
+
+    requires 'foo';
+
     package MyMetaclass;
-    use Moose;
-    BEGIN {
-        sub foo { 'i am foo' }
-        extends 'Moose::Meta::Class';
-        with 'MyRole';
-    }
-    no Moose;
+    use Moose qw(extends with);
+    extends 'Moose::Meta::Class';
+       with 'MyRole';
+        
+    sub foo { 'i am foo' }        
 }
 
 {
     package MyClass;
-    use metaclass 'MyMetaclass';
+    use metaclass ('MyMetaclass');
     use Moose;
-    no Moose;
 }
 
-use Test::More tests => 5;
+my $mc = MyMetaclass->initialize('MyClass');
+isa_ok($mc, 'MyMetaclass');
+
+ok($mc->meta->does_role('MyRole'), '... the metaclass does the role');
+
+is(MyClass->meta, $mc, '... these metas are the same thing');
+is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 my $a = MyClass->new;
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
-# now try combinations of having the class/metaclass made immutable
-# and run the same test
+diag join ", " => map { $_->name } @{$mc->meta->roles};
+diag join ", " => map { $_->name } $mc->meta->calculate_all_roles;
 
-MyClass->meta->make_immutable;
+lives_ok {
+    MyClass->meta->make_immutable;
+} '... make MyClass immutable okay';
+
+diag join ", " => map { $_->name } @{$mc->meta->roles};
+diag join ", " => map { $_->name } $mc->meta->calculate_all_roles;
+
+is(MyClass->meta, $mc, '... these metas are still the same thing');
+is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
+
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+
+=pod
 
 MyClass->meta->make_mutable;
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
