@@ -468,17 +468,11 @@ sub initialize_instance_slot {
 
     return unless $value_is_set;
 
-    if ($self->has_type_constraint) {
-        my $type_constraint = $self->type_constraint;
-        if ($self->should_coerce && $type_constraint->has_coercion) {
-            $val = $type_constraint->coerce($val);
-        }
-        $type_constraint->check($val)
-            || confess "Attribute (" 
-                     . $self->name 
-                     . ") does not pass the type constraint because: " 
-                     . $type_constraint->get_message($val);
-    }
+    (my($failed_type_constraint), $val) = $self->is_invalid_value($val);
+    defined($failed_type_constraint) && confess "Attribute (" 
+                . $self->name 
+                . ") does not pass the type constraint because: " 
+                . $failed_type_constraint->get_message($val);
 
     $self->_with_triggers($instance, $val, sub {
         my ($ins, $val, $attr) = @_;
@@ -513,15 +507,12 @@ sub _set_initial_slot_value {
 
     my $callback = sub {
         my $val = shift;
-        if ($type_constraint) {
-            $val = $type_constraint->coerce($val)
-                if $can_coerce;
-            $type_constraint->check($val)
-                || confess "Attribute (" 
-                         . $slot_name 
-                         . ") does not pass the type constraint because: " 
-                         . $type_constraint->get_message($val);            
-        }
+        (my($failed_type_constraint), $val) = $self->is_invalid_value($val);
+        defined($failed_type_constraint) && confess "Attribute (" 
+                    . $self->name 
+                    . ") does not pass the type constraint because: " 
+                    . $failed_type_constraint->get_message($val);
+
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
     
@@ -531,29 +522,35 @@ sub _set_initial_slot_value {
     $instance->$initializer($value, $callback, $self);
 }
 
+sub is_invalid_value {
+    my($self, $value) = @_;
+    if ( my $tc = $self->type_constraint ) {
+        $value = $tc->coercion->coerce($value)
+            if $tc->has_coercion && $self->should_coerce;
+        # return coerced value so coercion doesn't have to run twice
+        return $tc, $value unless defined( $tc->check($value) );
+    }
+    return undef, $value;
+}
+
 sub set_value {
     my ($self, $instance, @args) = @_;
     my $value = $args[0];
 
     my $attr_name = $self->name;
 
+    # I think this is unnecessary, declare and use a clearer method instead.
+    # This would allow initialize_instance_slot to call $self->set_value()
+    # instead of duplicating the subsequent code - edenc
     if ($self->is_required and not @args) {
         confess "Attribute ($attr_name) is required";
     }
 
-    if ($self->has_type_constraint) {
-
-        my $type_constraint = $self->type_constraint;
-
-        if ($self->should_coerce) {
-            $value = $type_constraint->coerce($value);
-        }        
-        $type_constraint->_compiled_type_constraint->($value)
-            || confess "Attribute (" 
-                     . $self->name 
-                     . ") does not pass the type constraint because " 
-                     . $type_constraint->get_message($value);
-    }
+    (my($failed_type_constraint), $value) = $self->is_invalid_value($value);
+    defined($failed_type_constraint) && confess "Attribute (" 
+                . $self->name 
+                . ") does not pass the type constraint because: " 
+                . $failed_type_constraint->get_message($value);
 
     $self->_with_triggers($instance, $value, sub {
         my ($ins, $val, $attr) = @_;
@@ -881,6 +878,11 @@ Returns true if this meta-attribute has a type constraint.
 A read-only accessor for this meta-attribute's type constraint. For
 more information on what you can do with this, see the documentation
 for L<Moose::Meta::TypeConstraint>.
+
+=item B<is_invalid_value>
+
+Returns a pair containing the failed type constraint and the possibly coerced
+value.
 
 =item B<has_handles>
 
