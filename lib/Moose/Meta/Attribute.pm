@@ -833,14 +833,14 @@ and predicate options for you using the following convention.
    #If your attribute name starts with an underscore:
    has '_foo' => (lazy_build => 1);
    #is the same as
-   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', builder => '_build__foo);
+   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', builder => '_build__foo');
    # or
    has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', default => sub{shift->_build__foo});
 
    #If your attribute name does not start with an underscore:
    has 'foo' => (lazy_build => 1);
    #is the same as
-   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', builder => '_build_foo);
+   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', builder => '_build_foo');
    # or
    has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', default => sub{shift->_build_foo});
 
