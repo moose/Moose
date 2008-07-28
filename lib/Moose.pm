@@ -218,10 +218,13 @@ use Moose::Util ();
         my ( $class, $traits ) = @_;
 
         return
-            unless $traits && @{ $traits };
+            unless $traits && @$traits;
 
-        for my $trait ( @{ $traits } ) {
-            $trait->meta()->apply_to_metaclass_instance( $class->meta() );
+        if ( @$traits == 1 ) {
+            $traits->[0]->meta()->apply_to_metaclass_instance( $class->meta() );
+        } else {
+            Moose::Meta::Role->combine(@$traits)
+                ->apply_to_metaclass_instance( $class->meta() );
         }
     }
 
