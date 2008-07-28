@@ -192,17 +192,15 @@ use Moose::Util ();
     );
 
     sub _strip_traits {
-        my $at = shift;
+        my $idx = first_index { $_ eq '-traits' } @_;
 
-        my $idx = first_index { $_ eq '-traits' } @{ $at };
+        return unless $idx && $#_ >= $idx + 1;
 
-        return unless $idx && $#{ $at } >= $idx + 1;
+        my $traits = $_[ $idx + 1 ];
 
-        my $traits = $at->[ $idx + 1 ];
+        splice @_, $idx, 2;
 
-        splice @{ $at }, $idx, 2;
-
-        return $traits;
+        return ( $traits, @_ )
     }
 
     # 1 extra level because it's called by import so there's a layer of indirection
@@ -228,7 +226,8 @@ use Moose::Util ();
     }
 
     sub import {
-        my $traits = _strip_traits(\@_);
+        my $traits;
+        ( $traits, @_ ) = _strip_traits(@_);
 
         $CALLER = _get_caller(@_);
 
