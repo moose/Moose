@@ -390,6 +390,16 @@ sub apply {
     }  
 }
 
+sub apply_to_metaclass_instance {
+    my ($self, $meta, @args) = @_;
+
+    $meta->isa('Moose::Meta::Class')
+        || confess "You must pass in a Moose::Meta::Class instance";
+
+    require Moose::Meta::Role::Application::ToMetaclassInstance;
+    return Moose::Meta::Role::Application::ToMetaclassInstance->new(@args)->apply($self, $meta);
+}
+
 sub combine {
     my ($class, @role_specs) = @_;
     
@@ -559,6 +569,8 @@ probably not that much really).
 =item B<new>
 
 =item B<apply>
+
+=item B<apply_to_metaclass_instance>
 
 =item B<combine>
 

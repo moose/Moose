@@ -10,6 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Scalar::Util 'blessed';
 use Carp         'confess', 'croak', 'cluck';
 
+use List::MoreUtils qw( first_index );
 use Sub::Exporter;
 
 use Class::MOP;
@@ -190,6 +191,20 @@ use Moose::Util ();
         }
     );
 
+    sub _strip_traits {
+        my $at = shift;
+
+        my $idx = first_index { $_ eq '-traits' } @{ $at };
+
+        return unless $idx && $#{ $at } >= $idx + 1;
+
+        my $traits = $at->[ $idx + 1 ];
+
+        splice @{ $at }, $idx, 2;
+
+        return $traits;
+    }
+
     # 1 extra level because it's called by import so there's a layer of indirection
     sub _get_caller{
         my $offset = 1;
@@ -201,7 +216,20 @@ use Moose::Util ();
                     : caller($offset);
     }
 
+    sub _apply_meta_traits {
+        my ( $class, $traits ) = @_;
+
+        return
+            unless $traits && @{ $traits };
+
+        for my $trait ( @{ $traits } ) {
+            $trait->meta()->apply_to_metaclass_instance( $class->meta() );
+        }
+    }
+
     sub import {
+        my $traits = _strip_traits(\@_);
+
         $CALLER = _get_caller(@_);
 
         # this works because both pragmas set $^H (see perldoc perlvar)
@@ -216,6 +244,8 @@ use Moose::Util ();
         return if $CALLER eq 'main';
 
         init_meta( $CALLER, 'Moose::Object' );
+
+        _apply_meta_traits( $CALLER, $traits );
 
         goto $exporter;
     }
