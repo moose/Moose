@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 37;
 use Test::Exception;
 
 BEGIN {
@@ -40,7 +40,9 @@ is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 my $a = MyClass->new;
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyClass->meta->make_immutable;
@@ -50,17 +52,21 @@ is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyClass->meta->make_mutable;
-} '... make MyClass immutable okay';
+} '... make MyClass mutable okay';
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyMetaclass->meta->make_immutable;
@@ -70,7 +76,9 @@ is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyClass->meta->make_immutable;
@@ -80,5 +88,7 @@ is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
 
 ok( $a->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
+is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
