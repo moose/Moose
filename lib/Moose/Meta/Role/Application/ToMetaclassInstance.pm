@@ -19,15 +19,24 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
 my %ANON_CLASSES;
 
 sub apply {
-    my ($self, $role, $meta) = @_;
+    my ( $self, $role, $meta ) = @_;
 
-    my $class = (blessed $meta)->create_anon_class(
-        superclasses => [ blessed($meta) ]
-    );
+    my $anon_role_key = (blessed($meta) . $role->name);
 
-    $self->SUPER::apply($role, $class);
+    my $class;
+    if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
+        $class = $ANON_CLASSES{$anon_role_key};
+    }
+    else {
+        $class = blessed($meta)->create_anon_class(
+            superclasses => [ blessed($meta) ],
+        );
 
-    $class->rebless_instance($meta, %{$self->rebless_params});
+        $ANON_CLASSES{$anon_role_key} = $class;
+        $self->SUPER::apply( $role, $class );
+    }
+
+    $class->rebless_instance( $meta, %{ $self->rebless_params } );
 }
 
 1;
