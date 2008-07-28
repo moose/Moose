@@ -238,8 +238,9 @@ ok( $robot->has_attribute("twist"), "has attr 'twist'" );
 }
 
 {
-    local $TODO = "attribute related methods are not yet known by the role";
     req_or_has($robot, "twist");
+
+    local $TODO = "attribute related methods are not yet known by the role";
     ok( $robot->has_method("twist"), "has twist method" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method::Accessor" );
