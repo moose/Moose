@@ -71,33 +71,36 @@ sub search_class_by_role {
 
 sub apply_all_roles {
     my $applicant = shift;
-    
-    confess "Must specify at least one role to apply to $applicant" unless @_;
-    
-    my $roles = Data::OptList::mkopt([ @_ ]);
-    
-    #use Data::Dumper;
-    #warn Dumper $roles;
-    
+
+    apply_all_roles_with_method( $applicant, 'apply', [@_] );
+}
+
+sub apply_all_roles_with_method {
+    my ($applicant, $apply_method, $role_list) = @_;
+
+    confess "Must specify at least one role to apply to $applicant" unless @$role_list;
+
+    my $roles = Data::OptList::mkopt($role_list);
+
     my $meta = (blessed $applicant ? $applicant : find_meta($applicant));
-    
+
     foreach my $role_spec (@$roles) {
         Class::MOP::load_class($role_spec->[0]);
     }
-    
+
     ($_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role'))
         || confess "You can only consume roles, " . $_->[0] . " is not a Moose role"
             foreach @$roles;
 
     if (scalar @$roles == 1) {
         my ($role, $params) = @{$roles->[0]};
-        $role->meta->apply($meta, (defined $params ? %$params : ()));
+        $role->meta->$apply_method($meta, (defined $params ? %$params : ()));
     }
     else {
         Moose::Meta::Role->combine(
             @$roles
-        )->apply($meta);
-    }    
+        )->$apply_method($meta);
+    }
 }
 
 # instance deconstruction ...

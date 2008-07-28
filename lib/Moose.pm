@@ -194,13 +194,13 @@ use Moose::Util ();
     sub _strip_traits {
         my $idx = first_index { $_ eq '-traits' } @_;
 
-        return unless $idx && $#_ >= $idx + 1;
+        return (undef, @_) unless $idx >= 0 && $#_ >= $idx + 1;
 
         my $traits = $_[ $idx + 1 ];
 
         splice @_, $idx, 2;
 
-        return ( $traits, @_ )
+        return ($traits, @_);
     }
 
     # 1 extra level because it's called by import so there's a layer of indirection
@@ -220,17 +220,17 @@ use Moose::Util ();
         return
             unless $traits && @$traits;
 
-        if ( @$traits == 1 ) {
-            $traits->[0]->meta()->apply_to_metaclass_instance( $class->meta() );
-        } else {
-            Moose::Meta::Role->combine(@$traits)
-                ->apply_to_metaclass_instance( $class->meta() );
-        }
+        my $meta = $class->meta();
+
+        Moose::Util::apply_all_roles_with_method($meta, 'apply_to_metaclass_instance', $traits);
     }
 
     sub import {
+        # This is a bit gross, but it's necessary for backwards
+        # compatibility, so that _get_caller() sees the arguments in
+        # the right order.
         my $traits;
-        ( $traits, @_ ) = _strip_traits(@_);
+        ($traits, @_) = _strip_traits(@_);
 
         $CALLER = _get_caller(@_);
 
