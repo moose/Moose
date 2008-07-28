@@ -54,7 +54,7 @@ ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 
 lives_ok {
     MyClass->meta->make_mutable;
-} '... make MyClass immutable okay';
+} '... make MyClass mutable okay';
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
