@@ -12,7 +12,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Sub::Exporter;
 
-use Class::MOP;
+use Class::MOP 0.64;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
