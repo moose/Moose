@@ -9,8 +9,6 @@ use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    use List::MoreUtils qw( zip );
-
     subtype 'EyeColor'
         => as 'Object'
         => where { $_->isa('Human::EyeColor') };
@@ -18,8 +16,12 @@ use warnings;
     coerce 'EyeColor'
         => from 'ArrayRef'
             => via {
-                my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
-                return Human::EyeColor->new( zip( @genes, @$_ ) );
+                return Human::EyeColor->new(
+                    bey2_1 => $_->[0],
+                    bey2_2 => $_->[1],
+                    gey_1  => $_->[2],
+                    gey_2  => $_->[3],
+                );
             };
 
     subtype 'Gender'
