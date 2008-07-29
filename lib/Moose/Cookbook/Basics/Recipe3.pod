@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe3 - A lazy B<BinaryTree> example
+Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
 
 =head1 SYNOPSIS
 
@@ -220,7 +220,7 @@ You I<can> use the C<default> option without the C<lazy> option if
 you like, as we showed in the second recipe.
 
 And actually, you can use C<builder> instead of C<default>. See
-L<Moose::Cookbook::Recipe9> for details.
+L<Moose::Cookbook::Basics::Recipe9> for details.
 
 =back
 

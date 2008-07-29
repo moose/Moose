@@ -3,8 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe12 - Create humans and their spawn using operator
-overloading, subtypes, and coercion.
+Moose::Cookbook::Basics::Recipe10 - Operator overloading, subtypes, and coercion
 
 =head1 SYNOPSIS
 
@@ -86,7 +85,7 @@ L<Moose::Util::TypeConstraints>.  Int, Str, and CodeRef are
 all examples.  Subtypes give you the ability to inherit the
 constraints of an existing type, and adding additional
 constraints on that type.  An introduction to type constraints
-is available in the L<Moose::Cookbook::Recipe4>.
+is available in the L<Moose::Cookbook::Basics::Recipe4>.
 
 =head2 Coercion
 
@@ -95,7 +94,7 @@ is checked to validate the value.  Normally, if the value
 does not pass the constraint, an exception will be thrown.
 But, it is possible with Moose to define the rules to coerce
 values from one type to another.  A good introduction to
-this can be found in L<Moose::Cookbook::Recipe5>.
+this can be found in L<Moose::Cookbook::Basics::Recipe5>.
 
 =head1 GENES
 

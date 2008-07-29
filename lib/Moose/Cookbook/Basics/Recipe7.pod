@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe7 - Making Moose fast with immutable
+Moose::Cookbook::Basics::Recipe7 - Making Moose fast with immutable
 
 =head1 SYNOPSIS
 
