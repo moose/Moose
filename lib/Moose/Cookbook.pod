@@ -68,7 +68,7 @@ provide a default attribute value.
 
 =item L<Moose::Cookbook::Basics::Recipe10> - Operator overloading, subtypes, and coercion
 
-Demonstrates using operator overloading, coercion, and sub types to
+Demonstrates using operator overloading, coercion, and subtypes to
 model how eye color is determined during reproduction.
 
 =back
