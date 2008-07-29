@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe22 - The attribute trait example
+Moose::Cookbook::Meta::Recipe3 - The attribute trait example
 
 =head1 SYNOPSIS
 
@@ -64,7 +64,7 @@ Moose::Cookbook::Recipe22 - The attribute trait example
 
 =head1 BUT FIRST
 
-This recipe is a continuation of L<Moose::Cookbook::Recipe21>. Please read that
+This recipe is a continuation of L<Moose::Cookbook::Meta::Recipe21>. Please read that
 first.
 
 =head1 MOTIVATION

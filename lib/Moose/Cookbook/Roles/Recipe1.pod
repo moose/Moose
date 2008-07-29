@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe10 - The Moose::Role example
+Moose::Cookbook::Roles::Recipe1 - The Moose::Role example
 
 =head1 SYNOPSIS
 

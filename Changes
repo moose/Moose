@@ -11,8 +11,12 @@ Revision history for Perl extension Moose
         the type constraints (RT #37569)
         - added tests for this (Charles Alderman)
 
-    * Moose::Cookbook::Recipe12
-      - A new recipe that shows off operator overloading
+    * Moose::Cookbook
+      - reorganized the recipes into sections - Basics, Roles, Meta
+        (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe10
+      - A new recipe that demonstrates operator overloading
         in combination with Moose. (bluefeet)
 
 0.54 Thurs. July 3, 2008

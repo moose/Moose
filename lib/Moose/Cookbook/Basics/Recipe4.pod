@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe4 - Subtypes, and modeling a simple B<Company> class hierarchy
+Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> class hierarchy
 
 =head1 SYNOPSIS
   

@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe11 - Advanced Role Composition - method exclusion and aliasing
+Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion and aliasing
 
 =head1 SYNOPSIS
 

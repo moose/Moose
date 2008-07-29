@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe6 - The augment/inner example
+Moose::Cookbook::Basics::Recipe6 - The augment/inner example
 
 =head1 SYNOPSIS
     

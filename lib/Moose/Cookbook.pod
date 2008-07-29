@@ -21,52 +21,52 @@ for common questions and problems people have with Moose.
 
 =over 4
 
-=item L<Moose::Cookbook::Recipe1> - The (always classic) B<Point> example
+=item L<Moose::Cookbook::Basics::Recipe1> - The (always classic) B<Point> example
 
 A simple Moose-based class. Demonstrated Moose attributes and subclassing.
 
-=item L<Moose::Cookbook::Recipe2> - A simple B<BankAccount> example
+=item L<Moose::Cookbook::Basics::Recipe2> - A simple B<BankAccount> example
 
 A slightly more complex Moose class. Demonstrates using a method
 modifier in a subclass.
 
-=item L<Moose::Cookbook::Recipe3> - A lazy B<BinaryTree> example
+=item L<Moose::Cookbook::Basics::Recipe3> - A lazy B<BinaryTree> example
 
 Demonstrates several attribute features, including types, weak
 references, predicates ("does this object have a foo?"), defaults, and
 lazy attribute construction.
 
-=item L<Moose::Cookbook::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
+=item L<Moose::Cookbook::Basics::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
 
 Introduces the creation and use of custom types, a C<BUILD> method,
 and the use of C<override> in a subclass.
 
-=item L<Moose::Cookbook::Recipe5> - More subtypes, coercion in a B<Request> class
+=item L<Moose::Cookbook::Basics::Recipe5> - More subtypes, coercion in a B<Request> class
 
 More type examples, including the use of type coercions.
 
-=item L<Moose::Cookbook::Recipe6> - The augment/inner example
+=item L<Moose::Cookbook::Basics::Recipe6> - The augment/inner example
 
 Demonstrates the use of C<augment> method modifiers, a way of turning
 the usual method overriding style "inside-out".
 
-=item L<Moose::Cookbook::Recipe7> - Making Moose fast with immutable
+=item L<Moose::Cookbook::Basics::Recipe7> - Making Moose fast with immutable
 
 Making a class immutable greatly increases the speed of accessors and
 object construction.
 
-=item L<Moose::Cookbook::Recipe8> - Managing complex relations with trigger (TODO)
+=item L<Moose::Cookbook::Basics::Recipe8> - Managing complex relations with trigger (TODO)
 
 I<abstract goes here>
 
 Work off of this http://code2.0beta.co.uk/moose/svn/Moose/trunk/t/200_examples/007_Child_Parent_attr_inherit.t
 
-=item L<Moose::Cookbook::Recipe9> - Builder methods and lazy_build
+=item L<Moose::Cookbook::Basics::Recipe9> - Builder methods and lazy_build
 
 The builder feature provides an inheritable and role-composable way to
 provide a default attribute value.
 
-=item L<Moose::Cookbook::Recipe12> - Create Humans and their Spawn
+=item L<Moose::Cookbook::Basics::Recipe10> - Create Humans and their Spawn
 
 Shows how operator overloading, coercion, and sub types can be used
 to mimmick the human reproductive system (well, the selection of genes
@@ -78,20 +78,20 @@ at least).  Assumes a basic understanding of Moose.
 
 =over 4
 
-=item L<Moose::Cookbook::Recipe10> - The Moose::Role example
+=item L<Moose::Cookbook::Role::Recipe1> - The Moose::Role example
 
 Demonstrates roles, which are also sometimes known as traits or
 mix-ins. Roles provide a method of code re-use which is orthogonal to
 subclassing.
 
-=item L<Moose::Cookbook::Recipe11> - Advanced Role Composition - method exclusion and aliasing
+=item L<Moose::Cookbook::Role::Recipe2> - Advanced Role Composition - method exclusion and aliasing
 
 Sometimes you just want to include part of a role in your
 class. Sometimes you want the whole role but one if its methods
 conflicts with one in your class. With method exclusion and aliasing,
 you can work around these problems.
 
-=item L<Moose::Cookbook::Recipe12> - Runtime Role Composition (TODO)
+=item L<Moose::Cookbook::Role::Recipe3> - Runtime Role Composition (TODO)
 
 I<abstract goes here>
 
@@ -101,25 +101,25 @@ I<abstract goes here>
 
 =over 4
 
-=item L<Moose::Cookbook::Recipe20> - Welcome to the meta-world (TODO)
+=item L<Moose::Cookbook::Meta::Recipe1> - Welcome to the meta-world (TODO)
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Recipe21> - The meta-attribute example
+=item L<Moose::Cookbook::Meta::Recipe2> - The meta-attribute example
 
 One way to extend Moose is to provide your own attribute
 metaclasses. Attribute metaclasses let you extend attribute
 declarations (with C<has>) and behavior to provide additional
 attribute functionality.
 
-=item L<Moose::Cookbook::Recipe22> - The meta-attribute trait example
+=item L<Moose::Cookbook::Meta::Recipe3> - The meta-attribute trait example
 
 Extending Moose's attribute metaclass is a great way to add
 functionality. However, attributes can only have one metaclass.
 Applying roles to the attribute metaclass lets you provide
 composable attribute functionality.
 
-=item L<Moose::Cookbook::Recipe23> - The meta-instance example (TODO)
+=item L<Moose::Cookbook::Meta::Recipe4> - The meta-instance example (TODO)
 
 I<abstract goes here>
 

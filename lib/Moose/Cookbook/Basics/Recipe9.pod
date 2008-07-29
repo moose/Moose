@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe9 - Builder methods and lazy_build
+Moose::Cookbook::Basics::Recipe9 - Builder methods and lazy_build
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,7 @@ Moose::Cookbook::Recipe9 - Builder methods and lazy_build
 
 =head1 DESCRIPTION
 
-If you've already read L<Moose::Cookbook::Recipe3>, then this example
+If you've already read L<Moose::Cookbook::Basics::Recipe3>, then this example
 should look awfully familiar. In fact, all we've done here is replace
 the attribute C<default> with a C<builder> method.
 

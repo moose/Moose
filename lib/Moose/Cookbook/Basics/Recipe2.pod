@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Recipe2 - A simple B<BankAccount> example
+Moose::Cookbook::Basics::Recipe2 - A simple B<BankAccount> example
 
 =head1 SYNOPSIS
 
