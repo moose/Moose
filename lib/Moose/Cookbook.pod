@@ -100,7 +100,7 @@ I<abstract goes here>
 
 =over 4
 
-=item L<Moose::Cookbook::Meta::Recipe1> - Welcome to the meta-world (TODO)
+=item L<Moose::Cookbook::Meta::Recipe1> - Welcome to the meta-world (Why Go Meta?)
 
 I<abstract goes here>
 

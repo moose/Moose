@@ -1,0 +1,67 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Meta::Recipe1 - Welcome to the meta world (Why Go Meta?)
+
+=head1 SUMMARY
+
+If you've ever found yourself thinking "Moose is great, but I wish it
+did X differently", then you've gone meta. The meta recipes are all
+about how to change and extend the way Moose does its thing, by
+changing how the various meta classes (C<Moose::Meta::Class>,
+C<Moose::Meta::Attribute>, etc) work.
+
+The metaclass system is a set of classes that describe classes, roles,
+attributes, etc. The metaclass API lets you ask questions about a
+class, like "what attributes does it have?", or "what roles does the
+class do?"
+
+The metaclass system also lets you actively make changes to a class,
+for example by adding new methods.
+
+The interface with which you normally use Moose (C<has>, C<with>,
+C<extends>) is just a thin layer of syntactic sugar over the
+underlying metaclass system.
+
+By extending and changing how this metaclass system works, you can in
+effect create a modified object implementation for your classes.
+
+=head2 Examples
+
+Let's say that you want to additional properties to
+attributes. Specifically, we want to add a "label" property to each
+attribute, so we can write C<<
+My::Class->meta()->get_attribute('size')->label() >>. The first two
+recipes show two different ways to do this, one with a full
+meta-attribute subclass, and the other with an attribute trait.
+
+You might also want to add additional properties to your
+metaclass. For example, if you were writing an ORM based on Moose, you
+could associate a table name with each class via the class's metaclass
+object, letting you write C<< My::Class->meta()->table_name() >>.
+
+=head1 SEE ALSO
+
+Many of the MooseX modules on CPAN implement metaclass extensions. A
+couple good examples include C<MooseX::Singleton> and
+C<MooseX::AttributeHelpers>. For a more complex example see
+C<Fey::ORM>.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.org<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+
