@@ -938,6 +938,14 @@ This is the official web home of Moose, it contains links to our public SVN repo
 as well as links to a number of talks and articles on Moose and Moose related
 technologies.
 
+=item L<Moose::Cookbook> - How to cook a Moose
+
+=item The Moose is flying, a tutorial by Randal Schwartz
+
+Part 1 - L<http://www.stonehenge.com/merlyn/LinuxMag/col94.html>
+
+Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
+
 =item L<Class::MOP> documentation
 
 =item The #moose channel on irc.perl.org
