@@ -47,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
+Moose::Meta::Role::Application::ToMetaclassInstance - Compose a role into a metaclass instance
 
 =head1 DESCRIPTION
 

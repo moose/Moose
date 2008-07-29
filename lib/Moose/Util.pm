@@ -226,6 +226,13 @@ actually used internally by both L<Moose> and L<Moose::Role>, and the
 C<@roles> will be pre-processed through L<Data::OptList::mkopt>
 to allow for the additional arguments to be passed. 
 
+=item B<apply_all_roles_with_method ($applicant, $method, @roles)>
+
+This function works just like C<apply_all_roles()>, except it allows
+you to specify what method will be called on the role metaclass when
+applying it to the C<$applicant>. This exists primarily so one can use
+the C<< Moose::Meta::Role->apply_to_metaclass_instance() >> method.
+
 =item B<get_all_attribute_values($meta, $instance)>
 
 Returns the values of the C<$instance>'s fields keyed by the attribute names.
