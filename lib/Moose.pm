@@ -368,11 +368,11 @@ metaclass programming as well.
 
 =head2 Moose Extensions
 
-The L<MooseX::> namespace is the official place to find Moose extensions.
-There are a number of these modules out on CPAN right now the best way to
-find them is to search for MooseX:: on search.cpan.org or to look at the 
-latest version of L<Task::Moose> which aims to keep an up to date, easily 
-installable list of these extensions. 
+The C<MooseX::> namespace is the official place to find Moose extensions.
+These extensions can be found on the CPAN.  The easiest way to find them
+is to search for them (L<http://search.cpan.org/search?query=MooseX::>),
+or to examine L<Task::Moose> which aims to keep an up-to-date, easily
+installable list of Moose extensions.
 
 =head1 BUILDING CLASSES WITH MOOSE
 
@@ -662,18 +662,18 @@ Here is another example, but within the context of a role:
 
   package Foo::Role;
   use Moose::Role;
-  
+
   has 'message' => (
       is      => 'rw',
       isa     => 'Str',
       default => 'Hello, I am a Foo'
   );
-  
+
   package My::Foo;
   use Moose;
-  
+
   with 'Foo::Role';
-  
+
   has '+message' => (default => 'Hello I am My::Foo');
 
 In this case, we are basically taking the attribute which the role supplied 
@@ -970,6 +970,14 @@ This is the official web home of Moose, it contains links to our public SVN repo
 as well as links to a number of talks and articles on Moose and Moose related
 technologies.
 
+=item L<Moose::Cookbook> - How to cook a Moose
+
+=item The Moose is flying, a tutorial by Randal Schwartz
+
+Part 1 - L<http://www.stonehenge.com/merlyn/LinuxMag/col94.html>
+
+Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
+
 =item L<Class::MOP> documentation
 
 =item The #moose channel on irc.perl.org
@@ -978,7 +986,9 @@ technologies.
 
 =item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/moose>
 
-=item Several Moose extension modules in the L<MooseX::> namespace.
+=item Several Moose extension modules in the C<MooseX::> namespace.
+
+See L<http://search.cpan.org/search?query=MooseX::> for extensions.
 
 =back
 

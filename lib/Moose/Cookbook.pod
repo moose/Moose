@@ -66,6 +66,12 @@ Work off of this http://code2.0beta.co.uk/moose/svn/Moose/trunk/t/200_examples/0
 The builder feature provides an inheritable and role-composable way to
 provide a default attribute value.
 
+=item L<Moose::Cookbook::Recipe12> - Create Humans and their Spawn
+
+Shows how operator overloading, coercion, and sub types can be used
+to mimmick the human reproductive system (well, the selection of genes
+at least).  Assumes a basic understanding of Moose.
+
 =back
 
 =head2 Moose Roles
