@@ -28,8 +28,8 @@ is( Foo->meta()->simple(), 5,
 
     use Moose::Role;
 
-    # This needs to happen at begin time so it happens before we apply
-    # traits to Bar
+    # This needs to happen at compile time so it happens before we
+    # apply traits to Bar
     BEGIN {
         has 'attr' =>
             ( is      => 'ro',
@@ -58,8 +58,6 @@ is( Bar->meta()->attr(), 'something',
 
     use Moose::Role;
 
-    # This needs to happen at begin time so it happens before we apply
-    # traits to Bar
     BEGIN {
         has 'attr2' =>
             ( is      => 'ro',
@@ -120,3 +118,26 @@ ok( Quux->meta()->has_attribute('size'),
     'Quux has size attribute' );
 ok( ! Quux->meta()->get_attribute('size')->writer(),
     'size attribute does not have a writer' );
+
+{
+    package My::Class::Whatever;
+
+    use Moose::Role;
+
+    sub whatever { 42 }
+
+    package Moose::Meta::Class::Custom::Trait::Whatever;
+
+    sub register_implementation {
+        return 'My::Class::Whatever';
+    }
+}
+
+{
+    package RanOutOfNames;
+
+    use Moose -traits => [ 'Whatever' ];
+}
+
+ok( RanOutOfNames->meta()->meta()->has_method('whatever'),
+    'RanOutOfNames->meta() has whatever method' );

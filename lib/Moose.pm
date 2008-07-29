@@ -222,7 +222,19 @@ use Moose::Util ();
 
         my $meta = $class->meta();
 
-        Moose::Util::apply_all_roles_with_method($meta, 'apply_to_metaclass_instance', $traits);
+        # We can only call does_role() on Moose::Meta::Class objects,
+        # and we can only do that on $meta->meta() if it has already
+        # had at least one trait applied to it. By default
+        # $meta->meta() returns a Class::MOP::Class object (not a
+        # Moose::Meta::Class).
+        my @traits
+            = grep { $meta->meta()->can('does_role') ? not $meta->meta()->does_role($_) : 1 }
+            map { Moose::Util::resolve_metatrait_alias( Class => $_ ) }
+            @$traits;
+
+        return unless @traits;
+
+        Moose::Util::apply_all_roles_with_method($meta, 'apply_to_metaclass_instance', \@traits);
     }
 
     sub import {
@@ -808,6 +820,40 @@ to work. Here is an example:
     }
 
     no Moose; # keywords are removed from the Person package
+
+=head1 METACLASS TRAITS
+
+When you import Moose, you can also specify a list of traits to be
+applied to the class's metaclass object with the C<-traits> flag:
+
+    package Person;
+    use Moose -traits => [ 'My::Trait::Debug' ];
+
+These traits will be applied to your class's metaclass instance. For
+example, in this case, when you call C<< Person->meta() >>, you will
+get back an object of the C<Moose::Meta::Class> class which I<also>
+does the C<My::Trait::Class> role.
+
+=head2 Registering Traits
+
+You can refer to traits by short names as long as you register them in
+advance. To register a trait, you must create a package of the form
+C<< Moose::Meta::Class::Custom::Trait::<TraitName> >>, where
+"TraitName" is the short name of your trait. This package should
+contain a single subroutine, C<register_implementation()>, which
+returns the package name which actually implements the traits.
+
+For example, for a trait named C<My::Trait::Debug>, we could do the
+following:
+
+    package My::Trait::Debug;
+    use Moose::Role;
+
+    sub debug { ... }
+
+    package Moose;:Meta::Class::Custom::Trait::Debug;
+
+    sub register_implementation { 'My::Trait::Debug' }
 
 =head1 EXTENDING AND EMBEDDING MOOSE
 
