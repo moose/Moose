@@ -630,18 +630,18 @@ Here is another example, but within the context of a role:
 
   package Foo::Role;
   use Moose::Role;
-  
+
   has 'message' => (
       is      => 'rw',
       isa     => 'Str',
       default => 'Hello, I am a Foo'
   );
-  
+
   package My::Foo;
   use Moose;
-  
+
   with 'Foo::Role';
-  
+
   has '+message' => (default => 'Hello I am My::Foo');
 
 In this case, we are basically taking the attribute which the role supplied 
