@@ -70,7 +70,6 @@ is( Bar->meta()->attr(), 'something',
     sub simple2 { return 55 }
 }
 
-
 {
     package Baz;
 
@@ -89,3 +88,35 @@ is( Baz->meta()->simple2(), 55,
 can_ok( Baz->meta(), 'attr2' );
 is( Baz->meta()->attr2(), 'something',
     'Baz->meta()->attr2() returns expected value' );
+
+{
+    package My::Trait::AlwaysRO;
+
+    use Moose::Role;
+
+    around '_process_new_attribute', '_process_inherited_attribute' =>
+        sub {
+            my $orig = shift;
+            my ( $self, $name, %args ) = @_;
+
+            $args{is} = 'ro';
+
+            return $self->$orig( $name, %args );
+        };
+}
+
+{
+    package Quux;
+
+    use Moose -traits => [ 'My::Trait::AlwaysRO' ];
+
+    has 'size' =>
+        ( is  => 'rw',
+          isa => 'Int',
+        );
+}
+
+ok( Quux->meta()->has_attribute('size'),
+    'Quux has size attribute' );
+ok( ! Quux->meta()->get_attribute('size')->writer(),
+    'size attribute does not have a writer' );
