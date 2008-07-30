@@ -34,7 +34,7 @@ modifier in a subclass.
 
 Demonstrates several attribute features, including types, weak
 references, predicates ("does this object have a foo?"), defaults, and
-lazy attribute construction.
+lazy attribute uction.
 
 =item L<Moose::Cookbook::Basics::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
 
@@ -122,7 +122,7 @@ composable attribute functionality.
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Recipe24> - The meta-class example (TODO)
+=item L<Moose::Cookbook::Meta::Recipe5> - The meta-class example (TODO)
 
 I<abstract goes here>
 

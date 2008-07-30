@@ -424,7 +424,7 @@ for information on how to define a new type, and how to retrieve type meta-data)
 
 This will attempt to use coercion with the supplied type constraint to change
 the value passed into any accessors or constructors. You B<must> have supplied
-a type constraint in order for this to work. See L<Moose::Cookbook::Recipe5>
+a type constraint in order for this to work. See L<Moose::Cookbook::Basics::Recipe5>
 for an example.
 
 =item I<does =E<gt> $role_name>
@@ -509,7 +509,7 @@ want installed locally, and its value is the name of the original method
 in the class being delegated to.
 
 This can be very useful for recursive classes like trees. Here is a
-quick example (soon to be expanded into a Moose::Cookbook::Recipe):
+quick example (soon to be expanded into a Moose::Cookbook recipe):
 
   package Tree;
   use Moose;
@@ -573,7 +573,7 @@ This tells the class to use a custom attribute metaclass for this particular
 attribute. Custom attribute metaclasses are useful for extending the
 capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
 but they are still a fairly advanced topic and too much to cover here, see 
-L<Moose::Cookbook::Recipe11> for more information.
+L<Moose::Cookbook::Meta::Recipe1> for more information.
 
 The default behavior here is to just load C<$metaclass_name>; however, we also
 have a way to alias to a shorter name. This will first look to see if
@@ -735,13 +735,13 @@ method call and the C<SUPER::> pseudo-package; it is really your choice.
 The keyword C<inner>, much like C<super>, is a no-op outside of the context of
 an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
-the L<Moose::Cookbook::Recipe6>.
+the L<Moose::Cookbook::Basics::Recipe6>.
 
 =item B<augment ($name, &sub)>
 
 An C<augment> method, is a way of explicitly saying "I am augmenting this
 method from my superclass". Once again, the details of how C<inner> and
-C<augment> work is best described in the L<Moose::Cookbook::Recipe6>.
+C<augment> work is best described in the L<Moose::Cookbook::Basics::Recipe6>.
 
 =item B<confess>
 
