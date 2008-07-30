@@ -11,6 +11,9 @@ Revision history for Perl extension Moose
         the type constraints (RT #37569)
         - added tests for this (Charles Alderman)
 
+    * Moose::Util::TypeConstraints
+      - fix coerce to accept anon types like subtype can
+
     * Moose::Cookbook
       - reorganized the recipes into sections - Basics, Roles, Meta
         (Dave Rolsky)
