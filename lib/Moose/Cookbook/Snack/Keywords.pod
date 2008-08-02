@@ -43,8 +43,6 @@ keywords:
 
 =item augment 
 
-=item make_immutable 
-
 =item confess 
 
 =item blessed 
