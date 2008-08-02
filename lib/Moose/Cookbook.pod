@@ -144,10 +144,14 @@ I<abstract goes here>
 
 I<abstract goes here>
 
+=back
+
 =head2 Extending Moose
 
 These recipes cover some more ways to extend Moose, and will be useful
 if you plan to write your own C<MooseX> module.
+
+=over 4
 
 =item L<Moose::Cookbook::Extending::Recipe1> - Providing an alternate base object class
 
