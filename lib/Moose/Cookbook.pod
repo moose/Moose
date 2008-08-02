@@ -118,11 +118,20 @@ functionality. However, attributes can only have one metaclass.
 Applying roles to the attribute metaclass lets you provide
 composable attribute functionality.
 
-=item L<Moose::Cookbook::Meta::Recipe4> - The meta-instance example (TODO)
+=item L<Moose::Cookbook::Meta::Recipe4> - Adding a "table" attribute to the metaclass
+
+If you want to store more information about your classes, you'll have
+to extend C<Moose::Meta::Class>. Doing so is simple, but you'll
+probably also want to provide some sugar, so see
+L<Moose::Cookbook::Meta::Recipe6> as well.
+
+=item L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented via a metaclass trait
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Meta::Recipe5> - The meta-class example (TODO)
+=item L<Moose::Cookbook::Meta::Recipe6> - Acting like Moose.pm and providing sugar Moose-style
+
+=item L<Moose::Cookbook::Meta::Recipe7> - I<meta-instance> (TODO)
 
 I<abstract goes here>
 

@@ -1,0 +1,64 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Meta::Recipe4 - Adding a "table" attribute to the metaclass
+
+=head1 SYNOPSIS
+
+  package MyApp::Meta::Class;
+  use Moose;
+  extends 'Moose::Meta::Class';
+
+  has table =>
+      ( is       => 'rw',
+        isa      => 'Str',
+      );
+
+=head1 DESCRIPTION
+
+In this recipe, we'll create a new metaclass which has a "table"
+attribute. This metaclass is for classes associated with a DBMS table,
+as one might do for an ORM.
+
+In this example, the table name is just a string, but in a real ORM
+the table might be an object describing the table.
+
+=head1 THE METACLASS
+
+The metaclass example really is as simple as the one in the
+synopsis. The trick is getting your classes to use this metaclass, and
+providing some sort of sugar for declaring the table. This is covered
+in L<Moose::Cookbook::Meta::Recipe5>, which shows how to make a module
+like C<Moose.pm> itself, with sugar like C<has_table()>.
+
+=head2 Using It
+
+Using this new "table" attribute is quite simple. Let's say we have a
+class named C<MyApp::User>, we could simply write the following:
+
+  my $table = MyApp::User->meta()->table();
+
+As long as MyApp::User has arranged to use C<MyApp::Meta::Class> as
+its metaclass, this method call just works.
+
+=head1 SEE ALSO
+
+L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented
+via a metaclass trait
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=pod
