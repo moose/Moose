@@ -15,16 +15,23 @@ Revision history for Perl extension Moose
       - fix coerce to accept anon types like subtype can
 
     * Moose::Cookbook
-      - reorganized the recipes into sections - Basics, Roles, Meta
-        (Dave Rolsky)
+      - reorganized the recipes into sections - Basics, Roles, Meta,
+        Extending - and wrote abstracts for each section (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe10
+      - A new recipe that demonstrates operator overloading
+        in combination with Moose. (bluefeet)
 
     * Moose::Cookbook::Meta::Recipe1
       - an introduction to what meta is and why you'd want to make
         your own metaclass extensions (Dave Rolsky)
 
-    * Moose::Cookbook::Basics::Recipe10
-      - A new recipe that demonstrates operator overloading
-        in combination with Moose. (bluefeet)
+    * Moose::Cookbook::Meta::Recipe4
+      - a very simple metaclass example (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe2
+      - how to write modules with an API just like C<Moose.pm> (Dave
+        Rolsky)
 
 0.54 Thurs. July 3, 2008
     ... this is not my day today ...
