@@ -64,18 +64,19 @@ Moose::Cookbook::Meta::Recipe3 - Labels implemented via attribute traits
 
 =head1 BUT FIRST
 
-This recipe is a continuation of L<Moose::Cookbook::Meta::Recipe21>. Please read that
-first.
+This recipe is a continuation of
+L<Moose::Cookbook::Meta::Recipe2>. Please read that recipe first.
 
 =head1 MOTIVATION
 
-In Recipe 21, we created an attribute metaclass that gives attributes a "label"
-that can be set in L<Moose/has>. That works well until you want a second
-meta-attribute, or until you want to adjust the behavior of the attribute. You
-could define a specialized attribute metaclass to use in every attribute.
-However, you may want different attributes to have different behaviors. You
-might end up with a unique attribute metaclass for B<every single attribute>,
-with a lot of code copying and pasting!
+In L<Moose::Cookbook::Meta::Recipe2>, we created an attribute
+metaclass that gives attributes a "label" that can be set in
+L<Moose/has>. That works well until you want a second meta-attribute,
+or until you want to adjust the behavior of the attribute. You could
+define a specialized attribute metaclass to use in every attribute.
+However, you may want different attributes to have different
+behaviors. You might end up with a unique attribute metaclass for
+B<every single attribute>, with a lot of code copying and pasting!
 
 Or, if you've been drinking deeply of the Moose kool-aid, you'll have a role
 for each of the behaviors. One role would give a label meta-attribute. Another
@@ -105,7 +106,7 @@ user-level class.
 
 =head1 DISSECTION
 
-A side-by-side look of the code examples in this recipe and recipe 21 should
+A side-by-side look of the code examples in this recipe and recipe 2 should
 indicate that defining and using a trait is very similar to defining and using
 a new attribute metaclass.
 
@@ -132,7 +133,7 @@ C<Moose::Meta::Attribute::Custom::Trait::$TRAIT_NAME> to find the full
 name of the trait.
 
 Now we begin writing our application logic. I'll only cover what has changed
-since recipe 21.
+since recipe 2.
 
     has url => (
         traits => [qw/Labeled/],
