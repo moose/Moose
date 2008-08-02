@@ -112,7 +112,8 @@ you extend the object system provide by Moose.
 
 =item L<Moose::Cookbook::Meta::Recipe1> - Welcome to the meta-world (Why Go Meta?)
 
-I<abstract goes here>
+If you're wondering what all this "meta" stuff is, and why you should
+care about it, read this "recipe".
 
 =item L<Moose::Cookbook::Meta::Recipe2> - A meta-attribute, attributes with labels
 
