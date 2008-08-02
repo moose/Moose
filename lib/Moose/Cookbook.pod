@@ -154,6 +154,8 @@ you want to write default to your own metaclass or base object class.
 
 =over 4
 
+=item L<Moose::Cookbook::Snack::Keywords>
+
 =item L<Moose::Cookbook::Snack::Types>
 
 =back
