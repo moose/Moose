@@ -104,14 +104,14 @@ I<abstract goes here>
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Meta::Recipe2> - The meta-attribute example
+=item L<Moose::Cookbook::Meta::Recipe2> - A meta-attribute, attributes with labels
 
 One way to extend Moose is to provide your own attribute
 metaclasses. Attribute metaclasses let you extend attribute
 declarations (with C<has>) and behavior to provide additional
 attribute functionality.
 
-=item L<Moose::Cookbook::Meta::Recipe3> - The meta-attribute trait example
+=item L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute traits
 
 Extending Moose's attribute metaclass is a great way to add
 functionality. However, attributes can only have one metaclass.

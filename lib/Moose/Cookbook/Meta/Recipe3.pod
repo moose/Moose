@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Meta::Recipe3 - The attribute trait example
+Moose::Cookbook::Meta::Recipe3 - Labels implemented via attribute traits
 
 =head1 SYNOPSIS
 

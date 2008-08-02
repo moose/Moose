@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Meta::Recipe2 - The meta-attribute example
+Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
 
 =head1 SYNOPSIS
 
