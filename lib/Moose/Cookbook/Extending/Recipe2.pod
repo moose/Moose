@@ -1,0 +1,149 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar Moose-style
+
+=head1 SYNOPSIS
+
+  package MyApp::Mooseish;
+
+  use strict;
+  use warnings;
+
+  our @EXPORT = qw( has_table );
+
+  use base 'Exporter';
+  use Class::MOP;
+  use Moose ();
+
+  sub import {
+    my $caller = caller();
+
+    return if $caller eq 'main';
+
+    Moose::init_meta( $caller,
+                      undef, # object base class
+                      'MyApp::Meta::Class',
+                    );
+
+    Moose->import( { into => $caller }, @_ );
+
+    __PACKAGE__->export_to_level( 1, @_ );
+  }
+
+  sub unimport {
+      my $caller = caller();
+
+      no strict 'refs';
+      foreach my $name (@EXPORT) {
+          if ( defined &{ $caller . '::' . $name } ) {
+              my $keyword = \&{ $caller . '::' . $name };
+
+              my ($pkg_name) = Class::MOP::get_code_info($keyword);
+
+              next if $pkg_name ne __PACKAGE__;
+
+              delete ${ $caller . '::' }{$name};
+          }
+      }
+
+      Moose::unimport( { into_level => 1 } );
+  }
+
+  sub has_table {
+      my $caller = caller();
+
+      $caller->meta()->table(shift);
+  }
+
+=head1 DESCRIPTION
+
+The code above shows what it takes to provide an import-based
+interface just like C<Moose.pm>.
+
+Given the above code, you can now replace all instances of C<use
+Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
+replaced with C<no MyApp::Mooseish>.
+
+=head1 WARNING
+
+This recipe covers a fairly undocumented and ugly part of Moose, and
+the techniques described here may be deprecated in a future
+release. If this happens, there will be plenty of warning, as a number
+of C<MooseX> modules on CPAN already use these techniques.
+
+=head1 HOW IT IS USED
+
+The purpose of all this code is to provide a Moose-like
+interface. Here's what it would look like in actual use:
+
+  package MyApp::User;
+
+  use MyApp::Mooseish;
+
+  has_table 'User';
+
+  has 'username';
+  has 'password';
+
+  sub login { ... }
+
+  no MyApp::Mooseish;
+
+All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
+when you C<use MyApp::Mooseish>.
+
+=head1 DISSECTION
+
+The first bit of magic is the call to C<Moose::init_meta()>. What this
+does is create a metaclass for the specified class. Normally, this is
+called by C<Moose.pm> in its own C<import()> method. However, we can
+call it first in order to provide an alternate metaclass class. We
+could also provide an alternate base object class to replace
+C<Moose::Object> (see L<Moose::Cookbook::Extending::Recipe1> for an
+example).
+
+The C<Moose::init_meta()> call takes three parameters. The first is
+the class for which we are initializing a metaclass object. The second
+is the base object, which is L<Moose::Object> by default. The third
+argument is the metaclass class, which is C<Moose::Meta::Class> by
+default.
+
+The next bit of magic is this:
+
+  Moose->import( { into => $caller } );
+
+This use of "into" is actually part of the C<Sub::Exporter> API, which
+C<Moose.pm> uses internally to export things like C<has()> and
+C<extends()>.
+
+Finally, we call C<< __PACKAGE__->export_to_level() >>. This method
+actually comes from C<Exporter>.
+
+This is all a bit fragile since it doesn't stack terribly well. You
+can basically only have one Moose-alike module. This may be fixed in
+the still-notional C<MooseX::Exporter> module someday.
+
+The C<unimport()> subroutine is basically a copy of the C<unimport()>
+from C<Moose.pm>. You can copy this verbatim into your code. Again,
+this doesn't stack well.
+
+Finally, we have our C<has_table()> subroutine. This provides a bit of
+sugar that looks a lot like C<has()>.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=pod

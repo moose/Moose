@@ -30,8 +30,8 @@ the table might be an object describing the table.
 The metaclass example really is as simple as the one in the
 synopsis. The trick is getting your classes to use this metaclass, and
 providing some sort of sugar for declaring the table. This is covered
-in L<Moose::Cookbook::Meta::Recipe5>, which shows how to make a module
-like C<Moose.pm> itself, with sugar like C<has_table()>.
+in L<Moose::Cookbook::Extending::Recipe2>, which shows how to make a
+module like C<Moose.pm> itself, with sugar like C<has_table()>.
 
 =head2 Using It
 
