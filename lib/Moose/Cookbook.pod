@@ -146,7 +146,7 @@ functionality to all your classes without typing C<extends
 
 You'll often find that you want to provide a replacement for
 C<Moose.pm> as part of a meta extension. This is especially true if
-you want to write a new metaclass or a new base object class.
+you want to write default to your own metaclass or base object class.
 
 =back
 
