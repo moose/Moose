@@ -97,7 +97,7 @@ delegation.  Moose makes this easy using the C<handles> keyword,
 coercions, and C<lazy_build>, so subclassing is often not the
 ideal route.
 
-That said, the default Moose constructors is inherited from
+That said, the default Moose constructor is inherited from
 L<Moose::Object>. When inheriting from a non-Moose class, the
 inheritance chain to L<Moose::Object> is broken. The simplest way
 to fix this is to simply explicitly inherit from L<Moose::Object>
