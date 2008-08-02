@@ -816,6 +816,8 @@ sets your baseclass to Moose::Object or the value you pass in unless you already
 have one. This is all done via C<init_meta> which takes the name of your class
 and optionally a baseclass and a metaclass as arguments.
 
+For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+
 =head1 CAVEATS
 
 =over 4
