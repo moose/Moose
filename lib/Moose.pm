@@ -29,52 +29,6 @@ use Moose::Util ();
 {
     my $CALLER;
 
-    sub init_meta {
-        my ( $class, $base_class, $metaclass ) = @_;
-        $base_class = 'Moose::Object'      unless defined $base_class;
-        $metaclass  = 'Moose::Meta::Class' unless defined $metaclass;
-
-        confess
-            "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
-            unless $metaclass->isa('Moose::Meta::Class');
-
-        # make a subtype for each Moose class
-        class_type($class)
-            unless find_type_constraint($class);
-
-        my $meta;
-        if ( $class->can('meta') ) {
-            # NOTE:
-            # this is the case where the metaclass pragma
-            # was used before the 'use Moose' statement to
-            # override a specific class
-            $meta = $class->meta();
-            ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
-              || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
-        }
-        else {
-            # NOTE:
-            # this is broken currently, we actually need
-            # to allow the possiblity of an inherited
-            # meta, which will not be visible until the
-            # user 'extends' first. This needs to have
-            # more intelligence to it
-            $meta = $metaclass->initialize($class);
-            $meta->add_method(
-                'meta' => sub {
-                    # re-initialize so it inherits properly
-                    $metaclass->initialize( blessed( $_[0] ) || $_[0] );
-                }
-            );
-        }
-
-        # make sure they inherit from Moose::Object
-        $meta->superclasses($base_class)
-          unless $meta->superclasses();
-         
-        return $meta;
-    }
-
     my %exports = (
         extends => sub {
             my $class = $CALLER;
@@ -256,6 +210,52 @@ use Moose::Util ();
         }
     }
 
+}
+
+sub init_meta {
+    my ( $class, $base_class, $metaclass ) = @_;
+    $base_class = 'Moose::Object'      unless defined $base_class;
+    $metaclass  = 'Moose::Meta::Class' unless defined $metaclass;
+
+    confess
+        "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
+        unless $metaclass->isa('Moose::Meta::Class');
+
+    # make a subtype for each Moose class
+    class_type($class)
+        unless find_type_constraint($class);
+
+    my $meta;
+    if ( $class->can('meta') ) {
+        # NOTE:
+        # this is the case where the metaclass pragma
+        # was used before the 'use Moose' statement to
+        # override a specific class
+        $meta = $class->meta();
+        ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
+          || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
+    }
+    else {
+        # NOTE:
+        # this is broken currently, we actually need
+        # to allow the possiblity of an inherited
+        # meta, which will not be visible until the
+        # user 'extends' first. This needs to have
+        # more intelligence to it
+        $meta = $metaclass->initialize($class);
+        $meta->add_method(
+            'meta' => sub {
+                # re-initialize so it inherits properly
+                $metaclass->initialize( blessed( $_[0] ) || $_[0] );
+            }
+        );
+    }
+
+    # make sure they inherit from Moose::Object
+    $meta->superclasses($base_class)
+      unless $meta->superclasses();
+
+    return $meta;
 }
 
 ## make 'em all immutable
