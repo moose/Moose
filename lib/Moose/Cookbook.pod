@@ -162,9 +162,10 @@ functionality to all your classes without typing C<extends
 
 =item L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and providing sugar Moose-style
 
-You'll often find that you want to provide a replacement for
-C<Moose.pm> as part of a meta extension. This is especially true if
-you want to write default to your own metaclass or base object class.
+This recipe shows how to provide a replacement for C<Moose.pm>. This
+is something that you may want to do as part of a C<MooseX> module,
+especially if you want to default to a new metaclass class or base
+object class.
 
 =back
 
