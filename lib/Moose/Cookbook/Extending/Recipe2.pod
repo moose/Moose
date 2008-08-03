@@ -61,7 +61,10 @@ Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar M
 =head1 DESCRIPTION
 
 The code above shows what it takes to provide an import-based
-interface just like C<Moose.pm>.
+interface just like C<Moose.pm>. This recipe builds on
+L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
+object base class, we provide our own metaclass class, and we also
+export a sugar subroutine C<has_table()>.
 
 Given the above code, you can now replace all instances of C<use
 Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
