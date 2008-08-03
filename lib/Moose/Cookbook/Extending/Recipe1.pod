@@ -1,0 +1,69 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Extending::Recipe1 - Providing an alternate base object class
+
+=head1 SYNOPSIS
+
+  package MyApp::Base;
+  use Moose;
+
+  extends 'Moose::Object';
+
+  before 'new' => sub { warn "Making a new " . $_[0] };
+
+  no Moose;
+
+  package MyApp::UseMyBase;
+  use Moose ();
+
+  sub import {
+    my $caller = caller();
+
+    return if $caller eq 'main';
+
+    Moose::init_meta( $caller,
+                      'MyApp::Object',
+                    );
+
+    Moose->import( { into => $caller }, @_ );
+  }
+
+  sub unimport {
+    my $caller = caller();
+
+    Moose->unimport( { into => $caller }, @_ );
+  }
+
+=head1 DESCRIPTION
+
+Often you find that you want to share some behavior between all your
+classes. One way to do that is to make a base class and simply add
+C<S<extends 'MyApp::Base'>> to every class in your
+application. However, that can get tedious. Instead, you can simply
+create your Moose-alike module that sets the base object class to
+C<MyApp::Base> for you.
+
+Then, instead of writing C<S<use Moose>> you can write C<S<use
+MyApp::UseMyBase>>.
+
+In this particular example, our base class issues some debugging
+output every time a new object is created, but you can surely think of
+some more interesting things to do with your own base class.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

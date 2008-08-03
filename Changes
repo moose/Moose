@@ -29,6 +29,10 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Meta::Recipe4
       - a very simple metaclass example (Dave Rolsky)
 
+    * Moose::Cookbook::Extending::Recipe1
+      - how to write a Moose-alike module to use your own object base
+        class (Dave Rolsky)
+
     * Moose::Cookbook::Extending::Recipe2
       - how to write modules with an API just like C<Moose.pm> (Dave
         Rolsky)
