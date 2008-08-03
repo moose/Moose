@@ -140,7 +140,22 @@ L<Moose::Cookbook::Meta::Recipe6> as well.
 
 I<abstract goes here>
 
-=item L<Moose::Cookbook::Meta::Recipe6> - I<meta-instance> (TODO)
+=item L<Moose::Cookbook::Meta::Recipe6> - Hooking into the immutabilization system (TODO)
+
+Moose has a feature known as "immutabilization". By calling C<<
+__PACKAGE__->meta()->make_immutable() >> after defining your class
+(attributes, roles, etc), you tell Moose to optimize things like
+object creation, attribute access, and so on.
+
+If you are creating your own metaclasses, you may need to hook into
+the immutabilization system. This cuts across a number of spots,
+including the metaclass class, meta method classes, and possibly the
+meta-instance class as well.
+
+This recipe shows you how to write extensions which immutabilize
+properly.
+
+=item L<Moose::Cookbook::Meta::Recipe7> - I<meta-instance> (TODO)
 
 I<abstract goes here>
 
