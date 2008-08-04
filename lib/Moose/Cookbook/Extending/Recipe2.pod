@@ -23,10 +23,11 @@ Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar M
 
     return if $caller eq 'main';
 
-    Moose::init_meta( $caller,
-                      undef, # object base class
-                      'MyApp::Meta::Class',
-                    );
+    Moose::init_meta(
+        $caller,
+        undef,    # object base class
+        'MyApp::Meta::Class',
+    );
 
     Moose->import( { into => $caller }, @_ );
 
