@@ -8,7 +8,7 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.55';
+our $VERSION   = '0.56';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
