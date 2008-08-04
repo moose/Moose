@@ -190,26 +190,40 @@ use Moose::Util ();
     }
 
     sub unimport {
-        no strict 'refs';
         my $class = _get_caller(@_);
 
-        # loop through the exports ...
-        foreach my $name ( keys %exports ) {
-
-            # if we find one ...
-            if ( defined &{ $class . '::' . $name } ) {
-                my $keyword = \&{ $class . '::' . $name };
-
-                # make sure it is from Moose
-                my ($pkg_name) = Class::MOP::get_code_info($keyword);
-                next if $pkg_name ne 'Moose';
-
-                # and if it is from Moose then undef the slot
-                delete ${ $class . '::' }{$name};
-            }
-        }
+        remove_keywords(
+            source   => __PACKAGE__,
+            package  => $class,
+            keywords => [ keys %exports ],
+        );
     }
 
+}
+
+sub remove_keywords {
+    my ( %args ) = @_;
+
+    my $source  = $args{source};
+    my $package = $args{package};
+
+    no strict 'refs';
+
+    # loop through the keywords ...
+    foreach my $name ( @{ $args{keywords} } ) {
+
+        # if we find one ...
+        if ( defined &{ $package . '::' . $name } ) {
+            my $keyword = \&{ $package . '::' . $name };
+
+            # make sure it is from us
+            my ($pkg_name) = Class::MOP::get_code_info($keyword);
+            next if $pkg_name ne $source;
+
+            # and if it is from us, then undef the slot
+            delete ${ $package . '::' }{$name};
+        }
+    }
 }
 
 sub init_meta {
@@ -815,6 +829,19 @@ and then injects a C<meta> accessor into your class to retrieve it. Then it
 sets your baseclass to Moose::Object or the value you pass in unless you already
 have one. This is all done via C<init_meta> which takes the name of your class
 and optionally a baseclass and a metaclass as arguments.
+
+For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+
+=head2 B<remove_keywords>
+
+The remove_keywords method is called by Moose's C<unimport> to remove Moose's
+keywords from a package when C<no Moose> is used. If you extend Moose with
+new keywords, you should provide an C<unimport> that calls C<remove_keywords>
+to remove your sugar.
+
+C<remove_keywords> takes named parameters C<source> (to make sure that we
+don't remove keywords defined by somebody else), C<package> (from which we're
+removing keywords), and C<keywords> (an array reference of keyword names).
 
 For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
 
