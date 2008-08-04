@@ -1,18 +1,18 @@
 Revision history for Perl extension Moose
 
-0.55
+0.55 Sun August 3, 2008
     * Moose::Meta::Attribute
-      - breaking down the way 'handles' methods are 
-        created so that the process can be more easily 
+      - breaking down the way 'handles' methods are
+        created so that the process can be more easily
         overridden by subclasses (stevan)
 
     * Moose::Meta::TypeConstraint
-      - fixing what is passed into a ->message with 
+      - fixing what is passed into a ->message with
         the type constraints (RT #37569)
         - added tests for this (Charles Alderman)
 
     * Moose::Util::TypeConstraints
-      - fix coerce to accept anon types like subtype can
+      - fix coerce to accept anon types like subtype can (mst)
 
     * Moose::Cookbook
       - reorganized the recipes into sections - Basics, Roles, Meta,
@@ -36,6 +36,10 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Extending::Recipe2
       - how to write modules with an API just like C<Moose.pm> (Dave
         Rolsky)
+
+    * all documentation
+      - Tons of fixes, both syntactical and grammatical (Dave
+        Rolsky, Paul Fenwick)
 
 0.54 Thurs. July 3, 2008
     ... this is not my day today ...
