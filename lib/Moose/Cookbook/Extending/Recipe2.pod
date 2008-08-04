@@ -42,7 +42,7 @@ Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar M
           keywords => \@EXPORT,
       );
 
-      Moose::unimport( { into_level => 1 } );
+      Moose->unimport( { into_level => 1 } );
   }
 
   sub has_table {
