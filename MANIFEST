@@ -22,10 +22,13 @@ lib/Moose/Cookbook/Basics/Recipe5.pod
 lib/Moose/Cookbook/Basics/Recipe6.pod
 lib/Moose/Cookbook/Basics/Recipe7.pod
 lib/Moose/Cookbook/Basics/Recipe9.pod
+lib/Moose/Cookbook/Extending/Recipe1.pod
+lib/Moose/Cookbook/Extending/Recipe2.pod
 lib/Moose/Cookbook/FAQ.pod
 lib/Moose/Cookbook/Meta/Recipe1.pod
 lib/Moose/Cookbook/Meta/Recipe2.pod
 lib/Moose/Cookbook/Meta/Recipe3.pod
+lib/Moose/Cookbook/Meta/Recipe4.pod
 lib/Moose/Cookbook/Roles/Recipe1.pod
 lib/Moose/Cookbook/Roles/Recipe2.pod
 lib/Moose/Cookbook/Snack/Keywords.pod
