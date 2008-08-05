@@ -10,12 +10,12 @@ use Test::Exception;
     package Point;
     use Moose;
 
-    has 'x' => ( isa => 'Int', is => 'ro' );
-    has 'y' => ( isa => 'Int', is => 'rw' );
+    has 'x' => (isa => 'Int', is => 'rw', required => 1);
+    has 'y' => (isa => 'Int', is => 'rw', required => 1);
 
     sub clear {
         my $self = shift;
-        $self->{x} = 0;
+        $self->x(0);
         $self->y(0);
     }
 
@@ -28,11 +28,11 @@ use Test::Exception;
 
     extends 'Point';
 
-    has 'z' => ( isa => 'Int' );
+    has 'z' => (isa => 'Int', is => 'rw', required => 1);
 
     after 'clear' => sub {
         my $self = shift;
-        $self->{z} = 0;
+        $self->z(0);
     };
 
     __PACKAGE__->meta->make_immutable( debug => 0 );
@@ -53,9 +53,8 @@ dies_ok {
 } '... cannot assign a non-Int to y';
 
 dies_ok {
-    $point->x(1000);
-} '... cannot assign to a read-only method';
-is($point->x, 1, '... got the right (un-changed) value for x');
+    Point->new();
+} '... must provide required attributes to new';
 
 $point->clear();
 
@@ -87,15 +86,11 @@ is($point3d->x, 10, '... got the right value for x');
 is($point3d->y, 15, '... got the right value for y');
 is($point3d->{'z'}, 3, '... got the right value for z');
 
-dies_ok {
-	$point3d->z;
-} '... there is no method for z';
-
 $point3d->clear();
 
 is($point3d->x, 0, '... got the right (cleared) value for x');
 is($point3d->y, 0, '... got the right (cleared) value for y');
-is($point3d->{'z'}, 0, '... got the right (cleared) value for z');
+is($point3d->z, 0, '... got the right (cleared) value for z');
 
 dies_ok {
 	Point3D->new(x => 10, y => 'Foo', z => 3);
@@ -108,6 +103,10 @@ dies_ok {
 dies_ok {
 	Point3D->new(x => 0, y => 10, z => 'Bar');
 } '... cannot assign a non-Int to z';
+
+dies_ok {
+	Point3D->new(x => 10, y => 3);
+} '... z is a required attribute for Point3D';
 
 # test some class introspection
 
@@ -158,7 +157,7 @@ is_deeply(
 	[ 'Point' ],
 	'... Point3D gets the parent given to it');
 
-my @Point3D_methods = qw(new meta clear);
+my @Point3D_methods = qw(new meta z clear);
 my @Point3D_attrs   = ('z');
 
 is_deeply(

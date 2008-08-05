@@ -9,180 +9,170 @@ Moose::Cookbook::Basics::Recipe1 - The (always classic) B<Point> example.
 
   package Point;
   use Moose;
-  	
-  has 'x' => (isa => 'Int', is => 'ro');
-  has 'y' => (isa => 'Int', is => 'rw');
-  
+
+  has 'x' => (isa => 'Int', is => 'rw', required => 1);
+  has 'y' => (isa => 'Int', is => 'rw', required => 1);
+
   sub clear {
       my $self = shift;
-      $self->{x} = 0;
-      $self->y(0);    
+      $self->x(0);
+      $self->y(0);
   }
-  
+
   package Point3D;
   use Moose;
-  
+
   extends 'Point';
-  
-  has 'z' => (isa => 'Int');
-  
+
+  has 'z' => (isa => 'Int', is => 'rw', required => 1);
+
   after 'clear' => sub {
       my $self = shift;
-      $self->{z} = 0;
+      $self->z(0);
   };
 
 =head1 DESCRIPTION
 
-This is the classic Point example. This one in particular I took 
-from the Perl 6 Apocalypse 12 document, but it is similar to the 
-example found in the classic K&R C book as well, and many other 
-places. And now, onto the code:
+This is the classic Point example. It is taken directly from the Perl
+6 Apocalypse 12 document, and is similar to the example found in the
+classic K&R C book as well.
 
-As with all Perl 5 classes, a Moose class is defined in a package. 
-Moose now handles turning on C<strict> and C<warnings> for you, so 
-all you need to do is say C<use Moose>, and no kittens will die.
+As with all Perl 5 classes, a Moose class is defined in a package.
+Moose handles turning on C<strict> and C<warnings> for us, so all we
+need to do is say C<use Moose>, and no kittens will die.
 
-By loading Moose, we are enabling the loading of the Moose
-"environment" into our package. This means that we import some
-functions which serve as Moose "keywords". These aren't anything
-fancy, just plain old exported functions.
+When Moose is loaded, it exports a set of sugar functions into our
+package. This means that we import some functions which serve as Moose
+"keywords". These aren't real language keywords, they're just Perl
+functions exported into our package.
 
-Another important thing happens at this stage as well. Moose will 
-automatically set your package's superclass to be L<Moose::Object>.
-The reason we do this, is so that we can be sure that your class
-will inherit from L<Moose::Object> and get the benefits that
-provides (such as a constructor; see L<Moose::Object> for details).
-However, you don't actually I<have> to inherit from L<Moose::Object>
-if you don't want to. All Moose features will still be accessible to
-you.
+Moose automatically makes our package a subclass of L<Moose::Object>.
+The L<Moose::Object> class provides us with a constructor that
+respects our attributes, as well other features. See L<Moose::Object>
+for details.
 
-Now, onto the keywords. The first one we see here is C<has>, which 
-defines an instance attribute in your class:
+Now, onto the keywords. The first one we see here is C<has>, which
+defines an instance attribute in our class:
 
-  has 'x' => (isa => 'Int', is => 'ro');
+  has 'x' => (isa => 'Int', is => 'rw', required => 1);
 
-This will create an attribute named C<x>, which will expect the 
-value stored in the attribute to pass the type constraint C<Int> (1), 
-and the accessor generated for this attribute will be read-only 
-(abbreviated as C<ro>).
+This will create an attribute named C<x>. The C<isa> parameter says
+that we expect the value stored in this attribute to pass the type
+constraint for C<Int> (1). The accessor generated for this attribute
+will be read-write.
 
-The next C<has> line is very similar, with only one difference:
+The C<< requires => 1 >> parameter means that this attribute must be
+provided when a new object is created. A point object without
+coordinates doesn't make much sense, so we don't allow it.
 
-  has 'y' => (isa => 'Int', is => 'rw');
-
-A read/write (abbreviated as C<rw>) accessor will be generated for
-the C<y> attribute.
-
-At this point the attributes have been defined, and it is time to 
-define our methods. In Moose, as with regular Perl 5 OO, a method 
-is just a subroutine defined within the package. So here we create 
-the C<clear> method.
+We have defined our attributes; next we define our methods. In Moose,
+as with regular Perl 5 OO, a method is just a subroutine defined
+within the package:
 
   sub clear {
       my $self = shift;
-      $self->{x} = 0;
-      $self->y(0);    
+      $self->x(0);
+      $self->y(0);
   }
 
-It is pretty standard, the only thing to note is that we are directly 
-accessing the C<x> slot in the instance L<(2)>. This is because the 
-value was created with a read-only accessor. This also shows that Moose 
-objects are not anything out of the ordinary, but just regular old 
-blessed HASH references. This means they are very compatible with 
-other Perl 5 (non-Moose) classes as well. 
+That concludes the B<Point> class.
 
-The next part of the code to review is the B<Point> subclass, 
-B<Point3D>. The first item you might notice is that we do not use 
-the standard C<use base> declaration here. Instead we use the Moose 
-keyword C<extends> like so:
+Next we have a subclass of B<Point>, B<Point3D>. To declare our
+superclass, we use the Moose keyword C<extends>:
 
   extends 'Point';
 
-This keyword will function very much like C<use base> does in that 
-it will make an attempt to load your class if it has not already been 
-loaded. However, it differs on one important point. The C<extends> 
-keyword will overwrite any previous values in your package's C<@ISA>, 
-where C<use base> will C<push> values onto the package's C<@ISA>. It 
-is my opinion that the behavior of C<extends> is more intuitive in 
-that it is more explicit about defining the superclass relationship.
+The C<extends> keyword works much like C<use base>. First, it will
+attempt to load your class if needed. However, unlike C<base>, the
+C<extends> keyword will I<overwrite> any previous values in your
+package's C<@ISA>, where C<use base> will C<push> values onto the
+package's C<@ISA>.
 
-A small digression here: both Moose and C<extends> support multiple 
-inheritance. You simply pass all the superclasses to C<extends>, 
-like so:
+It is my opinion that the behavior of C<extends> is more intuitive.
+(2).
 
-  extends 'Foo', 'Bar', 'Baz';
-  
-Now, back to our B<Point3D> class. The next thing we do is to create 
-a new attribute for B<Point3D> called C<z>.
+Next we create a new attribute for B<Point3D> called C<z>.
 
-  has 'z' => (isa => 'Int');
+  has 'z' => (isa => 'Int', is => 'rw', required => 1);
 
-As with B<Point>'s C<x> and C<y> attributes, this attribute has a 
-type constraint of C<Int>, but it differs in that it does B<not> 
-ask for any autogenerated accessors. The result being (aside from 
-broken object encapsulation) that C<z> is a private attribute.
+This attribute is just like B<Point>'s C<x> and C<y> attributes.
 
-Next comes another Moose feature which we call method "modifiers" 
-(or method "advice" for the AOP inclined). The modifier used here 
-is the C<after> modifier, and looks like this:
+The C<after> keyword demonstrates a Moose feature called "method
+modifiers" (or "advice" for the AOP inclined):
 
   after 'clear' => sub {
       my $self = shift;
-      $self->{z} = 0;
+      $self->z(0);
   };
 
-This modifier tells Moose to install a C<clear> method for 
-B<Point3D> that will first run the C<clear> method for the 
-superclass (in this case C<Point::clear>), and then run this 
-method I<after> it (passing in the same arguments as the original 
-method). 
+When C<clear> is called on a B<Point3D> object, our modifier method
+gets called as well. Unsurprisingly, the modifier is called I<after>
+the real method.
 
-Now, of course using the C<after> modifier is not the only way to 
-accomplish this. I mean, after all, this B<is> Perl right? You 
-would get the same results with this code:
+In this case, the real C<clear> method is inherited from B<Point>. Our
+modifier method receives the same arguments as those passed to the
+modified method (just C<$self> here).
+
+Of course, using the C<after> modifier is not the only way to
+accomplish this. This B<is> Perl, right? You can get the same results
+with this code:
 
   sub clear {
       my $self = shift;
       $self->SUPER::clear();
-      $self->{z} = 0;
+      $self->z(0);
   }
 
-You could also use another Moose method modifier, C<override> here, 
-and get the same results again. Here is how that would look:
+You could also use another Moose method modifier, C<override>:
 
   override 'clear' => sub {
       my $self = shift;
       super();
-      $self->{z} = 0;
+      $self->z(0);
   };
-  
-The C<override> modifier allows you to use the C<super> keyword 
-within it to dispatch to the superclass's method in a very Ruby-ish 
-style.
 
-Now, of course, what use is a class if you can't instantiate objects 
-with it? Since B<Point> inherits from L<Moose::Object>, it will also
-inherit the default L<Moose::Object> constructor: C<new>. Here 
-are two examples of how that is used:
+The C<override> modifier allows you to use the C<super> keyword to
+dispatch to the superclass's method in a very Ruby-ish style.
 
-  my $point = Point->new(x => 1, y => 2);   
+The choice of whether to use a method modifier, and which one to use,
+is often a question of style as much as functionality.
+
+Since B<Point> inherits from L<Moose::Object>, it will also inherit
+the default L<Moose::Object> constructor:
+
+  my $point   = Point  ->new(x => 1, y => 2);
   my $point3d = Point3D->new(x => 1, y => 2, z => 3);
 
-As you can see, C<new> accepts named argument pairs for any of the 
-attributes. It does not I<require> that you pass in the all the 
-attributes, and it will politely ignore any named arguments it does 
-not recognize. 
+The C<new> constructor accepts a named argument pair for each
+attribute defined by the class. In this particular example, the
+attributes are required, and calling C<new> without them will throw an
+error.
 
-From here on, you can use C<$point> and C<$point3d> just as you would 
-any other Perl 5 object. For a more detailed example of what can be 
-done, you can refer to the F<t/000_recipes/001_recipe.t> test file.
+From here on, we can use C<$point> and C<$point3d> just as you would
+any other Perl 5 object. For a more detailed example of what can be
+done, you can refer to the F<t/000_recipes/basic/001_point.t> test
+file.
+
+=head2 Moose Objects are Just Hashrefs
+
+While this all may appear rather magical, it's important to realize
+that Moose objects are just hash references under the hood (3). For
+example, you could pass C<$self> to C<Data::Dumper> and you'd get
+exactly what you'd expect.
+
+You could even poke around inside the object's data structure, but
+that is strongly discouraged.
+
+The fact that Moose objects are hashrefs means it is easy to use Moose
+to extend non-Moose classes, as long as they too are hash
+references. If you want to extend a non-hashref class, check out
+C<MooseX::InsideOut>.
 
 =head1 CONCLUSION
 
-I hope this recipe has given you some explanation of how to use 
-Moose to build your Perl 5 classes. The next recipe will build upon 
-the basics shown here with more complex attributes and methods. 
-Please read on :)
+This recipe demonstrates some basic Moose concepts. The next recipe
+will build upon the basics shown here with more complex attributes and
+methods. Please read on :)
 
 =head1 FOOTNOTES
 
@@ -190,21 +180,22 @@ Please read on :)
 
 =item (1)
 
-Several default type constraints are provided by Moose, of which 
-C<Int> is one. For more information on the builtin type constraints 
-and the type constraint system in general, see the 
-L<Moose::Util::TypeConstraints> documentation.
+Moose provides a number of builtin type constraints are provided by,
+of which C<Int> is one. For more information on the type constraint
+system, see L<Moose::Util::TypeConstraints>.
 
 =item (2)
 
+The C<extends> keyword support multiple inheritance. Simply pass all
+of your superclasses to C<extends> as a list:
+
+  extends 'Foo', 'Bar', 'Baz';
+
+=item (3)
+
 Moose supports using instance structures other than blessed hash
-references (such as in a glob reference -- see
-L<MooseX::GlobRef::Object>). If you want your Moose classes to
-be interchangeable, it is advisable to avoid direct instance
-access, like that shown above. Moose does let you get and set
-attributes directly without exposing the instance structure, but
-that's an advanced topic (intrepid readers should refer to the
-L<Moose::Meta::Attribute documentation>).
+references (such as in a glob reference - see
+L<MooseX::GlobRef::Object>).
 
 =back
 
