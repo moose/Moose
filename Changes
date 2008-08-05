@@ -3,7 +3,7 @@ Revision history for Perl extension Moose
 0.56
     * Moose
     * Moose::Cookbook::Extending::Recipe2
-      - Add a remove_keywords function so if you extend Moose
+      - Add a _remove_keywords function so if you extend Moose
         you don't have to cargo cult Moose's unimport (Sartak)
 
     * Moose

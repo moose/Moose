@@ -37,7 +37,7 @@ Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar M
   sub unimport {
       my $caller = caller();
 
-      Moose::remove_keywords(
+      Moose::_remove_keywords(
           source   => __PACKAGE__,
           package  => $caller,
           keywords => \@EXPORT,
@@ -123,11 +123,12 @@ This is all a bit fragile since it doesn't stack terribly well. You
 can basically only have one Moose-alike module. This may be fixed in
 the still-notional C<MooseX::Exporter> module someday.
 
-The C<unimport()> subroutine calls the C<remove_keywords> function
+The C<unimport()> subroutine calls the C<_remove_keywords> function
 from Moose.  This function removes only the keywords exported by
-this module. More precisely, C<remove_keywords> removes from the
+this module. More precisely, C<_remove_keywords> removes from the
 C<package> package the keywords given by the C<keywords> argument
-that were created in the C<source> package.
+that were created in the C<source> package. This functionality may
+be deprecated if L<Sub::Exporter> begins providing it.
 
 Finally, we have our C<has_table()> subroutine. This provides a bit of
 sugar that looks a lot like C<has()>.

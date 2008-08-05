@@ -195,7 +195,7 @@ use Moose::Util ();
     sub unimport {
         my $class = _get_caller(@_);
 
-        remove_keywords(
+        _remove_keywords(
             source   => __PACKAGE__,
             package  => $class,
             keywords => [ keys %exports ],
@@ -204,7 +204,7 @@ use Moose::Util ();
 
 }
 
-sub remove_keywords {
+sub _remove_keywords {
     my ( %args ) = @_;
 
     my $source  = $args{source};
@@ -832,19 +832,6 @@ and then injects a C<meta> accessor into your class to retrieve it. Then it
 sets your baseclass to Moose::Object or the value you pass in unless you already
 have one. This is all done via C<init_meta> which takes the name of your class
 and optionally a baseclass and a metaclass as arguments.
-
-For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
-
-=head2 B<remove_keywords>
-
-The remove_keywords method is called by Moose's C<unimport> to remove Moose's
-keywords from a package when C<no Moose> is used. If you extend Moose with
-new keywords, you should provide an C<unimport> that calls C<remove_keywords>
-to remove your sugar.
-
-C<remove_keywords> takes named parameters C<source> (to make sure that we
-don't remove keywords defined by somebody else), C<package> (from which we're
-removing keywords), and C<keywords> (an array reference of keyword names).
 
 For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
 
