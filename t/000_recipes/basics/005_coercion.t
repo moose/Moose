@@ -14,51 +14,39 @@ BEGIN {
 use Test::Exception;
 
 {
-	package Request;
-	use Moose;
+    package Request;
+    use Moose;
     use Moose::Util::TypeConstraints;
-	
-	use HTTP::Headers  ();
-	use Params::Coerce ();
-	use URI            ();
 
-	subtype Header
-	    => as Object
-	    => where { $_->isa('HTTP::Headers') };
+    use HTTP::Headers  ();
+    use Params::Coerce ();
+    use URI            ();
 
-	coerce Header
-	    => from ArrayRef
-	        => via { HTTP::Headers->new( @{ $_ } ) }
-	    => from HashRef
-	        => via { HTTP::Headers->new( %{ $_ } ) };
+    subtype Header => as Object => where { $_->isa('HTTP::Headers') };
 
-	subtype Uri
-	    => as Object
-	    => where { $_->isa('URI') };
+    coerce Header => from ArrayRef => via { HTTP::Headers->new( @{$_} ) } =>
+        from HashRef => via { HTTP::Headers->new( %{$_} ) };
 
-	coerce Uri
-	    => from Object
-	        => via { $_->isa('URI') ? $_ : Params::Coerce::coerce( 'URI', $_ ) }
-	    => from Str
-	        => via { URI->new( $_, 'http' ) };
+    subtype Uri => as Object => where { $_->isa('URI') };
 
-	subtype Protocol
-	    => as Str
-	    => where { /^HTTP\/[0-9]\.[0-9]$/ };
+    coerce Uri => from Object =>
+        via { $_->isa('URI') ? $_ : Params::Coerce::coerce( 'URI', $_ ) } =>
+        from Str => via { URI->new( $_, 'http' ) };
 
+    subtype Protocol => as Str => where {/^HTTP\/[0-9]\.[0-9]$/};
 
-	has 'base'     => (is => 'rw', isa => 'Uri', coerce  => 1);
-	has 'url'      => (is => 'rw', isa => 'Uri', coerce  => 1);	
-	has 'method'   => (is => 'rw', isa => 'Str');	
-	has 'protocol' => (is => 'rw', isa => 'Protocol');		
-	has 'headers'  => (
-	    is      => 'rw',
-	    isa     => 'Header',
-	    coerce  => 1,
-	    default => sub { HTTP::Headers->new } 
+    has 'base' => ( is => 'rw', isa => 'Uri', coerce => 1 );
+    has 'url'  => ( is => 'rw', isa => 'Uri', coerce => 1 );
+    has 'method'   => ( is => 'rw', isa => 'Str' );
+    has 'protocol' => ( is => 'rw', isa => 'Protocol' );
+    has 'headers'  => (
+        is      => 'rw',
+        isa     => 'Header',
+        coerce  => 1,
+        default => sub { HTTP::Headers->new }
     );
-    
-    __PACKAGE__->meta->make_immutable(debug => 0);
+
+    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 my $r = Request->new;

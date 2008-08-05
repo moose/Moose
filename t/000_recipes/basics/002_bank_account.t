@@ -9,41 +9,43 @@ use Test::Exception;
 {
     package BankAccount;
     use Moose;
-    
-    has 'balance' => (isa => 'Num', is => 'rw', default => 0);
+
+    has 'balance' => ( isa => 'Num', is => 'rw', default => 0 );
 
     sub deposit {
-        my ($self, $amount) = @_;
-        $self->balance($self->balance + $amount);
+        my ( $self, $amount ) = @_;
+        $self->balance( $self->balance + $amount );
     }
-    
+
     sub withdraw {
-        my ($self, $amount) = @_;
+        my ( $self, $amount ) = @_;
         my $current_balance = $self->balance();
-        ($current_balance >= $amount)
+        ( $current_balance >= $amount )
             || confess "Account overdrawn";
-        $self->balance($current_balance - $amount);
+        $self->balance( $current_balance - $amount );
     }
-    
-	__PACKAGE__->meta->make_immutable(debug => 0);
-}{
-	package CheckingAccount;	
-	use Moose;
 
- 	extends 'BankAccount';
-	
-    has 'overdraft_account' => (isa => 'BankAccount', is => 'rw');	
+    __PACKAGE__->meta->make_immutable( debug => 0 );
+}
 
-	before 'withdraw' => sub {
-		my ($self, $amount) = @_;
-		my $overdraft_amount = $amount - $self->balance();
-		if ($self->overdraft_account && $overdraft_amount > 0) {
-			$self->overdraft_account->withdraw($overdraft_amount);
-			$self->deposit($overdraft_amount);
-		}
-	};
+{
+    package CheckingAccount;
+    use Moose;
 
-	__PACKAGE__->meta->make_immutable(debug => 0);
+    extends 'BankAccount';
+
+    has 'overdraft_account' => ( isa => 'BankAccount', is => 'rw' );
+
+    before 'withdraw' => sub {
+        my ( $self, $amount ) = @_;
+        my $overdraft_amount = $amount - $self->balance();
+        if ( $self->overdraft_account && $overdraft_amount > 0 ) {
+            $self->overdraft_account->withdraw($overdraft_amount);
+            $self->deposit($overdraft_amount);
+        }
+    };
+
+    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 my $savings_account = BankAccount->new(balance => 250);

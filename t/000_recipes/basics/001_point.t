@@ -7,33 +7,35 @@ use Test::More tests => 57;
 use Test::Exception;
 
 {
-	package Point;	
-	use Moose;
-		
-	has 'x' => (isa => 'Int', is => 'ro');
-	has 'y' => (isa => 'Int', is => 'rw');
-	
-	sub clear {
-	    my $self = shift;
-	    $self->{x} = 0;
-	    $self->y(0);    
-	}
-	
-	__PACKAGE__->meta->make_immutable(debug => 0);
-}{	
-	package Point3D;
-	use Moose;
-	
-	extends 'Point';
-	
-	has 'z' => (isa => 'Int');
-	
-	after 'clear' => sub {
-	    my $self = shift;
-	    $self->{z} = 0;
-	};
-	
-    __PACKAGE__->meta->make_immutable(debug => 0);
+    package Point;
+    use Moose;
+
+    has 'x' => ( isa => 'Int', is => 'ro' );
+    has 'y' => ( isa => 'Int', is => 'rw' );
+
+    sub clear {
+        my $self = shift;
+        $self->{x} = 0;
+        $self->y(0);
+    }
+
+    __PACKAGE__->meta->make_immutable( debug => 0 );
+}
+
+{
+    package Point3D;
+    use Moose;
+
+    extends 'Point';
+
+    has 'z' => ( isa => 'Int' );
+
+    after 'clear' => sub {
+        my $self = shift;
+        $self->{z} = 0;
+    };
+
+    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 my $point = Point->new(x => 1, y => 2);	
