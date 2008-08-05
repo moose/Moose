@@ -3,13 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 17;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');
-    use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 my $type = Moose::Util::TypeConstraints::find_or_parse_type_constraint('Maybe[Int]');
 isa_ok($type, 'Moose::Meta::TypeConstraint');

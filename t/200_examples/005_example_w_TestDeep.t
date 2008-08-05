@@ -18,15 +18,10 @@ but it is not completely horrid either.
 BEGIN {
     eval "use Test::Deep;";
     plan skip_all => "Test::Deep is required for this test" if $@;        
-    plan tests => 7;    
+    plan tests => 5;    
 }
 
 use Test::Exception;
-
-BEGIN {  
-    use_ok('Moose');
-    use_ok('Moose::Util::TypeConstraints');    
-}
 
 {
     package Foo;

@@ -5,11 +5,9 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 6;
+use Test::More tests => 5;
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package Bar;

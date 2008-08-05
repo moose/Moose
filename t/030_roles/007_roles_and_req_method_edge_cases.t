@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 15;
 use Test::Exception;
 
 =pod
@@ -15,15 +15,6 @@ building process. A lot of the edge cases tested here
 are actually related to class construction order and 
 not any real functionality.
 - SL
-
-=cut
-
-BEGIN {
-    use_ok('Moose');
-    use_ok('Moose::Role');    
-}
-
-=pod
 
 Role which requires a method implemented 
 in another role as an override (it does 

@@ -8,14 +8,10 @@ use Test::More;
 BEGIN {
     eval "use HTTP::Headers; use Params::Coerce; use URI;";
     plan skip_all => "HTTP::Headers & Params::Coerce & URI required for this test" if $@;        
-    plan tests => 18;    
+    plan tests => 17;    
 }
 
 use Test::Exception;
-
-BEGIN {
-    use_ok('Moose');           
-}
 
 {
 	package Request;

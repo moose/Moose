@@ -3,13 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
-BEGIN {
-    use_ok('Moose');
-}
+
 
 
 {

@@ -28,4 +28,5 @@ be well from now on.
 
 { package Object::Test; }
 
-use_ok('Moose');      
+package Foo;
+::use_ok('Moose');      

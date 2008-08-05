@@ -3,11 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 46;
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 my @moose_exports = qw(
     extends with 

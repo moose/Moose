@@ -8,15 +8,13 @@ use Test::More;
 BEGIN {
     eval "use Regexp::Common; use Locale::US;";
     plan skip_all => "Regexp::Common & Locale::US required for this test" if $@;        
-    plan tests => 66;    
+    plan tests => 65;    
 }
 
 use Test::Exception;
 use Scalar::Util 'isweak';
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package Address;

@@ -167,7 +167,10 @@ use Moose::Util ();
         warnings->import;
 
         # we should never export to main
-        return if $CALLER eq 'main';
+        if ($CALLER eq 'main') {
+            warn qq{Moose does not export its sugar to the 'main' package.\n};
+            return;
+        }
 
         init_meta( $CALLER, 'Moose::Object' );
 

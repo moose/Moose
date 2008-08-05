@@ -3,14 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 58;
+use Test::More tests => 57;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package Foo;

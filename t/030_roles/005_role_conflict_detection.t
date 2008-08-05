@@ -3,13 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 89; # it's really 126 with kolibre's tests;
+use Test::More tests => 87; # it's really 124 with kolibre's tests;
 use Test::Exception;
-
-BEGIN {
-    use_ok('Moose');
-    use_ok('Moose::Role');    
-}
 
 =pod
 

@@ -10,7 +10,7 @@ BEGIN {
     plan skip_all => "DBM::Deep 1.0003 (or greater) is required for this test" if $@;              
     eval "use DateTime::Format::MySQL;";
     plan skip_all => "DateTime::Format::MySQL is required for this test" if $@;            
-    plan tests => 89;    
+    plan tests => 88;    
 }
 
 use Test::Exception;
@@ -24,9 +24,7 @@ END {
     unlink('newswriter.db') if -e 'newswriter.db';
 }
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 =pod
 

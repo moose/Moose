@@ -3,14 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More skip_all => 'The feature this test exercises is not yet written';
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');
-}
-
-=pod
 
 {
     package Scalar;
@@ -40,6 +35,3 @@ is_deeply(
     
     sub eq { shift == shift }
 }
-
-=cut
-
