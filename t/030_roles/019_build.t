@@ -1,16 +1,12 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 6;
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD
 # continues to work to run code after object initialization, whether the class
 # has a BUILD method or not
-
-BEGIN {
-    use_ok('Moose::Role');
-}
 
 my @CALLS;
 
