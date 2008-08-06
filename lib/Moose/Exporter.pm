@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Class::MOP;
-use namespace::clean ();
+use namespace::clean 0.08 ();
 use Sub::Exporter;
 
 
