@@ -24,23 +24,27 @@ sub extends {
 }
 
 sub with {
-    Moose::Util::apply_all_roles( shift->meta(), @_ );
+    my $role = caller();
+    Moose::Util::apply_all_roles( $role->meta(), @_ );
 }
 
 sub requires {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     croak "Must specify at least one method" unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     croak "Must specify at least one role" unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = @_;
@@ -49,7 +53,8 @@ sub has {
 }
 
 sub before {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     my $code = pop @_;
 
     for (@_) {
@@ -62,7 +67,8 @@ sub before {
 }
 
 sub after {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
 
     my $code = pop @_;
     for (@_) {
@@ -75,7 +81,8 @@ sub after {
 }
 
 sub around {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     my $code = pop @_;
     for (@_) {
         croak "Moose::Role do not currently support "
@@ -93,7 +100,8 @@ sub super {
 }
 
 sub override {
-    my $meta = shift->meta();
+    my $role = caller();
+    my $meta = $role->meta();
     my ( $name, $code ) = @_;
     $meta->add_override_method_modifier( $name, $code );
 }
@@ -107,11 +115,8 @@ sub augment {
 }
 
 my $exporter = Moose::Exporter->build_import_methods(
-    with_caller => [
-        qw( with requires excludes has before after around override make_immutable )
-    ],
-    as_is => [
-        qw( extends super inner augment ),
+    export => [
+        qw( with requires excludes has before after around override extends super inner augment ),
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],

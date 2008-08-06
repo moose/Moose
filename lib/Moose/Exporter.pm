@@ -24,7 +24,8 @@ sub build_import_methods {
     );
 
     my $import = $class->_make_import_sub(
-        $exporting_package, $args{init_meta_args},
+        $exporting_package,
+        $args{init_meta_args},
         $exporter
     );
 
@@ -44,20 +45,8 @@ sub _build_exporter {
 
     my @exported_names;
     my %exports;
-    for my $name ( @{ $args{with_caller} } ) {
-        my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
-
-        my $wrapped = Class::MOP::subname(
-            $exporting_package . '::' . $name => sub { $sub->( scalar caller(), @_ ) } );
-
-        $exports{$name} = sub { $wrapped };
-
-        push @exported_names, $name;
-    }
-
-    for my $name ( @{ $args{as_is} } ) {
+    for my $name ( @{ $args{export} } ) {
         my $sub;
-
         if ( ref $name ) {
             $sub  = $name;
             $name = ( Class::MOP::get_code_info($name) )[1];
@@ -69,6 +58,8 @@ sub _build_exporter {
         }
 
         $exports{$name} = sub { $sub };
+
+        push @exported_names, $name;
     }
 
     my $exporter = Sub::Exporter::build_exporter(
@@ -107,8 +98,8 @@ sub _make_import_sub {
 
         if ( $exporting_package->can('_init_meta') ) {
             $exporting_package->_init_meta(
+                %{ $init_meta_args || {} },
                 for_class => $caller,
-                %{ $init_meta_args || {} }
             );
         }
 
@@ -144,3 +135,94 @@ sub _make_unimport_sub {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Moose::Exporter - make an import() and unimport() just like Moose.pm
+
+=head1 SYNOPSIS
+
+  package MyApp::Moose;
+
+  use strict;
+  use warnings;
+
+  use Moose ();
+  use Moose::Exporter;
+
+  Moose::Exporter->build_export_methods(
+      export         => [ 'sugar1', 'sugar2', \&Some::Random::thing ],
+      init_meta_args => { metaclass_class => 'MyApp::Meta::Class' ],
+  );
+
+  # then later ...
+  package MyApp::User;
+
+  use MyApp::Moose;
+
+  has 'name';
+  sugar1 'do your thing';
+  thing;
+
+  no MyApp::Moose;
+
+=head1 DESCRIPTION
+
+This module encapsulates the logic to export sugar functions like
+C<Moose.pm>. It does this by building custom C<import> and C<unimport>
+methods for your module, based on a spec your provide.
+
+It also lets your "stack" Moose-alike modules so you can export
+Moose's sugar as well as your own, along with sugar from any random
+C<MooseX> module, as long as they all use C<Moose::Exporter>.
+
+=head1 METHODS
+
+This module provides exactly one public method:
+
+=head2 Moose::Exporter->build_import_methods(...)
+
+When you call this method, C<Moose::Exporter> build custom C<import>
+and C<unimport> methods for your module. The import method will export
+the functions you specify, and you can also tell it to export
+functions exported by some other module (like C<Moose.pm>).
+
+The C<unimport> method cleans the callers namespace of all the
+exported functions.
+
+This method accepts the following parameters:
+
+=over 4
+
+=item * export => [ ... ]
+
+This a list of function names or sub references to be exported
+as-is. You can identify a subroutine by reference, which is handy to
+re-export some other module's functions directly by reference
+(C<\&Some::Package::function>).
+
+=item * init_meta_args
+
+...
+
+=back
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+This is largely a reworking of code in Moose.pm originally written by
+Stevan Little and others.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
