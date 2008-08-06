@@ -47,10 +47,25 @@ sub _build_exporter {
     for my $name ( @{ $args{with_caller} } ) {
         my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
 
-        my $wrapped = Class::MOP::subname(
-            $exporting_package . '::' . $name => sub { $sub->( scalar caller(), @_ ) } );
+        # We need to set the package at import time, so that when
+        # package Foo imports has(), we capture "Foo" as the
+        # package. This lets other packages call Foo::has() and get
+        # the right package. This is done for backwards compatibility
+        # with existing production code, not because this is a good
+        # idea ;)
+        $exports{$name} = sub {
+            my $caller;
 
-        $exports{$name} = sub { $wrapped };
+            my $x = 0;
+            do
+            {
+                $caller = scalar caller($x++)
+            }
+            while ( $caller eq 'Sub::Exporter' );
+
+            Class::MOP::subname( $exporting_package . '::'
+                    . $name => sub { $sub->( $caller, @_ ) } );
+        };
 
         push @exported_names, $name;
     }
