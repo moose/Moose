@@ -19,23 +19,70 @@ sub get_caller{
                     : caller($offset);
 }
 
-my %EXPORTED;
-sub build_exporter {
+sub build_import_methods {
     my $class = shift;
     my %args  = @_;
 
-    my $exporting_pkg = caller();
+    my $exporting_package = caller();
+
+    my $exporter = $class->_build_exporter( exporting_package => $exporting_package, %args );
+
+    my $also = $args{also};
+
+    my $import = sub {
+        my $caller = Moose::Exporter->get_caller(@_);
+
+        # this works because both pragmas set $^H (see perldoc perlvar)
+        # which affects the current compilation - i.e. the file who use'd
+        # us - which is why we don't need to do anything special to make
+        # it affect that file rather than this one (which is already compiled)
+
+        strict->import;
+        warnings->import;
+
+        # we should never export to main
+        if ( $caller eq 'main' ) {
+            warn
+                qq{$exporting_package does not export its sugar to the 'main' package.\n};
+            return;
+        }
+
+        $also->($caller) if $also;
+
+        goto $exporter;
+    };
+
+    my $unimport = sub {
+        my $caller = Moose::Exporter->get_caller(@_);
+
+        Moose::Exporter->remove_keywords(
+            source => $exporting_package,
+            from   => $caller,
+        );
+    };
+
+    no strict 'refs';
+    *{ $exporting_package . '::import' } = $import;
+    *{ $exporting_package . '::unimport' } = $unimport;
+}
+
+my %EXPORTED;
+sub _build_exporter {
+    my $class = shift;
+    my %args  = @_;
+
+    my $exporting_package = $args{exporting_package};
 
     my %exports;
     for my $name ( @{ $args{with_caller} } ) {
-        my $sub = do { no strict 'refs'; \&{ $exporting_pkg . '::' . $name } };
+        my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
 
         my $wrapped = Class::MOP::subname(
-            $exporting_pkg . '::' . $name => sub { $sub->( scalar caller(), @_ ) } );
+            $exporting_package . '::' . $name => sub { $sub->( scalar caller(), @_ ) } );
 
         $exports{$name} = sub { $wrapped };
 
-        push @{ $EXPORTED{$exporting_pkg} }, $name;
+        push @{ $EXPORTED{$exporting_package} }, $name;
     }
 
     for my $name ( @{ $args{as_is} } ) {
@@ -46,9 +93,9 @@ sub build_exporter {
             $name = ( Class::MOP::get_code_info($name) )[1];
         }
         else {
-            $sub = do { no strict 'refs'; \&{ $exporting_pkg . '::' . $name } };
+            $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
 
-            push @{ $EXPORTED{$exporting_pkg} }, $name;
+            push @{ $EXPORTED{$exporting_package} }, $name;
         }
 
         $exports{$name} = sub { $sub };

@@ -115,7 +115,7 @@ sub make_immutable {
     $class->meta->make_immutable(@_);
 }
 
-my $exporter = Moose::Exporter->build_exporter(
+my $exporter = Moose::Exporter->build_import_methods(
     with_caller => [
         qw( extends with has before after around override augment make_immutable )
     ],
@@ -124,29 +124,8 @@ my $exporter = Moose::Exporter->build_exporter(
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],
+    also => sub { init_meta( shift, 'Moose::Object' ); },
 );
-
-sub import {
-    my $caller = Moose::Exporter->get_caller(@_);
-
-    # this works because both pragmas set $^H (see perldoc perlvar)
-    # which affects the current compilation - i.e. the file who use'd
-    # us - which is why we don't need to do anything special to make
-    # it affect that file rather than this one (which is already compiled)
-
-    strict->import;
-    warnings->import;
-
-    # we should never export to main
-    if ($caller eq 'main') {
-        warn qq{Moose does not export its sugar to the 'main' package.\n};
-        return;
-    }
-
-    init_meta($caller, 'Moose::Object');
-
-    goto $exporter;
-}
 
 # NOTE:
 # This is for special use by 
@@ -161,15 +140,6 @@ sub __CURRY_EXPORTS_FOR_CLASS__ {
     ($caller->can('meta') && $caller->meta->isa('Class::MOP::Class'))
         || croak "Cannot call _import_into on a package ($caller) without a metaclass";        
 #    return map { $_ => $exports{$_}->() } (@_ ? @_ : keys %exports);
-}
-
-sub unimport {
-    my $caller = Moose::Exporter->get_caller(@_);
-
-    Moose::Exporter->remove_keywords(
-        source => __PACKAGE__,
-        from   => $caller,
-    );
 }
 
 sub init_meta {

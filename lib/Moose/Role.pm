@@ -106,7 +106,7 @@ sub augment {
     croak "Moose::Role cannot support 'augment'";
 }
 
-my $exporter = Moose::Exporter->build_exporter(
+my $exporter = Moose::Exporter->build_import_methods(
     with_caller => [
         qw( with requires excludes has before after around override make_immutable )
     ],
@@ -115,38 +115,8 @@ my $exporter = Moose::Exporter->build_exporter(
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],
+    also => sub { init_meta(shift) },
 );
-
-sub import {
-    my $caller = Moose::Exporter->get_caller(@_);
-
-    # this works because both pragmas set $^H (see perldoc perlvar)
-    # which affects the current compilation - i.e. the file who use'd
-    # us - which is why we don't need to do anything special to make
-    # it affect that file rather than this one (which is already compiled)
-
-    strict->import;
-    warnings->import;
-
-    # we should never export to main
-    if ($caller eq 'main') {
-        warn qq{Moose::Role does not export its sugar to the 'main' package.\n};
-        return;
-    }
-
-    init_meta($caller);
-
-    goto $exporter;
-}
-
-sub unimport {
-    my $caller = Moose::Exporter->get_caller(@_);
-
-    Moose::Exporter->remove_keywords(
-        source => __PACKAGE__,
-        from   => $caller,
-    );
-}
 
 {
     my %METAS;
