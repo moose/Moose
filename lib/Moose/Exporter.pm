@@ -8,16 +8,16 @@ use namespace::clean 0.08 ();
 use Sub::Exporter;
 
 
-sub get_caller{
-    # 1 extra level because it's called by import so there's a layer of indirection
+sub get_caller {
+    # 1 extra level because it's called by import so there's a layer
+    # of indirection
     my $offset = 1;
 
     return
-        (ref $_[1] && defined $_[1]->{into})
-            ? $_[1]->{into}
-                : (ref $_[1] && defined $_[1]->{into_level})
-                    ? caller($offset + $_[1]->{into_level})
-                    : caller($offset);
+          ( ref $_[1] && defined $_[1]->{into} ) ? $_[1]->{into}
+        : ( ref $_[1] && defined $_[1]->{into_level} )
+        ? caller( $offset + $_[1]->{into_level} )
+        : caller($offset);
 }
 
 my %EXPORT_SPEC;
