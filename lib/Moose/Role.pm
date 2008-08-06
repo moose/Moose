@@ -19,32 +19,6 @@ use Moose::Util ();
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
-{
-    my %METAS;
-
-    sub init_meta {
-        my $role = shift;
-
-        return $METAS{$role} if exists $METAS{$role};
-
-        # make a subtype for each Moose class
-        role_type $role unless find_type_constraint($role);
-
-        my $meta;
-        if ($role->can('meta')) {
-            $meta = $role->meta();
-            (blessed($meta) && $meta->isa('Moose::Meta::Role'))
-                || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
-        }
-        else {
-            $meta = Moose::Meta::Role->initialize($role);
-            $meta->alias_method('meta' => sub { $meta });
-        }
-
-        return $METAS{$role} = $meta;
-    }
-}
-
 sub extends {
     croak "Roles do not currently support 'extends'";
 }
@@ -172,6 +146,32 @@ sub unimport {
         source => __PACKAGE__,
         from   => $caller,
     );
+}
+
+{
+    my %METAS;
+
+    sub init_meta {
+        my $role = shift;
+
+        return $METAS{$role} if exists $METAS{$role};
+
+        # make a subtype for each Moose class
+        role_type $role unless find_type_constraint($role);
+
+        my $meta;
+        if ($role->can('meta')) {
+            $meta = $role->meta();
+            (blessed($meta) && $meta->isa('Moose::Meta::Role'))
+                || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
+        }
+        else {
+            $meta = Moose::Meta::Role->initialize($role);
+            $meta->alias_method('meta' => sub { $meta });
+        }
+
+        return $METAS{$role} = $meta;
+    }
 }
 
 1;
