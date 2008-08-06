@@ -24,8 +24,7 @@ sub build_import_methods {
     );
 
     my $import = $class->_make_import_sub(
-        $exporting_package,
-        $args{init_meta_args},
+        $exporting_package, $args{init_meta_args},
         $exporter
     );
 
@@ -45,8 +44,20 @@ sub _build_exporter {
 
     my @exported_names;
     my %exports;
-    for my $name ( @{ $args{export} } ) {
+    for my $name ( @{ $args{with_caller} } ) {
+        my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
+
+        my $wrapped = Class::MOP::subname(
+            $exporting_package . '::' . $name => sub { $sub->( scalar caller(), @_ ) } );
+
+        $exports{$name} = sub { $wrapped };
+
+        push @exported_names, $name;
+    }
+
+    for my $name ( @{ $args{as_is} } ) {
         my $sub;
+
         if ( ref $name ) {
             $sub  = $name;
             $name = ( Class::MOP::get_code_info($name) )[1];
@@ -58,8 +69,6 @@ sub _build_exporter {
         }
 
         $exports{$name} = sub { $sub };
-
-        push @exported_names, $name;
     }
 
     my $exporter = Sub::Exporter::build_exporter(
@@ -98,8 +107,8 @@ sub _make_import_sub {
 
         if ( $exporting_package->can('_init_meta') ) {
             $exporting_package->_init_meta(
-                %{ $init_meta_args || {} },
                 for_class => $caller,
+                %{ $init_meta_args || {} }
             );
         }
 
@@ -196,7 +205,14 @@ This method accepts the following parameters:
 
 =over 4
 
-=item * export => [ ... ]
+=item * with_caller => [ ... ]
+
+This a list of function I<names only> to be exported wrapped and then
+exported. The wrapper will pass the name of the calling package as the
+first argument to the function. Many sugar functions need to know
+their caller so they can get the calling package's metaclass object.
+
+=item * as_is => [ ... ]
 
 This a list of function names or sub references to be exported
 as-is. You can identify a subroutine by reference, which is handy to

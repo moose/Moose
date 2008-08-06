@@ -27,7 +27,7 @@ use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
 sub extends {
-    my $class = caller();
+    my $class = shift;
 
     croak "Must derive at least one class" unless @_;
 
@@ -50,12 +50,12 @@ sub extends {
 }
 
 sub with {
-    my $class = caller();
+    my $class = shift;
     Moose::Util::apply_all_roles($class->meta, @_);
 }
 
 sub has {
-    my $class = caller();
+    my $class = shift;
     my $name  = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = @_;
@@ -64,17 +64,17 @@ sub has {
 }
 
 sub before {
-    my $class = caller();
+    my $class = shift;
     Moose::Util::add_method_modifier($class, 'before', \@_);
 }
 
 sub after {
-    my $class = caller();
+    my $class = shift;
     Moose::Util::add_method_modifier($class, 'after', \@_);
 }
 
 sub around {
-    my $class = caller();
+    my $class = shift;
     Moose::Util::add_method_modifier($class, 'around', \@_);
 }
 
@@ -83,7 +83,7 @@ sub super {
 }
 
 sub override {
-    my $class = caller();
+    my $class = shift;
     my ( $name, $method ) = @_;
     $class->meta->add_override_method_modifier( $name => $method );
 }
@@ -103,21 +103,24 @@ sub inner {
 }
 
 sub augment {
-    my $class = caller();
+    my $class = shift;
     my ( $name, $method ) = @_;
     $class->meta->add_augment_method_modifier( $name => $method );
 }
 
 sub make_immutable {
-    my $class = caller();
+    my $class = shift;
     cluck "The make_immutable keyword has been deprecated, " . 
           "please go back to __PACKAGE__->meta->make_immutable\n";
     $class->meta->make_immutable(@_);
 }
 
 my $exporter = Moose::Exporter->build_import_methods(
-    export => [
-        qw( extends with has before after around override augment make_immutable super inner ),
+    with_caller => [
+        qw( extends with has before after around override augment make_immutable )
+    ],
+    as_is => [
+        qw( super inner ),
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],
