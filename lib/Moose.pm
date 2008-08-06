@@ -124,28 +124,26 @@ my $exporter = Moose::Exporter->build_import_methods(
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],
-    also => sub { init_meta( shift, 'Moose::Object' ); },
 );
 
-# NOTE:
-# This is for special use by 
-# some modules and stuff, I 
-# dont know if it is sane enough
-# to document actually.
-# - SL
-sub __CURRY_EXPORTS_FOR_CLASS__ {
-    my $caller = shift;
-    ($caller ne 'Moose')
-        || croak "_import_into must be called a function, not a method";
-    ($caller->can('meta') && $caller->meta->isa('Class::MOP::Class'))
-        || croak "Cannot call _import_into on a package ($caller) without a metaclass";        
-#    return map { $_ => $exports{$_}->() } (@_ ? @_ : keys %exports);
-}
-
+# This exists for backwards compat
 sub init_meta {
     my ( $class, $base_class, $metaclass ) = @_;
-    $base_class = 'Moose::Object'      unless defined $base_class;
-    $metaclass  = 'Moose::Meta::Class' unless defined $metaclass;
+
+    __PACKAGE__->_init_meta( for_class         => $class,
+                             object_base_class => $base_class,
+                             metaclass_class   => $metaclass,
+                           );
+}
+
+sub _init_meta {
+    shift;
+    my %args = @_;
+
+    my $class = $args{for_class}
+        or confess "Cannot call _init_meta without specifying a for_class";
+    my $base_class = $args{object_base_class} || 'Moose::Object';
+    my $metaclass  = $args{metaclass_class}   || 'Moose::Meta::Class';
 
     confess
         "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."

@@ -115,14 +115,18 @@ my $exporter = Moose::Exporter->build_import_methods(
         \&Carp::confess,
         \&Scalar::Util::blessed,
     ],
-    also => sub { init_meta(shift) },
 );
 
 {
     my %METAS;
 
-    sub init_meta {
-        my $role = shift;
+    sub _init_meta {
+        shift;
+        my %args = @_;
+
+        my $role = $args{for_class}
+            or confess
+            "Cannot call _init_meta without specifying a for_class";
 
         return $METAS{$role} if exists $METAS{$role};
 

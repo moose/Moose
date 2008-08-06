@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Class::MOP;
+use namespace::clean ();
 use Sub::Exporter;
 
 
@@ -19,15 +20,18 @@ sub get_caller{
                     : caller($offset);
 }
 
+my %EXPORT_SPEC;
 sub build_import_methods {
     my $class = shift;
     my %args  = @_;
 
     my $exporting_package = caller();
 
-    my $exporter = $class->_build_exporter( exporting_package => $exporting_package, %args );
+    $EXPORT_SPEC{$exporting_package} = \%args;
 
-    my $also = $args{also};
+    my ( $exporter, $exported )
+        = $class->_build_exporter( exporting_package => $exporting_package,
+        %args );
 
     my $import = sub {
         my $caller = Moose::Exporter->get_caller(@_);
@@ -47,18 +51,24 @@ sub build_import_methods {
             return;
         }
 
-        $also->($caller) if $also;
+        if ( $exporting_package->can('_init_meta') ) {
+            $exporting_package->_init_meta(
+                for_class => $caller,
+                %{ $args{init_meta_args} || {} }
+            );
+        }
 
         goto $exporter;
     };
 
+    # [12:24]  <mst> yes. that's horrible. I know. but it should work.
+    #
+    # This will hopefully be replaced in the future once
+    # namespace::clean has an API for it.
     my $unimport = sub {
-        my $caller = Moose::Exporter->get_caller(@_);
+        @_ = ( 'namespace::clean', @{ $exported } );
 
-        Moose::Exporter->remove_keywords(
-            source => $exporting_package,
-            from   => $caller,
-        );
+        goto &namespace::clean::import;
     };
 
     no strict 'refs';
@@ -73,6 +83,7 @@ sub _build_exporter {
 
     my $exporting_package = $args{exporting_package};
 
+    my @exported_names;
     my %exports;
     for my $name ( @{ $args{with_caller} } ) {
         my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
@@ -82,7 +93,7 @@ sub _build_exporter {
 
         $exports{$name} = sub { $wrapped };
 
-        push @{ $EXPORTED{$exporting_package} }, $name;
+        push @exported_names, $name;
     }
 
     for my $name ( @{ $args{as_is} } ) {
@@ -95,38 +106,20 @@ sub _build_exporter {
         else {
             $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
 
-            push @{ $EXPORTED{$exporting_package} }, $name;
+            push @exported_names, $name;
         }
 
         $exports{$name} = sub { $sub };
     }
 
-    return Sub::Exporter::build_exporter(
+    my $exporter = Sub::Exporter::build_exporter(
         {
             exports => \%exports,
             groups  => { default => [':all'] }
         }
     );
-}
 
-sub remove_keywords {
-    my $class = shift;
-    my %args  = @_;
-
-    no strict 'refs';
-
-    for my $name ( @{ $EXPORTED{ $args{source} } } ) {
-        if ( defined &{ $args{from} . '::' . $name } ) {
-            my $keyword = \&{ $args{from} . '::' . $name };
-
-            # make sure it is from us
-            my ($pkg_name) = Class::MOP::get_code_info($keyword);
-            next if $pkg_name ne $args{source};
-
-            # and if it is from us, then undef the slot
-            delete ${ $args{from} . '::' }{$name};
-        }
-    }
+    return $exporter, \@exported_names;
 }
 
 1;
