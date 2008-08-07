@@ -3,9 +3,35 @@
 use strict;
 use warnings;
 
-use Test::More tests => 38;
+use Test::More;
 use Test::Exception;
 
+BEGIN {
+    unless ( eval 'use Test::Warn; 1' )  {
+        plan skip_all => 'These tests require Test::Warn';
+    }
+    else {
+        plan tests => 40;
+    }
+}
+
+
+{
+    package HasOwnImmutable;
+
+    use Moose;
+
+    no Moose;
+
+    ::warning_is( sub { eval q[sub make_immutable { return 'foo' }] },
+                  '',
+                  'no warning when defining our own make_immutable sub' );
+}
+
+{
+    is( HasOwnImmutable->make_immutable(), 'foo',
+        'HasOwnImmutable->make_immutable does not get overwritten' );
+}
 
 {
     package MooseX::Empty;

@@ -32,7 +32,7 @@ sub build_import_methods {
 
     my $import = $class->_make_import_sub( $exporter, \@exports_from );
 
-    my $unimport = $class->_make_unimport_sub( [ keys %{$exports} ] );
+    my $unimport = $class->_make_unimport_sub( \@exports_from, [ keys %{$exports} ] );
 
     no strict 'refs';
     *{ $exporting_package . '::import' }   = $import;
@@ -202,19 +202,28 @@ sub _get_caller {
 }
 
 sub _make_unimport_sub {
-    my $class    = shift;
-    my $exported = shift;
+    shift;
+    my $sources  = shift;
+    my $keywords = shift;
 
     return sub {
+        my $class  = shift;
         my $caller = scalar caller();
-        Moose::Exporter->_remove_keywords( $caller, $exported );
+        Moose::Exporter->_remove_keywords(
+            $caller,
+            [ $class, @{$sources} ],
+            $keywords
+        );
     };
 }
 
 sub _remove_keywords {
     shift;
     my $package  = shift;
+    my $sources  = shift;
     my $keywords = shift;
+
+    my %sources = map { $_ => 1 } @{$sources};
 
     no strict 'refs';
 
@@ -227,7 +236,7 @@ sub _remove_keywords {
 
             # make sure it is from us
             my ($pkg_name) = Class::MOP::get_code_info($keyword);
-            next if $pkg_name eq $package;
+            next unless $sources{$pkg_name};
 
             # and if it is from us, then undef the slot
             delete ${ $package . '::' }{$name};
