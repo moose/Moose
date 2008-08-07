@@ -6,33 +6,34 @@ use warnings;
 use Test::More tests => 38;
 use Test::Exception;
 
-# All the BEGIN blocks are necessary to emulate the behavior of
-# loading modules via use and the similar compile-time effect of "no
-# ..."
+
 {
     package MooseX::Empty;
 
     use Moose ();
-    BEGIN { Moose::Exporter->build_import_methods( also => 'Moose' ); }
+    Moose::Exporter->build_import_methods( also => 'Moose' );
 }
 
 {
     package WantsMoose;
 
-    BEGIN { MooseX::Empty->import(); }
+    MooseX::Empty->import();
 
     sub foo { 1 }
 
-    BEGIN {
-        ::can_ok( 'WantsMoose', 'has' );
-        ::can_ok( 'WantsMoose', 'with' );
-        ::can_ok( 'WantsMoose', 'foo' );
-    }
+    ::can_ok( 'WantsMoose', 'has' );
+    ::can_ok( 'WantsMoose', 'with' );
+    ::can_ok( 'WantsMoose', 'foo' );
 
-    BEGIN{ MooseX::Empty->unimport();}
+    MooseX::Empty->unimport();
 }
 
 {
+    # Note: it's important that these methods be out of scope _now_,
+    # after unimport was called. We tried a
+    # namespace::clean(0.08)-based solution, but had to abandon it
+    # because it cleans the namespace _later_ (when the file scope
+    # ends).
     ok( ! WantsMoose->can('has'),  'WantsMoose::has() has been cleaned' );
     ok( ! WantsMoose->can('with'), 'WantsMoose::with() has been cleaned' );
     can_ok( 'WantsMoose', 'foo' );
@@ -53,31 +54,27 @@ use Test::Exception;
         return $caller . ' called wrapped1';
     }
 
-    BEGIN {
-        Moose::Exporter->build_import_methods(
-            with_caller => ['wrapped1'],
-            also        => 'Moose',
-        );
-    }
+    Moose::Exporter->build_import_methods(
+        with_caller => ['wrapped1'],
+        also        => 'Moose',
+    );
 }
 
 {
     package WantsSugar;
 
-    BEGIN { MooseX::Sugar->import() }
+    MooseX::Sugar->import();
 
     sub foo { 1 }
 
-    BEGIN {
-        ::can_ok( 'WantsSugar', 'has' );
-        ::can_ok( 'WantsSugar', 'with' );
-        ::can_ok( 'WantsSugar', 'wrapped1' );
-        ::can_ok( 'WantsSugar', 'foo' );
-        ::is( wrapped1(), 'WantsSugar called wrapped1',
-              'wrapped1 identifies the caller correctly' );
-    }
+    ::can_ok( 'WantsSugar', 'has' );
+    ::can_ok( 'WantsSugar', 'with' );
+    ::can_ok( 'WantsSugar', 'wrapped1' );
+    ::can_ok( 'WantsSugar', 'foo' );
+    ::is( wrapped1(), 'WantsSugar called wrapped1',
+          'wrapped1 identifies the caller correctly' );
 
-    BEGIN{ MooseX::Sugar->unimport();}
+    MooseX::Sugar->unimport();
 }
 
 {
@@ -101,38 +98,34 @@ use Test::Exception;
         return 'as_is1';
     }
 
-    BEGIN {
-        Moose::Exporter->build_import_methods(
-            with_caller => ['wrapped2'],
-            as_is       => ['as_is1'],
-            also        => 'MooseX::Sugar',
-        );
-    }
+    Moose::Exporter->build_import_methods(
+        with_caller => ['wrapped2'],
+        as_is       => ['as_is1'],
+        also        => 'MooseX::Sugar',
+    );
 }
 
 {
     package WantsMoreSugar;
 
-    BEGIN { MooseX::MoreSugar->import() }
+    MooseX::MoreSugar->import();
 
     sub foo { 1 }
 
-    BEGIN {
-        ::can_ok( 'WantsMoreSugar', 'has' );
-        ::can_ok( 'WantsMoreSugar', 'with' );
-        ::can_ok( 'WantsMoreSugar', 'wrapped1' );
-        ::can_ok( 'WantsMoreSugar', 'wrapped2' );
-        ::can_ok( 'WantsMoreSugar', 'as_is1' );
-        ::can_ok( 'WantsMoreSugar', 'foo' );
-        ::is( wrapped1(), 'WantsMoreSugar called wrapped1',
-              'wrapped1 identifies the caller correctly' );
-        ::is( wrapped2(), 'WantsMoreSugar called wrapped2',
-              'wrapped2 identifies the caller correctly' );
-        ::is( as_is1(), 'as_is1',
-              'as_is1 works as expected' );
-    }
+    ::can_ok( 'WantsMoreSugar', 'has' );
+    ::can_ok( 'WantsMoreSugar', 'with' );
+    ::can_ok( 'WantsMoreSugar', 'wrapped1' );
+    ::can_ok( 'WantsMoreSugar', 'wrapped2' );
+    ::can_ok( 'WantsMoreSugar', 'as_is1' );
+    ::can_ok( 'WantsMoreSugar', 'foo' );
+    ::is( wrapped1(), 'WantsMoreSugar called wrapped1',
+          'wrapped1 identifies the caller correctly' );
+    ::is( wrapped2(), 'WantsMoreSugar called wrapped2',
+          'wrapped2 identifies the caller correctly' );
+    ::is( as_is1(), 'as_is1',
+          'as_is1 works as expected' );
 
-    BEGIN{ MooseX::MoreSugar->unimport();}
+    MooseX::MoreSugar->unimport();
 }
 
 {
@@ -165,13 +158,13 @@ use Test::Exception;
                                );
     }
 
-    BEGIN { Moose::Exporter->build_import_methods( also => 'Moose' ); }
+    Moose::Exporter->build_import_methods( also => 'Moose' );
 }
 
 {
     package NewMeta;
 
-    BEGIN { HasInitMeta->import() }
+    HasInitMeta->import();
 }
 
 {

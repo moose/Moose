@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Class::MOP;
-use namespace::clean 0.08 ();
 use List::MoreUtils qw( uniq );
 use Sub::Exporter;
 
@@ -206,15 +205,34 @@ sub _make_unimport_sub {
     my $class    = shift;
     my $exported = shift;
 
-    # [12:24]  <mst> yes. that's horrible. I know. but it should work.
-    #
-    # This will hopefully be replaced in the future once
-    # namespace::clean has an API for it.
     return sub {
-        @_ = ( 'namespace::clean', @{$exported} );
-
-        goto &namespace::clean::import;
+        my $caller = scalar caller();
+        Moose::Exporter->_remove_keywords( $caller, $exported );
     };
+}
+
+sub _remove_keywords {
+    shift;
+    my $package  = shift;
+    my $keywords = shift;
+
+    no strict 'refs';
+
+    # loop through the keywords ...
+    foreach my $name ( @{$keywords} ) {
+
+        # if we find one ...
+        if ( defined &{ $package . '::' . $name } ) {
+            my $keyword = \&{ $package . '::' . $name };
+
+            # make sure it is from us
+            my ($pkg_name) = Class::MOP::get_code_info($keyword);
+            next if $pkg_name eq $package;
+
+            # and if it is from us, then undef the slot
+            delete ${ $package . '::' }{$name};
+        }
+    }
 }
 
 1;
