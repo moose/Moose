@@ -5,6 +5,7 @@ use warnings;
 
 use Class::MOP;
 use namespace::clean 0.08 ();
+use List::MoreUtils qw( uniq );
 use Sub::Exporter;
 
 
@@ -18,10 +19,10 @@ sub build_import_methods {
 
     $EXPORT_SPEC{$exporting_package} = \%args;
 
-    my $exports = $class->_process_exports(
-        exporting_package => $exporting_package,
-        %args,
-    );
+    my @exports_from = $class->_follow_also( $exporting_package );
+
+    my $exports
+        = $class->_process_exports( $exporting_package, @exports_from );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
@@ -42,36 +43,81 @@ sub build_import_methods {
     *{ $exporting_package . '::unimport' } = $unimport;
 }
 
-sub _process_exports {
-    my $class = shift;
-    my %args  = @_;
+{
+    my %seen;
 
-    my $exporting_package = $args{exporting_package};
+    sub _follow_also {
+        my $class             = shift;
+        my $exporting_package = shift;
 
-    my %exports;
-    for my $name ( @{ $args{with_caller} } ) {
-        my $sub
-            = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
+        %seen = ( $exporting_package => 1 );
 
-        $exports{$name}
-            = $class->_make_wrapped_sub( $exporting_package, $name, $sub );
+        return uniq( _follow_also_real($exporting_package) );
     }
 
-    for my $name ( @{ $args{as_is} } ) {
-        my $sub;
+    sub _follow_also_real {
+        my $exporting_package = shift;
 
-        if ( ref $name ) {
-            $sub  = $name;
-            $name = ( Class::MOP::get_code_info($name) )[1];
+        die "Package in also ($exporting_package) does not seem to use MooseX::Exporter"
+            unless exists $EXPORT_SPEC{$exporting_package};
+
+        my $also = $EXPORT_SPEC{$exporting_package}{also};
+
+        return unless defined $also;
+
+        my @also = ref $also ? @{$also} : $also;
+
+        for my $package (@also)
+        {
+            die "Circular reference in also parameter to MooseX::Exporter between $exporting_package and $package"
+                if $seen{$package};
+
+            $seen{$package} = 1;
         }
-        else {
-            $sub = do {
+
+        return @also, map { _follow_also_real($_) } @also;
+    }
+}
+
+sub _process_exports {
+    my $class    = shift;
+    my @packages = @_;
+
+    my %exports;
+
+    for my $package (@packages) {
+        my $args = $EXPORT_SPEC{$package}
+            or die "The $package package does not use Moose::Exporter\n";
+
+        for my $name ( @{ $args->{with_caller} } ) {
+            my $sub = do {
                 no strict 'refs';
-                \&{ $exporting_package . '::' . $name };
+                \&{ $package . '::' . $name };
             };
+
+            $exports{$name} = $class->_make_wrapped_sub(
+                $package,
+                $name,
+                $sub
+            );
         }
 
-        $exports{$name} = sub {$sub};
+        for my $name ( @{ $args->{as_is} } ) {
+            my $sub;
+
+            if ( ref $name ) {
+                $sub  = $name;
+                $name = ( Class::MOP::get_code_info($name) )[1];
+            }
+            else {
+                $sub = do {
+                    no strict 'refs';
+                    \&{ $package . '::' . $name };
+                };
+            }
+
+            $exports{$name} = sub {$sub};
+        }
     }
 
     return \%exports;
