@@ -126,7 +126,7 @@ my $exporter = Moose::Exporter->build_import_methods(
 
         my $role = $args{for_class}
             or confess
-            "Cannot call _init_meta without specifying a for_class";
+            "Cannot call init_meta without specifying a for_class";
 
         return $METAS{$role} if exists $METAS{$role};
 
