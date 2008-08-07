@@ -8,6 +8,16 @@ use namespace::clean 0.08 ();
 use Sub::Exporter;
 
 
+# This variable gets closed over in each export _generator_. Then in
+# the generator we grab the value and close over it _again_ in the
+# real export, so it gets captured each time the generator runs.
+#
+# In the meantime, we arrange for the import method we generate to set
+# this variable to the caller each time it is called.
+#
+# This is all a bit confusing, but it works.
+my $CALLER;
+
 my %EXPORT_SPEC;
 
 sub build_import_methods {
@@ -18,31 +28,36 @@ sub build_import_methods {
 
     $EXPORT_SPEC{$exporting_package} = \%args;
 
-    my ( $exporter, $exported ) = $class->_build_exporter(
+    my $exports = $class->_process_exports(
         exporting_package => $exporting_package,
-        %args
+        %args,
+    );
+
+    my $exporter = Sub::Exporter::build_exporter(
+        {
+            exports => $exports,
+            groups  => { default => [':all'] }
+        }
     );
 
     my $import = $class->_make_import_sub(
-        $exporting_package, $args{init_meta_args},
-        $exporter
+        $exporter,
+        $args{init_meta_args},
     );
 
-    my $unimport = $class->_make_unimport_sub($exported);
+    my $unimport = $class->_make_unimport_sub( [ keys %{$exports} ] );
 
     no strict 'refs';
     *{ $exporting_package . '::import' }   = $import;
     *{ $exporting_package . '::unimport' } = $unimport;
 }
 
-my %EXPORTED;
-sub _build_exporter {
+sub _process_exports {
     my $class = shift;
     my %args  = @_;
 
     my $exporting_package = $args{exporting_package};
 
-    my @exported_names;
     my %exports;
     for my $name ( @{ $args{with_caller} } ) {
         my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
@@ -54,20 +69,10 @@ sub _build_exporter {
         # with existing production code, not because this is a good
         # idea ;)
         $exports{$name} = sub {
-            my $caller;
-
-            my $x = 0;
-            do
-            {
-                $caller = scalar caller($x++)
-            }
-            while ( $caller eq 'Sub::Exporter' );
-
+            my $caller = $CALLER;
             Class::MOP::subname( $exporting_package . '::'
                     . $name => sub { $sub->( $caller, @_ ) } );
         };
-
-        push @exported_names, $name;
     }
 
     for my $name ( @{ $args{as_is} } ) {
@@ -79,31 +84,25 @@ sub _build_exporter {
         }
         else {
             $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
-
-            push @exported_names, $name;
         }
 
         $exports{$name} = sub { $sub };
     }
 
-    my $exporter = Sub::Exporter::build_exporter(
-        {
-            exports => \%exports,
-            groups  => { default => [':all'] }
-        }
-    );
-
-    return $exporter, \@exported_names;
+    return \%exports;
 }
 
 sub _make_import_sub {
     my $class             = shift;
-    my $exporting_package = shift;
-    my $init_meta_args    = shift;
     my $exporter          = shift;
+    my $init_meta_args    = shift;
 
     return sub {
-        my $caller = Moose::Exporter->_get_caller(@_);
+        # It's important to leave @_ as-is for the benefit of
+        # Sub::Exporter.
+        my $class = $_[0];
+
+        $CALLER = Moose::Exporter::_get_caller(@_);
 
         # this works because both pragmas set $^H (see perldoc perlvar)
         # which affects the current compilation - i.e. the file who use'd
@@ -114,15 +113,15 @@ sub _make_import_sub {
         warnings->import;
 
         # we should never export to main
-        if ( $caller eq 'main' ) {
+        if ( $CALLER eq 'main' ) {
             warn
-                qq{$exporting_package does not export its sugar to the 'main' package.\n};
+                qq{$class does not export its sugar to the 'main' package.\n};
             return;
         }
 
-        if ( $exporting_package->can('_init_meta') ) {
-            $exporting_package->_init_meta(
-                for_class => $caller,
+        if ( $class->can('_init_meta') ) {
+            $class->_init_meta(
+                for_class => $CALLER,
                 %{ $init_meta_args || {} }
             );
         }

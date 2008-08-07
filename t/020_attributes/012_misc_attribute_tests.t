@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 47;
 use Test::Exception;
 
 
@@ -251,3 +251,14 @@ use Test::Exception;
 
 }
 
+{
+    package OutOfClassTest;
+
+    use Moose;
+}
+
+lives_ok { OutOfClassTest::has('foo'); } 'create attr via direct sub call';
+lives_ok { OutOfClassTest->can('has')->('bar'); } 'create attr via can';
+
+ok(OutOfClassTest->meta->get_attribute('foo'), 'attr created from sub call');
+ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
