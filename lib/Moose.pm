@@ -713,44 +713,71 @@ to work. Here is an example:
 
 =head1 EXTENDING AND EMBEDDING MOOSE
 
-Moose also offers some options for extending or embedding it into your own
-framework. The basic premise is to have something that sets up your class'
-metaclass and export the moose declarators (C<has>, C<with>, C<extends>,...).
-Here is an example:
+Moose also offers some options for extending or embedding it into your
+own framework. There are several things you might want to do as part
+of such a framework. First, you probably want to export Moose's sugar
+functions (C<has>, C<extends>, etc) for users of the
+framework. Second, you may want to provide additional sugar of your
+own. Third, you may want to provide your own object base class instead
+of L<Moose::Object>, and/or your own metaclass class instead of
+L<Moose::Meta::Class>.
+
+The exporting needs can be asily satisfied by using
+L<Moose::Exporter>, which is what C<Moose.pm> itself uses for
+exporting. L<Moose::Exporter> lets you "export like Moose".
+
+If you define an C<init_meta> method in a module that uses
+L<Moose::Exporter>, then this method will be called I<before>
+C<Moose.pm>'s own C<init_meta>. This gives you a chance to provide an
+alternate object base class or metaclass class.
+
+Here is a simple example:
 
     package MyFramework;
-    use Moose;
 
-    sub import {
-        my $CALLER = caller();
+    use strict;
+    use warnings;
 
-        strict->import;
-        warnings->import;
+    use Moose (); # no need to get Moose's exports
+    use Moose::Exporter;
 
-        # we should never export to main
-        return if $CALLER eq 'main';
-        Moose::init_meta( $CALLER, 'MyFramework::Base' );
-        Moose->import({into => $CALLER});
+    Moose::Exporter->build_import_methods( also => 'Moose' );
 
-        # Do my custom framework stuff
-
-        return 1;
+    sub init_meta {
+        shift;
+        return Moose->init_meta( @_, base_class => 'MyFramework::Base' );
     }
+
+In this example, any class that includes C<use MyFramework> will get
+all of C<Moose.pm>'s sugar functions, and will have their superclass
+set to C<MyFramework::Base>.
+
+Additionally, that class can include C<no MyFramework> to unimport
+
+=head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
+
+The C<init_meta> method sets up the metaclass object for the class
+specified by C<for_class>. It also injects a a C<meta> accessor into
+the class so you can get at this object. It also sets the class's
+superclass to C<base_class>, with L<Moose::Object> as the default.
+
+You can specify an alternate metaclass with the C<metaclass> parameter.
+
+For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+
+This method used to be documented as a function which accepted
+positional parameters. This calling style will still work for
+backwards compatibility.
 
 =head2 B<import>
 
 Moose's C<import> method supports the L<Sub::Exporter> form of C<{into =E<gt> $pkg}>
-and C<{into_level =E<gt> 1}>
+and C<{into_level =E<gt> 1}>.
 
-=head2 B<init_meta ($class, $baseclass, $metaclass)>
-
-Moose does some boot strapping: it creates a metaclass object for your class,
-and then injects a C<meta> accessor into your class to retrieve it. Then it
-sets your baseclass to Moose::Object or the value you pass in unless you already
-have one. This is all done via C<init_meta> which takes the name of your class
-and optionally a baseclass and a metaclass as arguments.
-
-For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+B<NOTE>: Doing this is more or less deprecated. Use L<Moose::Exporter>
+instead, which lets you stack multiple C<Moose.pm>-alike modules
+sanely. It handles getting the exported functions into the right place
+for you.
 
 =head1 CAVEATS
 

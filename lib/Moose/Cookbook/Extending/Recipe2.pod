@@ -12,50 +12,27 @@ Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar M
   use strict;
   use warnings;
 
-  our @EXPORT = qw( has_table );
-
-  use base 'Exporter';
-  use Class::MOP;
   use Moose ();
+  use Moose::Exporter;
 
-  sub import {
-    my $caller = caller();
+  Moose::Exporter->build_import_methods(
+      with_caller => ['has_table'],
+      also        => 'Moose',
+  );
 
-    return if $caller eq 'main';
-
-    Moose::init_meta(
-        $caller,
-        undef,    # object base class
-        'MyApp::Meta::Class',
-    );
-
-    Moose->import( { into => $caller }, @_ );
-
-    __PACKAGE__->export_to_level( 1, @_ );
-  }
-
-  sub unimport {
-      my $caller = caller();
-
-      Moose::_remove_keywords(
-          source   => __PACKAGE__,
-          package  => $caller,
-          keywords => \@EXPORT,
-      );
-
-      Moose->unimport( { into_level => 1 } );
+  sub init_meta {
+      shift;
+      Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
   }
 
   sub has_table {
-      my $caller = caller();
-
+      my $caller = shift;
       $caller->meta()->table(shift);
   }
 
 =head1 DESCRIPTION
 
-The code above shows what it takes to provide an import-based
-interface just like C<Moose.pm>. This recipe builds on
+This recipe expands on the use of L<Moose::Exporter> we saw in
 L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
 object base class, we provide our own metaclass class, and we also
 export a sugar subroutine C<has_table()>.
@@ -64,14 +41,14 @@ Given the above code, you can now replace all instances of C<use
 Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
 replaced with C<no MyApp::Mooseish>.
 
-=head1 WARNING
+The C<with_caller> parameter specifies a list of functions that should
+be wrapped before exporting. The wrapper simply ensures that the
+importing package name is the first argument to the function, so we
+can do C<S<my $caller = shift;>>.
 
-This recipe covers a fairly undocumented and ugly part of Moose, and
-the techniques described here may be deprecated in a future
-release. If this happens, there will be plenty of warning, as a number
-of C<MooseX> modules on CPAN already use these techniques.
+See the L<Moose::Exporter> docs for more details on its API.
 
-=head1 HOW IT IS USED
+=head1 USING MyApp::Mooseish
 
 The purpose of all this code is to provide a Moose-like
 interface. Here's what it would look like in actual use:
@@ -82,8 +59,8 @@ interface. Here's what it would look like in actual use:
 
   has_table 'User';
 
-  has 'username';
-  has 'password';
+  has 'username' => ( is => 'ro' );
+  has 'password' => ( is => 'ro' );
 
   sub login { ... }
 
@@ -91,47 +68,6 @@ interface. Here's what it would look like in actual use:
 
 All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
 when you C<use MyApp::Mooseish>.
-
-=head1 DISSECTION
-
-The first bit of magic is the call to C<Moose::init_meta()>. What this
-does is create a metaclass for the specified class. Normally, this is
-called by C<Moose.pm> in its own C<import()> method. However, we can
-call it first in order to provide an alternate metaclass class. We
-could also provide an alternate base object class to replace
-C<Moose::Object> (see L<Moose::Cookbook::Extending::Recipe1> for an
-example).
-
-The C<Moose::init_meta()> call takes three parameters. The first is
-the class for which we are initializing a metaclass object. The second
-is the base object, which is L<Moose::Object> by default. The third
-argument is the metaclass class, which is C<Moose::Meta::Class> by
-default.
-
-The next bit of magic is this:
-
-  Moose->import( { into => $caller } );
-
-This use of "into" is actually part of the C<Sub::Exporter> API, which
-C<Moose.pm> uses internally to export things like C<has()> and
-C<extends()>.
-
-Finally, we call C<< __PACKAGE__->export_to_level() >>. This method
-actually comes from C<Exporter>.
-
-This is all a bit fragile since it doesn't stack terribly well. You
-can basically only have one Moose-alike module. This may be fixed in
-the still-notional C<MooseX::Exporter> module someday.
-
-The C<unimport()> subroutine calls the C<_remove_keywords> function
-from Moose.  This function removes only the keywords exported by
-this module. More precisely, C<_remove_keywords> removes from the
-C<package> package the keywords given by the C<keywords> argument
-that were created in the C<source> package. This functionality may
-be deprecated if L<Sub::Exporter> begins providing it.
-
-Finally, we have our C<has_table()> subroutine. This provides a bit of
-sugar that looks a lot like C<has()>.
 
 =head1 AUTHOR
 
