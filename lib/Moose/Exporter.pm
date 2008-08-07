@@ -8,16 +8,6 @@ use namespace::clean 0.08 ();
 use Sub::Exporter;
 
 
-# This variable gets closed over in each export _generator_. Then in
-# the generator we grab the value and close over it _again_ in the
-# real export, so it gets captured each time the generator runs.
-#
-# In the meantime, we arrange for the import method we generate to set
-# this variable to the caller each time it is called.
-#
-# This is all a bit confusing, but it works.
-my $CALLER;
-
 my %EXPORT_SPEC;
 
 sub build_import_methods {
@@ -60,19 +50,11 @@ sub _process_exports {
 
     my %exports;
     for my $name ( @{ $args{with_caller} } ) {
-        my $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
+        my $sub
+            = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
 
-        # We need to set the package at import time, so that when
-        # package Foo imports has(), we capture "Foo" as the
-        # package. This lets other packages call Foo::has() and get
-        # the right package. This is done for backwards compatibility
-        # with existing production code, not because this is a good
-        # idea ;)
-        $exports{$name} = sub {
-            my $caller = $CALLER;
-            Class::MOP::subname( $exporting_package . '::'
-                    . $name => sub { $sub->( $caller, @_ ) } );
-        };
+        $exports{$name}
+            = $class->_make_wrapped_sub( $exporting_package, $name, $sub );
     }
 
     for my $name ( @{ $args{as_is} } ) {
@@ -83,51 +65,88 @@ sub _process_exports {
             $name = ( Class::MOP::get_code_info($name) )[1];
         }
         else {
-            $sub = do { no strict 'refs'; \&{ $exporting_package . '::' . $name } };
+            $sub = do {
+                no strict 'refs';
+                \&{ $exporting_package . '::' . $name };
+            };
         }
 
-        $exports{$name} = sub { $sub };
+        $exports{$name} = sub {$sub};
     }
 
     return \%exports;
 }
 
-sub _make_import_sub {
-    my $class             = shift;
-    my $exporter          = shift;
-    my $init_meta_args    = shift;
+{
+    # This variable gets closed over in each export _generator_. Then
+    # in the generator we grab the value and close over it _again_ in
+    # the real export, so it gets captured each time the generator
+    # runs.
+    #
+    # In the meantime, we arrange for the import method we generate to
+    # set this variable to the caller each time it is called.
+    #
+    # This is all a bit confusing, but it works.
+    my $CALLER;
 
-    return sub {
-        # It's important to leave @_ as-is for the benefit of
-        # Sub::Exporter.
-        my $class = $_[0];
+    sub _make_wrapped_sub {
+        my $class             = shift;
+        my $exporting_package = shift;
+        my $name              = shift;
+        my $sub               = shift;
 
-        $CALLER = Moose::Exporter::_get_caller(@_);
+        # We need to set the package at import time, so that when
+        # package Foo imports has(), we capture "Foo" as the
+        # package. This lets other packages call Foo::has() and get
+        # the right package. This is done for backwards compatibility
+        # with existing production code, not because this is a good
+        # idea ;)
+        return sub {
+            my $caller = $CALLER;
+            Class::MOP::subname( $exporting_package . '::'
+                    . $name => sub { $sub->( $caller, @_ ) } );
+        };
+    }
 
-        # this works because both pragmas set $^H (see perldoc perlvar)
-        # which affects the current compilation - i.e. the file who use'd
-        # us - which is why we don't need to do anything special to make
-        # it affect that file rather than this one (which is already compiled)
+    sub _make_import_sub {
+        my $class          = shift;
+        my $exporter       = shift;
+        my $init_meta_args = shift;
 
-        strict->import;
-        warnings->import;
+        return sub {
 
-        # we should never export to main
-        if ( $CALLER eq 'main' ) {
-            warn
-                qq{$class does not export its sugar to the 'main' package.\n};
-            return;
-        }
+            # It's important to leave @_ as-is for the benefit of
+            # Sub::Exporter.
+            my $class = $_[0];
 
-        if ( $class->can('_init_meta') ) {
-            $class->_init_meta(
-                for_class => $CALLER,
-                %{ $init_meta_args || {} }
-            );
-        }
+            $CALLER = Moose::Exporter::_get_caller(@_);
 
-        goto $exporter;
-    };
+            # this works because both pragmas set $^H (see perldoc
+            # perlvar) which affects the current compilation -
+            # i.e. the file who use'd us - which is why we don't need
+            # to do anything special to make it affect that file
+            # rather than this one (which is already compiled)
+
+            strict->import;
+            warnings->import;
+
+            # we should never export to main
+            if ( $CALLER eq 'main' ) {
+                warn
+                    qq{$class does not export its sugar to the 'main' package.\n};
+                return;
+            }
+
+            if ( $class->can('_init_meta') ) {
+                $class->_init_meta(
+                    for_class => $CALLER,
+                    %{ $init_meta_args || {} }
+                );
+            }
+
+            goto $exporter;
+        };
+    }
 }
 
 sub _get_caller {
