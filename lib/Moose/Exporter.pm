@@ -31,10 +31,7 @@ sub build_import_methods {
         }
     );
 
-    my $import = $class->_make_import_sub(
-        $exporter,
-        $args{init_meta_args},
-    );
+    my $import = $class->_make_import_sub($exporter);
 
     my $unimport = $class->_make_unimport_sub( [ keys %{$exports} ] );
 
@@ -157,7 +154,6 @@ sub _process_exports {
     sub _make_import_sub {
         my $class          = shift;
         my $exporter       = shift;
-        my $init_meta_args = shift;
 
         return sub {
 
@@ -183,10 +179,9 @@ sub _process_exports {
                 return;
             }
 
-            if ( $class->can('_init_meta') ) {
-                $class->_init_meta(
+            if ( $class->can('init_meta') ) {
+                $class->init_meta(
                     for_class => $CALLER,
-                    %{ $init_meta_args || {} }
                 );
             }
 

@@ -140,6 +140,41 @@ use Test::Exception;
 }
 
 {
+    package My::Metaclass;
+    use Moose;
+    BEGIN { extends 'Moose::Meta::Class' }
+
+    package My::Object;
+    use Moose;
+    BEGIN { extends 'Moose::Object' }
+
+    package HasInitMeta;
+
+    use Moose ();
+
+    sub init_meta {
+        shift;
+        return Moose->init_meta( @_,
+                                 metaclass  => 'My::Metaclass',
+                                 base_class => 'My::Object',
+                               );
+    }
+
+    BEGIN { Moose::Exporter->build_import_methods( also => 'Moose' ); }
+}
+
+{
+    package NewMeta;
+
+    BEGIN { HasInitMeta->import() }
+}
+
+{
+    isa_ok( NewMeta->meta(), 'My::Metaclass' );
+    isa_ok( NewMeta->new(), 'My::Object' );
+}
+
+{
     package MooseX::CircularAlso;
 
     use Moose ();

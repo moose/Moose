@@ -126,29 +126,24 @@ my $exporter = Moose::Exporter->build_import_methods(
     ],
 );
 
-# This exists for backwards compat
 sub init_meta {
-    my ( $class, $base_class, $metaclass ) = @_;
+    # This used to be called as a function. This hack preserves
+    # backwards compatibility.
+    if ( $_[0] ne __PACKAGE__ ) {
+        return __PACKAGE__->init_meta(
+            for_class  => $_[0],
+            base_class => $_[1],
+            metaclass  => $_[2],
+        );
+    }
 
-    __PACKAGE__->_init_meta( for_class         => $class,
-                             object_base_class => $base_class,
-                             metaclass_class   => $metaclass,
-                           );
-}
-
-# This may be used in some older MooseX extensions.
-sub _get_caller {
-    goto &Moose::Exporter::_get_caller;
-}
-
-sub _init_meta {
     shift;
     my %args = @_;
 
     my $class = $args{for_class}
-        or confess "Cannot call _init_meta without specifying a for_class";
-    my $base_class = $args{object_base_class} || 'Moose::Object';
-    my $metaclass  = $args{metaclass_class}   || 'Moose::Meta::Class';
+        or confess "Cannot call init_meta without specifying a for_class";
+    my $base_class = $args{base_class} || 'Moose::Object';
+    my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
 
     confess
         "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
@@ -188,7 +183,13 @@ sub _init_meta {
     $meta->superclasses($base_class)
       unless $meta->superclasses();
 
+
     return $meta;
+}
+
+# This may be used in some older MooseX extensions.
+sub _get_caller {
+    goto &Moose::Exporter::_get_caller;
 }
 
 ## make 'em all immutable

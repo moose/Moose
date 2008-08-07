@@ -120,7 +120,7 @@ my $exporter = Moose::Exporter->build_import_methods(
 {
     my %METAS;
 
-    sub _init_meta {
+    sub init_meta {
         shift;
         my %args = @_;
 
