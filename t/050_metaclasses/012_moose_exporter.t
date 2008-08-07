@@ -36,6 +36,11 @@ use Test::Exception;
     ok( ! WantsMoose->can('has'),  'WantsMoose::has() has been cleaned' );
     ok( ! WantsMoose->can('with'), 'WantsMoose::with() has been cleaned' );
     can_ok( 'WantsMoose', 'foo' );
+
+    # This makes sure that Moose->init_meta() happens properly
+    isa_ok( WantsMoose->meta(), 'Moose::Meta::Class' );
+    isa_ok( WantsMoose->new(), 'Moose::Object' );
+
 }
 
 {
