@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 38;
 use Test::Exception;
 
 # All the BEGIN blocks are necessary to emulate the behavior of
