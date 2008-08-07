@@ -136,6 +136,11 @@ sub init_meta {
                            );
 }
 
+# This may be used in some older MooseX extensions.
+sub _get_caller {
+    goto &Moose::Exporter::_get_caller;
+}
+
 sub _init_meta {
     shift;
     my %args = @_;
