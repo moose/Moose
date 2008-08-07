@@ -320,11 +320,32 @@ as-is. You can identify a subroutine by reference, which is handy to
 re-export some other module's functions directly by reference
 (C<\&Some::Package::function>).
 
-=item * init_meta_args
+=item * also => $name or \@names
 
-...
+This is a list of modules which contain functions that the caller
+wants to export. These modules must also use C<Moose::Exporter>. The
+most common use case will be to export the functions from C<Moose.pm>.
+
+C<Moose::Exporter> also makes sure all these functions get removed
+when C<unimport> is called.
 
 =back
+
+=head1 IMPORTING AND init_meta
+
+If you want to set an alternative base object class or metaclass
+class, simply define an C<init_meta> method in your class. The
+C<import> method that C<Moose::Exporter> generates for you will call
+this method (if it exists). It will always pass the caller to this
+method via the C<for_class> parameter.
+
+Most of the time, your C<init_meta> method will probably just call C<<
+Moose->init_meta >> to do the real work:
+
+  sub init_meta {
+      shift; # our class name
+      return Moose->init_meta( @_, metaclass => 'My::Metaclass' );
+  }
 
 =head1 AUTHOR
 
