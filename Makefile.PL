@@ -25,7 +25,5 @@ build_requires 'Test::LongString';
 
 tests_recursive;
 
-auto_install;
-
 WriteAll();
 
