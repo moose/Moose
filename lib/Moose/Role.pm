@@ -221,6 +221,15 @@ Moose::Role offers a way to remove the keywords it exports, through the
 C<unimport> method. You simply have to say C<no Moose::Role> at the bottom of
 your code for this to work.
 
+=head2 B<< Moose::Role->init_meta(for_class => $role, metaclass => $metaclass) >>
+
+The C<init_meta> method sets up the metaclass object for the role
+specified by C<for_class>. It also injects a a C<meta> accessor into
+the role so you can get at this object.
+
+The default metaclass is L<Moose::Mtea::Role>. You can specify an
+alternate metaclass with the C<metaclass> parameter.
+
 =head1 CAVEATS
 
 Role support has only a few caveats:
