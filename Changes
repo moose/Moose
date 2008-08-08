@@ -1,11 +1,10 @@
 Revision history for Perl extension Moose
 
-0.57
+0.56
     * Moose::Meta::Method::Constructor
       - Fix inlined constructor so that values produced by default
         or builder methods are coerced as required + test (t0m)
 
-0.56
     * Moose
     * Moose::Cookbook::Extending::Recipe2
       - Add a _remove_keywords function so if you extend Moose
