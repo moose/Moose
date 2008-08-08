@@ -6,14 +6,21 @@ Revision history for Perl extension Moose
         or builder methods are coerced as required + test (t0m)
 
     * Moose
+    * Moose::Cookbook::Extending::Recipe1
     * Moose::Cookbook::Extending::Recipe2
-      - Add a _remove_keywords function so if you extend Moose
-        you don't have to cargo cult Moose's unimport (Sartak)
+      - Rewrote extending and embedding moose documentation and
+        recipes to use Moose::Exporter (Dave Rolsky)
+
+    * Moose::Exporter
+      - This is a new helper module for writing "Moose-alike"
+        modules. This should make the lives of MooseX module authors
+        much easier. (Dave Rolsky)
 
     * Moose
-      - Moose now warns when you try to have it export its sugar
-        functions into the "main" package. Previously it silently did
-        nothing. (Dave Rolsky)
+    * Moose::Role
+      - These two modules now warn when you load them from the main
+        package "main" package, because we will not export sugar to
+        main. Previously it just did nothing. (Dave Rolsky)
 
 0.55 Sun August 3, 2008
     * Moose::Meta::Attribute
