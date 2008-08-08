@@ -757,8 +757,8 @@ Additionally, that class can include C<no MyFramework> to unimport
 =head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
 
 The C<init_meta> method sets up the metaclass object for the class
-specified by C<for_class>. It also injects a a C<meta> accessor into
-the class so you can get at this object. It also sets the class's
+specified by C<for_class>. This method injects a a C<meta> accessor
+into the class so you can get at this object. It also sets the class's
 superclass to C<base_class>, with L<Moose::Object> as the default.
 
 You can specify an alternate metaclass with the C<metaclass> parameter.
