@@ -227,7 +227,7 @@ The C<init_meta> method sets up the metaclass object for the role
 specified by C<for_class>. It also injects a a C<meta> accessor into
 the role so you can get at this object.
 
-The default metaclass is L<Moose::Mtea::Role>. You can specify an
+The default metaclass is L<Moose::Meta::Role>. You can specify an
 alternate metaclass with the C<metaclass> parameter.
 
 =head1 CAVEATS
