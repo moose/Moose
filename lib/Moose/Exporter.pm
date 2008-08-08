@@ -30,7 +30,10 @@ sub build_import_methods {
         }
     );
 
-    my $import = $class->_make_import_sub( $exporter, \@exports_from );
+    # $args{_export_to_main} exists for backwards compat, because
+    # Moose::Util::TypeConstraints did export to main (unlike Moose &
+    # Moose::Role).
+    my $import = $class->_make_import_sub( $exporter, \@exports_from, $args{_export_to_main} );
 
     my $unimport = $class->_make_unimport_sub( \@exports_from, [ keys %{$exports} ] );
 
@@ -152,8 +155,9 @@ sub _process_exports {
 
     sub _make_import_sub {
         shift;
-        my $exporter     = shift;
-        my $exports_from = shift;
+        my $exporter       = shift;
+        my $exports_from   = shift;
+        my $export_to_main = shift;
 
         return sub {
 
@@ -173,7 +177,7 @@ sub _process_exports {
             warnings->import;
 
             # we should never export to main
-            if ( $CALLER eq 'main' ) {
+            if ( $CALLER eq 'main' && ! $export_to_main ) {
                 warn
                     qq{$class does not export its sugar to the 'main' package.\n};
                 return;
