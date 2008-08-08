@@ -25,21 +25,21 @@ sub new {
 
     my $self = bless {
         # from our superclass
-        '&!body'          => undef, 
-        '$!package_name'  => $options{package_name},
-        '$!name'          => $options{name},
+        'body'          => undef, 
+        'package_name'  => $options{package_name},
+        'name'          => $options{name},
         # specific to this subclass
-        '%!options'       => $options{options},
-        '$!meta_instance' => $options{metaclass}->get_meta_instance,
-        '@!attributes'    => [ $options{metaclass}->compute_all_applicable_attributes ],
+        'options'       => $options{options},
+        'meta_instance' => $options{metaclass}->get_meta_instance,
+        'attributes'    => [ $options{metaclass}->compute_all_applicable_attributes ],
         # ...
-        '$!associated_metaclass' => $options{metaclass},
+        'associated_metaclass' => $options{metaclass},
     } => $class;
 
     # we don't want this creating
     # a cycle in the code, if not
     # needed
-    weaken($self->{'$!associated_metaclass'});
+    weaken($self->{'associated_metaclass'});
 
     $self->initialize_body;
 
@@ -48,11 +48,11 @@ sub new {
 
 ## accessors
 
-sub options       { (shift)->{'%!options'}       }
-sub meta_instance { (shift)->{'$!meta_instance'} }
-sub attributes    { (shift)->{'@!attributes'}    }
+sub options       { (shift)->{'options'}       }
+sub meta_instance { (shift)->{'meta_instance'} }
+sub attributes    { (shift)->{'attributes'}    }
 
-sub associated_metaclass { (shift)->{'$!associated_metaclass'} }
+sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
@@ -117,7 +117,7 @@ sub initialize_body {
         $code = eval $source;
         confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@" if $@;
     }
-    $self->{'&!body'} = $code;
+    $self->{'body'} = $code;
 }
 
 sub _generate_BUILDARGS {

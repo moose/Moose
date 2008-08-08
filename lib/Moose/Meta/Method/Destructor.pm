@@ -25,18 +25,18 @@ sub new {
     
     my $self = bless {
         # from our superclass
-        '&!body'                 => undef, 
-        '$!package_name'         => $options{package_name},
-        '$!name'                 => $options{name},              
+        'body'                 => undef, 
+        'package_name'         => $options{package_name},
+        'name'                 => $options{name},              
         # ...
-        '%!options'              => $options{options},        
-        '$!associated_metaclass' => $options{metaclass},
+        'options'              => $options{options},        
+        'associated_metaclass' => $options{metaclass},
     } => $class;
 
     # we don't want this creating 
     # a cycle in the code, if not 
     # needed
-    weaken($self->{'$!associated_metaclass'});    
+    weaken($self->{'associated_metaclass'});    
 
     $self->initialize_body;
 
@@ -45,8 +45,8 @@ sub new {
 
 ## accessors 
 
-sub options              { (shift)->{'%!options'}              }
-sub associated_metaclass { (shift)->{'$!associated_metaclass'} }
+sub options              { (shift)->{'options'}              }
+sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
@@ -59,7 +59,7 @@ sub is_needed {
             || confess "When calling is_needed as a class method you must pass a class name";
         return $_[0]->meta->can('DEMOLISH');
     }
-    defined $self->{'&!body'} ? 1 : 0 
+    defined $self->{'body'} ? 1 : 0 
 }
 
 sub initialize_body {
@@ -93,7 +93,7 @@ sub initialize_body {
         $code = eval $source;
         confess "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@" if $@;
     }
-    $self->{'&!body'} = $code;
+    $self->{'body'} = $code;
 }
 
 
