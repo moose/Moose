@@ -5,16 +5,16 @@ Revision history for Perl extension Moose
       - Fix inlined constructor so that values produced by default
         or builder methods are coerced as required + test (t0m)
 
+    * Moose::Exporter
+      - This is a new helper module for writing "Moose-alike"
+        modules. This should make the lives of MooseX module authors
+        much easier. (Dave Rolsky)
+
     * Moose
     * Moose::Cookbook::Extending::Recipe1
     * Moose::Cookbook::Extending::Recipe2
       - Rewrote extending and embedding moose documentation and
         recipes to use Moose::Exporter (Dave Rolsky)
-
-    * Moose::Exporter
-      - This is a new helper module for writing "Moose-alike"
-        modules. This should make the lives of MooseX module authors
-        much easier. (Dave Rolsky)
 
     * Moose
     * Moose::Role
