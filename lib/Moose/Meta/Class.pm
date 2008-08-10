@@ -169,12 +169,12 @@ sub construct_instance {
 sub get_method_map {
     my $self = shift;
 
-    if (defined $self->{'$!_package_cache_flag'} &&
-                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag($self->meta->name)) {
-        return $self->{'%!methods'};
+    if (defined $self->{'_package_cache_flag'} &&
+                $self->{'_package_cache_flag'} == Class::MOP::check_package_cache_flag($self->meta->name)) {
+        return $self->{'methods'};
     }
 
-    my $map  = $self->{'%!methods'};
+    my $map  = $self->{'methods'};
 
     my $class_name       = $self->name;
     my $method_metaclass = $self->method_metaclass;

@@ -43,60 +43,61 @@ Moose::Cookbook::Basics::Recipe2 - A simple B<BankAccount> example
 
 =head1 DESCRIPTION
 
-In the first recipe we demonstrated the construction of basic
-Moose classes whose attributes had various accessor schemes and
-builtin type constraints. However, our objects were very data-
-oriented, and did not have many behavioral aspects (i.e. methods)
-to them. In this recipe, we will expand upon the concepts from
-the first recipe and give a more realistic scenario of more
-behavior oriented classes.  
+The first recipe demonstrated how to build very basic Moose classes,
+focusing on creating and manipulating attributes. The objects in that
+recipe very data-oriented, and did not have much in the way of
+behavior (i.e. methods). In this recipe, we expand upon the concepts
+from the first recipe to include some real behavior. In particular, we
+should how you can use a method modifier to implement new behavior for
+a method.
 
-We are using the example of a bank account, which has a standard 
-account (you can deposit money, withdraw money and check your 
-current balance), and a checking account which has optional 
-overdraft protection. The overdraft protection will protect the 
-owner of the checking account by automatically withdrawing the 
-needed funds from the overdraft account to ensure that a check 
-will not bounce. 
+The classes in the SYNOPSIS show two kinds of bank account. A simple
+bank account has one attribute, the balance, and two behaviors,
+depositing and withdrawing money.
 
-Now, onto the code. The first class, B<BankAccount>, introduces a 
-new attribute feature: a default value. 
+We then extend the basic bank account in the CheckingAccount
+class. This class adds another attribute, an overdraft account. It
+also adds overdraft protection to the withdraw method. If you try to
+withdraw more than you have, the checking account attempts to
+reconcile the difference by withdrawing money from the overdraft
+account. (1)
+
+The first class, B<BankAccount>, introduces a new attribute feature, a
+default value:
 
   has 'balance' => (isa => 'Int', is => 'rw', default => 0);
 
-This tells us that a B<BankAccount> has a C<balance> attribute, 
-which has the C<Int> type constraint, a read/write accessor, 
-and a default value of C<0>. This means that every instance of 
-B<BankAccount> that is created will have its C<balance> slot 
-initialized to C<0>. Very simple really :)
+This says that a B<BankAccount> has a C<balance> attribute, which has
+a C<Int> type constraint, a read/write accessor, and a default value
+of C<0>. This means that every instance of B<BankAccount> that is
+created will have its C<balance> slot initialized to C<0>, unless some
+other value is provided to the constructor.
 
-Next come the methods. The C<deposit> and C<withdraw> methods 
-should be fairly self-explanatory; they are nothing specific to 
-Moose, just your standard Perl 5 OO.
+The C<deposit> and C<withdraw> methods should be fairly
+self-explanatory, as they are just plain old Perl 5 OO.
 
-Now, onto the B<CheckingAccount> class. As you know from the 
-first recipe, the keyword C<extends> sets a class's superclass 
-relationship. Here we see that B<CheckingAccount> is a 
-B<BankAccount>. The next line introduces yet another new aspect 
-of Moose, that of class-based type-constraints:
+As you know from the first recipe, the keyword C<extends> sets a
+class's superclass. Here we see that B<CheckingAccount> C<extends>
+B<BankAccount>. The next line introduces yet another new attribute
+feature, class-based type constraints:
 
   has 'overdraft_account' => (isa => 'BankAccount', is => 'rw');
 
-Up until now, we have only had C<Int> type constraints, which 
-(as I said in the first recipe) is a builtin type constraint 
-that Moose provides for you. The C<BankAccount> type constraint 
-is new, and was actually defined the moment we created the 
-B<BankAccount> class itself. In fact, for every class in 
-your program, a corresponding type constraint will be created. This
-means that in the first recipe, both C<Point> and C<Point3D> type
-constraints were created, and in this recipe, both C<BankAccount>
-and C<CheckingAccount> type constraints were created. Moose does
-this as a convenience so that your class model and the type
-constraint model can be kept in sync with one another. In short,
-Moose makes sure that it will just DWIM (1).
+Up until now, we have only seen the C<Int> type constraint, which (as
+we saw in the first recipe) is a builtin type constraint. The
+C<BankAccount> type constraint is new, and was actually defined the
+moment we created the B<BankAccount> class itself. In fact, Moose
+creates a corresponding type constraint for every class in your
+program (2).
 
-Next, we come to the behavioral part of B<CheckingAccount>, and 
-again we see a method modifier, but this time it is a C<before> 
+This means that in the first recipe, constraints for both C<Point> and
+C<Point3D> were created. In this recipe, both C<BankAccount> and
+C<CheckingAccount> type constraints are created automatically. Moose
+does this as a convenience so that your classes and type constraint
+can be kept in sync with one another. In short, Moose makes sure that
+it will just DWIM (3).
+
+In B<CheckingAccount>, we see another method modifier, the C<before>
 modifier.
 
   before 'withdraw' => sub {
@@ -108,19 +109,19 @@ modifier.
       }
   };
 
-Just as with the C<after> modifier from the first recipe, Moose 
-will handle calling the superclass method (in this case the 
-C<BankAccount::withdraw> method). The C<before> modifier shown 
-above will run (obviously) I<before> the code from the superclass 
-with run. The C<before> modifier here implements the overdraft 
-protection by first checking if there are enough available 
-funds in the checking account and if not (and if there is an overdraft 
-account available), it transfers the appropriate funds into the 
-checking account.
+Just as with the C<after> modifier from the first recipe, Moose will
+handle calling the superclass method (in this case C<<
+BankAccount->withdraw >>).
 
-As with the method modifier in the first recipe, there is another 
-way to accomplish this same thing using the built in C<SUPER::> 
-pseudo-package. So the above method is equivalent to the one here.
+The C<before> modifier will (obviously) run I<before> the code from
+the superclass is run. Here, C<before> modifier implements overdraft
+protection by first checking if there are available funds in the
+checking account. If not (and if there is an overdraft account
+available), it transfers the amount needed into the checking
+account (4).
+
+As with the method modifier in the first recipe, we could use
+C<SUPER::> to get the same effect:
 
   sub withdraw {
       my ($self, $amount) = @_;
@@ -132,39 +133,38 @@ pseudo-package. So the above method is equivalent to the one here.
       $self->SUPER::withdraw($amount);
   }
 
-The benefits of taking the method modifier approach is that the 
-author of the B<BankAccount> subclass does not need to remember 
-to call C<SUPER::withdraw> and to pass it the C<$amount> argument. 
-Instead the method modifier ensures that all arguments make it 
-to the superclass method correctly. But this is actually more 
-than just a convenience for forgetful programmers, it also helps 
-isolate subclasses from changes in the superclasses. For instance, 
-if B<BankAccount::withdraw> were to add an additional argument 
-of some kind, the version of B<CheckingAccount::withdraw> which 
-uses C<SUPER::withdraw> would not pass that extra argument 
-correctly, whereas the method modifier version would automatically
-pass along all arguments correctly.
+The benefit of taking the method modifier approach is we do not need
+to remember to call C<SUPER::withdraw> and pass it the C<$amount>
+argument when writing C<< CheckingAccount->withdraw >>.
 
-Just as with the first recipe, object instantiation is a fairly 
-normal process, here is an example:
-  
-  my $savings_account  = BankAccount->new(balance => 250);
+This is actually more than just a convenience for forgetful
+programmers. Using method modifiers helps isolate subclasses from
+changes in the superclasses. For instance, if B<<
+BankAccount->withdraw >> were to add an additional argument of some
+kind, the version of B<< CheckingAccount->withdraw >> which uses
+C<SUPER::withdraw> would not pass that extra argument correctly,
+whereas the method modifier version would automatically pass along all
+arguments correctly.
+
+Just as with the first recipe, object instantiation uses the C<new>
+method, which accepts named parameters.
+
+  my $savings_account = BankAccount->new( balance => 250 );
+
   my $checking_account = CheckingAccount->new(
-  					         balance => 100,
-  					         overdraft_account => $savings_account
-  					     );
+      balance           => 100,
+      overdraft_account => $savings_account,
+  );
 
-And as with the first recipe, a more in-depth example of using 
-these classes can be found in the F<t/000_recipes/002_recipe.t> test file.
+And as with the first recipe, a more in-depth example can be found in
+the F<t/000_recipes/basics/002_recipe.t> test file.
 
 =head1 CONCLUSION
 
-The aim of this recipe was to take the knowledge gained in the 
-first recipe and expand upon it with a more realistic use case. I
-hope that this recipe has accomplished this goal. The next recipe
-will expand even more upon the capabilities of attributes in Moose
-to create a behaviorally sophisticated class almost entirely
-defined by attributes.
+The aim of this recipe was to take the knowledge gained in the first
+recipe and expand upon it with a more realistic use case. The next
+recipe will expand on Moose attributes to create a behaviorally
+sophisticated class defined almost entirely by its attributes.
 
 =head1 FOOTNOTES
 
@@ -172,13 +172,32 @@ defined by attributes.
 
 =item (1)
 
-Moose does not attempt to encode a class's is-a relationships 
-within the type constraint hierarchy. Instead, Moose just
-considers the class type constraint to be a subtype of C<Object>,
-and specializes the constraint check to allow for subclasses. This 
-means that an instance of B<CheckingAccount> will pass a 
-C<BankAccount> type constraint successfully. For more details, 
-please refer to the L<Moose::Util::TypeConstraints> documentation.
+If you're paying close attention, you might realize that there's a
+circular loop waiting to happen here. A smarter example would have to
+make sure that we don't accidentally create a loop between the
+checking account and its overdraft account.
+
+=item (2)
+
+In reality, this creation is sensitive to the order in which modules
+are loaded. In more complicated cases, you may find that you need to
+explicitly declare a class type before the corresponding is loaded.
+
+=item (3)
+
+Moose does not attempt to encode a class's is-a relationships within
+the type constraint hierarchy. Instead, Moose just considers the class
+type constraint to be a subtype of C<Object>, and specializes the
+constraint check to allow for subclasses. This means that an instance
+of B<CheckingAccount> will pass a C<BankAccount> type constraint
+successfully. For more details, please refer to the
+L<Moose::Util::TypeConstraints> documentation.
+
+=item (4)
+
+If the overdraft account does not have the amount needed, it will
+throw an error. Of course, the overdraft account could also have
+overdraft protection. See note 1.
 
 =back
 
@@ -188,7 +207,7 @@ please refer to the L<Moose::Util::TypeConstraints> documentation.
 
 =item Acknowledgment
 
-The BankAccount example in this recipe is directly taken from the 
+The BankAccount example in this recipe is directly taken from the
 examples in this chapter of "Practical Common Lisp":
 
 L<http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html>

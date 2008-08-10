@@ -285,7 +285,16 @@ sub method_metaclass { 'Moose::Meta::Role::Method' }
 
 sub get_method_map {
     my $self = shift;
-    my $map  = {};
+
+    my $current = Class::MOP::check_package_cache_flag($self->name);
+
+    if (defined $self->{'_package_cache_flag'} && $self->{'_package_cache_flag'} == $current) {
+        return $self->{'methods'} ||= {};
+    }
+
+    $self->{_package_cache_flag} = $current;
+
+    my $map  = $self->{'methods'} ||= {};
 
     my $role_name        = $self->name;
     my $method_metaclass = $self->method_metaclass;
@@ -294,6 +303,10 @@ sub get_method_map {
 
     foreach my $symbol (keys %all_code) {
         my $code = $all_code{$symbol};
+
+        next if exists  $map->{$symbol} &&
+                defined $map->{$symbol} &&
+                        $map->{$symbol}->body == $code;
 
         my ($pkg, $name) = Class::MOP::get_code_info($code);
 
@@ -305,7 +318,7 @@ sub get_method_map {
             # loudly (in the case of Curses.pm) so we
             # just be a little overly cautious here.
             # - SL
-            && eval { no warnings; blessed($pkg->meta) }
+            && eval { no warnings; blessed($pkg->meta) } # FIXME calls meta
             && $pkg->meta->isa('Moose::Meta::Role')) {
             my $role = $pkg->meta->name;
             next unless $self->does_role($role);
