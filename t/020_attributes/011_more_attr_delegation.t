@@ -201,7 +201,7 @@ ok( !$p->can("child_b_method_2"), "but not ChildB's unspecified siblings" );
 
 
 ok( !$p->can($_), "none of ChildD's methods ($_)" )
-    for grep { /^child/ } map { $_->{name} } ChildD->meta->compute_all_applicable_methods();
+    for grep { /^child/ } map { $_->name } ChildD->meta->get_all_methods();
 
 can_ok( $p, "child_c_method_3_la" );
 can_ok( $p, "child_c_method_4_la" );
