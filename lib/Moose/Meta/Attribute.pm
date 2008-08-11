@@ -682,9 +682,9 @@ sub _get_delegate_method_list {
     my $self = shift;
     my $meta = $self->_find_delegate_metaclass;
     if ($meta->isa('Class::MOP::Class')) {
-        return map  { $_->{name}                     }  # NOTE: !never! delegate &meta
-               grep { $_->{class} ne 'Moose::Object' && $_->{name} ne 'meta' }
-                    $meta->compute_all_applicable_methods;
+        return map  { $_->name }  # NOTE: !never! delegate &meta
+               grep { $_->package_name ne 'Moose::Object' && $_->name ne 'meta' }
+                    $meta->get_all_methods;
     }
     elsif ($meta->isa('Moose::Meta::Role')) {
         return $meta->get_method_list;
