@@ -18,23 +18,13 @@ Moose::Cookbook::Extending::Recipe1 - Providing an alternate base object class
 
   package MyApp::UseMyBase;
   use Moose ();
+  use Moose::Exporter;
 
-  sub import {
-    my $caller = caller();
+  Moose::Exporter->build_import_methods( also => 'Moose' );
 
-    return if $caller eq 'main';
-
-    Moose::init_meta( $caller,
-                      'MyApp::Object',
-                    );
-
-    Moose->import( { into => $caller }, @_ );
-  }
-
-  sub unimport {
-    my $caller = caller();
-
-    Moose->unimport( { into => $caller }, @_ );
+  sub init_meta {
+      shift;
+      Moose->init_meta( @_, base_class => 'MyApp::Object' );
   }
 
 =head1 DESCRIPTION
@@ -52,6 +42,32 @@ MyApp::UseMyBase>>.
 In this particular example, our base class issues some debugging
 output every time a new object is created, but you can surely think of
 some more interesting things to do with your own base class.
+
+This all works because of the magic of L<Moose::Exporter>. When we
+call C<< Moose::Exporter->build_import_methods( also => 'Moose' ) >>
+it builds an C<import> and C<unimport> method for you. The C<< also =>
+'Moose' >> bit says that we want to export everything that Moose does.
+
+The C<import> method that gets created will call our C<init_meta>
+method, passing it C<< for_caller => $caller >> as its arguments. The
+C<$caller> is set to the class that actually imported us in the first
+place.
+
+See the L<Moose::Exporter> docs for more details on its API.
+
+=head1 USING MyApp::UseMyBase
+
+To actually use our new base class, we simply use C<MyApp::UseMyBase>
+I<instead> of C<Moose>. We get all the Moose sugar plus our new base
+class.
+
+  package Foo;
+
+  use MyApp::UseMyBase;
+
+  has 'size' => ( is => 'rw' );
+
+  no MyApp::UseMyBase;
 
 =head1 AUTHOR
 

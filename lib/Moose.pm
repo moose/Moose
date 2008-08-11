@@ -10,7 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Scalar::Util 'blessed';
 use Carp         'confess', 'croak', 'cluck';
 
-use Sub::Exporter;
+use Moose::Exporter;
 
 use Class::MOP 0.64;
 
@@ -26,213 +26,124 @@ use Moose::Object;
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
-{
-    my $CALLER;
+sub extends {
+    my $class = shift;
 
-    my %exports = (
-        extends => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::extends' => sub (@) {
-                croak "Must derive at least one class" unless @_;
-        
-                my @supers = @_;
-                foreach my $super (@supers) {
-                    Class::MOP::load_class($super);
-                    croak "You cannot inherit from a Moose Role ($super)"
-                        if $super->can('meta')  && 
-                           blessed $super->meta &&
-                           $super->meta->isa('Moose::Meta::Role')
-                }
+    croak "Must derive at least one class" unless @_;
 
-
-
-                # this checks the metaclass to make sure
-                # it is correct, sometimes it can get out
-                # of sync when the classes are being built
-                my $meta = $class->meta->_fix_metaclass_incompatability(@supers);
-                $meta->superclasses(@supers);
-            });
-        },
-        with => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::with' => sub (@) {
-                Moose::Util::apply_all_roles($class->meta, @_)
-            });
-        },
-        has => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::has' => sub ($;%) {
-                my $name    = shift;
-                croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-                my %options = @_;
-                my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-                $class->meta->add_attribute( $_, %options ) for @$attrs;
-            });
-        },
-        before => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::before' => sub (@&) {
-                Moose::Util::add_method_modifier($class, 'before', \@_);
-            });
-        },
-        after => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::after' => sub (@&) {
-                Moose::Util::add_method_modifier($class, 'after', \@_);
-            });
-        },
-        around => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::around' => sub (@&) {
-                Moose::Util::add_method_modifier($class, 'around', \@_);
-            });
-        },
-        super => sub {
-            return Class::MOP::subname('Moose::super' => sub { 
-                return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS) 
-            });
-        },
-        override => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::override' => sub ($&) {
-                my ( $name, $method ) = @_;
-                $class->meta->add_override_method_modifier( $name => $method );
-            });
-        },
-        inner => sub {
-            return Class::MOP::subname('Moose::inner' => sub {
-                my $pkg = caller();
-                our ( %INNER_BODY, %INNER_ARGS );
-
-                if ( my $body = $INNER_BODY{$pkg} ) {
-                    my @args = @{ $INNER_ARGS{$pkg} };
-                    local $INNER_ARGS{$pkg};
-                    local $INNER_BODY{$pkg};
-                    return $body->(@args);
-                } else {
-                    return;
-                }
-            });
-        },
-        augment => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::augment' => sub (@&) {
-                my ( $name, $method ) = @_;
-                $class->meta->add_augment_method_modifier( $name => $method );
-            });
-        },
-        make_immutable => sub {
-            my $class = $CALLER;
-            return Class::MOP::subname('Moose::make_immutable' => sub {
-                cluck "The make_immutable keyword has been deprecated, " . 
-                      "please go back to __PACKAGE__->meta->make_immutable\n";
-                $class->meta->make_immutable(@_);
-            });            
-        },        
-        confess => sub {
-            return \&Carp::confess;
-        },
-        blessed => sub {
-            return \&Scalar::Util::blessed;
-        },
-    );
-
-    my $exporter = Sub::Exporter::build_exporter(
-        {
-            exports => \%exports,
-            groups  => { default => [':all'] }
-        }
-    );
-
-    # 1 extra level because it's called by import so there's a layer of indirection
-    sub _get_caller{
-        my $offset = 1;
-        return
-            (ref $_[1] && defined $_[1]->{into})
-                ? $_[1]->{into}
-                : (ref $_[1] && defined $_[1]->{into_level})
-                    ? caller($offset + $_[1]->{into_level})
-                    : caller($offset);
+    my @supers = @_;
+    foreach my $super (@supers) {
+        Class::MOP::load_class($super);
+        croak "You cannot inherit from a Moose Role ($super)"
+            if $super->can('meta')  && 
+               blessed $super->meta &&
+               $super->meta->isa('Moose::Meta::Role')
     }
 
-    sub import {
-        $CALLER = _get_caller(@_);
 
-        # this works because both pragmas set $^H (see perldoc perlvar)
-        # which affects the current compilation - i.e. the file who use'd
-        # us - which is why we don't need to do anything special to make
-        # it affect that file rather than this one (which is already compiled)
 
-        strict->import;
-        warnings->import;
+    # this checks the metaclass to make sure
+    # it is correct, sometimes it can get out
+    # of sync when the classes are being built
+    my $meta = $class->meta->_fix_metaclass_incompatability(@supers);
+    $meta->superclasses(@supers);
+}
 
-        # we should never export to main
-        if ($CALLER eq 'main') {
-            warn qq{Moose does not export its sugar to the 'main' package.\n};
-            return;
-        }
+sub with {
+    my $class = shift;
+    Moose::Util::apply_all_roles($class->meta, @_);
+}
 
-        init_meta( $CALLER, 'Moose::Object' );
+sub has {
+    my $class = shift;
+    my $name  = shift;
+    croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+    my %options = @_;
+    my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
+    $class->meta->add_attribute( $_, %options ) for @$attrs;
+}
 
-        goto $exporter;
+sub before {
+    my $class = shift;
+    Moose::Util::add_method_modifier($class, 'before', \@_);
+}
+
+sub after {
+    my $class = shift;
+    Moose::Util::add_method_modifier($class, 'after', \@_);
+}
+
+sub around {
+    my $class = shift;
+    Moose::Util::add_method_modifier($class, 'around', \@_);
+}
+
+sub super {
+    return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS);
+}
+
+sub override {
+    my $class = shift;
+    my ( $name, $method ) = @_;
+    $class->meta->add_override_method_modifier( $name => $method );
+}
+
+sub inner {
+    my $pkg = caller();
+    our ( %INNER_BODY, %INNER_ARGS );
+
+    if ( my $body = $INNER_BODY{$pkg} ) {
+        my @args = @{ $INNER_ARGS{$pkg} };
+        local $INNER_ARGS{$pkg};
+        local $INNER_BODY{$pkg};
+        return $body->(@args);
+    } else {
+        return;
     }
-    
-    # NOTE:
-    # This is for special use by 
-    # some modules and stuff, I 
-    # dont know if it is sane enough
-    # to document actually.
-    # - SL
-    sub __CURRY_EXPORTS_FOR_CLASS__ {
-        $CALLER = shift;
-        ($CALLER ne 'Moose')
-            || croak "_import_into must be called a function, not a method";
-        ($CALLER->can('meta') && $CALLER->meta->isa('Class::MOP::Class'))
-            || croak "Cannot call _import_into on a package ($CALLER) without a metaclass";        
-        return map { $_ => $exports{$_}->() } (@_ ? @_ : keys %exports);
-    }
+}
 
-    sub unimport {
-        my $class = _get_caller(@_);
+sub augment {
+    my $class = shift;
+    my ( $name, $method ) = @_;
+    $class->meta->add_augment_method_modifier( $name => $method );
+}
 
-        _remove_keywords(
-            source   => __PACKAGE__,
-            package  => $class,
-            keywords => [ keys %exports ],
+sub make_immutable {
+    my $class = shift;
+    cluck "The make_immutable keyword has been deprecated, " . 
+          "please go back to __PACKAGE__->meta->make_immutable\n";
+    $class->meta->make_immutable(@_);
+}
+
+my $exporter = Moose::Exporter->build_import_methods(
+    with_caller => [
+        qw( extends with has before after around override augment make_immutable )
+    ],
+    as_is => [
+        qw( super inner ),
+        \&Carp::confess,
+        \&Scalar::Util::blessed,
+    ],
+);
+
+sub init_meta {
+    # This used to be called as a function. This hack preserves
+    # backwards compatibility.
+    if ( $_[0] ne __PACKAGE__ ) {
+        return __PACKAGE__->init_meta(
+            for_class  => $_[0],
+            base_class => $_[1],
+            metaclass  => $_[2],
         );
     }
 
-}
+    shift;
+    my %args = @_;
 
-sub _remove_keywords {
-    my ( %args ) = @_;
-
-    my $source  = $args{source};
-    my $package = $args{package};
-
-    no strict 'refs';
-
-    # loop through the keywords ...
-    foreach my $name ( @{ $args{keywords} } ) {
-
-        # if we find one ...
-        if ( defined &{ $package . '::' . $name } ) {
-            my $keyword = \&{ $package . '::' . $name };
-
-            # make sure it is from us
-            my ($pkg_name) = Class::MOP::get_code_info($keyword);
-            next if $pkg_name ne $source;
-
-            # and if it is from us, then undef the slot
-            delete ${ $package . '::' }{$name};
-        }
-    }
-}
-
-sub init_meta {
-    my ( $class, $base_class, $metaclass ) = @_;
-    $base_class = 'Moose::Object'      unless defined $base_class;
-    $metaclass  = 'Moose::Meta::Class' unless defined $metaclass;
+    my $class = $args{for_class}
+        or confess "Cannot call init_meta without specifying a for_class";
+    my $base_class = $args{base_class} || 'Moose::Object';
+    my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
 
     confess
         "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
@@ -272,7 +183,13 @@ sub init_meta {
     $meta->superclasses($base_class)
       unless $meta->superclasses();
 
+
     return $meta;
+}
+
+# This may be used in some older MooseX extensions.
+sub _get_caller {
+    goto &Moose::Exporter::_get_caller;
 }
 
 ## make 'em all immutable
@@ -796,44 +713,71 @@ to work. Here is an example:
 
 =head1 EXTENDING AND EMBEDDING MOOSE
 
-Moose also offers some options for extending or embedding it into your own
-framework. The basic premise is to have something that sets up your class'
-metaclass and export the moose declarators (C<has>, C<with>, C<extends>,...).
-Here is an example:
+Moose also offers some options for extending or embedding it into your
+own framework. There are several things you might want to do as part
+of such a framework. First, you probably want to export Moose's sugar
+functions (C<has>, C<extends>, etc) for users of the
+framework. Second, you may want to provide additional sugar of your
+own. Third, you may want to provide your own object base class instead
+of L<Moose::Object>, and/or your own metaclass class instead of
+L<Moose::Meta::Class>.
+
+The exporting needs can be asily satisfied by using
+L<Moose::Exporter>, which is what C<Moose.pm> itself uses for
+exporting. L<Moose::Exporter> lets you "export like Moose".
+
+If you define an C<init_meta> method in a module that uses
+L<Moose::Exporter>, then this method will be called I<before>
+C<Moose.pm>'s own C<init_meta>. This gives you a chance to provide an
+alternate object base class or metaclass class.
+
+Here is a simple example:
 
     package MyFramework;
-    use Moose;
 
-    sub import {
-        my $CALLER = caller();
+    use strict;
+    use warnings;
 
-        strict->import;
-        warnings->import;
+    use Moose (); # no need to get Moose's exports
+    use Moose::Exporter;
 
-        # we should never export to main
-        return if $CALLER eq 'main';
-        Moose::init_meta( $CALLER, 'MyFramework::Base' );
-        Moose->import({into => $CALLER});
+    Moose::Exporter->build_import_methods( also => 'Moose' );
 
-        # Do my custom framework stuff
-
-        return 1;
+    sub init_meta {
+        shift;
+        return Moose->init_meta( @_, base_class => 'MyFramework::Base' );
     }
+
+In this example, any class that includes C<use MyFramework> will get
+all of C<Moose.pm>'s sugar functions, and will have their superclass
+set to C<MyFramework::Base>.
+
+Additionally, that class can include C<no MyFramework> to unimport
+
+=head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
+
+The C<init_meta> method sets up the metaclass object for the class
+specified by C<for_class>. This method injects a a C<meta> accessor
+into the class so you can get at this object. It also sets the class's
+superclass to C<base_class>, with L<Moose::Object> as the default.
+
+You can specify an alternate metaclass with the C<metaclass> parameter.
+
+For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+
+This method used to be documented as a function which accepted
+positional parameters. This calling style will still work for
+backwards compatibility.
 
 =head2 B<import>
 
 Moose's C<import> method supports the L<Sub::Exporter> form of C<{into =E<gt> $pkg}>
-and C<{into_level =E<gt> 1}>
+and C<{into_level =E<gt> 1}>.
 
-=head2 B<init_meta ($class, $baseclass, $metaclass)>
-
-Moose does some boot strapping: it creates a metaclass object for your class,
-and then injects a C<meta> accessor into your class to retrieve it. Then it
-sets your baseclass to Moose::Object or the value you pass in unless you already
-have one. This is all done via C<init_meta> which takes the name of your class
-and optionally a baseclass and a metaclass as arguments.
-
-For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
+B<NOTE>: Doing this is more or less deprecated. Use L<Moose::Exporter>
+instead, which lets you stack multiple C<Moose.pm>-alike modules
+sanely. It handles getting the exported functions into the right place
+for you.
 
 =head1 CAVEATS
 
