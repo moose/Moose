@@ -1,12 +1,9 @@
 Changes
 doap.rdf
-inc/Module/AutoInstall.pm
 inc/Module/Install.pm
-inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
-inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
@@ -35,6 +32,7 @@ lib/Moose/Cookbook/Snack/Keywords.pod
 lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/Style.pod
 lib/Moose/Cookbook/WTF.pod
+lib/Moose/Exporter.pm
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
 lib/Moose/Meta/Instance.pm
@@ -84,6 +82,8 @@ t/000_recipes/basics/004_company.t
 t/000_recipes/basics/005_coercion.t
 t/000_recipes/basics/006_augment_inner.t
 t/000_recipes/basics/010_genes.t
+t/000_recipes/extending/001_base_class.t
+t/000_recipes/extending/002_metaclass_and_sugar.t
 t/000_recipes/meta/002_meta_attribute.t
 t/000_recipes/meta/003_attribute_trait.t
 t/000_recipes/roles/001_roles.t
@@ -103,6 +103,7 @@ t/010_basics/012_rebless.t
 t/010_basics/013_create.t
 t/010_basics/014_create_anon.t
 t/010_basics/015_buildargs.t
+t/010_basics/016_load_into_main.t
 t/020_attributes/001_attribute_reader_generation.t
 t/020_attributes/002_attribute_writer_generation.t
 t/020_attributes/003_attribute_accessor_generation.t
@@ -180,8 +181,9 @@ t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
 t/050_metaclasses/004_moose_for_meta.t
-t/050_metaclasses/010_extending_and_embedding.t
+t/050_metaclasses/010_extending_and_embedding_back_compat.t
 t/050_metaclasses/011_init_meta.t
+t/050_metaclasses/012_moose_exporter.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t
