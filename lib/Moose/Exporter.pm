@@ -21,7 +21,7 @@ sub build_import_methods {
     my @exports_from = $class->_follow_also( $exporting_package );
 
     my $exports
-        = $class->_process_exports( $exporting_package, @exports_from );
+        = $class->_make_sub_exporter_params( $exporting_package, @exports_from );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
@@ -78,7 +78,7 @@ sub build_import_methods {
     }
 }
 
-sub _process_exports {
+sub _make_sub_exporter_params {
     my $class    = shift;
     my @packages = @_;
 
