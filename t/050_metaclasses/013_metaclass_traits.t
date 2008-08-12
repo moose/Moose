@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 23;
+use Test::Exception;
 
 {
     package My::SimpleTrait;
@@ -21,6 +22,16 @@ use Test::More 'no_plan';
 
 can_ok( Foo->meta(), 'simple' );
 is( Foo->meta()->simple(), 5,
+    'Foo->meta()->simple() returns expected value' );
+
+{
+    package Bar;
+
+    use Moose -traits => 'My::SimpleTrait';
+}
+
+can_ok( Bar->meta(), 'simple' );
+is( Bar->meta()->simple(), 5,
     'Foo->meta()->simple() returns expected value' );
 
 {
@@ -151,3 +162,11 @@ ok( RanOutOfNames->meta()->meta()->has_method('whatever'),
 can_ok( Role::Foo->meta(), 'simple' );
 is( Role::Foo->meta()->simple(), 5,
     'Role::Foo->meta()->simple() returns expected value' );
+
+{
+    require Moose::Util::TypeConstraints;
+    dies_ok( sub { Moose::Util::TypeConstraints->import( -traits => 'My::SimpleTrait' ) },
+             'cannot provide -traits to an exporting module that does not init_meta' );
+    like( $@, qr/does not have an init_meta/,
+          '... and error provides a useful explanation' );
+}
