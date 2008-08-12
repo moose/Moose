@@ -521,16 +521,13 @@ B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
 
 This tells Moose to take the list of C<@role_names> and apply them to the 
 attribute meta-object. This is very similar to the I<metaclass> option, but 
-allows you to use more than one extension at a time. This too is an advanced 
-topic, we don't yet have a cookbook for it though. 
+allows you to use more than one extension at a time.
 
-As with I<metaclass>, the default behavior is to just load C<$role_name>; however, 
-we also have a way to alias to a shorter name. This will first look to see if
-B<Moose::Meta::Attribute::Custom::Trait::$role_name> exists. If it does, Moose
-will then check to see if that has the method C<register_implementation>, which
-should return the actual name of the custom attribute trait. If there is no
-C<register_implementation> method, it will fall back to using
-B<Moose::Meta::Attribute::Custom::Trait::$metaclass_name> as the trait name.
+See L<TRAIT NAME RESOLUTION> for details on how a trait name is
+resolved to a class name.
+
+Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
+example.
 
 =back
 
@@ -689,6 +686,36 @@ use it all the time. It is highly recommended that this is used instead of
 C<ref> anywhere you need to test for an object's class name.
 
 =back
+
+=head1 METACLASS TRAITS
+
+When you use Moose, you can also specify traits which will be applied
+to your metaclass:
+
+    use Moose -traits => 'My::Trait';
+
+This is very similar to the attribute traits feature. When you do
+this, your class's C<meta> object will have the specified traits
+applied to it. See L<TRAIT NAME RESOLUTION> for more details.
+
+=head1 TRAIT NAME RESOLUTION
+
+By default, when given a trait name, Moose simply tries to load a
+class of the same name. If such a class does not exist, it then looks
+for for a class matching
+B<Moose::Meta::$type::Custom::Trait::$trait_name>. The C<$type>
+variable here will be one of B<Attribute> or B<Class>, depending on
+what the trait is being applied to.
+
+If a class with this long name exists, Moose checks to see if it has
+the method C<register_implementation>. This method is expected to
+return the I<real> class name of the trait. If there is no
+C<register_implementation> method, it will fall back to using
+B<Moose::Meta::$type::Custom::Trait::$trait> as the trait name.
+
+If all this is confusing, take a look at
+L<Moose::Cookbook::Meta::Recipe3>, which demonstrates how to create an
+attribute trait.
 
 =head1 UNIMPORTING FUNCTIONS
 
