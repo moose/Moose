@@ -26,6 +26,7 @@ lib/Moose/Cookbook/Meta/Recipe1.pod
 lib/Moose/Cookbook/Meta/Recipe2.pod
 lib/Moose/Cookbook/Meta/Recipe3.pod
 lib/Moose/Cookbook/Meta/Recipe4.pod
+lib/Moose/Cookbook/Meta/Recipe5.pod
 lib/Moose/Cookbook/Roles/Recipe1.pod
 lib/Moose/Cookbook/Roles/Recipe2.pod
 lib/Moose/Cookbook/Snack/Keywords.pod

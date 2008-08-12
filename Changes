@@ -11,7 +11,8 @@ Revision history for Perl extension Moose
         much easier. (Dave Rolsky)
 
     * Moose
-      - Implemented metaclass traits:
+    * Moose::Cookbook::Meta::Recipe5
+      - Implemented metaclass traits (and wrote a recipe for it):
 
           use Moose -traits => 'Foo'
 
