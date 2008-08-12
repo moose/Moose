@@ -270,11 +270,11 @@ metaclass programming as well.
 
 =head2 New to Moose?
 
-If you're new to Moose, the best place to start reading it the
-L<Moose::Cookbook>. Reading through the recipes on Moose basics will
-get you up to speed with many of Moose's features quickly. Then you
-can use the Moose API documentation to get more detail on features
-you're interested in.
+If you're new to Moose, the best place to start is the
+L<Moose::Cookbook>. The recipes on Moose basics will get you up to
+speed with many of Moose's features quickly. Once you have an idea of
+what Moose can do, you can use the API documentation to get more
+detail on features which interest you.
 
 =head2 Moose Extensions
 
