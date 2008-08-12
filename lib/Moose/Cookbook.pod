@@ -134,11 +134,12 @@ composable attribute functionality.
 If you want to store more information about your classes, you'll have
 to extend C<Moose::Meta::Class>. Doing so is simple, but you'll
 probably also want to provide some sugar, so see
-L<Moose::Cookbook::Meta::Recipe6> as well.
+L<Moose::Cookbook::Extending::Recipe2> as well.
 
-=item L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented via a metaclass trait
+=item L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented as a metaclass trait
 
-I<abstract goes here>
+This example takes the class metaclass we saw in the previous recipe
+and reimplements it as a metaclass trait.
 
 =item L<Moose::Cookbook::Meta::Recipe6> - Hooking into the immutabilization system (TODO)
 
@@ -177,8 +178,8 @@ functionality to all your classes without typing C<extends
 
 =item L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and providing sugar Moose-style
 
-This recipe shows how to provide a replacement for C<Moose.pm>. This
-is something that you may want to do as part of a C<MooseX> module,
+This recipe shows how to provide a replacement for C<Moose.pm>. You
+may want to do this as part of the API for a C<MooseX> module,
 especially if you want to default to a new metaclass class or base
 object class.
 

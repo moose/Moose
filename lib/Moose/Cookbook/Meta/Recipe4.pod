@@ -33,7 +33,7 @@ providing some sort of sugar for declaring the table. This is covered
 in L<Moose::Cookbook::Extending::Recipe2>, which shows how to make a
 module like C<Moose.pm> itself, with sugar like C<has_table()>.
 
-=head2 Using It
+=head2 Using this Metaclass in Practice
 
 Using this new "table" attribute is quite simple. Let's say we have a
 class named C<MyApp::User>, we could simply write the following:
@@ -46,7 +46,10 @@ its metaclass, this method call just works.
 =head1 SEE ALSO
 
 L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented
-via a metaclass trait
+as a metaclass trait
+
+L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and
+providing sugar Moose-style
 
 =head1 AUTHOR
 
