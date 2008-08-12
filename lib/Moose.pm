@@ -794,7 +794,7 @@ For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
 
 This method used to be documented as a function which accepted
 positional parameters. This calling style will still work for
-backwards compatibility.
+backwards compatibility, but is deprecated.
 
 =head2 B<import>
 
