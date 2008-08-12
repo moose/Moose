@@ -3,8 +3,9 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
+use Carp qw( confess );
 use Class::MOP;
-use List::MoreUtils qw( uniq );
+use List::MoreUtils qw( first_index uniq );
 use Sub::Exporter;
 
 
@@ -160,6 +161,16 @@ sub _make_sub_exporter_params {
         my $export_to_main = shift;
 
         return sub {
+            # I think we could use Sub::Exporter's collector feature
+            # to do this, but that would be rather gross, since that
+            # feature isn't really designed to return a value to the
+            # caller of the exporter sub.
+            #
+            # Also, this makes sure we preserve backwards compat for
+            # _get_caller, so it always sees the arguments in the
+            # expected order.
+            my $traits;
+            ($traits, @_) = Moose::Exporter::_strip_traits(@_);
 
             # It's important to leave @_ as-is for the benefit of
             # Sub::Exporter.
@@ -183,14 +194,61 @@ sub _make_sub_exporter_params {
                 return;
             }
 
-            for my $c (grep { $_->can('init_meta') } $class, @{$exports_from} ) {
+            my $did_init_meta;
+            for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
 
                 $c->init_meta( for_class => $CALLER );
+                $did_init_meta = 1;
             }
+
+            _apply_meta_traits( $CALLER, $traits )
+                if $did_init_meta;
 
             goto $exporter;
         };
     }
+}
+
+sub _strip_traits {
+    my $idx = first_index { $_ eq '-traits' } @_;
+
+    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+
+    my $traits = $_[ $idx + 1 ];
+
+    splice @_, $idx, 2;
+
+    return ( $traits, @_ );
+}
+
+sub _apply_meta_traits {
+    my ( $class, $traits ) = @_;
+
+    return
+        unless $traits && @$traits;
+
+    my $meta = $class->meta();
+
+    my $type = ( split /::/, ref $meta )[-1]
+        or confess
+        'Cannot determine metaclass type for trait application . Meta isa '
+        . ref $meta;
+
+    # We can only call does_role() on Moose::Meta::Class objects, and
+    # we can only do that on $meta->meta() if it has already had at
+    # least one trait applied to it. By default $meta->meta() returns
+    # a Class::MOP::Class object (not a Moose::Meta::Class).
+    my @traits = grep {
+        $meta->meta()->can('does_role')
+            ? not $meta->meta()->does_role($_)
+            : 1
+        }
+        map { Moose::Util::resolve_metatrait_alias( $type => $_ ) } @$traits;
+
+    return unless @traits;
+
+    Moose::Util::apply_all_roles_with_method( $meta,
+        'apply_to_metaclass_instance', \@traits );
 }
 
 sub _get_caller {
