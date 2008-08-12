@@ -11,6 +11,14 @@ Revision history for Perl extension Moose
         much easier. (Dave Rolsky)
 
     * Moose
+      - Implemented metaclass traits:
+
+          use Moose -traits => 'Foo'
+
+        This should make writing small Moose extensions a little
+        easier (Dave Rolsky)
+
+    * Moose
     * Moose::Cookbook::Extending::Recipe1
     * Moose::Cookbook::Extending::Recipe2
       - Rewrote extending and embedding moose documentation and
