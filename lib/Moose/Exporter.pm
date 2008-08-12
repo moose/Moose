@@ -426,7 +426,9 @@ parameter passed as part of the import:
 
   use Moose -traits => [ 'My::Meta::Trait', 'My::Other::Trait' ];
 
-These traits will be applied to the caller's metaclass instance. These traits will be ignored
+These traits will be applied to the caller's metaclass
+instance. Providing traits for an exporting class that does not create
+a metaclass for the caller is an error.
 
 =head1 AUTHOR
 
