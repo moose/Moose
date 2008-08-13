@@ -215,6 +215,7 @@ $_->meta->make_immutable(
     Moose::Meta::TypeConstraint
     Moose::Meta::TypeConstraint::Union
     Moose::Meta::TypeConstraint::Parameterized
+    Moose::Meta::TypeConstraint::Parameterizable
     Moose::Meta::TypeConstraint::Enum
     Moose::Meta::TypeConstraint::Class
     Moose::Meta::TypeConstraint::Role
