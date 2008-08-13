@@ -31,7 +31,7 @@ BEGIN {
     use Moose ();
     use Moose::Exporter;
 
-    Moose::Exporter->build_import_methods( also => 'Moose' );
+    Moose::Exporter->setup_import_methods( also => 'Moose' );
 
     sub init_meta {
         shift;

@@ -106,7 +106,7 @@ sub augment {
     croak "Moose::Role cannot support 'augment'";
 }
 
-my $exporter = Moose::Exporter->build_import_methods(
+my $exporter = Moose::Exporter->setup_import_methods(
     with_caller => [
         qw( with requires excludes has before after around override make_immutable )
     ],

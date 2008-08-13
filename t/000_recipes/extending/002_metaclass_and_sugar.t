@@ -24,7 +24,7 @@ use Test::More tests => 3;
     use Moose ();
     use Moose::Exporter;
 
-    Moose::Exporter->build_import_methods(
+    Moose::Exporter->setup_import_methods(
         with_caller => ['has_table'],
         also        => 'Moose',
     );

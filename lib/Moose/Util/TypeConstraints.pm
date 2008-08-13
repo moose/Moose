@@ -62,7 +62,7 @@ use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
 use Moose::Util::TypeConstraints::OptimizedConstraints;
 
-Moose::Exporter->build_import_methods(
+Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
             type subtype class_type role_type as where message optimize_as

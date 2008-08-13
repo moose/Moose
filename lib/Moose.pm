@@ -45,13 +45,13 @@ sub extends {
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    my $meta = $class->meta->_fix_metaclass_incompatability(@supers);
+    my $meta = Class::MOP::Class->initialize($class)->_fix_metaclass_incompatability(@supers);
     $meta->superclasses(@supers);
 }
 
 sub with {
     my $class = shift;
-    Moose::Util::apply_all_roles($class->meta, @_);
+    Moose::Util::apply_all_roles(Class::MOP::Class->initialize($class), @_);
 }
 
 sub has {
@@ -60,7 +60,7 @@ sub has {
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = @_;
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-    $class->meta->add_attribute( $_, %options ) for @$attrs;
+    Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
 }
 
 sub before {
@@ -85,7 +85,7 @@ sub super {
 sub override {
     my $class = shift;
     my ( $name, $method ) = @_;
-    $class->meta->add_override_method_modifier( $name => $method );
+    Class::MOP::Class->initialize($class)->add_override_method_modifier( $name => $method );
 }
 
 sub inner {
@@ -105,17 +105,17 @@ sub inner {
 sub augment {
     my $class = shift;
     my ( $name, $method ) = @_;
-    $class->meta->add_augment_method_modifier( $name => $method );
+    Class::MOP::Class->initialize($class)->add_augment_method_modifier( $name => $method );
 }
 
 sub make_immutable {
     my $class = shift;
     cluck "The make_immutable keyword has been deprecated, " . 
           "please go back to __PACKAGE__->meta->make_immutable\n";
-    $class->meta->make_immutable(@_);
+    Class::MOP::Class->initialize($class)->make_immutable(@_);
 }
 
-my $exporter = Moose::Exporter->build_import_methods(
+Moose::Exporter->setup_import_methods(
     with_caller => [
         qw( extends with has before after around override augment make_immutable )
     ],
@@ -159,7 +159,7 @@ sub init_meta {
         # this is the case where the metaclass pragma
         # was used before the 'use Moose' statement to
         # override a specific class
-        $meta = $class->meta();
+        $meta = Class::MOP::Class->initialize($class);
         ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
           || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
     }
@@ -776,7 +776,7 @@ Here is a simple example:
     use Moose (); # no need to get Moose's exports
     use Moose::Exporter;
 
-    Moose::Exporter->build_import_methods( also => 'Moose' );
+    Moose::Exporter->setup_import_methods( also => 'Moose' );
 
     sub init_meta {
         shift;

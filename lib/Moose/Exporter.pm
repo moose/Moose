@@ -11,11 +11,22 @@ use Sub::Exporter;
 
 my %EXPORT_SPEC;
 
-sub build_import_methods {
-    my $class = shift;
-    my %args  = @_;
+sub setup_import_methods {
+    my ( $class, %args ) = @_;
 
-    my $exporting_package = caller();
+    my $exporting_package = $args{exporting_package} ||= caller();
+
+    my ( $import, $unimport) = $class->build_import_methods( %args );
+
+    no strict 'refs';
+    *{ $exporting_package . '::import' }   = $import;
+    *{ $exporting_package . '::unimport' } = $unimport;
+}
+
+sub build_import_methods {
+    my ( $class, %args ) = @_;
+
+    my $exporting_package = $args{exporting_package} ||= caller();
 
     $EXPORT_SPEC{$exporting_package} = \%args;
 
@@ -38,9 +49,7 @@ sub build_import_methods {
 
     my $unimport = $class->_make_unimport_sub( \@exports_from, [ keys %{$exports} ] );
 
-    no strict 'refs';
-    *{ $exporting_package . '::import' }   = $import;
-    *{ $exporting_package . '::unimport' } = $unimport;
+    return ( $import, $unimport )
 }
 
 {
@@ -331,7 +340,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
   use Moose ();
   use Moose::Exporter;
 
-  Moose::Exporter->build_export_methods(
+  Moose::Exporter->setup_import_methods(
       export         => [ 'sugar1', 'sugar2', \&Some::Random::thing ],
       init_meta_args => { metaclass_class => 'MyApp::Meta::Class' ],
   );
@@ -361,7 +370,7 @@ C<MooseX> module, as long as they all use C<Moose::Exporter>.
 
 This module provides exactly one public method:
 
-=head2 Moose::Exporter->build_import_methods(...)
+=head2 Moose::Exporter->setup_import_methods(...)
 
 When you call this method, C<Moose::Exporter> build custom C<import>
 and C<unimport> methods for your module. The import method will export
@@ -399,6 +408,12 @@ C<Moose::Exporter> also makes sure all these functions get removed
 when C<unimport> is called.
 
 =back
+
+=head2 Moose::Exporter->build_import_methods(...)
+
+Returns two code refs, one for import and one for unimport.
+
+Used by C<setup_import_methods>.
 
 =head1 IMPORTING AND init_meta
 

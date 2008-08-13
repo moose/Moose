@@ -20,7 +20,7 @@ Moose::Cookbook::Extending::Recipe1 - Providing an alternate base object class
   use Moose ();
   use Moose::Exporter;
 
-  Moose::Exporter->build_import_methods( also => 'Moose' );
+  Moose::Exporter->setup_import_methods( also => 'Moose' );
 
   sub init_meta {
       shift;
@@ -44,7 +44,7 @@ output every time a new object is created, but you can surely think of
 some more interesting things to do with your own base class.
 
 This all works because of the magic of L<Moose::Exporter>. When we
-call C<< Moose::Exporter->build_import_methods( also => 'Moose' ) >>
+call C<< Moose::Exporter->setup_import_methods( also => 'Moose' ) >>
 it builds an C<import> and C<unimport> method for you. The C<< also =>
 'Moose' >> bit says that we want to export everything that Moose does.
 

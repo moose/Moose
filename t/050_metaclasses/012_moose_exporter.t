@@ -37,7 +37,7 @@ BEGIN {
     package MooseX::Empty;
 
     use Moose ();
-    Moose::Exporter->build_import_methods( also => 'Moose' );
+    Moose::Exporter->setup_import_methods( also => 'Moose' );
 }
 
 {
@@ -80,7 +80,7 @@ BEGIN {
         return $caller . ' called wrapped1';
     }
 
-    Moose::Exporter->build_import_methods(
+    Moose::Exporter->setup_import_methods(
         with_caller => ['wrapped1'],
         also        => 'Moose',
     );
@@ -124,7 +124,7 @@ BEGIN {
         return 'as_is1';
     }
 
-    Moose::Exporter->build_import_methods(
+    Moose::Exporter->setup_import_methods(
         with_caller => ['wrapped2'],
         as_is       => ['as_is1'],
         also        => 'MooseX::Sugar',
@@ -184,7 +184,7 @@ BEGIN {
                                );
     }
 
-    Moose::Exporter->build_import_methods( also => 'Moose' );
+    Moose::Exporter->setup_import_methods( also => 'Moose' );
 }
 
 {
@@ -205,7 +205,7 @@ BEGIN {
 
     ::dies_ok(
         sub {
-            Moose::Exporter->build_import_methods(
+            Moose::Exporter->setup_import_methods(
                 also => [ 'Moose', 'MooseX::CircularAlso' ],
             );
         },
@@ -226,7 +226,7 @@ BEGIN {
 
     ::dies_ok(
         sub {
-            Moose::Exporter->build_import_methods(
+            Moose::Exporter->setup_import_methods(
                 also => [ 'NoSuchThing' ],
             );
         },
