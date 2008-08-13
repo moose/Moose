@@ -121,15 +121,16 @@ sub excludes_role {
 }
 
 sub new_object {
-    my ($class, %params) = @_;
-    my $self = $class->SUPER::new_object(%params);
+    my $class = shift;
+    my $params = @_ == 1 ? $_[0] : {@_};
+    my $self = $class->SUPER::new_object($params);
     foreach my $attr ($class->compute_all_applicable_attributes()) {
         # if we have a trigger, then ...
         if ($attr->can('has_trigger') && $attr->has_trigger) {
             # make sure we have an init-arg ...
             if (defined(my $init_arg = $attr->init_arg)) {
                 # now make sure an init-arg was passes ...
-                if (exists $params{$init_arg}) {
+                if (exists $params->{$init_arg}) {
                     # and if get here, fire the trigger
                     $attr->trigger->(
                         $self, 
@@ -140,7 +141,7 @@ sub new_object {
                             ? $attr->get_read_method_ref->($self)
                             # otherwise, just get the value from
                             # the constructor params
-                            : $params{$init_arg}), 
+                            : $params->{$init_arg}), 
                         $attr
                     );
                 }
@@ -151,15 +152,16 @@ sub new_object {
 }
 
 sub construct_instance {
-    my ($class, %params) = @_;
+    my $class = shift;
+    my $params = @_ == 1 ? $_[0] : {@_};
     my $meta_instance = $class->get_meta_instance;
     # FIXME:
     # the code below is almost certainly incorrect
     # but this is foreign inheritence, so we might
     # have to kludge it in the end.
-    my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
+    my $instance = $params->{'__INSTANCE__'} || $meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        $attr->initialize_instance_slot($meta_instance, $instance, \%params);
+        $attr->initialize_instance_slot($meta_instance, $instance, $params);
     }
     return $instance;
 }
