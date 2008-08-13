@@ -20,7 +20,7 @@ sub new {
     my ( $class, %args ) = @_;
 
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
-    my $self      = $class->meta->new_object(%args);
+    my $self      = $class->_new(\%args);
 
     $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();

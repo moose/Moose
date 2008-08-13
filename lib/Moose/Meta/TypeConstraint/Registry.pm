@@ -26,7 +26,7 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 
 sub new { 
     my $class = shift;
-    my $self  = $class->meta->new_object(@_);
+    my $self  = $class->_new(@_);
     return $self;
 }
 

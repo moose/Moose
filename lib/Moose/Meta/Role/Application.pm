@@ -29,7 +29,7 @@ sub new {
                                 : [ $params{excludes} ]);
     }
     
-    $class->meta->new_object(%params);
+    $class->_new(%params);
 }
 
 sub is_method_excluded {

@@ -11,6 +11,8 @@ use overload '""'     => sub { shift->name },   # stringify to tc name
 use Carp         'confess';
 use Scalar::Util qw(blessed refaddr);
 
+use base qw(Class::MOP::Object);
+
 our $VERSION   = '0.56';
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -57,7 +59,7 @@ __PACKAGE__->meta->add_attribute('package_defined_in' => (
 
 sub new {
     my $class = shift;
-    my $self  = $class->meta->new_object(@_);
+    my $self  = $class->_new(@_);
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
     return $self;

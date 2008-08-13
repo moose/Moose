@@ -20,9 +20,17 @@ use Moose::Meta::TypeCoercion;
 use Moose::Meta::Attribute;
 use Moose::Meta::Instance;
 
-use Moose::Meta::Role;
-
 use Moose::Object;
+
+use Moose::Meta::Role;
+use Moose::Meta::Role::Composite;
+use Moose::Meta::Role::Application;
+use Moose::Meta::Role::Application::RoleSummation;
+use Moose::Meta::Role::Application::ToClass;
+use Moose::Meta::Role::Application::ToRole;
+use Moose::Meta::Role::Application::ToInstance;
+use Moose::Meta::Role::Application::ToMetaclassInstance;
+
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
@@ -195,29 +203,45 @@ sub _get_caller {
 ## make 'em all immutable
 
 $_->meta->make_immutable(
-    inline_constructor => 0,
+    inline_constructor => 1,
+    constructor_name   => "_new",
     inline_accessors   => 1,  # these are Class::MOP accessors, so they need inlining
   )
-  for (
-    'Moose::Meta::Attribute',
-    'Moose::Meta::Class',
-    'Moose::Meta::Instance',
+  for (qw(
+    Moose::Meta::Attribute
+    Moose::Meta::Class
+    Moose::Meta::Instance
 
-    'Moose::Meta::TypeConstraint',
-    'Moose::Meta::TypeConstraint::Union',
-    'Moose::Meta::TypeConstraint::Parameterized',
-    'Moose::Meta::TypeCoercion',
+    Moose::Meta::TypeConstraint
+    Moose::Meta::TypeConstraint::Union
+    Moose::Meta::TypeConstraint::Parameterized
+    Moose::Meta::TypeConstraint::Enum
+    Moose::Meta::TypeConstraint::Class
+    Moose::Meta::TypeConstraint::Role
+    Moose::Meta::TypeConstraint::Registry
+    Moose::Meta::TypeCoercion
+    Moose::Meta::TypeCoercion::Union
 
-    'Moose::Meta::Method',
-    'Moose::Meta::Method::Accessor',
-    'Moose::Meta::Method::Constructor',
-    'Moose::Meta::Method::Destructor',
-    'Moose::Meta::Method::Overriden',
+    Moose::Meta::Method
+    Moose::Meta::Method::Accessor
+    Moose::Meta::Method::Constructor
+    Moose::Meta::Method::Destructor
+    Moose::Meta::Method::Overriden
+    Moose::Meta::Method::Augmented
 
-    'Moose::Meta::Role',
-    'Moose::Meta::Role::Method',
-    'Moose::Meta::Role::Method::Required',
-  );
+    Moose::Meta::Role
+    Moose::Meta::Role::Method
+    Moose::Meta::Role::Method::Required
+
+    Moose::Meta::Role::Composite
+
+    Moose::Meta::Role::Application
+    Moose::Meta::Role::Application::RoleSummation
+    Moose::Meta::Role::Application::ToClass
+    Moose::Meta::Role::Application::ToRole
+    Moose::Meta::Role::Application::ToInstance
+    Moose::Meta::Role::Application::ToMetaclassInstance
+));
 
 1;
 

@@ -20,7 +20,7 @@ sub new {
 
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Str');
 
-    my $self = $class->meta->new_object(%args);
+    my $self = $class->_new(%args);
 
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
