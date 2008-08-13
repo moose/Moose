@@ -28,7 +28,7 @@ Moose::Meta::Instance - The Moose Instance metaclass
 This class provides the low level data storage abstractions for attributes.
 
 Using this API generally violates attribute encapsulation and is not
-reccomended, instead look at L<Class::MOP::Attribute/get_value>,
+recommended, instead look at L<Class::MOP::Attribute/get_value>,
 L<Class::MOP::Attribute/set_value>, etc, as well as L<Moose::Meta::Attribute>
 for the recommended way to fiddle with attribute values in a generic way,
 independent of how/whether accessors have been defined. Accessors can be found
