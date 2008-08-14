@@ -286,38 +286,41 @@ sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
-        next unless $super->can('meta');
-        next unless $super->meta->isa("Class::MOP::Class");
+        my $meta = Class::MOP::Class->initialize($super) or next;
+        next unless $meta->isa("Class::MOP::Class");
+
         # get the name, make sure we take
         # immutable classes into account
-        my $super_meta_name = ($super->meta->is_immutable
-                                ? $super->meta->get_mutable_metaclass_name
-                                : blessed($super->meta));
-        # if it's meta is a vanilla Moose,
-        # then we can safely ignore it.
-        next if $super_meta_name eq 'Moose::Meta::Class';
+        my $super_meta_name = ($meta->is_immutable
+            ? $meta->get_mutable_metaclass_name
+            : ref($meta));
+
         # but if we have anything else,
         # we need to check it out ...
         unless (# see if of our metaclass is incompatible
-                ($self->isa($super_meta_name) &&
-                 # and see if our instance metaclass is incompatible
-                 $self->instance_metaclass->isa($super->meta->instance_metaclass)) &&
-                # ... and if we are just a vanilla Moose
-                $self->isa('Moose::Meta::Class')) {
-            # re-initialize the meta ...
-            my $super_meta = $super->meta;
-            # NOTE:
-            # We might want to consider actually
-            # transfering any attributes from the
-            # original meta into this one, but in
-            # general you should not have any there
-            # at this point anyway, so it's very
-            # much an obscure edge case anyway
-            $self = $super_meta->reinitialize($self->name => (
-                'attribute_metaclass' => $super_meta->attribute_metaclass,
-                'method_metaclass'    => $super_meta->method_metaclass,
-                'instance_metaclass'  => $super_meta->instance_metaclass,
-            ));
+            $self->isa($super_meta_name)
+                and
+            # and see if our instance metaclass is incompatible
+            $self->instance_metaclass->isa($meta->instance_metaclass)
+        ) {
+            if ( ref($self) eq 'Moose::Meta::Class' ) { # FIXME better check for vanilla case (check for no attrs, no custom meta, etc etc)
+                # NOTE:
+                # We might want to consider actually
+                # transfering any attributes from the
+                # original meta into this one, but in
+                # general you should not have any there
+                # at this point anyway, so it's very
+                # much an obscure edge case anyway
+                $self = $meta->reinitialize(
+                    package             => $self->name,
+                    attribute_metaclass => $meta->attribute_metaclass,
+                    method_metaclass    => $meta->method_metaclass,
+                    instance_metaclass  => $meta->instance_metaclass,
+                );
+            } else {
+                # this will be called soon enough, for now we let it slide
+                # $self->check_metaclass_compatability()
+            }
         }
     }
     return $self;
