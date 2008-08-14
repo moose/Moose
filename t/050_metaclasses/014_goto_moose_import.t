@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 8;
 use Test::Exception;
 
 # Some packages out in the wild cooperate with Moose by using goto
@@ -20,6 +20,10 @@ use Test::Exception;
     sub import {
         goto &Moose::import;
     }
+
+    sub unimport {
+        goto &Moose::unimport;
+    }
 }
 
 {
@@ -29,7 +33,16 @@ use Test::Exception;
 
     ::lives_ok( sub { has( 'size' ) },
                 'has was exported via MooseAlike1' );
+
+    MooseAlike1->unimport();
 }
+
+ok( ! Foo->can('has'),
+    'No has sub in Foo after MooseAlike1 is unimported' );
+ok( Foo->can('meta'),
+    'Foo has a meta method' );
+isa_ok( Foo->meta(), 'Moose::Meta::Class' );
+
 
 {
     package MooseAlike2;
@@ -43,6 +56,11 @@ use Test::Exception;
     sub import {
         goto $import;
     }
+
+    my $unimport = \&Moose::unimport;
+    sub unimport {
+        goto $unimport;
+    }
 }
 
 {
@@ -52,8 +70,13 @@ use Test::Exception;
 
     ::lives_ok( sub { has( 'size' ) },
                 'has was exported via MooseAlike2' );
+
+    MooseAlike2->unimport();
 }
 
 
-
-
+ok( ! Bar->can('has'),
+          'No has sub in Bar after MooseAlike2 is unimported' );
+ok( Bar->can('meta'),
+    'Bar has a meta method' );
+isa_ok( Bar->meta(), 'Moose::Meta::Class' );

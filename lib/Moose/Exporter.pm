@@ -45,9 +45,12 @@ sub build_import_methods {
     # $args{_export_to_main} exists for backwards compat, because
     # Moose::Util::TypeConstraints did export to main (unlike Moose &
     # Moose::Role).
-    my $import = $class->_make_import_sub( $exporter, \@exports_from, $args{_export_to_main} );
+    my $import = $class->_make_import_sub( $exporting_package, $exporter,
+        \@exports_from, $args{_export_to_main} );
 
-    my $unimport = $class->_make_unimport_sub( \@exports_from, [ keys %{$exports} ] );
+    my $unimport
+        = $class->_make_unimport_sub( $exporting_package, \@exports_from,
+        [ keys %{$exports} ] );
 
     return ( $import, $unimport )
 }
@@ -165,9 +168,10 @@ sub _make_sub_exporter_params {
 
     sub _make_import_sub {
         shift;
-        my $exporter       = shift;
-        my $exports_from   = shift;
-        my $export_to_main = shift;
+        my $exporting_package = shift;
+        my $exporter          = shift;
+        my $exports_from      = shift;
+        my $export_to_main    = shift;
 
         return sub {
             # I think we could use Sub::Exporter's collector feature
@@ -181,9 +185,10 @@ sub _make_sub_exporter_params {
             my $traits;
             ($traits, @_) = Moose::Exporter::_strip_traits(@_);
 
-            # It's important to leave @_ as-is for the benefit of
-            # Sub::Exporter.
-            my $class = $_[0];
+            # Normally we could look at $_[0], but in some weird cases
+            # (involving goto &Moose::import), $_[0] ends as something
+            # else (like Squirrel).
+            my $class = $exporting_package;
 
             $CALLER = Moose::Exporter::_get_caller(@_);
 
@@ -281,15 +286,15 @@ sub _get_caller {
 
 sub _make_unimport_sub {
     shift;
-    my $sources  = shift;
-    my $keywords = shift;
+    my $exporting_package = shift;
+    my $sources           = shift;
+    my $keywords          = shift;
 
     return sub {
-        my $class  = shift;
         my $caller = scalar caller();
         Moose::Exporter->_remove_keywords(
             $caller,
-            [ $class, @{$sources} ],
+            [ $exporting_package, @{$sources} ],
             $keywords
         );
     };
