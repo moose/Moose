@@ -24,23 +24,23 @@ sub extends {
 }
 
 sub with {
-    Moose::Util::apply_all_roles( shift->meta(), @_ );
+    Moose::Util::apply_all_roles( Moose::Meta::Role->initialize(shift), @_ );
 }
 
 sub requires {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     croak "Must specify at least one method" unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     croak "Must specify at least one role" unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = @_;
@@ -49,7 +49,7 @@ sub has {
 }
 
 sub before {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     my $code = pop @_;
 
     for (@_) {
@@ -62,7 +62,7 @@ sub before {
 }
 
 sub after {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
 
     my $code = pop @_;
     for (@_) {
@@ -75,7 +75,7 @@ sub after {
 }
 
 sub around {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     my $code = pop @_;
     for (@_) {
         croak "Moose::Role do not currently support "
@@ -93,7 +93,7 @@ sub super {
 }
 
 sub override {
-    my $meta = shift->meta();
+    my $meta = Moose::Meta::Role->initialize(shift);
     my ( $name, $code ) = @_;
     $meta->add_override_method_modifier( $name, $code );
 }
