@@ -341,8 +341,8 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      export         => [ 'sugar1', 'sugar2', \&Some::Random::thing ],
-      init_meta_args => { metaclass_class => 'MyApp::Meta::Class' ],
+      export => [ 'sugar1', 'sugar2', \&Some::Random::thing ],
+      also   => [ 'Moose' ],
   );
 
   # then later ...
