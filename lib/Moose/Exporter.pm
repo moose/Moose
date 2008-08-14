@@ -347,7 +347,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
   Moose::Exporter->setup_import_methods(
       export => [ 'sugar1', 'sugar2', \&Some::Random::thing ],
-      also   => [ 'Moose' ],
+      also   => 'Moose',
   );
 
   # then later ...
