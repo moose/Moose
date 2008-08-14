@@ -16,7 +16,7 @@ sub setup_import_methods {
 
     my $exporting_package = $args{exporting_package} ||= caller();
 
-    my ( $import, $unimport) = $class->build_import_methods( %args );
+    my ( $import, $unimport ) = $class->build_import_methods(%args);
 
     no strict 'refs';
     *{ $exporting_package . '::import' }   = $import;
@@ -368,7 +368,7 @@ C<MooseX> module, as long as they all use C<Moose::Exporter>.
 
 =head1 METHODS
 
-This module provides exactly one public method:
+This module provides two public methods:
 
 =head2 Moose::Exporter->setup_import_methods(...)
 
