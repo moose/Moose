@@ -187,6 +187,7 @@ t/050_metaclasses/010_extending_and_embedding_back_compat.t
 t/050_metaclasses/011_init_meta.t
 t/050_metaclasses/012_moose_exporter.t
 t/050_metaclasses/013_metaclass_traits.t
+t/050_metaclasses/014_goto_moose_import.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t
