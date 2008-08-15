@@ -312,7 +312,7 @@ sub _fix_metaclass_incompatability {
                 # at this point anyway, so it's very
                 # much an obscure edge case anyway
                 $self = $meta->reinitialize(
-                    package             => $self->name,
+                    $self->name,
                     attribute_metaclass => $meta->attribute_metaclass,
                     method_metaclass    => $meta->method_metaclass,
                     instance_metaclass  => $meta->instance_metaclass,
