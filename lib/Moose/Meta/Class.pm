@@ -390,10 +390,12 @@ sub create_immutable_transformer {
        /],
        memoize     => {
            class_precedence_list             => 'ARRAY',
+           linearized_isa                    => 'ARRAY', # FIXME perl 5.10 memoizes this on its own, no need?
+           get_all_methods                   => 'ARRAY',
+           #get_all_attributes               => 'ARRAY', # it's an alias, no need, but maybe in the future
            compute_all_applicable_attributes => 'ARRAY',
            get_meta_instance                 => 'SCALAR',
            get_method_map                    => 'SCALAR',
-           # maybe ....
            calculate_all_roles               => 'ARRAY',
        },
        # NOTE:
