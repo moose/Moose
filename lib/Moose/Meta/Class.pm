@@ -303,7 +303,12 @@ sub _fix_metaclass_incompatability {
             # and see if our instance metaclass is incompatible
             $self->instance_metaclass->isa($meta->instance_metaclass)
         ) {
-            if ( ref($self) eq 'Moose::Meta::Class' ) { # FIXME better check for vanilla case (check for no attrs, no custom meta, etc etc)
+            if ( $meta->isa(ref($self)) ) {
+                unless ( $self->is_pristine ) {
+                    confess "Not reinitializing metaclass for " . $self->name . ", it isn't pristine";
+                }
+                # also check values %{ $self->get_method_map } for any generated methods
+
                 # NOTE:
                 # We might want to consider actually
                 # transfering any attributes from the

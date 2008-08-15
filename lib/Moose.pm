@@ -53,7 +53,7 @@ sub extends {
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    my $meta = Class::MOP::Class->initialize($class)->_fix_metaclass_incompatability(@supers);
+    my $meta = Moose::Meta::Class->initialize($class)->_fix_metaclass_incompatability(@supers);
     $meta->superclasses(@supers);
 }
 
@@ -162,27 +162,63 @@ sub init_meta {
         unless find_type_constraint($class);
 
     my $meta;
+
+    if ( $meta = Class::MOP::get_metaclass_by_name($class) ) {
+        unless ( $meta->isa("Moose::Meta::Class") ) {
+            confess "$class already has a metaclass, but it does not inherit $metaclass ($meta)";
+        }
+    } else {
+        # no metaclass, no 'meta' method
+
+        # now we check whether our ancestors have metaclass, and if so borrow that
+        my ( undef, @isa ) = @{ $class->mro::get_linear_isa };
+
+        foreach my $ancestor ( @isa ) {
+            my $ancestor_meta = Class::MOP::get_metaclass_by_name($ancestor) || next;
+
+            my $ancestor_meta_class = ($ancestor_meta->is_immutable
+                ? $ancestor_meta->get_mutable_metaclass_name
+                : ref($ancestor_meta));
+
+            # if we have an ancestor metaclass that inherits $metaclass, we use
+            # that. This is like _fix_metaclass_incompatability, but we can do it now.
+
+            # the case of having an ancestry is not very common, but arises in
+            # e.g. Reaction
+            unless ( $metaclass->isa( $ancestor_meta_class ) ) {
+                if ( $ancestor_meta_class->isa($metaclass) ) {
+                    $metaclass = $ancestor_meta_class;
+                }
+            }
+        }
+
+        $meta = $metaclass->initialize($class);
+    }
+
     if ( $class->can('meta') ) {
+        # check 'meta' method
+
+        # it may be inherited
+
         # NOTE:
         # this is the case where the metaclass pragma
         # was used before the 'use Moose' statement to
         # override a specific class
-        $meta = Class::MOP::Class->initialize($class);
-        ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
-          || confess "$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)";
+        my $method_meta = $class->meta;
+
+        ( blessed($method_meta) && $method_meta->isa('Moose::Meta::Class') )
+            || confess "$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)";
+
+        $meta = $method_meta;
     }
-    else {
-        # NOTE:
-        # this is broken currently, we actually need
-        # to allow the possiblity of an inherited
-        # meta, which will not be visible until the
-        # user 'extends' first. This needs to have
-        # more intelligence to it
-        $meta = $metaclass->initialize($class);
+
+    unless ( $meta->has_method("meta") ) { # don't overwrite
+        # also check for inherited non moose 'meta' method?
+        # FIXME also skip this if the user requested by passing an option
         $meta->add_method(
             'meta' => sub {
                 # re-initialize so it inherits properly
-                $metaclass->initialize( blessed( $_[0] ) || $_[0] );
+                $metaclass->initialize( ref($_[0]) || $_[0] );
             }
         );
     }
@@ -190,7 +226,6 @@ sub init_meta {
     # make sure they inherit from Moose::Object
     $meta->superclasses($base_class)
       unless $meta->superclasses();
-
 
     return $meta;
 }
