@@ -169,7 +169,7 @@ sub init_meta {
         # override a specific class
         $meta = Class::MOP::Class->initialize($class);
         ( blessed($meta) && $meta->isa('Moose::Meta::Class') )
-          || confess "You already have a &meta function, but it does not return a Moose::Meta::Class";
+          || confess "$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)";
     }
     else {
         # NOTE:
