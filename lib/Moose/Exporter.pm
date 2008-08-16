@@ -56,13 +56,13 @@ sub build_import_methods {
 }
 
 {
-    my %seen;
+    my $seen = {};
 
     sub _follow_also {
         my $class             = shift;
         my $exporting_package = shift;
 
-        %seen = ( $exporting_package => 1 );
+        local %$seen = ( $exporting_package => 1 );
 
         return uniq( _follow_also_real($exporting_package) );
     }
@@ -82,9 +82,9 @@ sub build_import_methods {
         for my $package (@also)
         {
             die "Circular reference in also parameter to MooseX::Exporter between $exporting_package and $package"
-                if $seen{$package};
+                if $seen->{$package};
 
-            $seen{$package} = 1;
+            $seen->{$package} = 1;
         }
 
         return @also, map { _follow_also_real($_) } @also;
