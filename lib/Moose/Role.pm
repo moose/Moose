@@ -117,37 +117,32 @@ my $exporter = Moose::Exporter->setup_import_methods(
     ],
 );
 
-{
-    my %METAS;
+sub init_meta {
+    shift;
+    my %args = @_;
 
-    sub init_meta {
-        shift;
-        my %args = @_;
+    my $role = $args{for_class}
+        or confess
+        "Cannot call init_meta without specifying a for_class";
 
-        my $role = $args{for_class}
-            or confess
-            "Cannot call init_meta without specifying a for_class";
+    my $metaclass = $args{metaclass} || "Moose::Meta::Role";
 
-        return $METAS{$role} if exists $METAS{$role};
+    # make a subtype for each Moose class
+    role_type $role unless find_type_constraint($role);
 
-        my $metaclass = $args{metaclass} || "Moose::Meta::Role";
-
-        # make a subtype for each Moose class
-        role_type $role unless find_type_constraint($role);
-
-        my $meta;
-        if ($role->can('meta')) {
-            $meta = $role->meta();
-            (blessed($meta) && $meta->isa('Moose::Meta::Role'))
-                || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
-        }
-        else {
-            $meta = $metaclass->initialize($role);
-            $meta->alias_method('meta' => sub { $meta });
-        }
-
-        return $METAS{$role} = $meta;
+    # FIXME copy from Moose.pm
+    my $meta;
+    if ($role->can('meta')) {
+        $meta = $role->meta();
+        (blessed($meta) && $meta->isa('Moose::Meta::Role'))
+            || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
     }
+    else {
+        $meta = $metaclass->initialize($role);
+        $meta->alias_method('meta' => sub { $meta });
+    }
+
+    return $meta;
 }
 
 1;
