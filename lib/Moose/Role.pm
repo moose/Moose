@@ -130,6 +130,8 @@ my $exporter = Moose::Exporter->setup_import_methods(
 
         return $METAS{$role} if exists $METAS{$role};
 
+        my $metaclass = $args{metaclass} || "Moose::Meta::Role";
+
         # make a subtype for each Moose class
         role_type $role unless find_type_constraint($role);
 
@@ -140,7 +142,7 @@ my $exporter = Moose::Exporter->setup_import_methods(
                 || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
         }
         else {
-            $meta = Moose::Meta::Role->initialize($role);
+            $meta = $metaclass->initialize($role);
             $meta->alias_method('meta' => sub { $meta });
         }
 
