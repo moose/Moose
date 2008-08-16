@@ -240,6 +240,14 @@ sub get_method_modifier_list {
     keys %{$self->$accessor};
 }
 
+sub reset_package_cache_flag  { (shift)->{'_package_cache_flag'} = undef }
+sub update_package_cache_flag {
+    my $self = shift;
+    $self->{'_package_cache_flag'} = Class::MOP::check_package_cache_flag($self->name);
+}
+
+
+
 ## ------------------------------------------------------------------
 ## subroles
 
