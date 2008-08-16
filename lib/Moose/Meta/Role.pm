@@ -357,6 +357,48 @@ sub has_method {
     exists $self->get_method_map->{$name} ? 1 : 0
 }
 
+# FIXME this is copypasated from Class::MOP::Class
+# refactor to inherit from some common base
+sub add_method {
+    my ($self, $method_name, $method) = @_;
+    (defined $method_name && $method_name)
+        || confess "You must define a method name";
+
+    my $body;
+    if (blessed($method)) {
+        $body = $method->body;
+        if ($method->package_name ne $self->name &&
+            $method->name         ne $method_name) {
+            warn "Hello there, got something for you."
+                . " Method says " . $method->package_name . " " . $method->name
+                . " Class says " . $self->name . " " . $method_name;
+            $method = $method->clone(
+                package_name => $self->name,
+                name         => $method_name
+            ) if $method->can('clone');
+        }
+    }
+    else {
+        $body = $method;
+        ('CODE' eq ref($body))
+            || confess "Your code block must be a CODE reference";
+        $method = $self->method_metaclass->wrap(
+            $body => (
+                package_name => $self->name,
+                name         => $method_name
+            )
+        );
+    }
+    $self->get_method_map->{$method_name} = $method;
+
+    my $full_method_name = ($self->name . '::' . $method_name);
+    $self->add_package_symbol(
+        { sigil => '&', type => 'CODE', name => $method_name },
+        Class::MOP::subname($full_method_name => $body)
+    );
+    $self->update_package_cache_flag;
+}
+
 sub find_method_by_name { (shift)->get_method(@_) }
 
 sub get_method_list {
@@ -632,6 +674,8 @@ probably not that much really).
 =item B<get_method>
 
 =item B<has_method>
+
+=item B<add_method>
 
 =item B<alias_method>
 
