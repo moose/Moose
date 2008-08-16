@@ -367,10 +367,24 @@ sub has_method {
 
 # FIXME this is copypasated from Class::MOP::Class
 # refactor to inherit from some common base
+sub wrap_method_body {
+    my ( $self, %args ) = @_;
+
+    my $body = delete $args{body}; # delete is for compat
+
+    ('CODE' eq ref($body))
+        || confess "Your code block must be a CODE reference";
+
+    $self->method_metaclass->wrap( $body => (
+        package_name => $self->name,
+        %args,
+    ));
+}
+
 sub add_method {
     my ($self, $method_name, $method) = @_;
     (defined $method_name && $method_name)
-        || confess "You must define a method name";
+    || confess "You must define a method name";
 
     my $body;
     if (blessed($method)) {
@@ -378,8 +392,8 @@ sub add_method {
         if ($method->package_name ne $self->name &&
             $method->name         ne $method_name) {
             warn "Hello there, got something for you."
-                . " Method says " . $method->package_name . " " . $method->name
-                . " Class says " . $self->name . " " . $method_name;
+            . " Method says " . $method->package_name . " " . $method->name
+            . " Class says " . $self->name . " " . $method_name;
             $method = $method->clone(
                 package_name => $self->name,
                 name         => $method_name
@@ -388,15 +402,11 @@ sub add_method {
     }
     else {
         $body = $method;
-        ('CODE' eq ref($body))
-            || confess "Your code block must be a CODE reference";
-        $method = $self->method_metaclass->wrap(
-            $body => (
-                package_name => $self->name,
-                name         => $method_name
-            )
-        );
+        $method = $self->wrap_method_body( body => $body, name => $method_name );
     }
+
+    $method->attach_to_class($self);
+
     $self->get_method_map->{$method_name} = $method;
 
     my $full_method_name = ($self->name . '::' . $method_name);
@@ -404,7 +414,8 @@ sub add_method {
         { sigil => '&', type => 'CODE', name => $method_name },
         Class::MOP::subname($full_method_name => $body)
     );
-    $self->update_package_cache_flag;
+
+    $self->update_package_cache_flag; # still valid, since we just added the method to the map, and if it was invalid before that then get_method_map updated it
 }
 
 sub find_method_by_name { (shift)->get_method(@_) }
@@ -684,6 +695,8 @@ probably not that much really).
 =item B<has_method>
 
 =item B<add_method>
+
+=item B<wrap_method_body>
 
 =item B<alias_method>
 
