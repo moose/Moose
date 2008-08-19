@@ -91,10 +91,10 @@ BEGIN {
     }
 }
 
-ok( defined &Moose::XS::new_getter );
-ok( defined &Moose::XS::new_setter );
-ok( defined &Moose::XS::new_accessor );
-ok( defined &Moose::XS::new_predicate );
+ok( defined &Moose::XS::new_getter, "new_getter" );
+ok( defined &Moose::XS::new_setter, "new_setter" );
+ok( defined &Moose::XS::new_accessor, "new_accessor" );
+ok( defined &Moose::XS::new_predicate, "new_predicate" );
 
 {
     package Foo;
@@ -147,44 +147,43 @@ my $ref = [ ];
 
 my $foo = Foo->new( x => "ICKS", y => "WHY", z => "ZEE", ref => $ref );
 
-is( $foo->x, "ICKS" );
-is( $foo->y, "WHY" );
-is( $foo->z, "ZEE" );
-is( $foo->ref, $ref, );
+is( $foo->x, "ICKS", "accessor as reader" );
+is( $foo->y, "WHY", "reader" );
+is( $foo->z, "ZEE", "reader" );
+is( $foo->ref, $ref, "accessor for ref" );
 
-lives_ok { $foo->x("YASE") };
+lives_ok { $foo->x("YASE") } "accessor";
 
-is( $foo->x, "YASE" );
+is( $foo->x, "YASE", "attr value set by accessor" );
 
-dies_ok { $foo->y("blah") };
+dies_ok { $foo->y("blah") } "reader dies when used as writer";
 
-is( $foo->y, "WHY" );
+is( $foo->y, "WHY", "reader" );
 
-dies_ok { $foo->z("blah") };
+dies_ok { $foo->z("blah") } "reader dies when used as writer";
 
-is( $foo->z, "ZEE" );
+is( $foo->z, "ZEE", "reader" );
 
-lives_ok { $foo->set_z("new") };
+lives_ok { $foo->set_z("new") } "writer";
 
-is( $foo->z, "new" );
+is( $foo->z, "new", "attr set by writer" );
 
-ok( $foo->has_x );
+ok( $foo->has_x, "predicate" );
 
-ok( !Foo->new->has_x );
+ok( !Foo->new->has_x, "predicate on new obj is false" );
+
+is( $foo->ref, $ref, "ref attr" );
 
 undef $ref;
-
-is( $foo->ref(), undef );
+is( $foo->ref(), undef, "weak ref detstroyed" );
 
 $ref = { };
 
 $foo->ref($ref);
-
-is( $foo->ref, $ref, );
+is( $foo->ref, $ref, "attr set" );
 
 undef $ref;
-
-is( $foo->ref(), undef );
+is( $foo->ref(), undef, "weak ref destroyed" );
 
 ok( !eval { $foo->a("not a ref"); 1 }, "ArrayRef" );
 ok( !eval { $foo->a(3); 1 }, "ArrayRef" );
