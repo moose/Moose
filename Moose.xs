@@ -104,28 +104,26 @@ typedef enum {
     FileHandle,
     RegexpRef,
     Object,
+    ClassName,
     /* complex checks */
     Role,
-    ClassName,
     Enum,
 } TC;
 
 typedef enum {
     tc_none = 0,
     tc_type,
+    tc_stash,
     tc_cv,
     tc_op,
-    tc_stash,
-    tc_classname,
     tc_fptr,
 } tc_kind;
 
 typedef union {
     TC type;
+    HV *stash;
     CV *cv;
     OP *op;
-    HV *stash;
-    char *classname;
     bool (*fptr)(pTHX_ SV *type_constraint, SV *sv);
 } TC_CHECK;
 
@@ -281,7 +279,7 @@ STATIC bool check_reftype(TC type, SV *sv) {
             break;
     }
 
-    return SvTYPE(sv) == svt;
+    return SvTYPE(SvRV(sv)) == svt;
 }
 
 STATIC bool check_sv_class (pTHX_ HV *stash, SV *sv) {
@@ -320,6 +318,7 @@ STATIC bool check_sv_class (pTHX_ HV *stash, SV *sv) {
 STATIC bool check_sv_type (TC type, SV *sv) {
     if (!sv)
         return 0;
+
     switch (type) {
         case Any:
             return 1;
@@ -332,6 +331,30 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             break;
         case Str:
             return (SvOK(sv) && !SvROK(sv));
+        case Num:
+#if (PERL_VERSION < 8) || (PERL_VERSION == 8 && PERL_SUBVERSION <5)
+            if (!SvPOK(sv) && !SvPOKp(sv))
+                return SvFLAGS(sv) & (SVf_NOK|SVp_NOK|SVf_IOK|SVp_IOK);
+            else
+#endif
+                return looks_like_number(sv);
+            break;
+        case Int:
+            if ( SvIOK(sv) ) {
+                return 1;
+            } else if ( SvPOK(sv) ) {
+                croak("todo");
+                int i;
+                STRLEN len;
+                char *pv = SvPV(sv, len);
+                char *end = pv + len;
+
+                errno = 0;
+                i = strtol(pv, &end, 0);
+                return !errno;
+            }
+            return 0;
+            break;
         case Ref:
             return SvROK(sv);
             break;
@@ -347,6 +370,14 @@ STATIC bool check_sv_type (TC type, SV *sv) {
         case Object:
             return sv_isobject(sv);
             break;
+        case ClassName:
+            {
+                STRLEN len;
+                char *pv;
+                pv = SvPV(sv, len);
+                return ( gv_stashpvn(pv, len, 0) != NULL );
+                break;
+            }
         case RegexpRef:
             return sv_isa(sv, "Regexp");
             break;
@@ -360,7 +391,7 @@ STATIC bool check_sv_type (TC type, SV *sv) {
     return 0;
 }
 
-STATIC bool check_sv_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *type_constraint, SV *sv) {
+STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *type_constraint, SV *sv) {
     switch (kind) {
         case tc_none:
             return 1;
@@ -370,9 +401,6 @@ STATIC bool check_sv_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *
             break;
         case tc_stash:
             return check_class(aTHX_ tc_check.stash, sv);
-            break;
-        case tc_classname:
-            return ( gv_stashpv(tc_check.classname, 0) != NULL );
             break;
         case tc_fptr:
             return tc_check.fptr(aTHX_ type_constraint, sv);
@@ -388,41 +416,95 @@ STATIC bool check_sv_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *
 }
 
 
-STATIC void init_attr (MI *mi, ATTR *attr, HV *desc) {
+STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
+    U32 flags = 0;
     U32 hash;
     STRLEN len;
-    SV **key = hv_fetchs(desc, "key", 0);
-    SV **meta_attr = hv_fetchs(desc, "meta", 0);
     char *pv;
-
-    if ( !meta_attr ) croak("'meta' is required");
-
-    attr->meta_attr = newSVsv(*meta_attr);
+    I32 ix = av_len(desc);
+    SV **params = AvARRAY(desc);
+    SV *tc;
+    SV *key;
 
     attr->mi = mi;
 
-    attr->flags = 0;
 
+    if ( ix != 12 )
+        croak("wrong number of args (%d != 13)", ix + 1);
 
-    /* if type == hash */
-    /* prehash the key */
-    if ( !key ) croak("'key' is required");
+    for ( ; ix >= 0; ix-- ) {
+        if ( !params[ix] || params[ix] == &PL_sv_undef )
+            croak("bad params");
+    }
 
-    pv = SvPV(*key, len);
+    if ( !SvROK(params[1]) || SvTYPE(SvRV(params[1])) != SVt_PVAV )
+        croak("slots is not an array");
 
+    if ( av_len((AV *)SvRV(params[1])) != 0 )
+        croak("Only unary slots are supported at the moment");
+
+    /* calculate a hash from the slot */
+    /* FIXME arrays etc should also be supported */
+    key = *av_fetch((AV *)SvRV(params[1]), 0, 0);
+    pv = SvPV(key, len);
     PERL_HASH(hash, pv, len);
+
+
+    /* FIXME better organize these */
+    if ( SvTRUE(params[2]) )
+        flags |= ATTR_WEAK;
+
+    if ( SvTRUE(params[3]) )
+        flags |= ATTR_COERCE;
+
+    if ( SvTRUE(params[4]) )
+        flags |= ATTR_LAZY;
+
+    tc = params[5];
+
+    if ( SvOK(tc) ) {
+        int tc_kind = SvIV(params[6]);
+        SV *data = params[7];
+
+        switch (tc_kind) {
+            case tc_stash:
+                attr->tc_check.stash = gv_stashsv(data, 0);
+                break;
+            case tc_type:
+                attr->tc_check.type = SvIV(data);
+                break;
+            case tc_cv:
+                attr->tc_check.cv = (CV *)SvRV(data);
+                if ( SvTYPE(attr->tc_check.cv) != SVt_PVCV )
+                    croak("compiled type constraint is not a coderef");
+                break;
+            default:
+                croak("todo");
+        }
+
+        flags |= tc_kind;
+    }
+
+    attr->flags = flags; /* FIXME default_kind */
+
+    attr->trigger = SvROK(params[6]) ? (CV *)SvRV(params[6]) : NULL;
+    if ( attr->trigger && SvTYPE(attr->trigger) != SVt_PVCV )
+        croak("trigger is not a coderef");
+
+    attr->initializer = SvROK(params[7]) ? (CV *)SvRV(params[7]) : NULL;
+    if ( attr->initializer && SvTYPE(attr->initializer) != SVt_PVCV )
+        croak("initializer is not a coderef");
+
+    /* copy refs */
+    attr->meta_attr       = newSVsv(params[0]);
+    attr->type_constraint = newSVsv(tc);
+    if ( attr->trigger )     SvREFCNT_inc(attr->trigger);
+    if ( attr->initializer ) SvREFCNT_inc(attr->initializer);
 
     attr->slot_sv = newSVpvn_share(pv, len, hash);
     attr->slot_u32 = hash;
 
     attr->def.type = 0;
-
-    attr->tc_check.type = 0;
-    attr->type_constraint = NULL;
-
-
-    attr->initializer = NULL;
-    attr->trigger = NULL;
 
     /* cross refs to CVs which use this struct */
     attr->cvs = newAV();
@@ -446,11 +528,11 @@ STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
     for ( ix = 0; ix < num; ix++ ) {
         SV **desc = av_fetch(attrs, ix, 0);
 
-        if ( !desc || !*desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVHV) ) {
+        if ( !desc || !*desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVAV) ) {
             croak("Attribute descriptor has to be a hash reference");
         }
 
-        init_attr(mi, &mi->attrs[ix], (HV *)SvRV(*desc));
+        init_attr(mi, &mi->attrs[ix], (AV *)SvRV(*desc));
     }
 
     return mi;
@@ -639,6 +721,19 @@ STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr) {
     return hv_delete_ent((HV *)SvRV(self), attr->slot_sv, 0, attr->slot_u32);
 }
 
+STATIC SV *getter_common(pTHX_ SV *self, ATTR *attr) {
+    assert( ATTR_DUMB_READER(attr) );
+    return get_slot_value(aTHX_ self, attr);
+}
+
+STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value) {
+    if ( attr->flags & ATTR_MASK_TYPE ) {
+        if ( !check_type_constraint(aTHX_ attr->flags & ATTR_MASK_TYPE, attr->tc_check, attr->type_constraint, value) )
+            croak("Bad param");
+    }
+
+    set_slot_value(aTHX_ self, attr, value);
+}
 
 /* simple high level api */
 
@@ -657,9 +752,7 @@ STATIC XS(getter)
 
     SP -= items;
 
-    assert( ATTR_DUMB_READER(attr) );
-
-    value = get_slot_value(aTHX_ ST(0), attr);
+    value = getter_common(aTHX_ ST(0), attr);
 
     if (value) {
         ST(0) = sv_mortalcopy(value); /* mortalcopy because $_ .= "blah" for $foo->bar */
@@ -683,9 +776,7 @@ STATIC XS(setter)
 
     SP -= items;
 
-    assert( ATTR_DUMB_WRITER(attr) );
-
-    set_slot_value(aTHX_ ST(0), attr, ST(1));
+    setter_common(aTHX_ ST(0), attr, ST(1));
 
     ST(0) = ST(1); /* return value */
     XSRETURN(1);
@@ -706,13 +797,10 @@ STATIC XS(accessor)
     SP -= items;
 
     if (items > 1) {
-        assert( ATTR_DUMB_READER(attr) );
-        set_slot_value(aTHX_ ST(0), attr, ST(1));
+        setter_common(aTHX_ ST(0), attr, ST(1));
         ST(0) = ST(1); /* return value */
     } else {
-        SV *value;
-        assert( ATTR_DUMB_WRITER(attr) );
-        value = get_slot_value(aTHX_ ST(0), attr);
+        SV *value = getter_common(aTHX_ ST(0), attr);
         if ( value ) {
             ST(0) = value;
         } else {

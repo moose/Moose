@@ -26,15 +26,67 @@ BEGIN {
         return $attr->associated_class->get_meta_instance;
     }
 
+    my $i;
+    my %checks = map { $_ => $i++ } qw(
+        Any
+        Undef
+        Defined
+        Str
+        Num
+        Int
+        GlobRef
+        ArrayRef
+        HashRef
+        CodeRef
+        Ref
+        ScalarRef
+        FileHandle
+        RegexpRef
+        Object
+        ClassName
+    );
+
+    # aliases
+    $checks{Bool} = $checks{Item} = $checks{Any};
+    $checks{Value} = $checks{Str};
+
+    sub tc_params {
+        my $tc = shift;
+
+        return ( undef, 0, undef ) unless $tc;
+
+        if ( ref $tc eq 'Moose::Meta::TypeConstraint' or ref $tc eq 'Moose::Meta::TypeConstraint::Parameterizable') {
+            # builtin moose type #
+            return ( $tc, 1, $checks{$tc->name} );
+        } elsif ( $tc->isa("Moose::Meta::TypeConstraint::Class") ) {
+            return ( $tc, 2, $tc->class );
+        } else {
+            warn ref $tc;
+            return ( $tc, 3, $tc->_compiled_type_constraint );
+        }
+    }
+
     sub meta_instance_to_attr_descs {
         my $mi = shift;
 
         return (
             $mi->associated_metaclass->name,
-            [ map { {
-                meta => $_,
-                key  => ($_->slots)[0],
-            } } $mi->get_all_attributes ]
+            [ map {[
+                $_,
+                [$_->slots],
+
+                $_->is_weak_ref,
+                $_->should_coerce,
+                $_->is_lazy,
+
+                tc_params($_->type_constraint),
+                $_->trigger,
+                $_->initializer,
+
+                $_->has_default,
+                $_->default,
+                $_->builder,
+            ]} $mi->get_all_attributes ]
         );
     }
 }
@@ -55,6 +107,8 @@ ok( defined &Moose::XS::new_predicate );
     has i => ( isa => "Int", is => "rw" );
     has s => ( isa => "Str", is => "rw" );
     has a => ( isa => "ArrayRef", is => "rw" );
+
+    # FIXME Regexp, Class, ClassName, Object, parametrized, filehandle
 }
 
 {
