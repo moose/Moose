@@ -16,24 +16,6 @@
 #endif
 
 /* FIXME
- * type constraints are already implemented by konobi
- * should be trivial to do coercions for the core types, too
- *
- * TypeConstraint::Class can compare SvSTASH by ptr, and if it's neq *then*
- * call ->isa (should handle vast majority of cases)
- *
- * base parametrized types are also trivial
- *
- * ClassName is get_stathpvn
- */
-
-/* FIXME
- * for a constructor we have ATTR *attrs, and iterate that, removing init_arg
- * we can preallocate the structure to the right size (maybe even with the
- * right HEs?), and do various other prehashing hacks to gain speed
- * */
-
-/* FIXME
  * delegations and attribute helpers:
  *
  * typedef struct {
