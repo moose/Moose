@@ -2,6 +2,19 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#define NEED_newRV_noinc
+#define NEED_newSVpvn_share
+#define NEED_sv_2pv_flags
+#include "ppport.h"
+
+#ifndef XSPROTO
+#define XSPROTO(name) void name(pTHX_ CV* cv)
+#endif
+
+#ifndef gv_stashpvs
+#define gv_stashpvs(x, y) gv_stashpvn(STR_WITH_LEN(x), y)
+#endif
+
 /* FIXME
  * needs to be made into Moose::XS::Meta::Instance and Meta::Slot for the
  * metadata, with a proper destructor. XSANY still points to this struct, but
@@ -255,7 +268,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, HV *desc) {
 
     if ( !meta_attr ) croak("'meta' is required");
 
-    attr->meta_attr = *meta_attr;
+    attr->meta_attr = newSVsv(*meta_attr);
 
     attr->mi = mi;
 
@@ -315,7 +328,10 @@ STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
 }
 
 STATIC SV *new_mi_obj (pTHX_ MI *mi) {
-    return sv_bless( newRV_noinc(newSViv(PTR2IV(mi))), gv_stashpvs("Moose::XS::Meta::Instance", 0) );
+    HV *stash = gv_stashpvs("Moose::XS::Meta::Instance",0);
+    SV *obj = newRV_noinc(newSViv(PTR2IV(mi)));
+    sv_bless( obj, stash );
+    return obj;
 }
 
 STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
@@ -385,7 +401,7 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
 STATIC ATTR *mi_find_attr(MI *mi, SV *meta_attr) {
     I32 ix;
 
-    for ( ix = 0; ix <= mi->num_attrs; ix++ ) {
+    for ( ix = 0; ix < mi->num_attrs; ix++ ) {
         if ( SvRV(mi->attrs[ix].meta_attr) == SvRV(meta_attr) ) {
             return &mi->attrs[ix];
         }
@@ -562,8 +578,9 @@ STATIC XS(accessor)
         set_slot_value(aTHX_ ST(0), attr, ST(1));
         ST(0) = ST(1); /* return value */
     } else {
+        SV *value;
         assert( ATTR_DUMB_WRITER(attr) );
-        SV *value = get_slot_value(aTHX_ ST(0), attr);
+        value = get_slot_value(aTHX_ ST(0), attr);
         if ( value ) {
             ST(0) = value;
         } else {
