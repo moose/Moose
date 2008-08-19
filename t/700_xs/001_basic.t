@@ -26,6 +26,7 @@ BEGIN {
         return $attr->associated_class->get_meta_instance;
     }
 
+    # FIXME this needs to be in a header that's written by a perl script
     my $i;
     my %checks = map { $_ => $i++ } qw(
         Any
@@ -110,6 +111,9 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     has o => ( isa => "Object", is => "rw" );
     has f => ( isa => "Foo", is => "rw" );
     has c => ( isa => "ClassName", is => "rw" );
+    has b => ( is => "ro", lazy_build => 1 ); # fixme type constraint checking
+
+    sub _build_b { "builded!" }
 
     # FIXME Regexp, ScalarRef, parametrized, filehandle
 
@@ -127,7 +131,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
 }
 
 {
-    my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c);
+    my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c, $b ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c b);
     $x->Moose::XS::new_accessor("Foo::x");
     $x->Moose::XS::new_predicate("Foo::has_x");
     $y->Moose::XS::new_getter("Foo::y");
@@ -140,6 +144,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     $o->Moose::XS::new_accessor("Foo::o");
     $f->Moose::XS::new_accessor("Foo::f");
     $c->Moose::XS::new_accessor("Foo::c");
+    $b->Moose::XS::new_accessor("Foo::b");
 }
 
 
@@ -151,6 +156,7 @@ is( $foo->x, "ICKS", "accessor as reader" );
 is( $foo->y, "WHY", "reader" );
 is( $foo->z, "ZEE", "reader" );
 is( $foo->ref, $ref, "accessor for ref" );
+is( $foo->b, "builded!", "lazy builder" );
 
 lives_ok { $foo->x("YASE") } "accessor";
 

@@ -110,18 +110,16 @@ typedef union {
 
 typedef union {
     char *builder;
-    SV *value;
-    CV *sub;
+    SV *sv;
     OP *op;
     U32 type;
 } DEFAULT;
 
 typedef enum {
     default_none = 0,
-    default_type,
+    default_normal,
     default_builder,
-    default_value,
-    default_sub,
+    default_type,
     default_op,
 } default_kind;
 
@@ -168,9 +166,10 @@ typedef struct {
 #define ATTR_MASK_TYPE 0x7
 
 #define ATTR_MASK_DEFAULT 0x700
-#define ATTR_SHIFT_DEAFULT 8
+#define ATTR_SHIFT_DEFAULT 8
 
 #define ATTR_LAZY 0x800
+#define ATTR_DEFREFCNT 0x1000
 
 #define ATTR_COERCE 0x8
 #define ATTR_TCREFCNT 0x10
@@ -480,6 +479,25 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
         flags |= tc_kind;
     }
 
+
+    if ( SvTRUE(params[10]) ) { /* has default */
+        SV *sv = params[11];
+
+        if ( SvROK(sv) ) {
+            attr->def.sv = SvRV(sv);
+            if ( SvTYPE(attr->def.sv) != SVt_PVCV )
+                croak("compiled type constraint is not a coderef");
+        } else {
+            attr->def.sv = newSVsv(sv);
+            sv_2mortal(attr->def.sv); /* in case of error soon, we refcnt inc it later after we're done checking params */
+        }
+
+        flags |= ( ATTR_DEFREFCNT | ( default_normal << ATTR_SHIFT_DEFAULT ) );
+    } else if ( SvOK(params[12]) ) { /* builder */
+        attr->def.sv = newSVsv(params[12]);
+        flags |= ( ATTR_DEFREFCNT | ( default_builder << ATTR_SHIFT_DEFAULT ) );
+    }
+
     attr->flags = flags; /* FIXME default_kind */
 
     attr->trigger = SvROK(params[6]) ? (CV *)SvRV(params[6]) : NULL;
@@ -496,11 +514,10 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     SvREFCNT_inc(attr->trigger);
     SvREFCNT_inc(attr->initializer);
     if ( flags & ATTR_TCREFCNT ) SvREFCNT_inc(attr->tc_check.sv);
+    if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc(attr->def.sv);
 
     attr->slot_sv = newSVpvn_share(pv, len, hash);
     attr->slot_u32 = hash;
-
-    attr->def.type = 0;
 
     /* cross refs to CVs which use this struct */
     attr->cvs = newAV();
@@ -593,7 +610,7 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     FREETMPS;
     LEAVE;
 
-    return mi;
+    return sv_2mortal(mi);
 }
 
 STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
@@ -655,8 +672,6 @@ STATIC ATTR *get_attr(pTHX_ CV *cv) {
         stash_in_mg(aTHX_ SvRV(perl_mi), c_mi);
         SvREFCNT_dec(c_mi);
     }
-
-    sv_2mortal(perl_mi);
 
     mi = INT2PTR(MI *, SvIV(SvRV(c_mi)));
 
@@ -744,14 +759,73 @@ STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr) {
     return hv_delete_ent((HV *)SvRV(self), attr->slot_sv, 0, attr->slot_u32);
 }
 
+STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value);
+
+
+STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
+    switch ( ATTR_DEFAULT(attr) ) {
+        case default_none:
+            return NULL;
+            break;
+        case default_builder:
+            {
+                SV *sv;
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK(SP);
+                XPUSHs(self);
+                PUTBACK;
+
+                call_method(SvPV_nolen(attr->def.sv), G_SCALAR);
+
+                SPAGAIN;
+                sv = POPs;
+
+                SvREFCNT_inc(sv);
+
+                PUTBACK;
+                FREETMPS;
+                LEAVE;
+
+                return sv_2mortal(sv);
+            }
+            break;
+        case default_normal:
+            if ( SvROK(attr->def.sv) ) {
+                printf("CV default\n");
+            } else {
+                printf("simple value\n");
+                return attr->def.sv; /* will be copied by set for lazy, and by reader for both cases */
+            }
+            break;
+        case default_op:
+        case default_type:
+            croak("todo");
+            break;
+    }
+
+    return NULL;
+}
+
 STATIC SV *getter_common(pTHX_ SV *self, ATTR *attr) {
-    assert( ATTR_DUMB_READER(attr) );
-    return get_slot_value(aTHX_ self, attr);
+    SV *value = get_slot_value(aTHX_ self, attr);
+
+    if ( value ) {
+        return value;
+    } else if ( ATTR_ISLAZY(attr) ) {
+        value = get_default(aTHX_ self, attr);
+        setter_common(aTHX_ self, attr, value);
+        return value;
+    }
+
+    return NULL;
 }
 
 STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value) {
-    if ( attr->flags & ATTR_MASK_TYPE ) {
-        if ( !check_type_constraint(aTHX_ attr->flags & ATTR_MASK_TYPE, attr->tc_check, attr->type_constraint, value) )
+    if ( ATTR_TYPE(attr) ) {
+        if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
             croak("Bad param");
     }
 
