@@ -52,16 +52,22 @@ ok( defined &Moose::XS::new_predicate );
     has y => ( is => "ro" );
     has z => ( reader => "z", setter => "set_z" );
     has ref => ( is => "rw", weak_ref => 1 );
+    has i => ( isa => "Int", is => "rw" );
+    has s => ( isa => "Str", is => "rw" );
+    has a => ( isa => "ArrayRef", is => "rw" );
 }
 
 {
-    my ( $x, $y, $z, $ref ) = map { Foo->meta->get_attribute($_) } qw(x y z ref);
+    my ( $x, $y, $z, $ref, $a, $s, $i ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i);
     $x->Moose::XS::new_accessor("Foo::x");
     $x->Moose::XS::new_predicate("Foo::has_x");
     $y->Moose::XS::new_getter("Foo::y");
     $z->Moose::XS::new_getter("Foo::z");
     $z->Moose::XS::new_setter("Foo::set_z");
     $ref->Moose::XS::new_accessor("Foo::ref");
+    $a->Moose::XS::new_accessor("Foo::a");
+    $s->Moose::XS::new_accessor("Foo::s");
+    $i->Moose::XS::new_accessor("Foo::i");
 }
 
 
@@ -107,6 +113,14 @@ is( $foo->ref, $ref, );
 undef $ref;
 
 is( $foo->ref(), undef );
+
+ok( !eval { $foo->a("not a ref"); 1 } );
+ok( !eval { $foo->i(1.3); 1 } );
+ok( !eval { $foo->s(undef); 1 } );
+
+ok( eval { $foo->a([]); 1 } );
+ok( eval { $foo->i(3); 1 } );
+ok( eval { $foo->s("foo"); 1 } );
 
 use Data::Dumper;
 warn Dumper($foo);

@@ -87,50 +87,47 @@ STATIC SV *get_stashed_in_mg(pTHX_ SV *sv) {
     return NULL;
 }
 
-
+/* this is a enum of checks */
 typedef enum {
-    Any = 0,
-    Item,
-        Bool,
-        Maybe, /* [`a] */
-        Undef,
-        Defined,
-            Value,
-                Num,
-                    Int,
-                Str,
-                    ClassName,
-            Ref,
-                ScalarRef,
-                ArrayRef, /* [`a] */
-                HashRef, /* [`a] */
-                CodeRef,
-                RegexpRef,
-                GlobRef,
-                    FileHandle,
-                Object,
-                    Role,
-
-    /* XS only types */
-    Class,
-
-    max_TC
+    Any, /* or item, or bool */
+    Undef,
+    Defined,
+    Str, /* or value */
+    Num,
+    Int,
+    GlobRef, /* SVt_PVGV */
+    ArrayRef, /* SVt_PVAV */
+    HashRef, /* SVt_PVHV */
+    CodeRef, /* SVt_PVCV */
+    Ref,
+    ScalarRef,
+    FileHandle,
+    RegexpRef,
+    Object,
+    /* complex checks */
+    Role,
+    ClassName,
+    Enum,
 } TC;
-
-typedef union {
-    TC type;
-    CV *cv;
-    HV *stash;
-    OP *op;
-} TC_CHECK;
 
 typedef enum {
     tc_none = 0,
     tc_type,
     tc_cv,
-    tc_stash,
     tc_op,
+    tc_stash,
+    tc_classname,
+    tc_fptr,
 } tc_kind;
+
+typedef union {
+    TC type;
+    CV *cv;
+    OP *op;
+    HV *stash;
+    char *classname;
+    bool (*fptr)(pTHX_ SV *type_constraint, SV *sv);
+} TC_CHECK;
 
 typedef union {
     char *builder;
@@ -243,6 +240,152 @@ typedef struct mi {
     I32 num_attrs;
     ATTR *attrs;
 } MI;
+
+
+
+
+STATIC bool check_is_scalar_ref(SV *sv) {
+    if( SvROK(sv) ) {
+        switch (SvTYPE(SvRV(sv))) {
+            case SVt_IV:
+            case SVt_NV:
+            case SVt_PV:
+            case SVt_NULL:
+                return 1;
+                break;
+            default:
+                return 0;
+        }
+    }
+    return 0;
+}
+
+STATIC bool check_reftype(TC type, SV *sv) {
+    int svt;
+
+    if ( !SvROK(sv) )
+        return 0;
+
+    switch (type) {
+        case GlobRef:
+            svt = SVt_PVGV;
+            break;
+        case ArrayRef:
+            svt = SVt_PVAV;
+            break;
+        case HashRef:
+            svt = SVt_PVHV;
+            break;
+        case CodeRef:
+            svt = SVt_PVCV;
+            break;
+    }
+
+    return SvTYPE(sv) == svt;
+}
+
+STATIC bool check_sv_class (pTHX_ HV *stash, SV *sv) {
+    dSP;
+    bool ret;
+
+    if (!sv)
+        return 0;
+    SvGETMAGIC(sv);
+    if (!SvROK(sv))
+        return 0;
+    sv = (SV*)SvRV(sv);
+    if (!SvOBJECT(sv))
+        return 0;
+    if (SvSTASH(sv) == stash)
+        return 1;
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(sv);
+    XPUSHs(newSVpv(HvNAME_get(SvSTASH(sv)), 0));
+    PUTBACK;
+
+    call_method("isa", G_SCALAR);
+
+    SPAGAIN;
+    ret = SvTRUE(TOPs);
+
+    FREETMPS;
+    LEAVE;
+
+    return ret;
+}
+
+STATIC bool check_sv_type (TC type, SV *sv) {
+    if (!sv)
+        return 0;
+    switch (type) {
+        case Any:
+            return 1;
+            break;
+        case Undef:
+            return !SvOK(sv);
+            break;
+        case Defined:
+            return SvOK(sv);
+            break;
+        case Str:
+            return (SvOK(sv) && !SvROK(sv));
+        case Ref:
+            return SvROK(sv);
+            break;
+        case ScalarRef:
+            return check_is_scalar_ref(sv);
+            break;
+        case ArrayRef:
+        case HashRef:
+        case CodeRef:
+        case GlobRef:
+            return check_reftype(type, sv);
+            break;
+        case Object:
+            return sv_isobject(sv);
+            break;
+        case RegexpRef:
+            return sv_isa(sv, "Regexp");
+            break;
+        case FileHandle:
+            croak("todo");
+            break;
+        default:
+            croak("todo");
+    }
+
+    return 0;
+}
+
+STATIC bool check_sv_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *type_constraint, SV *sv) {
+    switch (kind) {
+        case tc_none:
+            return 1;
+            break;
+        case tc_type:
+            return check_sv_type(tc_check.type, sv);
+            break;
+        case tc_stash:
+            return check_class(aTHX_ tc_check.stash, sv);
+            break;
+        case tc_classname:
+            return ( gv_stashpv(tc_check.classname, 0) != NULL );
+            break;
+        case tc_fptr:
+            return tc_check.fptr(aTHX_ type_constraint, sv);
+            break;
+        case tc_cv:
+        case tc_op:
+            croak("todo");
+            break;
+    }
+
+    croak("todo");
+    return 0;
+}
 
 
 STATIC void init_attr (MI *mi, ATTR *attr, HV *desc) {
@@ -455,6 +598,7 @@ STATIC SV *get_slot_value(pTHX_ SV *self, ATTR *attr) {
 
 STATIC void set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     HE *he;
+    SV *copy;
 
     assert(self);
     assert(SvROK(self));
@@ -462,13 +606,15 @@ STATIC void set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value) {
 
     assert( ATTR_DUMB_INSTANCE(attr) );
 
-    SvREFCNT_inc(value);
+    copy = newSVsv(value);
 
-    he = hv_store_ent((HV*)SvRV(self), attr->slot_sv, value, attr->slot_u32);
+    he = hv_store_ent((HV*)SvRV(self), attr->slot_sv, copy, attr->slot_u32);
+
     if (he != NULL) {
         if ( ATTR_ISWEAK(attr) )
-            weaken(aTHX_ HeVAL(he)); /* actually only needed once at HE creation time */
+            weaken(aTHX_ HeVAL(he));
     } else {
+        SvREFCNT_dec(copy);
         croak("Hash store failed.");
     }
 }
