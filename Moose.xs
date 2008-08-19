@@ -315,7 +315,7 @@ STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
 }
 
 STATIC SV *new_mi_obj (pTHX_ MI *mi) {
-    return newRV_noinc(newSViv(PTR2IV(mi)));
+    return sv_bless( newRV_noinc(newSViv(PTR2IV(mi))), gv_stashpvs("Moose::XS::Meta::Instance", 0) );
 }
 
 STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
