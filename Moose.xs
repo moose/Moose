@@ -345,14 +345,23 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             if ( SvIOK(sv) ) {
                 return 1;
             } else if ( SvPOK(sv) ) {
+                /* FIXME i really don't like this */
                 int i;
                 STRLEN len;
                 char *pv = SvPV(sv, len);
                 char *end = pv + len;
+                char *tail = end;
 
                 errno = 0;
-                i = strtol(pv, &end, 0);
-                return !errno;
+                i = strtol(pv, &tail, 0);
+
+                if ( errno ) return 0;
+
+                while ( tail != end ) {
+                    if ( !isspace(*tail++) ) return 0;
+                }
+
+                return 1;
             }
             return 0;
             break;

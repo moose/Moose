@@ -217,6 +217,7 @@ ok( eval { $foo->a([]); 1 }, "ArrayRef" );
 ok( eval { $foo->i(3); 1 }, "Int" );
 ok( eval { $foo->i("3"); 1 }, "Int" );
 ok( eval { $foo->i("-3"); 1 }, "Int" );
+ok( eval { $foo->i("  -3  "); 1 }, "Int" );
 ok( eval { $foo->s("foo"); 1 }, "Str" );
 ok( eval { $foo->s(""); 1 }, "Str" );
 ok( eval { $foo->s(4); 1 }, "Str" );
