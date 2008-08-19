@@ -121,8 +121,7 @@ typedef enum {
 
 typedef union {
     TC type;
-    HV *stash;
-    CV *cv;
+    SV *sv;
     OP *op;
     bool (*fptr)(pTHX_ SV *type_constraint, SV *sv);
 } TC_CHECK;
@@ -169,8 +168,9 @@ typedef struct {
 /* slot flags:
  * instance           reading  writing
  * 00000000 00000000 00000000 00000000
- *                              ^      trigger
- *                               ^     weak
+ *                             ^       trigger
+ *                              ^      weak
+ *                               ^     tc refcnt
  *                                 ^^^ tc_kind
  *                                ^    coerce
  *                        ^^^          default_kind
@@ -190,9 +190,10 @@ typedef struct {
 
 #define ATTR_LAZY 0x800
 
-#define ATTR_COERCE 0x08
-#define ATTR_WEAK 0x10
-#define ATTR_TRIGGER 0x10
+#define ATTR_COERCE 0x8
+#define ATTR_TCREFCNT 0x10
+#define ATTR_WEAK 0x20
+#define ATTR_TRIGGER 0x40
 
 #define ATTR_ISWEAK(attr) ( attr->flags & ATTR_WEAK )
 #define ATTR_ISLAZY(attr) ( attr->flags & ATTR_LAZY )
@@ -282,26 +283,27 @@ STATIC bool check_reftype(TC type, SV *sv) {
     return SvTYPE(SvRV(sv)) == svt;
 }
 
-STATIC bool check_sv_class (pTHX_ HV *stash, SV *sv) {
+STATIC bool check_sv_class(pTHX_ HV *stash, SV *sv) {
     dSP;
     bool ret;
+    SV *rv;
 
     if (!sv)
         return 0;
     SvGETMAGIC(sv);
     if (!SvROK(sv))
         return 0;
-    sv = (SV*)SvRV(sv);
-    if (!SvOBJECT(sv))
+    rv = (SV*)SvRV(sv);
+    if (!SvOBJECT(rv))
         return 0;
-    if (SvSTASH(sv) == stash)
+    if (SvSTASH(rv) == stash)
         return 1;
 
     ENTER;
     SAVETMPS;
     PUSHMARK(SP);
     XPUSHs(sv);
-    XPUSHs(newSVpv(HvNAME_get(SvSTASH(sv)), 0));
+    XPUSHs(sv_2mortal(newSVpv(HvNAME_get(stash), 0)));
     PUTBACK;
 
     call_method("isa", G_SCALAR);
@@ -343,7 +345,6 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             if ( SvIOK(sv) ) {
                 return 1;
             } else if ( SvPOK(sv) ) {
-                croak("todo");
                 int i;
                 STRLEN len;
                 char *pv = SvPV(sv, len);
@@ -371,13 +372,14 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             return sv_isobject(sv);
             break;
         case ClassName:
-            {
+            if ( SvOK(sv) && !SvROK(sv) ) {
                 STRLEN len;
                 char *pv;
                 pv = SvPV(sv, len);
                 return ( gv_stashpvn(pv, len, 0) != NULL );
-                break;
             }
+            return 0;
+            break;
         case RegexpRef:
             return sv_isa(sv, "Regexp");
             break;
@@ -400,7 +402,7 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
             return check_sv_type(tc_check.type, sv);
             break;
         case tc_stash:
-            return check_sv_class(aTHX_ tc_check.stash, sv);
+            return check_sv_class(aTHX_ (HV *)tc_check.sv, sv);
             break;
         case tc_fptr:
             return tc_check.fptr(aTHX_ type_constraint, sv);
@@ -467,15 +469,17 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
         SV *data = params[7];
 
         switch (tc_kind) {
-            case tc_stash:
-                attr->tc_check.stash = gv_stashsv(data, 0);
-                break;
             case tc_type:
                 attr->tc_check.type = SvIV(data);
                 break;
+            case tc_stash:
+                flags |= ATTR_TCREFCNT;
+                attr->tc_check.sv = (SV *)gv_stashsv(data, 0);
+                break;
             case tc_cv:
-                attr->tc_check.cv = (CV *)SvRV(data);
-                if ( SvTYPE(attr->tc_check.cv) != SVt_PVCV )
+                flags |= ATTR_TCREFCNT;
+                attr->tc_check.sv = SvRV(data);
+                if ( SvTYPE(attr->tc_check.sv) != SVt_PVCV )
                     croak("compiled type constraint is not a coderef");
                 break;
             default:
@@ -498,8 +502,9 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     /* copy refs */
     attr->meta_attr       = newSVsv(params[0]);
     attr->type_constraint = newSVsv(tc);
-    if ( attr->trigger )     SvREFCNT_inc(attr->trigger);
-    if ( attr->initializer ) SvREFCNT_inc(attr->initializer);
+    SvREFCNT_inc(attr->trigger);
+    SvREFCNT_inc(attr->initializer);
+    if ( flags & ATTR_TCREFCNT ) SvREFCNT_inc(attr->tc_check.sv);
 
     attr->slot_sv = newSVpvn_share(pv, len, hash);
     attr->slot_u32 = hash;
@@ -536,6 +541,31 @@ STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
     }
 
     return mi;
+}
+
+STATIC void delete_mi (pTHX_ MI *mi) {
+    I32 i, j;
+
+    for ( i = 0; i < mi->num_attrs; i++ ) {
+        ATTR *attr = &mi->attrs[i];
+        /* clear the pointers to this meta attr from all the CVs */
+        SV **cvs = AvARRAY(attr->cvs);
+        for ( j = av_len(attr->cvs); j >= 0; j-- ) {
+            CV *cv = cvs[j];
+            XSANY.any_i32 = 0;
+        }
+
+        SvREFCNT_dec(attr->cvs);
+        SvREFCNT_dec(attr->slot_sv);
+        SvREFCNT_dec(attr->type_constraint);
+        if ( attr->flags & ATTR_TCREFCNT ) SvREFCNT_dec(attr->tc_check.sv);
+        SvREFCNT_dec(attr->initializer);
+        SvREFCNT_dec(attr->trigger);
+        SvREFCNT_dec(attr->meta_attr);
+    }
+
+    Safefree(mi->attrs);
+    Safefree(mi);
 }
 
 STATIC SV *new_mi_obj (pTHX_ MI *mi) {
@@ -632,6 +662,7 @@ STATIC ATTR *get_attr(pTHX_ CV *cv) {
     if (!c_mi) {
         c_mi = perl_mi_to_c_mi(aTHX_ perl_mi);
         stash_in_mg(aTHX_ SvRV(perl_mi), c_mi);
+        SvREFCNT_dec(c_mi);
     }
 
     sv_2mortal(perl_mi);
@@ -647,6 +678,7 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
 
     XSANY.any_i32 = PTR2IV(attr);
 
+    SvREFCNT_inc(cv);
     av_push( attr->cvs, (SV *)cv );
 
     return attr;
@@ -892,5 +924,4 @@ DESTROY(self)
     PREINIT:
         MI *mi = INT2PTR(MI *, SvIV(SvRV(self)));
     CODE:
-        printf("destroying\n");
-        /* foreach attr ( delete cvs XSANY ), free attrs free mi */
+        delete_mi(aTHX_ mi);

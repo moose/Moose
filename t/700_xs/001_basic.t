@@ -112,6 +112,18 @@ ok( defined &Moose::XS::new_predicate );
     has c => ( isa => "ClassName", is => "rw" );
 
     # FIXME Regexp, ScalarRef, parametrized, filehandle
+
+    package Gorch;
+    use Moose;
+
+    extends qw(Foo);
+
+    package Quxx;
+    use Moose;
+
+    sub isa {
+        return $_[1] eq 'Foo';
+    }
 }
 
 {
@@ -174,19 +186,49 @@ undef $ref;
 
 is( $foo->ref(), undef );
 
-ok( !eval { $foo->a("not a ref"); 1 } );
-ok( !eval { $foo->i(1.3); 1 } );
-ok( !eval { $foo->s(undef); 1 } );
-ok( !eval { $foo->o({}); 1 } );
-ok( !eval { $foo->f(bless {}, "Bar"); 1 } );
-ok( !eval { $foo->c("Horse"); 1 } );
+ok( !eval { $foo->a("not a ref"); 1 }, "ArrayRef" );
+ok( !eval { $foo->a(3); 1 }, "ArrayRef" );
+ok( !eval { $foo->a({}); 1 }, "ArrayRef" );
+ok( !eval { $foo->a(undef); 1 }, "ArrayRef" );
+ok( !eval { $foo->i(1.3); 1 }, "Int" );
+ok( !eval { $foo->i("1.3"); 1 }, "Int" );
+ok( !eval { $foo->i("foo"); 1 }, "Int" );
+ok( !eval { $foo->i(undef); 1 }, "Int" );
+ok( !eval { $foo->s(undef); 1 }, "Str" );
+ok( !eval { $foo->s([]); 1 }, "Str" );
+ok( !eval { $foo->o({}); 1 }, "Object" );
+ok( !eval { $foo->o(undef); 1 }, "Object" );
+ok( !eval { $foo->o(42); 1 }, "Object" );
+ok( !eval { $foo->o("hi ho"); 1 }, "Object" );
+ok( !eval { $foo->o(" ho"); 1 }, "Object" );
+ok( !eval { $foo->f(bless {}, "Bar"); 1 }, "Class (Foo)" );
+ok( !eval { $foo->f(undef); 1 }, "Class (Foo)" );
+ok( !eval { $foo->f("foo"); 1 }, "Class (Foo)" );
+ok( !eval { $foo->f(3); 1 }, "Class (Foo)" );
+ok( !eval { $foo->f({}); 1 }, "Class (Foo)" );
+ok( !eval { $foo->f("Foo"); 1 }, "Class (Foo)" );
+ok( !eval { $foo->c("Horse"); 1 }, "ClassName" );
+ok( !eval { $foo->c(3); 1 }, "ClassName" );
+ok( !eval { $foo->c(undef); 1 }, "ClassName" );
+ok( !eval { $foo->c("feck"); 1 }, "ClassName" );
+ok( !eval { $foo->c({}); 1 }, "ClassName" );
 
-ok( eval { $foo->a([]); 1 } );
-ok( eval { $foo->i(3); 1 } );
-ok( eval { $foo->s("foo"); 1 } );
-ok( eval { $foo->o(bless {}, "Bar"); 1 } );
-ok( eval { $foo->f(Foo->new); 1 } );
-ok( eval { $foo->c("Foo"); 1 } );
+ok( eval { $foo->a([]); 1 }, "ArrayRef" );
+ok( eval { $foo->i(3); 1 }, "Int" );
+ok( eval { $foo->i("3"); 1 }, "Int" );
+ok( eval { $foo->i("-3"); 1 }, "Int" );
+ok( eval { $foo->s("foo"); 1 }, "Str" );
+ok( eval { $foo->s(""); 1 }, "Str" );
+ok( eval { $foo->s(4); 1 }, "Str" );
+ok( eval { $foo->o(bless {}, "Bar"); 1 }, "Object" );
+ok( eval { $foo->f(Foo->new); 1 }, "Class (Foo)" );
+ok( eval { $foo->f(Gorch->new); 1 }, "Class (Foo), real subclass");
+ok( eval { $foo->f(Quxx->new); 1 }, "Class (Foo), fake subclass");
+ok( eval { $foo->c("Foo"); 1 }, "ClassName" );
 
-use Data::Dumper;
-warn Dumper($foo);
+
+
+$foo->meta->invalidate_meta_instance();
+isa_ok( $foo->f, 'Foo' );
+$foo->meta->invalidate_meta_instance();
+isa_ok( $foo->f, 'Foo' );
