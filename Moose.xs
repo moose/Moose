@@ -16,20 +16,6 @@
 #endif
 
 /* FIXME
- * needs to be made into Moose::XS::Meta::Instance and Meta::Slot for the
- * metadata, with a proper destructor. XSANY still points to this struct, but
- * it is shared by all functions of the same type.
- *
- * Instance contains SvSTASH, and ATTR slots[]
- *
- * On recreation of the meta instance we refresh the ATTR value of all the CVs
- * we installed
- *
- * need a good way to handle time between invalidate and regeneration (just
- * check XSANY and call get_meta_instance if null?)
- */
-
-/* FIXME
  * type constraints are already implemented by konobi
  * should be trivial to do coercions for the core types, too
  *
