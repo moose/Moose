@@ -107,12 +107,15 @@ ok( defined &Moose::XS::new_predicate );
     has i => ( isa => "Int", is => "rw" );
     has s => ( isa => "Str", is => "rw" );
     has a => ( isa => "ArrayRef", is => "rw" );
+    has o => ( isa => "Object", is => "rw" );
+    has f => ( isa => "Foo", is => "rw" );
+    has c => ( isa => "ClassName", is => "rw" );
 
-    # FIXME Regexp, Class, ClassName, Object, parametrized, filehandle
+    # FIXME Regexp, ScalarRef, parametrized, filehandle
 }
 
 {
-    my ( $x, $y, $z, $ref, $a, $s, $i ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i);
+    my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c);
     $x->Moose::XS::new_accessor("Foo::x");
     $x->Moose::XS::new_predicate("Foo::has_x");
     $y->Moose::XS::new_getter("Foo::y");
@@ -122,6 +125,9 @@ ok( defined &Moose::XS::new_predicate );
     $a->Moose::XS::new_accessor("Foo::a");
     $s->Moose::XS::new_accessor("Foo::s");
     $i->Moose::XS::new_accessor("Foo::i");
+    $o->Moose::XS::new_accessor("Foo::o");
+    $f->Moose::XS::new_accessor("Foo::f");
+    $c->Moose::XS::new_accessor("Foo::c");
 }
 
 
@@ -171,10 +177,16 @@ is( $foo->ref(), undef );
 ok( !eval { $foo->a("not a ref"); 1 } );
 ok( !eval { $foo->i(1.3); 1 } );
 ok( !eval { $foo->s(undef); 1 } );
+ok( !eval { $foo->o({}); 1 } );
+ok( !eval { $foo->f(bless {}, "Bar"); 1 } );
+ok( !eval { $foo->c("Horse"); 1 } );
 
 ok( eval { $foo->a([]); 1 } );
 ok( eval { $foo->i(3); 1 } );
 ok( eval { $foo->s("foo"); 1 } );
+ok( eval { $foo->o(bless {}, "Bar"); 1 } );
+ok( eval { $foo->f(Foo->new); 1 } );
+ok( eval { $foo->c("Foo"); 1 } );
 
 use Data::Dumper;
 warn Dumper($foo);

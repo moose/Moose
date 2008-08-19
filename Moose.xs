@@ -400,7 +400,7 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
             return check_sv_type(tc_check.type, sv);
             break;
         case tc_stash:
-            return check_class(aTHX_ tc_check.stash, sv);
+            return check_sv_class(aTHX_ tc_check.stash, sv);
             break;
         case tc_fptr:
             return tc_check.fptr(aTHX_ type_constraint, sv);
