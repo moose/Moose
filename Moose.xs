@@ -631,7 +631,7 @@ STATIC ATTR *get_attr(pTHX_ CV *cv) {
 
     if (!c_mi) {
         c_mi = perl_mi_to_c_mi(aTHX_ perl_mi);
-        stash_in_mg(aTHX_ perl_mi, c_mi);
+        stash_in_mg(aTHX_ SvRV(perl_mi), c_mi);
     }
 
     sv_2mortal(perl_mi);
@@ -892,4 +892,5 @@ DESTROY(self)
     PREINIT:
         MI *mi = INT2PTR(MI *, SvIV(SvRV(self)));
     CODE:
+        printf("destroying\n");
         /* foreach attr ( delete cvs XSANY ), free attrs free mi */
