@@ -66,6 +66,27 @@ STATIC MGVTBL null_mg_vtbl = {
 #endif /* MGf_LOCAL */
 };
 
+STATIC MAGIC *stash_in_mg (pTHX_ SV *sv, SV *obj) {
+    MAGIC *mg = sv_magicext(sv, obj, PERL_MAGIC_ext, &null_mg_vtbl, NULL, 0 );
+    mg->mg_flags |= MGf_REFCOUNTED;
+
+    return mg;
+}
+
+STATIC SV *get_stashed_in_mg(pTHX_ SV *sv) {
+    MAGIC *mg, *moremagic;
+
+    if (SvTYPE(sv) >= SVt_PVMG) {
+        for (mg = SvMAGIC(sv); mg; mg = mg->mg_moremagic) {
+            if ((mg->mg_type == PERL_MAGIC_ext) && (mg->mg_virtual == &null_mg_vtbl))
+                break;
+        }
+        if (mg)
+            return mg->mg_obj;
+    }
+
+    return NULL;
+}
 
 
 typedef enum {
@@ -147,7 +168,7 @@ typedef struct {
     CV *initializer;
     CV *trigger;
 
-    SV *attr; /* the meta attr object */
+    SV *meta_attr; /* the meta attr object */
     AV *cvs; /* CVs which use this attr */
 } ATTR;
 
@@ -190,7 +211,7 @@ typedef struct {
 #define ATTR_DUMB_WRITER(attr) ( ( attr->flags & ATTR_WRITING_MASK ) == 0 )
 #define ATTR_DUMB_INSTANCE(attr) ( ( attr->flags & ATTR_INSTANCE_MASK ) == 0 )
 
-#define dATTR ATTR *attr = (INT2PTR(ATTR *, (XSANY.any_i32 || define_attr(aTHX_ cv))))
+#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
 
 
 /* FIXME define a vtable that does call_sv */
@@ -213,7 +234,6 @@ typedef enum {
 } instance_types;
 
 typedef struct mi {
-    SV *associated_metaclass;
     HV *stash;
 
     /* slot access method */
@@ -235,7 +255,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, HV *desc) {
 
     if ( !meta_attr ) croak("'meta' is required");
 
-    attr->attr = *meta_attr;
+    attr->meta_attr = *meta_attr;
 
     attr->mi = mi;
 
@@ -266,7 +286,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, HV *desc) {
     attr->cvs = newAV();
 }
 
-STATIC MI *new_mi (pTHX_ HV *stash, SV *meta, AV *attrs) {
+STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
     MI *mi;
     I32 ix;
     const I32 num = av_len(attrs) + 1;
@@ -276,19 +296,17 @@ STATIC MI *new_mi (pTHX_ HV *stash, SV *meta, AV *attrs) {
     SvREFCNT_inc_simple(stash);
     mi->stash = stash;
 
-    SvREFCNT_inc_simple(meta);
-    mi->associated_metaclass = meta;
-
     mi->type = 0; /* nothing else implemented yet */
 
     /* initialize attributes */
     mi->num_attrs = num;
     Newx(mi->attrs, num, ATTR);
-    for ( ix = 0; ix < mi->num_attrs; ix++ ) {
+    for ( ix = 0; ix < num; ix++ ) {
         SV **desc = av_fetch(attrs, ix, 0);
 
-        if ( !desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVHV) )
+        if ( !desc || !*desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVHV) ) {
             croak("Attribute descriptor has to be a hash reference");
+        }
 
         init_attr(mi, &mi->attrs[ix], (HV *)SvRV(*desc));
     }
@@ -296,38 +314,104 @@ STATIC MI *new_mi (pTHX_ HV *stash, SV *meta, AV *attrs) {
     return mi;
 }
 
-STATIC SV *get_meta_attr_from_mg(pTHX_ CV *cv) {
-    MAGIC *mg, *moremagic;
+STATIC SV *new_mi_obj (pTHX_ MI *mi) {
+    return newRV_noinc(newSViv(PTR2IV(mi)));
+}
 
-    if (SvTYPE(cv) >= SVt_PVMG) {
-        for (mg = SvMAGIC(cv); mg; mg = mg->mg_moremagic) {
-            if ((mg->mg_type == PERL_MAGIC_ext) && (mg->mg_virtual == &null_mg_vtbl))
-                break;
+STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
+    dSP;
+    I32 count;
+    SV *mi;
+
+    if ( !meta_attr )
+        croak("No attr found in magic!");
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(meta_attr);
+    PUTBACK;
+    count = call_pv("Moose::XS::attr_to_meta_instance", G_SCALAR);
+
+    if ( count != 1 )
+        croak("attr_to_meta_instance borked (%d args returned, expecting 1)", count);
+
+    SPAGAIN;
+    mi = POPs;
+
+    SvREFCNT_inc(mi);
+
+    PUTBACK;
+    FREETMPS;
+    LEAVE;
+
+    return mi;
+}
+
+STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
+    dSP;
+    I32 count;
+    MI *mi = NULL;
+    SV *class;
+    SV *attrs;
+    HV *stash;
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(perl_mi);
+    PUTBACK;
+    count = call_pv("Moose::XS::meta_instance_to_attr_descs", G_ARRAY);
+
+    if ( count != 2 )
+        croak("meta_instance_to_attr_descs borked (%d args returned, expecting 2)", count);
+
+    SPAGAIN;
+    attrs = POPs;
+    class = POPs;
+
+    PUTBACK;
+
+    stash = gv_stashsv(class, 0);
+
+    mi = new_mi(aTHX_ stash, (AV *)SvRV(attrs));
+
+    FREETMPS;
+    LEAVE;
+
+    return new_mi_obj(aTHX_ mi);
+}
+
+STATIC ATTR *mi_find_attr(MI *mi, SV *meta_attr) {
+    I32 ix;
+
+    for ( ix = 0; ix <= mi->num_attrs; ix++ ) {
+        if ( SvRV(mi->attrs[ix].meta_attr) == SvRV(meta_attr) ) {
+            return &mi->attrs[ix];
         }
-        if (mg)
-            return mg->mg_obj;
     }
 
-    croak("No attr found in magic!");
+    sv_dump(meta_attr);
+    croak("Attr not found");
     return NULL;
 }
 
 STATIC ATTR *get_attr(pTHX_ CV *cv) {
-    SV *meta_attr = get_meta_attr_from_mg(aTHX_ cv);
+    SV *meta_attr = get_stashed_in_mg(aTHX_ (SV *)cv);
+    SV *perl_mi = attr_to_meta_instance(aTHX_ meta_attr);
+    SV *c_mi = get_stashed_in_mg(aTHX_ SvRV(perl_mi));
+    MI *mi;
 
-#if 0
-    my $mi = $meta_attr->associated_metaclass->get_meta_instance;
-    my @attrs = map {
-        {
-            meta => $_,
-            key =>  ($_->slots)[0],
-        },
-    } @{ $mi->attributes };
-#else
-    croak("todo");
-#endif
+    if (!c_mi) {
+        c_mi = perl_mi_to_c_mi(aTHX_ perl_mi);
+        stash_in_mg(aTHX_ perl_mi, c_mi);
+    }
 
-    return NULL;
+    sv_2mortal(perl_mi);
+
+    mi = INT2PTR(MI *, SvIV(SvRV(c_mi)));
+
+    return mi_find_attr(mi, meta_attr);
 }
 
 STATIC ATTR *define_attr (pTHX_ CV *cv) {
@@ -335,7 +419,8 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
     assert(attr);
 
     XSANY.any_i32 = PTR2IV(attr);
-    av_push( attr->cvs, cv );
+
+    av_push( attr->cvs, (SV *)cv );
 
     return attr;
 }
@@ -551,7 +636,7 @@ new_sub(attr, name)
             croak("Oi vey!");
 
         /* associate CV with meta attr */
-        (void)Perl_sv_magicext(aTHX_ (SV *)cv, attr, PERL_MAGIC_ext, &null_mg_vtbl, STR_WITH_LEN("Moose::Meta::Attribute") );
+        stash_in_mg(aTHX_ (SV *)cv, attr);
 
         /* this will be set on first call */
         XSANY.any_i32 = 0;
@@ -561,3 +646,13 @@ new_sub(attr, name)
         RETVAL
 
 
+MODULE = Moose  PACKAGE = Moose::XS::Meta::Instance
+
+void
+DESTROY(self)
+    INPUT:
+        SV *self;
+    PREINIT:
+        MI *mi = INT2PTR(MI *, SvIV(SvRV(self)));
+    CODE:
+        /* foreach attr ( delete cvs XSANY ), free attrs free mi */

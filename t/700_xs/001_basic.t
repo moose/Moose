@@ -18,6 +18,27 @@ BEGIN {
     plan 'no_plan';
 }
 
+{
+    package Moose::XS;
+
+    sub attr_to_meta_instance {
+        my $attr = shift;
+        return $attr->associated_class->get_meta_instance;
+    }
+
+    sub meta_instance_to_attr_descs {
+        my $mi = shift;
+
+        return (
+            $mi->associated_metaclass->name,
+            [ map { {
+                meta => $_,
+                key  => ($_->slots)[0],
+            } } $mi->get_all_attributes ]
+        );
+    }
+}
+
 ok( defined &Moose::XS::new_getter );
 ok( defined &Moose::XS::new_setter );
 ok( defined &Moose::XS::new_accessor );
