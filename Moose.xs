@@ -459,8 +459,11 @@ STATIC bool check_sv_type (TC type, SV *sv) {
         case GlobRef:
             return check_reftype(type, sv);
             break;
+        case RegexpRef:
+            return ( sv_isobject(sv) && ( strEQ("Regexp", HvNAME_get(SvSTASH(SvRV(sv)))) ) );
+            break;
         case Object:
-            return sv_isobject(sv);
+            return ( sv_isobject(sv) && ( strNE("Regexp", HvNAME_get(SvSTASH(SvRV(sv)))) ) );
             break;
         case ClassName:
             if ( SvOK(sv) && !SvROK(sv) ) {
@@ -470,9 +473,6 @@ STATIC bool check_sv_type (TC type, SV *sv) {
                 return ( gv_stashpvn(pv, len, 0) != NULL );
             }
             return 0;
-            break;
-        case RegexpRef:
-            return sv_isa(sv, "Regexp");
             break;
         case FileHandle:
             croak("todo");
@@ -1237,3 +1237,48 @@ DESTROY(self)
         if ( mi )
             delete_mi(aTHX_ mi);
 
+
+MODULE = Moose	PACKAGE = Moose::XS::TypeConstraints
+PROTOTYPES: ENABLE
+
+bool
+_check_type(sv)
+    INPUT:
+        SV* sv
+    ALIAS:
+        Any = Any
+        Item = Any
+        Bool = Any
+        Undef = Undef
+        Defined = Defined
+        Str = Str
+        Value = Str
+        Num = Num
+        Int = Int
+        GlobRef = GlobRef
+        ArrayRef = ArrayRef
+        HashRef = HashRef
+        CodeRef = CodeRef
+        Ref = Ref
+        ScalarRef = ScalarRef
+        FileHandle = FileHandle
+        RegexpRef = RegexpRef
+        Object = Object
+        Role = Role
+        ClassName = ClassName
+    CODE:
+        RETVAL = check_sv_type(ix, sv);
+    OUTPUT:
+        RETVAL
+
+bool
+ObjectOfType(sv, class)
+    INPUT:
+        SV* sv
+        SV* class
+    PREINIT:
+        HV *stash = gv_stashsv(class, 0);
+    CODE:
+        RETVAL = check_sv_class(aTHX_ stash, sv);
+    OUTPUT:
+        RETVAL
