@@ -538,7 +538,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     attr->type_constraint = newSVsv(tc);
     SvREFCNT_inc(attr->trigger);
     SvREFCNT_inc(attr->initializer);
-    if ( flags & ATTR_TCREFCNT ) SvREFCNT_inc(attr->tc_check.sv);
+    if ( flags & ATTR_TCREFCNT )  SvREFCNT_inc(attr->tc_check.sv);
     if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc(attr->def.sv);
 
     attr->slot_sv = newSVpvn_share(pv, len, hash);
@@ -591,7 +591,8 @@ STATIC void delete_mi (pTHX_ MI *mi) {
         SvREFCNT_dec(attr->cvs);
         SvREFCNT_dec(attr->slot_sv);
         SvREFCNT_dec(attr->type_constraint);
-        if ( attr->flags & ATTR_TCREFCNT ) SvREFCNT_dec(attr->tc_check.sv);
+        if ( attr->flags & ATTR_TCREFCNT )  SvREFCNT_dec(attr->tc_check.sv);
+        if ( attr->flags & ATTR_DEFREFCNT ) SvREFCNT_dec(attr->def.sv);
         SvREFCNT_dec(attr->initializer);
         SvREFCNT_dec(attr->trigger);
         SvREFCNT_dec(attr->meta_attr);
