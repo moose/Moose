@@ -56,13 +56,17 @@ BEGIN {
 
         return ( undef, 0, undef ) unless $tc;
 
-        if ( ref $tc eq 'Moose::Meta::TypeConstraint' or ref $tc eq 'Moose::Meta::TypeConstraint::Parameterizable') {
+        if (
+            # sleazy check for core types that haven't been parametrized
+            #(ref $tc eq 'Moose::Meta::TypeConstraint' or ref $tc eq 'Moose::Meta::TypeConstraint::Parameterizable')
+            #    and
+            exists $checks{$tc->name}
+        ) {
             # builtin moose type #
             return ( $tc, 1, $checks{$tc->name} );
         } elsif ( $tc->isa("Moose::Meta::TypeConstraint::Class") ) {
             return ( $tc, 2, $tc->class );
         } else {
-            warn ref $tc;
             return ( $tc, 3, $tc->_compiled_type_constraint );
         }
     }
@@ -101,6 +105,13 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     package Foo;
     use Moose;
 
+    use Moose::Util::TypeConstraints;
+
+    subtype( 'FiveChars',
+        as "Str",
+        where { length == 5 },
+    );
+
     has x => ( is => "rw", predicate => "has_x" );
     has y => ( is => "ro" );
     has z => ( reader => "z", setter => "set_z" );
@@ -112,6 +123,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     has f => ( isa => "Foo", is => "rw" );
     has c => ( isa => "ClassName", is => "rw" );
     has b => ( is => "ro", lazy_build => 1 ); # fixme type constraint checking
+    has tc => ( is => "rw", isa => "FiveChars" );
 
     sub _build_b { "builded!" }
 
@@ -217,6 +229,11 @@ ok( !eval { $foo->c(3); 1 }, "ClassName" );
 ok( !eval { $foo->c(undef); 1 }, "ClassName" );
 ok( !eval { $foo->c("feck"); 1 }, "ClassName" );
 ok( !eval { $foo->c({}); 1 }, "ClassName" );
+ok( !eval { $foo->tc(undef); 1 }, "custom type" );
+ok( !eval { $foo->tc(""); 1 }, "custom type" );
+ok( !eval { $foo->tc("foo"); 1 }, "custom type" );
+ok( !eval { $foo->tc(3); 1 }, "custom type" );
+ok( !eval { $foo->tc([]); 1 }, "custom type" );
 
 ok( eval { $foo->a([]); 1 }, "ArrayRef" );
 ok( eval { $foo->i(3); 1 }, "Int" );
@@ -231,6 +248,7 @@ ok( eval { $foo->f(Foo->new); 1 }, "Class (Foo)" );
 ok( eval { $foo->f(Gorch->new); 1 }, "Class (Foo), real subclass");
 ok( eval { $foo->f(Quxx->new); 1 }, "Class (Foo), fake subclass");
 ok( eval { $foo->c("Foo"); 1 }, "ClassName" );
+ok( eval { $foo->tc("hello"); 1 }, "custom type" );
 
 
 
@@ -238,3 +256,4 @@ $foo->meta->invalidate_meta_instance();
 isa_ok( $foo->f, 'Foo' );
 $foo->meta->invalidate_meta_instance();
 isa_ok( $foo->f, 'Foo' );
+

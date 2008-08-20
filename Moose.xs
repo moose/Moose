@@ -150,11 +150,12 @@ typedef struct {
  * 00000000 00000000 00000000 00000000
  *                             ^       trigger
  *                              ^      weak
- *                               ^     tc refcnt
+ *                               ^     tc.sv is refcounted
  *                                 ^^^ tc_kind
  *                                ^    coerce
  *                        ^^^          default_kind
  *                       ^             lazy
+ *                      ^              def.sv is refcounted
  *                 ^                   required
  * ^^^^^^^                             if 0 then nothing special (just hash)? FIXME TBD
  */
@@ -383,6 +384,28 @@ STATIC bool check_sv_type (TC type, SV *sv) {
     return 0;
 }
 
+STATIC bool check_sv_cv (pTHX_ SV *cv, SV *sv) {
+    bool ret;
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+    XPUSHs(sv);
+    PUTBACK;
+
+    call_sv(cv, G_SCALAR);
+
+    SPAGAIN;
+    ret = SvTRUE(POPs);
+
+    PUTBACK;
+    FREETMPS;
+    LEAVE;
+
+    return ret;
+}
+
 STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *type_constraint, SV *sv) {
     switch (kind) {
         case tc_none:
@@ -398,6 +421,8 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
             return tc_check.fptr(aTHX_ type_constraint, sv);
             break;
         case tc_cv:
+            return check_sv_cv(aTHX_ tc_check.sv, sv);
+            break;
         case tc_op:
             croak("todo");
             break;

@@ -18,6 +18,8 @@
     use Moose;
     has foo => (is => 'rw');
     __PACKAGE__->meta->make_immutable(inline_constructor => 0);
+    __PACKAGE__->meta->get_attribute("foo")->Moose::XS::new_accessor(__PACKAGE__ . "::foo");
+
 }
 {
     package ClassAccessorFast;
@@ -35,8 +37,8 @@ my $moose_immut          = MooseImmutable->new;
 my $moose_immut_no_const = MooseImmutable::NoConstructor->new;
 my $caf                  = ClassAccessorFast->new;
 
-my $acc_rounds = 100_000;
-my $ins_rounds = 100_000;
+my $acc_rounds = -1;
+my $ins_rounds = -1;
 
 print "\nSETTING\n";
 cmpthese($acc_rounds, {
