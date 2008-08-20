@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.56';
+our $VERSION   = '0.55_01';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('method_exclusions' => (

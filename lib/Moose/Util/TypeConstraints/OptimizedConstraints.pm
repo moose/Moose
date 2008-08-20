@@ -5,7 +5,8 @@ use warnings;
 
 use Scalar::Util 'blessed', 'looks_like_number';
 
-our $VERSION   = '0.56';
+our $VERSION   = '0.55_01';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub Value { defined($_[0]) && !ref($_[0]) }

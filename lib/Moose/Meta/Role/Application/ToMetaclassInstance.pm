@@ -6,7 +6,8 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.55';
+our $VERSION   = '0.55_01';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application::ToClass';

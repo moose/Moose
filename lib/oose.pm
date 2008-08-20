@@ -5,7 +5,8 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '0.56';
+our $VERSION   = '0.55_01';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 BEGIN {
