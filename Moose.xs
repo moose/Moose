@@ -584,7 +584,7 @@ STATIC void delete_mi (pTHX_ MI *mi) {
         /* clear the pointers to this meta attr from all the CVs */
         SV **cvs = AvARRAY(attr->cvs);
         for ( j = av_len(attr->cvs); j >= 0; j-- ) {
-            CV *cv = cvs[j];
+            CV *cv = (CV *)cvs[j];
             XSANY.any_i32 = 0;
         }
 
