@@ -6,7 +6,7 @@ Revision history for Perl extension Moose
         or builder methods are coerced as required + test (t0m)
 
     * Moose::Meta::Attribute
-      - Fix lazy built attributes so that type coersion always
+      - Fix lazy built attributes so that type coercion always
         occurs on them when accessed with get_value method + test (t0m)
 
     * Moose::Exporter
