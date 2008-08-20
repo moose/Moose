@@ -690,17 +690,13 @@ STATIC SV *new_mi (pTHX_ HV *stash, AV *attrs) {
     MI *mi;
     const I32 num_attrs = av_len(attrs) + 1;
 
-    Newx(mi, 1, MI);
-
-    mi->attrs = NULL;
-    mi->stash = NULL;
-    mi->num_attrs = 0;
+    Newxz(mi, 1, MI);
 
     /* set the pointer now, if we have any initialization errors it'll get
      * cleaned up because obj is mortal */
     sv_setiv(sv_ptr, PTR2IV(mi));
 
-    Newx(mi->attrs, num_attrs, ATTR);
+    Newxz(mi->attrs, num_attrs, ATTR);
 
     SvREFCNT_inc_simple(stash);
     mi->stash = stash;
