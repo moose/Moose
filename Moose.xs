@@ -30,6 +30,21 @@
  */
 
 
+
+
+
+
+
+/* These two functions attach magic with no behavior to an SV.
+ *
+ * The stashed value is reference counted, and is destroyed when it's parent
+ * object is destroyed.
+ *
+ * This is used to keep a reference the the meta attribute from a generated
+ * method, and to cache the C struct based wrapper attached to the meta
+ * instance.
+ */
+
 STATIC MGVTBL null_mg_vtbl = {
     NULL, /* get */
     NULL, /* set */
@@ -69,7 +84,34 @@ STATIC SV *get_stashed_in_mg(pTHX_ SV *sv) {
     return NULL;
 }
 
-/* this is a enum of checks */
+
+
+
+
+
+
+
+
+/* The folloing data structures deal with type constraints */
+
+/* this is an enum of the various kinds of constraint checking an attribute can
+ * have.
+ *
+ * tc_cv is the fallback behavior (simply applying the
+ * ->_compiled_type_constraint to the value, but other more optimal checks are
+ *  implemented too. */
+
+typedef enum {
+    tc_none = 0, /* no type checking */
+    tc_type, /* a builtin type to be checked by check_sv_type */
+    tc_stash, /* a stash for a class, implements TypeConstraint::Class by comparing SvSTASH and then invoking C<isa> if necessary */
+    tc_cv, /* applies a code reference to the value and checks for truth */
+    tc_fptr, /* apply a C function pointer */
+    tc_enum, /* TODO check that the value is in an allowed set of values (strings) */
+} tc_kind;
+
+/* this is a enum of builtin type check. They are handled in a switch statement
+ * in check_sv_type */
 typedef enum {
     Any, /* or item, or bool */
     Undef,
@@ -83,80 +125,102 @@ typedef enum {
     CodeRef, /* SVt_PVCV */
     Ref,
     ScalarRef,
-    FileHandle,
+    FileHandle, /* TODO */
     RegexpRef,
     Object,
+    Role, /* TODO */
     ClassName,
-    /* complex checks */
-    Role,
-    Enum,
 } TC;
 
-typedef enum {
-    tc_none = 0,
-    tc_type,
-    tc_stash,
-    tc_cv,
-    tc_op,
-    tc_fptr,
-} tc_kind;
-
+/* auxillary pointer/int union used for constraint checking */
 typedef union {
-    TC type;
-    SV *sv;
-    OP *op;
-    bool (*fptr)(pTHX_ SV *type_constraint, SV *sv);
+    TC type; /* the builtin type number for tc_type */
+    SV *sv; /* the cv for tc_cv, or the stash for tc_stash */
+    OP *op; /* TODO not used */
+    bool (*fptr)(pTHX_ SV *type_constraint, SV *sv); /* the function pointer for tc_fptr  FIXME aux data? */
 } TC_CHECK;
 
-typedef union {
-    char *builder;
-    SV *sv;
-    OP *op;
-    U32 type;
-} DEFAULT;
+
+
+
+
+
+/* The folloing data structures deal with type default value generation */
+
+/* This is an enum for the various types of default value behaviors an
+ * attribute can have */
 
 typedef enum {
-    default_none = 0,
-    default_normal,
-    default_builder,
-    default_type,
-    default_op,
+    default_none = 0, /* no default value */
+    default_normal, /* code reference or scalar */
+    default_builder, /* builder method */
+    default_type, /* TODO enumerated type optimization (will call newHV, newAV etc to avoid calling a code ref for these simple cases) */
 } default_kind;
 
+typedef union {
+    SV *sv; /* The default value, or a code ref to generate one. If builder then this sv is applied as a method (stringified) */
+    U32 type; /* TODO for default_type, should probably be one of SVt_PVAV/SVt_PVHV */
+} DEFAULT;
+
+
+
+
+
+
+/* the ATTR struct contains all the meta data for a Moose::Meta::Attribute for
+ * a given meta instance
+ *
+ * flags determines the various behaviors
+ *
+ * This supports only one slot per attribute in the current implementation, but
+ * slot_sv could contain an array
+ *
+ * A list of XSUBs that rely on this attr struct are cross indexed in the cvs
+ * array, so that when the meta instance is destroyed the XSANY field will be
+ * cleared. This is done in delete_mi
+ * */
+
 typedef struct {
-    /* the meta instance struct */
+    /* pointer to the MI this attribute is a part of the meta instance struct */
     struct mi *mi;
 
     U32 flags; /* slot type, TC behavior, coerce, weaken, (no default | default, builder + lazy), auto_deref */
 
     /* slot access fields */
-    SV *slot_sv; /* value of the slot (slot name presumably) */
-    U32 slot_u32; /* for optimized access (precomputed hash or otherr) */
+    SV *slot_sv; /* value of the slot (currently always slot name) */
+    U32 slot_u32; /* for optimized access (precomputed hash, possibly something else) */
 
     DEFAULT def; /* cv, value or other, depending on flags */
 
-    TC_CHECK tc_check; /* cv, value or other, dependidng on flags */
-    SV *type_constraint; /* meta attr */
+    TC_CHECK tc_check; /* see TC_CHECK*/
+    SV *type_constraint; /* Moose::Meta::TypeConstraint object */
 
-    CV *initializer;
-    CV *trigger;
+    CV *initializer; /* TODO */
+    CV *trigger; /* TODO */
 
-    SV *meta_attr; /* the meta attr object */
-    AV *cvs; /* CVs which use this attr */
+    SV *meta_attr; /* the Moose::Meta::Attribute */
+    AV *cvs; /* an array of CVs which use this attr, see delete_mi */
 } ATTR;
 
-/* slot flags:
- * instance           reading  writing
+/* the flags integer is mapped as follows
+ * instance     misc  reading  writing
  * 00000000 00000000 00000000 00000000
+ *                                     writing
  *                             ^       trigger
  *                              ^      weak
  *                               ^     tc.sv is refcounted
  *                                 ^^^ tc_kind
  *                                ^    coerce
+ *
+ *                                     reading
  *                        ^^^          default_kind
  *                       ^             lazy
  *                      ^              def.sv is refcounted
- *                 ^                   required
+ *
+ *                                     misc
+ *                 ^                   attr is required TODO
+ *
+ *                                     flags having to do with the instance layout (TODO, only hash supported for now)
  * ^^^^^^^                             if 0 then nothing special (just hash)? FIXME TBD
  */
 
@@ -188,10 +252,16 @@ typedef struct {
 #define ATTR_DUMB_WRITER(attr) ( ( attr->flags & ATTR_WRITING_MASK ) == 0 )
 #define ATTR_DUMB_INSTANCE(attr) ( ( attr->flags & ATTR_INSTANCE_MASK ) == 0 )
 
-#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
 
 
-/* FIXME define a vtable that does call_sv */
+/* This unused (TODO) vtable will implement the meta instance protocol in terms
+ * of function pointers to allow the XS accessors to be used with custom meta
+ * instances in the future.
+ *
+ * We'll need to define a default instance of this vtable that uses call_sv,
+ * too. */
+
+/* FIXME define a vtable that does call_sv for fallback meta instance protocol */
 typedef struct {
     SV * (*get)(pTHX_ SV *self, ATTR *attr);
     void (*set)(pTHX_ SV *self, ATTR *attr, SV *value);
@@ -199,7 +269,8 @@ typedef struct {
     SV * (*delete)(pTHX_ SV *self, ATTR *attr);
 } instance_vtbl;
 
-
+/* TODO this table describes the instance layout of the object. Not yet
+ * implemented */
 typedef enum {
     hash = 0,
 
@@ -210,12 +281,28 @@ typedef enum {
     judy,
 } instance_types;
 
+
+/* this struct models the meta instance *and* meta attributes simultaneously.
+ * It is a cache of the meta attribute behaviors for a given class or subclass
+ * and can be parametrized on that level
+ *
+ *
+ * An object pointing to this structure is kept in a refcounted magic inside
+ * the meta instance it corresponds to. On C<invalidate_meta_instance> the meta
+ * instance is destroyed, causing the proxy object to be destroyed, deleting
+ * this structure, clearing the XSANY of all dependent attribute methods.
+ *
+ * The next invocation of an attribute method will eventually call get_attr,
+ * which will call C<get_meta_instance> on the metaclass (recreating it in the
+ * Class::MOP level), and cache a new MI struct inside it. Subsequent
+ * invocations of get_attr will then search the MI for an ATTR matching the
+ * meta_attribute of the attribute method */
 typedef struct mi {
     HV *stash;
 
     /* slot access method */
-    instance_types type;
-    instance_vtbl *vtbl;
+    instance_types type; /* TODO only hashes supported currently */
+    instance_vtbl *vtbl; /* TODO */
 
     /* attr descriptors */
     I32 num_attrs;
@@ -225,6 +312,13 @@ typedef struct mi {
 
 
 
+
+
+
+
+/* these functions implement type constraint checking */
+
+/* checks that the SV is a scalar ref */
 STATIC bool check_is_scalar_ref(SV *sv) {
     if( SvROK(sv) ) {
         switch (SvTYPE(SvRV(sv))) {
@@ -241,6 +335,8 @@ STATIC bool check_is_scalar_ref(SV *sv) {
     return 0;
 }
 
+/* checks that the SV is a ref to a certain SvTYPE, where type is in the table
+ * above */
 STATIC bool check_reftype(TC type, SV *sv) {
     int svt;
 
@@ -265,6 +361,8 @@ STATIC bool check_reftype(TC type, SV *sv) {
     return SvTYPE(SvRV(sv)) == svt;
 }
 
+/* checks whether an SV is of a certain class
+ * SvSTASH is first compared by pointer for efficiency */
 STATIC bool check_sv_class(pTHX_ HV *stash, SV *sv) {
     dSP;
     bool ret;
@@ -299,6 +397,8 @@ STATIC bool check_sv_class(pTHX_ HV *stash, SV *sv) {
     return ret;
 }
 
+/* checks whether SV of of a known simple type. Most of the non parametrized
+ * Moose core types are implemented here */
 STATIC bool check_sv_type (TC type, SV *sv) {
     if (!sv)
         return 0;
@@ -384,6 +484,7 @@ STATIC bool check_sv_type (TC type, SV *sv) {
     return 0;
 }
 
+/* invoke a CV on an SV and return SvTRUE of the result */
 STATIC bool check_sv_cv (pTHX_ SV *cv, SV *sv) {
     bool ret;
     dSP;
@@ -406,6 +507,7 @@ STATIC bool check_sv_cv (pTHX_ SV *cv, SV *sv) {
     return ret;
 }
 
+/* checks the type constraint for an SV based on the type constraint kind */
 STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *type_constraint, SV *sv) {
     switch (kind) {
         case tc_none:
@@ -423,15 +525,24 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
         case tc_cv:
             return check_sv_cv(aTHX_ tc_check.sv, sv);
             break;
-        case tc_op:
-            croak("todo");
-            break;
     }
 
     croak("todo");
     return 0;
 }
 
+
+/* end of type constraint checking functions */
+
+
+
+
+
+
+
+
+
+/* Initialize the ATTR structure using positional arguments from Perl space. */
 
 STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     U32 flags = 0;
@@ -454,6 +565,10 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
             croak("bad params");
     }
 
+
+
+    /* handle attribute slot array */
+
     if ( !SvROK(params[1]) || SvTYPE(SvRV(params[1])) != SVt_PVAV )
         croak("slots is not an array");
 
@@ -467,7 +582,9 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     PERL_HASH(hash, pv, len);
 
 
-    /* FIXME better organize these */
+
+
+    /* FIXME better organize these, positionals suck */
     if ( SvTRUE(params[2]) )
         flags |= ATTR_WEAK;
 
@@ -476,6 +593,10 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
 
     if ( SvTRUE(params[4]) )
         flags |= ATTR_LAZY;
+
+
+
+    /* type constraint data */
 
     tc = params[5];
 
@@ -504,6 +625,9 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
         flags |= tc_kind;
     }
 
+    
+
+    /* default/builder data */
 
     if ( SvTRUE(params[10]) ) { /* has default */
         SV *sv = params[11];
@@ -523,7 +647,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
         flags |= ( ATTR_DEFREFCNT | ( default_builder << ATTR_SHIFT_DEFAULT ) );
     }
 
-    attr->flags = flags; /* FIXME default_kind */
+
 
     attr->trigger = SvROK(params[6]) ? (CV *)SvRV(params[6]) : NULL;
     if ( attr->trigger && SvTYPE(attr->trigger) != SVt_PVCV )
@@ -533,14 +657,25 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     if ( attr->initializer && SvTYPE(attr->initializer) != SVt_PVCV )
         croak("initializer is not a coderef");
 
-    /* copy refs */
+
+
+    /* now that we're done preparing/checking args and shit, so we finalize the
+     * attr, increasing refcounts for any referenced data, and creating the CV
+     * array */
+
+    attr->flags = flags;
+
+    /* copy the outer ref SV */
     attr->meta_attr       = newSVsv(params[0]);
     attr->type_constraint = newSVsv(tc);
+
+    /* increase the refcount for auxillary structures */
     SvREFCNT_inc(attr->trigger);
     SvREFCNT_inc(attr->initializer);
     if ( flags & ATTR_TCREFCNT )  SvREFCNT_inc(attr->tc_check.sv);
     if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc(attr->def.sv);
 
+    /* create a new SV for the hash key */
     attr->slot_sv = newSVpvn_share(pv, len, hash);
     attr->slot_u32 = hash;
 
@@ -548,12 +683,24 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     attr->cvs = newAV();
 }
 
-STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
+STATIC SV *new_mi (pTHX_ HV *stash, AV *attrs) {
+    HV *mi_stash = gv_stashpvs("Moose::XS::Meta::Instance",0);
+    SV *sv_ptr = newSViv(0);
+    SV *obj = sv_2mortal(sv_bless(newRV_noinc(sv_ptr), mi_stash));
     MI *mi;
-    I32 ix;
-    const I32 num = av_len(attrs) + 1;
+    const I32 num_attrs = av_len(attrs) + 1;
 
     Newx(mi, 1, MI);
+
+    mi->attrs = NULL;
+    mi->stash = NULL;
+    mi->num_attrs = 0;
+
+    /* set the pointer now, if we have any initialization errors it'll get
+     * cleaned up because obj is mortal */
+    sv_setiv(sv_ptr, PTR2IV(mi));
+
+    Newx(mi->attrs, num_attrs, ATTR);
 
     SvREFCNT_inc_simple(stash);
     mi->stash = stash;
@@ -561,54 +708,59 @@ STATIC MI *new_mi (pTHX_ HV *stash, AV *attrs) {
     mi->type = 0; /* nothing else implemented yet */
 
     /* initialize attributes */
-    mi->num_attrs = num;
-    Newx(mi->attrs, num, ATTR);
-    for ( ix = 0; ix < num; ix++ ) {
-        SV **desc = av_fetch(attrs, ix, 0);
+    for ( ; mi->num_attrs < num_attrs; mi->num_attrs++ ) {
+        SV **desc = av_fetch(attrs, mi->num_attrs, 0);
 
         if ( !desc || !*desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVAV) ) {
             croak("Attribute descriptor has to be a hash reference");
         }
 
-        init_attr(mi, &mi->attrs[ix], (AV *)SvRV(*desc));
+        init_attr(mi, &mi->attrs[mi->num_attrs], (AV *)SvRV(*desc));
     }
 
-    return mi;
-}
-
-STATIC void delete_mi (pTHX_ MI *mi) {
-    I32 i, j;
-
-    for ( i = 0; i < mi->num_attrs; i++ ) {
-        ATTR *attr = &mi->attrs[i];
-        /* clear the pointers to this meta attr from all the CVs */
-        SV **cvs = AvARRAY(attr->cvs);
-        for ( j = av_len(attr->cvs); j >= 0; j-- ) {
-            CV *cv = (CV *)cvs[j];
-            XSANY.any_i32 = 0;
-        }
-
-        SvREFCNT_dec(attr->cvs);
-        SvREFCNT_dec(attr->slot_sv);
-        SvREFCNT_dec(attr->type_constraint);
-        if ( attr->flags & ATTR_TCREFCNT )  SvREFCNT_dec(attr->tc_check.sv);
-        if ( attr->flags & ATTR_DEFREFCNT ) SvREFCNT_dec(attr->def.sv);
-        SvREFCNT_dec(attr->initializer);
-        SvREFCNT_dec(attr->trigger);
-        SvREFCNT_dec(attr->meta_attr);
-    }
-
-    Safefree(mi->attrs);
-    Safefree(mi);
-}
-
-STATIC SV *new_mi_obj (pTHX_ MI *mi) {
-    HV *stash = gv_stashpvs("Moose::XS::Meta::Instance",0);
-    SV *obj = newRV_noinc(newSViv(PTR2IV(mi)));
-    sv_bless( obj, stash );
     return obj;
 }
 
+STATIC void delete_attr (pTHX_ ATTR *attr) {
+    I32 i;
+    SV **cvs = AvARRAY(attr->cvs);
+
+    /* remove the pointers to this ATTR struct from all the the dependent CVs */
+    for ( i = av_len(attr->cvs); i >= 0; i-- ) {
+        CV *cv = (CV *)cvs[i];
+        XSANY.any_i32 = 0;
+    }
+
+    SvREFCNT_dec(attr->cvs);
+    SvREFCNT_dec(attr->slot_sv);
+    SvREFCNT_dec(attr->type_constraint);
+    if ( attr->flags & ATTR_TCREFCNT )  SvREFCNT_dec(attr->tc_check.sv);
+    if ( attr->flags & ATTR_DEFREFCNT ) SvREFCNT_dec(attr->def.sv);
+    SvREFCNT_dec(attr->initializer);
+    SvREFCNT_dec(attr->trigger);
+    SvREFCNT_dec(attr->meta_attr);
+}
+
+STATIC void delete_mi (pTHX_ MI *mi) {
+    SvREFCNT_dec(mi->stash);
+
+    while ( mi->num_attrs--) {
+        ATTR *attr = &mi->attrs[mi->num_attrs];
+        delete_attr(aTHX_ attr);
+    }
+
+    if ( mi->attrs ) Safefree(mi->attrs);
+    Safefree(mi);
+}
+
+
+
+
+/* these functions call Perl-space for MOP methods, helpers etc */
+
+
+/* wow, so much code for the equivalent of
+ * $attr->associated_class->get_meta_instance */
 STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     dSP;
     I32 count;
@@ -620,7 +772,9 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     ENTER;
     SAVETMPS;
     PUSHMARK(SP);
+
     XPUSHs(meta_attr);
+
     PUTBACK;
     count = call_pv("Moose::XS::attr_to_meta_instance", G_SCALAR);
 
@@ -639,10 +793,11 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     return sv_2mortal(mi);
 }
 
+/* gets a class and an array of attr parameters */
 STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
     dSP;
     I32 count;
-    MI *mi = NULL;
+    SV *mi;
     SV *class;
     SV *attrs;
     HV *stash;
@@ -650,7 +805,9 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
     ENTER;
     SAVETMPS;
     PUSHMARK(SP);
+
     XPUSHs(perl_mi);
+
     PUTBACK;
     count = call_pv("Moose::XS::meta_instance_to_attr_descs", G_ARRAY);
 
@@ -666,15 +823,20 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
     stash = gv_stashsv(class, 0);
 
     mi = new_mi(aTHX_ stash, (AV *)SvRV(attrs));
+    SvREFCNT_inc(mi);
 
     FREETMPS;
     LEAVE;
 
-    return new_mi_obj(aTHX_ mi);
+    return sv_2mortal(mi);
 }
 
-STATIC ATTR *mi_find_attr(MI *mi, SV *meta_attr) {
+
+
+/* locate an ATTR for a MOP level attribute inside an MI */
+STATIC ATTR *mi_find_attr(SV *mi_obj, SV *meta_attr) {
     I32 ix;
+    MI *mi = INT2PTR(MI *, SvIV(SvRV(mi_obj)));
 
     for ( ix = 0; ix < mi->num_attrs; ix++ ) {
         if ( SvRV(mi->attrs[ix].meta_attr) == SvRV(meta_attr) ) {
@@ -682,28 +844,32 @@ STATIC ATTR *mi_find_attr(MI *mi, SV *meta_attr) {
         }
     }
 
-    sv_dump(meta_attr);
-    croak("Attr not found");
+    croak("Attr %x not found in meta instance of %s", SvRV(meta_attr) /* SvPV_force_nomg(sv_2mortal(newSVsv(meta_attr))) */, HvNAME_get(mi->stash) );
     return NULL;
 }
 
+/* returns the ATTR for a CV:
+ *
+ * 1. get the Moose::Meta::Attribute using get_stashed_in_mg from the CV itself
+ * 2. get the meta instance by calling $attr->associated_class->get_meta_instance
+ * 3. get the MI by using get_stashed_in_mg from the meta instance, creating it if necessary
+ * 4. search for the appropriate ATTR in the MI using mi_find_attr
+ */
 STATIC ATTR *get_attr(pTHX_ CV *cv) {
     SV *meta_attr = get_stashed_in_mg(aTHX_ (SV *)cv);
     SV *perl_mi = attr_to_meta_instance(aTHX_ meta_attr);
-    SV *c_mi = get_stashed_in_mg(aTHX_ SvRV(perl_mi));
-    MI *mi;
+    SV *mi_obj = get_stashed_in_mg(aTHX_ SvRV(perl_mi));
 
-    if (!c_mi) {
-        c_mi = perl_mi_to_c_mi(aTHX_ perl_mi);
-        stash_in_mg(aTHX_ SvRV(perl_mi), c_mi);
-        SvREFCNT_dec(c_mi);
+    if (!mi_obj) {
+        mi_obj = perl_mi_to_c_mi(aTHX_ perl_mi);
+        stash_in_mg(aTHX_ SvRV(perl_mi), mi_obj);
     }
 
-    mi = INT2PTR(MI *, SvIV(SvRV(c_mi)));
-
-    return mi_find_attr(mi, meta_attr);
+    return mi_find_attr(mi_obj, meta_attr);
 }
 
+/* Cache a pointer to the appropriate ATTR in the XSANY of the CV, using
+ * get_attr */
 STATIC ATTR *define_attr (pTHX_ CV *cv) {
     ATTR *attr = get_attr(aTHX_ cv);
     assert(attr);
@@ -716,6 +882,12 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
     return attr;
 }
 
+
+
+
+
+
+
 STATIC void weaken(pTHX_ SV *sv) {
 #ifdef SvWEAKREF
 	sv_rvweaken(sv); /* FIXME i think this might warn when weakening an already weak ref */
@@ -723,6 +895,10 @@ STATIC void weaken(pTHX_ SV *sv) {
 	croak("weak references are not implemented in this release of perl");
 #endif
 }
+
+
+
+
 
 
 /* meta instance protocol */
@@ -785,48 +961,64 @@ STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr) {
     return hv_delete_ent((HV *)SvRV(self), attr->slot_sv, 0, attr->slot_u32);
 }
 
-STATIC void writer_common(pTHX_ SV *self, ATTR *attr, SV *value);
 
 
+
+
+
+/* Shared functionality for readers/writers/accessors, this roughly corresponds
+ * to the methods of Moose::Meta::Attribute on the instance
+ * (get_value/set_value, default value handling, etc) */
+
+STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value);
+
+STATIC SV *call_builder (pTHX_ SV *self, ATTR *attr) {
+    SV *sv;
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+
+    XPUSHs(self);
+
+    /* we invoke the builder as a stringified method. This will not work for
+     * $obj->$coderef etc, for that we need to use 'default' */
+    PUTBACK;
+    call_method(SvPV_nolen(attr->def.sv), G_SCALAR);
+    SPAGAIN;
+
+    /* the value is a mortal with a refcount of 1, so we need to keep it around */
+    sv = POPs;
+    SvREFCNT_inc(sv);
+
+    PUTBACK;
+    FREETMPS;
+    LEAVE;
+
+    return sv_2mortal(sv);
+}
+
+
+/* Returns an SV for the default value. Should be copied by the caller because
+ * it's either an alias for a simple value, or a mortal from cv/builder */
 STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
     switch ( ATTR_DEFAULT(attr) ) {
         case default_none:
             return NULL;
             break;
         case default_builder:
-            {
-                SV *sv;
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK(SP);
-                XPUSHs(self);
-                PUTBACK;
-
-                call_method(SvPV_nolen(attr->def.sv), G_SCALAR);
-
-                SPAGAIN;
-                sv = POPs;
-
-                SvREFCNT_inc(sv);
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-
-                return sv_2mortal(sv);
-            }
+            return call_builder(aTHX_ self, attr);
             break;
         case default_normal:
             if ( SvROK(attr->def.sv) ) {
                 printf("CV default\n");
+                croak("todo");
             } else {
                 printf("simple value\n");
                 return attr->def.sv; /* will be copied by set for lazy, and by reader for both cases */
             }
             break;
-        case default_op:
         case default_type:
             croak("todo");
             break;
@@ -835,21 +1027,25 @@ STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
     return NULL;
 }
 
-STATIC SV *reader_common(pTHX_ SV *self, ATTR *attr) {
+/* $attr->get_value($self), will vivify lazy values if needed
+ * returns an alias to the sv that is copied in the reader/writer/accessor code
+ * */
+STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
     SV *value = get_slot_value(aTHX_ self, attr);
 
     if ( value ) {
         return value;
     } else if ( ATTR_ISLAZY(attr) ) {
         value = get_default(aTHX_ self, attr);
-        writer_common(aTHX_ self, attr, value);
+        attr_set_value(aTHX_ self, attr, value);
         return value;
     }
 
     return NULL;
 }
 
-STATIC void writer_common(pTHX_ SV *self, ATTR *attr, SV *value) {
+/* $attr->set_value($self) */
+STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     if ( ATTR_TYPE(attr) ) {
         if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
             croak("Bad param");
@@ -858,7 +1054,27 @@ STATIC void writer_common(pTHX_ SV *self, ATTR *attr, SV *value) {
     set_slot_value(aTHX_ self, attr, value);
 }
 
-/* simple high level api */
+
+
+
+
+
+
+/* Perl-space level functionality
+ *
+ * These subs are installed by new_sub's various aliases as the bodies of the
+ * new XSUBs
+ * */
+
+
+
+/* This macro is used in the XS subs to set up the 'attr' variable.
+ *
+ * if XSANY is NULL then define_attr is called on the CV, to set the pointer
+ * to the ATTR struct.
+ * */
+#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
+
 
 STATIC XS(reader);
 STATIC XS(reader)
@@ -875,7 +1091,7 @@ STATIC XS(reader)
 
     SP -= items;
 
-    value = reader_common(aTHX_ ST(0), attr);
+    value = attr_get_value(aTHX_ ST(0), attr);
 
     if (value) {
         ST(0) = sv_mortalcopy(value); /* mortalcopy because $_ .= "blah" for $foo->bar */
@@ -899,7 +1115,7 @@ STATIC XS(writer)
 
     SP -= items;
 
-    writer_common(aTHX_ ST(0), attr, ST(1));
+    attr_set_value(aTHX_ ST(0), attr, ST(1));
 
     ST(0) = ST(1); /* return value */
     XSRETURN(1);
@@ -920,10 +1136,10 @@ STATIC XS(accessor)
     SP -= items;
 
     if (items > 1) {
-        writer_common(aTHX_ ST(0), attr, ST(1));
+        attr_set_value(aTHX_ ST(0), attr, ST(1));
         ST(0) = ST(1); /* return value */
     } else {
-        SV *value = reader_common(aTHX_ ST(0), attr);
+        SV *value = attr_get_value(aTHX_ ST(0), attr);
         if ( value ) {
             ST(0) = value;
         } else {
@@ -1015,4 +1231,6 @@ DESTROY(self)
     PREINIT:
         MI *mi = INT2PTR(MI *, SvIV(SvRV(self)));
     CODE:
-        delete_mi(aTHX_ mi);
+        if ( mi )
+            delete_mi(aTHX_ mi);
+

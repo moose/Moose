@@ -44,6 +44,7 @@ BEGIN {
         FileHandle
         RegexpRef
         Object
+        Role
         ClassName
     );
 
@@ -54,7 +55,7 @@ BEGIN {
     sub tc_params {
         my $tc = shift;
 
-        return ( undef, 0, undef ) unless $tc;
+        return ( undef, 0, undef ) unless $tc; # tc_none
 
         if (
             # sleazy check for core types that haven't been parametrized
@@ -62,12 +63,13 @@ BEGIN {
             #    and
             exists $checks{$tc->name}
         ) {
-            # builtin moose type #
-            return ( $tc, 1, $checks{$tc->name} );
+            # builtin moose type # 
+            return ( $tc, 1, $checks{$tc->name} ); # tc_type
         } elsif ( $tc->isa("Moose::Meta::TypeConstraint::Class") ) {
-            return ( $tc, 2, $tc->class );
+            return ( $tc, 2, $tc->class ); # tc_stash
         } else {
-            return ( $tc, 3, $tc->_compiled_type_constraint );
+            # FIXME enum is its own tc_kind
+            return ( $tc, 3, $tc->_compiled_type_constraint ); # tc_cv
         }
     }
 
