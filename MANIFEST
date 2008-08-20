@@ -179,6 +179,7 @@ t/040_type_constraints/021_maybe_type_constraint.t
 t/040_type_constraints/022_custom_type_errors.t
 t/040_type_constraints/023_types_and_undef.t
 t/040_type_constraints/024_role_type_constraint.t
+t/040_type_constraints/025_type_coersion_on_lazy_attributes.t
 t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
