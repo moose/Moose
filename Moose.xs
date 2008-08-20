@@ -965,7 +965,9 @@ STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr) {
     return hv_delete_ent((HV *)SvRV(self), attr->slot_sv, 0, attr->slot_u32);
 }
 
-
+STATIC SV *create_instance(pTHX_ MI *mi) {
+    return sv_bless(sv_2mortal(newRV_noinc(newHV())), mi->stash);
+}
 
 
 
