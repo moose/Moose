@@ -96,8 +96,8 @@ BEGIN {
     }
 }
 
-ok( defined &Moose::XS::new_getter, "new_getter" );
-ok( defined &Moose::XS::new_setter, "new_setter" );
+ok( defined &Moose::XS::new_reader, "new_reader" );
+ok( defined &Moose::XS::new_writer, "new_writer" );
 ok( defined &Moose::XS::new_accessor, "new_accessor" );
 ok( defined &Moose::XS::new_predicate, "new_predicate" );
 
@@ -114,7 +114,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
 
     has x => ( is => "rw", predicate => "has_x" );
     has y => ( is => "ro" );
-    has z => ( reader => "z", setter => "set_z" );
+    has z => ( reader => "z", writer => "set_z" );
     has ref => ( is => "rw", weak_ref => 1 );
     has i => ( isa => "Int", is => "rw" );
     has s => ( isa => "Str", is => "rw" );
@@ -146,9 +146,9 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c, $b ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c b);
     $x->Moose::XS::new_accessor("Foo::x");
     $x->Moose::XS::new_predicate("Foo::has_x");
-    $y->Moose::XS::new_getter("Foo::y");
-    $z->Moose::XS::new_getter("Foo::z");
-    $z->Moose::XS::new_setter("Foo::set_z");
+    $y->Moose::XS::new_reader("Foo::y");
+    $z->Moose::XS::new_reader("Foo::z");
+    $z->Moose::XS::new_writer("Foo::set_z");
     $ref->Moose::XS::new_accessor("Foo::ref");
     $a->Moose::XS::new_accessor("Foo::a");
     $s->Moose::XS::new_accessor("Foo::s");

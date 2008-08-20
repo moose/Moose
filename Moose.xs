@@ -785,7 +785,7 @@ STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr) {
     return hv_delete_ent((HV *)SvRV(self), attr->slot_sv, 0, attr->slot_u32);
 }
 
-STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value);
+STATIC void writer_common(pTHX_ SV *self, ATTR *attr, SV *value);
 
 
 STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
@@ -835,21 +835,21 @@ STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
     return NULL;
 }
 
-STATIC SV *getter_common(pTHX_ SV *self, ATTR *attr) {
+STATIC SV *reader_common(pTHX_ SV *self, ATTR *attr) {
     SV *value = get_slot_value(aTHX_ self, attr);
 
     if ( value ) {
         return value;
     } else if ( ATTR_ISLAZY(attr) ) {
         value = get_default(aTHX_ self, attr);
-        setter_common(aTHX_ self, attr, value);
+        writer_common(aTHX_ self, attr, value);
         return value;
     }
 
     return NULL;
 }
 
-STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value) {
+STATIC void writer_common(pTHX_ SV *self, ATTR *attr, SV *value) {
     if ( ATTR_TYPE(attr) ) {
         if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
             croak("Bad param");
@@ -860,8 +860,8 @@ STATIC void setter_common(pTHX_ SV *self, ATTR *attr, SV *value) {
 
 /* simple high level api */
 
-STATIC XS(getter);
-STATIC XS(getter)
+STATIC XS(reader);
+STATIC XS(reader)
 {
 #ifdef dVAR
     dVAR;
@@ -875,7 +875,7 @@ STATIC XS(getter)
 
     SP -= items;
 
-    value = getter_common(aTHX_ ST(0), attr);
+    value = reader_common(aTHX_ ST(0), attr);
 
     if (value) {
         ST(0) = sv_mortalcopy(value); /* mortalcopy because $_ .= "blah" for $foo->bar */
@@ -885,8 +885,8 @@ STATIC XS(getter)
     }
 }
 
-STATIC XS(setter);
-STATIC XS(setter)
+STATIC XS(writer);
+STATIC XS(writer)
 {
 #ifdef dVAR
     dVAR;
@@ -899,7 +899,7 @@ STATIC XS(setter)
 
     SP -= items;
 
-    setter_common(aTHX_ ST(0), attr, ST(1));
+    writer_common(aTHX_ ST(0), attr, ST(1));
 
     ST(0) = ST(1); /* return value */
     XSRETURN(1);
@@ -920,10 +920,10 @@ STATIC XS(accessor)
     SP -= items;
 
     if (items > 1) {
-        setter_common(aTHX_ ST(0), attr, ST(1));
+        writer_common(aTHX_ ST(0), attr, ST(1));
         ST(0) = ST(1); /* return value */
     } else {
-        SV *value = getter_common(aTHX_ ST(0), attr);
+        SV *value = reader_common(aTHX_ ST(0), attr);
         if ( value ) {
             ST(0) = value;
         } else {
@@ -955,16 +955,16 @@ STATIC XS(predicate)
 }
 
 enum xs_body {
-    xs_body_getter = 0,
-    xs_body_setter,
+    xs_body_reader = 0,
+    xs_body_writer,
     xs_body_accessor,
     xs_body_predicate,
     max_xs_body
 };
 
 STATIC XSPROTO ((*xs_bodies[])) = {
-    getter,
-    setter,
+    reader,
+    writer,
     accessor,
     predicate,
 };
@@ -977,8 +977,8 @@ new_sub(attr, name)
         SV *attr;
         SV *name;
     ALIAS:
-        new_getter    = xs_body_getter
-        new_setter    = xs_body_setter
+        new_reader    = xs_body_reader
+        new_writer    = xs_body_writer
         new_accessor  = xs_body_accessor
         new_predicate = xs_body_predicate
     PREINIT:
