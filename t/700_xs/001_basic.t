@@ -93,6 +93,8 @@ BEGIN {
                 $_->has_default,
                 $_->default,
                 $_->builder,
+
+                $_->init_arg,
             ]} $mi->get_all_attributes ]
         );
     }

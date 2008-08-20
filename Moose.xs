@@ -190,6 +190,9 @@ typedef struct {
     SV *slot_sv; /* value of the slot (currently always slot name) */
     U32 slot_u32; /* for optimized access (precomputed hash, possibly something else) */
 
+    SV *init_arg_sv;
+    U32 init_arg_u32;
+
     DEFAULT def; /* cv, value or other, depending on flags */
 
     TC_CHECK tc_check; /* see TC_CHECK*/
@@ -546,19 +549,19 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
 
 STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     U32 flags = 0;
-    U32 hash;
-    STRLEN len;
-    char *pv;
+    U32 slot_hash, init_arg_hash;
+    STRLEN slot_len, init_arg_len;
+    char *slot_pv, *init_arg_pv;
     I32 ix = av_len(desc);
     SV **params = AvARRAY(desc);
     SV *tc;
-    SV *key;
+    SV *slot_sv;
+    SV *init_arg_sv;
 
     attr->mi = mi;
 
-
-    if ( ix != 12 )
-        croak("wrong number of args (%d != 13)", ix + 1);
+    if ( ix != 13 )
+        croak("wrong number of args (%d != 14)", ix + 1);
 
     for ( ; ix >= 0; ix-- ) {
         if ( !params[ix] || params[ix] == &PL_sv_undef )
@@ -577,11 +580,14 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
 
     /* calculate a hash from the slot */
     /* FIXME arrays etc should also be supported */
-    key = *av_fetch((AV *)SvRV(params[1]), 0, 0);
-    pv = SvPV(key, len);
-    PERL_HASH(hash, pv, len);
+    slot_sv = *av_fetch((AV *)SvRV(params[1]), 0, 0);
+    slot_pv = SvPV(slot_sv, slot_len);
+    PERL_HASH(slot_hash, slot_pv, slot_len);
 
 
+    init_arg_sv = params[13];
+    init_arg_pv = SvPV(init_arg_sv, init_arg_len);
+    PERL_HASH(init_arg_hash, init_arg_pv, init_arg_len);
 
 
     /* FIXME better organize these, positionals suck */
@@ -675,9 +681,11 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     if ( flags & ATTR_TCREFCNT )  SvREFCNT_inc(attr->tc_check.sv);
     if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc(attr->def.sv);
 
-    /* create a new SV for the hash key */
-    attr->slot_sv = newSVpvn_share(pv, len, hash);
-    attr->slot_u32 = hash;
+    attr->slot_sv = newSVpvn_share(slot_pv, slot_len, slot_hash);
+    attr->slot_u32 = slot_hash;
+
+    attr->init_arg_sv = newSVpvn_share(init_arg_pv, init_arg_len, init_arg_hash);
+    attr->init_arg_u32 = init_arg_hash;
 
     /* cross refs to CVs which use this struct */
     attr->cvs = newAV();
