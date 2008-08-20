@@ -1186,12 +1186,14 @@ STATIC XSPROTO ((*xs_bodies[])) = {
 };
 
 MODULE = Moose PACKAGE = Moose::XS
+PROTOTYPES: ENABLE
 
 CV *
 new_sub(attr, name)
     INPUT:
         SV *attr;
         SV *name;
+    PROTOTYPE: $;$
     ALIAS:
         new_reader    = xs_body_reader
         new_writer    = xs_body_writer
@@ -1223,6 +1225,7 @@ new_sub(attr, name)
 
 
 MODULE = Moose  PACKAGE = Moose::XS::Meta::Instance
+PROTOTYPES: DISABLE
 
 void
 DESTROY(self)
