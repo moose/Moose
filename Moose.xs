@@ -107,7 +107,7 @@ typedef enum {
     tc_stash, /* a stash for a class, implements TypeConstraint::Class by comparing SvSTASH and then invoking C<isa> if necessary */
     tc_cv, /* applies a code reference to the value and checks for truth */
     tc_fptr, /* apply a C function pointer */
-    tc_enum, /* TODO check that the value is in an allowed set of values (strings) */
+    tc_enum /* TODO check that the value is in an allowed set of values (strings) */
 } tc_kind;
 
 /* this is a enum of builtin type check. They are handled in a switch statement
@@ -129,7 +129,7 @@ typedef enum {
     RegexpRef,
     Object,
     Role, /* TODO */
-    ClassName,
+    ClassName
 } TC;
 
 /* auxillary pointer/int union used for constraint checking */
@@ -154,7 +154,7 @@ typedef enum {
     default_none = 0, /* no default value */
     default_normal, /* code reference or scalar */
     default_builder, /* builder method */
-    default_type, /* TODO enumerated type optimization (will call newHV, newAV etc to avoid calling a code ref for these simple cases) */
+    default_type /* TODO enumerated type optimization (will call newHV, newAV etc to avoid calling a code ref for these simple cases) */
 } default_kind;
 
 typedef union {
@@ -281,7 +281,7 @@ typedef enum {
     array,
     fptr,
     cv,
-    judy,
+    judy
 } instance_types;
 
 
