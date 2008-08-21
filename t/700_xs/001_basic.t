@@ -215,6 +215,7 @@ ok( !eval { $foo->i(1.3); 1 }, "Int" );
 ok( !eval { $foo->i("1.3"); 1 }, "Int" );
 ok( !eval { $foo->i("foo"); 1 }, "Int" );
 ok( !eval { $foo->i(undef); 1 }, "Int" );
+ok( !eval { $foo->i(\undef); 1 }, "Int" );
 ok( !eval { $foo->s(undef); 1 }, "Str" );
 ok( !eval { $foo->s([]); 1 }, "Str" );
 ok( !eval { $foo->o({}); 1 }, "Object" );
