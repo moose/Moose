@@ -4,7 +4,7 @@ Revision history for Perl extension Moose
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
 
-0.55_01
+0.55_01 Wed August 20, 2008
 
     !! Calling Moose::init_meta as a function is now         !!
     !! deprecated. Please see the Moose.pm docs for details. !!
