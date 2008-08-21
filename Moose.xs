@@ -70,7 +70,7 @@ STATIC MAGIC *stash_in_mg (pTHX_ SV *sv, SV *obj) {
 }
 
 STATIC SV *get_stashed_in_mg(pTHX_ SV *sv) {
-    MAGIC *mg, *moremagic;
+    MAGIC *mg;
 
     if (SvTYPE(sv) >= SVt_PVMG) {
         for (mg = SvMAGIC(sv); mg; mg = mg->mg_moremagic) {
@@ -359,6 +359,8 @@ STATIC bool check_reftype(TC type, SV *sv) {
         case CodeRef:
             svt = SVt_PVCV;
             break;
+        default:
+            croak("not a reftype %d\n", type);
     }
 
     return SvTYPE(SvRV(sv)) == svt;
@@ -527,6 +529,9 @@ STATIC bool check_type_constraint(pTHX_ tc_kind kind, TC_CHECK tc_check, SV *typ
             break;
         case tc_cv:
             return check_sv_cv(aTHX_ tc_check.sv, sv);
+            break;
+        case tc_enum:
+            croak("todo\n");
             break;
     }
 
