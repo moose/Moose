@@ -12,7 +12,7 @@
 #endif
 
 #ifndef gv_stashpvs
-#define gv_stashpvs(x, y) gv_stashpvn(STR_WITH_LEN(x), y)
+#define gv_stashpvs(x, y) Perl_gv_stashpvn(aTHX_ STR_WITH_LEN(x), y)
 #endif
 
 /* FIXME
