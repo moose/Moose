@@ -465,10 +465,13 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             return check_reftype(type, sv);
             break;
         case RegexpRef:
-            return ( sv_isobject(sv) && ( strEQ("Regexp", HvNAME_get(SvSTASH(SvRV(sv)))) ) );
-            break;
         case Object:
-            return ( sv_isobject(sv) && ( strNE("Regexp", HvNAME_get(SvSTASH(SvRV(sv)))) ) );
+            if ( sv_isobject(sv) ) {
+                char *name = HvNAME_get(SvSTASH(SvRV(sv)));
+                bool is_regexp = strEQ("Regexp", name);
+                return ( type != RegexpRef ? is_regexp : !is_regexp );
+            }
+            return 0;
             break;
         case ClassName:
             if ( SvOK(sv) && !SvROK(sv) ) {
@@ -566,7 +569,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     attr->mi = mi;
 
     if ( ix != 13 )
-        croak("wrong number of args (%d != 14)", ix + 1);
+        croak("wrong number of args (%d != 14)", (int)ix + 1);
 
     for ( ; ix >= 0; ix-- ) {
         if ( !params[ix] || params[ix] == &PL_sv_undef )
@@ -788,7 +791,7 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     count = call_pv("Moose::XS::attr_to_meta_instance", G_SCALAR);
 
     if ( count != 1 )
-        croak("attr_to_meta_instance borked (%d args returned, expecting 1)", count);
+        croak("attr_to_meta_instance borked (%d args returned, expecting 1)", (int)count);
 
     SPAGAIN;
     mi = POPs;
@@ -821,7 +824,7 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
     count = call_pv("Moose::XS::meta_instance_to_attr_descs", G_ARRAY);
 
     if ( count != 2 )
-        croak("meta_instance_to_attr_descs borked (%d args returned, expecting 2)", count);
+        croak("meta_instance_to_attr_descs borked (%d args returned, expecting 2)", (int)count);
 
     SPAGAIN;
     attrs = POPs;
@@ -853,7 +856,7 @@ STATIC ATTR *mi_find_attr(SV *mi_obj, SV *meta_attr) {
         }
     }
 
-    croak("Attr %x not found in meta instance of %s", SvRV(meta_attr) /* SvPV_force_nomg(sv_2mortal(newSVsv(meta_attr))) */, HvNAME_get(mi->stash) );
+    croak("Attr %x not found in meta instance of %s", (unsigned int)PTR2UV(SvRV(meta_attr)) /* SvPV_force_nomg(sv_2mortal(newSVsv(meta_attr))) */, HvNAME_get(mi->stash) );
     return NULL;
 }
 
