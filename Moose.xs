@@ -679,10 +679,10 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     attr->type_constraint = newSVsv(tc);
 
     /* increase the refcount for auxillary structures */
-    SvREFCNT_inc(attr->trigger);
-    SvREFCNT_inc(attr->initializer);
-    if ( flags & ATTR_TCREFCNT )  SvREFCNT_inc(attr->tc_check.sv);
-    if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc(attr->def.sv);
+    SvREFCNT_inc_simple_void(attr->trigger);
+    SvREFCNT_inc_simple_void(attr->initializer);
+    if ( flags & ATTR_TCREFCNT )  SvREFCNT_inc_simple_void_NN(attr->tc_check.sv);
+    if ( flags & ATTR_DEFREFCNT ) SvREFCNT_inc_simple_void_NN(attr->def.sv);
 
     attr->slot_sv = newSVpvn_share(slot_pv, slot_len, slot_hash);
     attr->slot_u32 = slot_hash;
@@ -709,7 +709,7 @@ STATIC SV *new_mi (pTHX_ HV *stash, AV *attrs) {
 
     Newxz(mi->attrs, num_attrs, ATTR);
 
-    SvREFCNT_inc_simple(stash);
+    SvREFCNT_inc_simple_void_NN(stash);
     mi->stash = stash;
 
     mi->type = 0; /* nothing else implemented yet */
@@ -791,7 +791,7 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     SPAGAIN;
     mi = POPs;
 
-    SvREFCNT_inc(mi);
+    SvREFCNT_inc_simple_void(mi);
 
     PUTBACK;
     FREETMPS;
@@ -830,7 +830,7 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
     stash = gv_stashsv(class, 0);
 
     mi = new_mi(aTHX_ stash, (AV *)SvRV(attrs));
-    SvREFCNT_inc(mi);
+    SvREFCNT_inc_simple_void_NN(mi);
 
     FREETMPS;
     LEAVE;
@@ -883,7 +883,7 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
 
     XSANY.any_i32 = PTR2IV(attr);
 
-    SvREFCNT_inc(cv);
+    SvREFCNT_inc_simple_void(cv);
     av_push( attr->cvs, (SV *)cv );
 
     return attr;
@@ -996,7 +996,7 @@ STATIC SV *call_builder (pTHX_ SV *self, ATTR *attr) {
 
     /* the value is a mortal with a refcount of 1, so we need to keep it around */
     sv = POPs;
-    SvREFCNT_inc(sv);
+    SvREFCNT_inc_simple_void(sv);
 
     PUTBACK;
     FREETMPS;
