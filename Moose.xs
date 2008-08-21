@@ -408,6 +408,8 @@ STATIC bool check_sv_type (TC type, SV *sv) {
     if (!sv)
         return 0;
 
+    SvGETMAGIC(sv);
+
     switch (type) {
         case Any:
             return 1;
@@ -466,10 +468,14 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             break;
         case RegexpRef:
         case Object:
-            if ( sv_isobject(sv) ) {
-                char *name = HvNAME_get(SvSTASH(SvRV(sv)));
-                bool is_regexp = strEQ("Regexp", name);
-                return ( (type == RegexpRef) ^ !is_regexp );
+            /* not using sv_isobject to avoid repeated get magic */
+            if ( SvROK(sv) ) {
+                SV *rv = SvRV(sv);
+                if ( SvOBJECT(rv) ) {
+                    char *name = HvNAME_get(SvSTASH(SvRV(sv)));
+                    bool is_regexp = strEQ("Regexp", name);
+                    return ( (type == RegexpRef) ^ !is_regexp );
+                }
             }
             return 0;
             break;
