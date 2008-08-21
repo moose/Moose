@@ -915,7 +915,7 @@ STATIC void weaken(pTHX_ SV *sv) {
 
 /* meta instance protocol */
 
-STATIC SV *get_slot_value(pTHX_ SV *self, ATTR *attr) {
+STATIC SV *get_slot_lvalue(pTHX_ SV *self, ATTR *attr) {
     HE *he;
 
     assert(self);
@@ -930,9 +930,8 @@ STATIC SV *get_slot_value(pTHX_ SV *self, ATTR *attr) {
         return NULL;
 }
 
-STATIC void set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value) {
+STATIC bool set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     HE *he;
-    SV *copy;
 
     assert(self);
     assert(SvROK(self));
@@ -940,17 +939,9 @@ STATIC void set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value) {
 
     assert( ATTR_DUMB_INSTANCE(attr) );
 
-    copy = newSVsv(value);
+    he = hv_store_ent((HV*)SvRV(self), attr->slot_sv, value, attr->slot_u32);
 
-    he = hv_store_ent((HV*)SvRV(self), attr->slot_sv, copy, attr->slot_u32);
-
-    if (he != NULL) {
-        if ( ATTR_ISWEAK(attr) )
-            weaken(aTHX_ HeVAL(he));
-    } else {
-        SvREFCNT_dec(copy);
-        croak("Hash store failed.");
-    }
+    return he != NULL;
 }
 
 STATIC bool has_slot_value(pTHX_ SV *self, ATTR *attr) {
@@ -1014,8 +1005,6 @@ STATIC SV *call_builder (pTHX_ SV *self, ATTR *attr) {
 }
 
 
-/* Returns an SV for the default value. Should be copied by the caller because
- * it's either an alias for a simple value, or a mortal from cv/builder */
 STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
     switch ( ATTR_DEFAULT(attr) ) {
         case default_none:
@@ -1030,7 +1019,7 @@ STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
                 croak("todo");
             } else {
                 printf("simple value\n");
-                return attr->def.sv; /* will be copied by set for lazy, and by reader for both cases */
+                return sv_mortalcopy(attr->def.sv); /* will be copied by set for lazy, and by reader for both cases */
             }
             break;
         case default_type:
@@ -1045,10 +1034,10 @@ STATIC SV *get_default(pTHX_ SV *self, ATTR *attr) {
  * returns an alias to the sv that is copied in the reader/writer/accessor code
  * */
 STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
-    SV *value = get_slot_value(aTHX_ self, attr);
+    SV *value = get_slot_lvalue(aTHX_ self, attr);
 
     if ( value ) {
-        return value;
+        return sv_mortalcopy(value);
     } else if ( ATTR_ISLAZY(attr) ) {
         value = get_default(aTHX_ self, attr);
         attr_set_value(aTHX_ self, attr, value);
@@ -1060,12 +1049,27 @@ STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
 
 /* $attr->set_value($self) */
 STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
+    SV *copy;
+
+    if ( !value ) {
+        /* FIXME croak if required ? */
+        return;
+    }
+
     if ( ATTR_TYPE(attr) ) {
         if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
             croak("Bad param");
     }
 
-    set_slot_value(aTHX_ self, attr, value);
+    copy = newSVsv(value);
+
+    if ( ATTR_ISWEAK(attr) && SvROK(copy) )
+        weaken(aTHX_ copy);
+
+    if ( !set_slot_value(aTHX_ self, attr, copy) ) {
+        SvREFCNT_dec(copy);
+        croak("Hash store failed.");
+    }
 }
 
 
@@ -1108,7 +1112,7 @@ STATIC XS(reader)
     value = attr_get_value(aTHX_ ST(0), attr);
 
     if (value) {
-        ST(0) = sv_mortalcopy(value); /* mortalcopy because $_ .= "blah" for $foo->bar */
+        ST(0) = value;
         XSRETURN(1);
     } else {
         XSRETURN_UNDEF;
