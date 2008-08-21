@@ -770,7 +770,6 @@ STATIC void delete_mi (pTHX_ MI *mi) {
  * $attr->associated_class->get_meta_instance */
 STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     dSP;
-    I32 count;
     SV *mi;
 
     if ( !meta_attr )
@@ -783,10 +782,7 @@ STATIC SV *attr_to_meta_instance(pTHX_ SV *meta_attr) {
     XPUSHs(meta_attr);
 
     PUTBACK;
-    count = call_pv("Moose::XS::attr_to_meta_instance", G_SCALAR);
-
-    if ( count != 1 )
-        croak("attr_to_meta_instance borked (%d args returned, expecting 1)", (int)count);
+    call_pv("Moose::XS::attr_to_meta_instance", G_SCALAR);
 
     SPAGAIN;
     mi = POPs;
@@ -992,9 +988,9 @@ STATIC SV *call_builder (pTHX_ SV *self, ATTR *attr) {
      * $obj->$coderef etc, for that we need to use 'default' */
     PUTBACK;
     call_method(SvPV_nolen(attr->def.sv), G_SCALAR);
-    SPAGAIN;
 
     /* the value is a mortal with a refcount of 1, so we need to keep it around */
+    SPAGAIN;
     sv = POPs;
     SvREFCNT_inc_simple_void(sv);
 
