@@ -2,6 +2,8 @@
 #include "perl.h"
 #include "XSUB.h"
 
+#define NEED_grok_number
+#define NEED_grok_numeric_radix
 #define NEED_newRV_noinc
 #define NEED_newSVpvn_share
 #define NEED_sv_2pv_flags
