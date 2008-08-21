@@ -469,7 +469,7 @@ STATIC bool check_sv_type (TC type, SV *sv) {
             if ( sv_isobject(sv) ) {
                 char *name = HvNAME_get(SvSTASH(SvRV(sv)));
                 bool is_regexp = strEQ("Regexp", name);
-                return ( type != RegexpRef ? is_regexp : !is_regexp );
+                return ( type == RegexpRef ? is_regexp : !is_regexp );
             }
             return 0;
             break;
