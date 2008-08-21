@@ -913,7 +913,11 @@ STATIC void weaken(pTHX_ SV *sv) {
 
 
 
-/* meta instance protocol */
+/* meta instance protocol
+ *
+ * The slot functions don't change the refcount or copy (aliasing semantics)
+ *
+ * create_instance returns a new mortal */
 
 STATIC SV *get_slot_lvalue(pTHX_ SV *self, ATTR *attr) {
     HE *he;
@@ -973,7 +977,9 @@ STATIC SV *create_instance(pTHX_ MI *mi) {
 
 /* Shared functionality for readers/writers/accessors, this roughly corresponds
  * to the methods of Moose::Meta::Attribute on the instance
- * (get_value/set_value, default value handling, etc) */
+ * (get_value/set_value, default value handling, etc)
+ *
+ * These functions return mortal copiess and save copies (handling refcounting). */
 
 STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value);
 
