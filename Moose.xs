@@ -492,6 +492,7 @@ STATIC bool check_sv_type (TC type, SV *sv) {
 
 /* invoke a CV on an SV and return SvTRUE of the result */
 STATIC bool check_sv_cv (pTHX_ SV *cv, SV *sv) {
+    SV *ret_sv;
     bool ret;
     dSP;
 
@@ -504,7 +505,8 @@ STATIC bool check_sv_cv (pTHX_ SV *cv, SV *sv) {
     call_sv(cv, G_SCALAR);
 
     SPAGAIN;
-    ret = SvTRUE(POPs);
+    ret_sv = POPs;
+    ret = SvTRUE(ret_sv);
 
     PUTBACK;
     FREETMPS;
