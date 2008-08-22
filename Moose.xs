@@ -200,8 +200,9 @@ typedef struct {
     TC_CHECK tc_check; /* see TC_CHECK*/
     SV *type_constraint; /* Moose::Meta::TypeConstraint object */
 
-    CV *initializer; /* TODO */
-    CV *trigger; /* TODO */
+    CV *trigger;
+    CV *initializer;
+    CV *writer; /* used by the initializer */
 
     SV *meta_attr; /* the Moose::Meta::Attribute */
     AV *cvs; /* an array of CVs which use this attr, see delete_mi */
@@ -668,8 +669,6 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     if ( attr->initializer && SvTYPE(attr->initializer) != SVt_PVCV )
         croak("initializer is not a coderef");
 
-
-
     /* now that we're done preparing/checking args and shit, so we finalize the
      * attr, increasing refcounts for any referenced data, and creating the CV
      * array */
@@ -717,7 +716,7 @@ STATIC SV *new_mi (pTHX_ HV *stash, AV *attrs) {
     mi->type = 0; /* nothing else implemented yet */
 
     /* initialize attributes */
-    for ( ; mi->num_attrs < num_attrs; mi->num_attrs++ ) {
+    for ( mi->num_attrs = 0; mi->num_attrs < num_attrs; mi->num_attrs++ ) {
         SV **desc = av_fetch(attrs, mi->num_attrs, 0);
 
         if ( !desc || !*desc || !SvROK(*desc) || !(SvTYPE(SvRV(*desc)) == SVt_PVAV) ) {
@@ -745,8 +744,9 @@ STATIC void delete_attr (pTHX_ ATTR *attr) {
     SvREFCNT_dec(attr->type_constraint);
     if ( attr->flags & ATTR_TCREFCNT )  SvREFCNT_dec(attr->tc_check.sv);
     if ( attr->flags & ATTR_DEFREFCNT ) SvREFCNT_dec(attr->def.sv);
-    SvREFCNT_dec(attr->initializer);
     SvREFCNT_dec(attr->trigger);
+    SvREFCNT_dec(attr->initializer);
+    SvREFCNT_dec(attr->writer);
     SvREFCNT_dec(attr->meta_attr);
 }
 
@@ -1085,6 +1085,25 @@ STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
 
 
 
+/* generate a new attribute method */
+STATIC CV *new_attr_method (pTHX_ SV *attr, XSPROTO(body), char *name) {
+    CV *cv = newXS(name, body, __FILE__);
+
+    if (cv == NULL)
+        croak("Oi vey!");
+
+    /* associate CV with meta attr */
+    stash_in_mg(aTHX_ (SV *)cv, attr);
+
+    /* this will be set on first call */
+    XSANY.any_i32 = 0;
+
+    return cv;
+}
+
+
+
+
 /* This macro is used in the XS subs to set up the 'attr' variable.
  *
  * if XSANY is NULL then define_attr is called on the CV, to set the pointer
@@ -1187,6 +1206,12 @@ STATIC XS(predicate)
         XSRETURN_NO;
 }
 
+
+
+
+
+
+
 enum xs_body {
     xs_body_reader = 0,
     xs_body_writer,
@@ -1206,18 +1231,18 @@ MODULE = Moose PACKAGE = Moose::XS
 PROTOTYPES: ENABLE
 
 CV *
-new_sub(attr, name)
+new_attr_method(attr, name)
     INPUT:
         SV *attr;
         SV *name;
     PROTOTYPE: $;$
+    PREINIT:
+        char *pv = SvOK(name) ? SvPV_nolen(name) : NULL;
     ALIAS:
         new_reader    = xs_body_reader
         new_writer    = xs_body_writer
         new_accessor  = xs_body_accessor
         new_predicate = xs_body_predicate
-    PREINIT:
-        CV * cv;
     CODE:
         if ( ix >= max_xs_body )
             croak("Unknown Moose::XS body type");
@@ -1225,18 +1250,7 @@ new_sub(attr, name)
         if ( !sv_isobject(attr) )
             croak("'attr' must be a Moose::Meta::Attribute");
 
-        cv = newXS(SvOK(name) ? SvPV_nolen(name) : NULL, xs_bodies[ix], __FILE__);
-
-        if (cv == NULL)
-            croak("Oi vey!");
-
-        /* associate CV with meta attr */
-        stash_in_mg(aTHX_ (SV *)cv, attr);
-
-        /* this will be set on first call */
-        XSANY.any_i32 = 0;
-
-        RETVAL = cv;
+        RETVAL = new_attr_method(aTHX_ attr, xs_bodies[ix], pv);
     OUTPUT:
         RETVAL
 
