@@ -18,6 +18,8 @@ BEGIN {
     plan 'no_plan';
 }
 
+my $i;
+
 {
     package Moose::XS;
 
@@ -128,6 +130,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     has c => ( isa => "ClassName", is => "rw" );
     has b => ( is => "ro", lazy_build => 1 ); # fixme type constraint checking
     has tc => ( is => "rw", isa => "FiveChars" );
+    has t => ( is => "rw", trigger => sub { $i++ } );
 
     sub _build_b { "builded!" }
 
@@ -147,7 +150,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
 }
 
 {
-    my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c, $b ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c b);
+    my ( $x, $y, $z, $ref, $a, $s, $i, $o, $f, $c, $b, $tc, $t ) = map { Foo->meta->get_attribute($_) } qw(x y z ref a s i o f c b tc t);
     $x->Moose::XS::new_accessor("Foo::x");
     $x->Moose::XS::new_predicate("Foo::has_x");
     $y->Moose::XS::new_reader("Foo::y");
@@ -161,6 +164,8 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     $f->Moose::XS::new_accessor("Foo::f");
     $c->Moose::XS::new_accessor("Foo::c");
     $b->Moose::XS::new_accessor("Foo::b");
+    $tc->Moose::XS::new_accessor("Foo::tc");
+    $t->Moose::XS::new_accessor("Foo::t");
 }
 
 
@@ -206,6 +211,10 @@ is( $foo->ref, $ref, "attr set" );
 
 undef $ref;
 is( $foo->ref(), undef, "weak ref destroyed" );
+
+is( $i, undef, "trigger not yet called" );
+is( $foo->t, undef, "no value in t" );
+is( $i, undef, "trigger not yet called" );
 
 ok( !eval { $foo->a("not a ref"); 1 }, "ArrayRef" );
 ok( !eval { $foo->a(3); 1 }, "ArrayRef" );

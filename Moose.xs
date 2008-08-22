@@ -976,7 +976,37 @@ STATIC SV *create_instance(pTHX_ MI *mi) {
  *
  * These functions return mortal copiess and save copies (handling refcounting). */
 
-STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value);
+STATIC void attr_set_common(pTHX_ SV *self, ATTR *attr, SV *value) {
+    SV *copy;
+
+    if ( !value ) {
+        /* FIXME croak if required ? */
+        return;
+    }
+
+    if ( ATTR_TYPE(attr) ) {
+        if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
+            croak("Bad param");
+    }
+
+    copy = newSVsv(value);
+
+    if ( ATTR_ISWEAK(attr) && SvROK(copy) )
+        weaken(aTHX_ copy);
+
+    if ( !set_slot_value(aTHX_ self, attr, copy) ) {
+        SvREFCNT_dec(copy);
+        croak("Hash store failed.");
+    }
+}
+
+STATIC void attr_set_initial_value(pTHX_ SV *self, ATTR *attr, SV *value) {
+    if ( attr->initializer ) {
+        croak("todo");
+    } else {
+        attr_set_common(aTHX_ self, attr, value);
+    }
+}
 
 STATIC SV *call_builder (pTHX_ SV *self, ATTR *attr) {
     SV *sv;
@@ -1041,7 +1071,7 @@ STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
         return sv_mortalcopy(value);
     } else if ( ATTR_ISLAZY(attr) ) {
         value = get_default(aTHX_ self, attr);
-        attr_set_value(aTHX_ self, attr, value);
+        attr_set_initial_value(aTHX_ self, attr, value);
         return value;
     }
 
@@ -1050,26 +1080,27 @@ STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
 
 /* $attr->set_value($self) */
 STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
-    SV *copy;
+    attr_set_common(aTHX_ self, attr, value);
 
-    if ( !value ) {
-        /* FIXME croak if required ? */
-        return;
-    }
+    if ( attr->trigger ) {
+        dSP;
 
-    if ( ATTR_TYPE(attr) ) {
-        if ( !check_type_constraint(aTHX_ ATTR_TYPE(attr), attr->tc_check, attr->type_constraint, value) )
-            croak("Bad param");
-    }
+        ENTER;
+        SAVETMPS;
+        PUSHMARK(SP);
 
-    copy = newSVsv(value);
+        /* FIXME copy self & meta attr? */
+        XPUSHs(self);
+        XPUSHs(sv_2mortal(newSVsv(value)));
+        XPUSHs(attr->meta_attr);
 
-    if ( ATTR_ISWEAK(attr) && SvROK(copy) )
-        weaken(aTHX_ copy);
+        /* we invoke the builder as a stringified method. This will not work for
+         * $obj->$coderef etc, for that we need to use 'default' */
+        PUTBACK;
+        call_method(SvPV_nolen(attr->def.sv), G_VOID);
 
-    if ( !set_slot_value(aTHX_ self, attr, copy) ) {
-        SvREFCNT_dec(copy);
-        croak("Hash store failed.");
+        FREETMPS;
+        LEAVE;
     }
 }
 
