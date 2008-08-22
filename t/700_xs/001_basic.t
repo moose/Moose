@@ -18,8 +18,6 @@ BEGIN {
     plan 'no_plan';
 }
 
-my $i;
-
 {
     package Moose::XS;
 
@@ -107,6 +105,8 @@ ok( defined &Moose::XS::new_writer, "new_writer" );
 ok( defined &Moose::XS::new_accessor, "new_accessor" );
 ok( defined &Moose::XS::new_predicate, "new_predicate" );
 
+my $trigger;
+
 {
     package Foo;
     use Moose;
@@ -130,7 +130,7 @@ ok( defined &Moose::XS::new_predicate, "new_predicate" );
     has c => ( isa => "ClassName", is => "rw" );
     has b => ( is => "ro", lazy_build => 1 ); # fixme type constraint checking
     has tc => ( is => "rw", isa => "FiveChars" );
-    has t => ( is => "rw", trigger => sub { $i++ } );
+    has t => ( is => "rw", trigger => sub { $trigger = "got: " . $_[1] } );
 
     sub _build_b { "builded!" }
 
@@ -212,9 +212,11 @@ is( $foo->ref, $ref, "attr set" );
 undef $ref;
 is( $foo->ref(), undef, "weak ref destroyed" );
 
-is( $i, undef, "trigger not yet called" );
+is( $trigger, undef, "trigger not yet called" );
 is( $foo->t, undef, "no value in t" );
-is( $i, undef, "trigger not yet called" );
+is( $trigger, undef, "trigger not yet called" );
+$foo->t("laaa");
+is( $trigger, "got: laaa", "trigger called" );
 
 ok( !eval { $foo->a("not a ref"); 1 }, "ArrayRef" );
 ok( !eval { $foo->a(3); 1 }, "ArrayRef" );

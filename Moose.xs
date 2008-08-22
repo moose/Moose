@@ -663,11 +663,11 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
 
 
 
-    attr->trigger = SvROK(params[6]) ? (CV *)SvRV(params[6]) : NULL;
+    attr->trigger = SvROK(params[8]) ? (CV *)SvRV(params[8]) : NULL;
     if ( attr->trigger && SvTYPE(attr->trigger) != SVt_PVCV )
         croak("trigger is not a coderef");
 
-    attr->initializer = SvROK(params[7]) ? (CV *)SvRV(params[7]) : NULL;
+    attr->initializer = SvROK(params[9]) ? (CV *)SvRV(params[9]) : NULL;
     if ( attr->initializer && SvTYPE(attr->initializer) != SVt_PVCV )
         croak("initializer is not a coderef");
 
@@ -1097,7 +1097,7 @@ STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
         /* we invoke the builder as a stringified method. This will not work for
          * $obj->$coderef etc, for that we need to use 'default' */
         PUTBACK;
-        call_method(SvPV_nolen(attr->def.sv), G_VOID);
+        call_sv((SV *)attr->trigger, G_VOID);
 
         FREETMPS;
         LEAVE;
