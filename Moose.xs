@@ -36,7 +36,6 @@
 
 
 
-
 /* These two functions attach magic with no behavior to an SV.
  *
  * The stashed value is reference counted, and is destroyed when it's parent
@@ -202,7 +201,7 @@ typedef struct {
 
     CV *trigger;
     CV *initializer;
-    CV *writer; /* used by the initializer */
+    SV *writer; /* used by the initializer */
 
     SV *meta_attr; /* the Moose::Meta::Attribute */
     AV *cvs; /* an array of CVs which use this attr, see delete_mi */
@@ -317,6 +316,42 @@ typedef struct mi {
 
 
 
+
+/* Moose::Meta::Instance level API */
+STATIC SV *get_slot_lvalue(pTHX_ SV *self, ATTR *attr);
+STATIC bool set_slot_value(pTHX_ SV *self, ATTR *attr, SV *value);
+STATIC bool has_slot_value(pTHX_ SV *self, ATTR *attr);
+STATIC SV *create_instance(pTHX_ MI *mi);
+STATIC SV *deinitialize_slot(pTHX_ SV *self, ATTR *attr);
+
+/* Moose::Meta::Attribute level API */
+STATIC void attr_set_initial_value(pTHX_ SV *self, ATTR *attr, SV *value);
+STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr);
+STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value);
+STATIC SV *attr_clear_value(pTHX_ SV *self, ATTR *attr);
+STATIC bool attr_has_value(pTHX_ SV *self, ATTR *attr);
+STATIC SV *class_new_object(pTHX_ MI *mi, HV *params);
+
+
+/* Moose::Meta::Attribute level API (XSUBs) */
+STATIC CV *new_attr_method (pTHX_ SV *attr, XSPROTO(body), char *name);
+STATIC XS(initializer); /* only used by attr_set_initial_value */
+STATIC XS(reader);
+STATIC XS(writer);
+STATIC XS(accessor);
+STATIC XS(predicate);
+STATIC XS(clearer);
+STATIC XS(new_object);
+
+STATIC ATTR *define_attr(pTHX_ CV *cv);
+
+
+/* This macro is used in the XS subs to set up the 'attr' variable.
+ *
+ * if XSANY is NULL then define_attr is called on the CV, to set the pointer
+ * to the ATTR struct.
+ * */
+#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
 
 
 
@@ -1000,9 +1035,47 @@ STATIC void attr_set_common(pTHX_ SV *self, ATTR *attr, SV *value) {
     }
 }
 
+
+STATIC XS(initializer)
+{
+#ifdef dVAR
+    dVAR;
+#endif
+    dXSARGS;
+    dATTR;
+
+    if (items != 2)
+        Perl_croak(aTHX_ "Usage: %s(%s, %s)", GvNAME(CvGV(cv)), "self", "value");
+
+    SP -= items;
+
+    attr_set_common(aTHX_ ST(0), attr, ST(1));
+
+    XSRETURN_EMPTY;
+}
+
 STATIC void attr_set_initial_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     if ( attr->initializer ) {
-        croak("todo");
+        if ( !attr->writer ) {
+            attr->writer = newRV_inc((SV *)new_attr_method(aTHX_ attr->meta_attr, initializer, NULL ));
+        }
+
+        dSP;
+
+        ENTER;
+        SAVETMPS;
+        PUSHMARK(SP);
+
+        XPUSHs(self);
+        XPUSHs(sv_2mortal(newSVsv(value)));
+        XPUSHs(attr->writer);
+        XPUSHs(attr->meta_attr);
+
+        PUTBACK;
+        call_sv((SV *)attr->initializer, G_VOID);
+
+        FREETMPS;
+        LEAVE;
     } else {
         attr_set_common(aTHX_ self, attr, value);
     }
@@ -1104,7 +1177,13 @@ STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     }
 }
 
+STATIC bool attr_has_value(pTHX_ SV *self, ATTR *attr) {
+    return has_slot_value(aTHX_ self, attr);
+}
 
+STATIC SV *attr_clear_value(pTHX_ SV *self, ATTR *attr) {
+    return deinitialize_slot(aTHX_ self, attr);
+}
 
 
 
@@ -1137,15 +1216,6 @@ STATIC CV *new_attr_method (pTHX_ SV *attr, XSPROTO(body), char *name) {
 
 
 
-/* This macro is used in the XS subs to set up the 'attr' variable.
- *
- * if XSANY is NULL then define_attr is called on the CV, to set the pointer
- * to the ATTR struct.
- * */
-#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
-
-
-STATIC XS(reader);
 STATIC XS(reader)
 {
 #ifdef dVAR
@@ -1170,7 +1240,6 @@ STATIC XS(reader)
     }
 }
 
-STATIC XS(writer);
 STATIC XS(writer)
 {
 #ifdef dVAR
@@ -1190,7 +1259,6 @@ STATIC XS(writer)
     XSRETURN(1);
 }
 
-STATIC XS(accessor);
 STATIC XS(accessor)
 {
 #ifdef dVAR
@@ -1219,7 +1287,6 @@ STATIC XS(accessor)
     XSRETURN(1);
 }
 
-STATIC XS(predicate);
 STATIC XS(predicate)
 {
 #ifdef dVAR
@@ -1233,13 +1300,29 @@ STATIC XS(predicate)
 
     SP -= items;
 
-    if ( has_slot_value(aTHX_ ST(0), attr) )
+    if ( attr_has_value(aTHX_ ST(0), attr) )
         XSRETURN_YES;
     else
         XSRETURN_NO;
 }
 
+STATIC XS(clearer)
+{
+#ifdef dVAR
+    dVAR;
+#endif
+    dXSARGS;
+    dATTR;
 
+    if (items != 1)
+        Perl_croak(aTHX_ "Usage: %s(%s)", GvNAME(CvGV(cv)), "self");
+
+    SP -= items;
+
+    attr_clear_value(aTHX_ ST(0), attr);
+
+    XSRETURN_EMPTY;
+}
 
 
 
@@ -1250,6 +1333,8 @@ enum xs_body {
     xs_body_writer,
     xs_body_accessor,
     xs_body_predicate,
+    xs_body_initializer,
+    xs_body_clearer,
     max_xs_body
 };
 
@@ -1258,6 +1343,8 @@ STATIC XSPROTO ((*xs_bodies[])) = {
     writer,
     accessor,
     predicate,
+    initializer,
+    clearer,
 };
 
 MODULE = Moose PACKAGE = Moose::XS
@@ -1272,10 +1359,12 @@ new_attr_method(attr, name)
     PREINIT:
         char *pv = SvOK(name) ? SvPV_nolen(name) : NULL;
     ALIAS:
-        new_reader    = xs_body_reader
-        new_writer    = xs_body_writer
-        new_accessor  = xs_body_accessor
-        new_predicate = xs_body_predicate
+        new_reader      = xs_body_reader
+        new_writer      = xs_body_writer
+        new_accessor    = xs_body_accessor
+        new_predicate   = xs_body_predicate
+        new_initializer = xs_body_initializer
+        new_clearer     = xs_body_clearer
     CODE:
         if ( ix >= max_xs_body )
             croak("Unknown Moose::XS body type");
