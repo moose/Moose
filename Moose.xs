@@ -312,6 +312,9 @@ typedef struct mi {
     /* attr descriptors */
     I32 num_attrs;
     ATTR *attrs;
+
+    /* dependent methods */
+    AV *cvs;
 } MI;
 
 
@@ -334,7 +337,7 @@ STATIC SV *class_new_object(pTHX_ MI *mi, HV *params);
 
 
 /* Moose::Meta::Attribute level API (XSUBs) */
-STATIC CV *new_attr_method (pTHX_ SV *attr, XSPROTO(body), char *name);
+STATIC CV *new_method (pTHX_ SV *attr, XSPROTO(body), char *name);
 STATIC XS(initializer); /* only used by attr_set_initial_value */
 STATIC XS(reader);
 STATIC XS(writer);
@@ -344,6 +347,7 @@ STATIC XS(clearer);
 STATIC XS(new_object);
 
 STATIC ATTR *define_attr(pTHX_ CV *cv);
+STATIC MI *define_mi(pTHX_ CV *cv);
 
 
 /* This macro is used in the XS subs to set up the 'attr' variable.
@@ -352,6 +356,7 @@ STATIC ATTR *define_attr(pTHX_ CV *cv);
  * to the ATTR struct.
  * */
 #define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
+#define dMI   MI   *mi   = (XSANY.any_i32 ? INT2PTR(MI *,   (XSANY.any_i32)) : define_mi(aTHX_ cv))
 
 
 
@@ -629,8 +634,10 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
 
 
     init_arg_sv = params[13];
-    init_arg_pv = SvPV(init_arg_sv, init_arg_len);
-    PERL_HASH(init_arg_hash, init_arg_pv, init_arg_len);
+    if ( SvOK(init_arg_sv) ) {
+        init_arg_pv = SvPV(init_arg_sv, init_arg_len);
+        PERL_HASH(init_arg_hash, init_arg_pv, init_arg_len);
+    }
 
 
     /* FIXME better organize these, positionals suck */
@@ -763,20 +770,28 @@ STATIC SV *new_mi (pTHX_ HV *stash, AV *attrs) {
         init_attr(mi, &mi->attrs[mi->num_attrs], (AV *)SvRV(*desc));
     }
 
+    mi->cvs = newAV();
+
     return obj;
 }
 
-STATIC void delete_attr (pTHX_ ATTR *attr) {
-    I32 i;
-    SV **cvs = AvARRAY(attr->cvs);
+STATIC void clear_cvs (AV *av) {
+    SV **cvs = AvARRAY(av);
+    I32 i = av_len(av);
 
-    /* remove the pointers to this ATTR struct from all the the dependent CVs */
-    for ( i = av_len(attr->cvs); i >= 0; i-- ) {
-        CV *cv = (CV *)cvs[i];
+    /* remove the pointers from all the the dependent CVs */
+    while ( i >= 0 ) {
+        CV *cv = (CV *)cvs[i--];
         XSANY.any_i32 = 0;
     }
 
-    SvREFCNT_dec(attr->cvs);
+    SvREFCNT_dec(av);
+}
+
+STATIC void delete_attr (pTHX_ ATTR *attr) {
+
+    clear_cvs(attr->cvs);
+
     SvREFCNT_dec(attr->slot_sv);
     SvREFCNT_dec(attr->type_constraint);
     if ( attr->flags & ATTR_TCREFCNT )  SvREFCNT_dec(attr->tc_check.sv);
@@ -796,6 +811,11 @@ STATIC void delete_mi (pTHX_ MI *mi) {
     }
 
     if ( mi->attrs ) Safefree(mi->attrs);
+
+    if ( mi->cvs ) {
+        clear_cvs(mi->cvs);
+    }
+
     Safefree(mi);
 }
 
@@ -876,9 +896,8 @@ STATIC SV *perl_mi_to_c_mi(pTHX_ SV *perl_mi) {
 
 
 /* locate an ATTR for a MOP level attribute inside an MI */
-STATIC ATTR *mi_find_attr(SV *mi_obj, SV *meta_attr) {
+STATIC ATTR *mi_find_attr(MI *mi, SV *meta_attr) {
     I32 ix;
-    MI *mi = INT2PTR(MI *, SvIV(SvRV(mi_obj)));
 
     for ( ix = 0; ix < mi->num_attrs; ix++ ) {
         if ( SvRV(mi->attrs[ix].meta_attr) == SvRV(meta_attr) ) {
@@ -897,9 +916,7 @@ STATIC ATTR *mi_find_attr(SV *mi_obj, SV *meta_attr) {
  * 3. get the MI by using get_stashed_in_mg from the meta instance, creating it if necessary
  * 4. search for the appropriate ATTR in the MI using mi_find_attr
  */
-STATIC ATTR *get_attr(pTHX_ CV *cv) {
-    SV *meta_attr = get_stashed_in_mg(aTHX_ (SV *)cv);
-    SV *perl_mi = attr_to_meta_instance(aTHX_ meta_attr);
+STATIC MI *get_or_create_mi(pTHX_ SV *perl_mi) {
     SV *mi_obj = get_stashed_in_mg(aTHX_ SvRV(perl_mi));
 
     if (!mi_obj) {
@@ -907,7 +924,19 @@ STATIC ATTR *get_attr(pTHX_ CV *cv) {
         stash_in_mg(aTHX_ SvRV(perl_mi), mi_obj);
     }
 
-    return mi_find_attr(mi_obj, meta_attr);
+    return INT2PTR(MI *, SvIV(SvRV(mi_obj)));
+}
+
+STATIC ATTR *get_attr(pTHX_ CV *cv) {
+    SV *meta_attr = get_stashed_in_mg(aTHX_ (SV *)cv);
+    SV *perl_mi = attr_to_meta_instance(aTHX_ meta_attr);
+    MI *mi = get_or_create_mi(aTHX_ perl_mi);
+    return mi_find_attr(mi, meta_attr);
+}
+
+STATIC MI *get_mi(pTHX_ CV *cv) {
+    SV *perl_mi = get_stashed_in_mg(aTHX_ (SV *)cv);
+    return(get_or_create_mi(aTHX_ perl_mi));
 }
 
 /* Cache a pointer to the appropriate ATTR in the XSANY of the CV, using
@@ -924,6 +953,17 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
     return attr;
 }
 
+STATIC MI *define_mi (pTHX_ CV *cv) {
+    MI *mi = get_mi(aTHX_ cv);
+    assert(mi);
+
+    XSANY.any_i32 = PTR2IV(mi);
+
+    SvREFCNT_inc_simple_void(cv);
+    av_push( mi->cvs, (SV *)cv );
+
+    return mi;
+}
 
 
 
@@ -1057,7 +1097,7 @@ STATIC XS(initializer)
 STATIC void attr_set_initial_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     if ( attr->initializer ) {
         if ( !attr->writer ) {
-            attr->writer = newRV_inc((SV *)new_attr_method(aTHX_ attr->meta_attr, initializer, NULL ));
+            attr->writer = newRV_inc((SV *)new_method(aTHX_ attr->meta_attr, initializer, NULL ));
         }
 
         dSP;
@@ -1185,8 +1225,36 @@ STATIC SV *attr_clear_value(pTHX_ SV *self, ATTR *attr) {
     return deinitialize_slot(aTHX_ self, attr);
 }
 
+STATIC void initialize_instance_slot(pTHX_ SV *self, ATTR *attr, HV *params) {
+    HE *he;
+    SV *value = NULL;
 
+    if ( attr->init_arg_sv ) {
+        if (he = hv_fetch_ent(params, attr->init_arg_sv, 0, attr->init_arg_u32))
+            value = HeVAL(he);
+    }
 
+    if ( !value && ATTR_DEFAULT(attr) && !ATTR_ISLAZY(attr) ) {
+        value = get_default(aTHX_ self, attr);
+    }
+
+    if ( value ) {
+        attr_set_initial_value(aTHX_ self, attr, value);
+    }
+}
+
+STATIC SV *class_new_object(pTHX_ MI *mi, HV *params) {
+    I32 i;
+
+    SV *self = create_instance(aTHX_ mi);
+
+    for ( i = 0; i < mi->num_attrs; i++ ) {
+        ATTR *attr = &mi->attrs[i];
+        initialize_instance_slot(aTHX_ self, attr, params);
+    }
+
+    return self;
+}
 
 
 /* Perl-space level functionality
@@ -1198,7 +1266,7 @@ STATIC SV *attr_clear_value(pTHX_ SV *self, ATTR *attr) {
 
 
 /* generate a new attribute method */
-STATIC CV *new_attr_method (pTHX_ SV *attr, XSPROTO(body), char *name) {
+STATIC CV *new_method (pTHX_ SV *attr, XSPROTO(body), char *name) {
     CV *cv = newXS(name, body, __FILE__);
 
     if (cv == NULL)
@@ -1324,6 +1392,73 @@ STATIC XS(clearer)
     XSRETURN_EMPTY;
 }
 
+STATIC HV *buildargs (pTHX, SV **args, I32 items) {
+    if ( items == 1 ) {
+        SV *sv = args[0];
+        if ( SvROK(sv) && SvTYPE(SvRV(sv)) == SVt_PVHV )
+            return (HV *)SvRV(sv);
+        else
+            croak("Single argument must be hash ref"); /* FIXME copy the same error */
+    } else if ( items % 2 == 0 ) { /* kvp + self */
+        I32 i = 0;
+        HV* const hv = newHV();
+        sv_2mortal((SV *)hv);
+
+        while ( i < (items-1) ) {
+            SV * const key = args[i++];
+            SV * const val = newSVsv(args[i++]);
+            (void)hv_store_ent(hv,key,val,0);
+        }
+
+        return hv;
+    } else {
+        croak("even sized list expected, got %d", items); /* FIXME copy the same error */
+    }
+}
+
+STATIC XS(new_object)
+{
+#ifdef dVAR
+    dVAR;
+#endif
+    dXSARGS;
+    dMI;
+    HV *params;
+
+    if (items < 1)
+        Perl_croak(aTHX_ "Usage: %s(%s, ...)", GvNAME(CvGV(cv)), "self");
+
+    SP -= items;
+
+    params = buildargs(aTHX_ (SP+2), items-1);
+
+    ST(0) = class_new_object(aTHX_ mi, params);
+
+    XSRETURN(1);
+}
+
+STATIC XS(new)
+{
+#ifdef dVAR
+    dVAR;
+#endif
+    dXSARGS;
+    dMI;
+    HV *params;
+
+    if (items < 1)
+        Perl_croak(aTHX_ "Usage: %s(%s, ...)", GvNAME(CvGV(cv)), "self");
+
+    /* chec gv_stashsv of ST(0)
+     * call buildargs if MI says to
+     * then call class_new_object
+     * call array of build methods (either BUILDs or BUILDALLs)
+     */
+
+    croak("todo");
+
+    ST(0) = class_new_object(aTHX_ mi, params);
+}
 
 
 
@@ -1335,6 +1470,8 @@ enum xs_body {
     xs_body_predicate,
     xs_body_initializer,
     xs_body_clearer,
+    xs_body_new_object,
+    xs_body_new,
     max_xs_body
 };
 
@@ -1345,15 +1482,18 @@ STATIC XSPROTO ((*xs_bodies[])) = {
     predicate,
     initializer,
     clearer,
+    new_object,
+    new,
+    NULL
 };
 
 MODULE = Moose PACKAGE = Moose::XS
 PROTOTYPES: ENABLE
 
 CV *
-new_attr_method(attr, name)
+new_method(meta, name)
     INPUT:
-        SV *attr;
+        SV *meta;
         SV *name;
     PROTOTYPE: $;$
     PREINIT:
@@ -1365,14 +1505,16 @@ new_attr_method(attr, name)
         new_predicate   = xs_body_predicate
         new_initializer = xs_body_initializer
         new_clearer     = xs_body_clearer
+        new_new_object  = xs_body_new_object
+        new_new         = xs_body_new
     CODE:
         if ( ix >= max_xs_body )
             croak("Unknown Moose::XS body type");
 
-        if ( !sv_isobject(attr) )
-            croak("'attr' must be a Moose::Meta::Attribute");
+        if ( !sv_isobject(meta) )
+            croak("'meta' must be an object");
 
-        RETVAL = new_attr_method(aTHX_ attr, xs_bodies[ix], pv);
+        RETVAL = new_method(aTHX_ meta, xs_bodies[ix], pv);
     OUTPUT:
         RETVAL
 

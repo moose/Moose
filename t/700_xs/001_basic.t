@@ -166,6 +166,8 @@ my $trigger;
     $b->Moose::XS::new_accessor("Foo::b");
     $tc->Moose::XS::new_accessor("Foo::tc");
     $t->Moose::XS::new_accessor("Foo::t");
+
+    Foo->meta->get_meta_instance->Moose::XS::new_new_object("Foo::new");
 }
 
 
@@ -260,6 +262,7 @@ ok( eval { $foo->s("foo"); 1 }, "Str" );
 ok( eval { $foo->s(""); 1 }, "Str" );
 ok( eval { $foo->s(4); 1 }, "Str" );
 ok( eval { $foo->o(bless {}, "Bar"); 1 }, "Object" );
+
 ok( eval { $foo->f(Foo->new); 1 }, "Class (Foo)" );
 ok( eval { $foo->f(Gorch->new); 1 }, "Class (Foo), real subclass");
 ok( eval { $foo->f(Quxx->new); 1 }, "Class (Foo), fake subclass");
