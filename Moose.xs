@@ -246,9 +246,18 @@ typedef struct {
 #define ATTR_WEAK 0x20
 #define ATTR_TRIGGER 0x40
 
+#define ATTR_REQUIRED 0x10000
+#define ATTR_INIT_ARG 0x20000
+#define ATTR_INITIALIZER 0x40000
+
 #define ATTR_ISWEAK(attr) ( attr->flags & ATTR_WEAK )
 #define ATTR_ISLAZY(attr) ( attr->flags & ATTR_LAZY )
 #define ATTR_ISCOERCE(attr) ( attr->flags & ATTR_COERCE )
+#define ATTR_HAS_TRIGGER(attr) ( attr->flags & ATTR_TRIGGER )
+#define ATTR_HAS_INIT_ARG(attr) ( attr->flags & ATTR_INIT_ARG )
+#define ATTR_HAS_INITIALIZER(attr) ( attr->flags & ATTR_INITIALIZER )
+
+#define ATTR_IS_REQUIRED(Attr) ( attr->flags & ATTR_REQUIRED )
 
 #define ATTR_TYPE(f) ( attr->flags & 0x7 )
 #define ATTR_DEFAULT(f) ( ( attr->flags & ATTR_MASK_DEFAULT ) >> ATTR_SHIFT_DEFAULT )
@@ -366,7 +375,7 @@ STATIC MI *define_mi(pTHX_ CV *cv);
 
 /* checks that the SV is a scalar ref */
 STATIC bool check_is_scalar_ref(SV *sv) {
-    if( SvROK(sv) ) {
+    if ( SvROK(sv) ) {
         switch (SvTYPE(SvRV(sv))) {
             case SVt_IV:
             case SVt_NV:
@@ -635,6 +644,7 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
 
     init_arg_sv = params[13];
     if ( SvOK(init_arg_sv) ) {
+        flags |= ATTR_INIT_ARG;
         init_arg_pv = SvPV(init_arg_sv, init_arg_len);
         PERL_HASH(init_arg_hash, init_arg_pv, init_arg_len);
     }
@@ -709,9 +719,13 @@ STATIC void init_attr (MI *mi, ATTR *attr, AV *desc) {
     if ( attr->trigger && SvTYPE(attr->trigger) != SVt_PVCV )
         croak("trigger is not a coderef");
 
+    if ( attr->trigger ) flags |= ATTR_TRIGGER;
+
     attr->initializer = SvROK(params[9]) ? (CV *)SvRV(params[9]) : NULL;
     if ( attr->initializer && SvTYPE(attr->initializer) != SVt_PVCV )
         croak("initializer is not a coderef");
+
+    if ( attr->initializer ) flags |= ATTR_INITIALIZER;
 
     /* now that we're done preparing/checking args and shit, so we finalize the
      * attr, increasing refcounts for any referenced data, and creating the CV
@@ -1095,7 +1109,7 @@ STATIC XS(initializer)
 }
 
 STATIC void attr_set_initial_value(pTHX_ SV *self, ATTR *attr, SV *value) {
-    if ( attr->initializer ) {
+    if ( ATTR_HAS_INITIALIZER(attr) ) {
         if ( !attr->writer ) {
             attr->writer = newRV_inc((SV *)new_method(aTHX_ attr->meta_attr, initializer, NULL ));
         }
@@ -1191,29 +1205,33 @@ STATIC SV *attr_get_value(pTHX_ SV *self, ATTR *attr) {
     return NULL;
 }
 
+STATIC void call_trigger (pTHX_ SV *self, ATTR *attr, SV *value) {
+    dSP;
+
+    ENTER;
+    SAVETMPS;
+    PUSHMARK(SP);
+
+    /* FIXME copy self & meta attr? */
+    XPUSHs(self);
+    XPUSHs(sv_2mortal(newSVsv(value)));
+    XPUSHs(attr->meta_attr);
+
+    /* we invoke the builder as a stringified method. This will not work for
+     * $obj->$coderef etc, for that we need to use 'default' */
+    PUTBACK;
+    call_sv((SV *)attr->trigger, G_VOID);
+
+    FREETMPS;
+    LEAVE;
+}
+
 /* $attr->set_value($self) */
 STATIC void attr_set_value(pTHX_ SV *self, ATTR *attr, SV *value) {
     attr_set_common(aTHX_ self, attr, value);
 
-    if ( attr->trigger ) {
-        dSP;
-
-        ENTER;
-        SAVETMPS;
-        PUSHMARK(SP);
-
-        /* FIXME copy self & meta attr? */
-        XPUSHs(self);
-        XPUSHs(sv_2mortal(newSVsv(value)));
-        XPUSHs(attr->meta_attr);
-
-        /* we invoke the builder as a stringified method. This will not work for
-         * $obj->$coderef etc, for that we need to use 'default' */
-        PUTBACK;
-        call_sv((SV *)attr->trigger, G_VOID);
-
-        FREETMPS;
-        LEAVE;
+    if ( ATTR_HAS_TRIGGER(attr) ) {
+        call_trigger(aTHX_ self, attr, value);
     }
 }
 
@@ -1229,8 +1247,8 @@ STATIC void initialize_instance_slot(pTHX_ SV *self, ATTR *attr, HV *params) {
     HE *he;
     SV *value = NULL;
 
-    if ( attr->init_arg_sv ) {
-        if (he = hv_fetch_ent(params, attr->init_arg_sv, 0, attr->init_arg_u32))
+    if ( ATTR_HAS_INIT_ARG(attr) ) {
+        if ((he = hv_fetch_ent(params, attr->init_arg_sv, 0, attr->init_arg_u32)))
             value = HeVAL(he);
     }
 
@@ -1406,7 +1424,8 @@ STATIC HV *buildargs (pTHX, SV **args, I32 items) {
 
         while ( i < (items-1) ) {
             SV * const key = args[i++];
-            SV * const val = newSVsv(args[i++]);
+            SV * const val = args[i++];
+            SvREFCNT_inc_simple_void(val);
             (void)hv_store_ent(hv,key,val,0);
         }
 
