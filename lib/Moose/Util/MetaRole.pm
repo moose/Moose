@@ -94,3 +94,122 @@ sub _make_new_class {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Moose::Util::MetaRole - Apply roles to any metaclass, as well as the object base class
+
+=head1 SYNOPSIS
+
+  package MyApp::Moose;
+
+  use strict;
+  use warnings;
+
+  use Moose ();
+  use Moose::Exporter;
+  use Moose::Util::Meta::Role;
+
+  use MyApp::Role::Meta::Class;
+  use MyApp::Role::Meta::Method::Constructor;
+  use MyApp::Role::Object;
+
+  Moose::Exporter->setup_import_methods( also => 'Moose' );
+
+  sub init_meta {
+      shift;
+      my %options = @_;
+
+      Moose->init_meta(%options);
+
+      Moose::Util::MetaRole::apply_metaclass_roles(
+          for_class               => $options{for_class},
+          metaclass_roles         => ['MyApp::Role::Meta::Class'],
+          constructor_class_roles => ['MyApp::Role::Meta::Method::Constructor'],
+      );
+
+      Moose::Util::MetaRole::apply_base_class_roles(
+          for_class => $options{for_class},
+          roles     => ['MyApp::Role::Object'],
+      );
+
+      return $options{for_class}->meta();
+  }
+
+=head1 DESCRIPTION
+
+This utility module is designed to help authors of Moose extensions
+write extensions that are able to cooperate with other Moose
+extensions. To do this, you must write your extensions as roles, which
+can then be dynamically applyied to the caller's metaclasses.
+
+This module makes sure to preserve any existing superclasses and roles
+already set for the meta objects, which means that any number of
+extensions can apply roles in any order.
+
+=head1 USAGE
+
+B<It is very important that you only call this module's functions when
+your module is imported by the caller>. The process of applying roles
+to the metaclass reinitializes the metaclass object, which wipes out
+any existing attributes already defined. However, as long as you do
+this when your module is imported, the caller should not have any
+attributes defined yet.
+
+The easiest way to ensure that this happens is to use
+L<Moose::Exporter> and provide an C<init_meta> method that will be
+called when imported.
+
+=head1 FUNCTIONS
+
+This module provides two functions.
+
+=head2 apply_metaclass_roles( ... )
+
+This function will apply roles to one or more metaclasses for the
+specified class. It accepts the following parameters:
+
+=over 4
+
+=item * for_class => $name
+
+This specifies the class for which to alter the meta classes.
+
+=item * metaclass_roles => \@roles
+
+=item * attribute_metaclass_roles => \@roles
+
+=item * method_metaclass_roles => \@roles
+
+=item * instance_metaclass_roles => \@roles
+
+=item * constructor_class_roles => \@roles
+
+=item * destructor_class_roles => \@roles
+
+These parameter all specify one or more roles to be applied to the
+specified metaclass. You can pass any or all of these parameters at
+once.
+
+=back
+
+=head2 apply_base_class_roles( for_class => $class, roles => \@roles )
+
+This function will apply the specified roles to the object's base class.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
