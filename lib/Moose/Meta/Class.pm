@@ -23,6 +23,16 @@ __PACKAGE__->meta->add_attribute('roles' => (
     default => sub { [] }
 ));
 
+__PACKAGE__->meta->add_attribute('constructor_class' => (
+    accessor => 'constructor_class',
+    default  => sub { 'Moose::Meta::Method::Constructor' }
+));
+
+__PACKAGE__->meta->add_attribute('destructor_class' => (
+    accessor => 'destructor_class',
+    default  => sub { 'Moose::Meta::Method::Destructor' }
+));
+
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
@@ -424,8 +434,8 @@ sub make_immutable {
     my $self = shift;
     $self->SUPER::make_immutable
       (
-       constructor_class => 'Moose::Meta::Method::Constructor',
-       destructor_class  => 'Moose::Meta::Method::Destructor',
+       constructor_class => $self->constructor_class,
+       destructor_class  => $self->destructor_class,
        inline_destructor => 1,
        # NOTE:
        # no need to do this,
