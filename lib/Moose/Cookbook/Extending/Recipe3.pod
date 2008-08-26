@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Extending::Recipe1 - Providing an alternate base object class
+Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
 
 =head1 SYNOPSIS
 

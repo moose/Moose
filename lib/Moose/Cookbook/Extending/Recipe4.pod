@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar Moose-style
+Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar Moose-style
 
 =head1 SYNOPSIS
 
