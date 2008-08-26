@@ -46,9 +46,12 @@ sub _make_new_metaclass {
 
     Class::MOP::remove_metaclass_by_name($for);
 
+    # This could get called for a Moose::Meta::Role as well as a Moose::Meta::Class
     my %classes = map {
         $_ => _make_new_class( $old_meta->$_(), $options->{ $_ . '_roles' } )
-        } qw(
+        }
+        grep { $old_meta->can($_) }
+        qw(
         attribute_metaclass
         method_metaclass
         instance_metaclass
