@@ -364,8 +364,8 @@ STATIC MI *define_mi(pTHX_ CV *cv);
  * if XSANY is NULL then define_attr is called on the CV, to set the pointer
  * to the ATTR struct.
  * */
-#define dATTR ATTR *attr = (XSANY.any_i32 ? INT2PTR(ATTR *, (XSANY.any_i32)) : define_attr(aTHX_ cv))
-#define dMI   MI   *mi   = (XSANY.any_i32 ? INT2PTR(MI *,   (XSANY.any_i32)) : define_mi(aTHX_ cv))
+#define dATTR ATTR *attr = (XSANY.any_ptr ? INT2PTR(ATTR *, (XSANY.any_ptr)) : define_attr(aTHX_ cv))
+#define dMI   MI   *mi   = (XSANY.any_ptr ? INT2PTR(MI *,   (XSANY.any_ptr)) : define_mi(aTHX_ cv))
 
 
 
@@ -796,7 +796,7 @@ STATIC void clear_cvs (AV *av) {
     /* remove the pointers from all the the dependent CVs */
     while ( i >= 0 ) {
         CV *cv = (CV *)cvs[i--];
-        XSANY.any_i32 = 0;
+        XSANY.any_ptr = NULL;
     }
 
     SvREFCNT_dec(av);
@@ -959,7 +959,7 @@ STATIC ATTR *define_attr (pTHX_ CV *cv) {
     ATTR *attr = get_attr(aTHX_ cv);
     assert(attr);
 
-    XSANY.any_i32 = PTR2IV(attr);
+    XSANY.any_ptr = (void *)attr;
 
     SvREFCNT_inc_simple_void(cv);
     av_push( attr->cvs, (SV *)cv );
@@ -971,7 +971,7 @@ STATIC MI *define_mi (pTHX_ CV *cv) {
     MI *mi = get_mi(aTHX_ cv);
     assert(mi);
 
-    XSANY.any_i32 = PTR2IV(mi);
+    XSANY.any_ptr = (void *)mi;
 
     SvREFCNT_inc_simple_void(cv);
     av_push( mi->cvs, (SV *)cv );
@@ -1294,7 +1294,7 @@ STATIC CV *new_method (pTHX_ SV *attr, XSPROTO(body), char *name) {
     stash_in_mg(aTHX_ (SV *)cv, attr);
 
     /* this will be set on first call */
-    XSANY.any_i32 = 0;
+    XSANY.any_ptr = NULL;
 
     return cv;
 }
