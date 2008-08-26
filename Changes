@@ -4,6 +4,23 @@ Revision history for Perl extension Moose
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
 
+    * Moose::Util::TypeConstraints
+      - Fix warnings from find_type_constraint if the type is not 
+        found (t0m).
+      
+    * Moose::Meta::TypeConstraint
+      - predicate methods (equals/is_a_type_of/is_subtype_of) now 
+        return false if the type you specify cannot be found in the
+        type registry, rather than throwing an unhelpful and coincidental
+        exception. The behavior is now in line with to 
+        $ob->isa('DoesNotExist') (t0m).
+        - added docs & test for this (t0m)
+    
+    * Moose::Meta::TypeConstraint::Registry
+      - add_type_constraint now throws an exception if a parameter is
+        not supplied (t0m).
+        - added docs & test for this (t0m)
+        
 0.55_01 Wed August 20, 2008
 
     !! Calling Moose::init_meta as a function is now         !!
