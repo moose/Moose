@@ -1,8 +1,13 @@
 Revision history for Perl extension Moose
 
-0.56
+0.55_02
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
+
+    * Moose::Util::MetaRole
+      - This simplifies the application of roles to any meta class, as
+        well as the base object class. Reimplemented metaclass traits
+        using this module. (Dave Rolsky)
 
 0.55_01 Wed August 20, 2008
 
