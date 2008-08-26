@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 47;
 
 use Moose::Util::MetaRole;
 
@@ -264,4 +264,35 @@ use Moose::Util::MetaRole;
         '... and call foo() on that meta object' );
     ok( ( grep { $_ eq 'My::Meta::Class' } My::Class3->meta()->meta()->superclasses() ),
         'apply_metaclass_roles() does not interfere with metaclass set via Moose->init_meta()' );
+}
+
+{
+    package Role::Bar;
+    use Moose::Role;
+    has 'bar' => ( is => 'ro', default => 200 );
+}
+
+{
+    package My::Class4;
+    use Moose;
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                 => 'My::Class4',
+        metaclass_roles           => ['Role::Foo'],
+    );
+
+    ok( My::Class4->meta()->meta()->does_role('Role::Foo'),
+        'apply Role::Foo to My::Class4->meta()' );
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                 => 'My::Class4',
+        metaclass_roles           => ['Role::Bar'],
+    );
+
+    ok( My::Class4->meta()->meta()->does_role('Role::Bar'),
+        'apply Role::Bar to My::Class4->meta()' );
+    ok( My::Class4->meta()->meta()->does_role('Role::Foo'),
+        '... and My::Class4->meta() still does Role::Foo' );
 }
