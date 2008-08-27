@@ -322,15 +322,6 @@ sub _fix_metaclass_incompatability {
                     . ", it isn't pristine";
             }
 
-            # also check values %{ $self->get_method_map } for any generated methods
-
-            # NOTE:
-            # We might want to consider actually
-            # transfering any attributes from the
-            # original meta into this one, but in
-            # general you should not have any there
-            # at this point anyway, so it's very
-            # much an obscure edge case anyway
             $self = $meta->reinitialize(
                 $self->name,
                 attribute_metaclass => $meta->attribute_metaclass,
