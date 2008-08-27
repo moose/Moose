@@ -295,17 +295,18 @@ sub _find_next_method_by_name_which_is_not_overridden {
 
 sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
+
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
-        my $meta = Class::MOP::Class->initialize($super) or next;
-        next unless $meta->isa("Class::MOP::Class");
+        my $super_meta = Class::MOP::Class->initialize($super) or next;
+        next unless $super_meta->isa("Class::MOP::Class");
 
         # get the name, make sure we take
         # immutable classes into account
         my $super_meta_name
-            = $meta->is_immutable
-            ? $meta->get_mutable_metaclass_name
-            : ref($meta);
+            = $super_meta->is_immutable
+            ? $super_meta->get_mutable_metaclass_name
+            : ref($super_meta);
 
         next if
             # if our metaclass is compatible
@@ -313,9 +314,9 @@ sub _fix_metaclass_incompatability {
                 and
             # and our instance metaclass is also compatible then no
             # fixes are needed
-            $self->instance_metaclass->isa( $meta->instance_metaclass );
+            $self->instance_metaclass->isa( $super_meta->instance_metaclass );
 
-        next unless $meta->isa( ref($self) );
+        next unless $super_meta->isa( ref($self) );
 
         unless ( $self->is_pristine ) {
             confess "Not reinitializing metaclass for "
@@ -323,11 +324,11 @@ sub _fix_metaclass_incompatability {
                 . ", it isn't pristine";
         }
 
-        $self = $meta->reinitialize(
+        $self = $super_meta->reinitialize(
             $self->name,
-            attribute_metaclass => $meta->attribute_metaclass,
-            method_metaclass    => $meta->method_metaclass,
-            instance_metaclass  => $meta->instance_metaclass,
+            attribute_metaclass => $super_meta->attribute_metaclass,
+            method_metaclass    => $super_meta->method_metaclass,
+            instance_metaclass  => $super_meta->instance_metaclass,
         );
     }
 
