@@ -293,6 +293,32 @@ sub _find_next_method_by_name_which_is_not_overridden {
     return undef;
 }
 
+# Right now, this method does not handle the case where two
+# metaclasses differ only in roles applied against a common parent
+# class. This can happen fairly easily when ClassA applies metaclass
+# Role1, and then a subclass, ClassB, applies a metaclass Role2. In
+# reality, the way to resolve the problem is to apply Role1 to
+# ClassB's metaclass. However, we cannot currently detect this, and so
+# we simply fail to fix the incompatibility.
+#
+# The algorithm for fixing it is not that complicated.
+#
+# First, we see if the two metaclasses share a common parent (probably
+# Moose::Meta::Class).
+#
+# Second, we see if the metaclasses only differ in terms of roles
+# applied. This second point is where things break down. There is no
+# easy way to determine if the difference is from roles only. To do
+# that, we'd need to able to reliably determine the origin of each
+# method and attribute in each metaclass. If all the unshared methods
+# & attributes come from roles, and there is no name collision, then
+# we can apply the missing roles to the child's metaclass.
+#
+# Tracking the origin of these things will require some fairly
+# invasive changes to various parts of Moose & Class::MOP.
+#
+# For now, the workaround is for ClassB to subclass ClassA _and then_
+# apply metaclass roles to its metaclass.
 sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
 
