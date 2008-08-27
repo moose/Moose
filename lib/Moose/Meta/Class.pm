@@ -315,20 +315,20 @@ sub _fix_metaclass_incompatability {
             # fixes are needed
             $self->instance_metaclass->isa( $meta->instance_metaclass );
 
-        if ( $meta->isa( ref($self) ) ) {
-            unless ( $self->is_pristine ) {
-                confess "Not reinitializing metaclass for "
-                    . $self->name
-                    . ", it isn't pristine";
-            }
+        next unless $meta->isa( ref($self) );
 
-            $self = $meta->reinitialize(
-                $self->name,
-                attribute_metaclass => $meta->attribute_metaclass,
-                method_metaclass    => $meta->method_metaclass,
-                instance_metaclass  => $meta->instance_metaclass,
-            );
+        unless ( $self->is_pristine ) {
+            confess "Not reinitializing metaclass for "
+                . $self->name
+                . ", it isn't pristine";
         }
+
+        $self = $meta->reinitialize(
+            $self->name,
+            attribute_metaclass => $meta->attribute_metaclass,
+            method_metaclass    => $meta->method_metaclass,
+            instance_metaclass  => $meta->instance_metaclass,
+        );
     }
 
     return $self;
