@@ -203,6 +203,44 @@ once.
 
 This function will apply the specified roles to the object's base class.
 
+=head1 PROBLEMS WITH METACLASS ROLES AND SUBCLASS
+
+Because of the way this module works, there is an ordering problem
+which occurs in certain situations. This sequence of events causes an
+error:
+
+=over 4
+
+=item 1.
+
+There is a class (ClassA) which uses some extension(s) that apply
+roles to the metaclass.
+
+=item 2.
+
+You have another class (ClassB) which wants to subclass ClassA and
+apply some more extensions.
+
+=back
+
+Normally, the call to C<extends> will happen at run time, I<after> the
+additional extensions are applied. This causes an error when we try to
+make the metaclass for ClassB compatible with the metaclass for
+ClassA.
+
+We hope to be able to fix this in the future.
+
+For now the workaround is for ClassB to make sure it extends ClassA
+I<before> it loads extensions:
+
+  package ClassB;
+
+  use Moose;
+
+  BEGIN { extends 'ClassA' }
+
+  use MooseX::SomeExtension;
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
