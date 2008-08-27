@@ -175,10 +175,12 @@ There are quite a number of ways to extend Moose. This recipe explains
 provides an overview of each method, and provides recommendations for
 when each is appropriate.
 
-=item L<Moose::Cookbook::Extending::Recipe2> - Providing a base object class role (TODO)
+=item L<Moose::Cookbook::Extending::Recipe2> - Providing a base object class role
 
 Many base object class extensions can be implemented as roles. This
-example shows how to provide a base object class debugging role.
+example shows how to provide a base object class debugging role that
+is applied to any class that uses a notional C<MooseX::Debugging>
+module.
 
 =item L<Moose::Cookbook::Extending::Recipe3> - Providing an alternate base object class
 
