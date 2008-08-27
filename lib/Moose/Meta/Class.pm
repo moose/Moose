@@ -302,43 +302,44 @@ sub _fix_metaclass_incompatability {
 
         # get the name, make sure we take
         # immutable classes into account
-        my $super_meta_name = ($meta->is_immutable
+        my $super_meta_name
+            = $meta->is_immutable
             ? $meta->get_mutable_metaclass_name
-            : ref($meta));
+            : ref($meta);
 
-        # but if we have anything else,
-        # we need to check it out ...
-        unless (# see if of our metaclass is incompatible
+        next if
+            # if our metaclass is compatible
             $self->isa($super_meta_name)
                 and
-            # and see if our instance metaclass is incompatible
-            $self->instance_metaclass->isa($meta->instance_metaclass)
-        ) {
-            if ( $meta->isa(ref($self)) ) {
-                unless ( $self->is_pristine ) {
-                    confess "Not reinitializing metaclass for " . $self->name . ", it isn't pristine";
-                }
-                # also check values %{ $self->get_method_map } for any generated methods
+            # and our instance metaclass is also compatible then no
+            # fixes are needed
+            $self->instance_metaclass->isa( $meta->instance_metaclass );
 
-                # NOTE:
-                # We might want to consider actually
-                # transfering any attributes from the
-                # original meta into this one, but in
-                # general you should not have any there
-                # at this point anyway, so it's very
-                # much an obscure edge case anyway
-                $self = $meta->reinitialize(
-                    $self->name,
-                    attribute_metaclass => $meta->attribute_metaclass,
-                    method_metaclass    => $meta->method_metaclass,
-                    instance_metaclass  => $meta->instance_metaclass,
-                );
-            } else {
-                # this will be called soon enough, for now we let it slide
-                # $self->check_metaclass_compatability()
+        if ( $meta->isa( ref($self) ) ) {
+            unless ( $self->is_pristine ) {
+                confess "Not reinitializing metaclass for "
+                    . $self->name
+                    . ", it isn't pristine";
             }
+
+            # also check values %{ $self->get_method_map } for any generated methods
+
+            # NOTE:
+            # We might want to consider actually
+            # transfering any attributes from the
+            # original meta into this one, but in
+            # general you should not have any there
+            # at this point anyway, so it's very
+            # much an obscure edge case anyway
+            $self = $meta->reinitialize(
+                $self->name,
+                attribute_metaclass => $meta->attribute_metaclass,
+                method_metaclass    => $meta->method_metaclass,
+                instance_metaclass  => $meta->instance_metaclass,
+            );
         }
     }
+
     return $self;
 }
 
