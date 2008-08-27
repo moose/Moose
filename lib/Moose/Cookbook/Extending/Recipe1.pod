@@ -306,6 +306,11 @@ If you can write your extension as one or more metaclass and base
 object roles, please consider doing so. Make sure to read the docs for
 L<Moose::Exporter> and L<Moose::Util::MetaRole> as well.
 
+=head2 Caveat
+
+The L<Moose::Util::MetaRole> API is still considered an experiment,
+and could go away or change in the future.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
