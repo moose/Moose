@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 59;
 
 use Moose::Util::MetaRole;
 
@@ -295,4 +295,88 @@ use Moose::Util::MetaRole;
         'apply Role::Bar to My::Class4->meta()' );
     ok( My::Class4->meta()->meta()->does_role('Role::Foo'),
         '... and My::Class4->meta() still does Role::Foo' );
+}
+
+{
+    package My::Class5;
+    use Moose;
+
+    extends 'My::Class';
+}
+
+{
+    ok( My::Class->meta()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s does Role::Foo because it extends My::Class} );
+    ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s attribute metaclass also does Role::Foo} );
+    ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s method metaclass also does Role::Foo} );
+    ok( My::Class->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s instance metaclass also does Role::Foo} );
+    ok( My::Class->meta()->constructor_class()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s constructor class also does Role::Foo} );
+    ok( My::Class->meta()->destructor_class()->meta()->does_role('Role::Foo'),
+        q{My::Class->meta()'s destructor class also does Role::Foo} );
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Class5',
+        metaclass_roles => ['Role::Bar'],
+    );
+
+    ok( My::Class5->meta()->meta()->does_role('Role::Bar'),
+        q{apply Role::Bar My::Class5->meta()} );
+    ok( My::Class5->meta()->meta()->does_role('Role::Foo'),
+        q{... and My::Class5->meta() still does Role::Foo} );
+}
+
+SKIP:
+{
+    skip
+        'These tests will fail until Moose::Meta::Class->_fix_metaclass_incompatibility is much smarter.',
+        2;
+{
+    package My::Class6;
+    use Moose;
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Class6',
+        metaclass_roles => ['Role::Bar'],
+    );
+
+    extends 'My::Class';
+}
+
+{
+    ok( My::Class6->meta()->meta()->does_role('Role::Bar'),
+        q{apply Role::Bar My::Class6->meta() before extends} );
+    ok( My::Class6->meta()->meta()->does_role('Role::Foo'),
+        q{... and My::Class6->meta() does Role::Foo because it extends My::Class} );
+}
+}
+
+# This is the hack needed to work around the
+# _fix_metaclass_incompatibility problem. You must call extends()
+# (which in turn calls _fix_metaclass_imcompatibility) _before_ you
+# apply more extensions in the subclass.
+{
+    package My::Class7;
+    use Moose;
+
+    # In real usage this would go in a BEGIN block so it happened
+    # before apply_metaclass_roles was called by an extension.
+    extends 'My::Class';
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Class7',
+        metaclass_roles => ['Role::Bar'],
+    );
+}
+
+{
+    ok( My::Class7->meta()->meta()->does_role('Role::Bar'),
+        q{apply Role::Bar My::Class7->meta() before extends} );
+    ok( My::Class7->meta()->meta()->does_role('Role::Foo'),
+        q{... and My::Class7->meta() does Role::Foo because it extends My::Class} );
 }
