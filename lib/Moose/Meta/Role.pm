@@ -439,6 +439,10 @@ sub alias_method {
         { sigil => '&', type => 'CODE', name => $method_name },
         $body
     );
+
+    # Class::MOP::Class calls update_package_cache_flag here, but if
+    # we add it then a test in
+    # t/030_roles/012_method_exclusion_in_composition.t fails!
 }
 
 ## ------------------------------------------------------------------
