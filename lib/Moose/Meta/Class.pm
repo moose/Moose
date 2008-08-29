@@ -356,6 +356,9 @@ sub _fix_metaclass_incompatability {
             method_metaclass    => $super_meta->method_metaclass,
             instance_metaclass  => $super_meta->instance_metaclass,
         );
+
+        $self->$_( $super_meta->$_ )
+            for qw( constructor_class destructor_class );
     }
 
     return $self;
