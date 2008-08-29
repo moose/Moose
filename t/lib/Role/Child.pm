@@ -1,7 +1,7 @@
 package Role::Child;
 use Moose::Role;
 
-with 'Role::Parent' => { alias => { meth1 => '_aliased', } };
+with 'Role::Parent' => { alias => { meth1 => 'aliased_meth1', } };
 
 sub meth1 { }
 
