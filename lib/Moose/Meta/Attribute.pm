@@ -511,7 +511,7 @@ sub get_value {
                     if ($self->should_coerce);
                 $type_constraint->check($value) 
                   || confess "Attribute (" . $self->name
-                      . "') does not pass the type constraint because: "
+                      . ") does not pass the type constraint because: "
                       . $type_constraint->get_message($value);
             }
             $self->set_initial_value($instance, $value);

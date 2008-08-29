@@ -241,7 +241,9 @@ sub find_type_constraint ($) {
 
     if ( blessed $type and $type->isa("Moose::Meta::TypeConstraint") ) {
         return $type;
-    } else {
+    } 
+    else {
+        return unless $REGISTRY->has_type_constraint($type);
         return $REGISTRY->get_type_constraint($type);
     }
 }
@@ -735,6 +737,10 @@ parameterized, this means you can say:
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
+B<NOTE:> Unless you parameterize a type, then it is invalid to
+include the square brackets. I.e. C<ArrayRef[]> will be 
+literally interpreted as a type name.
+
 B<NOTE:> The C<Undef> type constraint for the most part works
 correctly now, but edge cases may still exist, please use it
 sparringly.
@@ -849,11 +855,20 @@ This is just sugar for the type constraint construction syntax.
 
 =item B<where>
 
-This is just sugar for the type constraint construction syntax.
+This is just sugar for the type constraint construction syntax. 
+
+Takes a block/code ref as an argument. When the type constraint is tested,
+the supplied code is run with the value to be tested in $_. Returning
+a true value indicates that the type constraint passes, a false value
+indicates that it failed. 
 
 =item B<message>
 
 This is just sugar for the type constraint construction syntax.
+
+Takes a block/code ref as an argument. When the type constraint fails,
+then the code block is run (with the value again in $_), and the value
+returned is the text of the exception which is thrown.
 
 =item B<optimize_as>
 

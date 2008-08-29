@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 28;
 use Test::Exception;
 
 {
@@ -169,4 +169,25 @@ is( Role::Foo->meta()->simple(), 5,
              'cannot provide -traits to an exporting module that does not init_meta' );
     like( $@, qr/does not have an init_meta/,
           '... and error provides a useful explanation' );
+}
+
+SKIP:
+{
+    skip 'This will blow up until Moose::Meta::Class->_fix_metaclass_incompatibility understands roles', 5;
+{
+    package Foo::Subclass;
+
+    use Moose -traits => [ 'My::SimpleTrait3' ];
+
+    extends 'Foo';
+}
+
+can_ok( Foo::Subclass->meta(), 'simple' );
+is( Foo::Subclass->meta()->simple(), 5,
+    'Foo::Subclass->meta()->simple() returns expected value' );
+is( Foo::Subclass->meta()->simple2(), 55,
+    'Foo::Subclass->meta()->simple2() returns expected value' );
+can_ok( Foo::Subclass->meta(), 'attr2' );
+is( Foo::Subclass->meta()->attr2(), 'something',
+    'Foo::Subclass->meta()->attr2() returns expected value' );
 }

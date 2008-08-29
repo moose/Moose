@@ -95,7 +95,7 @@ sub get_message {
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
 
     return 1 if refaddr($self) == refaddr($other);
 
@@ -118,7 +118,7 @@ sub equals {
 sub is_a_type_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
 
     ($self->equals($type) || $self->is_subtype_of($type));
 }
@@ -126,7 +126,7 @@ sub is_a_type_of {
 sub is_subtype_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
 
     my $current = $self;
 
@@ -282,12 +282,22 @@ If you wish to use features at this depth, please come to the
 
 =item B<equals ($type_name_or_object)>
 
+This checks the current type against the supplied type (only). 
+Returns false either if the type name or object supplied 
+does not match, or if a type name isn't found in the type registry.
+
 =item B<is_a_type_of ($type_name_or_object)>
 
-This checks the current type name, and if it does not match,
-checks if it is a subtype of it.
+This checks the current type against the supplied type, or if the
+current type is a sub-type of the type name or object supplied. 
+Returns false if the current type is not descended from the supplied
+type, of if the supplied type isn't found in the type registry.
 
 =item B<is_subtype_of ($type_name_or_object)>
+
+This checks the current type is a sub-type of the type name or object supplied. 
+Returns false if the current type is not descended from the supplied
+type, of if the supplied type isn't found in the type registry.
 
 =item B<compile_type_constraint>
 
@@ -309,9 +319,15 @@ the C<message> will be used to construct a custom error message.
 
 =item B<name>
 
+The name of the type in the global type registry.
+
 =item B<parent>
 
+The parent type of this type.
+
 =item B<has_parent>
+
+If this type has a parent type.
 
 =item B<parents>
 

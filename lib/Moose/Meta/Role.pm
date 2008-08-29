@@ -262,6 +262,7 @@ sub add_role {
     (blessed($role) && $role->isa('Moose::Meta::Role'))
         || confess "Roles must be instances of Moose::Meta::Role";
     push @{$self->get_roles} => $role;
+    $self->reset_package_cache_flag;
 }
 
 sub calculate_all_roles {
