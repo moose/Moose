@@ -334,7 +334,7 @@ use Moose::Util::MetaRole;
 {
     package My::Class6;
     use Moose;
-    local $::D =1;
+
     Moose::Util::MetaRole::apply_metaclass_roles(
         for_class       => 'My::Class6',
         metaclass_roles => ['Role::Bar'],
