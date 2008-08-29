@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.55_02';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +15,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Moose::Exporter;
 
-use Class::MOP 0.64;
+use Class::MOP 0.6406;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;

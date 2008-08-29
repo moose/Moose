@@ -155,6 +155,7 @@ t/030_roles/024_role_composition_methods.t
 t/030_roles/025_role_composition_override.t
 t/030_roles/026_role_composition_method_mods.t
 t/030_roles/030_role_parameterized.t
+t/030_roles/031_roles_applied_in_create.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t
@@ -243,5 +244,8 @@ t/lib/Foo.pm
 t/lib/MyMooseA.pm
 t/lib/MyMooseB.pm
 t/lib/MyMooseObject.pm
+t/lib/Role/Child.pm
+t/lib/Role/Interface.pm
+t/lib/Role/Parent.pm
 t/pod.t
 t/pod_coverage.t
