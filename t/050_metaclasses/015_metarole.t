@@ -305,18 +305,18 @@ use Moose::Util::MetaRole;
 }
 
 {
-    ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        q{My::Class5->meta()'s does Role::Foo because it extends My::Class} );
-    ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
+    ok( My::Class5->meta()->meta()->does_role('Role::Foo'),
+        q{My::Class55->meta()'s does Role::Foo because it extends My::Class} );
+    ok( My::Class5->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s attribute metaclass also does Role::Foo} );
-    ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
+    ok( My::Class5->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s method metaclass also does Role::Foo} );
-    ok( My::Class->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
+    ok( My::Class5->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s instance metaclass also does Role::Foo} );
-    ok( My::Class->meta()->constructor_class()->meta()->does_role('Role::Foo'),
+    ok( My::Class5->meta()->constructor_class()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s constructor class also does Role::Foo} );
-    ok( My::Class->meta()->destructor_class()->meta()->does_role('Role::Foo'),
-        q{My::Class->meta()'s destructor class also does Role::Foo} );
+    ok( My::Class5->meta()->destructor_class()->meta()->does_role('Role::Foo'),
+        q{My::Class5->meta()'s destructor class also does Role::Foo} );
 }
 
 {
