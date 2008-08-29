@@ -857,18 +857,19 @@ This is just sugar for the type constraint construction syntax.
 
 This is just sugar for the type constraint construction syntax. 
 
-Takes a block/code ref as an argument. When the type constraint is tested,
-the supplied code is run with the value to be tested in $_. Returning
-a true value indicates that the type constraint passes, a false value
-indicates that it failed. 
+Takes a block/code ref as an argument. When the type constraint is
+tested, the supplied code is run with the value to be tested in
+$_. This block should return true or false to indicate whether or not
+the constraint check passed.
 
 =item B<message>
 
 This is just sugar for the type constraint construction syntax.
 
 Takes a block/code ref as an argument. When the type constraint fails,
-then the code block is run (with the value again in $_), and the value
-returned is the text of the exception which is thrown.
+then the code block is run (with the value provided in $_). This code
+ref should return a string, which will be used in the text of the
+exception thrown.
 
 =item B<optimize_as>
 
