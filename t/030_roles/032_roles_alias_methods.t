@@ -12,11 +12,14 @@ use lib 't/lib', 'lib';
 
 use Role::Child;
 
-_test('Role::Parent', 'meth1,meth2');
-_test('Role::Child', 'aliased_meth1,meth1,meth2');
 
-sub _test {
-    my ($role, $methods) = @_;
-    is join(',', sort $role->meta->get_method_list), $methods;
-}
-
+is_deeply(
+    [ sort Role::Parent->meta->get_method_list ],
+    [qw( meth1 meth2 )],
+    'method list for Role::Parent'
+);
+is_deeply(
+    [ sort Role::Child->meta->get_method_list ],
+    [qw( aliased_meth1 meth1 meth2 )],
+    'method list for Role::Child'
+);
