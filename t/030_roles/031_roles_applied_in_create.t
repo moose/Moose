@@ -11,10 +11,8 @@ use Moose::Util;
 use lib 't/lib', 'lib';
 
 
-# Note that this test passes if we inline the role definitions in this
-# file, and it passes now that Class::MOP::load_class was changed to
-# do eval "require $module" rather than loading the module by
-# path. Perl is a strange beast.
+# Note that this test passed (pre svn #5543) if we inlined the role
+# definitions in this file, as it was very timing sensitive.
 lives_ok(
     sub {
         my $builder_meta = Moose::Meta::Class->create(
