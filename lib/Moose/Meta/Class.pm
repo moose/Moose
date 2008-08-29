@@ -322,8 +322,6 @@ sub _find_next_method_by_name_which_is_not_overridden {
 sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
 
-    my $self_meta_name = ref($self);
-
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
         my $super_meta = Class::MOP::Class->initialize($super) or next;
@@ -344,126 +342,23 @@ sub _fix_metaclass_incompatability {
             # fixes are needed
             $self->instance_metaclass->isa( $super_meta->instance_metaclass );
 
-        if ( $super_meta->isa($self_meta_name) ) {
-            $self->_require_pristine_to_reinitialize;
+        next unless $super_meta->isa( ref($self) );
 
-            $self = $super_meta->reinitialize(
-                $self->name,
-                attribute_metaclass => $super_meta->attribute_metaclass,
-                method_metaclass    => $super_meta->method_metaclass,
-                instance_metaclass  => $super_meta->instance_metaclass,
-            );
-
-            $self->$_( $super_meta->$_ )
-                for qw( constructor_class destructor_class );
+        unless ( $self->is_pristine ) {
+            confess "Not reinitializing metaclass for "
+                . $self->name
+                . ", it isn't pristine";
         }
-        elsif ( __difference_is_roles_only( $self, $super_meta ) ) {
-            $self->_require_pristine_to_reinitialize;
 
-            my @roles = map { $_->name } @{$self->meta->roles};
-
-            $self = $super_meta->reinitialize(
-                $self->name,
-                attribute_metaclass => $super_meta->attribute_metaclass,
-                method_metaclass    => $super_meta->method_metaclass,
-                instance_metaclass  => $super_meta->instance_metaclass,
-            );
-
-            $self = Moose::Util::MetaRole::apply_metaclass_roles(
-                for_class       => $self->name,
-                metaclass_roles => \@roles,
-            );
-        }
+        $self = $super_meta->reinitialize(
+            $self->name,
+            attribute_metaclass => $super_meta->attribute_metaclass,
+            method_metaclass    => $super_meta->method_metaclass,
+            instance_metaclass  => $super_meta->instance_metaclass,
+        );
     }
 
     return $self;
-}
-
-sub _require_pristine_to_reinitialize {
-    my $self = shift;
-
-    return if $self->is_pristine;
-
-    confess "Not reinitializing metaclass for "
-        . $self->name
-        . ", it isn't pristine";
-}
-
-# This stuff is called as functions because while it operates on
-# metaclasses, it might get a Class::MOP::Class as opposed to a
-# Moose::Meta::Class.
-sub __difference_is_roles_only {
-    my ( $meta1, $meta2 ) = @_;
-
-    return
-        unless $meta1->meta->can('does_role')
-            || $meta2->meta->can('does_role');
-
-    return
-        if __arrays_differ(
-        __methods_excluding_roles( $meta1->meta ),
-        __methods_excluding_roles( $meta2->meta )
-        );
-
-    return
-        if __arrays_differ(
-        __attr_excluding_roles( $meta1->meta ),
-        __attr_excluding_roles( $meta2->meta )
-        );
-
-    return 1;
-}
-
-sub __arrays_differ {
-    my ( $arr1, $arr2 ) = @_;
-
-    my %arr1_vals = map { $_ => 1 } @{$arr1};
-    delete @arr1_vals{ @{$arr2} };
-
-    return keys %arr1_vals ? 1 : 0;
-}
-
-sub __methods_excluding_roles {
-    my $meta = shift;
-
-    my %map = map { $_->name => $_ } $meta->get_all_methods;
-
-    delete $map{meta};
-
-    return values %map unless $meta->can('roles') && $meta->roles;
-
-    for my $role ( @{$meta->roles} ) {
-        for my $role_meth ( values %{$role->get_method_map} ) {
-            next if $role_meth->name eq 'meta';
-
-            my $meta_meth = $map{ $role_meth->name };
-
-            next unless $meta_meth;
-            next unless $meta_meth->body eq $role_meth->body;
-
-            delete $map{ $role_meth->name };
-        }
-
-        for my $attr ( grep { defined } map { $meta->get_attribute($_) } $role->get_attribute_list ) {
-            delete @map{ map { $_->name } @{$attr->associated_methods} };
-        }
-    }
-
-    return [ values %map ];
-}
-
-sub __attr_excluding_roles {
-    my $meta = shift;
-
-    my %map = map { $_->name => $_ } $meta->get_all_attributes;
-
-    return values %map unless $meta->can('roles') && $meta->roles;
-
-    for my $role ( @{$meta->roles} ) {
-        delete @map{ $role->get_attribute_list };
-    }
-
-    return [ values %map ];
 }
 
 # NOTE:
