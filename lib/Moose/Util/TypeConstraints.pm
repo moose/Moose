@@ -241,7 +241,7 @@ sub find_type_constraint ($) {
 
     if ( blessed $type and $type->isa("Moose::Meta::TypeConstraint") ) {
         return $type;
-    } 
+    }
     else {
         return unless $REGISTRY->has_type_constraint($type);
         return $REGISTRY->get_type_constraint($type);
@@ -331,7 +331,7 @@ sub enum ($;@) {
 
 sub create_enum_type_constraint ($$) {
     my ( $type_name, $values ) = @_;
-    
+
     Moose::Meta::TypeConstraint::Enum->new(
         name   => $type_name || '__ANON__',
         values => $values,
@@ -369,7 +369,7 @@ sub _create_type_constraint ($$$;$$) {
 
     # FIXME should probably not be a special case
     if ( defined $parent and $parent = find_or_parse_type_constraint($parent) ) {
-        $class = "Moose::Meta::TypeConstraint::Parameterizable" 
+        $class = "Moose::Meta::TypeConstraint::Parameterizable"
             if $parent->isa("Moose::Meta::TypeConstraint::Parameterizable");
     }
 
@@ -649,7 +649,7 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
   type 'Num' => where { Scalar::Util::looks_like_number($_) };
 
   subtype 'Natural'
-      => as 'Num'
+      => as 'Int'
       => where { $_ > 0 };
 
   subtype 'NaturalLessThanTen'
@@ -675,7 +675,7 @@ and they are not used by Moose unless you tell it to. No type
 inference is performed, expression are not typed, etc. etc. etc.
 
 This is simply a means of creating small constraint functions which
-can be used to simplify your own type-checking code, with the added 
+can be used to simplify your own type-checking code, with the added
 side benefit of making your intentions clearer through self-documentation.
 
 =head2 Slightly Less Important Caveat
@@ -705,7 +705,7 @@ yet to have been created yet, is to simply do this:
 
 =head2 Default Type Constraints
 
-This module also provides a simple hierarchy for Perl 5 types, here is 
+This module also provides a simple hierarchy for Perl 5 types, here is
 that hierarchy represented visually.
 
   Any
@@ -738,7 +738,7 @@ parameterized, this means you can say:
   Maybe[Str]       # value may be a string, may be undefined
 
 B<NOTE:> Unless you parameterize a type, then it is invalid to
-include the square brackets. I.e. C<ArrayRef[]> will be 
+include the square brackets. I.e. C<ArrayRef[]> will be
 literally interpreted as a type name.
 
 B<NOTE:> The C<Undef> type constraint for the most part works
@@ -750,10 +750,10 @@ existence check. This means that your class B<must> be loaded for
 this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
 
-=head2 Type Constraint Naming 
+=head2 Type Constraint Naming
 
-Since the types created by this module are global, it is suggested 
-that you namespace your types just as you would namespace your 
+Since the types created by this module are global, it is suggested
+that you namespace your types just as you would namespace your
 modules. So instead of creating a I<Color> type for your B<My::Graphics>
 module, you would call the type I<My::Graphics::Color> instead.
 
@@ -774,7 +774,7 @@ L<Declare::Constraints::Simple> to declare a completely new type.
           -keys   => HasLength,
           -values => IsArrayRef( IsObject ));
 
-For more examples see the F<t/200_examples/204_example_w_DCS.t> 
+For more examples see the F<t/200_examples/204_example_w_DCS.t>
 test file.
 
 Here is an example of using L<Test::Deep> and it's non-test
@@ -789,7 +789,7 @@ related C<eq_deeply> function.
               })))
         };
 
-For a complete example see the 
+For a complete example see the
 F<t/200_examples/205_example_w_TestDeep.t> test file.
 
 =head1 FUNCTIONS
@@ -855,7 +855,7 @@ This is just sugar for the type constraint construction syntax.
 
 =item B<where>
 
-This is just sugar for the type constraint construction syntax. 
+This is just sugar for the type constraint construction syntax.
 
 Takes a block/code ref as an argument. When the type constraint is
 tested, the supplied code is run with the value to be tested in
