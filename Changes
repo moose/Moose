@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+0.55_03 Fri August 29, 2008
+    * No changes from 0.55_02 except increasing the Class::MOP
+      dependency to 0.64_07.
+
 0.55_02 Fri August 29, 2008
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
