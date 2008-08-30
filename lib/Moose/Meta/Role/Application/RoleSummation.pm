@@ -6,7 +6,6 @@ use metaclass;
 
 use Carp            'confess';
 use Scalar::Util    'blessed';
-use Data::Dumper;
 
 use Moose::Meta::Role::Composite;
 
