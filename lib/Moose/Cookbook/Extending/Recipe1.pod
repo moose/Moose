@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Extending::Recipe - Moose extension overview
+Moose::Cookbook::Extending::Recipe1 - Moose extension overview
 
 =head1 DESCRIPTION
 
