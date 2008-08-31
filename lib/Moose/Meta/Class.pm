@@ -23,6 +23,16 @@ __PACKAGE__->meta->add_attribute('roles' => (
     default => sub { [] }
 ));
 
+__PACKAGE__->meta->add_attribute('constructor_class' => (
+    accessor => 'constructor_class',
+    default  => sub { 'Moose::Meta::Method::Constructor' }
+));
+
+__PACKAGE__->meta->add_attribute('destructor_class' => (
+    accessor => 'destructor_class',
+    default  => sub { 'Moose::Meta::Method::Destructor' }
+));
+
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
@@ -283,52 +293,74 @@ sub _find_next_method_by_name_which_is_not_overridden {
     return undef;
 }
 
+# Right now, this method does not handle the case where two
+# metaclasses differ only in roles applied against a common parent
+# class. This can happen fairly easily when ClassA applies metaclass
+# Role1, and then a subclass, ClassB, applies a metaclass Role2. In
+# reality, the way to resolve the problem is to apply Role1 to
+# ClassB's metaclass. However, we cannot currently detect this, and so
+# we simply fail to fix the incompatibility.
+#
+# The algorithm for fixing it is not that complicated.
+#
+# First, we see if the two metaclasses share a common parent (probably
+# Moose::Meta::Class).
+#
+# Second, we see if the metaclasses only differ in terms of roles
+# applied. This second point is where things break down. There is no
+# easy way to determine if the difference is from roles only. To do
+# that, we'd need to able to reliably determine the origin of each
+# method and attribute in each metaclass. If all the unshared methods
+# & attributes come from roles, and there is no name collision, then
+# we can apply the missing roles to the child's metaclass.
+#
+# Tracking the origin of these things will require some fairly
+# invasive changes to various parts of Moose & Class::MOP.
+#
+# For now, the workaround is for ClassB to subclass ClassA _and then_
+# apply metaclass roles to its metaclass.
 sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
+
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
-        my $meta = Class::MOP::Class->initialize($super) or next;
-        next unless $meta->isa("Class::MOP::Class");
+        my $super_meta = Class::MOP::Class->initialize($super) or next;
+        next unless $super_meta->isa("Class::MOP::Class");
 
         # get the name, make sure we take
         # immutable classes into account
-        my $super_meta_name = ($meta->is_immutable
-            ? $meta->get_mutable_metaclass_name
-            : ref($meta));
+        my $super_meta_name
+            = $super_meta->is_immutable
+            ? $super_meta->get_mutable_metaclass_name
+            : ref($super_meta);
 
-        # but if we have anything else,
-        # we need to check it out ...
-        unless (# see if of our metaclass is incompatible
+        next if
+            # if our metaclass is compatible
             $self->isa($super_meta_name)
                 and
-            # and see if our instance metaclass is incompatible
-            $self->instance_metaclass->isa($meta->instance_metaclass)
-        ) {
-            if ( $meta->isa(ref($self)) ) {
-                unless ( $self->is_pristine ) {
-                    confess "Not reinitializing metaclass for " . $self->name . ", it isn't pristine";
-                }
-                # also check values %{ $self->get_method_map } for any generated methods
+            # and our instance metaclass is also compatible then no
+            # fixes are needed
+            $self->instance_metaclass->isa( $super_meta->instance_metaclass );
 
-                # NOTE:
-                # We might want to consider actually
-                # transfering any attributes from the
-                # original meta into this one, but in
-                # general you should not have any there
-                # at this point anyway, so it's very
-                # much an obscure edge case anyway
-                $self = $meta->reinitialize(
-                    $self->name,
-                    attribute_metaclass => $meta->attribute_metaclass,
-                    method_metaclass    => $meta->method_metaclass,
-                    instance_metaclass  => $meta->instance_metaclass,
-                );
-            } else {
-                # this will be called soon enough, for now we let it slide
-                # $self->check_metaclass_compatability()
-            }
+        next unless $super_meta->isa( ref($self) );
+
+        unless ( $self->is_pristine ) {
+            confess "Not reinitializing metaclass for "
+                . $self->name
+                . ", it isn't pristine";
         }
+
+        $self = $super_meta->reinitialize(
+            $self->name,
+            attribute_metaclass => $super_meta->attribute_metaclass,
+            method_metaclass    => $super_meta->method_metaclass,
+            instance_metaclass  => $super_meta->instance_metaclass,
+        );
+
+        $self->$_( $super_meta->$_ )
+            for qw( constructor_class destructor_class );
     }
+
     return $self;
 }
 
@@ -424,8 +456,8 @@ sub make_immutable {
     my $self = shift;
     $self->SUPER::make_immutable
       (
-       constructor_class => 'Moose::Meta::Method::Constructor',
-       destructor_class  => 'Moose::Meta::Method::Destructor',
+       constructor_class => $self->constructor_class,
+       destructor_class  => $self->destructor_class,
        inline_destructor => 1,
        # NOTE:
        # no need to do this,

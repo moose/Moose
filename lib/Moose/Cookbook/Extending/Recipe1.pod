@@ -3,71 +3,313 @@
 
 =head1 NAME
 
-Moose::Cookbook::Extending::Recipe1 - Providing an alternate base object class
+Moose::Cookbook::Extending::Recipe1 - Moose extension overview
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
-  package MyApp::Base;
-  use Moose;
+Moose has quite a number of ways in which extensions can hook into
+Moose and change its behavior. Moose also has a lot of behavior that
+can be changed. This recipe will provide an overview of each extension
+method and give you some recommendations on what tools to use.
 
-  extends 'Moose::Object';
+If you haven't yet read the recipes on metaclasses, go read those
+first. You can't really write Moose extensions without understanding
+the metaclasses, and those recipes also demonstrate some basic
+extensions mechanisms such as metaclass subclasses and traits.
 
-  before 'new' => sub { warn "Making a new " . $_[0] };
+=head2 Playing Nice With Others
 
-  no Moose;
+One of the goals of this overview is to help you build extensions that
+cooperate well with other extensions. This is especially important if
+you plan to release your extension to CPAN.
 
-  package MyApp::UseMyBase;
+Moose comes with several modules that exist to help your write
+cooperative extensions. These are L<Moose::Exporter> and
+L<Moose::Util::MetaRole>. By using these two modules to implement your
+extensions, you will ensure that your extension works with both the
+Moose core features and any other CPAN extension using those modules.
+
+=head1 PARTS OF Moose YOU CAN EXTEND
+
+The types of things you might want to do in Moose extensions broadly
+fall into a few categories.
+
+=head2 Metaclass Extensions
+
+One way of extending Moose is by extending one or more Moose
+metaclasses. For example, in L<Moose::Cookbook::Meta::Recipe4> we saw
+a metaclass subclass that added a C<table> attribute to the
+metaclass. If you were writing an ORM, this would be a logical
+extension.
+
+Many of the Moose extensions on CPAN work by providing an attribute
+metaclass extension. For example, the C<MooseX::AttributeHelpers>
+distro provides a new attribute metaclass that lets you delegate
+behavior to a non-object attribute (a hashref or simple number).
+
+A metaclass extension can be packaged as a subclass or a
+role/trait. If you can, we recommend using traits instead of
+subclasses, since it's generally much easier to combine disparate
+traits then it is to combine a bunch of subclasses.
+
+When your extensions are implemented as roles, you can apply them with
+the L<Moose::Util::MetaRole> module.
+
+=head2 Providing Sugar Subs
+
+As part of a metaclass extension, you may also want to provide some
+sugar subroutines, much like C<Moose.pm> does. Moose provides a helper
+module called L<Moose::Exporter> that makes this much simpler. This
+will be used in several of the extension recipes.
+
+=head2 Object Class Extensions
+
+Another common Moose extension is to change the default object class
+behavior. For example, the C<MooseX::Singleton> extension changes the
+behavior of your objects so that they are singletons. The
+C<MooseX::StrictConstructor> extension makes the constructor reject
+arguments which don't match its attributes.
+
+Object class extensions often also include metaclass extensions. In
+particular, if you want your object extension to work when a class is
+made immutable, you may need to extend some or all of the
+C<Moose::Meta::Instance>, C<Moose::Meta::Method::Constructor>, and
+C<Moose::Meta::Method::Destructor> objects.
+
+The L<Moose::Util::MetaRole> module lets you apply roles to the base
+object class, as well as the meta classes just mentioned.
+
+=head2 Providing a Role
+
+Some extensions come in the form of a role for you to consume. The
+C<MooseX::Object::Pluggable> extension is a great example of this. In
+fact, despite the C<MooseX> name, it does not actually change anything
+about Moose's behavior. Instead, it is just a role that an object
+which wants to be pluggable can consume.
+
+If you are implementing this sort of extension, you don't need to do
+anything special. You simply create a role and document that it should
+be used via the normal C<with> sugar:
+
+   package RoleConsumer;
+
+   use Moose;
+
+   with 'MooseX::My::Role';
+
+=head2 New Types
+
+Another common Moose extension is a new type for the Moose type
+system. In this case, you simply create a type in your module. When
+people load your module, the type is created, and they can refer to it
+by name after that. The C<MooseX::Types::URI> and
+C<MooseX::Types::DateTime> distros are two good examples of how this
+works.
+
+=head1 ROLES VS TRAITS VS SUBCLASSES
+
+It is important to understand that B<roles and traits are the same
+thing>. A role can be used as a trait, and a trait is a role. The only
+thing that distinguishes the two is that a trait is packaged in a way
+that lets Moose resolve a short name to a class name. In other words,
+with a trait, the caller can specify it by a short name like "Big",
+and Moose will resolve it to a class like
+C<MooseX::Embiggen::Meta::Attribute::Role::Big>.
+
+See L<Moose::Cookbook::Meta::Recipe3> and
+L<Moose::Cookbook::Meta::Recipe5> for examples of traits in action. In
+particular, both of these recipes demonstrate the trait resolution
+mechanism.
+
+Implementing an extension as a (set of) metaclass or base object
+role(s) will make your extension more cooperative. It is hard for an
+end-user to effectively combine together multiple metaclass
+subclasses, but it can be very easy to combine roles.
+
+=head1 USING YOUR EXTENSION
+
+There are a number of ways in which an extension can be applied. In
+some cases you can provide multiple ways of consuming your extension.
+
+=head2 Extensions as Metaclass Traits
+
+If your extension is available as a trait, you can ask end users to
+simply specify it in a list of traits. Currently, this only works for
+metaclass and attribute metaclass traits:
+
+  use Moose -traits => [ 'Big', 'Blue' ];
+
+  has 'animal' =>
+     ( traits => [ 'Big', 'Blue' ],
+       ...
+     );
+
+If your extension applies to any other metaclass, or the object base
+class, you cannot use the trait mechanism.
+
+The benefit of the trait mechanism is that is very easy to see where a
+trait is applied in the code, and consumers have fine-grained control
+over what the trait applies to. This is especially true for attribute
+traits, where you can apply the trait to just one attribute in a
+class.
+
+=head2 Extensions as Metaclass (and Base Object) Subclasses
+
+Moose does not provide any simple APIs for consumers to use a subclass
+extension, excep for attribute metaclasses. The attribute declaration
+parameters include a C<metaclass> parameter a consumer of your
+extension can use to specify your subclass.
+
+This is one reason why implementing an extension as a subclass can be
+a poor choice. However, you can force the use of certain subclasses at
+import time by calling C<< Moose->init_meta >> for the caller, and
+providing an alternate metaclass or base object class.
+
+If you do want to do this, you should look at using C<Moose::Exporter>
+to re-export the C<Moose.pm> sugar subroutines. When you use
+L<Moose::Exporter> and your exporting class has an C<init_meta>
+method, L<Moose::Exporter> makes sure that this C<init_meta> method
+gets called when your class is imported.
+
+Then in your C<init_meta> you can arrange for the caller to use your
+subclasses:
+
+  package MooseX::Embiggen;
+
   use Moose ();
   use Moose::Exporter;
+
+  use MooseX::Embiggen::Meta::Class;
+  use MooseX::Embiggen::Object;
 
   Moose::Exporter->setup_import_methods( also => 'Moose' );
 
   sub init_meta {
-      shift;
-      Moose->init_meta( @_, base_class => 'MyApp::Object' );
+      shift; # just your package name
+      my %options = @_;
+
+      return Moose->init_meta(
+          for_class  => $options{for_class},
+          metaclass  => 'MooseX::Embiggen::Meta::Class',
+          base_class => 'MooseX::Embiggen::Object',
+      );
   }
 
-=head1 DESCRIPTION
+=head2 Extensions as Metaclass (and Base Object) Roles
 
-Often you find that you want to share some behavior between all your
-classes. One way to do that is to make a base class and simply add
-C<S<extends 'MyApp::Base'>> to every class in your
-application. However, that can get tedious. Instead, you can simply
-create your Moose-alike module that sets the base object class to
-C<MyApp::Base> for you.
+Implementing your extensions as metaclass roles makes your extensions
+easy to apply, and cooperative with other metaclass role-based extensions.
 
-Then, instead of writing C<S<use Moose>> you can write C<S<use
-MyApp::UseMyBase>>.
+Just as with a subclass, you will probably want to package your
+extensions for consumption with a single module that uses
+L<Moose::Exporter>. However, in this case, you will use
+L<Moose::Util::MetaRole> to apply all of your roles. The advantage of
+using this module is that I<it preserves any subclassing or roles
+already applied to the users metaclasses>. This means that your
+extension is cooperative I<by default>, and consumers of your
+extension can easily use it with other role-based extensions.
 
-In this particular example, our base class issues some debugging
-output every time a new object is created, but you can surely think of
-some more interesting things to do with your own base class.
+  package MooseX::Embiggen;
 
-This all works because of the magic of L<Moose::Exporter>. When we
-call C<< Moose::Exporter->setup_import_methods( also => 'Moose' ) >>
-it builds an C<import> and C<unimport> method for you. The C<< also =>
-'Moose' >> bit says that we want to export everything that Moose does.
+  use Moose ();
+  use Moose::Exporter;
+  use Moose::Util::MetaRole;
 
-The C<import> method that gets created will call our C<init_meta>
-method, passing it C<< for_caller => $caller >> as its arguments. The
-C<$caller> is set to the class that actually imported us in the first
-place.
+  use MooseX::Embiggen::Role::Meta::Class;
+  use MooseX::Embiggen::Role::Meta::Attribute;
+  use MooseX::Embiggen::Role::Meta::Method::Constructor
+  use MooseX::Embiggen::Role::Object;
 
-See the L<Moose::Exporter> docs for more details on its API.
+  Moose::Exporter->setup_import_methods( also => 'Moose' );
 
-=head1 USING MyApp::UseMyBase
+  sub init_meta {
+      shift; # just your package name
+      my %options = @_;
 
-To actually use our new base class, we simply use C<MyApp::UseMyBase>
-I<instead> of C<Moose>. We get all the Moose sugar plus our new base
-class.
+      Moose->init_meta(%options);
 
-  package Foo;
+      my $meta = Moose::Util::MetaRole::apply_metaclass_roles(
+          for_class       => $options{for_class},
+          metaclass_roles => ['MooseX::Embiggen::Role::Meta::Class'],
+          attribute_metaclass_roles =>
+              ['MooseX::Embiggen::Role::Meta::Attribute'],
+          constructor_class_roles =>
+              ['MooseX::Embiggen::Role::Meta::Method::Constructor'],
+      );
 
-  use MyApp::UseMyBase;
+      Moose::Util::MetaRole::apply_base_class_roles(
+          for_class => $options{for_class},
+          roles     => ['MooseX::Embiggen::Role::Object'],
+      );
 
-  has 'size' => ( is => 'rw' );
+      return $meta;
+  }
 
-  no MyApp::UseMyBase;
+As you can see from this example, you can use C<Moose::Util::MetaRole>
+to apply roles to any metaclass, as well as the base object class. If
+some other extension has already applied its own roles, they will be
+preserved when your extension applies its roles, and vice versa.
+
+=head2 Providing Sugar
+
+With L<Moose::Exporter>, you can also export your own sugar subs, as
+well as those from other sugar modules:
+
+  package MooseX::Embiggen;
+
+  use Moose ();
+  use Moose::Exporter;
+
+  Moose::Exporter->setup_import_methods(
+      with_caller => ['embiggen'],
+      also        => 'Moose',
+  );
+
+  sub init_meta { ... }
+
+  sub embiggen {
+      my $caller = shift;
+      $caller->meta()->embiggen(@_);
+  }
+
+And then the consumer of your extension can use your C<embiggen> sub:
+
+  package Consumer;
+
+  use MooseX::Embiggen;
+
+  extends 'Thing';
+
+  embiggen ...;
+
+This can be combined with metaclass and base class roles quite easily.
+
+=head1 LEGACY EXTENSION METHODOLOGIES
+
+Before the existence of L<Moose::Exporter> and
+L<Moose::Util::MetaRole>, there were a number of other ways to extend
+Moose. In general, these methods were less cooperative, and only
+worked well with a single extension.
+
+These methods include C<metaclass.pm>, C<Moose::Policy> (which uses
+C<metaclass.pm> under the hood), and various hacks to do what
+L<Moose::Exporter> does. Please do not use these for your own
+extensions.
+
+Note that if you write a cooperative extension, it should cooperate
+with older extensions, though older extensions generally do not
+cooperate with each oether.
+
+=head1 CONCLUSION
+
+If you can write your extension as one or more metaclass and base
+object roles, please consider doing so. Make sure to read the docs for
+L<Moose::Exporter> and L<Moose::Util::MetaRole> as well.
+
+=head2 Caveat
+
+The L<Moose::Util::MetaRole> API is still considered an experiment,
+and could go away or change in the future.
 
 =head1 AUTHOR
 
@@ -75,7 +317,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2008 by Infinity Interactive, Inc.
+Copyright 2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

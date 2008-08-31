@@ -1,0 +1,85 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
+
+=head1 SYNOPSIS
+
+  package MyApp::Base;
+  use Moose;
+
+  extends 'Moose::Object';
+
+  before 'new' => sub { warn "Making a new " . $_[0] };
+
+  no Moose;
+
+  package MyApp::UseMyBase;
+  use Moose ();
+  use Moose::Exporter;
+
+  Moose::Exporter->setup_import_methods( also => 'Moose' );
+
+  sub init_meta {
+      shift;
+      Moose->init_meta( @_, base_class => 'MyApp::Object' );
+  }
+
+=head1 DESCRIPTION
+
+Often you find that you want to share some behavior between all your
+classes. One way to do that is to make a base class and simply add
+C<S<extends 'MyApp::Base'>> to every class in your
+application. However, that can get tedious. Instead, you can simply
+create your Moose-alike module that sets the base object class to
+C<MyApp::Base> for you.
+
+Then, instead of writing C<S<use Moose>> you can write C<S<use
+MyApp::UseMyBase>>.
+
+In this particular example, our base class issues some debugging
+output every time a new object is created, but you can surely think of
+some more interesting things to do with your own base class.
+
+This all works because of the magic of L<Moose::Exporter>. When we
+call C<< Moose::Exporter->setup_import_methods( also => 'Moose' ) >>
+it builds an C<import> and C<unimport> method for you. The C<< also =>
+'Moose' >> bit says that we want to export everything that Moose does.
+
+The C<import> method that gets created will call our C<init_meta>
+method, passing it C<< for_caller => $caller >> as its arguments. The
+C<$caller> is set to the class that actually imported us in the first
+place.
+
+See the L<Moose::Exporter> docs for more details on its API.
+
+=head1 USING MyApp::UseMyBase
+
+To actually use our new base class, we simply use C<MyApp::UseMyBase>
+I<instead> of C<Moose>. We get all the Moose sugar plus our new base
+class.
+
+  package Foo;
+
+  use MyApp::UseMyBase;
+
+  has 'size' => ( is => 'rw' );
+
+  no MyApp::UseMyBase;
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

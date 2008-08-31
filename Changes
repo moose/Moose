@@ -1,5 +1,21 @@
 Revision history for Perl extension Moose
 
+0.55_04 Sat August 30, 2008
+    * Moose::Util::MetaRole
+    * Moose::Cookbook::Extending::Recipe2
+      - This simplifies the application of roles to any meta class, as
+        well as the base object class. Reimplemented metaclass traits
+        using this module. (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe1
+      - This a new recipe, an overview of various ways to write Moose
+        extensions (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe3
+    * Moose::Cookbook::Extending::Recipe4
+      - These used to be Extending::Recipe1 and Extending::Recipe2,
+        respectively.
+
 0.55_03 Fri August 29, 2008
     * No changes from 0.55_02 except increasing the Class::MOP
       dependency to 0.64_07.

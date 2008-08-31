@@ -3,71 +3,53 @@
 
 =head1 NAME
 
-Moose::Cookbook::Extending::Recipe2 - Acting like Moose.pm and providing sugar Moose-style
+Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
 =head1 SYNOPSIS
 
-  package MyApp::Mooseish;
+  package MooseX::Debugging;
 
   use strict;
   use warnings;
 
-  use Moose ();
   use Moose::Exporter;
+  use Moose::Util::MetaRole;
+  use MooseX::Debugging::Role::Object;
 
-  Moose::Exporter->setup_import_methods(
-      with_caller => ['has_table'],
-      also        => 'Moose',
-  );
+  Moose::Exporter->setup_import_methods();
 
   sub init_meta {
       shift;
-      Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
+      my %options = @_;
+
+      Moose::Util::MetaRole::apply_base_object_roles(
+          for_class => $options{for_class},
+          role      => ['MooseX::Debugging::Role::Object'],
+      );
   }
 
-  sub has_table {
-      my $caller = shift;
-      $caller->meta()->table(shift);
+
+  package MooseX::Debugging::Role::Object;
+
+  after 'BUILD' => sub {
+      my $self = shift;
+
+      warn "Made a new " . ref $self . " object\n";
   }
 
 =head1 DESCRIPTION
 
-This recipe expands on the use of L<Moose::Exporter> we saw in
-L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
-object base class, we provide our own metaclass class, and we also
-export a sugar subroutine C<has_table()>.
+In this example, we provide a role for the base object class that adds
+some simple debugging output. Every time an object is created, it
+spits out a warning saying what type of object it was.
 
-Given the above code, you can now replace all instances of C<use
-Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
-replaced with C<no MyApp::Mooseish>.
+Obviously, a real debugging role would do something more interesting,
+but this recipe is all about how we apply that role.
 
-The C<with_caller> parameter specifies a list of functions that should
-be wrapped before exporting. The wrapper simply ensures that the
-importing package name is the first argument to the function, so we
-can do C<S<my $caller = shift;>>.
-
-See the L<Moose::Exporter> docs for more details on its API.
-
-=head1 USING MyApp::Mooseish
-
-The purpose of all this code is to provide a Moose-like
-interface. Here's what it would look like in actual use:
-
-  package MyApp::User;
-
-  use MyApp::Mooseish;
-
-  has_table 'User';
-
-  has 'username' => ( is => 'ro' );
-  has 'password' => ( is => 'ro' );
-
-  sub login { ... }
-
-  no MyApp::Mooseish;
-
-All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
-when you C<use MyApp::Mooseish>.
+In this case, with the combination of L<Moose::Exporter> and
+L<Moose::Util::MetaRole>, we ensure that when a module does "S<use
+MooseX::Debugging>", it automatically gets the debugging role applied
+to its base object class.
 
 =head1 AUTHOR
 
@@ -75,11 +57,12 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2008 by Infinity Interactive, Inc.
+Copyright 2008 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-=pod
+=cut
+
