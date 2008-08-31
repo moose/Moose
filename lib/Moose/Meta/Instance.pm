@@ -4,7 +4,7 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-our $VERSION   = '0.55_03';
+our $VERSION   = '0.55_04';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
