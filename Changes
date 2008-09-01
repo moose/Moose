@@ -1,5 +1,26 @@
 Revision history for Perl extension Moose
 
+0.56 Mon September 1, 2008
+    For those not following the series of dev releases, there are
+    several major changes in this release of Moose.
+      ! Moose::init_meta should now be called as a method. See the
+        docs for details.
+
+      - Major performance improvements by nothingmuch.
+
+      - New modules for extension writers, Moose::Exporter and
+        Moose::Util::MetaRole by Dave Rolsky.
+
+      - Lots of doc improvements and additions, especially in the
+        cookbook sections.
+
+      - Various bug fixes.
+
+    * Removed all references to the experimental-but-no-longer-needed
+      Moose::Meta::Role::Application::ToMetaclassInstance.
+
+    * Require Class::MOP 0.65.
+
 0.55_04 Sat August 30, 2008
     * Moose::Util::MetaRole
     * Moose::Cookbook::Extending::Recipe2

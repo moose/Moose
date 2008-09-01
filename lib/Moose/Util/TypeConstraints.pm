@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use Moose::Exporter;
 
-our $VERSION   = '0.55_04';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
