@@ -32,7 +32,6 @@ use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Application::ToClass;
 use Moose::Meta::Role::Application::ToRole;
 use Moose::Meta::Role::Application::ToInstance;
-use Moose::Meta::Role::Application::ToMetaclassInstance;
 
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
@@ -279,7 +278,6 @@ $_->meta->make_immutable(
     Moose::Meta::Role::Application::ToClass
     Moose::Meta::Role::Application::ToRole
     Moose::Meta::Role::Application::ToInstance
-    Moose::Meta::Role::Application::ToMetaclassInstance
 ));
 
 1;
