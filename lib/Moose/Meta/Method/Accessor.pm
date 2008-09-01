@@ -170,7 +170,7 @@ sub _inline_check_lazy {
                 $code .= '    my $default;'."\n".
                          '    if(my $builder = '.$instance.'->can($attr->builder)){ '."\n".
                          '        $default = '.$instance.'->$builder; '. "\n    } else {\n" .
-                         '        confess(Scalar::Util::blessed('.$instance.')." does not support builder method '.
+                         '        confess((Scalar::Util::blessed('.$instance.') || '.$instance.')." does not support builder method '.
                          '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
             }
             $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
@@ -192,7 +192,7 @@ sub _inline_check_lazy {
             $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n" 
                   .  '       ' . $self->_inline_init_slot($attr, $instance, $slot_access, ($instance . '->$builder'))           
                      . "\n    } else {\n" .
-                     '        confess(Scalar::Util::blessed('.$instance.')." does not support builder method '.
+                     '        confess((Scalar::Util::blessed('.$instance.') || '.$instance.')." does not support builder method '.
                      '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'");'. "\n    }";
         } 
         else {
