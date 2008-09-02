@@ -31,6 +31,14 @@ Moose::Cookbook::Basics::Recipe1 - The (always classic) B<Point> example.
       $self->z(0);
   };
 
+  ....
+
+  # hash or hashrefs are ok for the constructor
+  my $point1 = Point->new(x => 5, y => 7);
+  my $point2 = Point->new({x => 5, y => 7});
+
+  my $point3d = Point3D->new(x => 5, y => 42, z => -5);
+
 =head1 DESCRIPTION
 
 This is the classic Point example. It is taken directly from the Perl
@@ -140,13 +148,17 @@ is often a question of style as much as functionality.
 Since B<Point> inherits from L<Moose::Object>, it will also inherit
 the default L<Moose::Object> constructor:
 
-  my $point   = Point  ->new(x => 1, y => 2);
-  my $point3d = Point3D->new(x => 1, y => 2, z => 3);
+  my $point1 = Point->new(x => 5, y => 7);
+  my $point2 = Point->new({x => 5, y => 7});
+
+  my $point3d = Point3D->new(x => 5, y => 42, z => -5);
 
 The C<new> constructor accepts a named argument pair for each
-attribute defined by the class. In this particular example, the
-attributes are required, and calling C<new> without them will throw an
-error.
+attribute defined by the class, which you can provide as a hash or
+hash reference. In this particular example, the attributes are
+required, and calling C<new> without them will throw an error.
+
+  my $point = Point->new( x => 5 ); # no y, kaboom!
 
 From here on, we can use C<$point> and C<$point3d> just as you would
 any other Perl 5 object. For a more detailed example of what can be
