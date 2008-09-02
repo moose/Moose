@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +15,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Moose::Exporter;
 
-use Class::MOP 0.64;
+use Class::MOP 0.65;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -32,7 +32,6 @@ use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Application::ToClass;
 use Moose::Meta::Role::Application::ToRole;
 use Moose::Meta::Role::Application::ToInstance;
-use Moose::Meta::Role::Application::ToMetaclassInstance;
 
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
@@ -279,7 +278,6 @@ $_->meta->make_immutable(
     Moose::Meta::Role::Application::ToClass
     Moose::Meta::Role::Application::ToRole
     Moose::Meta::Role::Application::ToInstance
-    Moose::Meta::Role::Application::ToMetaclassInstance
 ));
 
 1;

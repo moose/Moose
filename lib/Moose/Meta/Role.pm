@@ -8,7 +8,7 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -464,16 +464,6 @@ sub apply {
         require Moose::Meta::Role::Application::ToInstance;
         return Moose::Meta::Role::Application::ToInstance->new(@args)->apply($self, $other);        
     }  
-}
-
-sub apply_to_metaclass_instance {
-    my ($self, $meta, @args) = @_;
-
-    $meta->isa('Moose::Meta::Class') || $meta->isa('Moose::Meta::Role')
-        || confess "You must pass in a Moose::Meta::Class or Moose::Meta::Role instance";
-
-    require Moose::Meta::Role::Application::ToMetaclassInstance;
-    return Moose::Meta::Role::Application::ToMetaclassInstance->new(@args)->apply($self, $meta);
 }
 
 sub combine {

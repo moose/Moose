@@ -284,17 +284,14 @@ is not called for my composed roles?> question in the B<Roles> section.
 
 =head3 What are Traits, and how are they different to Roles?
 
-In Moose, a trait is almost exactly the same thing as a role, except that 
-traits typically register themselves, and thus can be referred to by a short name. 
+In Moose, a trait is almost exactly the same thing as a role, except
+that traits typically register themselves, which allows you to refer
+to them by a short name ("Big" vs "MyApp::Role::Big").
 
-The word I<Role> is typically used to indicate a class building block, which 
-is composed into a class at class composition time, whereas I<Trait> is used to
-indicate functionality which is composed into an instance of a class at runtime 
-to add or modify the behavior of B<that instance>.
-
-But this is all just convention, so don't take it too seriously - nobody
-is going to yell at you if you use them interchangeably, or use one instead
-of the other.
+In Moose-speak, a I<Role> is usually composed into a I<class> at
+compile time, whereas a I<Trait> is usually composed into an instance
+of a class at runtime to add or modify the behavior of B<just that
+instance>.
 
 Outside the context of Moose, traits and roles generally mean exactly the
 same thing. The original paper called them Traits, however Perl 6 will call

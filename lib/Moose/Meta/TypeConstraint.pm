@@ -13,7 +13,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -282,22 +282,23 @@ If you wish to use features at this depth, please come to the
 
 =item B<equals ($type_name_or_object)>
 
-This checks the current type against the supplied type (only). 
-Returns false either if the type name or object supplied 
-does not match, or if a type name isn't found in the type registry.
+This checks the current type against the supplied type (only).
+Returns false if the two types are not equal. It also returns false if
+you provide the type as a name, and the type name isn't found in the
+type registry.
 
 =item B<is_a_type_of ($type_name_or_object)>
 
 This checks the current type against the supplied type, or if the
-current type is a sub-type of the type name or object supplied. 
-Returns false if the current type is not descended from the supplied
-type, of if the supplied type isn't found in the type registry.
+current type is a sub-type of the type name or object supplied. It
+also returns false if you provide the type as a name, and the type
+name isn't found in the type registry.
 
 =item B<is_subtype_of ($type_name_or_object)>
 
-This checks the current type is a sub-type of the type name or object supplied. 
-Returns false if the current type is not descended from the supplied
-type, of if the supplied type isn't found in the type registry.
+This checks the current type is a sub-type of the type name or object
+supplied. It also returns false if you provide the type as a name, and
+the type name isn't found in the type registry.
 
 =item B<compile_type_constraint>
 
@@ -323,11 +324,11 @@ The name of the type in the global type registry.
 
 =item B<parent>
 
-The parent type of this type.
+This type's parent  type.
 
 =item B<has_parent>
 
-If this type has a parent type.
+Returns true if this type has a parent type.
 
 =item B<parents>
 

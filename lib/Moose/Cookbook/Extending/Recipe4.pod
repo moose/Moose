@@ -1,0 +1,85 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar Moose-style
+
+=head1 SYNOPSIS
+
+  package MyApp::Mooseish;
+
+  use strict;
+  use warnings;
+
+  use Moose ();
+  use Moose::Exporter;
+
+  Moose::Exporter->setup_import_methods(
+      with_caller => ['has_table'],
+      also        => 'Moose',
+  );
+
+  sub init_meta {
+      shift;
+      Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
+  }
+
+  sub has_table {
+      my $caller = shift;
+      $caller->meta()->table(shift);
+  }
+
+=head1 DESCRIPTION
+
+This recipe expands on the use of L<Moose::Exporter> we saw in
+L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
+object base class, we provide our own metaclass class, and we also
+export a sugar subroutine C<has_table()>.
+
+Given the above code, you can now replace all instances of C<use
+Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
+replaced with C<no MyApp::Mooseish>.
+
+The C<with_caller> parameter specifies a list of functions that should
+be wrapped before exporting. The wrapper simply ensures that the
+importing package name is the first argument to the function, so we
+can do C<S<my $caller = shift;>>.
+
+See the L<Moose::Exporter> docs for more details on its API.
+
+=head1 USING MyApp::Mooseish
+
+The purpose of all this code is to provide a Moose-like
+interface. Here's what it would look like in actual use:
+
+  package MyApp::User;
+
+  use MyApp::Mooseish;
+
+  has_table 'User';
+
+  has 'username' => ( is => 'ro' );
+  has 'password' => ( is => 'ro' );
+
+  sub login { ... }
+
+  no MyApp::Mooseish;
+
+All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
+when you C<use MyApp::Mooseish>.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=pod

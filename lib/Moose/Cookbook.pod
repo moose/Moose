@@ -169,14 +169,27 @@ if you plan to write your own C<MooseX> module.
 
 =over 4
 
-=item L<Moose::Cookbook::Extending::Recipe1> - Providing an alternate base object class
+=item L<Moose::Cookbook::Extending::Recipe1> - Moose extension overview
+
+There are quite a number of ways to extend Moose. This recipe explains
+provides an overview of each method, and provides recommendations for
+when each is appropriate.
+
+=item L<Moose::Cookbook::Extending::Recipe2> - Providing a base object class role
+
+Many base object class extensions can be implemented as roles. This
+example shows how to provide a base object class debugging role that
+is applied to any class that uses a notional C<MooseX::Debugging>
+module.
+
+=item L<Moose::Cookbook::Extending::Recipe3> - Providing an alternate base object class
 
 You may find that you want to provide an alternate base object class
 along with a meta extension, or maybe you just want to add some
 functionality to all your classes without typing C<extends
 'MyApp::Base'> over and over.
 
-=item L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and providing sugar Moose-style
+=item L<Moose::Cookbook::Extending::Recipe4> - Acting like Moose.pm and providing sugar Moose-style
 
 This recipe shows how to provide a replacement for C<Moose.pm>. You
 may want to do this as part of the API for a C<MooseX> module,

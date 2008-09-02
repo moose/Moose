@@ -6,6 +6,7 @@ use warnings;
 use Carp qw( confess );
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
+use Moose::Util::MetaRole;
 use Sub::Exporter;
 
 
@@ -215,10 +216,10 @@ sub _make_sub_exporter_params {
                 $did_init_meta = 1;
             }
 
-            if ($did_init_meta) {
+            if ( $did_init_meta && @{$traits} ) {
                 _apply_meta_traits( $CALLER, $traits );
             }
-            elsif ( $traits && @{$traits} ) {
+            elsif ( @{$traits} ) {
                 confess
                     "Cannot provide traits when $class does not have an init_meta() method";
             }
@@ -231,7 +232,7 @@ sub _make_sub_exporter_params {
 sub _strip_traits {
     my $idx = first_index { $_ eq '-traits' } @_;
 
-    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+    return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
 
     my $traits = $_[ $idx + 1 ];
 
@@ -245,8 +246,7 @@ sub _strip_traits {
 sub _apply_meta_traits {
     my ( $class, $traits ) = @_;
 
-    return
-        unless $traits && @$traits;
+    return unless @{$traits};
 
     my $meta = $class->meta();
 
@@ -255,21 +255,16 @@ sub _apply_meta_traits {
         'Cannot determine metaclass type for trait application . Meta isa '
         . ref $meta;
 
-    # We can only call does_role() on Moose::Meta::Class objects, and
-    # we can only do that on $meta->meta() if it has already had at
-    # least one trait applied to it. By default $meta->meta() returns
-    # a Class::MOP::Class object (not a Moose::Meta::Class).
-    my @traits = grep {
-        $meta->meta()->can('does_role')
-            ? not $meta->meta()->does_role($_)
-            : 1
-        }
-        map { Moose::Util::resolve_metatrait_alias( $type => $_ ) } @$traits;
+    my @resolved_traits
+        = map { Moose::Util::resolve_metatrait_alias( $type => $_ ) }
+        @$traits;
 
-    return unless @traits;
+    return unless @resolved_traits;
 
-    Moose::Util::apply_all_roles_with_method( $meta,
-        'apply_to_metaclass_instance', \@traits );
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => $class,
+        metaclass_roles => \@resolved_traits,
+    );
 }
 
 sub _get_caller {

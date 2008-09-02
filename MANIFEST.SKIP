@@ -20,3 +20,4 @@ cover_db
 ^benchmarks
 ^\._.*$
 ^t\/600_todo_tests\/$
+\.shipit

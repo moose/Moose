@@ -10,7 +10,7 @@ use Carp         'confess', 'croak';
 use Data::OptList;
 use Sub::Exporter;
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -140,7 +140,13 @@ sub init_meta {
     }
     else {
         $meta = $metaclass->initialize($role);
-        $meta->alias_method('meta' => sub { $meta });
+
+        $meta->add_method(
+            'meta' => sub {
+                # re-initialize so it inherits properly
+                $metaclass->initialize( ref($_[0]) || $_[0] );
+            }
+        );
     }
 
     return $meta;

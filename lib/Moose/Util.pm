@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Class::MOP   0.56;
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -73,16 +73,9 @@ sub search_class_by_role {
 sub apply_all_roles {
     my $applicant = shift;
 
-    apply_all_roles_with_method( $applicant, 'apply', [@_] );
-}
+    confess "Must specify at least one role to apply to $applicant" unless @_;
 
-sub apply_all_roles_with_method {
-    my ( $applicant, $apply_method, $role_list ) = @_;
-
-    confess "Must specify at least one role to apply to $applicant"
-        unless @$role_list;
-
-    my $roles = Data::OptList::mkopt($role_list);
+    my $roles = Data::OptList::mkopt( [@_] );
 
     my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
 
@@ -98,11 +91,10 @@ sub apply_all_roles_with_method {
 
     if ( scalar @$roles == 1 ) {
         my ( $role, $params ) = @{ $roles->[0] };
-        $role->meta->$apply_method( $meta,
-            ( defined $params ? %$params : () ) );
+        $role->meta->apply( $meta, ( defined $params ? %$params : () ) );
     }
     else {
-        Moose::Meta::Role->combine( @$roles )->$apply_method($meta);
+        Moose::Meta::Role->combine( @$roles )->apply($meta);
     }
 }
 
@@ -228,13 +220,6 @@ right thing to apply the C<@roles> to the C<$applicant>. This is
 actually used internally by both L<Moose> and L<Moose::Role>, and the
 C<@roles> will be pre-processed through L<Data::OptList::mkopt>
 to allow for the additional arguments to be passed. 
-
-=item B<apply_all_roles_with_method ($applicant, $method, @roles)>
-
-This function works just like C<apply_all_roles()>, except it allows
-you to specify what method will be called on the role metaclass when
-applying it to the C<$applicant>. This exists primarily so one can use
-the C<< Moose::Meta::Role->apply_to_metaclass_instance() >> method.
 
 =item B<get_all_attribute_values($meta, $instance)>
 

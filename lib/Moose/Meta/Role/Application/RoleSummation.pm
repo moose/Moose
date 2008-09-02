@@ -6,11 +6,10 @@ use metaclass;
 
 use Carp            'confess';
 use Scalar::Util    'blessed';
-use Data::Dumper;
 
 use Moose::Meta::Role::Composite;
 
-our $VERSION   = '0.55_01';
+our $VERSION   = '0.56';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

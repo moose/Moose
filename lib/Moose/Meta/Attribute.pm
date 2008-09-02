@@ -376,13 +376,8 @@ sub initialize_instance_slot {
             $value_is_set = 1;
         } 
         elsif ($self->has_builder) {
-            if (my $builder = $instance->can($self->builder)){
-                $val = $instance->$builder;
-                $value_is_set = 1;
-            } 
-            else {
-                confess(blessed($instance)." does not support builder method '".$self->builder."' for attribute '" . $self->name . "'");
-            }
+            $val = $self->_call_builder($instance);
+            $value_is_set = 1;
         }
     }
 
@@ -403,6 +398,22 @@ sub initialize_instance_slot {
     $self->set_initial_value($instance, $val);
     $meta_instance->weaken_slot_value($instance, $self->name)
         if ref $val && $self->is_weak_ref;
+}
+
+sub _call_builder {
+    my ( $self, $instance ) = @_;
+
+    my $builder = $self->builder();
+
+    return $instance->$builder()
+        if $instance->can( $self->builder );
+
+    confess(  blessed($instance)
+            . " does not support builder method '"
+            . $self->builder
+            . "' for attribute '"
+            . $self->name
+            . "'" );
 }
 
 ## Slot management
@@ -493,18 +504,8 @@ sub get_value {
             if ($self->has_default) {
                 $value = $self->default($instance);
             } elsif ( $self->has_builder ) {
-                if (my $builder = $instance->can($self->builder)){
-                    $value = $instance->$builder;
-                }
-                else {
-                    confess(blessed($instance) 
-                          . " does not support builder method '"
-                          . $self->builder 
-                          . "' for attribute '" 
-                          . $self->name 
-                          . "'");
-                }
-            } 
+                $value = $self->_call_builder($instance);
+            }
             if ($self->has_type_constraint) {
                 my $type_constraint = $self->type_constraint;
                 $value = $type_constraint->coerce($value)

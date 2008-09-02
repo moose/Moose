@@ -1,6 +1,47 @@
 Revision history for Perl extension Moose
 
-0.56
+0.56 Mon September 1, 2008
+    For those not following the series of dev releases, there are
+    several major changes in this release of Moose.
+      ! Moose::init_meta should now be called as a method. See the
+        docs for details.
+
+      - Major performance improvements by nothingmuch.
+
+      - New modules for extension writers, Moose::Exporter and
+        Moose::Util::MetaRole by Dave Rolsky.
+
+      - Lots of doc improvements and additions, especially in the
+        cookbook sections.
+
+      - Various bug fixes.
+
+    * Removed all references to the experimental-but-no-longer-needed
+      Moose::Meta::Role::Application::ToMetaclassInstance.
+
+    * Require Class::MOP 0.65.
+
+0.55_04 Sat August 30, 2008
+    * Moose::Util::MetaRole
+    * Moose::Cookbook::Extending::Recipe2
+      - This simplifies the application of roles to any meta class, as
+        well as the base object class. Reimplemented metaclass traits
+        using this module. (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe1
+      - This a new recipe, an overview of various ways to write Moose
+        extensions (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe3
+    * Moose::Cookbook::Extending::Recipe4
+      - These used to be Extending::Recipe1 and Extending::Recipe2,
+        respectively.
+
+0.55_03 Fri August 29, 2008
+    * No changes from 0.55_02 except increasing the Class::MOP
+      dependency to 0.64_07.
+
+0.55_02 Fri August 29, 2008
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
 
@@ -9,17 +50,26 @@ Revision history for Perl extension Moose
         found (t0m).
       
     * Moose::Meta::TypeConstraint
-      - predicate methods (equals/is_a_type_of/is_subtype_of) now 
+      - Predicate methods (equals/is_a_type_of/is_subtype_of) now
         return false if the type you specify cannot be found in the
-        type registry, rather than throwing an unhelpful and coincidental
-        exception. The behavior is now in line with to 
-        $ob->isa('DoesNotExist') (t0m).
+        type registry, rather than throwing an unhelpful and
+        coincidental exception. (t0m).
         - added docs & test for this (t0m)
     
     * Moose::Meta::TypeConstraint::Registry
       - add_type_constraint now throws an exception if a parameter is
         not supplied (t0m).
         - added docs & test for this (t0m)
+
+    * Moose::Cookbook::FAQ
+      - Added a faq entry on the difference between "role" and "trait"
+        (t0m)
+
+    * Moose::Meta::Role
+      - Fixed a bug that caused role composition to not see a required
+        method when that method was provided by another role being
+        composed at the same time. (Dave Rolsky)
+        - test and bug finding (tokuhirom)
         
 0.55_01 Wed August 20, 2008
 

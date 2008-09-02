@@ -21,6 +21,8 @@ lib/Moose/Cookbook/Basics/Recipe7.pod
 lib/Moose/Cookbook/Basics/Recipe9.pod
 lib/Moose/Cookbook/Extending/Recipe1.pod
 lib/Moose/Cookbook/Extending/Recipe2.pod
+lib/Moose/Cookbook/Extending/Recipe3.pod
+lib/Moose/Cookbook/Extending/Recipe4.pod
 lib/Moose/Cookbook/FAQ.pod
 lib/Moose/Cookbook/Meta/Recipe1.pod
 lib/Moose/Cookbook/Meta/Recipe2.pod
@@ -48,7 +50,6 @@ lib/Moose/Meta/Role/Application.pm
 lib/Moose/Meta/Role/Application/RoleSummation.pm
 lib/Moose/Meta/Role/Application/ToClass.pm
 lib/Moose/Meta/Role/Application/ToInstance.pm
-lib/Moose/Meta/Role/Application/ToMetaclassInstance.pm
 lib/Moose/Meta/Role/Application/ToRole.pm
 lib/Moose/Meta/Role/Composite.pm
 lib/Moose/Meta/Role/Method.pm
@@ -67,6 +68,7 @@ lib/Moose/Object.pm
 lib/Moose/Role.pm
 lib/Moose/Spec/Role.pod
 lib/Moose/Util.pm
+lib/Moose/Util/MetaRole.pm
 lib/Moose/Util/TypeConstraints.pm
 lib/Moose/Util/TypeConstraints/OptimizedConstraints.pm
 lib/oose.pm
@@ -155,6 +157,7 @@ t/030_roles/024_role_composition_methods.t
 t/030_roles/025_role_composition_override.t
 t/030_roles/026_role_composition_method_mods.t
 t/030_roles/030_role_parameterized.t
+t/030_roles/031_roles_applied_in_create.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t
@@ -189,6 +192,8 @@ t/050_metaclasses/011_init_meta.t
 t/050_metaclasses/012_moose_exporter.t
 t/050_metaclasses/013_metaclass_traits.t
 t/050_metaclasses/014_goto_moose_import.t
+t/050_metaclasses/015_metarole.t
+t/050_metaclasses/016_metarole_w_metaclass_pm.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t
@@ -243,5 +248,8 @@ t/lib/Foo.pm
 t/lib/MyMooseA.pm
 t/lib/MyMooseB.pm
 t/lib/MyMooseObject.pm
+t/lib/Role/Child.pm
+t/lib/Role/Interface.pm
+t/lib/Role/Parent.pm
 t/pod.t
 t/pod_coverage.t
