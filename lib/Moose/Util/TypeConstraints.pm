@@ -213,21 +213,18 @@ sub find_or_create_does_type_constraint ($) {
 
 sub find_or_parse_type_constraint ($) {
     my $type_constraint_name = shift;
-
-    return $REGISTRY->get_type_constraint($type_constraint_name)
-        if $REGISTRY->has_type_constraint($type_constraint_name);
-
     my $constraint;
-
-    if (_detect_type_constraint_union($type_constraint_name)) {
+    
+    if ($constraint = find_type_constraint($type_constraint_name)) {
+        return $constraint;
+    } elsif (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
-    }
-    elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
+    } elsif (_detect_parameterized_type_constraint($type_constraint_name)) {     
         $constraint = create_parameterized_type_constraint($type_constraint_name);
     } else {
         return;
     }
-
+    
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
 }
