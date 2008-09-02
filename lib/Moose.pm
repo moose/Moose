@@ -322,20 +322,23 @@ Moose is an extension of the Perl 5 object system.
 
 The main goal of Moose is to make Perl 5 Object Oriented programming
 easier, more consistent and less tedious. With Moose you can to think
-more about what you want to do and less about the mechanics of OOP. 
+more about what you want to do and less about the mechanics of OOP.
 
-Additionally, Moose is built on top of L<Class::MOP>, which is a 
-metaclass system for Perl 5. This means that Moose not only makes 
-building normal Perl 5 objects better, but it provides the power of 
-metaclass programming as well. 
+Additionally, Moose is built on top of L<Class::MOP>, which is a
+metaclass system for Perl 5. This means that Moose not only makes
+building normal Perl 5 objects better, but it provides the power of
+metaclass programming as well.
 
 =head2 New to Moose?
 
-If you're new to Moose, the best place to start is the
-L<Moose::Cookbook>. The recipes on Moose basics will get you up to
-speed with many of Moose's features quickly. Once you have an idea of
-what Moose can do, you can use the API documentation to get more
-detail on features which interest you.
+If you're new to Moose, the best place to start is the L<Moose::Intro>
+docs, followed by the L<Moose::Cookbook>. The intro will show you what
+Moose is, and how it makes Perl 5 OO better.
+
+The cookbook recipes on Moose basics will get you up to speed with
+many of Moose's features quickly. Once you have an idea of what Moose
+can do, you can use the API documentation to get more detail on
+features which interest you.
 
 =head2 Moose Extensions
 
@@ -810,45 +813,10 @@ to work. Here is an example:
 =head1 EXTENDING AND EMBEDDING MOOSE
 
 Moose also offers some options for extending or embedding it into your
-own framework. There are several things you might want to do as part
-of such a framework. First, you probably want to export Moose's sugar
-functions (C<has>, C<extends>, etc) for users of the
-framework. Second, you may want to provide additional sugar of your
-own. Third, you may want to provide your own object base class instead
-of L<Moose::Object>, and/or your own metaclass class instead of
-L<Moose::Meta::Class>.
-
-The exporting needs can be asily satisfied by using
-L<Moose::Exporter>, which is what C<Moose.pm> itself uses for
-exporting. L<Moose::Exporter> lets you "export like Moose".
-
-If you define an C<init_meta> method in a module that uses
-L<Moose::Exporter>, then this method will be called I<before>
-C<Moose.pm>'s own C<init_meta>. This gives you a chance to provide an
-alternate object base class or metaclass class.
-
-Here is a simple example:
-
-    package MyFramework;
-
-    use strict;
-    use warnings;
-
-    use Moose (); # no need to get Moose's exports
-    use Moose::Exporter;
-
-    Moose::Exporter->setup_import_methods( also => 'Moose' );
-
-    sub init_meta {
-        shift;
-        return Moose->init_meta( @_, base_class => 'MyFramework::Base' );
-    }
-
-In this example, any class that includes C<use MyFramework> will get
-all of C<Moose.pm>'s sugar functions, and will have their superclass
-set to C<MyFramework::Base>.
-
-Additionally, that class can include C<no MyFramework> to unimport
+own framework. To learn more about extending Moose, we recommend
+checking out the "Extending" recipes in the L<Moose::Cookbook>,
+starting with L<Moose::Cookbook::Extending::Recipe1>, which provides
+an overview of all the different ways you might extend Moose.
 
 =head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
 
