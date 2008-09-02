@@ -577,6 +577,15 @@ cascade down the role hierarchy.
 This method does the same thing as L<Class::MOP::Class::add_attribute>, but adds
 support for taking the C<$params> as a HASH ref.
 
+=item B<constructor_class ($class_name)>
+
+=item B<destructor_class ($class_name)>
+
+These are the names of classes used when making a class
+immutable. These default to L<Moose::Meta::Method::Constructor> and
+L<Moose::Meta::Method::Destructor> respectively. These accessors are
+read-write, so you can use them to change the class name.
+
 =back
 
 =head1 BUGS
