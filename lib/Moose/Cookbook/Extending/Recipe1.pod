@@ -298,7 +298,7 @@ extensions.
 
 Note that if you write a cooperative extension, it should cooperate
 with older extensions, though older extensions generally do not
-cooperate with each oether.
+cooperate with each other.
 
 =head1 CONCLUSION
 
