@@ -998,6 +998,8 @@ Wallace (wreis) Reis
 
 Jonathan (jrockway) Rockway
 
+Dave (autarch) Rolsky
+
 Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain
