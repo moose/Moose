@@ -1,9 +1,5 @@
 Revision history for Perl extension Moose
-0.58
-    * Moose::Util::TypeConstraints
-	  - Fixed a bug in find_or_parse_type_constraint that caused
-	    trouble if it's argument was an already blessed type
-        constraint.  Added test to prevent regressions.
+
 0.57
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
@@ -13,6 +9,12 @@ Revision history for Perl extension Moose
       - Shows examples of two classes, each done first with and then
         without Moose. This makes a nice parallel to
         Moose::Intro. (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints
+      - Fixed a bug in find_or_parse_type_constraint so that it
+        accepts a Moose::Meta::TypeConstraint object as the parent
+        type, not just a name (jnapiorkowski)
+        - added tests (jnapiorkowski)
 
 0.56 Mon September 1, 2008
     For those not following the series of dev releases, there are
