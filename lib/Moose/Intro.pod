@@ -300,6 +300,10 @@ With Moose, this C<new()> method is created for you, and it simply
 does the right thing. You should never need to define your own
 constructor!
 
+Sometimes you want to do something whenever an object is created. In
+those cases, you can provide a C<BUILD()> method in your class. Moose
+will call this for you after creating a new object.
+
 =head2 Destructor
 
 This is a special method called when an object instance goes out of
