@@ -114,10 +114,10 @@ helpers like C<Class::Accessor>.
 
       $class->_validate_shirt_size( $p{shirt_size} );
 
-      my $self = map { $_ => $p{$_} } qw( name shirt_size );
-      $self->{birth_date} = $date;
+      my %self = map { $_ => $p{$_} } qw( name shirt_size );
+      $self{birth_date} = $date;
 
-      return bless $self, $class;
+      return bless \%self, $class;
   }
 
   sub _validate_name {
