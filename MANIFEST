@@ -36,6 +36,7 @@ lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/Style.pod
 lib/Moose/Cookbook/WTF.pod
 lib/Moose/Exporter.pm
+lib/Moose/Intro.pod
 lib/Moose/Meta/Attribute.pm
 lib/Moose/Meta/Class.pm
 lib/Moose/Meta/Instance.pm
@@ -67,6 +68,7 @@ lib/Moose/Meta/TypeConstraint/Union.pm
 lib/Moose/Object.pm
 lib/Moose/Role.pm
 lib/Moose/Spec/Role.pod
+lib/Moose/Unsweetened.pod
 lib/Moose/Util.pm
 lib/Moose/Util/MetaRole.pm
 lib/Moose/Util/TypeConstraints.pm
