@@ -17,6 +17,7 @@ cover_db
 ^\.#
 ^TODO$
 ^PLANS$
+^doc/
 ^benchmarks
 ^\._.*$
 ^t\/600_todo_tests\/$
