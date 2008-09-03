@@ -322,20 +322,23 @@ Moose is an extension of the Perl 5 object system.
 
 The main goal of Moose is to make Perl 5 Object Oriented programming
 easier, more consistent and less tedious. With Moose you can to think
-more about what you want to do and less about the mechanics of OOP. 
+more about what you want to do and less about the mechanics of OOP.
 
-Additionally, Moose is built on top of L<Class::MOP>, which is a 
-metaclass system for Perl 5. This means that Moose not only makes 
-building normal Perl 5 objects better, but it provides the power of 
-metaclass programming as well. 
+Additionally, Moose is built on top of L<Class::MOP>, which is a
+metaclass system for Perl 5. This means that Moose not only makes
+building normal Perl 5 objects better, but it provides the power of
+metaclass programming as well.
 
 =head2 New to Moose?
 
-If you're new to Moose, the best place to start is the
-L<Moose::Cookbook>. The recipes on Moose basics will get you up to
-speed with many of Moose's features quickly. Once you have an idea of
-what Moose can do, you can use the API documentation to get more
-detail on features which interest you.
+If you're new to Moose, the best place to start is the L<Moose::Intro>
+docs, followed by the L<Moose::Cookbook>. The intro will show you what
+Moose is, and how it makes Perl 5 OO better.
+
+The cookbook recipes on Moose basics will get you up to speed with
+many of Moose's features quickly. Once you have an idea of what Moose
+can do, you can use the API documentation to get more detail on
+features which interest you.
 
 =head2 Moose Extensions
 
@@ -810,45 +813,10 @@ to work. Here is an example:
 =head1 EXTENDING AND EMBEDDING MOOSE
 
 Moose also offers some options for extending or embedding it into your
-own framework. There are several things you might want to do as part
-of such a framework. First, you probably want to export Moose's sugar
-functions (C<has>, C<extends>, etc) for users of the
-framework. Second, you may want to provide additional sugar of your
-own. Third, you may want to provide your own object base class instead
-of L<Moose::Object>, and/or your own metaclass class instead of
-L<Moose::Meta::Class>.
-
-The exporting needs can be asily satisfied by using
-L<Moose::Exporter>, which is what C<Moose.pm> itself uses for
-exporting. L<Moose::Exporter> lets you "export like Moose".
-
-If you define an C<init_meta> method in a module that uses
-L<Moose::Exporter>, then this method will be called I<before>
-C<Moose.pm>'s own C<init_meta>. This gives you a chance to provide an
-alternate object base class or metaclass class.
-
-Here is a simple example:
-
-    package MyFramework;
-
-    use strict;
-    use warnings;
-
-    use Moose (); # no need to get Moose's exports
-    use Moose::Exporter;
-
-    Moose::Exporter->setup_import_methods( also => 'Moose' );
-
-    sub init_meta {
-        shift;
-        return Moose->init_meta( @_, base_class => 'MyFramework::Base' );
-    }
-
-In this example, any class that includes C<use MyFramework> will get
-all of C<Moose.pm>'s sugar functions, and will have their superclass
-set to C<MyFramework::Base>.
-
-Additionally, that class can include C<no MyFramework> to unimport
+own framework. To learn more about extending Moose, we recommend
+checking out the "Extending" recipes in the L<Moose::Cookbook>,
+starting with L<Moose::Cookbook::Extending::Recipe1>, which provides
+an overview of all the different ways you might extend Moose.
 
 =head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
 
@@ -894,75 +862,6 @@ This might seem like a restriction, but I am of the opinion that keeping these
 two features separate (yet interoperable) actually makes them easy to use, since
 their behavior is then easier to predict. Time will tell whether I am right or
 not (UPDATE: so far so good).
-
-=item *
-
-It is important to note that we currently have no simple way of combining 
-multiple extended versions of Moose (see L<EXTENDING AND EMBEDDING MOOSE> above), 
-and that in many cases they will conflict with one another. We are working on 
-developing a way around this issue, but in the meantime, you have been warned.
-
-=back
-
-=head1 JUSTIFICATION
-
-In case you are still asking yourself "Why do I need this?", then this 
-section is for you. This used to be part of the main DESCRIPTION, but 
-I think Moose no longer actually needs justification, so it is included 
-(read: buried) here for those who are still not convinced.
-
-=over 4
-
-=item Another object system!?!?
-
-Yes, I know there has been an explosion recently of new ways to
-build objects in Perl 5, most of them based on inside-out objects
-and other such things. Moose is different because it is not a new
-object system for Perl 5, but instead an extension of the existing
-object system.
-
-Moose is built on top of L<Class::MOP>, which is a metaclass system
-for Perl 5. This means that Moose not only makes building normal
-Perl 5 objects better, but it also provides the power of metaclass
-programming.
-
-=item Is this for real? Or is this just an experiment?
-
-Moose is I<based> on the prototypes and experiments I did for the Perl 6
-meta-model. However, Moose is B<NOT> an experiment/prototype; it is for B<real>.
-
-=item Is this ready for use in production?
-
-Yes, I believe that it is.
-
-Moose has been used successfully in production environemnts by several people
-and companies (including the one I work for). There are Moose applications
-which have been in production with little or no issue now for well over two years.
-I consider it highly stable and we are commited to keeping it stable.
-
-Of course, in the end, you need to make this call yourself. If you have
-any questions or concerns, please feel free to email me, or even the list
-or just stop by #moose and ask away.
-
-=item Is Moose just Perl 6 in Perl 5?
-
-No. While Moose is very much inspired by Perl 6, it is not itself Perl 6.
-Instead, it is an OO system for Perl 5. I built Moose because I was tired of
-writing the same old boring Perl 5 OO code, and drooling over Perl 6 OO. So
-instead of switching to Ruby, I wrote Moose :)
-
-=item Wait, I<post> modern, I thought it was just I<modern>?
-
-So I was reading Larry Wall's talk from the 1999 Linux World entitled 
-"Perl, the first postmodern computer language" in which he talks about how 
-he picked the features for Perl because he thought they were cool and he 
-threw out the ones that he thought sucked. This got me thinking about how 
-we have done the same thing in Moose. For Moose, we have "borrowed" features 
-from Perl 6, CLOS (LISP), Smalltalk, Java, BETA, OCaml, Ruby and more, and 
-the bits we didn't like (cause they sucked) we tossed aside. So for this 
-reason (and a few others) I have re-dubbed Moose a I<postmodern> object system.
-
-Nuff Said.
 
 =back
 
@@ -1098,6 +997,8 @@ Chris (perigrin) Prather
 Wallace (wreis) Reis
 
 Jonathan (jrockway) Rockway
+
+Dave (autarch) Rolsky
 
 Piotr (dexter) Roszatycki
 

@@ -1,0 +1,549 @@
+=pod
+
+=head1 NAME
+
+Moose::Intro - What is Moose, and how do I use it?
+
+=head1 WHAT IS MOOSE?
+
+Moose is a I<complete> object system for Perl 5. If you've used a
+modern object-oriented language (which Perl 5 definitely isn't), you
+know they provide keywords for attribute declaration, object
+construction, and inheritance. These keywords are part of the
+language, and you don't care how they are implemented.
+
+Moose aims to do the same thing for Perl 5 OO. We can't actually
+create new keywords, but we do offer "sugar" that looks a lot like
+them. More importantly, with Moose, you I<declaritively define> your
+class, without needing to know about blessed hashrefs, accessor
+methods, and so on.
+
+Moose lets you focus on the I<logical> structure of your classes, so
+you can focus on "what" rather than "how". With Moose, a class
+definition should read like a list of very concise English sentences.
+
+Moose is built in top of C<Class::MOP>, a meta-object protocol (aka
+MOP). Using the MOP, Moose provides complete introspection for all
+Moose-using classes. This means you can ask classes about their
+attributes, parents, children, methods, etc., all using a well-defined
+API. The MOP abstracts away tedious digging about in the Perl symbol
+table, looking at C<@ISA> vars, and all the other crufty Perl tricks
+we know and love (?).
+
+Moose is based in large part on the Perl 6 object system, as well as
+drawing on the best ideas from CLOS, Smalltalk, and many other
+languages.
+
+=head1 WHY MOOSE?
+
+Moose makes Perl 5 OO both simpler and more powerful. It encapsulates
+all the tricks of Perl 5 power users in high-level declarative APIs
+which are easy to use, and don't require any special knowledge of how
+Perl works under the hood.
+
+Moose makes Perl 5 OO fun, accessible, and powerful. And if you want
+to dig about in the guts, Moose lets you do that too, by using and
+extending its powerful introspection API.
+
+=head1 AN EXAMPLE
+
+  package Person;
+
+  use Moose;
+
+  has 'first_name' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+  has 'last_name' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+This is a I<complete and usable> class definition!
+
+  package User;
+
+  use DateTime;
+  use Moose;
+
+  extends 'Person';
+
+  has 'password' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+  has 'last_login' => (
+      is      => 'rw',
+      isa     => 'DateTime',
+      handles => { 'date_of_last_login' => 'date' },
+  );
+
+  sub login {
+      my $self = shift;
+      my $pw   = shift;
+
+      return 0 if $pw ne $self->password;
+
+      $self->last_login( DateTime->now() );
+
+      return 1;
+  }
+
+We'll leave the line-by-line explanation of this code to other
+documentation, but you can see how Moose reduces common OO idioms to
+simple declarative constructs.
+
+=head2 Where's the Constructor?
+
+One point of confusion that might come up with Moose is how it handles
+object construction. B<You should not define a C<new()> method for
+your classes!>
+
+Moose will provide one for you. It will accept a hash or hash
+reference of named parameters matching your attributes. This is just
+another way in which Moose keeps your from worrying I<how> classes are
+implemented. Simply define a class and you're ready to start creating
+objects!
+
+=head1 MOOSE CONCEPTS (VS "OLD SCHOOL" Perl)
+
+In the past, you may not have thought too much about the difference
+between packages and classes, attributes and methods, constructors vs
+methods, etc. Part of what the MOP provides is well-defined
+introspection features for each of those things, and in turn Moose
+provides I<distinct> sugar for each of them. Moose also introduces
+concepts that are uncommon (or entirely new) like roles, method
+modifiers, and declarative delegation.
+
+Knowing what these concepts mean in Moose-speak, and how they used to
+be done in old school Perl 5 OO is a good way to start learning to use
+Moose.
+
+=head2 Class
+
+When you say "use Moose" in a package, you are defining your package
+as a class. At its simplest, a class will consist simply of attributes
+and/or methods. It can also include roles, method modifiers, and more.
+
+A class I<has> zero or more B<attributes>.
+
+A class I<has> zero or more B<methods>.
+
+A class I<may have> one or more superclasses (aka parent classes). A
+class inherits from its superclass(es).
+
+A class may I<have> B<method modifiers>. These modifiers can apply to
+its own methods or methods that are inherited from its ancestors.
+
+A class may I<do> one or more B<roles>.
+
+A class I<has> a B<constructor> and a B<destructor>. These are
+provided for you "for free" by Moose.
+
+The B<constructor> accepts named parameters corresponding to the
+class's attributes and uses them to initialize an B<object instances>.
+
+A class I<has> a B<metaclass>, which in turn has B<meta-attributes>,
+B<meta-methods>, and B<meta-roles>. This metaclass I<describes> the
+class.
+
+A class is usually analogous to a category of nouns, like "People" or
+"Users".
+
+  package Person;
+
+  use Moose;
+  # now it's a Moose class!
+
+=head2 Attribute
+
+An attribute is a property of the class that defines it. It I<always>
+has a name, and it I<may have> a number of other defining
+characteristics.
+
+These characteristics may include a read/write flag, a B<type>,
+accessor method names, B<delegations>, a default value, and more.
+
+Attributes I<are not> methods, but defining them causes various
+accessor methods to be created. At a minimum, a normal attribute will
+always have a reader accessor method. Many attributes have things like
+a writer method, clearer method, and predicate method ("has it been
+set?").
+
+An attribute may also define B<delegation>s, which will create
+additional methods based on the delegation specification.
+
+By default, Moose stores attributes in the object instance, which is a
+hashref, I<but this is invisible to the author of a Moose-base class>!
+It is best to think of Moose attributes as "properties" of the
+I<opaque> B<object instance>. These properties are accessed through
+well-defined accessor methods.
+
+An attribute is usually analagous to specific feature of something in
+the class's category. For example, People have first and last
+names. Users have passwords and last login datetimes.
+
+  has 'first_name' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+=head2 Method
+
+A method is very straightforward. Any subroutine you define in your
+class is a method.
+
+Methods correspond to verbs, and are what your objects can do. For
+example, a User can login.
+
+  sub login { ... }
+
+=head2 Roles
+
+A role is something that a class I<does>. For example, a Machine class
+might do the Breakable role, and a so could a Bone class. A role is
+used to define some concept that cuts across multiple unrelated
+classes, like "breakability", or "has a color".
+
+A role I<has> zero or more B<attributes>.
+
+A role I<has> zero or more B<methods>.
+
+A role I<has> zero or more B<method modifiers>.
+
+A role I<has> zero or more B<required methods>.
+
+A required method is not implemented by the role. Instead, a required
+method says "to use this Role you must implement this method".
+
+Roles are I<composed> into classes (or other roles). When a role is
+composed into a class, its attributes and methods are "flattened" into
+the class. Roles I<do not> show up in the inheritance hierarchy. When
+a role is composed, it's attributes and methods appear as if they were
+defined I<in the consuming class>.
+
+Role are somewhat like mixins or interfaces in other OO languages.
+
+  package Breakable;
+
+  use Moose::Role;
+
+  has is_broken => (
+      is  => 'rw',
+      isa => 'Bool',
+  );
+
+  requires 'break';
+
+  before 'break' => {
+      my $self = shift;
+
+      $self->is_broken(1);
+  };
+
+=head2 Method Modifiers
+
+A method modifier is a way of defining an action to be taken when a
+named method is called. Think of it as a hook on the named method. For
+example, you could say "before calling C<login()>, call this modifier
+first". Modifiers come in different flavors like "before", "after",
+"around", and "augment", and you can apply more than one modifier to
+a single method.
+
+Method modifiers are often used as an alternative to overriding a
+method in a parent class. They are also used in roles as a way of
+modifying methods in the consuming class.
+
+Under the hood, a method modifier is just a plain old Perl subroutine
+that gets called before or after (or around, etc.) some named method.
+
+  before 'login' => sub {
+      my $self = shift;
+      my $pw   = shift;
+
+      warn "Called login() with $pw\n";
+  };
+
+=head2 Type
+
+Moose also comes with a (miniature) type system. This allows you to
+define types for attributes. Moose has a set of built-in types based
+on what Perl provides, such as "Str", "Num", "Bool", "HashRef", etc.
+
+In addition, every class name in your application can also be used as
+a type name. We saw an example using "DateTime" earlier.
+
+Finally, you can define your own types, either as subtypes or entirely
+new types, with their own constraints. For example, you could define a
+type "PosInt", a subtype of "Int" which only allows positive numbers.
+
+=head2 Delegation
+
+Moose attributes provide declarative syntax for defining
+delegations. A delegation is a method which delegates the real work to
+some attribute of the class.
+
+You saw this in the User example, where we defined a delegation for
+the C<date_of_last_login()> method. Under the hood, this simple calls
+C<date()> on the User object's C<last_login> attribute.
+
+=head2 Constructor
+
+A constructor creates an B<object instance> for the class. In old
+school Perl, this was usually done by defining a method called
+C<new()> which in turn called C<bless> on a reference.
+
+With Moose, this C<new()> method is created for you, and it simply
+does the right thing. You should never need to define your own
+constructor!
+
+Sometimes you want to do something whenever an object is created. In
+those cases, you can provide a C<BUILD()> method in your class. Moose
+will call this for you after creating a new object.
+
+=head2 Destructor
+
+This is a special method called when an object instance goes out of
+scope. You can specialize what your class does in this method if you
+need to, but you usually don't.
+
+With old school Perl 5, this is the C<DESTROY()> method, but with
+Moose it is the C<DEMOLISH()> method.
+
+=head2 Object Instance
+
+An object instance is a specific noun in the class's "category". For
+example, one specific Person or User. An instance is created by the
+class's B<constructor>.
+
+An instance has values for its attributes. For example, a specific
+person has a first and last name,
+
+In old school Perl 5, this is often a blessed hash reference. With
+Moose, you should never need to know what your object instance
+actually is. (ok, it's usually a blessed hashref with Moose too)
+
+=head2 Moose VS Old School Summary
+
+=over 4
+
+=item * Class
+
+A package with no introspection other than mucking about in the symbol
+table.
+
+With Moose, you get well-defined declaration and introspection.
+
+=item * Attributes
+
+Hand-written accessor methods, symbol table hackery, or a helper
+module like C<Class::Accessor>.
+
+With Moose, these are declaritively defined, and distinct from
+methods.
+
+=item * Method
+
+These are pretty much the same in Moose as in old school Perl.
+
+=item * Roles
+
+C<Class::Trait> or C<Class::Role>, or maybe C<mixin.pm>.
+
+With Moose, they're part of the core feature set, and are
+introspectable like everything else.
+
+=item * Method Modifiers
+
+Could only be done through serious symbol table wizardry, and you
+probably never saw this before (at least in Perl 5).
+
+=item * Type
+
+Hand-written parameter checking in your C<new()> method and accessors.
+
+With Moose, you define types declaratively, and then use them by name
+in your attributes.
+
+=item * Delegation
+
+C<Class::Delegation> or C<Class::Delegator>, but probably even more
+hand-written code.
+
+With Moose, this is also declarative.
+
+=item * Constructor
+
+A C<new()> method which calls C<bless> on a reference.
+
+Comes for free when you define a class with Moose.
+
+=item * Destructor
+
+A C<DESTROY()> method.
+
+With Moose, this is called C<DEMOLISH()>.
+
+=item * Object Instance
+
+A blessed reference, usually a hash reference.
+
+With Moose, this is an opaque thing which has a bunch of attributes
+and methods, as defined by its class.
+
+=item * Immutabilization
+
+Moose comes with a feature called "immutabilization". When you make
+your class immutable, it means you're done adding methods, attributes,
+roles, etc. This lets Moose optimize your class with a bunch of
+extremely dirty in-place code generation tricks that speed up things
+like object construction and so on.
+
+=back
+
+=head1 META WHAT?
+
+A metaclass is a class that describes classes. With Moose, every class
+you define gets a C<meta()> method. It returns a L<Moose::Meta::Class>
+object, which has an introspection API that can tell you about the
+class it represents.
+
+  my $meta = User->meta();
+
+  for my $attribute ( $meta->compute_all_applicable_attributes ) {
+      print $attribute->name(), "\n";
+
+      if ( $attribute->has_type_constraint ) {
+          print "  type: ", $attribute->type_constraint->name, "\n";
+      }
+  }
+
+  for my $method ( $meta->compute_all_applicable_methods ) {
+      print $method->name, "\n";
+  }
+
+Almost every concept we defined earlier has a meta class, so we have
+L<Moose::Meta::Class>, L<Moose::Meta::Attribute>,
+L<Moose::Meta::Method>, L<Moose::Meta::Role>,
+L<Moose::Meta::TypeConstraint>, L<Moose::Meta::Instance>, and so on.
+
+=head1 BUT I NEED TO DO IT MY WAY!
+
+One of the great things about Moose, is that if you dig down and find
+that it does something the "wrong way", you can change it by extending
+a metaclass. For example, you can have arrayref based objects, you can
+make your constructors strict (no unknown params allowed!), you can
+define a naming scheme for attribute accessors, you can make a class a
+Singleton, and much, much more.
+
+Many of these extensions require surprisingly small amounts of code,
+and once you've done it once, you'll never have to hand-code "your way
+of doing things" again. Instead you ll just load your favorite
+extensions.
+
+  package MyWay::User;
+
+  use Moose;
+  use MooseX::StrictConstructor
+  use MooseX::MyWay;
+
+  has ...;
+
+
+=head1 JUSTIFICATION
+
+If you're still still asking yourself "Why do I need this?", then this
+section is for you.
+
+=over 4
+
+=item Another object system!?!?
+
+Yes, I know there has been an explosion recently of new ways to
+build objects in Perl 5, most of them based on inside-out objects
+and other such things. Moose is different because it is not a new
+object system for Perl 5, but instead an extension of the existing
+object system.
+
+Moose is built on top of L<Class::MOP>, which is a metaclass system
+for Perl 5. This means that Moose not only makes building normal
+Perl 5 objects better, but it also provides the power of metaclass
+programming.
+
+=item Is this for real? Or is this just an experiment?
+
+Moose is I<based> on the prototypes and experiments Stevan did for the
+Perl 6 meta-model. However, Moose is B<NOT> an experiment or
+prototype; it is for B<real>.
+
+=item Is this ready for use in production?
+
+Yes.
+
+Moose has been used successfully in production environments by several
+people and companies. There are Moose applications which have been in
+production with little or no issue now for well over two years. We
+consider it highly stable and we are commited to keeping it stable.
+
+Of course, in the end, you need to make this call yourself. If you
+have any questions or concerns, please feel free to email Stevan, the
+moose@perl.org list, or just stop by irc.perl.org#moose and ask away.
+
+=item Is Moose just Perl 6 in Perl 5?
+
+No. While Moose is very much inspired by Perl 6, it is not itself Perl
+6.  Instead, it is an OO system for Perl 5. Stevan built Moose because
+he was tired of writing the same old boring Perl 5 OO code, and
+drooling over Perl 6 OO. So instead of switching to Ruby, he wrote
+Moose :)
+
+=item Wait, I<post> modern, I thought it was just I<modern>?
+
+Stevan read Larry Wall's talk from the 1999 Linux World entitled
+"Perl, the first postmodern computer language" in which he talks about
+how he picked the features for Perl because he thought they were cool
+and he threw out the ones that he thought sucked. This got him
+thinking about how we have done the same thing in Moose. For Moose, we
+have "borrowed" features from Perl 6, CLOS (LISP), Smalltalk, Java,
+BETA, OCaml, Ruby and more, and the bits we didn't like (cause they
+sucked) we tossed aside. So for this reason (and a few others) Stevan
+has re-dubbed Moose a I<postmodern> object system.
+
+Nuff Said.
+
+=back
+
+=head1 WHAT NEXT?
+
+So you're sold on Moose. Time to learn how to really use it.
+
+We recommend that you start with the L<Moose::Cookbook>. If you work
+your way through all the recipes under the basics section, you should
+have a pretty good sense of how Moose works, and all of its basic OO
+features.
+
+After that, check out the Role recipes. If you're really curious, go
+on and read the Meta and Extending recipes, but those are mostly there
+for people who want to be Moose wizards and change how Moose works.
+
+If you want to see how Moose would translate directly old school Perl
+5 OO code, check out the L<Moose::Unsweetened>.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt> and Stevan Little
+E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

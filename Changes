@@ -1,5 +1,15 @@
 Revision history for Perl extension Moose
 
+0.57
+    * Moose::Intro
+      - A new bit of doc intended to introduce folks familiar with
+        "standard" Perl 5 OO to Moose concepts. (Dave Rolsky)
+
+    * Moose::Unsweetened
+      - Shows examples of two classes, each done first with and then
+        without Moose. This makes a nice parallel to
+        Moose::Intro. (Dave Rolsky)
+
 0.56 Mon September 1, 2008
     For those not following the series of dev releases, there are
     several major changes in this release of Moose.

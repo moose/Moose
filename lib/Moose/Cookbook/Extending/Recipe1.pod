@@ -156,7 +156,7 @@ class.
 =head2 Extensions as Metaclass (and Base Object) Subclasses
 
 Moose does not provide any simple APIs for consumers to use a subclass
-extension, excep for attribute metaclasses. The attribute declaration
+extension, except for attribute metaclasses. The attribute declaration
 parameters include a C<metaclass> parameter a consumer of your
 extension can use to specify your subclass.
 
@@ -298,7 +298,7 @@ extensions.
 
 Note that if you write a cooperative extension, it should cooperate
 with older extensions, though older extensions generally do not
-cooperate with each oether.
+cooperate with each other.
 
 =head1 CONCLUSION
 
