@@ -390,6 +390,14 @@ A blessed reference, usually a hash reference.
 With Moose, this is an opaque thing which has a bunch of attributes
 and methods, as defined by its class.
 
+=item * Immutabilization
+
+Moose comes with a feature called "immutabilization". When you make
+your class immutable, it means you're done adding methods, attributes,
+roles, etc. This lets Moose optimize your class with a bunch of
+extremely dirty in-place code generation tricks that speed up things
+like object construction and so on.
+
 =back
 
 =head1 META WHAT?
@@ -503,6 +511,19 @@ has re-dubbed Moose a I<postmodern> object system.
 Nuff Said.
 
 =back
+
+=head1 WHAT NEXT?
+
+So you're sold on Moose. Time to learn how to really use it.
+
+We recommend that you start with the L<Moose::Cookbook>. If you work
+your way through all the recipes under the basics section, you should
+have a pretty good sense of how Moose works, and all of its basic OO
+features.
+
+After that, check out the Role recipes. If you're really curious, go
+on and read the Meta and Extending recipes, but those are mostly there
+for people who want to be Moose wizards and change how Moose works.
 
 =head1 AUTHOR
 
