@@ -211,7 +211,7 @@ data validation code consumes. As a result, it's pretty common for
 Perl 5 programmers to just not bother, which results in much more
 fragile code.
 
-Did you spot the bug?
+Did you spot the (intentional) bug?
 
 It's in the C<_validate_birth_date()> method. We should check that
 that value in C<$birth_date> is actually defined and object before we
