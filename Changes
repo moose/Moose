@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
-
+0.58
+    * Moose::Util::TypeConstraints
+	  - Fixed a bug in find_or_parse_type_constraint that caused
+	    trouble if it's argument was an already blessed type
+        constraint.  Added test to prevent regressions.
 0.57
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
