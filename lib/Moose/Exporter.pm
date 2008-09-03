@@ -33,8 +33,10 @@ sub build_import_methods {
 
     my @exports_from = $class->_follow_also( $exporting_package );
 
-    my $exports
-        = $class->_make_sub_exporter_params( $exporting_package, @exports_from );
+    my $export_recorder = {};
+
+    my $exports = $class->_make_sub_exporter_params(
+        [ $exporting_package, @exports_from ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
@@ -49,9 +51,8 @@ sub build_import_methods {
     my $import = $class->_make_import_sub( $exporting_package, $exporter,
         \@exports_from, $args{_export_to_main} );
 
-    my $unimport
-        = $class->_make_unimport_sub( $exporting_package, \@exports_from,
-        [ keys %{$exports} ] );
+    my $unimport = $class->_make_unimport_sub( $exporting_package, $exports,
+        $export_recorder );
 
     return ( $import, $unimport )
 }
@@ -93,12 +94,13 @@ sub build_import_methods {
 }
 
 sub _make_sub_exporter_params {
-    my $class    = shift;
-    my @packages = @_;
+    my $class             = shift;
+    my $packages          = shift;
+    my $export_recorder   = shift;
 
     my %exports;
 
-    for my $package (@packages) {
+    for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
             or die "The $package package does not use Moose::Exporter\n";
 
@@ -108,10 +110,12 @@ sub _make_sub_exporter_params {
                 \&{ $package . '::' . $name };
             };
 
+            my $fq_name = $package . '::' . $name;
+
             $exports{$name} = $class->_make_wrapped_sub(
-                $package,
-                $name,
-                $sub
+                $fq_name,
+                $sub,
+                $export_recorder,
             );
         }
 
@@ -128,6 +132,8 @@ sub _make_sub_exporter_params {
                     \&{ $package . '::' . $name };
                 };
             }
+
+            $export_recorder->{$sub} = 1;
 
             $exports{$name} = sub {$sub};
         }
@@ -149,10 +155,11 @@ sub _make_sub_exporter_params {
     my $CALLER;
 
     sub _make_wrapped_sub {
-        my $class             = shift;
-        my $exporting_package = shift;
-        my $name              = shift;
-        my $sub               = shift;
+        shift;
+        my $fq_name         = shift;
+        my $sub             = shift;
+        my $export_recorder = shift;
+
 
         # We need to set the package at import time, so that when
         # package Foo imports has(), we capture "Foo" as the
@@ -162,8 +169,12 @@ sub _make_sub_exporter_params {
         # idea ;)
         return sub {
             my $caller = $CALLER;
-            Class::MOP::subname( $exporting_package . '::'
-                    . $name => sub { $sub->( $caller, @_ ) } );
+
+            my $sub = Class::MOP::subname( $fq_name => sub { $sub->( $caller, @_ ) } );
+
+            $export_recorder->{$sub} = 1;
+
+            return $sub;
         };
     }
 
@@ -282,39 +293,34 @@ sub _get_caller {
 sub _make_unimport_sub {
     shift;
     my $exporting_package = shift;
-    my $sources           = shift;
-    my $keywords          = shift;
+    my $exports           = shift;
+    my $export_recorder   = shift;
 
     return sub {
         my $caller = scalar caller();
         Moose::Exporter->_remove_keywords(
             $caller,
-            [ $exporting_package, @{$sources} ],
-            $keywords
+            [ keys %{$exports} ],
+            $export_recorder,
         );
     };
 }
 
 sub _remove_keywords {
     shift;
-    my $package  = shift;
-    my $sources  = shift;
-    my $keywords = shift;
-
-    my %sources = map { $_ => 1 } @{$sources};
+    my $package          = shift;
+    my $keywords         = shift;
+    my $recorded_exports = shift;
 
     no strict 'refs';
 
-    # loop through the keywords ...
-    foreach my $name ( @{$keywords} ) {
+    foreach my $name ( @{ $keywords } ) {
 
-        # if we find one ...
         if ( defined &{ $package . '::' . $name } ) {
-            my $keyword = \&{ $package . '::' . $name };
+            my $sub = \&{ $package . '::' . $name };
 
             # make sure it is from us
-            my ($pkg_name) = Class::MOP::get_code_info($keyword);
-            next unless $sources{$pkg_name};
+            next unless $recorded_exports->{$sub};
 
             # and if it is from us, then undef the slot
             delete ${ $package . '::' }{$name};
