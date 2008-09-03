@@ -16,6 +16,10 @@ Revision history for Perl extension Moose
         type, not just a name (jnapiorkowski)
         - added tests (jnapiorkowski)
 
+    * Moose::Exporter
+      - If Sub::Name was not present, unimporting failed to actually
+        remove some sugar subs, causing test failures (Dave Rolsky)
+
 0.56 Mon September 1, 2008
     For those not following the series of dev releases, there are
     several major changes in this release of Moose.
