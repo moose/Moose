@@ -288,7 +288,7 @@ some attribute of the class.
 
 You saw this in the User example, where we defined a delegation for
 the C<date_of_last_login()> method. Under the hood, this simple calls
-C<date()> on the User object's C<last_login_datetime> attribute.
+C<date()> on the User object's C<last_login> attribute.
 
 =head2 Constructor
 
