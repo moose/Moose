@@ -78,7 +78,7 @@ This is a I<complete and usable> class definition!
   has 'last_login' => (
       is      => 'rw',
       isa     => 'DateTime',
-      handles => { 'last_login_date' => 'date' },
+      handles => { 'date_of_last_login' => 'date' },
   );
 
   sub login {
@@ -287,7 +287,7 @@ delegations. A delegation is a method which delegates the real work to
 some attribute of the class.
 
 You saw this in the User example, where we defined a delegation for
-the C<last_login_date()> method. Under the hood, this simple calls
+the C<date_of_last_login()> method. Under the hood, this simple calls
 C<date()> on the User object's C<last_login_datetime> attribute.
 
 =head2 Constructor
