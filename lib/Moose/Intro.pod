@@ -72,8 +72,8 @@ This is a I<complete and usable> class definition!
 
   has 'password' => (
       is  => 'rw',
-      isa => Str ',
-          );
+      isa => 'Str',
+  );
 
   has 'last_login' => (
       is      => 'rw',
@@ -524,6 +524,9 @@ features.
 After that, check out the Role recipes. If you're really curious, go
 on and read the Meta and Extending recipes, but those are mostly there
 for people who want to be Moose wizards and change how Moose works.
+
+If you want to see how Moose would translate directly old school Perl
+5 OO code, check out the L<Moose::Unsweetened>.
 
 =head1 AUTHOR
 
