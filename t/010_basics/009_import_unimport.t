@@ -19,14 +19,17 @@ my @moose_exports = qw(
 {
     package Foo;
 
-    use Moose;
+    eval 'use Moose';
+    die $@ if $@;
 }
 
 can_ok('Foo', $_) for @moose_exports;
 
 {
     package Foo;
-    no Moose;
+
+    eval 'no Moose';
+    die $@ if $@;
 }
 
 ok(!Foo->can($_), '... Foo can no longer do ' . $_) for @moose_exports;
@@ -43,14 +46,17 @@ my @moose_type_constraint_exports = qw(
 {
     package Bar;
 
-    use Moose::Util::TypeConstraints;
+    eval 'use Moose::Util::TypeConstraints';
+    die $@ if $@;
 }
 
 can_ok('Bar', $_) for @moose_type_constraint_exports;
 
 {
     package Bar;
-    no Moose::Util::TypeConstraints;
+
+    eval 'no Moose::Util::TypeConstraints';
+    die $@ if $@;
 }
 
 ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_exports;
