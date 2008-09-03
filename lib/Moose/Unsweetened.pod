@@ -310,8 +310,8 @@ much. We could probably simplify this by defining some sort of
   );
 
 Then we could define a base class that would accept such a definition,
-and do the right thing. Keep that sort of thing up and you're well on
-your way to writing a half-assed version of Moose!
+and do the right thing. Keep that sort of thing up and we're well on
+our way to writing a half-assed version of Moose!
 
 Of course, there are CPAN modules that do some of what Moose does,
 like C<Class::Accessor>, C<Class::Meta>, and so on. But none of them
