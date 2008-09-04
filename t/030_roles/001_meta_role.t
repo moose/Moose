@@ -3,13 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More tests => 27;
 use Test::Exception;
 
-BEGIN {  
-    use_ok('Moose'); 
-    use_ok('Moose::Meta::Role');               
-}
+use Moose::Meta::Role;
 
 {
     package FooRole;

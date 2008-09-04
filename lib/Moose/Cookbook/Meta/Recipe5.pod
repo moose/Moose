@@ -1,0 +1,68 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Meta::Recipe5 - The "table" attribute as a metaclass trait
+
+=head1 SYNOPSIS
+
+  package MyApp::Meta::Class::Trait::HasTable;
+  use Moose::Role;
+
+  has table =>
+      ( is       => 'rw',
+        isa      => 'Str',
+      );
+
+  package Moose::Meta::Class::Custom::Trait::HasTable;
+  sub register_implementation { 'MyApp::Meta::Class::Trait::HasTable' }
+
+  package MyApp::User;
+  use Moose -traits => 'HasTable';
+
+  __PACKAGE__->table('User');
+
+=head1 DESCRIPTION
+
+This recipe takes the metaclass table attribute and reimplements it as
+a metaclass trait. Traits are just roles that Moose applies to
+something for you. In this case, that "something" is the class's
+metaclass object.
+
+The advantage of using traits is that it's easy to combine multiple
+traits, whereas combining multiple metaclasses can be tricky (which
+subclasses which?).
+
+The disadvantage is that it's not easy to combine a trait with some
+sort of sugar (like our notional C<has_table> sugar).
+
+=head2 Using this Metaclass Trait in Practice
+
+Once this trait has been applied to a metaclass, it looks exactly like
+the example we saw in L<Moose::Cookbook::Meta::Recipe4>:
+
+  my $table = MyApp::User->meta()->table();
+
+=head1 SEE ALSO
+
+L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute
+traits
+
+L<Moose::Cookbook::Meta::Recipe4> - Adding a "table" attribute to the
+metaclass
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=pod

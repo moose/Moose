@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';

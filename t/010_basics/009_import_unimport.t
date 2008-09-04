@@ -3,11 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 42;
 
-BEGIN {
-    use_ok('Moose');           
-}
 
 my @moose_exports = qw(
     extends with 
@@ -21,21 +18,19 @@ my @moose_exports = qw(
 
 {
     package Foo;
-}
 
-eval q{
-    package Foo;
-    use Moose;
-};
-ok(!$@, '... Moose succesfully exported into Foo');
+    eval 'use Moose';
+    die $@ if $@;
+}
 
 can_ok('Foo', $_) for @moose_exports;
 
-eval q{
+{
     package Foo;
-    no Moose;
-};
-ok(!$@, '... Moose succesfully un-exported from Foo');
+
+    eval 'no Moose';
+    die $@ if $@;
+}
 
 ok(!Foo->can($_), '... Foo can no longer do ' . $_) for @moose_exports;
 
@@ -50,21 +45,19 @@ my @moose_type_constraint_exports = qw(
 
 {
     package Bar;
-}
 
-eval q{
-    package Bar;
-    use Moose::Util::TypeConstraints;
-};
-ok(!$@, '... Moose::Util::TypeConstraints succesfully exported into Bar');
+    eval 'use Moose::Util::TypeConstraints';
+    die $@ if $@;
+}
 
 can_ok('Bar', $_) for @moose_type_constraint_exports;
 
-eval q{
+{
     package Bar;
-    no Moose::Util::TypeConstraints;
-};
-ok(!$@, '... Moose::Util::TypeConstraints succesfully un-exported from Bar');
+
+    eval 'no Moose::Util::TypeConstraints';
+    die $@ if $@;
+}
 
 ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_exports;
 

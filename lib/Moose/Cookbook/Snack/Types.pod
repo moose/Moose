@@ -36,7 +36,7 @@ Moose::Cookbook::Snack::Types - Snippets of code for using Types and Type Constr
 
 =head1 DESCRIPTION
 
-This is the Point example from (L<Moose::Cookbook::Recipe1>) with added
+This is the Point example from (L<Moose::Cookbook::Basics::Recipe1>) with added
 type checking. 
 
 If we try to assign a string value to an attribute that is defined as
@@ -51,7 +51,7 @@ check the value we are about to set, before we try and set it.
 
 =over 4
 
-=item L<Moose::Cookbook::Recipe1>
+=item L<Moose::Cookbook::Basics::Recipe1>
 
 =item L<Moose::Utils::TypeConstraints>
 

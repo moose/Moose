@@ -7,7 +7,8 @@ use metaclass;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role';
@@ -39,7 +40,7 @@ sub new {
     # and the name is created from the
     # roles if one has not been provided
     $params{name} ||= (join "|" => map { $_->name } @{$params{roles}});
-    $class->meta->new_object(%params);
+    $class->_new(\%params);
 }
 
 # NOTE:

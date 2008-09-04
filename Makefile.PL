@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use inc::Module::Install 0.75;
+use inc::Module::Install;
 
 name 'Moose';
 all_from 'lib/Moose.pm';
@@ -10,10 +10,12 @@ license 'perl';
 my $win32 = !! ( $^O eq 'Win32' or $^O eq 'cygwin' );
 
 # prereqs
+requires 'perl'             => '5.008';
 requires 'Scalar::Util' => $win32 ? '1.17' : '1.18';
 requires 'Carp';
-requires 'Class::MOP'    => '0.59';
-requires 'Sub::Exporter' => '0.972';
+requires 'Class::MOP'       => '0.65';
+requires 'List::MoreUtils';
+requires 'Sub::Exporter'    => '0.972';
 
 # only used by oose.pm, not Moose.pm :P
 requires 'Filter::Simple' => '0'; 
@@ -24,8 +26,6 @@ build_requires 'Test::Exception' => '0.21';
 build_requires 'Test::LongString';
 
 tests_recursive;
-
-auto_install;
 
 WriteAll();
 

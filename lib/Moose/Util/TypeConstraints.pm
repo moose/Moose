@@ -6,9 +6,10 @@ use warnings;
 
 use Carp ();
 use Scalar::Util 'blessed';
-use Sub::Exporter;
+use Moose::Exporter;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 ## --------------------------------------------------------
@@ -62,38 +63,17 @@ use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
 use Moose::Util::TypeConstraints::OptimizedConstraints;
 
-my @exports = qw/
-    type subtype class_type role_type as where message optimize_as
-    coerce from via
-    enum
-    find_type_constraint
-    register_type_constraint
-/;
-
-Sub::Exporter::setup_exporter({
-    exports => \@exports,
-    groups  => { default => [':all'] }
-});
-
-sub unimport {
-    no strict 'refs';
-    my $class = caller();
-    # loop through the exports ...
-    foreach my $name (@exports) {
-        # if we find one ...
-        if (defined &{$class . '::' . $name}) {
-            my $keyword = \&{$class . '::' . $name};
-
-            # make sure it is from Moose
-            my ($pkg_name) = Class::MOP::get_code_info($keyword);
-            next if $@;
-            next if $pkg_name ne 'Moose::Util::TypeConstraints';
-
-            # and if it is from Moose then undef the slot
-            delete ${$class . '::'}{$name};
-        }
-    }
-}
+Moose::Exporter->setup_import_methods(
+    as_is => [
+        qw(
+            type subtype class_type role_type as where message optimize_as
+            coerce from via
+            enum
+            find_type_constraint
+            register_type_constraint )
+    ],
+    _export_to_main => 1,
+);
 
 ## --------------------------------------------------------
 ## type registry and some useful functions for it
@@ -245,21 +225,18 @@ sub find_or_create_does_type_constraint ($) {
 
 sub find_or_parse_type_constraint ($) {
     my $type_constraint_name = shift;
-
-    return $REGISTRY->get_type_constraint($type_constraint_name)
-        if $REGISTRY->has_type_constraint($type_constraint_name);
-
     my $constraint;
-
-    if (_detect_type_constraint_union($type_constraint_name)) {
+    
+    if ($constraint = find_type_constraint($type_constraint_name)) {
+        return $constraint;
+    } elsif (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
-    }
-    elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
+    } elsif (_detect_parameterized_type_constraint($type_constraint_name)) {     
         $constraint = create_parameterized_type_constraint($type_constraint_name);
     } else {
         return;
     }
-
+    
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
 }
@@ -273,7 +250,9 @@ sub find_type_constraint ($) {
 
     if ( blessed $type and $type->isa("Moose::Meta::TypeConstraint") ) {
         return $type;
-    } else {
+    }
+    else {
+        return unless $REGISTRY->has_type_constraint($type);
         return $REGISTRY->get_type_constraint($type);
     }
 }
@@ -361,7 +340,7 @@ sub enum ($;@) {
 
 sub create_enum_type_constraint ($$) {
     my ( $type_name, $values ) = @_;
-    
+
     Moose::Meta::TypeConstraint::Enum->new(
         name   => $type_name || '__ANON__',
         values => $values,
@@ -399,7 +378,7 @@ sub _create_type_constraint ($$$;$$) {
 
     # FIXME should probably not be a special case
     if ( defined $parent and $parent = find_or_parse_type_constraint($parent) ) {
-        $class = "Moose::Meta::TypeConstraint::Parameterizable" 
+        $class = "Moose::Meta::TypeConstraint::Parameterizable"
             if $parent->isa("Moose::Meta::TypeConstraint::Parameterizable");
     }
 
@@ -436,7 +415,7 @@ sub _create_type_constraint ($$$;$$) {
 
 sub _install_type_coercions ($$) {
     my ($type_name, $coercion_map) = @_;
-    my $type = $REGISTRY->get_type_constraint($type_name);
+    my $type = find_type_constraint($type_name);
     (defined $type)
         || confess "Cannot find type '$type_name', perhaps you forgot to load it.";
     if ($type->has_coercion) {
@@ -679,7 +658,7 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
   type 'Num' => where { Scalar::Util::looks_like_number($_) };
 
   subtype 'Natural'
-      => as 'Num'
+      => as 'Int'
       => where { $_ > 0 };
 
   subtype 'NaturalLessThanTen'
@@ -705,7 +684,7 @@ and they are not used by Moose unless you tell it to. No type
 inference is performed, expression are not typed, etc. etc. etc.
 
 This is simply a means of creating small constraint functions which
-can be used to simplify your own type-checking code, with the added 
+can be used to simplify your own type-checking code, with the added
 side benefit of making your intentions clearer through self-documentation.
 
 =head2 Slightly Less Important Caveat
@@ -735,7 +714,7 @@ yet to have been created yet, is to simply do this:
 
 =head2 Default Type Constraints
 
-This module also provides a simple hierarchy for Perl 5 types, here is 
+This module also provides a simple hierarchy for Perl 5 types, here is
 that hierarchy represented visually.
 
   Any
@@ -767,6 +746,10 @@ parameterized, this means you can say:
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
+B<NOTE:> Unless you parameterize a type, then it is invalid to
+include the square brackets. I.e. C<ArrayRef[]> will be
+literally interpreted as a type name.
+
 B<NOTE:> The C<Undef> type constraint for the most part works
 correctly now, but edge cases may still exist, please use it
 sparringly.
@@ -776,10 +759,10 @@ existence check. This means that your class B<must> be loaded for
 this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
 
-=head2 Type Constraint Naming 
+=head2 Type Constraint Naming
 
-Since the types created by this module are global, it is suggested 
-that you namespace your types just as you would namespace your 
+Since the types created by this module are global, it is suggested
+that you namespace your types just as you would namespace your
 modules. So instead of creating a I<Color> type for your B<My::Graphics>
 module, you would call the type I<My::Graphics::Color> instead.
 
@@ -800,7 +783,7 @@ L<Declare::Constraints::Simple> to declare a completely new type.
           -keys   => HasLength,
           -values => IsArrayRef( IsObject ));
 
-For more examples see the F<t/200_examples/204_example_w_DCS.t> 
+For more examples see the F<t/200_examples/204_example_w_DCS.t>
 test file.
 
 Here is an example of using L<Test::Deep> and it's non-test
@@ -815,7 +798,7 @@ related C<eq_deeply> function.
               })))
         };
 
-For a complete example see the 
+For a complete example see the
 F<t/200_examples/205_example_w_TestDeep.t> test file.
 
 =head1 FUNCTIONS
@@ -883,9 +866,19 @@ This is just sugar for the type constraint construction syntax.
 
 This is just sugar for the type constraint construction syntax.
 
+Takes a block/code ref as an argument. When the type constraint is
+tested, the supplied code is run with the value to be tested in
+$_. This block should return true or false to indicate whether or not
+the constraint check passed.
+
 =item B<message>
 
 This is just sugar for the type constraint construction syntax.
+
+Takes a block/code ref as an argument. When the type constraint fails,
+then the code block is run (with the value provided in $_). This code
+ref should return a string, which will be used in the text of the
+exception thrown.
 
 =item B<optimize_as>
 

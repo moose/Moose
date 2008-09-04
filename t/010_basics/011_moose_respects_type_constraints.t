@@ -3,13 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 7;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');           
-    use_ok('Moose::Util::TypeConstraints');               
-}
+use Moose::Util::TypeConstraints;
 
 =pod
 

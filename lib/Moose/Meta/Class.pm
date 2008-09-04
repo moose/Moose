@@ -9,7 +9,8 @@ use Class::MOP;
 use Carp ();
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
@@ -20,6 +21,16 @@ use base 'Class::MOP::Class';
 __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
     default => sub { [] }
+));
+
+__PACKAGE__->meta->add_attribute('constructor_class' => (
+    accessor => 'constructor_class',
+    default  => sub { 'Moose::Meta::Method::Constructor' }
+));
+
+__PACKAGE__->meta->add_attribute('destructor_class' => (
+    accessor => 'destructor_class',
+    default  => sub { 'Moose::Meta::Method::Destructor' }
 ));
 
 __PACKAGE__->meta->add_attribute('error_builder' => (
@@ -131,15 +142,16 @@ sub excludes_role {
 }
 
 sub new_object {
-    my ($class, %params) = @_;
-    my $self = $class->SUPER::new_object(%params);
+    my $class = shift;
+    my $params = @_ == 1 ? $_[0] : {@_};
+    my $self = $class->SUPER::new_object($params);
     foreach my $attr ($class->compute_all_applicable_attributes()) {
         # if we have a trigger, then ...
         if ($attr->can('has_trigger') && $attr->has_trigger) {
             # make sure we have an init-arg ...
             if (defined(my $init_arg = $attr->init_arg)) {
                 # now make sure an init-arg was passes ...
-                if (exists $params{$init_arg}) {
+                if (exists $params->{$init_arg}) {
                     # and if get here, fire the trigger
                     $attr->trigger->(
                         $self, 
@@ -150,7 +162,7 @@ sub new_object {
                             ? $attr->get_read_method_ref->($self)
                             # otherwise, just get the value from
                             # the constructor params
-                            : $params{$init_arg}), 
+                            : $params->{$init_arg}), 
                         $attr
                     );
                 }
@@ -161,15 +173,16 @@ sub new_object {
 }
 
 sub construct_instance {
-    my ($class, %params) = @_;
+    my $class = shift;
+    my $params = @_ == 1 ? $_[0] : {@_};
     my $meta_instance = $class->get_meta_instance;
     # FIXME:
     # the code below is almost certainly incorrect
     # but this is foreign inheritence, so we might
     # have to kludge it in the end.
-    my $instance = $params{'__INSTANCE__'} || $meta_instance->create_instance();
+    my $instance = $params->{'__INSTANCE__'} || $meta_instance->create_instance();
     foreach my $attr ($class->compute_all_applicable_attributes()) {
-        $attr->initialize_instance_slot($meta_instance, $instance, \%params);
+        $attr->initialize_instance_slot($meta_instance, $instance, $params);
     }
     return $instance;
 }
@@ -179,12 +192,15 @@ sub construct_instance {
 sub get_method_map {
     my $self = shift;
 
-    if (defined $self->{'$!_package_cache_flag'} &&
-                $self->{'$!_package_cache_flag'} == Class::MOP::check_package_cache_flag($self->meta->name)) {
-        return $self->{'%!methods'};
+    my $current = Class::MOP::check_package_cache_flag($self->name);
+
+    if (defined $self->{'_package_cache_flag'} && $self->{'_package_cache_flag'} == $current) {
+        return $self->{'methods'};
     }
 
-    my $map  = $self->{'%!methods'};
+    $self->{_package_cache_flag} = $current;
+
+    my $map  = $self->{'methods'};
 
     my $class_name       = $self->name;
     my $method_metaclass = $self->method_metaclass;
@@ -287,43 +303,74 @@ sub _find_next_method_by_name_which_is_not_overridden {
     return undef;
 }
 
+# Right now, this method does not handle the case where two
+# metaclasses differ only in roles applied against a common parent
+# class. This can happen fairly easily when ClassA applies metaclass
+# Role1, and then a subclass, ClassB, applies a metaclass Role2. In
+# reality, the way to resolve the problem is to apply Role1 to
+# ClassB's metaclass. However, we cannot currently detect this, and so
+# we simply fail to fix the incompatibility.
+#
+# The algorithm for fixing it is not that complicated.
+#
+# First, we see if the two metaclasses share a common parent (probably
+# Moose::Meta::Class).
+#
+# Second, we see if the metaclasses only differ in terms of roles
+# applied. This second point is where things break down. There is no
+# easy way to determine if the difference is from roles only. To do
+# that, we'd need to able to reliably determine the origin of each
+# method and attribute in each metaclass. If all the unshared methods
+# & attributes come from roles, and there is no name collision, then
+# we can apply the missing roles to the child's metaclass.
+#
+# Tracking the origin of these things will require some fairly
+# invasive changes to various parts of Moose & Class::MOP.
+#
+# For now, the workaround is for ClassB to subclass ClassA _and then_
+# apply metaclass roles to its metaclass.
 sub _fix_metaclass_incompatability {
     my ($self, @superclasses) = @_;
+
     foreach my $super (@superclasses) {
         # don't bother if it does not have a meta.
-        next unless $super->can('meta');
+        my $super_meta = Class::MOP::Class->initialize($super) or next;
+        next unless $super_meta->isa("Class::MOP::Class");
+
         # get the name, make sure we take
         # immutable classes into account
-        my $super_meta_name = ($super->meta->is_immutable
-                                ? $super->meta->get_mutable_metaclass_name
-                                : blessed($super->meta));
-        # if it's meta is a vanilla Moose,
-        # then we can safely ignore it.
-        next if $super_meta_name eq 'Moose::Meta::Class';
-        # but if we have anything else,
-        # we need to check it out ...
-        unless (# see if of our metaclass is incompatible
-                ($self->isa($super_meta_name) &&
-                 # and see if our instance metaclass is incompatible
-                 $self->instance_metaclass->isa($super->meta->instance_metaclass)) &&
-                # ... and if we are just a vanilla Moose
-                $self->isa('Moose::Meta::Class')) {
-            # re-initialize the meta ...
-            my $super_meta = $super->meta;
-            # NOTE:
-            # We might want to consider actually
-            # transfering any attributes from the
-            # original meta into this one, but in
-            # general you should not have any there
-            # at this point anyway, so it's very
-            # much an obscure edge case anyway
-            $self = $super_meta->reinitialize($self->name => (
-                'attribute_metaclass' => $super_meta->attribute_metaclass,
-                'method_metaclass'    => $super_meta->method_metaclass,
-                'instance_metaclass'  => $super_meta->instance_metaclass,
-            ));
+        my $super_meta_name
+            = $super_meta->is_immutable
+            ? $super_meta->get_mutable_metaclass_name
+            : ref($super_meta);
+
+        next if
+            # if our metaclass is compatible
+            $self->isa($super_meta_name)
+                and
+            # and our instance metaclass is also compatible then no
+            # fixes are needed
+            $self->instance_metaclass->isa( $super_meta->instance_metaclass );
+
+        next unless $super_meta->isa( ref($self) );
+
+        unless ( $self->is_pristine ) {
+            $self->throw_error("Not reinitializing metaclass for "
+                . $self->name
+                . ", it isn't pristine");
         }
+
+        $self = $super_meta->reinitialize(
+            $self->name,
+            attribute_metaclass => $super_meta->attribute_metaclass,
+            method_metaclass    => $super_meta->method_metaclass,
+            instance_metaclass  => $super_meta->instance_metaclass,
+        );
+
+        $self->$_( $super_meta->$_ )
+            for qw( constructor_class destructor_class );
     }
+
     return $self;
 }
 
@@ -379,41 +426,38 @@ use Moose::Meta::Method::Destructor;
 sub create_immutable_transformer {
     my $self = shift;
     my $class = Class::MOP::Immutable->new($self, {
-        read_only   => [qw/
-            superclasses
-            roles
-            error_class
-            error_builder
-        /],
-        cannot_call => [qw/
-            add_method
-            alias_method
-            remove_method
-            add_attribute
-            remove_attribute
-            remove_package_symbol
-            add_role
-        /],
-        memoize     => {
-            class_precedence_list             => 'ARRAY',
-            compute_all_applicable_attributes => 'ARRAY',
-            get_meta_instance                 => 'SCALAR',
-            get_method_map                    => 'SCALAR',
-            # maybe ....
-            calculate_all_roles               => 'ARRAY',
-        },
-        # NOTE:
-        # this is ugly, but so are typeglobs, 
-        # so whattayahgonnadoboutit
-        # - SL
-        wrapped => { 
-            add_package_symbol => sub {
-                my $original = shift;
-                $self->throw_error("Cannot add package symbols to an immutable metaclass") 
-                    unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
-                goto $original->body;
-            },
-        },       
+       read_only   => [qw/superclasses/],
+       cannot_call => [qw/
+           add_method
+           alias_method
+           remove_method
+           add_attribute
+           remove_attribute
+           remove_package_symbol
+           add_role
+       /],
+       memoize     => {
+           class_precedence_list             => 'ARRAY',
+           linearized_isa                    => 'ARRAY', # FIXME perl 5.10 memoizes this on its own, no need?
+           get_all_methods                   => 'ARRAY',
+           #get_all_attributes               => 'ARRAY', # it's an alias, no need, but maybe in the future
+           compute_all_applicable_attributes => 'ARRAY',
+           get_meta_instance                 => 'SCALAR',
+           get_method_map                    => 'SCALAR',
+           calculate_all_roles               => 'ARRAY',
+       },
+       # NOTE:
+       # this is ugly, but so are typeglobs, 
+       # so whattayahgonnadoboutit
+       # - SL
+       wrapped => { 
+           add_package_symbol => sub {
+               my $original = shift;
+               $self->throw_error("Cannot add package symbols to an immutable metaclass")
+                   unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
+               goto $original->body;
+           },
+       },       
     });
     return $class;
 }
@@ -422,8 +466,8 @@ sub make_immutable {
     my $self = shift;
     $self->SUPER::make_immutable
       (
-       constructor_class => 'Moose::Meta::Method::Constructor',
-       destructor_class  => 'Moose::Meta::Method::Destructor',
+       constructor_class => $self->constructor_class,
+       destructor_class  => $self->destructor_class,
        inline_destructor => 1,
        # NOTE:
        # no need to do this,
@@ -619,6 +663,15 @@ cascade down the role hierarchy.
 
 This method does the same thing as L<Class::MOP::Class::add_attribute>, but adds
 support for taking the C<$params> as a HASH ref.
+
+=item B<constructor_class ($class_name)>
+
+=item B<destructor_class ($class_name)>
+
+These are the names of classes used when making a class
+immutable. These default to L<Moose::Meta::Method::Constructor> and
+L<Moose::Meta::Method::Destructor> respectively. These accessors are
+read-write, so you can use them to change the class name.
 
 =item B<throw_error $message, %extra>
 

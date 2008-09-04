@@ -4,7 +4,8 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -52,7 +53,7 @@ sub generate_accessor_method_inline {
         . $self->_inline_store($inv, $value_name) . "\n"
         . $self->_inline_trigger($inv, $value_name) . "\n"
     . ' }' . "\n"
-    . $self->_inline_check_lazy . "\n"
+    . $self->_inline_check_lazy($inv) . "\n"
     . $self->_inline_post_body(@_) . "\n"
     . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv)) . "\n"
     . ' }');
@@ -88,7 +89,7 @@ sub generate_reader_method_inline {
     $self->_eval_code('sub {'
     . $self->_inline_pre_body(@_)
     . $self->_inline_throw_error('"Cannot assign a value to a read-only accessor"', 'data => \@_') . ' if @_ > 1;'
-    . $self->_inline_check_lazy
+    . $self->_inline_check_lazy($inv)
     . $self->_inline_post_body(@_)
     . 'return ' . $self->_inline_auto_deref( $slot_access ) . ';'
     . '}');
@@ -142,53 +143,53 @@ sub _inline_check_required {
 }
 
 sub _inline_check_lazy {
-    my $self = $_[0];
+    my ($self, $instance) = @_;
+
     my $attr = $self->associated_attribute;
 
     return '' unless $attr->is_lazy;
 
-    my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_access($inv, $attr->name);
+    my $slot_access = $self->_inline_access($instance, $attr->name);
 
-    my $slot_exists = $self->_inline_has($inv, $attr->name);
+    my $slot_exists = $self->_inline_has($instance, $attr->name);
 
     my $code = 'unless (' . $slot_exists . ') {' . "\n";
     if ($attr->has_type_constraint) {
         if ($attr->has_default || $attr->has_builder) {
             if ($attr->has_default) {
-                $code .= '    my $default = $attr->default(' . $inv . ');'."\n";
+                $code .= '    my $default = $attr->default(' . $instance . ');'."\n";
             } 
             elsif ($attr->has_builder) {
                 $code .= '    my $default;'."\n".
-                         '    if(my $builder = '.$inv.'->can($attr->builder)){ '."\n".
-                         '        $default = '.$inv.'->$builder; '. "\n    } else {\n" .
-                         '        ' . $self->_inline_throw_error('Scalar::Util::blessed('.$inv.')." does not support builder method '.
-                         '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'"') . ';'. "\n    }";
+                         '    if(my $builder = '.$instance.'->can($attr->builder)){ '."\n".
+                         '        $default = '.$instance.'->$builder; '. "\n    } else {\n" .
+                         '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name') .
+                         ';'. "\n    }";
             }
             $code .= '    $default = $type_constraint_obj->coerce($default);'."\n"  if $attr->should_coerce;
             $code .= '    ($type_constraint->($default))' .
                      '            || ' . $self->_inline_throw_error('"Attribute (" . $attr_name . ") does not pass the type constraint ("' .
                      '           . $type_constraint_name . ") with " . (defined($default) ? overload::StrVal($default) : "undef")' ) . ';' 
                      . "\n";
-            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, '$default') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, '$default') . "\n";
         } 
         else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, 'undef') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
         }
 
     } else {
         if ($attr->has_default) {
-            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, ('$attr->default(' . $inv . ')')) . "\n";            
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, ('$attr->default(' . $instance . ')')) . "\n";            
         } 
         elsif ($attr->has_builder) {
-            $code .= '    if (my $builder = '.$inv.'->can($attr->builder)) { ' . "\n" 
-                  .  '       ' . $self->_inline_init_slot($attr, $inv, $slot_access, ($inv . '->$builder'))           
-                     . "\n    } else {\n" .
-                     '        ' . $self->_inline_throw_error('Scalar::Util::blessed('.$inv.')." does not support builder method '.
-                     '\'".$attr->builder."\' for attribute \'" . $attr->name . "\'"') . ';'. "\n    }";
+            $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n" 
+                  .  '       ' . $self->_inline_init_slot($attr, $instance, $slot_access, ($instance . '->$builder'))           
+                  .  "\n    } else {\n"
+                  .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name')
+                  .  ';'. "\n    }";
         } 
         else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $inv, $slot_access, 'undef') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
         }
     }
     $code .= "}\n";

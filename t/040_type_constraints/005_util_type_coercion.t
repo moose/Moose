@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 24;
 use Test::Exception;
 
 BEGIN {
@@ -38,39 +38,54 @@ ok(Header($header), '... this passed the type test');
 ok(!Header([]), '... this did not pass the type test');
 ok(!Header({}), '... this did not pass the type test');
 
-my $coercion = find_type_constraint('Header')->coercion;
-isa_ok($coercion, 'Moose::Meta::TypeCoercion');
+my $anon_type = subtype Object => where { $_->isa('HTTPHeader') };
 
-{
-    my $coerced = $coercion->coerce([ 1, 2, 3 ]);
-    isa_ok($coerced, 'HTTPHeader');
+lives_ok {
+    coerce $anon_type
+        => from ArrayRef 
+            => via { HTTPHeader->new(array => $_[0]) }
+        => from HashRef 
+            => via { HTTPHeader->new(hash => $_[0]) };
+} 'coercion of anonymous subtype succeeds';
 
-    is_deeply(
-        $coerced->array(),
-        [ 1, 2, 3 ],
-        '... got the right array');
-    is($coerced->hash(), undef, '... nothing assigned to the hash');        
-}
+foreach my $coercion (
+    find_type_constraint('Header')->coercion,
+    $anon_type->coercion
+    ) {
 
-{
-    my $coerced = $coercion->coerce({ one => 1, two => 2, three => 3 });
-    isa_ok($coerced, 'HTTPHeader');
+    my $coercion = find_type_constraint('Header')->coercion;
+    isa_ok($coercion, 'Moose::Meta::TypeCoercion');
     
-    is_deeply(
-        $coerced->hash(),
-        { one => 1, two => 2, three => 3 },
-        '... got the right hash');
-    is($coerced->array(), undef, '... nothing assigned to the array');        
+    {
+        my $coerced = $coercion->coerce([ 1, 2, 3 ]);
+        isa_ok($coerced, 'HTTPHeader');
+    
+        is_deeply(
+            $coerced->array(),
+            [ 1, 2, 3 ],
+            '... got the right array');
+        is($coerced->hash(), undef, '... nothing assigned to the hash');        
+    }
+    
+    {
+        my $coerced = $coercion->coerce({ one => 1, two => 2, three => 3 });
+        isa_ok($coerced, 'HTTPHeader');
+        
+        is_deeply(
+            $coerced->hash(),
+            { one => 1, two => 2, three => 3 },
+            '... got the right hash');
+        is($coerced->array(), undef, '... nothing assigned to the array');        
+    }
+    
+    {
+        my $scalar_ref = \(my $var);
+        my $coerced = $coercion->coerce($scalar_ref);
+        is($coerced, $scalar_ref, '... got back what we put in');
+    }
+    
+    {
+        my $coerced = $coercion->coerce("Foo");
+        is($coerced, "Foo", '... got back what we put in');
+    }
 }
-
-{
-    my $scalar_ref = \(my $var);
-    my $coerced = $coercion->coerce($scalar_ref);
-    is($coerced, $scalar_ref, '... got back what we put in');
-}
-
-{
-    my $coerced = $coercion->coerce("Foo");
-    is($coerced, "Foo", '... got back what we put in');
-}
-

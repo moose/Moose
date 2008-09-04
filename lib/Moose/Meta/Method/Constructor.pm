@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -26,21 +26,21 @@ sub new {
 
     my $self = bless {
         # from our superclass
-        '&!body'          => undef, 
-        '$!package_name'  => $options{package_name},
-        '$!name'          => $options{name},
+        'body'          => undef, 
+        'package_name'  => $options{package_name},
+        'name'          => $options{name},
         # specific to this subclass
-        '%!options'       => $options{options},
-        '$!meta_instance' => $meta->get_meta_instance,
-        '@!attributes'    => [ $meta->compute_all_applicable_attributes ],
+        'options'       => $options{options},
+        'meta_instance' => $meta->get_meta_instance,
+        'attributes'    => [ $meta->compute_all_applicable_attributes ],
         # ...
-        '$!associated_metaclass' => $meta,
+        'associated_metaclass' => $meta,
     } => $class;
 
     # we don't want this creating
     # a cycle in the code, if not
     # needed
-    weaken($self->{'$!associated_metaclass'});
+    weaken($self->{'associated_metaclass'});
 
     $self->initialize_body;
 
@@ -49,11 +49,11 @@ sub new {
 
 ## accessors
 
-sub options       { (shift)->{'%!options'}       }
-sub meta_instance { (shift)->{'$!meta_instance'} }
-sub attributes    { (shift)->{'@!attributes'}    }
+sub options       { (shift)->{'options'}       }
+sub meta_instance { (shift)->{'meta_instance'} }
+sub attributes    { (shift)->{'attributes'}    }
 
-sub associated_metaclass { (shift)->{'$!associated_metaclass'} }
+sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
@@ -76,12 +76,9 @@ sub initialize_body {
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
 
-    $source .= "\n" . $self->_inline_throw_error('"Single parameters to new() must be a HASH ref"', 'data => $_[0]');
-    $source .= "\n" . '    if scalar @_ == 1 && ref($_[0]) ne q{HASH};';
+    $source .= "\n" . 'my $params = ' . $self->_generate_BUILDARGS('$class', '@_');
 
-    $source .= "\n" . 'my %params = (scalar @_ == 1) ? %{$_[0]} : @_;';
-
-    $source .= "\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
+    $source .= ";\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
 
     $source .= ";\n" . (join ";\n" => map {
         $self->_generate_slot_initializer($_)
@@ -123,14 +120,32 @@ sub initialize_body {
         $code = eval $source;
         $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
     }
-    $self->{'&!body'} = $code;
+    $self->{'body'} = $code;
+}
+
+sub _generate_BUILDARGS {
+    my ( $self, $class, $args ) = @_;
+
+    my $buildargs = $self->associated_metaclass->find_method_by_name("BUILDARGS");
+
+    if ( $args eq '@_' and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS ) ) {
+        return join("\n",
+            'do {',
+            $self->_inline_throw_error('"Single parameters to new() must be a HASH ref"', 'data => $_[0]'),
+            '    if scalar @_ == 1 && defined $_[0] && ref($_[0]) ne q{HASH};',
+            '(scalar @_ == 1) ? {%{$_[0]}} : {@_};',
+            '}',
+        );
+    } else {
+        return $class . "->BUILDARGS($args)";
+    }
 }
 
 sub _generate_BUILDALL {
     my $self = shift;
     my @BUILD_calls;
     foreach my $method (reverse $self->associated_metaclass->find_all_methods_by_name('BUILD')) {
-        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD(\%params)';
+        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD($params)';
     }
     return join ";\n" => @BUILD_calls;
 }
@@ -143,7 +158,7 @@ sub _generate_triggers {
         if ($attr->can('has_trigger') && $attr->has_trigger) {
             if (defined(my $init_arg = $attr->init_arg)) {
                 push @trigger_calls => (
-                    '(exists $params{\'' . $init_arg . '\'}) && do {' . "\n    "
+                    '(exists $params->{\'' . $init_arg . '\'}) && do {' . "\n    "
                     .   '$attrs->[' . $i . ']->trigger->('
                     .       '$instance, ' 
                     .        $self->meta_instance->inline_get_slot_value(
@@ -172,35 +187,18 @@ sub _generate_slot_initializer {
     my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
 
     if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
-        push @source => ('(exists $params{\'' . $attr->init_arg . '\'}) ' .
+        push @source => ('(exists $params->{\'' . $attr->init_arg . '\'}) ' .
                         '|| ' . $self->_inline_throw_error('"Attribute (' . $attr->name . ') is required"') .';');
     }
 
     if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
 
         if ( defined( my $init_arg = $attr->init_arg ) ) {
-            push @source => 'if (exists $params{\'' . $init_arg . '\'}) {';
-
-                push @source => ('my $val = $params{\'' . $init_arg . '\'};');
-
-                if ($is_moose && $attr->has_type_constraint) {
-                    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                        push @source => $self->_generate_type_coercion(
-                            $attr, 
-                            '$type_constraints[' . $index . ']', 
-                            '$val', 
-                            '$val'
-                        );
-                    }
-                    push @source => $self->_generate_type_constraint_check(
-                        $attr, 
-                        '$type_constraint_bodies[' . $index . ']', 
-                        '$type_constraints[' . $index . ']',                         
-                        '$val'
-                    );
-                }
-                push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-
+            push @source => 'if (exists $params->{\'' . $init_arg . '\'}) {';
+            push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
+            push @source => $self->_generate_type_constraint_and_coercion($attr, $index)
+                if $is_moose;
+            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
             push @source => "} else {";
         }
             my $default;
@@ -214,22 +212,17 @@ sub _generate_slot_initializer {
             
             push @source => '{'; # wrap this to avoid my $val overwrite warnings
             push @source => ('my $val = ' . $default . ';');
-            push @source => $self->_generate_type_constraint_check(
-                $attr,
-                ('$type_constraint_bodies[' . $index . ']'),
-                ('$type_constraints[' . $index . ']'),                
-                '$val'
-            ) if ($is_moose && $attr->has_type_constraint);
-            
+            push @source => $self->_generate_type_constraint_and_coercion($attr, $index)
+                if $is_moose; 
             push @source => $self->_generate_slot_assignment($attr, '$val', $index);
             push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
 
         push @source => "}" if defined $attr->init_arg;
     }
     elsif ( defined( my $init_arg = $attr->init_arg ) ) {
-        push @source => '(exists $params{\'' . $init_arg . '\'}) && do {';
+        push @source => '(exists $params->{\'' . $init_arg . '\'}) && do {';
 
-            push @source => ('my $val = $params{\'' . $init_arg . '\'};');
+            push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
                     push @source => $self->_generate_type_coercion(
@@ -288,6 +281,29 @@ sub _generate_slot_assignment {
     }
 
     return $source;
+}
+
+sub _generate_type_constraint_and_coercion {
+    my ($self, $attr, $index) = @_;
+    
+    return unless $attr->has_type_constraint;
+    
+    my @source;
+    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
+        push @source => $self->_generate_type_coercion(
+            $attr,
+            '$type_constraints[' . $index . ']',
+            '$val',
+            '$val'
+        );
+    }
+    push @source => $self->_generate_type_constraint_check(
+        $attr,
+        ('$type_constraint_bodies[' . $index . ']'),
+        ('$type_constraints[' . $index . ']'),            
+        '$val'
+    );
+    return @source;
 }
 
 sub _generate_type_coercion {

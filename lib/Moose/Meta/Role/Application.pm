@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
@@ -29,7 +30,7 @@ sub new {
                                 : [ $params{excludes} ]);
     }
     
-    $class->meta->new_object(%params);
+    $class->_new(\%params);
 }
 
 sub is_method_excluded {

@@ -3,12 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 13;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package Foo;

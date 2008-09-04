@@ -8,7 +8,8 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Object';
@@ -26,7 +27,7 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 
 sub new { 
     my $class = shift;
-    my $self  = $class->meta->new_object(@_);
+    my $self  = $class->_new(@_);
     return $self;
 }
 
@@ -37,11 +38,14 @@ sub has_type_constraint {
 
 sub get_type_constraint {
     my ($self, $type_name) = @_;
+    return unless defined $type_name; 
     $self->type_constraints->{$type_name}
 }
 
 sub add_type_constraint {
     my ($self, $type) = @_;
+    confess("No type supplied / type is not a valid type constraint") 
+        unless ($type && blessed $type && $type->isa('Moose::Meta::TypeConstraint'));
     $self->type_constraints->{$type->name} = $type;
 }
 
@@ -93,7 +97,14 @@ base Moose registry and base Moose types will automagically be found too).
 
 =item B<get_type_constraint ($type_name)>
 
+Returns a type constraint object from the registry by name. Will return
+false if the supplied type name cannot be found.
+
 =item B<add_type_constraint ($type)>
+
+Adds a type constraint object to the registry. Will throw an exception if
+no type is supplied, or the supplied object does not inherit from 
+L<Moose::Meta::TypeConstraint>
 
 =item B<find_type_constraint ($type_name)>
 

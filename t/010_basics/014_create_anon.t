@@ -3,13 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 8;
 
-BEGIN {
-    use_ok('Moose::Meta::Class');
-    use_ok('Moose');
-    use_ok('Moose::Role');
-}
+use Moose::Meta::Class;
 
 { 
     package Class;

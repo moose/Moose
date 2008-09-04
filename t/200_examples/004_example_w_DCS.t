@@ -17,15 +17,10 @@ Pretty well if I do say so myself :)
 BEGIN {
     eval "use Declare::Constraints::Simple;";
     plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;        
-    plan tests => 11;    
+    plan tests => 9;    
 }
 
 use Test::Exception;
-
-BEGIN {  
-    use_ok('Moose');
-    use_ok('Moose::Util::TypeConstraints');    
-}
 
 {
     package Foo;

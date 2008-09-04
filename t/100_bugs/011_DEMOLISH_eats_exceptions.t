@@ -4,13 +4,10 @@ use strict;
 use warnings;
 use FindBin;
 
-use Test::More tests => 146;
+use Test::More tests => 144;
 use Test::Exception;
 
-BEGIN {
-     use_ok('Moose');
-     use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 subtype 'FilePath'
     => as 'Str'

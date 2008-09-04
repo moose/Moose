@@ -1,0 +1,86 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Basics::Recipe6 - The augment/inner example
+
+=head1 SYNOPSIS
+    
+  package Document::Page;
+  use Moose;
+  
+  has 'body' => (is => 'rw', isa => 'Str', default => sub {''});
+  
+  sub create {
+      my $self = shift;
+      $self->open_page;
+      inner();
+      $self->close_page;
+  }
+  
+  sub append_body { 
+      my ($self, $appendage) = @_;
+      $self->body($self->body . $appendage);
+  }
+  
+  sub open_page  { (shift)->append_body('<page>') }
+  sub close_page { (shift)->append_body('</page>') }  
+  
+  package Document::PageWithHeadersAndFooters;
+  use Moose;
+  
+  extends 'Document::Page';
+  
+  augment 'create' => sub {
+      my $self = shift;
+      $self->create_header;
+      inner();
+      $self->create_footer;
+  };
+  
+  sub create_header { (shift)->append_body('<header/>') }
+  sub create_footer { (shift)->append_body('<footer/>') }  
+  
+  package TPSReport;
+  use Moose;
+  
+  extends 'Document::PageWithHeadersAndFooters';
+  
+  augment 'create' => sub {
+      my $self = shift;
+      $self->create_tps_report;
+  };
+  
+  sub create_tps_report {
+     (shift)->append_body('<report type="tps"/>') 
+  }
+  
+  print TPSReport->new->create # <page><header/><report type="tps"/><footer/></page>
+
+=head1 DESCRIPTION
+
+Coming Soon.
+
+=head1 CONCLUSION
+
+=head1 FOOTNOTES
+
+=over 4
+
+=back
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2007 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut       

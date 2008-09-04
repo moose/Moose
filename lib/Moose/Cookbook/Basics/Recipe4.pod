@@ -1,0 +1,295 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> class hierarchy
+
+=head1 SYNOPSIS
+  
+  package Address;
+  use Moose;
+  use Moose::Util::TypeConstraints;
+  
+  use Locale::US;
+  use Regexp::Common 'zip';
+  
+  my $STATES = Locale::US->new;
+  
+  subtype USState 
+      => as Str
+      => where {
+          (exists $STATES->{code2state}{uc($_)} || 
+           exists $STATES->{state2code}{uc($_)})
+      };
+      
+  subtype USZipCode 
+      => as Value
+      => where {
+          /^$RE{zip}{US}{-extended => 'allow'}$/            
+      };
+  
+  has 'street'   => (is => 'rw', isa => 'Str');
+  has 'city'     => (is => 'rw', isa => 'Str');
+  has 'state'    => (is => 'rw', isa => 'USState');
+  has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
+  
+  package Company;
+  use Moose;
+  use Moose::Util::TypeConstraints;
+  
+  has 'name'      => (is => 'rw', isa => 'Str', required => 1);
+  has 'address'   => (is => 'rw', isa => 'Address'); 
+  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');    
+  
+  sub BUILD {
+      my ($self, $params) = @_;
+      if ($params->{employees}) {
+          foreach my $employee (@{$params->{employees}}) {
+              $employee->company($self);
+          }
+      }
+  }
+  
+  after 'employees' => sub {
+      my ($self, $employees) = @_;
+      if (defined $employees) {
+          foreach my $employee (@{$employees}) {
+              $employee->company($self);
+          }            
+      }
+  };  
+  
+  package Person;
+  use Moose;
+  
+  has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
+  has 'last_name'      => (is => 'rw', isa => 'Str', required => 1);       
+  has 'middle_initial' => (is => 'rw', isa => 'Str', 
+                           predicate => 'has_middle_initial');  
+  has 'address'        => (is => 'rw', isa => 'Address');
+  
+  sub full_name {
+      my $self = shift;
+      return $self->first_name . 
+            ($self->has_middle_initial ? 
+                ' ' . $self->middle_initial . '. ' 
+                : 
+                ' ') .
+             $self->last_name;
+  }
+    
+  package Employee;
+  use Moose;  
+  
+  extends 'Person';
+  
+  has 'title'   => (is => 'rw', isa => 'Str', required => 1);
+  has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
+  
+  override 'full_name' => sub {
+      my $self = shift;
+      super() . ', ' . $self->title
+  };
+
+=head1 DESCRIPTION
+
+In this recipe we introduce the C<subtype> keyword, and show 
+how it can be useful for specifying type constraints 
+without building an entire class to represent them. We 
+will also show how this feature can be used to leverage the 
+usefulness of CPAN modules. In addition to this, we will 
+introduce another attribute option.
+
+Let's first look at the C<subtype> feature. In the B<Address> class we have
+defined two subtypes. The first C<subtype> uses the L<Locale::US> module, which
+provides two hashes which can be used to perform existential checks for state
+names and their two letter state codes. It is a very simple and very useful
+module, and perfect for use in a C<subtype> constraint.
+  
+  my $STATES = Locale::US->new;  
+  subtype USState 
+      => as Str
+      => where {
+          (exists $STATES->{code2state}{uc($_)} || 
+           exists $STATES->{state2code}{uc($_)})
+      };
+
+Because we know that states will be passed to us as strings, we 
+can make C<USState> a subtype of the built-in type constraint 
+C<Str>. This will ensure that anything which is a C<USState> will 
+also pass as a C<Str>. Next, we create a constraint specializer 
+using the C<where> keyword. The value being checked against in 
+the C<where> clause can be found in the C<$_> variable (1). Our 
+constraint specializer will then check whether the given string 
+is either a state name or a state code. If the string meets this 
+criteria, then the constraint will pass, otherwise it will fail.
+We can now use this as we would any built-in constraint, like so:
+
+  has 'state' => (is => 'rw', isa => 'USState');
+
+The C<state> accessor will now check all values against the 
+C<USState> constraint, thereby only allowing valid state names or 
+state codes to be stored in the C<state> slot. 
+
+The next C<subtype> does pretty much the same thing using the L<Regexp::Common>
+module, and is used as the constraint for the C<zip_code> slot.
+
+  subtype USZipCode 
+      => as Value
+      => where {
+          /^$RE{zip}{US}{-extended => 'allow'}$/            
+      };
+
+Using subtypes can save a lot of unnecessary abstraction by not requiring you to
+create many small classes for these relatively simple values. They also allow
+you to reuse the same constraints in a number of classes (thereby avoiding
+duplication), since all type constraints are stored in a global registry and
+always accessible to C<has>.
+
+With these two subtypes and some attributes, we have defined
+as much as we need for a basic B<Address> class. Next, we define 
+a basic B<Company> class, which itself has an address. As we saw in 
+earlier recipes, we can use the C<Address> type constraint that 
+Moose automatically created for us:
+
+  has 'address' => (is => 'rw', isa => 'Address');
+
+A company also needs a name, so we define that as well:
+
+  has 'name' => (is => 'rw', isa => 'Str', required => 1);
+
+Here we introduce another attribute option, the C<required> option. 
+This option tells Moose that C<name> is a required parameter in 
+the B<Company> constructor, and that the C<name> accessor cannot 
+accept an undefined value for the slot. The result is that C<name> 
+will always have a value. 
+
+The next attribute option is not actually new, but a new variant 
+of options we have already introduced:
+  
+  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');
+
+Here, we are passing a more complex string to the C<isa> option, we 
+are passing a container type constraint. Container type constraints 
+can either be C<ArrayRef> or C<HashRef> with a contained type given 
+inside the square brackets. This basically checks that all the values 
+in the ARRAY ref are instances of the B<Employee> class. 
+
+This will ensure that our employees will all be of the correct type. However,
+the B<Employee> object (which we will see in a moment) also maintains a
+reference to its associated B<Company>. In order to maintain this relationship
+(and preserve the referential integrity of our objects), we need to perform some
+processing of the employees over and above that of the type constraint check.
+This is accomplished in two places. First we need to be sure that any employees
+array passed to the constructor is properly initialized. For this we can use the
+C<BUILD> method (2):
+  
+  sub BUILD {
+      my ($self, $params) = @_;
+      if ($params->{employees}) {
+          foreach my $employee (@{$params->{employees}}) {
+              $employee->company($self);
+          }
+      }
+  }
+
+The C<BUILD> method will be executed after the initial type constraint 
+check, so we can simply perform a basic existential check on the C<employees>
+param here, and assume that if it does exist, it is both an ARRAY ref 
+and contains I<only> instances of B<Employee>.
+
+The next aspect we need to address is the C<employees> read/write 
+accessor (see the C<employees> attribute declaration above). This 
+accessor will correctly check the type constraint, but we need to extend it
+with some additional processing. For this we use an C<after> method modifier,
+like so:
+
+  after 'employees' => sub {
+      my ($self, $employees) = @_;
+      if (defined $employees) {
+          foreach my $employee (@{$employees}) {
+              $employee->company($self);
+          }            
+      }
+  };
+
+Again, as with the C<BUILD> method, we know that the type constraint 
+check has already happened, so we can just check for defined-ness on the 
+C<$employees> argument.
+
+At this point, our B<Company> class is complete. Next comes our B<Person> 
+class and its subclass, the previously mentioned B<Employee> class. 
+
+The B<Person> class should be obvious to you at this point. It has a few 
+C<required> attributes, and the C<middle_initial> slot has an additional 
+C<predicate> method (which we saw in the previous recipe with the 
+B<BinaryTree> class). 
+
+Next, the B<Employee> class, which should also be pretty obvious at this 
+point. It requires a C<title>, and maintains a weakened reference to a 
+B<Company> instance. The only new item, which we have seen before in 
+examples, but never in the recipe itself, is the C<override> method 
+modifier:
+
+  override 'full_name' => sub {
+      my $self = shift;
+      super() . ', ' . $self->title
+  };
+
+This just tells Moose that I am intentionally overriding the superclass 
+C<full_name> method here, and adding the value of the C<title> slot at 
+the end of the employee's full name.
+
+And that's about it.
+
+Once again, as with all the other recipes, you can go about using 
+these classes like any other Perl 5 class. A more detailed example of 
+usage can be found in F<t/000_recipes/004_recipe.t>.
+
+=head1 CONCLUSION
+
+This recipe was intentionally longer and more complex to illustrate both 
+how easily Moose classes can interact (using class type constraints, etc.)
+and the sheer density of information and behaviors which Moose can pack 
+into a relatively small amount of typing. Ponder for a moment how much 
+more code a non-Moose plain old Perl 5 version of this recipe would have 
+been (including all the type constraint checks, weak references, and so on).
+
+And of course, this recipe also introduced the C<subtype> keyword, and 
+its usefulness within the Moose toolkit. In the next recipe we will 
+focus more on subtypes, and introduce the idea of type coercion as well.
+
+=head1 FOOTNOTES
+
+=over 4
+
+=item (1)
+
+The value being checked is also passed as the first argument to 
+the C<where> block as well, so it can also be accessed as C<$_[0]> 
+as well.
+
+=item (2)
+
+The C<BUILD> method is called by C<Moose::Object::BUILDALL>, which is 
+called by C<Moose::Object::new>. C<BUILDALL> will climb the object 
+inheritance graph and call the appropriate C<BUILD> methods in the 
+correct order.
+
+=back
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

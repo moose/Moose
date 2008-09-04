@@ -3,13 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 12;
 use Test::Exception;
 use Test::Moose;
 
-BEGIN {
-    use_ok('Moose');
-}
+
 
 {
     package My::Attribute::Trait;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 8;
 use Test::Exception;
 
 BEGIN {
@@ -18,3 +18,32 @@ lives_ok {
 
 my $numb3rs = find_type_constraint('Numb3rs');
 isa_ok($numb3rs, 'Moose::Meta::TypeConstraint');
+
+# subtype with unions
+
+{
+    package Test::Moose::Meta::TypeConstraint::Union;
+
+    use overload '""' => sub {'Broken|Test'}, fallback => 1;
+    use Moose;
+
+    extends 'Moose::Meta::TypeConstraint';
+}
+
+my $dummy_instance = Test::Moose::Meta::TypeConstraint::Union->new;
+
+ok $dummy_instance => "Created Instance";
+
+isa_ok $dummy_instance,
+    'Test::Moose::Meta::TypeConstraint::Union' => 'isa correct type';
+
+is "$dummy_instance", "Broken|Test" =>
+    'Got expected stringification result';
+
+my $subtype1 = subtype 'New1' => as $dummy_instance;
+
+ok $subtype1 => 'made a subtype from our type object';
+
+my $subtype2 = subtype 'New2' => as $subtype1;
+
+ok $subtype2 => 'made a subtype of our subtype';

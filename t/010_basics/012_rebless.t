@@ -3,14 +3,11 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 11;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
-BEGIN {
-    use_ok('Moose');
-    use_ok("Moose::Util::TypeConstraints");
-}
+use Moose::Util::TypeConstraints;
 
 subtype 'Positive'
      => as 'Num'

@@ -10,7 +10,8 @@ use Carp         'confess', 'croak';
 use Data::OptList;
 use Sub::Exporter;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose       ();
@@ -19,189 +20,136 @@ use Moose::Util ();
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
-{
-    my ( $CALLER, %METAS );
+sub extends {
+    croak "Roles do not currently support 'extends'";
+}
 
-    sub _find_meta {
-        my $role = $CALLER;
+sub with {
+    Moose::Util::apply_all_roles( Moose::Meta::Role->initialize(shift), @_ );
+}
 
-        return $METAS{$role} if exists $METAS{$role};
+sub requires {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    croak "Must specify at least one method" unless @_;
+    $meta->add_required_methods(@_);
+}
 
-        # make a subtype for each Moose class
-        role_type $role unless find_type_constraint($role);
+sub excludes {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    croak "Must specify at least one role" unless @_;
+    $meta->add_excluded_roles(@_);
+}
 
-        my $meta;
-        if ($role->can('meta')) {
-            $meta = $role->meta();
-            (blessed($meta) && $meta->isa('Moose::Meta::Role'))
-                || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
-        }
-        else {
-            $meta = Moose::Meta::Role->initialize($role);
-            $meta->alias_method('meta' => sub { $meta });
-        }
+sub has {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    my $name = shift;
+    croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+    my %options = @_;
+    my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
+    $meta->add_attribute( $_, %options ) for @$attrs;
+}
 
-        return $METAS{$role} = $meta;
+sub before {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    my $code = pop @_;
+
+    for (@_) {
+        croak "Moose::Role do not currently support "
+            . ref($_)
+            . " references for before method modifiers"
+            if ref $_;
+        $meta->add_before_method_modifier( $_, $code );
     }
+}
 
+sub after {
+    my $meta = Moose::Meta::Role->initialize(shift);
 
-    my %exports = (
-        extends => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::extends' => sub {
-                croak "Roles do not currently support 'extends'"
-            });
-        },
-        with => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::with' => sub (@) {
-                Moose::Util::apply_all_roles($meta, @_)
-            });
-        },
-        requires => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::requires' => sub (@) {
-                croak "Must specify at least one method" unless @_;
-                $meta->add_required_methods(@_);
-            });
-        },
-        excludes => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::excludes' => sub (@) {
-                croak "Must specify at least one role" unless @_;
-                $meta->add_excluded_roles(@_);
-            });
-        },
-        has => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::has' => sub ($;%) {
-                my $name = shift;
-                croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-                my %options = @_;
-                my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-                $meta->add_attribute( $_, %options ) for @$attrs;
-            });
-        },
-        before => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::before' => sub (@&) {
-                my $code = pop @_;
-                do {
-                    croak "Moose::Role do not currently support " 
-                          . ref($_) 
-                          . " references for before method modifiers" 
-                    if ref $_;
-                    $meta->add_before_method_modifier($_, $code) 
-                } for @_;
-            });
-        },
-        after => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::after' => sub (@&) {
-                my $code = pop @_;
-                do {
-                    croak "Moose::Role do not currently support " 
-                          . ref($_) 
-                          . " references for after method modifiers" 
-                    if ref $_;                
-                    $meta->add_after_method_modifier($_, $code) 
-                } for @_;
-            });
-        },
-        around => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::around' => sub (@&) {
-                my $code = pop @_;
-                do {
-                    croak "Moose::Role do not currently support " 
-                          . ref($_) 
-                          . " references for around method modifiers" 
-                    if ref $_;                
-                    $meta->add_around_method_modifier($_, $code) 
-                } for @_;  
-            });
-        },
-        # see Moose.pm for discussion
-        super => sub {
-            return Class::MOP::subname('Moose::Role::super' => sub { 
-                return unless $Moose::SUPER_BODY; $Moose::SUPER_BODY->(@Moose::SUPER_ARGS) 
-            });
-        },
-        override => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::override' => sub ($&) {
-                my ($name, $code) = @_;
-                $meta->add_override_method_modifier($name, $code);
-            });
-        },
-        inner => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::inner' => sub {
-                croak "Moose::Role cannot support 'inner'";
-            });
-        },
-        augment => sub {
-            my $meta = _find_meta();
-            return Class::MOP::subname('Moose::Role::augment' => sub {
-                croak "Moose::Role cannot support 'augment'";
-            });
-        },
-        confess => sub {
-            return \&Carp::confess;
-        },
-        blessed => sub {
-            return \&Scalar::Util::blessed;
-        }
-    );
+    my $code = pop @_;
+    for (@_) {
+        croak "Moose::Role do not currently support "
+            . ref($_)
+            . " references for after method modifiers"
+            if ref $_;
+        $meta->add_after_method_modifier( $_, $code );
+    }
+}
 
-    my $exporter = Sub::Exporter::build_exporter({
-        exports => \%exports,
-        groups  => {
-            default => [':all']
-        }
-    });
+sub around {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    my $code = pop @_;
+    for (@_) {
+        croak "Moose::Role do not currently support "
+            . ref($_)
+            . " references for around method modifiers"
+            if ref $_;
+        $meta->add_around_method_modifier( $_, $code );
+    }
+}
 
-    sub import {
-        $CALLER =
-            ref $_[1] && defined $_[1]->{into} ? $_[1]->{into}
-          : ref $_[1]
-          && defined $_[1]->{into_level} ? caller( $_[1]->{into_level} )
-          :                                caller();
+# see Moose.pm for discussion
+sub super {
+    return unless $Moose::SUPER_BODY;
+    $Moose::SUPER_BODY->(@Moose::SUPER_ARGS);
+}
 
-        # this works because both pragmas set $^H (see perldoc perlvar)
-        # which affects the current compilation - i.e. the file who use'd
-        # us - which is why we don't need to do anything special to make
-        # it affect that file rather than this one (which is already compiled)
+sub override {
+    my $meta = Moose::Meta::Role->initialize(shift);
+    my ( $name, $code ) = @_;
+    $meta->add_override_method_modifier( $name, $code );
+}
 
-        strict->import;
-        warnings->import;
+sub inner {
+    croak "Moose::Role cannot support 'inner'";
+}
 
-        # we should never export to main
-        return if $CALLER eq 'main';
+sub augment {
+    croak "Moose::Role cannot support 'augment'";
+}
 
-        goto $exporter;
-    };
+my $exporter = Moose::Exporter->setup_import_methods(
+    with_caller => [
+        qw( with requires excludes has before after around override make_immutable )
+    ],
+    as_is => [
+        qw( extends super inner augment ),
+        \&Carp::confess,
+        \&Scalar::Util::blessed,
+    ],
+);
 
-    sub unimport {
-        no strict 'refs';
-        my $class = Moose::_get_caller(@_);
+sub init_meta {
+    shift;
+    my %args = @_;
 
-        # loop through the exports ...
-        foreach my $name ( keys %exports ) {
+    my $role = $args{for_class}
+        or confess
+        "Cannot call init_meta without specifying a for_class";
 
-            # if we find one ...
-            if ( defined &{ $class . '::' . $name } ) {
-                my $keyword = \&{ $class . '::' . $name };
+    my $metaclass = $args{metaclass} || "Moose::Meta::Role";
 
-                # make sure it is from Moose::Role
-                my ($pkg_name) = Class::MOP::get_code_info($keyword);
-                next if $pkg_name ne 'Moose::Role';
+    # make a subtype for each Moose class
+    role_type $role unless find_type_constraint($role);
 
-                # and if it is from Moose::Role then undef the slot
-                delete ${ $class . '::' }{$name};
+    # FIXME copy from Moose.pm
+    my $meta;
+    if ($role->can('meta')) {
+        $meta = $role->meta();
+        (blessed($meta) && $meta->isa('Moose::Meta::Role'))
+            || confess "You already have a &meta function, but it does not return a Moose::Meta::Role";
+    }
+    else {
+        $meta = $metaclass->initialize($role);
+
+        $meta->add_method(
+            'meta' => sub {
+                # re-initialize so it inherits properly
+                $metaclass->initialize( ref($_[0]) || $_[0] );
             }
-        }
+        );
     }
+
+    return $meta;
 }
 
 1;
@@ -276,6 +224,15 @@ lightly.
 Moose::Role offers a way to remove the keywords it exports, through the
 C<unimport> method. You simply have to say C<no Moose::Role> at the bottom of
 your code for this to work.
+
+=head2 B<< Moose::Role->init_meta(for_class => $role, metaclass => $metaclass) >>
+
+The C<init_meta> method sets up the metaclass object for the role
+specified by C<for_class>. It also injects a a C<meta> accessor into
+the role so you can get at this object.
+
+The default metaclass is L<Moose::Meta::Role>. You can specify an
+alternate metaclass with the C<metaclass> parameter.
 
 =head1 CAVEATS
 

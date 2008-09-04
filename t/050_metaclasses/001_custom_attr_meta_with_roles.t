@@ -3,12 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 3;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');
-}
+
 
 {
     package My::Custom::Meta::Attr;

@@ -3,12 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 25;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package HTTPHeader;

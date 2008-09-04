@@ -9,12 +9,10 @@ use Test::Exception;
 BEGIN {
     eval "use IO::String; use IO::File;";
     plan skip_all => "IO::String and IO::File are required for this test" if $@;        
-    plan tests => 29;    
+    plan tests => 28;    
 }
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 {
     package Email::Moose;

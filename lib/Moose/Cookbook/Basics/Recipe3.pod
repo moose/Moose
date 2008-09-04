@@ -1,0 +1,240 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
+
+=head1 SYNOPSIS
+
+  package BinaryTree;
+  use Moose;
+  
+  has 'node' => (is => 'rw', isa => 'Any');
+  
+  has 'parent' => (
+      is        => 'rw',
+      isa       => 'BinaryTree',	
+      predicate => 'has_parent',
+      weak_ref  => 1,
+  );
+  
+  has 'left' => (
+      is        => 'rw',	
+      isa       => 'BinaryTree',		
+      predicate => 'has_left',  
+      lazy      => 1,
+      default   => sub { BinaryTree->new(parent => $_[0]) },       
+  );
+  
+  has 'right' => (
+      is        => 'rw',	
+      isa       => 'BinaryTree',		
+      predicate => 'has_right',   
+      lazy      => 1,       
+      default   => sub { BinaryTree->new(parent => $_[0]) },       
+  );
+  
+  before 'right', 'left' => sub {
+      my ($self, $tree) = @_;
+      $tree->parent($self) if defined $tree;   
+  };
+
+=head1 DESCRIPTION
+
+In this recipe we take a closer look at attributes, and see how 
+some of their more advanced features can be used to create fairly 
+complex behaviors. 
+
+The class in this recipe is a classic binary tree, each node in the 
+tree is represented by an instance of the B<BinaryTree> class. Each 
+instance has a C<node> slot to hold an arbitrary value, a C<right> 
+slot to hold the right node, a C<left> slot to hold the left node, 
+and finally a C<parent> slot to hold a reference back up the tree. 
+
+Now, let's start with the code. Our first attribute is the C<node> 
+slot, defined as such:
+
+  has 'node' => (is => 'rw', isa => 'Any');
+
+If you recall from the previous recipes, this slot will have a read/write
+accessor generated for it, and has a type constraint on it. The new item here is
+the type constraint of C<Any>. C<Any> is the "root" of the
+L<Moose::Util::TypeConstraints> type hierarchy. It means exactly what it says:
+I<any> value passes the constraint. Now, you could just as easily have left out
+the C<isa>, leaving the C<node> slot unconstrained and retaining this
+behavior. But in this case, we are really including the type constraint for the
+benefit of other programmers, not the computer. It makes clear my intent that
+the C<node> attribute can be of any type, and that the class is a polymorphic
+container.
+
+Next, let's move on to the C<parent> slot:
+
+  has 'parent' => (
+      is        => 'rw',
+      isa       => 'BinaryTree',	
+      predicate => 'has_parent',
+      weak_ref  => 1,
+  );
+
+As you already know, this code tells you that C<parent> gets a read/write
+accessor and is constrained to only accept instances of B<BinaryTree>. You will
+of course remember from the second recipe that the C<BinaryTree> type constraint
+is automatically created for us by Moose.
+
+The next attribute option is new, though: the C<predicate> option. 
+This option creates a method which can be used to check whether 
+a given slot (in this case C<parent>) has been initialized. In 
+this case it will create a method called C<has_parent>. Quite simple, 
+and quite handy too.
+
+This brings us to our last attribute option, also a new one. Since C<parent> is
+a circular reference (the tree in C<parent> should already have a reference to
+this one, in its C<left> or C<right> node), we want to make sure that it is also
+a weakened reference to avoid memory leaks. The C<weak_ref> attribute option
+will do just that, C<weak_ref> simply takes a boolean value (C<1> or C<0>) and
+then alters the accessor function to weaken the reference to any value stored in
+the C<parent> slot (1).
+
+Now, onto the C<left> and C<right> attributes. They are essentially identical,
+save for different names, so I will just describe one here:
+
+  has 'left' => (
+      is        => 'rw',	
+      isa       => 'BinaryTree',		
+      predicate => 'has_left',  
+      lazy      => 1,
+      default   => sub { BinaryTree->new(parent => $_[0]) },       
+  );
+
+You already know what the C<is>, C<isa> and C<predicate> options do, but now we
+have two new options. These two options are actually linked together, in fact:
+you cannot use the C<lazy> option unless you have set the C<default> option.
+Class creation will fail with an exception (2).
+
+Before I go into detail about how C<lazy> works, let me first 
+explain how C<default> works, and in particular why it is wrapped 
+in a CODE ref.
+
+In the second recipe the B<BankAccount>'s C<balance> slot had a 
+default value of C<0>. Since Perl will copy strings and numbers 
+by value, this was all we had to say. But for any other item 
+(ARRAY ref, HASH ref, object instance, etc) you would need to 
+wrap it in a CODE reference, so this:
+
+  has 'foo' => (is => 'rw', default => []);
+
+is actually illegal in Moose. Instead, what you really want is this:
+
+  has 'foo' => (is => 'rw', default => sub { [] });
+
+This ensures that each instance of this class will get its own ARRAY ref in the
+C<foo> slot. 
+
+One other feature of the CODE ref version of the C<default> option is that when
+the subroutine is executed (to get the default value), we pass in the instance
+where the slot will be stored. This can come in quite handy at times, as
+illustrated above, with this code:
+
+  default => sub { BinaryTree->new(parent => $_[0]) },
+
+The default value being generated is a new C<BinaryTree> instance for the
+C<left> (or C<right>) slot. Here we set up the correct relationship by passing
+the current instance as the C<parent> argument to the constructor.
+
+Now, before we go on to the C<lazy> option, I want you to think 
+for a moment. When an instance of this class is created, and the 
+slots are being initialized, the "normal" behavior would be for 
+the C<left> and C<right> slots to be populated with a new instance
+of B<BinaryTree>. In creating that instance of the C<left> or 
+C<right> slots, we would need to create new instances to populate 
+the C<left> and C<right> slots of I<those> instances. This would 
+continue in an I<infinitely recursive spiral of death> until you had 
+exhausted all available memory on your machine.
+
+This is, of course, not good :)
+
+Which brings us to the C<lazy> attribute option. The C<lazy> option does just
+what it says: it lazily initializes the slot within the instance. This means
+that it waits till absolutely the I<latest> possible moment to populate the
+slot. So if you, the user, store a value in the slot, everything works normally,
+and what you pass in is stored. However, if you I<read> the slot I<before>
+storing a value in it, then at that I<exact> moment (and no sooner), the slot
+will be populated with the value of the C<default> option.
+
+This option is what allows the B<BinaryTree> class to instantiate
+objects without fear of the I<infinitely recursive spiral of death>
+mentioned earlier.
+
+So, we have described a quite complex set of behaviors here, and not one method
+had to be written. But wait, we aren't quite done yet; the autogenerated
+C<right> and C<left> accessors are not completely correct. They will not install
+the parental relationships that we need. We could write our own accessors, but
+that would require us to implement all those features we got automatically (type
+constraints, lazy initialization, and so on). Instead, we use method modifiers
+again:
+  
+  before 'right', 'left' => sub {
+      my ($self, $tree) = @_;
+      $tree->parent($self) if defined $tree;   
+  };
+
+This is a C<before> modifier, just like we saw in the second recipe, but with
+two slight differences. First, we are applying this to more than one method at a
+time. Since both the C<left> and C<right> methods need the same feature, it
+makes sense. The second difference is that we are not wrapping an inherited
+method anymore, but instead a method of our own local class. Wrapping local
+methods is no different, the only requirement is that the wrappee be created
+before the wrapper (after all, you cannot wrap something which doesn't exist,
+right?).
+
+Now, as with all the other recipes, you can go about using 
+B<BinaryTree> like any other Perl 5 class. A more detailed example of its
+usage can be found in F<t/000_recipes/003_recipe.t>.
+
+=head1 CONCLUSION
+
+This recipe introduced you to some of the more advanced behavioral 
+possibilities of Moose's attribute mechanism. I hope that it has 
+opened your mind to the powerful possibilities of Moose. In the next 
+recipe we explore how we can create custom subtypes and take 
+advantage of the plethora of useful modules out on CPAN with Moose.
+
+=head1 FOOTNOTES
+
+=over 4
+
+=item (1)
+
+Weak references are tricky things, and should be used sparingly 
+and appropriately (such as in the case of circular refs). If you 
+are not careful, you will have slot values disappear "mysteriously"
+because perls reference counting garbage collector has gone and 
+removed the item you are weak-referencing. 
+
+In short, don't use them unless you know what you are doing :)
+
+=item (2)
+
+You I<can> use the C<default> option without the C<lazy> option if 
+you like, as we showed in the second recipe.
+
+And actually, you can use C<builder> instead of C<default>. See
+L<Moose::Cookbook::Basics::Recipe9> for details.
+
+=back
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

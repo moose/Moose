@@ -3,14 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 8;
 use Test::Exception;
 use Scalar::Util 'blessed';
-
-BEGIN {
-    use_ok('Moose');
-    use_ok('Moose::Meta::Role');
-}
 
 =pod
 

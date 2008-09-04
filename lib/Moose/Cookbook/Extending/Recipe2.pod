@@ -1,0 +1,68 @@
+
+=pod
+
+=head1 NAME
+
+Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
+
+=head1 SYNOPSIS
+
+  package MooseX::Debugging;
+
+  use strict;
+  use warnings;
+
+  use Moose::Exporter;
+  use Moose::Util::MetaRole;
+  use MooseX::Debugging::Role::Object;
+
+  Moose::Exporter->setup_import_methods();
+
+  sub init_meta {
+      shift;
+      my %options = @_;
+
+      Moose::Util::MetaRole::apply_base_object_roles(
+          for_class => $options{for_class},
+          role      => ['MooseX::Debugging::Role::Object'],
+      );
+  }
+
+
+  package MooseX::Debugging::Role::Object;
+
+  after 'BUILD' => sub {
+      my $self = shift;
+
+      warn "Made a new " . ref $self . " object\n";
+  }
+
+=head1 DESCRIPTION
+
+In this example, we provide a role for the base object class that adds
+some simple debugging output. Every time an object is created, it
+spits out a warning saying what type of object it was.
+
+Obviously, a real debugging role would do something more interesting,
+but this recipe is all about how we apply that role.
+
+In this case, with the combination of L<Moose::Exporter> and
+L<Moose::Util::MetaRole>, we ensure that when a module does "S<use
+MooseX::Debugging>", it automatically gets the debugging role applied
+to its base object class.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+

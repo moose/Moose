@@ -3,12 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 4;
 use Test::Exception;
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 =pod
 
@@ -53,6 +51,6 @@ isa_ok(Foo->meta, 'Foo::Meta');
     eval 'use Moose;';
     ::ok($@, '... could not load moose without correct metaclass');
     ::like($@, 
-        qr/^You already have a \&meta function\, but it does not return a Moose\:\:Meta\:\:Class/, 
+        qr/^Bar already has a metaclass, but it does not inherit Moose::Meta::Class/,
         '... got the right error too');
 }

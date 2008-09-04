@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 38;
+use Test::More tests => 44;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -104,3 +104,17 @@ is($string->validate(5),
 
 lives_ok { Moose::Meta::Attribute->new('bob', isa => 'Spong') }
   'meta-attr construction ok even when type constraint utils loaded first';
+
+# Test type constraint predicate return values.
+
+foreach my $predicate (qw/equals is_subtype_of is_a_type_of/) {
+    ok( !defined $string->$predicate('DoesNotExist'), "$predicate predicate returns undef for non existant constraint");
+}
+
+# Test adding things which don't look like types to the registry throws an exception
+
+my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
+throws_ok {$r->add_type_constraint()} qr/not a valid type constraint/, '->add_type_constraint(undef) throws';
+throws_ok {$r->add_type_constraint('foo')} qr/not a valid type constraint/, '->add_type_constraint("foo") throws';
+throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type constraint/, '->add_type_constraint(SomeClass->new) throws';
+

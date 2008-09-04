@@ -1,6 +1,249 @@
 Revision history for Perl extension Moose
 
-0.51
+0.57 Wed September 3, 2008
+    * Moose::Intro
+      - A new bit of doc intended to introduce folks familiar with
+        "standard" Perl 5 OO to Moose concepts. (Dave Rolsky)
+
+    * Moose::Unsweetened
+      - Shows examples of two classes, each done first with and then
+        without Moose. This makes a nice parallel to
+        Moose::Intro. (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints
+      - Fixed a bug in find_or_parse_type_constraint so that it
+        accepts a Moose::Meta::TypeConstraint object as the parent
+        type, not just a name (jnapiorkowski)
+        - added tests (jnapiorkowski)
+
+    * Moose::Exporter
+      - If Sub::Name was not present, unimporting failed to actually
+        remove some sugar subs, causing test failures (Dave Rolsky)
+
+0.56 Mon September 1, 2008
+    For those not following the series of dev releases, there are
+    several major changes in this release of Moose.
+      ! Moose::init_meta should now be called as a method. See the
+        docs for details.
+
+      - Major performance improvements by nothingmuch.
+
+      - New modules for extension writers, Moose::Exporter and
+        Moose::Util::MetaRole by Dave Rolsky.
+
+      - Lots of doc improvements and additions, especially in the
+        cookbook sections.
+
+      - Various bug fixes.
+
+    * Removed all references to the experimental-but-no-longer-needed
+      Moose::Meta::Role::Application::ToMetaclassInstance.
+
+    * Require Class::MOP 0.65.
+
+0.55_04 Sat August 30, 2008
+    * Moose::Util::MetaRole
+    * Moose::Cookbook::Extending::Recipe2
+      - This simplifies the application of roles to any meta class, as
+        well as the base object class. Reimplemented metaclass traits
+        using this module. (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe1
+      - This a new recipe, an overview of various ways to write Moose
+        extensions (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe3
+    * Moose::Cookbook::Extending::Recipe4
+      - These used to be Extending::Recipe1 and Extending::Recipe2,
+        respectively.
+
+0.55_03 Fri August 29, 2008
+    * No changes from 0.55_02 except increasing the Class::MOP
+      dependency to 0.64_07.
+
+0.55_02 Fri August 29, 2008
+    * Makefile.PL and Moose.pm
+      - explicitly require Perl 5.8.0+ (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints
+      - Fix warnings from find_type_constraint if the type is not 
+        found (t0m).
+      
+    * Moose::Meta::TypeConstraint
+      - Predicate methods (equals/is_a_type_of/is_subtype_of) now
+        return false if the type you specify cannot be found in the
+        type registry, rather than throwing an unhelpful and
+        coincidental exception. (t0m).
+        - added docs & test for this (t0m)
+    
+    * Moose::Meta::TypeConstraint::Registry
+      - add_type_constraint now throws an exception if a parameter is
+        not supplied (t0m).
+        - added docs & test for this (t0m)
+
+    * Moose::Cookbook::FAQ
+      - Added a faq entry on the difference between "role" and "trait"
+        (t0m)
+
+    * Moose::Meta::Role
+      - Fixed a bug that caused role composition to not see a required
+        method when that method was provided by another role being
+        composed at the same time. (Dave Rolsky)
+        - test and bug finding (tokuhirom)
+        
+0.55_01 Wed August 20, 2008
+
+    !! Calling Moose::init_meta as a function is now         !!
+    !! deprecated. Please see the Moose.pm docs for details. !!
+
+    * Moose::Meta::Method::Constructor
+      - Fix inlined constructor so that values produced by default
+        or builder methods are coerced as required. (t0m)
+        - added test for this (t0m)
+
+    * Moose::Meta::Attribute
+      - A lazy attribute with a default or builder did not attempt to
+        coerce the default value. The immutable code _did_
+        coerce. (t0m)
+        - added test for this (t0m)
+
+    * Moose::Exporter
+      - This is a new helper module for writing "Moose-alike"
+        modules. This should make the lives of MooseX module authors
+        much easier. (Dave Rolsky)
+
+    * Moose
+    * Moose::Cookbook::Meta::Recipe5
+      - Implemented metaclass traits (and wrote a recipe for it):
+
+          use Moose -traits => 'Foo'
+
+        This should make writing small Moose extensions a little
+        easier (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe1
+      - Removed any examples of direct hashref access, and applied an
+        editorial axe to reduce verbosity. (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe1
+      - Also applied an editorial axe here. (Dave Rolsky)
+
+    * Moose
+    * Moose::Cookbook::Extending::Recipe1
+    * Moose::Cookbook::Extending::Recipe2
+      - Rewrote extending and embedding moose documentation and
+        recipes to use Moose::Exporter (Dave Rolsky)
+
+    * Moose
+    * Moose::Role
+      - These two modules now warn when you load them from the main
+        package "main" package, because we will not export sugar to
+        main. Previously it just did nothing. (Dave Rolsky)
+
+    * Moose::Role
+      - Now provide an init_meta method just like Moose.pm, and you
+        can call this to provide an alternate role metaclass. (Dave
+        Rolsky and nothingmuch)
+      - get_method_map now respects the package cache flag (nothingmuch)
+
+    * Moose::Meta::Role
+      - Two new methods - add_method and wrap_method_body
+        (nothingmuch)
+
+    * many modules
+      - Optimizations including allowing constructors to accept hash
+        refs, making many more classes immutable, and making
+        constructors immutable. (nothingmuch)
+
+0.55 Sun August 3, 2008
+    * Moose::Meta::Attribute
+      - breaking down the way 'handles' methods are
+        created so that the process can be more easily
+        overridden by subclasses (stevan)
+
+    * Moose::Meta::TypeConstraint
+      - fixing what is passed into a ->message with
+        the type constraints (RT #37569)
+        - added tests for this (Charles Alderman)
+
+    * Moose::Util::TypeConstraints
+      - fix coerce to accept anon types like subtype can (mst)
+
+    * Moose::Cookbook
+      - reorganized the recipes into sections - Basics, Roles, Meta,
+        Extending - and wrote abstracts for each section (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe10
+      - A new recipe that demonstrates operator overloading
+        in combination with Moose. (bluefeet)
+
+    * Moose::Cookbook::Meta::Recipe1
+      - an introduction to what meta is and why you'd want to make
+        your own metaclass extensions (Dave Rolsky)
+
+    * Moose::Cookbook::Meta::Recipe4
+      - a very simple metaclass example (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe1
+      - how to write a Moose-alike module to use your own object base
+        class (Dave Rolsky)
+
+    * Moose::Cookbook::Extending::Recipe2
+      - how to write modules with an API just like C<Moose.pm> (Dave
+        Rolsky)
+
+    * all documentation
+      - Tons of fixes, both syntactical and grammatical (Dave
+        Rolsky, Paul Fenwick)
+
+0.54 Thurs. July 3, 2008
+    ... this is not my day today ...
+    
+    * Moose::Meta::Attribute
+      - fixed legal_options_for_inheritance such that 
+        clone_and_inherit options still works for 
+        Class::MOP::Attribute objects and therefore 
+        does not break MooseX::AttributeHelpers
+        (stevan)
+
+0.53 Thurs. July 3, 2008
+    * Whoops, I guess I should run 'make manifest' before 
+      actually releasing the module. No actual changes 
+      in this release, except the fact that it includes
+      the changes that I didn't include in the last 
+      release. (stevan--)
+
+0.52 Thurs. July 3, 2008
+    * Moose
+      - added "FEATURE REQUESTS" section to the Moose docs
+        to properly direct people (stevan) (RT #34333)
+      - making 'extends' croak if it is passed a Role since 
+        this is not ever something you want to do 
+        (fixed by stevan, found by obra)
+        - added tests for this (stevan)
+
+    * Moose::Object
+      - adding support for DOES (as in UNIVERSAL::DOES) 
+        (nothingmuch)
+        - added test for this
+
+    * Moose::Meta::Attribute
+      - added legal_options_for_inheritance (wreis)
+        - added tests for this (wreis)
+
+    * Moose::Cookbook::Snacks::*
+      - removed some of the unfinished snacks that should 
+        not have been released yet. Added some more examples
+        to the 'Keywords' snack. (stevan)
+
+    * Moose::Cookbook::Style
+      - added general Moose "style guide" of sorts to the 
+        cookbook (nothingmuch) (RT #34335)
+
+    * t/
+      - added more BUILDARGS tests (stevan)
+
+0.51 Thurs. Jun 26, 2008
     * Moose::Role
       - add unimport so "no Moose::Role" actually does
         something (sartak)
@@ -25,10 +268,21 @@ Revision history for Perl extension Moose
     * Moose::Meta::Attribute
       - added support for meta_attr->does("ShortAlias") (sartak)
         - added tests for this (sartak)
+      - moved the bulk of the `handles` handling to the new
+        install_delegation method (Stevan)
 
     * Moose::Object
+      - Added BUILDARGS, a new step in new()
+
     * Moose::Meta::Role::Application::RoleSummation
       - fix typos no one ever sees (sartak)
+
+    * Moose::Util::TypeConstraints
+    * Moose::Meta::TypeConstraint
+    * Moose::Meta::TypeCoercion
+      - Attempt to work around the ??{ } vs. threads issue
+        (not yet fixed)
+      - Some null_constraint optimizations
 
 0.50 Thurs. Jun 11, 2008
     - Fixed a version number issue by bumping all modules
@@ -114,7 +368,7 @@ Revision history for Perl extension Moose
 
 0.45 Saturday, May 24, 2008
     * Moose
-      - Because of work in Class::MOP 0.56, all 
+      - Because of work in Class::MOP 0.57, all 
         XS based functionality is now optional
         and a Pure Perl version is supplied
         - the CLASS_MOP_NO_XS environment variable
@@ -151,7 +405,7 @@ Revision history for Perl extension Moose
 
     * Moose::Meta::Class
       - added same 'add_package_symbol' fix as in 
-        Class::MOP 0.56
+        Class::MOP 0.57
 
     * Moose::Util
       - does_role now handles non-Moose classes 

@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use Moose;
 
 use Test::More tests => 1;
 use Test::Exception;

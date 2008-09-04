@@ -9,26 +9,33 @@ use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
 use Carp 'confess';
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-    my %params;
-    my $meta = $class->meta;
+    my $params = $class->BUILDARGS(@_);
+    my $self = $class->meta->new_object($params);
+    $self->BUILDALL($params);
+    return $self;
+}
+
+sub BUILDARGS {
+    my $class = shift;
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
-                || $meta->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
-            %params = %{$_[0]};
+                || $class->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
+            return {%{$_[0]}};
+        } 
+        else {
+            return {}; # FIXME this is compat behavior, but is it correct?
         }
-    }
+    } 
     else {
-        %params = @_;
+        return {@_};
     }
-    my $self = $meta->new_object(%params);
-    $self->BUILDALL(\%params);
-    return $self;
 }
 
 sub BUILDALL {
@@ -65,6 +72,16 @@ sub DESTROY {
     }
     # otherwise it is normal destruction
     $_[0]->DEMOLISHALL;
+}
+
+# support for UNIVERSAL::DOES ...
+BEGIN {
+    my $does = UNIVERSAL->can("DOES") ? "SUPER::DOES" : "isa";
+    eval 'sub DOES {
+        my ( $self, $class_or_role_name ) = @_;
+        return $self->'.$does.'($class_or_role_name)
+            || $self->does($class_or_role_name);
+    }';
 }
 
 # new does() methods will be created 
@@ -129,7 +146,12 @@ This will return the metaclass associated with the given class.
 
 =item B<new>
 
-This will create a new instance and call C<BUILDALL>.
+This will call C<BUILDARGS>, create a new instance and call C<BUILDALL>.
+
+=item B<BUILDARGS>
+
+This method processes an argument list into a hash reference. It is used by
+C<new>.
 
 =item B<BUILDALL>
 
@@ -144,6 +166,12 @@ This will call every C<DEMOLISH> method in the inheritance hierarchy.
 
 This will check if the invocant's class C<does> a given C<$role_name>. 
 This is similar to C<isa> for object, but it checks the roles instead.
+
+=item B<DOES ($class_or_role_name)>
+
+A Moose Role aware implementation of L<UNIVERSAL/DOES>.
+
+C<DOES> is equivalent to C<isa> or C<does>.
 
 =item B<dump ($maxdepth)>
 

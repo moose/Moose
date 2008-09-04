@@ -5,12 +5,10 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 5;
+use Test::More tests => 4;
 use Test::Exception;
 
-BEGIN {
-	use_ok('Moose');
-}
+
 
 $SIG{__WARN__} = sub { 0 };
 

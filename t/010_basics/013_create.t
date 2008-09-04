@@ -3,14 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 7;
 use Test::Exception;
-
-BEGIN {
-    use_ok('Moose::Meta::Class');
-    use_ok('Moose');
-    use_ok('Moose::Role');
-}
 
 { 
     package Class;

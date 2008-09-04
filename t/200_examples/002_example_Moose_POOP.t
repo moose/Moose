@@ -10,7 +10,7 @@ BEGIN {
     plan skip_all => "DBM::Deep 1.0003 (or greater) is required for this test" if $@;              
     eval "use DateTime::Format::MySQL;";
     plan skip_all => "DateTime::Format::MySQL is required for this test" if $@;            
-    plan tests => 89;    
+    plan tests => 88;    
 }
 
 use Test::Exception;
@@ -24,9 +24,7 @@ END {
     unlink('newswriter.db') if -e 'newswriter.db';
 }
 
-BEGIN {
-    use_ok('Moose');           
-}
+
 
 =pod
 
@@ -139,9 +137,10 @@ BEGIN {
     extends 'Moose::Meta::Class';    
     
     override 'construct_instance' => sub {
-        my ($class, %params) = @_;
-        return $class->get_meta_instance->find_instance($params{oid}) 
-            if $params{oid};
+        my $class = shift;
+        my $params = @_ == 1 ? $_[0] : {@_};
+        return $class->get_meta_instance->find_instance($params->{oid}) 
+            if $params->{oid};
         super();
     };
 

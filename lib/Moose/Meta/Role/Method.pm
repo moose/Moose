@@ -4,7 +4,8 @@ package Moose::Meta::Role::Method;
 use strict;
 use warnings;
 
-our $VERSION   = '0.50';
+our $VERSION   = '0.57';
+$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Method';
