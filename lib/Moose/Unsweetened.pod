@@ -41,9 +41,10 @@ First, we define two very small classes the Moose way.
       => via { $en_parser->parse_datetime($_) };
 
   has birth_date => (
-      is     => 'rw',
-      isa    => 'DateTime',
-      coerce => 1,
+      is      => 'rw',
+      isa     => 'DateTime',
+      coerce  => 1,
+      handles => { birth_year => 'year' },
   );
 
   subtype 'ShirtSize'
@@ -194,6 +195,12 @@ helpers like C<Class::Accessor>.
       }
 
       return $self->{birth_date};
+  }
+
+  sub birth_year {
+      my $self = shift;
+
+      return $self->birth_date->year;
   }
 
   sub shirt_size {
