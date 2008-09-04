@@ -314,7 +314,9 @@ our way to writing a half-assed version of Moose!
 Of course, there are CPAN modules that do some of what Moose does,
 like C<Class::Accessor>, C<Class::Meta>, and so on. But none of them
 put together all of Moose's features along with a layer of declarative
-sugar.
+sugar, nor are these other modules designed for extensibility in the
+same way as Moose. With Moose, it's easy to write a MooseX module to
+replace or extend a piece of built-in functionality.
 
 =head1 AUTHOR
 
