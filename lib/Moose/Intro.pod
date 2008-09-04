@@ -132,11 +132,12 @@ A class I<has> zero or more B<attributes>.
 
 A class I<has> zero or more B<methods>.
 
-A class I<may have> one or more superclasses (aka parent classes). A
+A class I<has> zero or more superclasses (aka parent classes). A
 class inherits from its superclass(es).
 
-A class may I<have> B<method modifiers>. These modifiers can apply to
-its own methods or methods that are inherited from its ancestors.
+A class I<has> zero or more B<method modifiers>. These modifiers can
+apply to its own methods or methods that are inherited from its
+ancestors.
 
 A class may I<do> one or more B<roles>.
 
