@@ -41,8 +41,9 @@ First, we define two very small classes the Moose way.
       => via { $en_parser->parse_datetime($_) };
 
   has birth_date => (
-      is  => 'rw',
-      isa => 'DateTime',
+      is     => 'rw',
+      isa    => 'DateTime',
+      coerce => 1,
   );
 
   subtype 'ShirtSize'
