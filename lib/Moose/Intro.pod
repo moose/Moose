@@ -104,14 +104,14 @@ your classes!>
 
 Moose will provide one for you. It will accept a hash or hash
 reference of named parameters matching your attributes. This is just
-another way in which Moose keeps your from worrying I<how> classes are
+another way in which Moose keeps you from worrying I<how> classes are
 implemented. Simply define a class and you're ready to start creating
 objects!
 
 =head1 MOOSE CONCEPTS (VS "OLD SCHOOL" Perl)
 
 In the past, you may not have thought too much about the difference
-between packages and classes, attributes and methods, constructors vs
+between packages and classes, attributes and methods, constructors and
 methods, etc. Part of what the MOP provides is well-defined
 introspection features for each of those things, and in turn Moose
 provides I<distinct> sugar for each of them. Moose also introduces
@@ -145,7 +145,7 @@ A class I<has> a B<constructor> and a B<destructor>. These are
 provided for you "for free" by Moose.
 
 The B<constructor> accepts named parameters corresponding to the
-class's attributes and uses them to initialize an B<object instances>.
+class's attributes and uses them to initialize an B<object instance>.
 
 A class I<has> a B<metaclass>, which in turn has B<meta-attributes>,
 B<meta-methods>, and B<meta-roles>. This metaclass I<describes> the
@@ -183,7 +183,7 @@ It is best to think of Moose attributes as "properties" of the
 I<opaque> B<object instance>. These properties are accessed through
 well-defined accessor methods.
 
-An attribute is usually analagous to specific feature of something in
+An attribute is usually analogous to specific feature of something in
 the class's category. For example, People have first and last
 names. Users have passwords and last login datetimes.
 
@@ -205,7 +205,7 @@ example, a User can login.
 =head2 Roles
 
 A role is something that a class I<does>. For example, a Machine class
-might do the Breakable role, and a so could a Bone class. A role is
+might do the Breakable role, and so could a Bone class. A role is
 used to define some concept that cuts across multiple unrelated
 classes, like "breakability", or "has a color".
 
@@ -223,7 +223,7 @@ method says "to use this Role you must implement this method".
 Roles are I<composed> into classes (or other roles). When a role is
 composed into a class, its attributes and methods are "flattened" into
 the class. Roles I<do not> show up in the inheritance hierarchy. When
-a role is composed, it's attributes and methods appear as if they were
+a role is composed, its attributes and methods appear as if they were
 defined I<in the consuming class>.
 
 Role are somewhat like mixins or interfaces in other OO languages.
@@ -321,7 +321,7 @@ example, one specific Person or User. An instance is created by the
 class's B<constructor>.
 
 An instance has values for its attributes. For example, a specific
-person has a first and last name,
+person has a first and last name.
 
 In old school Perl 5, this is often a blessed hash reference. With
 Moose, you should never need to know what your object instance
@@ -433,7 +433,7 @@ L<Moose::Meta::TypeConstraint>, L<Moose::Meta::Instance>, and so on.
 
 =head1 BUT I NEED TO DO IT MY WAY!
 
-One of the great things about Moose, is that if you dig down and find
+One of the great things about Moose is that if you dig down and find
 that it does something the "wrong way", you can change it by extending
 a metaclass. For example, you can have arrayref based objects, you can
 make your constructors strict (no unknown params allowed!), you can
