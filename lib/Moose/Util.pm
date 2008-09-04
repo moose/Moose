@@ -5,7 +5,6 @@ use warnings;
 
 use Sub::Exporter;
 use Scalar::Util 'blessed';
-use Carp         'confess';
 use Class::MOP   0.57;
 
 our $VERSION   = '0.57';
@@ -73,7 +72,7 @@ sub search_class_by_role {
 sub apply_all_roles {
     my $applicant = shift;
 
-    confess "Must specify at least one role to apply to $applicant" unless @_;
+    Moose::throw_error("Must specify at least one role to apply to $applicant") unless @_;
 
     my $roles = Data::OptList::mkopt( [@_] );
 
@@ -84,9 +83,9 @@ sub apply_all_roles {
     }
 
     ( $_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role') )
-        || confess "You can only consume roles, "
+        || Moose::throw_error("You can only consume roles, "
         . $_->[0]
-        . " is not a Moose role"
+        . " is not a Moose role")
         foreach @$roles;
 
     if ( scalar @$roles == 1 ) {

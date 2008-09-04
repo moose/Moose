@@ -5,7 +5,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 our $VERSION   = '0.57';
@@ -19,8 +18,8 @@ sub compile_type_coercion {
     my $type_constraint = $self->type_constraint;
     
     (blessed $type_constraint && $type_constraint->isa('Moose::Meta::TypeConstraint::Union'))
-     || confess "You can only a Moose::Meta::TypeCoercion::Union for a " .
-                "Moose::Meta::TypeConstraint::Union, not a $type_constraint";
+     || Moose::throw_error("You can only a Moose::Meta::TypeCoercion::Union for a " .
+                "Moose::Meta::TypeConstraint::Union, not a $type_constraint");
     
     $self->_compiled_type_coercion(sub {
         my $value = shift;
@@ -44,7 +43,7 @@ sub compile_type_coercion {
 sub has_coercion_for_type { 0 }
 
 sub add_type_coercions {
-    confess "Cannot add additional type coercions to Union types";
+    Moose::throw_error("Cannot add additional type coercions to Union types");
 }
 
 1;

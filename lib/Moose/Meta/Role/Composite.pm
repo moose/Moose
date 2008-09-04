@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 our $VERSION   = '0.57';
@@ -35,7 +34,7 @@ sub new {
     my ($class, %params) = @_;
     # the roles param is required ...
     ($_->isa('Moose::Meta::Role'))
-        || confess "The list of roles must be instances of Moose::Meta::Role, not $_"
+        || Moose::throw_error("The list of roles must be instances of Moose::Meta::Role, not $_")
             foreach @{$params{roles}};
     # and the name is created from the
     # roles if one has not been provided
@@ -51,7 +50,7 @@ sub new {
 sub alias_method {
     my ($self, $method_name, $method) = @_;
     (defined $method_name && $method_name)
-        || confess "You must define a method name";
+        || Moose::throw_error("You must define a method name");
 
     # make sure to bless the 
     # method if nessecary 

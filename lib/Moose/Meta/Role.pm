@@ -5,7 +5,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 our $VERSION   = '0.57';
@@ -215,8 +214,8 @@ $META->add_attribute('override_method_modifiers' => (
 sub add_override_method_modifier {
     my ($self, $method_name, $method) = @_;
     (!$self->has_method($method_name))
-        || confess "Cannot add an override of method '$method_name' " .
-                   "because there is a local version of '$method_name'";
+        || Moose::throw_error("Cannot add an override of method '$method_name' " .
+                   "because there is a local version of '$method_name'");
     $self->get_override_method_modifiers_map->{$method_name} = $method;
 }
 
@@ -260,7 +259,7 @@ __PACKAGE__->meta->add_attribute('roles' => (
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || confess "Roles must be instances of Moose::Meta::Role";
+        || Moose::throw_error("Roles must be instances of Moose::Meta::Role");
     push @{$self->get_roles} => $role;
     $self->reset_package_cache_flag;
 }
@@ -278,7 +277,7 @@ sub calculate_all_roles {
 sub does_role {
     my ($self, $role_name) = @_;
     (defined $role_name)
-        || confess "You must supply a role name to look for";
+        || Moose::throw_error("You must supply a role name to look for");
     # if we are it,.. then return true
     return 1 if $role_name eq $self->name;
     # otherwise.. check our children
@@ -375,7 +374,7 @@ sub wrap_method_body {
     my $body = delete $args{body}; # delete is for compat
 
     ('CODE' eq ref($body))
-        || confess "Your code block must be a CODE reference";
+        || Moose::throw_error("Your code block must be a CODE reference");
 
     $self->method_metaclass->wrap( $body => (
         package_name => $self->name,
@@ -386,7 +385,7 @@ sub wrap_method_body {
 sub add_method {
     my ($self, $method_name, $method) = @_;
     (defined $method_name && $method_name)
-    || confess "You must define a method name";
+    || Moose::throw_error("You must define a method name");
 
     my $body;
     if (blessed($method)) {
@@ -430,11 +429,11 @@ sub get_method_list {
 sub alias_method {
     my ($self, $method_name, $method) = @_;
     (defined $method_name && $method_name)
-        || confess "You must define a method name";
+        || Moose::throw_error("You must define a method name");
 
     my $body = (blessed($method) ? $method->body : $method);
     ('CODE' eq ref($body))
-        || confess "Your code block must be a CODE reference";
+        || Moose::throw_error("Your code block must be a CODE reference");
 
     $self->add_package_symbol(
         { sigil => '&', type => 'CODE', name => $method_name },
@@ -450,7 +449,7 @@ sub apply {
     my ($self, $other, @args) = @_;
 
     (blessed($other))
-        || confess "You must pass in an blessed instance";
+        || Moose::throw_error("You must pass in an blessed instance");
         
     if ($other->isa('Moose::Meta::Role')) {
         require Moose::Meta::Role::Application::ToRole;

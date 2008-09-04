@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp            'confess';
 use Scalar::Util    'blessed';
 
 our $VERSION   = '0.57';
@@ -21,10 +20,10 @@ sub apply {
 
 sub check_role_exclusions {
     my ($self, $role1, $role2) = @_;
-    confess "Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'"
+    Moose::throw_error("Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'")
         if $role2->excludes_role($role1->name);
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
-        confess "The class " . $role2->name . " does the excluded role '$excluded_role_name'"
+        Moose::throw_error("The class " . $role2->name . " does the excluded role '$excluded_role_name'")
             if $role2->does_role($excluded_role_name);
         $role2->add_excluded_roles($excluded_role_name);
     }
@@ -52,8 +51,8 @@ sub apply_attributes {
         if ($role2->has_attribute($attribute_name) &&
             # make sure we haven't seen this one already too
             $role2->get_attribute($attribute_name) != $role1->get_attribute($attribute_name)) {
-            confess "Role '" . $role1->name . "' has encountered an attribute conflict " .
-                    "during composition. This is fatal error and cannot be disambiguated.";
+            Moose::throw_error("Role '" . $role1->name . "' has encountered an attribute conflict " .
+                    "during composition. This is fatal error and cannot be disambiguated.");
         }
         else {
             $role2->add_attribute(
@@ -76,7 +75,7 @@ sub apply_methods {
             if ($role2->has_method($aliased_method_name) &&
                 # and if they are not the same thing ...
                 $role2->get_method($aliased_method_name)->body != $role1->get_method($method_name)->body) {
-                confess "Cannot create a method alias if a local method of the same name exists";
+                Moose::throw_error("Cannot create a method alias if a local method of the same name exists");
             }
 
             $role2->alias_method(
@@ -120,9 +119,9 @@ sub apply_override_method_modifiers {
             # we have a conflict here, because you cannot
             # combine an overriden method with a locally
             # defined one
-            confess "Role '" . $role1->name . "' has encountered an 'override' method conflict " .
+            Moose::throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
                     "during composition (A local method of the same name as been found). This " .
-                    "is fatal error.";
+                    "is fatal error.");
         }
         else {
             # if we are a role, we need to make sure
@@ -130,9 +129,9 @@ sub apply_override_method_modifiers {
             # we are composing into
             if ($role2->has_override_method_modifier($method_name) &&
                 $role2->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
-                confess "Role '" . $role1->name . "' has encountered an 'override' method conflict " .
+                Moose::throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
                         "during composition (Two 'override' methods of the same name encountered). " .
-                        "This is fatal error.";
+                        "This is fatal error.");
             }
             else {
                 # if there is no conflict,
