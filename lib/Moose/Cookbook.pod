@@ -84,20 +84,20 @@ These recipes will show you how to use Moose roles.
 
 =over 4
 
-=item L<Moose::Cookbook::Role::Recipe1> - The Moose::Role example
+=item L<Moose::Cookbook::Roles::Recipe1> - The Moose::Role example
 
 Demonstrates roles, which are also sometimes known as traits or
 mix-ins. Roles provide a method of code re-use which is orthogonal to
 subclassing.
 
-=item L<Moose::Cookbook::Role::Recipe2> - Advanced Role Composition - method exclusion and aliasing
+=item L<Moose::Cookbook::Roles::Recipe2> - Advanced Role Composition - method exclusion and aliasing
 
 Sometimes you just want to include part of a role in your
 class. Sometimes you want the whole role but one if its methods
 conflicts with one in your class. With method exclusion and aliasing,
 you can work around these problems.
 
-=item L<Moose::Cookbook::Role::Recipe3> - Runtime Role Composition (TODO)
+=item L<Moose::Cookbook::Roles::Recipe3> - Runtime Role Composition (TODO)
 
 I<abstract goes here>
 
