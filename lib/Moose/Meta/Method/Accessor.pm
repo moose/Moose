@@ -272,7 +272,7 @@ sub _inline_auto_deref {
         $sigil = '%';
     }
     else {
-        $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", data => $type_constraint );
+        $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", type_constraint => $type_constraint );
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";

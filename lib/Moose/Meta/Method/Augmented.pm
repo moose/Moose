@@ -3,8 +3,6 @@ package Moose::Meta::Method::Augmented;
 use strict;
 use warnings;
 
-use Carp 'confess';
-
 our $VERSION   = '0.57';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';

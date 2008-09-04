@@ -544,7 +544,7 @@ sub get_value {
             return wantarray ? %{ $rv } : $rv;
         }
         else {
-            $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", object => $instance, data => $type_constraint);
+            $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", object => $instance, type_constraint => $type_constraint);
         }
 
     }
@@ -773,7 +773,7 @@ I<Attribute (x) does not pass the type constraint (Int) with 'fourty-two'>
 
 Before setting the value, a check is made on the type constraint of
 the attribute, if it has one, to see if the value passes it. If the
-value fails to pass, the set operation dies with a L<Carp/confess>.
+value fails to pass, the set operation dies with a L<throw_error>.
 
 Any coercion to convert values is done before checking the type constraint.
 
