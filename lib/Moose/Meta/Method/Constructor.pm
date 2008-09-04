@@ -19,10 +19,10 @@ sub new {
     my $meta = $options{metaclass};
 
     (ref $options{options} eq 'HASH')
-        || $meta->throw_error("You must pass a hash of options", data => $options{options});
+        || $class->throw_error("You must pass a hash of options", data => $options{options});
 
     ($options{package_name} && $options{name})
-        || $meta->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
+        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
 
     my $self = bless {
         # from our superclass
