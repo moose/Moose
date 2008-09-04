@@ -21,7 +21,8 @@ sub throw_error {
     unshift @_, "message" if @_ % 2 == 1;
     unshift @_, method => $self if ref $self;
     unshift @_, $inv;
-    goto $inv->can("throw_error"); # to avoid incrementing depth by 1
+    my $handler = $inv->can("throw_error");
+    goto $handler; # to avoid incrementing depth by 1
 }
 
 sub _inline_throw_error {
