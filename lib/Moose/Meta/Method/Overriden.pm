@@ -3,8 +3,6 @@ package Moose::Meta::Method::Overriden;
 use strict;
 use warnings;
 
-use Carp 'confess';
-
 our $VERSION   = '0.57';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -25,7 +23,7 @@ sub new {
     my $super = $args{class}->find_next_method_by_name($name);
 
     (defined $super)
-        || confess "You cannot override '$name' because it has no super method";
+        || $class->throw_error("You cannot override '$name' because it has no super method", data => $name);
 
     my $super_body = $super->body;
 

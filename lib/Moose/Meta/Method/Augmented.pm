@@ -3,8 +3,6 @@ package Moose::Meta::Method::Augmented;
 use strict;
 use warnings;
 
-use Carp 'confess';
-
 our $VERSION   = '0.57';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -24,7 +22,7 @@ sub new {
     my $super = $meta->find_next_method_by_name($name);
 
     (defined $super)
-        || confess "You cannot augment '$name' because it has no super method";
+        || $meta->throw_error("You cannot augment '$name' because it has no super method", data => $name);
 
     my $_super_package = $super->package_name;
     # BUT!,... if this is an overriden method ....

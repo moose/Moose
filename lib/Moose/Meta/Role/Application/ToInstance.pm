@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 our $VERSION   = '0.57';

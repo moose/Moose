@@ -4,7 +4,6 @@ package Moose::Meta::Method::Destructor;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
 our $VERSION   = '0.57';
@@ -18,12 +17,12 @@ sub new {
     my $class   = shift;
     my %options = @_;
     
-    (exists $options{options} && ref $options{options} eq 'HASH')
-        || confess "You must pass a hash of options";    
-        
+    (ref $options{options} eq 'HASH')
+        || $class->throw_error("You must pass a hash of options", data => $options{options});
+
     ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";        
-    
+        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
+
     my $self = bless {
         # from our superclass
         'body'                 => undef, 
@@ -57,7 +56,7 @@ sub is_needed {
     # then must pass in a class name
     unless (blessed $self) {
         (blessed $_[0] && $_[0]->isa('Class::MOP::Class')) 
-            || confess "When calling is_needed as a class method you must pass a class name";
+            || $self->throw_error("When calling is_needed as a class method you must pass a class name");
         return $_[0]->meta->can('DEMOLISH');
     }
     defined $self->{'body'} ? 1 : 0 
@@ -92,7 +91,7 @@ sub initialize_body {
     my $code;
     {
         $code = eval $source;
-        confess "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@" if $@;
+        $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source) if $@;
     }
     $self->{'body'} = $code;
 }

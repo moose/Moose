@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp            'confess';
 use Scalar::Util    'blessed';
 
 our $VERSION   = '0.57';
@@ -22,11 +21,11 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role, $class) = @_;
     if ($class->excludes_role($role->name)) {
-        confess "Conflict detected: " . $class->name . " excludes role '" . $role->name . "'";
+        $class->throw_error("Conflict detected: " . $class->name . " excludes role '" . $role->name . "'");
     }
     foreach my $excluded_role_name ($role->get_excluded_roles_list) {
         if ($class->does_role($excluded_role_name)) {
-            confess "The class " . $class->name . " does the excluded role '$excluded_role_name'";
+            $class->throw_error("The class " . $class->name . " does the excluded role '$excluded_role_name'");
         }
     }
 }
@@ -45,8 +44,8 @@ sub check_required_methods {
             
             next if $self->is_aliased_method($required_method_name);
             
-            confess "'" . $role->name . "' requires the method '$required_method_name' " .
-                    "to be implemented by '" . $class->name . "'";
+            $class->throw_error("'" . $role->name . "' requires the method '$required_method_name' " .
+                    "to be implemented by '" . $class->name . "'");
         }
         else {
             # NOTE:
@@ -57,8 +56,8 @@ sub check_required_methods {
 
             # check if it is a generated accessor ...
             (!$method->isa('Class::MOP::Method::Accessor'))
-                || confess "'" . $role->name . "' requires the method '$required_method_name' " .
-                           "to be implemented by '" . $class->name . "', the method is only an attribute accessor";
+                || $class->throw_error("'" . $role->name . "' requires the method '$required_method_name' " .
+                           "to be implemented by '" . $class->name . "', the method is only an attribute accessor");
 
             # NOTE:
             # All other tests here have been removed, they were tests
@@ -123,7 +122,7 @@ sub apply_methods {
             if ($class->has_method($aliased_method_name) &&
                 # and if they are not the same thing ...
                 $class->get_method($aliased_method_name)->body != $role->get_method($method_name)->body) {
-                confess "Cannot create a method alias if a local method of the same name exists";
+                $class->throw_error("Cannot create a method alias if a local method of the same name exists");
             }            
             $class->alias_method(
                 $aliased_method_name,

@@ -7,8 +7,6 @@ use warnings;
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-use Carp 'confess';
-
 our $VERSION   = '0.57';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -26,7 +24,7 @@ sub BUILDARGS {
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
-                || confess "Single parameters to new() must be a HASH ref";
+                || $class->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
             return {%{$_[0]}};
         } 
         else {
@@ -88,9 +86,9 @@ BEGIN {
 # as approiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
-    (defined $role_name)
-        || confess "You must supply a role name to does()";
     my $meta = $self->meta;
+    (defined $role_name)
+        || $meta->throw_error("You much supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
         return 1 

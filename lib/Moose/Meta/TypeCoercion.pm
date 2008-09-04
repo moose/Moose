@@ -5,8 +5,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp 'confess';
-
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
@@ -46,7 +44,7 @@ sub compile_type_coercion {
         my ($constraint_name, $action) = splice(@coercion_map, 0, 2);
         my $type_constraint = ref $constraint_name ? $constraint_name : Moose::Util::TypeConstraints::find_or_parse_type_constraint($constraint_name);
         (defined $type_constraint)
-            || confess "Could not find the type constraint ($constraint_name) to coerce from";
+            || Moose::throw_error("Could not find the type constraint ($constraint_name) to coerce from");
         push @coercions => [ 
             $type_constraint->_compiled_type_constraint, 
             $action 
@@ -80,7 +78,7 @@ sub add_type_coercions {
     while (@new_coercion_map) {
         my ($constraint_name, $action) = splice(@new_coercion_map, 0, 2);        
         
-        confess "A coercion action already exists for '$constraint_name'"
+        Moose::throw_error("A coercion action already exists for '$constraint_name'")
             if exists $has_coercion{$constraint_name};
         
         push @{$coercion_map} => ($constraint_name, $action);

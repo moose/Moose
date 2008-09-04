@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Carp            'confess';
 use Scalar::Util    'blessed';
 
 use Moose::Meta::Role::Composite;
@@ -72,7 +71,7 @@ sub check_role_exclusions {
 
     foreach my $role (@{$c->get_roles}) {
         foreach my $excluded (@all_excluded_roles) {
-            confess "Conflict detected: " . $role->name . " excludes role '" . $excluded . "'"
+            Moose::throw_error("Conflict detected: " . $role->name . " excludes role '" . $excluded . "'")
                 if $role->does_role($excluded);
         }
     }
@@ -119,8 +118,8 @@ sub apply_attributes {
     my %seen;
     foreach my $attr (@all_attributes) {
         if (exists $seen{$attr->{name}}) {
-            confess "We have encountered an attribute conflict with '" . $attr->{name} . "' " 
-                  . "during composition. This is fatal error and cannot be disambiguated."
+            Moose::throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' " 
+                  . "during composition. This is fatal error and cannot be disambiguated.")
                 if $seen{$attr->{name}} != $attr->{attr};           
         }
         $seen{$attr->{name}} = $attr->{attr};
@@ -189,14 +188,14 @@ sub apply_override_method_modifiers {
     
     my %seen;
     foreach my $override (@all_overrides) {
-        confess "Role '" . $c->name . "' has encountered an 'override' method conflict " .
+        Moose::throw_error( "Role '" . $c->name . "' has encountered an 'override' method conflict " .
                 "during composition (A local method of the same name as been found). This " .
-                "is fatal error."
+                "is fatal error." )
             if $c->has_method($override->{name});        
         if (exists $seen{$override->{name}}) {
-            confess "We have encountered an 'override' method conflict during " .
+            Moose::throw_error( "We have encountered an 'override' method conflict during " .
                     "composition (Two 'override' methods of the same name encountered). " .
-                    "This is fatal error."
+                    "This is fatal error.")
                 if $seen{$override->{name}} != $override->{method};                
         }
         $seen{$override->{name}} = $override->{method};

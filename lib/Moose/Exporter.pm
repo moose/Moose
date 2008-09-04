@@ -3,7 +3,6 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-use Carp qw( confess );
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
@@ -231,8 +230,7 @@ sub _make_sub_exporter_params {
                 _apply_meta_traits( $CALLER, $traits );
             }
             elsif ( @{$traits} ) {
-                confess
-                    "Cannot provide traits when $class does not have an init_meta() method";
+                Moose::throw_error("Cannot provide traits when $class does not have an init_meta() method");
             }
 
             goto $exporter;
@@ -262,9 +260,9 @@ sub _apply_meta_traits {
     my $meta = $class->meta();
 
     my $type = ( split /::/, ref $meta )[-1]
-        or confess
+        or Moose::throw_error(
         'Cannot determine metaclass type for trait application . Meta isa '
-        . ref $meta;
+        . ref $meta );
 
     my @resolved_traits
         = map { Moose::Util::resolve_metatrait_alias( $type => $_ ) }
