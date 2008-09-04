@@ -812,11 +812,10 @@ to work. Here is an example:
 
 =head1 EXTENDING AND EMBEDDING MOOSE
 
-Moose also offers some options for extending or embedding it into your
-own framework. To learn more about extending Moose, we recommend
-checking out the "Extending" recipes in the L<Moose::Cookbook>,
-starting with L<Moose::Cookbook::Extending::Recipe1>, which provides
-an overview of all the different ways you might extend Moose.
+To learn more about extending Moose, we recommend checking out the
+"Extending" recipes in the L<Moose::Cookbook>, starting with
+L<Moose::Cookbook::Extending::Recipe1>, which provides an overview of
+all the different ways you might extend Moose.
 
 =head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
 
