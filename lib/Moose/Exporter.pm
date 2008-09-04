@@ -230,7 +230,7 @@ sub _make_sub_exporter_params {
                 _apply_meta_traits( $CALLER, $traits );
             }
             elsif ( @{$traits} ) {
-                Moose::throw_error("Cannot provide traits when $class does not have an init_meta() method");
+                Moose->throw_error("Cannot provide traits when $class does not have an init_meta() method");
             }
 
             goto $exporter;
@@ -260,7 +260,7 @@ sub _apply_meta_traits {
     my $meta = $class->meta();
 
     my $type = ( split /::/, ref $meta )[-1]
-        or Moose::throw_error(
+        or Moose->throw_error(
         'Cannot determine metaclass type for trait application . Meta isa '
         . ref $meta );
 

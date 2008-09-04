@@ -36,7 +36,11 @@ use Moose::Meta::Role::Application::ToInstance;
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
-BEGIN { *throw_error = \&confess } # FIXME make this smarter
+sub throw_error {
+    # FIXME This 
+    shift;
+    goto \&confess
+}
 
 sub extends {
     my $class = shift;
@@ -153,12 +157,11 @@ sub init_meta {
     my %args = @_;
 
     my $class = $args{for_class}
-        or throw_error "Cannot call init_meta without specifying a for_class";
+        or Moose->throw_error("Cannot call init_meta without specifying a for_class");
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
 
-    throw_error
-        "The Metaclass $metaclass must be a subclass of Moose::Meta::Class."
+    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
         unless $metaclass->isa('Moose::Meta::Class');
 
     # make a subtype for each Moose class
@@ -169,7 +172,7 @@ sub init_meta {
 
     if ( $meta = Class::MOP::get_metaclass_by_name($class) ) {
         unless ( $meta->isa("Moose::Meta::Class") ) {
-            throw_error "$class already has a metaclass, but it does not inherit $metaclass ($meta)";
+            Moose->throw_error("$class already has a metaclass, but it does not inherit $metaclass ($meta)");
         }
     } else {
         # no metaclass, no 'meta' method
@@ -211,7 +214,7 @@ sub init_meta {
         my $method_meta = $class->meta;
 
         ( blessed($method_meta) && $method_meta->isa('Moose::Meta::Class') )
-            || throw_error "$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)";
+            || Moose->throw_error("$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)");
 
         $meta = $method_meta;
     }

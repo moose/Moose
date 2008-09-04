@@ -65,7 +65,7 @@ sub new {
     return $self;
 }
 
-sub coerce   { ((shift)->coercion || Moose::throw_error("Cannot coerce without a type coercion"))->coerce(@_) }
+sub coerce   { ((shift)->coercion || Moose->throw_error("Cannot coerce without a type coercion"))->coerce(@_) }
 sub check    { $_[0]->_compiled_type_constraint->($_[1]) ? 1 : undef }
 sub validate {
     my ($self, $value) = @_;
@@ -154,7 +154,7 @@ sub _actually_compile_type_constraint {
 
     my $check = $self->constraint;
     (defined $check)
-        || Moose::throw_error("Could not compile type constraint '"
+        || Moose->throw_error("Could not compile type constraint '"
                 . $self->name
                 . "' because no constraint check");
 
@@ -169,7 +169,7 @@ sub _compile_hand_optimized_type_constraint {
 
     my $type_constraint = $self->hand_optimized_type_constraint;
 
-    Moose::throw_error("Hand optimized type constraint is not a code reference") unless ref $type_constraint;
+    Moose->throw_error("Hand optimized type constraint is not a code reference") unless ref $type_constraint;
 
     return $type_constraint;
 }

@@ -59,7 +59,7 @@ sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 # this was changed in 0.41, but broke MooseX::Singleton, so try to catch
 # any other code using the original broken spelling
-sub intialize_body { Moose::throw_error("Please correct the spelling of 'intialize_body' to 'initialize_body'") }
+sub intialize_body { Moose->throw_error("Please correct the spelling of 'intialize_body' to 'initialize_body'") }
 
 sub initialize_body {
     my $self = shift;

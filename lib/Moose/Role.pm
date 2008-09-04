@@ -123,7 +123,7 @@ sub init_meta {
     my %args = @_;
 
     my $role = $args{for_class}
-        or Moose::throw_error("Cannot call init_meta without specifying a for_class");
+        or Moose->throw_error("Cannot call init_meta without specifying a for_class");
 
     my $metaclass = $args{metaclass} || "Moose::Meta::Role";
 
@@ -135,7 +135,7 @@ sub init_meta {
     if ($role->can('meta')) {
         $meta = $role->meta();
         (blessed($meta) && $meta->isa('Moose::Meta::Role'))
-            || Moose::throw_error("You already have a &meta function, but it does not return a Moose::Meta::Role");
+            || Moose->throw_error("You already have a &meta function, but it does not return a Moose::Meta::Role");
     }
     else {
         $meta = $metaclass->initialize($role);
