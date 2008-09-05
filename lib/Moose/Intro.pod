@@ -183,7 +183,7 @@ It is best to think of Moose attributes as "properties" of the
 I<opaque> B<object instance>. These properties are accessed through
 well-defined accessor methods.
 
-An attribute is usually analogous to specific feature of something in
+An attribute is usually analogous to a specific feature of something in
 the class's category. For example, People have first and last
 names. Users have passwords and last login datetimes.
 
