@@ -24,7 +24,7 @@ sub BUILDARGS {
     if (scalar @_ == 1) {
         if (defined $_[0]) {
             (ref($_[0]) eq 'HASH')
-                || $class->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
+                || $class->meta->throw_error("Single parameters to new() must be a HASH ref", data => $_[0]);
             return {%{$_[0]}};
         } 
         else {
