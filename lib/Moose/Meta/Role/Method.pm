@@ -8,7 +8,7 @@ our $VERSION   = '0.57';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Class::MOP::Method';
+use base 'Moose::Meta::Method';
 
 1;
 
