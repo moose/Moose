@@ -78,7 +78,7 @@ sub apply_methods {
                 Moose->throw_error("Cannot create a method alias if a local method of the same name exists");
             }
 
-            $role2->alias_method(
+            $role2->add_method(
                 $aliased_method_name,
                 $role1->get_method($method_name)
             );
@@ -100,7 +100,7 @@ sub apply_methods {
         }
         else {
             # add it, although it could be overriden
-            $role2->alias_method(
+            $role2->add_method(
                 $method_name,
                 $role1->get_method($method_name)
             );

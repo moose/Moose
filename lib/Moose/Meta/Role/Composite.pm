@@ -42,23 +42,29 @@ sub new {
     $class->_new(\%params);
 }
 
-# NOTE:
-# we need to override this cause 
-# we dont have that package I was
-# talking about above.
-# - SL
-sub alias_method {
+# This is largely a cope of what's in Moose::Meta::Role (itself
+# largely a copy of Class::MOP::Class). However, we can't actually
+# call add_package_symbol, because there's no package to which which
+# add the symbol.
+sub add_method {
     my ($self, $method_name, $method) = @_;
     (defined $method_name && $method_name)
-        || Moose->throw_error("You must define a method name");
+    || Moose->throw_error("You must define a method name");
 
-    # make sure to bless the 
-    # method if nessecary 
-    $method = $self->method_metaclass->wrap(
-        $method,
-        package_name => $self->name,
-        name         => $method_name
-    ) if !blessed($method);
+    my $body;
+    if (blessed($method)) {
+        $body = $method->body;
+        if ($method->package_name ne $self->name) {
+            $method = $method->clone(
+                package_name => $self->name,
+                name         => $method_name            
+            ) if $method->can('clone');
+        }
+    }
+    else {
+        $body = $method;
+        $method = $self->wrap_method_body( body => $body, name => $method_name );
+    }
 
     $self->get_method_map->{$method_name} = $method;
 }
@@ -87,7 +93,7 @@ Moose::Meta::Role::Composite - An object to represent the set of roles
 
 =item B<get_method_map>
 
-=item B<alias_method>
+=item B<add_method>
 
 =back
 
