@@ -202,11 +202,7 @@ ok( $gorch->has_attribute("attr"), "has attribute 'attr'" );
 req_or_has($gorch, "gorch_method");
 ok( $gorch->has_method("gorch_method"), "has_method gorch_method" );
 ok( !$gorch->requires_method("gorch_method"), "requires gorch method" );
-
-{
-    local $TODO = "role method isn't a meta object yet";
-    isa_ok( $gorch->get_method("gorch_method"), "Moose::Meta::Method" );
-}
+isa_ok( $gorch->get_method("gorch_method"), "Moose::Meta::Method" );
 
 {
     local $TODO = "method modifier doesn't yet create a method requirement or meta object";
