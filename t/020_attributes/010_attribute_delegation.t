@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 85;
+use Test::More tests => 86;
 use Test::Exception;
 
 
@@ -37,7 +37,10 @@ isa_ok($bar, 'Bar');
 ok($bar->foo, '... we have something in bar->foo');
 isa_ok($bar->foo, 'Foo');
 
-isa_ok(Bar->meta->get_method('foo_bar'), 'Moose::Meta::Method::Delegation');
+my $meth = Bar->meta->get_method('foo_bar');
+isa_ok($meth, 'Moose::Meta::Method::Delegation');
+is($meth->associated_attribute->name, 'foo',
+   'associated_attribute->name for this method is foo');
 
 is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
 
