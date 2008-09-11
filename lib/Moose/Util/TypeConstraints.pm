@@ -142,12 +142,12 @@ sub _create_parameterized_type_constraint {
     my ($tc_name, $base_type_tc, $type_parameter_str) = @_;
     if($base_type_tc->can('parameterize')) {
         my @type_parameters_tc = $base_type_tc->parse_parameter_str($type_parameter_str);  
-        return $base_type_tc->parameterize($tc_name,@type_parameters_tc);
+        return $base_type_tc->parameterize($tc_name, @type_parameters_tc);
     } else {
         return Moose::Meta::TypeConstraint::Parameterized->new(
             name           => $tc_name,
             parent         => $base_type_tc,
-            type_parameter => find_or_create_isa_type_constraint[$type_parameter_str],
+            type_parameter => find_or_create_isa_type_constraint($type_parameter_str),
         );
     } 
 }
@@ -240,7 +240,7 @@ sub find_or_parse_type_constraint ($) {
     } else {
         return;
     }
-    
+
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
 }

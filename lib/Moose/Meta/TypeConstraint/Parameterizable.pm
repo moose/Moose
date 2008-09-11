@@ -10,6 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
 use Moose::Meta::TypeConstraint::Parameterized;
+use Moose::Util::TypeConstraints ();
 
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
@@ -43,7 +44,7 @@ sub _can_coerce_constraint_from {
 
 sub parse_parameter_str {
     my ($self, $type_str) = @_;
-    return find_or_create_isa_type_constraint($type_str);
+    return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_str);
 }
 
 sub parameterize {
