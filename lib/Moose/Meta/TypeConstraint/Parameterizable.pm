@@ -9,6 +9,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
+use Moose::Meta::TypeConstraint::Parameterized;
 
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
@@ -38,6 +39,24 @@ sub _can_coerce_constraint_from {
         local $_ = $coercion->coerce($_);
         $constraint->(@_);
     };
+}
+
+sub parameterize {
+	my ($self, $args) = @_;
+	
+	unless(ref $args eq 'ARRAY') {
+		  Moose->throw_error(
+			"The type constraint ".$self->name." requires it's argument to be an ArrayRef"
+		);
+	}
+	
+	my $contained_tc = find_or_create_isa_type_constraint($args->[0]);
+	
+    return Moose::Meta::TypeConstraint::Parameterized->new(
+        name           => $self->name .'['.$contained_tc->name.']',
+        parent         => $self,
+        type_parameter => find_or_create_isa_type_constraint($contained_tc),
+    );	
 }
 
 

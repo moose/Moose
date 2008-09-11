@@ -47,3 +47,18 @@ ok $subtype1 => 'made a subtype from our type object';
 my $subtype2 = subtype 'New2' => as $subtype1;
 
 ok $subtype2 => 'made a subtype of our subtype';
+
+# testing the parameterize method
+
+{
+	package Test::Moose::Meta::TypeConstraint::Parameterizable;
+	
+	use Moose;
+	use Moose::Util::TypeConstraints;
+	
+	my $parameterizable = subtype 'parameterizable_hashref',
+		as 'HashRef';
+		
+	my $parameterized = subtype 'parameterized_hashref',
+		as 'HashRef[Int]';
+}
