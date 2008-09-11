@@ -121,19 +121,35 @@ sub create_type_constraint_union (@) {
 sub create_parameterized_type_constraint ($) {
     my $type_constraint_name = shift;
 
-    my ($base_type, $type_parameter) = _parse_parameterized_type_constraint($type_constraint_name);
+    my ($base_type, $type_parameter_str) = _parse_parameterized_type_constraint($type_constraint_name);
 
-    (defined $base_type && defined $type_parameter)
+    (defined $base_type && defined $type_parameter_str)
         || Moose->throw_error("Could not parse type name ($type_constraint_name) correctly");
 
-    ($REGISTRY->has_type_constraint($base_type))
-        || Moose->throw_error("Could not locate the base type ($base_type)");
+    if ($REGISTRY->has_type_constraint($base_type)) {
+        my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
+        return _create_parameterized_type_constraint(
+            $type_constraint_name,
+            $base_type_tc,
+            $type_parameter_str,
+        );
+    } else {
+        Moose->throw_error("Could not locate the base type ($base_type)");
+    }
+}
 
-    return Moose::Meta::TypeConstraint::Parameterized->new(
-        name           => $type_constraint_name,
-        parent         => $REGISTRY->get_type_constraint($base_type),
-        type_parameter => find_or_create_isa_type_constraint($type_parameter),
-    );
+sub _create_parameterized_type_constraint {
+    my ($tc_name, $base_type_tc, $type_parameter_str) = @_;
+    my @type_parameters_tc = map {find_or_create_isa_type_constraint($_)} ($type_parameter_str);
+    if($base_type_tc->can('parameterize')) {
+        return $base_type_tc->parameterize($tc_name,@type_parameters_tc);
+    } else {
+        return Moose::Meta::TypeConstraint::Parameterized->new(
+            name           => $tc_name,
+            parent         => $base_type_tc,
+            type_parameter => $type_parameters_tc[0],
+        );
+    } 
 }
 
 #should we also support optimized checks?

@@ -42,20 +42,25 @@ sub _can_coerce_constraint_from {
 }
 
 sub parameterize {
-	my ($self, $args) = @_;
+	my ($self, @args) = @_;
+    
+    ## ugly hacking to deal with tc naming normalization issue
+    my ($tc_name, $contained_tc);
+    if (ref $args[0]) {
+        $contained_tc = shift @args;
+        $tc_name = $self->name .'['. $contained_tc->name .']';
+    } else {
+        ($tc_name, $contained_tc) = @args;
+    }
 	
-	unless(ref $args eq 'ARRAY') {
-		  Moose->throw_error(
-			"The type constraint ".$self->name." requires it's argument to be an ArrayRef"
-		);
+	unless($contained_tc->isa('Moose::Meta::TypeConstraint')) {
+		Moose->throw_error("The type parameter must be a Moose meta type");
 	}
 	
-	my $contained_tc = find_or_create_isa_type_constraint($args->[0]);
-	
     return Moose::Meta::TypeConstraint::Parameterized->new(
-        name           => $self->name .'['.$contained_tc->name.']',
+        name           => $tc_name,
         parent         => $self,
-        type_parameter => find_or_create_isa_type_constraint($contained_tc),
+        type_parameter => $contained_tc,
     );	
 }
 
@@ -80,6 +85,10 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 =item B<has_constraint_generator>
 
 =item B<generate_constraint_for>
+
+=item B<parameterize>
+
+Given an array of type constraints, parameterize the current type constraint.
 
 =item B<meta>
 
