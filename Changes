@@ -1,5 +1,17 @@
 Revision history for Perl extension Moose
 
+0.5x
+    * Roles and role application
+      - Roles now add methods by calling add_method, not
+        alias_method. They make sure to always provide a method
+        object, which will be cloned internally. This means that it is
+        now possible to track the source of a method provided by a
+        role, and even follow its history through intermediate roles.
+
+    * Moose::Meta::Method::Delegation
+    * Moose::Meta::Attribute
+      - Delegation methods now have their own method class.
+
 0.57 Wed September 3, 2008
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
