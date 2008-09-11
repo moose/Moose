@@ -41,6 +41,11 @@ sub _can_coerce_constraint_from {
     };
 }
 
+sub parse_parameter_str {
+    my ($self, $type_str) = @_;
+    return find_or_create_isa_type_constraint($type_str);
+}
+
 sub parameterize {
 	my ($self, @args) = @_;
     
@@ -85,6 +90,10 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 =item B<has_constraint_generator>
 
 =item B<generate_constraint_for>
+
+=item B<parse_parameter_str>
+
+Given a string, convert it to a Perl structure.
 
 =item B<parameterize>
 
