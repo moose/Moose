@@ -11,6 +11,7 @@ our $VERSION   = '0.57';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
+use Moose::Meta::Method::Delegation;
 use Moose::Util ();
 use Moose::Util::TypeConstraints ();
 
@@ -598,29 +599,9 @@ sub install_delegation {
         #cluck("Not delegating method '$handle' because it is a core method") and
         next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
-        if ('CODE' eq ref($method_to_call)) {
-            $associated_class->add_method($handle => Class::MOP::subname($name, $method_to_call));
-        }
-        else {
-            # NOTE:
-            # we used to do a goto here, but the
-            # goto didn't handle failure correctly
-            # (it just returned nothing), so I took 
-            # that out. However, the more I thought
-            # about it, the less I liked it doing 
-            # the goto, and I prefered the act of 
-            # delegation being actually represented
-            # in the stack trace. 
-            # - SL
-            $associated_class->add_method($handle => Class::MOP::subname($name, sub {
-                my $instance = shift;
-                my $proxy = $instance->$accessor();
-                (defined $proxy) 
-                    || $self->throw_error("Cannot delegate $handle to $method_to_call because " . 
-                              "the value of " . $self->name . " is not defined", method_name => $method_to_call, object => $instance);
-                $proxy->$method_to_call(@_);
-            }));
-        }
+        my $method = $self->_make_delegation_method($accessor, $handle, $method_to_call);
+
+        $self->associated_class->add_method($method->name, $method);
     }    
 }
 
@@ -711,6 +692,48 @@ sub _get_delegate_method_list {
     else {
         $self->throw_error("Unable to recognize the delegate metaclass '$meta'", data => $meta);
     }
+}
+
+sub _make_delegation_method {
+    my ( $self, $accessor, $handle_name, $method_to_call ) = @_;
+
+    my $method_body;
+
+    if ( 'CODE' eq ref($method_to_call) ) {
+        $method_body = $method_to_call;
+    }
+    else {
+
+        # NOTE:
+        # we used to do a goto here, but the
+        # goto didn't handle failure correctly
+        # (it just returned nothing), so I took
+        # that out. However, the more I thought
+        # about it, the less I liked it doing
+        # the goto, and I prefered the act of
+        # delegation being actually represented
+        # in the stack trace.
+        # - SL
+        $method_body = sub {
+            my $instance = shift;
+            my $proxy    = $instance->$accessor();
+            ( defined $proxy )
+                || $self->throw_error(
+                "Cannot delegate $handle_name to $method_to_call because "
+                    . "the value of "
+                    . $self->name
+                    . " is not defined", method_name => $method_to_call,
+                object => $instance );
+            $proxy->$method_to_call(@_);
+        };
+    }
+
+    return Moose::Meta::Method::Delegation->new(
+        name         => $handle_name,
+        package_name => $self->associated_class->name,
+        attribute    => $self,
+        body         => $method_body,
+    );
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
