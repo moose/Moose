@@ -34,7 +34,8 @@ sub build_import_methods {
 
     my $export_recorder = {};
 
-    my $exports = $class->_make_sub_exporter_params(
+    my ( $exports, $is_removable )
+        = $class->_make_sub_exporter_params(
         [ $exporting_package, @exports_from ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
@@ -51,7 +52,7 @@ sub build_import_methods {
         \@exports_from, $args{_export_to_main} );
 
     my $unimport = $class->_make_unimport_sub( $exporting_package, $exports,
-        $export_recorder );
+        $is_removable, $export_recorder );
 
     return ( $import, $unimport )
 }
@@ -98,6 +99,7 @@ sub _make_sub_exporter_params {
     my $export_recorder   = shift;
 
     my %exports;
+    my %is_removable;
 
     for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
@@ -116,6 +118,8 @@ sub _make_sub_exporter_params {
                 $sub,
                 $export_recorder,
             );
+
+            $is_removable{$name} = 1;
         }
 
         for my $name ( @{ $args->{as_is} } ) {
@@ -123,13 +127,29 @@ sub _make_sub_exporter_params {
 
             if ( ref $name ) {
                 $sub  = $name;
-                $name = ( Class::MOP::get_code_info($name) )[1];
+
+                # Even though Moose re-exports things from Carp &
+                # Scalar::Util, we don't want to remove those at
+                # unimport time, because the importing package may
+                # have imported them explicitly ala
+                #
+                # use Carp qw( confess );
+                #
+                # This is a hack. Since we can't know whether they
+                # really want to keep these subs or not, we err on the
+                # safe side and leave them in.
+                my $coderef_pkg;
+                ( $coderef_pkg, $name ) = Class::MOP::get_code_info($name);
+
+                $is_removable{$name} = $coderef_pkg eq $package ? 1 : 0;
             }
             else {
                 $sub = do {
                     no strict 'refs';
                     \&{ $package . '::' . $name };
                 };
+
+                $is_removable{$name} = 1;
             }
 
             $export_recorder->{$sub} = 1;
@@ -138,7 +158,7 @@ sub _make_sub_exporter_params {
         }
     }
 
-    return \%exports;
+    return ( \%exports, \%is_removable );
 }
 
 {
@@ -292,6 +312,7 @@ sub _make_unimport_sub {
     shift;
     my $exporting_package = shift;
     my $exports           = shift;
+    my $is_removable      = shift;
     my $export_recorder   = shift;
 
     return sub {
@@ -299,6 +320,7 @@ sub _make_unimport_sub {
         Moose::Exporter->_remove_keywords(
             $caller,
             [ keys %{$exports} ],
+            $is_removable,
             $export_recorder,
         );
     };
@@ -308,11 +330,13 @@ sub _remove_keywords {
     shift;
     my $package          = shift;
     my $keywords         = shift;
+    my $is_removable     = shift;
     my $recorded_exports = shift;
 
     no strict 'refs';
 
     foreach my $name ( @{ $keywords } ) {
+        next unless $is_removable->{$name};
 
         if ( defined &{ $package . '::' . $name } ) {
             my $sub = \&{ $package . '::' . $name };
@@ -402,6 +426,11 @@ This a list of function names or sub references to be exported
 as-is. You can identify a subroutine by reference, which is handy to
 re-export some other module's functions directly by reference
 (C<\&Some::Package::function>).
+
+If you do export some other packages function, this function will
+never be removed by the C<unimport> method. The reason for this is we
+cannot know if the caller I<also> explicitly imported the sub
+themselves, and therefore wants to keep it.
 
 =item * also => $name or \@names
 
