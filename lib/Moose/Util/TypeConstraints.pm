@@ -101,7 +101,7 @@ sub create_type_constraint_union (@) {
     else {
         @type_constraint_names = @_;
     }
-
+    
     (scalar @type_constraint_names >= 2)
         || Moose->throw_error("You must pass in at least 2 type names to make a union");
 
@@ -223,7 +223,7 @@ sub find_or_create_does_type_constraint ($) {
 }
 
 sub find_or_parse_type_constraint ($) {
-    my $type_constraint_name = shift;
+    my $type_constraint_name = normalize_type_constraint_name(shift);
     my $constraint;
     
     if ($constraint = find_type_constraint($type_constraint_name)) {
@@ -238,6 +238,12 @@ sub find_or_parse_type_constraint ($) {
 
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
+}
+
+sub normalize_type_constraint_name {
+    my $type_constraint_name = shift @_;
+    $type_constraint_name =~s/\s//g;
+    return $type_constraint_name;
 }
 
 ## --------------------------------------------------------
@@ -925,6 +931,11 @@ This is just sugar for the type coercion construction syntax.
 =head2 Type Constraint Construction & Locating
 
 =over 4
+
+=item B<normalize_type_constraint_name ($type_constraint_name)>
+
+Given a string that is expected to match a type constraint, will normalize the
+string so that extra whitespace and newlines are removed.
 
 =item B<create_type_constraint_union ($pipe_seperated_types | @type_constraint_names)>
 

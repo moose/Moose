@@ -24,7 +24,7 @@ lives_ok {
     isa_ok($p, 'Moose::Meta::TypeConstraint::Union');
     isa_ok($p, 'Moose::Meta::TypeConstraint');
 
-    is($p->name, 'ArrayRef | HashRef', '... parent name is correct');
+    is($p->name, 'ArrayRef|HashRef', '... parent name is correct');
 
     ok($t->check([]), '... validated it correctly');
     ok($t->check({}), '... validated it correctly');    
@@ -33,7 +33,7 @@ lives_ok {
 
 lives_ok {
     subtype 'MyCollectionsExtended' 
-        => as 'ArrayRef | HashRef'
+        => as 'ArrayRef|HashRef'
         => where {
             if (ref($_) eq 'ARRAY') {
                 return if scalar(@$_) < 2;
@@ -55,7 +55,7 @@ lives_ok {
     isa_ok($p, 'Moose::Meta::TypeConstraint::Union');
     isa_ok($p, 'Moose::Meta::TypeConstraint');
 
-    is($p->name, 'ArrayRef | HashRef', '... parent name is correct');
+    is($p->name, 'ArrayRef|HashRef', '... parent name is correct');
 
     ok(!$t->check([]), '... validated it correctly');
     ok($t->check([1, 2]), '... validated it correctly');    
