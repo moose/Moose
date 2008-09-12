@@ -8,7 +8,8 @@ Revision history for Perl extension Moose
         Carp::confess function, among others. The reasoning is that we
         cannot know whether you have also explicitly imported those
         functions for your own use, so we err on the safe side and
-        always keep them.
+        always keep them. (Dave Rolsky)
+        - added tests for this (rafl)
 
 0.57 Wed September 3, 2008
     * Moose::Intro
