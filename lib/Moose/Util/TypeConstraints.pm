@@ -105,22 +105,18 @@ sub create_type_constraint_union (@) {
     (scalar @type_constraint_names >= 2)
         || Moose->throw_error("You must pass in at least 2 type names to make a union");
 
-    ($REGISTRY->has_type_constraint($_))
-        || Moose->throw_error("Could not locate type constraint ($_) for the union")
-            foreach @type_constraint_names;
-
+    my @type_constraints = sort { $a->name cmp $b->name} map {
+        find_or_parse_type_constraint($_) ||
+         Moose->throw_error("Could not locate type constraint ($_) for the union")
+    } @type_constraint_names;
+    
     return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => [
-            map {
-                $REGISTRY->get_type_constraint($_)
-            } @type_constraint_names
-        ],
+        type_constraints => [@type_constraints]
     );
 }
 
 sub create_parameterized_type_constraint ($) {
     my $type_constraint_name = shift;
-
     my ($base_type, $type_parameter_str) = _parse_parameterized_type_constraint($type_constraint_name);
 
     (defined $base_type && defined $type_parameter_str)
@@ -129,7 +125,6 @@ sub create_parameterized_type_constraint ($) {
     if ($REGISTRY->has_type_constraint($base_type)) {
         my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
         return _create_parameterized_type_constraint(
-            $type_constraint_name,
             $base_type_tc,
             $type_parameter_str,
         );
@@ -139,13 +134,13 @@ sub create_parameterized_type_constraint ($) {
 }
 
 sub _create_parameterized_type_constraint {
-    my ($tc_name, $base_type_tc, $type_parameter_str) = @_;
+    my ($base_type_tc, $type_parameter_str) = @_;
     if($base_type_tc->can('parameterize')) {
         my @type_parameters_tc = $base_type_tc->parse_parameter_str($type_parameter_str);  
-        return $base_type_tc->parameterize($tc_name, @type_parameters_tc);
+        return $base_type_tc->parameterize( @type_parameters_tc);
     } else {
         return Moose::Meta::TypeConstraint::Parameterized->new(
-            name           => $tc_name,
+            name           => $base_type_tc->name .'['. $type_parameter_str .']',
             parent         => $base_type_tc,
             type_parameter => find_or_create_isa_type_constraint($type_parameter_str),
         );
@@ -235,7 +230,7 @@ sub find_or_parse_type_constraint ($) {
         return $constraint;
     } elsif (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
-    } elsif (_detect_parameterized_type_constraint($type_constraint_name)) {     
+    } elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
         $constraint = create_parameterized_type_constraint($type_constraint_name);
     } else {
         return;
@@ -452,19 +447,26 @@ sub _install_type_coercions ($$) {
 
     my $any;
 
-    my $type                = qr{  $valid_chars+  (?: \[  (??{$any})  \] )? }x;
-    my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ ((??{$any})) \] )? }x;
-    my $type_with_parameter = qr{  $valid_chars+      \[  (??{$any})  \]    }x;
+    my $type                = qr{  $valid_chars+  (?: \[  \s* (??{$any}) \s* \] )? }x;
+    my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ \s* ((??{$any})) \s* \] )? }x;
+    my $type_with_parameter = qr{  $valid_chars+      \[ \s* (??{$any}) \s* \]    }x;
 
     my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
 
-    $any = qr{ $type | $union }x;
+    ## New Stuff for structured types.
+    my $comma = qr{,};
+    my $indirection = qr{=>};
+    my $divider_ops = qr{ $comma | $indirection }x;
+    my $structure_divider = qr{\s* $divider_ops \s*}x;    
+    my $structure_elements = qr{ ($type $structure_divider*)+ }x;
+
+    $any = qr{ $type | $union | $structure_elements }x;
 
     sub _parse_parameterized_type_constraint {
         { no warnings 'void'; $any; } # force capture of interpolated lexical
-        $_[0] =~ m{ $type_capture_parts }x;
-        return ($1, $2);
+        my($base, $elements) = ($_[0] =~ m{ $type_capture_parts }x);
+        return ($base, split($structure_divider, $elements));
     }
 
     sub _detect_parameterized_type_constraint {

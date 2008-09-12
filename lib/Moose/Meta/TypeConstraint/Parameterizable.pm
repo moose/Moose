@@ -48,26 +48,18 @@ sub parse_parameter_str {
 }
 
 sub parameterize {
-	my ($self, @args) = @_;
-    
-    ## ugly hacking to deal with tc naming normalization issue
-    my ($tc_name, $contained_tc);
-    if (ref $args[0]) {
-        $contained_tc = shift @args;
-        $tc_name = $self->name .'['. $contained_tc->name .']';
-    } else {
-        ($tc_name, $contained_tc) = @args;
+	my ($self, $contained_tc) = @_;
+
+	if($contained_tc->isa('Moose::Meta::TypeConstraint')) {
+        my $tc_name = $self->name .'['. $contained_tc->name .']';        
+        return Moose::Meta::TypeConstraint::Parameterized->new(
+            name           => $tc_name,
+            parent         => $self,
+            type_parameter => $contained_tc,
+        );			
+	} else {
+        Moose->throw_error("The type parameter must be a Moose meta type");
     }
-	
-	unless($contained_tc->isa('Moose::Meta::TypeConstraint')) {
-		Moose->throw_error("The type parameter must be a Moose meta type");
-	}
-	
-    return Moose::Meta::TypeConstraint::Parameterized->new(
-        name           => $tc_name,
-        parent         => $self,
-        type_parameter => $contained_tc,
-    );	
 }
 
 
