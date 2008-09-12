@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 
 my @moose_exports = qw(
@@ -61,3 +61,14 @@ can_ok('Bar', $_) for @moose_type_constraint_exports;
 
 ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_exports;
 
+
+{
+    package Baz;
+
+    use Scalar::Util qw( blessed );
+    use Moose;
+
+    no Moose;
+}
+
+can_ok( 'Baz', 'blessed' );
