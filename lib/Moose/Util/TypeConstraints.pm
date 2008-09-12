@@ -105,13 +105,13 @@ sub create_type_constraint_union (@) {
     (scalar @type_constraint_names >= 2)
         || Moose->throw_error("You must pass in at least 2 type names to make a union");
 
-    my @type_constraints = sort { $a->name cmp $b->name} map {
+    my @type_constraints = sort {$a->name cmp $b->name} map {
         find_or_parse_type_constraint($_) ||
-         Moose->throw_error("Could not locate type constraint ($_) for the union")
+         Moose->throw_error("Could not locate type constraint ($_) for the union");
     } @type_constraint_names;
     
     return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => [@type_constraints]
+        type_constraints => \@type_constraints
     );
 }
 
