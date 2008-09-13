@@ -19,6 +19,17 @@ Revision history for Perl extension Moose
       - Delegation methods now have their own method class. (Dave
         Rolsky)
 
+    * Moose::Exporter
+    * Moose
+      - Moose::Exporter will no longer remove a subroutine that the
+        exporting package re-exports. Moose re-exports the
+        Carp::confess function, among others. The reasoning is that we
+        cannot know whether you have also explicitly imported those
+        functions for your own use, so we err on the safe side and
+        always keep them. (Dave Rolsky)
+        - added tests for this (rafl)
+
+<<<< 122127346164625
 0.57 Wed September 3, 2008
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
