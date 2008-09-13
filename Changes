@@ -29,7 +29,6 @@ Revision history for Perl extension Moose
         always keep them. (Dave Rolsky)
         - added tests for this (rafl)
 
-<<<< 122127346164625
 0.57 Wed September 3, 2008
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
