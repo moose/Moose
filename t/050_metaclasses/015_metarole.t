@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 66;
+use Test::More tests => 68;
 
 use Moose::Util::MetaRole;
 
@@ -390,4 +390,55 @@ use Moose::Util::MetaRole;
         q{apply Role::Bar to My::Class9->meta()->attribute_metaclass before extends} );
     ok( My::Class9->meta()->attribute_metaclass->meta()->does_role('Role::Foo'),
         q{... and My::Class9->meta()->attribute_metaclass does Role::Foo because My::Class9 extends My::Class} );
+}
+
+# This tests applying meta roles to a metaclass's metaclass. This is
+# completely insane, but is exactly what happens with
+# Fey::Meta::Class::Table. It's a subclass of Moose::Meta::Class
+# itself, and then it _uses_ MooseX::ClassAttribute, so the metaclass
+# for Fey::Meta::Class::Table does a role.
+#
+# At one point this caused a metaclass incompatibility error down
+# below, when we applied roles to the metaclass of My::Class10. It's
+# all madness but as long as the tests pass we're happy.
+{
+    package My::Meta::Class2;
+    use Moose;
+    extends 'Moose::Meta::Class';
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Meta::Class2',
+        metaclass_roles => ['Role::Foo'],
+    );
+}
+
+{
+    package My::Meta2;
+
+    use Moose::Exporter;
+    Moose::Exporter->setup_import_methods( also => 'Moose' );
+
+    sub init_meta {
+        shift;
+        my %p = @_;
+
+        Moose->init_meta( %p, metaclass => 'My::Meta::Class2' );
+    }
+}
+
+{
+    package My::Class10;
+    My::Meta2->import;
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Class10',
+        metaclass_roles => ['Role::Bar'],
+    );
+}
+
+{
+    ok( My::Class10->meta()->meta()->meta()->does_role('Role::Foo'),
+        q{My::Class10->meta()->meta() does Role::Foo } );
+    ok( My::Class10->meta()->isa('My::Meta::Class2'),
+        q{... and My::Class10->meta still isa(My::Meta::Class2)} );
 }

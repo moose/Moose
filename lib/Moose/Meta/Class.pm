@@ -63,9 +63,16 @@ sub create {
     (ref $options{roles} eq 'ARRAY')
         || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
-    
+
+    my $super = delete $options{superclasses};
+
     my $class = $self->SUPER::create($package_name, %options);
-    
+
+    if ( my @super = @{ $super || [] } ) {
+        $class = $class->_fix_metaclass_incompatibility(@super);
+        $class->superclasses(@super);
+    }
+
     if (exists $options{roles}) {
         Moose::Util::apply_all_roles($class, @{$options{roles}});
     }
@@ -352,7 +359,7 @@ sub _reconcile_with_superclass_meta {
 
     my $super_meta = $super->meta;
 
-    my $super_metaclass_name
+    my $super_meta_name
         = $super_meta->is_immutable
         ? $super_meta->get_mutable_metaclass_name
         : ref($super_meta);
@@ -361,7 +368,7 @@ sub _reconcile_with_superclass_meta {
 
     # If neither of these is true we have a more serious
     # incompatibility that we just cannot fix (yet?).
-    if ( $super_metaclass_name->isa( ref $self )
+    if ( $super_meta_name->isa( ref $self )
         && all { $super_meta->$_->isa( $self->$_ ) } @MetaClassTypes ) {
         return $self->_reinitialize_with($super_meta);
     }
