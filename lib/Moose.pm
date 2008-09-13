@@ -61,7 +61,7 @@ sub extends {
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    my $meta = Moose::Meta::Class->initialize($class)->_fix_metaclass_incompatability(@supers);
+    my $meta = Moose::Meta::Class->initialize($class)->_fix_metaclass_incompatibility(@supers);
     $meta->superclasses(@supers);
 }
 
@@ -188,7 +188,7 @@ sub init_meta {
                 : ref($ancestor_meta));
 
             # if we have an ancestor metaclass that inherits $metaclass, we use
-            # that. This is like _fix_metaclass_incompatability, but we can do it now.
+            # that. This is like _fix_metaclass_incompatibility, but we can do it now.
 
             # the case of having an ancestry is not very common, but arises in
             # e.g. Reaction

@@ -1251,7 +1251,7 @@ Revision history for Perl extension Moose
       - added tests to assure we work with Module::Refresh
       - added stricter test skip logic in the Moose POOP
         test, ask Rob Kinyon why.
-        - *cough* DBM::Deep 1.0 backwards compatability sucks *cough* ;)
+        - *cough* DBM::Deep 1.0 backwards compatibility sucks *cough* ;)
 
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~
@@ -1532,7 +1532,7 @@ Revision history for Perl extension Moose
         - 'with' now checks Role validaity and
           accepts more than one Role at a time
         - 'extends' makes metaclass adjustments as
-           needed to ensure metaclass compatability
+           needed to ensure metaclass compatibility
 
     * Moose::Role
       - refactored the keyword exports

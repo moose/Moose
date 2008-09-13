@@ -305,7 +305,7 @@ sub _find_next_method_by_name_which_is_not_overridden {
     return undef;
 }
 
-sub _fix_metaclass_incompatability {
+sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
     foreach my $super (@superclasses) {
