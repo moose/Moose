@@ -245,7 +245,7 @@ sub find_or_parse_type_constraint ($) {
 
 sub normalize_type_constraint_name {
     my $type_constraint_name = shift @_;
-    $type_constraint_name =~s/\s//g;
+    $type_constraint_name =~ s/\s//g;
     return $type_constraint_name;
 }
 
