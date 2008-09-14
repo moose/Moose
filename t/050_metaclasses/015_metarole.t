@@ -276,7 +276,7 @@ use Moose::Util::MetaRole;
 
 {
     ok( My::Class5->meta()->meta()->does_role('Role::Foo'),
-        q{My::Class55->meta()'s does Role::Foo because it extends My::Class} );
+        q{My::Class5->meta()'s does Role::Foo because it extends My::Class} );
     ok( My::Class5->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s attribute metaclass also does Role::Foo} );
     ok( My::Class5->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
