@@ -80,6 +80,6 @@ lives_ok {
 } 'Immutability on Moose class extending Class::MOP class ok';
     
 lives_ok {
-    SubClass2->meta->superclasses([ 'MyBase' ]);
+    SubClass2->meta->superclasses('MyBase');
 } 'Can subclass the same non-Moose class twice with different metaclasses';
 
