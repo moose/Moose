@@ -64,20 +64,23 @@ sub create {
         || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
 
-    my $super = delete $options{superclasses};
-
     my $class = $self->SUPER::create($package_name, %options);
-
-    if ( my @super = @{ $super || [] } ) {
-        $class->_fix_metaclass_incompatibility(@super);
-        $class->superclasses(@super);
-    }
 
     if (exists $options{roles}) {
         Moose::Util::apply_all_roles($class, @{$options{roles}});
     }
     
     return $class;
+}
+
+sub check_metaclass_compatibility {
+    my $self = shift;
+
+    if ( my @supers = $self->superclasses ) {
+        $self->_fix_metaclass_incompatibility(@supers);
+    }
+
+    $self->SUPER::check_metaclass_compatibility(@_);
 }
 
 my %ANON_CLASSES;
@@ -541,7 +544,7 @@ sub _reconcile_role_differences {
         $roles{ $thing . '_roles' } = \@roles;
     }
 
-    $self = $self->_reinitialize_with($super_meta);
+    $self->_reinitialize_with($super_meta);
 
     Moose::Util::MetaRole::apply_metaclass_roles(
         for_class => $self->name,
