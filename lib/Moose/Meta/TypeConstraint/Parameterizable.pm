@@ -42,9 +42,9 @@ sub _can_coerce_constraint_from {
     };
 }
 
-sub parse_parameter_str {
-    my ($self, $type_str) = @_;
-    return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_str);
+sub parse_type_parameter {
+    my ($self, $type_parameter) = @_;
+    return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_parameter);
 }
 
 sub parameterize {

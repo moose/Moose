@@ -117,16 +117,16 @@ sub create_type_constraint_union (@) {
 
 sub create_parameterized_type_constraint ($) {
     my $type_constraint_name = shift;
-    my ($base_type, $type_parameter_str) = _parse_parameterized_type_constraint($type_constraint_name);
+    my ($base_type, $type_parameter) = _parse_parameterized_type_constraint($type_constraint_name);
 
-    (defined $base_type && defined $type_parameter_str)
+    (defined $base_type && defined $type_parameter)
         || Moose->throw_error("Could not parse type name ($type_constraint_name) correctly");
 
     if ($REGISTRY->has_type_constraint($base_type)) {
         my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
         return _create_parameterized_type_constraint(
             $base_type_tc,
-            $type_parameter_str,
+            $type_parameter,
         );
     } else {
         Moose->throw_error("Could not locate the base type ($base_type)");
@@ -134,18 +134,18 @@ sub create_parameterized_type_constraint ($) {
 }
 
 sub _create_parameterized_type_constraint {
-    my ( $base_type_tc, $type_parameter_str ) = @_;
+    my ( $base_type_tc, $type_parameter ) = @_;
     if ( $base_type_tc->can('parameterize') ) {
         my @type_parameters_tc
-            = $base_type_tc->parse_parameter_str($type_parameter_str);
+            = $base_type_tc->parse_type_parameter($type_parameter);
         return $base_type_tc->parameterize(@type_parameters_tc);
     }
     else {
         return Moose::Meta::TypeConstraint::Parameterized->new(
-            name   => $base_type_tc->name . '[' . $type_parameter_str . ']',
+            name   => $base_type_tc->name . '[' . $type_parameter . ']',
             parent => $base_type_tc,
             type_parameter =>
-                find_or_create_isa_type_constraint($type_parameter_str),
+                find_or_create_isa_type_constraint($type_parameter),
         );
     }
 }
