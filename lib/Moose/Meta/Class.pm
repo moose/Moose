@@ -69,7 +69,7 @@ sub create {
     my $class = $self->SUPER::create($package_name, %options);
 
     if ( my @super = @{ $super || [] } ) {
-        $class = $class->_fix_metaclass_incompatibility(@super);
+        $class->_fix_metaclass_incompatibility(@super);
         $class->superclasses(@super);
     }
 
@@ -325,10 +325,8 @@ sub _fix_metaclass_incompatibility {
                     . ", it isn't pristine" );
         }
 
-        return $self->_reconcile_with_superclass_meta($super);
+        $self->_reconcile_with_superclass_meta($super);
     }
-
-    return $self;
 }
 
 sub _superclass_meta_is_compatible {
@@ -370,28 +368,30 @@ sub _reconcile_with_superclass_meta {
     # incompatibility that we just cannot fix (yet?).
     if ( $super_meta_name->isa( ref $self )
         && all { $super_meta->$_->isa( $self->$_ ) } @MetaClassTypes ) {
-        return $self->_reinitialize_with($super_meta);
+        $self->_reinitialize_with($super_meta);
     }
     elsif ( $self->_all_metaclasses_differ_by_roles_only($super_meta) ) {
-        return $self->_reconcile_role_differences($super_meta);
+        $self->_reconcile_role_differences($super_meta);
     }
-
-    return $self;
 }
 
 sub _reinitialize_with {
     my ( $self, $new_meta ) = @_;
 
-    $self = $new_meta->reinitialize(
+    my $new_self = $new_meta->reinitialize(
         $self->name,
         attribute_metaclass => $new_meta->attribute_metaclass,
         method_metaclass    => $new_meta->method_metaclass,
         instance_metaclass  => $new_meta->instance_metaclass,
     );
 
-    $self->$_( $new_meta->$_ ) for qw( constructor_class destructor_class );
+    $new_self->$_( $new_meta->$_ ) for qw( constructor_class destructor_class );
 
-    return $self;
+    %$self = %$new_self;
+
+    bless $self, ref $new_self;
+
+    Class::MOP::store_metaclass_by_name( $self->name, $self );
 }
 
 # In the more complex case, we share a common ancestor with our
