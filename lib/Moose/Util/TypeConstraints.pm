@@ -134,17 +134,20 @@ sub create_parameterized_type_constraint ($) {
 }
 
 sub _create_parameterized_type_constraint {
-    my ($base_type_tc, $type_parameter_str) = @_;
-    if($base_type_tc->can('parameterize')) {
-		my @type_parameters_tc = $base_type_tc->parse_parameter_str($type_parameter_str);
-		return $base_type_tc->parameterize( @type_parameters_tc);
-    } else {
+    my ( $base_type_tc, $type_parameter_str ) = @_;
+    if ( $base_type_tc->can('parameterize') ) {
+        my @type_parameters_tc
+            = $base_type_tc->parse_parameter_str($type_parameter_str);
+        return $base_type_tc->parameterize(@type_parameters_tc);
+    }
+    else {
         return Moose::Meta::TypeConstraint::Parameterized->new(
-            name           => $base_type_tc->name .'['. $type_parameter_str .']',
-            parent         => $base_type_tc,
-            type_parameter => find_or_create_isa_type_constraint($type_parameter_str),
+            name   => $base_type_tc->name . '[' . $type_parameter_str . ']',
+            parent => $base_type_tc,
+            type_parameter =>
+                find_or_create_isa_type_constraint($type_parameter_str),
         );
-    } 
+    }
 }
 
 #should we also support optimized checks?
