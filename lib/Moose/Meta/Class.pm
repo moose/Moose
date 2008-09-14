@@ -394,12 +394,11 @@ sub _reinitialize_with {
 
     bless $self, ref $new_self;
 
-    # FIXME? This seems to be necessary in some cases because of how
-    # Class::MOP::Class->construct_class_instance will weaken the
-    # metaclass store entry for an anonymous class. However, if that
-    # anonymous class is a metaclass's metaclass, we don't want it
-    # going out of scope. I'm not sure this is the right fix at all.
+    # We need to replace the cached metaclass instance or else when it
+    # goes out of scope Class::MOP::Class destroy's the namespace for
+    # the metaclass's class, causing much havoc.
     Class::MOP::store_metaclass_by_name( $self->name, $self );
+    Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
 }
 
 # In the more complex case, we share a common ancestor with our
