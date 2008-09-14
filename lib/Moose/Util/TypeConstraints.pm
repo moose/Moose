@@ -136,9 +136,7 @@ sub create_parameterized_type_constraint ($) {
 sub _create_parameterized_type_constraint {
     my ( $base_type_tc, $type_parameter ) = @_;
     if ( $base_type_tc->can('parameterize') ) {
-        my @type_parameters_tc
-            = $base_type_tc->parse_type_parameter($type_parameter);
-        return $base_type_tc->parameterize(@type_parameters_tc);
+        return $base_type_tc->parameterize($type_parameter);
     }
     else {
         return Moose::Meta::TypeConstraint::Parameterized->new(

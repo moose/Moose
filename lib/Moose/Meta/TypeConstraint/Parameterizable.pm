@@ -42,13 +42,15 @@ sub _can_coerce_constraint_from {
     };
 }
 
-sub parse_type_parameter {
+sub _parse_type_parameter {
     my ($self, $type_parameter) = @_;
     return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_parameter);
 }
 
 sub parameterize {
-    my ( $self, $contained_tc ) = @_;
+    my ($self, $type_parameter) = @_;
+
+    my $contained_tc = $self->_parse_type_parameter($type_parameter);
 
     if ( $contained_tc->isa('Moose::Meta::TypeConstraint') ) {
         my $tc_name = $self->name . '[' . $contained_tc->name . ']';
@@ -84,10 +86,6 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 =item B<has_constraint_generator>
 
 =item B<generate_constraint_for>
-
-=item B<parse_type_parameter>
-
-Given a string, convert it to a Perl structure.
 
 =item B<parameterize>
 
