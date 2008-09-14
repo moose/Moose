@@ -852,6 +852,11 @@ immutable. These default to L<Moose::Meta::Method::Constructor> and
 L<Moose::Meta::Method::Destructor> respectively. These accessors are
 read-write, so you can use them to change the class name.
 
+=item B<check_metaclass_compatibility>
+
+Moose overrides this method from C<Class::MOP::Class> and attempts to
+fix some incompatibilities before doing the check.
+
 =item B<throw_error $message, %extra>
 
 Throws the error created by C<create_error> using C<raise_error>
