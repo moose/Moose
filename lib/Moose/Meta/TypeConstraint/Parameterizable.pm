@@ -89,7 +89,8 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 
 =item B<parameterize>
 
-Given an array of type constraints, parameterize the current type constraint.
+Given a single type constraint string, this method parses the string
+and parameterizes the type based on the parsed string.
 
 =item B<meta>
 
