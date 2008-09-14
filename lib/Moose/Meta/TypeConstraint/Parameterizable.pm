@@ -85,7 +85,7 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 
 =item B<generate_constraint_for>
 
-=item B<parse_parameter_str>
+=item B<parse_type_parameter>
 
 Given a string, convert it to a Perl structure.
 
