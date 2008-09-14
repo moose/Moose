@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 37;
 use Test::Exception;
 
 BEGIN {
@@ -60,29 +60,21 @@ is_deeply
 	["ArrayRef", "HashRef[Int  ]"]
  => 'Correctly parsed ArrayRef[  HashRef[Int  ]  ]';
 
-ok Moose::Util::TypeConstraints::_detect_parameterized_type_constraint('ArrayRef[Int,Str]')
+ok Moose::Util::TypeConstraints::_detect_parameterized_type_constraint('ArrayRef[Int|Str]')
  => 'detected correctly';
  
 is_deeply
-	[Moose::Util::TypeConstraints::_parse_parameterized_type_constraint('ArrayRef[Int,Str]')],
-	["ArrayRef", "Int", "Str"]
- => 'Correctly parsed ArrayRef[Int,Str]';
+	[Moose::Util::TypeConstraints::_parse_parameterized_type_constraint('ArrayRef[Int|Str]')],
+	["ArrayRef", "Int|Str"]
+ => 'Correctly parsed ArrayRef[Int|Str]';
  
-ok Moose::Util::TypeConstraints::_detect_parameterized_type_constraint('ArrayRef[ArrayRef[Int],Str]')
+ok Moose::Util::TypeConstraints::_detect_parameterized_type_constraint('ArrayRef[ArrayRef[Int]|Str]')
  => 'detected correctly';
  
 is_deeply
-	[Moose::Util::TypeConstraints::_parse_parameterized_type_constraint('ArrayRef[ArrayRef[Int],Str]')],
-	["ArrayRef", "ArrayRef[Int]", "Str"]
- => 'Correctly parsed ArrayRef[ArrayRef[Int],Str]';
-
-ok Moose::Util::TypeConstraints::_detect_parameterized_type_constraint('HashRef[key1 => Int, key2=>Int, key3=>ArrayRef[Int]]')
- => 'detected correctly';
- 
-is_deeply 
-	[Moose::Util::TypeConstraints::_parse_parameterized_type_constraint('HashRef[key1 => Int, key2=>Int, key3=>ArrayRef[Int]]')],
-	["HashRef", "key1", "Int", "key2", "Int", "key3", "ArrayRef[Int]"]
- => 'Correctly parsed HashRef[key1 => Int, key2=>Int, key3=>ArrayRef[Int]]';
+	[Moose::Util::TypeConstraints::_parse_parameterized_type_constraint('ArrayRef[ArrayRef[Int]|Str]')],
+	["ArrayRef", "ArrayRef[Int]|Str"]
+ => 'Correctly parsed ArrayRef[ArrayRef[Int]|Str]';
  
 ## creating names via subtype
 

@@ -136,8 +136,8 @@ sub create_parameterized_type_constraint ($) {
 sub _create_parameterized_type_constraint {
     my ($base_type_tc, $type_parameter_str) = @_;
     if($base_type_tc->can('parameterize')) {
-        my @type_parameters_tc = $base_type_tc->parse_parameter_str($type_parameter_str);  
-        return $base_type_tc->parameterize( @type_parameters_tc);
+		my @type_parameters_tc = $base_type_tc->parse_parameter_str($type_parameter_str);
+		return $base_type_tc->parameterize( @type_parameters_tc);
     } else {
         return Moose::Meta::TypeConstraint::Parameterized->new(
             name           => $base_type_tc->name .'['. $type_parameter_str .']',
@@ -472,7 +472,7 @@ sub _install_type_coercions ($$) {
     sub _parse_parameterized_type_constraint {
         { no warnings 'void'; $any; } # force capture of interpolated lexical
         my($base, $elements) = ($_[0] =~ m{ $type_capture_parts }x);
-        return ($base, split($structure_divider, $elements));
+        return ($base,$elements);
     }
 
     sub _detect_parameterized_type_constraint {
