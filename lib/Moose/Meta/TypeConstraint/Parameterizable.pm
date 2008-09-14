@@ -48,16 +48,17 @@ sub parse_parameter_str {
 }
 
 sub parameterize {
-	my ($self, $contained_tc) = @_;
+    my ( $self, $contained_tc ) = @_;
 
-	if($contained_tc->isa('Moose::Meta::TypeConstraint')) {
-        my $tc_name = $self->name .'['. $contained_tc->name .']';        
+    if ( $contained_tc->isa('Moose::Meta::TypeConstraint') ) {
+        my $tc_name = $self->name . '[' . $contained_tc->name . ']';
         return Moose::Meta::TypeConstraint::Parameterized->new(
             name           => $tc_name,
             parent         => $self,
             type_parameter => $contained_tc,
-        );			
-	} else {
+        );
+    }
+    else {
         Moose->throw_error("The type parameter must be a Moose meta type");
     }
 }
