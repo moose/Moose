@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 68;
+use Test::More tests => 69;
 
 use Moose::Util::MetaRole;
 
@@ -439,6 +439,8 @@ use Moose::Util::MetaRole;
 {
     ok( My::Class10->meta()->meta()->meta()->does_role('Role::Foo'),
         q{My::Class10->meta()->meta() does Role::Foo } );
+    ok( My::Class10->meta()->meta()->does_role('Role::Bar'),
+        q{My::Class10->meta()->meta() does Role::Bar } );
     ok( My::Class10->meta()->isa('My::Meta::Class2'),
         q{... and My::Class10->meta still isa(My::Meta::Class2)} );
 }
