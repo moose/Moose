@@ -44,6 +44,7 @@ lib/Moose/Meta/Method.pm
 lib/Moose/Meta/Method/Accessor.pm
 lib/Moose/Meta/Method/Augmented.pm
 lib/Moose/Meta/Method/Constructor.pm
+lib/Moose/Meta/Method/Delegation.pm
 lib/Moose/Meta/Method/Destructor.pm
 lib/Moose/Meta/Method/Overriden.pm
 lib/Moose/Meta/Role.pm
@@ -161,6 +162,7 @@ t/030_roles/025_role_composition_override.t
 t/030_roles/026_role_composition_method_mods.t
 t/030_roles/030_role_parameterized.t
 t/030_roles/031_roles_applied_in_create.t
+t/030_roles/032_roles_and_method_cloning.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t
@@ -199,6 +201,7 @@ t/050_metaclasses/013_metaclass_traits.t
 t/050_metaclasses/014_goto_moose_import.t
 t/050_metaclasses/015_metarole.t
 t/050_metaclasses/016_metarole_w_metaclass_pm.t
+t/050_metaclasses/017_use_base_of_moose.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t
