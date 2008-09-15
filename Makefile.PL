@@ -2,6 +2,8 @@ use strict;
 use warnings;
 use inc::Module::Install;
 
+check_conflicts();
+
 name 'Moose';
 all_from 'lib/Moose.pm';
 license 'perl';
@@ -29,3 +31,43 @@ tests_recursive;
 
 WriteAll();
 
+# Use the cpan-smolder-stable script in the Moose svn root to figure
+# out what on CPAN will break with the latest Moose, then update this
+# before a release.
+sub check_conflicts {
+    my %conflicts = (
+        'MooseX::Singleton'        => '0.11',
+        'MooseX::Params::Validate' => '0.05',
+        'Fey::ORM'                 => '0.10',
+    );
+
+    my $found = 0;
+    for my $mod ( sort keys %conflicts ) {
+        eval "require $mod";
+        next if $@;
+
+        my $installed = $mod->VERSION();
+        if ( $installed le $conflicts{$mod} ) {
+
+            print <<"EOF";
+
+***
+    This version of Moose conflicts with the version of
+    $mod ($installed) you have installed.
+
+    You will need to upgrade $mod after installing
+    this version of Moose.
+***
+
+EOF
+
+            $found = 1;
+        }
+    }
+
+    # More or less copied from Module::Build
+    return if  $ENV{PERL_MM_USE_DEFAULT};
+    return unless -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+
+    sleep 4 if $found;
+}
