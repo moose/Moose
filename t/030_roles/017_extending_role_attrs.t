@@ -99,7 +99,7 @@ is($baz->baz, 99, '... got the extended attribute');
 $baz->baz('Foo');
 is($baz->baz, 'Foo', "... can change the attribute's value to a ClassName");
 
-throws_ok { $baz->baz("zonk") } qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'Int \| ClassName' failed with value zonk at /;
+throws_ok { $baz->baz("zonk") } qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'ClassName\|Int' failed with value zonk at /;
 is_deeply($baz->baz, 'Foo', "... still has the old ClassName value");
 
 
@@ -137,10 +137,10 @@ is($quux->quux, 100, "... can change the attribute's value to an Int");
 $quux->quux(["hi"]);
 is_deeply($quux->quux, ["hi"], "... can change the attribute's value to an ArrayRef");
 
-throws_ok { $quux->quux("quux") } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'Positive \| ArrayRef' failed with value quux at /;
+throws_ok { $quux->quux("quux") } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' failed with value quux at /;
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
-throws_ok { $quux->quux({a => 1}) } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'Positive \| ArrayRef' failed with value HASH\(\w+\) at /;
+throws_ok { $quux->quux({a => 1}) } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' failed with value HASH\(\w+\) at /;
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
 
