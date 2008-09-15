@@ -65,9 +65,11 @@ EOF
         }
     }
 
+    return unless $found;
+
     # More or less copied from Module::Build
     return if  $ENV{PERL_MM_USE_DEFAULT};
     return unless -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 
-    sleep 4 if $found;
+    sleep 4;
 }
