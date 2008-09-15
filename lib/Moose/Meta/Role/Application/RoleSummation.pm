@@ -170,7 +170,7 @@ sub apply_methods {
         $method_map{$method->{name}} = $method->{method};
     }
 
-    $c->alias_method($_ => $method_map{$_}) for keys %method_map;
+    $c->add_method($_ => $method_map{$_}) for keys %method_map;
 }
 
 sub apply_override_method_modifiers {

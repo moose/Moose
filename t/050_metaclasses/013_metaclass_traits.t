@@ -171,9 +171,6 @@ is( Role::Foo->meta()->simple(), 5,
           '... and error provides a useful explanation' );
 }
 
-SKIP:
-{
-    skip 'This will blow up until Moose::Meta::Class->_fix_metaclass_incompatibility understands roles', 5;
 {
     package Foo::Subclass;
 
@@ -190,4 +187,4 @@ is( Foo::Subclass->meta()->simple2(), 55,
 can_ok( Foo::Subclass->meta(), 'attr2' );
 is( Foo::Subclass->meta()->attr2(), 'something',
     'Foo::Subclass->meta()->attr2() returns expected value' );
-}
+

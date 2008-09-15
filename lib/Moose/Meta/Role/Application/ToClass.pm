@@ -110,7 +110,7 @@ sub apply_methods {
         }
         else {
             # add it, although it could be overriden
-            $class->alias_method(
+            $class->add_method(
                 $method_name,
                 $role->get_method($method_name)
             );         
@@ -124,7 +124,7 @@ sub apply_methods {
                 $class->get_method($aliased_method_name)->body != $role->get_method($method_name)->body) {
                 $class->throw_error("Cannot create a method alias if a local method of the same name exists");
             }            
-            $class->alias_method(
+            $class->add_method(
                 $aliased_method_name,
                 $role->get_method($method_name)
             );                

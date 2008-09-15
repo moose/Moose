@@ -371,15 +371,13 @@ sub has_method {
 sub wrap_method_body {
     my ( $self, %args ) = @_;
 
-    my $body = delete $args{body}; # delete is for compat
-
-    ('CODE' eq ref($body))
+    ('CODE' eq ref $args{body})
         || Moose->throw_error("Your code block must be a CODE reference");
 
-    $self->method_metaclass->wrap( $body => (
+    $self->method_metaclass->wrap(
         package_name => $self->name,
         %args,
-    ));
+    );
 }
 
 sub add_method {
@@ -390,14 +388,10 @@ sub add_method {
     my $body;
     if (blessed($method)) {
         $body = $method->body;
-        if ($method->package_name ne $self->name &&
-            $method->name         ne $method_name) {
-            warn "Hello there, got something for you."
-            . " Method says " . $method->package_name . " " . $method->name
-            . " Class says " . $self->name . " " . $method_name;
+        if ($method->package_name ne $self->name) {
             $method = $method->clone(
                 package_name => $self->name,
-                name         => $method_name
+                name         => $method_name            
             ) if $method->can('clone');
         }
     }
@@ -427,18 +421,9 @@ sub get_method_list {
 }
 
 sub alias_method {
-    my ($self, $method_name, $method) = @_;
-    (defined $method_name && $method_name)
-        || Moose->throw_error("You must define a method name");
+    my $self = shift;
 
-    my $body = (blessed($method) ? $method->body : $method);
-    ('CODE' eq ref($body))
-        || Moose->throw_error("Your code block must be a CODE reference");
-
-    $self->add_package_symbol(
-        { sigil => '&', type => 'CODE', name => $method_name },
-        $body
-    );
+    $self->add_method(@_);
 }
 
 ## ------------------------------------------------------------------

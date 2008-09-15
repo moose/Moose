@@ -1,6 +1,24 @@
 Revision history for Perl extension Moose
 
-0.58
+0.5x
+    !! This release has an incompatible change regarding !!
+       how roles add methods to a class !!
+
+    * Roles and role application
+      ! Roles now add methods by calling add_method, not
+        alias_method. They make sure to always provide a method
+        object, which will be cloned internally. This means that it is
+        now possible to track the source of a method provided by a
+        role, and even follow its history through intermediate roles.
+
+        This means that methods added by a role now show up when
+        looking at a class's method list/map. (Dave Rolsky)
+
+    * Moose::Meta::Method::Delegation
+    * Moose::Meta::Attribute
+      - Delegation methods now have their own method class. (Dave
+        Rolsky)
+
     * Moose::Meta::TypeConstraint::Parameterizable
       - Added a new method 'parameterize' which is basically a factory
         for the containing constraint.  This makes it easier to create
@@ -36,6 +54,15 @@ Revision history for Perl extension Moose
         functions for your own use, so we err on the safe side and
         always keep them. (Dave Rolsky)
         - added tests for this (rafl)
+
+     * Moose::Meta::Class
+       - Changes to how we fix metaclass compatibility that are much
+         too complicated to go into. The summary is that Moose is much
+         less likely to complain about metaclass incompatibility
+         now. In particular, if two metaclasses differ because
+         Moose::Util::MetaRole was used on the two corresponding
+         classes, then the difference in roles is reconciled for the
+         subclass's metaclass. (Dave Rolsky)
 
 0.57 Wed September 3, 2008
     * Moose::Intro
@@ -1259,7 +1286,7 @@ Revision history for Perl extension Moose
       - added tests to assure we work with Module::Refresh
       - added stricter test skip logic in the Moose POOP
         test, ask Rob Kinyon why.
-        - *cough* DBM::Deep 1.0 backwards compatability sucks *cough* ;)
+        - *cough* DBM::Deep 1.0 backwards compatibility sucks *cough* ;)
 
 0.18 Sat. March 10, 2007
     ~~ Many, many documentation updates ~~
@@ -1540,7 +1567,7 @@ Revision history for Perl extension Moose
         - 'with' now checks Role validaity and
           accepts more than one Role at a time
         - 'extends' makes metaclass adjustments as
-           needed to ensure metaclass compatability
+           needed to ensure metaclass compatibility
 
     * Moose::Role
       - refactored the keyword exports

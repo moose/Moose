@@ -11,6 +11,7 @@ our $VERSION   = '0.57';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
+use Moose::Meta::Method::Delegation;
 use Moose::Util ();
 use Moose::Util::TypeConstraints ();
 
@@ -575,8 +576,6 @@ sub install_delegation {
     # to delagate to, see that method for details
     my %handles = $self->_canonicalize_handles;
 
-    # find the accessor method for this attribute
-    my $accessor = $self->_get_delegate_accessor;
 
     # install the delegation ...
     my $associated_class = $self->associated_class;
@@ -598,43 +597,13 @@ sub install_delegation {
         #cluck("Not delegating method '$handle' because it is a core method") and
         next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
-        if ('CODE' eq ref($method_to_call)) {
-            $associated_class->add_method($handle => Class::MOP::subname($name, $method_to_call));
-        }
-        else {
-            # NOTE:
-            # we used to do a goto here, but the
-            # goto didn't handle failure correctly
-            # (it just returned nothing), so I took 
-            # that out. However, the more I thought
-            # about it, the less I liked it doing 
-            # the goto, and I prefered the act of 
-            # delegation being actually represented
-            # in the stack trace. 
-            # - SL
-            $associated_class->add_method($handle => Class::MOP::subname($name, sub {
-                my $instance = shift;
-                my $proxy = $instance->$accessor();
-                (defined $proxy) 
-                    || $self->throw_error("Cannot delegate $handle to $method_to_call because " . 
-                              "the value of " . $self->name . " is not defined", method_name => $method_to_call, object => $instance);
-                $proxy->$method_to_call(@_);
-            }));
-        }
+        my $method = $self->_make_delegation_method($handle, $method_to_call);
+
+        $self->associated_class->add_method($method->name, $method);
     }    
 }
 
 # private methods to help delegation ...
-
-sub _get_delegate_accessor {
-    my $self = shift;
-    # find the accessor method for this attribute
-    my $accessor = $self->get_read_method_ref;
-    # then unpack it if we need too ...
-    $accessor = $accessor->body if blessed $accessor;    
-    # return the accessor
-    return $accessor;
-}
 
 sub _canonicalize_handles {
     my $self    = shift;
@@ -711,6 +680,22 @@ sub _get_delegate_method_list {
     else {
         $self->throw_error("Unable to recognize the delegate metaclass '$meta'", data => $meta);
     }
+}
+
+sub _make_delegation_method {
+    my ( $self, $handle_name, $method_to_call ) = @_;
+
+    my $method_body;
+
+    $method_body = $method_to_call
+        if 'CODE' eq ref($method_to_call);
+
+    return Moose::Meta::Method::Delegation->new(
+        name               => $handle_name,
+        package_name       => $self->associated_class->name,
+        attribute          => $self,
+        delegate_to_method => $method_to_call,
+    );
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
