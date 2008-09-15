@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.5x
+0.58
     !! This release has an incompatible change regarding !!
        how roles add methods to a class !!
 
@@ -13,6 +13,19 @@ Revision history for Perl extension Moose
 
         This means that methods added by a role now show up when
         looking at a class's method list/map. (Dave Rolsky)
+
+    * Makefile.PL
+      - From this release on, we'll try to maintain a list of
+        conflicting modules, and warn you if you have one
+        installed. For example, this release conflicts with ...
+        - MooseX::Singleton        <= 0.11
+        - MooseX::Params::Validate <= 0.05
+        - Fey::ORM                 <= 0.10
+
+        In general, we try to not break backwards compatibility for
+        most Moose users, but MooseX modules and other code which
+        extends Moose's metaclasses is often affected by very small
+        changes in the Moose internals.
 
     * Moose::Meta::Method::Delegation
     * Moose::Meta::Attribute
