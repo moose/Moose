@@ -1,6 +1,26 @@
 Revision history for Perl extension Moose
 
 0.58
+    * Moose::Meta::TypeConstraint::Parameterizable
+      - added a new method 'parameterize' which is basically a
+        factory for the containing constraint.  This makes it easier
+        to create new types of parameterized constraints.
+    * Moose::Meta::TypeConstraint::Union
+      - changed the way Union types canonicalize their names to follow
+        the normalized TC naming rules (no whitespace).
+    * Moose::Util::TypeConstraints
+      - Parameter and Union args are now sorted, this makes Int|Str
+      the same constraint as Str|Int.
+      - Changes to the way Union types are parsed to more correctly
+        stringify their names
+      - creating parameterize types now use the new parameterize method
+      - incoming type constraint strings are now normalized to remove
+        all whitespace differences.
+      - changed the way we parse type constraint strings so that we now
+        match TC[Int,Int,...] and TC[name=>Str] as parameterized type
+        constraints.  This lays the foundation for more flexible type
+        constraint implementations.
+    * Tests and docs for all the above.
     * Moose::Exporter
     * Moose
       - Moose::Exporter will no longer remove a subroutine that the
