@@ -9,6 +9,8 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
+use Moose::Meta::TypeConstraint::Parameterized;
+use Moose::Util::TypeConstraints ();
 
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
@@ -40,6 +42,29 @@ sub _can_coerce_constraint_from {
     };
 }
 
+sub _parse_type_parameter {
+    my ($self, $type_parameter) = @_;
+    return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_parameter);
+}
+
+sub parameterize {
+    my ($self, $type_parameter) = @_;
+
+    my $contained_tc = $self->_parse_type_parameter($type_parameter);
+
+    if ( $contained_tc->isa('Moose::Meta::TypeConstraint') ) {
+        my $tc_name = $self->name . '[' . $contained_tc->name . ']';
+        return Moose::Meta::TypeConstraint::Parameterized->new(
+            name           => $tc_name,
+            parent         => $self,
+            type_parameter => $contained_tc,
+        );
+    }
+    else {
+        Moose->throw_error("The type parameter must be a Moose meta type");
+    }
+}
+
 
 1;
 
@@ -61,6 +86,11 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 =item B<has_constraint_generator>
 
 =item B<generate_constraint_for>
+
+=item B<parameterize>
+
+Given a single type constraint string, this method parses the string
+and parameterizes the type based on the parsed string.
 
 =item B<meta>
 
