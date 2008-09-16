@@ -851,6 +851,46 @@ for you.
 
 An alias for C<confess>, used by internally by Moose.
 
+=head1 METACLASS COMPATIBILITY AND MOOSE
+
+Metaclass compatibility is a thorny subject. You should start by
+reading the "About Metaclass compatibility" section in the
+C<Class::MOP> docs.
+
+Moose will attempt to resolve a few cases of metaclass incompatibility
+when you set the superclasses for a class, unlike C<Class::MOP>, which
+simply dies if the metaclasses are incompatible.
+
+In actuality, Moose fixes incompatibility for I<all> of a class's
+metaclasses, not just the class metaclass. That includes the instance
+metaclass, attribute metaclass, as well as its constructor class and
+destructor class. However, for simplicity this discussion will just
+refer to "metaclass", meaning the class metaclass, most of the time.
+
+Moose has two algorithms for fixing metaclass incompatibility.
+
+The first algorithm is very simple. If all the metaclass for the
+parent is a I<subclass> of the child's metaclass, then we simply
+replace the child's metaclass with the parent's.
+
+The second algorithm is more complicated. It tries to determine if the
+metaclasses only "differ by roles". This means that the parent and
+child's metaclass share a common ancestor in their respective
+hierarchies, and that the subclasses under the common ancestor are
+only different because of role applications. This case is actually
+fairly common when you mix and match various C<MooseX::*> modules,
+many of which apply roles to the metaclass.
+
+If the parent and child do differ by roles, Moose replaces the
+metaclass in the child with a newly created metaclass. This metaclass
+is a subclass of the parent's metaclass, does all of the roles that
+the child's metaclass did before being replaced. Effectively, this
+means the new metaclass does all of the roles done by both the
+parent's and child's original metaclasses.
+
+Ultimately, this is all transparent to you except in the case of an
+unresolvable conflict.
+
 =head1 CAVEATS
 
 =over 4
