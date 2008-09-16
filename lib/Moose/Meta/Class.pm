@@ -28,12 +28,12 @@ __PACKAGE__->meta->add_attribute('roles' => (
 
 __PACKAGE__->meta->add_attribute('constructor_class' => (
     accessor => 'constructor_class',
-    default  => sub { 'Moose::Meta::Method::Constructor' }
+    default  => 'Moose::Meta::Method::Constructor',
 ));
 
 __PACKAGE__->meta->add_attribute('destructor_class' => (
     accessor => 'destructor_class',
-    default  => sub { 'Moose::Meta::Method::Destructor' }
+    default  => 'Moose::Meta::Method::Destructor',
 ));
 
 __PACKAGE__->meta->add_attribute('error_class' => (
