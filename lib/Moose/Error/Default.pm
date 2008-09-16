@@ -3,14 +3,17 @@ package Moose::Error::Default;
 use strict;
 use warnings;
 
+use Carp::Heavy;
+
+
 sub new {
     my ( $self, @args ) = @_;
-    $self->create_error_confess(@args);
+    $self->create_error_confess( @args );
 }
 
 sub create_error_croak {
     my ( $self, @args ) = @_;
-    $self->_create_error_carpmess(@args);
+    $self->_create_error_carpmess( @args );
 }
 
 sub create_error_confess {
@@ -22,17 +25,15 @@ sub _create_error_carpmess {
     my ( $self, %args ) = @_;
 
     my $carp_level = 3 + ( $args{depth} || 1 );
-    local $Carp::MaxArgNums = 20
-        ;  # default is 8, usually we use named args which gets messier though
+    local $Carp::MaxArgNums = 20; # default is 8, usually we use named args which gets messier though
 
     my @args = exists $args{message} ? $args{message} : ();
 
     if ( $args{longmess} || $Carp::Verbose ) {
         local $Carp::CarpLevel = ( $Carp::CarpLevel || 0 ) + $carp_level;
         return Carp::longmess(@args);
-    }
-    else {
-        return Carp::ret_summary( $carp_level, @args );
+    } else {
+        return Carp::ret_summary($carp_level, @args);
     }
 }
 
