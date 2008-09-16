@@ -1,5 +1,8 @@
 package Moose::Error::Croak;
 
+use strict;
+use warnings;
+
 use base qw(Moose::Error::Default);
 
 sub new {

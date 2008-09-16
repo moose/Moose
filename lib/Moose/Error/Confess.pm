@@ -1,5 +1,8 @@
 package Moose::Error::Confess;
 
+use strict;
+use warnings;
+
 use base qw(Moose::Error::Default);
 
 __PACKAGE__
