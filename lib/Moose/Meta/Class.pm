@@ -563,7 +563,7 @@ sub _process_attribute {
 
     @args = %{$args[0]} if scalar @args == 1 && ref($args[0]) eq 'HASH';
 
-    if ($name =~ /^\+(.*)/) {
+    if (($name || '') =~ /^\+(.*)/) {
         return $self->_process_inherited_attribute($1, @args);
     }
     else {

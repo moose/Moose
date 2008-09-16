@@ -76,6 +76,11 @@ Revision history for Perl extension Moose
         Moose::Util::MetaRole was used on the two corresponding
         classes, then the difference in roles is reconciled for the
         subclass's metaclass. (Dave Rolsky)
+      - Squashed an warning in _process_attribute (thepler)
+
+    * Moose::Meta::Role
+      - throw exceptions (sooner) for invalid attribute names (thepler)
+        - added tests for this (thepler)
 
 0.57 Wed September 3, 2008
     * Moose::Intro
