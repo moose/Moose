@@ -653,8 +653,6 @@ sub make_immutable {
       );
 }
 
-#{ package Moose::Meta::Class::ErrorRoutines; %Carp::Internal?
-
 our $error_level;
 
 sub throw_error {
