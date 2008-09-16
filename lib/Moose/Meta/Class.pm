@@ -17,6 +17,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overriden;
 use Moose::Meta::Method::Augmented;
+use Moose::Error::Default;
 
 use base 'Class::MOP::Class';
 
@@ -35,13 +36,9 @@ __PACKAGE__->meta->add_attribute('destructor_class' => (
     default  => sub { 'Moose::Meta::Method::Destructor' }
 ));
 
-__PACKAGE__->meta->add_attribute('error_builder' => (
-    reader  => 'error_builder',
-    default => 'confess',
-));
-
 __PACKAGE__->meta->add_attribute('error_class' => (
-    reader  => 'error_class',
+    accessor => 'error_class',
+    default  => 'Moose::Error::Default',
 ));
 
 
@@ -658,11 +655,11 @@ sub make_immutable {
 
 #{ package Moose::Meta::Class::ErrorRoutines; %Carp::Internal?
 
-our $level;
+our $error_level;
 
 sub throw_error {
     my ( $self, @args ) = @_;
-    local $level = 1;
+    local $error_level = ($error_level || 0) + 1;
     $self->raise_error($self->create_error(@args));
 }
 
@@ -676,63 +673,22 @@ sub create_error {
 
     require Carp::Heavy;
 
-    local $level = $level + 1;
-
+    local $error_level = ($error_level || 0 ) + 1;
 
     if ( @args % 2 == 1 ) {
         unshift @args, "message";
     }
 
-    my %args = ( Carp::caller_info($level), metaclass => $self, error => $@, @args );
+    my %args = ( metaclass => $self, error => $@, @args );
 
-    if ( my $class = $args{class} || ( ref $self && $self->error_class ) ) {
-        return $self->create_error_object( %args, class => $class );
-    } else {
-        my $builder = $args{builder} || ( ref($self) ? $self->error_builder : "confess" );
+    $args{depth} += $error_level;
 
-        my $builder_method = ( ( ref($builder) && ref($builder) eq 'CODE' ) 
-            ? $builder
-            : ( $self->can("create_error_$builder") || "create_error_confess" ));
-
-        return $self->$builder_method(%args);
-    }
-}
-
-sub create_error_object {
-    my ( $self, %args ) = @_;
-
-    my $class = delete $args{class};
+    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
 
     $class->new(
-        %args,
-        depth => ( ($args{depth} || 1) + ( $level + 1 ) ),
+        Carp::caller_info($args{depth}),
+        %args
     );
-}
-
-sub create_error_croak {
-    my ( $self, @args ) = @_;
-    $self->_create_error_carpmess( @args );
-}
-
-sub create_error_confess {
-    my ( $self, @args ) = @_;
-    $self->_create_error_carpmess( @args, longmess => 1 );
-}
-
-sub _create_error_carpmess {
-    my ( $self, %args ) = @_;
-
-    my $carp_level = $level + 1 + ( $args{depth} || 1 );
-    local $Carp::MaxArgNums = 20;         # default is 8, usually we use named args which gets messier though
-
-    my @args = exists $args{message} ? $args{message} : ();
-
-    if ( $args{longmess} || $Carp::Verbose ) {
-        local $Carp::CarpLevel = ( $Carp::CarpLevel || 0 ) + $carp_level;
-        return Carp::longmess(@args);
-    } else {
-        return Carp::ret_summary($carp_level, @args);
-    }
 }
 
 1;

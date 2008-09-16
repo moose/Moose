@@ -14,21 +14,13 @@ use Test::More 'no_plan';;
     package Bar;
     use metaclass (
         metaclass => "Moose::Meta::Class",
-        error_builder => "croak",
+        error_class => "Moose::Error::Croak",
     );
     use Moose;
 
     has foo => ( is  => "ro" );
 
-    package Baz;
-    use metaclass (
-        metaclass => "Moose::Meta::Class",
-        error_class => "Baz::Error",
-    );
-    use Moose;
-
-    has foo => ( is  => "ro" );
-
+    
     package Baz::Error;
     use Moose;
 
@@ -39,6 +31,15 @@ use Test::More 'no_plan';;
     has data => ( is => "ro" );
     has line => ( isa => "Int", is => "ro" );
     has file => ( isa => "Str", is => "ro" );
+
+    package Baz;
+    use metaclass (
+        metaclass => "Moose::Meta::Class",
+        error_class => "Baz::Error",
+    );
+    use Moose;
+
+    has foo => ( is  => "ro" );
 }
 
 my $line;
