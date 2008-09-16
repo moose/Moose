@@ -679,7 +679,7 @@ sub create_error {
         unshift @args, "message";
     }
 
-    my %args = ( metaclass => $self, error => $@, @args );
+    my %args = ( metaclass => $self, last_error => $@, @args );
 
     $args{depth} += $error_level;
 
