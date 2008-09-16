@@ -31,6 +31,7 @@ use Test::More 'no_plan';;
     has data => ( is => "ro" );
     has line => ( isa => "Int", is => "ro" );
     has file => ( isa => "Str", is => "ro" );
+    has last_error => ( isa => "Any", is => "ro" );
 
     package Baz;
     use metaclass (
@@ -46,7 +47,7 @@ my $line;
 sub blah { $line = __LINE__; shift->foo(4) }
 
 sub create_error {
-    eval { blah(shift) };
+    eval { eval { die "Blah" }; blah(shift) };
     ok( my $e = $@, "got some error" );
     return {
         file => __FILE__,
@@ -80,4 +81,5 @@ sub create_error {
     is( $e->{error}->line, $e->{line}, "line attr" );
     is( $e->{error}->file, $e->{file}, "file attr" );
     is_deeply( $e->{error}->data, [ $baz, 4 ], "captured args" );
+    like( $e->{error}->last_error, qr/Blah/, "last error preserved" );
 }
