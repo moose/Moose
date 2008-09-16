@@ -683,6 +683,8 @@ sub create_error {
 
     my $class = ref $self ? $self->error_class : "Moose::Error::Default";
 
+    Class::MOP::load_class($class);
+
     $class->new(
         Carp::caller_info($args{depth}),
         %args
