@@ -674,13 +674,16 @@ sub raise_error {
 sub create_error {
     my ( $self, @args ) = @_;
 
+    require Carp::Heavy;
+
+    local $level = $level + 1;
+
+
     if ( @args % 2 == 1 ) {
         unshift @args, "message";
     }
 
-    my %args = ( meta => $self, error => $@, @args );
-
-    local $level = $level + 1;
+    my %args = ( Carp::caller_info($level), metaclass => $self, error => $@, @args );
 
     if ( my $class = $args{class} || ( ref $self && $self->error_class ) ) {
         return $self->create_error_object( %args, class => $class );
@@ -720,16 +723,15 @@ sub _create_error_carpmess {
     my ( $self, %args ) = @_;
 
     my $carp_level = $level + 1 + ( $args{depth} || 1 );
-
-    local $Carp::CarpLevel = $carp_level; # $Carp::CarpLevel + $carp_level ?
     local $Carp::MaxArgNums = 20;         # default is 8, usually we use named args which gets messier though
 
     my @args = exists $args{message} ? $args{message} : ();
 
-    if ( $args{longmess} ) {
+    if ( $args{longmess} || $Carp::Verbose ) {
+        local $Carp::CarpLevel = ( $Carp::CarpLevel || 0 ) + $carp_level;
         return Carp::longmess(@args);
     } else {
-        return Carp::shortmess(@args);
+        return Carp::ret_summary($carp_level, @args);
     }
 }
 

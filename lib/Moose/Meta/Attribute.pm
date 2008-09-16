@@ -70,7 +70,8 @@ sub throw_error {
     unshift @_, "message" if @_ % 2 == 1;
     unshift @_, attr => $self if ref $self;
     unshift @_, $class;
-    goto $class->can("throw_error"); # to avoid incrementing depth by 1
+    my $handler = $class->can("throw_error"); # to avoid incrementing depth by 1
+    goto $handler;
 }
 
 sub new {

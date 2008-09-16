@@ -11,8 +11,7 @@ use base 'Class::MOP::Method';
 
 sub _error_thrower {
     my $self = shift;
-    return "Moose::Meta::Class";
-    #( $self->associated_attribute || $self->associated_class ) # FIXME move to Accessor, fix for Constructor
+    ( ref $self && $self->associated_metaclass ) || "Moose::Meta::Class";
 }
 
 sub throw_error {

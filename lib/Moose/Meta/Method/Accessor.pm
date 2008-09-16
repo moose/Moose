@@ -11,7 +11,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
-## Inline method generators
+sub _error_thrower {
+    my $self = shift;
+    ( ref $self && $self->associated_attribute ) || $self->SUPER::_error_thrower();
+}
 
 sub _eval_code {
     my ( $self, $code ) = @_;
