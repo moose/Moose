@@ -847,7 +847,7 @@ instead, which lets you stack multiple C<Moose.pm>-alike modules
 sanely. It handles getting the exported functions into the right place
 for you.
 
-=head2 throw_error
+=head2 B<throw_error>
 
 An alias for C<confess>, used by internally by Moose.
 
