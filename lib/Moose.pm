@@ -62,7 +62,6 @@ sub extends {
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
     my $meta = Moose::Meta::Class->initialize($class);
-    $meta->_fix_metaclass_incompatibility(@supers);
     $meta->superclasses(@supers);
 }
 
