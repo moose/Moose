@@ -134,6 +134,7 @@ t/020_attributes/019_attribute_lazy_initializer.t
 t/020_attributes/020_trigger_and_coerce.t
 t/020_attributes/021_method_generation_rules.t
 t/020_attributes/022_legal_options_for_inheritance.t
+t/020_attributes/023_attribute_names.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t
