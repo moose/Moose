@@ -96,11 +96,12 @@ Revision history for Perl extension Moose
     * Moose::Error::Default
     * Moose::Error::Croak
     * Moose::Error::Confess
-      - All instances of confess() changed with an overridable C<throw_error>
-        that leads to the metaclass, with additional parameters (not just an
-        error string). This allows per class custom errors using the
-        C<error_class> metaclass attribute.
-        The default C<error_class> behaves like C<confess>.
+      - All instances of confess() changed to use overridable
+        C<throw_error> method. This method ultimately calls a class
+        constructor, and you can change the class being called. In
+        addition, errors now pass more information than just a string.
+        The default C<error_class> behaves like C<Carp::confess>, so
+        the behavior is not visibly different for end users.
 
 0.57 Wed September 3, 2008
     * Moose::Intro
