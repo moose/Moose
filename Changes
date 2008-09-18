@@ -82,6 +82,12 @@ Revision history for Perl extension Moose
       - throw exceptions (sooner) for invalid attribute names (thepler)
         - added tests for this (thepler)
 
+    * Moose::Util::MetaRole
+      - If you explicitly set a constructor or destructor class for a
+        metaclass object, and then applied roles to the metaclass,
+        that explicitly set class would be lost and replaced with the
+        default.
+
 0.57 Wed September 3, 2008
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
