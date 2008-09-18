@@ -2,7 +2,7 @@ Revision history for Perl extension Moose
 
 0.58
     !! This release has an incompatible change regarding !!
-       how roles add methods to a class !!
+    !! how roles add methods to a class !!
 
     * Roles and role application
       ! Roles now add methods by calling add_method, not
