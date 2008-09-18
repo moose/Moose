@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';;
+use Test::More tests => 24;
+use Test::Exception;
 
 {
 
@@ -87,3 +88,69 @@ sub create_error {
     is_deeply( $e->{error}->data, [ $baz, 4 ], "captured args" );
     like( $e->{error}->last_error, qr/Blah/, "last error preserved" );
 }
+
+{
+    package Role::Foo;
+    use Moose::Role;
+
+    sub foo { }
+}
+
+{
+    package Baz::Sub;
+
+    use Moose;
+    extends 'Baz';
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => __PACKAGE__,
+        metaclass_roles => ['Role::Foo'],
+    );
+}
+
+{
+    package Baz::Sub::Sub;
+    use metaclass (
+        metaclass   => 'Moose::Meta::Class',
+        error_class => 'Moose::Error::Croak',
+    );
+    use Moose;
+
+    ::dies_ok { extends 'Baz::Sub' } 'error_class is included in metaclass compatibility checks';
+}
+
+{
+    package Foo::Sub;
+
+    use metaclass (
+        metaclass   => 'Moose::Meta::Class',
+        error_class => 'Moose::Error::Croak',
+    );
+
+    use Moose;
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class         => __PACKAGE__,
+        metaclass_roles => ['Role::Foo'],
+    );
+}
+
+ok( Foo::Sub->meta->error_class->isa('Moose::Error::Croak'),
+    q{Foo::Sub's error_class still isa Moose::Error::Croak} );
+
+{
+    package Foo::Sub::Sub;
+    use Moose;
+
+    ::lives_ok { extends 'Foo::Sub' } 'error_class differs by role so incompat is handled';
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class         => __PACKAGE__,
+        error_class_roles => ['Role::Foo'],
+    );
+}
+
+ok( Foo::Sub::Sub->meta->error_class->meta->does_role('Role::Foo'),
+    q{Foo::Sub::Sub's error_class does Role::Foo} );
+ok( Foo::Sub::Sub->meta->error_class->isa('Moose::Error::Croak'),
+    q{Foo::Sub::Sub's error_class now subclasses Moose::Error::Croak} );
