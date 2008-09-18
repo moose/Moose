@@ -8,7 +8,7 @@ use Class::MOP;
 
 use Carp ();
 use List::Util qw( first );
-use List::MoreUtils qw( any all );
+use List::MoreUtils qw( any all uniq );
 use Scalar::Util 'weaken', 'blessed';
 
 our $VERSION   = '0.57';
@@ -350,7 +350,8 @@ sub _superclass_meta_is_compatible {
 
 # I don't want to have to type this >1 time
 my @MetaClassTypes =
-    qw( attribute_metaclass method_metaclass instance_metaclass constructor_class destructor_class );
+    qw( attribute_metaclass method_metaclass instance_metaclass
+        constructor_class destructor_class error_class );
 
 sub _reconcile_with_superclass_meta {
     my ($self, $super) = @_;
@@ -385,7 +386,8 @@ sub _reinitialize_with {
         instance_metaclass  => $new_meta->instance_metaclass,
     );
 
-    $new_self->$_( $new_meta->$_ ) for qw( constructor_class destructor_class );
+    $new_self->$_( $new_meta->$_ )
+        for qw( constructor_class destructor_class error_class );
 
     %$self = %$new_self;
 
@@ -515,7 +517,7 @@ sub _all_roles_until {
         push @roles, $meta->calculate_all_roles;
     }
 
-    return @roles;
+    return uniq @roles;
 }
 
 sub _reconcile_role_differences {
@@ -809,6 +811,12 @@ These are the names of classes used when making a class
 immutable. These default to L<Moose::Meta::Method::Constructor> and
 L<Moose::Meta::Method::Destructor> respectively. These accessors are
 read-write, so you can use them to change the class name.
+
+=item B<error_class ($class_name)>
+
+The name of the class used to throw errors. This default to
+L<Moose::Error::Default>, which generates an error with a stacktrace
+just like C<Carp::confess>.
 
 =item B<check_metaclass_compatibility>
 
