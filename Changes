@@ -88,6 +88,20 @@ Revision history for Perl extension Moose
         that explicitly set class would be lost and replaced with the
         default.
 
+    * Moose::Meta::Class
+    * Moose::Meta::Attribute
+    * Moose::Meta::Method
+    * Moose
+    * Moose::Object
+    * Moose::Error::Default
+    * Moose::Error::Croak
+    * Moose::Error::Confess
+      - All instances of confess() changed with an overridable C<throw_error>
+        that leads to the metaclass, with additional parameters (not just an
+        error string). This allows per class custom errors using the
+        C<error_class> metaclass attribute.
+        The default C<error_class> behaves like C<confess>.
+
 0.57 Wed September 3, 2008
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
