@@ -5,22 +5,29 @@ use warnings;
 
 use List::MoreUtils qw( all );
 
+my @Classes = qw( constructor_class destructor_class error_class );
+
 sub apply_metaclass_roles {
     my %options = @_;
 
     my $for = $options{for_class};
 
+    my %old_classes = map { $_ => $for->meta->$_ } @Classes;
+
     my $meta = _make_new_metaclass( $for, \%options );
 
-    for my $tor_class ( grep { $options{ $_ . '_roles' } }
-        qw( constructor_class destructor_class ) ) {
+    for my $c (@Classes) {
+        if ( $options{ $c . '_roles' } ) {
+            my $class = _make_new_class(
+                $meta->$c(),
+                $options{ $c . '_roles' }
+            );
 
-        my $class = _make_new_class(
-            $meta->$tor_class(),
-            $options{ $tor_class . '_roles' }
-        );
-
-        $meta->$tor_class($class);
+            $meta->$c($class);
+        }
+        else {
+            $meta->$c( $old_classes{$c} );
+        }
     }
 
     return $meta;
@@ -82,7 +89,7 @@ sub _make_new_class {
 
     return $existing_class unless $roles;
 
-    my $meta = $existing_class->meta();
+    my $meta = Class::MOP::Class->initialize($existing_class);
 
     return $existing_class
         if $meta->can('does_role') && all { $meta->does_role($_) } @{$roles};

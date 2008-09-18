@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 69;
+use Test::More tests => 71;
 
 use Moose::Util::MetaRole;
 
@@ -443,4 +443,30 @@ use Moose::Util::MetaRole;
         q{My::Class10->meta()->meta() does Role::Bar } );
     ok( My::Class10->meta()->isa('My::Meta::Class2'),
         q{... and My::Class10->meta still isa(My::Meta::Class2)} );
+}
+
+{
+    package My::Constructor;
+
+    use base 'Moose::Meta::Method::Constructor';
+}
+
+{
+    package My::Class11;
+
+    use Moose;
+
+    __PACKAGE__->meta->constructor_class('My::Constructor');
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class       => 'My::Class11',
+        metaclass_roles => ['Role::Foo'],
+    );
+}
+
+{
+    ok( My::Class11->meta()->meta()->does_role('Role::Foo'),
+        q{My::Class11->meta()->meta() does Role::Foo } );
+    is( My::Class11->meta()->constructor_class, 'My::Constructor',
+        q{... and explicitly set constructor_class value is unchanged)} );
 }
