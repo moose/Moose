@@ -19,19 +19,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 # ensures the prototypes are in scope when consumers are
 # compiled.
 
-# creation and location
-sub find_type_constraint                 ($);
-sub register_type_constraint             ($);
-sub find_or_create_type_constraint       ($;$);
-sub find_or_parse_type_constraint        ($);
-sub find_or_create_isa_type_constraint   ($);
-sub find_or_create_does_type_constraint  ($);
-sub create_type_constraint_union         (@);
-sub create_parameterized_type_constraint ($);
-sub create_class_type_constraint         ($;$);
-sub create_role_type_constraint          ($;$);
-sub create_enum_type_constraint          ($$);
-
 # dah sugah!
 sub type        ($$;$$);
 sub subtype     ($$;$$$);
@@ -92,7 +79,7 @@ sub export_type_constraints_as_functions {
     }
 }
 
-sub create_type_constraint_union (@) {
+sub create_type_constraint_union {
     my @type_constraint_names;
 
     if (scalar @_ == 1 && _detect_type_constraint_union($_[0])) {
@@ -115,7 +102,7 @@ sub create_type_constraint_union (@) {
     );
 }
 
-sub create_parameterized_type_constraint ($) {
+sub create_parameterized_type_constraint {
     my $type_constraint_name = shift;
     my ($base_type, $type_parameter) = _parse_parameterized_type_constraint($type_constraint_name);
 
@@ -149,7 +136,7 @@ sub _create_parameterized_type_constraint {
 }
 
 #should we also support optimized checks?
-sub create_class_type_constraint ($;$) {
+sub create_class_type_constraint {
     my ( $class, $options ) = @_;
 
     # too early for this check
@@ -167,7 +154,7 @@ sub create_class_type_constraint ($;$) {
     Moose::Meta::TypeConstraint::Class->new( %options );
 }
 
-sub create_role_type_constraint ($;$) {
+sub create_role_type_constraint {
     my ( $role, $options ) = @_;
 
     # too early for this check
@@ -186,7 +173,7 @@ sub create_role_type_constraint ($;$) {
 }
 
 
-sub find_or_create_type_constraint ($;$) {
+sub find_or_create_type_constraint {
     my ( $type_constraint_name, $options_for_anon_type ) = @_;
 
     if ( my $constraint = find_or_parse_type_constraint($type_constraint_name) ) {
@@ -213,17 +200,17 @@ sub find_or_create_type_constraint ($;$) {
     return;
 }
 
-sub find_or_create_isa_type_constraint ($) {
+sub find_or_create_isa_type_constraint {
     my $type_constraint_name = shift;
     find_or_parse_type_constraint($type_constraint_name) || create_class_type_constraint($type_constraint_name)
 }
 
-sub find_or_create_does_type_constraint ($) {
+sub find_or_create_does_type_constraint {
     my $type_constraint_name = shift;
     find_or_parse_type_constraint($type_constraint_name) || create_role_type_constraint($type_constraint_name)
 }
 
-sub find_or_parse_type_constraint ($) {
+sub find_or_parse_type_constraint {
     my $type_constraint_name = normalize_type_constraint_name(shift);
     my $constraint;
     
@@ -251,7 +238,7 @@ sub normalize_type_constraint_name {
 ## exported functions ...
 ## --------------------------------------------------------
 
-sub find_type_constraint ($) {
+sub find_type_constraint {
     my $type = shift;
 
     if ( blessed $type and $type->isa("Moose::Meta::TypeConstraint") ) {
@@ -263,7 +250,7 @@ sub find_type_constraint ($) {
     }
 }
 
-sub register_type_constraint ($) {
+sub register_type_constraint {
     my $constraint = shift;
     Moose->throw_error("can't register an unnamed type constraint") unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
@@ -344,7 +331,7 @@ sub enum ($;@) {
     );
 }
 
-sub create_enum_type_constraint ($$) {
+sub create_enum_type_constraint {
     my ( $type_name, $values ) = @_;
 
     Moose::Meta::TypeConstraint::Enum->new(
