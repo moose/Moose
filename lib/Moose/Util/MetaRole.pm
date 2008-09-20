@@ -12,11 +12,12 @@ sub apply_metaclass_roles {
 
     my $for = $options{for_class};
 
-    my %old_classes = map { $_ => $for->meta->$_ } @Classes;
+    my %old_classes
+        = map { $_ => $for->meta->$_ } grep { $for->meta->can($_) } @Classes;
 
     my $meta = _make_new_metaclass( $for, \%options );
 
-    for my $c (@Classes) {
+    for my $c ( grep { $meta->can($_) } @Classes ) {
         if ( $options{ $c . '_roles' } ) {
             my $class = _make_new_class(
                 $meta->$c(),
