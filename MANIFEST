@@ -35,6 +35,9 @@ lib/Moose/Cookbook/Snack/Keywords.pod
 lib/Moose/Cookbook/Snack/Types.pod
 lib/Moose/Cookbook/Style.pod
 lib/Moose/Cookbook/WTF.pod
+lib/Moose/Error/Confess.pm
+lib/Moose/Error/Croak.pm
+lib/Moose/Error/Default.pm
 lib/Moose/Exporter.pm
 lib/Moose/Intro.pod
 lib/Moose/Meta/Attribute.pm
