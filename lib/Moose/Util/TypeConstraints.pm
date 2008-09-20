@@ -20,17 +20,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 # compiled.
 
 # dah sugah!
-sub type        ($$;$$);
-sub subtype     ($$;$$$);
-sub class_type  ($;$);
-sub coerce      ($@);
-sub as          ($);
-sub from        ($);
 sub where       (&);
 sub via         (&);
 sub message     (&);
 sub optimize_as (&);
-sub enum        ($;@);
 
 ## private stuff ...
 sub _create_type_constraint ($$$;$$);
@@ -259,12 +252,12 @@ sub register_type_constraint {
 
 # type constructors
 
-sub type ($$;$$) {
+sub type {
     splice(@_, 1, 0, undef);
     goto &_create_type_constraint;
 }
 
-sub subtype ($$;$$$) {
+sub subtype {
     # NOTE:
     # this adds an undef for the name
     # if this is an anon-subtype:
@@ -278,7 +271,7 @@ sub subtype ($$;$$$) {
     goto &_create_type_constraint;
 }
 
-sub class_type ($;$) {
+sub class_type {
     register_type_constraint(
         create_class_type_constraint(
             $_[0],
@@ -296,20 +289,20 @@ sub role_type ($;$) {
     );
 }
 
-sub coerce ($@) {
+sub coerce {
     my ($type_name, @coercion_map) = @_;
     _install_type_coercions($type_name, \@coercion_map);
 }
 
-sub as      ($) { $_[0] }
-sub from    ($) { $_[0] }
+sub as          { @_ }
+sub from        { @_ }
 sub where   (&) { $_[0] }
 sub via     (&) { $_[0] }
 
 sub message     (&) { +{ message   => $_[0] } }
 sub optimize_as (&) { +{ optimized => $_[0] } }
 
-sub enum ($;@) {
+sub enum {
     my ($type_name, @values) = @_;
     # NOTE:
     # if only an array-ref is passed then
