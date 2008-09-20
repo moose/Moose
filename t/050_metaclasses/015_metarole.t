@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 71;
+use Test::More tests => 72;
 
 use Moose::Util::MetaRole;
 
@@ -413,6 +413,12 @@ use Moose::Util::MetaRole;
 }
 
 {
+    package My::Object;
+    use Moose;
+    extends 'Moose::Object';
+}
+
+{
     package My::Meta2;
 
     use Moose::Exporter;
@@ -422,7 +428,11 @@ use Moose::Util::MetaRole;
         shift;
         my %p = @_;
 
-        Moose->init_meta( %p, metaclass => 'My::Meta::Class2' );
+        Moose->init_meta(
+            %p,
+            metaclass  => 'My::Meta::Class2',
+            base_class => 'My::Object',
+        );
     }
 }
 
@@ -443,6 +453,8 @@ use Moose::Util::MetaRole;
         q{My::Class10->meta()->meta() does Role::Bar } );
     ok( My::Class10->meta()->isa('My::Meta::Class2'),
         q{... and My::Class10->meta still isa(My::Meta::Class2)} );
+    ok( My::Class10->isa('My::Object'),
+        q{... and My::Class10 still isa(My::Object)} );
 }
 
 {
