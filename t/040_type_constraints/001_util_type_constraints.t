@@ -3,14 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 44;
+use Test::More tests => 52;
 use Test::Exception;
 
 use Scalar::Util ();
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
-}
+use Moose::Util::TypeConstraints;
+
 
 type Number => where { Scalar::Util::looks_like_number($_) };
 type String 
@@ -59,6 +58,23 @@ is($negative->check('Foo'), undef, '... this is not a negative number');
 
 ok($negative->is_subtype_of('Number'), '... $negative is a subtype of Number');
 ok(!$negative->is_subtype_of('String'), '... $negative is not a subtype of String');
+
+my $negative2 = subtype Number => where { $_ < 0 } => message {"$_ is not a negative number"};
+
+ok(defined $negative2, '... got a value back from negative');
+isa_ok($negative2, 'Moose::Meta::TypeConstraint');
+
+ok($negative2->check(-5), '... this is a negative number');
+ok(!defined($negative2->check(5)), '... this is not a negative number');
+is($negative2->check('Foo'), undef, '... this is not a negative number');
+
+ok($negative2->is_subtype_of('Number'), '... $negative2 is a subtype of Number');
+ok(!$negative2->is_subtype_of('String'), '... $negative is not a subtype of String');
+
+ok($negative2->has_message, '... it has a message');
+is($negative2->validate(2), 
+   '2 is not a negative number',
+   '... validated unsuccessfully (got error)');
 
 # check some meta-details
 

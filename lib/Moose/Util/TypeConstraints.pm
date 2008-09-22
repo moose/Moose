@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Carp ();
+use List::MoreUtils qw( all );
 use Scalar::Util 'blessed';
 use Moose::Exporter;
 
@@ -289,12 +290,18 @@ sub subtype ($$;$$$) {
     # this adds an undef for the name
     # if this is an anon-subtype:
     #   subtype(Num => where { $_ % 2 == 0 }) # anon 'even' subtype
-    # but if the last arg is not a code
-    # ref then it is a subtype alias:
+    #     or
+    #   subtype(Num => where { $_ % 2 == 0 }) message { "$_ must be an even number" }
+    #
+    # but if the last arg is not a code ref then it is a subtype
+    # alias:
+    #
     #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
     # ... yeah I know it's ugly code
     # - SL
-    unshift @_ => undef if scalar @_ <= 2 && ('CODE' eq ref($_[1]));
+    unshift @_ => undef if scalar @_ == 2 && ( 'CODE' eq ref( $_[-1] ) );
+    unshift @_ => undef
+        if scalar @_ == 3 && all { ref($_) =~ /^(?:CODE|HASH)$/ } @_[ 1, 2 ];
     goto &_create_type_constraint;
 }
 
