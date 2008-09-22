@@ -247,6 +247,13 @@ sub normalize_type_constraint_name {
     return $type_constraint_name;
 }
 
+sub _confess {
+    my $error = shift;
+
+    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+    Carp::confess($error);
+}
+
 ## --------------------------------------------------------
 ## exported functions ...
 ## --------------------------------------------------------
@@ -373,11 +380,13 @@ sub _create_type_constraint ($$$;$$) {
     if (defined $name) {
         my $type = $REGISTRY->get_type_constraint($name);
 
-        ($type->_package_defined_in eq $pkg_defined_in)
-            || confess ("The type constraint '$name' has already been created in "
-                       . $type->_package_defined_in . " and cannot be created again in "
-                       . $pkg_defined_in)
-                 if defined $type;
+        ( $type->_package_defined_in eq $pkg_defined_in )
+            || _confess(
+                  "The type constraint '$name' has already been created in "
+                . $type->_package_defined_in
+                . " and cannot be created again in "
+                . $pkg_defined_in )
+            if defined $type;
     }
 
     my $class = "Moose::Meta::TypeConstraint";
@@ -1031,17 +1040,6 @@ This returns all the parameterizable types that have been registered.
 =item B<add_parameterizable_type ($type)>
 
 Adds C<$type> to the list of parameterizable types
-
-=back
-
-=head1 Error Management
-
-=over 4
-
-=item B<confess>
-
-If the caller is a Moose metaclass, use its L<Moose::Meta::Class/throw_error>
-routine, otherwise use L<Carp/confess>.
 
 =back
 
