@@ -18,14 +18,14 @@ type String
     => message { "This is not a string ($_)" };
 
 subtype Natural 
-	=> as Number 
-	=> where { $_ > 0 };
+        => as Number 
+        => where { $_ > 0 };
 
 subtype NaturalLessThanTen 
-	=> as Natural
-	=> where { $_ < 10 }
-	=> message { "The number '$_' is not less than 10" };
-	
+        => as Natural
+        => where { $_ < 10 }
+        => message { "The number '$_' is not less than 10" };
+        
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
 ok(Number(5), '... this is a Num');
@@ -46,10 +46,10 @@ ok(NaturalLessThanTen(5), '... this is a NaturalLessThanTen');
 is(NaturalLessThanTen(12), undef, '... this is not a NaturalLessThanTen');
 is(NaturalLessThanTen(-5), undef, '... this is not a NaturalLessThanTen');
 is(NaturalLessThanTen('Foo'), undef, '... this is not a NaturalLessThanTen');
-	
-# anon sub-typing	
-	
-my $negative = subtype Number => where	{ $_ < 0 };
+        
+# anon sub-typing       
+        
+my $negative = subtype Number => where  { $_ < 0 };
 ok(defined $negative, '... got a value back from negative');
 isa_ok($negative, 'Moose::Meta::TypeConstraint');
 
