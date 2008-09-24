@@ -21,7 +21,7 @@ Moose::Cookbook::Meta::Recipe5 - The "table" attribute as a metaclass trait
   package MyApp::User;
   use Moose -traits => 'HasTable';
 
-  __PACKAGE__->table('User');
+  __PACKAGE__->meta->table('User');
 
 =head1 DESCRIPTION
 
