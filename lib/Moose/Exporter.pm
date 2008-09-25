@@ -72,7 +72,7 @@ sub build_import_methods {
     sub _follow_also_real {
         my $exporting_package = shift;
 
-        die "Package in also ($exporting_package) does not seem to use MooseX::Exporter"
+        die "Package in also ($exporting_package) does not seem to use Moose::Exporter"
             unless exists $EXPORT_SPEC{$exporting_package};
 
         my $also = $EXPORT_SPEC{$exporting_package}{also};
@@ -83,7 +83,7 @@ sub build_import_methods {
 
         for my $package (@also)
         {
-            die "Circular reference in also parameter to MooseX::Exporter between $exporting_package and $package"
+            die "Circular reference in also parameter to Moose::Exporter between $exporting_package and $package"
                 if $seen->{$package};
 
             $seen->{$package} = 1;
