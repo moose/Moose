@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Carp ();
+use List::MoreUtils qw( all );
 use Scalar::Util 'blessed';
 use Moose::Exporter;
 
@@ -227,6 +228,13 @@ sub normalize_type_constraint_name {
     return $type_constraint_name;
 }
 
+sub _confess {
+    my $error = shift;
+
+    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+    Carp::confess($error);
+}
+
 ## --------------------------------------------------------
 ## exported functions ...
 ## --------------------------------------------------------
@@ -262,12 +270,18 @@ sub subtype {
     # this adds an undef for the name
     # if this is an anon-subtype:
     #   subtype(Num => where { $_ % 2 == 0 }) # anon 'even' subtype
-    # but if the last arg is not a code
-    # ref then it is a subtype alias:
+    #     or
+    #   subtype(Num => where { $_ % 2 == 0 }) message { "$_ must be an even number" }
+    #
+    # but if the last arg is not a code ref then it is a subtype
+    # alias:
+    #
     #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
     # ... yeah I know it's ugly code
     # - SL
-    unshift @_ => undef if scalar @_ <= 2 && ('CODE' eq ref($_[1]));
+    unshift @_ => undef if scalar @_ == 2 && ( 'CODE' eq ref( $_[-1] ) );
+    unshift @_ => undef
+        if scalar @_ == 3 && all { ref($_) =~ /^(?:CODE|HASH)$/ } @_[ 1, 2 ];
     goto &_create_type_constraint;
 }
 
@@ -353,11 +367,13 @@ sub _create_type_constraint ($$$;$$) {
     if (defined $name) {
         my $type = $REGISTRY->get_type_constraint($name);
 
-        ($type->_package_defined_in eq $pkg_defined_in)
-            || confess ("The type constraint '$name' has already been created in "
-                       . $type->_package_defined_in . " and cannot be created again in "
-                       . $pkg_defined_in)
-                 if defined $type;
+        ( $type->_package_defined_in eq $pkg_defined_in )
+            || _confess(
+                  "The type constraint '$name' has already been created in "
+                . $type->_package_defined_in
+                . " and cannot be created again in "
+                . $pkg_defined_in )
+            if defined $type;
     }
 
     my $class = "Moose::Meta::TypeConstraint";
@@ -1011,17 +1027,6 @@ This returns all the parameterizable types that have been registered.
 =item B<add_parameterizable_type ($type)>
 
 Adds C<$type> to the list of parameterizable types
-
-=back
-
-=head1 Error Management
-
-=over 4
-
-=item B<confess>
-
-If the caller is a Moose metaclass, use its L<Moose::Meta::Class/throw_error>
-routine, otherwise use L<Carp/confess>.
 
 =back
 

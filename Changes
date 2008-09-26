@@ -1,5 +1,11 @@
 Revision history for Perl extension Moose
 
+0.59
+    * Moose::Util::TypeConstraints
+      - Creating a anonymous subtype with both a constraint and a
+        message failed with a very unhelpful error. Reported by
+        t0m. (Dave Rolsky)
+
 0.58
     !! This release has an incompatible change regarding !!
     !! how roles add methods to a class !!
