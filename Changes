@@ -2,6 +2,8 @@ Revision history for Perl extension Moose
 
 0.59
     * Moose::Util::TypeConstraints
+      - removed prototypes from all but the &-based stuff (mst)
+    * Moose::Util::TypeConstraints
       - Creating a anonymous subtype with both a constraint and a
         message failed with a very unhelpful error, but should just
         work. Reported by t0m. (Dave Rolsky)
