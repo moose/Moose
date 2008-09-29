@@ -226,12 +226,6 @@ that value in C<$birth_date> is actually defined and object before we
 go and call C<isa()> on it! Leaving out those checks means our data
 validation code could actually cause our program to die. Oops.
 
-There's one bit of code in there worth explaining, which is the
-handling of the birth date for coercion. In both the constructor and
-accessor, we first take a copy of the birth date before passing it to
-the coercion routine. This is to avoid changing the value as it was
-passed to those methods, which could cause problems for the caller.
-
 Also note that if we add a superclass to Person we'll have to change
 the constructor to account for that.
 
