@@ -7,6 +7,10 @@ Revision history for Perl extension Moose
       - Creating a anonymous subtype with both a constraint and a
         message failed with a very unhelpful error, but should just
         work. Reported by t0m. (Dave Rolsky)
+    * Tests
+      - Some tests that used Test::Warn if it was available failed
+        with older versions of Test::Warn. Reported by Fayland. (Dave
+        Rolsky)
 
 0.58
     !! This release has an incompatible change regarding !!
