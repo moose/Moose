@@ -442,7 +442,7 @@ Singleton, and much, much more.
 
 Many of these extensions require surprisingly small amounts of code,
 and once you've done it once, you'll never have to hand-code "your way
-of doing things" again. Instead you ll just load your favorite
+of doing things" again. Instead you'll just load your favorite
 extensions.
 
   package MyWay::User;
