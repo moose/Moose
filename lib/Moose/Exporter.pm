@@ -369,10 +369,18 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => [ 'sugar1', 'sugar2' ],
+      with_caller => [ 'has_rw', 'sugar2' ],
       as_is       => [ 'sugar3', \&Some::Random::thing ],
       also        => 'Moose',
   );
+
+  sub has_rw {
+      my ($caller, $class, $name, %options) = @_;
+      Class::MOP::Class->initialize($caller)->add_attribute($name,
+          is => 'rw',
+          %options,
+      );
+  }
 
   # then later ...
   package MyApp::User;
