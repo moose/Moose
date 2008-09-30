@@ -22,5 +22,5 @@ throws_ok {
     use Moose::Util::TypeConstraints;
 
     subtype 'MySubType' => as 'Int' => where { 1 };
-} qr/cannot be created again/, 'Trying to create same constraint twice throws';
+} qr/cannot be created again/, 'Trying to create same type twice throws';
 
