@@ -450,9 +450,9 @@ sub _install_type_coercions ($$) {
 
     my $any;
 
-    my $type                = qr{  $valid_chars+  (?: \[  \s* (??{$any}) \s* \] )? }x;
+    my $type                = qr{  $valid_chars+  (?: \[ \s* (??{$any})   \s* \] )? }x;
     my $type_capture_parts  = qr{ ($valid_chars+) (?: \[ \s* ((??{$any})) \s* \] )? }x;
-    my $type_with_parameter = qr{  $valid_chars+      \[ \s* (??{$any}) \s* \]    }x;
+    my $type_with_parameter = qr{  $valid_chars+      \[ \s* (??{$any})   \s* \]    }x;
 
     my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
