@@ -207,6 +207,7 @@ t/050_metaclasses/015_metarole.t
 t/050_metaclasses/016_metarole_w_metaclass_pm.t
 t/050_metaclasses/017_use_base_of_moose.t
 t/050_metaclasses/018_throw_error.t
+t/050_metaclasses/019_create_anon_with_required_attr.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t

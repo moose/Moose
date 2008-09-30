@@ -11,8 +11,12 @@ Revision history for Perl extension Moose
       - Some tests that used Test::Warn if it was available failed
         with older versions of Test::Warn. Reported by Fayland. (Dave
         Rolsky)
+    * Moose::Meta::Class
+      - In create(), do not pass "roles" option to the superclass
+        - added related test that creates an anon metaclass with
+          a required attribute
 
-0.58
+0.58 Sat September 20, 2008
     !! This release has an incompatible change regarding !!
     !! how roles add methods to a class !!
 

@@ -60,11 +60,12 @@ sub create {
     (ref $options{roles} eq 'ARRAY')
         || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
+    my $roles = delete $options{roles};
 
     my $class = $self->SUPER::create($package_name, %options);
 
-    if (exists $options{roles}) {
-        Moose::Util::apply_all_roles($class, @{$options{roles}});
+    if ($roles) {
+        Moose::Util::apply_all_roles( $class, @$roles );
     }
     
     return $class;
