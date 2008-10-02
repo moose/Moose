@@ -16,7 +16,7 @@ production using Moose, they have been running without
 issue now for well over a year. 
 
 At C<$work> we are re-writing our core offering to use Moose, 
-so it's continued development is assured. 
+so its continued development is assured. 
 
 Several other people on #moose either have apps in production 
 which use Moose, or are in the process of deploying sites 

@@ -179,7 +179,7 @@ location) a consistent API not only across multiple accessors,
 but across multiple classes as well. 
 
 In the next recipe, we will introduce roles, a concept originally 
-borrowed from Smalltalk, which made it's way into Perl 6, and 
+borrowed from Smalltalk, which made its way into Perl 6, and 
 now into Moose.
 
 =head1 AUTHOR
