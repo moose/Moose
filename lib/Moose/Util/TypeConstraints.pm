@@ -751,7 +751,7 @@ that hierarchy represented visually.
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
 
-  ArrayRef[Int]    # an array of intergers
+  ArrayRef[Int]    # an array of integers
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
