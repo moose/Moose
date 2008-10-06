@@ -1,6 +1,10 @@
 Revision history for Perl extension Moose
 
 0.59
+    * Moose
+      - Add abridged documentation for builder/default/initializer/
+        predicate, and link to more details sections in 
+        Class::MOP::Attribute. (t0m)
     * Moose::Util::TypeConstraints
       - removed prototypes from all but the &-based stuff (mst)
     * Moose::Util::TypeConstraints
@@ -11,6 +15,8 @@ Revision history for Perl extension Moose
       - Some tests that used Test::Warn if it was available failed
         with older versions of Test::Warn. Reported by Fayland. (Dave
         Rolsky)
+      - Test firing behavior of triggers in relation to builder/default/
+        lazy_build. (t0m)
     * Moose::Meta::Class
       - In create(), do not pass "roles" option to the superclass
         - added related test that creates an anon metaclass with

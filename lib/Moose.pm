@@ -418,7 +418,8 @@ only). These will create either a read/write accessor or a read-only
 accessor respectively, using the same name as the C<$name> of the attribute.
 
 If you need more control over how your accessors are named, you can use the
-I<reader>, I<writer> and I<accessor> options inherited from
+L<reader|Class::MOP::Attribute#reader>, I<|Class::MOP::Attribute#writer> and 
+I<|Class::MOP::Attribute#accessor> options inherited from 
 L<Class::MOP::Attribute>, however if you use those, you won't need the I<is> 
 option.
 
@@ -471,7 +472,11 @@ The I<trigger> option is a CODE reference which will be called after the value o
 the attribute is set. The CODE ref will be passed the instance itself, the
 updated value and the attribute meta-object (this is for more advanced fiddling
 and can typically be ignored). You B<cannot> have a trigger on a read-only
-attribute.
+attribute. 
+
+B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
+either in the constructor, or using the writer. Default and built values will
+B<not> cause the trigger to be fired.
 
 =item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
 
@@ -605,6 +610,37 @@ resolved to a class name.
 
 Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
 example.
+
+=item I<builder>
+
+The value of this key is the name of the method that will be called to obtain the value used to 
+initialize the attribute. See the documentation in
+L<Class::MOP::Attribute|Class::MOP::Attribute#builder> for more information.
+
+=item I<default>
+
+The value of this key is the default value which will initialize the attribute.
+
+NOTE: If the value is a simple scalar (string or number), then it can be just passed as is. 
+However, if you wish to initialize it with a HASH or ARRAY ref, then you need to wrap that inside a CODE reference. 
+See the documentation in L<Class::MOP::Attribute|Class::MOP::Attribute#default> for more information.
+
+=item I<initializer>
+
+This may be a method name (referring to a method on the class with this attribute) or a CODE ref. 
+The initializer is used to set the attribute value on an instance when the attribute is set during 
+instance initialization (but not when the value is being assigned to). See the documentation in
+L<Class::MOP::Attribute|Class::MOP::Attribute#initializer> for more information.
+
+=item I<clearer>
+
+Allows you to clear the value, see the documentation in 
+L<Class::MOP::Attribute|Class::MOP::Attribute#clearer> for more information.
+
+=item I<predicate>
+
+Basic test to see if a value has been set in the attribute, see the documentation in 
+L<Class::MOP::Attribute|Class::MOP::Attribute#predicate> for more information.
 
 =back
 
