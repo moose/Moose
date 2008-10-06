@@ -152,33 +152,31 @@ sub excludes_role {
 }
 
 sub new_object {
-    my $class = shift;
+    my $class  = shift;
     my $params = @_ == 1 ? $_[0] : {@_};
-    my $self = $class->SUPER::new_object($params);
-    foreach my $attr ($class->compute_all_applicable_attributes()) {
-        # if we have a trigger, then ...
-        if ($attr->can('has_trigger') && $attr->has_trigger) {
-            # make sure we have an init-arg ...
-            if (defined(my $init_arg = $attr->init_arg)) {
-                # now make sure an init-arg was passes ...
-                if (exists $params->{$init_arg}) {
-                    # and if get here, fire the trigger
-                    $attr->trigger->(
-                        $self, 
-                        # check if there is a coercion
-                        ($attr->should_coerce
-                            # and if so, we need to grab the 
-                            # value that is actually been stored
-                            ? $attr->get_read_method_ref->($self)
-                            # otherwise, just get the value from
-                            # the constructor params
-                            : $params->{$init_arg}), 
-                        $attr
-                    );
-                }
-            }       
-        }
+    my $self   = $class->SUPER::new_object($params);
+
+    foreach my $attr ( $class->compute_all_applicable_attributes() ) {
+
+        next unless $attr->can('has_trigger') && $attr->has_trigger;
+
+        my $init_arg = $attr->init_arg;
+
+        next unless defined $init_arg;
+
+        next unless exists $params->{$init_arg};
+
+        $attr->trigger->(
+            $self,
+            (
+                  $attr->should_coerce
+                ? $attr->get_read_method_ref->($self)
+                : $params->{$init_arg}
+            ),
+            $attr
+        );
     }
+
     return $self;
 }
 
