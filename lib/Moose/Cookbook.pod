@@ -76,6 +76,10 @@ provide a default attribute value.
 Demonstrates using operator overloading, coercion, and subtypes to
 model how eye color is determined during reproduction.
 
+=item L<Moose::Cookbook::Basics::Recipe11> - BUILD and BUILDARGS (TODO)
+
+We need a good recipe demonstrating how these work.
+
 =back
 
 =head2 Moose Roles
