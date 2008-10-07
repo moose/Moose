@@ -61,6 +61,7 @@ sub equals {
 
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
+    return unless defined $other;
     return unless $other->isa(__PACKAGE__);
 
     return $self->class eq $other->class;
@@ -83,6 +84,8 @@ sub is_subtype_of {
     }
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_class);
+    
+    return unless defined $type;
 
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_class isn't a class, it might be the TC name of another ::Class type

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More tests => 32;
 use Test::Exception;
 
 BEGIN {
@@ -32,6 +32,9 @@ lives_ok {
     ok( $t->equals($t), "equals to self" );
     ok( !$t->equals( $t->parent ), "not equal to parent" );
     ok( $t->parent->equals( $t->parent ), "parent equals to self" );
+
+    ok( !$t->is_a_type_of("ThisTypeDoesNotExist"), "not a non existant type" );
+    ok( !$t->is_subtype_of("ThisTypeDoesNotExist"), "not a subtype of a non existant type" );
 }
 
 lives_ok {

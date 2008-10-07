@@ -59,6 +59,7 @@ sub equals {
 
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
+    return unless defined $other;
     return unless $other->isa(__PACKAGE__);
 
     return $self->role eq $other->role;
@@ -82,6 +83,8 @@ sub is_subtype_of {
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
 
+    return unless defined $type;
+    
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch

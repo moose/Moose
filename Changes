@@ -17,10 +17,18 @@ Revision history for Perl extension Moose
         Rolsky)
       - Test firing behavior of triggers in relation to builder/default/
         lazy_build. (t0m)
+      - Test behavior of equals/is_a_type_of/is_a_subtype_of for all
+        kinds of supported type. (t0m)
     * Moose::Meta::Class
       - In create(), do not pass "roles" option to the superclass
         - added related test that creates an anon metaclass with
           a required attribute
+    * Moose::Meta::TypeConstraint::Class
+    * Moose::Meta::TypeConstraint::Role
+      - Unify behavior of equals/is_a_type_of/is_a_subtype_of with
+        other types (as per change in 0.55_02). (t0m)
+    * Moose::Meta::TypeConstraint::Registry
+      - Fix warning when dealing with unknown type names (t0m)
 
 0.58 Sat September 20, 2008
     !! This release has an incompatible change regarding !!

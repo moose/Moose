@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More tests => 19;
 use Test::Exception;
 
 BEGIN {
@@ -45,6 +45,9 @@ ok( $type->is_subtype_of("Bar"), "subtype of bar" );
 
 ok( $type->is_subtype_of("Object"), "subtype of Object" );
 ok( $type->is_subtype_of("Role"), "subtype of Role" );
+
+ok( !$type->is_subtype_of("ThisTypeDoesNotExist"), "not subtype of unknown type name" );
+ok( !$type->is_a_type_of("ThisTypeDoesNotExist"), "not type of unknown type name" );
 
 ok( find_type_constraint("Bar")->check(FooC->new), "Foo passes Bar" );
 ok( find_type_constraint("Bar")->check(BarC->new), "Bar passes Bar" );

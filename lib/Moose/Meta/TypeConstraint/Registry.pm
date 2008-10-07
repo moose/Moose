@@ -33,7 +33,7 @@ sub new {
 
 sub has_type_constraint {
     my ($self, $type_name) = @_;
-    exists $self->type_constraints->{$type_name} ? 1 : 0
+    ($type_name and exists $self->type_constraints->{$type_name}) ? 1 : 0
 }
 
 sub get_type_constraint {
