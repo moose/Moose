@@ -86,11 +86,11 @@ sub create_type_constraint_union {
     (scalar @type_constraint_names >= 2)
         || Moose->throw_error("You must pass in at least 2 type names to make a union");
 
-    my @type_constraints = sort {$a->name cmp $b->name} map {
+    my @type_constraints = map {
         find_or_parse_type_constraint($_) ||
          Moose->throw_error("Could not locate type constraint ($_) for the union");
     } @type_constraint_names;
-    
+
     return Moose::Meta::TypeConstraint::Union->new(
         type_constraints => \@type_constraints
     );
@@ -103,30 +103,20 @@ sub create_parameterized_type_constraint {
     (defined $base_type && defined $type_parameter)
         || Moose->throw_error("Could not parse type name ($type_constraint_name) correctly");
 
-    if ($REGISTRY->has_type_constraint($base_type)) {
-        my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
-        return _create_parameterized_type_constraint(
-            $base_type_tc,
-            $type_parameter,
-        );
-    } else {
-        Moose->throw_error("Could not locate the base type ($base_type)");
-    }
-}
+    # We need to get the relevant type constraints and use them to
+    # create the name to ensure that we end up with the fully
+    # normalized name, because the user could've passed something like
+    # HashRef[Str|Int] and we want to make that HashRef[Int|Str].
+    my $base_type_tc = $REGISTRY->get_type_constraint($base_type)
+        || Moose->throw_error("Could not locate the base type ($base_type)");
+    my $parameter_tc = find_or_create_isa_type_constraint($type_parameter)
+        || Moose->throw_error("Could not locate the parameter type ($type_parameter)");
 
-sub _create_parameterized_type_constraint {
-    my ( $base_type_tc, $type_parameter ) = @_;
-    if ( $base_type_tc->can('parameterize') ) {
-        return $base_type_tc->parameterize($type_parameter);
-    }
-    else {
-        return Moose::Meta::TypeConstraint::Parameterized->new(
-            name   => $base_type_tc->name . '[' . $type_parameter . ']',
-            parent => $base_type_tc,
-            type_parameter =>
-                find_or_create_isa_type_constraint($type_parameter),
-        );
-    }
+    return Moose::Meta::TypeConstraint::Parameterized->new(
+        name           => $base_type_tc->name . '[' . $parameter_tc->name . ']',
+        parent         => $base_type_tc,
+        type_parameter => $parameter_tc,
+    );
 }
 
 #should we also support optimized checks?
@@ -223,7 +213,7 @@ sub find_or_parse_type_constraint {
 }
 
 sub normalize_type_constraint_name {
-    my $type_constraint_name = shift @_;
+    my $type_constraint_name = shift;
     $type_constraint_name =~ s/\s//g;
     return $type_constraint_name;
 }
@@ -457,19 +447,12 @@ sub _install_type_coercions ($$) {
     my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
 
-    ## New Stuff for structured types.
-    my $comma = qr{,};
-    my $indirection = qr{=>};
-    my $divider_ops = qr{ $comma | $indirection }x;
-    my $structure_divider = qr{\s* $divider_ops \s*}x;    
-    my $structure_elements = qr{ ($type $structure_divider*)+ }x;
-
-    $any = qr{ $type | $union | $structure_elements }x;
+    $any = qr{ $type | $union }x;
 
     sub _parse_parameterized_type_constraint {
         { no warnings 'void'; $any; } # force capture of interpolated lexical
-        my($base, $elements) = ($_[0] =~ m{ $type_capture_parts }x);
-        return ($base,$elements);
+        $_[0] =~ m{ $type_capture_parts }x;
+        return ($1, $2);
     }
 
     sub _detect_parameterized_type_constraint {

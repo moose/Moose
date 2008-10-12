@@ -5,12 +5,15 @@ Revision history for Perl extension Moose
       - Add abridged documentation for builder/default/initializer/
         predicate, and link to more details sections in 
         Class::MOP::Attribute. (t0m)
+
     * Moose::Util::TypeConstraints
       - removed prototypes from all but the &-based stuff (mst)
+
     * Moose::Util::TypeConstraints
       - Creating a anonymous subtype with both a constraint and a
         message failed with a very unhelpful error, but should just
         work. Reported by t0m. (Dave Rolsky)
+
     * Tests
       - Some tests that used Test::Warn if it was available failed
         with older versions of Test::Warn. Reported by Fayland. (Dave
@@ -19,16 +22,28 @@ Revision history for Perl extension Moose
         lazy_build. (t0m)
       - Test behavior of equals/is_a_type_of/is_a_subtype_of for all
         kinds of supported type. (t0m)
+
     * Moose::Meta::Class
       - In create(), do not pass "roles" option to the superclass
         - added related test that creates an anon metaclass with
           a required attribute
+
     * Moose::Meta::TypeConstraint::Class
     * Moose::Meta::TypeConstraint::Role
       - Unify behavior of equals/is_a_type_of/is_a_subtype_of with
         other types (as per change in 0.55_02). (t0m)
+
     * Moose::Meta::TypeConstraint::Registry
       - Fix warning when dealing with unknown type names (t0m)
+
+    * Moose::Util::TypeConstraints
+      - Reverted changes from 0.58 related to handle parameterized
+        types. This caused random failures on BSD and Win32 systems,
+        apparently related to the regex engine. This means that Moose
+        can no longer parse structured type constraints like
+        ArrayRef[Int,Int] or HashRef[name=>Str]. This will be
+        supported in a slightly different way via MooseX::Types some
+        time in the future. (Dave Rolsky)
 
 0.58 Sat September 20, 2008
     !! This release has an incompatible change regarding !!
