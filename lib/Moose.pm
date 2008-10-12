@@ -938,6 +938,16 @@ parent's and child's original metaclasses.
 Ultimately, this is all transparent to you except in the case of an
 unresolvable conflict.
 
+=head2 The MooseX:: namespace
+
+Generally if you're writing an extension I<for> Moose itself you'll want 
+to put your extension in the C<MooseX::> namespace. This namespace is 
+specifically for extensions that make Moose better or different in some 
+fundamental way. It is traditionally B<not> for a package that just happens 
+to use Moose. This namespace follows from the examples of the C<LWPx::> 
+and C<DBIx::> namespaces that perform the same function for C<LWP> and C<DBI>
+respectively.
+
 =head1 CAVEATS
 
 =over 4
