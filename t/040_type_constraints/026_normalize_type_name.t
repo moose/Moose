@@ -124,7 +124,7 @@ ok my $subtype_b1 = subtype( 'subtype_b1' => as 'HashRef[Int|Str]' ), =>
 ok my $subtype_b2 = subtype( 'subtype_b2' => as 'HashRef[Int | Str]' ), =>
     'created subtype_b2';
 
-ok my $subtype_b3 = subtype( 'subtype_b2' => as 'HashRef[Str|Int]' ), =>
+ok my $subtype_b3 = subtype( 'subtype_b3' => as 'HashRef[Str|Int]' ), =>
     'created subtype_b3';
 
 is $subtype_b1->parent->name, $subtype_b2->parent->name => 'names match';
