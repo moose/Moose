@@ -523,7 +523,7 @@ sub get_value {
                 $value = $type_constraint->coerce($value)
                     if ($self->should_coerce);
                 $type_constraint->check($value) 
-                  || c$self->throw_error("Attribute (" . $self->name
+                  || $self->throw_error("Attribute (" . $self->name
                       . ") does not pass the type constraint because: "
                       . $type_constraint->get_message($value), type_constraint => $type_constraint, data => $value);
             }
