@@ -175,6 +175,11 @@ For instance:
 
 will return true, even though C<has> is not a method.
 
+If you choose L<namespace::clean>, make sure to keep the C<meta> method if you
+want to use it for introspection:
+
+    use namespace::clean -except => "meta";
+
 =head1 Accept no substitutes
 
 By substitutes I mean hacks instead of "proper" solutions.
