@@ -402,12 +402,13 @@ superclasses still properly inherit from L<Moose::Object>.
 
 This will apply a given set of C<@roles> to the local class. 
 
-=item B<has $name =E<gt> %options>
+=item B<has $name|@$names =E<gt> %options>
 
-This will install an attribute of a given C<$name> into the current class.
-The C<%options> are the same as those provided by
-L<Class::MOP::Attribute>, in addition to the list below which are provided
-by Moose (L<Moose::Meta::Attribute> to be more specific):
+This will install an attribute of a given C<$name> into the current class. If
+the first parameter is an array reference, it will create an attribute for
+every C<$name> in the list. The C<%options> are the same as those provided by
+L<Class::MOP::Attribute>, in addition to the list below which are provided by
+Moose (L<Moose::Meta::Attribute> to be more specific):
 
 =over 4
 
