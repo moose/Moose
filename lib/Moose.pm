@@ -1077,11 +1077,11 @@ but the community as well.
 
 Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
 
-Dave (autarch) Rolsky 
-
 Yuval (nothingmuch) Kogman
 
 Shawn (sartak) Moore
+
+Dave (autarch) Rolsky 
 
 =head2 OTHER CONTRIBUTORS
 
