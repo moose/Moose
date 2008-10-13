@@ -1064,9 +1064,26 @@ either email the mailing list or join us on irc at #moose to discuss.
 
 =head1 AUTHOR
 
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
+Moose is an open project, there are at this point dozens of people who have 
+contributed, and can contribute. If you have added anything to the Moose 
+project you have a commit bit on this file and can add your name to the list.
 
-B<with contributions from:>
+=head2 CABAL
+
+However there are only a few people with the rights to release a new version 
+of Moose. The Moose Cabal are the people to go to with questions regarding
+the wider pervue of Moose, and help out maintaining not just the code
+but the commnity as well.
+
+Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
+
+Dave (autarch) Rolsky 
+
+Yuval (nothingmuch) Kogman
+
+Shawn (sartak) Moore
+
+=head2 OTHER CONTRIBUTORS
 
 Aankhen
 
@@ -1096,21 +1113,15 @@ Scott (konobi) McWhirter
 
 Shlomi (rindolf) Fish
 
-Yuval (nothingmuch) Kogman
-
 Chris (perigrin) Prather
 
 Wallace (wreis) Reis
 
 Jonathan (jrockway) Rockway
 
-Dave (autarch) Rolsky
-
 Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain
-
-Shawn (sartak) Moore
 
 ... and many other #moose folks
 
