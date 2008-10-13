@@ -1081,7 +1081,7 @@ Yuval (nothingmuch) Kogman
 
 Shawn (sartak) Moore
 
-Dave (autarch) Rolsky 
+Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head2 OTHER CONTRIBUTORS
 
