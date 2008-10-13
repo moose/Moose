@@ -1072,7 +1072,7 @@ project you have a commit bit on this file and can add your name to the list.
 
 However there are only a few people with the rights to release a new version 
 of Moose. The Moose Cabal are the people to go to with questions regarding
-the wider purvue of Moose, and help out maintaining not just the code
+the wider purview of Moose, and help out maintaining not just the code
 but the community as well.
 
 Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
