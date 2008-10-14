@@ -27,7 +27,7 @@ build_requires 'Test::More'      => '0.62';
 build_requires 'Test::Exception' => '0.21';
 build_requires 'Test::LongString';
 
-tests_recursive;
+tests_recursive();
 
 WriteAll();
 
