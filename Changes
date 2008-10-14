@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.59
+0.59 Tue October 14, 2008
     * Moose
       - Add abridged documentation for builder/default/initializer/
         predicate, and link to more details sections in 
