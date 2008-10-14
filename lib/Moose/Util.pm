@@ -5,9 +5,9 @@ use warnings;
 
 use Sub::Exporter;
 use Scalar::Util 'blessed';
-use Class::MOP   0.57;
+use Class::MOP   0.59;
 
-our $VERSION   = '0.57';
+our $VERSION   = '0.59';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
