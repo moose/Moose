@@ -161,102 +161,98 @@ sub _make_sub_exporter_params {
     return ( \%exports, \%is_removable );
 }
 
-{
-    # This variable gets closed over in each export _generator_. Then
-    # in the generator we grab the value and close over it _again_ in
-    # the real export, so it gets captured each time the generator
-    # runs.
-    #
-    # In the meantime, we arrange for the import method we generate to
-    # set this variable to the caller each time it is called.
-    #
-    # This is all a bit confusing, but it works.
-    my $CALLER;
+our $CALLER;
 
-    sub _make_wrapped_sub {
-        shift;
-        my $fq_name         = shift;
-        my $sub             = shift;
-        my $export_recorder = shift;
+sub _make_wrapped_sub {
+    shift;
+    my $fq_name         = shift;
+    my $sub             = shift;
+    my $export_recorder = shift;
 
+    # We need to set the package at import time, so that when
+    # package Foo imports has(), we capture "Foo" as the
+    # package. This lets other packages call Foo::has() and get
+    # the right package. This is done for backwards compatibility
+    # with existing production code, not because this is a good
+    # idea ;)
+    return sub {
+        my $caller = $CALLER;
 
-        # We need to set the package at import time, so that when
-        # package Foo imports has(), we capture "Foo" as the
-        # package. This lets other packages call Foo::has() and get
-        # the right package. This is done for backwards compatibility
-        # with existing production code, not because this is a good
-        # idea ;)
-        return sub {
-            my $caller = $CALLER;
+        my $sub
+            = Class::MOP::subname( $fq_name => sub { $sub->( $caller, @_ ) } );
 
-            my $sub = Class::MOP::subname( $fq_name => sub { $sub->( $caller, @_ ) } );
+        $export_recorder->{$sub} = 1;
 
-            $export_recorder->{$sub} = 1;
-
-            return $sub;
-        };
-    }
-
-    sub _make_import_sub {
-        shift;
-        my $exporting_package = shift;
-        my $exporter          = shift;
-        my $exports_from      = shift;
-        my $export_to_main    = shift;
-
-        return sub {
-            # I think we could use Sub::Exporter's collector feature
-            # to do this, but that would be rather gross, since that
-            # feature isn't really designed to return a value to the
-            # caller of the exporter sub.
-            #
-            # Also, this makes sure we preserve backwards compat for
-            # _get_caller, so it always sees the arguments in the
-            # expected order.
-            my $traits;
-            ($traits, @_) = Moose::Exporter::_strip_traits(@_);
-
-            # Normally we could look at $_[0], but in some weird cases
-            # (involving goto &Moose::import), $_[0] ends as something
-            # else (like Squirrel).
-            my $class = $exporting_package;
-
-            $CALLER = Moose::Exporter::_get_caller(@_);
-
-            # this works because both pragmas set $^H (see perldoc
-            # perlvar) which affects the current compilation -
-            # i.e. the file who use'd us - which is why we don't need
-            # to do anything special to make it affect that file
-            # rather than this one (which is already compiled)
-
-            strict->import;
-            warnings->import;
-
-            # we should never export to main
-            if ( $CALLER eq 'main' && ! $export_to_main ) {
-                warn
-                    qq{$class does not export its sugar to the 'main' package.\n};
-                return;
-            }
-
-            my $did_init_meta;
-            for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
-
-                $c->init_meta( for_class => $CALLER );
-                $did_init_meta = 1;
-            }
-
-            if ( $did_init_meta && @{$traits} ) {
-                _apply_meta_traits( $CALLER, $traits );
-            }
-            elsif ( @{$traits} ) {
-                Moose->throw_error("Cannot provide traits when $class does not have an init_meta() method");
-            }
-
-            goto $exporter;
-        };
-    }
+        return $sub;
+    };
 }
+
+sub _make_import_sub {
+    shift;
+    my $exporting_package = shift;
+    my $exporter          = shift;
+    my $exports_from      = shift;
+    my $export_to_main    = shift;
+
+    return sub {
+
+        # I think we could use Sub::Exporter's collector feature
+        # to do this, but that would be rather gross, since that
+        # feature isn't really designed to return a value to the
+        # caller of the exporter sub.
+        #
+        # Also, this makes sure we preserve backwards compat for
+        # _get_caller, so it always sees the arguments in the
+        # expected order.
+        my $traits;
+        ( $traits, @_ ) = _strip_traits(@_);
+
+        # Normally we could look at $_[0], but in some weird cases
+        # (involving goto &Moose::import), $_[0] ends as something
+        # else (like Squirrel).
+        my $class = $exporting_package;
+
+        $CALLER = _get_caller(@_);
+
+        # this works because both pragmas set $^H (see perldoc
+        # perlvar) which affects the current compilation -
+        # i.e. the file who use'd us - which is why we don't need
+        # to do anything special to make it affect that file
+        # rather than this one (which is already compiled)
+
+        strict->import;
+        warnings->import;
+
+        # we should never export to main
+        if ( $CALLER eq 'main' && !$export_to_main ) {
+            warn
+                qq{$class does not export its sugar to the 'main' package.\n};
+            return;
+        }
+
+        my $did_init_meta;
+        for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
+            $c->init_meta( for_class => $CALLER );
+            $did_init_meta = 1;
+        }
+
+        if ( $did_init_meta && @{$traits} ) {
+            # The traits will use Moose::Role, which in turn uses
+            # Moose::Exporter, which in turn sets $CALLER, so we need
+            # to protect against that.
+            local $CALLER = $CALLER;
+            _apply_meta_traits( $CALLER, $traits );
+        }
+        elsif ( @{$traits} ) {
+            Moose->throw_error(
+                "Cannot provide traits when $class does not have an init_meta() method"
+            );
+        }
+
+        goto $exporter;
+    };
+}
+
 
 sub _strip_traits {
     my $idx = first_index { $_ eq '-traits' } @_;
