@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+    * Tests
+      - Test bug causing exported methods to get the wrong caller when
+        the -traits option is passed, and traits are loaded from disk
+        (thus recursively calling Moose::Exporter). (t0m)
+
 0.59 Tue October 14, 2008
     * Moose
       - Add abridged documentation for builder/default/initializer/

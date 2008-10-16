@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use lib 't/lib', 'lib';
+
+use Test::More tests => 31;
 use Test::Exception;
 
 {
@@ -187,4 +189,31 @@ is( Foo::Subclass->meta()->simple2(), 55,
 can_ok( Foo::Subclass->meta(), 'attr2' );
 is( Foo::Subclass->meta()->attr2(), 'something',
     'Foo::Subclass->meta()->attr2() returns expected value' );
+
+{
+    package Class::WithAlreadyPresentTrait;
+    use Moose -traits => 'My::SimpleTrait';
+
+   has an_attr => ( is => 'ro' );
+}
+lives_ok {
+    my $instance = Class::WithAlreadyPresentTrait->new(an_attr => 'value');
+    is($instance->an_attr, 'value', 'Can get value');
+} 'Can create instance and access attributes';
+
+{
+    package Class::WhichLoadsATraitFromDisk;
+    use Moose -traits => 'Role::Parent'; # Any role you like here, the only important bit is that it
+                                         # gets loaded from disk and has not already been defined.
+    
+    has an_attr => ( is => 'ro' );
+}
+
+TODO: {
+    local $TODO = 'Not working yet';
+    lives_ok {
+        my $instance = Class::WhichLoadsATraitFromDisk->new(an_attr => 'value');
+        is($instance->an_attr, 'value', 'Can get value');
+    } 'Can create instance and access attributes';
+}
 
