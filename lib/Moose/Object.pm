@@ -83,7 +83,7 @@ BEGIN {
 }
 
 # new does() methods will be created 
-# as approiate see Moose::Meta::Role
+# as appropiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
     my $meta = $self->meta;
