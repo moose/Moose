@@ -61,7 +61,7 @@ sub does {
         Moose::Util::resolve_metatrait_alias(Attribute => $role_name)
     };
     return 0 if !defined($name); # failed to load class
-    return Moose::Object::does($self, $name);
+    return $self->Moose::Object::does($name);
 }
 
 sub throw_error {
