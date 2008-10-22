@@ -7,12 +7,13 @@ Revision history for Perl extension Moose
         - Tests for this bug. (t0m)
     
     * Moose::Util
-      - Change resolve_metaclass alias to use the new 
+      - Change resolve_metaclass alias to use the new
         load_first_existing_class function. This makes it a lot
         simpler, and also around 5 times faster. (t0m)
-      - Add caching to resolve_metatrait_alias, which gives an
-        order of magnitude speedup to things which repeatedly call 
-        the does method. E.g. MooseX::Storage (t0m)
+      - Add caching to resolve_metaclass_alias, which gives an order
+        of magnitude speedup to things which repeatedly call the
+        Moose::Meta::Attribute->does method. E.g. MooseX::Storage
+        (t0m)
 
 0.59 Tue October 14, 2008
     * Moose
