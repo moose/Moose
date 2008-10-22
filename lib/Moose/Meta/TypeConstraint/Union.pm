@@ -21,7 +21,8 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 sub new { 
     my ($class, %options) = @_;
     my $self = $class->SUPER::new(
-        name     => (join '|' => sort map { $_->name } @{$options{type_constraints}}),
+        name     => (join '|' => sort {$a cmp $b}
+                     map { $_->name } @{$options{type_constraints}}),
         parent   => undef,
         message  => undef,
         hand_optimized_type_constraint => undef,

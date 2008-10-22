@@ -103,21 +103,29 @@ sub create_parameterized_type_constraint {
     (defined $base_type && defined $type_parameter)
         || Moose->throw_error("Could not parse type name ($type_constraint_name) correctly");
 
-    # We need to get the relevant type constraints and use them to
-    # create the name to ensure that we end up with the fully
-    # normalized name, because the user could've passed something like
-    # HashRef[Str|Int] and we want to make that HashRef[Int|Str].
-    my $base_type_tc = $REGISTRY->get_type_constraint($base_type)
-        || Moose->throw_error("Could not locate the base type ($base_type)");
-    my $parameter_tc = find_or_create_isa_type_constraint($type_parameter)
-        || Moose->throw_error("Could not locate the parameter type ($type_parameter)");
-
-    return Moose::Meta::TypeConstraint::Parameterized->new(
-        name           => $base_type_tc->name . '[' . $parameter_tc->name . ']',
-        parent         => $base_type_tc,
-        type_parameter => $parameter_tc,
-    );
+    if ($REGISTRY->has_type_constraint($base_type)) {
+        my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
+        return _create_parameterized_type_constraint(
+            $base_type_tc,
+            $type_parameter
+        );
+    } else {
+        Moose->throw_error("Could not locate the base type ($base_type)");
+    }
 }
+
+sub _create_parameterized_type_constraint {
+    my ( $base_type_tc, $type_parameter ) = @_;
+    if ( $base_type_tc->can('parameterize') ) {
+        return $base_type_tc->parameterize($type_parameter);
+    } else {
+        return Moose::Meta::TypeConstraint::Parameterized->new(
+            name => $base_type_tc->name . '[' . $type_parameter . ']',
+            parent => $base_type_tc,
+            type_parameter => find_or_create_isa_type_constraint($type_parameter),
+        );
+    }
+}                                       
 
 #should we also support optimized checks?
 sub create_class_type_constraint {
