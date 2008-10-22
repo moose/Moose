@@ -8,12 +8,9 @@ name 'Moose';
 all_from 'lib/Moose.pm';
 license 'perl';
 
-# Scalar::Util 1.18 doesn't work on Windows
-my $win32 = !! ( $^O eq 'Win32' or $^O eq 'cygwin' );
-
 # prereqs
 requires 'perl'             => '5.008';
-requires 'Scalar::Util' => $win32 ? '1.17' : '1.18';
+requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
 requires 'Class::MOP'       => '0.68';
 requires 'List::MoreUtils';
