@@ -118,27 +118,28 @@ sub get_all_init_args {
     };
 }
 
-sub resolve_metatrait_alias {
-    resolve_metaclass_alias( @_, trait => 1 );
+{   my %cache;
+    sub resolve_metatrait_alias {
+        my ( $type, $metaclass_name ) = @_;
+        
+        return $cache{$type}{$metaclass_name} if $cache{$type}{$metaclass_name};
+        
+        my $class = resolve_metaclass_alias( @_, trait => 1 );
+        $cache{$type}{$metaclass_name} = $class if $class;
+        
+        return $class;
+    }
 }
 
 sub resolve_metaclass_alias {
     my ( $type, $metaclass_name, %options ) = @_;
 
-    if ( my $resolved = eval {
-        my $possible_full_name = 'Moose::Meta::' . $type . '::Custom::' . ( $options{trait} ? "Trait::" : "" ) . $metaclass_name;
+    my $possible_full_name = 'Moose::Meta::' . $type . '::Custom::' . ( $options{trait} ? "Trait::" : "" ) . $metaclass_name;
+    my $loaded_class = Class::MOP::load_first_existing_class($possible_full_name, $metaclass_name);
 
-        Class::MOP::load_class($possible_full_name);
-
-        $possible_full_name->can('register_implementation')
-            ? $possible_full_name->register_implementation
-            : $possible_full_name;
-    } ) {
-        return $resolved;
-    } else {
-        Class::MOP::load_class($metaclass_name);
-        return $metaclass_name;
-    }
+    $loaded_class->can('register_implementation')
+        ? $loaded_class->register_implementation
+        : $loaded_class;
 }
 
 sub add_method_modifier {
