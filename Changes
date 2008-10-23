@@ -15,6 +15,12 @@ Revision history for Perl extension Moose
         Moose::Meta::Attribute->does method. E.g. MooseX::Storage
         (t0m)
 
+    * Moose::Util::TypeConstraints
+      - Put back the changes for parameterized constraints that
+        shouldn't have been removed in 0.59. We still cannot parse
+        them, but MooseX modules can create them in some other
+        way. See the 0.58 changes for more details. (jnapiorkowski)
+
 0.59 Tue October 14, 2008
     * Moose
       - Add abridged documentation for builder/default/initializer/
