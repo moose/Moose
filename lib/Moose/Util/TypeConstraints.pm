@@ -373,40 +373,41 @@ sub _create_type_constraint ($$$;$$) {
                 . $pkg_defined_in )
             if defined $type;
     }
-
-    my $class = "Moose::Meta::TypeConstraint";
-
-    # FIXME should probably not be a special case
-    if ( defined $parent and $parent = find_or_parse_type_constraint($parent) ) {
-        $class = "Moose::Meta::TypeConstraint::Parameterizable"
-            if $parent->isa("Moose::Meta::TypeConstraint::Parameterizable");
-    }
-
-    my $constraint = $class->new(
-        name               => $name || '__ANON__',
+    
+    ## Here are the basic options we will use to create the constraint.  These
+    ## may be altered depending on the parent type, etc.
+    
+    my %opts = (
+        name => $name || '__ANON__',
         package_defined_in => $pkg_defined_in,
 
-        ($parent    ? (parent     => $parent )   : ()),
         ($check     ? (constraint => $check)     : ()),
         ($message   ? (message    => $message)   : ()),
         ($optimized ? (optimized  => $optimized) : ()),
     );
-
-    # NOTE:
-    # if we have a type constraint union, and no
-    # type check, this means we are just aliasing
-    # the union constraint, which means we need to
-    # handle this differently.
-    # - SL
-    if (not(defined $check)
-        && $parent->isa('Moose::Meta::TypeConstraint::Union')
-        && $parent->has_coercion
-        ){
-        $constraint->coercion(Moose::Meta::TypeCoercion::Union->new(
-            type_constraint => $parent
-        ));
+    
+    ## If we have a parent we make sure to instantiate this new type constraint
+    ## as a subclass of the parents meta class.  We need to see if the $parent
+    ## is already a blessed TC or if we need to go make it based on it's name
+    
+    my $constraint;
+    
+    if(
+        defined $parent
+        and $parent = blessed $parent ? $parent:find_or_parse_type_constraint($parent)
+    ) {
+        ## creating the child is a job we delegate to the parent, since each
+        ## parent may have local customization needs to influence it's child.
+        $constraint = $parent->create_childtype(%opts);
+    } else {
+        ## If for some reason the above couldn't create a type constraint, let's
+        ## make sure to create something.        
+        $constraint = Moose::Meta::TypeConstraint->new(%opts);    
     }
 
+    ## Unless we have a request to make an anonynmous constraint, let's add it
+    ## to the $REGISTRY so that it gets cached for quicker lookups next time
+    
     $REGISTRY->add_type_constraint($constraint)
         if defined $name;
 
