@@ -134,6 +134,8 @@ Moose::Meta::TypeConstraint::Class - Class/TypeConstraint parallel hierarchy
 
 Return all the parent types, corresponding to the parent classes.
 
+=item B<create_childtype>
+
 =item B<meta>
 
 =back
