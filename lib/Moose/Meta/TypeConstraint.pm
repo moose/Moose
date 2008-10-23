@@ -246,7 +246,7 @@ sub _collect_all_parents {
     return @parents;
 }
 
-sub create_childtype {
+sub create_child_type {
     my ($self, %opts) = @_;
     my $class = ref $self;
     return $class->new(%opts, parent => $self);
@@ -353,7 +353,7 @@ Returns true if this type has a parent type.
 
 =item B<has_hand_optimized_type_constraint>
 
-=item B<create_childtype>
+=item B<create_child_type>
 
 =back
 

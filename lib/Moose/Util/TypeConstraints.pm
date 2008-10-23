@@ -398,7 +398,7 @@ sub _create_type_constraint ($$$;$$) {
     ) {
         ## creating the child is a job we delegate to the parent, since each
         ## parent may have local customization needs to influence it's child.
-        $constraint = $parent->create_childtype(%opts);
+        $constraint = $parent->create_child_type(%opts);
     } else {
         ## If for some reason the above couldn't create a type constraint, let's
         ## make sure to create something.        

@@ -56,7 +56,7 @@ sub compile_type_constraint {
           . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.");
 }
 
-sub create_childtype {
+sub create_child_type {
     my ($self, %opts) = @_;
     return Moose::Meta::TypeConstraint->new(%opts, parent => $self);
 }
@@ -86,7 +86,7 @@ Moose::Meta::TypeConstraint::Parameterized - Higher Order type constraints for M
 
 =item B<equals>
 
-=item B<create_childtype>
+=item B<create_child_type>
 
 =back
 

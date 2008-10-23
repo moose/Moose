@@ -100,7 +100,7 @@ sub is_subtype_of {
     return 0;
 }
 
-sub create_childtype {
+sub create_child_type {
     my ($self, %opts) = @_;
     my $class = ref $self;
     my $constraint = Moose::Meta::TypeConstraint->new(%opts, parent => $self);
@@ -204,7 +204,7 @@ anyway. They are here for completeness.
 
 =item B<has_hand_optimized_type_constraint>
 
-=item B<create_childtype>
+=item B<create_child_type>
 
 =back
 
