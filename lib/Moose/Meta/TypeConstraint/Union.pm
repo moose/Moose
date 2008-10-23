@@ -7,7 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-our $VERSION   = '0.59';
+our $VERSION   = '0.60';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -100,25 +100,26 @@ sub is_subtype_of {
     return 0;
 }
 
-sub create_childtype {
-    my ($self, %opts) = @_;
-    my $class = ref $self;
-    my $constraint = Moose::Meta::TypeConstraint->new(%opts, parent => $self);
-    
+sub create_child_type {
+    my ( $self, %opts ) = @_;
+
+    my $constraint
+        = Moose::Meta::TypeConstraint->new( %opts, parent => $self );
+
     # if we have a type constraint union, and no
     # type check, this means we are just aliasing
     # the union constraint, which means we need to
     # handle this differently.
     # - SL
-    if (
-            not(defined $opts{constraint})
-            && $self->has_coercion
-    ) {
-        $constraint->coercion(Moose::Meta::TypeCoercion::Union->new(
-            type_constraint => $self,
-        ));
+    if ( not( defined $opts{constraint} )
+        && $self->has_coercion ) {
+        $constraint->coercion(
+            Moose::Meta::TypeCoercion::Union->new(
+                type_constraint => $self,
+            )
+        );
     }
-    
+
     return $constraint;
 }
 
@@ -204,7 +205,7 @@ anyway. They are here for completeness.
 
 =item B<has_hand_optimized_type_constraint>
 
-=item B<create_childtype>
+=item B<create_child_type>
 
 =back
 

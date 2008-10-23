@@ -26,6 +26,19 @@ Revision history for Perl extension Moose
       - test to make sure the new parameterize method works.
     * /t/040_type_constraints/030-class_subtypes.t
       - test to make sure we can properly subclass Moose::Meta::TypeConstraint
+    * Moose::Util
+      - Change resolve_metaclass alias to use the new
+        load_first_existing_class function. This makes it a lot
+        simpler, and also around 5 times faster. (t0m)
+      - Add caching to resolve_metaclass_alias, which gives an order
+        of magnitude speedup to things which repeatedly call the
+        Moose::Meta::Attribute->does method, notably MooseX::Storage
+        (t0m)
+    * Moose::Util::TypeConstraints
+      - Put back the changes for parameterized constraints that
+        shouldn't have been removed in 0.59. We still cannot parse
+        them, but MooseX modules can create them in some other
+        way. See the 0.58 changes for more details. (jnapiorkowski)
 
 0.59 Tue October 14, 2008
     * Moose
