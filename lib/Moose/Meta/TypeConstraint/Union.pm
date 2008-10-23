@@ -21,7 +21,8 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 sub new { 
     my ($class, %options) = @_;
     my $self = $class->SUPER::new(
-        name     => (join '|' => sort map { $_->name } @{$options{type_constraints}}),
+        name     => (join '|' => sort {$a cmp $b}
+                     map { $_->name } @{$options{type_constraints}}),
         parent   => undef,
         message  => undef,
         hand_optimized_type_constraint => undef,
@@ -97,6 +98,28 @@ sub is_subtype_of {
         return 1 if $type->is_subtype_of($type_name);
     }
     return 0;
+}
+
+sub create_childtype {
+    my ($self, %opts) = @_;
+    my $class = ref $self;
+    my $constraint = Moose::Meta::TypeConstraint->new(%opts, parent => $self);
+    
+    # if we have a type constraint union, and no
+    # type check, this means we are just aliasing
+    # the union constraint, which means we need to
+    # handle this differently.
+    # - SL
+    if (
+            not(defined $opts{constraint})
+            && $self->has_coercion
+    ) {
+        $constraint->coercion(Moose::Meta::TypeCoercion::Union->new(
+            type_constraint => $self,
+        ));
+    }
+    
+    return $constraint;
 }
 
 1;
@@ -180,6 +203,8 @@ anyway. They are here for completeness.
 =item B<hand_optimized_type_constraint>
 
 =item B<has_hand_optimized_type_constraint>
+
+=item B<create_childtype>
 
 =back
 

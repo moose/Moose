@@ -26,7 +26,7 @@ lives_ok {
 
     is($p->name, 'HashRef[Int]', '... parent name is correct');
 
-    ok($t->check({ one => 1, two => 2 }), '... validated it correctly');
+    ok($t->check({ one => 1, two => 2 }), '... validated {one=>1, two=>2} correctly');
     ok(!$t->check({ one => "ONE", two => "TWO" }), '... validated it correctly');
 
     ok( $t->equals($t), "equals to self" );
@@ -59,7 +59,7 @@ lives_ok {
     is($p->name, 'HashRef[Int]', '... parent name is correct');
 
     ok($t->check({ one => 1, two => 2 }), '... validated it correctly');
-    ok(!$t->check({ zero => 10, one => 11, two => 12 }), '... validated it correctly');
+    ok(!$t->check({ zero => 10, one => 11, two => 12 }), '... validated { zero => 10, one => 11, two => 12 } correctly');
     ok(!$t->check({ one => "ONE", two => "TWO" }), '... validated it correctly');
 }
 

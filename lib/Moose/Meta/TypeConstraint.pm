@@ -246,6 +246,12 @@ sub _collect_all_parents {
     return @parents;
 }
 
+sub create_childtype {
+    my ($self, %opts) = @_;
+    my $class = ref $self;
+    return $class->new(%opts, parent => $self);
+}
+
 ## this should get deprecated actually ...
 
 sub union { Carp::croak "DEPRECATED" }
@@ -346,6 +352,8 @@ Returns true if this type has a parent type.
 =item B<hand_optimized_type_constraint>
 
 =item B<has_hand_optimized_type_constraint>
+
+=item B<create_childtype>
 
 =back
 
