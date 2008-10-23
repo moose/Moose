@@ -58,13 +58,7 @@ sub compile_type_constraint {
 
 sub create_childtype {
     my ($self, %opts) = @_;
-
     return Moose::Meta::TypeConstraint->new(%opts, parent => $self);
-    
-    return $self->SUPER::create_subtype(
-        %opts,
-        type_parameter=>$self->type_parameter,
-    );
 }
 
 1;
