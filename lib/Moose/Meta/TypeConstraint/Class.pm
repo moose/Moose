@@ -33,8 +33,8 @@ sub _create_hand_optimized_type_constraint {
     my $self = shift;
     my $class = $self->class;
     $self->hand_optimized_type_constraint(
-        sub { 
-            blessed( $_[0] ) && $_[0]->isa($class) 
+        sub {
+            blessed( $_[0] ) && $_[0]->isa($class);
         }
     );
 }
@@ -95,6 +95,11 @@ sub is_subtype_of {
         # the only other thing we are a subtype of is Object
         $self->SUPER::is_subtype_of($type);
     }
+}
+
+sub create_childtype {
+    my ($self, %opts) = @_;
+    return Moose::Meta::TypeConstraint->new(%opts, parent => $self);
 }
 
 1;
