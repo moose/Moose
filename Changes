@@ -5,6 +5,27 @@ Revision history for Perl extension Moose
       - Passing "-traits" when loading Moose caused the Moose.pm
         exports to be broken. Reported by t0m. (Dave Rolsky)
         - Tests for this bug. (t0m)
+    * Moose::Util::TypeConstraint
+      - restored code to properly parameterize type constraints using the new
+        ->parameterize method.
+      - changed the way subtypes are created so that the job is delegated to a
+        type constraint parent.  This clears up some hardcoded checking and
+        should allow correct subtypes of Moose::Meta::Type::Constraint
+    * Moose::Meta::TypeConstraint
+      - added new method 'create_childtype' so that a parent can now be in
+        charge of creating and influencing it's own children.
+    * Moose::Meta::TypeConstraint::Union
+      - more careful sorting of the type constraints that make up a name string
+      - support for create_childtype customization
+    * Moose::Meta::TypeConstraint::Parameterized
+      - support for create_childtype customization
+    * Moose::Meta::TypeConstraint::Parameterizable
+      - new parameterize method which is a type of factory method to make a new
+        type constraint with a given parameterized type.
+    * /t/040_type_constraints/027_parameterize_from.t
+      - test to make sure the new parameterize method works.
+    * /t/040_type_constraints/030-class_subtypes.t
+      - test to make sure we can properly subclass Moose::Meta::TypeConstraint
 
 0.59 Tue October 14, 2008
     * Moose
