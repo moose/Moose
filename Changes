@@ -12,7 +12,7 @@ Revision history for Perl extension Moose
         simpler, and also around 5 times faster. (t0m)
       - Add caching to resolve_metaclass_alias, which gives an order
         of magnitude speedup to things which repeatedly call the
-        Moose::Meta::Attribute->does method. E.g. MooseX::Storage
+        Moose::Meta::Attribute->does method, notably MooseX::Storage
         (t0m)
 
     * Moose::Util::TypeConstraints
