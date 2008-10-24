@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.60 Fri October 25, 2008
+0.60 Fri October 24, 2008
     * Moose::Exporter
       - Passing "-traits" when loading Moose caused the Moose.pm
         exports to be broken. Reported by t0m. (Dave Rolsky)
