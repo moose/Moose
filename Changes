@@ -15,11 +15,6 @@ Revision history for Perl extension Moose
         Moose::Meta::Attribute->does method, notably MooseX::Storage
         (t0m)
 
-    * Moose::Exporter
-      - Passing "-traits" when loading Moose caused the Moose.pm
-        exports to be broken. Reported by t0m. (Dave Rolsky)
-        - Tests for this bug. (t0m)
-
     * Moose::Util::TypeConstraint
       - Put back the changes for parameterized constraints that
         shouldn't have been removed in 0.59. We still cannot parse
