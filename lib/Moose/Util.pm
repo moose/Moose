@@ -119,8 +119,6 @@ sub get_all_init_args {
 }
 
 sub resolve_metatrait_alias {
-    my ( $type, $metaclass_name ) = @_;
-
     return resolve_metaclass_alias( @_, trait => 1 );
 }
 
