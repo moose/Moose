@@ -6,6 +6,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints;
+use Moose::Meta::TypeConstraint::Parameterizable;
 
 our $VERSION   = '0.60';
 $VERSION = eval $VERSION;
@@ -58,7 +59,7 @@ sub compile_type_constraint {
 
 sub create_child_type {
     my ($self, %opts) = @_;
-    return Moose::Meta::TypeConstraint->new(%opts, parent => $self);
+    return Moose::Meta::TypeConstraint::Parameterizable->new(%opts, parent=>$self);
 }
 
 1;
