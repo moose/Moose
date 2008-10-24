@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 39;
 use Test::Exception;
 
 BEGIN {
@@ -87,4 +87,35 @@ lives_ok {
     ok( $t->check({ one => 1, two => 2, three => 3 }), "validated" );
     ok( !$t->check({ one => 1, two => "foo", three => [] }), "failed" );
     ok( !$t->check({ one => 1 }), "failed" );
+}
+
+{
+    ## Because to throw errors in M:M:Parameterizable needs Moose loaded in
+    ## order to throw errors.  In theory the use Moose belongs to that class
+    ## but when I put it there causes all sorts or trouble.  In theory this is
+    ## never a real problem since you are likely to use Moose somewhere when you
+    ## are creating type constraints.
+    use Moose ();
+    
+    my $MyArrayRefInt =  subtype 'MyArrayRefInt',
+        as 'ArrayRef[Int]';
+
+    my $BiggerInt = subtype 'BiggerInt',
+        as 'Int',
+        where {$_>10};
+
+    my $SubOfMyArrayRef = subtype 'SubOfMyArrayRef',
+        as 'MyArrayRefInt[BiggerInt]';
+        
+    ok $MyArrayRefInt->check([1,2,3]), '[1,2,3] is okay';
+    ok ! $MyArrayRefInt->check(["a","b"]), '["a","b"] is not';  
+    ok $BiggerInt->check(100), '100 is  big enough';
+    ok ! $BiggerInt->check(5), '5 is  big enough';   
+    ok $SubOfMyArrayRef->check([15,20,25]), '[15,20,25] is a bunch of big ints';
+    ok ! $SubOfMyArrayRef->check([15,5,25]), '[15,5,25] is NOT a bunch of big ints';
+    
+    throws_ok sub {
+        my $SubOfMyArrayRef = subtype 'SubSubOfMyArrayRef',
+            as 'SubOfMyArrayRef[Str]';        
+    }, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
 }
