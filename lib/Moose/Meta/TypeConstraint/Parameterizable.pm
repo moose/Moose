@@ -51,6 +51,16 @@ sub parameterize {
     my ($self, $type_parameter) = @_;
 
     my $contained_tc = $self->_parse_type_parameter($type_parameter);
+    
+    ## The type parameter should be a subtype of the parent's type parameter
+    ## if there is one.
+    
+    if(my $parent = $self->parent) {
+        if($parent->can('type_parameter')) {
+            $contained_tc->is_a_type_of($parent->type_parameter)
+             || Moose->throw_error("$type_parameter is not a subtype of ".$parent->type_parameter);
+        }
+    }
 
     if ( $contained_tc->isa('Moose::Meta::TypeConstraint') ) {
         my $tc_name = $self->name . '[' . $contained_tc->name . ']';
