@@ -149,7 +149,7 @@ As for alternate solutions, there are a couple.
 Using a combination of lazy and default in your attributes to 
 defer initialization (see the Binary Tree example in the cookbook
 for a good example of lazy/default usage
-L<http://search.cpan.org/~stevan/Moose-0.21/lib/Moose/Cookbook/Recipe3.pod>)
+L<Moose::Cookbook::Basics::Recipe3>)
 
 =item *
 
