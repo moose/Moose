@@ -193,7 +193,9 @@ t/040_type_constraints/023_types_and_undef.t
 t/040_type_constraints/024_role_type_constraint.t
 t/040_type_constraints/025_type_coersion_on_lazy_attributes.t
 t/040_type_constraints/026_normalize_type_name.t
+t/040_type_constraints/027_parameterize_from.t
 t/040_type_constraints/029_define_type_twice_throws.t
+t/040_type_constraints/030-class_subtypes.t
 t/050_metaclasses/001_custom_attr_meta_with_roles.t
 t/050_metaclasses/002_custom_attr_meta_as_role.t
 t/050_metaclasses/003_moose_w_metaclass.t
@@ -248,6 +250,7 @@ t/300_immutable/009_buildargs.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
+t/400_moose_util/004_resolve_alias.t
 t/500_test_moose/001_test_moose.t
 t/500_test_moose/002_test_moose_does_ok.t
 t/500_test_moose/003_test_moose_has_attribute_ok.t
@@ -259,6 +262,10 @@ t/600_todo_tests/004_inlined_constructor_modified_new.t
 t/600_todo_tests/005_moose_and_threads.t
 t/lib/Bar.pm
 t/lib/Foo.pm
+t/lib/Moose/Meta/Attribute/Custom/Bar.pm
+t/lib/Moose/Meta/Attribute/Custom/Foo.pm
+t/lib/Moose/Meta/Attribute/Custom/Trait/Bar.pm
+t/lib/Moose/Meta/Attribute/Custom/Trait/Foo.pm
 t/lib/MyMooseA.pm
 t/lib/MyMooseB.pm
 t/lib/MyMooseObject.pm
