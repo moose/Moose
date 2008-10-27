@@ -15,26 +15,26 @@
   </foaf:Person>
  </maintainer>
 
- <developer>
+ <maintainer>
   <foaf:Person>
      <foaf:name>Yuval Kogman</foaf:name>
 	 <foaf:nick>nothingmuch</foaf:nick>
   </foaf:Person>
- </developer>
+ </maintainer>
 
- <developer>
+ <maintainer>
   <foaf:Person>
      <foaf:name>Shawn Moore</foaf:name>
 	 <foaf:nick>Sartak</foaf:nick>
   </foaf:Person>
- </developer>
+ </maintainer>
 
- <developer>
+ <maintainer>
   <foaf:Person>
      <foaf:name>Dave Rolsky</foaf:name>
 	 <foaf:nick>autarch</foaf:nick>
   </foaf:Person>
- </developer>
+ </maintainer>
 
 
  <repository>
