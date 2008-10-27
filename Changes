@@ -1,7 +1,7 @@
 Revision history for Perl extension Moose
 0.61 ???
-	* Moose::Meta::Attribue
-	  - load_class for a Role if the Role isn't already loaded during handles
+    * Moose::Meta::Attribute
+      - When passing a role to handles, it will be loaded if necessary
         (perigrin)
 
 0.60 Fri October 24, 2008
