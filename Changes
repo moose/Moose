@@ -1,4 +1,8 @@
 Revision history for Perl extension Moose
+0.61 ???
+	* Moose::Meta::Attribue
+	  - load_class for a Role if the Role isn't already loaded during handles
+        (perigrin)
 
 0.60 Fri October 24, 2008
     * Moose::Exporter
