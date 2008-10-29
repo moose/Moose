@@ -842,7 +842,7 @@ Get or set the error builder. Defaults to C<confess>.
 
 =item B<error_class $class_name>
 
-Get or set the error class. Has no default.
+Get or set the error class. This defaults to L<Moose::Error::Default>.
 
 =item B<create_error_confess %args>
 
