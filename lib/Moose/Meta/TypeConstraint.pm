@@ -59,11 +59,17 @@ __PACKAGE__->meta->add_attribute('package_defined_in' => (
 
 sub new {
     my $class = shift;
-    my $self  = $class->_new(@_);
+    my ($first, @rest) = @_;
+    my %args = ref $first ? %$first : $first ? ($first, @rest) : ();
+    $args{name} = $args{name} ? "$args{name}" : "__ANON__";
+    
+    my $self  = $class->_new(%args);
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
     return $self;
 }
+
+
 
 sub coerce   { ((shift)->coercion || Moose->throw_error("Cannot coerce without a type coercion"))->coerce(@_) }
 sub check    { $_[0]->_compiled_type_constraint->($_[1]) ? 1 : undef }

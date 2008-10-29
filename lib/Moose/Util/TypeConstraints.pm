@@ -373,8 +373,6 @@ sub _create_type_constraint ($$$;$$) {
                 . $pkg_defined_in )
             if defined $type;
     }
-    
-    $name = $name ? "$name" : "__ANON__";
 
     my %opts = (
         name => $name,
