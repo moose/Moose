@@ -613,14 +613,14 @@ resolved to a class name.
 Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
 example.
 
-=item I<builder>
+=item I<builder> => Str
 
 The value of this key is the name of the method that will be called to
 obtain the value used to initialize the attribute. See the L<builder
 option docs in Class::MOP::Attribute|Class::MOP::Attribute/builder>
 for more information.
 
-=item I<default>
+=item I<default> => SCALAR | CODE
 
 The value of this key is the default value which will initialize the attribute.
 
@@ -631,7 +631,7 @@ See the L<default option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/default> for more
 information.
 
-=item I<initializer>
+=item I<initializer> => Str
 
 This may be a method name (referring to a method on the class with
 this attribute) or a CODE ref.  The initializer is used to set the
@@ -641,18 +641,24 @@ to). See the L<initializer option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
 information.
 
-=item I<clearer>
+=item I<clearer> => Str
 
 Allows you to clear the value, see the L<clearer option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/clearer> for more
 information.
 
-=item I<predicate>
+=item I<predicate> => Str
 
 Basic test to see if a value has been set in the attribute, see the
 L<predicate option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more
 information.
+
+=item I<lazy_build> => (0|1)
+
+Automatically define lazy => 1 as well as builder => "_build_$attr", clearer =>
+"clear_$attr', predicate => 'has_$attr' unless they are already defined.
+
 
 =back
 
