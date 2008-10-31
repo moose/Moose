@@ -95,6 +95,11 @@ sub is_subtype_of {
     }
 }
 
+sub create_child_type {
+    my ($self, @args) = @_;
+    return Moose::meta::TypeConstraint->new(@args, parent => $self);
+}
+
 1;
 
 __END__
@@ -122,6 +127,8 @@ Moose::Meta::TypeConstraint::Role - Role/TypeConstraint parallel hierarchy
 =item B<is_a_type_of>
 
 =item B<is_subtype_of>
+
+=item B<create_child_type>
 
 =item B<parents>
 
