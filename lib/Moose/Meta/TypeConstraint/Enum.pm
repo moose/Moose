@@ -69,7 +69,7 @@ sub _compile_hand_optimized_type_constraint {
 
 sub create_child_type {
     my ($self, @args) = @_;
-    return Moose::meta::TypeConstraint->new(@args, parent => $self);
+    return Moose::Meta::TypeConstraint->new(@args, parent => $self);
 }
 
 1;

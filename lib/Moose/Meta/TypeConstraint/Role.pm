@@ -97,7 +97,7 @@ sub is_subtype_of {
 
 sub create_child_type {
     my ($self, @args) = @_;
-    return Moose::meta::TypeConstraint->new(@args, parent => $self);
+    return Moose::Meta::TypeConstraint->new(@args, parent => $self);
 }
 
 1;
