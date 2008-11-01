@@ -9,7 +9,7 @@ use List::MoreUtils qw( all );
 use Scalar::Util 'blessed';
 use Moose::Exporter;
 
-our $VERSION   = '0.60';
+our $VERSION   = '0.61';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
