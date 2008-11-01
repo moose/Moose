@@ -1,8 +1,17 @@
 Revision history for Perl extension Moose
-0.61 ???
+
+0.61
     * Moose::Meta::Attribute
       - When passing a role to handles, it will be loaded if necessary
         (perigrin)
+
+    * Moose::Meta::Class
+      - Method objects returned by get_method (and other methods)
+        Could end up being returned without an associated_metaclass
+        attribute. Removing get_method_map, which is provided by
+        Class::MOP::Class, fixed this. The Moose version did nothing
+        different from its parent except introduce a bug. (Dave ROlsky
+        - added tests for this (jdv79)
 
 0.60 Fri October 24, 2008
     * Moose::Exporter
