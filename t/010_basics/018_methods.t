@@ -23,7 +23,6 @@ like( $t1_am->name(), qr/::__ANON__::/,
     'associated_metaclass->name looks like an anonymous class' );
 
 {
-
     package Test2;
 
     use Moose;
