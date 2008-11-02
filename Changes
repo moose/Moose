@@ -10,7 +10,7 @@ Revision history for Perl extension Moose
         Could end up being returned without an associated_metaclass
         attribute. Removing get_method_map, which is provided by
         Class::MOP::Class, fixed this. The Moose version did nothing
-        different from its parent except introduce a bug. (Dave ROlsky
+        different from its parent except introduce a bug. (Dave Rolsky)
         - added tests for this (jdv79)
 
 0.60 Fri October 24, 2008
