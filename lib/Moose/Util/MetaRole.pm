@@ -3,6 +3,10 @@ package Moose::Util::MetaRole;
 use strict;
 use warnings;
 
+our $VERSION   = '0.61';
+$VERSION = eval $VERSION;
+our $AUTHORITY = 'cpan:STEVAN';
+
 use List::MoreUtils qw( all );
 
 my @Classes = qw( constructor_class destructor_class error_class );

@@ -3,6 +3,10 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
+our $VERSION   = '0.61';
+$VERSION = eval $VERSION;
+our $AUTHORITY = 'cpan:STEVAN';
+
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;

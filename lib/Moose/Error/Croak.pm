@@ -3,6 +3,10 @@ package Moose::Error::Croak;
 use strict;
 use warnings;
 
+our $VERSION   = '0.61';
+$VERSION = eval $VERSION;
+our $AUTHORITY = 'cpan:STEVAN';
+
 use base qw(Moose::Error::Default);
 
 sub new {

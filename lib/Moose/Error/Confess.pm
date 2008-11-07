@@ -3,6 +3,10 @@ package Moose::Error::Confess;
 use strict;
 use warnings;
 
+our $VERSION   = '0.61';
+$VERSION = eval $VERSION;
+our $AUTHORITY = 'cpan:STEVAN';
+
 use base qw(Moose::Error::Default);
 
 __PACKAGE__
