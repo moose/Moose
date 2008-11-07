@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.61
+0.61 Fri November 7, 2008
     * Moose::Meta::Attribute
       - When passing a role to handles, it will be loaded if necessary
         (perigrin)
@@ -12,6 +12,16 @@ Revision history for Perl extension Moose
         Class::MOP::Class, fixed this. The Moose version did nothing
         different from its parent except introduce a bug. (Dave Rolsky)
         - added tests for this (jdv79)
+
+    * Various
+      - Added a $VERSION to all .pm files which didn't have one. Fixes
+        RT #40049, reported by Adam Kennedy. (Dave Rolsky)
+
+    * Moose::Cookbook::Basics::Recipe4
+    * Moose::Cookbook::Basics::Recipe6
+      - These files had spaces on the first line of the SYNOPSIS, as
+        opposed to a totally empty line. According to RT #40432, this
+        confuses POD parsers. (Dave Rolsky)
 
 0.60 Fri October 24, 2008
     * Moose::Exporter
