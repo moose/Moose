@@ -6,90 +6,91 @@
 Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> class hierarchy
 
 =head1 SYNOPSIS
-  
+
   package Address;
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   use Locale::US;
   use Regexp::Common 'zip';
-  
+
   my $STATES = Locale::US->new;
-  
-  subtype USState 
+  subtype USState
       => as Str
       => where {
-          (exists $STATES->{code2state}{uc($_)} || 
-           exists $STATES->{state2code}{uc($_)})
-      };
-      
-  subtype USZipCode 
+             (    exists $STATES->{code2state}{ uc($_) }
+               || exists $STATES->{state2code}{ uc($_) } );
+         };
+
+  subtype USZipCode
       => as Value
       => where {
-          /^$RE{zip}{US}{-extended => 'allow'}$/            
-      };
-  
-  has 'street'   => (is => 'rw', isa => 'Str');
-  has 'city'     => (is => 'rw', isa => 'Str');
-  has 'state'    => (is => 'rw', isa => 'USState');
-  has 'zip_code' => (is => 'rw', isa => 'USZipCode');   
-  
+             /^$RE{zip}{US}{-extended => 'allow'}$/;
+         };
+
+  has 'street'   => ( is => 'rw', isa => 'Str' );
+  has 'city'     => ( is => 'rw', isa => 'Str' );
+  has 'state'    => ( is => 'rw', isa => 'USState' );
+  has 'zip_code' => ( is => 'rw', isa => 'USZipCode' );
+
   package Company;
   use Moose;
   use Moose::Util::TypeConstraints;
-  
-  has 'name'      => (is => 'rw', isa => 'Str', required => 1);
-  has 'address'   => (is => 'rw', isa => 'Address'); 
-  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');    
-  
+
+  has 'name' => ( is => 'rw', isa => 'Str', required => 1 );
+  has 'address'   => ( is => 'rw', isa => 'Address' );
+  has 'employees' => ( is => 'rw', isa => 'ArrayRef[Employee]' );
+
   sub BUILD {
-      my ($self, $params) = @_;
-      if ($params->{employees}) {
-          foreach my $employee (@{$params->{employees}}) {
+      my ( $self, $params ) = @_;
+      if ( $params->{employees} ) {
+          foreach my $employee ( @{ $params->{employees} } ) {
               $employee->company($self);
           }
       }
   }
-  
+
   after 'employees' => sub {
-      my ($self, $employees) = @_;
-      if (defined $employees) {
-          foreach my $employee (@{$employees}) {
+      my ( $self, $employees ) = @_;
+      if ( defined $employees ) {
+          foreach my $employee ( @{$employees} ) {
               $employee->company($self);
-          }            
+          }
       }
-  };  
-  
+  };
+
   package Person;
   use Moose;
-  
-  has 'first_name'     => (is => 'rw', isa => 'Str', required => 1);
-  has 'last_name'      => (is => 'rw', isa => 'Str', required => 1);       
-  has 'middle_initial' => (is => 'rw', isa => 'Str', 
-                           predicate => 'has_middle_initial');  
-  has 'address'        => (is => 'rw', isa => 'Address');
-  
+
+  has 'first_name' => ( is => 'rw', isa => 'Str', required => 1 );
+  has 'last_name'  => ( is => 'rw', isa => 'Str', required => 1 );
+  has 'middle_initial' => (
+      is        => 'rw', isa => 'Str',
+      predicate => 'has_middle_initial'
+  );
+  has 'address' => ( is => 'rw', isa => 'Address' );
+
   sub full_name {
       my $self = shift;
-      return $self->first_name . 
-            ($self->has_middle_initial ? 
-                ' ' . $self->middle_initial . '. ' 
-                : 
-                ' ') .
-             $self->last_name;
+      return $self->first_name
+          . (
+          $self->has_middle_initial
+          ? ' ' . $self->middle_initial . '. '
+          : ' '
+          ) . $self->last_name;
   }
-    
+
   package Employee;
-  use Moose;  
-  
+  use Moose;
+
   extends 'Person';
-  
-  has 'title'   => (is => 'rw', isa => 'Str', required => 1);
-  has 'company' => (is => 'rw', isa => 'Company', weak_ref => 1);  
-  
+
+  has 'title'   => ( is => 'rw', isa => 'Str',     required => 1 );
+  has 'company' => ( is => 'rw', isa => 'Company', weak_ref => 1 );
+
   override 'full_name' => sub {
       my $self = shift;
-      super() . ', ' . $self->title
+      super() . ', ' . $self->title;
   };
 
 =head1 DESCRIPTION
@@ -106,14 +107,14 @@ defined two subtypes. The first C<subtype> uses the L<Locale::US> module, which
 provides two hashes which can be used to perform existential checks for state
 names and their two letter state codes. It is a very simple and very useful
 module, and perfect for use in a C<subtype> constraint.
-  
-  my $STATES = Locale::US->new;  
-  subtype USState 
+
+  my $STATES = Locale::US->new;
+  subtype USState
       => as Str
       => where {
-          (exists $STATES->{code2state}{uc($_)} || 
-           exists $STATES->{state2code}{uc($_)})
-      };
+             (    exists $STATES->{code2state}{ uc($_) }
+               || exists $STATES->{state2code}{ uc($_) } );
+         };
 
 Because we know that states will be passed to us as strings, we 
 can make C<USState> a subtype of the built-in type constraint 
@@ -126,7 +127,7 @@ is either a state name or a state code. If the string meets this
 criteria, then the constraint will pass, otherwise it will fail.
 We can now use this as we would any built-in constraint, like so:
 
-  has 'state' => (is => 'rw', isa => 'USState');
+  has 'state'    => ( is => 'rw', isa => 'USState' );
 
 The C<state> accessor will now check all values against the 
 C<USState> constraint, thereby only allowing valid state names or 
@@ -135,11 +136,11 @@ state codes to be stored in the C<state> slot.
 The next C<subtype> does pretty much the same thing using the L<Regexp::Common>
 module, and is used as the constraint for the C<zip_code> slot.
 
-  subtype USZipCode 
+  subtype USZipCode
       => as Value
       => where {
-          /^$RE{zip}{US}{-extended => 'allow'}$/            
-      };
+             /^$RE{zip}{US}{-extended => 'allow'}$/;
+         };
 
 Using subtypes can save a lot of unnecessary abstraction by not requiring you to
 create many small classes for these relatively simple values. They also allow
@@ -153,11 +154,11 @@ a basic B<Company> class, which itself has an address. As we saw in
 earlier recipes, we can use the C<Address> type constraint that 
 Moose automatically created for us:
 
-  has 'address' => (is => 'rw', isa => 'Address');
+  has 'address'   => ( is => 'rw', isa => 'Address' );
 
 A company also needs a name, so we define that as well:
 
-  has 'name' => (is => 'rw', isa => 'Str', required => 1);
+  has 'name' => ( is => 'rw', isa => 'Str', required => 1 );
 
 Here we introduce another attribute option, the C<required> option. 
 This option tells Moose that C<name> is a required parameter in 
@@ -167,8 +168,8 @@ will always have a value.
 
 The next attribute option is not actually new, but a new variant 
 of options we have already introduced:
-  
-  has 'employees' => (is => 'rw', isa => 'ArrayRef[Employee]');
+
+  has 'employees' => ( is => 'rw', isa => 'ArrayRef[Employee]' );
 
 Here, we are passing a more complex string to the C<isa> option, we 
 are passing a container type constraint. Container type constraints 
@@ -184,11 +185,11 @@ processing of the employees over and above that of the type constraint check.
 This is accomplished in two places. First we need to be sure that any employees
 array passed to the constructor is properly initialized. For this we can use the
 C<BUILD> method (2):
-  
+
   sub BUILD {
-      my ($self, $params) = @_;
-      if ($params->{employees}) {
-          foreach my $employee (@{$params->{employees}}) {
+      my ( $self, $params ) = @_;
+      if ( $params->{employees} ) {
+          foreach my $employee ( @{ $params->{employees} } ) {
               $employee->company($self);
           }
       }
@@ -206,11 +207,11 @@ with some additional processing. For this we use an C<after> method modifier,
 like so:
 
   after 'employees' => sub {
-      my ($self, $employees) = @_;
-      if (defined $employees) {
-          foreach my $employee (@{$employees}) {
+      my ( $self, $employees ) = @_;
+      if ( defined $employees ) {
+          foreach my $employee ( @{$employees} ) {
               $employee->company($self);
-          }            
+          }
       }
   };
 
@@ -234,7 +235,7 @@ modifier:
 
   override 'full_name' => sub {
       my $self = shift;
-      super() . ', ' . $self->title
+      super() . ', ' . $self->title;
   };
 
 This just tells Moose that I am intentionally overriding the superclass 
