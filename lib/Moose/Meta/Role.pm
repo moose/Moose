@@ -368,7 +368,7 @@ sub has_method {
     exists $self->get_method_map->{$name} ? 1 : 0
 }
 
-# FIXME this is copypasated from Class::MOP::Class
+# FIXME this is copy-pasted from Class::MOP::Class
 # refactor to inherit from some common base
 sub wrap_method_body {
     my ( $self, %args ) = @_;
