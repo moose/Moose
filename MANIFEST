@@ -168,6 +168,7 @@ t/030_roles/026_role_composition_method_mods.t
 t/030_roles/030_role_parameterized.t
 t/030_roles/031_roles_applied_in_create.t
 t/030_roles/032_roles_and_method_cloning.t
+t/030_roles/033_role_exclusion_and_alias_bug.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t

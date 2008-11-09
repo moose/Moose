@@ -66,8 +66,6 @@ sub apply_attributes {
 sub apply_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $method_name ($role1->get_method_list) {
-        
-        next if $self->is_method_excluded($method_name);        
 
         if ($self->is_method_aliased($method_name)) {
             my $aliased_method_name = $self->get_method_aliases->{$method_name};
@@ -84,11 +82,14 @@ sub apply_methods {
             );
 
             if (!$role2->has_method($method_name)) {
-                $role2->add_required_methods($method_name);
+                $role2->add_required_methods($method_name)
+                    unless $self->is_method_excluded($method_name);
             }
 
             next;
-        }        
+        }     
+        
+        next if $self->is_method_excluded($method_name);           
         
         # it if it has one already
         if ($role2->has_method($method_name) &&

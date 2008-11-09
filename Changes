@@ -1,5 +1,13 @@
 Revision history for Perl extension Moose
 
+0.62
+    * Moose::Meta::Role::Application::ToClass
+      Moose::Meta::Role::Application::ToRole
+      - fixed issues where excluding and aliasing the 
+        same methods for a single role did not work 
+        right (worked just fine with multiple roles)
+        - added test for this
+
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute
       - When passing a role to handles, it will be loaded if necessary
