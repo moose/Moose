@@ -15,6 +15,7 @@ requires 'Carp';
 requires 'Class::MOP'       => '0.68';
 requires 'List::MoreUtils';
 requires 'Sub::Exporter'    => '0.972';
+requires 'Task::Weaken'     => '0';
 
 # only used by oose.pm, not Moose.pm :P
 requires 'Filter::Simple' => '0'; 
