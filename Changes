@@ -7,6 +7,10 @@ Revision history for Perl extension Moose
         same methods for a single role did not work 
         right (worked just fine with multiple roles)
         - added test for this
+    * Moose::Exporter
+      - Catch another case where recursion caused the value
+        of $CALLER to be stamped on (t0m)
+        - added test for this (t0m)
 
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute

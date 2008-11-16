@@ -246,6 +246,7 @@ sub _make_import_sub {
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
+            local $CALLER = $CALLER;
             $c->init_meta( for_class => $CALLER );
             $did_init_meta = 1;
         }

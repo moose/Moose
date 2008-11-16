@@ -3,7 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 72;
+use lib 't/lib', 'lib';
+
+use Test::More tests => 73;
+use Test::Exception;
 
 use Moose::Util::MetaRole;
 
@@ -482,3 +485,29 @@ use Moose::Util::MetaRole;
     is( My::Class11->meta()->constructor_class, 'My::Constructor',
         q{... and explicitly set constructor_class value is unchanged)} );
 }
+
+{
+    package ExportsMoose;
+
+    Moose::Exporter->setup_import_methods(
+        also        => 'Moose',
+    );
+
+    sub init_meta {
+        shift;
+        my %p = @_;
+        Moose->init_meta(%p);
+        return Moose::Util::MetaRole::apply_metaclass_roles( 
+            for_class       => $p{for_class},
+            # Causes us to recurse through init_meta, as we have to
+            # load MyMetaclassRole from disk.
+           metaclass_roles => [qw/MyMetaclassRole/],
+        );
+    }
+}
+
+lives_ok {
+    package UsesExportedMoose;
+    ExportsMoose->import;
+} 'import module which loads a role from disk during init_meta';
+
