@@ -11,6 +11,10 @@ Revision history for Perl extension Moose
       - Catch another case where recursion caused the value
         of $CALLER to be stamped on (t0m)
         - added test for this (t0m)
+    * Moose
+      - Remove the make_immutable keyword, which has been
+        deprecated since April. It breaks metaclasses that
+        use Moose without no Moose (Sartak)
 
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 41;
 
 
 my @moose_exports = qw(
@@ -13,7 +13,6 @@ my @moose_exports = qw(
     override
     augment
     super inner
-    make_immutable
 );
 
 {

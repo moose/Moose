@@ -124,16 +124,9 @@ sub augment {
     Class::MOP::Class->initialize($class)->add_augment_method_modifier( $name => $method );
 }
 
-sub make_immutable {
-    my $class = shift;
-    cluck "The make_immutable keyword has been deprecated, " . 
-          "please go back to __PACKAGE__->meta->make_immutable\n";
-    Class::MOP::Class->initialize($class)->make_immutable(@_);
-}
-
 Moose::Exporter->setup_import_methods(
     with_caller => [
-        qw( extends with has before after around override augment make_immutable )
+        qw( extends with has before after around override augment)
     ],
     as_is => [
         qw( super inner ),
