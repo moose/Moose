@@ -336,11 +336,8 @@ sub _generate_default_value {
     else {
         my $default = $attr->default;
         # make sure to quote strings ...
-        unless (looks_like_number($default)) {
-            $default = "'$default'";
-        }
-
-        return $default;
+        return "'$default'";
+        
     }
 }
 
