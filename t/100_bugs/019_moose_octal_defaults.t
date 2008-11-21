@@ -92,3 +92,26 @@ __PACKAGE__->meta->make_immutable;
     my $obj = Test::Moose::Go::Boom4->new;
     ::is( $obj->id, '0xFF', 'value is still the same' );
 }
+
+{
+    my $package = qq{
+package Test::Moose::Go::Boom5;
+use Moose;
+use lib qw(lib);
+
+has id => (
+    isa     => 'Str',
+    is      => 'ro',
+    default => '0 but true',  
+);
+
+no Moose;
+
+__PACKAGE__->meta->make_immutable;
+};
+
+    eval $package;
+    $@ ? ::fail($@) : ::pass('017600 octal default works');
+    my $obj = Test::Moose::Go::Boom5->new;
+    ::is( $obj->id, '0 but true', 'value is still the same' );
+}
