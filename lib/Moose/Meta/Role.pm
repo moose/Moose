@@ -476,12 +476,9 @@ sub combine {
 }
 
 sub create {
-    my ( $role, @args ) = @_;
+    my ( $role, $package_name, %options ) = @_;
 
-    unshift @args, 'package' if @args % 2 == 1;
-
-    my (%options) = @args;
-    my $package_name = $options{package};
+    $options{package} = $package_name;
 
     (ref $options{attributes} eq 'HASH')
         || confess "You must pass a HASH ref of attributes"
@@ -493,7 +490,7 @@ sub create {
 
     $role->SUPER::create(%options);
 
-    my (%initialize_options) = @args;
+    my (%initialize_options) = %options;
     delete @initialize_options{qw(
         package
         attributes

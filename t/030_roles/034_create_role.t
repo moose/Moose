@@ -5,7 +5,7 @@ use Test::More tests => 4;
 use Moose ();
 
 my $role = Moose::Meta::Role->create(
-    'package' => 'MyItem::Role::Equipment',
+    'MyItem::Role::Equipment',
     attributes => {
         is_worn => {
             is => 'rw',
