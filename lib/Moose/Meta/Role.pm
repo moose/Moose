@@ -882,6 +882,16 @@ probably not that much really).
 
 =back
 
+=over 4
+
+=item B<create>
+
+=item B<create_anon_role>
+
+=item B<is_anon_role>
+
+=back
+
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no
