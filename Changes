@@ -15,6 +15,9 @@ Revision history for Perl extension Moose
       - Remove the make_immutable keyword, which has been
         deprecated since April. It breaks metaclasses that
         use Moose without no Moose (Sartak)
+    * Moose::Meta::Role
+      - create method for constructing a role
+        dynamically (Sartak)
 
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute

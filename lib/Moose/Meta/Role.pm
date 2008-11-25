@@ -6,6 +6,7 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
+use Carp         'confess';
 
 our $VERSION   = '0.61';
 $VERSION = eval $VERSION;
@@ -472,6 +473,56 @@ sub combine {
     )->apply($c);
     
     return $c;
+}
+
+sub create {
+    my ( $role, @args ) = @_;
+
+    unshift @args, 'package' if @args % 2 == 1;
+
+    my (%options) = @args;
+    my $package_name = $options{package};
+
+    (ref $options{attributes} eq 'HASH')
+        || confess "You must pass a HASH ref of attributes"
+            if exists $options{attributes};
+
+    (ref $options{methods} eq 'HASH')
+        || confess "You must pass a HASH ref of methods"
+            if exists $options{methods};
+
+    $role->SUPER::create(%options);
+
+    my (%initialize_options) = @args;
+    delete @initialize_options{qw(
+        package
+        attributes
+        methods
+        version
+        authority
+    )};
+
+    my $meta = $role->initialize( $package_name => %initialize_options );
+
+    # FIXME totally lame
+    $meta->add_method('meta' => sub {
+        $role->initialize(ref($_[0]) || $_[0]);
+    });
+
+    if (exists $options{attributes}) {
+        foreach my $attribute_name (keys %{$options{attributes}}) {
+            my $attr = $options{attributes}->{$attribute_name};
+            $meta->add_attribute($attribute_name => $attr);
+        }
+    }
+
+    if (exists $options{methods}) {
+        foreach my $method_name (keys %{$options{methods}}) {
+            $meta->add_method($method_name, $options{methods}->{$method_name});
+        }
+    }
+
+    return $meta;
 }
 
 #####################################################################
