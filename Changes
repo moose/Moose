@@ -19,6 +19,8 @@ Revision history for Perl extension Moose
       - create method for constructing a role
         dynamically (Sartak)
       - begin implementing anonymous roles (Sartak)
+    * Moose::Role
+      - more consistent error messages (Sartak)
 
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute

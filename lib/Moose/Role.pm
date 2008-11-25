@@ -54,7 +54,7 @@ sub before {
     my $code = pop @_;
 
     for (@_) {
-        croak "Moose::Role do not currently support "
+        croak "Roles do not currently support "
             . ref($_)
             . " references for before method modifiers"
             if ref $_;
@@ -67,7 +67,7 @@ sub after {
 
     my $code = pop @_;
     for (@_) {
-        croak "Moose::Role do not currently support "
+        croak "Roles do not currently support "
             . ref($_)
             . " references for after method modifiers"
             if ref $_;
@@ -79,7 +79,7 @@ sub around {
     my $meta = Moose::Meta::Role->initialize(shift);
     my $code = pop @_;
     for (@_) {
-        croak "Moose::Role do not currently support "
+        croak "Roles do not currently support "
             . ref($_)
             . " references for around method modifiers"
             if ref $_;
@@ -100,11 +100,11 @@ sub override {
 }
 
 sub inner {
-    croak "Moose::Role cannot support 'inner'";
+    croak "Roles cannot support 'inner'";
 }
 
 sub augment {
-    croak "Moose::Role cannot support 'augment'";
+    croak "Roles cannot support 'augment'";
 }
 
 my $exporter = Moose::Exporter->setup_import_methods(
