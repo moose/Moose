@@ -525,6 +525,69 @@ sub create {
     return $meta;
 }
 
+# anonymous roles. most of it is copied straight out of Class::MOP::Class.
+# an intrepid hacker might find great riches if he unifies this code with that
+# code in Class::MOP::Module or Class::MOP::Package
+{
+    # NOTE:
+    # this should be sufficient, if you have a
+    # use case where it is not, write a test and
+    # I will change it.
+    my $ANON_ROLE_SERIAL = 0;
+
+    # NOTE:
+    # we need a sufficiently annoying prefix
+    # this should suffice for now, this is
+    # used in a couple of places below, so
+    # need to put it up here for now.
+    my $ANON_ROLE_PREFIX = 'Moose::Meta::Role::__ANON__::SERIAL::';
+
+    sub is_anon_role {
+        my $self = shift;
+        no warnings 'uninitialized';
+        $self->name =~ /^$ANON_ROLE_PREFIX/;
+    }
+
+    sub create_anon_role {
+        my ($role, %options) = @_;
+        my $package_name = $ANON_ROLE_PREFIX . ++$ANON_ROLE_SERIAL;
+        return $role->create($package_name, %options);
+    }
+
+    # NOTE:
+    # this will only get called for
+    # anon-roles, all other calls
+    # are assumed to occur during
+    # global destruction and so don't
+    # really need to be handled explicitly
+    sub DESTROY {
+        my $self = shift;
+
+        return if Class::MOP::in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
+
+        no warnings 'uninitialized';
+        return unless $self->name =~ /^$ANON_ROLE_PREFIX/;
+
+        # XXX: is this necessary for us? I don't understand what it's doing
+        # -sartak
+
+        # Moose does a weird thing where it replaces the metaclass for
+        # class when fixing metaclass incompatibility. In that case,
+        # we don't want to clean out the namespace now. We can detect
+        # that because Moose will explicitly update the singleton
+        # cache in Class::MOP.
+        #my $current_meta = Class::MOP::get_metaclass_by_name($self->name);
+        #return if $current_meta ne $self;
+
+        my ($serial_id) = ($self->name =~ /^$ANON_ROLE_PREFIX(\d+)/);
+        no strict 'refs';
+        foreach my $key (keys %{$ANON_ROLE_PREFIX . $serial_id}) {
+            delete ${$ANON_ROLE_PREFIX . $serial_id}{$key};
+        }
+        delete ${'main::' . $ANON_ROLE_PREFIX}{$serial_id . '::'};
+    }
+}
+
 #####################################################################
 ## NOTE:
 ## This is Moose::Meta::Role as defined by Moose (plus the use of 
