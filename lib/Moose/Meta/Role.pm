@@ -519,6 +519,9 @@ sub create {
         }
     }
 
+    Class::MOP::weaken_metaclass($meta->name)
+        if $meta->is_anon_role;
+
     return $meta;
 }
 

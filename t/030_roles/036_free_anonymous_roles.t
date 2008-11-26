@@ -22,8 +22,5 @@ do {
 
 };
 
-TODO: {
-    local $TODO = "we don't weaken role metaclasses yet";
-    ok(!$weak, "the role metaclass is freed after its last reference (from a consuming anonymous class) is freed");
-};
+ok(!$weak, "the role metaclass is freed after its last reference (from a consuming anonymous class) is freed");
 
