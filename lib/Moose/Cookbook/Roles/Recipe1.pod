@@ -144,7 +144,11 @@ target class need implement.
   }
 
 Next up is B<Printable>. This is a very simple role, akin to B<Eq>. It merely
-requires a C<to_string> method.
+requires a C<to_string> method. Roles that only require methods are very much
+like Java's interfaces. If we know that a class does the B<Printable> role, it
+not only tells us that we can call the C<to_string> method on it, but also that
+C<to_string> has the precise semantics we want (consider classes B<Tree> and
+B<Dog>, both with method C<bark>).
 
 Finally, we come to B<US::Currency>, a class that allows us to reap the benefits
 of our hard work. This is a regular Moose class, so we include the normal C<use

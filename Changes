@@ -27,6 +27,9 @@ Revision history for Perl extension Moose
         - added test for this (Sartak)
     * Moose::Role
       - more consistent error messages (Sartak)
+    * Moose::Cookbook::Roles::Recipe1
+      - attempt to explain why a role that just requires
+        methods is useful (Sartak)
 
 0.61 Fri November 7, 2008
     * Moose::Meta::Attribute
