@@ -79,7 +79,7 @@ sub check_role_exclusions {
             next unless $role->does_role($excluded);
 
             my @excluding = @{ $excluded_roles{$excluded} };
-            Moose->throw_error(sprintf 'Conflict detected: Role%s %s exclude%s role "%s"', (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
+            Moose->throw_error(sprintf "Conflict detected: Role%s %s exclude%s role '%s'", (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
         }
     }
 
