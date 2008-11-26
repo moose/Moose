@@ -65,18 +65,25 @@ my $uniq = sub { my %h; map { $h{$_}++ == 0 ? $_ : () } @_ };
 sub check_role_exclusions {
     my ($self, $c) = @_;
 
-    my @all_excluded_roles = $uniq->(map {
-        $_->get_excluded_roles_list
-    } @{$c->get_roles});
+    my %excluded_roles;
+    for my $role (@{ $c->get_roles }) {
+        my $name = $role->name;
 
-    foreach my $role (@{$c->get_roles}) {
-        foreach my $excluded (@all_excluded_roles) {
-            Moose->throw_error("Conflict detected: " . $role->name . " excludes role '" . $excluded . "'")
-                if $role->does_role($excluded);
+        for my $excluded ($role->get_excluded_roles_list) {
+            push @{ $excluded_roles{$excluded} }, $name;
         }
     }
 
-    $c->add_excluded_roles(@all_excluded_roles);
+    foreach my $role (@{$c->get_roles}) {
+        foreach my $excluded (keys %excluded_roles) {
+            next unless $role->does_role($excluded);
+
+            my @excluding = @{ $excluded_roles{$excluded} };
+            Moose->throw_error(sprintf 'Conflict detected: Role%s %s exclude%s role "%s"', (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
+        }
+    }
+
+    $c->add_excluded_roles(keys %excluded_roles);
 }
 
 sub check_required_methods {

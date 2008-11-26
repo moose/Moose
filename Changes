@@ -7,6 +7,9 @@ Revision history for Perl extension Moose
         same methods for a single role did not work 
         right (worked just fine with multiple roles)
         - added test for this
+    * Moose::Meta::Role::Application::RoleSummation
+      - fixed the error message when trying to compose
+        a role with a role it excludes (Sartak)
     * Moose::Exporter
       - Catch another case where recursion caused the value
         of $CALLER to be stamped on (t0m)
