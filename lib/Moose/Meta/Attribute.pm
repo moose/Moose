@@ -567,6 +567,13 @@ sub install_accessors {
     return;
 }
 
+sub remove_accessors {
+    my $self = shift;
+    $self->SUPER::remove_accessors(@_);
+    $self->remove_delegation if $self->has_handles;
+    return;
+}
+
 sub install_delegation {
     my $self = shift;
 
@@ -602,6 +609,15 @@ sub install_delegation {
 
         $self->associated_class->add_method($method->name, $method);
     }    
+}
+
+sub remove_delegation {
+    my $self = shift;
+    my %handles = $self->_canonicalize_handles;
+    my $associated_class = $self->associated_class;
+    foreach my $handle (keys %handles) {
+        $self->associated_class->remove_method($handle);
+    }
 }
 
 # private methods to help delegation ...
@@ -745,7 +761,11 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<install_accessors>
 
+=item B<remove_accessors>
+
 =item B<install_delegation>
+
+=item B<remove_delegation>
 
 =item B<accessor_metaclass>
 
