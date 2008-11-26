@@ -28,6 +28,12 @@ Revision history for Perl extension Moose
         (handles) methods installed for that attribute (t0m)
         - added test for this (t0m)
 
+    * Moose::Meta::Method::Constructor
+      - An attribute with a default that looked like a number (but was
+        really a string) would accidentally be treated as a number
+        when the constructor was made immutable (perigrin)
+        - added test for this (perigrin)
+
     * Moose::Meta::Role
       - create method for constructing a role
         dynamically (Sartak)
