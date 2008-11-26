@@ -169,6 +169,9 @@ t/030_roles/030_role_parameterized.t
 t/030_roles/031_roles_applied_in_create.t
 t/030_roles/032_roles_and_method_cloning.t
 t/030_roles/033_role_exclusion_and_alias_bug.t
+t/030_roles/034_create_role.t
+t/030_roles/035_anonymous_roles.t
+t/030_roles/036_free_anonymous_roles.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t
@@ -232,6 +235,7 @@ t/100_bugs/014_DEMOLISHALL.t
 t/100_bugs/016_inheriting_from_roles.t
 t/100_bugs/017_type_constraint_messages.t
 t/100_bugs/018_immutable_metaclass_does_role.t
+t/100_bugs/019_moose_octal_defaults.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t
@@ -268,6 +272,7 @@ t/lib/Moose/Meta/Attribute/Custom/Bar.pm
 t/lib/Moose/Meta/Attribute/Custom/Foo.pm
 t/lib/Moose/Meta/Attribute/Custom/Trait/Bar.pm
 t/lib/Moose/Meta/Attribute/Custom/Trait/Foo.pm
+t/lib/MyMetaclassRole.pm
 t/lib/MyMooseA.pm
 t/lib/MyMooseB.pm
 t/lib/MyMooseObject.pm
