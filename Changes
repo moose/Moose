@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.62
+0.62 Wed November 26, 2008
     * Moose::Meta::Role::Application::ToClass
       Moose::Meta::Role::Application::ToRole
       - fixed issues where excluding and aliasing the
