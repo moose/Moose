@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.63
+    * Moose::Object
+      - use the method->execute API for BUILDALL
+        and DEMOLISHALL (Sartak)
+
 0.62 Wed November 26, 2008
     * Moose::Meta::Role::Application::ToClass
       Moose::Meta::Role::Application::ToRole
