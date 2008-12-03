@@ -237,24 +237,18 @@ sub _get_caller {
 
 ## make 'em all immutable
 
-$_->meta->make_immutable(
+$_->make_immutable(
     inline_constructor => 1,
     constructor_name   => "_new",
-    inline_accessors   => 1,  # these are Class::MOP accessors, so they need inlining
-  )
-  for (qw(
+    # these are Class::MOP accessors, so they need inlining
+    inline_accessors => 1
+    ) for grep { $_->is_mutable }
+    map { $_->meta }
+    qw(
     Moose::Meta::Attribute
     Moose::Meta::Class
     Moose::Meta::Instance
 
-    Moose::Meta::TypeConstraint
-    Moose::Meta::TypeConstraint::Union
-    Moose::Meta::TypeConstraint::Parameterized
-    Moose::Meta::TypeConstraint::Parameterizable
-    Moose::Meta::TypeConstraint::Enum
-    Moose::Meta::TypeConstraint::Class
-    Moose::Meta::TypeConstraint::Role
-    Moose::Meta::TypeConstraint::Registry
     Moose::Meta::TypeCoercion
     Moose::Meta::TypeCoercion::Union
 
@@ -276,7 +270,7 @@ $_->meta->make_immutable(
     Moose::Meta::Role::Application::ToClass
     Moose::Meta::Role::Application::ToRole
     Moose::Meta::Role::Application::ToInstance
-));
+);
 
 1;
 

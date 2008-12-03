@@ -481,6 +481,27 @@ sub _install_type_coercions ($$) {
 # define some basic built-in types
 ## --------------------------------------------------------
 
+# By making these classes immutable before creating all the types we
+# below, we avoid repeatedly calling the slow MOP-based accessors.
+$_->make_immutable(
+    inline_constructor => 1,
+    constructor_name   => "_new",
+
+    # these are Class::MOP accessors, so they need inlining
+    inline_accessors => 1
+    ) for grep { $_->is_mutable }
+    map { $_->meta }
+    qw(
+    Moose::Meta::TypeConstraint
+    Moose::Meta::TypeConstraint::Union
+    Moose::Meta::TypeConstraint::Parameterized
+    Moose::Meta::TypeConstraint::Parameterizable
+    Moose::Meta::TypeConstraint::Class
+    Moose::Meta::TypeConstraint::Role
+    Moose::Meta::TypeConstraint::Enum
+    Moose::Meta::TypeConstraint::Registry
+);
+
 type 'Any'  => where { 1 }; # meta-type including all
 type 'Item' => where { 1 }; # base-type
 
