@@ -34,9 +34,9 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
-        'MooseX::Singleton'        => '0.11',
+        'MooseX::Singleton'        => '0.12',
         'MooseX::Params::Validate' => '0.05',
-        'Fey::ORM'                 => '0.10',
+        'Fey::ORM'                 => '0.12',
     );
 
     my $found = 0;
