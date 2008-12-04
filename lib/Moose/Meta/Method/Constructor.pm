@@ -51,6 +51,8 @@ sub can_be_inlined {
     my $self      = shift;
     my $metaclass = $self->associated_metaclass;
 
+    my $expected_class = $self->_expected_constructor_class;
+
     # If any of our parents have been made immutable, we are okay to
     # inline our own new method. The assumption is that an inlined new
     # method provided by a parent does not actually get used by
@@ -58,16 +60,23 @@ sub can_be_inlined {
     for my $meta (
         grep { $_->is_immutable }
         map  { ( ref $metaclass )->initialize($_) }
+        grep { $_ ne $expected_class }
         $metaclass->linearized_isa
         ) {
         my $transformer = $meta->get_immutable_transformer;
 
+        # This is actually a false positive if we're in a subclass of
+        # this class, _and_ the expected class is not overridden (but
+        # should be), and the real expected class is actually
+        # immutable itself (see Fey::Object::Table for an example of
+        # how this can happen). I'm not sure how to actually handle
+        # that case, since it's effectively a bug in the subclass (for
+        # not overriding _expected_constructor_class).
         return 1 if $transformer->inlined_constructor;
     }
 
     if ( my $constructor = $metaclass->find_method_by_name( $self->name ) ) {
         my $class = $self->associated_metaclass->name;
-        my $expected_class = $self->_expected_constructor_class;
 
         if ( $constructor->body != $expected_class->can('new') ) {
             warn "Not inlining a constructor for $class since it is not"
