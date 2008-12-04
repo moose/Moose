@@ -28,7 +28,7 @@ is_deeply(
     package Foo::Class;
     use Moose;
 
-    ::dies_ok{ with('Foo::Role') }
+    ::dies_ok { with('Foo::Role') }
         '... no foo method implemented by Foo::Class';
 }
 
@@ -38,9 +38,9 @@ is_deeply(
     package Bar::Class;
     use Moose;
 
-    ::dies_ok{ with('Foo::Class') }
+    ::dies_ok { with('Foo::Class') }
         '... cannot consume a class, it must be a role';
-    ::lives_ok{ with('Foo::Role') }
+    ::lives_ok { with('Foo::Role') }
         '... has a foo method implemented by Bar::Class';
 
     sub foo {'Bar::Class::foo'}
@@ -52,7 +52,7 @@ is_deeply(
     package Bar::Role;
     use Moose::Role;
 
-    ::lives_ok{ with('Foo::Role') }
+    ::lives_ok { with('Foo::Role') }
         '... has a foo method implemented by Bar::Role';
 
     sub foo {'Bar::Role::foo'}
@@ -70,7 +70,7 @@ is_deeply(
     package Baz::Role;
     use Moose::Role;
 
-    ::lives_ok{ with('Foo::Role') }
+    ::lives_ok { with('Foo::Role') }
         '... no foo method implemented by Baz::Role';
 }
 
@@ -86,7 +86,7 @@ is_deeply(
     package Baz::Class;
     use Moose;
 
-    ::dies_ok{ with('Baz::Role') }
+    ::dies_ok { with('Baz::Role') }
         '... no foo method implemented by Baz::Class2';
 }
 
@@ -96,7 +96,7 @@ is_deeply(
     package Baz::Class2;
     use Moose;
 
-    ::lives_ok{ with('Baz::Role') }
+    ::lives_ok { with('Baz::Role') }
         '... has a foo method implemented by Baz::Class2';
 
     sub foo {'Baz::Class2::foo'}
