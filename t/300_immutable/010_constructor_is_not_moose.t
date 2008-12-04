@@ -8,7 +8,7 @@ use Test::More;
 eval "use Test::Output";
 plan skip_all => "Test::Output is required for this test" if $@;
 
-plan tests => 5;
+plan tests => 6;
 
 {
     package NotMoose;
@@ -74,6 +74,31 @@ isnt(
     ::stderr_is(
         sub { Quux->meta->make_immutable },
         q{},
+        'no warning when inheriting from a class that has already made itself immutable'
+    );
+}
+
+{
+    package My::Constructor;
+    use base 'Moose::Meta::Method::Constructor';
+}
+
+{
+    package CustomCons;
+    use Moose;
+
+    CustomCons->meta->make_immutable( constructor_class => 'My::Constructor' );
+}
+
+{
+    package Subclass;
+    use Moose;
+
+    extends 'CustomCons';
+
+    ::stderr_is(
+        sub { Subclass->meta->make_immutable },
+        "Not inlining a constructor for Subclass. It has a parent class (CustomCons) which was inlined using My::Constructor, but Subclass is using Moose::Meta::Method::Constructor\n",
         'no warning when inheriting from a class that has already made itself immutable'
     );
 }
