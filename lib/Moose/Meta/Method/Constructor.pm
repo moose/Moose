@@ -57,7 +57,8 @@ sub can_be_inlined {
 
         if ( $constructor->body != $expected_class->can('new') ) {
             my $class = $metaclass->name;
-            warn "Not inlining a constructor for $class since it is not inheriting the default $expected_class constructor\n";
+            warn "Not inlining a constructor for $class since it is not"
+                . " inheriting the default $expected_class constructor\n";
 
             return 0;
         }
