@@ -15,14 +15,14 @@ Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> cl
   use Regexp::Common 'zip';
 
   my $STATES = Locale::US->new;
-  subtype USState
+  subtype 'USState'
       => as Str
       => where {
              (    exists $STATES->{code2state}{ uc($_) }
                || exists $STATES->{state2code}{ uc($_) } );
          };
 
-  subtype USZipCode
+  subtype 'USZipCode'
       => as Value
       => where {
              /^$RE{zip}{US}{-extended => 'allow'}$/;
@@ -109,7 +109,7 @@ names and their two letter state codes. It is a very simple and very useful
 module, and perfect for use in a C<subtype> constraint.
 
   my $STATES = Locale::US->new;
-  subtype USState
+  subtype 'USState'
       => as Str
       => where {
              (    exists $STATES->{code2state}{ uc($_) }
@@ -136,7 +136,7 @@ state codes to be stored in the C<state> slot.
 The next C<subtype> does pretty much the same thing using the L<Regexp::Common>
 module, and is used as the constraint for the C<zip_code> slot.
 
-  subtype USZipCode
+  subtype 'USZipCode'
       => as Value
       => where {
              /^$RE{zip}{US}{-extended => 'allow'}$/;
