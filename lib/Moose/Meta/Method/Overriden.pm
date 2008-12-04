@@ -3,7 +3,7 @@ package Moose::Meta::Method::Overriden;
 use strict;
 use warnings;
 
-our $VERSION   = '0.62';
+our $VERSION   = '0.62_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
