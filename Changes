@@ -7,6 +7,14 @@ Revision history for Perl extension Moose
         methods, as opposed to just the first one found. Requested by
         Michael Schwern (RT #41119). (Dave Rolsky)
 
+    * Moose::Meta::Method::Constructor
+      - Moose will no longer inline a constructor for your class
+        unless it inherits its constructor from Moose::Object, and
+        will warn when it doesn't inline. If you want to force
+        inlining anyway, pass "replace_constructor => 1" to
+        make_immutable. Addresses RT #40968, reported by Jon
+        Swartz. (Dave Rolsky)
+
 0.62_01 Wed, December 3, 2008
     * Moose::Object
       - use the method->execute API for BUILDALL

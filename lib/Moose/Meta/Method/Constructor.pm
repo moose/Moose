@@ -47,6 +47,35 @@ sub new {
     return $self;
 }
 
+sub can_be_inlined {
+    my $self      = shift;
+    my $metaclass = $self->associated_metaclass;
+
+    if ( my $constructor = $metaclass->find_method_by_name( $self->name ) ) {
+
+        my $expected_class = $self->_expected_constructor_class;
+
+        if ( $constructor->body != $expected_class->can('new') ) {
+            my $class = $metaclass->name;
+            warn "Not inlining a constructor for $class since it is not inheriting the default $expected_class constructor\n";
+
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+
+    # This would be a rather weird case where we have no constructor
+    # in the inheritance chain.
+    return 1;
+}
+
+# This is here so can_be_inlined can be inherited by MooseX modules.
+sub _expected_constructor_class {
+    return 'Moose::Object';
+}
+
 ## accessors
 
 sub options       { (shift)->{'options'}       }
