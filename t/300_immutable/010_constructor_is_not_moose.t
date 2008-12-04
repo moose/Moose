@@ -98,7 +98,7 @@ isnt(
 
     ::stderr_is(
         sub { Subclass->meta->make_immutable },
-        "Not inlining a constructor for Subclass. It has a parent class (CustomCons) which was inlined using My::Constructor, but Subclass is using Moose::Meta::Method::Constructor\n",
+        q{},
         'no warning when inheriting from a class that has already made itself immutable'
     );
 }

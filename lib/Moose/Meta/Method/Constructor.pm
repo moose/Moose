@@ -51,39 +51,22 @@ sub can_be_inlined {
     my $self      = shift;
     my $metaclass = $self->associated_metaclass;
 
-    my $class = $self->associated_metaclass->name;
-
     # If any of our parents have been made immutable, we are okay to
-    # inline our own method as long as the parent's constructor class
-    # is the same as $self.
-    for my $meta ( grep { $_->is_immutable }
-        map { ( ref $metaclass )->initialize($_) }
-        $metaclass->linearized_isa ) {
+    # inline our own new method. The assumption is that an inlined new
+    # method provided by a parent does not actually get used by
+    # children anyway.
+    for my $meta (
+        grep { $_->is_immutable }
+        map  { ( ref $metaclass )->initialize($_) }
+        $metaclass->linearized_isa
+        ) {
         my $transformer = $meta->get_immutable_transformer;
 
-        my $constructor = $transformer->inlined_constructor
-            or next;
-
-        return 1 if ref $constructor eq ref $self;
-
-        my $parent_name = $meta->name;
-        my $constructor_class = ref $constructor;
-        my $self_class = ref $self;
-
-        # This case is fairly unlikely. In most normal cases,
-        # incompatibility between constructor classes will be caught
-        # by the code that fixes metaclass incompatibility in
-        # Moose::Meta::Class. However, if the parent passes a
-        # constructor_class directly to
-        # Parent->meta->make_immutable(), this could happen.
-        warn "Not inlining a constructor for $class. It has a parent class ($parent_name)"
-            . " which was inlined using $constructor_class, but $class is using $self_class\n";
-
-        return 0;
+        return 1 if $transformer->inlined_constructor;
     }
 
     if ( my $constructor = $metaclass->find_method_by_name( $self->name ) ) {
-
+        my $class = $self->associated_metaclass->name;
         my $expected_class = $self->_expected_constructor_class;
 
         if ( $constructor->body != $expected_class->can('new') ) {
