@@ -51,6 +51,20 @@ sub can_be_inlined {
     my $self      = shift;
     my $metaclass = $self->associated_metaclass;
 
+    # If any of our parents have been made immutable, we are okay to
+    # inline our own method as long as the parent's constructor class
+    # is the same as $self.
+    for my $meta ( grep { $_->is_immutable }
+        map { ( ref $metaclass )->initialize($_) }
+        $metaclass->linearized_isa ) {
+        my $transformer = $meta->get_immutable_transformer;
+
+        my $constructor = $transformer->inlined_constructor
+            or next;
+
+        return ref $constructor eq ref $self;
+    }
+
     if ( my $constructor = $metaclass->find_method_by_name( $self->name ) ) {
 
         my $expected_class = $self->_expected_constructor_class;

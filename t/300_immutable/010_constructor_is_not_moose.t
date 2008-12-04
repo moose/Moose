@@ -8,7 +8,7 @@ use Test::More;
 eval "use Test::Output";
 plan skip_all => "Test::Output is required for this test" if $@;
 
-plan tests => 4;
+plan tests => 5;
 
 {
     package NotMoose;
@@ -57,3 +57,23 @@ isnt(
     Moose::Object->can('new'),
     'Bar->new is not inherited from NotMoose because it was inlined'
 );
+
+{
+    package Baz;
+    use Moose;
+
+    Baz->meta->make_immutable;
+}
+
+{
+    package Quux;
+    use Moose;
+
+    extends 'Baz';
+
+    ::stderr_is(
+        sub { Quux->meta->make_immutable },
+        q{},
+        'no warning when inheriting from a class that has already made itself immutable'
+    );
+}
