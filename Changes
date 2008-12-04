@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.63
+    * Moose::Meta::Role::Application::ToClass
+      - When a class does not provide all of a role's required
+        methods, the error thrown now mentions all of the missing
+        methods, as opposed to just the first one found. Requested by
+        Michael Schwern (RT #41119). (Dave Rolsky)
+
 0.62_01 Wed, December 3, 2008
     * Moose::Object
       - use the method->execute API for BUILDALL

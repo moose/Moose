@@ -21,6 +21,7 @@ my @exports = qw[
     resolve_metatrait_alias
     resolve_metaclass_alias
     add_method_modifier
+    english_list
 ];
 
 Sub::Exporter::setup_exporter({
@@ -170,6 +171,19 @@ sub add_method_modifier {
     }
 }
 
+sub english_list {
+    my @items = sort @_;
+
+    return $items[0] if @items == 1;
+    return "$items[0] and $items[1]" if @items == 2;
+
+    my $tail = pop @items;
+    my $list = join ', ', @items;
+    $list .= ', and ' . $tail;
+
+    return $list;
+}
+
 1;
 
 __END__
@@ -253,6 +267,12 @@ Resolve a short name like in e.g.
 to a full class name.
 
 =item B<add_method_modifier ($class_or_obj, $modifier_name, $args)>
+
+=item B<english_list(@items)>
+
+Given a list of scalars, turns them into a proper list in English
+("one and two", "one, two, three, and four"). This is used to help us
+make nicer error messages.
 
 =back
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 14;
 use Test::Exception;
 
 
@@ -102,3 +102,58 @@ is_deeply(
     sub foo {'Baz::Class2::foo'}
 }
 
+
+{
+    package Quux::Role;
+    use Moose::Role;
+
+    requires qw( meth1 meth2 meth3 meth4 );
+}
+
+# RT #41119
+{
+
+    package Quux::Class;
+    use Moose;
+
+    ::throws_ok { with('Quux::Role') }
+        qr/\Q'Quux::Role' requires the methods 'meth1', 'meth2', 'meth3', and 'meth4' to be implemented by 'Quux::Class'/,
+        'exception mentions all the missing required methods at once';
+}
+
+{
+    package Quux::Class2;
+    use Moose;
+
+    sub meth1 { }
+
+    ::throws_ok { with('Quux::Role') }
+        qr/'Quux::Role' requires the methods 'meth2', 'meth3', and 'meth4' to be implemented by 'Quux::Class2'/,
+        'exception mentions all the missing required methods at once, but not the one that exists';
+}
+
+{
+    package Quux::Class3;
+    use Moose;
+
+    has 'meth1' => ( is => 'ro' );
+    has 'meth2' => ( is => 'ro' );
+
+    ::throws_ok { with('Quux::Role') }
+        qr/\Q'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class3'\E\n
+           \Q'Quux::Role' requires the methods 'meth1' and 'meth2' to be implemented by 'Quux::Class3' but the method is only an attribute accessor/x,
+        'exception mentions all the require methods that are accessors at once, as well as missing methods';
+}
+
+{
+    package Quux::Class4;
+    use Moose;
+
+    sub meth1 { }
+    has 'meth2' => ( is => 'ro' );
+
+    ::throws_ok { with('Quux::Role') }
+        qr/\Q'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class4'\E\n
+           \Q'Quux::Role' requires the method 'meth2' to be implemented by 'Quux::Class4' but the method is only an attribute accessor/x,
+        'exception mentions all the require methods that are accessors at once, as well as missing methods, but not the one that exists';
+}

@@ -4,7 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
-use Scalar::Util    'blessed';
+use Moose::Util  'english_list';
+use Scalar::Util 'blessed';
 
 our $VERSION   = '0.62_01';
 $VERSION = eval $VERSION;
@@ -32,6 +33,10 @@ sub check_role_exclusions {
 
 sub check_required_methods {
     my ($self, $role, $class) = @_;
+
+    my @missing;
+    my @is_attr;
+
     # NOTE:
     # we might need to move this down below the
     # the attributes so that we can require any
@@ -43,9 +48,8 @@ sub check_required_methods {
         if (!$class->find_method_by_name($required_method_name)) {
             
             next if $self->is_aliased_method($required_method_name);
-            
-            $class->throw_error("'" . $role->name . "' requires the method '$required_method_name' " .
-                    "to be implemented by '" . $class->name . "'");
+
+            push @missing, $required_method_name;
         }
         else {
             # NOTE:
@@ -55,9 +59,8 @@ sub check_required_methods {
             my $method = $class->find_method_by_name($required_method_name);
 
             # check if it is a generated accessor ...
-            (!$method->isa('Class::MOP::Method::Accessor'))
-                || $class->throw_error("'" . $role->name . "' requires the method '$required_method_name' " .
-                           "to be implemented by '" . $class->name . "', the method is only an attribute accessor");
+            push @is_attr, $required_method_name,
+                if $method->isa('Class::MOP::Method::Accessor');
 
             # NOTE:
             # All other tests here have been removed, they were tests
@@ -72,6 +75,43 @@ sub check_required_methods {
             # - SL
         }
     }
+
+    return unless @missing || @is_attr;
+
+    my $error = '';
+
+    if (@missing) {
+        my $noun = @missing == 1 ? 'method' : 'methods';
+
+        my $list
+            = Moose::Util::english_list( map { q{'} . $_ . q{'} } @missing );
+
+        $error
+            .= q{'}
+            . $role->name
+            . "' requires the $noun $list "
+            . "to be implemented by '"
+            . $class->name . q{'};
+    }
+
+    if (@is_attr) {
+        my $noun = @is_attr == 1 ? 'method' : 'methods';
+
+        my $list
+            = Moose::Util::english_list( map { q{'} . $_ . q{'} } @is_attr );
+
+        $error .= "\n" if length $error;
+
+        $error
+            .= q{'}
+            . $role->name
+            . "' requires the $noun $list "
+            . "to be implemented by '"
+            . $class->name
+            . "' but the method is only an attribute accessor";
+    }
+
+    $class->throw_error($error);
 }
 
 sub check_required_attributes {
