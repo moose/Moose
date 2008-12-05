@@ -72,7 +72,13 @@ sub new {
 
 
 sub coerce   { ((shift)->coercion || Moose->throw_error("Cannot coerce without a type coercion"))->coerce(@_) }
-sub check    { $_[0]->_compiled_type_constraint->($_[1]) ? 1 : undef }
+
+sub check {
+    my ($self, @args) = @_;
+    my $constraint_subref = $self->_compiled_type_constraint;
+    return $constraint_subref->(@args) ? 1 : undef;
+}
+
 sub validate {
     my ($self, $value) = @_;
     if ($self->_compiled_type_constraint->($value)) {
@@ -210,8 +216,9 @@ sub _compile_subtype {
         } else {
             return Class::MOP::subname($self->name, sub {
                 return undef unless $optimized_parent->($_[0]);
-                local $_ = $_[0];
-                $check->($_[0]);
+                my (@args) = @_;
+                local $_ = $args[0];
+                $check->(@args);
             });
         }
     } else {
@@ -219,9 +226,10 @@ sub _compile_subtype {
         my @checks = @parents;
         push @checks, $check if $check != $null_constraint;
         return Class::MOP::subname($self->name => sub {
-            local $_ = $_[0];
+            my (@args) = @_;
+            local $_ = $args[0];
             foreach my $check (@checks) {
-                return undef unless $check->($_[0]);
+                return undef unless $check->(@args);
             }
             return 1;
         });
@@ -234,8 +242,9 @@ sub _compile_type {
     return $check if $check == $null_constraint; # Item, Any
 
     return Class::MOP::subname($self->name => sub {
-        local $_ = $_[0];
-        $check->($_[0]);
+        my (@args) = @_;
+        local $_ = $args[0];
+        $check->(@args);
     });
 }
 

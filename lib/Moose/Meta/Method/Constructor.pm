@@ -419,6 +419,8 @@ not particularly useful.
 
 =item B<new>
 
+=item B<can_be_inlined>
+
 =item B<attributes>
 
 =item B<meta_instance>
