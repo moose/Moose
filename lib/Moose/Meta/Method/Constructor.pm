@@ -432,6 +432,8 @@ not particularly useful.
 
 =item B<associated_metaclass>
 
+=item B<can_be_inlined>
+
 =back
 
 =head1 AUTHORS
