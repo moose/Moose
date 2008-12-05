@@ -392,10 +392,7 @@ sub _generate_default_value {
         return '$attrs->[' . $index . ']->default($instance)';
     }
     else {
-        my $default = $attr->default;
-        # make sure to quote strings ...
-        return "'$default'";
-        
+        return q{"} . quotemeta( $attr->default ) . q{"};
     }
 }
 

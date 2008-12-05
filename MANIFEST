@@ -254,6 +254,7 @@ t/300_immutable/008_immutable_constructor_error.t
 t/300_immutable/009_buildargs.t
 t/300_immutable/010_constructor_is_not_moose.t
 t/300_immutable/011_constructor_is_wrapped.t
+t/300_immutable/012_default_values.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
