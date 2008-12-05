@@ -79,8 +79,14 @@ sub can_be_inlined {
         my $class = $self->associated_metaclass->name;
 
         if ( $constructor->body != $expected_class->can('new') ) {
-            warn "Not inlining a constructor for $class since it is not"
+            my $warning
+                = "Not inlining a constructor for $class since it is not"
                 . " inheriting the default $expected_class constructor\n";
+
+            $warning .= " (constructor has method modifiers which would be lost if it were inlined)\n"
+                if $constructor->isa('Class::MOP::Method::Wrapped');
+
+            warn $warning;
 
             return 0;
         }
