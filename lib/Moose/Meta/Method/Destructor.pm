@@ -88,11 +88,8 @@ sub initialize_body {
     $source .= ";\n" . '}'; 
     warn $source if $self->options->{debug};    
     
-    my $code;
-    {
-        $code = eval $source;
-        $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source) if $@;
-    }
+    my $code = $self->_eval_closure(q{}, $source);
+    $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source) if $@;
     $self->{'body'} = $code;
 }
 

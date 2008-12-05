@@ -150,7 +150,7 @@ sub initialize_body {
     warn $source if $self->options->{debug};
 
     my $code;
-    {
+    my $environment = q{
         my $meta = $self; # FIXME for _inline_throw_error...
 
         # NOTE:
@@ -174,10 +174,9 @@ sub initialize_body {
         my @type_constraint_bodies = map {
             defined $_ ? $_->_compiled_type_constraint : undef;
         } @type_constraints;
-
-        $code = eval $source;
-        $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
-    }
+    };
+    $code = $self->_eval_closure($environment, $source);
+    $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
     $self->{'body'} = $code;
 }
 
