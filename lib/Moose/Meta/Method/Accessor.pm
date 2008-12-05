@@ -32,7 +32,6 @@ sub _eval_code {
                                    : undef;
 
     #warn "code for $attr_name =>\n" . $code . "\n";
-    confess unless blessed $self;
     my $sub = eval $code;
     $self->throw_error("Could not create writer for '$attr_name' because $@ \n code: $code", error => $@, data => $code ) if $@;
     return $sub;
