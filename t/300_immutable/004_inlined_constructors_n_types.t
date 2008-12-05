@@ -44,8 +44,8 @@ for (1..2) {
     my $mutable_string = $is_immutable ? 'immutable' : 'mutable';
     lives_ok {
         my $f = Foo->new(foo => 10, bar => "Hello World", baz => 10, zot => 4);
-        is($f->moo, 69, "Type coersion works as expected on default ($mutable_string)");
-        is($f->boo, 69, "Type coersion works as expected on builder ($mutable_string)");
+        is($f->moo, 69, "Type coercion works as expected on default ($mutable_string)");
+        is($f->boo, 69, "Type coercion works as expected on builder ($mutable_string)");
     } "... this passes the constuctor correctly ($mutable_string)";
 
     lives_ok {
