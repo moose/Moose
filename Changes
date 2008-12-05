@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.63
+0.62_02 Fri, December 5, 2008
     * Moose::Meta::Role::Application::ToClass
       - When a class does not provide all of a role's required
         methods, the error thrown now mentions all of the missing
