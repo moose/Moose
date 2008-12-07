@@ -531,7 +531,7 @@ on and read the Meta and Extending recipes, but those are mostly there
 for people who want to be Moose wizards and change how Moose works.
 
 If you want to see how Moose would translate directly old school Perl
-5 OO code, check out the L<Moose::Unsweetened>.
+5 OO code, check out L<Moose::Unsweetened>.
 
 =head1 AUTHOR
 
