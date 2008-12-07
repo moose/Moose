@@ -213,22 +213,23 @@ helpers like C<Class::Accessor>.
 
 Wow, that was a mouthful! One thing to note is just how much space the
 data validation code consumes. As a result, it's pretty common for
-Perl 5 programmers to just not bother, which results in much more
-fragile code.
+Perl 5 programmers to just not bother. Unfortunately, not validating
+arguments leads to surprises down the line ("why is birth_date an
+email address?").
 
-Did you spot the (intentional) bug?
+Also, did you spot the (intentional) bug?
 
 It's in the C<_validate_birth_date()> method. We should check that
 that value in C<$birth_date> is actually defined and object before we
 go and call C<isa()> on it! Leaving out those checks means our data
 validation code could actually cause our program to die. Oops.
 
-Also note that if we add a superclass to Person we'll have to change
-the constructor to account for that.
+Note that if we add a superclass to Person we'll have to change the
+constructor to account for that.
 
 (As an aside, getting all the little details of what Moose does for
-you just right in this code was not easy, which just emphasizes the
-point, that Moose saves you a lot of work!)
+you just right in this example was really not easy, which emphasizes
+the point of the example. Moose saves you a lot of work!)
 
 Now let's see User:
 
