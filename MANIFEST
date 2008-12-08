@@ -172,6 +172,7 @@ t/030_roles/033_role_exclusion_and_alias_bug.t
 t/030_roles/034_create_role.t
 t/030_roles/035_anonymous_roles.t
 t/030_roles/036_free_anonymous_roles.t
+t/030_roles/037_create_role_subclass.t
 t/040_type_constraints/001_util_type_constraints.t
 t/040_type_constraints/002_util_type_constraints_export.t
 t/040_type_constraints/003_util_std_type_constraints.t
