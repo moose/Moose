@@ -165,7 +165,6 @@ t/030_roles/023_role_composition_attributes.t
 t/030_roles/024_role_composition_methods.t
 t/030_roles/025_role_composition_override.t
 t/030_roles/026_role_composition_method_mods.t
-t/030_roles/030_role_parameterized.t
 t/030_roles/031_roles_applied_in_create.t
 t/030_roles/032_roles_and_method_cloning.t
 t/030_roles/033_role_exclusion_and_alias_bug.t
