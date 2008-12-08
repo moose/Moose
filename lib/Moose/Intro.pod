@@ -139,7 +139,7 @@ A class I<has> zero or more B<method modifiers>. These modifiers can
 apply to its own methods or methods that are inherited from its
 ancestors.
 
-A class may I<do> one or more B<roles>.
+A class may I<do> zero or more B<roles>.
 
 A class I<has> a B<constructor> and a B<destructor>. These are
 provided for you "for free" by Moose.
