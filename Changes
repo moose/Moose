@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.63 Mon, December 8, 2008
+    * Moose::Unsweetened
+      - Some small grammar tweaks and bug fixes in non-Moose example
+        code. (Dave Rolsky)
+
 0.62_02 Fri, December 5, 2008
     * Moose::Meta::Role::Application::ToClass
       - When a class does not provide all of a role's required
