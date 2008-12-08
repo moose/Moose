@@ -14,7 +14,7 @@ language, and you don't care how they are implemented.
 
 Moose aims to do the same thing for Perl 5 OO. We can't actually
 create new keywords, but we do offer "sugar" that looks a lot like
-them. More importantly, with Moose, you I<declaritively define> your
+them. More importantly, with Moose, you I<declaratively define> your
 class, without needing to know about blessed hashrefs, accessor
 methods, and so on.
 
@@ -343,7 +343,7 @@ With Moose, you get well-defined declaration and introspection.
 Hand-written accessor methods, symbol table hackery, or a helper
 module like C<Class::Accessor>.
 
-With Moose, these are declaritively defined, and distinct from
+With Moose, these are declaratively defined, and distinct from
 methods.
 
 =item * Method
