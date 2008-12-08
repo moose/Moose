@@ -8,7 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess'; # FIXME Moose->throw_error
 
-our $VERSION   = '0.62_02';
+our $VERSION   = '0.63';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
