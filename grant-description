@@ -1,0 +1,67 @@
+1. Write a set of Moose::Intro::* documentation. This would be a major
+expansion of the documentation currently in Moose::Intro. These docs
+will explain concepts in detail, and also explain why and when someone
+would choose to use a particular feature.
+
+This differs from the cookbook, which is primarily aimed at showing
+examples of features in code, and then walking through that code.
+
+The intro docs would include the following:
+
+    * Moose::Intro::Attributes - what are attributes and how are they
+      used? This piece of documentation would show all the different
+      features available for attributes, including the "initializer",
+      "clearer", "predicate", triggers, etc. It's likely that this
+      will end up being split into two or three separate documents,
+      since Moose has quite a lot of attribute-related features. For
+      example, delegation could easily be in its own document, and it
+      may make sense to split features into a "basic" and "advanced"
+      set.
+
+    * Moose::Intro::Subclassing - subclassing the Moose
+      way. Subclassing in Moose is very simple, but different from the
+      "old school" Perl 5 way.
+
+    * Moose::Intro::MethodModifiers - a detailed discussion of each
+      type of method modifier with explanations of when each is
+      appropriate.
+
+    * Moose::Intro::MooseObject - details of how Moose::Object works
+      and the features it provides for its subclasses. In particular,
+      this documentation would focus on how to use the BUILD,
+      BUILDARGS, and DEMOLISH methods.
+
+    * Moose::Intro::Roles - an explanation of what roles are and
+      discussion of when to use them. This document would discuss how
+      to apply multiple roles to classes, how to apply roles to other
+      roles, and also how to apply roles to an instantiated object.
+
+    * Moose::Intro::Types - an explanation of Moose's type
+      system. This will include information on how and when to create
+      your own types, and how to use coercion.
+
+    * Moose::Intro::Introspection - what are metaclasses,
+      meta-attributes, etc? This document will explain what the
+      metaclasses are, and talk about how they can be used for
+      introspection.
+
+    * Moose::Intro::MooseX - an overview of some useful MooseX
+      modules, specifically MooseX::AttributeHelpers,
+      MooseX::StrictConstructor, MooseX::Params::Validate, and
+      MooseX::Types.
+
+2. Revise all of the existing cookbook recipes for clarity and
+simplicity. I've already done this for a few recipes, but there are
+quite a few left to do.
+
+3. Write the recipes marked as TODO:
+
+    * Moose::Cookbook::Basics::Recipe8 - Managing complex relations with trigger
+    * Moose::Cookbook::Basics::Recipe11 - BUILD and BUILDARGS
+    * Moose::Cookbook::Roles::Recipe3 - Runtime Role Composition
+    * Moose::Cookbook::Meta::Recipe6 - Hooking into the immutabilization system
+    * Moose::Cookbook::Meta::Recipe7 - Custom meta-instances
+
+4. Complete API docs for all Moose and Class::MOP classes. Many of
+these classes have POD which simply lists their methods, without any
+explanation of what these methods do.
