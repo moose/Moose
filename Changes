@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+0.64
+    * Moose::Meta::Method::Accessor
+      - Always inline predicate and clearer methods (Sartak)
+
 0.63 Mon, December 8, 2008
     * Moose::Unsweetened
       - Some small grammar tweaks and bug fixes in non-Moose example
