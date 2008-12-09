@@ -228,7 +228,7 @@ sub _inline_trigger {
     my ($self, $instance, $value) = @_;
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
+    return sprintf('$attr->trigger->(%s, %s);', $instance, $value);
 }
 
 sub _inline_get {

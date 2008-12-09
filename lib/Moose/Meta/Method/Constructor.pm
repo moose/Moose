@@ -222,8 +222,6 @@ sub _generate_triggers {
                                  '$instance',
                                  ("'" . $attr->name . "'")
                              ) 
-                             . ', '
-                    .        '$attrs->[' . $i . ']'
                     .   ');'
                     ."\n}"
                 );
