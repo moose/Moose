@@ -8,11 +8,14 @@ Moose::Manual::Concepts - Moose OO Concepts
 
 In the past, you may not have thought too much about the difference
 between packages and classes, attributes and methods, constructors and
-methods, etc. Part of what the MOP provides is well-defined
-introspection features for each of those things, and in turn Moose
+methods, etc. With Moose, these are all conceptually separate things,
+even though under the hood they're implemented with plain old Perl.
+
+Our meta-object protocol (aka MOP) provides a well-defined
+introspection features for each of those concepts, and Moose in turn
 provides I<distinct> sugar for each of them. Moose also introduces
-concepts that are uncommon (or entirely new) like roles, method
-modifiers, and declarative delegation.
+additional concepts such as roles, method modifiers, and declarative
+delegation.
 
 Knowing what these concepts mean in Moose-speak, and how they used to
 be done in old school Perl 5 OO is a good way to start learning to use
@@ -20,8 +23,8 @@ Moose.
 
 =head2 Class
 
-When you say "use Moose" in a package, you are defining your package
-as a class. At its simplest, a class will consist simply of attributes
+When you say "use Moose" in a package, you are making your package a
+class. At its simplest, a class will consist simply of attributes
 and/or methods. It can also include roles, method modifiers, and more.
 
 A class I<has> zero or more B<attributes>.
@@ -79,9 +82,9 @@ It is best to think of Moose attributes as "properties" of the
 I<opaque> B<object instance>. These properties are accessed through
 well-defined accessor methods.
 
-An attribute is usually analogous to a specific feature of something in
-the class's category. For example, People have first and last
-names. Users have passwords and last login datetimes.
+An attribute is something that the class's members have. For example,
+People have first and last names. Users have passwords and last login
+datetimes.
 
   has 'first_name' => (
       is  => 'rw',
@@ -113,8 +116,8 @@ A role I<has> zero or more B<method modifiers>.
 
 A role I<has> zero or more B<required methods>.
 
-A required method is not implemented by the role. Instead, a required
-method says "to use this Role you must implement this method".
+A required method is not implemented by the role. Required methods say
+"to use this Role you must implement this method".
 
 Roles are I<composed> into classes (or other roles). When a role is
 composed into a class, its attributes and methods are "flattened" into
@@ -143,12 +146,11 @@ Role are somewhat like mixins or interfaces in other OO languages.
 
 =head2 Method Modifiers
 
-A method modifier is a way of defining an action to be taken when a
-named method is called. Think of it as a hook on the named method. For
-example, you could say "before calling C<login()>, call this modifier
-first". Modifiers come in different flavors like "before", "after",
-"around", and "augment", and you can apply more than one modifier to
-a single method.
+A method modifier is a hook that is called when a named method is
+called. For example, you could say "before calling C<login()>, call
+this modifier first". Modifiers come in different flavors like
+"before", "after", "around", and "augment", and you can apply more
+than one modifier to a single method.
 
 Method modifiers are often used as an alternative to overriding a
 method in a parent class. They are also used in roles as a way of
@@ -180,12 +182,8 @@ type "PosInt", a subtype of "Int" which only allows positive numbers.
 =head2 Delegation
 
 Moose attributes provide declarative syntax for defining
-delegations. A delegation is a method which delegates the real work to
-some attribute of the class.
-
-You saw this in the User example, where we defined a delegation for
-the C<date_of_last_login()> method. Under the hood, this simple calls
-C<date()> on the User object's C<last_login> attribute.
+delegations. A delegation is a method which calls some method on an
+attribute to do its real work.
 
 =head2 Constructor
 
@@ -357,7 +355,7 @@ If you want to see how Moose would translate directly old school Perl
 5 OO code, check out L<Moose::Unsweetened>. This might be helpful for
 quickly wrapping your brain around some aspects of "the Moose way".
 
-Obviously, the first thing to read is the L<Moose::Manual>
+Obviously, the next thing to read is the rest of the L<Moose::Manual>.
 
 After that we recommend that you start with the L<Moose::Cookbook>. If
 you work your way through all the recipes under the basics section,
