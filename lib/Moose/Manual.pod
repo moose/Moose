@@ -38,12 +38,11 @@ languages.
 
 Moose makes Perl 5 OO both simpler and more powerful. It encapsulates
 all the tricks of Perl 5 power users in high-level declarative APIs
-which are easy to use, and don't require any special knowledge of how
-Perl works under the hood.
+which are easy to use, and doesn't require any special knowledge of
+how Perl works under the hood.
 
-Moose makes Perl 5 OO fun, accessible, and powerful. And if you want
-to dig about in the guts, Moose lets you do that too, by using and
-extending its powerful introspection API.
+If you want to dig about in the guts, Moose lets you do that too, by
+using and extending its powerful introspection API.
 
 =head1 AN EXAMPLE
 
@@ -107,25 +106,22 @@ This manual consists of a number of documents.
 Introduces Moose concepts, and contrasts them against "old school"
 Perl 5 OO.
 
-=item L<Moose::Manual::UsingMoose>
+=item L<Moose::Manual::Classes>
 
-How do you make use of Moose in your classes?
-
-=item L<Moose::Manual::Subclassing>
-
-Now that I'm a Moose, how do I subclass something?
-
-=item L<Moose::Manual::Construction>
-
-Learn how objects are built in Moose, and in particular about the
-C<BUILD>, C<BUILDARGS> methods. Also covers object destruction
-with C<DEMOLISH>.
+How do you make use of Moose in your classes? Now that I'm a Moose,
+how do I subclass something?
 
 =item L<Moose::Manual::Attributes>
 
 Attributes are a core part of the Moose OO system. An attribute is a
 piece of data that an object has. Moose has a lot of attribute-related
 features!
+
+=item L<Moose::Manual::Construction>
+
+Learn how objects are built in Moose, and in particular about the
+C<BUILD>, C<BUILDARGS> methods. Also covers object destruction
+with C<DEMOLISH>.
 
 =item L<Moose::Manual::MethodModifiers>
 
