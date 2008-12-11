@@ -34,10 +34,6 @@ documentation.
 Loading Moose in your class also turns on the C<strict> and
 C<warnings> pragmas in your class for you.
 
-It also creates a L<Moose::Meta::Class> object for your class. This
-metaclass object is now available by calling a C<meta> method on your
-class, for example C<< Person->meta >>.
-
 The metaclass object an introspection API for your class. It is also
 used by Moose itself under the hood to add attributes, define parent
 classes, and so on. In fact, all of Moose's sugar does the real work
@@ -54,6 +50,10 @@ As a convenience, Moose creates a new class type with the name of your
 class, by calling the C<class_type> function in
 L<Moose::Util::Constraints>. See the L<Moose::Manual::Types> document
 for more about types.
+
+It also creates a L<Moose::Meta::Class> object for your class. This
+metaclass object is now available by calling a C<meta> method on your
+class, for example C<< Person->meta >>.
 
 =head1 SUBCLASSING
 
