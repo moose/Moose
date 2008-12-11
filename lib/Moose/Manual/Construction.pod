@@ -10,7 +10,7 @@ B<You do not need to define a C<new()> method for your classes!>
 
 When you C<use Moose> in your class, you will become a subclass of
 C<Moose::Object>, which provides a C<new> method for you. And if you
-follow L<our recommendations|Moose::Manual::BestPractices> and make
+follow our recommendations in L<Moose::Manual::BestPractices> and make
 your class immutable, then you actually get a class-specific C<new>
 method genreated in your class.
 
