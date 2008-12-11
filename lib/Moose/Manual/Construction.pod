@@ -6,14 +6,13 @@ Moose::Manual::Classes - Object construction (and destruction) with Moose
 
 =head1 WHERE'S THE CONSTRUCTOR?
 
-The first question about object construction with Moose might be how
-it happens. B<You do not need to define a C<new()> method for your
-classes!>
+B<You do not need to define a C<new()> method for your classes!>
 
 When you C<use Moose> in your class, you will become a subclass of
 C<Moose::Object>, which provides a C<new> method for you. And if you
-follow our recommendations and make your class immutable, then you
-actually get a class-specific C<new> method genreated in your class.
+follow L<our recommendations|Moose::Manual::BestPractices> and make
+your class immutable, then you actually get a class-specific C<new>
+method genreated in your class.
 
 The Moose-provided constructor accepts a hash or hash reference of
 named parameters matching your attributes (actually, matching their
@@ -21,7 +20,7 @@ C<init_arg>s). This is just another way in which Moose keeps you from
 worrying I<how> classes are implemented. Simply define a class and
 you're ready to start creating objects!
 
-=head1 DOING "STUFF" WHEN AN OBJECT IS CONSTRUCTED
+=head1 OBJECT CONSTRUCTION HOOKS
 
 Sometimes you need to hook into object construction. Some common needs
 are validating an object's state, logging, and allowing non-hash(ref)
@@ -45,9 +44,9 @@ calling style. For example, we might want to allow our Person class to
 be called with a single argument of a social security number, C<<
 Person->new($ssn) >>.
 
-Without a C<BUILDARGS> method, Moose will complain, because this is
-clearly not a hash reference. With a C<BUILDARGS> method we can easily
-accomodate this:
+Without a C<BUILDARGS> method, Moose will complain, because it expects
+a hash or hash reference. We can use the C<BUILDARGS> method to
+accomodate this calling style:
 
   sub BUILDARGS {
       my $class = shift;
@@ -87,7 +86,7 @@ object creation.
   sub BUILD {
       my $self = shift;
 
-      log_debug( 'Made a new person - SSN = ', $self->ssn, );
+      debug( 'Made a new person - SSN = ', $self->ssn, );
   }
 
 =head3 BUILD and Parent Classes
@@ -105,13 +104,16 @@ The theory behind this is that C<BUILD> methods can only be used for
 increasing specialization of a class's constraints, so it makes sense
 to call the least specific first (also, this is how Perl 6 does it).
 
-=head OBJECT DESTRUCTION
+=head1 OBJECT DESTRUCTION
 
 Moose provides a hook for object destruction with the C<DEMOLISH>
 method. As with C<BUILD>, you should never explicitly call C<<
 $self->SUPER::DEMOLISH >>. Moose will arrange for all of the
 C<DEMOLISH> methods in your hierarchy to be called, from most to least
 specific.
+
+In most cases, Perl's built-in garbage collection is sufficient, and
+you won't need ot provide a C<DEMOLISH> method.
 
 =head1 AUTHOR
 
