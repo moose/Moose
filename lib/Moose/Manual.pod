@@ -60,6 +60,9 @@ using and extending its powerful introspection API.
       isa => 'Str',
   );
 
+  no Moose;
+  __PACKAGE__->meta->make_immutable;
+
 This is a I<complete and usable> class definition!
 
   package User;
@@ -90,6 +93,9 @@ This is a I<complete and usable> class definition!
 
       return 1;
   }
+
+  no Moose;
+  __PACKAGE__->meta->make_immutable;
 
 We'll leave the line-by-line explanation of this code to other
 documentation, but you can see how Moose reduces common OO idioms to
