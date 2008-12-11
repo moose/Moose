@@ -15,7 +15,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Moose::Exporter;
 
-use Class::MOP 0.71_02;
+use Class::MOP 0.72;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;

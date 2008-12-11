@@ -12,7 +12,7 @@ license 'perl';
 requires 'perl'             => '5.008';
 requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
-requires 'Class::MOP'       => '0.71_02';
+requires 'Class::MOP'       => '0.72';
 requires 'List::MoreUtils'  => '0.12';
 requires 'Sub::Exporter'    => '0.972';
 requires 'Task::Weaken'     => '0';
