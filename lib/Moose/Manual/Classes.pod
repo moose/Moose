@@ -105,25 +105,6 @@ well.
 To make your class immutable you simply call C<make_immutable> on your
 class's metaclass object.
 
-=head1 RECOMMENDATIONS
-
-We recommend that you end your Moose class definitions by removing the
-Moose sugar and making your class immutable.
-
-  package Person;
-
-  use Moose;
-
-  # extends, roles, attributes, etc.
-
-  # methods
-
-  no Moose;
-
-  __PACKAGE__->meta->make_immutable;
-
-  1;
-
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
