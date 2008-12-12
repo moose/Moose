@@ -150,13 +150,16 @@ sub initialize_body {
     warn $source if $self->options->{debug};
 
     my $code;
-    my $environment = q{
-        my $meta = $self; # FIXME for _inline_throw_error...
+    my $attrs = $self->attributes;
+    my @type_constraints = map { 
+        $_->can('type_constraint') ? $_->type_constraint : undef
+    } @$attrs;
+    my $environment = {
 
-        # NOTE:
-        # create the nessecary lexicals
-        # to be picked up in the eval
-        my $attrs = $self->attributes;
+        # lexicals for the scope within which we will be constructed
+
+        '$meta' => \$self, # FIXME for _inline_throw_error...
+        '$attrs' => \$attrs,
 
         # We need to check if the attribute ->can('type_constraint')
         # since we may be trying to immutabilize a Moose meta class,
@@ -167,13 +170,11 @@ sub initialize_body {
         # because the inlined code is using the index of the attributes
         # to determine where to find the type constraint
         
-        my @type_constraints = map { 
-            $_->can('type_constraint') ? $_->type_constraint : undef
-        } @$attrs;
+        '@type_constraints' => \@type_constraints,
         
-        my @type_constraint_bodies = map {
+        '@type_constraint_bodies' => [ map {
             defined $_ ? $_->_compiled_type_constraint : undef;
-        } @type_constraints;
+        } @type_constraints ]
     };
     $code = $self->_eval_closure($environment, $source);
     $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;

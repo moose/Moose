@@ -21,17 +21,18 @@ sub _eval_code {
 
     # NOTE:
     # set up the environment
-    my $environment = q{
-    my $attr        = $self->associated_attribute;
-    my $attr_name   = $attr->name;
-    my $meta        = $self;
-
-    my $type_constraint_obj  = $attr->type_constraint;
-    my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
-    my $type_constraint      = $type_constraint_obj
+    my $attr = $self->associated_attribute;
+    my $type_constraint_obj = $attr->type_constraint;
+    my $environment = {
+        '$attr' => \$attr,
+        '$attr_name' => \$attr->name,
+        '$meta' => \$self,
+        '$type_constraint_obj' => \$type_constraint_obj,
+        '$type_constraint_name' => \($type_constraint_obj && $type_constraint_obj->name),
+        '$type_constraint' => \($type_constraint_obj
                                    ? $type_constraint_obj->_compiled_type_constraint
-                                   : undef;
-};
+                                   : undef),
+    };
 
     #warn "code for $attr_name =>\n" . $code . "\n";
     my $sub = $self->_eval_closure($environment, $code);
