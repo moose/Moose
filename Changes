@@ -14,7 +14,7 @@ Revision history for Perl extension Moose
       - When a class does not provide all of a role's required
         methods, the error thrown now mentions all of the missing
         methods, as opposed to just the first one found. Requested by
-        Michael Schwern (RT #41119). (Dave Rolsky)
+        Curtis Poe (RT #41119). (Dave Rolsky)
 
     * Moose::Meta::Method::Constructor
       - Moose will no longer inline a constructor for your class
