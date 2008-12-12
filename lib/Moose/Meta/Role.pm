@@ -8,7 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-our $VERSION   = '0.62_01';
+our $VERSION   = '0.63';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -311,10 +311,10 @@ sub get_method_map {
     my $role_name        = $self->name;
     my $method_metaclass = $self->method_metaclass;
 
-    my %all_code = $self->get_all_package_symbols('CODE');
+    my $all_code = $self->get_all_package_symbols('CODE');
 
-    foreach my $symbol (keys %all_code) {
-        my $code = $all_code{$symbol};
+    foreach my $symbol (keys %{ $all_code }) {
+        my $code = $all_code->{$symbol};
 
         next if exists  $map->{$symbol} &&
                 defined $map->{$symbol} &&

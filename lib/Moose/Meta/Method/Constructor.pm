@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.62_01';
+our $VERSION   = '0.63';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -389,10 +389,7 @@ sub _generate_default_value {
         return '$attrs->[' . $index . ']->default($instance)';
     }
     else {
-        my $default = $attr->default;
-        # make sure to quote strings ...
-        return "'$default'";
-        
+        return q{"} . quotemeta( $attr->default ) . q{"};
     }
 }
 
@@ -418,6 +415,8 @@ not particularly useful.
 =over 4
 
 =item B<new>
+
+=item B<can_be_inlined>
 
 =item B<attributes>
 

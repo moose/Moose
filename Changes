@@ -1,6 +1,15 @@
 Revision history for Perl extension Moose
 
-0.63
+0.64
+    * Moose::Meta::Method::Accessor
+      - Always inline predicate and clearer methods (Sartak)
+
+0.63 Mon, December 8, 2008
+    * Moose::Unsweetened
+      - Some small grammar tweaks and bug fixes in non-Moose example
+        code. (Dave Rolsky)
+
+0.62_02 Fri, December 5, 2008
     * Moose::Meta::Role::Application::ToClass
       - When a class does not provide all of a role's required
         methods, the error thrown now mentions all of the missing
@@ -14,6 +23,9 @@ Revision history for Perl extension Moose
         inlining anyway, pass "replace_constructor => 1" to
         make_immutable. Addresses RT #40968, reported by Jon
         Swartz. (Dave Rolsky)
+      - The quoting of default values could be broken if the default
+        contained a single quote ('). Now we use quotemeta to escape
+        anything potentially dangerous in the defaults. (Dave Rolsky)
 
 0.62_01 Wed, December 3, 2008
     * Moose::Object
