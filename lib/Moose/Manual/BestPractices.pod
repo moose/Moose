@@ -1,0 +1,39 @@
+
+=head1 RECOMMENDATIONS
+
+=head2 No Moose and Immutabilize
+
+We recommend that you end your Moose class definitions by removing the
+Moose sugar and making your class immutable.
+
+  package Person;
+
+  use Moose;
+
+  # extends, roles, attributes, etc.
+
+  # methods
+
+  no Moose;
+
+  __PACKAGE__->meta->make_immutable;
+
+  1;
+
+=head2 Always call SUPER::BUILDARGS
+
+=head2 No complex subs for a default, use a builder
+
+builders can be inherited, show up more cleanly in profile
+
+=head2 use default for simple scalar, and empty refs
+
+=head2 use builder for everything else
+
+=head2 use lazy_build
+
+keep builders private
+
+consider keeping clearers & predicates private
+
+consider keeping writers private
