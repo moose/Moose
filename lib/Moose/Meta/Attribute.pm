@@ -108,11 +108,12 @@ sub interpolate_class {
     my @traits;
 
     if (my $traits = $options{traits}) {
-        if ( @traits = grep { not $class->does($_) } map {
-            Moose::Util::resolve_metatrait_alias( Attribute => $_ )
-                or
-            $_
-        } @$traits ) {
+        @traits =
+            grep { not $class->does($_) }
+            map { Moose::Util::resolve_metatrait_alias(Attribute => $_) || $_ }
+            @$traits;
+
+        if (@traits) {
             my $anon_class = Moose::Meta::Class->create_anon_class(
                 superclasses => [ $class ],
                 roles        => [ @traits ],
