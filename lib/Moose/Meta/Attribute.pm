@@ -108,10 +108,22 @@ sub interpolate_class {
     my @traits;
 
     if (my $traits = $options{traits}) {
-        @traits =
-            grep { not $class->does($_) }
-            map { Moose::Util::resolve_metatrait_alias(Attribute => $_) || $_ }
-            @$traits;
+        my $i = 0;
+        while ($i < @$traits) {
+            my $trait = $traits->[$i++];
+            next if ref($trait); # options to a trait we discarded
+
+            $trait = Moose::Util::resolve_metatrait_alias(Attribute => $trait)
+                  || $trait;
+
+            next if $class->does($trait);
+
+            push @traits, $trait;
+
+            # are there options?
+            push @traits, $traits->[$i++]
+                if $traits->[$i] && ref($traits->[$i]);
+        }
 
         if (@traits) {
             my $anon_class = Moose::Meta::Class->create_anon_class(
