@@ -576,9 +576,9 @@ use a C<builder> (which is Moose-only) instead.
 =head1 MORE ON ATTRIBUTES
 
 Moose attributes are a big topic, and this document glosses over a few
-topics. We recommend that you read the L<Moose::Manual::Delegation>
-and L<Moose::Manual::Types> documents to get a more complete
-understanding of attribute features.
+aspects of their aspects. We recommend that you read the
+L<Moose::Manual::Delegation> and L<Moose::Manual::Types> documents to
+get a more complete understanding of attribute features.
 
 =head1 AUTHOR
 
