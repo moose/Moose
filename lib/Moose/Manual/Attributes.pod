@@ -19,7 +19,7 @@ At its simplest, an attribute can be thought of slot in hash that can
 be read and set. However, attributes, can also have things like
 default values, laziness, type constraints, delegation and much more.
 
-=head1 ATTRIBUTE 101
+=head1 ATTRIBUTE OPTIONS
 
 Use the C<has> function to declare an attribute:
 
@@ -57,7 +57,7 @@ So with our Person example above, we now have a single C<first_name>
 accessor that can set or return a person object's first name.
 
 If you want, you can also explicitly specify the method names to be
-used for getting and setting an attribute's value. This is
+used for reading and writing an attribute's value. This is
 particularly handy when you'd like an attribute to be publically
 readable, but only privately settable. For example:
 
@@ -71,10 +71,10 @@ for example every time the C<eat> method is called, we might adjust
 weight. This lets us hide the implementation details of weight
 changes, but still provide the weight value to users of the class.
 
-Some people might prefer to have distinct methods for getting and
-setting, even when setting is a public method. In I<Perl Best
-Practices>, Damian Conway recommends that getter methods start with
-"get_" and setter methods start with "set_".
+Some people might prefer to have distinct methods for reading and
+writing, even when writing is a public method. In I<Perl Best
+Practices>, Damian Conway recommends that reader methods start with
+"get_" and writer methods start with "set_".
 
 We can do exactly that by providing names for both the C<reader> and
 C<writer> methods:
@@ -148,7 +148,7 @@ want.
 
 By default, all attributes are optional. That means that they do not
 need to be provided at object construction time. If you want to make
-an attribute required, simply set the required option to true:
+an attribute required, simply set the C<required> option to true:
 
   has 'name' =>
       ( is       => 'rw',
@@ -168,8 +168,8 @@ remove it after object construction.
 
 So if you do make an attribute required, that probably means that
 providing a clearer doesn't make much sense. In some cases, it might
-be handy to have a I<private> clearer and predicate for a required
-attribute.
+be handy to have a I<private> C<clearer> and C<predicate> for a
+required attribute.
 
 =head2 Default and Builder Methods
 
@@ -177,7 +177,7 @@ Attributes can have default values, and there are several ways to
 specify this.
 
 In the simplest form, you simply provide a non-reference scalar value
-for the "default" option:
+for the C<default> option:
 
   has 'size' =>
       ( is        => 'rw',
@@ -192,7 +192,7 @@ up being set to "medium":
   $person->size; # medium
   $person->has_size; # true
 
-You can also provide a subroutine reference for default. This
+You can also provide a subroutine reference for C<default>. This
 reference will be called a method on the object.
 
   has 'size' =>
@@ -207,8 +207,8 @@ will be called for every new object created.
 
 Of course, if it's called during object construction, it may be before
 other attributes have been set. If your default is dependent on other
-parts of the object's state, you can make the default lazy, which is
-covered in the next section.
+parts of the object's state, you can make the default c<lazy>, which
+is covered in the next section.
 
 If you want to use a reference of any sort as the default value, you
 must return it from a subroutine. This is necessary because otherwise
@@ -232,7 +232,7 @@ reference:
 This is a bit awkward, but it's just the way Perl works.
 
 As an alternative to using a subroutine reference, you can instead
-supply a builder method for your attribute:
+supply a C<builder> method for your attribute:
 
   has 'size' =>
       ( is        => 'rw',
@@ -249,12 +249,13 @@ own named method, which improves readability and code
 organization. Second, the C<_build_size> method can be overridden in
 subclasses.
 
-We strongly recommend that you use a builder instead of a default for
-anything beyond the most trivial default.
+We strongly recommend that you use a C<builder> instead of a
+C<default> for anything beyond the most trivial default.
 
 =head2 Laziness and lazy_build
 
-Moose lets you defer attribute population by making an attribute lazy:
+Moose lets you defer attribute population by making an attribute
+C<lazy>:
 
   has 'size' =>
       ( is        => 'rw',
@@ -262,23 +263,23 @@ Moose lets you defer attribute population by making an attribute lazy:
         builder   => '_build_size',
       );
 
-When the lazy option is true, the attribute is not populated until the
-reader method is called, rather than at object construction
+When the C<lazy> option is true, the attribute is not populated until
+the reader method is called, rather than at object construction
 time. There are several reasons you might choose to do this.
 
 First, if the default value for this attribute depends on some other
-attributes, then the attribute I<must> be lazy. During object
+attributes, then the attribute I<must> be C<lazy>. During object
 construction, default subroutine references are not called in any
 particular order, so you cannot count on other attribute being
 populated at that time.
 
 Second, there's often no reason to spend program time calculating a
-default before its needed. Making an attribute lazy lets you defer the
-cost until the attribute is needed. If the attribute is I<never>
+default before its needed. Making an attribute C<lazy> lets you defer
+the cost until the attribute is needed. If the attribute is I<never>
 needed, you save some CPU time.
 
 We recommend that you make any attribute with a builder or non-trivial
-default lazy as a matter of course.
+default C<lazy> as a matter of course.
 
 To facilitate this, you can simply specify the C<lazy_build> attribute
 option. This bundles up a number of options together:
@@ -306,7 +307,7 @@ and predicate will as well:
         lazy_build => 1,
       );
 
-becomes ...
+becomes:
 
   has '_size' =>
       ( is        => 'rw',
@@ -316,8 +317,233 @@ becomes ...
         predicate => '_has_size',
       );
 
-Note the doubled underscore in the builder name. The lazy_build simply
-prepends the attribute name with "_build_" to come up with the builder
-name.
+Note the doubled underscore in the builder name. Internally, Moose
+simply prepends the attribute name with "_build_" to come up with the
+builder name.
 
-=head2 Private Attributes
+If you don't like the names that C<lazy_build> generates, you can
+always provide your own:
+
+  has 'size' =>
+      ( is         => 'rw',
+        lazy_build => 1,
+        clearer    => '_has_size',
+      );
+
+Options that you explicitly provide are always used in favor of
+Moose's internal defaults.
+
+=head2 Weak References
+
+Moose has built-in support for weak references. If you set the
+C<weak_ref> to a true value for the attribute, then it will call
+C<Scalar::Util::weaken> whenever the attribute is set:
+
+  has 'parent' =>
+      ( is       => 'rw',
+        weak_ref => 1,
+      );
+
+  $node->parent($parent_node);
+
+This is very useful when you're building objects that may contain
+circular references.
+
+=head2 Triggers
+
+You can provide a C<trigger> option as a subroutine reference which
+will be called whenever the attribute is set:
+
+  has 'size' =>
+      ( is      => 'rw',
+        trigger => \&_size_set,
+      );
+
+  sub _size_set {
+      my ( $self, $size, $meta_attr ) = @_;
+
+      print $self->name, " size is now $size\n";
+  }
+
+The trigger is called as a method, and receives the new value as well
+as the L<Moose::Meta::Attribute> object for the attribute.
+
+=head2 Attribute Types
+
+Attributes can be restriced to only accept certain types:
+
+  has 'first_name' =>
+      ( is  => 'rw',
+        isa => 'Str',
+      );
+
+This says that the first_name attribute must be a string.
+
+Moose also provides a shortcut for specifying that an attribute only
+accepts objects that do a certain role:
+
+  has 'weapon' =>
+     ( is   => 'rw',
+       does => 'MyApp::Weapon',
+     );
+
+See the L<Moose::Manual::Types> documentation for a complete
+discussion of Moose's type system.
+
+=head2 Delegation
+
+Attributes can define delegations to their values:
+
+  has 'hair_color' =>
+      ( is      => 'rw',
+        isa     => 'Graphics::Color::RGB',
+        handles => { hair_color_hex => 'as_hex_string' },
+      );
+
+This adds a new method, C<hair_color_hex>. Internally, this just calls
+C<< $self->hair_color->as_hex_string >>.
+
+See L<Moose::Manual::Delegation> for more details on how to set up
+delegation methods.
+
+=head2 Metaclass and traits
+
+One of Moose's best features is that it can be extended in all sorts
+of ways through the use of new metaclasses and metaclass traits.
+
+When declaring an attribute, you can declare a metaclass or a set of
+traits for the attribute:
+
+  use MooseX::AttributeHelpers;
+
+  has 'mapping' =>
+      ( metaclass => 'Collection::Hash',
+        is        => 'ro',
+        default   => sub { {} },
+      );
+
+In this case, the metaclass C<Collection::Hash> really refers to
+C<MooseX::AttributeHelpers::Collection::Hash>.
+
+You can also apply one or more traits to an attribute:
+
+
+  use MooseX::MetaDescription;
+
+  has 'size' =>
+      ( is          => 'rw',
+        traits      => [ 'MooseX::MetaDescription::Meta::Trait' ],
+        description => { html_widget  => 'text_input',
+                         serialize_as => 'element',
+                       },
+      );
+
+The advantage of traits is that you can mix more than one of them
+together easily (in fact, a trait is just a role under the hood).
+
+There are a number of MooseX modules on CPAN which provide useful
+attribute metaclasses and traits. See L<Moose::Manual::MooseX> for
+some examples. You can also write your own metaclasses and traits. See
+the "Meta" and "Extending" recipes in L<Moose::Cookbook> for examples.
+
+=head2 Attribute Inheritance
+
+By default, a child inherits all of its parent class(es)' attributes
+as-is. You can explicitly change some aspects of the inherited
+attribute in the child class.
+
+The options that can be overridden in a subclass are:
+
+=over 4
+
+=item * default
+
+=item * coerce
+
+=item * required
+
+=item * documentation
+
+=item * lazy
+
+=item * isa
+
+=item * handles
+
+=item * builder
+
+=item * metaclass
+
+=item * traits
+
+=back
+
+To override an attribute, you simply prepend its name with a plus sign
+(+):
+
+  package LazyPerson;
+
+  use Moose;
+
+  extends 'Person';
+
+  has '+first_name' =>
+      ( lazy    => 1,
+        default => 'Bill',
+      );
+
+Now the C<first_name> attribute in C<LazyPerson> is lazy, and defaults
+to C<'Bill'>.
+
+We recommend that you exercise caution when changing the type (C<isa>)
+of an inherited attribute. It's best to only make the new type a
+subtype of the one accepted by the parent.
+
+=head2 The C<documentation> option
+
+You can provide a piece of documentation as a string for an attribute:
+
+  has 'first_name' =>
+      ( is            => 'rw',
+        documentation => q{The person's first (personal) name},
+      );
+
+Moose does absolutely nothing with this information other than store
+it.
+
+As an alternative, you might want to look at the
+C<MooseX::MetaDescription> module, which lets you attach a
+"description" to each attribute. This description is a hashref that
+can include meta-information intended for use in other code, as well
+as documentation information.
+
+=head2 The C<auto_deref> Option
+
+If your attribute is an array reference or hash reference, the
+C<auto_deref> option will make Moose de-reference the value when it is
+returned from the reader method:
+
+  my %map = $object->mapping;
+
+This option only works if your attribute is explicitly typed as an
+ArrayRef or HashRef.
+
+However, we recommend that you use C<MooseX::AttributeHelpers> for
+these types of attributes, which gives you much more control over how
+they are accessed and manipulated.
+
+=head2 Initializer
+
+Moose provides an attribute option called C<initializer>. This is
+similar to C<builder>, except that it is I<only> called during object
+construction.
+
+This option is inherited from C<Class::MOP>, but we recommend that you
+use a C<builder> (which is Moose-only) instead.
+
+=head1 MORE ON ATTRIBUTES
+
+Moose attributes are a big topic, and this document glosses over a few
+topics. We recommend that you read the L<Moose::Manual::Delegation>
+and L<Moose::Manual::Types> documents to get a more complete
+understanding of attribute features.
