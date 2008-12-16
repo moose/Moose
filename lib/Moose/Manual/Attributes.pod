@@ -478,7 +478,7 @@ attribute metaclasses and traits. See L<Moose::Manual::MooseX> for
 some examples. You can also write your own metaclasses and traits. See
 the "Meta" and "Extending" recipes in L<Moose::Cookbook> for examples.
 
-=head2 Attribute Inheritance
+=head1 ATTRIBUTE INHERITANCE
 
 By default, a child inherits all of its parent class(es)' attributes
 as-is. However, you can explicitly change some aspects of the
@@ -531,6 +531,19 @@ We recommend that you exercise caution when changing the type (C<isa>)
 of an inherited attribute. It's best to only make the new type a
 subtype of the one accepted by the parent.
 
+=head1 MORE ON ATTRIBUTES
+
+Moose attributes are a big topic, and this document glosses over a few
+aspects of their aspects. We recommend that you read the
+L<Moose::Manual::Delegation> and L<Moose::Manual::Types> documents to
+get a more complete understanding of attribute features.
+
+=head1 A FEW MORE OPTIONS
+
+Moose has lots of attribute options. The ones listed below are
+superceded by some more modern features, but are covered for the sake
+of completeness.
+
 =head2 The C<documentation> option
 
 You can provide a piece of documentation as a string for an attribute:
@@ -572,13 +585,6 @@ construction.
 
 This option is inherited from C<Class::MOP>, but we recommend that you
 use a C<builder> (which is Moose-only) instead.
-
-=head1 MORE ON ATTRIBUTES
-
-Moose attributes are a big topic, and this document glosses over a few
-aspects of their aspects. We recommend that you read the
-L<Moose::Manual::Delegation> and L<Moose::Manual::Types> documents to
-get a more complete understanding of attribute features.
 
 =head1 AUTHOR
 
