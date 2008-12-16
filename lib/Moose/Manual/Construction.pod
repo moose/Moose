@@ -14,6 +14,8 @@ follow our recommendations in L<Moose::Manual::BestPractices> and make
 your class immutable, then you actually get a class-specific C<new>
 method genreated in your class.
 
+=head1 OBJECT CONSTRUCTION AND ATTRIBUTES
+
 The Moose-provided constructor accepts a hash or hash reference of
 named parameters matching your attributes (actually, matching their
 C<init_arg>s). This is just another way in which Moose keeps you from
