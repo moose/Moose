@@ -1,0 +1,273 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::Attribute - Moose's Method Modifiers
+
+=head1 WHAT IS A METHOD MODIFIER?
+
+Moose provides a feature called "method modifiers". Another word for
+this feature might be "hooks" or "advice".
+
+It's probably easiest to understand this feature with a few examples:
+
+  package Example;
+
+  use Moose;
+
+  sub foo {
+     print "foo\n";
+  }
+
+  before 'foo' => sub { print "about to call foo\n"; };
+  after  'foo' => sub { print "just called foo\n"; };
+
+  around 'foo' => sub {
+      my $orig = shift;
+      my $self = shift;
+
+      print "I'm around foo\n";
+
+      $self->$orig(@_);
+
+      print "I'm still around foo\n";
+  };
+
+Now if I call C<< Example->new->foo >> I'll get the following output:
+
+  about to call foo
+  I'm around foo
+  foo
+  I'm still around foo
+  just called foo
+
+You probably could have figured that out from the names "before",
+"after", and "around".
+
+Also, as you can see, the before modifiers come before around
+modifiers, and after modifiers come last.
+
+When there are multiple modifiers of the same type, the before and
+around modifiers run from the last added to the first, and after
+modifiers run from first added to last:
+
+   before 2
+    before 1
+     around 2
+      around 1
+       primary
+      around 1
+     around 2
+    after 1
+   after 2
+
+=head1 WHY USE THEM?
+
+Method modifiers have many uses. One very common use is in roles. This
+lets roles alter the behavior of methods in the classes that use
+them. See L<Moose::Manual::Roles> for more about roles.
+
+Modifiers really are at their most useful in roles, so some of the
+examples below are a bit artificial. They're intended to give you an
+idea of how modifiers work, but may not be the most natural usages.
+
+=head1 BEFORE, AFTER, AND AROUND
+
+Method modifiers can also be used to add behavior to a method that
+Moose generates for you, such as an attribute accessor:
+
+  has 'size' => ( is => 'rw' );
+
+  before 'size' => sub {
+      my $self = shift;
+
+      if (@_) {
+          Carp::cluck('Someone is setting size');
+      }
+  };
+
+Another use for the before modifier would be to do some sort of
+pre-checking on a method call. For example:
+
+  before 'size' => sub {
+      my $self = shift;
+
+      die 'Cannot set size while the person is growing'
+          if @_ && $self->is_growing;
+  };
+
+This lets us implement logical checks that don't fit well into
+constraints.
+
+Similarly, an after modifier could be used for logging an action that
+was taken.
+
+Note that the return values of both before and after modifiers are
+ignored.
+
+An around modifier is a bit more powerful than either a before or
+after modifier. First, it is easy to modify the arguments being passed
+onto the original method in an around modifier. Second, you can decide
+to simply not call the original method at all, unlike with other
+modifiers. Finally, you can modify the return value with an around
+modifier.
+
+An around modifier receives the original method as its first argument,
+I<then> the object, and finally any arguments passed to the method.
+
+  around 'size' => sub {
+      my $orig = shift;
+      my $self = shift;
+
+      return $self->$orig()
+          unless @_;
+
+      my $size = shift;
+      $size = $size / 2
+          if $self->likes_small_things();
+
+      return $self->$orig($size);
+  };
+
+=head1 INNER AND AUGMENT
+
+Augment and inner are two halves of the same feature. The augment
+modifier provides a sort of inverted subclassing. You provide part of
+the implementation in a superclass, and then document that subclasses
+are expected to provide the rest.
+
+The superclass calls C<inner()>, which then calls the C<augment>
+modifier in the subclass:
+
+  package Document;
+
+  use Moose;
+
+  sub as_xml {
+      my $self = shift;
+
+      my $xml = "<document>\n";
+      $xml .= inner();
+      $xml .= "</document>\n";
+
+      return $xml;
+  }
+
+Using C<inner()> in this method makes it possible for one or more
+subclasses to then augment this method with their own specific
+implementation:
+
+  package Report;
+
+  use Moose;
+
+  extends 'Document';
+
+  augment 'as_xml' => sub {
+      my $self = shift;
+
+      my $xml = "<report>\n";
+      $xml .= inner();
+      $xml .= "</report>\n";
+
+      return $xml;
+  };
+
+When we call C<as_xml> on a Report object, we get something like this:
+
+  <document>
+  <report>
+  </report>
+  </document>
+
+But we also called C<inner()> in C<Report>, so we can continue
+subclassing and adding more content inside the document:
+
+  package Report::IncomeAndExpenses;
+
+  use Moose;
+
+  extends 'Report';
+
+  augment 'as_xml' => sub {
+      my $self = shift;
+
+      my $xml = '<income>' . $self->income . '</income>';
+      $xml .= "\n";
+      my $xml = '<expenses>' . $self->expenses . '</expenses>';
+      $xml .= "\n";
+
+      $xml .= inner() || q{};
+
+      return $xml;
+  };
+
+Now our report has some content:
+
+  <document>
+  <report>
+  <income>$10</income>
+  <expenses>$8</expenses>
+  </report>
+  </document>
+
+What makes this combination of C<augment> and C<inner()> special is
+that it allows us to have methods which are called from I<parent
+(least specific) to child (most specific). This inverts the normal
+order, where the child's method is called first, and it in turn will
+call C<< $self->SUPER::method >> to call the parent.
+
+Note that in C<Report::IncomeAndExpenses> we call C<inner()> again. If
+the object is an instance of C<Report::IncomeAndExpenses> then this
+call is a no-op, and just returns false.
+
+=head1 OVERRIDE AND SUPER
+
+Finally, Moose provides some simple sugar for Perl's built-in method
+overriding scheme. If you want to override a method from a parent
+class, you can do this with C<override>:
+
+  package Employee;
+
+  use Moose;
+
+  extends 'Person';
+
+  has 'job_title' => ( is => 'rw' );
+
+  override 'display_name' => sub {
+      my $self = shift;
+
+      return super() . q{, } . $self->title();
+  };
+
+The call to C<super()> is almost the same as calling C<<
+$self->SUPER::display_name >>. The difference is that the arguments
+passed to the superclass's method will always be the same as the ones
+passed to the method modifier, and cannot be changed.
+
+All arguments passed to C<super()> are ignored, as are any changes
+made to C<@_> before C<super()> is called.
+
+=head1 SEMI-COLONS
+
+Because all of these method modifiers are implemented as Perl
+functions, you must always end the modifier declaration with a
+semi-colon:
+
+  after 'foo' => sub { };
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
