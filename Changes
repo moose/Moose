@@ -5,6 +5,8 @@ Revision history for Perl extension Moose
       - Always inline predicate and clearer methods (Sartak)
     * Moose::Meta::Attribute
       - Support for parameterized traits (Sartak)
+      - check_type_constraint method to avoid duplication and
+        enhance extensibility (Sartak)
     * Moose::Meta::Class
       - Tests (but no support yet) for parameterized traits (Sartak)
 

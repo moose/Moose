@@ -411,11 +411,7 @@ sub initialize_instance_slot {
         if ($self->should_coerce && $type_constraint->has_coercion) {
             $val = $type_constraint->coerce($val);
         }
-        $type_constraint->check($val)
-            || $self->throw_error("Attribute (" 
-                     . $self->name 
-                     . ") does not pass the type constraint because: " 
-                     . $type_constraint->get_message($val), data => $val, object => $instance);
+        $self->check_type_constraint($val, instance => $instance);
     }
 
     $self->set_initial_value($instance, $val);
@@ -467,11 +463,7 @@ sub _set_initial_slot_value {
         if ($type_constraint) {
             $val = $type_constraint->coerce($val)
                 if $can_coerce;
-            $type_constraint->check($val)
-                || $self->throw_error("Attribute (" 
-                         . $slot_name 
-                         . ") does not pass the type constraint because: " 
-                         . $type_constraint->get_message($val), data => $val, object => $instance);
+            $self->check_type_constraint($val, object => $instance);
         }
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
@@ -535,10 +527,7 @@ sub get_value {
                 my $type_constraint = $self->type_constraint;
                 $value = $type_constraint->coerce($value)
                     if ($self->should_coerce);
-                $type_constraint->check($value) 
-                  || $self->throw_error("Attribute (" . $self->name
-                      . ") does not pass the type constraint because: "
-                      . $type_constraint->get_message($value), type_constraint => $type_constraint, data => $value);
+                $self->check_type_constraint($value);
             }
             $self->set_initial_value($instance, $value);
         }
@@ -731,6 +720,21 @@ sub _make_delegation_method {
     );
 }
 
+sub check_type_constraint {
+    my $self = shift;
+    my $val  = shift;
+
+    return 1 if !$self->has_type_constraint;
+
+    my $type_constraint = $self->type_constraint;
+
+    $type_constraint->check($val)
+        || $self->throw_error("Attribute ("
+                 . $self->name
+                 . ") does not pass the type constraint because: "
+                 . $type_constraint->get_message($val), data => $val, @_);
+}
+
 package Moose::Meta::Attribute::Custom::Moose;
 sub register_implementation { 'Moose::Meta::Attribute' }
 
@@ -845,6 +849,11 @@ Returns true if this meta-attribute has a type constraint.
 A read-only accessor for this meta-attribute's type constraint. For
 more information on what you can do with this, see the documentation
 for L<Moose::Meta::TypeConstraint>.
+
+=item B<check_type_constraint>
+
+Confirms that the given value is valid under this attribute's type
+constraint, otherwise throws an error.
 
 =item B<has_handles>
 
