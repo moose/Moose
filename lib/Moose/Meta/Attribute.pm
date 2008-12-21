@@ -647,7 +647,7 @@ sub _canonicalize_handles {
         }
         elsif ($handle_type eq 'Regexp') {
             ($self->has_type_constraint)
-                || $self->throw_error("Cannot delegate methods based on a RegExpr without a type constraint (isa)", data => $handles);
+                || $self->throw_error("Cannot delegate methods based on a Regexp without a type constraint (isa)", data => $handles);
             return map  { ($_ => $_) }
                    grep { /$handles/ } $self->_get_delegate_method_list;
         }

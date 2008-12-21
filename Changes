@@ -1250,7 +1250,7 @@ Revision history for Perl extension Moose
           ArrayRef[Int]    # array or integers
           HashRef[Object]  # a hash with object values
       They can also be nested:
-          ArrayRef[HashRef[RegExpr]] # an array of hashes with regexpr values
+          ArrayRef[HashRef[RegexpRef]] # an array of hashes with regex values
       And work with the type unions as well:
           ArrayRef[Int | Str]  # array of integers of strings
 
