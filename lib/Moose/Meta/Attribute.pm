@@ -411,7 +411,7 @@ sub initialize_instance_slot {
         if ($self->should_coerce && $type_constraint->has_coercion) {
             $val = $type_constraint->coerce($val);
         }
-        $self->verify_type_constraint($val, instance => $instance);
+        $self->verify_against_type_constraint($val, instance => $instance);
     }
 
     $self->set_initial_value($instance, $val);
@@ -463,7 +463,7 @@ sub _set_initial_slot_value {
         if ($type_constraint) {
             $val = $type_constraint->coerce($val)
                 if $can_coerce;
-            $self->verify_type_constraint($val, object => $instance);
+            $self->verify_against_type_constraint($val, object => $instance);
         }
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
@@ -527,7 +527,7 @@ sub get_value {
                 my $type_constraint = $self->type_constraint;
                 $value = $type_constraint->coerce($value)
                     if ($self->should_coerce);
-                $self->verify_type_constraint($value);
+                $self->verify_against_type_constraint($value);
             }
             $self->set_initial_value($instance, $value);
         }
@@ -720,7 +720,7 @@ sub _make_delegation_method {
     );
 }
 
-sub verify_type_constraint {
+sub verify_against_type_constraint {
     my $self = shift;
     my $val  = shift;
 
@@ -850,7 +850,7 @@ A read-only accessor for this meta-attribute's type constraint. For
 more information on what you can do with this, see the documentation
 for L<Moose::Meta::TypeConstraint>.
 
-=item B<verify_type_constraint>
+=item B<verify_against_type_constraint>
 
 Verifies that the given value is valid under this attribute's type
 constraint, otherwise throws an error.
