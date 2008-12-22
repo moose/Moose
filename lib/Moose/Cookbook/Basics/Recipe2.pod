@@ -45,11 +45,11 @@ Moose::Cookbook::Basics::Recipe2 - A simple B<BankAccount> example
 
 The first recipe demonstrated how to build very basic Moose classes,
 focusing on creating and manipulating attributes. The objects in that
-recipe very data-oriented, and did not have much in the way of
+recipe were very data-oriented, and did not have much in the way of
 behavior (i.e. methods). In this recipe, we expand upon the concepts
 from the first recipe to include some real behavior. In particular, we
-should how you can use a method modifier to implement new behavior for
-a method.
+show how you can use a method modifier to implement new behavior for a
+method.
 
 The classes in the SYNOPSIS show two kinds of bank account. A simple
 bank account has one attribute, the balance, and two behaviors,
