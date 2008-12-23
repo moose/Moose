@@ -16,11 +16,11 @@ It's probably easiest to understand this feature with a few examples:
   use Moose;
 
   sub foo {
-     print "foo\n";
+      print "foo\n";
   }
 
   before 'foo' => sub { print "about to call foo\n"; };
-  after  'foo' => sub { print "just called foo\n"; };
+  after 'foo'  => sub { print "just called foo\n"; };
 
   around 'foo' => sub {
       my $orig = shift;
