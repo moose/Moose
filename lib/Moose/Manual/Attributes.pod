@@ -62,10 +62,10 @@ used for reading and writing an attribute's value. This is
 particularly handy when you'd like an attribute to be publically
 readable, but only privately settable. For example:
 
-  has 'weight' =>
-      ( is     => 'rw',
-        writer => '_set_weight',
-      );
+  has 'weight' => (
+      is     => 'rw',
+      writer => '_set_weight',
+  );
 
 This might be useful if weight is calculated based on other methods,
 for example every time the C<eat> method is called, we might adjust
@@ -79,11 +79,11 @@ reader methods start with "get_" and writer methods start with "set_".
 We can do exactly that by providing names for both the C<reader> and
 C<writer> methods:
 
-  has 'weight' =>
-      ( is     => 'rw',
-        reader => 'get_weight',
-        writer => 'set_weight',
-      );
+  has 'weight' => (
+      is     => 'rw',
+      reader => 'get_weight',
+      writer => 'set_weight',
+  );
 
 If you're thinking that doing this over and over would be insanely
 tedious, you're right! Fortunately, Moose provides a powerful
@@ -113,11 +113,11 @@ predicate, and clearer method.
 
   use Moose;
 
-  has 'ssn' =>
-      ( is        => 'rw',
-        clearer   => 'clear_ssn',
-        predicate => 'has_ssn',
-      );
+  has 'ssn' => (
+      is        => 'rw',
+      clearer   => 'clear_ssn',
+      predicate => 'has_ssn',
+  );
 
   ...
 
@@ -149,10 +149,10 @@ By default, all attributes are optional, and do not need to be
 provided at object construction time. If you want to make an attribute
 required, simply set the C<required> option to true:
 
-  has 'name' =>
-      ( is       => 'rw',
-        required => 1,
-      );
+  has 'name' => (
+      is       => 'rw',
+      required => 1,
+  );
 
 There are a couple caveats worth mentioning in regards to what
 required actually means.
@@ -178,11 +178,11 @@ specify that default.
 In the simplest form, you simply provide a non-reference scalar value
 for the C<default> option:
 
-  has 'size' =>
-      ( is        => 'rw',
-        default   => 'medium',
-        predicate => 'has_size',
-      );
+  has 'size' => (
+      is        => 'rw',
+      default   => 'medium',
+      predicate => 'has_size',
+  );
 
 If the size attribute is not provided to the constructor, then it ends
 up being set to "medium":
@@ -194,12 +194,12 @@ up being set to "medium":
 You can also provide a subroutine reference for C<default>. This
 reference will be called a method on the object.
 
-  has 'size' =>
-      ( is        => 'rw',
-        default   =>
-            sub { ('small', 'medium', 'large')[ int( rand 3 ) ] },
-        predicate => 'has_size',
-      );
+  has 'size' => (
+      is => 'rw',
+      default =>
+          sub { ( 'small', 'medium', 'large' )[ int( rand 3 ) ] },
+      predicate => 'has_size',
+  );
 
 This is dumb example, but it illustrates the point that the subroutine
 will be called for every new object created.
@@ -214,10 +214,10 @@ must return it from a subroutine. This is necessary because otherwise
 Perl would instantiate the reference exactly once, and it would be
 shared by all objects:
 
-  has 'mapping' =>
-      ( is      => 'rw',
-        default => {}, # wrong!
-      );
+  has 'mapping' => (
+      is      => 'rw',
+      default => {}, # wrong!
+  );
 
 Moose will throw an error if you pass a bare non-subroutine reference
 as the default.
@@ -226,24 +226,24 @@ If Moose allowed this then the default mapping attribute could easily
 end up shared across many objects. Instead, wrap it in a subroutine
 reference:
 
-  has 'mapping' =>
-      ( is      => 'rw',
-        default => sub { {} }, # right!
-      );
+  has 'mapping' => (
+      is      => 'rw',
+      default => sub { {} }, # right!
+  );
 
 This is a bit awkward, but it's just the way Perl works.
 
 As an alternative to using a subroutine reference, you can instead
 supply a C<builder> method for your attribute:
 
-  has 'size' =>
-      ( is        => 'rw',
-        builder   => '_build_size',
-        predicate => 'has_size',
-      );
+  has 'size' => (
+      is        => 'rw',
+      builder   => '_build_size',
+      predicate => 'has_size',
+  );
 
   sub _build_size {
-      return ('small', 'medium', 'large')[ int( rand 3 ) ];
+      return ( 'small', 'medium', 'large' )[ int( rand 3 ) ];
   }
 
 This has several advantages. First, it moves a chunk of code to its
@@ -259,11 +259,11 @@ C<default> for anything beyond the most trivial default.
 Moose lets you defer attribute population by making an attribute
 C<lazy>:
 
-  has 'size' =>
-      ( is        => 'rw',
-        lazy      => 1,
-        builder   => '_build_size',
-      );
+  has 'size' => (
+      is      => 'rw',
+      lazy    => 1,
+      builder => '_build_size',
+  );
 
 When C<lazy> is true, the attribute is not populated until the reader
 method is called, rather than at object construction time. There are
@@ -286,38 +286,38 @@ default C<lazy> as a matter of course.
 To facilitate this, you can simply specify the C<lazy_build> attribute
 option. This bundles up a number of options together:
 
-  has 'size' =>
-      ( is         => 'rw',
-        lazy_build => 1,
-      );
+  has 'size' => (
+      is         => 'rw',
+      lazy_build => 1,
+  );
 
 This is the same as specifying all of these options:
 
-  has 'size' =>
-      ( is        => 'rw',
-        lazy      => 1,
-        builder   => '_build_size',
-        clearer   => 'clear_size',
-        predicate => 'has_size',
-      );
+  has 'size' => (
+      is        => 'rw',
+      lazy      => 1,
+      builder   => '_build_size',
+      clearer   => 'clear_size',
+      predicate => 'has_size',
+  );
 
 If your attribute name starts with an underscore (_), then the clearer
 and predicate will as well:
 
-  has '_size' =>
-      ( is         => 'rw',
-        lazy_build => 1,
-      );
+  has '_size' => (
+      is         => 'rw',
+      lazy_build => 1,
+  );
 
 becomes:
 
-  has '_size' =>
-      ( is        => 'rw',
-        lazy      => 1,
-        builder   => '_build__size',
-        clearer   => '_clear_size',
-        predicate => '_has_size',
-      );
+  has '_size' => (
+      is        => 'rw',
+      lazy      => 1,
+      builder   => '_build__size',
+      clearer   => '_clear_size',
+      predicate => '_has_size',
+  );
 
 Note the doubled underscore in the builder name. Internally, Moose
 simply prepends the attribute name with "_build_" to come up with the
@@ -326,11 +326,11 @@ builder name.
 If you don't like the names that C<lazy_build> generates, you can
 always provide your own:
 
-  has 'size' =>
-      ( is         => 'rw',
-        lazy_build => 1,
-        clearer    => '_clear_size',
-      );
+  has 'size' => (
+      is         => 'rw',
+      lazy_build => 1,
+      clearer    => '_clear_size',
+  );
 
 Options that you explicitly provide are always used in favor of
 Moose's internal defaults.
@@ -345,10 +345,10 @@ unsettable from the constructor.
 Both of these things can be done by providing a value for the
 C<init_arg> option:
 
-  has 'bigness' =>
-      ( is       => 'rw',
-        init_arg => 'size',
-      );
+  has 'bigness' => (
+      is       => 'rw',
+      init_arg => 'size',
+  );
 
 Now we have an attribute named bigness, but to set it during object
 construction we pass C<size> to the constructor.
@@ -356,10 +356,10 @@ construction we pass C<size> to the constructor.
 Even more useful is the ability to disable setting attribute. This is
 particularly handy for private attributes:
 
-  has '_genetic_code' =>
-     ( is       => 'rw',
-       init_arg => undef,
-     );
+  has '_genetic_code' => (
+      is       => 'rw',
+      init_arg => undef,
+  );
 
 By setting the C<init_arg> to C<undef>, we make it impossible to set
 this attribute when creating a new object.
@@ -370,10 +370,10 @@ Moose has built-in support for weak references. If you set the
 C<weak_ref> option to a true value, then it will call
 C<Scalar::Util::weaken> whenever the attribute is set:
 
-  has 'parent' =>
-      ( is       => 'rw',
-        weak_ref => 1,
-      );
+  has 'parent' => (
+      is       => 'rw',
+      weak_ref => 1,
+  );
 
   $node->parent($parent_node);
 
@@ -385,10 +385,10 @@ circular references.
 A C<trigger> is a subroutine that is called whenever the attribute is
 set:
 
-  has 'size' =>
-      ( is      => 'rw',
-        trigger => \&_size_set,
-      );
+  has 'size' => (
+      is      => 'rw',
+      trigger => \&_size_set,
+  );
 
   sub _size_set {
       my ( $self, $size, $meta_attr ) = @_;
@@ -404,20 +404,20 @@ is called I<after> the value is set.
 
 Attributes can be restricted to only accept certain types:
 
-  has 'first_name' =>
-      ( is  => 'rw',
-        isa => 'Str',
-      );
+  has 'first_name' => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
 This says that the first_name attribute must be a string.
 
 Moose also provides a shortcut for specifying that an attribute only
 accepts objects that do a certain role:
 
-  has 'weapon' =>
-     ( is   => 'rw',
-       does => 'MyApp::Weapon',
-     );
+  has 'weapon' => (
+      is   => 'rw',
+      does => 'MyApp::Weapon',
+  );
 
 See the L<Moose::Manual::Types> documentation for a complete
 discussion of Moose's type system.
@@ -426,11 +426,11 @@ discussion of Moose's type system.
 
 Attributes can define methods which simple delegate to their values:
 
-  has 'hair_color' =>
-      ( is      => 'rw',
-        isa     => 'Graphics::Color::RGB',
-        handles => { hair_color_hex => 'as_hex_string' },
-      );
+  has 'hair_color' => (
+      is      => 'rw',
+      isa     => 'Graphics::Color::RGB',
+      handles => { hair_color_hex => 'as_hex_string' },
+  );
 
 This adds a new method, C<hair_color_hex>. When someone calls
 C<hair_color_hex>, internally, the object just calls C<<
@@ -449,11 +449,11 @@ traits for the attribute:
 
   use MooseX::AttributeHelpers;
 
-  has 'mapping' =>
-      ( metaclass => 'Collection::Hash',
-        is        => 'ro',
-        default   => sub { {} },
-      );
+  has 'mapping' => (
+      metaclass => 'Collection::Hash',
+      is        => 'ro',
+      default   => sub { {} },
+  );
 
 In this case, the metaclass C<Collection::Hash> really refers to
 C<MooseX::AttributeHelpers::Collection::Hash>.
@@ -462,13 +462,14 @@ You can also apply one or more traits to an attribute:
 
   use MooseX::MetaDescription;
 
-  has 'size' =>
-      ( is          => 'rw',
-        traits      => [ 'MooseX::MetaDescription::Meta::Trait' ],
-        description => { html_widget  => 'text_input',
-                         serialize_as => 'element',
-                       },
-      );
+  has 'size' => (
+      is          => 'rw',
+      traits      => ['MooseX::MetaDescription::Meta::Trait'],
+      description => {
+          html_widget  => 'text_input',
+          serialize_as => 'element',
+      },
+  );
 
 The advantage of traits is that you can mix more than one of them
 together easily (in fact, a trait is just a role under the hood).
@@ -519,10 +520,10 @@ To override an attribute, you simply prepend its name with a plus sign
 
   extends 'Person';
 
-  has '+first_name' =>
-      ( lazy    => 1,
-        default => 'Bill',
-      );
+  has '+first_name' => (
+      lazy    => 1,
+      default => 'Bill',
+  );
 
 Now the C<first_name> attribute in C<LazyPerson> is lazy, and defaults
 to C<'Bill'>.
@@ -548,10 +549,10 @@ of completeness.
 
 You can provide a piece of documentation as a string for an attribute:
 
-  has 'first_name' =>
-      ( is            => 'rw',
-        documentation => q{The person's first (personal) name},
-      );
+  has 'first_name' => (
+      is            => 'rw',
+      documentation => q{The person's first (personal) name},
+  );
 
 Moose does absolutely nothing with this information other than store
 it.
