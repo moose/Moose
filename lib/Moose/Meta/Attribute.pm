@@ -108,11 +108,24 @@ sub interpolate_class {
     my @traits;
 
     if (my $traits = $options{traits}) {
-        if ( @traits = grep { not $class->does($_) } map {
-            Moose::Util::resolve_metatrait_alias( Attribute => $_ )
-                or
-            $_
-        } @$traits ) {
+        my $i = 0;
+        while ($i < @$traits) {
+            my $trait = $traits->[$i++];
+            next if ref($trait); # options to a trait we discarded
+
+            $trait = Moose::Util::resolve_metatrait_alias(Attribute => $trait)
+                  || $trait;
+
+            next if $class->does($trait);
+
+            push @traits, $trait;
+
+            # are there options?
+            push @traits, $traits->[$i++]
+                if $traits->[$i] && ref($traits->[$i]);
+        }
+
+        if (@traits) {
             my $anon_class = Moose::Meta::Class->create_anon_class(
                 superclasses => [ $class ],
                 roles        => [ @traits ],
@@ -398,11 +411,7 @@ sub initialize_instance_slot {
         if ($self->should_coerce && $type_constraint->has_coercion) {
             $val = $type_constraint->coerce($val);
         }
-        $type_constraint->check($val)
-            || $self->throw_error("Attribute (" 
-                     . $self->name 
-                     . ") does not pass the type constraint because: " 
-                     . $type_constraint->get_message($val), data => $val, object => $instance);
+        $self->verify_against_type_constraint($val, instance => $instance);
     }
 
     $self->set_initial_value($instance, $val);
@@ -454,11 +463,7 @@ sub _set_initial_slot_value {
         if ($type_constraint) {
             $val = $type_constraint->coerce($val)
                 if $can_coerce;
-            $type_constraint->check($val)
-                || $self->throw_error("Attribute (" 
-                         . $slot_name 
-                         . ") does not pass the type constraint because: " 
-                         . $type_constraint->get_message($val), data => $val, object => $instance);
+            $self->verify_against_type_constraint($val, object => $instance);
         }
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
@@ -522,10 +527,7 @@ sub get_value {
                 my $type_constraint = $self->type_constraint;
                 $value = $type_constraint->coerce($value)
                     if ($self->should_coerce);
-                $type_constraint->check($value) 
-                  || $self->throw_error("Attribute (" . $self->name
-                      . ") does not pass the type constraint because: "
-                      . $type_constraint->get_message($value), type_constraint => $type_constraint, data => $value);
+                $self->verify_against_type_constraint($value);
             }
             $self->set_initial_value($instance, $value);
         }
@@ -634,7 +636,7 @@ sub _canonicalize_handles {
         }
         elsif ($handle_type eq 'Regexp') {
             ($self->has_type_constraint)
-                || $self->throw_error("Cannot delegate methods based on a RegExpr without a type constraint (isa)", data => $handles);
+                || $self->throw_error("Cannot delegate methods based on a Regexp without a type constraint (isa)", data => $handles);
             return map  { ($_ => $_) }
                    grep { /$handles/ } $self->_get_delegate_method_list;
         }
@@ -716,6 +718,21 @@ sub _make_delegation_method {
         attribute          => $self,
         delegate_to_method => $method_to_call,
     );
+}
+
+sub verify_against_type_constraint {
+    my $self = shift;
+    my $val  = shift;
+
+    return 1 if !$self->has_type_constraint;
+
+    my $type_constraint = $self->type_constraint;
+
+    $type_constraint->check($val)
+        || $self->throw_error("Attribute ("
+                 . $self->name
+                 . ") does not pass the type constraint because: "
+                 . $type_constraint->get_message($val), data => $val, @_);
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
@@ -832,6 +849,11 @@ Returns true if this meta-attribute has a type constraint.
 A read-only accessor for this meta-attribute's type constraint. For
 more information on what you can do with this, see the documentation
 for L<Moose::Meta::TypeConstraint>.
+
+=item B<verify_against_type_constraint>
+
+Verifies that the given value is valid under this attribute's type
+constraint, otherwise throws an error.
 
 =item B<has_handles>
 

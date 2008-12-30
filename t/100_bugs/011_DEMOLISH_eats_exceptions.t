@@ -11,7 +11,7 @@ use Moose::Util::TypeConstraints;
 
 subtype 'FilePath'
     => as 'Str'
-    => where { $_ =~ m#^(/[a-zA-Z0-9_.-]+)+$#
+    => where { $_ =~ m#^(/[a-zA-Z0-9_.-]+)+/?$#
                 || $_ =~ m#^([c-zC-Z]:/[a-zA-Z0-9_.-]+)# };
 {
     package Baz;

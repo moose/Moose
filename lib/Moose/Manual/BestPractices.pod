@@ -30,6 +30,8 @@ builders can be inherited, show up more cleanly in profile
 
 =head2 use builder for everything else
 
+don't use initializer
+
 =head2 use lazy_build
 
 keep builders private
@@ -37,3 +39,5 @@ keep builders private
 consider keeping clearers & predicates private
 
 consider keeping writers private
+
+=head2 use MX::AH instead of auto_deref
