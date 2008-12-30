@@ -9,6 +9,9 @@ Revision history for Perl extension Moose
         and enhance extensibility (Sartak)
     * Moose::Meta::Class
       - Tests (but no support yet) for parameterized traits (Sartak)
+    * Moose
+      - Require Class::MOP 0.74+, which has the side effect of making
+        sure we work on Win32. (Dave Rolsky)
 
 0.63 Mon, December 8, 2008
     * Moose::Unsweetened
