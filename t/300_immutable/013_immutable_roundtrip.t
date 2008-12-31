@@ -25,6 +25,10 @@ plan tests => 1;
     __PACKAGE__->meta->make_immutable;
     __PACKAGE__->meta->make_mutable;
 
+
+    # This actually is testing for a bug in Class::MOP that cause
+    # Moose::Meta::Method::Constructor to spit out a warning when it
+    # shouldn't have done so. The bug was fixed in CMOP 0.75.
     ::stderr_unlike(
         sub { Bar->meta->make_immutable },
         qr/Not inlining a constructor/,
