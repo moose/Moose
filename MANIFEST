@@ -139,6 +139,7 @@ t/020_attributes/020_trigger_and_coerce.t
 t/020_attributes/021_method_generation_rules.t
 t/020_attributes/022_legal_options_for_inheritance.t
 t/020_attributes/023_attribute_names.t
+t/020_attributes/024_attribute_traits_parameterized.t
 t/030_roles/001_meta_role.t
 t/030_roles/002_role.t
 t/030_roles/003_apply_role.t
@@ -215,6 +216,7 @@ t/050_metaclasses/016_metarole_w_metaclass_pm.t
 t/050_metaclasses/017_use_base_of_moose.t
 t/050_metaclasses/018_throw_error.t
 t/050_metaclasses/019_create_anon_with_required_attr.t
+t/050_metaclasses/020_metaclass_parameterized_traits.t
 t/060_compat/001_module_refresh_compat.t
 t/060_compat/002_moose_respects_base.t
 t/060_compat/003_foreign_inheritence.t
@@ -255,6 +257,7 @@ t/300_immutable/009_buildargs.t
 t/300_immutable/010_constructor_is_not_moose.t
 t/300_immutable/011_constructor_is_wrapped.t
 t/300_immutable/012_default_values.t
+t/300_immutable/013_immutable_roundtrip.t
 t/400_moose_util/001_moose_util.t
 t/400_moose_util/002_moose_util_does_role.t
 t/400_moose_util/003_moose_util_search_class_by_role.t
