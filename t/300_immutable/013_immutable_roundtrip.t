@@ -15,7 +15,8 @@ plan tests => 1;
     use Moose;
     __PACKAGE__->meta->make_immutable;
 }
-TODO: {
+
+{
     package Bar;
     use Moose;
 
@@ -23,9 +24,6 @@ TODO: {
 
     __PACKAGE__->meta->make_immutable;
     __PACKAGE__->meta->make_mutable;
-
-    use Test::More;
-    local $TODO = 'Known bug';
 
     ::stderr_unlike(
         sub { Bar->meta->make_immutable },
