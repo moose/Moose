@@ -90,8 +90,8 @@ sub create_anon_class {
     
     # something like Super::Class|Super::Class::2=Role|Role::1
     my $cache_key = join '=' => (
-        join('|', sort @{$options{superclasses} || []}),
-        join('|', sort @{$options{roles}        || []}),
+        join('|', @{$options{superclasses} || []}),
+        join('|', sort @{$options{roles}   || []}),
     );
     
     if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
