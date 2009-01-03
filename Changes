@@ -1,5 +1,9 @@
 Revision history for Perl extension Moose
 
+Pending
+    * Moose::Meta::TypeConstraint
+      - Add some explanation for a few explanationless methods (gphat)
+
 0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)

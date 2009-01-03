@@ -1116,6 +1116,8 @@ Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain
 
+Cory (gphat) Watson
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE
