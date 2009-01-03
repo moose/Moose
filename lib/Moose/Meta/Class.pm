@@ -514,7 +514,7 @@ sub _process_inherited_attribute {
     my ($self, $attr_name, %options) = @_;
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
-        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from", data => $attr_name);
+        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from in ${\$self->name}", data => $attr_name);
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
         return $inherited_attr->clone_and_inherit_options(%options);
     }

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 82;
+use Test::More tests => 83;
 use Test::Exception;
 
 
@@ -100,6 +100,9 @@ use Test::Exception;
     ::dies_ok { 
         has '+other_fail' => (weak_ref => 1);           
     } '... cannot create an attribute with an illegal option';   
+    ::throws_ok {
+        has '+does_not_exist' => (isa => 'Str');
+    } qr/in Bar/, '... cannot extend a non-existing attribute';
 }
 
 my $foo = Foo->new;
