@@ -1,15 +1,16 @@
 use strict;
 use warnings;
 use inc::Module::Install;
+use 5.008;
 
 check_conflicts();
 
 name 'Moose';
+perl_version '5.008';
 all_from 'lib/Moose.pm';
 license 'perl';
 
 # prereqs
-requires 'perl'             => '5.008';
 requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
 requires 'Class::MOP'       => '0.75';
