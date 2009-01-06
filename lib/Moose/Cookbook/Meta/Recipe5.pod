@@ -10,10 +10,10 @@ Moose::Cookbook::Meta::Recipe5 - The "table" attribute as a metaclass trait
   package MyApp::Meta::Class::Trait::HasTable;
   use Moose::Role;
 
-  has table =>
-      ( is       => 'rw',
-        isa      => 'Str',
-      );
+  has table => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
   package Moose::Meta::Class::Custom::Trait::HasTable;
   sub register_implementation { 'MyApp::Meta::Class::Trait::HasTable' }
@@ -42,7 +42,7 @@ sort of sugar (like our notional C<has_table> sugar).
 Once this trait has been applied to a metaclass, it looks exactly like
 the example we saw in L<Moose::Cookbook::Meta::Recipe4>:
 
-  my $table = MyApp::User->meta()->table();
+  my $table = MyApp::User->meta->table;
 
 =head1 SEE ALSO
 

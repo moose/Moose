@@ -28,14 +28,13 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
       );
   }
 
-
   package MooseX::Debugging::Role::Object;
 
   after 'BUILD' => sub {
       my $self = shift;
 
       warn "Made a new " . ref $self . " object\n";
-  }
+  };
 
 =head1 DESCRIPTION
 

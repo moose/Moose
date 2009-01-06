@@ -7,60 +7,61 @@ Moose::Cookbook::Meta::Recipe3 - Labels implemented via attribute traits
 
 =head1 SYNOPSIS
 
-    package MyApp::Meta::Attribute::Trait::Labeled;
-    use Moose::Role;
+  package MyApp::Meta::Attribute::Trait::Labeled;
+  use Moose::Role;
 
-    has label => (
-        is        => 'rw',
-        isa       => 'Str',
-        predicate => 'has_label',
-    );
+  has label => (
+      is        => 'rw',
+      isa       => 'Str',
+      predicate => 'has_label',
+  );
 
-    package Moose::Meta::Attribute::Custom::Trait::Labeled;
-    sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
+  package Moose::Meta::Attribute::Custom::Trait::Labeled;
+  sub register_implementation {'MyApp::Meta::Attribute::Trait::Labeled'}
 
-    package MyApp::Website;
-    use Moose;
-    use MyApp::Meta::Attribute::Trait::Labeled;
+  package MyApp::Website;
+  use Moose;
+  use MyApp::Meta::Attribute::Trait::Labeled;
 
-    has url => (
-        traits => [qw/Labeled/],
-        is     => 'rw',
-        isa    => 'Str',
-        label  => "The site's URL",
-    );
+  has url => (
+      traits => [qw/Labeled/],
+      is     => 'rw',
+      isa    => 'Str',
+      label  => "The site's URL",
+  );
 
-    has name => (
-        is  => 'rw',
-        isa => 'Str',
-    );
+  has name => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
-    sub dump {
-        my $self = shift;
+  sub dump {
+      my $self = shift;
 
-        # iterate over all the attributes in $self
-        my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $attribute) = each %attributes) {
+      # iterate over all the attributes in $self
+      my %attributes = %{ $self->meta->get_attribute_map };
+      while ( my ( $name, $attribute ) = each %attributes ) {
 
-            # print the label if available
-            if ($attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
-                && $attribute->has_label) {
-                    print $attribute->label;
-            }
-            # otherwise print the name
-            else {
-                print $name;
-            }
+          # print the label if available
+          if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
+              && $attribute->has_label ) {
+              print $attribute->label;
+          }
 
-            # print the attribute's value
-            my $reader = $attribute->get_read_method;
-            print ": " . $self->$reader . "\n";
-        }
-    }
+          # otherwise print the name
+          else {
+              print $name;
+          }
 
-    package main;
-    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
-    $app->dump;
+          # print the attribute's value
+          my $reader = $attribute->get_read_method;
+          print ": " . $self->$reader . "\n";
+      }
+  }
+
+  package main;
+  my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
+  $app->dump;
 
 =head1 BUT FIRST
 
@@ -110,22 +111,22 @@ A side-by-side look of the code examples in this recipe and recipe 2 should
 indicate that defining and using a trait is very similar to defining and using
 a new attribute metaclass.
 
-    package MyApp::Meta::Attribute::Trait::Labeled;
-    use Moose::Role;
+  package MyApp::Meta::Attribute::Trait::Labeled;
+  use Moose::Role;
 
-    has label => (
-        is        => 'rw',
-        isa       => 'Str',
-        predicate => 'has_label',
-    );
+  has label => (
+      is        => 'rw',
+      isa       => 'Str',
+      predicate => 'has_label',
+  );
 
 Instead of subclassing L<Moose::Meta::Attribute>, we define a role. Traits
 don't need any special methods or attributes. You just focus on whatever it is
 you actually need to get done. Here we're adding a new meta-attribute for use
 in our application.
 
-    package Moose::Meta::Attribute::Custom::Trait::Labeled;
-    sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
+  package Moose::Meta::Attribute::Custom::Trait::Labeled;
+  sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
 
 Much like when we define a new attribute metaclass, we can provide a shorthand
 name for the trait. Moose looks at the C<register_implementation> method in
@@ -135,22 +136,22 @@ name of the trait.
 Now we begin writing our application logic. I'll only cover what has changed
 since recipe 2.
 
-    has url => (
-        traits => [qw/Labeled/],
-        is     => 'rw',
-        isa    => 'Str',
-        label  => "The site's URL",
-    );
+  has url => (
+      traits => [qw/Labeled/],
+      is     => 'rw',
+      isa    => 'Str',
+      label  => "The site's URL",
+  );
 
 L<Moose/has> provides a C<traits> option. Just pass the list of trait names and
 it will compose them together to form the (anonymous) attribute metaclass used
 by the attribute. We provide a label for the attribute in the same way.
 
-    # print the label if available
-    if ($attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
-        && $attribute->has_label) {
-            print $attribute->label;
-    }
+  # print the label if available
+  if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
+      && $attribute->has_label ) {
+      print $attribute->label;
+  }
 
 Previously, this code asked the question "Does this attribute use our attribute
 metaclass?" Since we're now using a trait, we ask "Does this attribute's
@@ -169,13 +170,13 @@ All is not lost. If you rewrite your extension as a trait, then you can
 easily get a regular metaclass extension out of it. You just compose the trait
 in the attribute metaclass, as normal.
 
-    package MyApp::Meta::Attribute::Labeled;
-    use Moose;
-    extends 'Moose::Meta::Attribute';
-    with 'MyApp::Meta::Attribute::Trait::Labeled';
+  package MyApp::Meta::Attribute::Labeled;
+  use Moose;
+  extends 'Moose::Meta::Attribute';
+  with 'MyApp::Meta::Attribute::Trait::Labeled';
 
-    package Moose::Meta::Attribute::Custom::Labeled;
-    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+  package Moose::Meta::Attribute::Custom::Labeled;
+  sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
 
 Unfortunately, going the other way (providing a trait created from a metaclass)
 is more tricky. Thus, defining your extensions as traits is just plain better

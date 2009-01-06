@@ -7,61 +7,62 @@ Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
 
 =head1 SYNOPSIS
 
-    package MyApp::Meta::Attribute::Labeled;
-    use Moose;
-    extends 'Moose::Meta::Attribute';
+  package MyApp::Meta::Attribute::Labeled;
+  use Moose;
+  extends 'Moose::Meta::Attribute';
 
-    has label => (
-        is  => 'rw',
-        isa => 'Str',
-        predicate => 'has_label',
-    );
+  has label => (
+      is        => 'rw',
+      isa       => 'Str',
+      predicate => 'has_label',
+  );
 
-    package Moose::Meta::Attribute::Custom::Labeled;
-    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+  package Moose::Meta::Attribute::Custom::Labeled;
+  sub register_implementation {'MyApp::Meta::Attribute::Labeled'}
 
-    package MyApp::Website;
-    use Moose;
-    use MyApp::Meta::Attribute::Labeled;
+  package MyApp::Website;
+  use Moose;
+  use MyApp::Meta::Attribute::Labeled;
 
-    has url => (
-        metaclass => 'Labeled',
-        is        => 'rw',
-        isa       => 'Str',
-        label     => "The site's URL",
-    );
+  has url => (
+      metaclass => 'Labeled',
+      is        => 'rw',
+      isa       => 'Str',
+      label     => "The site's URL",
+  );
 
-    has name => (
-        is  => 'rw',
-        isa => 'Str',
-    );
+  has name => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
-    sub dump {
-        my $self = shift;
+  sub dump {
+      my $self = shift;
 
-        # iterate over all the attributes in $self
-        my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $attribute) = each %attributes) {
+      # iterate over all the attributes in $self
+      my %attributes = %{ $self->meta->get_attribute_map };
+      while ( my ( $name, $attribute ) = each %attributes ) {
 
-            # print the label if available
-            if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
-                && $attribute->has_label) {
-                    print $attribute->label;
-            }
-            # otherwise print the name
-            else {
-                print $name;
-            }
+          # print the label if available
+          if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
+              && $attribute->has_label ) {
+              print $attribute->label;
+          }
 
-            # print the attribute's value
-            my $reader = $attribute->get_read_method;
-            print ": " . $self->$reader . "\n";
-        }
-    }
+          # otherwise print the name
+          else {
+              print $name;
+          }
 
-    package main;
-    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
-    $app->dump;
+          # print the attribute's value
+          my $reader = $attribute->get_read_method;
+          print ": " . $self->$reader . "\n";
+      }
+  }
+
+  package main;
+  my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
+  $app->dump;
 
 =head1 SUMMARY
 
@@ -81,8 +82,8 @@ All the attributes of a Moose-based object are actually objects themselves.
 These objects have methods and (surprisingly) attributes. Let's look at a
 concrete example.
 
-    has 'x' => (isa => 'Int', is => 'ro');
-    has 'y' => (isa => 'Int', is => 'rw');
+  has 'x' => ( isa => 'Int', is => 'ro' );
+  has 'y' => ( isa => 'Int', is => 'rw' );
 
 Ahh, the veritable x and y of the Point example. Internally, every Point has an
 x object and a y object. They have methods (such as "get_value") and attributes
@@ -94,23 +95,23 @@ and forget that there's a lot of machinery lying in such methods.
 So you have a C<$point> object, which has C<x> and C<y> methods. How can you
 actually access the objects behind these attributes? Here's one way:
 
-    $point->meta->get_attribute_map()
+  $point->meta->get_attribute_map()
 
 C<get_attribute_map> returns a hash reference that maps attribute names to
 their objects. In our case, C<get_attribute_map> might return something that
 looks like the following:
 
-    {
-        x => Moose::Meta::Attribute=HASH(0x196c23c),
-        y => Moose::Meta::Attribute=HASH(0x18d1690),
-    }
+  {
+      x => Moose::Meta::Attribute=HASH(0x196c23c),
+      y => Moose::Meta::Attribute=HASH(0x18d1690),
+  }
 
 Another way to get a handle on an attribute's object is
 C<< $self->meta->get_attribute('name') >>. Here's one thing you can do now that
 you can interact with the attribute's object directly:
 
-    print $point->meta->get_attribute('x')->type_constraint;
-       => Int
+  print $point->meta->get_attribute('x')->type_constraint;
+     => Int
 
 (As an aside, it's not called C<< ->isa >> because C<< $obj->isa >> is already
 taken)
@@ -134,18 +135,18 @@ Let's start dissecting the recipe's code.
 We get the ball rolling by creating a new attribute metaclass. It starts off
 somewhat ungloriously.
 
-    package MyApp::Meta::Attribute::Labeled;
-    use Moose;
-    extends 'Moose::Meta::Attribute';
+  package MyApp::Meta::Attribute::Labeled;
+  use Moose;
+  extends 'Moose::Meta::Attribute';
 
 You subclass metaclasses the same way you subclass regular classes. (Extra
 credit: how in the actual hell can you use the MOP to extend itself?)
 
-    has label => (
-        is        => 'rw',
-        isa       => 'Str',
-        predicate => 'has_label',
-    );
+  has label => (
+      is        => 'rw',
+      isa       => 'Str',
+      predicate => 'has_label',
+  );
 
 Hey, this looks pretty reasonable! This is plain jane Moose code. Recipe 1
 fare. This is merely making a new attribute. An attribute that attributes have.
@@ -156,8 +157,8 @@ The name is "label", it will have a regular accessor, and is a string.
 C<predicate> is a standard part of C<has>. It just creates a method that asks
 the question "Does this attribute have a value?"
 
-    package Moose::Meta::Attribute::Custom::Labeled;
-    sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
+  package Moose::Meta::Attribute::Custom::Labeled;
+  sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
 
 This lets Moose discover our new metaclass. That way attributes can actually
 use it. More on what this is doing in a moment.
@@ -165,19 +166,19 @@ use it. More on what this is doing in a moment.
 Note that we're done defining the new metaclass! Only nine lines of code, and
 not particularly difficult lines, either. Now to start using the metaclass.
 
-    package MyApp::Website;
-    use Moose;
-    use MyApp::Meta::Attribute::Labeled;
+  package MyApp::Website;
+  use Moose;
+  use MyApp::Meta::Attribute::Labeled;
 
 Nothing new here. We do have to actually load our metaclass to be able to use
 it.
 
-    has url => (
-        metaclass => 'Labeled',
-        is        => 'rw',
-        isa       => 'Str',
-        label     => "The site's URL",
-    );
+  has url => (
+      metaclass => 'Labeled',
+      is        => 'rw',
+      isa       => 'Str',
+      label     => "The site's URL",
+  );
 
 Ah ha! Now we're using the metaclass. We're adding a new attribute, C<url>, to
 C<MyApp::Website>. C<has> lets you set the metaclass of the attribute.
@@ -199,35 +200,35 @@ your own namespaces.
 Finally, we see that C<has> is setting our new meta-attribute, C<label>, to
 C<"The site's URL">. We can access this meta-attribute with:
 
-    $website->meta->get_attribute('url')->label()
+  $website->meta->get_attribute('url')->label()
 
 Well, back to the code.
 
-    has name => (
-        is  => 'rw',
-        isa => 'Str',
-    );
+  has name => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
 Of course, you don't have to use the new metaclass for B<all> new attributes.
 
 Now we begin defining a method that will dump the C<MyApp::Website> instance
 for human readers.
 
-    sub dump {
-        my $self = shift;
+  sub dump {
+      my $self = shift;
 
-        # iterate over all the attributes in $self
-        my %attributes = %{ $self->meta->get_attribute_map };
-        while (my ($name, $attribute) = each %attributes) {
+      # iterate over all the attributes in $self
+      my %attributes = %{ $self->meta->get_attribute_map };
+      while ( my ( $name, $attribute ) = each %attributes ) {
 
 Recall that C<get_attribute_map> returns a hashref of attribute names and their
 associated objects.
 
-            # print the label if available
-            if ($attribute->isa('MyApp::Meta::Attribute::Labeled')
-                && $attribute->has_label) {
-                    print $attribute->label;
-            }
+          # print the label if available
+          if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
+              && $attribute->has_label ) {
+              print $attribute->label;
+          }
 
 We have two checks here. The first is "is this attribute an instance of
 C<MyApp::Meta::Attribute::Labeled>?". It's good to code defensively. Even if
@@ -240,18 +241,18 @@ The second check is "does this attribute have a label?". This method was
 defined in the new metaclass as the "predicate". If we pass both checks, we
 print the attribute's label.
 
-            # otherwise print the name
-            else {
-                print $name;
-            }
+          # otherwise print the name
+          else {
+              print $name;
+          }
 
 Another good, defensive coding practice: Provide reasonable defaults.
 
-            # print the attribute's value
-            my $reader = $attribute->get_read_method;
-            print ": " . $self->$reader . "\n";
-        }
-    }
+          # print the attribute's value
+          my $reader = $attribute->get_read_method;
+          print ": " . $self->$reader . "\n";
+      }
+  }
 
 Here's another example of using the attribute metaclass.
 C<< $attribute->get_read_method >> returns the name of the method that can
@@ -261,9 +262,9 @@ name of the method, we're using a variable with the name of the method in it.
 Perl doesn't mind. Another way to write this would be
 C<< $self->can($reader)->($self) >>. Yuck. :)
 
-    package main;
-    my $app = MyApp::Website->new(url => "http://google.com", name => "Google");
-    $app->dump;
+  package main;
+  my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
+  $app->dump;
 
 And we wrap up the example with a script to show off our newfound magic.
 
@@ -282,13 +283,13 @@ limited to just adding new meta-attributes. For example, you could implement
 a metaclass that expires attributes after a certain amount of time. You
 might use it as such:
 
-    has site_cache => (
-        metaclass     => 'TimedExpiry',
-        expires_after => { hours => 1 },
-        refresh_with  => sub { get($_->url) },
-        isa           => 'Str',
-        is            => 'ro',
-    );
+   has site_cache => (
+       metaclass     => 'TimedExpiry',
+       expires_after => { hours => 1 },
+       refresh_with  => sub { get( $_->url ) },
+       isa           => 'Str',
+       is            => 'ro',
+   );
 
 The sky's the limit!
 
