@@ -156,6 +156,44 @@ Method modifiers and roles are a very powerful combination.  Often, a
 role will combine method modifiers and required methods. We already
 saw one example with our C<Breakable> example.
 
-Once caveat to be aware of with method modifiers in roles is that they
-introduce an ordering issue to role application.
+Method modifiers increase the complexity of roles, because they make
+the role application order relevant. If a class uses two roles, each
+of which modify the same method, those modifiers will be applied in
+the same order as the roles are used:
+
+  package MovieCar;
+
+  use Moose;
+
+  extends 'Car';
+
+  with 'Breakable', 'ExplodesOnBreakage';
+
+Assuming that the new C<ExplodesOnBreakage> method I<also> has an
+C<after> modifier on C<break>, the C<after> modifiers will run one
+after the other. The modifier from C<Breakable> will run first, then
+the one from C<ExplodesOnBreakage>.
+
+=head1 METHOD CONFLICTS
+
+If a class composes multiple roles, and those roles have methods of
+the same name, we will have a conflict. In that case, the composing
+class is required to provide its I<own> method of the same name.
+
+  package Breakdances;
+
+  use Moose::Role
+
+  sub break {
+
+  }
+
+If we compose both C<Breakable> and C<Breakdancer> in a class, we must
+provide our own C<break> method:
+
+  package FragileDancer;
+
+  use Moose;
+
+  with 'Breakable', 'Breakdancer';
 

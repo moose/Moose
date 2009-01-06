@@ -1,6 +1,10 @@
 Revision history for Perl extension Moose
 
-0.64
+Pending
+    * Moose::Meta::TypeConstraint
+      - Add some explanation for a few explanationless methods (gphat)
+
+0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)
     * Moose::Meta::Attribute
@@ -9,6 +13,9 @@ Revision history for Perl extension Moose
         and enhance extensibility (Sartak)
     * Moose::Meta::Class
       - Tests (but no support yet) for parameterized traits (Sartak)
+    * Moose
+      - Require Class::MOP 0.75+, which has the side effect of making
+        sure we work on Win32. (Dave Rolsky)
 
 0.63 Mon, December 8, 2008
     * Moose::Unsweetened

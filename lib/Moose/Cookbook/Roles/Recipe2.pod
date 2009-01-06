@@ -25,8 +25,12 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
   package Restartable::ButUnreliable;
   use Moose::Role;
 
-  with 'Restartable' => { alias  => { stop  => '_stop',
-                                      start => '_start' } };
+  with 'Restartable' => {
+      alias => {
+          stop  => '_stop',
+          start => '_start'
+      }
+  };
 
   sub stop {
       my $self = shift;

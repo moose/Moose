@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -90,8 +90,8 @@ sub create_anon_class {
     
     # something like Super::Class|Super::Class::2=Role|Role::1
     my $cache_key = join '=' => (
-        join('|', sort @{$options{superclasses} || []}),
-        join('|', sort @{$options{roles}        || []}),
+        join('|', @{$options{superclasses} || []}),
+        join('|', sort @{$options{roles}   || []}),
     );
     
     if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
@@ -514,7 +514,7 @@ sub _process_inherited_attribute {
     my ($self, $attr_name, %options) = @_;
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
-        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from", data => $attr_name);
+        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from in ${\$self->name}", data => $attr_name);
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
         return $inherited_attr->clone_and_inherit_options(%options);
     }
