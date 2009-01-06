@@ -10,8 +10,8 @@ Moose::Cookbook::Basics::Recipe7 - Making Moose fast with immutable
   package Point;
   use Moose;
 
-  has 'x' => (isa => 'Int', is => 'ro');
-  has 'y' => (isa => 'Int', is => 'rw');
+  has 'x' => ( isa => 'Int', is => 'ro' );
+  has 'y' => ( isa => 'Int', is => 'rw' );
 
   __PACKAGE__->meta->make_immutable;
 
