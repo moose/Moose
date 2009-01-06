@@ -9,66 +9,66 @@ Moose::Cookbook::Roles::Recipe1 - The Moose::Role example
 
   package Eq;
   use Moose::Role;
-  
+
   requires 'equal_to';
-  
-  sub not_equal_to { 
-      my ($self, $other) = @_;
+
+  sub not_equal_to {
+      my ( $self, $other ) = @_;
       not $self->equal_to($other);
   }
-  
+
   package Comparable;
   use Moose::Role;
-  
+
   with 'Eq';
-  
+
   requires 'compare';
-  
+
   sub equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == 0;
-  }    
-  
+  }
+
   sub greater_than {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == 1;
-  }    
-  
+  }
+
   sub less_than {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == -1;
   }
-  
+
   sub greater_than_or_equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->greater_than($other) || $self->equal_to($other);
-  }        
-  
+  }
+
   sub less_than_or_equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->less_than($other) || $self->equal_to($other);
-  }  
-  
+  }
+
   package Printable;
   use Moose::Role;
-  
-  requires 'to_string';    
-  
+
+  requires 'to_string';
+
   package US::Currency;
   use Moose;
-  
+
   with 'Comparable', 'Printable';
-  
-  has 'amount' => (is => 'rw', isa => 'Num', default => 0);
-  
+
+  has 'amount' => ( is => 'rw', isa => 'Num', default => 0 );
+
   sub compare {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->amount <=> $other->amount;
   }
-  
+
   sub to_string {
       my $self = shift;
-      sprintf '$%0.2f USD' => $self->amount
+      sprintf '$%0.2f USD' => $self->amount;
   }
 
 =head1 DESCRIPTION
@@ -119,27 +119,27 @@ defining a number of utility methods in terms of only a single method that the
 target class need implement.
 
   sub equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == 0;
   }
-  
+
   sub greater_than {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == 1;
-  }    
-  
+  }
+
   sub less_than {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->compare($other) == -1;
   }
-  
+
   sub greater_than_or_equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->greater_than($other) || $self->equal_to($other);
-  }        
-  
+  }
+
   sub less_than_or_equal_to {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->less_than($other) || $self->equal_to($other);
   }
 
@@ -160,12 +160,12 @@ shows:
 It also defines a regular Moose attribute, C<amount>, with a type constraint of
 C<Num> and a default of C<0>:
 
-  has 'amount' => (is => 'rw', isa => 'Num', default => 0);
+  has 'amount' => ( is => 'rw', isa => 'Num', default => 0 );
 
 Now we come to the core of the class. First up, we define a C<compare> method:
 
   sub compare {
-      my ($self, $other) = @_;
+      my ( $self, $other ) = @_;
       $self->amount <=> $other->amount;
   }
 
@@ -180,7 +180,7 @@ C<amount> attribute for display:
 
   sub to_string {
       my $self = shift;
-      sprintf '$%0.2f USD' => $self->amount
+      sprintf '$%0.2f USD' => $self->amount;
   }
 
 =head1 CONCLUSION
@@ -213,4 +213,4 @@ L<http://www.iinteractive.com>
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-=cut       
+=cut
