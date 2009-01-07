@@ -24,7 +24,6 @@ requires 'Filter::Simple' => '0';
 # things the tests need
 build_requires 'Test::More'      => '0.77';
 build_requires 'Test::Exception' => '0.21';
-build_requires 'Test::LongString';
 
 tests_recursive();
 
