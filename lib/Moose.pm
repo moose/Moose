@@ -195,25 +195,7 @@ sub init_meta {
         $meta = $metaclass->initialize($class);
     }
 
-    if ( $class->can('meta') ) {
-        # check 'meta' method
-
-        # it may be inherited
-
-        # NOTE:
-        # this is the case where the metaclass pragma
-        # was used before the 'use Moose' statement to
-        # override a specific class
-        my $method_meta = $class->meta;
-
-        ( blessed($method_meta) && $method_meta->isa('Moose::Meta::Class') )
-            || Moose->throw_error("$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)");
-
-        $meta = $method_meta;
-    }
-
     unless ( $meta->has_method("meta") ) { # don't overwrite
-        # also check for inherited non moose 'meta' method?
         # FIXME also skip this if the user requested by passing an option
         $meta->add_method(
             'meta' => sub {
