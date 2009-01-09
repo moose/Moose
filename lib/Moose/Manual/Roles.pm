@@ -68,11 +68,11 @@ The C<with> function composes roles into a class. Once that is done,
 the C<Car> class has an C<is_broken> attribute and a C<break>
 method. The C<Car> class also C<does('Breakable')>:
 
-  my $car = Car->new( engine => Engine->new() );
+  my $car = Car->new( engine => Engine->new );
 
-  print $car->is_broken() ? 'Still working' : 'Busted';
-  $car->break();
-  print $car->is_broken() ? 'Still working' : 'Busted';
+  print $car->is_broken ? 'Still working' : 'Busted';
+  $car->break;
+  print $car->is_broken ? 'Still working' : 'Busted';
 
   $car->does('Breakable'); # true
 
@@ -117,7 +117,7 @@ methods:
       my $self = shift;
 
       $self->is_broken(1);
-  }
+  };
 
 If we try to consume this role in a class that does not have a
 C<break> method, we will get an exception.
@@ -133,7 +133,7 @@ is always set to true when C<break> is called.
 
   package Car
 
-  use Moose;
+      use Moose;
 
   with 'Breakable';
 
@@ -145,8 +145,8 @@ is always set to true when C<break> is called.
   sub break {
       my $self = shift;
 
-      if ( $self->is_moving() ) {
-          $self->stop();
+      if ( $self->is_moving ) {
+          $self->stop;
       }
   }
 
@@ -157,9 +157,9 @@ role will combine method modifiers and required methods. We already
 saw one example with our C<Breakable> example.
 
 Method modifiers increase the complexity of roles, because they make
-the role application order relevant. If a class uses two roles, each
-of which modify the same method, those modifiers will be applied in
-the same order as the roles are used:
+the role application order relevant. If a class uses multiple roles,
+each of which modify the same method, those modifiers will be applied
+in the same order as the roles are used:
 
   package MovieCar;
 
@@ -196,4 +196,41 @@ provide our own C<break> method:
   use Moose;
 
   with 'Breakable', 'Breakdancer';
+
+  sub break { ... }
+
+=head1 METHOD EXCLUSION AND ALIASING
+
+If we want our C<FragileDancer> class to be able to call the methods
+from both its roles, we can alias the methods:
+
+  package FragileDancer;
+
+  use Moose;
+
+  with 'Breakable'   => { alias => { break => 'break_bone' } },
+       'Breakdancer' => { alias => { break => 'break_dance' } };
+
+However, aliasing a method simply makes a I<copy> of the method with
+the new name. We also need to exclude the original name:
+
+  with 'Breakable' => {
+      alias   => { break => 'break_bone' },
+      exclude => 'break',
+      },
+      'Breakdancer' => {
+      alias   => { break => 'break_dance' },
+      exclude => 'break',
+      };
+
+The exclude parameter prevents the C<break> method from being composed
+into the C<FragileDancer> class, so we don't have a conflict. This
+means that C<FragileDancer> does not need to implement its own
+C<break> method.
+
+This is useful, but it's worth noting that this breaks the contract
+implicit in consuming a role. Our C<FragileDancer> class does both the
+C<Breakable> and C<BreakDancer>, but does not provide a C<break>
+method. If some API expects an object that does one of those roles, it
+probably expects it to implement that method.
 

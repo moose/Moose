@@ -166,11 +166,10 @@ section is for you.
 
 =item Another object system!?!?
 
-Yes, I know there has been an explosion recently of new ways to
-build objects in Perl 5, most of them based on inside-out objects
-and other such things. Moose is different because it is not a new
-object system for Perl 5, but instead an extension of the existing
-object system.
+Yes, I know there are many, many ways to build objects in Perl 5, many
+of them based on inside-out objects and other such things. Moose is
+different because it is not a new object system for Perl 5, but
+instead an extension of the existing object system.
 
 Moose is built on top of L<Class::MOP>, which is a metaclass system
 for Perl 5. This means that Moose not only makes building normal
@@ -187,10 +186,10 @@ prototype; it is for B<real>.
 
 Yes.
 
-Moose has been used successfully in production environments by several
+Moose has been used successfully in production environments by many
 people and companies. There are Moose applications which have been in
-production with little or no issue now for well over two years. We
-consider it highly stable and we are commited to keeping it stable.
+production with little or no issue now for well years. We consider it
+highly stable and we are commited to keeping it stable.
 
 Of course, in the end, you need to make this call yourself. If you
 have any questions or concerns, please feel free to email Stevan, the
