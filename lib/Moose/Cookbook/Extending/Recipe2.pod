@@ -27,7 +27,7 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
       Moose::Util::MetaRole::apply_base_class_roles(
           for_class => $options{for_class},
-          role      => ['MooseX::Debugging::Role::Object'],
+          roles     => ['MooseX::Debugging::Role::Object'],
       );
   }
 
