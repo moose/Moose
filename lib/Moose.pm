@@ -36,6 +36,13 @@ use Moose::Meta::Role::Application::ToInstance;
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
+sub _caller_info {
+    my $level = @_ ? ($_[0] + 1) : 2;
+    my %info;
+    @info{qw(package file line)} = caller($level);
+    return \%info;
+}
+
 sub throw_error {
     # FIXME This 
     shift;
@@ -74,7 +81,7 @@ sub has {
     my $class = shift;
     my $name  = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-    my %options = @_;
+    my %options = ( definition_context => _caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
 }

@@ -23,7 +23,7 @@ sub _eval_code {
     # set up the environment
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
-    my $meta        = $self,
+    my $meta        = $self;
 
     my $type_constraint_obj  = $attr->type_constraint;
     my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
@@ -32,10 +32,8 @@ sub _eval_code {
                                    : undef;
 
     #warn "code for $attr_name =>\n" . $code . "\n";
-    my $sub = eval $code;
-    $self->throw_error("Could not create writer for '$attr_name' because $@ \n code: $code", error => $@, data => $code ) if $@;
-    return $sub;
-
+    eval $self->_prepare_code( code => $code )
+        or $self->throw_error("Could not create writer for '$attr_name' because $@ \n code: $code", error => $@, data => $code );
 }
 
 sub generate_accessor_method_inline {

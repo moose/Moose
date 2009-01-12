@@ -145,6 +145,7 @@ my @legal_options_for_inheritance = qw(
     default coerce required 
     documentation lazy handles 
     builder type_constraint
+    definition_context
 );
 
 sub legal_options_for_inheritance { @legal_options_for_inheritance }
