@@ -35,7 +35,7 @@ use Test::More 'no_plan';
 
     sub bar {
         ::BAIL_OUT('B::bar called twice') if $main::seen{'B::bar'}++;
-        return 'b' . super();
+        return 'b' . ( super() || '' );
     }
 
     override baz => sub {
