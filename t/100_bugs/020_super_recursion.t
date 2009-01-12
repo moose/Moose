@@ -4,7 +4,6 @@ use warnings;
 use Test::More 'no_plan';
 
 {
-
     package A;
     use Moose;
 
@@ -25,7 +24,6 @@ use Test::More 'no_plan';
 }
 
 {
-
     package B;
     use Moose;
     extends qw(A);
@@ -47,7 +45,6 @@ use Test::More 'no_plan';
 }
 
 {
-
     package C;
     use Moose;
     extends qw(B);
