@@ -94,8 +94,15 @@ sub around {
     Moose::Util::add_method_modifier($class, 'around', \@_);
 }
 
+our $SUPER_PACKAGE;
+our $SUPER_BODY;
+our @SUPER_ARGS;
+
 sub super {
-    return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS);
+    # This check avoids a recursion loop - see
+    # t/100_bugs/020_super_recursion.t
+    return if defined $SUPER_PACKAGE && $SUPER_PACKAGE ne caller();
+    return unless $SUPER_BODY; $SUPER_BODY->(@SUPER_ARGS);
 }
 
 sub override {

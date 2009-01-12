@@ -1,6 +1,11 @@
 Revision history for Perl extension Moose
 
-Pending
+0.65
+    * Moose and Moose::Meta::Method::Overridden
+      - If an overridden method called super(), and then the
+        superclass's method (not overridden) _also_ called super(),
+        Moose went into an endless recursion loop. Test provided by
+        Chris Prather. (Dave Rolsky)
     * Moose::Meta::TypeConstraint
       - Add some explanation for a few explanationless methods (gphat)
 
