@@ -3,7 +3,7 @@ package Moose::Util::MetaRole;
 use strict;
 use warnings;
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -159,7 +159,7 @@ experimental, and it could go away in the future!>
 This utility module is designed to help authors of Moose extensions
 write extensions that are able to cooperate with other Moose
 extensions. To do this, you must write your extensions as roles, which
-can then be dynamically applyied to the caller's metaclasses.
+can then be dynamically applied to the caller's metaclasses.
 
 This module makes sure to preserve any existing superclasses and roles
 already set for the meta objects, which means that any number of

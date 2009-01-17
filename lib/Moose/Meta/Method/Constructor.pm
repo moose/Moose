@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -150,16 +150,13 @@ sub initialize_body {
     warn $source if $self->options->{debug};
 
     my $code;
-    my $attrs = $self->attributes;
-    my @type_constraints = map { 
-        $_->can('type_constraint') ? $_->type_constraint : undef
-    } @$attrs;
-    my $environment = {
+    {
+        my $meta = $self; # FIXME for _inline_throw_error...
 
-        # lexicals for the scope within which we will be constructed
-
-        '$meta' => \$self, # FIXME for _inline_throw_error...
-        '$attrs' => \$attrs,
+        # NOTE:
+        # create the nessecary lexicals
+        # to be picked up in the eval
+        my $attrs = $self->attributes;
 
         # We need to check if the attribute ->can('type_constraint')
         # since we may be trying to immutabilize a Moose meta class,
@@ -170,14 +167,17 @@ sub initialize_body {
         # because the inlined code is using the index of the attributes
         # to determine where to find the type constraint
         
-        '@type_constraints' => \@type_constraints,
+        my @type_constraints = map { 
+            $_->can('type_constraint') ? $_->type_constraint : undef
+        } @$attrs;
         
-        '@type_constraint_bodies' => [ map {
+        my @type_constraint_bodies = map {
             defined $_ ? $_->_compiled_type_constraint : undef;
-        } @type_constraints ]
-    };
-    $code = $self->_eval_closure($environment, $source);
-    $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
+        } @type_constraints;
+
+        $code = eval $source;
+        $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
+    }
     $self->{'body'} = $code;
 }
 
@@ -223,6 +223,8 @@ sub _generate_triggers {
                                  '$instance',
                                  ("'" . $attr->name . "'")
                              ) 
+                             . ', '
+                    .        '$attrs->[' . $i . ']'
                     .   ');'
                     ."\n}"
                 );

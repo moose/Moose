@@ -9,35 +9,35 @@ Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
 
   package BinaryTree;
   use Moose;
-  
-  has 'node' => (is => 'rw', isa => 'Any');
-  
+
+  has 'node' => ( is => 'rw', isa => 'Any' );
+
   has 'parent' => (
       is        => 'rw',
-      isa       => 'BinaryTree',	
+      isa       => 'BinaryTree',
       predicate => 'has_parent',
       weak_ref  => 1,
   );
-  
+
   has 'left' => (
-      is        => 'rw',	
-      isa       => 'BinaryTree',		
-      predicate => 'has_left',  
+      is        => 'rw',
+      isa       => 'BinaryTree',
+      predicate => 'has_left',
       lazy      => 1,
-      default   => sub { BinaryTree->new(parent => $_[0]) },       
+      default   => sub { BinaryTree->new( parent => $_[0] ) },
   );
-  
+
   has 'right' => (
-      is        => 'rw',	
-      isa       => 'BinaryTree',		
-      predicate => 'has_right',   
-      lazy      => 1,       
-      default   => sub { BinaryTree->new(parent => $_[0]) },       
+      is        => 'rw',
+      isa       => 'BinaryTree',
+      predicate => 'has_right',
+      lazy      => 1,
+      default   => sub { BinaryTree->new( parent => $_[0] ) },
   );
-  
+
   before 'right', 'left' => sub {
-      my ($self, $tree) = @_;
-      $tree->parent($self) if defined $tree;   
+      my ( $self, $tree ) = @_;
+      $tree->parent($self) if defined $tree;
   };
 
 =head1 DESCRIPTION
@@ -55,7 +55,7 @@ and finally a C<parent> slot to hold a reference back up the tree.
 Now, let's start with the code. Our first attribute is the C<node> 
 slot, defined as such:
 
-  has 'node' => (is => 'rw', isa => 'Any');
+  has 'node' => ( is => 'rw', isa => 'Any' );
 
 If you recall from the previous recipes, this slot will have a read/write
 accessor generated for it, and has a type constraint on it. The new item here is
@@ -72,7 +72,7 @@ Next, let's move on to the C<parent> slot:
 
   has 'parent' => (
       is        => 'rw',
-      isa       => 'BinaryTree',	
+      isa       => 'BinaryTree',
       predicate => 'has_parent',
       weak_ref  => 1,
   );
@@ -100,11 +100,11 @@ Now, onto the C<left> and C<right> attributes. They are essentially identical,
 save for different names, so I will just describe one here:
 
   has 'left' => (
-      is        => 'rw',	
-      isa       => 'BinaryTree',		
-      predicate => 'has_left',  
+      is        => 'rw',
+      isa       => 'BinaryTree',
+      predicate => 'has_left',
       lazy      => 1,
-      default   => sub { BinaryTree->new(parent => $_[0]) },       
+      default   => sub { BinaryTree->new( parent => $_[0] ) },
   );
 
 You already know what the C<is>, C<isa> and C<predicate> options do, but now we
@@ -122,11 +122,11 @@ by value, this was all we had to say. But for any other item
 (ARRAY ref, HASH ref, object instance, etc) you would need to 
 wrap it in a CODE reference, so this:
 
-  has 'foo' => (is => 'rw', default => []);
+  has 'foo' => ( is => 'rw', default => [] );
 
 is actually illegal in Moose. Instead, what you really want is this:
 
-  has 'foo' => (is => 'rw', default => sub { [] });
+  has 'foo' => ( is => 'rw', default => sub { [] } );
 
 This ensures that each instance of this class will get its own ARRAY ref in the
 C<foo> slot. 
@@ -136,7 +136,7 @@ the subroutine is executed (to get the default value), we pass in the instance
 where the slot will be stored. This can come in quite handy at times, as
 illustrated above, with this code:
 
-  default => sub { BinaryTree->new(parent => $_[0]) },
+  default => sub { BinaryTree->new( parent => $_[0] ) },
 
 The default value being generated is a new C<BinaryTree> instance for the
 C<left> (or C<right>) slot. Here we set up the correct relationship by passing
@@ -173,10 +173,10 @@ the parental relationships that we need. We could write our own accessors, but
 that would require us to implement all those features we got automatically (type
 constraints, lazy initialization, and so on). Instead, we use method modifiers
 again:
-  
+
   before 'right', 'left' => sub {
-      my ($self, $tree) = @_;
-      $tree->parent($self) if defined $tree;   
+      my ( $self, $tree ) = @_;
+      $tree->parent($self) if defined $tree;
   };
 
 This is a C<before> modifier, just like we saw in the second recipe, but with

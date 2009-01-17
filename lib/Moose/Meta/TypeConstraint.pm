@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -344,7 +344,7 @@ The name of the type in the global type registry.
 
 =item B<parent>
 
-This type's parent  type.
+This type's parent type.
 
 =item B<has_parent>
 
@@ -352,17 +352,32 @@ Returns true if this type has a parent type.
 
 =item B<parents>
 
+Synonym for C<parent>.
+
 =item B<constraint>
+
+Returns this type's constraint.  This is the value of C<where> provided
+when defining a type.
 
 =item B<has_message>
 
+Returns true if this type has a message.
+
 =item B<message>
+
+Returns this type's message.
 
 =item B<get_message ($value)>
 
+Generate message for $value.
+
 =item B<has_coercion>
 
+Returns true if this type has a coercion.
+
 =item B<coercion>
+
+Returns this type's L<Moose::Meta::TypeCoercion> if one exists.
 
 =item B<hand_optimized_type_constraint>
 

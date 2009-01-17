@@ -9,33 +9,33 @@ Moose::Cookbook::Basics::Recipe2 - A simple B<BankAccount> example
 
   package BankAccount;
   use Moose;
-  
-  has 'balance' => (isa => 'Int', is => 'rw', default => 0);
-  
+
+  has 'balance' => ( isa => 'Int', is => 'rw', default => 0 );
+
   sub deposit {
-      my ($self, $amount) = @_;
-      $self->balance($self->balance + $amount);
+      my ( $self, $amount ) = @_;
+      $self->balance( $self->balance + $amount );
   }
-  
+
   sub withdraw {
-      my ($self, $amount) = @_;
+      my ( $self, $amount ) = @_;
       my $current_balance = $self->balance();
-      ($current_balance >= $amount)
+      ( $current_balance >= $amount )
           || confess "Account overdrawn";
-      $self->balance($current_balance - $amount);
+      $self->balance( $current_balance - $amount );
   }
-  
+
   package CheckingAccount;
   use Moose;
-  
+
   extends 'BankAccount';
-  
-  has 'overdraft_account' => (isa => 'BankAccount', is => 'rw');	
-  
+
+  has 'overdraft_account' => ( isa => 'BankAccount', is => 'rw' );
+
   before 'withdraw' => sub {
-      my ($self, $amount) = @_;
+      my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if ($self->overdraft_account && $overdraft_amount > 0) {
+      if ( $self->overdraft_account && $overdraft_amount > 0 ) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }
@@ -45,11 +45,11 @@ Moose::Cookbook::Basics::Recipe2 - A simple B<BankAccount> example
 
 The first recipe demonstrated how to build very basic Moose classes,
 focusing on creating and manipulating attributes. The objects in that
-recipe very data-oriented, and did not have much in the way of
+recipe were very data-oriented, and did not have much in the way of
 behavior (i.e. methods). In this recipe, we expand upon the concepts
 from the first recipe to include some real behavior. In particular, we
-should how you can use a method modifier to implement new behavior for
-a method.
+show how you can use a method modifier to implement new behavior for a
+method.
 
 The classes in the SYNOPSIS show two kinds of bank account. A simple
 bank account has one attribute, the balance, and two behaviors,
@@ -65,7 +65,7 @@ account. (1)
 The first class, B<BankAccount>, introduces a new attribute feature, a
 default value:
 
-  has 'balance' => (isa => 'Int', is => 'rw', default => 0);
+  has 'balance' => ( isa => 'Int', is => 'rw', default => 0 );
 
 This says that a B<BankAccount> has a C<balance> attribute, which has
 a C<Int> type constraint, a read/write accessor, and a default value
@@ -81,7 +81,7 @@ class's superclass. Here we see that B<CheckingAccount> C<extends>
 B<BankAccount>. The next line introduces yet another new attribute
 feature, class-based type constraints:
 
-  has 'overdraft_account' => (isa => 'BankAccount', is => 'rw');
+  has 'overdraft_account' => ( isa => 'BankAccount', is => 'rw' );
 
 Up until now, we have only seen the C<Int> type constraint, which (as
 we saw in the first recipe) is a builtin type constraint. The
@@ -101,9 +101,9 @@ In B<CheckingAccount>, we see another method modifier, the C<before>
 modifier.
 
   before 'withdraw' => sub {
-      my ($self, $amount) = @_;
+      my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if ($self->overdraft_account && $overdraft_amount > 0) {
+      if ( $self->overdraft_account && $overdraft_amount > 0 ) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }
@@ -124,9 +124,9 @@ As with the method modifier in the first recipe, we could use
 C<SUPER::> to get the same effect:
 
   sub withdraw {
-      my ($self, $amount) = @_;
+      my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self->balance();
-      if ($self->overdraft_account && $overdraft_amount > 0) {
+      if ( $self->overdraft_account && $overdraft_amount > 0 ) {
           $self->overdraft_account->withdraw($overdraft_amount);
           $self->deposit($overdraft_amount);
       }

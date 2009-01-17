@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +15,7 @@ use Carp         'confess', 'croak', 'cluck';
 
 use Moose::Exporter;
 
-use Class::MOP 0.72;
+use Class::MOP 0.75;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -35,6 +35,13 @@ use Moose::Meta::Role::Application::ToInstance;
 
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
+
+sub _caller_info {
+    my $level = @_ ? ($_[0] + 1) : 2;
+    my %info;
+    @info{qw(package file line)} = caller($level);
+    return \%info;
+}
 
 sub throw_error {
     # FIXME This 
@@ -74,7 +81,7 @@ sub has {
     my $class = shift;
     my $name  = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-    my %options = @_;
+    my %options = ( definition_context => _caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
 }
@@ -94,8 +101,15 @@ sub around {
     Moose::Util::add_method_modifier($class, 'around', \@_);
 }
 
+our $SUPER_PACKAGE;
+our $SUPER_BODY;
+our @SUPER_ARGS;
+
 sub super {
-    return unless our $SUPER_BODY; $SUPER_BODY->(our @SUPER_ARGS);
+    # This check avoids a recursion loop - see
+    # t/100_bugs/020_super_recursion.t
+    return if defined $SUPER_PACKAGE && $SUPER_PACKAGE ne caller();
+    return unless $SUPER_BODY; $SUPER_BODY->(@SUPER_ARGS);
 }
 
 sub override {
@@ -1115,6 +1129,8 @@ Jonathan (jrockway) Rockway
 Piotr (dexter) Roszatycki
 
 Sam (mugwump) Vilain
+
+Cory (gphat) Watson
 
 ... and many other #moose folks
 

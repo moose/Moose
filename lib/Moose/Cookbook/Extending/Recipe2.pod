@@ -12,6 +12,7 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
   use strict;
   use warnings;
 
+  use Moose ();
   use Moose::Exporter;
   use Moose::Util::MetaRole;
   use MooseX::Debugging::Role::Object;
@@ -22,12 +23,13 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
       shift;
       my %options = @_;
 
-      Moose::Util::MetaRole::apply_base_object_roles(
+      Moose->init_meta(%options);
+
+      Moose::Util::MetaRole::apply_base_class_roles(
           for_class => $options{for_class},
-          role      => ['MooseX::Debugging::Role::Object'],
+          roles     => ['MooseX::Debugging::Role::Object'],
       );
   }
-
 
   package MooseX::Debugging::Role::Object;
 
@@ -35,7 +37,7 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
       my $self = shift;
 
       warn "Made a new " . ref $self . " object\n";
-  }
+  };
 
 =head1 DESCRIPTION
 

@@ -1,8 +1,26 @@
 Revision history for Perl extension Moose
 
-0.64
+0.65
+    * Moose and Moose::Meta::Method::Overridden
+      - If an overridden method called super(), and then the
+        superclass's method (not overridden) _also_ called super(),
+        Moose went into an endless recursion loop. Test provided by
+        Chris Prather. (Dave Rolsky)
+    * Moose::Meta::TypeConstraint
+      - Add some explanation for a few explanationless methods (gphat)
+
+0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)
+    * Moose::Meta::Attribute
+      - Support for parameterized traits (Sartak)
+      - verify_against_type_constraint method to avoid duplication
+        and enhance extensibility (Sartak)
+    * Moose::Meta::Class
+      - Tests (but no support yet) for parameterized traits (Sartak)
+    * Moose
+      - Require Class::MOP 0.75+, which has the side effect of making
+        sure we work on Win32. (Dave Rolsky)
 
 0.63 Mon, December 8, 2008
     * Moose::Unsweetened
@@ -14,7 +32,7 @@ Revision history for Perl extension Moose
       - When a class does not provide all of a role's required
         methods, the error thrown now mentions all of the missing
         methods, as opposed to just the first one found. Requested by
-        Michael Schwern (RT #41119). (Dave Rolsky)
+        Curtis Poe (RT #41119). (Dave Rolsky)
 
     * Moose::Meta::Method::Constructor
       - Moose will no longer inline a constructor for your class
@@ -1246,7 +1264,7 @@ Revision history for Perl extension Moose
           ArrayRef[Int]    # array or integers
           HashRef[Object]  # a hash with object values
       They can also be nested:
-          ArrayRef[HashRef[RegExpr]] # an array of hashes with regexpr values
+          ArrayRef[HashRef[RegexpRef]] # an array of hashes with regex values
       And work with the type unions as well:
           ArrayRef[Int | Str]  # array of integers of strings
 

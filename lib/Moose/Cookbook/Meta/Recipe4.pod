@@ -11,10 +11,10 @@ Moose::Cookbook::Meta::Recipe4 - Adding a "table" attribute to the metaclass
   use Moose;
   extends 'Moose::Meta::Class';
 
-  has table =>
-      ( is       => 'rw',
-        isa      => 'Str',
-      );
+  has table => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
 =head1 DESCRIPTION
 
@@ -38,7 +38,7 @@ module like C<Moose.pm> itself, with sugar like C<has_table()>.
 Using this new "table" attribute is quite simple. Let's say we have a
 class named C<MyApp::User>, we could simply write the following:
 
-  my $table = MyApp::User->meta()->table();
+  my $table = MyApp::User->meta->table;
 
 As long as MyApp::User has arranged to use C<MyApp::Meta::Class> as
 its metaclass, this method call just works.

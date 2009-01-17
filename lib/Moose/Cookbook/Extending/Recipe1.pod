@@ -139,10 +139,10 @@ metaclass and attribute metaclass traits:
 
   use Moose -traits => [ 'Big', 'Blue' ];
 
-  has 'animal' =>
-     ( traits => [ 'Big', 'Blue' ],
-       ...
-     );
+  has 'animal' => (
+      traits => [ 'Big', 'Blue' ],
+      ...
+  );
 
 If your extension applies to any other metaclass, or the object base
 class, you cannot use the trait mechanism.
@@ -185,7 +185,7 @@ subclasses:
   Moose::Exporter->setup_import_methods( also => 'Moose' );
 
   sub init_meta {
-      shift; # just your package name
+      shift;    # just your package name
       my %options = @_;
 
       return Moose->init_meta(
@@ -217,13 +217,13 @@ extension can easily use it with other role-based extensions.
 
   use MooseX::Embiggen::Role::Meta::Class;
   use MooseX::Embiggen::Role::Meta::Attribute;
-  use MooseX::Embiggen::Role::Meta::Method::Constructor
+  use MooseX::Embiggen::Role::Meta::Method::Constructor;
   use MooseX::Embiggen::Role::Object;
 
   Moose::Exporter->setup_import_methods( also => 'Moose' );
 
   sub init_meta {
-      shift; # just your package name
+      shift;    # just your package name
       my %options = @_;
 
       Moose->init_meta(%options);

@@ -8,32 +8,33 @@ Moose::Cookbook::Basics::Recipe10 - Operator overloading, subtypes, and coercion
 =head1 SYNOPSIS
 
   package Human;
-  
+
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   subtype 'Gender'
       => as 'Str'
       => where { $_ =~ m{^[mf]$}s };
-  
+
   has 'gender' => ( is => 'ro', isa => 'Gender', required => 1 );
-  
+
   has 'mother' => ( is => 'ro', isa => 'Human' );
   has 'father' => ( is => 'ro', isa => 'Human' );
-  
+
   use overload '+' => \&_overload_add, fallback => 1;
-  
+
   sub _overload_add {
-      my ($one, $two) = @_;
-  
+      my ( $one, $two ) = @_;
+
       die('Only male and female humans may create children')
-          if ($one->gender() eq $two->gender());
-  
-      my ( $mother, $father ) = ( $one->gender eq 'f' ? ($one, $two) : ($two, $one) );
-  
+          if ( $one->gender() eq $two->gender() );
+
+      my ( $mother, $father )
+          = ( $one->gender eq 'f' ? ( $one, $two ) : ( $two, $one ) );
+
       my $gender = 'f';
-      $gender = 'm' if (rand() >= 0.5);
-  
+      $gender = 'm' if ( rand() >= 0.5 );
+
       return Human->new(
           gender => $gender,
           mother => $mother,
@@ -106,12 +107,12 @@ make classes for these genes.
 =head2 bey2
 
   package Human::Gene::bey2;
-  
+
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   type 'bey2Color' => where { $_ =~ m{^(?:brown|blue)$}s };
-  
+
   has 'color' => ( is => 'ro', isa => 'bey2Color' );
 
 This class is really simple.  All we need to know about the bey2
@@ -122,12 +123,12 @@ which validates for the two possible colors.
 =head2 gey
 
   package Human::Gene::gey;
-  
+
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   type 'geyColor' => where { $_ =~ m{^(?:green|blue)$}s };
-  
+
   has 'color' => ( is => 'ro', isa => 'geyColor' );
 
 The gey gene is nearly identical to the bey2, except that it
@@ -142,31 +143,31 @@ won't get all cluttered up with the details behind the different
 characteristics that makes up a Human.
 
   package Human::EyeColor;
-  
+
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   subtype 'bey2Gene'
       => as 'Object'
       => where { $_->isa('Human::Gene::bey2') };
-  
+
   coerce 'bey2Gene'
       => from 'Str'
           => via { Human::Gene::bey2->new( color => $_ ) };
-  
+
   subtype 'geyGene'
       => as 'Object'
       => where { $_->isa('Human::Gene::gey') };
-  
+
   coerce 'geyGene'
       => from 'Str'
           => via { Human::Gene::gey->new( color => $_ ) };
-  
+
   has 'bey2_1' => ( is => 'ro', isa => 'bey2Gene', coerce => 1 );
   has 'bey2_2' => ( is => 'ro', isa => 'bey2Gene', coerce => 1 );
-  
-  has 'gey_1'  => ( is => 'ro', isa => 'geyGene', coerce => 1 );
-  has 'gey_2'  => ( is => 'ro', isa => 'geyGene', coerce => 1 );
+
+  has 'gey_1' => ( is => 'ro', isa => 'geyGene', coerce => 1 );
+  has 'gey_2' => ( is => 'ro', isa => 'geyGene', coerce => 1 );
 
 So, we now have a class that can hold the four genes that dictate
 eye color.  This isn't quite enough, as we also need to calculate
@@ -178,10 +179,16 @@ recessive to the brown bey gene and dominant to the blues.  Finally,
 the bey and gey2 blue genes are recessive to both brown and green.
 
   sub color {
-      my ( $self ) = @_;
-  
-      return 'brown' if ($self->bey2_1->color() eq 'brown' or $self->bey2_2->color() eq 'brown');
-      return 'green' if ($self->gey_1->color() eq 'green' or $self->gey_2->color() eq 'green');
+      my ($self) = @_;
+
+      return 'brown'
+          if ( $self->bey2_1->color() eq 'brown'
+          or $self->bey2_2->color() eq 'brown' );
+
+      return 'green'
+          if ( $self->gey_1->color() eq 'green'
+          or $self->gey_2->color() eq 'green' );
+
       return 'blue';
   }
 
@@ -202,16 +209,16 @@ create a new EyeColor that is derived in a similar manner as
 the gene selection in human reproduction.
 
   use overload '+' => \&_overload_add, fallback => 1;
-  
+
   sub _overload_add {
-      my ($one, $two) = @_;
-  
+      my ( $one, $two ) = @_;
+
       my $one_bey2 = 'bey2_' . _rand2();
       my $two_bey2 = 'bey2_' . _rand2();
-  
+
       my $one_gey = 'gey_' . _rand2();
       my $two_gey = 'gey_' . _rand2();
-  
+
       return Human::EyeColor->new(
           bey2_1 => $one->$one_bey2->color(),
           bey2_2 => $two->$two_bey2->color(),
@@ -219,7 +226,7 @@ the gene selection in human reproduction.
           gey_2  => $two->$two_gey->color(),
       );
   }
-  
+
   sub _rand2 {
       return 1 + int( rand(2) );
   }
@@ -242,29 +249,28 @@ attribute called eye_color, and just for the sake of simple code
 we'll coerce an arrayref of colors in to an EyeColor object.
 
   use List::MoreUtils qw( zip );
-  
+
   subtype 'EyeColor'
       => as 'Object'
       => where { $_->isa('Human::EyeColor') };
-  
+
   coerce 'EyeColor'
       => from 'ArrayRef'
-          => via {
-              my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
-              return Human::EyeColor->new( zip( @genes, @$_ ) );
-          };
-  
-  has 'eye_color' => ( is => 'ro', isa => 'EyeColor', coerce => 1, required => 1 );
+      => via { my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
+              return Human::EyeColor->new( zip( @genes, @$_ ) ); };
+
+  has 'eye_color' =>
+      ( is => 'ro', isa => 'EyeColor', coerce => 1, required => 1 );
 
 And then in the _overload_add() of the Human class we modify
 the creation of the child object to include the addition of
 the mother and father's eye colors.
 
   return Human->new(
-      gender => $gender,
+      gender    => $gender,
       eye_color => ( $one->eye_color() + $two->eye_color() ),
-      mother => $mother,
-      father => $father,
+      mother    => $mother,
+      father    => $father,
   );
 
 =head1 CONCLUSION

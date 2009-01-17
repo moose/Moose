@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.63';
+our $VERSION   = '0.64';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -88,8 +88,11 @@ sub initialize_body {
     $source .= ";\n" . '}'; 
     warn $source if $self->options->{debug};    
     
-    my $code = $self->_eval_closure(q{}, $source);
-    $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source) if $@;
+    my $code;
+    {
+        $code = eval $source;
+        $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source) if $@;
+    }
     $self->{'body'} = $code;
 }
 

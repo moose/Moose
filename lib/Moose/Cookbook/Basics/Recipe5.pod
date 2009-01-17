@@ -10,61 +10,61 @@ Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
   package Request;
   use Moose;
   use Moose::Util::TypeConstraints;
-  
+
   use HTTP::Headers  ();
   use Params::Coerce ();
   use URI            ();
-  
+
   subtype 'Header'
       => as 'Object'
       => where { $_->isa('HTTP::Headers') };
-  
+
   coerce 'Header'
       => from 'ArrayRef'
-          => via { HTTP::Headers->new( @{ $_ } ) }
+          => via { HTTP::Headers->new( @{$_} ) }
       => from 'HashRef'
-          => via { HTTP::Headers->new( %{ $_ } ) };
-  
+          => via { HTTP::Headers->new( %{$_} ) };
+
   subtype 'Uri'
       => as 'Object'
       => where { $_->isa('URI') };
-  
+
   coerce 'Uri'
       => from 'Object'
-          => via { $_->isa('URI') 
-                    ? $_ 
-                    : Params::Coerce::coerce( 'URI', $_ ) }
+          => via { $_->isa('URI')
+                   ? $_
+                   : Params::Coerce::coerce( 'URI', $_ ); }
       => from 'Str'
           => via { URI->new( $_, 'http' ) };
-  
+
   subtype 'Protocol'
-      => as Str
+      => as 'Str'
       => where { /^HTTP\/[0-9]\.[0-9]$/ };
-  
-  has 'base'     => (is => 'rw', isa => 'Uri', coerce  => 1);
-  has 'uri'      => (is => 'rw', isa => 'Uri', coerce  => 1);	
-  has 'method'   => (is => 'rw', isa => 'Str');	
-  has 'protocol' => (is => 'rw', isa => 'Protocol');		
+
+  has 'base' => ( is => 'rw', isa => 'Uri', coerce => 1 );
+  has 'uri'  => ( is => 'rw', isa => 'Uri', coerce => 1 );
+  has 'method'   => ( is => 'rw', isa => 'Str' );
+  has 'protocol' => ( is => 'rw', isa => 'Protocol' );
   has 'headers'  => (
       is      => 'rw',
       isa     => 'Header',
       coerce  => 1,
-      default => sub { HTTP::Headers->new } 
+      default => sub { HTTP::Headers->new }
   );
 
 =head1 DESCRIPTION
 
-This recipe introduces the idea of type coercions, and the C<coerce> 
-keyword. Coercions can be attached to existing type constraints, 
-and can be used to transform input of one type into input of another 
-type. This can be an extremely powerful tool if used correctly, which 
-is why it is off by default. If you want your accessor to attempt 
-a coercion, you must specifically ask for it with the B<coerce> option.
+This recipe introduces the idea of type coercions, and the C<coerce>
+keyword. Coercions can be attached to existing type constraints, and
+can be used to transform input of one type into input of another
+type. This can be an extremely powerful tool if used correctly, which
+is why it is off by default. If you want your accessor to attempt a
+coercion, you must specifically ask for it with the B<coerce> option.
 
-Now, onto the coercions. 
+Now, onto the coercions.
 
-First we need to create a subtype to attach our coercion to. Here we 
-create a basic I<Header> subtype, which matches any instance of the 
+First we need to create a subtype to attach our coercion to. Here we
+create a basic I<Header> subtype, which matches any instance of the
 class B<HTTP::Headers>:
 
   subtype 'Header'
@@ -74,60 +74,60 @@ class B<HTTP::Headers>:
 The simplest thing from here would be create an accessor declaration
 like this:
 
-  has 'headers'  => (
+  has 'headers' => (
       is      => 'rw',
       isa     => 'Header',
-      default => sub { HTTP::Headers->new } 
+      default => sub { HTTP::Headers->new }
   );
 
-We would then have a self-validating accessor whose default value is 
-an empty instance of B<HTTP::Headers>. This is nice, but it is not 
+We would then have a self-validating accessor whose default value is
+an empty instance of B<HTTP::Headers>. This is nice, but it is not
 ideal.
 
 The constructor for B<HTTP::Headers> accepts a list of key-value pairs
-representing the HTTP header fields. In Perl, such a list could 
-easily be stored in an ARRAY or HASH reference. We would like our 
-class's interface to be able to accept this list of key-value pairs 
-in place of the B<HTTP::Headers> instance, and just DWIM. This is where
+representing the HTTP header fields. In Perl, such a list could easily
+be stored in an ARRAY or HASH reference. We would like our class's
+interface to be able to accept this list of key-value pairs in place
+of the B<HTTP::Headers> instance, and just DWIM. This is where
 coercion can help. First, let's declare our coercion:
 
   coerce 'Header'
       => from 'ArrayRef'
-          => via { HTTP::Headers->new( @{ $_ } ) }
+          => via { HTTP::Headers->new( @{$_} ) }
       => from 'HashRef'
-          => via { HTTP::Headers->new( %{ $_ } ) };
+          => via { HTTP::Headers->new( %{$_} ) };
 
 We first tell it that we are attaching the coercion to the 'Header'
-subtype. We then give it a set of C<from> clauses which map other 
-subtypes to coercion routines (through the C<via> keyword). Fairly 
-simple really; however, this alone does nothing. We have to tell 
-our attribute declaration to actually use the coercion, like so:
+subtype. We then give it a set of C<from> clauses which map other
+subtypes to coercion routines (through the C<via> keyword). Fairly
+simple really; however, this alone does nothing. We have to tell our
+attribute declaration to actually use the coercion, like so:
 
-  has 'headers'  => (
+  has 'headers' => (
       is      => 'rw',
       isa     => 'Header',
       coerce  => 1,
-      default => sub { HTTP::Headers->new } 
+      default => sub { HTTP::Headers->new }
   );
 
 This will coerce any B<ArrayRef> or B<HashRef> which is passed into 
 the C<headers> accessor into an instance of B<HTTP::Headers>. So the
 the following lines of code are all equivalent:
 
-  $foo->headers(HTTP::Headers->new(bar => 1, baz => 2));
-  $foo->headers([ 'bar', 1, 'baz', 2 ]);  
-  $foo->headers({ bar => 1, baz => 2 });  
+  $foo->headers( HTTP::Headers->new( bar => 1, baz => 2 ) );
+  $foo->headers( [ 'bar', 1, 'baz', 2 ] );
+  $foo->headers( { bar => 1, baz => 2 } );
 
-As you can see, careful use of coercions can produce a very open 
-interface for your class, while still retaining the "safety" of 
-your type constraint checks.
+As you can see, careful use of coercions can produce a very open
+interface for your class, while still retaining the "safety" of your
+type constraint checks.
 
-Our next coercion takes advantage of the power of CPAN to handle 
-the details of our coercion. In this particular case it uses the 
+Our next coercion takes advantage of the power of CPAN to handle the
+details of our coercion. In this particular case it uses the
 L<Params::Coerce> module, which fits in rather nicely with L<Moose>.
 
-Again, we create a simple subtype to represent instances of the 
-B<URI> class:
+Again, we create a simple subtype to represent instances of the B<URI>
+class:
 
   subtype 'Uri'
       => as 'Object'
@@ -137,50 +137,50 @@ Then we add the coercion:
 
   coerce 'Uri'
       => from 'Object'
-          => via { $_->isa('URI') 
-                    ? $_ 
-                    : Params::Coerce::coerce( 'URI', $_ ) }
+          => via { $_->isa('URI')
+                   ? $_
+                   : Params::Coerce::coerce( 'URI', $_ ); }
       => from 'Str'
           => via { URI->new( $_, 'http' ) };
 
-The first C<from> clause we introduce is for the 'Object' subtype. An 'Object'
-is simply any C<bless>ed value. This means that if the coercion encounters
-another object, it should use this clause. Now we look at the C<via> block.
-First it checks to see if the object is a B<URI> instance. Since the coercion
-process occurs prior to any type constraint checking, it is entirely possible
-for this to happen, and if it does happen, we simply want to pass the instance
-on through. However, if it is not an instance of B<URI>, then we need to coerce
-it. This is where L<Params::Coerce> can do its magic, and we can just use its
-return value. Simple really, and much less work since we used a module from CPAN
-:)
+The first C<from> clause we introduce is for the 'Object' subtype. An
+'Object' is simply any C<bless>ed value. This means that if the
+coercion encounters another object, it should use this clause. Now we
+look at the C<via> block.  First it checks to see if the object is a
+B<URI> instance. Since the coercion process occurs prior to any type
+constraint checking, it is entirely possible for this to happen, and
+if it does happen, we simply want to pass the instance on
+through. However, if it is not an instance of B<URI>, then we need to
+coerce it. This is where L<Params::Coerce> can do its magic, and we
+can just use its return value. Simple really, and much less work since
+we used a module from CPAN :)
 
-The second C<from> clause is attached to the 'Str' subtype, and 
-illustrates how coercions can also be used to handle certain 
-'default' behaviors. In this coercion, we simple take any string 
-and pass it to the B<URI> constructor along with the default 
-'http' scheme type. 
+The second C<from> clause is attached to the 'Str' subtype, and
+illustrates how coercions can also be used to handle certain 'default'
+behaviors. In this coercion, we simple take any string and pass it to
+the B<URI> constructor along with the default 'http' scheme type.
 
-And of course, our coercions do nothing unless they are told to, 
-like so:
+And of course, our coercions do nothing unless they are told to, like
+so:
 
-  has 'base' => (is => 'rw', isa => 'Uri', coerce => 1);
-  has 'uri'  => (is => 'rw', isa => 'Uri', coerce => 1);
+  has 'base' => ( is => 'rw', isa => 'Uri', coerce => 1 );
+  has 'uri'  => ( is => 'rw', isa => 'Uri', coerce => 1 );
 
-As you can see, re-using the coercion allows us to enforce a 
+As you can see, re-using the coercion allows us to enforce a
 consistent and very flexible API across multiple accessors.
 
 =head1 CONCLUSION
 
-This recipe illustrated the power of coercions to build a more 
-flexible and open API for your accessors, while still retaining 
-all the safety that comes from using Moose's type constraints. 
-Using coercions it becomes simple to manage (from a single 
-location) a consistent API not only across multiple accessors, 
-but across multiple classes as well. 
+This recipe illustrated the power of coercions to build a more
+flexible and open API for your accessors, while still retaining all
+the safety that comes from using Moose's type constraints.  Using
+coercions it becomes simple to manage (from a single location) a
+consistent API not only across multiple accessors, but across multiple
+classes as well.
 
-In the next recipe, we will introduce roles, a concept originally 
-borrowed from Smalltalk, which made its way into Perl 6, and 
-now into Moose.
+In the next recipe, we will introduce roles, a concept originally
+borrowed from Smalltalk, which made its way into Perl 6, and now into
+Moose.
 
 =head1 AUTHOR
 
