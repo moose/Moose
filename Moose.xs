@@ -1410,7 +1410,7 @@ STATIC XS(clearer)
     XSRETURN_EMPTY;
 }
 
-STATIC HV *buildargs (pTHX, SV **args, I32 items) {
+STATIC HV *buildargs (pTHX_ SV **args, I32 items) {
     if ( items == 1 ) {
         SV *sv = args[0];
         if ( SvROK(sv) && SvTYPE(SvRV(sv)) == SVt_PVHV )
