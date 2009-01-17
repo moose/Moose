@@ -35,7 +35,7 @@ sub _eval_code {
     };
 
     #warn "code for $attr_name =>\n" . $code . "\n";
-    $self->_eval_closure($environment, $self->_prepare_code( code => $code ) )
+    $self->_compile_code( environment => $environment, code => $code )
         or $self->throw_error("Could not create writer for '${\$self->associated_attribute->name}' because $@ \n code: $code", error => $@, data => $code );
 }
 
