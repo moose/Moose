@@ -11,8 +11,10 @@ use Moose::Util::TypeConstraints;
 
 subtype 'FilePath'
     => as 'Str'
-    => where { $_ =~ m#^(/[a-zA-Z0-9_.-]+)+/?$#
-                || $_ =~ m#^([c-zC-Z]:/[a-zA-Z0-9_.-]+)# };
+    # This used to try to _really_ check for a valid Unix or Windows
+    # path, but the regex wasn't quite right, and all we care about
+    # for the tests is that it rejects '/'
+    => where { $_ ne '/' };
 {
     package Baz;
     use Moose;
