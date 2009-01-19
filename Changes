@@ -8,7 +8,7 @@ Revision history for Perl extension Moose
         Chris Prather. (Dave Rolsky)
 
     * Moose::Meta::TypeConstraint
-      - Add some explanation for a few explanationless methods (gphat)
+      - All methods are now documented. (gphat)
 
     * t/100_bugs/011_DEMOLISH_eats_exceptions.t
       - Fixed some bogus failures that occurred because we tried to
