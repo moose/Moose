@@ -140,9 +140,8 @@ is_deeply(
     has 'meth2' => ( is => 'ro' );
 
     ::throws_ok { with('Quux::Role') }
-        qr/\Q'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class3'\E\n
-           \Q'Quux::Role' requires the methods 'meth1' and 'meth2' to be implemented by 'Quux::Class3' but the method is only an attribute accessor/x,
-        'exception mentions all the require methods that are accessors at once, as well as missing methods';
+        qr/'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class3'/,
+        'exception mentions all the missing methods at once, but not the accessors';
 }
 
 {
@@ -153,7 +152,6 @@ is_deeply(
     has 'meth2' => ( is => 'ro' );
 
     ::throws_ok { with('Quux::Role') }
-        qr/\Q'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class4'\E\n
-           \Q'Quux::Role' requires the method 'meth2' to be implemented by 'Quux::Class4' but the method is only an attribute accessor/x,
+        qr/'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class4'/,
         'exception mentions all the require methods that are accessors at once, as well as missing methods, but not the one that exists';
 }

@@ -83,7 +83,6 @@ sub req_or_has ($$) {
     has twist => ( is => "rw" );
 
     {
-        local our $TODO = "accessors don't satisfy role requires";
         ::lives_ok { with qw(Dancer) };
     }
 
