@@ -305,14 +305,16 @@ sub role_type ($;$) {
 sub maybe_type {
     my ($type_parameter) = @_;
 
-    Moose::Meta::TypeConstraint->new(
-        parent               => find_type_constraint('Item'),
-        constraint           => sub {
-            my $check = $type_parameter->_compiled_type_constraint;
-            return 1 if not(defined($_)) || $check->($_);
-            return;
-        }
-    )
+    register_type_constraint(
+      Moose::Meta::TypeConstraint->new(
+          parent               => find_type_constraint('Item'),
+          constraint           => sub {
+              my $check = $type_parameter->_compiled_type_constraint;
+              return 1 if not(defined($_)) || $check->($_);
+              return;
+          }
+      )
+    );
 }
 
 sub coerce {
