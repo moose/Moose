@@ -99,8 +99,8 @@ Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for
 
 =item B<parameterize>
 
-Given a single type constraint string, this method parses the string
-and parameterizes the type based on the parsed string.
+Given a single type constraint or type constraint string, this method
+parameterizes the type based on the given argument.
 
 =item B<meta>
 
