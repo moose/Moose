@@ -306,6 +306,8 @@ sub maybe_type {
     my ($type_parameter) = @_;
 
     register_type_constraint(
+      # $REGISTRY->get_type_constraint('Maybe')
+      #  ->get_constraint_for($type_parameter)
       Moose::Meta::TypeConstraint->new(
           parent               => find_type_constraint('Item'),
           constraint           => sub {
