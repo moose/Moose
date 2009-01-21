@@ -47,7 +47,8 @@ use Moose::Util::TypeConstraints::OptimizedConstraints;
 Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
-            type subtype class_type role_type as where message optimize_as
+            type subtype class_type role_type maybe_type
+            as where message optimize_as
             coerce from via
             enum
             find_type_constraint
@@ -299,6 +300,19 @@ sub role_type ($;$) {
             ( defined($_[1]) ? $_[1] : () ),
         )
     );
+}
+
+sub maybe_type {
+    my ($type_parameter) = @_;
+
+    Moose::Meta::TypeConstraint->new(
+        parent               => find_type_constraint('Item'),
+        constraint           => sub {
+            my $check = $type_parameter->_compiled_type_constraint;
+            return 1 if not(defined($_)) || $check->($_);
+            return;
+        }
+    )
 }
 
 sub coerce {
@@ -844,6 +858,11 @@ L<Moose::Meta::TypeConstraint::Class>.
 
 Creates a type constraint with the name C<$role> and the metaclass
 L<Moose::Meta::TypeConstraint::Role>.
+
+=item B<maybe_type ($type)>
+
+Creates a type constraint for either C<undef> or something of the
+given type.
 
 =item B<enum ($name, @values)>
 
