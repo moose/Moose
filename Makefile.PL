@@ -13,7 +13,7 @@ license 'perl';
 # prereqs
 requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
-requires 'Class::MOP'       => '0.75';
+requires 'Class::MOP'       => '0.76';
 requires 'List::MoreUtils'  => '0.12';
 requires 'Sub::Exporter'    => '0.972';
 requires 'Task::Weaken'     => '0';
