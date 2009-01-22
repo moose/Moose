@@ -238,6 +238,7 @@ t/100_bugs/016_inheriting_from_roles.t
 t/100_bugs/017_type_constraint_messages.t
 t/100_bugs/018_immutable_metaclass_does_role.t
 t/100_bugs/019_moose_octal_defaults.t
+t/100_bugs/020_super_recursion.t
 t/200_examples/001_example.t
 t/200_examples/002_example_Moose_POOP.t
 t/200_examples/003_example.t
