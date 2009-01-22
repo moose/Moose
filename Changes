@@ -15,10 +15,12 @@ Revision history for Perl extension Moose
         validate filesystem paths in a very ad-hoc and
         not-quite-correct way. (Dave Rolsky)
 
-    * added maybe_type to exports of Moose::Util::TypeConstraints (rjbs)
+    * Moose::Util::TypeConstraints
+      - Added maybe_type to exports. See docs for details. (rjbs)
 
-    * Moose::Util::TypeConstraints mentioned in the See Also section
-      of main Moose documentation.
+    * Moose
+      - Added Moose::Util::TypeConstraints to the SEE ALSO
+        section. (pjf)
 
 0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
