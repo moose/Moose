@@ -36,8 +36,6 @@ use Test::Exception;
 
     sub boo {'BarClass::boo'}
     sub foo {'BarClass::foo'}    # << the role overrides this ...
-
-    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 {
@@ -50,8 +48,6 @@ use Test::Exception;
     sub blau {'FooClass::blau'}    # << the role wraps this ...
 
     sub goo {'FooClass::goo'}      # << overrides the one from the role ...
-
-    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 {
@@ -74,12 +70,12 @@ dies_ok {
 '... does_role requires a role name';
 
 dies_ok {
-    $foo_class_meta->apply_role();
+    $foo_class_meta->add_role();
 }
 '... apply_role requires a role';
 
 dies_ok {
-    $foo_class_meta->apply_role( bless( {} => 'Fail' ) );
+    $foo_class_meta->add_role( bless( {} => 'Fail' ) );
 }
 '... apply_role requires a role';
 
