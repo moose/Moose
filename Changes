@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.65
+0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
         superclass's method (not overridden) _also_ called super(),
@@ -21,6 +21,15 @@ Revision history for Perl extension Moose
     * Moose
       - Added Moose::Util::TypeConstraints to the SEE ALSO
         section. (pjf)
+
+    * Moose::Role
+      - Methods created via an attribute can now fulfill a "requires"
+        declaration for a role. (nothingmuch)
+
+    * Moose::Meta::Method::*
+      - Stack traces from inlined code will now report its line and
+        file as being in your class, as opposed to in Moose
+        guts. (nothingmuch).
 
 0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
