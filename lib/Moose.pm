@@ -1019,6 +1019,8 @@ Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
 
 =item L<Class::MOP> documentation
 
+=item L<Moose::Util::TypeConstraints> for information about type constraints.
+
 =item The #moose channel on irc.perl.org
 
 =item The Moose mailing list - moose@perl.org

@@ -17,6 +17,9 @@ Revision history for Perl extension Moose
 
     * added maybe_type to exports of Moose::Util::TypeConstraints (rjbs)
 
+    * Moose::Util::TypeConstraints mentioned in the See Also section
+      of main Moose documentation.
+
 0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)
