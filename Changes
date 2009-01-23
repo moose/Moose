@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.66
+    * Moose::Meta::Attribute
+      - Added a delegation_metaclass method to replace a hard-coded
+        use of Moose::Meta::Method::Delegation. (Dave Rolsky)
+
 0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
