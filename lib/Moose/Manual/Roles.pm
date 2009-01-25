@@ -234,3 +234,17 @@ C<Breakable> and C<BreakDancer>, but does not provide a C<break>
 method. If some API expects an object that does one of those roles, it
 probably expects it to implement that method.
 
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
