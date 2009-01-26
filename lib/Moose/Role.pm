@@ -17,6 +17,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Moose       ();
 use Moose::Util ();
 
+use Moose::Exporter;
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
@@ -107,7 +108,7 @@ sub augment {
     croak "Roles cannot support 'augment'";
 }
 
-my $exporter = Moose::Exporter->setup_import_methods(
+Moose::Exporter->setup_import_methods(
     with_caller => [
         qw( with requires excludes has before after around override make_immutable )
     ],
