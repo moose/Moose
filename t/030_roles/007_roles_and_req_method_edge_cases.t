@@ -173,9 +173,9 @@ method modifier.
     
     has 'foo' => (is => 'ro');     
     
-    ::dies_ok {
+    ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, but it is a before (and we will die)';    
+    } '... the required "foo" method exists, and is an accessor';
 }    
 
 # ...
@@ -211,7 +211,7 @@ method modifier.
     use Moose;
     extends 'Foo::Class::Base';
     
-    ::dies_ok {       
+    ::lives_ok {
         with 'Foo::Role';
     } '... our role combined successfully';
 }

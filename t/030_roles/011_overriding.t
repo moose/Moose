@@ -174,6 +174,7 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     } "define role Role::I";
     
     sub zot { 'Role::I::zot' }
+    sub zzy { 'Role::I::zzy' }
 
     package Class::C;
     use Moose;
@@ -205,26 +206,21 @@ is( Class::E->new->xxy, "Role::J::xxy",  "... got the right &xxy method" );
 ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requirement');
 
 {
-    # fix these later ...
-    TODO: {
-        local $TODO = "add support for attribute methods fufilling reqs";
+    lives_ok {
+        package Class::D;
+        use Moose;
 
-        lives_ok {
-            package Class::D;
-            use Moose;
+        has foo => ( default => __PACKAGE__ . "::foo", is => "rw" );
 
-            has foo => ( default => __PACKAGE__ . "::foo", is => "rw" );
+        sub zot { 'Class::D::zot' }
 
-            sub zot { 'Class::D::zot' }
+        with qw(Role::I);
 
-            with qw(Role::I);
-            
-        } "resolved with attr";
+    } "resolved with attr";
 
-        can_ok( Class::D->new, qw(foo bar xxy zot) );
-        is( eval { Class::D->new->bar }, "Role::H::bar", "bar" );
-        is( eval { Class::D->new->xxy }, "Role::I::xxy", "xxy" );
-    }
+    can_ok( Class::D->new, qw(foo bar xxy zot) );
+    is( eval { Class::D->new->bar }, "Role::H::bar", "bar" );
+    is( eval { Class::D->new->zzy }, "Role::I::zzy", "zzy" );
 
     is( eval { Class::D->new->foo }, "Class::D::foo", "foo" );
     is( eval { Class::D->new->zot }, "Class::D::zot", "zot" );

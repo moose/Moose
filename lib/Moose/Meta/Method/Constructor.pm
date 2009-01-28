@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -142,42 +142,42 @@ sub initialize_body {
         $self->_generate_slot_initializer($_)
     } 0 .. (@{$self->attributes} - 1));
 
-    $source .= ";\n" . $self->_generate_triggers();    
+    $source .= ";\n" . $self->_generate_triggers();
     $source .= ";\n" . $self->_generate_BUILDALL();
 
     $source .= ";\n" . 'return $instance';
     $source .= ";\n" . '}';
     warn $source if $self->options->{debug};
 
-    my $code;
-    {
-        my $meta = $self; # FIXME for _inline_throw_error...
+    # We need to check if the attribute ->can('type_constraint')
+    # since we may be trying to immutabilize a Moose meta class,
+    # which in turn has attributes which are Class::MOP::Attribute
+    # objects, rather than Moose::Meta::Attribute. And
+    # Class::MOP::Attribute attributes have no type constraints.
+    # However we need to make sure we leave an undef value there
+    # because the inlined code is using the index of the attributes
+    # to determine where to find the type constraint
 
-        # NOTE:
-        # create the nessecary lexicals
-        # to be picked up in the eval
-        my $attrs = $self->attributes;
+    my $attrs = $self->attributes;
 
-        # We need to check if the attribute ->can('type_constraint')
-        # since we may be trying to immutabilize a Moose meta class,
-        # which in turn has attributes which are Class::MOP::Attribute
-        # objects, rather than Moose::Meta::Attribute. And 
-        # Class::MOP::Attribute attributes have no type constraints.
-        # However we need to make sure we leave an undef value there
-        # because the inlined code is using the index of the attributes
-        # to determine where to find the type constraint
-        
-        my @type_constraints = map { 
-            $_->can('type_constraint') ? $_->type_constraint : undef
-        } @$attrs;
-        
-        my @type_constraint_bodies = map {
-            defined $_ ? $_->_compiled_type_constraint : undef;
-        } @type_constraints;
+    my @type_constraints = map {
+        $_->can('type_constraint') ? $_->type_constraint : undef
+    } @$attrs;
 
-        $code = eval $source;
-        $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source ) if $@;
-    }
+    my @type_constraint_bodies = map {
+        defined $_ ? $_->_compiled_type_constraint : undef;
+    } @type_constraints;
+
+    my $code = $self->_compile_code(
+        code => $source,
+        environment => {
+            '$meta'  => \$self,
+            '$attrs' => \$attrs,
+            '@type_constraints' => \@type_constraints,
+            '@type_constraint_bodies' => \@type_constraint_bodies,
+        },
+    ) or $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source );
+
     $self->{'body'} = $code;
 }
 

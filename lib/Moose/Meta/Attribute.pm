@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -145,6 +145,7 @@ my @legal_options_for_inheritance = qw(
     default coerce required 
     documentation lazy handles 
     builder type_constraint
+    definition_context
 );
 
 sub legal_options_for_inheritance { @legal_options_for_inheritance }
@@ -704,6 +705,8 @@ sub _get_delegate_method_list {
     }
 }
 
+sub delegation_metaclass { 'Moose::Meta::Method::Delegation' }
+
 sub _make_delegation_method {
     my ( $self, $handle_name, $method_to_call ) = @_;
 
@@ -712,7 +715,7 @@ sub _make_delegation_method {
     $method_body = $method_to_call
         if 'CODE' eq ref($method_to_call);
 
-    return Moose::Meta::Method::Delegation->new(
+    return $self->delegation_metaclass->new(
         name               => $handle_name,
         package_name       => $self->associated_class->name,
         attribute          => $self,
@@ -785,6 +788,8 @@ will behave just as L<Class::MOP::Attribute> does.
 =item B<remove_delegation>
 
 =item B<accessor_metaclass>
+
+=item B<delegation_metaclass>
 
 =item B<get_value>
 

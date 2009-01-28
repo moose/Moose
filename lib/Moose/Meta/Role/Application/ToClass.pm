@@ -7,7 +7,7 @@ use metaclass;
 use Moose::Util  'english_list';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -51,32 +51,9 @@ sub check_required_methods {
 
             push @missing, $required_method_name;
         }
-        else {
-            # NOTE:
-            # we need to make sure that the method is
-            # not a method modifier, because those do
-            # not satisfy the requirements ...
-            my $method = $class->find_method_by_name($required_method_name);
-
-            # check if it is a generated accessor ...
-            push @is_attr, $required_method_name,
-                if $method->isa('Class::MOP::Method::Accessor');
-
-            # NOTE:
-            # All other tests here have been removed, they were tests
-            # for overriden methods and before/after/around modifiers.
-            # But we realized that for classes any overriden or modified
-            # methods would be backed by a real method of that name
-            # (and therefore meet the requirement). And for roles, the
-            # overriden and modified methods are "in statis" and so would
-            # not show up in this test anyway (and as a side-effect they
-            # would not fufill the requirement, which is exactly what we
-            # want them to do anyway).
-            # - SL
-        }
     }
 
-    return unless @missing || @is_attr;
+    return unless @missing;
 
     my $error = '';
 
@@ -92,23 +69,6 @@ sub check_required_methods {
             . "' requires the $noun $list "
             . "to be implemented by '"
             . $class->name . q{'};
-    }
-
-    if (@is_attr) {
-        my $noun = @is_attr == 1 ? 'method' : 'methods';
-
-        my $list
-            = Moose::Util::english_list( map { q{'} . $_ . q{'} } @is_attr );
-
-        $error .= "\n" if length $error;
-
-        $error
-            .= q{'}
-            . $role->name
-            . "' requires the $noun $list "
-            . "to be implemented by '"
-            . $class->name
-            . "' but the method is only an attribute accessor";
     }
 
     $class->throw_error($error);

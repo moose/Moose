@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -21,21 +21,22 @@ sub _eval_code {
 
     # NOTE:
     # set up the environment
-    my $attr        = $self->associated_attribute;
-    my $attr_name   = $attr->name;
-    my $meta        = $self,
-
-    my $type_constraint_obj  = $attr->type_constraint;
-    my $type_constraint_name = $type_constraint_obj && $type_constraint_obj->name;
-    my $type_constraint      = $type_constraint_obj
+    my $attr = $self->associated_attribute;
+    my $type_constraint_obj = $attr->type_constraint;
+    my $environment = {
+        '$attr' => \$attr,
+        '$attr_name' => \$attr->name,
+        '$meta' => \$self,
+        '$type_constraint_obj' => \$type_constraint_obj,
+        '$type_constraint_name' => \($type_constraint_obj && $type_constraint_obj->name),
+        '$type_constraint' => \($type_constraint_obj
                                    ? $type_constraint_obj->_compiled_type_constraint
-                                   : undef;
+                                   : undef),
+    };
 
     #warn "code for $attr_name =>\n" . $code . "\n";
-    my $sub = eval $code;
-    $self->throw_error("Could not create writer for '$attr_name' because $@ \n code: $code", error => $@, data => $code ) if $@;
-    return $sub;
-
+    $self->_compile_code( environment => $environment, code => $code )
+        or $self->throw_error("Could not create writer for '${\$self->associated_attribute->name}' because $@ \n code: $code", error => $@, data => $code );
 }
 
 sub generate_accessor_method_inline {
@@ -228,7 +229,7 @@ sub _inline_trigger {
     my ($self, $instance, $value) = @_;
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s, $attr);', $instance, $value);
+    return sprintf('$attr->trigger->(%s, %s);', $instance, $value);
 }
 
 sub _inline_get {

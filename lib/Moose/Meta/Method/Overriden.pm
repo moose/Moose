@@ -3,7 +3,7 @@ package Moose::Meta::Method::Overriden;
 use strict;
 use warnings;
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -16,7 +16,7 @@ sub new {
     # it is really more like body's compilation stash
     # this is where we need to override the definition of super() so that the
     # body of the code can call the right overridden version
-    my $_super_package = $args{package} || $args{class}->name;
+    my $super_package = $args{package} || $args{class}->name;
 
     my $name = $args{name};
 
@@ -30,13 +30,14 @@ sub new {
     my $method = $args{method};
 
     my $body = sub {
+        local $Moose::SUPER_PACKAGE = $super_package;
         local @Moose::SUPER_ARGS = @_;
         local $Moose::SUPER_BODY = $super_body;
         return $method->(@_);
     };
 
     # FIXME do we need this make sure this works for next::method?
-    # subname "${_super_package}::${name}", $method;
+    # subname "${super_package}::${name}", $method;
 
     # FIXME store additional attrs
     $class->wrap(

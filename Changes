@@ -1,18 +1,59 @@
 Revision history for Perl extension Moose
 
-Pending
+0.66
+    * Moose::Meta::Attribute
+      - Added a delegation_metaclass method to replace a hard-coded
+        use of Moose::Meta::Method::Delegation. (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints
+      - If you created a subtype and passed a parent that Moose didn't
+        know about, it simply ignored the parent. Now it automatically
+        creates the parent as a class type. This may not be what you
+        want, but is less broken than before. (Dave Rolsky)
+
+0.65 Thu, January 22, 2008
+    * Moose and Moose::Meta::Method::Overridden
+      - If an overridden method called super(), and then the
+        superclass's method (not overridden) _also_ called super(),
+        Moose went into an endless recursion loop. Test provided by
+        Chris Prather. (Dave Rolsky)
+
     * Moose::Meta::TypeConstraint
-      - Add some explanation for a few explanationless methods (gphat)
+      - All methods are now documented. (gphat)
+
+    * t/100_bugs/011_DEMOLISH_eats_exceptions.t
+      - Fixed some bogus failures that occurred because we tried to
+        validate filesystem paths in a very ad-hoc and
+        not-quite-correct way. (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints
+      - Added maybe_type to exports. See docs for details. (rjbs)
+
+    * Moose
+      - Added Moose::Util::TypeConstraints to the SEE ALSO
+        section. (pjf)
+
+    * Moose::Role
+      - Methods created via an attribute can now fulfill a "requires"
+        declaration for a role. (nothingmuch)
+
+    * Moose::Meta::Method::*
+      - Stack traces from inlined code will now report its line and
+        file as being in your class, as opposed to in Moose
+        guts. (nothingmuch).
 
 0.64 Wed, December 31, 2008
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)
+
     * Moose::Meta::Attribute
       - Support for parameterized traits (Sartak)
       - verify_against_type_constraint method to avoid duplication
         and enhance extensibility (Sartak)
+
     * Moose::Meta::Class
       - Tests (but no support yet) for parameterized traits (Sartak)
+
     * Moose
       - Require Class::MOP 0.75+, which has the side effect of making
         sure we work on Win32. (Dave Rolsky)

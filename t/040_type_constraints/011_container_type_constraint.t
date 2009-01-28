@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 use Test::Exception;
 
 BEGIN {    
@@ -64,5 +64,10 @@ ok(!$array_of_array_of_ints->check(
     [[ 1, 2, 3 ], [ qw/foo bar/ ]]
 ), '... [[ 1, 2, 3 ], [ qw/foo bar/ ]] failed successfully');
 
+{
+    my $anon_type = Moose::Util::TypeConstraints::find_or_parse_type_constraint('ArrayRef[Foo]');
+    isa_ok( $anon_type, 'Moose::Meta::TypeConstraint::Parameterized' );
 
-
+    my $param_type = $anon_type->type_parameter;
+    isa_ok( $param_type, 'Moose::Meta::TypeConstraint::Class' );
+}

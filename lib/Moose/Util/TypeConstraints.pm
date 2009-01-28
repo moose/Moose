@@ -9,7 +9,7 @@ use List::MoreUtils qw( all );
 use Scalar::Util 'blessed';
 use Moose::Exporter;
 
-our $VERSION   = '0.64';
+our $VERSION   = '0.65';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -47,7 +47,8 @@ use Moose::Util::TypeConstraints::OptimizedConstraints;
 Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
-            type subtype class_type role_type as where message optimize_as
+            type subtype class_type role_type maybe_type
+            as where message optimize_as
             coerce from via
             enum
             find_type_constraint
@@ -301,6 +302,14 @@ sub role_type ($;$) {
     );
 }
 
+sub maybe_type {
+    my ($type_parameter) = @_;
+
+    register_type_constraint(
+        $REGISTRY->get_type_constraint('Maybe')->parameterize($type_parameter)
+    );
+}
+
 sub coerce {
     my ($type_name, @coercion_map) = @_;
     _install_type_coercions($type_name, \@coercion_map);
@@ -386,7 +395,7 @@ sub _create_type_constraint ($$$;$$) {
     my $constraint;
     if ( defined $parent
         and $parent
-        = blessed $parent ? $parent : find_or_parse_type_constraint($parent) )
+        = blessed $parent ? $parent : find_or_create_isa_type_constraint($parent) )
     {
         $constraint = $parent->create_child_type(%opts);
     }
@@ -754,6 +763,10 @@ parameterized, this means you can say:
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
+If Moose finds a name in brackets that it does not recognize as an
+existing type, it assumes that this is a class name, for example
+C<ArrayRef[DateTime]>.
+
 B<NOTE:> Unless you parameterize a type, then it is invalid to
 include the square brackets. I.e. C<ArrayRef[]> will be
 literally interpreted as a type name.
@@ -829,6 +842,9 @@ This creates a base type, which has no parent.
 
 This creates a named subtype.
 
+If you provide a parent that Moose does not recognize, it will
+automatically create a new class type constraint for this name.
+
 =item B<subtype ($parent, $where_clause, ?$message)>
 
 This creates an unnamed subtype and will return the type
@@ -844,6 +860,11 @@ L<Moose::Meta::TypeConstraint::Class>.
 
 Creates a type constraint with the name C<$role> and the metaclass
 L<Moose::Meta::TypeConstraint::Role>.
+
+=item B<maybe_type ($type)>
+
+Creates a type constraint for either C<undef> or something of the
+given type.
 
 =item B<enum ($name, @values)>
 

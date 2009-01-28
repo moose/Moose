@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 31;
+use Test::More tests => 36;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -26,26 +26,52 @@ ok(!$type->check('Hello World'), '... checked type correctly (fail)');
 ok(!$type->check([]), '... checked type correctly (fail)');
 
 {
+    package Bar;
+    use Moose;
+
     package Foo;
     use Moose;
+    use Moose::Util::TypeConstraints;
     
-    has 'bar' => (is => 'rw', isa => 'Maybe[ArrayRef]', required => 1);    
+    has 'arr' => (is => 'rw', isa => 'Maybe[ArrayRef]', required => 1);    
+    has 'bar' => (is => 'rw', isa => class_type('Bar'));
+    has 'maybe_bar' => (is => 'rw', isa => maybe_type(class_type('Bar')));
 }
 
 lives_ok {
-    Foo->new(bar => []);
+    Foo->new(arr => [], bar => Bar->new);
+} '... Bar->new isa Bar';
+
+dies_ok {
+    Foo->new(arr => [], bar => undef);
+} '... undef isnta Bar';
+
+lives_ok {
+    Foo->new(arr => [], maybe_bar => Bar->new);
+} '... Bar->new isa maybe(Bar)';
+
+lives_ok {
+    Foo->new(arr => [], maybe_bar => undef);
+} '... undef isa maybe(Bar)';
+
+dies_ok {
+    Foo->new(arr => [], maybe_bar => 1);
+} '... 1 isnta maybe(Bar)';
+
+lives_ok {
+    Foo->new(arr => []);
 } '... it worked!';
 
 lives_ok {
-    Foo->new(bar => undef);
+    Foo->new(arr => undef);
 } '... it worked!';
 
 dies_ok {
-    Foo->new(bar => 100);
+    Foo->new(arr => 100);
 } '... failed the type check';
 
 dies_ok {
-    Foo->new(bar => 'hello world');
+    Foo->new(arr => 'hello world');
 } '... failed the type check';
 
 
