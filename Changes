@@ -5,6 +5,12 @@ Revision history for Perl extension Moose
       - Added a delegation_metaclass method to replace a hard-coded
         use of Moose::Meta::Method::Delegation. (Dave Rolsky)
 
+    * Moose::Util::TypeConstraints
+      - If you created a subtype and passed a parent that Moose didn't
+        know about, it simply ignored the parent. Now it automatically
+        creates the parent as a class type. This may not be what you
+        want, but is less broken than before. (Dave Rolsky)
+
 0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the

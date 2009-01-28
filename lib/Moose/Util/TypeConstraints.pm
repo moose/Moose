@@ -395,7 +395,7 @@ sub _create_type_constraint ($$$;$$) {
     my $constraint;
     if ( defined $parent
         and $parent
-        = blessed $parent ? $parent : find_or_parse_type_constraint($parent) )
+        = blessed $parent ? $parent : find_or_create_isa_type_constraint($parent) )
     {
         $constraint = $parent->create_child_type(%opts);
     }
@@ -837,6 +837,9 @@ This creates a base type, which has no parent.
 =item B<subtype ($name, $parent, $where_clause, ?$message)>
 
 This creates a named subtype.
+
+If you provide a parent that Moose does not recognize, it will
+automatically create a new class type constraint for this name.
 
 =item B<subtype ($parent, $where_clause, ?$message)>
 
