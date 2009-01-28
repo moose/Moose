@@ -763,6 +763,10 @@ parameterized, this means you can say:
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   Maybe[Str]       # value may be a string, may be undefined
 
+If Moose finds a name in brackets that it does not recognize as an
+existing type, it assumes that this is a class name, for example
+C<ArrayRef[DateTime]>.
+
 B<NOTE:> Unless you parameterize a type, then it is invalid to
 include the square brackets. I.e. C<ArrayRef[]> will be
 literally interpreted as a type name.
