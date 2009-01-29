@@ -1,7 +1,13 @@
-
 =head1 RECOMMENDATIONS
 
-=head2 No Moose and Immutabilize
+Moose has a lot of features, and there's definitely more than one way
+to do it. However, we think that picking a subset of these features
+and using them consistently makes everyone's life easier.
+
+Of course, as with any list of "best practices", these are really just
+opinions. Feel free to ignore us.
+
+=head2 "No Moose" and Immutabilize
 
 We recommend that you end your Moose class definitions by removing the
 Moose sugar and making your class immutable.
@@ -20,34 +26,100 @@ Moose sugar and making your class immutable.
 
   1;
 
+The "no Moose" bit is simply good code hygiene, and making classes
+immutable speeds up a lot of things, most notably object construction.
+
 =head2 Always call SUPER::BUILDARGS
 
-=head2 No complex subs for a default, use a builder
+If you override the C<BUILDARGS> method in your class, make sure to
+play nice and call C<SUPER::BUILDARGS> to handle cases you're not
+checking for explicitly.q
 
-builders can be inherited, show up more cleanly in profile
+The default C<BUILDARGS> method in L<Moose::Object> handles both a
+list and hashref of named parameters correctly, and also checks for a
+I<non-hashref> single argument.
 
-=head2 use default for simple scalar, and empty refs
+=head2 Don't Use the initializer Feature
 
-=head2 use builder for everything else
+Don't know what we're talking about? That's fine.
 
-don't use initializer
+=head2 Use builder Instead of default Most of the Time.
 
-=head2 use lazy_build
+Builders can be inherited, they have explicit names, and they're just
+plain cleaner.
 
-keep builders private
+However, I<do> use a default when the default is a non-reference,
+I<or> when the default is simply an empty reference of some sort.
 
-consider keeping clearers & predicates private
+Also, keep your builder methods private.
 
-consider keeping writers private
+=head2 Use lazy_build
+
+Lazy is good, and often solves initialization ordering problems. It's
+also good for deferring work that may never have to be done. If you're
+going to be lazy, use I<lazy_build> to save yourself some typing and
+standardize names.
+
+=head2 Consider Keeping clearers & predicates Private
+
+Does everyone I<really> need to be able to clear an attribute?
+Probably not. Don't expose this functionality outside your class
+by default.
+
+Predicates are less problematic, but there's no reason to make your
+public API bigger than it has to be.
+
+=head2 Default to read-only, and Consider Keeping writers Private
+
+Making attributes mutable just means more complexity to account for in
+your program. The alternative to mutable state is to encourage users
+of your class to simply make new objects as needed.
+
+If you I<must> make an attribute read-write, consider making the
+writer a separate private method. Narrower APIs are easy to maintain,
+and mutable state is trouble.
 
 =head2 Think Twice Before Changing an Attribute's Type in a Subclass
 
-=head2 use MX::AH instead of auto_deref
+Down this path lies great confusion. If the attribute is an object
+itself, at least make sure that it has the same interface as the type
+of object in the parent class.
+
+=head2 Use MooseX::AttributeHelpers Instead of auto_deref
+
+The C<auto_deref> feature is a big troublesome. Directly exposing a
+complex attribute is ugly. Instead, consider using
+C<MooseX::AttributeHelpers> to define an API that exposes those pieces
+of functionality that need exposing. Then you can expose just the
+functionality that you want.
 
 =head2 Namespace Your Types
 
-and don't use "::"
+Use some sort of namespacing convention for type names. We recommend
+something like "MyApp.Type.Foo". I<Never> use "::" as the namespace
+separator, since that overlaps with actual class names.
 
 =head2 Coercion Instead of Unions
 
+Consider using a type coercion instead of a type union. This was
+covered at length in L<Moose::Manual::Types>.
+
 =head2 Define All Your Types in One Module
+
+Define all your types and coercions in one module. This was also
+covered in L<Moose::Manual::Types>.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
