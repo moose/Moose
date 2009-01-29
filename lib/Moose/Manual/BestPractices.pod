@@ -40,4 +40,14 @@ consider keeping clearers & predicates private
 
 consider keeping writers private
 
+=head2 Think Twice Before Changing an Attribute's Type in a Subclass
+
 =head2 use MX::AH instead of auto_deref
+
+=head2 Namespace Your Types
+
+and don't use "::"
+
+=head2 Coercion Instead of Unions
+
+=head2 Define All Your Types in One Module
