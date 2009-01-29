@@ -123,6 +123,11 @@ Attributes are a core part of the Moose OO system. An attribute is a
 piece of data that an object has. Moose has a lot of attribute-related
 features!
 
+=item L<Moose::Manual::Delegation>
+
+Delegation is a powerful way to make use of attribute which are
+themselves objects.
+
 =item L<Moose::Manual::Construction>
 
 Learn how objects are built in Moose, and in particular about the
