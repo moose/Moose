@@ -1,3 +1,5 @@
+=pod
+
 =head1 RECOMMENDATIONS
 
 Moose has a lot of features, and there's definitely more than one way
