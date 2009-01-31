@@ -152,7 +152,7 @@ C<Class::MOP> distribution.
 
 Finally, we welcome questions on the Moose mailing list and
 IRC. Information on the mailing list, IRC, and more references can be
-found in the L<Moose.pm docs|Moose/SEE ALSO>.
+found in the L<Moose.pm docs|Moose/GETTING HELP>.
 
 =head1 AUTHOR
 
