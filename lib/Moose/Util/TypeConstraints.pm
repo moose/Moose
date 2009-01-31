@@ -754,7 +754,7 @@ that hierarchy represented visually.
               GlobRef
                 FileHandle
               Object
-                  Role
+                Role
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
@@ -785,7 +785,7 @@ but it is a saner restriction than most others.
 Since the types created by this module are global, it is suggested
 that you namespace your types just as you would namespace your
 modules. So instead of creating a I<Color> type for your B<My::Graphics>
-module, you would call the type I<My::Graphics::Color> instead.
+module, you would call the type I<My.Graphics.Color> instead.
 
 =head2 Use with Other Constraint Modules
 

@@ -1,0 +1,116 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::Attribute - Attribute Delegation
+
+=head1 WHAT IS DELEGATION?
+
+Moose's delegation feature lets you create "shadow" methods that do
+nothing more than call some other method on an attribute. This is
+quite handy since it lets you simplify a complex set of "has-a"
+relationships and present a single unified API from one class.
+
+This means that consumers of a class don't need to know about all the
+objects it contains, and it simplifies their code.
+
+Delegations are defined as a mapping between one or more methods
+provided by the "real" class (the delegatee), and a set of
+corresponding methods in the delegating class. The delegating class
+can re-use the method names provided by the delegatee, or provide its
+own names.
+
+Delegation is also a great way to wrap an existing class, especially a
+non-Moose class or one that is somehow hard (or impossible) to
+subclass.
+
+=head1 DEFINING A MAPPING
+
+Moose offers a number of options for defining a delegation's mapping,
+ranging from simple to complex.
+
+The simplest form is to simply specify a list of methods:
+
+  package Website;
+
+  use Moose;
+
+  has 'uri' => (
+      is      => 'ro',
+      isa     => 'URI',
+      handles => [qw( host path )],
+  );
+
+With this definition, we can call C<< $website->host >> and it "just
+works". Under the hood, Moose will call C<< $website->uri->host >> for
+you.
+
+We can also define a mapping as a hash reference. This allows you to
+rename methods as part of the mapping:
+
+  package Website;
+
+  use Moose;
+
+  has 'uri' => (
+      is      => 'ro',
+      isa     => 'URI',
+      handles => {
+          hostname => 'host',
+          path     => 'path',
+      },
+  );
+
+In this example, we've created a C<< $website->hostname >> method,
+rather than using C<URI.pm>'s name, C<host>.
+
+These two mapping forms are the ones you will use most often. The
+remainder are a bit more complex, and less common.
+
+  has 'uri' => (
+      is      => 'ro',
+      isa     => 'URI',
+      handles => qr/^(?:host|path|query.*)/,
+  );
+
+This is similar to the array version, except it uses the regex to
+match against all the methods provided by the delegatee. In order for
+this to work, you must provide an C<isa> parameter for the attribute,
+and it must be a class. Moose uses this to introspect the delegatee
+class and determine what methods it provides.
+
+You can use a role name as the value of C<handles>:
+
+  has 'uri' => (
+      is      => 'ro',
+      isa     => 'URI',
+      handles => 'HasURI',
+  );
+
+Moose will introspect the role to determine what methods it provides
+and create a mapping for each of those methods.
+
+Finally, you can also provide a sub reference to I<generate> a
+mapping. You probably won't need this version often (if ever). See the
+L<Moose> docs for more details on exactly how this works.
+
+=head1 MISSING ATTRIBUTES
+
+It is perfectly valid to delegate methods to an attribute which is not
+required, or can be undefined. In that case, Moose will throw a
+runtime error when a delegated method is called.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

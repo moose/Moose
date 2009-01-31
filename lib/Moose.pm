@@ -632,16 +632,6 @@ See the L<default option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/default> for more
 information.
 
-=item I<initializer> => Str
-
-This may be a method name (referring to a method on the class with
-this attribute) or a CODE ref.  The initializer is used to set the
-attribute value on an instance when the attribute is set during
-instance initialization (but not when the value is being assigned
-to). See the L<initializer option docs in
-Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
-information.
-
 =item I<clearer> => Str
 
 Allows you to clear the value, see the L<clearer option docs in
@@ -660,6 +650,15 @@ information.
 Automatically define lazy => 1 as well as builder => "_build_$attr", clearer =>
 "clear_$attr', predicate => 'has_$attr' unless they are already defined.
 
+=item I<initializer> => Str
+
+This may be a method name (referring to a method on the class with
+this attribute) or a CODE ref.  The initializer is used to set the
+attribute value on an instance when the attribute is set during
+instance initialization (but not when the value is being assigned
+to). See the L<initializer option docs in
+Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
+information.
 
 =back
 
@@ -978,6 +977,18 @@ not (UPDATE: so far so good).
 
 =back
 
+=head1 GETTING HELP
+
+We offer both a mailing list and a very active IRC channel.
+
+The mailing list is L<moose@perl.org>. You must be subscribed to send
+a message. To subscribe, send an empty message to
+L<moose-subscribe@perl.org>
+
+You can also visit us at L<#moose on
+irc.perl.org|irc://irc.perl.org/#moose>. This channel is quite active,
+and questions at all levels (on Moose-related topics ;) are welcome.
+
 =head1 ACKNOWLEDGEMENTS
 
 =over 4
@@ -1009,27 +1020,17 @@ This is the official web home of Moose, it contains links to our public SVN repo
 as well as links to a number of talks and articles on Moose and Moose related
 technologies.
 
-=item L<Moose::Cookbook> - How to cook a Moose
-
 =item The Moose is flying, a tutorial by Randal Schwartz
 
 Part 1 - L<http://www.stonehenge.com/merlyn/LinuxMag/col94.html>
 
 Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
 
-=item L<Class::MOP> documentation
-
-=item L<Moose::Util::TypeConstraints> for information about type constraints.
-
-=item The #moose channel on irc.perl.org
-
-=item The Moose mailing list - moose@perl.org
-
-=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/moose>
-
 =item Several Moose extension modules in the C<MooseX::> namespace.
 
 See L<http://search.cpan.org/search?query=MooseX::> for extensions.
+
+=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/moose>
 
 =back
 
