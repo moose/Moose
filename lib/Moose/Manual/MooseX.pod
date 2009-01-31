@@ -1,0 +1,245 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::MooseX - Recommended Moose Extensions
+
+=head1 MooseX?
+
+One of the great things about Moose is that it is easy to extend and
+override. You can use the meta-model API to do things your own way,
+add new features, and generally customize your Moose.
+
+Writing your own extensions does require a good understanding of the
+meta-model. You can start learning about thiswith the
+L<Moose::Manual::Introspection> docs. There are also several extensions
+recipes in the L<Moose::Cookbook>.
+
+Explaining how to write extensions is beyond the scope of this
+manual. Fortunately, lots of people have already written extensions
+and put them on CPAN for you.
+
+This document covers a few of the ones we like best.
+
+=head1 MooseX::AttributeHelpers
+
+If you only look at one extension, it should be this one. The name
+isn't the best, but what it does it provide the equivalent of
+delegation for all of Perl's native data types, such as array
+reference, hash references, numbers, strings, etc.
+
+This lets you create I<much> cleaner and fluent APIs.
+
+  package User;
+
+  use Moose;
+  use MooseX::AttributeHelpers;
+
+  has '_orders' => (
+      metaclass => 'Collection::Array',
+      is        => 'ro',
+      isa       => 'ArrayRef',
+      default   => sub { [] },
+      provides  => {
+          push     => 'add_order',
+          shift    => 'next_order',
+          elements => 'orders',
+      },
+  );
+
+Instead of directly exposing an array reference, we have three
+well-named, easy to use methods.
+
+=head1 MooseX::StrictConstructor
+
+By default, Moose lets you pass any old junk into a class's
+constructor. If you load C<MooseX::StrictConstructor>, your class will
+throw an error if it sees something it doesn't recognize;
+
+  package User;
+
+  use Moose;
+  use MooseX::StrictConstructor;
+
+  has 'name';
+  has 'email';
+
+  User->new( name => 'Bob', emali => 'bob@example.com' );
+
+With C<MooseX::StrictConstructor>, that typo ("emali") will cause a
+runtime error. Otherwise, the "emali" attribute would just be silently
+ignored.
+
+=head1 MooseX::Params::Validate
+
+We have high hopes for the future of C<MooseX::Method::Signatures> and
+C<MooseX::Declare>. However, for now we recommend the decidely more
+clunky (but also faster and simpler) C<MooseX::Params::Validate>. This
+module lets you apply Moose types and coercions to any method
+arguments.
+
+  package User;
+
+  use Moose;
+  use MooseX::Params::Validate qw( validatep );
+
+  sub login {
+      my $self = shift;
+      my ($password)
+          = validatep( \@_, password => { isa => 'Str', required => 1 } );
+
+      ...
+  }
+
+=head1 MooseX::Getopt
+
+This is a role which adds a C<new_with_options> method to your
+class. This is a constructor that takes the command line options and
+uses them to populate attributes.
+
+Thia makes writing a command-line application as a module trivially
+simple:
+
+  package App::Foo;
+
+  use Moose;
+  with 'MooseX::Getopt';
+
+  has 'input' => (
+      is       => 'ro',
+      isa      => 'Str',
+      required => 1
+  );
+
+  has 'output' => (
+      is       => 'ro',
+      isa      => 'Str',
+      required => 1
+  );
+
+  sub run { ... }
+
+Then in the script that gets run we have:
+
+  use App::Foo;
+
+  App::Foo->new_with_options->run;
+
+=head1 MooseX::Singleton
+
+To be honest, using a singleton is often a hack, but it sure is a
+handy hack. C<MooseX::Singleton> lets you have a Moose class that's a
+singleton:
+
+  package Config;
+
+  use MooseX::Singleton; # instead of Moose
+
+  has 'cache_dir' => ( ... );
+
+It's that simple.
+
+=head1 EXTENSIONS TO CONSIDER
+
+There are literally dozens of other extensions on CPAN. These are a
+few to consider. We're not quite ready to recommend them outright,
+though. There's a couple reasons for this. One, they may be very
+specialized. Two, they may be immature. Three, they may not be quite
+right yet. Four, we may not all agree they're such a great idea.
+
+=head2 MooseX::Declare
+
+Extends Perl with Moose-based keywords using C<Devel::Declare>. Very
+cool, but still new and experimental.
+
+  class User {
+
+      has 'name'  => ( ... );
+      has 'email' => ( ... );
+
+      method login (Str $password) { ... }
+  }
+
+=head2 MooseX::Types
+
+This extension helps you build a type library for your application. It
+also lets you pre-declare type names and use them as barewords.
+
+  use MooseX::Types -declare => ['PosInt'];
+  use MooseX::Types::Moose 'Int';
+
+  subtype PositiveInt
+      => as Int,
+      => where { $_ > 0 }
+      => message {"Int is not larger than 0"};
+
+One nice feature is the those bareword names are actually namespaces
+in Moose's type registry, so multiple applications can use the same
+bareword names, even if the type definitions differ.
+
+=head2 MooseX::Types::Structured
+
+This extension builds on top of C<MooseX::Types> to let you declare
+complex data structure types.
+
+  use MooseX::Types -declare => [ qw( Name Color ) ];
+  use MooseX::Types::Moose qw(Str Int);
+  use MooseX::Types::Structured qw(Dict Tuple Optional);
+
+  subtype Name
+      => as Dict[ first => Str, middle => Optional[Str], last => Str ];
+
+  subtype Color
+      => as Tuple[ Int, Int, Int, Optional[Int] ];
+
+Of course, you could always use objects to represent these sorts of
+things too.
+
+=head2 MooseX::ClassAttribute
+
+This extension provides class attributes for Moose classes. The
+declared class attributes are introspectable just like regular Moose
+attributes.
+
+  package User;
+
+  use Moose;
+  use MooseX::ClassAttribute;
+
+  has 'name' => ( ... );
+
+  class_has 'Cache' => ( ... );
+
+=head2 MooseX::Daemonize
+
+This is a role that provides a number of methods useful for creating a
+daemon, including methods for starting and stopping, managing a PID
+file, and signal handling.
+
+=head2 MooseX::Role::Parameterized
+
+If you find yourself wanting a role that customizes itself for each
+consumer, this is the tool for you. With this module, you can create a
+role that accepts parameters and generates attributes, methods, etc on
+a customized basis for each consumer.
+
+=head2 MooseX::POE
+
+This is a small wrapper that ties together a Moose class with
+C<POE::Session>, and gives you an C<event> sugar function to declare
+event handlers.
+
+=head1 AUTHOR
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2008 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
