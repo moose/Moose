@@ -212,10 +212,10 @@ Now our report has some content:
   </document>
 
 What makes this combination of C<augment> and C<inner()> special is
-that it allows us to have methods which are called from I<parent
-(least specific) to child (most specific). This inverts the normal
-order, where the child's method is called first, and it in turn will
-call C<< $self->SUPER::method >> to call the parent.
+that it allows us to have methods which are called from parent (least
+specific) to child (most specific). This inverts the normal order,
+where the child's method is called first, and it in turn will call C<<
+$self->SUPER::method >> to call the parent.
 
 Note that in C<Report::IncomeAndExpenses> we call C<inner()> again. If
 the object is an instance of C<Report::IncomeAndExpenses> then this
