@@ -85,11 +85,11 @@ sub create_type_constraint_union {
     }
     
     (scalar @type_constraint_names >= 2)
-        || Moose->throw_error("You must pass in at least 2 type names to make a union");
+        || __PACKAGE__->_throw_error("You must pass in at least 2 type names to make a union");
 
     my @type_constraints = map {
         find_or_parse_type_constraint($_) ||
-         Moose->throw_error("Could not locate type constraint ($_) for the union");
+         __PACKAGE__->_throw_error("Could not locate type constraint ($_) for the union");
     } @type_constraint_names;
 
     return Moose::Meta::TypeConstraint::Union->new(
@@ -102,7 +102,7 @@ sub create_parameterized_type_constraint {
     my ($base_type, $type_parameter) = _parse_parameterized_type_constraint($type_constraint_name);
 
     (defined $base_type && defined $type_parameter)
-        || Moose->throw_error("Could not parse type name ($type_constraint_name) correctly");
+        || __PACKAGE__->_throw_error("Could not parse type name ($type_constraint_name) correctly");
 
     if ($REGISTRY->has_type_constraint($base_type)) {
         my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
@@ -111,7 +111,7 @@ sub create_parameterized_type_constraint {
             $type_parameter
         );
     } else {
-        Moose->throw_error("Could not locate the base type ($base_type)");
+        __PACKAGE__->_throw_error("Could not locate the base type ($base_type)");
     }
 }
 
@@ -134,7 +134,7 @@ sub create_class_type_constraint {
 
     # too early for this check
     #find_type_constraint("ClassName")->check($class)
-    #    || Moose->throw_error("Can't create a class type constraint because '$class' is not a class name");
+    #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
 
     my %options = (
         class => $class,
@@ -152,7 +152,7 @@ sub create_role_type_constraint {
 
     # too early for this check
     #find_type_constraint("ClassName")->check($class)
-    #    || Moose->throw_error("Can't create a class type constraint because '$class' is not a class name");
+    #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
 
     my %options = (
         role => $role,
@@ -252,7 +252,7 @@ sub find_type_constraint {
 
 sub register_type_constraint {
     my $constraint = shift;
-    Moose->throw_error("can't register an unnamed type constraint") unless defined $constraint->name;
+    __PACKAGE__->_throw_error("can't register an unnamed type constraint") unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
 }
@@ -334,7 +334,7 @@ sub enum {
         $type_name = undef;
     }
     (scalar @values >= 2)
-        || Moose->throw_error("You must have at least two values to enumerate through");
+        || __PACKAGE__->_throw_error("You must have at least two values to enumerate through");
     my %valid = map { $_ => 1 } @values;
 
     register_type_constraint(
@@ -413,7 +413,7 @@ sub _install_type_coercions ($$) {
     my ($type_name, $coercion_map) = @_;
     my $type = find_type_constraint($type_name);
     (defined $type)
-        || Moose->throw_error("Cannot find type '$type_name', perhaps you forgot to load it.");
+        || __PACKAGE__->_throw_error("Cannot find type '$type_name', perhaps you forgot to load it.");
     if ($type->has_coercion) {
         $type->coercion->add_type_coercions(@$coercion_map);
     }
@@ -472,7 +472,7 @@ sub _install_type_coercions ($$) {
             push @rv => $1;
         }
         (pos($given) eq length($given))
-            || Moose->throw_error("'$given' didn't parse (parse-pos="
+            || __PACKAGE__->_throw_error("'$given' didn't parse (parse-pos="
                      . pos($given)
                      . " and str-length="
                      . length($given)
@@ -645,7 +645,7 @@ sub get_all_parameterizable_types { @PARAMETERIZABLE_TYPES }
 sub add_parameterizable_type {
     my $type = shift;
     (blessed $type && $type->isa('Moose::Meta::TypeConstraint::Parameterizable'))
-        || Moose->throw_error("Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type");
+        || __PACKAGE__->_throw_error("Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type");
     push @PARAMETERIZABLE_TYPES => $type;
 }
 
@@ -656,6 +656,12 @@ sub add_parameterizable_type {
 {
     my @BUILTINS = list_all_type_constraints();
     sub list_all_builtin_type_constraints { @BUILTINS }
+}
+
+sub _throw_error {
+    require Moose;
+    unshift @_, 'Moose';
+    goto &Moose::throw_error;
 }
 
 1;

@@ -11,6 +11,12 @@ Revision history for Perl extension Moose
         creates the parent as a class type. This may not be what you
         want, but is less broken than before. (Dave Rolsky)
 
+    * Moose::Util::TypeConstraints
+      - This module tried throw errors by calling Moose->throw_error,
+        but it did not ensure that Moose was loaded first. This could
+        cause very unhelpful errors when it tried to throw an error
+        before Moose was loaded. (Dave Rolsky)
+
 0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
