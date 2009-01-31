@@ -151,10 +151,10 @@ is orthogonal to inheritance.
 Moose's type system lets you strictly define what values an attribute
 can contain.
 
-=item L<Moose::Manual::Introspection>
+=item L<Moose::Manual::MOP>
 
-Moose's introspection system (primarily from C<Class::MOP>) lets you
-ask classes about their parents, children, methods, attributes, etc.
+Moose's meta API system lets you ask classes about their parents,
+children, methods, attributes, etc.
 
 =item L<Moose::Manual::MooseX>
 
