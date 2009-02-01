@@ -1,12 +1,12 @@
 use strict;
 use warnings;
 use inc::Module::Install;
-use 5.008;
+use 5.008001;
 
 check_conflicts();
 
 name 'Moose';
-perl_version '5.008';
+perl_version '5.008001';
 all_from 'lib/Moose.pm';
 license 'perl';
 
