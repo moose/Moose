@@ -381,6 +381,10 @@ sub _create_type_constraint ($$$;$$) {
                 . " and cannot be created again in "
                 . $pkg_defined_in )
             if defined $type;
+
+        $name =~ /^[\w:\.]+$/
+            or die qq{$name contains invalid characters for a type name.}
+            . qq{Names can contain alphanumeric character, ":", and "."\n};
     }
 
     my %opts = (
@@ -439,7 +443,7 @@ sub _install_type_coercions ($$) {
 
     use re "eval";
 
-    my $valid_chars = qr{[\w:]};
+    my $valid_chars = qr{[\w:\.]};
     my $type_atom   = qr{ $valid_chars+ };
 
     my $any;
@@ -787,6 +791,9 @@ this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
 
 =head2 Type Constraint Naming
+
+Type name declared via this module can only contain alphanumeric
+characters, colons (:), and periods (.).
 
 Since the types created by this module are global, it is suggested
 that you namespace your types just as you would namespace your

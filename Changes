@@ -17,6 +17,13 @@ Revision history for Perl extension Moose
         cause very unhelpful errors when it tried to throw an error
         before Moose was loaded. (Dave Rolsky)
 
+    * Moose::Util::TypeConstraints
+      - You could declare a name with subtype such as "Foo!Bar" that
+        would be allowed, but if you used it in a parameterized type
+        such as "ArrayRef[Foo!Bar]" it wouldn't work. We now do some
+        vetting on names created via the sugar functions, so that they
+        can only contain alphanumerics, ":", and ".".
+
 0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
