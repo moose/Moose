@@ -1,6 +1,12 @@
 Revision history for Perl extension Moose
 
 0.66
+    * Moose::Manual
+      - This is a brand new, extensive manual for Moose. This aims to
+        provide a complete introduction to all of Moose's
+        features. This work was funded as part of the Moose doc grant
+        from TPF. (Dave Rolsky)
+
     * Moose::Meta::Attribute
       - Added a delegation_metaclass method to replace a hard-coded
         use of Moose::Meta::Method::Delegation. (Dave Rolsky)
@@ -22,7 +28,7 @@ Revision history for Perl extension Moose
         would be allowed, but if you used it in a parameterized type
         such as "ArrayRef[Foo!Bar]" it wouldn't work. We now do some
         vetting on names created via the sugar functions, so that they
-        can only contain alphanumerics, ":", and ".".
+        can only contain alphanumerics, ":", and ".". (Dave Rolsky)
 
 0.65 Thu, January 22, 2008
     * Moose and Moose::Meta::Method::Overridden
