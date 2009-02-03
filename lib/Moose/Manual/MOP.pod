@@ -6,30 +6,31 @@ Moose::Manual::MOP - The Moose (and Class::MOP) Meta API
 
 =head1 INTRODUCTION
 
-Moose provides a powerful introspection API by building on top of
+Moose provides a powerful introspection API built on top of
 C<Class::MOP>. "MOP" stands for Meta-Object Protocol. In plainer
-english, a MOP is an API for examing classes, attributes, methods, and
-so on.
+english, a MOP is an API for performing introspection on classes,
+attributes, methods, and so on.
 
 In fact, it is C<Class::MOP> that provides many of Moose's core
 features, including attributes, before/after/around method modifiers,
-and immutability. In most cases, Moose subclasses an existing
-C<Class::MOP> class to extend. Moose also adds some entirely new
-features, including roles, method augmentation, and types.
+and immutability. In most cases, Moose takes an existing C<Class::MOP>
+class and subclasses it to add additional features. Moose also adds
+some entirely new features of its own, such as roles, the augment
+modifier, and types.
 
-It's important to know about C<Class::MOP> so you know what docs to
-read. Often times, the introspection method that you're looking for is
-defined in a C<Class::MOP> class, rather than Moose itself.
+If you're interested in the MOP, it's important to know about
+C<Class::MOP> so you know what docs to read. Often, the introspection
+method that you're looking for is defined in a C<Class::MOP> class,
+rather than Moose itself.
 
 The MOP provides more than just I<read-only> introspection. It also
 lets you add attributes, method, apply roles, and much more. In fact,
 all of the declarative Moose sugar is simply a thin layer on top of
 the MOP API.
 
-The meta API is useful for a lot of things. If you want to write Moose
-extensions, you'll definitely need to learn about the meta API. The
-introspection methods are also handy if you want to do something like
-generate docs or inheritance graphs, or do some other sort of runtime
+If you want to write Moose extensions, you'll need to learn some of
+the MOP API. The introspection methods are also handy if you want to
+generate docs or inheritance graphs, or do some other runtime
 reflection.
 
 This document is not a complete reference for the meta API. We're just
@@ -39,9 +40,9 @@ docs, and possibly even dig into the Moose guts a bit.
 
 =head1 GETTING STARTED
 
-The typical entry point to the meta API is a class's metaclass object,
-which is a L<Moose::Meta::Class>. This is available by calling the
-C<meta> method on a class or object:
+The usual entry point to the meta API is through a class's metaclass
+object, which is a L<Moose::Meta::Class>. This is available by calling
+the C<meta> method on a class or object:
 
   package User;
 
@@ -51,18 +52,13 @@ C<meta> method on a class or object:
 
 The C<meta> method is added to a class when it uses Moose.
 
-You can also use C<Class::MOP::get_metaclass_by_name($name)> to get a
+You can also use C<< Class::MOP::Class->initialize($name) >> to get a
 metaclass object for any class. This is safer than calling C<<
 $class->meta >> when you're not sure that the class has a meta method.
 
-If you want a metaclass object for a class that I<isn't> using Moose,
-a good idiom to use is:
-
-  my $meta = Class::MOP::Class->initialize($class_name);
-
-The C<< Class::MOP::Class->initialize >> will return an existing
-metaclass if one has already been created (via Moose or some other
-means). If it hasn't, it will return a new C<Class::MOP::Class>
+The C<< Class::MOP::Class->initialize >> constructor will return an
+existing metaclass if one has already been created (via Moose or some
+other means). If it hasn't, it will return a new C<Class::MOP::Class>
 object. This will work for classes that use Moose, meta API classes,
 and classes which don't use Moose at all.
 
@@ -77,8 +73,9 @@ attributes:
   }
 
 The C<get_all_attributes> method is documented in
-C<Class::MOP::Class>. It returns a list of L<Moose::Meta::Attribute>
-objects for attributes defined in the class and its parents.
+C<Class::MOP::Class>. For Moose-using classes, it returns a list of
+L<Moose::Meta::Attribute> objects for attributes defined in the class
+and its parents.
 
 You can also get a list of methods:
 
@@ -104,10 +101,26 @@ We can look at a class's parent classes and subclasses:
 Note that both these methods return class I<names>, not metaclass
 objects.
 
-=head1 CHANGING THE OBJECT
+=head1 ALTERING CLASSES WITH THE MOP
 
-You can also use the metaclass object to change the class directly, by
-adding attributes, methods, etc.
+The metaclass object can change the class directly, by adding
+attributes, methods, etc.
+
+As an example, we can add a method to a class:
+
+  $meta->add_method( 'say' => sub { print @_, "\n" } );
+
+Or an attribute:
+
+  $meta->add_attribute(
+      name => 'size',
+      is   => 'rw',
+      isa  => 'Int',
+  );
+
+Obviously, this is much more cumbersome than using Perl syntax or
+Moose sugar for defining methods and attributes, but this API allows
+for very powerful extensions.
 
 You might remember that we've talked about making classes immutable
 elsewhere in the manual. This is a good practice. However, once a
@@ -122,27 +135,11 @@ However, the most common use for this part of of the meta API is as
 part of Moose extensions. These extensions should assume that they are
 being run before you make a class immutable.
 
-As an example, we can add a method to a class:
-
-  $meta->add_method( 'say' => sub { print @_, "\n" } );
-
-Or an attribute:
-
-  $meta->add_attribute(
-      name => 'size',
-      is   => 'rw',
-      isa  => 'Int',
-  );
-
-Obviously, this is much more cumbersome than the normal way of
-defining methods and attributes, but being able to do this via an API
-makes for very powerful extensions.
-
 =head1 GOING FURTHER
 
-We recommend that you take a look at all of the "Meta" and "Extending"
-recipes in the L<Moose::Cookbook>. These show various practical
-applications of the MOP.
+If you're interested in extending moose, we recommend reading all of
+the "Meta" and "Extending" recipes in the L<Moose::Cookbook>. Those
+recipes show various practical applications of the MOP.
 
 If you'd like to write your own extensions, one of the best ways to
 learn more about this is to look at other similar extensions to see
