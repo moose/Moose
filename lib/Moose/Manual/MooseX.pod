@@ -72,7 +72,7 @@ silently ignored.
 =head1 MooseX::Params::Validate
 
 We have high hopes for the future of C<MooseX::Method::Signatures> and
-C<MooseX::Declare>. However, for now we recommend the decidely more
+C<MooseX::Declare>. However, for now we recommend the decidedly more
 clunky (but also faster and simpler) C<MooseX::Params::Validate>. This
 module lets you apply Moose types and coercions to any method
 arguments.

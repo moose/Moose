@@ -12,8 +12,8 @@ powerful class simply by declaring attributes. In fact, it's possible
 to have classes that consist solely of attribute declarations.
 
 An attribute is a property that every member of a class has. For
-example, we might say that "every Person object has a first name and
-last name". Attributes can be optional, so that we can say "some Person
+example, we might say that "every C<Person> object has a first name and
+last name". Attributes can be optional, so that we can say "some C<Person>
 objects have a social security number (and some don't)".
 
 At its simplest, an attribute can be thought of as a named value (as
@@ -33,7 +33,7 @@ Use the C<has> function to declare an attribute:
 
   has 'first_name' => ( is => 'rw' );
 
-This says that all person objects have an optional read-write
+This says that all C<Person> objects have an optional read-write
 "first_name" attribute.
 
 =head2 Read-write Vs Read-only
@@ -57,8 +57,9 @@ you declared your attribute as C<ro> then your accessor will be
 read-only. If you declared it read-write, you get a read-write
 accessor. Simple.
 
-Given our Person example above, we now have a single C<first_name>
-accessor that can read or write a person object's first name.
+Given our C<Person> example above, we now have a single C<first_name>
+accessor that can read or write a C<Person> object's C<first_name>
+attribute's value.
 
 If you want, you can also explicitly specify the method names to be
 used for reading and writing an attribute's value. This is
@@ -101,7 +102,7 @@ you want to access this information, you must define clearer and
 predicate methods for an attribute.
 
 A predicate method tells you whether or not a given attribute is
-currently set. Note an attribute can be explicitly set to undef or
+currently set. Note an attribute can be explicitly set to C<undef> or
 some other false value, but the predicate will return true.
 
 The clearer method unsets the attribute. This is I<not> the
@@ -156,9 +157,9 @@ required, simply set the C<required> option to true:
   );
 
 There are a couple caveats worth mentioning in regards to what
-required actually means.
+"required" actually means.
 
-Basically, all it says is that this attribute (name) must be provided
+Basically, all it says is that this attribute (C<name>) must be provided
 to the constructor. It does not say anything about its value, so it
 could be C<undef>.
 
@@ -186,7 +187,7 @@ for the C<default> option:
   );
 
 If the size attribute is not provided to the constructor, then it ends
-up being set to "medium":
+up being set to C<medium>:
 
   my $person = Person->new();
   $person->size; # medium
