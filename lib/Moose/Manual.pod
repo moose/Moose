@@ -4,28 +4,30 @@
 
 Moose::Manual - What is Moose, and how do I use it?
 
-=head2 DESCRIPTION
+=head1 WHAT IS MOOSE?
 
-Go read L<Moose::Manual>. This POD document still exists for the
-benefit of anyone out there who might've linked to it in the past.
+Moose is a I<complete> object system for Perl 5. Consider any modern
+object-oriented language (which Perl 5 definitely isn't). It provides
+keywords for attribute declaration, object construction, inheritance,
+and maybe more. These keywords are part of the language, and you don't
+care how they are implemented.
 
 Moose aims to do the same thing for Perl 5 OO. We can't actually
 create new keywords, but we do offer "sugar" that looks a lot like
-them. More importantly, with Moose, you I<declaratively define> your
-class, without needing to know about blessed hashrefs, accessor
-methods, and so on.
+them. More importantly, with Moose, you I<define your class
+declaratively>, without needing to know about blessed hashrefs,
+accessor methods, and so on.
 
-Moose helps you define the I<logical> structure of your classes, so
-you can focus on "what" rather than "how". With Moose, a class
-definition reads like a list of very concise English sentences.
+With Moose, you can concentrate on the I<logical> structure of your
+classes, focusing on "what" rather than "how". A class definition with
+Moose reads like a list of very concise English sentences.
 
 Moose is built in top of C<Class::MOP>, a meta-object protocol (aka
 MOP). Using the MOP, Moose provides complete introspection for all
 Moose-using classes. This means you can ask classes about their
 attributes, parents, children, methods, etc., all using a well-defined
-API. The MOP abstracts away tedious digging about in the Perl symbol
-table, looking at C<@ISA> vars, and all the other crufty Perl tricks
-we know and love(?).
+API. The MOP abstracts away the symbol table, looking at C<@ISA> vars,
+and all the other crufty Perl tricks we know and love(?).
 
 Moose is based in large part on the Perl 6 object system, as well as
 drawing on the best ideas from CLOS, Smalltalk, and many other
@@ -34,12 +36,11 @@ languages.
 =head1 WHY MOOSE?
 
 Moose makes Perl 5 OO both simpler and more powerful. It encapsulates
-all the tricks of Perl 5 power users in high-level declarative APIs
-which are easy to use, and doesn't require any special knowledge of
-how Perl works under the hood.
+Perl 5 power tools in high-level declarative APIs which are easy to
+use. Best of all, you don't need to be a wizard to use it.
 
-If you want to dig about in the guts, Moose lets you do that too, by
-using and extending its powerful introspection API.
+But if you want to dig about in the guts, Moose lets you do that too,
+by using and extending its powerful introspection API.
 
 =head1 AN EXAMPLE
 
@@ -168,9 +169,9 @@ section is for you.
 
 =item Another object system!?!?
 
-Yes, I know there are many, many ways to build objects in Perl 5, many
-of them based on inside-out objects and other such things. Moose is
-different because it is not a new object system for Perl 5, but
+Yes, we know there are many, many ways to build objects in Perl 5,
+many of them based on inside-out objects and other such things. Moose
+is different because it is not a new object system for Perl 5, but
 instead an extension of the existing object system.
 
 Moose is built on top of L<Class::MOP>, which is a metaclass system
@@ -221,14 +222,15 @@ Nuff Said.
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Dave Rolsky E<lt>autarch@urth.orgE<gt> and Stevan Little
-E<lt>stevan@iinteractive.comE<gt>
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2008 by Infinity Interactive, Inc.
+Copyright 2008-2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
