@@ -89,7 +89,7 @@ of object in the parent class.
 
 =head2 Use MooseX::AttributeHelpers Instead of auto_deref
 
-The C<auto_deref> feature is a big troublesome. Directly exposing a
+The C<auto_deref> feature is a bit troublesome. Directly exposing a
 complex attribute is ugly. Instead, consider using
 C<MooseX::AttributeHelpers> to define an API that exposes those pieces
 of functionality that need exposing. Then you can expose just the
