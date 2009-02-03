@@ -139,6 +139,20 @@ singleton:
 
 It's that simple.
 
+=head1 MooseX::MetaDescription
+
+This module lets you attach an arbitrary hash reference of metadata to
+an attribute.
+
+  has 'image_name' => (
+      metaclass   => 'MooseX::MetaDescription::Meta::Attribute',
+      is          => 'ro',
+      isa         => 'Str',
+      description => {
+          html_display => 'Image',
+      }
+  );
+
 =head1 EXTENSIONS TO CONSIDER
 
 There are literally dozens of other extensions on CPAN. These are a
