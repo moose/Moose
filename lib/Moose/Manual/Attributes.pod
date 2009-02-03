@@ -6,12 +6,12 @@ Moose::Manual::Attribute - Object attributes with Moose
 
 =head1 INTRODUCTION
 
-Moose has many attribute-related features, and attributes are probably
-the single most useful aspect of Moose. You can do a lot in a class
-just by declaring attributes. In fact, it's quite possible to have
-classes that consist solely of attribute declarations.
+Moose attributes have many properties, and attributes are probably the
+single most powerful and flexible part of Moose. You can create a
+powerful class simply by declaring attributes. In fact, it's possible
+to have classes that consist solely of attribute declarations.
 
-An Attribute is a property that every member of a class has. For
+An attribute is a property that every member of a class has. For
 example, we might say that "every Person object has a first name and
 last name". Attributes can be optional, so that we can say "some Person
 objects have a social security number (and some don't)".
@@ -19,6 +19,9 @@ objects have a social security number (and some don't)".
 At its simplest, an attribute can be thought of as a named value (as
 in a hash) that can be read and set. However, attributes can also have
 defaults, type constraints, delegation and much more.
+
+In other languages, attributes are also referred to as slots or
+properties.
 
 =head1 ATTRIBUTE OPTIONS
 
@@ -35,14 +38,14 @@ This says that all person objects have an optional read-write
 
 =head2 Read-write Vs Read-only
 
-The options passed to C<has> define the details of the
-attribute. There are a lot of options you can put here, but in the
-simplest form you just need to include C<is>, which can be either
-C<rw> (read-write) or C<ro> (read-only).
+The options passed to C<has> define the properties of the
+attribute. There are a many options, but in the simplest form you just
+need to set C<is>, which can be either C<rw> (read-write) or C<ro>
+(read-only).
 
-(In fact, you could even omit C<is>, but that leaves you with an
-attribute that has no accessors, which is pointless unless you're
-doing some deep, dark magic).
+(In fact, you could even omit C<is>, but that gives you an attribute
+that has no accessors, which is pointless unless you're doing some
+deep, dark magic).
 
 =head2 Accessor Methods
 
@@ -87,20 +90,19 @@ C<writer> methods:
 
 If you're thinking that doing this over and over would be insanely
 tedious, you're right! Fortunately, Moose provides a powerful
-extension system that lets you do things like override the default
-accessor method conventions. See L<Moose::Manual::MooseX> for more
-details.
+extension system that lets override the default naming
+conventions. See L<Moose::Manual::MooseX> for more details.
 
 =head2 Predicate and Clearer Methods
 
 Moose allows you to explicitly distinguish between a false or
-undefined attribute value and an attribute which is not set. If you
-want to be able access this information, you must define clearer and
+undefined attribute value and an attribute which has not been set. If
+you want to access this information, you must define clearer and
 predicate methods for an attribute.
 
 A predicate method tells you whether or not a given attribute is
-currently set. Note that even if the attribute was explicitly set to
-undef or some other false value, the predicate will return true.
+currently set. Note an attribute can be explicitly set to undef or
+some other false value, but the predicate will return true.
 
 The clearer method unsets the attribute. This is I<not> the
 same as setting the value to C<undef>, but you can only distinguish
@@ -140,8 +142,7 @@ predicate, and clearer method.
   $person2->has_ssn; # true
 
 By default, Moose does not make a predicate or clearer for you. You
-must explicitly provide method names for these options if you want
-them.
+must explicitly provide names for them.
 
 =head2 Required or Not?
 
@@ -192,7 +193,7 @@ up being set to "medium":
   $person->has_size; # true
 
 You can also provide a subroutine reference for C<default>. This
-reference will be called a method on the object.
+reference will be called as a method on the object.
 
   has 'size' => (
       is => 'rw',
@@ -206,8 +207,8 @@ will be called for every new object created.
 
 Of course, if it's called during object construction, it may be called
 before other attributes have been set. If your default is dependent on
-other parts of the object's state, you can make the default c<lazy>,
-which is covered in the next section.
+other parts of the object's state, you can make the attribute
+C<lazy>. Laziness is covered in the next section.
 
 If you want to use a reference of any sort as the default value, you
 must return it from a subroutine. This is necessary because otherwise
@@ -265,15 +266,15 @@ C<lazy>:
       builder => '_build_size',
   );
 
-When C<lazy> is true, the attribute is not populated until the reader
+When C<lazy> is true, the default is not generated until the reader
 method is called, rather than at object construction time. There are
 several reasons you might choose to do this.
 
 First, if the default value for this attribute depends on some other
 attributes, then the attribute I<must> be C<lazy>. During object
 construction, defaults are not generated in a predictable order, so
-you cannot count on some other attribute being populated in a non-lazy
-default subroutine.
+you cannot count on some other attribute being populated when
+generating a default.
 
 Second, there's often no reason to calculate a default before it's
 needed. Making an attribute C<lazy> lets you defer the cost until the
@@ -340,25 +341,25 @@ Moose's internal defaults.
 By default, each attribute can be passed by name to the class's
 constructor. On occassion, you may want to use a different name for
 the constructor parameter. You may also want to make an attribute
-unsettable from the constructor.
+unsettable via the constructor.
 
-Both of these things can be done by providing a value for the
-C<init_arg> option:
+Both of these goals can be accomplished with the C<init_arg> option:
 
   has 'bigness' => (
       is       => 'rw',
       init_arg => 'size',
   );
 
-Now we have an attribute named bigness, but to set it during object
-construction we pass C<size> to the constructor.
+Now we have an attribute named bigness, but we pass C<size> to the
+constructor.
 
-Even more useful is the ability to disable setting attribute. This is
-particularly handy for private attributes:
+Even more useful is the ability to disable setting an attribute via
+the constructor. This is particularly handy for private attributes:
 
   has '_genetic_code' => (
-      is       => 'rw',
-      init_arg => undef,
+      is         => 'rw',
+      lazy_build => 1,
+      init_arg   => undef,
   );
 
 By setting the C<init_arg> to C<undef>, we make it impossible to set
@@ -436,7 +437,7 @@ This adds a new method, C<hair_color_hex>. When someone calls
 C<hair_color_hex>, internally, the object just calls C<<
 $self->hair_color->as_hex_string >>.
 
-See L<Moose::Manual::Delegation> for more details on how to set up
+See L<Moose::Manual::Delegation> for documentation on how to set up
 delegation methods.
 
 =head2 Metaclass and traits
@@ -529,8 +530,7 @@ Now the C<first_name> attribute in C<LazyPerson> is lazy, and defaults
 to C<'Bill'>.
 
 We recommend that you exercise caution when changing the type (C<isa>)
-of an inherited attribute. It's best to only make the new type a
-subtype of the one accepted by the parent.
+of an inherited attribute.
 
 =head1 MORE ON ATTRIBUTES
 
@@ -556,12 +556,6 @@ You can provide a piece of documentation as a string for an attribute:
 
 Moose does absolutely nothing with this information other than store
 it.
-
-As an alternative, you might want to look at the
-C<MooseX::MetaDescription> module, which lets you attach a
-"description" to each attribute. This description is a hashref that
-can include meta-information intended for use in other code, as well
-as documentation information.
 
 =head2 The C<auto_deref> Option
 
