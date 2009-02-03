@@ -4,7 +4,7 @@ Revision history for Perl extension Moose
     * Moose::Manual
       - This is a brand new, extensive manual for Moose. This aims to
         provide a complete introduction to all of Moose's
-        features. This work was funded as part of the Moose doc grant
+        features. This work was funded as part of the Moose docs grant
         from TPF. (Dave Rolsky)
 
     * Moose::Meta::Attribute
