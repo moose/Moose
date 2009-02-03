@@ -9,13 +9,14 @@ Moose::Manual::Roles - Roles, an Alternative to Deep Hierarchies and Base Classe
 A role is something that classes do. Usually, a role encapsulates some
 piece of behavior or state that can be shared between classes. It is
 important to understand that I<roles are not classes>. Roles do not
-participate in inheritance, and a role cannot be instantiated.
+participate in inheritance, and a role cannot be instantiated. We
+sometimes say that classes I<consume> roles.
 
 Instead, a role is I<composed> into a class. In practical terms, this
 means that all of the methods and attributes defined in a role are
-added directly to (we sometimes say ("flattened into") the class that
-consumes the role. These attributes and methods then show up in the
-class as if they were defined directly in the class.
+added directly to (we sometimes say "flattened into") the class that
+consumes the role. These attributes and methods then appear as if they
+were defined in the class itself.
 
 Moose roles are similar to mixins or interfaces in other languages.
 
@@ -122,18 +123,14 @@ methods:
 If we try to consume this role in a class that does not have a
 C<break> method, we will get an exception.
 
-Note that attribute-generated accessors do not satisfy the requirement
-that the named method exists. Similarly, a method modifier does not
-satisfy this requirement either. This may change in the future.
-
-You can also see that we added a method modifier on
-C<break>. Basically, we want consuming classes to implement their own
-logic for breaking, but we make sure that the C<is_broken> attribute
-is always set to true when C<break> is called.
+You can see that we added a method modifier on C<break>. We want
+classes that consume this role to implement their own logic for
+breaking, but we make sure that the C<is_broken> attribute is always
+set to true when C<break> is called.
 
   package Car
 
-      use Moose;
+  use Moose;
 
   with 'Breakable';
 
@@ -233,6 +230,21 @@ implicit in consuming a role. Our C<FragileDancer> class does both the
 C<Breakable> and C<BreakDancer>, but does not provide a C<break>
 method. If some API expects an object that does one of those roles, it
 probably expects it to implement that method.
+
+In some use cases we might alias and exclude methods from roles, but
+then provide a method of the same name in the class itself.
+
+=head1 ROLE EXCLUSION
+
+A role can say that it cannot be combined with some other role. This
+should be used with great caution, since it limits the re-usability of
+the role.
+
+  package Breakable;
+
+  use Moose::Role;
+
+  excludes 'BreakDancer';
 
 =head1 AUTHOR
 
