@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.66
+0.66 Tue, February 3, 2009
     * Moose::Manual
       - This is a brand new, extensive manual for Moose. This aims to
         provide a complete introduction to all of Moose's
