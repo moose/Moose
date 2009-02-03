@@ -2,11 +2,12 @@
 
 =head1 NAME
 
-Moose::Intro - Got renamed to Moose::Manual
+Moose::Intro - Expanded into Moose::Manual, so go read that
 
 =head2 DESCRIPTION
 
-Go read L<Moose::Manual>. This POD document still exists for the
-benefit of anyone out there who might've linked to it in the past.
+The intro has been replaced by L<Moose::Manual>. This POD document
+still exists for the benefit of anyone out there who might've linked
+to it in the past.
 
 =cut
