@@ -35,7 +35,7 @@ immutable speeds up a lot of things, most notably object construction.
 
 If you override the C<BUILDARGS> method in your class, make sure to
 play nice and call C<SUPER::BUILDARGS> to handle cases you're not
-checking for explicitly.q
+checking for explicitly.
 
 The default C<BUILDARGS> method in L<Moose::Object> handles both a
 list and hashref of named parameters correctly, and also checks for a

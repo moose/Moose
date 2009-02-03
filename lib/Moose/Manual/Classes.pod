@@ -66,7 +66,7 @@ classes, C<extends>:
 
   has 'username' => ( is => 'rw' );
 
-ote, that each call to C<extends> will I<reset> your parents. For
+Note that each call to C<extends> will I<reset> your parents. For
 multiple inheritance you must provide all the parents at once,
 C<extends 'Foo', 'Bar'>.
 

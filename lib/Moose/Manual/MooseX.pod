@@ -96,7 +96,7 @@ This is a role which adds a C<new_with_options> method to your
 class. This is a constructor that takes the command line options and
 uses them to populate attributes.
 
-Thia makes writing a command-line application as a module trivially
+This makes writing a command-line application as a module trivially
 simple:
 
   package App::Foo;
