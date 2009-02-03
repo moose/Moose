@@ -63,7 +63,7 @@ attribute's value.
 
 If you want, you can also explicitly specify the method names to be
 used for reading and writing an attribute's value. This is
-particularly handy when you'd like an attribute to be publically
+particularly handy when you'd like an attribute to be publicly
 readable, but only privately settable. For example:
 
   has 'weight' => (
@@ -340,7 +340,7 @@ Moose's internal defaults.
 =head2 Constructor Parameters (init_arg)
 
 By default, each attribute can be passed by name to the class's
-constructor. On occassion, you may want to use a different name for
+constructor. On occasion, you may want to use a different name for
 the constructor parameter. You may also want to make an attribute
 unsettable via the constructor.
 
@@ -543,7 +543,7 @@ get a more complete understanding of attribute features.
 =head1 A FEW MORE OPTIONS
 
 Moose has lots of attribute options. The ones listed below are
-superceded by some more modern features, but are covered for the sake
+superseded by some more modern features, but are covered for the sake
 of completeness.
 
 =head2 The C<documentation> option
@@ -561,7 +561,7 @@ it.
 =head2 The C<auto_deref> Option
 
 If your attribute is an array reference or hash reference, the
-C<auto_deref> option will make Moose de-reference the value when it is
+C<auto_deref> option will make Moose dereference the value when it is
 returned from the reader method:
 
   my %map = $object->mapping;

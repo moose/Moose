@@ -41,14 +41,14 @@ reference. This hash reference will be used to construct the object,
 so it should contain keys matching your attributes' names (well,
 C<init_arg>s).
 
-One common use for C<BUILDARGS> is to accomodate a non-hash(ref)
+One common use for C<BUILDARGS> is to accommodate a non-hash(ref)
 calling style. For example, we might want to allow our Person class to
 be called with a single argument of a social security number, C<<
 Person->new($ssn) >>.
 
 Without a C<BUILDARGS> method, Moose will complain, because it expects
 a hash or hash reference. We can use the C<BUILDARGS> method to
-accomodate this calling style:
+accommodate this calling style:
 
   sub BUILDARGS {
       my $class = shift;

@@ -157,7 +157,7 @@ You can also create new top-level types:
   type 'FourCharacters' => where { defined $_ && length $_ == 4 };
 
 In practice, this example is more or less the same as subtyping
-C<Str>, except you have to check defined-ness yourself.
+C<Str>, except you have to check definedness yourself.
 
 It's hard to find a case where you wouldn't want to subtype a very
 broad type like C<Defined>, C<Ref> or C<Object>.

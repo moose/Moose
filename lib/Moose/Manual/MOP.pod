@@ -8,7 +8,7 @@ Moose::Manual::MOP - The Moose (and Class::MOP) Meta API
 
 Moose provides a powerful introspection API built on top of
 C<Class::MOP>. "MOP" stands for Meta-Object Protocol. In plainer
-english, a MOP is an API for performing introspection on classes,
+English, a MOP is an API for performing introspection on classes,
 attributes, methods, and so on.
 
 In fact, it is C<Class::MOP> that provides many of Moose's core
