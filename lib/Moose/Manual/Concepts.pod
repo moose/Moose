@@ -11,11 +11,10 @@ between packages and classes, attributes and methods, constructors and
 methods, etc. With Moose, these are all conceptually separate things,
 even though under the hood they're implemented with plain old Perl.
 
-Our meta-object protocol (aka MOP) provides a well-defined
-introspection features for each of those concepts, and Moose in turn
-provides I<distinct> sugar for each of them. Moose also introduces
-additional concepts such as roles, method modifiers, and declarative
-delegation.
+Our meta-object protocol (aka MOP) provides well-defined introspection
+features for each of those concepts, and Moose in turn provides
+distinct sugar for each of them. Moose also introduces additional
+concepts such as roles, method modifiers, and declarative delegation.
 
 Knowing what these concepts mean in Moose-speak, and how they used to
 be done in old school Perl 5 OO is a good way to start learning to use
@@ -38,7 +37,7 @@ A class I<has> zero or more B<method modifiers>. These modifiers can
 apply to its own methods or methods that are inherited from its
 ancestors.
 
-A class I<does> zero or more B<roles>.
+A class I<does> (and I<consumes>) zero or more B<roles>.
 
 A class I<has> a B<constructor> and a B<destructor>. These are
 provided for you "for free" by Moose.
@@ -61,26 +60,25 @@ A class is usually analogous to a category of nouns, like "People" or
 =head2 Attribute
 
 An attribute is a property of the class that defines it. It I<always>
-has a name, and it I<may have> a number of other defining
-characteristics.
+has a name, and it I<may have> a number of other properties.
 
-These characteristics may include a read/write flag, a B<type>,
-accessor method names, B<delegations>, a default value, and more.
+These properties can include a read/write flag, a B<type>, accessor
+method names, B<delegations>, a default value, and more.
 
 Attributes I<are not> methods, but defining them causes various
 accessor methods to be created. At a minimum, a normal attribute will
-always have a reader accessor method. Many attributes have things like
-a writer method, clearer method, and predicate method ("has it been
-set?").
+always have a reader accessor method. Many attributes also other
+methods such as a writer method, clearer method, and predicate method
+("has it been set?").
 
-An attribute may also define B<delegation>s, which will create
-additional methods based on the delegation specification.
+An attribute may also define B<delegations>, which will create
+additional methods based on the delegation mapping.
 
 By default, Moose stores attributes in the object instance, which is a
-hashref, I<but this is invisible to the author of a Moose-base class>!
-It is best to think of Moose attributes as "properties" of the
-I<opaque> B<object instance>. These properties are accessed through
-well-defined accessor methods.
+hashref, I<but this is invisible to the author of a Moose-based
+class>!  It is best to think of Moose attributes as "properties" of
+the I<opaque> B<object instance>. These properties are accessed
+through well-defined accessor methods.
 
 An attribute is something that the class's members have. For example,
 People have first and last names. Users have passwords and last login
@@ -93,20 +91,21 @@ datetimes.
 
 =head2 Method
 
-A method is very straightforward. Any subroutine you define in your
+A B<method> is very straightforward. Any subroutine you define in your
 class is a method.
 
-Methods correspond to verbs, and are what your objects can do. For
+B<Methods> correspond to verbs, and are what your objects can do. For
 example, a User can login.
 
   sub login { ... }
 
 =head2 Roles
 
-A role is something that a class I<does>. For example, a Machine class
-might do the Breakable role, and so could a Bone class. A role is
-used to define some concept that cuts across multiple unrelated
-classes, like "breakability", or "has a color".
+A role is something that a class I<does>. We also say that classes
+I<consume> roles. For example, a Machine class might do the Breakable
+role, and so could a Bone class. A role is used to define some concept
+that cuts across multiple unrelated classes, like "breakability", or
+"has a color".
 
 A role I<has> zero or more B<attributes>.
 
@@ -118,6 +117,11 @@ A role I<has> zero or more B<required methods>.
 
 A required method is not implemented by the role. Required methods say
 "to use this Role you must implement this method".
+
+A role I<has> zero or more B<excluded roles>.
+
+An excluded role is a role that the role doing the excluding says it
+cannot be combined with.
 
 Roles are I<composed> into classes (or other roles). When a role is
 composed into a class, its attributes and methods are "flattened" into
@@ -146,7 +150,7 @@ Role are somewhat like mixins or interfaces in other OO languages.
 
 =head2 Method Modifiers
 
-A method modifier is a hook that is called when a named method is
+A B<method modifier> is a hook that is called when a named method is
 called. For example, you could say "before calling C<login()>, call
 this modifier first". Modifiers come in different flavors like
 "before", "after", "around", and "augment", and you can apply more
@@ -372,7 +376,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2008 by Infinity Interactive, Inc.
+Copyright 2008-2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
