@@ -1139,7 +1139,7 @@ Cory (gphat) Watson
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2008 by Infinity Interactive, Inc.
+Copyright 2006-2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

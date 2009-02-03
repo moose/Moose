@@ -55,7 +55,7 @@ Dave Rolsky E<lt>autarch@urth.org<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2008 by Infinity Interactive, Inc.
+Copyright 2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
