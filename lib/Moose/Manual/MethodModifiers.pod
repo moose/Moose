@@ -2,12 +2,12 @@
 
 =head1 NAME
 
-Moose::Manual::Attribute - Moose's Method Modifiers
+Moose::Manual::MethodModifiers - Moose's Method Modifiers
 
 =head1 WHAT IS A METHOD MODIFIER?
 
-Moose provides a feature called "method modifiers". Another word for
-this feature might be "hooks" or "advice".
+Moose provides a feature called "method modifiers". You can also think
+of these as "hooks" or "advice".
 
 It's probably easiest to understand this feature with a few examples:
 
@@ -65,11 +65,11 @@ modifiers run from first added to last:
 
 Method modifiers have many uses. One very common use is in roles. This
 lets roles alter the behavior of methods in the classes that use
-them. See L<Moose::Manual::Roles> for more about roles.
+them. See L<Moose::Manual::Roles> for more information about roles.
 
-Modifiers really are at their most useful in roles, so some of the
+Most of the modifiers are most useful in roles, so some of the
 examples below are a bit artificial. They're intended to give you an
-idea of how modifiers work, but may not be the most natural usages.
+idea of how modifiers work, but may not be the most natural usage.
 
 =head1 BEFORE, AFTER, AND AROUND
 
@@ -96,8 +96,9 @@ pre-checking on a method call. For example:
           if @_ && $self->is_growing;
   };
 
-This lets us implement logical checks that don't fit well into
-constraints.
+This lets us implement logical checks that don't make sense as type
+constraints. In particular, they're useful for defining logical rules
+about an object's state changes.
 
 Similarly, an after modifier could be used for logging an action that
 was taken.
@@ -106,11 +107,10 @@ Note that the return values of both before and after modifiers are
 ignored.
 
 An around modifier is a bit more powerful than either a before or
-after modifier. First, it is easy to modify the arguments being passed
-onto the original method in an around modifier. Second, you can decide
-to simply not call the original method at all, unlike with other
-modifiers. Finally, you can modify the return value with an around
-modifier.
+after modifier. It can modify the arguments being passed to the
+original method, and you can even decide to simply not call the
+original method at all. Finally, you can modify the return value with
+an around modifier.
 
 An around modifier receives the original method as its first argument,
 I<then> the object, and finally any arguments passed to the method.
@@ -213,9 +213,8 @@ Now our report has some content:
 
 What makes this combination of C<augment> and C<inner()> special is
 that it allows us to have methods which are called from parent (least
-specific) to child (most specific). This inverts the normal order,
-where the child's method is called first, and it in turn will call C<<
-$self->SUPER::method >> to call the parent.
+specific) to child (most specific). This inverts the normal
+inheritance pattern.
 
 Note that in C<Report::IncomeAndExpenses> we call C<inner()> again. If
 the object is an instance of C<Report::IncomeAndExpenses> then this
@@ -263,7 +262,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2008 by Infinity Interactive, Inc.
+Copyright 2008-2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
