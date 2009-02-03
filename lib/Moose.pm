@@ -634,16 +634,15 @@ information.
 
 =item I<clearer> => Str
 
-Allows you to clear the value, see the L<clearer option docs in
-Class::MOP::Attribute|Class::MOP::Attribute/clearer> for more
+Creates a method allowing you to clear the value, see the L<clearer option
+docs in Class::MOP::Attribute|Class::MOP::Attribute/clearer> for more
 information.
 
 =item I<predicate> => Str
 
-Basic test to see if a value has been set in the attribute, see the
-L<predicate option docs in
-Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more
-information.
+Creates a method to perform a basic test to see if a value has been set in the
+attribute, see the L<predicate option docs in
+Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more information.
 
 =item I<lazy_build> => (0|1)
 
