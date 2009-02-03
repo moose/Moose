@@ -47,7 +47,7 @@ Creating a role looks a lot like creating a Moose class:
       $self->is_broken(1);
   }
 
-Except for our use of C<Moose::Role>, this looks just like a class
+Except for our use of L<Moose::Role>, this looks just like a class
 definition with Moose. However, this is not a class, and it cannot be
 instantiated.
 

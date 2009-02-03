@@ -52,7 +52,7 @@ well-named, easy to use methods.
 =head1 MooseX::StrictConstructor
 
 By default, Moose lets you pass any old junk into a class's
-constructor. If you load C<MooseX::StrictConstructor>, your class will
+constructor. If you load L<MooseX::StrictConstructor>, your class will
 throw an error if it sees something it doesn't recognize;
 
   package User;
@@ -65,15 +65,15 @@ throw an error if it sees something it doesn't recognize;
 
   User->new( name => 'Bob', emali => 'bob@example.com' );
 
-With C<MooseX::StrictConstructor>, that typo ("emali") will cause a
+With L<MooseX::StrictConstructor>, that typo ("emali") will cause a
 runtime error. With plain old Moose, the "emali" attribute would be
 silently ignored.
 
 =head1 MooseX::Params::Validate
 
-We have high hopes for the future of C<MooseX::Method::Signatures> and
-C<MooseX::Declare>. However, for now we recommend the decidedly more
-clunky (but also faster and simpler) C<MooseX::Params::Validate>. This
+We have high hopes for the future of L<MooseX::Method::Signatures> and
+L<MooseX::Declare>. However, for now we recommend the decidedly more
+clunky (but also faster and simpler) L<MooseX::Params::Validate>. This
 module lets you apply Moose types and coercions to any method
 arguments.
 
@@ -131,7 +131,7 @@ From the command line, someone can execute the script:
 =head1 MooseX::Singleton
 
 To be honest, using a singleton is often a hack, but it sure is a
-handy hack. C<MooseX::Singleton> lets you have a Moose class that's a
+handy hack. L<MooseX::Singleton> lets you have a Moose class that's a
 singleton:
 
   package Config;
@@ -180,7 +180,7 @@ bareword names, even if the type definitions differ.
 
 =head2 MooseX::Types::Structured
 
-This extension builds on top of C<MooseX::Types> to let you declare
+This extension builds on top of L<MooseX::Types> to let you declare
 complex data structure types.
 
   use MooseX::Types -declare => [ qw( Name Color ) ];

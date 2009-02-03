@@ -303,7 +303,7 @@ This is the same as specifying all of these options:
       predicate => 'has_size',
   );
 
-If your attribute name starts with an underscore (_), then the clearer
+If your attribute name starts with an underscore (C<_>), then the clearer
 and predicate will as well:
 
   has '_size' => (
@@ -351,7 +351,7 @@ Both of these goals can be accomplished with the C<init_arg> option:
       init_arg => 'size',
   );
 
-Now we have an attribute named bigness, but we pass C<size> to the
+Now we have an attribute named "bigness", but we pass C<size> to the
 constructor.
 
 Even more useful is the ability to disable setting an attribute via
@@ -411,7 +411,7 @@ Attributes can be restricted to only accept certain types:
       isa => 'Str',
   );
 
-This says that the first_name attribute must be a string.
+This says that the C<first_name> attribute must be a string.
 
 Moose also provides a shortcut for specifying that an attribute only
 accepts objects that do a certain role:
@@ -426,7 +426,7 @@ discussion of Moose's type system.
 
 =head2 Delegation
 
-Attributes can define methods which simple delegate to their values:
+Attributes can define methods which simply delegate to their values:
 
   has 'hair_color' => (
       is      => 'rw',
@@ -458,7 +458,7 @@ traits for the attribute:
   );
 
 In this case, the metaclass C<Collection::Hash> really refers to
-C<MooseX::AttributeHelpers::Collection::Hash>.
+L<MooseX::AttributeHelpers::Collection::Hash>.
 
 You can also apply one or more traits to an attribute:
 
@@ -514,7 +514,7 @@ The options that can be overridden in a subclass are:
 =back
 
 To override an attribute, you simply prepend its name with a plus sign
-(+):
+(C<+>):
 
   package LazyPerson;
 
@@ -567,9 +567,9 @@ returned from the reader method:
   my %map = $object->mapping;
 
 This option only works if your attribute is explicitly typed as an
-ArrayRef or HashRef.
+C<ArrayRef> or C<HashRef>.
 
-However, we recommend that you use C<MooseX::AttributeHelpers> for
+However, we recommend that you use L<MooseX::AttributeHelpers> for
 these types of attributes, which gives you much more control over how
 they are accessed and manipulated.
 
@@ -579,7 +579,7 @@ Moose provides an attribute option called C<initializer>. This is
 similar to C<builder>, except that it is I<only> called during object
 construction.
 
-This option is inherited from C<Class::MOP>, but we recommend that you
+This option is inherited from L<Class::MOP>, but we recommend that you
 use a C<builder> (which is Moose-only) instead.
 
 =head1 AUTHOR

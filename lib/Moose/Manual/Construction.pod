@@ -9,7 +9,7 @@ Moose::Manual::Construction - Object construction (and destruction) with Moose
 B<You do not need to define a C<new()> method for your classes!>
 
 When you C<use Moose> in your class, you will become a subclass of
-C<Moose::Object>, which provides a C<new> method for you. If you
+L<Moose::Object>, which provides a C<new> method for you. If you
 follow our recommendations in L<Moose::Manual::BestPractices> and make
 your class immutable, then you actually get a class-specific C<new>
 method "inlined" in your class.
@@ -62,7 +62,7 @@ accommodate this calling style:
   }
 
 Note the call to C<SUPER::BUILDARGS>. This will call the default
-C<BUILDARGS> in C<Moose::Object>. This method handles distinguishing
+C<BUILDARGS> in L<Moose::Object>. This method handles distinguishing
 between a hash reference and a plain hash for you.
 
 =head2 BUILD

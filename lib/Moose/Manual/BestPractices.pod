@@ -32,7 +32,7 @@ Moose sugar and making your class immutable.
 
   1;
 
-The "no Moose" bit is simply good code hygiene, and making classes
+The C<no Moose> bit is simply good code hygiene, and making classes
 immutable speeds up a lot of things, most notably object construction.
 
 =head2 Always call SUPER::BUILDARGS
@@ -45,11 +45,11 @@ The default C<BUILDARGS> method in L<Moose::Object> handles both a
 list and hashref of named parameters correctly, and also checks for a
 I<non-hashref> single argument.
 
-=head2 Don't Use the initializer Feature
+=head2 Don't Use the C<initializer> Feature
 
 Don't know what we're talking about? That's fine.
 
-=head2 Use builder Instead of default Most of the Time.
+=head2 Use C<builder> Instead of C<default> Most of the Time.
 
 Builders can be inherited, they have explicit names, and they're just
 plain cleaner.
@@ -59,14 +59,14 @@ I<or> when the default is simply an empty reference of some sort.
 
 Also, keep your builder methods private.
 
-=head2 Use lazy_build
+=head2 Use C<lazy_build>
 
 Lazy is good, and often solves initialization ordering problems. It's
 also good for deferring work that may never have to be done. If you're
 going to be lazy, use I<lazy_build> to save yourself some typing and
 standardize names.
 
-=head2 Consider Keeping clearers & predicates Private
+=head2 Consider Keeping Clearers and Predicates Private
 
 Does everyone I<really> need to be able to clear an attribute?
 Probably not. Don't expose this functionality outside your class
@@ -75,7 +75,7 @@ by default.
 Predicates are less problematic, but there's no reason to make your
 public API bigger than it has to be.
 
-=head2 Default to read-only, and Consider Keeping writers Private
+=head2 Default to read-only, and Consider Keeping Writers Private
 
 Making attributes mutable just means more complexity to account for in
 your program. The alternative to mutable state is to encourage users
@@ -91,11 +91,11 @@ Down this path lies great confusion. If the attribute is an object
 itself, at least make sure that it has the same interface as the type
 of object in the parent class.
 
-=head2 Use MooseX::AttributeHelpers Instead of auto_deref
+=head2 Use L<MooseX::AttributeHelpers> Instead of C<auto_deref>
 
 The C<auto_deref> feature is a bit troublesome. Directly exposing a
 complex attribute is ugly. Instead, consider using
-C<MooseX::AttributeHelpers> to define an API that exposes those pieces
+L<MooseX::AttributeHelpers> to define an API that exposes those pieces
 of functionality that need exposing. Then you can expose just the
 functionality that you want.
 

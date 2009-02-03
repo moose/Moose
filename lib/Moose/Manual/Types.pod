@@ -118,7 +118,7 @@ that the name is a class:
       isa => 'ArrayRef[DateTime]',
   );
 
-Moose will assume that "DateTime" is a class name in both of these
+Moose will assume that C<DateTime> is a class name in both of these
 instances.
 
 =head1 SUBTYPES
@@ -128,7 +128,7 @@ C<Num> for example.
 
 A subtype is defined in terms of a parent type and a constraint. Any
 constraints defined by the parent(s) will be checked first, and then
-the the subtype's . A value must pass I<all> of these checks to be
+the the subtype's. A value must pass I<all> of these checks to be
 valid for the subtype.
 
 Typically, a subtype takes the parent's constraint and makes it more
@@ -185,7 +185,7 @@ class names are I<also> valid type names! Using something else, like a
 period, makes it clear that "MyApp::User" is a class and
 "MyApp.Type.PositiveInt" is a Moose type defined by your application.
 
-The C<MooseX::Types> module lets you create bareword aliases to longer
+The L<MooseX::Types> module lets you create bareword aliases to longer
 names and also automatically namespaces all the types you define.
 
 =head1 COERCION
@@ -366,7 +366,7 @@ Moose does not provide any means of validating method
 parameters. However, there are several MooseX extensions on CPAN which
 let you do this.
 
-The simplest and least sugary is C<MooseX::Params::Validate>. This
+The simplest and least sugary is L<MooseX::Params::Validate>. This
 lets you validate a set of named parameters using Moose types:
 
   use Moose;
@@ -381,11 +381,11 @@ lets you validate a set of named parameters using Moose types:
       ...
   }
 
-C<MooseX::Params::Validate> also supports coercions.
+L<MooseX::Params::Validate> also supports coercions.
 
 There are several more powerful extensions that support method
 parameter validation using Moose types, including
-C<MooseX::Method::Signatures>, which gives you a full-blown C<method>
+L<MooseX::Method::Signatures>, which gives you a full-blown C<method>
 keyword.
 
   method morning (Str $name) {
