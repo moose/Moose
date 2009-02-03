@@ -6,14 +6,14 @@ Moose::Manual::MooseX - Recommended Moose Extensions
 
 =head1 MooseX?
 
-One of the great things about Moose is that it is easy to extend and
-override. You can use the meta-model API to do things your own way,
+It's easy to extend and change Moose, and this is part of what makes
+Moose so powerful. You can use the MOP API to do things your own way,
 add new features, and generally customize your Moose.
 
 Writing your own extensions does require a good understanding of the
-meta-model. You can start learning about thiswith the
-L<Moose::Manual::Introspection> docs. There are also several extensions
-recipes in the L<Moose::Cookbook>.
+meta-model. You can start learning about this with the
+L<Moose::Manual::MOP> docs. There are also several extensions recipes
+in the L<Moose::Cookbook>.
 
 Explaining how to write extensions is beyond the scope of this
 manual. Fortunately, lots of people have already written extensions
@@ -23,10 +23,9 @@ This document covers a few of the ones we like best.
 
 =head1 MooseX::AttributeHelpers
 
-If you only look at one extension, it should be this one. The name
-isn't the best, but what it does it provide the equivalent of
-delegation for all of Perl's native data types, such as array
-reference, hash references, numbers, strings, etc.
+If you only look at one extension, it should be this one. It provides
+the equivalent of delegation for all of Perl's native data types, such
+as array reference, hash references, numbers, strings, etc.
 
 This lets you create I<much> cleaner and fluent APIs.
 
@@ -67,8 +66,8 @@ throw an error if it sees something it doesn't recognize;
   User->new( name => 'Bob', emali => 'bob@example.com' );
 
 With C<MooseX::StrictConstructor>, that typo ("emali") will cause a
-runtime error. Otherwise, the "emali" attribute would just be silently
-ignored.
+runtime error. With plain old Moose, the "emali" attribute would be
+silently ignored.
 
 =head1 MooseX::Params::Validate
 
@@ -86,7 +85,7 @@ arguments.
   sub login {
       my $self = shift;
       my ($password)
-          = validatep( \@_, password => { isa => 'Str', required => 1 } );
+          = validated_list( \@_, password => { isa => 'Str', required => 1 } );
 
       ...
   }
@@ -125,6 +124,10 @@ Then in the script that gets run we have:
 
   App::Foo->new_with_options->run;
 
+From the command line, someone can execute the script:
+
+  foo@example> foo --input /path/to/input --output /path/to/output
+
 =head1 MooseX::Singleton
 
 To be honest, using a singleton is often a hack, but it sure is a
@@ -141,11 +144,9 @@ It's that simple.
 
 =head1 EXTENSIONS TO CONSIDER
 
-There are literally dozens of other extensions on CPAN. These are a
-few to consider. We're not quite ready to recommend them outright,
-though. There's a couple reasons for this. One, they may be very
-specialized. Two, they may be immature. Three, they may not be quite
-right yet. Four, we may not all agree they're such a great idea.
+There are literally dozens of other extensions on CPAN. This is a list
+of extensions that you might find useful, but we're not quite ready to
+endorse just yet.
 
 =head2 MooseX::Declare
 
@@ -173,7 +174,7 @@ also lets you pre-declare type names and use them as barewords.
       => where { $_ > 0 }
       => message {"Int is not larger than 0"};
 
-One nice feature is the those bareword names are actually namespaces
+One nice feature is that those bareword names are actually namespaced
 in Moose's type registry, so multiple applications can use the same
 bareword names, even if the type definitions differ.
 
@@ -232,12 +233,12 @@ event handlers.
 =head2 MooseX::FollowPBP
 
 Automatically names all accessors I<Perl Best Practices>-style,
-"get_name" and "set_name".
+"get_size" and "set_size".
 
 =head2 MooseX::SemiAffordanceAccessor
 
-Autoamtically names all accessors with an explicit set and implicit
-get, "name" and "set_name".
+Automatically names all accessors with an explicit set and implicit
+get, "size" and "set_size".
 
 =head1 AUTHOR
 
