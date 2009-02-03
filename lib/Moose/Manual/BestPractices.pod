@@ -1,5 +1,9 @@
 =pod
 
+=head1 NAME
+
+Moose::Manual::BestPractices - Get the most out of Moose
+
 =head1 RECOMMENDATIONS
 
 Moose has a lot of features, and there's definitely more than one way

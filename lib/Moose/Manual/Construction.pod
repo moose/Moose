@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::Classes - Object construction (and destruction) with Moose
+Moose::Manual::Construction - Object construction (and destruction) with Moose
 
 =head1 WHERE'S THE CONSTRUCTOR?
 
