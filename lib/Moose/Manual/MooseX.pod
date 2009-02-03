@@ -229,6 +229,16 @@ This is a small wrapper that ties together a Moose class with
 C<POE::Session>, and gives you an C<event> sugar function to declare
 event handlers.
 
+=head2 MooseX::FollowPBP
+
+Automatically names all accessors I<Perl Best Practices>-style,
+"get_name" and "set_name".
+
+=head2 MooseX::SemiAffordanceAccessor
+
+Autoamtically names all accessors with an explicit set and implicit
+get, "name" and "set_name".
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
