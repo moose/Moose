@@ -129,7 +129,7 @@ themselves objects.
 =item L<Moose::Manual::Construction>
 
 Learn how objects are built in Moose, and in particular about the
-C<BUILD>, C<BUILDARGS> methods. Also covers object destruction
+C<BUILD> and C<BUILDARGS> methods. Also covers object destruction
 with C<DEMOLISH>.
 
 =item L<Moose::Manual::MethodModifiers>
@@ -157,6 +157,12 @@ children, methods, attributes, etc.
 =item L<Moose::Manual::MooseX>
 
 This document shows a few of the most useful Moose extensions on CPAN.
+
+=item L<Moose::Manual::BestPractices>
+
+Moose has a lot of features, and there's definitely more than one way
+to do it. However, we think that picking a subset of these features
+and using them consistently makes everyone's life easier.
 
 =back
 
@@ -191,8 +197,8 @@ Yes.
 
 Moose has been used successfully in production environments by many
 people and companies. There are Moose applications which have been in
-production with little or no issue now for well years. We consider it
-highly stable and we are commited to keeping it stable.
+production with little or no issue now for years. We consider it
+highly stable and we are committed to keeping it stable.
 
 Of course, in the end, you need to make this call yourself. If you
 have any questions or concerns, please feel free to email Stevan, the
@@ -201,7 +207,7 @@ moose@perl.org list, or just stop by irc.perl.org#moose and ask away.
 =item Is Moose just Perl 6 in Perl 5?
 
 No. While Moose is very much inspired by Perl 6, it is not itself Perl
-6.  Instead, it is an OO system for Perl 5. Stevan built Moose because
+6. Instead, it is an OO system for Perl 5. Stevan built Moose because
 he was tired of writing the same old boring Perl 5 OO code, and
 drooling over Perl 6 OO. So instead of switching to Ruby, he wrote
 Moose :)
