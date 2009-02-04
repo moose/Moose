@@ -270,7 +270,7 @@ $_->make_immutable(
     Moose::Meta::Method::Accessor
     Moose::Meta::Method::Constructor
     Moose::Meta::Method::Destructor
-    Moose::Meta::Method::Overriden
+    Moose::Meta::Method::Overridden
     Moose::Meta::Method::Augmented
 
     Moose::Meta::Role

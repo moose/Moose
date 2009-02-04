@@ -1,4 +1,4 @@
-package Moose::Meta::Method::Overriden;
+package Moose::Meta::Method::Overridden;
 
 use strict;
 use warnings;
@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Method::Overriden - A Moose Method metaclass for overridden methods
+Moose::Meta::Method::Overridden - A Moose Method metaclass for overridden methods
 
 =head1 DESCRIPTION
 

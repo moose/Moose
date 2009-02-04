@@ -88,7 +88,7 @@ ok(Role::Base2->meta->has_override_method_modifier('foo'), '... have the method 
 ok(Role::Derived3->meta->has_override_method_modifier('foo'), '... have the method foo as expected');
 ok(Role::Derived4->meta->has_override_method_modifier('foo'), '... have the method foo as expected');
 ok(My::Test::Class2->meta->has_method('foo'), '... have the method foo as expected');
-isa_ok(My::Test::Class2->meta->get_method('foo'), 'Moose::Meta::Method::Overriden');
+isa_ok(My::Test::Class2->meta->get_method('foo'), 'Moose::Meta::Method::Overridden');
 ok(My::Test::Class2::Base->meta->has_method('foo'), '... have the method foo as expected');
 isa_ok(My::Test::Class2::Base->meta->get_method('foo'), 'Class::MOP::Method');
 
