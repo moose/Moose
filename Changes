@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.68
+0.68 Wed, February 4, 2009
     * Moose::Manual::Attributes
       - The NAME section in the POD used "Attribute" so search.cpan
         didn't resolve links from other documents properly.
