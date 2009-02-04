@@ -1,5 +1,14 @@
 Revision history for Perl extension Moose
 
+0.68
+    * Moose::Manual::Attributes
+      - The NAME section in the POD used "Attribute" so search.cpan
+        didn't resolve links from other documents properly.
+
+    * Moose::Meta::Method::Overriden
+      - Now properly spelled as Overridden. Thanks to daxim for
+        noticing this.
+
 0.67 Tue, February 3, 2009
     * Moose::Manual::*
       - Lots of little typo fixes and a few clarifications. Several
