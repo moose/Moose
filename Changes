@@ -1,6 +1,9 @@
 Revision history for Perl extension Moose
 
 0.68 Wed, February 4, 2009
+    * POD
+      - Many spelling, typo, and formatting fixes by daxim.
+
     * Moose::Manual::Attributes
       - The NAME section in the POD used "Attribute" so search.cpan
         didn't resolve links from other documents properly.
