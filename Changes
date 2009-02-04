@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.67 Tue, February 3, 2009
+    * Moose::Manual::*
+      - Lots of little typo fixes and a few clarifications. Several
+        pages didn't have proper titles, and so weren't actually
+        visible on search.cpan.org. Thanks to hanekomu for a variety
+        of fixes and formatting improvements.
+
 0.66 Tue, February 3, 2009
     * Moose::Manual
       - This is a brand new, extensive manual for Moose. This aims to
