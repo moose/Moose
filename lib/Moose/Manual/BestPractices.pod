@@ -13,7 +13,7 @@ and using them consistently makes everyone's life easier.
 Of course, as with any list of "best practices", these are really just
 opinions. Feel free to ignore us.
 
-=head2 "No Moose" and Immutabilize
+=head2 C<no Moose> and immutabilize
 
 We recommend that you end your Moose class definitions by removing the
 Moose sugar and making your class immutable.
@@ -35,7 +35,7 @@ Moose sugar and making your class immutable.
 The C<no Moose> bit is simply good code hygiene, and making classes
 immutable speeds up a lot of things, most notably object construction.
 
-=head2 Always call SUPER::BUILDARGS
+=head2 Always call C<SUPER::BUILDARGS>
 
 If you override the C<BUILDARGS> method in your class, make sure to
 play nice and call C<SUPER::BUILDARGS> to handle cases you're not
@@ -45,11 +45,11 @@ The default C<BUILDARGS> method in L<Moose::Object> handles both a
 list and hashref of named parameters correctly, and also checks for a
 I<non-hashref> single argument.
 
-=head2 Don't Use the C<initializer> Feature
+=head2 Don't use the C<initializer> feature
 
 Don't know what we're talking about? That's fine.
 
-=head2 Use C<builder> Instead of C<default> Most of the Time.
+=head2 Use C<builder> instead of C<default> most of the time
 
 Builders can be inherited, they have explicit names, and they're just
 plain cleaner.
@@ -66,7 +66,7 @@ also good for deferring work that may never have to be done. If you're
 going to be lazy, use I<lazy_build> to save yourself some typing and
 standardize names.
 
-=head2 Consider Keeping Clearers and Predicates Private
+=head2 Consider keeping clearers and predicates private
 
 Does everyone I<really> need to be able to clear an attribute?
 Probably not. Don't expose this functionality outside your class
@@ -75,7 +75,7 @@ by default.
 Predicates are less problematic, but there's no reason to make your
 public API bigger than it has to be.
 
-=head2 Default to read-only, and Consider Keeping Writers Private
+=head2 Default to read-only, and consider keeping writers private
 
 Making attributes mutable just means more complexity to account for in
 your program. The alternative to mutable state is to encourage users
@@ -85,13 +85,13 @@ If you I<must> make an attribute read-write, consider making the
 writer a separate private method. Narrower APIs are easy to maintain,
 and mutable state is trouble.
 
-=head2 Think Twice Before Changing an Attribute's Type in a Subclass
+=head2 Think twice before changing an attribute's type in a subclass
 
 Down this path lies great confusion. If the attribute is an object
 itself, at least make sure that it has the same interface as the type
 of object in the parent class.
 
-=head2 Use L<MooseX::AttributeHelpers> Instead of C<auto_deref>
+=head2 Use L<MooseX::AttributeHelpers> instead of C<auto_deref>
 
 The C<auto_deref> feature is a bit troublesome. Directly exposing a
 complex attribute is ugly. Instead, consider using
@@ -99,18 +99,18 @@ L<MooseX::AttributeHelpers> to define an API that exposes those pieces
 of functionality that need exposing. Then you can expose just the
 functionality that you want.
 
-=head2 Namespace Your Types
+=head2 Namespace your types
 
 Use some sort of namespacing convention for type names. We recommend
 something like "MyApp.Type.Foo". I<Never> use "::" as the namespace
 separator, since that overlaps with actual class names.
 
-=head2 Coercion Instead of Unions
+=head2 Coercion instead of unions
 
 Consider using a type coercion instead of a type union. This was
 covered at length in L<Moose::Manual::Types>.
 
-=head2 Define All Your Types in One Module
+=head2 Define all your types in one module
 
 Define all your types and coercions in one module. This was also
 covered in L<Moose::Manual::Types>.

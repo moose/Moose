@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::Delegation - Attribute Delegation
+Moose::Manual::Delegation - Attribute delegation
 
 =head1 WHAT IS DELEGATION?
 

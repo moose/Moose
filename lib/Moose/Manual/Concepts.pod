@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::Concepts - Moose OO Concepts
+Moose::Manual::Concepts - Moose OO concepts
 
 =head1 MOOSE CONCEPTS (VS "OLD SCHOOL" Perl)
 
@@ -148,7 +148,7 @@ Role are somewhat like mixins or interfaces in other OO languages.
       $self->is_broken(1);
   };
 
-=head2 Method Modifiers
+=head2 Method modifiers
 
 A B<method modifier> is a hook that is called when a named method is
 called. For example, you could say "before calling C<login()>, call
@@ -212,7 +212,7 @@ need to, but you usually don't.
 With old school Perl 5, this is the C<DESTROY()> method, but with
 Moose it is the C<DEMOLISH()> method.
 
-=head2 Object Instance
+=head2 Object instance
 
 An object instance is a specific noun in the class's "category". For
 example, one specific Person or User. An instance is created by the
@@ -225,7 +225,7 @@ In old school Perl 5, this is often a blessed hash reference. With
 Moose, you should never need to know what your object instance
 actually is. (ok, it's usually a blessed hashref with Moose too)
 
-=head2 Moose VS Old School Summary
+=head2 Moose vs old school summary
 
 =over 4
 

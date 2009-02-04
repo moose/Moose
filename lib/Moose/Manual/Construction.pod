@@ -91,7 +91,7 @@ object creation.
       debug( 'Made a new person - SSN = ', $self->ssn, );
   }
 
-=head3 BUILD and Parent Classes
+=head3 BUILD and parent classes
 
 The interaction between multiple C<BUILD> methods in an inheritance
 hierarchy is different from normal Perl methods. B<You should never

@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::MethodModifiers - Moose's Method Modifiers
+Moose::Manual::MethodModifiers - Moose's method modifiers
 
 =head1 WHAT IS A METHOD MODIFIER?
 

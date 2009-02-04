@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::Types - Moose's Type System
+Moose::Manual::Types - Moose's type system
 
 =head1 TYPES IN PERL?
 
@@ -150,7 +150,7 @@ Here's a simple (and useful) subtype example:
 Note that the sugar functions for working with types are all exported
 by L<Moose::Util::TypeConstraints>.
 
-=head2 Creating a New Type (That Isn't a Subtype)
+=head2 Creating a new type (that isn't a subtype)
 
 You can also create new top-level types:
 
@@ -222,7 +222,7 @@ C<coerce> attribute parameter to a true value:
 This code example will do the right thing, and the newly created
 object will have C<[ 42 ]> as its C<sizes> attribute.
 
-=head2 Deep Coercion
+=head2 Deep coercion
 
 Deep coercion is the coercion of type parameters for parameterized
 types. Let's take these types as an example:

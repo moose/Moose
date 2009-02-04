@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::MOP - The Moose (and Class::MOP) Meta API
+Moose::Manual::MOP - The Moose (and Class::MOP) meta API
 
 =head1 INTRODUCTION
 

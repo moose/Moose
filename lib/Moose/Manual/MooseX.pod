@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::MooseX - Recommended Moose Extensions
+Moose::Manual::MooseX - Recommended Moose extensions
 
 =head1 MooseX?
 
@@ -21,7 +21,7 @@ and put them on CPAN for you.
 
 This document covers a few of the ones we like best.
 
-=head1 MooseX::AttributeHelpers
+=head1 L<MooseX::AttributeHelpers>
 
 If you only look at one extension, it should be this one. It provides
 the equivalent of delegation for all of Perl's native data types, such
@@ -49,7 +49,7 @@ This lets you create I<much> cleaner and fluent APIs.
 Instead of directly exposing an array reference, we have three
 well-named, easy to use methods.
 
-=head1 MooseX::StrictConstructor
+=head1 L<MooseX::StrictConstructor>
 
 By default, Moose lets you pass any old junk into a class's
 constructor. If you load L<MooseX::StrictConstructor>, your class will
@@ -69,7 +69,7 @@ With L<MooseX::StrictConstructor>, that typo ("emali") will cause a
 runtime error. With plain old Moose, the "emali" attribute would be
 silently ignored.
 
-=head1 MooseX::Params::Validate
+=head1 L<MooseX::Params::Validate>
 
 We have high hopes for the future of L<MooseX::Method::Signatures> and
 L<MooseX::Declare>. However, for now we recommend the decidedly more
@@ -90,7 +90,7 @@ arguments.
       ...
   }
 
-=head1 MooseX::Getopt
+=head1 L<MooseX::Getopt>
 
 This is a role which adds a C<new_with_options> method to your
 class. This is a constructor that takes the command line options and
@@ -128,7 +128,7 @@ From the command line, someone can execute the script:
 
   foo@example> foo --input /path/to/input --output /path/to/output
 
-=head1 MooseX::Singleton
+=head1 L<MooseX::Singleton>
 
 To be honest, using a singleton is often a hack, but it sure is a
 handy hack. L<MooseX::Singleton> lets you have a Moose class that's a
@@ -148,7 +148,7 @@ There are literally dozens of other extensions on CPAN. This is a list
 of extensions that you might find useful, but we're not quite ready to
 endorse just yet.
 
-=head2 MooseX::Declare
+=head2 L<MooseX::Declare>
 
 Extends Perl with Moose-based keywords using C<Devel::Declare>. Very
 cool, but still new and experimental.
@@ -161,7 +161,7 @@ cool, but still new and experimental.
       method login (Str $password) { ... }
   }
 
-=head2 MooseX::Types
+=head2 L<MooseX::Types>
 
 This extension helps you build a type library for your application. It
 also lets you pre-declare type names and use them as barewords.
@@ -178,7 +178,7 @@ One nice feature is that those bareword names are actually namespaced
 in Moose's type registry, so multiple applications can use the same
 bareword names, even if the type definitions differ.
 
-=head2 MooseX::Types::Structured
+=head2 L<MooseX::Types::Structured>
 
 This extension builds on top of L<MooseX::Types> to let you declare
 complex data structure types.
@@ -196,7 +196,7 @@ complex data structure types.
 Of course, you could always use objects to represent these sorts of
 things too.
 
-=head2 MooseX::ClassAttribute
+=head2 L<MooseX::ClassAttribute>
 
 This extension provides class attributes for Moose classes. The
 declared class attributes are introspectable just like regular Moose
@@ -211,31 +211,31 @@ attributes.
 
   class_has 'Cache' => ( ... );
 
-=head2 MooseX::Daemonize
+=head2 L<MooseX::Daemonize>
 
 This is a role that provides a number of methods useful for creating a
 daemon, including methods for starting and stopping, managing a PID
 file, and signal handling.
 
-=head2 MooseX::Role::Parameterized
+=head2 L<MooseX::Role::Parameterized>
 
 If you find yourself wanting a role that customizes itself for each
 consumer, this is the tool for you. With this module, you can create a
 role that accepts parameters and generates attributes, methods, etc on
 a customized basis for each consumer.
 
-=head2 MooseX::POE
+=head2 L<MooseX::POE>
 
 This is a small wrapper that ties together a Moose class with
 C<POE::Session>, and gives you an C<event> sugar function to declare
 event handlers.
 
-=head2 MooseX::FollowPBP
+=head2 L<MooseX::FollowPBP>
 
 Automatically names all accessors I<Perl Best Practices>-style,
 "get_size" and "set_size".
 
-=head2 MooseX::SemiAffordanceAccessor
+=head2 L<MooseX::SemiAffordanceAccessor>
 
 Automatically names all accessors with an explicit set and implicit
 get, "size" and "set_size".
