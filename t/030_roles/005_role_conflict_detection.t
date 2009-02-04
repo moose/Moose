@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 87; # it's really 124 with kolibre's tests;
+use Test::More tests => 87; # it's really 124 with kolibrie's tests;
 use Test::Exception;
 
 =pod
@@ -352,8 +352,7 @@ Role conflicts between attributes and methods
 [15:24]  <kolibrie> when class 'has'   method and role defines method, class wins
 [15:24]  <kolibrie> when class defines method and role 'has'   method, role wins
 [15:24]  <kolibrie> when class 'has'   method and role 'has'   method, role wins
-[15:24]  <kolibrie> which means when class 'has' method and two roles 'has' method, no tiebreak is d
-[15:24]  <kolibrie> etected
+[15:24]  <kolibrie> which means when class 'has' method and two roles 'has' method, no tiebreak is detected
 [15:24]  <perigrin> this is with role and has declaration in the exact same order in every case?
 [15:25]  <kolibrie> yes
 [15:25]  <perigrin> interesting

@@ -25,7 +25,7 @@ sub new {
         || $meta->throw_error("You cannot augment '$name' because it has no super method", data => $name);
 
     my $_super_package = $super->package_name;
-    # BUT!,... if this is an overriden method ....
+    # BUT!,... if this is an overridden method ....
     if ($super->isa('Moose::Meta::Method::Overriden')) {
         # we need to be sure that we actually
         # find the next method, which is not

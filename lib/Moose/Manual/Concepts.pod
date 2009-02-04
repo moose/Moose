@@ -174,14 +174,14 @@ that gets called before or after (or around, etc.) some named method.
 
 Moose also comes with a (miniature) type system. This allows you to
 define types for attributes. Moose has a set of built-in types based
-on what Perl provides, such as "Str", "Num", "Bool", "HashRef", etc.
+on what Perl provides, such as C<Str>, C<Num>, C<Bool>, C<HashRef>, etc.
 
 In addition, every class name in your application can also be used as
-a type name. We saw an example using "DateTime" earlier.
+a type name. We saw an example using C<DateTime> earlier.
 
 Finally, you can define your own types, either as subtypes or entirely
 new types, with their own constraints. For example, you could define a
-type "PosInt", a subtype of "Int" which only allows positive numbers.
+type C<PosInt>, a subtype of C<Int> which only allows positive numbers.
 
 =head2 Delegation
 
@@ -223,7 +223,7 @@ person has a first and last name.
 
 In old school Perl 5, this is often a blessed hash reference. With
 Moose, you should never need to know what your object instance
-actually is. (ok, it's usually a blessed hashref with Moose too)
+actually is. (Okay, it's usually a blessed hashref with Moose, too.)
 
 =head2 Moose vs old school summary
 
@@ -334,7 +334,7 @@ L<Moose::Meta::TypeConstraint>, L<Moose::Meta::Instance>, and so on.
 One of the great things about Moose is that if you dig down and find
 that it does something the "wrong way", you can change it by extending
 a metaclass. For example, you can have arrayref based objects, you can
-make your constructors strict (no unknown params allowed!), you can
+make your constructors strict (no unknown parameters allowed!), you can
 define a naming scheme for attribute accessors, you can make a class a
 Singleton, and much, much more.
 

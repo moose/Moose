@@ -55,7 +55,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Method::Overriden - A Moose Method metaclass for overriden methods
+Moose::Meta::Method::Overriden - A Moose Method metaclass for overridden methods
 
 =head1 DESCRIPTION
 

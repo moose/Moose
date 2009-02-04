@@ -38,7 +38,7 @@ isa_ok($baz, 'Foo');
 
 When a subclass which augments foo(), calls a subclass which does not augment
 foo(), there is a chance for some confusion. If Moose does not realize that
-Bar does not augment foo(), becuase it is in the call flow of Baz which does,
+Bar does not augment foo(), because it is in the call flow of Baz which does,
 then we may have an infinite loop.
 
 =cut

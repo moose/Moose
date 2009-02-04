@@ -108,7 +108,7 @@ sub apply_methods {
                 next;
             }
             else {
-                # add it, although it could be overriden
+                # add it, although it could be overridden
                 $class->add_method(
                     $method_name,
                     $role->get_method($method_name)

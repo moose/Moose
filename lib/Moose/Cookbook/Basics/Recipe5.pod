@@ -97,7 +97,7 @@ coercion can help. First, let's declare our coercion:
       => from 'HashRef'
           => via { HTTP::Headers->new( %{$_} ) };
 
-We first tell it that we are attaching the coercion to the 'Header'
+We first tell it that we are attaching the coercion to the C<Header>
 subtype. We then give it a set of C<from> clauses which map other
 subtypes to coercion routines (through the C<via> keyword). Fairly
 simple really; however, this alone does nothing. We have to tell our
@@ -143,8 +143,8 @@ Then we add the coercion:
       => from 'Str'
           => via { URI->new( $_, 'http' ) };
 
-The first C<from> clause we introduce is for the 'Object' subtype. An
-'Object' is simply any C<bless>ed value. This means that if the
+The first C<from> clause we introduce is for the C<Object> subtype. An
+C<Object> is simply any C<bless>ed value. This means that if the
 coercion encounters another object, it should use this clause. Now we
 look at the C<via> block.  First it checks to see if the object is a
 B<URI> instance. Since the coercion process occurs prior to any type
@@ -153,12 +153,12 @@ if it does happen, we simply want to pass the instance on
 through. However, if it is not an instance of B<URI>, then we need to
 coerce it. This is where L<Params::Coerce> can do its magic, and we
 can just use its return value. Simple really, and much less work since
-we used a module from CPAN :)
+we used a module from CPAN. :)
 
-The second C<from> clause is attached to the 'Str' subtype, and
-illustrates how coercions can also be used to handle certain 'default'
+The second C<from> clause is attached to the C<Str> subtype, and
+illustrates how coercions can also be used to handle certain "default"
 behaviors. In this coercion, we simple take any string and pass it to
-the B<URI> constructor along with the default 'http' scheme type.
+the B<URI> constructor along with the default C<http> scheme type.
 
 And of course, our coercions do nothing unless they are told to, like
 so:

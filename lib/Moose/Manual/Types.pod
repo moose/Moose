@@ -78,7 +78,7 @@ L<Moose::Util::TypeConstraints>.
 It's important to realize that types are not classes (or
 packages). Types are just objects (L<Moose::Meta::TypeConstraint>
 objects, to be exact) with a name and a constraint. Moose maintains a
-global type registry that lets it convert names like "Num" into the
+global type registry that lets it convert names like C<Num> into the
 appropriate object.
 
 However, class names I<can be> type names. When you define a new class

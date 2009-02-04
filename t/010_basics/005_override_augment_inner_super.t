@@ -56,7 +56,7 @@ Allow me to clarify this one now ...
 
 Since Baz::bar is an augment routine, it needs to find the 
 correct inner() to be called by. In this case it is Foo::bar.
-However, Bar::bar is inbetween us, so it should actually be
+However, Bar::bar is in-between us, so it should actually be
 called first. Bar::bar is an overriden sub, and calls super()
 which in turn then calls our Foo::bar, which calls inner(), 
 which calls Baz::bar.

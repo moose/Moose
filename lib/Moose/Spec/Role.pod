@@ -44,17 +44,17 @@ the consuming role.
 =item Required Attributes
 
 Just as a role can require methods, it can also require attributes.
-The requirement fufilling attribute must implement at least as much 
+The requirement fulfilling attribute must implement at least as much 
 as is required. That means, for instance, that if the role requires
-that the attribute be readonly, then it must at least have a reader
+that the attribute be read-only, then it must at least have a reader
 and can also have a writer. It means that if the role requires that 
 the attribute be an ArrayRef, then it must either be an ArrayRef or 
 a subtype of an ArrayRef.
 
-=item Overriden Methods
+=item Overridden Methods
 
 The C<override> and C<super> keywords are allowed in roles, but 
-thier behavior is different from that of it's class counterparts. 
+their behavior is different from that of it's class counterparts. 
 The C<super> in a class refers directly to that class's superclass, 
 while the C<super> in a role is deferred and only has meaning once
 the role is composed into a class. Once that composition occurs, 
@@ -88,7 +88,7 @@ just like attributes and the C<override> keyword).
 
 =item Methods
 
-=item Overriden methods
+=item Overridden methods
 
 =item Method Modifiers (before, around, after)
 
@@ -110,7 +110,7 @@ just like attributes and the C<override> keyword).
 
 =item Methods
 
-=item Overriden methods
+=item Overridden methods
 
 =item Method Modifiers (before, around, after)
 
@@ -134,8 +134,8 @@ The product of the composition is a composite role
 =item Attributes
 
 Attributes with the same name will conflict and are considered
-a un-recoverable error. No other aspect of the attribute is 
-examained, it is enough that just the attribute names conflict. 
+a unrecoverable error. No other aspect of the attribute is 
+examined, it is enough that just the attribute names conflict. 
 
 The reason for such early and harsh conflicts with attributes 
 is because there is so much room for variance between two 
@@ -162,17 +162,17 @@ conflicts. This can be illustrated like so:
        method   set { a, b, d, e }
        conflict set { c }
 
-=item Overriden methods
+=item Overridden methods
 
-An overriden method can conflict in one of two ways. 
+An overridden method can conflict in one of two ways. 
 
-The first way is with another overriden method of the same 
-name, and this is considered an un-recoverable error. This 
+The first way is with another overridden method of the same 
+name, and this is considered an unrecoverable error. This 
 is an obvious error since you cannot override a method twice
 in the same class. 
 
-The second way for conflict is for an overriden method and a 
-regular method to have the same name. This is also an un-recoverable 
+The second way for conflict is for an overridden method and a 
+regular method to have the same name. This is also an unrecoverable 
 error since there is no way to combine these two, nor is it 
 okay for both items to be composed into a single class at some 
 point. 
@@ -202,7 +202,7 @@ is the key.
 
 This is a just a set of complex edge cases which can easily get 
 confused. This attempts to clarify those cases and provide an 
-explination of what is going on in them.
+explanation of what is going on in them.
 
 =over 4
 
@@ -258,9 +258,9 @@ This works because the combination of Role::Foo and Role::Bar produce
 a conflict with the C<foo> method. This conflict results in the 
 composite role (that was created by the combination of Role::Foo 
 and Role::Bar using the I<with> keyword) having a method requirement 
-of C<foo>. The Role::FooBar then fufills this requirement. 
+of C<foo>. The Role::FooBar then fulfills this requirement. 
 
-It is important to note that Role::FooBar is simply fufilling the 
+It is important to note that Role::FooBar is simply fulfilling the 
 required C<foo> method, and **NOT** overriding C<foo>. This is an 
 important distinction to make.
 
@@ -304,7 +304,7 @@ This is the main site for the original Traits papers.
 
 I created this implementation of traits several years ago, 
 after reading the papers linked above. (This module is now 
-maintatined by Ovid and I am no longer involved with it).
+maintained by Ovid and I am no longer involved with it).
 
 =back
 

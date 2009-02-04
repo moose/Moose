@@ -44,7 +44,7 @@ extension.
 
 Many of the Moose extensions on CPAN work by providing an attribute
 metaclass extension. For example, the C<MooseX::AttributeHelpers>
-distro provides a new attribute metaclass that lets you delegate
+distribution provides a new attribute metaclass that lets you delegate
 behavior to a non-object attribute (a hashref or simple number).
 
 A metaclass extension can be packaged as a subclass or a
@@ -103,7 +103,7 @@ Another common Moose extension is a new type for the Moose type
 system. In this case, you simply create a type in your module. When
 people load your module, the type is created, and they can refer to it
 by name after that. The C<MooseX::Types::URI> and
-C<MooseX::Types::DateTime> distros are two good examples of how this
+C<MooseX::Types::DateTime> distributions are two good examples of how this
 works.
 
 =head1 ROLES VS TRAITS VS SUBCLASSES

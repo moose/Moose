@@ -41,9 +41,9 @@ Well cause merlyn asked if it could :)
     # the correct instance in the accessors
     
     sub find_instance {
-        my ($self, $canidate, $accessor_type) = @_;
+        my ($self, $candidate, $accessor_type) = @_;
         
-        my $instance = $canidate;
+        my $instance = $candidate;
         my $attr     = $self->associated_attribute;
         
         # if it is a class calling it ...

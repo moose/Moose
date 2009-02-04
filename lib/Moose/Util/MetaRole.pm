@@ -225,24 +225,24 @@ error:
 
 =item 1.
 
-There is a class (ClassA) which uses some extension(s) that apply
+There is a class (C<ClassA>) which uses some extension(s) that apply
 roles to the metaclass.
 
 =item 2.
 
-You have another class (ClassB) which wants to subclass ClassA and
+You have another class (C<ClassB>) which wants to subclass C<ClassA> and
 apply some more extensions.
 
 =back
 
 Normally, the call to C<extends> will happen at run time, I<after> the
 additional extensions are applied. This causes an error when we try to
-make the metaclass for ClassB compatible with the metaclass for
-ClassA.
+make the metaclass for C<ClassB> compatible with the metaclass for
+C<ClassA>.
 
 We hope to be able to fix this in the future.
 
-For now the workaround is for ClassB to make sure it extends ClassA
+For now the workaround is for C<ClassB> to make sure it extends C<ClassA>
 I<before> it loads extensions:
 
   package ClassB;

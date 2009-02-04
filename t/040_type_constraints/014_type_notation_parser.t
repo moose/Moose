@@ -11,7 +11,7 @@ BEGIN {
 
 =pod
 
-This is a good canidate for LectroTest
+This is a good candidate for LectroTest
 Volunteers welcome :)
 
 =cut

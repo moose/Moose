@@ -73,7 +73,7 @@ can benefit greatly from going more meta.
 
 The high-level goal of this recipe's code is to allow each attribute to have a
 human-readable "label" attached to it. Such labels would be used when showing
-data to an end user. In this recipe we label the "url" attribute with "The
+data to an end user. In this recipe we label the C<url> attribute with "The
 site's URL" and create a simple method to demonstrate how to use that label.
 
 =head1 REAL ATTRIBUTES 101
@@ -85,7 +85,7 @@ concrete example.
   has 'x' => ( isa => 'Int', is => 'ro' );
   has 'y' => ( isa => 'Int', is => 'rw' );
 
-Ahh, the veritable x and y of the Point example. Internally, every Point has an
+Ah, the veritable x and y of the Point example. Internally, every Point has an
 x object and a y object. They have methods (such as "get_value") and attributes
 (such as "is_lazy"). What class are they instances of?
 L<Moose::Meta::Attribute>.  You don't normally see the objects lurking behind
@@ -148,7 +148,7 @@ credit: how in the actual hell can you use the MOP to extend itself?)
       predicate => 'has_label',
   );
 
-Hey, this looks pretty reasonable! This is plain jane Moose code. Recipe 1
+Hey, this looks pretty reasonable! This is plain-Jane Moose code. Recipe 1
 fare. This is merely making a new attribute. An attribute that attributes have.
 A meta-attribute. It may sound scary, but it really isn't! Reread
 L<REAL ATTRIBUTES 101> if this really is terrifying.

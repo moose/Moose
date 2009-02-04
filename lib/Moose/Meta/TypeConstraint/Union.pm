@@ -166,7 +166,7 @@ but it does provide the same API
 
 =back
 
-=head2 Overriden methods 
+=head2 Overridden methods 
 
 =over 4
 

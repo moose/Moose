@@ -51,7 +51,7 @@ understanding of Moose.
 
 =head1 INTRODUCTION
 
-The example in the SYNOPSIS outlines a very basic use of
+The example in the L</"SYNOPSIS"> outlines a very basic use of
 operator overloading and Moose.  The example creates a class
 that allows you to add together two humans and produce a
 child from them.
@@ -64,7 +64,7 @@ While this example works and gets the job done, it really isn't
 all that useful.  To take this a step further let's play around
 with genes.  Particularly the genes that dictate eye color.  Why
 eye color?  Because it is simple.  There are two genes that have
-the most affect on eye color and each person carries two of each
+the most effect on eye color and each person carries two of each
 gene.  Now that will be useful!
 
 Oh, and don't forget that you were promised some coercion goodness.
@@ -76,13 +76,13 @@ First, let's quickly define the techniques that will be used.
 =head2 Operator Overloading
 
 Overloading operators takes a simple declaration of which operator
-you want to overload and what method to call.  See the perldoc for
-overload to see some good, basic, examples.
+you want to overload and what method to call.  See
+L<overload> to see some good, basic, examples.
 
 =head2 Subtypes
 
 Moose comes with 21 default type constraints, as documented in
-L<Moose::Util::TypeConstraints>.  Int, Str, and CodeRef are
+L<Moose::Util::TypeConstraints>.  C<Int>, C<Str>, and C<CodeRef> are
 all examples.  Subtypes give you the ability to inherit the
 constraints of an existing type, and adding additional
 constraints on that type.  An introduction to type constraints
@@ -101,7 +101,7 @@ this can be found in L<Moose::Cookbook::Basics::Recipe5>.
 
 As I alluded to in the introduction, there are many different
 genes that affect eye color.  But, there are 2 genes that play
-the most prominent role: gey and bey2.  To get started let us
+the most prominent role: I<gey> and I<bey2>.  To get started let us
 make classes for these genes.
 
 =head2 bey2
@@ -115,7 +115,7 @@ make classes for these genes.
 
   has 'color' => ( is => 'ro', isa => 'bey2Color' );
 
-This class is really simple.  All we need to know about the bey2
+This class is really simple.  All we need to know about the I<bey2>
 gene is whether it is of the blue or brown variety.  As you can
 see a type constraint for the color attribute has been created
 which validates for the two possible colors.
@@ -131,14 +131,14 @@ which validates for the two possible colors.
 
   has 'color' => ( is => 'ro', isa => 'geyColor' );
 
-The gey gene is nearly identical to the bey2, except that it
+The I<gey> gene is nearly identical to I<bey2>, except that it
 has a green or blue variety.
 
 =head1 EYE COLOR
 
-Rather than throwing the 4 gene object (2xbey, 2xgey2) straight
-on to the Human class, let's create an intermediate class that
-abstracts the logic behind eye color.  This way the Human class
+Rather than throwing the 4 gene object (2 x I<bey>, 2 x I<gey2>) straight
+on to the C<Human> class, let's create an intermediate class that
+abstracts the logic behind eye color.  This way the C<Human> class
 won't get all cluttered up with the details behind the different
 characteristics that makes up a Human.
 
@@ -173,10 +173,10 @@ So, we now have a class that can hold the four genes that dictate
 eye color.  This isn't quite enough, as we also need to calculate
 what the human's actual eye color is as a result of the genes.
 
-As with most genes there are recessive and dominant genes.  The bey2
-brown gene is dominant to both blue and green.  The gey green gene is
-recessive to the brown bey gene and dominant to the blues.  Finally,
-the bey and gey2 blue genes are recessive to both brown and green.
+As with most genes there are recessive and dominant genes.  The I<bey2>
+brown gene is dominant to both blue and green.  The I<gey> green gene is
+recessive to the brown I<bey> gene and dominant to the blues.  Finally,
+the I<bey> and I<gey2> blue genes are recessive to both brown and green.
 
   sub color {
       my ($self) = @_;
@@ -192,10 +192,10 @@ the bey and gey2 blue genes are recessive to both brown and green.
       return 'blue';
   }
 
-To top it off, if I want to access color(), I want to be really lazy
+To top it off, if I want to access C<color()>, I want to be really lazy
 about it.  Perl overloading supports the ability to overload the
-stringification of an object.  So, normally if I did "$eye_color"
-I'd get something like "Human::EyeColor=HASH(0xba9348)".  What I
+stringification of an object.  So, normally if I did C<$eye_color>
+I'd get something like C<Human::EyeColor=HASH(0xba9348)>.  What I
 really want is "brown", "green", or "blue".  To do this you overload
 the stringification of the object.
 
@@ -204,8 +204,8 @@ the stringification of the object.
 That's all and good, but don't forget the spawn!  Our
 humans have to have children, and those children need to inherit
 genes from their parents.  Let's use operator overloading so
-that we can add (+) together two EyeColor characteristics to
-create a new EyeColor that is derived in a similar manner as
+that we can add (+) together two C<EyeColor> characteristics to
+create a new C<EyeColor> that is derived in a similar manner as
 the gene selection in human reproduction.
 
   use overload '+' => \&_overload_add, fallback => 1;
@@ -233,8 +233,8 @@ the gene selection in human reproduction.
 
 What is happening here is we are overloading the addition
 operator.  When two eye color objects are added together
-the _overload_add() method will be called with the two
-objects on the left and right side of the + as arguments.
+the C<_overload_add()> method will be called with the two
+objects on the left and right side of the C<+> as arguments.
 The return value of this method should be the expected
 result of the addition.  I'm not going to go in to the
 details of how the gene's are selected as it should be
@@ -242,11 +242,11 @@ fairly self-explanatory.
 
 =head1 HUMAN EVOLUTION
 
-Our original human class in the SYNOPSIS requires very little
-change to support the new EyeColor characteristic.  All we
-need to do is define a new subtype called EyeColor, a new
-attribute called eye_color, and just for the sake of simple code
-we'll coerce an arrayref of colors in to an EyeColor object.
+Our original human class in the L</"SYNOPSIS"> requires very little
+change to support the new C<EyeColor> characteristic.  All we
+need to do is define a new subtype called C<EyeColor>, a new
+attribute called C<eye_color>, and just for the sake of simple code
+we'll coerce an arrayref of colors in to an C<EyeColor> object.
 
   use List::MoreUtils qw( zip );
 
@@ -262,7 +262,7 @@ we'll coerce an arrayref of colors in to an EyeColor object.
   has 'eye_color' =>
       ( is => 'ro', isa => 'EyeColor', coerce => 1, required => 1 );
 
-And then in the _overload_add() of the Human class we modify
+And then in the C<_overload_add()> of the C<Human> class we modify
 the creation of the child object to include the addition of
 the mother and father's eye colors.
 
@@ -280,7 +280,8 @@ and coercion - provide the power to produce simple, flexible, powerful,
 explicit, inheritable, and enjoyable interfaces.
 
 If you want to get your hands on this code all combined together, and
-working, download the Moose tarball and look at "t/000_recipes/012_genes.t".
+working, download the Moose tarball and look at
+F<t/000_recipes/basics/010_genes.t>.
 
 =head1 NEXT STEPS
 

@@ -96,7 +96,7 @@ the C<init_arg> to C<undef> instead of overwriting it in C<BUILD>.
 
 If you need to change the way C<@_> is processed, for example for
 C<< Class->new( $single_param ) >>, use C<BUILDARGS> instead of wrapping
-C<new>. This ensures the behavior is subclassible, it keeps this logic
+C<new>. This ensures the behavior is subclassable, it keeps this logic
 independent of the other aspects of construction, and can be made efficient
 using C<make_immutable>.
 

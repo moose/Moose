@@ -16,7 +16,7 @@ Moose::Cookbook::Snack::Types - Snippets of code for using Types and Type Constr
   package main;
 
   my $point = eval {
-    Point->new(x => 'fifty', y => 'fourty');
+    Point->new(x => 'fifty', y => 'forty');
   };
 
   if($@) {
@@ -24,7 +24,7 @@ Moose::Cookbook::Snack::Types - Snippets of code for using Types and Type Constr
   }
 
   my $point;
-  my $xval = 'fourty-two';
+  my $xval = 'forty-two';
   my $xattribute = Point->meta->find_attribute_by_name('x');
   my $xtype_constraint = $xattribute->type_constraint;
   if($xtype_constraint->check($xval)) {
@@ -41,7 +41,7 @@ type checking.
 
 If we try to assign a string value to an attribute that is defined as
 being of type Int, Moose will die with an explicit error message
-saying which attribute failed which type constaint with which
+saying which attribute failed which type constraint with which
 value. The eval example catches this message and displays it.
 
 The second example fetches the type constraint instance and asks it to

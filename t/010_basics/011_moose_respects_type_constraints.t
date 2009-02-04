@@ -11,7 +11,7 @@ use Moose::Util::TypeConstraints;
 =pod
 
 This tests demonstrates that Moose will not override 
-a pre-existing type constraint of the same name when 
+a preexisting type constraint of the same name when 
 making constraints for a Moose-class.
 
 It also tests that an attribute which uses a 'Foo' for

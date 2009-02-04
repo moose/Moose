@@ -66,14 +66,14 @@ attribute>. Here's an example in code:
 
 At this point, Moose will call C<< $tree->_build_child_tree() >> in
 order to populate the C<left> attribute. If we had passed C<left> to
-the original constructor, the builer would not be called.
+the original constructor, the builder would not be called.
 
 =head2 Subclassable
 
 There are some differences between C<default> and C<builder>. Because
 C<builder> is called I<by name>, it goes through Perl's normal
 inheritance system. This means that builder methods are both
-inheritable and overrideable.
+inheritable and overridable.
 
 For example, we might make a C<BinaryTree> subclass:
 

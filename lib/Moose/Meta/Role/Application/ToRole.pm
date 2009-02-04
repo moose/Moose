@@ -100,7 +100,7 @@ sub apply_methods {
             $role2->add_required_methods($method_name);
         }
         else {
-            # add it, although it could be overriden
+            # add it, although it could be overridden
             $role2->add_method(
                 $method_name,
                 $role1->get_method($method_name)
@@ -118,7 +118,7 @@ sub apply_override_method_modifiers {
         if ($role2->has_method($method_name)) {
             # if it is being composed into another role
             # we have a conflict here, because you cannot
-            # combine an overriden method with a locally
+            # combine an overridden method with a locally
             # defined one
             Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
                     "during composition (A local method of the same name as been found). This " .

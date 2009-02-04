@@ -213,7 +213,7 @@ This is a set of utility functions to help working with Moose classes, and
 is used internally by Moose itself. The goal is to provide useful functions
 that for both Moose users and Moose extenders (MooseX:: authors).
 
-This is a relatively new addition to the Moose toolchest, so ideas, 
+This is a relatively new addition to the Moose tool chest, so ideas, 
 suggestions and contributions to this collection are most welcome. 
 See the L<TODO> section below for a list of ideas for possible functions 
 to write.
@@ -241,7 +241,7 @@ Given an C<$applicant> (which can somehow be turned into either a
 metaclass or a metarole) and a list of C<@roles> this will do the 
 right thing to apply the C<@roles> to the C<$applicant>. This is 
 actually used internally by both L<Moose> and L<Moose::Role>, and the
-C<@roles> will be pre-processed through L<Data::OptList::mkopt>
+C<@roles> will be preprocessed through L<Data::OptList::mkopt>
 to allow for the additional arguments to be passed. 
 
 =item B<get_all_attribute_values($meta, $instance)>

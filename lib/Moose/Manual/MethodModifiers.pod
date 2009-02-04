@@ -87,7 +87,7 @@ Moose generates for you, such as an attribute accessor:
   };
 
 Another use for the before modifier would be to do some sort of
-pre-checking on a method call. For example:
+prechecking on a method call. For example:
 
   before 'size' => sub {
       my $self = shift;

@@ -85,35 +85,35 @@ no user serviceable parts inside.
 
 =over 4
 
-=item Value
+=item C<Value>
 
-=item Ref
+=item C<Ref>
 
-=item Str
+=item C<Str>
 
-=item Num
+=item C<Num>
 
-=item Int
+=item C<Int>
 
-=item ScalarRef
+=item C<ScalarRef>
 
-=item ArrayRef
+=item C<ArrayRef>
 
-=item HashRef
+=item C<HashRef>
 
-=item CodeRef
+=item C<CodeRef>
 
-=item RegexpRef
+=item C<RegexpRef>
 
-=item GlobRef
+=item C<GlobRef>
 
-=item FileHandle
+=item C<FileHandle>
 
-=item Object
+=item C<Object>
 
-=item Role
+=item C<Role>
 
-=item ClassName
+=item C<ClassName>
 
 =back
 

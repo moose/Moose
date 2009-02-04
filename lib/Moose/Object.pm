@@ -97,15 +97,6 @@ sub does {
     return 0;   
 }
 
-# RANT:
-# Cmon, how many times have you written 
-# the following code while debugging:
-# 
-#  use Data::Dumper; 
-#  warn Dumper \%thing;
-#
-# It can get seriously annoying, so why 
-# not just do this ...
 sub dump { 
     my $self = shift;
     require Data::Dumper;
@@ -173,7 +164,7 @@ C<DOES> is equivalent to C<isa> or C<does>.
 
 =item B<dump ($maxdepth)>
 
-Cmon, how many times have you written the following code while debugging:
+C'mon, how many times have you written the following code while debugging:
 
  use Data::Dumper; 
  warn Dumper $obj;

@@ -100,7 +100,7 @@ your code, like so:
 
   no Moose;
 
-This will un-export the keywords that L<Moose> originally exported. The same 
+This will unexport the keywords that L<Moose> originally exported. The same 
 will also work for L<Moose::Role> and L<Moose::Util::TypeConstraints>. It is 
 general L<Moose> policy that this feature is used.
 

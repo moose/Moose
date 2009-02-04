@@ -137,7 +137,7 @@ that the order of composition does not matter (for information on
 the deeper theory of this read the original traits papers here 
 L<http://www.iam.unibe.ch/~scg/Research/Traits/>). 
 
-Because roles are essentially un-ordered, it would be impossible to 
+Because roles are essentially unordered, it would be impossible to 
 determine the order in which to execute the BUILD methods. 
 
 As for alternate solutions, there are a couple.
@@ -153,15 +153,15 @@ L<Moose::Cookbook::Basics::Recipe3>)
 
 =item *
 
-Use attibutes triggers, which fire after an attribute it set, to faciliate 
+Use attributes triggers, which fire after an attribute it set, to facilitate 
 initialization. These are described in the L<Moose> docs and examples can be 
 found in the test suite.
 
 =back
 
-In general, roles should not I<require> intialization, they should either 
+In general, roles should not I<require> initialization, they should either 
 provide sane defaults or should be documented as needing specific 
-initialization. One such way to "document" this is to have a seperate
+initialization. One such way to "document" this is to have a separate
 attribute initializer which is required for the role. Here is an example of 
 how to do this:
 

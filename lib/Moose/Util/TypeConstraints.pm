@@ -702,7 +702,7 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
 =head1 DESCRIPTION
 
 This module provides Moose with the ability to create custom type
-contraints to be used in attribute definition.
+constraints to be used in attribute definition.
 
 =head2 Important Caveat
 
@@ -783,7 +783,7 @@ literally interpreted as a type name.
 
 B<NOTE:> The C<Undef> type constraint for the most part works
 correctly now, but edge cases may still exist, please use it
-sparringly.
+sparingly.
 
 B<NOTE:> The C<ClassName> type constraint does a complex package
 existence check. This means that your class B<must> be loaded for
@@ -886,8 +886,8 @@ The resulting constraint will be a subtype of C<Str> and
 will match any of the items in C<@values>. It is case sensitive.
 See the L<SYNOPSIS> for a simple example.
 
-B<NOTE:> This is not a true proper enum type, it is simple
-a convient constraint builder.
+B<NOTE:> This is not a true proper enum type, it is simply
+a convenient constraint builder.
 
 =item B<enum (\@values)>
 
@@ -926,7 +926,7 @@ exception thrown.
 
 This can be used to define a "hand optimized" version of your
 type constraint which can be used to avoid traversing a subtype
-constraint heirarchy.
+constraint hierarchy.
 
 B<NOTE:> You should only use this if you know what you are doing,
 all the built in types use this, so your subtypes (assuming they
@@ -967,9 +967,9 @@ This is just sugar for the type coercion construction syntax.
 Given a string that is expected to match a type constraint, will normalize the
 string so that extra whitespace and newlines are removed.
 
-=item B<create_type_constraint_union ($pipe_seperated_types | @type_constraint_names)>
+=item B<create_type_constraint_union ($pipe_separated_types | @type_constraint_names)>
 
-Given string with C<$pipe_seperated_types> or a list of C<@type_constraint_names>,
+Given string with C<$pipe_separated_types> or a list of C<@type_constraint_names>,
 this will return a L<Moose::Meta::TypeConstraint::Union> instance.
 
 =item B<create_parameterized_type_constraint ($type_name)>

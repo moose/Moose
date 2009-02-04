@@ -795,12 +795,12 @@ will behave just as L<Class::MOP::Attribute> does.
 
 =item B<set_value>
 
-  eval { $point->meta->get_attribute('x')->set_value($point, 'fourty-two') };
+  eval { $point->meta->get_attribute('x')->set_value($point, 'forty-two') };
   if($@) {
     print "Oops: $@\n";
   }
 
-I<Attribute (x) does not pass the type constraint (Int) with 'fourty-two'>
+I<Attribute (x) does not pass the type constraint (Int) with 'forty-two'>
 
 Before setting the value, a check is made on the type constraint of
 the attribute, if it has one, to see if the value passes it. If the

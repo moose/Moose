@@ -164,7 +164,7 @@ cool, but still new and experimental.
 =head2 L<MooseX::Types>
 
 This extension helps you build a type library for your application. It
-also lets you pre-declare type names and use them as barewords.
+also lets you predeclare type names and use them as barewords.
 
   use MooseX::Types -declare => ['PosInt'];
   use MooseX::Types::Moose 'Int';
