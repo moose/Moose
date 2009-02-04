@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Manual::Attribute - Object attributes with Moose
+Moose::Manual::Attributes - Object attributes with Moose
 
 =head1 INTRODUCTION
 
