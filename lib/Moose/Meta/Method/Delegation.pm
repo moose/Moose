@@ -79,7 +79,7 @@ sub _initialize_body {
             || $self->throw_error(
             "Cannot delegate $handle_name to $method_to_call because "
                 . "the value of "
-                . $self->name
+                . $self->associated_attribute->name
                 . " is not defined",
             method_name => $method_to_call,
             object      => $instance
