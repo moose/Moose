@@ -109,9 +109,9 @@ Here is some sample code:
       return reverse @rv;
   };
 
-=head2 Moose and Attributes
+=head2 Moose and Subroutine Attributes
 
-=head3 Why don't attributes I inherited from a superclass work?
+=head3 Why don't subroutine attributes I inherited from a superclass work?
 
 Currently when you subclass a module, this is done at runtime with
 the C<extends> keyword but attributes are checked at compile time
@@ -119,7 +119,12 @@ by Perl. To make attributes work, you must place C<extends> in a
 C<BEGIN> block so that the attribute handlers will be available at
 compile time like this:
 
-  BEGIN { extends qw/Foo/ } 
+  BEGIN { extends qw/Foo/ }
+
+Note that we're talking about Perl's subroutine attributes here, not
+Moose attributes:
+
+  sub foo : Bar(27) { ... }
 
 =head2 Moose and Other Modules
 
