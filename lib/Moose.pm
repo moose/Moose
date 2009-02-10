@@ -11,7 +11,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Scalar::Util 'blessed';
-use Carp         'confess', 'croak', 'cluck';
+use Carp         'confess';
 
 use Moose::Exporter;
 
@@ -52,12 +52,12 @@ sub throw_error {
 sub extends {
     my $class = shift;
 
-    croak "Must derive at least one class" unless @_;
+    Moose->throw_error("Must derive at least one class") unless @_;
 
     my @supers = @_;
     foreach my $super (@supers) {
         Class::MOP::load_class($super);
-        croak "You cannot inherit from a Moose Role ($super)"
+        Moose->throw_error("You cannot inherit from a Moose Role ($super)")
             if $super->can('meta')  && 
                blessed $super->meta &&
                $super->meta->isa('Moose::Meta::Role')
@@ -80,7 +80,10 @@ sub with {
 sub has {
     my $class = shift;
     my $name  = shift;
-    croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+
+    Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
+        if @_ == 1;
+
     my %options = ( definition_context => _caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
