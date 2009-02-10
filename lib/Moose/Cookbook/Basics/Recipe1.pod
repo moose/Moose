@@ -182,9 +182,8 @@ C<MooseX::InsideOut>.
 
 =head1 CONCLUSION
 
-This recipe demonstrates some basic Moose concepts. The next recipe
-will build upon the basics shown here with more complex attributes and
-methods. Please read on :)
+This recipe demonstrates some basic Moose concepts, attributes,
+subclassing, and a simple method modifier.
 
 =head1 FOOTNOTES
 
