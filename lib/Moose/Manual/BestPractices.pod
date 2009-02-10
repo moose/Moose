@@ -99,6 +99,13 @@ L<MooseX::AttributeHelpers> to define an API that exposes those pieces
 of functionality that need exposing. Then you can expose just the
 functionality that you want.
 
+=head2 Always call C<inner> in the most specific subclass
+
+When using C<augment> and C<inner>, we recommend that you call
+C<inner> in the most specific subclass of your hierarchy. This makes
+it possible to subclass further and extend the hierarchy without
+changing the parents.
+
 =head2 Namespace your types
 
 Use some sort of namespacing convention for type names. We recommend
