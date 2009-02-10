@@ -72,6 +72,10 @@ sub _initialize_body {
     # out. However, the more I thought about it, the less I liked it
     # doing the goto, and I prefered the act of delegation being
     # actually represented in the stack trace.  - SL
+    # not inlining this, since it won't really speed things up at
+    # all... the only thing that would end up different would be
+    # interpolating in $method_to_call, and a bunch of things in the
+    # error handling that mostly never gets called - doy
     $self->{body} = sub {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
