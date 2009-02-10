@@ -22,31 +22,38 @@ use Test::Exception;
     use Params::Coerce ();
     use URI            ();
 
-    subtype Header => as Object => where { $_->isa('HTTP::Headers') };
+    class_type('HTTP::Headers');
 
-    coerce Header => from ArrayRef => via { HTTP::Headers->new( @{$_} ) } =>
-        from HashRef => via { HTTP::Headers->new( %{$_} ) };
+    coerce 'HTTP::Headers'
+        => from 'ArrayRef'
+            => via { HTTP::Headers->new( @{$_} ) }
+        => from 'HashRef'
+            => via { HTTP::Headers->new( %{$_} ) };
 
-    subtype Uri => as Object => where { $_->isa('URI') };
+    class_type('URI');
 
-    coerce Uri => from Object =>
-        via { $_->isa('URI') ? $_ : Params::Coerce::coerce( 'URI', $_ ) } =>
-        from Str => via { URI->new( $_, 'http' ) };
+    coerce 'URI'
+        => from 'Object'
+            => via { $_->isa('URI')
+                     ? $_
+                     : Params::Coerce::coerce( 'URI', $_ ); }
+        => from 'Str'
+            => via { URI->new( $_, 'http' ) };
 
-    subtype Protocol => as Str => where {/^HTTP\/[0-9]\.[0-9]$/};
+    subtype 'Protocol'
+        => as 'Str'
+        => where { /^HTTP\/[0-9]\.[0-9]$/ };
 
-    has 'base' => ( is => 'rw', isa => 'Uri', coerce => 1 );
-    has 'url'  => ( is => 'rw', isa => 'Uri', coerce => 1 );
+    has 'base' => ( is => 'rw', isa => 'URI', coerce => 1 );
+    has 'uri'  => ( is => 'rw', isa => 'URI', coerce => 1 );
     has 'method'   => ( is => 'rw', isa => 'Str' );
     has 'protocol' => ( is => 'rw', isa => 'Protocol' );
     has 'headers'  => (
         is      => 'rw',
-        isa     => 'Header',
+        isa     => 'HTTP::Headers',
         coerce  => 1,
         default => sub { HTTP::Headers->new }
     );
-
-    __PACKAGE__->meta->make_immutable( debug => 0 );
 }
 
 my $r = Request->new;
