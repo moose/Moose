@@ -250,11 +250,51 @@ supply a C<builder> method for your attribute:
 
 This has several advantages. First, it moves a chunk of code to its
 own named method, which improves readability and code
-organization. Second, the C<_build_size> method can be overridden in
-subclasses.
+organization.
 
 We strongly recommend that you use a C<builder> instead of a
 C<default> for anything beyond the most trivial default.
+
+=head3 Builders allow subclassing
+
+Because the C<builder> is called I<by name>, it goes through Perl's
+method resolution. This means that builder methods are both
+inheritable and overridable.
+
+If we subclass our C<Person> class, we can override C<_build_size>:
+
+  package Lilliputian;
+
+  use Moose;
+  extends 'Person';
+
+  sub _build_size { return 'small' }
+
+=head3 Builders can be composed from roles
+
+Because builders are called by name, they work well with roles. For
+example, a role could provide an attribute but require that the
+consuming class provide the C<builder>:
+
+  package HasSize;
+  use Moose::Role;
+
+  requires '_build_size';
+
+  has 'size' => (
+      is      => 'ro',
+      lazy    => 1,
+      builder => '_build_animal',
+  );
+
+  package Lilliputian;
+  use Moose;
+
+  with 'HasSize';
+
+  sub _build_size { return 'small' }
+
+Roles are covered in L<Moose::Manual::Roles>.
 
 =head2 Laziness and C<lazy_build>
 

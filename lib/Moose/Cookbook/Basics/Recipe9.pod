@@ -48,100 +48,34 @@ Moose::Cookbook::Basics::Recipe9 - Builder methods and lazy_build
 
 =head1 DESCRIPTION
 
-If you've already read L<Moose::Cookbook::Basics::Recipe3>, then this example
-should look awfully familiar. In fact, all we've done here is replace
-the attribute C<default> with a C<builder> method.
+If you've already read L<Moose::Cookbook::Basics::Recipe3>, then this
+example should look very familiar. In fact, all we've done here is
+replace the attribute's C<default> parameter with a C<builder>.
 
 In this particular case, the C<default> and C<builder> options act in
-exactly the same way. When the C<left> or C<right> attribute get
-method is called, Moose will call the builder method to initialize the
-attribute.
+exactly the same way. When the C<left> or C<right> attribute is read,
+Moose calls the builder method to initialize the attribute.
 
 Note that Moose calls the builder method I<on the object which has the
-attribute>. Here's an example in code:
+attribute>. Here's an example:
 
   my $tree = BinaryTree->new();
 
   my $left = $tree->left();
 
-At this point, Moose will call C<< $tree->_build_child_tree() >> in
-order to populate the C<left> attribute. If we had passed C<left> to
-the original constructor, the builder would not be called.
+When C<< $tree->left() >> is called, Moose calls C<<
+$tree->_build_child_tree() >> in order to populate the C<left>
+attribute. If we had passed C<left> to the original constructor, the
+builder would not be called.
 
-=head2 Subclassable
-
-There are some differences between C<default> and C<builder>. Because
-C<builder> is called I<by name>, it goes through Perl's normal
-inheritance system. This means that builder methods are both
-inheritable and overridable.
-
-For example, we might make a C<BinaryTree> subclass:
-
-  package TrinaryTree;
-  use Moose;
-
-  extends 'BinaryTree';
-
-  has 'middle' => (
-      is        => 'rw',
-      isa       => 'BinaryTree',
-      predicate => 'has_middle',
-      lazy      => 1,
-      builder   => '_build_child_tree',
-  );
-
-This doesn't quite work though. If you look closely at the
-C<_build_child_tree> method defined in C<BinaryTree>, you'll notice
-that it hard-codes a class name. Naughty us!
-
-Also, as a bonus, we'll pass C<@_> through, so subclasses can override
-the method to pass additional options to the constructor.
-
-Good object-oriented code should allow itself to be subclassed
-gracefully. Let's tweak C<_build_child_tree>:
-
-  sub _build_child_tree {
-      my $self = shift;
-
-      return (ref $self)->new( parent => $self, @_ );
-  }
-
-Now C<_build_child_tree> can be gracefully inherited and overridden.
-
-=head2 Composable
-
-There's more to builders than just subclassing, though. The fact that
-builders are called by name also makes them suitable for use in a
-role.
-
-  package HasAnimal;
-  use Moose::Role;
-
-  requires '_build_animal';
-
-  has 'animal' => (
-      is      => 'ro',
-      isa     => 'Animal',
-      lazy    => 1,
-      builder => '_build_animal',
-  );
-
-This role provides an animal attribute, but requires that the consumer
-of the role provide a builder method it.
-
-  package CatLover;
-  use Moose;
-
-  with 'HasAnimal';
-
-  sub _build_animal {
-      return Cat->new();
-  }
+There are some differences between C<default> and C<builder>. Notably,
+a builder is subclassable, and can be composed from a role. See
+L<Moose::Manual::Attributes> for more details.
 
 =head2 The lazy_build shortcut
 
 The C<lazy_build> attribute parameter can be used as sugar to specify
-a whole bunch of options at once.
+a whole set of attribute parameters at once:
 
   has 'animal' => (
       is         => 'ro',
@@ -149,7 +83,7 @@ a whole bunch of options at once.
       lazy_build => 1,
   );
 
-This is a shorthand for this:
+This is a shorthand for:
 
   has 'animal' => (
       is        => 'ro',
@@ -164,35 +98,16 @@ This is a shorthand for this:
 If your attribute starts with an underscore, Moose is smart and will
 do the right thing with the C<predicate> and C<clearer>, making them
 both start with an underscore. The C<builder> method I<always> starts
-with an underscore, since you will want this to be private the vast
-majority of the time.
+with an underscore.
 
-Note that the C<builder> method name is created by simply taking
-"_build_" and appending the attribute name. This means that attributes
-with a leading underscore like C<_animal> end up with a builder named
-C<_build__animal>.
+You can read more about C<lazy_build> in L<Moose::Manual::Attributes>
 
 =head1 CONCLUSION
 
 The C<builder> option is a more OO-friendly version of the C<default>
-functionality. It also has the property of separating out the code
-into a separate well-defined method. This alone makes it valuable. It
-is quite ugly to jam a long default code reference into your attribute
-definition.
-
-Here are some good rules for determining when to use C<builder> vs
-C<default>.
-
-If the default value is a simple scalar that only needs to be
-calculated once (or a constant), use C<default>.
-
-If the default value is an empty reference that needs to be wrapped in
-a coderef like C<sub { [] }>, use C<default>.
-
-Otherwise, use C<builder>.
-
-This ensures that your classes are easily subclassable, and also helps
-keep crufty code out of your attribute definition blocks.
+functionality. It also separates the default-generating code into a
+well-defined method. Sprinkling your attribute definitions with
+anonymous subroutines can be quite ugly and hard to follow.
 
 =head1 AUTHOR
 
