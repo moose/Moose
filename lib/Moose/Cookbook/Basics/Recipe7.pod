@@ -17,33 +17,21 @@ Moose::Cookbook::Basics::Recipe7 - Making Moose fast with immutable
 
 =head1 DESCRIPTION
 
-The Moose metaclass API provides a method C<make_immutable()>. At a
-high level, this calling this method does two things to your
-class. One, it makes it faster. In particular, object construction and
-accessors are effectively "inlined" in your class, and no longer go
-through the meta-object system.
+The Moose metaclass API provides a C<make_immutable()> method. Calling
+this method does two things to your class. First, it makes it
+faster. In particular, object construction and destruction are
+effectively "inlined" in your class, and no longer invokes the meta
+API.
 
-Second, you can no longer make changes via the metaclass API such as
-adding attributes. In practice, this won't be a problem, as you don't
-usually need to do this at runtime after first loading the class.
-
-=head2 Immutabilization and C<new()>
-
-If you override C<new()> in your class, then the immutabilization code
-will not be able to provide an optimized constructor for your
-class. Instead, consider providing a C<BUILD()> method. You can
-probably do the same thing in a C<BUILD()> method.
-
-Alternately, if you really need to provide a different C<new()>, you
-can also provide your own immutabilization method.
-
-Discussing this is beyond the scope of this recipe, however.
+Second, you can no longer make changes via the metaclass API, such as
+adding attributes. In practice, this won't be a problem, as you rarely
+need to do this after first loading the class.
 
 =head1 CONCLUSION
 
 We strongly recommend you make your classes immutable. It makes your
-code much faster, basically for free. This will be especially
-noticeable when creating many objects or calling accessors frequently.
+code much faster, with a small compile-time cost. This will be
+especially noticeable when creating many object.
 
 =head1 AUTHOR
 

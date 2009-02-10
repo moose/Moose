@@ -103,6 +103,18 @@ class's metaclass object.
 
   __PACKAGE__->meta->make_immutable;
 
+=head2 Immutabilization and C<new()>
+
+If you override C<new()> in your class, then the immutabilization code
+will not be able to provide an optimized constructor for your
+class. Instead, you should use C<BUILD()> method, which will be called
+from the inlined constructor.
+
+Alternately, if you really need to provide a different C<new()>, you
+can also provide your own immutabilization method. Doing so requires
+extending the Moose metaclasses, and is well beyond the scope of this
+manual.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
