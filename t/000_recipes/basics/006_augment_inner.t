@@ -54,6 +54,7 @@ use Test::Exception;
     augment 'create' => sub {
         my $self = shift;
         $self->create_tps_report;
+        inner();
     };
 
     sub create_tps_report {

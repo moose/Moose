@@ -50,6 +50,7 @@ Moose::Cookbook::Basics::Recipe6 - The augment/inner example
   augment 'create' => sub {
       my $self = shift;
       $self->create_tps_report;
+      inner();
   };
 
   sub create_tps_report {
@@ -61,27 +62,75 @@ Moose::Cookbook::Basics::Recipe6 - The augment/inner example
 
 =head1 DESCRIPTION
 
-Coming Soon.
+This recipe shows how the C<augment> method modifier works. This
+modifier reverses the normal subclass to parent method resolution
+order. With an C<augment> modifier the I<least> specific method is
+called first. Each successive call to C<inner> descends the
+inheritance tree, ending at the most specific subclass.
+
+The C<augment> modifier lets you design a parent class that can be
+extended in a specific way. The parent provides generic wrapper
+functionality, and the subclasses fill in the details.
+
+In the example above, we've created a set of document classes, with
+the most specific being the C<TPSReport> class.
+
+We start with the least specific class, C<Document::Page>. Its create
+method contains a call to C<inner()>:
+
+  sub create {
+      my $self = shift;
+      $self->open_page;
+      inner();
+      $self->close_page;
+  }
+
+The C<inner> function is exported by C<Moose>, and is like C<super>
+for augmented methods. When C<inner> is called, Moose finds the next
+method in the chain, which is the C<augment> modifier in
+C<Document::PageWithHeadersAndFooters>. You'll note that we can call
+C<inner> in our modifier:
+
+  augment 'create' => sub {
+      my $self = shift;
+      $self->create_header;
+      inner();
+      $self->create_footer;
+  };
+
+This finds the next most specific modifier, in the C<TPSReport> class.
+
+Finally, in the C<TPSReport> class, the chain comes to an end:
+
+  augment 'create' => sub {
+      my $self = shift;
+      $self->create_tps_report;
+      inner();
+  };
+
+We do call the C<inner> function one more time, but since there is no
+more specific subclass, this is a no-op. Making this call means we can
+easily subclass C<TPSReport> in the future.
 
 =head1 CONCLUSION
 
-=head1 FOOTNOTES
-
-=over 4
-
-=back
+The C<augment> modifier is a powerful tool for creating a set of
+nested wrappers. It's not something you will need often, but when you
+do it is very handy.
 
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007 by Infinity Interactive, Inc.
+Copyright 2007-2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-=cut       
+=cut
