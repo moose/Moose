@@ -3,26 +3,14 @@
 use strict;
 use warnings;
 
+use Test::More tests => 10;
+
+
 {
     package Human;
 
     use Moose;
     use Moose::Util::TypeConstraints;
-
-    subtype 'EyeColor'
-        => as 'Object'
-        => where { $_->isa('Human::EyeColor') };
-
-    coerce 'EyeColor'
-        => from 'ArrayRef'
-            => via {
-                return Human::EyeColor->new(
-                    bey2_1 => $_->[0],
-                    bey2_2 => $_->[1],
-                    gey_1  => $_->[2],
-                    gey_2  => $_->[3],
-                );
-            };
 
     subtype 'Gender'
         => as 'Str'
@@ -30,35 +18,67 @@ use warnings;
 
     has 'gender' => ( is => 'ro', isa => 'Gender', required => 1 );
 
-    has 'eye_color' => ( is => 'ro', isa => 'EyeColor', coerce => 1, required => 1 );
-
     has 'mother' => ( is => 'ro', isa => 'Human' );
     has 'father' => ( is => 'ro', isa => 'Human' );
 
     use overload '+' => \&_overload_add, fallback => 1;
 
     sub _overload_add {
-        my ($one, $two) = @_;
+        my ( $one, $two ) = @_;
 
-        die('Only male and female humans may have children')
-            if ($one->gender() eq $two->gender());
+        die('Only male and female humans may create children')
+            if ( $one->gender() eq $two->gender() );
 
-        my ( $mother, $father ) = ( $one->gender eq 'f' ? ($one, $two) : ($two, $one) );
+        my ( $mother, $father )
+            = ( $one->gender eq 'f' ? ( $one, $two ) : ( $two, $one ) );
 
         my $gender = 'f';
-        $gender = 'm' if (rand() >= 0.5);
-
-        # Would be better to use Crypt::Random.
-        #use Crypt::Random qw( makerandom ); 
-        #$gender = 'm' if (makerandom( Size => 1, Strength => 1, Uniform => 1 ));
+        $gender = 'm' if ( rand() >= 0.5 );
 
         return Human->new(
-            gender => $gender,
+            gender    => $gender,
             eye_color => ( $one->eye_color() + $two->eye_color() ),
-            mother => $mother,
-            father => $father,
+            mother    => $mother,
+            father    => $father,
         );
     }
+
+    use List::MoreUtils qw( zip );
+
+    coerce 'Human::EyeColor'
+        => from 'ArrayRef'
+        => via { my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
+                 return Human::EyeColor->new( zip( @genes, @{$_} ) ); };
+
+    has 'eye_color' => (
+        is       => 'ro',
+        isa      => 'Human::EyeColor',
+        coerce   => 1,
+        required => 1,
+    );
+
+}
+
+{
+    package Human::Gene::bey2;
+
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    type 'bey2_color' => where { $_ =~ m{^(?:brown|blue)$} };
+
+    has 'color' => ( is => 'ro', isa => 'bey2_color' );
+}
+
+{
+    package Human::Gene::gey;
+
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    type 'gey_color' => where { $_ =~ m{^(?:green|blue)$} };
+
+    has 'color' => ( is => 'ro', isa => 'gey_color' );
 }
 
 {
@@ -67,41 +87,40 @@ use warnings;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    subtype 'bey2Gene'
-        => as 'Object'
-        => where { $_->isa('Human::Gene::bey2') };
-
-    coerce 'bey2Gene'
+    coerce 'Human::Gene::bey2'
         => from 'Str'
             => via { Human::Gene::bey2->new( color => $_ ) };
 
-    subtype 'geyGene'
-        => as 'Object'
-        => where { $_->isa('Human::Gene::gey') };
-
-    coerce 'geyGene'
+    coerce 'Human::Gene::gey'
         => from 'Str'
             => via { Human::Gene::gey->new( color => $_ ) };
 
-    has 'bey2_1' => ( is => 'ro', isa => 'bey2Gene', coerce => 1 );
-    has 'bey2_2' => ( is => 'ro', isa => 'bey2Gene', coerce => 1 );
+    has [qw( bey2_1 bey2_2 )] =>
+        ( is => 'ro', isa => 'Human::Gene::bey2', coerce => 1 );
 
-    has 'gey_1'  => ( is => 'ro', isa => 'geyGene', coerce => 1 );
-    has 'gey_2'  => ( is => 'ro', isa => 'geyGene', coerce => 1 );
-
-    use overload '+' => \&_overload_add, fallback => 1;
-    use overload '""' => \&color, fallback => 1;
+    has [qw( gey_1 gey_2 )] =>
+        ( is => 'ro', isa => 'Human::Gene::gey', coerce => 1 );
 
     sub color {
-        my ( $self ) = @_;
+        my ($self) = @_;
 
-        return 'brown' if ($self->bey2_1->color() eq 'brown' or $self->bey2_2->color() eq 'brown');
-        return 'green' if ($self->gey_1->color() eq 'green' or $self->gey_2->color() eq 'green');
+        return 'brown'
+            if ( $self->bey2_1->color() eq 'brown'
+            or $self->bey2_2->color() eq 'brown' );
+
+        return 'green'
+            if ( $self->gey_1->color() eq 'green'
+            or $self->gey_2->color() eq 'green' );
+
         return 'blue';
     }
 
+    use overload '""' => \&color, fallback => 1;
+
+    use overload '+' => \&_overload_add, fallback => 1;
+
     sub _overload_add {
-        my ($one, $two) = @_;
+        my ( $one, $two ) = @_;
 
         my $one_bey2 = 'bey2_' . _rand2();
         my $two_bey2 = 'bey2_' . _rand2();
@@ -118,81 +137,78 @@ use warnings;
     }
 
     sub _rand2 {
-        # Would be better to use Crypt::Random.
-        #use Crypt::Random qw( makerandom ); 
-        #return 1 + makerandom( Size => 1, Strength => 1, Uniform => 1 );
         return 1 + int( rand(2) );
     }
 }
 
-{
-    package Human::Gene::bey2;
-
-    use Moose;
-    use Moose::Util::TypeConstraints;
-
-    type 'bey2Color' => where { $_ =~ m{^(?:brown|blue)$}s };
-
-    has 'color' => ( is => 'ro', isa => 'bey2Color' );
-}
-
-{
-    package Human::Gene::gey;
-
-    use Moose;
-    use Moose::Util::TypeConstraints;
-
-    type 'geyColor' => where { $_ =~ m{^(?:green|blue)$}s };
-
-    has 'color' => ( is => 'ro', isa => 'geyColor' );
-}
-
-use Test::More tests => 10;
-
 my $gene_color_sets = [
-    [qw( blue blue blue blue ) => 'blue'],
-    [qw( blue blue green blue ) => 'green'],
-    [qw( blue blue blue green ) => 'green'],
-    [qw( blue blue green green ) => 'green'],
-    [qw( brown blue blue blue ) => 'brown'],
-    [qw( brown brown green green ) => 'brown'],
-    [qw( blue brown green blue ) => 'brown'],
+    [ qw( blue blue blue blue )     => 'blue' ],
+    [ qw( blue blue green blue )    => 'green' ],
+    [ qw( blue blue blue green )    => 'green' ],
+    [ qw( blue blue green green )   => 'green' ],
+    [ qw( brown blue blue blue )    => 'brown' ],
+    [ qw( brown brown green green ) => 'brown' ],
+    [ qw( blue brown green blue )   => 'brown' ],
 ];
 
 foreach my $set (@$gene_color_sets) {
-    my $expected_color = pop( @$set );
+    my $expected_color = pop(@$set);
+
     my $person = Human->new(
-        gender => 'f',
+        gender    => 'f',
         eye_color => $set,
     );
+
     is(
         $person->eye_color(),
         $expected_color,
-        'gene combination '.join(',',@$set).' produces '.$expected_color.' eye color',
+        'gene combination '
+            . join( ',', @$set )
+            . ' produces '
+            . $expected_color
+            . ' eye color',
     );
 }
 
 my $parent_sets = [
-    [ [qw( blue blue blue blue )], [qw( blue blue blue blue )] => 'blue' ],
-    [ [qw( blue blue blue blue )], [qw( brown brown green blue )] => 'brown' ],
-    [ [qw( blue blue green green )], [qw( blue blue green green )] => 'green' ],
+    [
+        [qw( blue blue blue blue )],
+        [qw( blue blue blue blue )] => 'blue'
+    ],
+    [
+        [qw( blue blue blue blue )],
+        [qw( brown brown green blue )] => 'brown'
+    ],
+    [
+        [qw( blue blue green green )],
+        [qw( blue blue green green )] => 'green'
+    ],
 ];
 
 foreach my $set (@$parent_sets) {
-    my $expected_color = pop( @$set );
-    my $mother = Human->new(
-        gender => 'f',
+    my $expected_color = pop(@$set);
+
+    my $mother         = Human->new(
+        gender    => 'f',
         eye_color => shift(@$set),
     );
+
     my $father = Human->new(
-        gender => 'm',
+        gender    => 'm',
         eye_color => shift(@$set),
     );
+
     my $child = $mother + $father;
+
     is(
         $child->eye_color(),
         $expected_color,
-        'mother '.$mother->eye_color().' + father '.$father->eye_color().' = child '.$expected_color,
+        'mother '
+            . $mother->eye_color()
+            . ' + father '
+            . $father->eye_color()
+            . ' = child '
+            . $expected_color,
     );
 }
 
