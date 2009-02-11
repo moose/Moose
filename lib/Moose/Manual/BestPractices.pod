@@ -169,9 +169,9 @@ have magical side effects elsewhere:
 
 Instead, we can create an "empty" subtype for the coercion:
 
-    subtype 'My.HTTP.Headers' => as class_type('HTTP::Headers');
+    subtype 'My.HTTP::Headers' => as class_type('HTTP::Headers');
 
-    coerce 'My.HTTP.Headers'
+    coerce 'My.HTTP::Headers'
         => from 'HashRef'
             => via { HTTP::Headers->new( %{$_} ) };
 
