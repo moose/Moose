@@ -7,26 +7,29 @@ Moose::Cookbook::Meta::Recipe1 - Welcome to the meta world (Why Go Meta?)
 
 =head1 SUMMARY
 
-If you've ever found yourself thinking "Moose is great, but I wish it
-did X differently", then you've gone meta. The meta recipes are all
-about how to change and extend the way Moose does its thing, by
-changing how the various meta classes (C<Moose::Meta::Class>,
-C<Moose::Meta::Attribute>, etc) work.
+You might want to read L<Moose::Manual::MOP> if you haven't done so
+yet.
 
-The metaclass system is a set of classes that describe classes, roles,
+If you've ever thought "Moose is great, but I wish it did X
+differently", then you've gone meta. The meta recipes demonstrate how
+to change and extend the way Moose works by extending and overriding
+how the meta classes (L<Moose::Meta::Class>,
+L<Moose::Meta::Attribute>, etc) work.
+
+The metaclass API is a set of classes that describe classes, roles,
 attributes, etc. The metaclass API lets you ask questions about a
 class, like "what attributes does it have?", or "what roles does the
 class do?"
 
-The metaclass system also lets you actively make changes to a class,
-for example by adding new methods.
+The metaclass system also lets you make changes to a class, for
+example by adding new methods or attributes.
 
-The interface with which you normally use Moose (C<has>, C<with>,
+The interface presented by L<Moose.pm|Moose> (C<has>, C<with>,
 C<extends>) is just a thin layer of syntactic sugar over the
 underlying metaclass system.
 
-By extending and changing how this metaclass system works, you can in
-effect create a modified object implementation for your classes.
+By extending and changing how this metaclass system works, you can
+create your own Moose variant.
 
 =head2 Examples
 
@@ -45,9 +48,9 @@ object, letting you write C<< My::Class->meta()->table_name() >>.
 =head1 SEE ALSO
 
 Many of the MooseX modules on CPAN implement metaclass extensions. A
-couple good examples include C<MooseX::Singleton> and
-C<MooseX::AttributeHelpers>. For a more complex example see
-C<Fey::ORM>.
+couple good examples include L<MooseX::Singleton> and
+L<MooseX::AttributeHelpers>. For a more complex example see
+L<Fey::ORM> or L<Reaction>.
 
 =head1 AUTHOR
 
