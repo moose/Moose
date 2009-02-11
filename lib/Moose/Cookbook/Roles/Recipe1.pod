@@ -73,50 +73,41 @@ Moose::Cookbook::Roles::Recipe1 - The Moose::Role example
 
 =head1 DESCRIPTION
 
-In this recipe we examine the role support provided in Moose. "Roles" may be
-described in many ways, but there are two main ways in which they are used: as
-interfaces, and as a means of code reuse. This recipe demonstrates the
-construction and incorporation of roles that define comparison and display of
-objects.
+Roles have two primary purposes: as interfaces, and as a means of code
+reuse. This recipe demonstrates the latter, with roles that define
+comparison and display code for objects.
 
-Let's start by examining B<Eq>. You'll notice that instead of the familiar C<use
-Moose> you might be expecting, here we use C<Moose::Role> to make it clear that
-this is a role. We encounter a new keyword, C<requires>:
+Let's start with CB<Eq>. First, note that we've replaced C<use Moose>
+with C<use Moose::Role>. We also have a new sugar function, C<required>:
 
   requires 'equal_to';
 
-What this does is to indicate that any class which "consumes" (that is to say,
-"includes using C<with>", as we'll see a little later) the B<Eq> role I<must>
-include an C<equal_to> method, whether this is provided by the class itself, one
-of its superclasses, or another role consumed by the class (1).
+This says that any class which consumes this role must provide an
+C<equal_to> method. It can provide this method directly, or by
+consuming some other role.
 
-In addition to requiring an C<equal_to> method, B<Eq> defines a C<not_equal_to>
-method, which simply inverts the result of C<equal_to>. Defining additional
-methods in this way, by using only a few base methods that target classes must
-define, is a useful pattern to provide maximum functionality with minimum
-effort.
+The C<Eq> role defines its C<not_equal_to> method in terms of the
+required C<equal_to> method. This lets us minimize the methods that
+consuming classes must provide.
 
-After the minimal B<Eq>, we next move on to B<Comparable>. The first thing you
-will notice is another new keyword, C<with>:
+The next role, C<Comparable>, builds on the C<Eq> role. We include
+C<Eq> in C<Comparable> using C<with>, another new sugar function:
 
   with 'Eq';
 
-C<with> is used to provide a list of roles which this class (or role) consumes.
-Here, B<Comparable> only consumes one role (B<Eq>). In effect, it is as if we
-defined a C<not_equal_to> method within Comparable, and also promised to fulfill
-the requirement of an C<equal_to> method.
+The C<with> function takes a list of roles to consume. In our example,
+the C<Comparable> role provides the C<equal_to> method required by
+C<Eq>. However, it could opt not to, in which case a class that
+consumed C<Comparable> would have to provide its own C<equal_to>. In
+other words, a role can consume another role I<without> providing any
+required methods.
 
-B<Comparable> itself states that it requires C<compare>. Again, it means that
-any classes consuming this role must implement a C<compare> method.
+The C<Comparable> role requires a method,  C<compare>:
 
   requires 'compare';
 
-B<Comparable> defines an C<equal_to> method which satisfies the B<Eq> role's
-requirements. This, along with a number of other methods (C<greater_than>,
-C<less_than>, C<greater_than_or_equal_to>, and C<less_than_or_equal_to>) is
-simply defined in terms of C<compare>, once again demonstrating the pattern of
-defining a number of utility methods in terms of only a single method that the
-target class need implement.
+The C<Comparable> role also provides a number of other methods, all of
+which ultimately rely on C<compare>.
 
   sub equal_to {
       my ( $self, $other ) = @_;
@@ -143,40 +134,39 @@ target class need implement.
       $self->less_than($other) || $self->equal_to($other);
   }
 
-Next up is B<Printable>. This is a very simple role, akin to B<Eq>. It merely
-requires a C<to_string> method. Roles that only require methods are very much
-like Java's interfaces. If we know that a class does the B<Printable> role, it
-not only tells us that we can call the C<to_string> method on it, but also that
-C<to_string> has the precise semantics we want (consider classes B<Tree> and
-B<Dog>, both with method C<bark>).
+Finally, we the C<Printable> role. This role exists solely to provide
+an interface. It has no methods, just a list of required methods. In
+this case, it just requires a C<to_string> method.
 
-Finally, we come to B<US::Currency>, a class that allows us to reap the benefits
-of our hard work. This is a regular Moose class, so we include the normal C<use
-Moose>. It consumes both B<Comparable> and B<Printable>, as the following line
-shows:
+An interface role is useful because it defines both a method and a
+I<name>. We know that any class which does this role has a
+C<to_string> method, but we can also assume that this method has the
+semantics we want. Presumably, in real code we would define those
+semantics in the documentation for the C<Printable> role. (1)
+
+Finally, we have the C<US::Currency> class which consumes both the
+C<Comparable> and C<Printable> roles.
 
   with 'Comparable', 'Printable';
 
-It also defines a regular Moose attribute, C<amount>, with a type constraint of
-C<Num> and a default of C<0>:
+It also defines a regular Moose attribute, C<amount>:
 
   has 'amount' => ( is => 'rw', isa => 'Num', default => 0 );
 
-Now we come to the core of the class. First up, we define a C<compare> method:
+Finally we see the implementation of the methods required by our
+roles. We have a C<compare> method:
 
   sub compare {
       my ( $self, $other ) = @_;
       $self->amount <=> $other->amount;
   }
 
-As you can see, it simply compares the C<amount> attribute of this object with
-the C<amount> attribute of the other object passed to it. With the single
-definition of this method, we gain the following methods for free: C<equal_to>,
-C<greater_than>, C<less_than>, C<greater_than_or_equal_to> and
+By consuming the C<Comparable> role and defining this method, we gain
+the following methods for free: C<equal_to>, C<greater_than>,
+C<less_than>, C<greater_than_or_equal_to> and
 C<less_than_or_equal_to>.
 
-We end the class with a definition of the C<to_string> method, which formats the
-C<amount> attribute for display:
+Then we have our C<to_string> method:
 
   sub to_string {
       my $self = shift;
@@ -185,8 +175,9 @@ C<amount> attribute for display:
 
 =head1 CONCLUSION
 
-This recipe has shown that roles can be very powerful and immensely useful, and
-save a great deal of repetition.
+Roles can very powerful. They are a great way of encapsulating
+reusable behavior, as well as communicating (semantic and interface)
+information about the methods our classes provide.
 
 =head1 FOOTNOTES
 
@@ -194,15 +185,19 @@ save a great deal of repetition.
 
 =item (1)
 
-At present, method requirements from roles cannot be satisfied by attribute
-accessors. This is a limitation of Moose, and will most likely be rectified in a
-future release.
+Consider two classes, C<Runner> and C<Process>, both of which define a
+C<run> method. If we just require that an object implements a C<run>
+method, we still aren't saying anything about what that method
+I<actually does>. If we require an object that implements the
+C<Executable> role, we're saying something about semantics.
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
