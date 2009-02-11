@@ -4,7 +4,7 @@
 
 Moose::Intro - Expanded into Moose::Manual, so go read that
 
-=head2 DESCRIPTION
+=head1 DESCRIPTION
 
 The intro has been replaced by L<Moose::Manual>. This POD document
 still exists for the benefit of anyone out there who might've linked
