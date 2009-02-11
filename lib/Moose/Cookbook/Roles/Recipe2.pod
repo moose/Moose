@@ -67,13 +67,13 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
 
 =head1 DESCRIPTION
 
-Sometimes when you include a role in a class, you may want to leave
-out some of its methods. In this example, we have a role C<Restartable>
-which provides an C<is_paused> attribute, and two methods, C<stop> and
-C<start>. The implementation of those two methods is irrelevant.
+In this example, we demonstrate how to exercise fine-grained control
+over what methods we consume from a role. We have a C<Restartable>
+role which provides an C<is_paused> attribute, and two methods,
+C<stop> and C<start>.
 
-Then we have two more roles which also implement the same interface,
-each putting their own spin on the C<stop> and C<start> method.
+Then we have two more roles which implement the same interface, each
+putting their own spin on the C<stop> and C<start> methods.
 
 In the C<Restartable::ButUnreliable> role, we want to provide a new
 implementation of C<stop> and C<start>, but still have access to the
@@ -81,19 +81,28 @@ original implementation. To do this, we alias the methods from
 C<Restartable> to private methods, and provide wrappers around the
 originals (1).
 
+  with 'Restartable' => {
+      alias => {
+          stop  => '_stop',
+          start => '_start'
+      }
+  };
+
 In the C<Restartable::ButBroken> role, we want to provide an entirely
-new behavior for C<stop> and C<start>, so we exclude them when
+new behavior for C<stop> and C<start>. We exclude them entirely when
 composing the C<Restartable> role into C<Restartable::ButBroken>.
 
 It's worth noting that the C<excludes> parameter also accepts a single
 string as an argument if you just want to exclude one method.
 
+  with 'Restartable' => { excludes => [ 'stop', 'start' ] };
+
 =head1 CONCLUSION
 
-Method exclusion and renaming can come in handy, especially when
-building roles out of other roles. In this example, all of our roles
-implement the C<Restartable> role. Each role provides same API, but
-each has a different implementation under the hood.
+Exclusion and renaming are a power tool that can be handy, especially
+when building roles out of other roles. In this example, all of our
+roles implement the C<Restartable> role. Each role provides same API,
+but each has a different implementation under the hood.
 
 You can also use the method aliasing and excluding features when
 composing a role into a class.
