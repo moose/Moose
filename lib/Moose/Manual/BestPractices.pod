@@ -35,6 +35,21 @@ Moose sugar and making your class immutable.
 The C<no Moose> bit is simply good code hygiene, and making classes
 immutable speeds up a lot of things, most notably object construction.
 
+=head2 Never override C<new>
+
+Overriding C<new> is a very bad practice. Instead, you should use a
+C<BUILD> or C<BUILDARGS> methods to do the same thing. When you
+override C<new>, Moose can no longer inline a constructor when your
+class is immutablized.
+
+The only reason to override C<new> is if you are writing a MooseX
+extension that provides its own L<Moose::Object> subclass I<and> a
+subclass of L<Moose::Meta::Method::Constructor> to inline the
+constructor.
+
+If you know how to do that, you know when to ignore this best practice
+;)
+
 =head2 Always call C<SUPER::BUILDARGS>
 
 If you override the C<BUILDARGS> method in your class, make sure to
@@ -45,9 +60,15 @@ The default C<BUILDARGS> method in L<Moose::Object> handles both a
 list and hashref of named parameters correctly, and also checks for a
 I<non-hashref> single argument.
 
-=head2 Don't use the C<initializer> feature
+=head2 Provide defaults whenever possible, otherwise use C<required>
 
-Don't know what we're talking about? That's fine.
+When your class provides defaults, this makes constructing new objects
+simpler. If you cannot provide a default, consider making the
+attribute C<required>.
+
+If you don't do either, an attribute can simply be left unset,
+increasing the complexity of your object, because it has more possible
+states that you or the user of your class must account for.
 
 =head2 Use C<builder> instead of C<default> most of the time
 
@@ -91,6 +112,10 @@ Down this path lies great confusion. If the attribute is an object
 itself, at least make sure that it has the same interface as the type
 of object in the parent class.
 
+=head2 Don't use the C<initializer> feature
+
+Don't know what we're talking about? That's fine.
+
 =head2 Use L<MooseX::AttributeHelpers> instead of C<auto_deref>
 
 The C<auto_deref> feature is a bit troublesome. Directly exposing a
@@ -112,7 +137,45 @@ Use some sort of namespacing convention for type names. We recommend
 something like "MyApp.Type.Foo". I<Never> use "::" as the namespace
 separator, since that overlaps with actual class names.
 
-=head2 Coercion instead of unions
+=head2 Do not coerce Moose built-ins directly
+
+If you define a coercion for a Moose built-in like C<ArrayRef>, this
+will affect every application in the Perl interpreter that uses this
+type.
+
+    # very naughty!
+    coerce 'ArrayRef'
+        => from Str
+            => via { [ split /,/ ] };
+
+Instead, create a subtype and coerce that:
+
+    subtype 'My.ArrayRef' => as 'ArrayRef';
+
+    coerce 'My.ArrayRef'
+        => from 'Str'
+            => via { [ split /,/ ] };
+
+=head2 Do not coerce class names directly
+
+Just as with Moose built-in types, a class type is global for the
+entire interpreter. If you add a coercion for that class name, it can
+have magical side effects elsewhere:
+
+    # also very naughty!
+    coerce 'HTTP::Headers'
+        => from 'HashRef'
+            => via { HTTP::Headers->new( %{$_} ) };
+
+Instead, we can create an "empty" subtype for the coercion:
+
+    subtype 'My.HTTP.Headers' => as class_type('HTTP::Headers');
+
+    coerce 'My.HTTP.Headers'
+        => from 'HashRef'
+            => via { HTTP::Headers->new( %{$_} ) };
+
+=head2 Use coercion instead of unions
 
 Consider using a type coercion instead of a type union. This was
 covered at length in L<Moose::Manual::Types>.
@@ -122,7 +185,31 @@ covered at length in L<Moose::Manual::Types>.
 Define all your types and coercions in one module. This was also
 covered in L<Moose::Manual::Types>.
 
+=head1 BENEFITS OF BEST PRACTICES
+
+Following these practices has a number of benefits.
+
+It helps ensure that your code will play nice with others, making it
+more reusable and easier to extend.
+
+Following an accepted set of idioms will make maintenance easier,
+especially when someone else has to maintain your code. It will also
+make it easier to get support from other Moose users, since your code
+will be easier to digest quickly.
+
+Some of these practices are designed to help Moose do the right thing,
+especially when it comes to immutabilization. This means your code
+will be faster when immutabilized.
+
+Many of these practices also help get the most out of meta
+programming. If you used an overridden C<new> to do type coercion by
+hand, rather than defining a real coercion, there is no introspectable
+metadata. This sort of thing is particuarly problematic MooseX
+extensions which rely on introspection to do the right thing.
+
 =head1 AUTHOR
+
+Yuval (nothingmuch) Kogman
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
