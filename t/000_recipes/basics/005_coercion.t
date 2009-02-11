@@ -22,17 +22,17 @@ use Test::Exception;
     use Params::Coerce ();
     use URI            ();
 
-    class_type('HTTP::Headers');
+    subtype 'My.HTTP::Headers' => as class_type('HTTP::Headers');
 
-    coerce 'HTTP::Headers'
+    coerce 'My.HTTP::Headers'
         => from 'ArrayRef'
             => via { HTTP::Headers->new( @{$_} ) }
         => from 'HashRef'
             => via { HTTP::Headers->new( %{$_} ) };
 
-    class_type('URI');
+    subtype 'My.URI' => as class_type('HTTP::Headers');
 
-    coerce 'URI'
+    coerce 'My.URI'
         => from 'Object'
             => via { $_->isa('URI')
                      ? $_
@@ -44,13 +44,13 @@ use Test::Exception;
         => as 'Str'
         => where { /^HTTP\/[0-9]\.[0-9]$/ };
 
-    has 'base' => ( is => 'rw', isa => 'URI', coerce => 1 );
-    has 'uri'  => ( is => 'rw', isa => 'URI', coerce => 1 );
+    has 'base' => ( is => 'rw', isa => 'My.URI', coerce => 1 );
+    has 'uri'  => ( is => 'rw', isa => 'My.URI', coerce => 1 );
     has 'method'   => ( is => 'rw', isa => 'Str' );
     has 'protocol' => ( is => 'rw', isa => 'Protocol' );
     has 'headers'  => (
         is      => 'rw',
-        isa     => 'HTTP::Headers',
+        isa     => 'My.HTTP::Headers',
         coerce  => 1,
         default => sub { HTTP::Headers->new }
     );
