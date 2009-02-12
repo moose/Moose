@@ -1,5 +1,6 @@
 Revision history for Perl extension Moose
 
+0.69
     * Moose
       - Make some keyword errors use throw_error instead of croak
         since Moose::Exporter wraps keywords now (Sartak)
@@ -9,6 +10,11 @@ Revision history for Perl extension Moose
         documentation out of cookbook recipes and into Moose::Manual
         pages. This work was funded as part of the Moose docs grant
         from TPF. (Dave Rolsky)
+
+    * Moose::Meta::Method::Delegation
+      - If the attribute doing the delegation was not populated, the
+        error message did not specify the attribute name
+        properly. (doy)
 
 0.68 Wed, February 4, 2009
     * POD
