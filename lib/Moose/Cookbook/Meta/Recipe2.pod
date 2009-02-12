@@ -108,7 +108,7 @@ you can call methods on it like this:
 
 To add a label to our attributes there are two steps. First, we need a
 new attribute metaclass that can store a label for an
-attribute. Second, we nede to create attributes that use that
+attribute. Second, we need to create attributes that use that
 attribute metaclass.
 
 =head1 RECIPE REVIEW
@@ -136,7 +136,7 @@ Then we need to register our metaclass with Moose:
   sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
 
 This is a bit of magic that lets us use a short name, "Labeled", when
-referring to our new metaclas.
+referring to our new metaclass.
 
 That was the whole attribute metaclass.
 
@@ -157,7 +157,7 @@ Finally, we use it for an attribute:
       label     => "The site's URL",
   );
 
-This looks like a normal attribute declaraion, except for two things,
+This looks like a normal attribute declaration, except for two things,
 the C<metaclass> and C<label> parameters. The C<metaclass> parameter
 tells Moose we want to use a custom metaclass for this (one)
 attribute. The C<label> parameter will be stored in the meta-attribute

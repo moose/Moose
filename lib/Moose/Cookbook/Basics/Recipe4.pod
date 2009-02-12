@@ -107,7 +107,7 @@ existing CPAN tools for data validation.
 Finally, we introduce the C<required> attribute parameter.
 
 The the C<Address> class we define two subtypes. The first uses the
-L<Locale::US> module to check the validaity of a state. It accepts
+L<Locale::US> module to check the validity of a state. It accepts
 either a state abbreviation of full name.
 
 A state will be passed in as a string, so we make our C<USState> type
@@ -245,7 +245,7 @@ method modifier:
 
 This is just a sugary alternative to Perl's built in C<SUPER::>
 feature. However, there is one difference. You cannot pass any
-arguments to C<super>. Instead, Moose ismply passes the same
+arguments to C<super>. Instead, Moose simply passes the same
 parameters that were passed to the method.
 
 A more detailed example of usage can be found in

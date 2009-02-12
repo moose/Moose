@@ -40,7 +40,7 @@ immutable speeds up a lot of things, most notably object construction.
 Overriding C<new> is a very bad practice. Instead, you should use a
 C<BUILD> or C<BUILDARGS> methods to do the same thing. When you
 override C<new>, Moose can no longer inline a constructor when your
-class is immutablized.
+class is immutabilized.
 
 The only reason to override C<new> is if you are writing a MooseX
 extension that provides its own L<Moose::Object> subclass I<and> a
@@ -204,7 +204,7 @@ will be faster when immutabilized.
 Many of these practices also help get the most out of meta
 programming. If you used an overridden C<new> to do type coercion by
 hand, rather than defining a real coercion, there is no introspectable
-metadata. This sort of thing is particuarly problematic MooseX
+metadata. This sort of thing is particularly problematic MooseX
 extensions which rely on introspection to do the right thing.
 
 =head1 AUTHOR

@@ -230,7 +230,7 @@ The three techniques we used, overloading, subtypes, and coercion,
 combine to provide a powerful interface.
 
 If you'd like to learn more about overloading, please read the
-documentation for the L<overload> pragme.
+documentation for the L<overload> pragma.
 
 To see all the code we created together, take a look at
 F<t/000_recipes/basics/010_genes.t>.

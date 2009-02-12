@@ -59,7 +59,7 @@ constraint is C<Any>, which means literally means it can contain
 anything.
 
 We could have left out the C<isa> option, but in this case, we are
-including ir for the benefit of other programmers, not the computer.
+including it for the benefit of other programmers, not the computer.
 
 Next, let's move on to the C<parent> attribute:
 
@@ -130,7 +130,7 @@ object.
 In our case, we're making a new C<BinaryTree> object in our default,
 with the current tree as the parent.
 
-Normally, when an object is instantiated, any defaults are evaluted
+Normally, when an object is instantiated, any defaults are evaluated
 immediately. With our C<BinaryTree> class, this would be a big
 problem! We'd create the first object, which would immediately try to
 populate its C<left> and C<right> attributes, which would create a new

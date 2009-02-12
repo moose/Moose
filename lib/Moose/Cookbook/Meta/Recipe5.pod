@@ -26,7 +26,7 @@ Moose::Cookbook::Meta::Recipe5 - The "table" attribute as a metaclass trait
 =head1 DESCRIPTION
 
 This recipe takes the metaclass table attribute from
-L<Moose::Cookbook::Meta::Recipe4> and mplements it as a metaclass
+L<Moose::Cookbook::Meta::Recipe4> and implements it as a metaclass
 trait. Traits are just roles, as we saw in
 L<Moose::Cookbook::Meta::Recipe3>.
 

@@ -73,7 +73,7 @@ L<Moose::Cookbook::Meta::Recipe2>. Please read that recipe first.
 In L<Moose::Cookbook::Meta::Recipe2>, we created an attribute
 metaclass which lets you provide a label for attributes.
 
-Using a metaclss works fine until you realize you want to add a label
+Using a metaclass works fine until you realize you want to add a label
 I<and> an expiration, or some other combination of new behaviors. You
 could create yet another metaclass which subclasses those two, but
 that makes a mess, especially if you want to mix and match behaviors

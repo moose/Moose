@@ -74,6 +74,7 @@ clearers
 composable
 Debuggable
 DEMOLISHALL
+hardcode
 immutabilization
 immutabilize
 introspectable
@@ -81,6 +82,7 @@ metaclass
 Metaclass
 METACLASS
 metaclass's
+metadata
 MetaObject
 metaprogrammer
 metarole
@@ -105,6 +107,8 @@ destructor
 destructors
 DWIM
 hashrefs
+immutabilize
+immutabilized
 inline
 invocant
 invocant's

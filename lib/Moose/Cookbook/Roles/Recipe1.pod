@@ -77,7 +77,7 @@ Roles have two primary purposes: as interfaces, and as a means of code
 reuse. This recipe demonstrates the latter, with roles that define
 comparison and display code for objects.
 
-Let's start with CB<Eq>. First, note that we've replaced C<use Moose>
+Let's start with C<Eq>. First, note that we've replaced C<use Moose>
 with C<use Moose::Role>. We also have a new sugar function, C<required>:
 
   requires 'equal_to';
