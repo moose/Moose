@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.69
+0.69 Thu, February 12, 2009
     * Moose
       - Make some keyword errors use throw_error instead of croak
         since Moose::Exporter wraps keywords now (Sartak)

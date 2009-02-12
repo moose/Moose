@@ -7,7 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-our $VERSION   = '0.68';
+our $VERSION   = '0.69';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
