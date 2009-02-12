@@ -18,9 +18,6 @@ requires 'List::MoreUtils'  => '0.12';
 requires 'Sub::Exporter'    => '0.972';
 requires 'Task::Weaken'     => '0';
 
-# only used by oose.pm, not Moose.pm :P
-requires 'Filter::Simple' => '0'; 
-
 # things the tests need
 build_requires 'Test::More'      => '0.77';
 build_requires 'Test::Exception' => '0.21';
