@@ -73,8 +73,8 @@ I<before> we go and add traits to it.
 The C<< Moose->init_meta >> method does ensures that the caller has a
 sane metaclass, and we don't want to replicate that logic in our
 extension. If the C<< Moose->init_meta >> was already called (because
-the caller did C<use Moose> before using our extension), then calling
-C<< Moose->init_meta >> again is effectively a no-op.
+the caller did C<S<use Moose>> before using our extension), then
+calling C<< Moose->init_meta >> again is effectively a no-op.
 
 =head1 AUTHOR
 
