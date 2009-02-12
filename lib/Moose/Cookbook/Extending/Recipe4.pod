@@ -27,7 +27,7 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
 
   sub has_table {
       my $caller = shift;
-      $caller->meta()->table(shift);
+      $caller->meta->table(shift);
   }
 
 =head1 DESCRIPTION
@@ -35,7 +35,7 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
 This recipe expands on the use of L<Moose::Exporter> we saw in
 L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
 object base class, we provide our own metaclass class, and we also
-export a sugar subroutine C<has_table()>.
+export a C<has_table> sugar function.
 
 Given the above code, you can now replace all instances of C<use
 Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
@@ -68,6 +68,11 @@ interface. Here's what it would look like in actual use:
 
 All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
 when you C<use MyApp::Mooseish>.
+
+=head1 CONCLUSION
+
+Providing sugar functions can make your extension look much more
+Moose-ish. See L<Fey::ORM> for a more extensive example.
 
 =head1 AUTHOR
 
