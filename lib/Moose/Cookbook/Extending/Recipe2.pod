@@ -49,8 +49,8 @@ Obviously, a real debugging role would do something more interesting,
 but this recipe is all about how we apply that role.
 
 In this case, with the combination of L<Moose::Exporter> and
-L<Moose::Util::MetaRole>, we ensure that when a module does "S<use
-MooseX::Debugging>", it automatically gets the debugging role applied
+L<Moose::Util::MetaRole>, we ensure that when a module does C<S<use
+MooseX::Debugging>>, it automatically gets the debugging role applied
 to its base object class.
 
 There are a few pieces of code worth looking at more closely.
