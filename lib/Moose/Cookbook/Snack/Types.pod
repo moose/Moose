@@ -9,43 +9,45 @@ Moose::Cookbook::Snack::Types - Snippets of code for using Types and Type Constr
 
   package Point;
   use Moose;
-  	
-  has 'x' => (isa => 'Int', is => 'ro' );
-  has 'y' => (isa => 'Int', is => 'rw' );
-  
+
+  has 'x' => ( isa => 'Int', is => 'ro' );
+  has 'y' => ( isa => 'Int', is => 'rw' );
+
   package main;
 
-  my $point = eval {
-    Point->new(x => 'fifty', y => 'forty');
-  };
+  my $point = eval { Point->new( x => 'fifty', y => 'forty' ); };
 
-  if($@) {
-    print "Oops: $@";
+  if ($@) {
+      print "Oops: $@";
   }
 
   my $point;
-  my $xval = 'forty-two';
-  my $xattribute = Point->meta->find_attribute_by_name('x');
+  my $xval             = 'forty-two';
+  my $xattribute       = Point->meta->find_attribute_by_name('x');
   my $xtype_constraint = $xattribute->type_constraint;
-  if($xtype_constraint->check($xval)) {
-    $point = Point->new(x => $xval, y => 0);
-  } else {
-    print "Value: $xval is not an " . $xtype_constraint->name . "\n";
-  }
 
+  if ( $xtype_constraint->check($xval) ) {
+      $point = Point->new( x => $xval, y => 0 );
+  }
+  else {
+      print "Value: $xval is not an " . $xtype_constraint->name . "\n";
+  }
 
 =head1 DESCRIPTION
 
-This is the Point example from (L<Moose::Cookbook::Basics::Recipe1>) with added
-type checking. 
+This is the Point example from L<Moose::Cookbook::Basics::Recipe1>
+with type checking added.
 
-If we try to assign a string value to an attribute that is defined as
-being of type Int, Moose will die with an explicit error message
-saying which attribute failed which type constraint with which
-value. The eval example catches this message and displays it.
+If we try to assign a string value to an attribute that is an C<Int>,
+Moose will die with an explicit error message. The error will include
+the attribute name, as well as the type constraint name and the value
+which failed the constraint check.
 
-The second example fetches the type constraint instance and asks it to
-check the value we are about to set, before we try and set it.
+We use C<eval> to catch this error message in C<$@>.
+
+Later, we get the L<Moose::Meta::TypeConstraint> object from a
+L<Moose::Meta::Attribute> and use the L<Moose::Meta::TypeConstraint>
+to check a value directly.
 
 =head1 SEE ALSO
 
