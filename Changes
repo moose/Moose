@@ -7,7 +7,8 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::*
       - Revised every recipe for style and clarity. Also moved some
         documentation out of cookbook recipes and into Moose::Manual
-        pages.
+        pages. This work was funded as part of the Moose docs grant
+        from TPF. (Dave Rolsky)
 
 0.68 Wed, February 4, 2009
     * POD
