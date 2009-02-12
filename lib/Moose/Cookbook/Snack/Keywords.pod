@@ -2,79 +2,82 @@
 
 =head1 NAME
 
-Moose::Cookbook::Snack::Keywords - Restricted keywords in Moose 
+Moose::Cookbook::Snack::Keywords - Restricted "keywords" in Moose
 
 =head1 DESCRIPTION
 
-There are several keywords exported by L<Moose> that can cause clashes 
-against other user-defined barewords. The following document provides 
-a list of those keywords in a single place for easy reference.
+Moose exports a number of sugar functions in order to emulate Perl
+built-in keywords. These can cause clashes with other user-defined
+functions. This document provides a list of those keywords for easy
+reference.
 
 =head2 The 'meta' keyword
 
-While most of the reserved keywords collisions can be avoided, however 
-I<meta> is the only one you B<can not> override. Do not attempt to override
-I<meta>, it will break the Moose internals.
+While most collisions can be avoided, you cannot avoid importing a
+C<meta> method when you C<S<use Moose>>. If you try to override or
+change what C<meta> does, you could end up breaking Moose internals.
 
-=head2 Moose Keywords 
+=head2 Moose Keywords
 
-If you are using L<Moose> or L<Moose::Role> its best to avoid these 
+If you are using L<Moose> or L<Moose::Role> its best to avoid these
 keywords:
 
 =over 4
 
-=item extends 
+=item extends
 
-=item with 
+=item with
 
-=item has 
+=item has
 
-=item before 
+=item before
 
-=item after 
+=item after
 
-=item around 
+=item around
 
-=item super 
+=item super
 
-=item override 
+=item override
 
-=item inner 
+=item inner
 
-=item augment 
+=item augment
 
-=item confess 
+=item confess
 
-=item blessed 
+=item blessed
 
 =back
 
-=head2 Moose::Util::TypeConstraints Keywords 
+=head2 Moose::Util::TypeConstraints Keywords
 
-If you are using L<Moose::Util::TypeConstraints> its best to avoid 
-these keywords 
+If you are using L<Moose::Util::TypeConstraints> its best to avoid
+these keywords
 
 =over 4
 
-=item type 
+=item type
 
-=item subtype 
+=item subtype
 
-=item class_type 
+=item class_type
 
-=item role_type 
+=item role_type
 
-=item as 
+=item maybe_type
 
-=item where 
+=item as
 
-=item message 
+=item where
+
+=item message
 
 =item optimize_as
 
-=item coerce 
+=item coerce
 
-=item from 
+=item from
 
 =item via
 
@@ -90,8 +93,8 @@ these keywords
 
 =head3 Turning off Moose
 
-To remove the keywords L<Moose> exports just add C<no Moose> at the bottom of 
-your code, like so:
+To remove the sugar functions L<Moose> exports just add C<S<no Moose>>
+at the bottom of your code:
 
   package Thing;
   use Moose;
@@ -100,34 +103,35 @@ your code, like so:
 
   no Moose;
 
-This will unexport the keywords that L<Moose> originally exported. The same 
-will also work for L<Moose::Role> and L<Moose::Util::TypeConstraints>. It is 
-general L<Moose> policy that this feature is used.
+This will unexport the sugar functions that L<Moose> originally
+exported. The same will also work for L<Moose::Role> and
+L<Moose::Util::TypeConstraints>.
 
-=head3  Sub::Exporter
+=head3 Sub::Exporter features
 
-L<Moose>, L<Moose::Role> and L<Moose::Util::TypeConstraints> all use 
-L<Sub::Exporter> to handle all their exporting needs. This means that all the 
-features that L<Sub::Exporter> provides are also available to them. 
+L<Moose>, L<Moose::Role> and L<Moose::Util::TypeConstraints> all use
+L<Sub::Exporter> to handle all their exporting needs. This means that
+all the features that L<Sub::Exporter> provides are also available to
+them.
 
 For instance, with L<Sub::Exporter> you can rename keywords, like so:
 
   package LOL::Cat;
   use Moose 'has' => { -as => 'i_can_haz' };
-  
+
   i_can_haz 'cheeseburger' => (
-     is      => 'rw',
-     trigger => sub { print "NOM NOM" }
+      is      => 'rw',
+      trigger => sub { print "NOM NOM" }
   );
-  
+
   LOL::Cat->new->cheeseburger('KTHNXBYE');
 
 See the L<Sub::Exporter> docs for more information.
 
 =head3 namespace::clean
 
-You can also use L<namespace::clean> to clean up your namespace, but you must 
-be careful not to remove C<meta> with this. Here is an example of that usage:
+You can also use L<namespace::clean> to clean up your namespace, but
+you must be careful not to remove C<meta> when doing so:
 
   package Foo;
   use Moose;
