@@ -4,6 +4,11 @@ Revision history for Perl extension Moose
       - Make some keyword errors use throw_error instead of croak
         since Moose::Exporter wraps keywords now (Sartak)
 
+    * Moose::Cookbook::*
+      - Revised every recipe for style and clarity. Also moved some
+        documentation out of cookbook recipes and into Moose::Manual
+        pages.
+
 0.68 Wed, February 4, 2009
     * POD
       - Many spelling, typo, and formatting fixes by daxim.
