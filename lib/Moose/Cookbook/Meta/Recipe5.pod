@@ -25,17 +25,15 @@ Moose::Cookbook::Meta::Recipe5 - The "table" attribute as a metaclass trait
 
 =head1 DESCRIPTION
 
-This recipe takes the metaclass table attribute and reimplements it as
-a metaclass trait. Traits are just roles that Moose applies to
-something for you. In this case, that "something" is the class's
-metaclass object.
+This recipe takes the metaclass table attribute from
+L<Moose::Cookbook::Meta::Recipe4> and mplements it as a metaclass
+trait. Traits are just roles, as we saw in
+L<Moose::Cookbook::Meta::Recipe3>.
 
 The advantage of using traits is that it's easy to combine multiple
-traits, whereas combining multiple metaclasses can be tricky (which
-subclasses which?).
-
-The disadvantage is that it's not easy to combine a trait with some
-sort of sugar (like our notional C<has_table> sugar).
+traits, whereas combining multiple metaclass subclasses requires
+creating yet another subclass. With traits, Moose takes care of
+applying them to your metaclass.
 
 =head2 Using this Metaclass Trait in Practice
 
@@ -43,6 +41,24 @@ Once this trait has been applied to a metaclass, it looks exactly like
 the example we saw in L<Moose::Cookbook::Meta::Recipe4>:
 
   my $table = MyApp::User->meta->table;
+
+  # the safe version
+  $table = MyApp::User->meta->table
+      if MyApp::User->meta->meta->can('does')
+         and MyApp::User->meta->meta->does('MyApp::Meta::Class');
+
+The safe version is a little complicated. We have to check that the
+metaclass object's metaclass has a C<does> method, in which case we
+can ask if the the metaclass does a given role.
+
+It's simpler to just write:
+
+  $table = MyApp::User->meta->table
+      if MyApp::User->meta->can('table');
+
+In theory, this is a little less correct, since the metaclass might be
+getting its C<table> method from a I<different> role. In practice, you
+are unlikely to encounter this sort of problem.
 
 =head1 SEE ALSO
 
