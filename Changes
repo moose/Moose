@@ -8,7 +8,8 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Basics::Recipe3
       - Updated the before qw[left right] sub to be a little more
         defensive about what it accepts (stevan)
-        - added more tests to t/000_recipies/basics/003_binary_tree.t (stevan)
+        - added more tests to t/000_recipies/basics/003_binary_tree.t
+          (stevan)
 
 0.69 Thu, February 12, 2009
     * Moose
