@@ -7,8 +7,8 @@ use Test::More;
 use Test::Exception;
 
 BEGIN {
-    unless ( eval 'use Test::Warn 0.10; 1' )  {
-        plan skip_all => 'These tests require Test::Warn 0.10';
+    unless ( eval 'use Test::Warn 0.11; 1' )  {
+        plan skip_all => 'These tests require Test::Warn 0.11';
     }
     else {
         plan tests => 40;
