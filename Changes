@@ -2,13 +2,13 @@ Revision history for Perl extension Moose
 
 0.70
     * Moose::Util::TypeConstraints
-      - added the RoleName type
-        - added tests for this
+      - Added the RoleName type (stevan)
+        - added tests for this (stevan)
         
     * Moose::Cookbook::Basics::Recipe3
-      - updating the before qw[left right] to be a little more
-        defensive about what it accepts
-        - added more tests to t/000_recipies/basics/003_binary_tree.t
+      - Updated the before qw[left right] sub to be a little more
+        defensive about what it accepts (stevan)
+        - added more tests to t/000_recipies/basics/003_binary_tree.t (stevan)
 
 0.69 Thu, February 12, 2009
     * Moose
