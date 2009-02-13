@@ -42,10 +42,10 @@ C<BUILD> or C<BUILDARGS> methods to do the same thing. When you
 override C<new>, Moose can no longer inline a constructor when your
 class is immutabilized.
 
-The only reason to override C<new> is if you are writing a MooseX
-extension that provides its own L<Moose::Object> subclass I<and> a
-subclass of L<Moose::Meta::Method::Constructor> to inline the
-constructor.
+There are two good reasons to override C<new>. One, you are writing a
+MooseX extension that provides its own L<Moose::Object> subclass
+I<and> a subclass of L<Moose::Meta::Method::Constructor> to inline the
+constructor. Two, you are subclassing a non-Moose parent.
 
 If you know how to do that, you know when to ignore this best practice
 ;)
