@@ -43,6 +43,7 @@ The basic Moose type hierarchy looks like this
                 Int
               Str
                 ClassName
+                RoleName
           Ref
               ScalarRef
               ArrayRef[`a]
