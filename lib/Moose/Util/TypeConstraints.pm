@@ -759,6 +759,7 @@ that hierarchy represented visually.
                 Int
               Str
                 ClassName
+                RoleName
           Ref
               ScalarRef
               ArrayRef[`a]
@@ -793,6 +794,10 @@ B<NOTE:> The C<ClassName> type constraint does a complex package
 existence check. This means that your class B<must> be loaded for
 this type constraint to pass. I know this is not ideal for all,
 but it is a saner restriction than most others.
+
+B<NOTE:> The C<RoleName> constraint checks a string is I<package name>
+which is a role, like C<'MyApp::Role::Comparable'>. The C<Role>
+constraint checks that an I<object> does the named role.
 
 =head2 Type Constraint Naming
 
@@ -870,13 +875,13 @@ L<Moose::Meta::TypeConstraint>.
 
 =item B<class_type ($class, ?$options)>
 
-Creates a type constraint with the name C<$class> and the metaclass
-L<Moose::Meta::TypeConstraint::Class>.
+Creates a new subtype of C<Object> with the name C<$class> and the
+metaclass L<Moose::Meta::TypeConstraint::Class>.
 
 =item B<role_type ($role, ?$options)>
 
-Creates a type constraint with the name C<$role> and the metaclass
-L<Moose::Meta::TypeConstraint::Role>.
+Creates a C<Role> type constraint with the name C<$role> and the
+metaclass L<Moose::Meta::TypeConstraint::Role>.
 
 =item B<maybe_type ($type)>
 
