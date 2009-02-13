@@ -37,7 +37,11 @@ Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
 
   before 'right', 'left' => sub {
       my ( $self, $tree ) = @_;
-      $tree->parent($self) if defined $tree;
+      if (defined $tree) {
+          confess "You cannot insert a tree which already has a parent"
+              if $tree->has_parent;
+          $tree->parent($self);
+      }
   };
 
 =head1 DESCRIPTION
@@ -151,7 +155,11 @@ Instead, we use method modifiers:
 
   before 'right', 'left' => sub {
       my ( $self, $tree ) = @_;
-      $tree->parent($self) if defined $tree;
+      if (defined $tree) {
+          confess "You cannot insert a tree which already has a parent"
+              if $tree->has_parent;
+          $tree->parent($self);
+      }
   };
 
 This is a C<before> modifier, just like we saw in the second recipe,

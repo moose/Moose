@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 273;
+use Test::More tests => 291;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -327,5 +327,31 @@ ok(!defined ClassName(undef),           '... ClassName rejects anything which is
 ok(defined ClassName('UNIVERSAL'),      '... ClassName accepts anything which is a ClassName');
 ok(defined ClassName('Quux::Wibble'),      '... ClassName accepts anything which is a ClassName');
 ok(defined ClassName('Moose::Meta::TypeConstraint'), '... ClassName accepts anything which is a ClassName');
+
+ok(!defined RoleName(0),               '... RoleName rejects anything which is not a RoleName');
+ok(!defined RoleName(100),             '... RoleName rejects anything which is not a RoleName');
+ok(!defined RoleName(''),              '... RoleName rejects anything which is not a RoleName');
+ok(!defined RoleName('Baz'),           '... RoleName rejects anything which is not a RoleName');
+
+{
+  package Quux::Wibble::Role; # this makes Quux symbol table exist
+  use Moose::Role;
+  sub foo {}
+}
+
+ok(!defined RoleName('Quux'),           '... RoleName rejects anything which is not a RoleName');
+ok(!defined RoleName([]),              '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName({}),              '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName(sub {}),          '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName($SCALAR_REF),     '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName($fh),             '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName($GLOB_REF),       '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName(qr/../),          '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName(bless {}, 'Foo'), '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName(undef),           '... Rolename rejects anything which is not a RoleName');
+ok(!defined RoleName('UNIVERSAL'),      '... RoleName accepts anything which is a RoleName');
+ok(!defined RoleName('Quux::Wibble'),      '... RoleName accepts anything which is a RoleName');
+ok(!defined RoleName('Moose::Meta::TypeConstraint'), '... RoleName accepts anything which is a RoleName');
+ok(defined RoleName('Quux::Wibble::Role'),      '... RoleName accepts anything which is a RoleName');
 
 close($fh) || die "Could not close the filehandle $0 for test";

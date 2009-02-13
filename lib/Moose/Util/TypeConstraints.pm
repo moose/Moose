@@ -575,13 +575,17 @@ subtype 'Role'
     => where { $_->can('does') }
     => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
-my $_class_name_checker = sub {
-};
+my $_class_name_checker = sub {};
 
 subtype 'ClassName'
     => as 'Str'
     => where { Class::MOP::is_class_loaded($_) }
     => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
+
+subtype 'RoleName'
+    => as 'ClassName'
+    => where { (($_->can('meta') || return)->($_) || return)->isa('Moose::Meta::Role') }
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::RoleName;    ;
 
 ## --------------------------------------------------------
 # parameterizable types ...

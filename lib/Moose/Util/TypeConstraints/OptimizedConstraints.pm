@@ -60,6 +60,11 @@ sub ClassName {
     return 0;
 }
 
+sub RoleName {
+    ClassName($_[0]) 
+        && (($_[0]->can('meta') || return)->($_[0]) || return)->isa('Moose::Meta::Role')
+}
+
 # NOTE:
 # we have XS versions too, ...
 # 04:09 <@konobi> nothingmuch: konobi.co.uk/code/utilsxs.tar.gz

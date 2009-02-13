@@ -1,5 +1,15 @@
 Revision history for Perl extension Moose
 
+0.70
+    * Moose::Util::TypeConstraints
+      - added the RoleName type
+        - added tests for this
+        
+    * Moose::Cookbook::Basics::Recipe3
+      - updating the before qw[left right] to be a little more
+        defensive about what it accepts
+        - added more tests to t/000_recipies/basics/003_binary_tree.t
+
 0.69 Thu, February 12, 2009
     * Moose
       - Make some keyword errors use throw_error instead of croak
