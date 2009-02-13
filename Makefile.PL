@@ -10,7 +10,6 @@ perl_version '5.008001';
 all_from 'lib/Moose.pm';
 license 'perl';
 
-# prereqs
 requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
 requires 'Class::MOP'       => '0.76';
@@ -18,7 +17,6 @@ requires 'List::MoreUtils'  => '0.12';
 requires 'Sub::Exporter'    => '0.972';
 requires 'Task::Weaken'     => '0';
 
-# things the tests need
 test_requires 'Test::More'      => '0.77';
 test_requires 'Test::Exception' => '0.21';
 
