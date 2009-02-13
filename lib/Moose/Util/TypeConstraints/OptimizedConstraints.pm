@@ -120,6 +120,8 @@ no user serviceable parts inside.
 
 =item C<ClassName>
 
+=item C<RoleName>
+
 =back
 
 =head1 BUGS
