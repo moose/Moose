@@ -172,6 +172,11 @@ requirement is that the wrappee must exist before the wrapper is
 defined (after all, you cannot wrap something which doesn't exist,
 right?).
 
+We could also get the same outcome by using an attribute trigger. A
+trigger is fired whenever the attribute is I<set>. See
+L<Moose::Manual::Attributes/Triggers> for more information about
+triggers.
+
 As with all the other recipes, B<BinaryTree> can be used just like any
 other Perl 5 class. A more detailed example of its usage can be found
 in F<t/000_recipes/003_recipe.t>.
