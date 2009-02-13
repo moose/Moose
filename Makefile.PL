@@ -19,8 +19,8 @@ requires 'Sub::Exporter'    => '0.972';
 requires 'Task::Weaken'     => '0';
 
 # things the tests need
-build_requires 'Test::More'      => '0.77';
-build_requires 'Test::Exception' => '0.21';
+test_requires 'Test::More'      => '0.77';
+test_requires 'Test::Exception' => '0.21';
 
 tests_recursive();
 
