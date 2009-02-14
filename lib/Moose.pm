@@ -474,11 +474,10 @@ This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 =item I<trigger =E<gt> $code>
 
-The I<trigger> option is a CODE reference which will be called after the value of
-the attribute is set. The CODE ref will be passed the instance itself, the
-updated value and the attribute meta-object (this is for more advanced fiddling
-and can typically be ignored). You B<cannot> have a trigger on a read-only
-attribute. 
+The I<trigger> option is a CODE reference which will be called after
+the value of the attribute is set. The CODE ref will be passed the
+instance itself and the updated value. You B<cannot> have a trigger on
+a read-only attribute.
 
 B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will
