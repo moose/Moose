@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 73;
+use Test::More tests => 78;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
@@ -73,6 +73,26 @@ use Moose::Util::MetaRole;
     My::Class->meta()->add_method( 'bar' => sub { 'bar' } );
     is( My::Class->meta()->get_method('bar')->foo(), 10,
         '... call foo() on a method metaclass object' );
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                      => 'My::Class',
+        wrapped_method_metaclass_roles => ['Role::Foo'],
+    );
+
+    ok( My::Class->meta()->wrapped_method_metaclass()->meta()->does_role('Role::Foo'),
+        q{apply Role::Foo to My::Class->meta()'s wrapped method metaclass} );
+    ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
+        '... My::Class->meta() still does Role::Foo' );
+    ok( My::Class->meta()->meta()->does_role('Role::Foo'),
+        '... My::Class->meta() still does Role::Foo' );
+    ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
+        q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
+
+    My::Class->meta()->add_after_method_modifier( 'bar' => sub { 'bar' } );
+    is( My::Class->meta()->get_method('bar')->foo(), 10,
+        '... call foo() on a wrapped method metaclass object' );
 }
 
 {

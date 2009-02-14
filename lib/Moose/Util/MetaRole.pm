@@ -48,6 +48,7 @@ sub _make_new_metaclass {
             metaclass
             attribute_metaclass
             method_metaclass
+            wrapped_method_metaclass
             instance_metaclass
     );
 
@@ -64,6 +65,7 @@ sub _make_new_metaclass {
         qw(
         attribute_metaclass
         method_metaclass
+        wrapped_method_metaclass
         instance_metaclass
     );
 
@@ -198,6 +200,8 @@ This specifies the class for which to alter the meta classes.
 =item * attribute_metaclass_roles => \@roles
 
 =item * method_metaclass_roles => \@roles
+
+=item * wrapped_method_metaclass_roles => \@roles
 
 =item * instance_metaclass_roles => \@roles
 
