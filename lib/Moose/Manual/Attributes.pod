@@ -206,10 +206,22 @@ reference will be called as a method on the object.
 This is dumb example, but it illustrates the point that the subroutine
 will be called for every new object created.
 
-Of course, if it's called during object construction, it may be called
-before other attributes have been set. If your default is dependent on
-other parts of the object's state, you can make the attribute
-C<lazy>. Laziness is covered in the next section.
+When you provide a C<default> subroutine reference, it is called as a
+method on the object, with no additional parameters:
+
+  has 'size' => (
+      is => 'rw',
+      default => sub {
+          my $self = shift;
+
+          return $self->height > 200 ? 'big' : 'average';
+      },
+  );
+
+When the C<default> is called during object construction, it may be
+called before other attributes have been set. If your default is
+dependent on other parts of the object's state, you can make the
+attribute C<lazy>. Laziness is covered in the next section.
 
 If you want to use a reference of any sort as the default value, you
 must return it from a subroutine. This is necessary because otherwise
@@ -254,6 +266,9 @@ organization.
 
 We strongly recommend that you use a C<builder> instead of a
 C<default> for anything beyond the most trivial default.
+
+A C<builder>, just like a C<default>, is called as a method on the
+object with no additional parameters.
 
 =head3 Builders allow subclassing
 
