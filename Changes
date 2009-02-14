@@ -11,6 +11,20 @@ Revision history for Perl extension Moose
         - added more tests to t/000_recipies/basics/003_binary_tree.t
           (stevan)
 
+    * Moose::Object
+      - We now always call DEMOLISHALL, even if a class does not
+        define DEMOLISH. This makes sure that method modifiers on
+        DEMOLISHALL work as expected. (doy)
+        - added tests for this (EvanCarroll)
+
+    * Moose::Util::MetaRole
+      - Accept roles for the wrapped_method_metaclass (rafl)
+        - added tests for this (rafl)
+
+    * Tests
+      - Some tests tried to use Test::Warn 0.10, which had bugs. Now
+        they require 0.11. (Dave Rolsky)
+
 0.69 Thu, February 12, 2009
     * Moose
       - Make some keyword errors use throw_error instead of croak
