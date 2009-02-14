@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.69';
+our $VERSION   = '0.70';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',

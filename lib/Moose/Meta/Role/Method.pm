@@ -4,7 +4,7 @@ package Moose::Meta::Role::Method;
 use strict;
 use warnings;
 
-our $VERSION   = '0.69';
+our $VERSION   = '0.70';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
