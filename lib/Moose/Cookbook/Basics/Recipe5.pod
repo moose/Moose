@@ -57,7 +57,7 @@ another.
 
 This is very powerful, but it's also magical, so you have to
 explicitly ask for an attribute to be coerced. To do this, you must
-set the C<coerce> attribute parameter to a true value.
+set the C<coerce> attribute option to a true value.
 
 First, we create the subtype to which we will coerce the other types:
 

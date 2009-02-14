@@ -104,7 +104,7 @@ In the recipe we also make use of L<Locale::US> and L<Regexp::Common>
 to build constraints, showing how how constraints can make use of
 existing CPAN tools for data validation.
 
-Finally, we introduce the C<required> attribute parameter.
+Finally, we introduce the C<required> attribute option.
 
 The the C<Address> class we define two subtypes. The first uses the
 L<Locale::US> module to check the validity of a state. It accepts
@@ -159,11 +159,11 @@ A company also needs a name:
 
   has 'name' => ( is => 'rw', isa => 'Str', required => 1 );
 
-This introduces a new attribute parameter, C<required>. If an
-attribute is required, then it must be passed to the class's
-constructor, or an exception will be thrown. It's important to
-understand that a C<required> attribute can still be false or
-C<undef>, if its type constraint allows that.
+This introduces a new attribute option, C<required>. If an attribute
+is required, then it must be passed to the class's constructor, or an
+exception will be thrown. It's important to understand that a
+C<required> attribute can still be false or C<undef>, if its type
+constraint allows that.
 
 The next attribute, C<employees>, uses a I<parameterized> type
 constraint:

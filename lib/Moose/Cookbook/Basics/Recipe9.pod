@@ -74,8 +74,8 @@ L<Moose::Manual::Attributes> for more details.
 
 =head2 The lazy_build shortcut
 
-The C<lazy_build> attribute parameter can be used as sugar to specify
-a whole set of attribute parameters at once:
+The C<lazy_build> attribute option can be used as sugar to specify
+a whole set of attribute options at once:
 
   has 'animal' => (
       is         => 'ro',

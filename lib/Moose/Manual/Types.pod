@@ -208,7 +208,7 @@ works.
 Coercions, like type names, are global. This is I<another> reason why
 it is good to namespace your types. Moose will I<never> try to coerce
 a value unless you explicitly ask for it. This is done by setting the
-C<coerce> attribute parameter to a true value:
+C<coerce> attribute option to a true value:
 
   package Foo;
 
@@ -351,7 +351,7 @@ This creates a type named C<RGB>
 
 All of the type creation functions return a type object. This type
 object can be used wherever you would use a type name, as a parent
-type, or as the value for an attribute's C<isa> parameter:
+type, or as the value for an attribute's C<isa> option:
 
   has 'size' => (
       is => 'rw',

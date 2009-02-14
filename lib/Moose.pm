@@ -884,7 +884,7 @@ specified by C<for_class>. This method injects a a C<meta> accessor
 into the class so you can get at this object. It also sets the class's
 superclass to C<base_class>, with L<Moose::Object> as the default.
 
-You can specify an alternate metaclass with the C<metaclass> parameter.
+You can specify an alternate metaclass with the C<metaclass> option.
 
 For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
 

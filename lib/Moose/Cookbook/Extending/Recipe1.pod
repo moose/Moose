@@ -158,8 +158,8 @@ class.
 
 Moose does not provide any simple APIs for consumers to use a subclass
 extension, except for attribute metaclasses. The attribute declaration
-parameters include a C<metaclass> parameter a consumer of your
-extension can use to specify your subclass.
+options include a C<metaclass> option a consumer of your extension can
+use to specify your subclass.
 
 This is one reason why implementing an extension as a subclass can be
 a poor choice. However, you can force the use of certain subclasses at
