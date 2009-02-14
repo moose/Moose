@@ -92,7 +92,7 @@ using Moose, it defines an associated type name behind the scenes:
 Now you can use C<'MyApp::User'> as a type name:
 
   has creator => (
-      is  => 'rw',
+      is  => 'ro',
       isa => 'MyApp::User',
   );
 
@@ -102,7 +102,7 @@ assumes that any unknown type name passed as the C<isa> value for an
 attribute is a class. So this works:
 
   has 'birth_date' => (
-      is  => 'rw',
+      is  => 'ro',
       isa => 'DateTime',
   );
 
@@ -213,7 +213,7 @@ C<coerce> attribute option to a true value:
   package Foo;
 
   has 'sizes' => (
-      is     => 'rw',
+      is     => 'ro',
       isa    => 'ArrayRefOfInts',
       coerce => 1,
   );
@@ -237,7 +237,7 @@ types. Let's take these types as an example:
       => via { hex $_ };
 
   has 'sizes' => (
-      is     => 'rw',
+      is     => 'ro',
       isa    => 'ArrayRef[Int]',
       coerce => 1,
   );
@@ -307,7 +307,7 @@ with a simple wrapper class:
   use Moose;
 
   has 'handle' => (
-      is  => 'ro',
+      is  => 'rw',
       isa => 'FileHandle',
   );
 
@@ -354,7 +354,7 @@ object can be used wherever you would use a type name, as a parent
 type, or as the value for an attribute's C<isa> option:
 
   has 'size' => (
-      is => 'rw',
+      is => 'ro',
       isa => subtype 'Int' => where { $_ > 0 },
   );
 
