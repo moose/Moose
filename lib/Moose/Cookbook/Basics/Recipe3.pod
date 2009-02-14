@@ -25,6 +25,7 @@ Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
       predicate => 'has_left',
       lazy      => 1,
       default   => sub { BinaryTree->new( parent => $_[0] ) },
+      trigger   => \&_set_parent_for_child
   );
 
   has 'right' => (
@@ -33,21 +34,24 @@ Moose::Cookbook::Basics::Recipe3 - A lazy B<BinaryTree> example
       predicate => 'has_right',
       lazy      => 1,
       default   => sub { BinaryTree->new( parent => $_[0] ) },
+      trigger   => \&_set_parent_for_child
   );
 
-  before 'right', 'left' => sub {
-      my ( $self, $tree ) = @_;
-      if (defined $tree) {
-          confess "You cannot insert a tree which already has a parent"
-              if $tree->has_parent;
-          $tree->parent($self);
-      }
-  };
+  sub _set_parent_for_child {
+      my ( $self, $child ) = @_;
+
+      confess "You cannot insert a tree which already has a parent"
+          if $child->has_parent;
+
+      $child->parent($self);
+  }
 
 =head1 DESCRIPTION
 
 This recipe shows how various advanced attribute features can be used
-to create complex and powerful behaviors.
+to create complex and powerful behaviors. In particular, we introduce
+a number of new attribute options, including C<predicate>, C<lazy>,
+and C<trigger>.
 
 The example class is a classic binary tree. Each node in the tree is
 itself an instance of C<BinaryTree>. It has a C<node>, which holds
@@ -101,13 +105,15 @@ C<left>:
       predicate => 'has_left',
       lazy      => 1,
       default   => sub { BinaryTree->new( parent => $_[0] ) },
+      trigger   => \&_set_parent_for_child
   );
 
-There are two new options here, C<lazy> and C<default>. These two
-options are linked, and in fact you cannot have a C<lazy> attribute
-unless it has a C<default> (or a C<builder>, but we'll cover that
-later). If you try to make an attribute lazy without a default, class
-creation will fail with an exception. (2)
+There are three new options here, C<lazy>, C<default>, and
+C<trigger>. The C<lazy> and C<default> options options are linked.  In
+fact, you cannot have a C<lazy> attribute unless it has a C<default>
+(or a C<builder>, but we'll cover that later). If you try to make an
+attribute lazy without a default, class creation will fail with an
+exception. (2)
 
 In the second recipe the B<BankAccount>'s C<balance> attribute had a
 default value of C<0>. Given a non-reference, Perl copies the
@@ -123,6 +129,7 @@ reference every time the default is called.
 
 In fact, using a non-subroutine reference as a default is illegal in Moose.
 
+  # will fail
   has 'foo' => ( is => 'rw', default => [] );
 
 This will blow up, so don't do it.
@@ -151,31 +158,28 @@ these is set, we want to make sure that we update the parent of the
 C<left> or C<right> attribute's tree.
 
 We could write our own accessors, but then why use Moose at all?
-Instead, we use method modifiers:
+Instead, we use a C<trigger>. A C<trigger> accepts a subroutine
+reference, which will be called as a method whenever the attribute is
+set. This can happen both during object construction or later by
+passing a new object to the attribute's accessor method. However, it
+is not called when a value is provided by a C<default> or C<builder>.
 
-  before 'right', 'left' => sub {
-      my ( $self, $tree ) = @_;
-      if (defined $tree) {
-          confess "You cannot insert a tree which already has a parent"
-              if $tree->has_parent;
-          $tree->parent($self);
-      }
-  };
+  sub _set_parent_for_child {
+      my ( $self, $child ) = @_;
 
-This is a C<before> modifier, just like we saw in the second recipe,
-but with two slight differences. First, we are applying the modifier
-to more than one method at a time, because both C<left> and C<right>
-attributes need the same behavior. The other difference is that we are
-not wrapping an inherited method, but rather a method from our own
-local class. Wrapping local methods is no different, the only
-requirement is that the wrappee must exist before the wrapper is
-defined (after all, you cannot wrap something which doesn't exist,
-right?).
+      confess "You cannot insert a tree which already has a parent"
+          if $child->has_parent;
 
-We could also get the same outcome by using an attribute trigger. A
-trigger is fired whenever the attribute is I<set>. See
-L<Moose::Manual::Attributes/Triggers> for more information about
-triggers.
+      $child->parent($self);
+  }
+
+This trigger does two things. First, it ensures that the new child
+node does not already have a parent. This is done for the sake of
+simplifying the example. If we wanted to be more clever, we would
+remove the child from its old parent tree and add it to the new one.
+
+If the child has no parent, we will add it to the current tree, and we
+ensure that is has the correct value for its C<parent> attribute.
 
 As with all the other recipes, B<BinaryTree> can be used just like any
 other Perl 5 class. A more detailed example of its usage can be found

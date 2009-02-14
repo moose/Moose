@@ -27,6 +27,7 @@ use Scalar::Util 'isweak';
         predicate => 'has_left',
         lazy      => 1,
         default   => sub { BinaryTree->new( parent => $_[0] ) },
+        trigger   => \&_set_parent_for_child
     );
 
     has 'right' => (
@@ -35,18 +36,17 @@ use Scalar::Util 'isweak';
         predicate => 'has_right',
         lazy      => 1,
         default   => sub { BinaryTree->new( parent => $_[0] ) },
+        trigger   => \&_set_parent_for_child
     );
 
-    before 'right', 'left' => sub {
-        my ( $self, $tree ) = @_;
-        if (defined $tree) {
-            confess "You cannot insert a tree which already has a parent"
-                if $tree->has_parent;
-            $tree->parent($self);
-        }
-    };
+    sub _set_parent_for_child {
+        my ( $self, $child ) = @_;
 
-    __PACKAGE__->meta->make_immutable( debug => 0 );
+        confess "You cannot insert a tree which already has a parent"
+            if $child->has_parent;
+
+        $child->parent($self);
+    }
 }
 
 my $root = BinaryTree->new(node => 'root');
