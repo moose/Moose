@@ -21,15 +21,20 @@ Revision history for Perl extension Moose
       - Accept roles for the wrapped_method_metaclass (rafl)
         - added tests for this (rafl)
 
-    * Tests
-      - Some tests tried to use Test::Warn 0.10, which had bugs. Now
-        they require 0.11. (Dave Rolsky)
-
     * Moose::Meta::Attribute
       - We no longer pass the meta-attribute object as a final
         argument to triggers. This actually changed for inlined code a
         while back, but the non-inlined version and the docs were
         still out of date.
+
+    * Tests
+      - Some tests tried to use Test::Warn 0.10, which had bugs. Now
+        they require 0.11. (Dave Rolsky)
+
+    * Documentation  
+      - Lots of small changes to the manual, cookbook, and
+        elsewhere. These were based on feedback from various
+        users, too many to list here. (Dave Rolsky)
 
 0.69 Thu, February 12, 2009
     * Moose
