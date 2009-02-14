@@ -25,6 +25,12 @@ Revision history for Perl extension Moose
       - Some tests tried to use Test::Warn 0.10, which had bugs. Now
         they require 0.11. (Dave Rolsky)
 
+    * Moose::Meta::Attribute
+      - We no longer pass the meta-attribute object as a final
+        argument to triggers. This actually changed for inlined code a
+        while back, but the non-inlined version and the docs were
+        still out of date.
+
 0.69 Thu, February 12, 2009
     * Moose
       - Make some keyword errors use throw_error instead of croak
