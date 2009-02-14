@@ -8,15 +8,16 @@ Moose::Manual::Roles - Roles, an alternative to deep hierarchies and base classe
 
 A role is something that classes do. Usually, a role encapsulates some
 piece of behavior or state that can be shared between classes. It is
-important to understand that I<roles are not classes>. Roles do not
-participate in inheritance, and a role cannot be instantiated. We
-sometimes say that classes I<consume> roles.
+important to understand that I<roles are not classes>. You cannot
+inherit from a role, and a role cannot be instantiated. We sometimes
+say that roles are I<consumed>, either by classes or other roles.
 
 Instead, a role is I<composed> into a class. In practical terms, this
 means that all of the methods and attributes defined in a role are
 added directly to (we sometimes say "flattened into") the class that
 consumes the role. These attributes and methods then appear as if they
-were defined in the class itself.
+were defined in the class itself. A subclass of the consuming class
+will inherit all of these methods and attributes.
 
 Moose roles are similar to mixins or interfaces in other languages.
 
@@ -146,6 +147,24 @@ set to true when C<break> is called.
           $self->stop;
       }
   }
+
+=head2 Roles Versus Abstract Base Classes
+
+If you are familiar with the concept of abstract base classes in other
+languages, you may be tempted to use roles in the same way.
+
+You I<can> define a "interface-only" role, one that contains I<just> a
+list of required methods.
+
+However, any class which consumes this role must implement all of the
+required methods, either directly or through inheritance from a
+parent. You cannot delay the method requirement check so that they can
+be implemented by future subclasses.
+
+Because the role defines the required methods directly, adding a base
+class to the mix would not achieve anything. We recommend that you
+simply consume the interface role in each class which implements that
+interface.
 
 =head1 USING METHOD MODIFIERS
 
