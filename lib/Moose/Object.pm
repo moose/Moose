@@ -49,16 +49,16 @@ sub BUILDALL {
 
 sub DEMOLISHALL {
     my $self = shift;    
+    # NOTE: we ask Perl if we even 
+    # need to do this first, to avoid
+    # extra meta level calls    
+    return unless $self->can('DEMOLISH');
     foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
         $method->{code}->execute($self);
     }
 }
 
 sub DESTROY { 
-    # NOTE: we ask Perl if we even 
-    # need to do this first, to avoid
-    # extra meta level calls    
-    return unless $_[0]->can('DEMOLISH');
     # if we have an exception here ...
     if ($@) {
         # localize the $@ ...
