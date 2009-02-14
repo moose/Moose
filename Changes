@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.70
+0.70 Sat, February 14, 2009
     * Moose::Util::TypeConstraints
       - Added the RoleName type (stevan)
         - added tests for this (stevan)
