@@ -299,7 +299,7 @@ consuming class provide the C<builder>:
   has 'size' => (
       is      => 'ro',
       lazy    => 1,
-      builder => '_build_animal',
+      builder => '_build_size',
   );
 
   package Lilliputian;
