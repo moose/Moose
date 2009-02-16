@@ -54,6 +54,17 @@ ok($pure_insanity->check([ 1, 'Str', 3 ]), '... this passed the type check');
 ok(!$pure_insanity->check([ 1, {}, 'foo' ]), '... this didnt pass the type check');
 ok(!$pure_insanity->check([ [], {}, 1 ]), '... this didnt pass the type check');
 
+# intersection of Arrays of Int | Str or Arrays of Str | Int
+
+my $sheer_insanity = Moose::Util::TypeConstraints::create_type_constraint_intersection('ArrayRef[Int|Str] & ArrayRef[Str | Int]');
+isa_ok($sheer_insanity, 'Moose::Meta::TypeConstraint::Intersection');
+
+ok($sheer_insanity->check([ 1, 4, 'foo' ]), '... this passed the type check');
+ok($sheer_insanity->check([ 1, 'Str', 'foo' ]), '... this passed the type check');
+
+ok(!$sheer_insanity->check([ 1, {}, 'foo' ]), '... this didnt pass the type check');
+ok(!$sheer_insanity->check([ [], {}, 1 ]), '... this didnt pass the type check');
+
 ## Nested Containers ...
 
 # Array of Ints

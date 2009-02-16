@@ -149,4 +149,19 @@ is $union1->name, $union3->name, 'names match';
 
 is $union2->name, $union3->name, 'names match';
 
+ok my $intersection1 = Moose::Util::TypeConstraints::create_type_constraint_intersection(
+    'ArrayRef[Int|Str] & ArrayRef[Int | HashRef]') => 'Created Intersection1';
+
+ok my $intersection2 = Moose::Util::TypeConstraints::create_type_constraint_intersection(
+    'ArrayRef[  Int|Str] & ArrayRef[Int | HashRef]') => 'Created Intersection2';
+
+ok my $intersection3 = Moose::Util::TypeConstraints::create_type_constraint_intersection(
+    'ArrayRef[Int |Str   ] & ArrayRef[Int | HashRef  ]') => 'Created Intersection3';
+
+is $intersection1->name, $intersection2->name, 'names match';
+
+is $intersection1->name, $intersection3->name, 'names match';
+
+is $intersection2->name, $intersection3->name, 'names match';
+
 done_testing;
