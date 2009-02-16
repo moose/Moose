@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More tests => 68;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
@@ -101,5 +101,55 @@ ok(!Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
         [ Moose::Util::TypeConstraints::_parse_type_constraint_union($_) ],
         $split_tests{$_},
         '... this correctly split the union (' . $_ . ')'
+    ) for keys %split_tests;
+}
+
+## now for the intersections
+
+ok(Moose::Util::TypeConstraints::_detect_type_constraint_intersection($_), 
+   '... this correctly detected intersection (' . $_ . ')')
+    for (
+    'Int & Str',
+    'Int&Str',    
+    'ArrayRef[Foo] & Int',
+    'ArrayRef[Foo]&Int',    
+    'Int & ArrayRef[Foo]',
+    'Int&ArrayRef[Foo]',    
+    'ArrayRef[Foo | Int] & Str',
+    'ArrayRef[Foo|Int]&Str',    
+    'Str & ArrayRef[Foo | Int]', 
+    'Str&ArrayRef[Foo|Int]',     
+    'Some&Silly&Name&With&Pipes & Int',   
+    'Some&Silly&Name&With&Pipes&Int',       
+);
+
+ok(!Moose::Util::TypeConstraints::_detect_type_constraint_intersection($_), 
+   '... this correctly detected a non-intersection (' . $_ . ')')
+    for (
+    'Int',
+    'ArrayRef[Foo | Int]',
+    'ArrayRef[Foo|Int]',    
+);
+
+{
+    my %split_tests = (
+        'Int & Str'                        => [ 'Int', 'Str' ],
+        'Int&Str'                          => [ 'Int', 'Str' ],        
+        'ArrayRef[Foo] & Int'              => [ 'ArrayRef[Foo]', 'Int' ],
+        'ArrayRef[Foo]&Int'                => [ 'ArrayRef[Foo]', 'Int' ],        
+        'Int & ArrayRef[Foo]'              => [ 'Int', 'ArrayRef[Foo]' ],
+        'Int&ArrayRef[Foo]'                => [ 'Int', 'ArrayRef[Foo]' ],        
+        'ArrayRef[Foo | Int] & Str'        => [ 'ArrayRef[Foo | Int]', 'Str' ],
+        'ArrayRef[Foo|Int]&Str'            => [ 'ArrayRef[Foo|Int]', 'Str' ],        
+        'Str & ArrayRef[Foo | Int]'        => [ 'Str', 'ArrayRef[Foo | Int]' ],  
+        'Str&ArrayRef[Foo|Int]'            => [ 'Str', 'ArrayRef[Foo|Int]' ],          
+        'Some&Silly&Name&With&Pipes & Int' => [ 'Some', 'Silly', 'Name', 'With', 'Pipes', 'Int' ],  
+        'Some&Silly&Name&With&Pipes&Int'   => [ 'Some', 'Silly', 'Name', 'With', 'Pipes', 'Int' ],         
+    );
+
+    is_deeply(
+        [ Moose::Util::TypeConstraints::_parse_type_constraint_intersection($_) ],
+        $split_tests{$_},
+        '... this correctly split the intersection (' . $_ . ')'
     ) for keys %split_tests;
 }

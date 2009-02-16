@@ -268,6 +268,7 @@ $_->make_immutable(
 
     Moose::Meta::TypeCoercion
     Moose::Meta::TypeCoercion::Union
+    Moose::Meta::TypeCoercion::Intersection
 
     Moose::Meta::Method
     Moose::Meta::Method::Accessor

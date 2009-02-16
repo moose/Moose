@@ -34,6 +34,7 @@ sub _install_type_coercions ($$);
 
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
+use Moose::Meta::TypeConstraint::Intersection;
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Meta::TypeConstraint::Parameterizable;
 use Moose::Meta::TypeConstraint::Class;
@@ -41,6 +42,7 @@ use Moose::Meta::TypeConstraint::Role;
 use Moose::Meta::TypeConstraint::Enum;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
+use Moose::Meta::TypeCoercion::Intersection;
 use Moose::Meta::TypeConstraint::Registry;
 use Moose::Util::TypeConstraints::OptimizedConstraints;
 
@@ -93,6 +95,29 @@ sub create_type_constraint_union {
     } @type_constraint_names;
 
     return Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => \@type_constraints
+    );
+}
+
+sub create_type_constraint_intersection {
+    my @type_constraint_names;
+
+    if (scalar @_ == 1 && _detect_type_constraint_intersection($_[0])) {
+        @type_constraint_names = _parse_type_constraint_intersection($_[0]);
+    }
+    else {
+        @type_constraint_names = @_;
+    }
+    
+    (scalar @type_constraint_names >= 2)
+        || __PACKAGE__->_throw_error("You must pass in at least 2 type names to make an intersection");
+
+    my @type_constraints = map {
+        find_or_parse_type_constraint($_) ||
+         __PACKAGE__->_throw_error("Could not locate type constraint ($_) for the intersection");
+    } @type_constraint_names;
+
+    return Moose::Meta::TypeConstraint::Intersection->new(
         type_constraints => \@type_constraints
     );
 }
@@ -209,6 +234,8 @@ sub find_or_parse_type_constraint {
     
     if ($constraint = find_type_constraint($type_constraint_name)) {
         return $constraint;
+    } elsif (_detect_type_constraint_intersection($type_constraint_name)) {
+        $constraint = create_type_constraint_intersection($type_constraint_name);
     } elsif (_detect_type_constraint_union($type_constraint_name)) {
         $constraint = create_type_constraint_union($type_constraint_name);
     } elsif (_detect_parameterized_type_constraint($type_constraint_name)) {
@@ -455,7 +482,10 @@ sub _install_type_coercions ($$) {
     my $op_union = qr{ \s* \| \s* }x;
     my $union    = qr{ $type (?: $op_union $type )+ }x;
 
-    $any = qr{ $type | $union }x;
+    my $op_intersection = qr{ \s* & \s* }x;
+    my $intersection    = qr{ $type (?: $op_intersection $type )+ }x;
+
+    $any = qr{ $type | $union | $intersection }x;
 
     sub _parse_parameterized_type_constraint {
         { no warnings 'void'; $any; } # force capture of interpolated lexical
@@ -484,9 +514,30 @@ sub _install_type_coercions ($$) {
         @rv;
     }
 
+    sub _parse_type_constraint_intersection {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
+        my $given = shift;
+        my @rv;
+        while ( $given =~ m{ \G (?: $op_intersection )? ($type) }gcx ) {
+            push @rv => $1;
+        }
+        (pos($given) eq length($given))
+            || __PACKAGE__->_throw_error("'$given' didn't parse (parse-pos="
+                     . pos($given)
+                     . " and str-length="
+                     . length($given)
+                     . ")");
+        @rv;
+    }
+
     sub _detect_type_constraint_union {
         { no warnings 'void'; $any; } # force capture of interpolated lexical
         $_[0] =~ m{^ $type $op_union $type ( $op_union .* )? $}x;
+    }
+
+    sub _detect_type_constraint_intersection {
+        { no warnings 'void'; $any; } # force capture of interpolated lexical
+        $_[0] =~ m{^ $type $op_intersection $type ( $op_intersection .* )? $}x;
     }
 }
 
@@ -507,6 +558,7 @@ $_->make_immutable(
     qw(
     Moose::Meta::TypeConstraint
     Moose::Meta::TypeConstraint::Union
+    Moose::Meta::TypeConstraint::Intersection
     Moose::Meta::TypeConstraint::Parameterized
     Moose::Meta::TypeConstraint::Parameterizable
     Moose::Meta::TypeConstraint::Class
@@ -981,6 +1033,11 @@ string so that extra whitespace and newlines are removed.
 Given string with C<$pipe_separated_types> or a list of C<@type_constraint_names>,
 this will return a L<Moose::Meta::TypeConstraint::Union> instance.
 
+=item B<create_type_constraint_intersection ($pipe_separated_types | @type_constraint_names)>
+
+Given string with C<$pipe_separated_types> or a list of C<@type_constraint_names>,
+this will return a L<Moose::Meta::TypeConstraint::Intersection> instance.
+
 =item B<create_parameterized_type_constraint ($type_name)>
 
 Given a C<$type_name> in the form of:
@@ -1006,7 +1063,7 @@ object for that role name.
 
 This will attempt to find or create a type constraint given the a C<$type_name>.
 If it cannot find it in the registry, it will see if it should be a union or
-container type an create one if appropriate
+intersection or container type an create one if appropriate
 
 =item B<find_or_create_type_constraint ($type_name, ?$options_for_anon_type)>
 
