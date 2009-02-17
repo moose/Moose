@@ -75,9 +75,10 @@ provide a default attribute value.
 Demonstrates using operator overloading, coercion, and subtypes to
 model how eye color is determined during reproduction.
 
-=item L<Moose::Cookbook::Basics::Recipe11> - BUILD and BUILDARGS (TODO)
+=item L<Moose::Cookbook::Basics::Recipe11> - Using BUILDARGS and BUILD to hook into object construction
 
-We need a good recipe demonstrating how these work.
+This recipe demonstrates the use of C<BUILDARGS> and C<BUILD> to hook
+into object construction.
 
 =back
 
