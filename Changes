@@ -1,5 +1,10 @@
 Revision history for Perl extension Moose
 
+0.71
+    * Moose::Cookbook::Basics::Recipe11
+      - A new recipe which demonstrates the use of BUILDARGS and
+        BUILD. (Dave Rolsky)
+
 0.70 Sat, February 14, 2009
     * Moose::Util::TypeConstraints
       - Added the RoleName type (stevan)
