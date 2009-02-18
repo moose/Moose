@@ -83,7 +83,7 @@ use Test::Inline;
 
 my $target = 't/000_recipes';
 
-for my $t_file ( File::Find::Rule->file->name(qr/\.t$/)->in($target) ) {
+for my $t_file ( File::Find::Rule->file->name(qr/^moose_cookbook_\.t$/)->in($target) ) {
     unlink $t_file or die "Cannot unlink $t_file: $!";
 }
 
