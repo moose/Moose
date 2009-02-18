@@ -1,6 +1,19 @@
 
 =pod
 
+=begin testing SETUP
+
+BEGIN {
+    eval 'use HTTP::Headers; use Params::Coerce; use URI;';
+    if ($@) {
+        diag 'HTTP::Headers, Params::Coerce & URI required for this test';
+        ok(1);
+        exit 0;
+    }
+}
+
+=end testing
+
 =head1 NAME
 
 Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
@@ -207,5 +220,67 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+my $r = Request->new;
+isa_ok( $r, 'Request' );
+
+{
+    my $header = $r->headers;
+    isa_ok( $header, 'HTTP::Headers' );
+
+    is( $r->headers->content_type, '',
+        '... got no content type in the header' );
+
+    $r->headers( { content_type => 'text/plain' } );
+
+    my $header2 = $r->headers;
+    isa_ok( $header2, 'HTTP::Headers' );
+    isnt( $header, $header2, '... created a new HTTP::Header object' );
+
+    is( $header2->content_type, 'text/plain',
+        '... got the right content type in the header' );
+
+    $r->headers( [ content_type => 'text/html' ] );
+
+    my $header3 = $r->headers;
+    isa_ok( $header3, 'HTTP::Headers' );
+    isnt( $header2, $header3, '... created a new HTTP::Header object' );
+
+    is( $header3->content_type, 'text/html',
+        '... got the right content type in the header' );
+
+    $r->headers( HTTP::Headers->new( content_type => 'application/pdf' ) );
+
+    my $header4 = $r->headers;
+    isa_ok( $header4, 'HTTP::Headers' );
+    isnt( $header3, $header4, '... created a new HTTP::Header object' );
+
+    is( $header4->content_type, 'application/pdf',
+        '... got the right content type in the header' );
+
+    dies_ok {
+        $r->headers('Foo');
+    }
+    '... dies when it gets bad params';
+}
+
+{
+    is( $r->protocol, undef, '... got nothing by default' );
+
+    lives_ok {
+        $r->protocol('HTTP/1.0');
+    }
+    '... set the protocol correctly';
+    is( $r->protocol, 'HTTP/1.0', '... got nothing by default' );
+
+    dies_ok {
+        $r->protocol('http/1.0');
+    }
+    '... the protocol died with bar params correctly';
+}
+
+=end testing
 
 =cut

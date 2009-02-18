@@ -22,7 +22,6 @@ Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
 
   package MyApp::Website;
   use Moose;
-  use MyApp::Meta::Attribute::Labeled;
 
   has url => (
       metaclass => 'Labeled',
@@ -39,30 +38,30 @@ Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
   sub dump {
       my $self = shift;
 
-      # iterate over all the attributes in $self
-      my %attributes = %{ $self->meta->get_attribute_map };
-      while ( my ( $name, $attribute ) = each %attributes ) {
+      my $dump = '';
 
-          # print the label if available
+      my %attributes = %{ $self->meta->get_attribute_map };
+      for my $name ( sort keys %attributes ) {
+          my $attribute = $attributes{$name};
+
           if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
               && $attribute->has_label ) {
-              print $attribute->label;
+              $dump .= $attribute->label;
           }
-
-          # otherwise print the name
           else {
-              print $name;
+              $dump .= $name;
           }
 
-          # print the attribute's value
           my $reader = $attribute->get_read_method;
-          print ": " . $self->$reader . "\n";
+          $dump .= ": " . $self->$reader . "\n";
       }
+
+      return $dump;
   }
 
   package main;
+
   my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
-  $app->dump;
 
 =head1 SUMMARY
 
@@ -201,14 +200,15 @@ attribute's label if it has one.
   sub dump {
       my $self = shift;
 
-      # iterate over all the attributes in $self
-      my %attributes = %{ $self->meta->get_attribute_map };
-      while ( my ( $name, $attribute ) = each %attributes ) {
+      my $dump = '';
 
-          # print the label if available
+      my %attributes = %{ $self->meta->get_attribute_map };
+      for my $name ( sort keys %attributes ) {
+          my $attribute = $attributes{$name};
+
           if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
               && $attribute->has_label ) {
-              print $attribute->label;
+              $dump .= $attribute->label;
           }
 
 This is a bit of defensive code. We cannot depend on every
@@ -218,17 +218,17 @@ superclass could add an attribute without a label.
 
 We also check that the attribute has a label using the predicate we
 defined. We could instead make the label C<required>. If we have a
-label, we print it, otherwise we print the attribute name:
+label, we use it, otherwise we use the attribute name:
 
-          # otherwise print the name
           else {
-              print $name;
+              $dump .= $name;
           }
 
-          # print the attribute's value
           my $reader = $attribute->get_read_method;
-          print ": " . $self->$reader . "\n";
+          $dump .= ": " . $self->$reader . "\n";
       }
+
+      return $dump;
   }
 
 The C<get_read_method> is part of the L<Moose::Meta::Attribute>
@@ -276,6 +276,17 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
+is(
+    $app->dump, q{name: Google
+The site's URL: http://google.com
+}, '... got the expected dump value'
+);
+
+=end testing
 
 =cut
 

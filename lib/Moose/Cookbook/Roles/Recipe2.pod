@@ -18,9 +18,9 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
 
   requires 'save_state', 'load_state';
 
-  sub stop { ... }
+  sub stop { 1 }
 
-  sub start { ... }
+  sub start { 1 }
 
   package Restartable::ButUnreliable;
   use Moose::Role;
@@ -130,5 +130,46 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+{
+    my $unreliable = Moose::Meta::Class->create_anon_class(
+        superclasses => [],
+        roles        => [qw/Restartable::ButUnreliable/],
+        methods      => {
+            explode      => sub { },    # nop.
+            'save_state' => sub { },
+            'load_state' => sub { },
+        },
+    )->new_object();
+    ok( $unreliable, 'made anon class with Restartable::ButUnreliable role' );
+    can_ok( $unreliable, qw/start stop/ );
+}
+
+{
+    my $cnt    = 0;
+    my $broken = Moose::Meta::Class->create_anon_class(
+        superclasses => [],
+        roles        => [qw/Restartable::ButBroken/],
+        methods      => {
+            explode      => sub { $cnt++ },
+            'save_state' => sub { },
+            'load_state' => sub { },
+        },
+    )->new_object();
+
+    ok( $broken, 'made anon class with Restartable::ButBroken role' );
+
+    $broken->start();
+
+    is( $cnt, 1, '... start called explode' );
+
+    $broken->stop();
+
+    is( $cnt, 2, '... stop also called explode' );
+}
+
+=end testing
 
 =cut

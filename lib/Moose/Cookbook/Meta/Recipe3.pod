@@ -21,7 +21,6 @@ Moose::Cookbook::Meta::Recipe3 - Labels implemented via attribute traits
 
   package MyApp::Website;
   use Moose;
-  use MyApp::Meta::Attribute::Trait::Labeled;
 
   has url => (
       traits => [qw/Labeled/],
@@ -38,30 +37,30 @@ Moose::Cookbook::Meta::Recipe3 - Labels implemented via attribute traits
   sub dump {
       my $self = shift;
 
-      # iterate over all the attributes in $self
-      my %attributes = %{ $self->meta->get_attribute_map };
-      while ( my ( $name, $attribute ) = each %attributes ) {
+      my $dump = '';
 
-          # print the label if available
+      my %attributes = %{ $self->meta->get_attribute_map };
+      for my $name ( sort keys %attributes ) {
+          my $attribute = $attributes{$name};
+
           if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
               && $attribute->has_label ) {
-              print $attribute->label;
+              $dump .= $attribute->label;
           }
-
-          # otherwise print the name
           else {
-              print $name;
+              $dump .= $name;
           }
 
-          # print the attribute's value
           my $reader = $attribute->get_read_method;
-          print ": " . $self->$reader . "\n";
+          $dump .= ": " . $self->$reader . "\n";
       }
+
+      return $dump;
   }
 
   package main;
+
   my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
-  $app->dump;
 
 =head1 BUT FIRST
 
@@ -144,11 +143,10 @@ anonymous attribute metaclass from these traits and use it for this
 attribute. Passing a C<label> parameter works just as it did with the
 metaclass example.
 
-  # print the label if available
-  if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
-      && $attribute->has_label ) {
-      print $attribute->label;
-  }
+          if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
+              && $attribute->has_label ) {
+              $dump .= $attribute->label;
+          }
 
 In the metaclass example, we used C<< $attribute->isa >>. With a role,
 we instead ask if the meta-attribute object C<does> the required
@@ -200,6 +198,17 @@ L<http://www.iinteractive.com>
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+=begin testing
+
+my $app2
+    = MyApp::Website->new( url => "http://google.com", name => "Google" );
+is(
+    $app2->dump, q{name: Google
+The site's URL: http://google.com
+}, '... got the expected dump value'
+);
+
+
+=end testing
+
 =cut
-
-

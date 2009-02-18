@@ -30,6 +30,13 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
       $caller->meta->table(shift);
   }
 
+  package MyApp::Meta::Class;
+  use Moose;
+
+  extends 'Moose::Meta::Class';
+
+  has 'table' => ( is => 'rw' );
+
 =head1 DESCRIPTION
 
 This recipe expands on the use of L<Moose::Exporter> we saw in
@@ -86,5 +93,29 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+
+{
+    package MyApp::User;
+
+    MyApp::Mooseish->import;
+
+    has_table( 'User' );
+
+    has( 'username' => ( is => 'ro' ) );
+    has( 'password' => ( is => 'ro' ) );
+
+    sub login { }
+}
+
+isa_ok( MyApp::User->meta, 'MyApp::Meta::Class' );
+is( MyApp::User->meta->table, 'User',
+    'MyApp::User->meta->table returns User' );
+ok( MyApp::User->can('username'),
+    'MyApp::User has username method' );
+
+=end testing
 
 =pod

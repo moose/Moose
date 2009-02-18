@@ -58,7 +58,7 @@ Moose::Cookbook::Basics::Recipe6 - The augment/inner example
   }
 
   # <page><header/><report type="tps"/><footer/></page>
-  print TPSReport->new->create;
+  my $report_xml = TPSReport->new->create;
 
 =head1 DESCRIPTION
 
@@ -132,5 +132,18 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+my $tps_report = TPSReport->new;
+isa_ok( $tps_report, 'TPSReport' );
+
+is(
+    $tps_report->create,
+    q{<page><header/><report type="tps"/><footer/></page>},
+    '... got the right TPS report'
+);
+
+=end testing
 
 =cut

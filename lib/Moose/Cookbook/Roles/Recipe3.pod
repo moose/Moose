@@ -1,5 +1,29 @@
+package Moose::Cookbook::Roles::Recipe3;
 
 =pod
+
+=begin testing SETUP
+
+{
+    # Not in the recipe, but needed for writing tests.
+    package Employee;
+
+    use Moose;
+
+    has 'name' => (
+        is       => 'ro',
+        isa      => 'Str',
+        required => 1,
+    );
+
+    has 'work' => (
+        is        => 'rw',
+        isa       => 'Str',
+        predicate => 'has_work',
+    );
+}
+
+=end testing
 
 =head1 NAME
 
@@ -26,7 +50,7 @@ Moose::Cookbook::Roles::Recipe3 - Applying a role to an object instance
 
       die 'All my employees have work to do!' unless $employee;
 
-      $employee->assign_work($work);
+      $employee->work($work);
   }
 
   package main;
@@ -92,5 +116,28 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+
+=begin testing
+
+{
+    my $lisa = Employee->new( name => 'Lisa' );
+    MyApp::Role::Job::Manager->meta->apply($lisa);
+
+    my $homer = Employee->new( name => 'Homer' );
+    my $bart  = Employee->new( name => 'Bart' );
+    my $marge = Employee->new( name => 'Marge' );
+
+    $lisa->employees( [ $homer, $bart, $marge ] );
+    $lisa->assign_work('mow the lawn');
+
+    ok( $lisa->does('MyApp::Role::Job::Manager'),
+        'lisa now does the manager role' );
+
+    is( $homer->work, 'mow the lawn',
+        'homer was assigned a task by lisa' );
+}
+
+=end testing
 
 =cut

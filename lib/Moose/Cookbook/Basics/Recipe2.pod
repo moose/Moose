@@ -157,7 +157,7 @@ method, which accepts named parameters.
   );
 
 And as with the first recipe, a more in-depth example can be found in
-the F<t/000_recipes/basics/002_recipe.t> test file.
+the F<t/000_recipes/moose_cookbook_basics_recipe2.t> test file.
 
 =head1 CONCLUSION
 
@@ -226,5 +226,92 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+my $savings_account;
+
+{
+    $savings_account = BankAccount->new( balance => 250 );
+    isa_ok( $savings_account, 'BankAccount' );
+
+    is( $savings_account->balance, 250, '... got the right savings balance' );
+    lives_ok {
+        $savings_account->withdraw(50);
+    }
+    '... withdrew from savings successfully';
+    is( $savings_account->balance, 200,
+        '... got the right savings balance after withdrawl' );
+
+    $savings_account->deposit(150);
+    is( $savings_account->balance, 350,
+        '... got the right savings balance after deposit' );
+}
+
+{
+    my $checking_account = CheckingAccount->new(
+        balance           => 100,
+        overdraft_account => $savings_account
+    );
+    isa_ok( $checking_account, 'CheckingAccount' );
+    isa_ok( $checking_account, 'BankAccount' );
+
+    is( $checking_account->overdraft_account, $savings_account,
+        '... got the right overdraft account' );
+
+    is( $checking_account->balance, 100,
+        '... got the right checkings balance' );
+
+    lives_ok {
+        $checking_account->withdraw(50);
+    }
+    '... withdrew from checking successfully';
+    is( $checking_account->balance, 50,
+        '... got the right checkings balance after withdrawl' );
+    is( $savings_account->balance, 350,
+        '... got the right savings balance after checking withdrawl (no overdraft)'
+    );
+
+    lives_ok {
+        $checking_account->withdraw(200);
+    }
+    '... withdrew from checking successfully';
+    is( $checking_account->balance, 0,
+        '... got the right checkings balance after withdrawl' );
+    is( $savings_account->balance, 200,
+        '... got the right savings balance after overdraft withdrawl' );
+}
+
+{
+    my $checking_account = CheckingAccount->new(
+        balance => 100
+
+            # no overdraft account
+    );
+    isa_ok( $checking_account, 'CheckingAccount' );
+    isa_ok( $checking_account, 'BankAccount' );
+
+    is( $checking_account->overdraft_account, undef,
+        '... no overdraft account' );
+
+    is( $checking_account->balance, 100,
+        '... got the right checkings balance' );
+
+    lives_ok {
+        $checking_account->withdraw(50);
+    }
+    '... withdrew from checking successfully';
+    is( $checking_account->balance, 50,
+        '... got the right checkings balance after withdrawl' );
+
+    dies_ok {
+        $checking_account->withdraw(200);
+    }
+    '... withdrawl failed due to attempted overdraft';
+    is( $checking_account->balance, 50,
+        '... got the right checkings balance after withdrawl failure' );
+}
+
+=end testing
 
 =cut

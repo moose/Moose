@@ -1,6 +1,19 @@
 
 =pod
 
+=begin testing SETUP
+
+BEGIN {
+    eval 'use Test::Warn 0.11;';
+    if ($@) {
+        diag 'Test::Warn 0.11+ is required for this test';
+        ok(1);
+        exit 0;
+    }
+}
+
+=end testing
+
 =head1 NAME
 
 Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
@@ -24,7 +37,7 @@ Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
 
   sub init_meta {
       shift;
-      Moose->init_meta( @_, base_class => 'MyApp::Object' );
+      Moose->init_meta( @_, base_class => 'MyApp::Base' );
   }
 
 =head1 DESCRIPTION
@@ -86,5 +99,30 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+{
+    package Foo;
+
+    MyApp::UseMyBase->import;
+
+    has( 'size' => ( is => 'rw' ) );
+}
+
+ok( Foo->isa('MyApp::Base'), 'Foo isa MyApp::Base' );
+
+ok( Foo->can('size'), 'Foo has a size method' );
+
+my $foo;
+warning_is(
+    sub { $foo = Foo->new( size => 2 ) },
+    'Making a new Foo',
+    'got expected warning when calling Foo->new'
+);
+
+is( $foo->size(), 2, '$foo->size is 2' );
+
+=end testing
 
 =cut

@@ -183,7 +183,7 @@ ensure that is has the correct value for its C<parent> attribute.
 
 As with all the other recipes, B<BinaryTree> can be used just like any
 other Perl 5 class. A more detailed example of its usage can be found
-in F<t/000_recipes/003_recipe.t>.
+in F<t/000_recipes/moose_cookbook_basics_recipe3.t>.
 
 =head1 CONCLUSION
 
@@ -229,5 +229,106 @@ L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+use Scalar::Util 'isweak';
+
+my $root = BinaryTree->new(node => 'root');
+isa_ok($root, 'BinaryTree');
+
+is($root->node, 'root', '... got the right node value');
+
+ok(!$root->has_left, '... no left node yet');
+ok(!$root->has_right, '... no right node yet');
+
+ok(!$root->has_parent, '... no parent for root node');
+
+# make a left node
+
+my $left = $root->left;
+isa_ok($left, 'BinaryTree');
+
+is($root->left, $left, '... got the same node (and it is $left)');
+ok($root->has_left, '... we have a left node now');
+
+ok($left->has_parent, '... lefts has a parent');
+is($left->parent, $root, '... lefts parent is the root');
+
+ok(isweak($left->{parent}), '... parent is a weakened ref');
+
+ok(!$left->has_left, '... $left no left node yet');
+ok(!$left->has_right, '... $left no right node yet');
+
+is($left->node, undef, '... left has got no node value');
+
+lives_ok {
+    $left->node('left')
+} '... assign to lefts node';
+
+is($left->node, 'left', '... left now has a node value');
+
+# make a right node
+
+ok(!$root->has_right, '... still no right node yet');
+
+is($root->right->node, undef, '... right has got no node value');
+
+ok($root->has_right, '... now we have a right node');
+
+my $right = $root->right;
+isa_ok($right, 'BinaryTree');
+
+lives_ok {
+    $right->node('right')
+} '... assign to rights node';
+
+is($right->node, 'right', '... left now has a node value');
+
+is($root->right, $right, '... got the same node (and it is $right)');
+ok($root->has_right, '... we have a right node now');
+
+ok($right->has_parent, '... rights has a parent');
+is($right->parent, $root, '... rights parent is the root');
+
+ok(isweak($right->{parent}), '... parent is a weakened ref');
+
+# make a left node of the left node
+
+my $left_left = $left->left;
+isa_ok($left_left, 'BinaryTree');
+
+ok($left_left->has_parent, '... left does have a parent');
+
+is($left_left->parent, $left, '... got a parent node (and it is $left)');
+ok($left->has_left, '... we have a left node now');
+is($left->left, $left_left, '... got a left node (and it is $left_left)');
+
+ok(isweak($left_left->{parent}), '... parent is a weakened ref');
+
+# make a right node of the left node
+
+my $left_right = BinaryTree->new;
+isa_ok($left_right, 'BinaryTree');
+
+lives_ok {
+    $left->right($left_right)
+} '... assign to rights node';
+
+ok($left_right->has_parent, '... left does have a parent');
+
+is($left_right->parent, $left, '... got a parent node (and it is $left)');
+ok($left->has_right, '... we have a left node now');
+is($left->right, $left_right, '... got a left node (and it is $left_left)');
+
+ok(isweak($left_right->{parent}), '... parent is a weakened ref');
+
+# and check the error
+
+dies_ok {
+    $left_right->right($left_left)
+} '... cant assign a node which already has a parent';
+
+=end testing
 
 =cut
