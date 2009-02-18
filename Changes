@@ -5,6 +5,10 @@ Revision history for Perl extension Moose
       - A new recipe which demonstrates the use of BUILDARGS and
         BUILD. (Dave Rolsky)
 
+    * Moose::Cookbook::Roles::Recipe3
+      - A new recipe, applying a role to an object instance. (Dave
+        Rolsky)
+
 0.70 Sat, February 14, 2009
     * Moose::Util::TypeConstraints
       - Added the RoleName type (stevan)
