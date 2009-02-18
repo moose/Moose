@@ -20,6 +20,10 @@ requires 'Task::Weaken'     => '0';
 test_requires 'Test::More'      => '0.77';
 test_requires 'Test::Exception' => '0.21';
 
+if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
+    system( $^X, 'extract-inline-tests' );
+}
+
 tests_recursive();
 
 WriteAll();
