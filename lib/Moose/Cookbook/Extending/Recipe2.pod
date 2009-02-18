@@ -15,7 +15,6 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
   use Moose ();
   use Moose::Exporter;
   use Moose::Util::MetaRole;
-  use MooseX::Debugging::Role::Object;
 
   Moose::Exporter->setup_import_methods;
 
@@ -32,6 +31,8 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
   }
 
   package MooseX::Debugging::Role::Object;
+
+  use Moose::Role;
 
   after 'BUILD' => sub {
       my $self = shift;
