@@ -11,7 +11,7 @@ BEGIN {
         plan skip_all => 'These tests require Test::Warn 0.11';
     }
     else {
-        plan tests => 40;
+        plan tests => 45;
     }
 }
 
@@ -239,3 +239,38 @@ BEGIN {
         'got the expected error from a reference in also to a package which does not use Moose::Exporter'
     );
 }
+
+{
+    package MooseX::OverridingSugar;
+
+    use Moose ();
+
+    sub has {
+        my $caller = shift;
+        return $caller . ' called has';
+    }
+
+    Moose::Exporter->setup_import_methods(
+        with_caller => ['has'],
+        also        => 'Moose',
+    );
+}
+
+{
+    package WantsOverridingSugar;
+
+    MooseX::OverridingSugar->import();
+
+    ::can_ok( 'WantsOverridingSugar', 'has' );
+    ::can_ok( 'WantsOverridingSugar', 'with' );
+    ::is( has('foo'), 'WantsOverridingSugar called has',
+          'has from MooseX::OverridingSugar is called, not has from Moose' );
+
+    MooseX::OverridingSugar->unimport();
+}
+
+{
+    ok( ! WantsSugar->can('has'),  'WantsSugar::has() has been cleaned' );
+    ok( ! WantsSugar->can('with'), 'WantsSugar::with() has been cleaned' );
+}
+
