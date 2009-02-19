@@ -178,19 +178,10 @@ you prefix names with some sort of namespace indicator to prevent
 these sorts of collisions.
 
 For example, instead of calling a type "PositiveInt", call it
-"MyApp::Type::PositiveInt" or "MyApp::Types::PositiveInt" - you may
-find it easiest to centralize these definitions in a lib/MyApp/Types.pm
-so the other classes in your application can simply do "use MyApp::Types"
-and assume that all relevant types have now been defined.
-
-The L<MooseX::Types> module provides namespaced types as functions so that
-you can import the names into packages and use them as barewords - i.e.
-
-  has 'foo' => (isa => 'MyApp::Types::PositiveInt');
-
-would become
-
-  has 'foo' => (isa => PositiveInt);
+"MyApp::Type::PositiveInt" or "MyApp::Types::PositiveInt". We
+recommend that you centralize all of these definitions in a single
+package, C<MyApp::Types>, which can be loaded by other classes in your
+application.
 
 =head1 COERCION
 
