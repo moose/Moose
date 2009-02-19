@@ -178,16 +178,19 @@ you prefix names with some sort of namespace indicator to prevent
 these sorts of collisions.
 
 For example, instead of calling a type "PositiveInt", call it
-"MyApp.Type.PositiveInt".
+"MyApp::Type::PositiveInt" or "MyApp::Types::PositiveInt" - you may
+find it easiest to centralize these definitions in a lib/MyApp/Types.pm
+so the other classes in your application can simply do "use MyApp::Types"
+and assume that all relevant types have now been defined.
 
-Type names are just strings. We recommend that you I<do not> use "::"
-as a separator in type names. This can be very confusing, because
-class names are I<also> valid type names! Using something else, like a
-period, makes it clear that "MyApp::User" is a class and
-"MyApp.Type.PositiveInt" is a Moose type defined by your application.
+The L<MooseX::Types> module provides namespaced types as functions so that
+you can import the names into packages and use them as barewords - i.e.
 
-The L<MooseX::Types> module lets you create bareword aliases to longer
-names and also automatically namespaces all the types you define.
+  has 'foo' => (isa => 'MyApp::Types::PositiveInt');
+
+would become
+
+  has 'foo' => (isa => PositiveInt);
 
 =head1 COERCION
 
