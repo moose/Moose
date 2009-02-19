@@ -137,8 +137,8 @@ Use some sort of namespacing convention for type names. We recommend
 something like "MyApp::Type::Foo".
 
 If you're intending to package your types up for re-use using
-MooseX::Types later, avoid using characters that are invalid in perl
-identifiers such as a space or period.
+L<MooseX::Types> later, avoid using characters that are invalid in
+perl identifiers such as a space or period.
 
 =head2 Do not coerce Moose built-ins directly
 
