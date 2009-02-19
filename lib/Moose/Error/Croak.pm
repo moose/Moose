@@ -3,7 +3,7 @@ package Moose::Error::Croak;
 use strict;
 use warnings;
 
-our $VERSION   = '0.70';
+our $VERSION   = '0.71';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

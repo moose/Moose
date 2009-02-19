@@ -8,7 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-our $VERSION   = '0.70';
+our $VERSION   = '0.71';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
