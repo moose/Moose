@@ -134,8 +134,9 @@ changing the parents.
 =head2 Namespace your types
 
 Use some sort of namespacing convention for type names. We recommend
-something like "MyApp.Type.Foo". I<Never> use "::" as the namespace
-separator, since that overlaps with actual class names.
+something like "MyApp::Type::Foo". If you're intending to package
+your types up for re-use using MooseX::Types later, avoid using
+characters that are invalid in perl identifiers such as ' ' and '.'.
 
 =head2 Do not coerce Moose built-ins directly
 
