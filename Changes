@@ -9,6 +9,18 @@ Revision history for Perl extension Moose
       - A new recipe, applying a role to an object instance. (Dave
         Rolsky)
 
+    * Moose::Util::TypeConstraints::Optimized
+      - Just use Class::MOP for the optimized ClassName check (Dave
+        Rolsky)
+
+    * Moose::Exporter
+      - Allow overriding specific keywords from "also" packages (doy)
+
+    * Tests
+      - Replace hardcoded cookbook tests with Test::Inline POD
+        to ensure they don't desync (Dave Rolsky)
+      - Many fixes, small and large (Dave Rolsky)
+
 0.70 Sat, February 14, 2009
     * Moose::Util::TypeConstraints
       - Added the RoleName type (stevan)
