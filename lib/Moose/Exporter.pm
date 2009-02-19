@@ -40,7 +40,7 @@ sub build_import_methods {
 
     my ( $exports, $is_removable )
         = $class->_make_sub_exporter_params(
-        [ $exporting_package, @exports_from ], $export_recorder );
+        [ @exports_from, $exporting_package ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
