@@ -6,7 +6,6 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-use Carp         'confess'; # FIXME Moose->throw_error
 
 our $VERSION   = '0.71';
 $VERSION = eval $VERSION;
@@ -44,8 +43,12 @@ sub get_type_constraint {
 
 sub add_type_constraint {
     my ($self, $type) = @_;
-    confess("No type supplied / type is not a valid type constraint") 
-        unless ($type && blessed $type && $type->isa('Moose::Meta::TypeConstraint'));
+
+    unless ( $type && blessed $type && $type->isa('Moose::Meta::TypeConstraint') ) {
+        require Moose;
+        Moose->throw_error("No type supplied / type is not a valid type constraint");
+    }
+
     $self->type_constraints->{$type->name} = $type;
 }
 

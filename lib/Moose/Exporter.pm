@@ -262,6 +262,7 @@ sub _make_import_sub {
             _apply_meta_traits( $CALLER, $traits );
         }
         elsif ( @{$traits} ) {
+            require Moose;
             Moose->throw_error(
                 "Cannot provide traits when $class does not have an init_meta() method"
             );

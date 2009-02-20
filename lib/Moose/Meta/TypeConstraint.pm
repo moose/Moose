@@ -36,6 +36,7 @@ __PACKAGE__->meta->add_attribute('coercion'   => (
     accessor  => 'coercion',
     predicate => 'has_coercion'
 ));
+
 __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     init_arg  => 'optimized',
     accessor  => 'hand_optimized_type_constraint',
@@ -62,7 +63,7 @@ sub new {
     my ($first, @rest) = @_;
     my %args = ref $first ? %$first : $first ? ($first, @rest) : ();
     $args{name} = $args{name} ? "$args{name}" : "__ANON__";
-    
+
     my $self  = $class->_new(%args);
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
@@ -71,7 +72,18 @@ sub new {
 
 
 
-sub coerce   { ((shift)->coercion || Moose->throw_error("Cannot coerce without a type coercion"))->coerce(@_) }
+sub coerce {
+    my $self = shift;
+
+    my $coercion = $self->coercion;
+
+    unless ($coercion) {
+        require Moose;
+        Moose->throw_error("Cannot coerce without a type coercion");
+    }
+
+    return $coercion->coerce(@_);
+}
 
 sub check {
     my ($self, @args) = @_;
@@ -165,10 +177,12 @@ sub _actually_compile_type_constraint {
         if $self->has_hand_optimized_type_constraint;
 
     my $check = $self->constraint;
-    (defined $check)
-        || Moose->throw_error("Could not compile type constraint '"
+    unless ( defined $check ) {
+        require Moose;
+        Moose->throw_error( "Could not compile type constraint '"
                 . $self->name
-                . "' because no constraint check");
+                . "' because no constraint check" );
+    }
 
     return $self->_compile_subtype($check)
         if $self->has_parent;
@@ -181,7 +195,11 @@ sub _compile_hand_optimized_type_constraint {
 
     my $type_constraint = $self->hand_optimized_type_constraint;
 
-    Moose->throw_error("Hand optimized type constraint is not a code reference") unless ref $type_constraint;
+    unless ( ref $type_constraint ) {
+        require Moose;
+        Carp::confess ("Hand optimized type constraint for " . $self->name . " is not a code reference");
+        Moose->throw_error("Hand optimized type constraint is not a code reference");
+    }
 
     return $type_constraint;
 }

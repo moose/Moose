@@ -43,6 +43,7 @@ sub compile_type_coercion {
 sub has_coercion_for_type { 0 }
 
 sub add_type_coercions {
+    require Moose;
     Moose->throw_error("Cannot add additional type coercions to Union types");
 }
 

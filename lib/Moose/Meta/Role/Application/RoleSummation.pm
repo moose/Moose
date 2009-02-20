@@ -79,6 +79,8 @@ sub check_role_exclusions {
             next unless $role->does_role($excluded);
 
             my @excluding = @{ $excluded_roles{$excluded} };
+
+            require Moose;
             Moose->throw_error(sprintf "Conflict detected: Role%s %s exclude%s role '%s'", (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
         }
     }
@@ -125,9 +127,11 @@ sub apply_attributes {
     my %seen;
     foreach my $attr (@all_attributes) {
         if (exists $seen{$attr->{name}}) {
-            Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' " 
-                  . "during composition. This is fatal error and cannot be disambiguated.")
-                if $seen{$attr->{name}} != $attr->{attr};           
+            if ( $seen{$attr->{name}} != $attr->{attr} ) {
+                require Moose;
+                Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' " 
+                                   . "during composition. This is fatal error and cannot be disambiguated.")
+            }
         }
         $seen{$attr->{name}} = $attr->{attr};
     }
@@ -195,15 +199,19 @@ sub apply_override_method_modifiers {
     
     my %seen;
     foreach my $override (@all_overrides) {
-        Moose->throw_error( "Role '" . $c->name . "' has encountered an 'override' method conflict " .
-                "during composition (A local method of the same name as been found). This " .
-                "is fatal error." )
-            if $c->has_method($override->{name});        
+        if ( $c->has_method($override->{name}) ){
+            require Moose;
+            Moose->throw_error( "Role '" . $c->name . "' has encountered an 'override' method conflict " .
+                                "during composition (A local method of the same name as been found). This " .
+                                "is fatal error." )
+        }
         if (exists $seen{$override->{name}}) {
-            Moose->throw_error( "We have encountered an 'override' method conflict during " .
-                    "composition (Two 'override' methods of the same name encountered). " .
-                    "This is fatal error.")
-                if $seen{$override->{name}} != $override->{method};                
+            if ( $seen{$override->{name}} != $override->{method} ) {
+                require Moose;
+                Moose->throw_error( "We have encountered an 'override' method conflict during " .
+                                    "composition (Two 'override' methods of the same name encountered). " .
+                                    "This is fatal error.")
+            }
         }
         $seen{$override->{name}} = $override->{method};
     }

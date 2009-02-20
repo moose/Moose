@@ -73,7 +73,10 @@ sub search_class_by_role {
 sub apply_all_roles {
     my $applicant = shift;
 
-    Moose->throw_error("Must specify at least one role to apply to $applicant") unless @_;
+    unless (@_) {
+        require Moose;
+        Moose->throw_error("Must specify at least one role to apply to $applicant");
+    }
 
     my $roles = Data::OptList::mkopt( [@_] );
 
@@ -83,11 +86,16 @@ sub apply_all_roles {
         Class::MOP::load_class( $role_spec->[0] );
     }
 
-    ( $_->[0]->can('meta') && $_->[0]->meta->isa('Moose::Meta::Role') )
-        || Moose->throw_error("You can only consume roles, "
-        . $_->[0]
-        . " is not a Moose role")
-        foreach @$roles;
+    foreach my $role (@$roles) {
+        unless ( $role->[0]->can('meta')
+            && $role->[0]->meta->isa('Moose::Meta::Role') ) {
+
+            require Moose;
+            Moose->throw_error( "You can only consume roles, "
+                    . $role->[0]
+                    . " is not a Moose role" );
+        }
+    }
 
     if ( scalar @$roles == 1 ) {
         my ( $role, $params ) = @{ $roles->[0] };

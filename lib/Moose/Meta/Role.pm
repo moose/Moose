@@ -122,8 +122,10 @@ foreach my $action (
 sub add_attribute {
     my $self = shift;
     my $name = shift;
-    (defined $name && $name)
-        || Moose->throw_error("You must provide a name for the attribute");
+    unless ( defined $name && $name ) {
+        require Moose;
+        Moose->throw_error("You must provide a name for the attribute");
+    }
     my $attr_desc;
     if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
         $attr_desc = $_[0];

@@ -33,9 +33,12 @@ __PACKAGE__->meta->add_attribute('methods' => (
 sub new {
     my ($class, %params) = @_;
     # the roles param is required ...
-    ($_->isa('Moose::Meta::Role'))
-        || Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_")
-            foreach @{$params{roles}};
+    foreach ( @{$params{roles}} ) {
+        unless ( $_->isa('Moose::Meta::Role') ) {
+            require Moose;
+            Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_");
+        }
+    }
     # and the name is created from the
     # roles if one has not been provided
     $params{name} ||= (join "|" => map { $_->name } @{$params{roles}});
@@ -48,8 +51,10 @@ sub new {
 # add the symbol.
 sub add_method {
     my ($self, $method_name, $method) = @_;
-    (defined $method_name && $method_name)
-    || Moose->throw_error("You must define a method name");
+
+    unless ( defined $method_name && $method_name ) {
+        Moose->throw_error("You must define a method name");
+    }
 
     my $body;
     if (blessed($method)) {
