@@ -217,10 +217,9 @@ sub _inline_store {
     my $attr = $self->associated_attribute;
     
     my $mi = $attr->associated_class->get_meta_instance;
-    my $slot_name = sprintf "'%s'", $attr->slots;
     
-    my $code = $mi->inline_set_slot_value($instance, $slot_name, $value)    . ";";
-    $code   .= $mi->inline_weaken_slot_value($instance, $slot_name, $value) . ";"
+    my $code = $mi->inline_set_slot_value($instance, $attr->slots, $value)    . ";";
+    $code   .= $mi->inline_weaken_slot_value($instance, $attr->slots, $value) . ";"
         if $attr->is_weak_ref;
     return $code;
 }
@@ -237,9 +236,8 @@ sub _inline_get {
     my $attr = $self->associated_attribute;
     
     my $mi = $attr->associated_class->get_meta_instance;
-    my $slot_name = sprintf "'%s'", $attr->slots;
 
-    return $mi->inline_get_slot_value($instance, $slot_name);
+    return $mi->inline_get_slot_value($instance, $attr->slots);
 }
 
 sub _inline_access {
@@ -247,9 +245,8 @@ sub _inline_access {
     my $attr = $self->associated_attribute;
     
     my $mi = $attr->associated_class->get_meta_instance;
-    my $slot_name = sprintf "'%s'", $attr->slots;
 
-    return $mi->inline_slot_access($instance, $slot_name);
+    return $mi->inline_slot_access($instance, $attr->slots);
 }
 
 sub _inline_has {
@@ -257,9 +254,8 @@ sub _inline_has {
     my $attr = $self->associated_attribute;
     
     my $mi = $attr->associated_class->get_meta_instance;
-    my $slot_name = sprintf "'%s'", $attr->slots;
 
-    return $mi->inline_is_slot_initialized($instance, $slot_name);
+    return $mi->inline_is_slot_initialized($instance, $attr->slots);
 }
 
 sub _inline_auto_deref {

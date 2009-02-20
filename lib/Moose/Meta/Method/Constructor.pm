@@ -221,7 +221,7 @@ sub _generate_triggers {
                     .       '$instance, ' 
                     .        $self->meta_instance->inline_get_slot_value(
                                  '$instance',
-                                 ("'" . $attr->name . "'")
+                                 $attr->name,
                              ) 
                              . ', '
                     .        '$attrs->[' . $i . ']'
@@ -319,7 +319,7 @@ sub _generate_slot_assignment {
         $source = (
             $self->meta_instance->inline_set_slot_value(
                 '$instance',
-                ("'" . $attr->name . "'"),
+                $attr->name,
                 $value
             ) . ';'
         );        
@@ -332,7 +332,7 @@ sub _generate_slot_assignment {
             "\n" .
             $self->meta_instance->inline_weaken_slot_value(
                 '$instance',
-                ("'" . $attr->name . "'")
+                $attr->name
             ) .
             ' if ref ' . $value . ';'
         );
