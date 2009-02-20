@@ -27,7 +27,7 @@ use Test::Exception;
       isa     => 'Fake::DateTime',
       coerce  => 1,
       trigger => sub {
-        my ( $self, $val, $meta ) = @_;
+        my ( $self, $val ) = @_;
         ::pass('... trigger is being called');
         ::isa_ok($self->closing_date, 'Fake::DateTime');
         ::isa_ok($val, 'Fake::DateTime');
