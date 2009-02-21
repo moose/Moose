@@ -384,7 +384,7 @@ sub _create_type_constraint ($$$;$$) {
 
         $name =~ /^[\w:\.]+$/
             or die qq{$name contains invalid characters for a type name.}
-            . qq{Names can contain alphanumeric character, ":", and "."\n};
+            . qq{ Names can contain alphanumeric character, ":", and "."\n};
     }
 
     my %opts = (
