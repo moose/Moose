@@ -9,12 +9,19 @@ Revision history for Perl extension Moose
       - A new recipe, applying a role to an object instance. (Dave
         Rolsky)
 
-    * Moose::Util::TypeConstraints::Optimized
-      - Just use Class::MOP for the optimized ClassName check. (Dave
-        Rolsky)
-
     * Moose::Exporter
       - Allow overriding specific keywords from "also" packages. (doy)
+
+    * Moose::Util::TypeConstraints
+      - Calling type or subtype without the sugar helpers (as, where,
+        message) is now deprecated.
+      - The subtype function tried hard to guess what you meant, but
+        often got it wrong. For example:
+
+         my $subtype = subtype as 'ArrayRef[Object]';
+
+        This caused an error in the past, but now works as you'd
+        expect.
 
     * Tests
       - Replace hardcoded cookbook tests with Test::Inline POD
@@ -23,6 +30,10 @@ Revision history for Perl extension Moose
     * Moose::Cookbook
       - Working on the above turned up a number of little bugs in the
         recipe code. (Dave Rolsky)
+
+    * Moose::Util::TypeConstraints::Optimized
+      - Just use Class::MOP for the optimized ClassName check. (Dave
+        Rolsky)
 
 0.70 Sat, February 14, 2009
     * Moose::Util::TypeConstraints

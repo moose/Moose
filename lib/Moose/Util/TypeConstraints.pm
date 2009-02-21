@@ -6,7 +6,7 @@ use warnings;
 
 use Carp ();
 use List::MoreUtils qw( all );
-use Scalar::Util 'blessed';
+use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
 our $VERSION   = '0.71';
@@ -25,10 +25,6 @@ sub where       (&);
 sub via         (&);
 sub message     (&);
 sub optimize_as (&);
-
-## private stuff ...
-sub _create_type_constraint ($$$;$$);
-sub _install_type_coercions ($$);
 
 ## --------------------------------------------------------
 
@@ -260,28 +256,50 @@ sub register_type_constraint {
 # type constructors
 
 sub type {
-    splice(@_, 1, 0, undef);
-    goto &_create_type_constraint;
+    if ( all { ( reftype($_) || '' ) eq 'CODE' || ! ref $_ } @_ ) {
+        # back-compat version, called without sugar
+        _create_type_constraint( $_[0], undef, $_[1] );
+    }
+    else {
+        my $name = shift;
+
+        my %p = map { %{$_} } @_;
+
+        _create_type_constraint( $name, undef, $p{check}, $p{message}, $p{optimized} );
+    }
 }
 
 sub subtype {
-    # NOTE:
-    # this adds an undef for the name
-    # if this is an anon-subtype:
-    #   subtype(Num => where { $_ % 2 == 0 }) # anon 'even' subtype
-    #     or
-    #   subtype(Num => where { $_ % 2 == 0 }) message { "$_ must be an even number" }
+    # crazy back-compat code for being called without sugar ...
     #
-    # but if the last arg is not a code ref then it is a subtype
-    # alias:
-    #
-    #   subtype(MyNumbers => as Num); # now MyNumbers is the same as Num
-    # ... yeah I know it's ugly code
-    # - SL
-    unshift @_ => undef if scalar @_ == 2 && ( 'CODE' eq ref( $_[-1] ) );
-    unshift @_ => undef
-        if scalar @_ == 3 && all { ref($_) =~ /^(?:CODE|HASH)$/ } @_[ 1, 2 ];
-    goto &_create_type_constraint;
+    # subtype 'Parent', sub { where };
+    if ( scalar @_ == 2 && ( reftype( $_[1] ) || '' ) eq 'CODE' ) {
+        return _create_type_constraint( undef, @_ );
+    }
+
+    # subtype 'Parent', sub { where }, sub { message };
+    # subtype 'Parent', sub { where }, sub { message }, sub { optimized };
+    if ( scalar @_ >= 3 && all { ( reftype($_) || '' ) eq 'CODE' }
+         @_[ 1 .. $#_ ] ) {
+        return _create_type_constraint( undef, @_ );
+    }
+
+    # subtype 'Name', 'Parent', ...
+    if ( scalar @_ >= 2 && all { !ref } @_[ 0, 1 ] ) {
+        return _create_type_constraint(@_);
+    }
+
+    my $name = ref $_[0] ? undef : shift;
+
+    my %p = map { %{$_} } @_;
+
+    # subtype Str => where { ... };
+    if ( ! exists $p{parent} ) {
+        $p{parent} = $name;
+        $name = undef;
+    }
+
+    _create_type_constraint( $name, $p{parent}, $p{check}, $p{message}, $p{optimized} );
 }
 
 sub class_type {
@@ -315,13 +333,13 @@ sub coerce {
     _install_type_coercions($type_name, \@coercion_map);
 }
 
-sub as          { @_ }
-sub from        { @_ }
-sub where   (&) { $_[0] }
-sub via     (&) { $_[0] }
+sub as ($)          { { parent    => $_[0] } }
+sub where (&)       { { check     => $_[0] } }
+sub message (&)     { { message   => $_[0] } }
+sub optimize_as (&) { { optimized => $_[0] } }
 
-sub message     (&) { +{ message   => $_[0] } }
-sub optimize_as (&) { +{ optimized => $_[0] } }
+sub from    {@_}
+sub via (&) { $_[0] }
 
 sub enum {
     my ($type_name, @values) = @_;
@@ -359,17 +377,13 @@ sub create_enum_type_constraint {
 ## --------------------------------------------------------
 
 sub _create_type_constraint ($$$;$$) {
-    my $name   = shift;
-    my $parent = shift;
-    my $check  = shift;
+    my $name      = shift;
+    my $parent    = shift;
+    my $check     = shift;
+    my $message   = shift;
+    my $optimized = shift;
 
-    my ( $message, $optimized );
-    for (@_) {
-        $message   = $_->{message}   if exists $_->{message};
-        $optimized = $_->{optimized} if exists $_->{optimized};
-    }
-
-    my $pkg_defined_in = scalar( caller(0) );
+    my $pkg_defined_in = scalar( caller(1) );
 
     if ( defined $name ) {
         my $type = $REGISTRY->get_type_constraint($name);
@@ -388,7 +402,7 @@ sub _create_type_constraint ($$$;$$) {
     }
 
     my %opts = (
-        name => $name,
+        name               => $name,
         package_defined_in => $pkg_defined_in,
 
         ( $check     ? ( constraint => $check )     : () ),
@@ -857,18 +871,24 @@ See the L<SYNOPSIS> for an example of how to use these.
 
 =over 4
 
-=item B<type ($name, $where_clause)>
+=item B<type 'Name' => where { } ... >
 
 This creates a base type, which has no parent.
 
-=item B<subtype ($name, $parent, $where_clause, ?$message)>
+Note that calling C<type> I<without> the sugar helpers (C<where>,
+C<message>, etc), is deprecated.
+
+=item B<subtype 'Name' => as 'Parent' => where { } ...>
 
 This creates a named subtype.
 
 If you provide a parent that Moose does not recognize, it will
 automatically create a new class type constraint for this name.
 
-=item B<subtype ($parent, $where_clause, ?$message)>
+Note that calling C<subtype> I<without> the sugar helpers (C<where>,
+C<message>, etc), is deprecated.
+
+=item B<subtype as 'Parent' => where { } ...>
 
 This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of

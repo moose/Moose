@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 52;
+use Test::More tests => 73;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -133,4 +133,66 @@ my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
 throws_ok {$r->add_type_constraint()} qr/not a valid type constraint/, '->add_type_constraint(undef) throws';
 throws_ok {$r->add_type_constraint('foo')} qr/not a valid type constraint/, '->add_type_constraint("foo") throws';
 throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type constraint/, '->add_type_constraint(SomeClass->new) throws';
+
+# Test some specific things that in the past did not work,
+# specifically weird variations on anon subtypes.
+
+{
+    my $subtype = subtype as 'Str';
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got an anon subtype' );
+    is( $subtype->parent->name, 'Str', 'parent is Str' );
+    # This test sucks but is the best we can do
+    is( $subtype->constraint->(), 1,
+        'subtype has the null constraint' );
+    ok( ! $subtype->has_message, 'subtype has no message' );
+}
+
+{
+    my $subtype = subtype 'ArrayRef[Num|Str]';
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got an anon subtype' );
+    is( $subtype->parent->name, 'ArrayRef[Num|Str]', 'parent is ArrayRef[Num|Str]' );
+    ok( ! $subtype->has_message, 'subtype has no message' );
+}
+
+{
+    my $subtype = subtype 'ArrayRef[Num|Str]' => message { 'foo' };
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got an anon subtype' );
+    is( $subtype->parent->name, 'ArrayRef[Num|Str]', 'parent is ArrayRef[Num|Str]' );
+    ok( $subtype->has_message, 'subtype does have a message' );
+}
+
+# Back-compat for being called without sugar. Previously, calling with
+# sugar was indistinguishable from calling directly.
+
+{
+    my $type = type( 'Number2', sub { Scalar::Util::looks_like_number($_) } );
+
+    ok( $type->check(5), '... this is a Num' );
+    ok( ! $type->check('Foo'), '... this is not a Num' );
+}
+
+{
+    # anon subtype
+    my $subtype = subtype( 'Number2', sub { $_ > 0 } );
+
+    ok( $subtype->check(5), '... this is a Natural');
+    ok( ! $subtype->check(-5), '... this is not a Natural');
+    ok( ! $subtype->check('Foo'), '... this is not a Natural');
+}
+
+{
+    my $subtype = subtype( 'Natural2', 'Number2', sub { $_ > 0 } );
+
+    ok( $subtype->check(5), '... this is a Natural');
+    ok( ! $subtype->check(-5), '... this is not a Natural');
+    ok( ! $subtype->check('Foo'), '... this is not a Natural');
+}
+
+{
+    my $subtype = subtype( 'Natural3', 'Number2' );
+
+    ok( $subtype->check(5), '... this is a Natural');
+    ok( $subtype->check(-5), '... this is a Natural');
+    ok( ! $subtype->check('Foo'), '... this is not a Natural');
+}
 
