@@ -2,7 +2,7 @@ package Moose::Cookbook::Roles::Recipe3;
 
 =pod
 
-=begin testing SETUP
+=begin testing-SETUP
 
 {
     # Not in the recipe, but needed for writing tests.
@@ -23,7 +23,7 @@ package Moose::Cookbook::Roles::Recipe3;
     );
 }
 
-=end testing
+=end testing-SETUP
 
 =head1 NAME
 

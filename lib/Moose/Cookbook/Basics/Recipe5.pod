@@ -1,7 +1,7 @@
 
 =pod
 
-=begin testing SETUP
+=begin testing-SETUP
 
 BEGIN {
     eval 'use HTTP::Headers; use Params::Coerce; use URI;';
@@ -12,7 +12,7 @@ BEGIN {
     }
 }
 
-=end testing
+=end testing-SETUP
 
 =head1 NAME
 

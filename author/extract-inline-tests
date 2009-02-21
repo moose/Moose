@@ -27,9 +27,10 @@ use warnings;
 			\n=for[ \t]+example[ \t]+end\s*?      # ... until the =for example end
 			(?:\n|$)                              # ... at the end of file or a newline
 		|                                  # OR
-			=begin[ \t]+(?:test|testing)\b        # ... when we find a =begin test or testing
-			.*?                                   # ... and keep capturing
-			\n=end[ \t]+(?:test|testing)\s*?      # ... until an =end tag
+			=begin[ \t]+(?:test|testing)(?:-SETUP)? # ... when we find a =begin test or testing
+			.*?                                     # ... and keep capturing
+			\n=end[ \t]+(?:test|testing)(?:-SETUP)? # ... until an =end tag
+                        .*?
 			(?:\n|$)                              # ... at the end of file or a newline
 		)                                  # ... and stop capturing
 		/isx;
@@ -42,9 +43,13 @@ use warnings;
 
             # A hack to turn the SYNOPSIS into something Test::Inline
             # doesn't barf on
-            if ( $elt =~ s/=head1[ \t]+SYNOPSIS/=begin testing SETUP\n\n{/ ) {
-                $elt .= "}\n\n=end testing SETUP";
+            if ( $elt =~ s/=head1[ \t]+SYNOPSIS/=begin testing-SETUP\n\n{/ ) {
+                $elt .= "}\n\n=end testing-SETUP";
             }
+
+            # It seems like search.cpan doesn't like a name with
+            # spaces after =begin. bleah, what a mess.
+            $elt =~ s/testing-SETUP/testing SETUP/g;
 
             push @elements, $elt;
 	}
