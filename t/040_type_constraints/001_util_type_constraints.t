@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 73;
+use Test::More tests => 84;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -160,6 +160,31 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
     is( $subtype->parent->name, 'ArrayRef[Num|Str]', 'parent is ArrayRef[Num|Str]' );
     ok( $subtype->has_message, 'subtype does have a message' );
 }
+
+# alternative sugar-less calling style which is documented as legit:
+{
+    my $subtype = subtype( 'MyStr', { as => 'Str' } );
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got a subtype' );
+    is( $subtype->name, 'MyStr', 'name is MyStr' );
+    is( $subtype->parent->name, 'Str', 'parent is Str' );
+}
+
+{
+    my $subtype = subtype( { as => 'Str' } );
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got a subtype' );
+    is( $subtype->name, '__ANON__', 'name is __ANON__' );
+    is( $subtype->parent->name, 'Str', 'parent is Str' );
+}
+
+{
+    my $subtype = subtype( { as => 'Str', where => sub { /X/ } } );
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got a subtype' );
+    is( $subtype->name, '__ANON__', 'name is __ANON__' );
+    is( $subtype->parent->name, 'Str', 'parent is Str' );
+    ok( $subtype->check('FooX'), 'constraint accepts FooX' );
+    ok( ! $subtype->check('Foo'), 'constraint reject Foo' );
+}
+
 
 # Back-compat for being called without sugar. Previously, calling with
 # sugar was indistinguishable from calling directly.

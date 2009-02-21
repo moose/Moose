@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp ();
-use List::MoreUtils qw( all );
+use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
@@ -256,17 +256,16 @@ sub register_type_constraint {
 # type constructors
 
 sub type {
-    if ( all { ( reftype($_) || '' ) eq 'CODE' || ! ref $_ } @_ ) {
-        # back-compat version, called without sugar
-        _create_type_constraint( $_[0], undef, $_[1] );
+    # back-compat version, called without sugar
+    if ( ! any { ( reftype($_) || '' ) eq 'HASH' } @_ ) {
+        return _create_type_constraint( $_[0], undef, $_[1] );
     }
-    else {
-        my $name = shift;
 
-        my %p = map { %{$_} } @_;
+    my $name = shift;
 
-        _create_type_constraint( $name, undef, $p{check}, $p{message}, $p{optimized} );
-    }
+    my %p = map { %{$_} } @_;
+
+    return _create_type_constraint( $name, undef, $p{where}, $p{message}, $p{optimize_as} );
 }
 
 sub subtype {
@@ -294,12 +293,12 @@ sub subtype {
     my %p = map { %{$_} } @_;
 
     # subtype Str => where { ... };
-    if ( ! exists $p{parent} ) {
-        $p{parent} = $name;
+    if ( ! exists $p{as} ) {
+        $p{as} = $name;
         $name = undef;
     }
 
-    _create_type_constraint( $name, $p{parent}, $p{check}, $p{message}, $p{optimized} );
+    return _create_type_constraint( $name, $p{as}, $p{where}, $p{message}, $p{optimize_as} );
 }
 
 sub class_type {
@@ -333,10 +332,10 @@ sub coerce {
     _install_type_coercions($type_name, \@coercion_map);
 }
 
-sub as ($)          { { parent    => $_[0] } }
-sub where (&)       { { check     => $_[0] } }
-sub message (&)     { { message   => $_[0] } }
-sub optimize_as (&) { { optimized => $_[0] } }
+sub as ($)          { { as          => $_[0] } }
+sub where (&)       { { where       => $_[0] } }
+sub message (&)     { { message     => $_[0] } }
+sub optimize_as (&) { { optimize_as => $_[0] } }
 
 sub from    {@_}
 sub via (&) { $_[0] }
@@ -836,10 +835,13 @@ them to work with Moose.
 For instance, this is how you could use it with
 L<Declare::Constraints::Simple> to declare a completely new type.
 
-  type 'HashOfArrayOfObjects'
-      => IsHashRef(
+  type 'HashOfArrayOfObjects',
+      {
+      where => IsHashRef(
           -keys   => HasLength,
-          -values => IsArrayRef( IsObject ));
+          -values => IsArrayRef(IsObject)
+      )
+  };
 
 For more examples see the F<t/200_examples/204_example_w_DCS.t>
 test file.
@@ -875,8 +877,13 @@ See the L<SYNOPSIS> for an example of how to use these.
 
 This creates a base type, which has no parent.
 
-Note that calling C<type> I<without> the sugar helpers (C<where>,
-C<message>, etc), is deprecated.
+The C<type> function should either be called with the sugar helpers
+(C<where>, C<message>, etc), or with a name and a hashref of
+parameters:
+
+  type( 'Foo', { where => ..., message => ... } );
+
+The valid hashref keys are C<where>, C<message>, and C<optimize_as>.
 
 =item B<subtype 'Name' => as 'Parent' => where { } ...>
 
@@ -885,14 +892,26 @@ This creates a named subtype.
 If you provide a parent that Moose does not recognize, it will
 automatically create a new class type constraint for this name.
 
-Note that calling C<subtype> I<without> the sugar helpers (C<where>,
-C<message>, etc), is deprecated.
+When creating a named type, the C<subtype> function should either be
+called with the sugar helpers (C<where>, C<message>, etc), or with a
+name and a hashref of parameters:
+
+ subtype( 'Foo', { where => ..., message => ... } );
+
+The valid hashref keys are C<as> (the parent), C<where>, C<message>,
+and C<optimize_as>.
 
 =item B<subtype as 'Parent' => where { } ...>
 
 This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
 L<Moose::Meta::TypeConstraint>.
+
+When creating an anonymous type, the C<subtype> function should either
+be called with the sugar helpers (C<where>, C<message>, etc), or with
+just a hashref of parameters:
+
+ subtype( { where => ..., message => ... } );
 
 =item B<class_type ($class, ?$options)>
 

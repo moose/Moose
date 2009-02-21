@@ -27,13 +27,16 @@ use Test::Exception;
     use Moose;
     use Moose::Util::TypeConstraints;
     use Declare::Constraints::Simple -All;
-    
+
     # define your own type ...
-    type 'HashOfArrayOfObjects' 
-        => IsHashRef(
+    type( 'HashOfArrayOfObjects',
+        {
+        where => IsHashRef(
             -keys   => HasLength,
-            -values => IsArrayRef( IsObject ));    
-    
+            -values => IsArrayRef(IsObject)
+        )
+    } );
+
     has 'bar' => (
         is  => 'rw',
         isa => 'HashOfArrayOfObjects',
@@ -42,7 +45,7 @@ use Test::Exception;
     # inline the constraints as anon-subtypes
     has 'baz' => (
         is  => 'rw',
-        isa => subtype('ArrayRef' => IsArrayRef(IsInt)),
+        isa => subtype( { as => 'ArrayRef', where => IsArrayRef(IsInt) } ),
     );
 
     package Bar;
