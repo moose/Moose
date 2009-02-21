@@ -667,6 +667,7 @@ sub add_parameterizable_type {
 }
 
 sub _throw_error {
+    shift;
     require Moose;
     unshift @_, 'Moose';
     goto &Moose::throw_error;
