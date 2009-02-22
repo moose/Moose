@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.72
+0.71_01 Sun, February 22, 2009
     * Moose::Cookbook
       - Hopefully fixed some POD errors in a few recipes that caused
         them to display weird on search.cpan.org.
