@@ -288,7 +288,9 @@ sub subtype {
         return _create_type_constraint(@_);
     }
 
-    my $name = ref $_[0] ? undef : shift;
+    # The blessed check is mostly to accommodate MooseX::Types, which
+    # uses an object which overloads stringification as a type name.
+    my $name = ref $_[0] && ! blessed $_[0] ? undef : shift;
 
     my %p = map { %{$_} } @_;
 
@@ -332,7 +334,20 @@ sub coerce {
     _install_type_coercions($type_name, \@coercion_map);
 }
 
-sub as ($)          { { as          => $_[0] } }
+# The trick of returning @_ lets us avoid having to specify a
+# prototype. Perl will parse this:
+#
+# subtype 'Foo'
+#     => as 'Str'
+#     => where { ... }
+#
+# as this:
+#
+# subtype( 'Foo', as( 'Str', where { ... } ) );
+#
+# If as() returns all it's extra arguments, this just works, and
+# preserves backwards compatibility.
+sub as              { { as          => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
 sub message (&)     { { message     => $_[0] } }
 sub optimize_as (&) { { optimize_as => $_[0] } }
