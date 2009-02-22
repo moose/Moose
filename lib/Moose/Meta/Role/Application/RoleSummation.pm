@@ -8,7 +8,7 @@ use Scalar::Util    'blessed';
 
 use Moose::Meta::Role::Composite;
 
-our $VERSION   = '0.71';
+our $VERSION   = '0.72';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
