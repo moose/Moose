@@ -16,6 +16,10 @@ Revision history for Perl extension Moose
         This caused an error in the past, but now works as you'd
         expect.
 
+    * Everywhere
+      - Make sure Moose.pm is loaded before calling
+        Moose->throw_error. This wasn't normally an issue, but could
+        bite you in weird cases.
 
 0.71 Thu, February 19, 2009
     * Moose::Cookbook::Basics::Recipe11
