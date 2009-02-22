@@ -1,16 +1,9 @@
 Revision history for Perl extension Moose
 
-0.71 Thu, February 19, 2009
-    * Moose::Cookbook::Basics::Recipe11
-      - A new recipe which demonstrates the use of BUILDARGS and
-        BUILD. (Dave Rolsky)
-
-    * Moose::Cookbook::Roles::Recipe3
-      - A new recipe, applying a role to an object instance. (Dave
-        Rolsky)
-
-    * Moose::Exporter
-      - Allow overriding specific keywords from "also" packages. (doy)
+0.72
+    * Moose::Cookbook
+      - Hopefully fixed some POD errors in a few recipes that caused
+        them to display weird on search.cpan.org.
 
     * Moose::Util::TypeConstraints
       - Calling type or subtype without the sugar helpers (as, where,
@@ -22,6 +15,19 @@ Revision history for Perl extension Moose
 
         This caused an error in the past, but now works as you'd
         expect.
+
+
+0.71 Thu, February 19, 2009
+    * Moose::Cookbook::Basics::Recipe11
+      - A new recipe which demonstrates the use of BUILDARGS and
+        BUILD. (Dave Rolsky)
+
+    * Moose::Cookbook::Roles::Recipe3
+      - A new recipe, applying a role to an object instance. (Dave
+        Rolsky)
+
+    * Moose::Exporter
+      - Allow overriding specific keywords from "also" packages. (doy)
 
     * Tests
       - Replace hardcoded cookbook tests with Test::Inline POD
