@@ -1,5 +1,13 @@
 Revision history for Perl extension Moose
 
+0.72
+    * Moose::Object
+    * Moose::Meta::Method::Constructor
+      - A mutable class accepted Foo->new(undef) without complaint,
+        while an immutable class would blow up with an unhelpful
+        error. Now, in both cases we throw a helpful error
+        instead. Reported by doy.
+
 0.71_01 Sun, February 22, 2009
     * Moose::Cookbook
       - Hopefully fixed some POD errors in a few recipes that caused

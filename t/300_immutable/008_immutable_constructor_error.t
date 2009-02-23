@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Exception;
 
 
@@ -30,4 +30,6 @@ throws_ok { Foo->new($scalar) } qr/\QSingle parameters to new() must be a HASH r
           'Non-ref provided to immutable constructor gives useful error message';
 throws_ok { Foo->new(\$scalar) } qr/\QSingle parameters to new() must be a HASH ref/,
           'Scalar ref provided to immutable constructor gives useful error message';
+throws_ok { Foo->new(undef) } qr/\QSingle parameters to new() must be a HASH ref/,
+          'undef provided to immutable constructor gives useful error message';
 

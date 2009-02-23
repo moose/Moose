@@ -116,7 +116,7 @@ sub check_em {
      }
      {
          local $@;        
-         my $obj = eval { $pkg->new ( undef ); };
+         my $obj = eval { $pkg->new ( notanattr => 1 ); };
          ::like( $@, qr/is required/, "... $pkg undef" );
          ::is( $obj, undef, "... the object is undef" );
      }
