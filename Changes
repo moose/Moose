@@ -1,6 +1,6 @@
 Revision history for Perl extension Moose
 
-0.72
+0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
       - A mutable class accepted Foo->new(undef) without complaint,
