@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.73
+    * Moose::Util::TypeConstraints
+      - Calling subtype with a name as the only argument is now an
+        exception. If you want an anonymous subtype do:
+
+         my $subtype = subtype as 'Foo';
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
