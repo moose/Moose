@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 84;
+use Test::More tests => 85;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -148,7 +148,7 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
 }
 
 {
-    my $subtype = subtype 'ArrayRef[Num|Str]';
+    my $subtype = subtype as 'ArrayRef[Num|Str]';
     isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got an anon subtype' );
     is( $subtype->parent->name, 'ArrayRef[Num|Str]', 'parent is ArrayRef[Num|Str]' );
     ok( ! $subtype->has_message, 'subtype has no message' );
@@ -185,6 +185,10 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
     ok( ! $subtype->check('Foo'), 'constraint reject Foo' );
 }
 
+{
+    throws_ok { subtype 'Foo' } qr/cannot consist solely of a name/,
+        'Cannot call subtype with a single string argument';
+}
 
 # Back-compat for being called without sugar. Previously, calling with
 # sugar was indistinguishable from calling directly.

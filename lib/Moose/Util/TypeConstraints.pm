@@ -288,6 +288,10 @@ sub subtype {
         return _create_type_constraint(@_);
     }
 
+    if ( @_ == 1 && ! ref $_[0] ) {
+        __PACKAGE__->_throw_error('A subtype cannot consist solely of a name, it must have a parent');
+    }
+
     # The blessed check is mostly to accommodate MooseX::Types, which
     # uses an object which overloads stringification as a type name.
     my $name = ref $_[0] && ! blessed $_[0] ? undef : shift;
