@@ -42,8 +42,8 @@ Revision history for Perl extension Moose
       - Allow overriding specific keywords from "also" packages. (doy)
 
     * Tests
-      - Replace hardcoded cookbook tests with Test::Inline POD
-        to ensure they don't get out of sync. (Dave Rolsky)
+      - Replace hardcoded cookbook tests with Test::Inline to ensure
+        the tests match the actual code in the recipes. (Dave Rolsky)
 
     * Moose::Cookbook
       - Working on the above turned up a number of little bugs in the
