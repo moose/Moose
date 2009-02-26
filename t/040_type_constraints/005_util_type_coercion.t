@@ -53,7 +53,6 @@ foreach my $coercion (
     $anon_type->coercion
     ) {
 
-    my $coercion = find_type_constraint('Header')->coercion;
     isa_ok($coercion, 'Moose::Meta::TypeCoercion');
     
     {
