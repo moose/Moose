@@ -81,7 +81,10 @@ sub can_be_inlined {
         if ( $constructor->body != $expected_class->can('new') ) {
             my $warning
                 = "Not inlining a constructor for $class since it is not"
-                . " inheriting the default $expected_class constructor\n";
+                . " inheriting the default $expected_class constructor\n"
+                . "If you are certain you don't need to inline your"
+                . " constructor, specify inline_constructor => 0 in your"
+                . " call to $class->meta->make_immutable\n";
 
             $warning .= " (constructor has method modifiers which would be lost if it were inlined)\n"
                 if $constructor->isa('Class::MOP::Method::Wrapped');
