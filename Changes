@@ -7,6 +7,9 @@ Revision history for Perl extension Moose
 
          my $subtype = subtype as 'Foo';
 
+    * Moose::Cookbook::Meta::Recipe7
+      - A new recipe, creating a custom meta-instance class.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
