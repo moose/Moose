@@ -160,9 +160,11 @@ meta-instance class as well.
 This recipe shows you how to write extensions which immutabilize
 properly.
 
-=item L<Moose::Cookbook::Meta::Recipe7> - I<meta-instance> (TODO)
+=item L<Moose::Cookbook::Meta::Recipe7> - Using a blessed array reference as an object instance
 
-I<abstract goes here>
+This recipe shows an example of how you create your own meta-instance
+class. The meta-instance determines the internal structure of object
+instances and provide access to attribute slots.
 
 =back
 
