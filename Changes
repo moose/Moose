@@ -10,6 +10,9 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Meta::Recipe7
       - A new recipe, creating a custom meta-instance class.
 
+    * Moose::Cookbook::Basics::Recipe5
+      - Fix POD formatting typo
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor

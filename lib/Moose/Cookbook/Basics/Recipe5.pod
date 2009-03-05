@@ -117,7 +117,7 @@ is for:
       => from 'HashRef'
           => via { HTTP::Headers->new( %{$_} ) };
 
-The first argument to c<coerce> is the type I<to> which we are
+The first argument to C<coerce> is the type I<to> which we are
 coercing. Then we give it a set of C<from>/C<via> clauses. The C<from>
 function takes some other type name and C<via> takes a subroutine
 reference which actually does the coercion.
