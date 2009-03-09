@@ -281,6 +281,14 @@ isa_ok( $r, 'Request' );
     '... the protocol died with bar params correctly';
 }
 
+{
+    $r->base('http://localhost/');
+    isa_ok( $r->base, 'URI' );
+
+    $r->uri('http://localhost/');
+    isa_ok( $r->uri, 'URI' );
+}
+
 =end testing
 
 =cut
