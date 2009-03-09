@@ -36,7 +36,7 @@ Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
       => from 'HashRef'
           => via { HTTP::Headers->new( %{$_} ) };
 
-  subtype 'My.URI' => as class_type('HTTP::Headers');
+  subtype 'My.URI' => as class_type('URI');
 
   coerce 'My.URI'
       => from 'Object'
@@ -150,7 +150,7 @@ help implement coercions. In this case we use L<Params::Coerce>.
 Once again, we need to declare a class type for our non-Moose L<URI>
 class:
 
-  subtype 'My.URI' => as class_type('HTTP::Headers');
+  subtype 'My.URI' => as class_type('URI');
 
 Then we define the coercion:
 
