@@ -28,17 +28,17 @@ Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
   use Params::Coerce ();
   use URI            ();
 
-  subtype 'My.HTTP::Headers' => as class_type('HTTP::Headers');
+  subtype 'My::Types::HTTP::Headers' => as class_type('HTTP::Headers');
 
-  coerce 'My.HTTP::Headers'
+  coerce 'My::Types::HTTP::Headers'
       => from 'ArrayRef'
           => via { HTTP::Headers->new( @{$_} ) }
       => from 'HashRef'
           => via { HTTP::Headers->new( %{$_} ) };
 
-  subtype 'My.URI' => as class_type('URI');
+  subtype 'My::Types::URI' => as class_type('URI');
 
-  coerce 'My.URI'
+  coerce 'My::Types::URI'
       => from 'Object'
           => via { $_->isa('URI')
                    ? $_
@@ -50,13 +50,13 @@ Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
       => as 'Str'
       => where { /^HTTP\/[0-9]\.[0-9]$/ };
 
-  has 'base' => ( is => 'rw', isa => 'My.URI', coerce => 1 );
-  has 'uri'  => ( is => 'rw', isa => 'My.URI', coerce => 1 );
+  has 'base' => ( is => 'rw', isa => 'My::Types::URI', coerce => 1 );
+  has 'uri'  => ( is => 'rw', isa => 'My::Types::URI', coerce => 1 );
   has 'method'   => ( is => 'rw', isa => 'Str' );
   has 'protocol' => ( is => 'rw', isa => 'Protocol' );
   has 'headers'  => (
       is      => 'rw',
-      isa     => 'My.HTTP::Headers',
+      isa     => 'My::Types::HTTP::Headers',
       coerce  => 1,
       default => sub { HTTP::Headers->new }
   );
@@ -74,7 +74,7 @@ set the C<coerce> attribute option to a true value.
 
 First, we create the subtype to which we will coerce the other types:
 
-  subtype 'My.HTTP::Headers' => as class_type('HTTP::Headers');
+  subtype 'My::Types::HTTP::Headers' => as class_type('HTTP::Headers');
 
 We are creating a subtype rather than using C<HTTP::Headers> as a type
 directly. The reason we do this is coercions are global, and a
@@ -111,7 +111,7 @@ to accept those data structure instead of an B<HTTP::Headers>
 instance, and just do the right thing. This is exactly what coercion
 is for:
 
-  coerce 'My.HTTP::Headers'
+  coerce 'My::Types::HTTP::Headers'
       => from 'ArrayRef'
           => via { HTTP::Headers->new( @{$_} ) }
       => from 'HashRef'
@@ -127,7 +127,7 @@ we want a particular attribute to be coerced:
 
   has 'headers' => (
       is      => 'rw',
-      isa     => 'My.HTTP::Headers',
+      isa     => 'My::Types::HTTP::Headers',
       coerce  => 1,
       default => sub { HTTP::Headers->new }
   );
@@ -150,11 +150,11 @@ help implement coercions. In this case we use L<Params::Coerce>.
 Once again, we need to declare a class type for our non-Moose L<URI>
 class:
 
-  subtype 'My.URI' => as class_type('URI');
+  subtype 'My::Types::URI' => as class_type('URI');
 
 Then we define the coercion:
 
-  coerce 'My.URI'
+  coerce 'My::Types::URI'
       => from 'Object'
           => via { $_->isa('URI')
                    ? $_
@@ -177,8 +177,8 @@ string is assumed to be an C<http> URI.
 
 Finally, we need to make sure our attributes enable coercion.
 
-  has 'base' => ( is => 'rw', isa => 'My.URI', coerce => 1 );
-  has 'uri'  => ( is => 'rw', isa => 'My.URI', coerce => 1 );
+  has 'base' => ( is => 'rw', isa => 'My::Types::URI', coerce => 1 );
+  has 'uri'  => ( is => 'rw', isa => 'My::Types::URI', coerce => 1 );
 
 Re-using the coercion lets us enforce a consistent API across multiple
 attributes.
