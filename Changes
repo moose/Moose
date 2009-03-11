@@ -17,6 +17,11 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Basics::Recipe9
       - Link to this recipe from Moose.pm's builder blurb
 
+    * Moose::Exporter
+      - When wrapping a function with a prototype, Moose::Exporter now
+        makes sure the wrapped function still has the same
+        prototype. Patch by Daisuke Maki.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
