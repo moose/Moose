@@ -156,6 +156,8 @@ sub _make_sub_exporter_params {
                 $is_removable{$name} = 1;
             }
 
+            $class->_make_prototyped_sub($sub);
+
             $export_recorder->{$sub} = 1;
 
             $exports{$name} = sub {$sub};
@@ -192,13 +194,36 @@ sub _make_wrapped_sub {
     };
 }
 
-sub _make_wrapper {
+sub _make_prototyped_sub {
     shift;
+    my $sub = shift;
+
+    # If I use Scalar::Util::set_prototype, this will forever be bound to XS.
+    # And it's hard to use anyway (it requires a BLOCK or a sub{} declaration
+    # as its first argument)
+    if (my $proto = prototype $sub) {
+        $sub = eval "sub ($proto) { \$sub->(\@_) }";
+        Carp::confess if $@;
+    }
+    return $sub;
+}
+
+sub _make_wrapper {
+    my $class   = shift;
     my $caller  = shift;
     my $sub     = shift;
     my $fq_name = shift;
 
-    return sub { $sub->($caller, @_) };
+    # XXX optimization: since we're building a new sub anyways, we
+    # unroll _make_prototyped_sub here
+    my $wrapper;
+    if (my $proto = prototype $sub) {
+        $wrapper = eval "sub ($proto) { \$sub->(\$caller, \@_) }";
+        Carp::confess if $@;
+    } else {
+        $wrapper = sub { $sub->($caller, @_) };
+    }
+    return $wrapper;
 }
 
 sub _make_import_sub {
