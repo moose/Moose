@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 83;
+use Test::More tests => 84;
 use Test::Exception;
 
 
@@ -70,6 +70,10 @@ use Test::Exception;
     ::lives_ok { 
         has '+gloum' => (lazy => 1);           
     } '... we can change/add lazy as an attribute option';    
+
+    ::lives_ok {
+        has '+gloum' => (lazy_build => 1);
+    } '... we can add lazy_build as an attribute option';
 
     ::lives_ok {
         has '+bunch_of_stuff' => (isa => 'ArrayRef[Int]');        
