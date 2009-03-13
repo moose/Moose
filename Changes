@@ -22,6 +22,10 @@ Revision history for Perl extension Moose
         makes sure the wrapped function still has the same
         prototype. Patch by Daisuke Maki.
 
+    * Moose::Meta::Attribute
+      - Allow a subclass to set lazy_build for an inherited
+        attribute. (Dieter Pearcey).
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
