@@ -18,76 +18,66 @@
 
 =head1 NAME
 
-Moose::Cookbook::Meta::Recipe7 - Creating an array reference meta-instance class
+Moose::Cookbook::Meta::Recipe7 - Creating a glob reference meta-instance class
 
 =head1 SYNOPSIS
 
   package My::Meta::Instance;
 
-  use List::Util qw( max );
+  use Scalar::Util qw( weaken );
+  use Symbol qw( gensym );
 
   use Moose;
   extends 'Moose::Meta::Instance';
 
   sub create_instance {
       my $self = shift;
-      bless [], $self->_class_name;
+      my $sym = gensym();
+      bless $sym, $self->_class_name;
   }
 
   sub clone_instance {
       my ( $self, $instance ) = @_;
-      bless [@$instance], $self->_class_name;
+
+      my $new_sym = gensym();
+      %{*$new_sym} = %{*$instance};
+
+      bless $new_sym, $self->_class_name;
   }
 
   sub get_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
-      $instance->[ $self->_index_for_slot_name($slot_name) ];
+      return *$instance->{$slot_name};
   }
 
   sub set_slot_value {
       my ( $self, $instance, $slot_name, $value ) = @_;
-      $instance->[ $self->_index_for_slot_name($slot_name) ] = $value;
+      *$instance->{$slot_name} = $value;
   }
 
   sub deinitialize_slot {
       my ( $self, $instance, $slot_name ) = @_;
-      delete $instance->[ $self->_index_for_slot_name($slot_name) ];
+      delete *$instance->{$slot_name};;
   }
 
   sub is_slot_initialized {
       my ( $self, $instance, $slot_name, $value ) = @_;
-      exists $instance->[ $self->_index_for_slot_name($slot_name) ];
+      exists *$instance->{$slot_name};;
   }
 
   sub weaken_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
-      weaken $instance->[ $self->_index_for_slot_name($slot_name) ];
+      weaken *$instance->{$slot_name};;
   }
 
   sub inline_create_instance {
       my ( $self, $class_variable ) = @_;
-      'bless [] => ' . $class_variable;
+      return 'do { my $sym = Symbol::gensym(); bless $sym, ' . $class_variable . ' }';
   }
 
   sub inline_slot_access {
       my ( $self, $instance, $slot_name ) = @_;
-      $slot_name =~ s/^\'|\'$//g;
-      sprintf "%s->[%s]", $instance, $self->_index_for_slot_name($slot_name);
-  }
-
-  my %Indexes;
-  sub _index_for_slot_name {
-      my $self      = shift;
-      my $slot_name = shift;
-
-      my $indexes = $Indexes{ $self->associated_metaclass->name } ||= {};
-
-      return $indexes->{$slot_name}
-          if exists $indexes->{$slot_name};
-
-      my $max = max values %{$indexes};
-
-      return $indexes->{$slot_name} = ( $max || 0 ) + 1;
+      return '*{' . $instance . '}->{' . $slot_name . '}';
   }
 
   package MyApp::User;
@@ -113,10 +103,9 @@ This recipe shows how to build your own meta-instance. The meta
 instance is the metaclass that creates object instances and helps
 manages access to attribute slots.
 
-In this example, we're creating a meta-instance that is an array
-reference rather than a hash reference. In theory, this might be a bit
-faster than using a hash, though in practice the difference may be
-negligible. Nonetheless, it makes for a simple example here.
+In this example, we're creating a meta-instance that is based on a
+glob reference rather than a hash reference. This example is largely
+based on the Piotr Roszatycki's L<MooseX::GlobRef> module.
 
 Our class is a subclass of L<Moose::Meta::Instance>, which creates
 hash reference based objects. We need to override all the methods
@@ -124,39 +113,44 @@ which make assumptions about the object's data structure.
 
 The first method we override is C<create_instance>:
 
+
   sub create_instance {
       my $self = shift;
-      bless [], $self->_class_name;
+      my $sym = gensym();
+      bless $sym, $self->_class_name;
   }
 
-This returns an array reference which has been blessed into our
+This returns an glob reference which has been blessed into our
 meta-instance's associated class.
 
 We also override C<clone_instance> to create a new array reference:
 
   sub clone_instance {
       my ( $self, $instance ) = @_;
-      bless [@$instance], $self->_class_name;
+
+      my $new_sym = gensym();
+      %{*$new_sym} = %{*$instance};
+
+      bless $new_sym, $self->_class_name;
   }
 
 After that, we have a series of methods which mediate access to the
 object's slots (attributes are stored in "slots"). In the default
-instance class, these look up the slot by name. We need to translate
-the name to a numeric index instead:
+instance class, these expect the object to be a hash reference, but we
+need to change this to expect a glob reference instead.
 
   sub get_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
-      $instance->[ $self->_index_for_slot_name($slot_name) ];
+      *$instance->{$slot_name};;
   }
 
 This level of indirection probably makes our instance class I<slower>
 than the default. However, when attribute access is inlined, this
 lookup will be cached:
 
-  sub inline_slot_access {
-      my ( $self, $instance, $slot_name ) = @_;
-      $slot_name =~ s/^\'|\'$//g;
-      sprintf "%s->[%s]", $instance, $self->_index_for_slot_name($slot_name);
+  sub inline_create_instance {
+      my ( $self, $class_variable ) = @_;
+      return 'do { my $sym = Symbol::gensym(); bless $sym, ' . $class_variable . ' }';
   }
 
 The code snippet that the C<inline_slot_access> method returns will
@@ -211,15 +205,26 @@ it under the same terms as Perl itself.
 
 =begin testing
 
-for my $x ( 0..1 )
 {
+    package MyApp::Employee;
+
+    use Moose;
+    extends 'MyApp::User';
+
+    has 'employee_number' => ( is => 'rw' );
+}
+
+for my $x ( 0 .. 1 ) {
     MyApp::User->meta->make_immutable if $x;
 
-    my $user = MyApp::User->new( name => 'Faye', email => 'faye@example.com' );
+    my $user = MyApp::User->new(
+        name  => 'Faye',
+        email => 'faye@example.com',
+    );
 
-    ok( eval { @{$user} }, 'user object is an arrayref with some values' );
+    ok( eval { *{$user} }, 'user object is an glob ref with some values' );
 
-    is( $user->name, 'Faye', 'check name' );
+    is( $user->name,  'Faye',             'check name' );
     is( $user->email, 'faye@example.com', 'check email' );
 
     $user->name('Ralph');
@@ -229,7 +234,30 @@ for my $x ( 0..1 )
     is( $user->email, 'ralph@example.com', 'check email after changing it' );
 }
 
+for my $x ( 0 .. 1 ) {
+    MyApp::Employee->meta->make_immutable if $x;
 
+    my $emp = MyApp::Employee->new(
+        name            => 'Faye',
+        email           => 'faye@example.com',
+        employee_number => $x,
+    );
+
+    ok( eval { *{$emp} }, 'employee object is an glob ref with some values' );
+
+    is( $emp->name,            'Faye',             'check name' );
+    is( $emp->email,           'faye@example.com', 'check email' );
+    is( $emp->employee_number, $x,                 'check employee_number' );
+
+    $emp->name('Ralph');
+    is( $emp->name, 'Ralph', 'check name after changing it' );
+
+    $emp->email('ralph@example.com');
+    is( $emp->email, 'ralph@example.com', 'check email after changing it' );
+
+    $emp->employee_number(42);
+    is( $emp->employee_number, 42, 'check employee_number after changing it' );
+}
 
 =end testing
 
