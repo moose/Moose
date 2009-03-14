@@ -152,7 +152,6 @@ gey
 breakability
 delegatee
 hackery
-ungloriously
 wrappee
 
 ## compound
@@ -166,6 +165,7 @@ kool
 pre
 # vice versa
 versa
+lookup
 
 ## slang
 C'mon

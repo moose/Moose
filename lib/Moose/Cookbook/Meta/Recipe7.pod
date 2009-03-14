@@ -116,7 +116,7 @@ manages access to attribute slots.
 In this example, we're creating a meta-instance that is an array
 reference rather than a hash reference. In theory, this might be a bit
 faster than using a hash, though in practice the difference may be
-neglible. Nonetheless, it makes for a simple example here.
+negligible. Nonetheless, it makes for a simple example here.
 
 Our class is a subclass of L<Moose::Meta::Instance>, which creates
 hash reference based objects. We need to override all the methods
