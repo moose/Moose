@@ -49,6 +49,7 @@ Rockway
 Roditi
 Rolsky
 Roszatycki
+Roszatycki's
 sartak
 Sedlacek
 Shlomi
