@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More tests => 27;
 
 use Scalar::Util qw(blessed);
 
@@ -101,21 +101,6 @@ isa_ok($obj2, 'My::Class');
     is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing again');
 }
 
-SKIP:
-{
-    eval 'use Test::Output;';
-    skip 'This test requires Test::Output', 1
-        if $@;
 
-    my $obj = My::Class->new;
 
-    stderr_is(
-        sub {
-            for ( 1 .. 200 ) {
-                Sleeper->meta->apply($obj);
-            }
-        },
-        q{},
-        'No warnings when re-applying a role to an object 200 times'
-    );
-}
+

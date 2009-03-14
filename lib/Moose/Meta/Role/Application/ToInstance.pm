@@ -22,11 +22,6 @@ my %ANON_CLASSES;
 sub apply {
     my ($self, $role, $object) = @_;
 
-    return
-        if $object->can('meta')
-            && $object->meta->can('does_role')
-            && $object->meta->does_role( $role->name );
-
     my $anon_role_key = (blessed($object) . $role->name);
 
     my $class;
