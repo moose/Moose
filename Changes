@@ -26,6 +26,12 @@ Revision history for Perl extension Moose
       - Allow a subclass to set lazy_build for an inherited
         attribute. (Dieter Pearcey).
 
+    * Moose::Meta::Role::Application::ToInstance
+      - Attempting to apply the same role to an object repeatedly is
+        now a no-op after the first application. Previously, doing
+        this to an object instance eventually caused recursion
+        warnings from Perl. Reported by Curtis Poe. RT #43904.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
