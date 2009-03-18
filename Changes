@@ -26,6 +26,11 @@ Revision history for Perl extension Moose
       - Allow a subclass to set lazy_build for an inherited
         attribute. (Dieter Pearcey).
 
+    * Makefile.PL
+      - Explicitly depend on Data::OptList. We already had this dependency
+        via Sub::Exporter, but since we're using it directly we're
+        better off with it listed. (Sartak)
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
