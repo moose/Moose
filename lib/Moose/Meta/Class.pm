@@ -71,14 +71,14 @@ sub create {
     return $class;
 }
 
-sub check_metaclass_compatibility {
+sub _check_metaclass_compatibility {
     my $self = shift;
 
     if ( my @supers = $self->superclasses ) {
         $self->_fix_metaclass_incompatibility(@supers);
     }
 
-    $self->SUPER::check_metaclass_compatibility(@_);
+    $self->SUPER::_check_metaclass_compatibility(@_);
 }
 
 my %ANON_CLASSES;

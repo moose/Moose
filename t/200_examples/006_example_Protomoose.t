@@ -67,7 +67,7 @@ Well cause merlyn asked if it could :)
         return $instance;
     }
     
-    sub generate_accessor_method {
+    sub _generate_accessor_method {
         my $self = shift;
         my $attr = $self->associated_attribute; 
         return sub {
@@ -81,7 +81,7 @@ Well cause merlyn asked if it could :)
         };
     }
 
-    sub generate_reader_method {
+    sub _generate_reader_method {
         my $self = shift;
         my $attr = $self->associated_attribute; 
         return sub {
@@ -90,7 +90,7 @@ Well cause merlyn asked if it could :)
         };   
     }
 
-    sub generate_writer_method {
+    sub _generate_writer_method {
         my $self = shift;
         my $attr = $self->associated_attribute; 
         return sub {
