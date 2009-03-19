@@ -63,7 +63,7 @@ sub can_be_inlined {
         grep { $_ ne $expected_class }
         $metaclass->linearized_isa
         ) {
-        my $transformer = $meta->get_immutable_transformer;
+        my $transformer = $meta->immutable_transformer;
 
         # This is actually a false positive if we're in a subclass of
         # this class, _and_ the expected class is not overridden (but
