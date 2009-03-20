@@ -122,6 +122,24 @@ sub associated_metaclass { (shift)->{'associated_metaclass'} }
 # any other code using the original broken spelling
 sub intialize_body { $_[0]->throw_error("Please correct the spelling of 'intialize_body' to 'initialize_body'") }
 
+sub _generate_params {
+  my ($self, $var, $class_var) = @_;
+  "my $var = " . $self->_generate_BUILDARGS($class_var, '@_') . ";\n";
+}
+
+sub _generate_instance {
+  my ($self, $var, $class_var) = @_;
+  "my $var = " . $self->meta_instance->inline_create_instance($class_var) 
+               . ";\n";
+}
+
+sub _generate_slot_initializers {
+    my ($self) = @_;
+    return (join ";\n" => map {
+        $self->_generate_slot_initializer($_)
+    } 0 .. (@{$self->attributes} - 1)) . ";\n";
+}
+
 sub initialize_body {
     my $self = shift;
     # TODO:
@@ -135,20 +153,17 @@ sub initialize_body {
     $source .= "\n" . 'my $class = shift;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
-    $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
+    $source .= "\n    if \$class ne '" . $self->associated_metaclass->name 
+            .  "';\n";
 
-    $source .= "\n" . 'my $params = ' . $self->_generate_BUILDARGS('$class', '@_');
+    $source .= $self->_generate_params('$params', '$class');
+    $source .= $self->_generate_instance('$instance', '$class');
+    $source .= $self->_generate_slot_initializers;
 
-    $source .= ";\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
-
-    $source .= ";\n" . (join ";\n" => map {
-        $self->_generate_slot_initializer($_)
-    } 0 .. (@{$self->attributes} - 1));
-
-    $source .= ";\n" . $self->_generate_triggers();
+    $source .= $self->_generate_triggers();
     $source .= ";\n" . $self->_generate_BUILDALL();
 
-    $source .= ";\n" . 'return $instance';
+    $source .= ";\nreturn \$instance";
     $source .= ";\n" . '}';
     warn $source if $self->options->{debug};
 

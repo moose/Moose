@@ -16,6 +16,9 @@ Revision history for Perl extension Moose
     * Moose::Cookbook::Basics::Recipe9
       - Link to this recipe from Moose.pm's builder blurb
 
+    * Moose::Meta::Method::Constructor
+      - Make it easier to subclass the inlining behaviour
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
