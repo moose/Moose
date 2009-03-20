@@ -246,28 +246,23 @@ sub clone {
 
     my $class = $params{metaclass} || ref $self;
 
-    if ( 0 and $class eq ref $self ) {
-        return $self->SUPER::clone(%params);
-    } else {
-        my ( @init, @non_init );
+    my ( @init, @non_init );
 
-        foreach my $attr ( grep { $_->has_value($self) } $self->meta->compute_all_applicable_attributes ) {
-            push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
-        }
-
-        my %new_params = ( ( map { $_->init_arg => $_->get_value($self) } @init ), %params );
-
-        my $name = delete $new_params{name};
-
-        my $clone = $class->new($name, %new_params, __hack_no_process_options => 1 );
-
-        foreach my $attr ( @non_init ) {
-            $attr->set_value($clone, $attr->get_value($self));
-        }
-
-
-        return $clone;
+    foreach my $attr ( grep { $_->has_value($self) } $self->meta->compute_all_applicable_attributes ) {
+        push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
     }
+
+    my %new_params = ( ( map { $_->init_arg => $_->get_value($self) } @init ), %params );
+
+    my $name = delete $new_params{name};
+
+    my $clone = $class->new($name, %new_params, __hack_no_process_options => 1 );
+
+    foreach my $attr ( @non_init ) {
+        $attr->set_value($clone, $attr->get_value($self));
+    }
+
+    return $clone;
 }
 
 sub _process_options {
