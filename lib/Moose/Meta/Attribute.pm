@@ -749,43 +749,145 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Attribute> with Moose specific
-extensions.
+This class is a subclass of L<Class::MOP::Attribute> that provides
+additional Moose-specific functionality.
 
-For the most part, the only time you will ever encounter an
-instance of this class is if you are doing some serious deep
-introspection. To really understand this class, you need to refer
-to the L<Class::MOP::Attribute> documentation.
+To really understand this class, you will probably need to start with
+the L<Class::MOP::Attribute> documentation. This class can be
+understood as a set of additional features on top of the basic feature
+provided by that parent class.
 
 =head1 METHODS
 
-=head2 Overridden methods
+Many of the documented below override methods in
+L<Class::MOP::Attribute> and add Moose specific features.
 
-These methods override methods in L<Class::MOP::Attribute> and add
-Moose specific features. You can safely assume though that they
-will behave just as L<Class::MOP::Attribute> does.
+=head2 Creation
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::Attribute->new(%options) >>
 
-=item B<clone>
+This method overrides the L<Class::MOP::Attribute> constructor.
 
-=item B<does>
+Many of the options below are described in more detail in the
+L<Moose::Manual::Attributes> document.
 
-=item B<initialize_instance_slot>
+It adds the following options to the constructor:
 
-=item B<install_accessors>
+=over 8
 
-=item B<remove_accessors>
+=item * is => 'ro' or 'rw'
 
-=item B<install_delegation>
+This provides a shorthand for specifying the C<reader>, C<writer>, or
+C<accessor> names. If the attribute is read-only ('ro') then it will
+have a C<reader> method with the same attribute as the name.
 
-=item B<remove_delegation>
+If it is read-write ('rw') then it will have an C<accessor> method
+with the same name. If you provide an explicit C<writer> for a
+read-write attribute, then you will have a C<reader> with the same
+name as the attribute, and a C<writer> with the name you provided.
 
-=item B<accessor_metaclass>
+=item * isa => $type
 
-=item B<delegation_metaclass>
+This option accepts a type. The type can be a string, which should be
+a type name. If the type name is unknown, it is assumed to be a class
+name.
+
+This option can also accept a L<Moose::Meta::TypeConstraint> object.
+
+If you I<also> provide a C<does> option, then your C<isa> option must
+be a class name, and that class must do the role specified with
+C<does>.
+
+=item * does => $role
+
+This is short-hand for saying that the attribute's type must be an
+object which does the named role.
+
+=item * coerce => $bool
+
+This option is only valid for objects with a type constraint
+(C<isa>). If this is true, then coercions will be applied whenever
+this attribute is set.
+
+You can make both this and the C<weak_ref> option true.
+
+=item * trigger => $sub
+
+This option accepts a subroutine reference, which will be called after
+the attribute is set.
+
+=item * required => $bool
+
+An attribute which is required must be provided to the constructor. An
+attribute which is required can also have a C<default> or C<builder>,
+which will satisy its required-ness.
+
+A required attribute must have a C<default>, C<builder> or a
+non-C<undef> C<init_arg>
+
+=item * lazy => $bool
+
+A lazy attribute must have a C<default> or C<builder>. When an
+attribute is lazy, the default value will not be calculated until the
+attribute is read.
+
+=item * weak_ref => $bool
+
+If this is true, the attribute's value will be stored as a weak
+reference.
+
+=item * auto_deref => $bool
+
+If this is true, then the reader will dereference the value when it is
+called. The attribute must have a type constraint which defines the
+attribute as an array or hash reference.
+
+=item * lazy_build => $bool
+
+Setting this to true makes the attribute lazy and provides a number of
+default methods.
+
+  has 'size' => (
+      is         => 'ro',
+      lazy_build => 1,
+  );
+
+is equivalent to this:
+
+  has 'size' => (
+      is        => 'ro',
+      lazy      => 1,
+      builder   => '_build_size',
+      clearer   => 'clear_size',
+      predicate => 'has_size',
+  );
+
+=item * documentation
+
+An arbitrary string that can be retrieved later by calling C<<
+$attr->documentation >>.
+
+=back
+
+=item B<< $attr->clone(%options) >>
+
+This creates a new attribute based on attribute being cloned. You must
+supply a C<name> option to provide a new name for the attribute.
+
+The C<%options> can only specify options handled by
+L<Class::MOP::Attribute>.
+
+=head2 Value management
+
+=item B<< $attr->initialize_instance_slot($meta_instance, $instance, $params) >>
+
+This method is used internally to initialize the attribute's slot in
+the object C<$instance>.
+
+This overrides the L<Class::MOP::Attribute> method to handle lazy
+attributes, weak references, and type constraints.
 
 =item B<get_value>
 
@@ -812,141 +914,161 @@ for an example.
 
 =back
 
-=head2 Additional Moose features
-
-Moose attributes support type-constraint checking, weak reference
-creation and type coercion.
+=head2 Attribute Accessor generation
 
 =over 4
 
-=item B<throw_error>
+=item B<< $attr->install_accessors >>
 
-Delegates to C<associated_class> or C<Moose::Meta::Class> if there is none.
+This method overrides the parent to also install delegation methods.
 
-=item B<interpolate_class_and_new>
+=item B<< $attr->remove_accessors>>
 
-=item B<interpolate_class>
+This method overrides the parent to also remove delegation methods.
 
-When called as a class method causes interpretation of the C<metaclass> and
+=item B<< $attr->install_delegation >>
+
+This method adds its delegation methods to the attribute's associated
+class, if it has any to add.
+
+=item B<< $attr->remove_delegation >>
+
+This method remove its delegation methods from the attribute's
+associated class.
+
+=item B<< $attr->accessor_metaclass >>
+
+Returns the accessor metaclass name, which defaults to
+L<Moose::Meta::Method::Accessor>.
+
+=item B<< $attr->delegation_metaclass >>
+
+Returns the delegation metaclass name, which defaults to
+L<Moose::Meta::Method::Delegation>.
+
+=back
+
+=head2 Additional Moose features
+
+These methods are not found in the superclass. They support features
+provided by Moose.
+
+=item B<< $attr->does($role) >>
+
+This indicates whether the I<attribute itself> does the given
+role. The role can be given as a full class name, or as a resolveable
+trait name.
+
+Note that this checks the attribute itself, not its type constraint,
+so it is checking the attribute's metaclass and any traits applied to
+the attribute.
+
+=item B<< Moose::Meta::Class->interpolate_class_and_new($name, %options) >>
+
+This is an alternate constructor that handles the C<metaclass> and
 C<traits> options.
 
-=item B<clone_and_inherit_options>
+Effectively, this method is a factory that finds or creates the
+appropriate class for the given C<metaclass> and/or C<traits.
 
-This is to support the C<has '+foo'> feature, it clones an attribute
-from a superclass and allows a very specific set of changes to be made
-to the attribute.
+Once it has the appropriate class, it will call C<< $class->new($name,
+%options) >> on that class.
 
-=item B<legal_options_for_inheritance>
+=item B<< $attr->clone_and_inherit_options(%options) >>
 
-Whitelist with options you can change. You can overload it in your custom
-metaclass to allow your options be inheritable.
+This method supports the C<has '+foo'> feature. It does various bits
+of processing on the supplied C<%options> before ultimately calling
+the C<clone> method.
 
-=item B<has_type_constraint>
+One of its main tasks is to make sure that the C<%options> provided
+only includes the options returned by the
+C<legal_options_for_inheritance> method.
 
-Returns true if this meta-attribute has a type constraint.
+=item B<< $attr->legal_options_for_inheritance >>
 
-=item B<type_constraint>
+This returns a whitelist of options that can be overridden in a
+subclass's attribute definition.
 
-A read-only accessor for this meta-attribute's type constraint. For
-more information on what you can do with this, see the documentation
-for L<Moose::Meta::TypeConstraint>.
+This exists to allow a custom metaclass to change or add to the list
+of options which can be changed.
 
-=item B<verify_against_type_constraint>
+=item B<< $attr->type_constraint >>
 
-Verifies that the given value is valid under this attribute's type
-constraint, otherwise throws an error.
+Returns the L<Moose::Meta::TypeConstraint> object for this attribute,
+if it has one.
 
-=item B<has_handles>
+=item B<< $attr->has_type_constraint >>
 
-Returns true if this meta-attribute performs delegation.
+Returns true if this attribute has a type constraint.
 
-=item B<handles>
+=item B<< $attr->verify_against_type_constraint($value) >>
 
-This returns the value which was passed into the handles option.
+Given a value, this method returns true if the value is valid for the
+attribute's type constraint. If the value is not valid, it throws an
+error.
 
-=item B<is_weak_ref>
+=item B<< $attr->handles >>
 
-Returns true if this meta-attribute produces a weak reference.
+This returns the value of the C<handles> option passed to the
+constructor.
 
-=item B<is_required>
+=item B<< $attr->has_handles >>
 
-Returns true if this meta-attribute is required to have a value.
+Returns true if this attribute performs delegation.
 
-=item B<is_lazy>
+=item B<< $attr->is_weak_ref >>
 
-Returns true if this meta-attribute should be initialized lazily.
+Returns true if this attribute stores its value as a weak reference.
 
-NOTE: lazy attributes, B<must> have a C<default> or C<builder> field set.
+=item B<< $attr->is_required >>
 
-=item B<is_lazy_build>
+Returns true if this attribute is required to have a value.
 
-Returns true if this meta-attribute should be initialized lazily through
-the builder generated by lazy_build. Using C<lazy_build =E<gt> 1> will
-make your attribute required and lazy. In addition it will set the builder, clearer
-and predicate options for you using the following convention.
+=item B<< $attr->is_lazy >>
 
-   #If your attribute name starts with an underscore:
-   has '_foo' => (lazy_build => 1);
-   #is the same as
-   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', builder => '_build__foo');
-   # or
-   has '_foo' => (lazy => 1, required => 1, predicate => '_has_foo', clearer => '_clear_foo', default => sub{shift->_build__foo});
+Returns true if this attribute is lazy.
 
-   #If your attribute name does not start with an underscore:
-   has 'foo' => (lazy_build => 1);
-   #is the same as
-   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', builder => '_build_foo');
-   # or
-   has 'foo' => (lazy => 1, required => 1, predicate => 'has_foo', clearer => 'clear_foo', default => sub{shift->_build_foo});
+=item B<< $attr->is_lazy_build >>
 
-The reason for the different naming of the C<builder> is that the C<builder>
-method is a private method while the C<clearer> and C<predicate> methods
-are public methods.
+Returns true if the C<lazy_build> option was true when passed to the
+constructor.
 
-NOTE: This means your class should provide a method whose name matches the value
-of the builder part, in this case _build__foo or _build_foo.
+=item B<< $attr->should_coerce >>
 
-=item B<should_coerce>
+Returns true if the C<coerce> option passed to the constructor was
+true.
 
-Returns true if this meta-attribute should perform type coercion.
+=item B<< $attr->should_auto_deref >>
 
-=item B<should_auto_deref>
+Returns true if the C<auto_deref> option passed to the constructor was
+true.
 
-Returns true if this meta-attribute should perform automatic
-auto-dereferencing.
+=item B<< $attr->trigger >>
 
-NOTE: This can only be done for attributes whose type constraint is
-either I<ArrayRef> or I<HashRef>.
+This is the subroutine reference that was in the C<trigger> option
+passed to the constructor, if any.
 
-=item B<has_trigger>
+=item B<< $attr->has_trigger>>
 
-Returns true if this meta-attribute has a trigger set.
+Returns true if this attribute has a trigger set.
 
-=item B<trigger>
+=item B<< $attr->documentation >>
 
-This is a CODE reference which will be executed every time the
-value of an attribute is assigned. The CODE ref will get two values,
-the invocant and the new value. This can be used to handle I<basic>
-bi-directional relations.
+Returns the value that was in the C<documentation> option passed to
+the constructor, if any.
 
-=item B<documentation>
+=item B<< $attr->has_documentation >>
 
-This is a string which contains the documentation for this attribute.
-It serves no direct purpose right now, but it might in the future
-in some kind of automated documentation system perhaps.
+Returns true if this attribute has any documentation.
 
-=item B<has_documentation>
+=item B<< $attr->applied_traits >>
 
-Returns true if this meta-attribute has any documentation.
+This returns an array reference of all the traits which were applied
+to this attribute. If none were applied, this returns C<undef>.
 
-=item B<applied_traits>
+=item B<< $attr->has_applied_traits >>
 
-This will return the ARRAY ref of all the traits applied to this 
-attribute, or if no traits have been applied, it returns C<undef>.
-
-=item B<has_applied_traits>
-
-Returns true if this meta-attribute has any traits applied.
+Returns true if this attribute has any traits applied.
 
 =back
 

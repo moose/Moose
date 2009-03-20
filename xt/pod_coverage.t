@@ -14,7 +14,8 @@ my @modules = all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
-    'Moose' => ['make_immutable'],
+    'Moose'                  => ['make_immutable'],
+    'Moose::Meta::Attribute' => [ 'interpolate_class', 'throw_error' ],
     'Moose::Meta::Method::Constructor' =>
         [qw( initialize_body intialize_body)],
     'Moose::Meta::Method::Destructor' => ['initialize_body'],
