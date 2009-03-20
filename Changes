@@ -11,10 +11,25 @@ Revision history for Perl extension Moose
       - A new recipe, creating a custom meta-instance class.
 
     * Moose::Cookbook::Basics::Recipe5
-      - Fix POD formatting typo
+      - Fix various typos and mistakes. Includes a patch from Radu
+        Greab.
 
     * Moose::Cookbook::Basics::Recipe9
       - Link to this recipe from Moose.pm's builder blurb
+
+    * Moose::Exporter
+      - When wrapping a function with a prototype, Moose::Exporter now
+        makes sure the wrapped function still has the same
+        prototype. Patch by Daisuke Maki.
+
+    * Moose::Meta::Attribute
+      - Allow a subclass to set lazy_build for an inherited
+        attribute. (Dieter Pearcey).
+
+    * Makefile.PL
+      - Explicitly depend on Data::OptList. We already had this dependency
+        via Sub::Exporter, but since we're using it directly we're
+        better off with it listed. (Sartak)
 
     * Moose::Meta::Method::Constructor
       - Make it easier to subclass the inlining behaviour

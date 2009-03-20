@@ -78,7 +78,7 @@ reuse. This recipe demonstrates the latter, with roles that define
 comparison and display code for objects.
 
 Let's start with C<Eq>. First, note that we've replaced C<use Moose>
-with C<use Moose::Role>. We also have a new sugar function, C<required>:
+with C<use Moose::Role>. We also have a new sugar function, C<requires>:
 
   requires 'equal_to';
 

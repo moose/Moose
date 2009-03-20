@@ -28,7 +28,7 @@ plan tests => 6;
 
     ::stderr_is(
         sub { Foo->meta->make_immutable },
-        "Not inlining a constructor for Foo since it is not inheriting the default Moose::Object constructor\n",
+        "Not inlining a constructor for Foo since it is not inheriting the default Moose::Object constructor\nIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\n",
         'got a warning that Foo may not have an inlined constructor'
     );
 }

@@ -89,7 +89,7 @@ The C<BUILD> method is called I<after> the object is constructed, but
 before it is returned to the caller. The C<BUILD> method provides an
 opportunity to check the object state as a whole. This is a good place
 to put logic that cannot be expressed as a type constraint on a single
-object.
+attribute.
 
 In the C<Person> class, we need to check the relationship between two
 attributes, C<ssn> and C<country_of_residence>. We throw an exception
