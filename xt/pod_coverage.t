@@ -16,11 +16,29 @@ plan tests => scalar @modules;
 my %trustme = (
     'Moose'                  => ['make_immutable'],
     'Moose::Meta::Attribute' => [ 'interpolate_class', 'throw_error' ],
+    'Moose::Meta::Class'     => [
+        qw( check_metaclass_compatibility
+            construct_instance
+            create_error
+            create_immutable_transformer
+            raise_error
+            )
+    ],
     'Moose::Meta::Method::Constructor' =>
         [qw( initialize_body intialize_body)],
     'Moose::Meta::Method::Destructor' => ['initialize_body'],
     'Moose::Role'                     => [
-        qw( after around augment before extends has inner make_immutable override super with )
+        qw( after
+            around
+            augment
+            before
+            extends
+            has
+            inner
+            make_immutable
+            override
+            super
+            with )
     ],
 );
 

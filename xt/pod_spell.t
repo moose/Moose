@@ -119,6 +119,7 @@ hashrefs
 immutabilize
 immutabilized
 inline
+inlines
 invocant
 invocant's
 irc
@@ -129,6 +130,8 @@ namespace
 namespaced
 namespaces
 namespacing
+# as in required-ness
+ness
 OO
 OOP
 ORM
@@ -153,6 +156,7 @@ UNIMPORTING
 Unported
 unsets
 unsettable
+whitelist
 Whitelist
 
 ## other jargon
