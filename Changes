@@ -45,6 +45,9 @@ Revision history for Perl extension Moose
       - The long-deprecated intialize_body method has been removed
         (yes, spelled like that).
 
+    * Moose::Meta::Method::Destructor
+      - This is_needed method is now always a class method.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor

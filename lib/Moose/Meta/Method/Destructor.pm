@@ -50,16 +50,15 @@ sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
-sub is_needed { 
-    my $self = shift;
-    # if called as a class method
-    # then must pass in a class name
-    unless (blessed $self) {
-        (blessed $_[0] && $_[0]->isa('Class::MOP::Class')) 
-            || $self->throw_error("When calling is_needed as a class method you must pass a class name");
-        return $_[0]->meta->can('DEMOLISH');
-    }
-    defined $self->{'body'} ? 1 : 0 
+sub is_needed {
+    my $self      = shift;
+    my $metaclass = shift;
+
+    ( blessed $metaclass && $metaclass->isa('Class::MOP::Class') )
+        || $self->throw_error(
+        "The is_needed method expected a metaclass object as its arugment");
+
+    return $metaclass->meta->can('DEMOLISH');
 }
 
 sub initialize_body {
