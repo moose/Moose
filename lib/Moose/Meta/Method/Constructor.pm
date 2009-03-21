@@ -115,10 +115,6 @@ sub attributes    { (shift)->{'attributes'}    }
 
 ## method
 
-# this was changed in 0.41, but broke MooseX::Singleton, so try to catch
-# any other code using the original broken spelling
-sub intialize_body { $_[0]->throw_error("Please correct the spelling of 'intialize_body' to 'initialize_body'") }
-
 sub _generate_params {
   my ($self, $var, $class_var) = @_;
   "my $var = " . $self->_generate_BUILDARGS($class_var, '@_') . ";\n";
