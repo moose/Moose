@@ -229,27 +229,33 @@ sub _generate_BUILDALL {
 sub _generate_triggers {
     my $self = shift;
     my @trigger_calls;
-    foreach my $i (0 .. $#{ $self->attributes }) {
+    foreach my $i ( 0 .. $#{ $self->attributes } ) {
         my $attr = $self->attributes->[$i];
-        if ($attr->can('has_trigger') && $attr->has_trigger) {
-            if (defined(my $init_arg = $attr->init_arg)) {
-                push @trigger_calls => (
-                    '(exists $params->{\'' . $init_arg . '\'}) && do {' . "\n    "
-                    .   '$attrs->[' . $i . ']->trigger->('
-                    .       '$instance, ' 
-                    .        $self->meta_instance->inline_get_slot_value(
-                                 '$instance',
-                                 $attr->name,
-                             ) 
-                             . ', '
-                    .        '$attrs->[' . $i . ']'
-                    .   ');'
-                    ."\n}"
-                );
-            } 
-        }
+
+        next unless $attr->can('has_trigger') && $attr->has_trigger;
+
+        my $init_arg = $attr->init_arg;
+
+        next unless defined $init_arg;
+
+        push @trigger_calls => '(exists $params->{\''
+            . $init_arg
+            . '\'}) && do {'
+            . "\n    "
+            . '$attrs->['
+            . $i
+            . ']->trigger->('
+            . '$instance, '
+            . $self->meta_instance->inline_get_slot_value(
+                  '$instance',
+                  $attr->name,
+              )
+            . ', '
+            . '$attrs->['
+            . $i . ']' . ');' . "\n}";
     }
-    return join ";\n" => @trigger_calls;    
+
+    return join ";\n" => @trigger_calls;
 }
 
 sub _generate_slot_initializer {
