@@ -24,6 +24,7 @@ my %trustme = (
             raise_error
             )
     ],
+    'Moose::Meta::Method' => ['throw_error'],
     'Moose::Meta::Method::Constructor' =>
         [qw( initialize_body intialize_body)],
     'Moose::Meta::Method::Destructor' => ['initialize_body'],

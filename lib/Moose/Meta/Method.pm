@@ -41,19 +41,11 @@ Moose::Meta::Method - A Moose Method metaclass
 
 =head1 DESCRIPTION
 
-For now, this is nothing but a subclass of Class::MOP::Method, 
-but with the expanding role of the method sub-protocol, it might 
-be more useful later on. 
+This class is a subclass of L<Class::MOP::Class> that provides
+additional Moose-specific functionality, all of which is private.
 
-=head1 METHODS
-
-=over 4
-
-=item throw_error $msg, %args
-
-=item _inline_throw_error $msg_expr, $args_expr
-
-=back
+To understand this class, you should read the the L<Class::MOP::Class>
+documentation.
 
 =head1 BUGS
 
