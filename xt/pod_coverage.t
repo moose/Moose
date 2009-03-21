@@ -24,7 +24,18 @@ my %trustme = (
             raise_error
             )
     ],
-    'Moose::Meta::Method' => ['throw_error'],
+    'Moose::Meta::Method'           => ['throw_error'],
+    'Moose::Meta::Method::Accessor' => [
+        qw( generate_accessor_method
+            generate_accessor_method_inline
+            generate_clearer_method
+            generate_predicate_method
+            generate_reader_method
+            generate_reader_method_inline
+            generate_writer_method
+            generate_writer_method_inline
+            )
+    ],
     'Moose::Meta::Method::Constructor' =>
         [qw( initialize_body intialize_body)],
     'Moose::Meta::Method::Destructor' => ['initialize_body'],
