@@ -264,7 +264,7 @@ Making type errors use the assigned message, prior to this they didn't.
 Moose is now a postmodern object system :)
 
 The Role system was completely refactored. It is 100% backwards compat, but the 
-internals are totaly changed. So if you relied on the internals then you might 
+internals are totally changed. So if you relied on the internals then you might 
 want to check this one out.
 
 Added method exclusion and aliasing for Roles in this release.
@@ -287,7 +287,7 @@ Honestly, you shouldn't be using versions of Moose that are this old, so many
 bug fixes and speed improvements have been made you would be crazy to not 
 upgrade.
 
-Also, I am tired of going through the Changelog so I am stoping here, if 
+Also, I am tired of going through the Changelog so I am stopping here, if 
 anyone would like to continue this please feel free.
 
 =head1 AUTHOR
