@@ -31,6 +31,9 @@ Revision history for Perl extension Moose
         via Sub::Exporter, but since we're using it directly we're
         better off with it listed. (Sartak)
 
+    * Moose::Meta::Method::Constructor
+      - Make it easier to subclass the inlining behaviour
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
