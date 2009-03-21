@@ -10,7 +10,7 @@ our $VERSION   = '0.72';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Generated';
+         'Class::MOP::Method::Constructor';
 
 sub new {
     my $class   = shift;
@@ -430,6 +430,11 @@ provides additional Moose-specific functionality
 
 To understand this class, you should read the the
 L<Class::MOP::Class::Constructor> documentation as well.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Method::Constructor> is a subclass of
+L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 
 =head1 METHODS
 
