@@ -757,6 +757,10 @@ L<Class::MOP::Attribute> documentation. This class can be understood
 as a set of additional features on top of the basic feature provided
 by that parent class.
 
+=head1 INHERITANCE
+
+C<Moose::Meta::Attribute> is a subclass of L<Class::MOP::Attribute>.
+
 =head1 METHODS
 
 Many of the documented below override methods in

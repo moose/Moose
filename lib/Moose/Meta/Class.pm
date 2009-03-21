@@ -644,6 +644,10 @@ L<Class::MOP::Class> documentation. This class can be understood as a
 set of additional features on top of the basic feature provided by
 that parent class.
 
+=head1 INHERITANCE
+
+C<Moose::Meta::Class> is a subclass of L<Class::MOP::Class>.
+
 =head1 METHODS
 
 =over 4

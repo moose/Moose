@@ -37,6 +37,10 @@ APIs in turn call the methods in this class as appropriate.
 At present, this is an empty subclass of L<Class::MOP::Instance>, so
 you should see that class for all API details.
 
+=head1 INHERITANCE
+
+C<Moose::Meta::Instance> is a subclass of L<Class::MOP::Instance>.
+
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no 
