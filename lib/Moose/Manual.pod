@@ -164,6 +164,15 @@ Moose has a lot of features, and there's definitely more than one way
 to do it. However, we think that picking a subset of these features
 and using them consistently makes everyone's life easier.
 
+=item L<Moose::Manual::Contributing>
+
+Interested in hacking on Moose? Read this.
+
+=item L<Moose::Manual::Delta>
+
+This document details backwards-incompatibilities and other major
+changes to Moose.
+
 =back
 
 =head1 JUSTIFICATION
