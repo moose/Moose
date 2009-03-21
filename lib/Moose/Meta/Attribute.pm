@@ -822,7 +822,7 @@ the attribute is set.
 
 An attribute which is required must be provided to the constructor. An
 attribute which is required can also have a C<default> or C<builder>,
-which will satisy its required-ness.
+which will satisfy its required-ness.
 
 A required attribute must have a C<default>, C<builder> or a
 non-C<undef> C<init_arg>
@@ -879,7 +879,11 @@ supply a C<name> option to provide a new name for the attribute.
 The C<%options> can only specify options handled by
 L<Class::MOP::Attribute>.
 
+=back
+
 =head2 Value management
+
+=over 4
 
 =item B<< $attr->initialize_instance_slot($meta_instance, $instance, $params) >>
 
@@ -922,7 +926,7 @@ for an example.
 
 This method overrides the parent to also install delegation methods.
 
-=item B<< $attr->remove_accessors>>
+=item B<< $attr->remove_accessors >>
 
 This method overrides the parent to also remove delegation methods.
 
@@ -953,10 +957,12 @@ L<Moose::Meta::Method::Delegation>.
 These methods are not found in the superclass. They support features
 provided by Moose.
 
+=over 4
+
 =item B<< $attr->does($role) >>
 
 This indicates whether the I<attribute itself> does the given
-role. The role can be given as a full class name, or as a resolveable
+role. The role can be given as a full class name, or as a resolvable
 trait name.
 
 Note that this checks the attribute itself, not its type constraint,
@@ -969,7 +975,7 @@ This is an alternate constructor that handles the C<metaclass> and
 C<traits> options.
 
 Effectively, this method is a factory that finds or creates the
-appropriate class for the given C<metaclass> and/or C<traits.
+appropriate class for the given C<metaclass> and/or C<traits>.
 
 Once it has the appropriate class, it will call C<< $class->new($name,
 %options) >> on that class.
@@ -1048,7 +1054,7 @@ true.
 This is the subroutine reference that was in the C<trigger> option
 passed to the constructor, if any.
 
-=item B<< $attr->has_trigger>>
+=item B<< $attr->has_trigger >>
 
 Returns true if this attribute has a trigger set.
 
