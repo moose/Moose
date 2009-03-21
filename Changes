@@ -41,6 +41,10 @@ Revision history for Perl extension Moose
     * Moose::Manual::Contributing
       - Contributor's guide to Moose.
 
+    * Moose::Meta::Method::Constructor
+      - The long-deprecated intialize_body method has been removed
+        (yes, spelled like that).
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
