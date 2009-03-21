@@ -110,11 +110,8 @@ sub _expected_constructor_class {
 
 ## accessors
 
-sub options       { (shift)->{'options'}       }
 sub meta_instance { (shift)->{'meta_instance'} }
 sub attributes    { (shift)->{'attributes'}    }
-
-sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
@@ -432,28 +429,32 @@ Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Method> which handles
-constructing an appropriate Constructor methods. This is primarily
-used in the making of immutable metaclasses, otherwise it is
-not particularly useful.
+This class is a subclass of L<Class::MOP::Class::Constructor> that
+provides additional Moose-specific functionality
+
+To understand this class, you should read the the
+L<Class::MOP::Class::Constructor> documentation as well.
 
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< $metamethod->can_be_inlined >>
 
-=item B<can_be_inlined>
+This returns true if the method can inlined.
 
-=item B<attributes>
+First, it looks at all of the parents of the associated class. If any
+of them have an inlined constructor, then the constructor can be
+inlined.
 
-=item B<meta_instance>
+If none of them have been inlined, it checks to make sure that the
+pre-inlining constructor for the class matches the constructor from
+the expected class.
 
-=item B<options>
+By default, it expects this constructor come from L<Moose::Object>,
+but subclasses can change this expectation.
 
-=item B<initialize_body>
-
-=item B<associated_metaclass>
+If the constructor cannot be inlined it warns that this is the case.
 
 =back
 

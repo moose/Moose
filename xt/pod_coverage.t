@@ -36,8 +36,16 @@ my %trustme = (
             generate_writer_method_inline
             )
     ],
-    'Moose::Meta::Method::Constructor' =>
-        [qw( initialize_body intialize_body)],
+    'Moose::Meta::Method::Constructor' => [
+        qw( attributes
+            generate_constructor_method
+            generate_constructor_method_inline
+            initialize_body
+            meta_instance
+            new
+            options
+            )
+    ],
     'Moose::Meta::Method::Destructor' => ['initialize_body'],
     'Moose::Role'                     => [
         qw( after
