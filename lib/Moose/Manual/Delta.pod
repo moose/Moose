@@ -246,8 +246,8 @@ just officially support it.
 
 The C<< Moose::Meta::Class->create >> method now supports roles.
 
-It is now possible to make anononymous enum types by passing C<enum>
-an array reference instead of the C<< enum $name => @values >>.
+It is now possible to make anonymous enum types by passing C<enum> an
+array reference instead of the C<< enum $name => @values >>.
 
 =head1 Version 0.37
 

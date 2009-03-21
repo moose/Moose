@@ -107,10 +107,13 @@ TypeContraints
 API
 APIs
 Baz
+Changelog
+compat
 datetimes
 definedness
 destructor
 destructors
+dev
 DWIM
 hashrefs
 immutabilize
@@ -137,6 +140,8 @@ parameterizes
 pluggable
 prechecking
 prepends
+refactored
+refactoring
 runtime
 stacktrace
 subclassable

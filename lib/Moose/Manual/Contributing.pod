@@ -65,13 +65,13 @@ an entry in the Changes file. Make sure to give yourself credit!
 =head1 BACKWARDS COMPATIBILITY
 
 Change is inevitable and Moose is not immune to this. We do our best
-to maintain backwards compatability, but we do not want the codebase
+to maintain backwards compatibility, but we do not want the code base
 to become overburdened by this. This is not to say that we will be
 frivolous with our changes, quite the opposite, just that we are not
 afraid of change and will do our best to keep it as painless as
 possible for the end user.
 
-The rule is that if you do something that is not backwards compatabile
+The rule is that if you do something that is not backwards compatible
 you B<must> do I<at least> one deprecation cycle (more if it is larger
 change). For really larger or radical changes dev releases may be
 needed as well (the core developers will decide on this on a
@@ -81,7 +81,7 @@ The preference with regard to deprecation is to warn loudly and often
 so that users will have time to fix their usages.
 
 All backwards incompatible changes B<must> be documented in
-L<Moose::Manual::Delta>. Mke sure to document any useful tips or
+L<Moose::Manual::Delta>. Make sure to document any useful tips or
 workarounds for the change in that document.
 
 =head1 AUTHOR
