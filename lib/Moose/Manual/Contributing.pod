@@ -39,7 +39,7 @@ know.
 =head1 BACKWARDS COMPATABILITY
 
 Change is inevitable and Moose is not immune to this. We do our best 
-to maintain backwards compatabilty, but we do not want the codebase 
+to maintain backwards compatability, but we do not want the codebase 
 to become overburdened by this. This is not to say that we will 
 be frivolous with our changes, quite the opposite, it is more to say 
 that we are not afraid of change and will do our best to keep it as 
