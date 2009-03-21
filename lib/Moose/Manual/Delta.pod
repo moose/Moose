@@ -195,7 +195,7 @@ So that you can do:
 
 =head1 Version 0.51
 
-Added C<BUILDARGS>, a new step in C<< Moose::Object->new() >.
+Added C<BUILDARGS>, a new step in C<< Moose::Object->new() >>.
 
 =head1 Version 0.49
 
