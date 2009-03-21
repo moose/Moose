@@ -34,6 +34,13 @@ Revision history for Perl extension Moose
     * Moose::Meta::Method::Constructor
       - Make it easier to subclass the inlining behaviour
 
+    * Moose::Manual::Delta
+      - Details significant changes in the history of Moose, along
+        with recommended workarounds.
+
+    * Moose::Manual::Contributing
+      - Contributor's guide to Moose.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
