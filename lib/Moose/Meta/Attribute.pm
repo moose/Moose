@@ -752,10 +752,10 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 This class is a subclass of L<Class::MOP::Attribute> that provides
 additional Moose-specific functionality.
 
-To really understand this class, you will probably need to start with
-the L<Class::MOP::Attribute> documentation. This class can be
-understood as a set of additional features on top of the basic feature
-provided by that parent class.
+To really understand this class, you will need to start with the
+L<Class::MOP::Attribute> documentation. This class can be understood
+as a set of additional features on top of the basic feature provided
+by that parent class.
 
 =head1 METHODS
 
