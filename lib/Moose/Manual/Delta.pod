@@ -25,6 +25,16 @@ exception. If you want an anonymous subtype do:
 
 This is related to the changes in version 0.71_01.
 
+The C<is_needed> method in L<Moose::Meta::Method::Destructor> is now
+only usable as a class method. Previously, it worked as a class or
+object method, with a different internal implementation for each
+version.
+
+The internals of making a class immutable changed a lot in Class::MOP
+0.78_02, and Moose's internals have changed along with it. The
+external C<< $metaclass->make_immutable >> method still works the same
+way.
+
 =head1 Version 0.72
 
 A mutable class accepted C<< Foo->new(undef) >> without complaint,
