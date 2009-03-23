@@ -48,6 +48,10 @@ Revision history for Perl extension Moose
     * Moose::Meta::Method::Destructor
       - This is_needed method is now always a class method.
 
+    * Moose::Meta::Class
+      - Changes to the internals of how make_immutable works to match
+        changes in latest Class::MOP.
+
 0.72 Mon, February 23, 2009
     * Moose::Object
     * Moose::Meta::Method::Constructor
