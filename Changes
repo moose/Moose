@@ -20,11 +20,11 @@ Revision history for Perl extension Moose
     * Moose::Exporter
       - When wrapping a function with a prototype, Moose::Exporter now
         makes sure the wrapped function still has the same
-        prototype. Patch by Daisuke Maki.
+        prototype. (Daisuke Maki)
 
     * Moose::Meta::Attribute
       - Allow a subclass to set lazy_build for an inherited
-        attribute. (Dieter Pearcey).
+        attribute. (Dieter Pearcey)
 
     * Makefile.PL
       - Explicitly depend on Data::OptList. We already had this dependency
@@ -32,7 +32,8 @@ Revision history for Perl extension Moose
         better off with it listed. (Sartak)
 
     * Moose::Meta::Method::Constructor
-      - Make it easier to subclass the inlining behaviour
+      - Make it easier to subclass the inlining behaviour. (Ash
+        Berlin)
 
     * Moose::Manual::Delta
       - Details significant changes in the history of Moose, along
