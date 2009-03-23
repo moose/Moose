@@ -46,7 +46,7 @@ my %trustme = (
             options
             )
     ],
-    'Moose::Meta::Method::Destructor' => ['initialize_body'],
+    'Moose::Meta::Method::Destructor' => [ 'initialize_body', 'options' ],
     'Moose::Role'                     => [
         qw( after
             around

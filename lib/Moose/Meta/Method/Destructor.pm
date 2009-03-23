@@ -46,7 +46,6 @@ sub new {
 ## accessors 
 
 sub options              { (shift)->{'options'}              }
-sub associated_metaclass { (shift)->{'associated_metaclass'} }
 
 ## method
 
@@ -108,28 +107,49 @@ Moose::Meta::Method::Destructor - Method Meta Object for destructors
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Method> which handles 
-constructing an appropriate Destructor method. This is primarily 
-used in the making of immutable metaclasses, otherwise it is 
-not particularly useful.
+This class is a subclass of L<Class::MOP::Class::Generated> that
+provides Moose-specific functionality for inlining destructors.
+
+To understand this class, you should read the the
+L<Class::MOP::Class::Generated> documentation as well.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Method::Destructor> is a subclass of
+L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Generated>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta;:Method::Destructor->new(%options) >>
 
-=item B<attributes>
+This constructs a new object. It accepts the following options:
 
-=item B<meta_instance>
+=over 8
 
-=item B<options>
+=item * package_name
 
-=item B<is_needed>
+The package for the class in which the destructor is being
+inlined. This option is required.
 
-=item B<initialize_body>
+=item * name
 
-=item B<associated_metaclass>
+The name of the destructor method. This option is required.
+
+=item * metaclass
+
+The metaclass for the class this destructor belongs to. This is
+optional, as it can be set later by calling C<<
+$metamethod->attach_to_class >>.
+
+=back
+
+=item B<< Moose::Meta;:Method::Destructor->is_needed($metaclass) >>
+
+Given a L<Moose::Meta::Class> object, this method returns a boolean
+indicating whether the class needs a destructor. If the class or any
+of its parents defines a C<DEMOLISH> method, it needs a destructor.
 
 =back
 
