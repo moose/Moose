@@ -267,12 +267,6 @@ In most cases, this will be a non-issue; however, it is something to keep in
 mind when using method modifiers in a role. You should never assume any
 ordering.
 
-=item *
-
-The C<requires> keyword currently only works with actual methods. A
-method modifier (before/around/after and override) will not count as a
-fulfillment of the requirement.
-
 =back
 
 =head1 BUGS
