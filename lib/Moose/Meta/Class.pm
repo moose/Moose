@@ -530,60 +530,31 @@ sub _process_inherited_attribute {
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 
-# This could be done by using SUPER and altering ->options
-# I am keeping it this way to make it more explicit.
-sub create_immutable_transformer {
-    my $self = shift;
-    my $class = Class::MOP::Immutable->new($self, {
-       read_only   => [qw/superclasses/],
-       cannot_call => [qw/
-           add_method
-           alias_method
-           remove_method
-           add_attribute
-           remove_attribute
-           remove_package_symbol
-           add_role
-       /],
-       memoize     => {
-           class_precedence_list             => 'ARRAY',
-           linearized_isa                    => 'ARRAY', # FIXME perl 5.10 memoizes this on its own, no need?
-           get_all_methods                   => 'ARRAY',
-           #get_all_attributes               => 'ARRAY', # it's an alias, no need, but maybe in the future
-           compute_all_applicable_attributes => 'ARRAY',
-           get_meta_instance                 => 'SCALAR',
-           get_method_map                    => 'SCALAR',
-           calculate_all_roles               => 'ARRAY',
-       },
-       # NOTE:
-       # this is ugly, but so are typeglobs, 
-       # so whattayahgonnadoboutit
-       # - SL
-       wrapped => { 
-           add_package_symbol => sub {
-               my $original = shift;
-               $self->throw_error("Cannot add package symbols to an immutable metaclass")
-                   unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
-               goto $original->body;
-           },
-       },       
-    });
-    return $class;
-}
 
-sub make_immutable {
+sub _default_immutable_transformer_options {
     my $self = shift;
-    $self->SUPER::make_immutable
-      (
-       constructor_class => $self->constructor_class,
-       destructor_class  => $self->destructor_class,
-       inline_destructor => 1,
-       # NOTE:
-       # no need to do this,
-       # Moose always does it
-       inline_accessors  => 0,
-       @_,
-      );
+
+    my %options = $self->SUPER::_default_immutable_transformer_options;
+
+    # We need to copy the references as we do not want to alter the
+    # superclass's references.
+    $options{cannot_call} = [ @{ $options{cannot_call} }, 'add_role' ];
+    $options{memoize} = {
+        %{ $options{memoize} },
+        calculate_all_roles => 'ARRAY',
+    };
+
+    %options = (
+        %options,
+        constructor_class => $self->constructor_class,
+        destructor_class  => $self->destructor_class,
+        inline_destructor => 1,
+
+        # Moose always does this when an attribute is created
+        inline_accessors => 0,
+    );
+
+    return %options
 }
 
 our $error_level;
