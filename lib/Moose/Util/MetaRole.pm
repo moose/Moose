@@ -125,7 +125,7 @@ Moose::Util::MetaRole - Apply roles to any metaclass, as well as the object base
 
   use Moose ();
   use Moose::Exporter;
-  use Moose::Util::Meta::Role;
+  use Moose::Util::MetaRole;
 
   use MyApp::Role::Meta::Class;
   use MyApp::Role::Meta::Method::Constructor;
