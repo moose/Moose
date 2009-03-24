@@ -47,7 +47,15 @@ my %trustme = (
             )
     ],
     'Moose::Meta::Method::Destructor' => [ 'initialize_body', 'options' ],
-    'Moose::Role'                     => [
+    'Moose::Meta::Role'               => [
+        qw( alias_method
+            get_method_modifier_list
+            reset_package_cache_flag
+            update_package_cache_flag
+            wrap_method_body
+            )
+    ],
+    'Moose::Role' => [
         qw( after
             around
             augment
