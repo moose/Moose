@@ -340,9 +340,9 @@ metaclass programming as well.
 
 =head2 New to Moose?
 
-If you're new to Moose, the best place to start is the L<Moose::Intro>
-docs, followed by the L<Moose::Cookbook>. The intro will show you what
-Moose is, and how it makes Perl 5 OO better.
+If you're new to Moose, the best place to start is the
+L<Moose::Manual> docs, followed by the L<Moose::Cookbook>. The intro
+will show you what Moose is, and how it makes Perl 5 OO better.
 
 The cookbook recipes on Moose basics will get you up to speed with
 many of Moose's features quickly. Once you have an idea of what Moose
