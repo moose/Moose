@@ -55,7 +55,8 @@ my %trustme = (
             wrap_method_body
             )
     ],
-    'Moose::Role' => [
+    'Moose::Meta::Role::Composite' => ['add_method'],
+    'Moose::Role'                  => [
         qw( after
             around
             augment
