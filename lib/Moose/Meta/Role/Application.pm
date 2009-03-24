@@ -96,6 +96,9 @@ Moose::Meta::Role::Application - A base class for role application
 
 This is the abstract base class for role applications.
 
+The API for this class and its subclasses still needs some
+consideration, and is intentionally not yet documented.
+
 =head2 METHODS
 
 =over 4
