@@ -1071,7 +1071,9 @@ the user-visible features. Instead we have made sure that the underlying
 meta-system of Moose is as extensible as possible so that you can add your 
 own features easily. That said, occasionally there is a feature needed in the 
 meta-system to support your planned extension, in which case you should 
-either email the mailing list or join us on irc at #moose to discuss.
+either email the mailing list or join us on irc at #moose to discuss. The
+L<Moose::Manual::Contributing> has more detail about how and when you can
+contribute.
 
 =head1 AUTHOR
 
