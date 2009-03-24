@@ -94,29 +94,76 @@ Moose::Meta::Role::Application - A base class for role application
 
 =head1 DESCRIPTION
 
-This is the abstract base class for role applications.
+This is the abstract base class for role applications. Role
+application is the logic of composing a role into something. That
+something could be a class, another role, or an object instance.
 
 =head2 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::Role::Application->new(%options) >>
 
-=item B<meta>
+This method returns a new role application. It accepts several
+options:
 
-=item B<get_method_exclusions>
+=over 8
 
-=item B<is_method_excluded>
+=item * excludes
 
-=item B<get_method_aliases>
+This is an optional array reference of methods to be excluded when
+applying the role.
 
-=item B<is_aliased_method>
+=item * alias
 
-=item B<is_method_aliased>
+This is an optional hash reference of methods to be renamed when
+applying the role. The keys are the original method names, and the
+values are the new method names.
 
-=item B<apply>
+=back
 
-=item B<check_role_exclusions>
+Note that the constructor does not actually take any roles as
+arguments.
+
+=item B<< $application->get_method_exclusions >>
+
+Returns an array reference containing the names of the excluded
+methods.
+
+=item B<< $application->is_method_excluded($method_name) >>
+
+Given a method name, returns true if the method is excluded.
+
+=item B<< $application->get_method_aliases >>
+
+Returns the hash reference of method aliases passed to the
+constructor.
+
+=item B<< $application->is_aliased_method($method_name) >>
+
+This takes the name of the original method, and returns true if it is
+aliased.
+
+=item B<< $application->is_method_aliased($method_name) >>
+
+Returns true if the method name given is being used as the I<new> name
+for any method.
+
+=item B<< $application->apply($role, $thing) >>
+
+This method implements the logic of role application by calling the
+various check and apply methods below. Any arguments passed to this
+method are simply passed on to the other methods, without any
+processing.
+
+The first argument is always a L<Moose::Meta::Role> object, and the
+second is the thing to which the role is being applied.
+
+In some cases, the second
+
+=item B<< $application->check_role_exclusions(...) >>
+
+A virtual method. Subclasses are expected to throw an error if 
 
 =item B<check_required_methods>
 
@@ -135,6 +182,8 @@ This is the abstract base class for role applications.
 =item B<apply_around_method_modifiers>
 
 =item B<apply_override_method_modifiers>
+
+=item B<meta>
 
 =back
 
