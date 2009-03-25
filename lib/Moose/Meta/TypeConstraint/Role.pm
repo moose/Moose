@@ -68,7 +68,7 @@ sub equals {
 sub is_a_type_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+ $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
     ($self->equals($type) || $self->is_subtype_of($type_or_name));
 }
@@ -145,7 +145,7 @@ Returns the role name associated with the constraint.
 Returns all the type's parent types, corresponding to the roles that
 its role does.
 
-=item B<< $constraint->is_a_subtype_of($type_name_or_object) >>
+=item B<< $constraint->is_subtype_of($type_name_or_object) >>
 
 If the given type is also a role type, then this checks that the
 type's role does the other type's role.

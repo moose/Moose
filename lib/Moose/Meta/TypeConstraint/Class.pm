@@ -151,7 +151,7 @@ Returns the class name associated with the constraint.
 Returns all the type's parent types, corresponding to its parent
 classes.
 
-=item B<< $constraint->is_a_subtype_of($type_name_or_object) >>
+=item B<< $constraint->is_subtype_of($type_name_or_object) >>
 
 If the given type is also a class type, then this checks that the
 type's class is a subclass of the other type's class.

@@ -69,7 +69,11 @@ my %trustme = (
             super
             with )
     ],
+    'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
     'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint', 'union' ],
+    'Moose::Meta::TypeConstraint::Class' =>
+        [qw( equals is_a_type_of is_a_subtype_of )],
+    'Moose::Meta::TypeConstraint::Union' => ['compile_type_constraint'],
 );
 
 for my $module ( sort @modules ) {
