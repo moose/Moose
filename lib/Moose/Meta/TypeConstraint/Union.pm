@@ -20,27 +20,36 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 
 sub new { 
     my ($class, %options) = @_;
+
+    my $name = join '|' => sort { $a cmp $b }
+        map { $_->name } @{ $options{type_constraints} };
+
     my $self = $class->SUPER::new(
-        name     => (join '|' => sort {$a cmp $b}
-                     map { $_->name } @{$options{type_constraints}}),
-        parent   => undef,
-        message  => undef,
-        hand_optimized_type_constraint => undef,
-        compiled_type_constraint => sub {
-            my $value = shift;
-            foreach my $type (@{$options{type_constraints}}) {
-                return 1 if $type->check($value);
-            }
-            return undef;    
-        },
-        %options
+        name => $name,
+        %options,
     );
+
     $self->_set_constraint(sub { $self->check($_[0]) });
     $self->coercion(Moose::Meta::TypeCoercion::Union->new(
         type_constraint => $self
     ));
     return $self;
 }
+
+sub _actually_compile_type_constraint {
+    my $self = shift;
+
+    my @constraints = @{ $self->type_constraints };
+
+    return sub {
+        my $value = shift;
+        foreach my $type (@constraints) {
+            return 1 if $type->check($value);
+        }
+        return undef;
+    };
+}
+
 
 sub equals {
     my ( $self, $type_or_name ) = @_;
