@@ -69,6 +69,7 @@ my %trustme = (
             super
             with )
     ],
+    'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint', 'union' ],
 );
 
 for my $module ( sort @modules ) {
