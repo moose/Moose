@@ -72,7 +72,7 @@ This method always returns false.
 =item B<< $coercion->add_type_coercions >>
 
 This method always throws an error. You cannot add coercions to a
-union type constraint.
+union type coercion.
 
 =item B<< $coercion->coerce($value) >>
 
