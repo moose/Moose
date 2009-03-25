@@ -156,7 +156,7 @@ classes.
 If the given type is also a class type, then this checks that the
 type's class is a subclass of the other type's class.
 
-Otherwise it falls back to the implement in
+Otherwise it falls back to the implementation in
 L<Moose::Meta::TypeConstraint>.
 
 =item B<< $constraint->create_child_type(%options) >>
