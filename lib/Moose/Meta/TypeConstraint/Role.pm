@@ -68,7 +68,7 @@ sub equals {
 sub is_a_type_of {
     my ($self, $type_or_name) = @_;
 
- $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
     ($self->equals($type) || $self->is_subtype_of($type_or_name));
 }
