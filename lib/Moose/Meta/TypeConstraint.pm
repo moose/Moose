@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -305,6 +305,10 @@ This class represents a single type constraint. Moose's built-in type
 constraints, as well as constraints you define, are all store in a
 L<Moose::Meta::TypeConstraint::Registry> object as objects of this
 class.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint> is a subclass of L<Class::MOP::Object>.
 
 =head1 METHODS
 
