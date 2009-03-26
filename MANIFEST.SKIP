@@ -23,3 +23,4 @@ cover_db
 ^t\/600_todo_tests\/$
 \.shipit
 ^grant-description
+\.git.*
