@@ -1096,7 +1096,7 @@ L<Moose::Meta::TypeConstraint::Role> constructor (as a hash).
 
 =item B<find_or_parse_type_constraint($type_name)>
 
-Given a tpye name, this first attempts to find a matching constraint
+Given a type name, this first attempts to find a matching constraint
 in the global registry.
 
 If the type name is a union or parameterized type, it will create a
