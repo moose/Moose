@@ -96,6 +96,7 @@ mixins
 MooseX
 Num
 oose
+OtherName
 PosInt
 PositiveInt
 ro
@@ -137,6 +138,7 @@ OOP
 ORM
 overridable
 parameterizable
+parameterization
 parameterize
 parameterized
 parameterizes
