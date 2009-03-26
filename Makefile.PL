@@ -37,7 +37,6 @@ sub check_conflicts {
         'MooseX::Singleton'        => '0.12',
         'MooseX::Params::Validate' => '0.05',
         'Fey::ORM'                 => '0.12',
-        'MooseX::AttributeHelpers' => '0.14',
     );
 
     my $found = 0;
