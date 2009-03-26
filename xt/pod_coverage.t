@@ -73,9 +73,10 @@ my %trustme = (
     'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint', 'union' ],
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
-    'Moose::Meta::TypeConstraint::Parameterizable' => [ '.+' ],
-    'Moose::Meta::TypeConstraint::Parameterized' => [ '.+' ],
+    'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
+    'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
     'Moose::Meta::TypeConstraint::Union' => ['compile_type_constraint'],
+    'Moose::Util'                        => ['add_method_modifier'],
 );
 
 for my $module ( sort @modules ) {
