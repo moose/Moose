@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -428,7 +428,9 @@ C<MooseX> module, as long as they all use C<Moose::Exporter>.
 
 This module provides two public methods:
 
-=head2 Moose::Exporter->setup_import_methods(...)
+=over 4
+
+=item  B<< Moose::Exporter->setup_import_methods(...) >>
 
 When you call this method, C<Moose::Exporter> build custom C<import>
 and C<unimport> methods for your module. The import method will export
@@ -440,7 +442,7 @@ exported functions.
 
 This method accepts the following parameters:
 
-=over 4
+=over 8
 
 =item * with_caller => [ ... ]
 
@@ -475,11 +477,13 @@ when C<unimport> is called.
 
 =back
 
-=head2 Moose::Exporter->build_import_methods(...)
+=item B<< Moose::Exporter->build_import_methods(...) >>
 
 Returns two code refs, one for import and one for unimport.
 
 Used by C<setup_import_methods>.
+
+=back
 
 =head1 IMPORTING AND init_meta
 

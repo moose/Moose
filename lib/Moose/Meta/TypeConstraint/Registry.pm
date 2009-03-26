@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -74,42 +74,71 @@ Moose::Meta::TypeConstraint::Registry - registry for type constraints
 
 =head1 DESCRIPTION
 
-This module is currently only use internally by L<Moose::Util::TypeConstraints>. 
-It can be used to create your own private type constraint registry as well, but 
-the details of that are currently left as an exercise to the reader. (One hint: 
-You can use the 'parent_registry' feature to connect your private version with the 
-base Moose registry and base Moose types will automagically be found too).
+This class is a registry that maps type constraint names to
+L<Moose::Meta::TypeConstraint> objects.
+
+Currently, it is only used internally by
+L<Moose::Util::TypeConstraints>, which creates a single global
+registry.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint::Registry> is a subclass of
+L<Class::MOP::Object>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<meta>
+=item B<< Moose::Meta::TypeConstraint::Registry->new(%options) >>
 
-=item B<new>
+This creates a new registry object based on the provided C<%options>:
 
-=item B<get_parent_registry>
+=over 8
 
-=item B<set_parent_registry ($registry)>
-    
-=item B<has_parent_registry>
+=item * parent_registry
 
-=item B<type_constraints>
+This is an optional L<Moose::Meta::TypeConstraint::Registry>
+object.
 
-=item B<has_type_constraint ($type_name)>
+=item * type_constraints
 
-=item B<get_type_constraint ($type_name)>
+This is hash reference of type names to type objects. This is
+optional. Constraints can be added to the registry after it is
+created.
 
-Returns a type constraint object from the registry by name. Will return
-false if the supplied type name cannot be found.
+=back
 
-=item B<add_type_constraint ($type)>
+=item B<< $registry->get_parent_registry >>
 
-Adds a type constraint object to the registry. Will throw an exception if
-no type is supplied, or the supplied object does not inherit from 
-L<Moose::Meta::TypeConstraint>
+Returns the registry's parent registry, if it has one.
 
-=item B<find_type_constraint ($type_name)>
+=item B<< $registry->has_parent_registry >>
+
+Returns true if the registry has a parent.
+
+=item B<< $registry->set_parent_registry($registry) >>
+
+Sets the parent registry.
+
+=item B<< $registry->get_type_constraint($type_name) >>
+
+This returns the L<Moose::Meta::TypeConstraint> object from the
+registry for the given name, if one exists.
+
+=item B<< $registry->has_type_constraint($type_name) >>
+
+Returns true if the registry has a type of the given name.
+
+=item B<< $registry->add_type_constraint($type) >>
+
+Adds a new L<Moose::Meta::TypeConstraint> object to the registry.
+
+=item B<< $registry->find_type_constraint($type_name) >>
+
+This method looks in the current registry for the named type. If the
+type is not found, then this method will look in the registry's
+parent, if it has one.
 
 =back
 

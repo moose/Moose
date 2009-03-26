@@ -3,7 +3,7 @@ package Moose::Meta::Method;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -41,19 +41,15 @@ Moose::Meta::Method - A Moose Method metaclass
 
 =head1 DESCRIPTION
 
-For now, this is nothing but a subclass of Class::MOP::Method, 
-but with the expanding role of the method sub-protocol, it might 
-be more useful later on. 
+This class is a subclass of L<Class::MOP::Class> that provides
+additional Moose-specific functionality, all of which is private.
 
-=head1 METHODS
+To understand this class, you should read the the L<Class::MOP::Class>
+documentation.
 
-=over 4
+=head1 INHERITANCE
 
-=item throw_error $msg, %args
-
-=item _inline_throw_error $msg_expr, $args_expr
-
-=back
+C<Moose::Meta::Method> is a subclass of L<Class::MOP::Method>.
 
 =head1 BUGS
 

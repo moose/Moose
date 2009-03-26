@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -292,35 +292,12 @@ Moose::Meta::Method::Accessor - A Moose Method metaclass for accessors
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Method::Accessor> and it's primary
-responsibility is to generate the accessor methods for attributes. It
-can handle both closure based accessors, as well as inlined source based
-accessors.
+This class is a subclass of L<Class::MOP::Class::Accessor> that
+provides additional Moose-specific functionality, all of which is
+private.
 
-This is a fairly new addition to the MOP, but this will play an important
-role in the optimization strategy we are currently following.
-
-=head1 METHODS
-
-=over 4
-
-=item B<generate_accessor_method>
-
-=item B<generate_reader_method>
-
-=item B<generate_writer_method>
-
-=item B<generate_predicate_method>
-
-=item B<generate_clearer_method>
-
-=item B<generate_accessor_method_inline>
-
-=item B<generate_reader_method_inline>
-
-=item B<generate_writer_method_inline>
-
-=back
+To understand this class, you should read the the
+L<Class::MOP::Class::Accessor> documentation.
 
 =head1 BUGS
 

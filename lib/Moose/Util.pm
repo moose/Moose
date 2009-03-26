@@ -7,7 +7,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -217,64 +217,71 @@ Moose::Util - Utilities for working with Moose classes
 
 =head1 DESCRIPTION
 
-This is a set of utility functions to help working with Moose classes, and 
-is used internally by Moose itself. The goal is to provide useful functions
-that for both Moose users and Moose extenders (MooseX:: authors).
-
-This is a relatively new addition to the Moose tool chest, so ideas, 
-suggestions and contributions to this collection are most welcome. 
-See the L<TODO> section below for a list of ideas for possible functions 
-to write.
+This module provides a set of utility functions. Many of these
+functions are intended for use in Moose itself or MooseX modules, but
+some of them may be useful for use in your own code.
 
 =head1 EXPORTED FUNCTIONS
 
 =over 4
 
-=item B<find_meta ($class_or_obj)>
+=item B<find_meta($class_or_obj)>
 
-This will attempt to locate a metaclass for the given C<$class_or_obj>
-and return it.
+This method takes a class name or object and attempts to find a
+metaclass for the class, if one exists. It will not create one if it
+does not yet exist.
 
-=item B<does_role ($class_or_obj, $role_name)>
+=item B<does_role($class_or_obj, $role_name)>
 
-Returns true if C<$class_or_obj> can do the role C<$role_name>.
+Returns true if C<$class_or_obj> does the given C<$role_name>.
 
-=item B<search_class_by_role ($class_or_obj, $role_name)>
+The class must already have a metaclass for this to work.
 
-Returns first class in precedence list that consumed C<$role_name>.
+=item B<search_class_by_role($class_or_obj, $role_name)>
 
-=item B<apply_all_roles ($applicant, @roles)>
+Returns the first class in the class's precedence list that does
+C<$role_name>, if any.
 
-Given an C<$applicant> (which can somehow be turned into either a 
-metaclass or a metarole) and a list of C<@roles> this will do the 
-right thing to apply the C<@roles> to the C<$applicant>. This is 
-actually used internally by both L<Moose> and L<Moose::Role>, and the
-C<@roles> will be preprocessed through L<Data::OptList::mkopt>
-to allow for the additional arguments to be passed. 
+The class must already have a metaclass for this to work.
+
+=item B<apply_all_roles($applicant, @roles)>
+
+This function applies one or more roles to the given C<$applicant> The
+applicant can be a role name, class name, or object.
+
+The C<$applicant> must already have a metaclass object.
+
+The list of C<@roles> should be a list of names, each of which can be
+followed by an optional hash reference of options (C<exclude> and
+C<alias>).
 
 =item B<get_all_attribute_values($meta, $instance)>
 
-Returns the values of the C<$instance>'s fields keyed by the attribute names.
+Returns a hash reference containing all of the C<$instance>'s
+attributes. The keys are attribute names.
 
 =item B<get_all_init_args($meta, $instance)>
 
-Returns a hash reference where the keys are all the attributes' C<init_arg>s
-and the values are the instance's fields. Attributes without an C<init_arg>
-will be skipped.
+Returns a hash reference containing all of the C<init_arg> values for
+the instance's attributes. The values are the associated attribute
+values. If an attribute does not have a defined C<init_arg>, it is
+skipped.
+
+This could be useful in cloning an object.
 
 =item B<resolve_metaclass_alias($category, $name, %options)>
 
 =item B<resolve_metatrait_alias($category, $name, %options)>
 
-Resolve a short name like in e.g.
+Resolves a short name to a full class name. Short names are often used
+when specifying the C<metaclass> or C<traits> option for an attribute:
 
     has foo => (
         metaclass => "Bar",
     );
 
-to a full class name.
-
-=item B<add_method_modifier ($class_or_obj, $modifier_name, $args)>
+The name resolution mechanism is covered in L<Moose/Trait Name
+Resolution>.
 
 =item B<english_list(@items)>
 
@@ -319,7 +326,7 @@ Copyright 2007-2009 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
 

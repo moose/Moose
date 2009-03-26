@@ -1,0 +1,319 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::Delta - Important Changes in Moose
+
+=head1 DESCRIPTION
+
+This documents any important or noteworthy changes in Moose, with a
+focus on backwards. This does duplicate data from the F<Changes> file,
+but aims to provide more details and when possible workarounds.
+
+Besides helping keep up with changes, you can also use this document
+for finding the lowest version of Moose that supported a given
+feature.  If you encounter a problem and have a solution but don't see
+it documented here, or think we missed an important feature, please
+send us a patch.
+
+=head1 Version 0.73
+
+Calling C<subtype> with a name as the only argument now throws an
+exception. If you want an anonymous subtype do:
+
+    my $subtype = subtype as 'Foo';
+
+This is related to the changes in version 0.71_01.
+
+The C<is_needed> method in L<Moose::Meta::Method::Destructor> is now
+only usable as a class method. Previously, it worked as a class or
+object method, with a different internal implementation for each
+version.
+
+The internals of making a class immutable changed a lot in Class::MOP
+0.78_02, and Moose's internals have changed along with it. The
+external C<< $metaclass->make_immutable >> method still works the same
+way.
+
+=head1 Version 0.72
+
+A mutable class accepted C<< Foo->new(undef) >> without complaint,
+while an immutable class would blow up with an unhelpful error. Now,
+in both cases we throw a helpful error instead.
+
+This "feature" was originally added to allow for cases such as this:
+
+  my $args;
+
+  if ( something() ) {
+      $args = {...};
+  }
+
+  return My::Class->new($args);
+
+But we decided this is a bad idea and a little too magical, because it
+can easily mask real errors.
+
+=head1 Version 0.71_01
+
+Calling C<type> or C<subtype> without the sugar helpers (C<as>,
+C<where>, C<message>) is now deprecated.
+
+As a side effect, this meant we ended up using Perl prototypes on
+C<as>, and code like this will no longer work:
+
+  use Moose::Util::TypeConstraints;
+  use Declare::Constraints::Simple -All;
+
+  subtype 'ArrayOfInts'
+      => as 'ArrayRef'
+      => IsArrayRef(IsInt);
+
+Instead it must be changed to this:
+
+  subtype(
+      'ArrayOfInts' => {
+          as    => 'ArrayRef',
+          where => IsArrayRef(IsInt)
+      }
+  );
+
+If you want to maintain backwards compat with older versions of Moose,
+you must explicitly test Moose's C<VERSION>:
+
+  if ( Moose->VERSION < 0.71_01 ) {
+      subtype 'ArrayOfInts'
+          => as 'ArrayRef'
+          => IsArrayRef(IsInt);
+  }
+  else {
+      subtype(
+          'ArrayOfInts' => {
+              as    => 'ArrayRef',
+              where => IsArrayRef(IsInt)
+          }
+      );
+  }
+
+=head1 Version 0.70
+
+We no longer pass the meta-attribute object as a final argument to
+triggers. This actually changed for inlined code a while back, but the
+non-inlined version and the docs were still out of date.
+
+If by some chance you actually used this feature, the workaround is
+simple. You fetch the attribute object from out of the C<$self>
+that is passed as the first argument to trigger, like so:
+
+  has 'foo' => (
+      is      => 'ro',
+      isa     => 'Any',
+      trigger => sub {
+          my ( $self, $value ) = @_;
+          my $attr = $self->meta->find_attribute_by_name('foo');
+
+          # ...
+      }
+  );
+
+=head1 Version 0.66
+
+If you created a subtype and passed a parent that Moose didn't know
+about, it simply ignored the parent. Now it automatically creates the
+parent as a class type. This may not be what you want, but is less
+broken than before.
+
+You could declare a name with subtype such as "Foo!Bar". Moose would
+accept this allowed, but if you used it in a parameterized type such
+as "ArrayRef[Foo!Bar]" it wouldn't work. We now do some vetting on
+names created via the sugar functions, so that they can only contain
+alphanumerics, ":", and ".".
+
+=head1 Version 0.65
+
+Methods created via an attribute can now fulfill a C<requires>
+declaration for a role. Honestly we don't know why Stevan didn't make
+this work originally, he was just insane or something.
+
+Stack traces from inlined code will now report the line and file as
+being in your class, as opposed to in Moose guts.
+
+=head1 Version 0.62_02
+
+When a class does not provide all of a role's required methods, the
+error thrown now mentions all of the missing methods, as opposed to
+just the first missing method.
+
+Moose will no longer inline a constructor for your class unless it
+inherits its constructor is inherited from Moose::Object, and will
+warn when it doesn't inline. If you want to force inlining anyway,
+pass C<< "replace_constructor => 1 >> to C<make_immutable>.
+
+If you want to get rid of the warning, pass C<< inline_constructor =>
+1 >>.
+
+=head1 Version 0.62
+
+Removed the (deprecated) C<make_immutable> keyword.
+
+Removing an attribute from a class now also removes delegation
+(C<handles>) methods installed for that attribute. This is correct
+behavior, but if you were wrongly relying on it you might get bit.
+
+=head1 Version 0.58
+
+Roles now add methods by calling C<add_method>, not
+C<alias_method>. They make sure to always provide a method object,
+which will be cloned internally. This means that it is now possible to
+track the source of a method provided by a role, and even follow its
+history through intermediate roles.  This means that methods added by
+a role now show up when looking at a class's method list/map.
+
+Parameter and Union args are now sorted, this makes Int|Str the same
+constraint as Str|Int. Also, incoming type constraint strings are
+normalized to remove all whitespace differences. This is mostly for
+internals and should not affect outside code.
+
+L<Moose::Exporter> will no longer remove a subroutine that the
+exporting package re-exports. Moose re-exports the Carp::confess
+function, among others. The reasoning is that we cannot know whether
+you have also explicitly imported those functions for your own use, so
+we err on the safe side and always keep them.
+
+=head1 Version 0.56
+
+C<Moose::init_meta> should now be called as a method.
+
+New modules for extension writers, L<Moose::Exporter> and
+L<Moose::Util::MetaRole>.
+
+=head1 Version 0.55_01
+
+Implemented metaclass traits (and wrote a recipe for it):
+
+  use Moose -traits => 'Foo'
+
+This should make writing small Moose extensions a little
+easier.
+
+=head1 Version 0.55
+
+Fixed C<coerce> to accept anon types just like C<subtype> can.
+So that you can do:
+
+  coerce $some_anon_type => from 'Str' => via { ... };
+
+=head1 Version 0.51
+
+Added C<BUILDARGS>, a new step in C<< Moose::Object->new() >>.
+
+=head1 Version 0.49
+
+Fixed how the C<< is => (ro|rw) >> works with custom defined
+C<reader>, C<writer> and C<accessor> options. See the below table for
+details:
+
+  is => ro, writer => _foo    # turns into (reader => foo, writer => _foo)
+  is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
+  is => rw, accessor => _foo  # turns into (accessor => _foo)
+  is => ro, accessor => _foo  # error, accesor is rw
+
+=head1 Version 0.45
+
+The C<before/around/after> method modifiers now support regexp
+matching of method names. NOTE: this only works for classes, it is
+currently not supported in roles, but, ... patches welcome.
+
+The C<has> keyword for roles now accepts the same array ref form that
+L<Moose>.pm does for classes.
+
+A trigger on a read-only attribute is no longer an error, as it's
+useful to trigger off of the constructor.
+
+Subtypes of parameterizable types now are parameterizable types
+themselves.
+
+=head1 Version 0.44
+
+Fixed issue where C<DEMOLISHALL> was eating the value in C<$@>, and so
+not working correctly. It still kind of eats them, but so does vanilla
+perl.
+
+=head1 Version 0.41
+
+Inherited attributes may now be extended without restriction on the
+type ('isa', 'does').
+
+The entire set of Moose::Meta::TypeConstraint::* classes were
+refactored in this release. If you were relying on their internals you
+should test your code carefully.
+
+=head1 Version 0.40
+
+Documenting the use of '+name' with attributes that come from recently
+composed roles. It makes sense, people are using it, and so why not
+just officially support it.
+
+The C<< Moose::Meta::Class->create >> method now supports roles.
+
+It is now possible to make anonymous enum types by passing C<enum> an
+array reference instead of the C<< enum $name => @values >>.
+
+=head1 Version 0.37
+
+Added the C<make_immutable> keyword as a shortcut to calling
+C<make_immutable> on the meta object. This eventually got removed!
+
+Made C<< init_arg => undef >> work in Moose. This means "do not accept
+a constructor parameter for this attribute".
+
+Type errors now use the provided message. Prior to this release they
+didn't.
+
+=head1 Version 0.34
+
+Moose is now a postmodern object system :)
+
+The Role system was completely refactored. It is 100% backwards
+compat, but the internals were totally changed. If you relied on the
+internals then you are advised to test carefully.
+
+Added method exclusion and aliasing for Roles in this release.
+
+Added the L<Moose::Util::TypeConstraints::OptimizedConstraints>
+module.
+
+Passing a list of values to an accessor (which is only expecting one
+value) used to be silently ignored, now it throws an error.
+
+=head1 Version 0.26
+
+Added parameterized types and did a pretty heavy refactoring of the
+type constraint system.
+
+Better framework extendability and better support for "making your own
+Moose".
+
+=head1 Version 0.25 or before
+
+Honestly, you shouldn't be using versions of Moose that are this old,
+so many bug fixes and speed improvements have been made you would be
+crazy to not upgrade.
+
+Also, I am tired of going through the Changelog so I am stopping here,
+if anyone would like to continue this please feel free.
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2009 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

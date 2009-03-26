@@ -96,6 +96,7 @@ mixins
 MooseX
 Num
 oose
+OtherName
 PosInt
 PositiveInt
 ro
@@ -107,15 +108,19 @@ TypeContraints
 API
 APIs
 Baz
+Changelog
+compat
 datetimes
 definedness
 destructor
 destructors
+dev
 DWIM
 hashrefs
 immutabilize
 immutabilized
 inline
+inlines
 invocant
 invocant's
 irc
@@ -126,17 +131,22 @@ namespace
 namespaced
 namespaces
 namespacing
+# as in required-ness
+ness
 OO
 OOP
 ORM
 overridable
 parameterizable
+parameterization
 parameterize
 parameterized
 parameterizes
 pluggable
 prechecking
 prepends
+refactored
+refactoring
 runtime
 stacktrace
 subclassable
@@ -148,6 +158,7 @@ UNIMPORTING
 Unported
 unsets
 unsettable
+whitelist
 Whitelist
 
 ## other jargon

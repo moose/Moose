@@ -10,7 +10,7 @@ use Carp         'croak';
 use Data::OptList;
 use Sub::Exporter;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -266,12 +266,6 @@ before/around/after modifiers.
 In most cases, this will be a non-issue; however, it is something to keep in
 mind when using method modifiers in a role. You should never assume any
 ordering.
-
-=item *
-
-The C<requires> keyword currently only works with actual methods. A
-method modifier (before/around/after and override) will not count as a
-fulfillment of the requirement.
 
 =back
 

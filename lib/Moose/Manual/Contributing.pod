@@ -1,0 +1,100 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::Contributing - How to get involved in Moose
+
+=head1 GETTING INVOLVED
+
+Moose is a pretty open project and we are always willing to accept bug
+fixes, more tests and doc patches. Doing these things is as simple as
+cloning a copy of the git repository and hacking.
+
+Commit bits are given out freely. All we ask is that for any
+non-trivial code patches, you check with one of the core developers
+before applying said patch.
+
+Alternatively, you can make a new branch with your change and push it
+back to the Moose git server, then ask a core dev to review your
+branch.
+
+=head2 IRC and Email
+
+A B<lot> of Moose discussion happens on IRC. We have two channels on
+irc.perl.org, #moose and #moose-dev. The former is much more active,
+but the core developers pay attention to both channels.
+
+We also have a mailing list, moose@perl.org and all the core
+developers read and respond to messages on that list.
+
+=head1 NEW FEATURES
+
+Moose already has a fairly large feature set and we are currently
+B<not> looking to add any major new features to it. If you have an
+idea for a new feature in Moose, you are invited instead to create a
+MooseX module first.
+
+At this stage, no new features will even be considered for addition
+into the core without first being vetted as a MooseX module, unless
+it is absolutely 100% impossible to implement the feature outside the
+core.
+
+If you think it is 100% impossible, you're probably wrong. However,
+your feature may need a small hook in the core, or a refactoring of
+some core modules, and we are definitely open to that.
+
+Moose was built from the ground up with the idea of being highly
+extensible, and quite often the feature requests we see can be
+implemented through a couple of small and well placed extensions. Try
+it, it is much easier then you might think.
+
+=head1 TESTS, TESTS, TESTS
+
+If you write I<any> code for Moose or Class::MOP, you B<must> add
+tests for that code. If you do not write tests then we cannot
+guarantee your change will not be removed or altered at a later date.
+
+If your code change/addition is deep within the bowels of
+Moose/Class::MOP and your test exercises this feature in a non-obvious
+way, please add some comments either near the code in question or in
+the test so that others know.
+
+We also greatly appreciate documentation to go with your changes, and
+an entry in the Changes file. Make sure to give yourself credit!
+
+=head1 BACKWARDS COMPATIBILITY
+
+Change is inevitable and Moose is not immune to this. We do our best
+to maintain backwards compatibility, but we do not want the code base
+to become overburdened by this. This is not to say that we will be
+frivolous with our changes, quite the opposite, just that we are not
+afraid of change and will do our best to keep it as painless as
+possible for the end user.
+
+The rule is that if you do something that is not backwards compatible
+you B<must> do I<at least> one deprecation cycle (more if it is larger
+change). For really larger or radical changes dev releases may be
+needed as well (the core developers will decide on this on a
+case-per-case basis).
+
+The preference with regard to deprecation is to warn loudly and often
+so that users will have time to fix their usages.
+
+All backwards incompatible changes B<must> be documented in
+L<Moose::Manual::Delta>. Make sure to document any useful tips or
+workarounds for the change in that document.
+
+=head1 AUTHOR
+
+Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2009 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

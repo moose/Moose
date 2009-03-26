@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints;
 use Moose::Meta::TypeConstraint::Parameterizable;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -76,25 +76,17 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint::Parameterized - Higher Order type constraints for Moose
+Moose::Meta::TypeConstraint::Parameterized - Type constraints with a bound parameter (ArrayRef[Int])
 
 =head1 METHODS
 
-=over 4
+This class is intentionally not documented because the API is
+confusing and needs some work.
 
-=item B<compile_type_constraint>
+=head1 INHERITANCE
 
-=item B<type_parameter>
-
-=item B<has_type_parameter>
-
-=item B<meta>
-
-=item B<equals>
-
-=item B<create_child_type>
-
-=back
+C<Moose::Meta::TypeConstraint::Parameterized> is a subclass of
+L<Moose::Meta::TypeConstraint>.
 
 =head1 BUGS
 

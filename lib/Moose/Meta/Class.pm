@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -379,7 +379,7 @@ sub _find_common_ancestor {
 
     # FIXME? This doesn't account for multiple inheritance (not sure
     # if it needs to though). For example, is somewhere in $meta1's
-    # history it inherits from both ClassA and ClassB, and $meta
+    # history it inherits from both ClassA and ClassB, and $meta2
     # inherits from ClassB & ClassA, does it matter? And what crazy
     # fool would do that anyway?
 
@@ -530,60 +530,31 @@ sub _process_inherited_attribute {
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 
-# This could be done by using SUPER and altering ->options
-# I am keeping it this way to make it more explicit.
-sub create_immutable_transformer {
-    my $self = shift;
-    my $class = Class::MOP::Immutable->new($self, {
-       read_only   => [qw/superclasses/],
-       cannot_call => [qw/
-           add_method
-           alias_method
-           remove_method
-           add_attribute
-           remove_attribute
-           remove_package_symbol
-           add_role
-       /],
-       memoize     => {
-           class_precedence_list             => 'ARRAY',
-           linearized_isa                    => 'ARRAY', # FIXME perl 5.10 memoizes this on its own, no need?
-           get_all_methods                   => 'ARRAY',
-           #get_all_attributes               => 'ARRAY', # it's an alias, no need, but maybe in the future
-           compute_all_applicable_attributes => 'ARRAY',
-           get_meta_instance                 => 'SCALAR',
-           get_method_map                    => 'SCALAR',
-           calculate_all_roles               => 'ARRAY',
-       },
-       # NOTE:
-       # this is ugly, but so are typeglobs, 
-       # so whattayahgonnadoboutit
-       # - SL
-       wrapped => { 
-           add_package_symbol => sub {
-               my $original = shift;
-               $self->throw_error("Cannot add package symbols to an immutable metaclass")
-                   unless (caller(2))[3] eq 'Class::MOP::Package::get_package_symbol'; 
-               goto $original->body;
-           },
-       },       
-    });
-    return $class;
-}
 
-sub make_immutable {
+sub _default_immutable_transformer_options {
     my $self = shift;
-    $self->SUPER::make_immutable
-      (
-       constructor_class => $self->constructor_class,
-       destructor_class  => $self->destructor_class,
-       inline_destructor => 1,
-       # NOTE:
-       # no need to do this,
-       # Moose always does it
-       inline_accessors  => 0,
-       @_,
-      );
+
+    my %options = $self->SUPER::_default_immutable_transformer_options;
+
+    # We need to copy the references as we do not want to alter the
+    # superclass's references.
+    $options{cannot_call} = [ @{ $options{cannot_call} }, 'add_role' ];
+    $options{memoize} = {
+        %{ $options{memoize} },
+        calculate_all_roles => 'ARRAY',
+    };
+
+    %options = (
+        %options,
+        constructor_class => $self->constructor_class,
+        destructor_class  => $self->destructor_class,
+        inline_destructor => 1,
+
+        # Moose always does this when an attribute is created
+        inline_accessors => 0,
+    );
+
+    return %options
 }
 
 our $error_level;
@@ -636,162 +607,119 @@ Moose::Meta::Class - The Moose metaclass
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Class> with Moose specific
-extensions.
+This class is a subclass of L<Class::MOP::Class> that provides
+additional Moose-specific functionality.
 
-For the most part, the only time you will ever encounter an
-instance of this class is if you are doing some serious deep
-introspection. To really understand this class, you need to refer
-to the L<Class::MOP::Class> documentation.
+To really understand this class, you will need to start with the
+L<Class::MOP::Class> documentation. This class can be understood as a
+set of additional features on top of the basic feature provided by
+that parent class.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Class> is a subclass of L<Class::MOP::Class>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<initialize>
+=item B<< Moose::Meta::Class->initialize($package_name, %options) >>
 
-=item B<create>
+This overrides the parent's method in order to provide its own
+defaults for the C<attribute_metaclass>, C<instance_metaclass>, and
+C<method_metaclass> options.
 
-Overrides original to accept a list of roles to apply to
-the created class.
+These all default to the appropriate Moose class.
 
-   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
+=item B<< Moose::Meta::Class->create($package_name, %options) >>
 
-=item B<create_anon_class>
+This overrides the parent's method in order to accept a C<roles>
+option. This should be an array reference containing one more roles
+that the class does.
 
-Overrides original to support roles and caching.
+  my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
 
-   my $metaclass = Moose::Meta::Class->create_anon_class(
-       superclasses => ['Foo'],
-       roles        => [qw/Some Roles Go Here/],
-       cache        => 1,
-   );
+=item B<< Moose::Meta::Class->create_anon_class >>
 
-=item B<make_immutable>
+This overrides the parent's method to accept a C<roles> option, just
+as C<create> does.
 
-Override original to add default options for inlining destructor
-and altering the Constructor metaclass.
+It also accepts a C<cache> option. If this is true, then the anonymous
+class will be cached based on its superclasses and roles. If an
+existing anonymous class in the cache has the same superclasses and
+roles, it will be reused.
 
-=item B<create_immutable_transformer>
+  my $metaclass = Moose::Meta::Class->create_anon_class(
+      superclasses => ['Foo'],
+      roles        => [qw/Some Roles Go Here/],
+      cache        => 1,
+  );
 
-Override original to lock C<add_role> and memoize C<calculate_all_roles>
+=item B<< $metaclass->make_immutable(%options) >>
 
-=item B<new_object>
+This overrides the parent's method to add a few options. Specifically,
+it uses the Moose-specific constructor and destructor classes, and
+enables inlining the destructor.
 
-We override this method to support the C<trigger> attribute option.
+Also, since Moose always inlines attributes, it sets the
+C<inline_accessors> option to false.
 
-=item B<construct_instance>
+=item B<< $metaclass->new_object(%params) >>
 
-This provides some Moose specific extensions to this method, you
-almost never call this method directly unless you really know what
-you are doing.
+This overrides the parent's method in order to add support for
+attribute triggers.
 
-This method makes sure to handle the moose weak-ref, type-constraint
-and type coercion features.
+=item B<< $metaclass->add_override_method_modifier($name, $sub) >>
 
-=item B<get_method_map>
+This adds an C<override> method modifier to the package.
 
-This accommodates Moose::Meta::Role::Method instances, which are
-aliased, instead of added, but still need to be counted as valid
-methods.
+=item B<< $metaclass->add_augment_method_modifier($name, $sub) >>
 
-=item B<add_override_method_modifier ($name, $method)>
+This adds an C<augment> method modifier to the package.
 
-This will create an C<override> method modifier for you, and install
-it in the package.
+=item B<< $metaclass->calculate_all_roles >>
 
-=item B<add_augment_method_modifier ($name, $method)>
+This will return a unique array of C<Moose::Meta::Role> instances
+which are attached to this class.
 
-This will create an C<augment> method modifier for you, and install
-it in the package.
+=item B<< $metaclass->add_role($role) >>
 
-=item B<calculate_all_roles>
+This takes a L<Moose::Meta::Role> object, and adds it to the class's
+list of roles. This I<does not> actually apply the role to the class.
 
-=item B<roles>
+=item B<< $metaclass->does_role($role_name) >>
 
-This will return an array of C<Moose::Meta::Role> instances which are
-attached to this class.
+This returns a boolean indicating whether or not the class does the
+specified role. This tests both the class and its parents.
 
-=item B<add_role ($role)>
+=item B<< $metaclass->excludes_role($role_name) >>
 
-This takes an instance of C<Moose::Meta::Role> in C<$role>, and adds it
-to the list of associated roles.
+A class excludes a role if it has already composed a role which
+excludes the named role. This tests both the class and its parents.
 
-=item B<does_role ($role_name)>
+=item B<< $metaclass->add_attribute($attr_name, %params|$params) >>
 
-This will test if this class C<does> a given C<$role_name>. It will
-not only check it's local roles, but ask them as well in order to
-cascade down the role hierarchy.
+This overrides the parent's method in order to allow the parameters to
+be provided as a hash reference.
 
-=item B<excludes_role ($role_name)>
+=item B<< $metaclass->constructor_class ($class_name) >>
 
-This will test if this class C<excludes> a given C<$role_name>. It will
-not only check it's local roles, but ask them as well in order to
-cascade down the role hierarchy.
-
-=item B<add_attribute ($attr_name, %params|$params)>
-
-This method does the same thing as L<Class::MOP::Class::add_attribute>, but adds
-support for taking the C<$params> as a HASH ref.
-
-=item B<constructor_class ($class_name)>
-
-=item B<destructor_class ($class_name)>
+=item B<< $metaclass->destructor_class ($class_name) >>
 
 These are the names of classes used when making a class
 immutable. These default to L<Moose::Meta::Method::Constructor> and
 L<Moose::Meta::Method::Destructor> respectively. These accessors are
 read-write, so you can use them to change the class name.
 
-=item B<error_class ($class_name)>
+=item B<< $metaclass->error_class($class_name) >>
 
-The name of the class used to throw errors. This default to
+The name of the class used to throw errors. This defaults to
 L<Moose::Error::Default>, which generates an error with a stacktrace
 just like C<Carp::confess>.
 
-=item B<check_metaclass_compatibility>
-
-Moose overrides this method from C<Class::MOP::Class> and attempts to
-fix some incompatibilities before doing the check.
-
-=item B<throw_error $message, %extra>
+=item B<< $metaclass->throw_error($message, %extra) >>
 
 Throws the error created by C<create_error> using C<raise_error>
-
-=item B<create_error $message, %extra>
-
-Creates an error message or object.
-
-The default behavior is C<create_error_confess>.
-
-If C<error_class> is set uses C<create_error_object>. Otherwise uses
-C<error_builder> (a code reference or variant name), and calls the appropriate
-C<create_error_$builder> method.
-
-=item B<error_builder $builder_name>
-
-Get or set the error builder. Defaults to C<confess>.
-
-=item B<error_class $class_name>
-
-Get or set the error class. This defaults to L<Moose::Error::Default>.
-
-=item B<create_error_confess %args>
-
-Creates an error using L<Carp/longmess>
-
-=item B<create_error_croak %args>
-
-Creates an error using L<Carp/shortmess>
-
-=item B<create_error_object %args>
-
-Calls C<new> on the C<class> parameter in C<%args>. Usable with C<error_class>
-to support custom error objects for your meta class.
-
-=item B<raise_error $error>
-
-Dies with an error object or string.
 
 =back
 

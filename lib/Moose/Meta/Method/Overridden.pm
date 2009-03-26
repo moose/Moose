@@ -3,7 +3,7 @@ package Moose::Meta::Method::Overridden;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -59,16 +59,38 @@ Moose::Meta::Method::Overridden - A Moose Method metaclass for overridden method
 
 =head1 DESCRIPTION
 
-This class implements method overriding logic for the L<Moose> C<override> keyword.
+This class implements method overriding logic for the L<Moose>
+C<override> keyword.
 
-This involves setting up C<super> for the overriding body, and dispatching to
-the correct parent method upon its invocation.
+The overriding subroutine's parent will be invoked explicitly using
+the C<super> keyword from the parent class's method definition.
 
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::Method::Overridden->new(%options) >>
+
+This constructs a new object. It accepts the following options:
+
+=over 8
+
+=item * class
+
+The metaclass object for the class in which the override is being
+declared. This option is required.
+
+=item * name
+
+The name of the method which we are overriding. This method must exist
+in one of the class's superclasses. This option is required.
+
+=item * method
+
+The subroutine reference which implements the overriding. This option
+is required.
+
+=back
 
 =back
 

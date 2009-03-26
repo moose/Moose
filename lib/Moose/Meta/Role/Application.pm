@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -95,6 +95,9 @@ Moose::Meta::Role::Application - A base class for role application
 =head1 DESCRIPTION
 
 This is the abstract base class for role applications.
+
+The API for this class and its subclasses still needs some
+consideration, and is intentionally not yet documented.
 
 =head2 METHODS
 

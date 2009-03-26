@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -88,26 +88,29 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::TypeConstraint::Parameterizable - Higher Order type constraints for Moose
+Moose::Meta::TypeConstraint::Parameterizable - Type constraints which can take a parameter (ArrayRef)
+
+=head1 DESCRIPTION
+
+This class represents a parameterizable type constraint. This is a
+type constraint like C<ArrayRef> or C<HashRef>, that can be
+parameterized and made more specific by specifying a contained
+type. For example, instead of just an C<ArrayRef> of anything, you can
+specify that is an C<ArrayRef[Int]>.
+
+A parameterizable constraint should not be used as an attribute type
+constraint. Instead, when parameterized it creates a
+L<Moose::Meta::TypeConstraint::Parameterized> which should be used.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint::Parameterizable> is a subclass of
+L<Moose::Meta::TypeConstraint>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<constraint_generator>
-
-=item B<has_constraint_generator>
-
-=item B<generate_constraint_for>
-
-=item B<parameterize>
-
-Given a single type constraint or type constraint string, this method
-parameterizes the type based on the given argument.
-
-=item B<meta>
-
-=back
+This class is intentionally not documented because the API is
+confusing and needs some work.
 
 =head1 BUGS
 

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -121,17 +121,16 @@ methods.
 
 =over 4
 
-=item B<new (%options)>
+=item B<< Moose::Meta::Method::Delegation->new(%options) >>
 
-This creates the method based on the criteria in C<%options>,
-these options are:
+This creates the delegation methods based on the provided C<%options>.
 
 =over 4
 
 =item I<attribute>
 
 This must be an instance of C<Moose::Meta::Attribute> which this
-accessor is being generated for. This parameter is B<required>.
+accessor is being generated for. This options is B<required>.
 
 =item I<delegate_to_method>
 
@@ -140,13 +139,14 @@ delegate. This can be either a method name or a code reference.
 
 =back
 
-=item B<associated_attribute>
+=item B<< $metamethod->associated_attribute >>
 
 Returns the attribute associated with this method.
 
-=item B<delegate_to_method>
+=item B<< $metamethod->delegate_to_method >>
 
-Returns the method to which this method delegates.
+Returns the method to which this method delegates, as passed to the
+constructor.
 
 =back
 

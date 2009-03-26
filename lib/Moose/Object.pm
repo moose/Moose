@@ -7,7 +7,7 @@ use warnings;
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -114,60 +114,71 @@ Moose::Object - The base object for Moose
 
 =head1 DESCRIPTION
 
-This serves as the base object for all Moose classes. Every 
-effort will be made to ensure that all classes which C<use Moose> 
-will inherit from this class. It provides a default constructor 
-and destructor, which run all the BUILD and DEMOLISH methods in 
-the class tree.
+This class is the default base class for all Moose-using classes. When
+you C<use Moose> in this class, your class will inherit from this
+class.
 
-You don't actually I<need> to inherit from this in order to 
-use Moose though. It is just here to make life easier.
+It provides a default constructor and destructor, which run the
+C<BUILDALL> and C<DEMOLISHALL> methods respectively.
+
+You don't actually I<need> to inherit from this in order to use Moose,
+but it makes it easier to take advantage of all of Moose's features.
 
 =head1 METHODS
 
 =over 4
 
-=item B<meta>
+=item B<< Moose::Object->new(%params) >>
 
-This will return the metaclass associated with the given class.
+This method calls C<< $class->BUILDARGS(@_) >>, and then creates a new
+instance of the appropriate class. Once the instance is created, it
+calls C<< $instance->BUILDALL($params) >>.
 
-=item B<new>
+=item B<< Moose::Object->BUILDARGS(%params) >>
 
-This will call C<BUILDARGS>, create a new instance and call C<BUILDALL>.
+The default implementation of this method accepts a hash or hash
+reference of named parameters. If it receives a single argument that
+I<isn't> a hash reference it throws an error.
 
-=item B<BUILDARGS>
+You can override this method in your class to handle other types of
+options passed to the constructor.
 
-This method processes an argument list into a hash reference. It is used by
-C<new>.
+This method should always return a hash reference of named options.
 
-=item B<BUILDALL>
+=item B<< $object->BUILDALL($params) >>
 
-This will call every C<BUILD> method in the inheritance hierarchy, 
-and pass it a hash-ref of the the C<%params> passed to C<new>.
+This method will call every C<BUILD> method in the inheritance
+hierarchy, starting with the most distant parent class and ending with
+the object's class.
 
-=item B<DEMOLISHALL>
+The C<BUILD> method will be passed the hash reference returned by
+C<BUILDARGS>.
 
-This will call every C<DEMOLISH> method in the inheritance hierarchy.
+=item B<< $object->DEMOLISHALL >>
 
-=item B<does ($role_name)>
+This will call every C<DEMOLISH> method in the inheritance hierarchy,
+starting with the object's class and ending with the most distant
+parent.
 
-This will check if the invocant's class C<does> a given C<$role_name>. 
-This is similar to C<isa> for object, but it checks the roles instead.
+=item B<< $object->does($role_name) >>
+
+This returns true if the object does the given role.
 
 =item B<DOES ($class_or_role_name)>
 
-A Moose Role aware implementation of L<UNIVERSAL/DOES>.
+This is a a Moose role-aware implementation of L<UNIVERSAL/DOES>.
 
-C<DOES> is equivalent to C<isa> or C<does>.
+This is effectively the same as writing:
 
-=item B<dump ($maxdepth)>
+  $object->does($name) || $object->isa($name)
 
-C'mon, how many times have you written the following code while debugging:
+This method will work with Perl 5.8, which did not implement
+C<UNIVERSAL::DOES>.
 
- use Data::Dumper; 
- warn Dumper $obj;
+=item B<< $object->dump($maxdepth) >>
 
-It can get seriously annoying, so why not just use this.
+This is a handy utility for C<Data::Dumper>ing an object. By default,
+the maximum depth is 1, to avoid making a mess.
 
 =back
 

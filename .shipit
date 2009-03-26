@@ -1,7 +1,6 @@
 # auto-generated shipit config file.
 steps = FindVersion, ChangeVersion, CheckChangeLog, CheckVersionsMatch, DistTest, Commit, Tag, MakeDist, DistClean
 
-svn.tagpattern = %v
-svn.tagpattern = http://code2.0beta.co.uk/moose/svn/Moose/tags/%v
+git.tagpattern = %v
 
 CheckChangeLog.files = Changes

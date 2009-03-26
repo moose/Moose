@@ -6,11 +6,11 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Generated';
+         'Class::MOP::Method::Constructor';
 
 sub new {
     my $class   = shift;
@@ -63,7 +63,7 @@ sub can_be_inlined {
         grep { $_ ne $expected_class }
         $metaclass->linearized_isa
         ) {
-        my $transformer = $meta->get_immutable_transformer;
+        my $transformer = $meta->immutable_transformer;
 
         # This is actually a false positive if we're in a subclass of
         # this class, _and_ the expected class is not overridden (but
@@ -110,17 +110,28 @@ sub _expected_constructor_class {
 
 ## accessors
 
-sub options       { (shift)->{'options'}       }
 sub meta_instance { (shift)->{'meta_instance'} }
 sub attributes    { (shift)->{'attributes'}    }
 
-sub associated_metaclass { (shift)->{'associated_metaclass'} }
-
 ## method
 
-# this was changed in 0.41, but broke MooseX::Singleton, so try to catch
-# any other code using the original broken spelling
-sub intialize_body { $_[0]->throw_error("Please correct the spelling of 'intialize_body' to 'initialize_body'") }
+sub _generate_params {
+  my ($self, $var, $class_var) = @_;
+  "my $var = " . $self->_generate_BUILDARGS($class_var, '@_') . ";\n";
+}
+
+sub _generate_instance {
+  my ($self, $var, $class_var) = @_;
+  "my $var = " . $self->meta_instance->inline_create_instance($class_var) 
+               . ";\n";
+}
+
+sub _generate_slot_initializers {
+    my ($self) = @_;
+    return (join ";\n" => map {
+        $self->_generate_slot_initializer($_)
+    } 0 .. (@{$self->attributes} - 1)) . ";\n";
+}
 
 sub initialize_body {
     my $self = shift;
@@ -135,20 +146,17 @@ sub initialize_body {
     $source .= "\n" . 'my $class = shift;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
-    $source .= "\n" . '    if $class ne \'' . $self->associated_metaclass->name . '\';';
+    $source .= "\n    if \$class ne '" . $self->associated_metaclass->name 
+            .  "';\n";
 
-    $source .= "\n" . 'my $params = ' . $self->_generate_BUILDARGS('$class', '@_');
+    $source .= $self->_generate_params('$params', '$class');
+    $source .= $self->_generate_instance('$instance', '$class');
+    $source .= $self->_generate_slot_initializers;
 
-    $source .= ";\n" . 'my $instance = ' . $self->meta_instance->inline_create_instance('$class');
-
-    $source .= ";\n" . (join ";\n" => map {
-        $self->_generate_slot_initializer($_)
-    } 0 .. (@{$self->attributes} - 1));
-
-    $source .= ";\n" . $self->_generate_triggers();
+    $source .= $self->_generate_triggers();
     $source .= ";\n" . $self->_generate_BUILDALL();
 
-    $source .= ";\n" . 'return $instance';
+    $source .= ";\nreturn \$instance";
     $source .= ";\n" . '}';
     warn $source if $self->options->{debug};
 
@@ -214,27 +222,33 @@ sub _generate_BUILDALL {
 sub _generate_triggers {
     my $self = shift;
     my @trigger_calls;
-    foreach my $i (0 .. $#{ $self->attributes }) {
+    foreach my $i ( 0 .. $#{ $self->attributes } ) {
         my $attr = $self->attributes->[$i];
-        if ($attr->can('has_trigger') && $attr->has_trigger) {
-            if (defined(my $init_arg = $attr->init_arg)) {
-                push @trigger_calls => (
-                    '(exists $params->{\'' . $init_arg . '\'}) && do {' . "\n    "
-                    .   '$attrs->[' . $i . ']->trigger->('
-                    .       '$instance, ' 
-                    .        $self->meta_instance->inline_get_slot_value(
-                                 '$instance',
-                                 $attr->name,
-                             ) 
-                             . ', '
-                    .        '$attrs->[' . $i . ']'
-                    .   ');'
-                    ."\n}"
-                );
-            } 
-        }
+
+        next unless $attr->can('has_trigger') && $attr->has_trigger;
+
+        my $init_arg = $attr->init_arg;
+
+        next unless defined $init_arg;
+
+        push @trigger_calls => '(exists $params->{\''
+            . $init_arg
+            . '\'}) && do {'
+            . "\n    "
+            . '$attrs->['
+            . $i
+            . ']->trigger->('
+            . '$instance, '
+            . $self->meta_instance->inline_get_slot_value(
+                  '$instance',
+                  $attr->name,
+              )
+            . ', '
+            . '$attrs->['
+            . $i . ']' . ');' . "\n}";
     }
-    return join ";\n" => @trigger_calls;    
+
+    return join ";\n" => @trigger_calls;
 }
 
 sub _generate_slot_initializer {
@@ -411,28 +425,37 @@ Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Method> which handles
-constructing an appropriate Constructor methods. This is primarily
-used in the making of immutable metaclasses, otherwise it is
-not particularly useful.
+This class is a subclass of L<Class::MOP::Class::Constructor> that
+provides additional Moose-specific functionality
+
+To understand this class, you should read the the
+L<Class::MOP::Class::Constructor> documentation as well.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Method::Constructor> is a subclass of
+L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< $metamethod->can_be_inlined >>
 
-=item B<can_be_inlined>
+This returns true if the method can inlined.
 
-=item B<attributes>
+First, it looks at all of the parents of the associated class. If any
+of them have an inlined constructor, then the constructor can be
+inlined.
 
-=item B<meta_instance>
+If none of them have been inlined, it checks to make sure that the
+pre-inlining constructor for the class matches the constructor from
+the expected class.
 
-=item B<options>
+By default, it expects this constructor come from L<Moose::Object>,
+but subclasses can change this expectation.
 
-=item B<initialize_body>
-
-=item B<associated_metaclass>
+If the constructor cannot be inlined it warns that this is the case.
 
 =back
 

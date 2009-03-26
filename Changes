@@ -1,6 +1,11 @@
 Revision history for Perl extension Moose
 
-0.73
+0.72_01 Thu, March 26, 2009
+    * Everything
+      - Almost every module has complete API documentation. A few
+        methods (and even whole classes) have been intentionally
+        excluded pending some rethinking of their APIs.
+
     * Moose::Util::TypeConstraints
       - Calling subtype with a name as the only argument is now an
         exception. If you want an anonymous subtype do:
@@ -20,16 +25,38 @@ Revision history for Perl extension Moose
     * Moose::Exporter
       - When wrapping a function with a prototype, Moose::Exporter now
         makes sure the wrapped function still has the same
-        prototype. Patch by Daisuke Maki.
+        prototype. (Daisuke Maki)
 
     * Moose::Meta::Attribute
       - Allow a subclass to set lazy_build for an inherited
-        attribute. (Dieter Pearcey).
+        attribute. (Dieter Pearcey)
 
     * Makefile.PL
       - Explicitly depend on Data::OptList. We already had this dependency
         via Sub::Exporter, but since we're using it directly we're
         better off with it listed. (Sartak)
+
+    * Moose::Meta::Method::Constructor
+      - Make it easier to subclass the inlining behaviour. (Ash
+        Berlin)
+
+    * Moose::Manual::Delta
+      - Details significant changes in the history of Moose, along
+        with recommended workarounds.
+
+    * Moose::Manual::Contributing
+      - Contributor's guide to Moose.
+
+    * Moose::Meta::Method::Constructor
+      - The long-deprecated intialize_body method has been removed
+        (yes, spelled like that).
+
+    * Moose::Meta::Method::Destructor
+      - This is_needed method is now always a class method.
+
+    * Moose::Meta::Class
+      - Changes to the internals of how make_immutable works to match
+        changes in latest Class::MOP.
 
 0.72 Mon, February 23, 2009
     * Moose::Object

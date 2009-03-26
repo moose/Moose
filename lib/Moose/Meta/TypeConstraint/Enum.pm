@@ -6,7 +6,7 @@ use metaclass;
 
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -82,21 +82,45 @@ __END__
 
 Moose::Meta::TypeConstraint::Enum - Type constraint for enumerated values.
 
+=head1 DESCRIPTION
+
+This class represents type constraints based on an enumerated list of
+acceptable values.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint::Enum> is a subclass of
+L<Moose::Meta::TypeConstraint>.
+
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::TypeConstraint::Enum->new(%options) >>
 
-=item B<equals>
+This creates a new class type constraint based on the given
+C<%options>.
 
-=item B<constraint>
+It takes the same options as its parent, with several
+exceptions. First, it requires an additional option, C<values>. This
+should be an array reference containing a list of valid string
+values. Second, it automatically sets the parent to the C<Str> type.
 
-=item B<values>
+Finally, it ignores any provided C<constraint> option. The constraint
+is generated automatically based on the provided C<values>
 
-=item B<meta>
+=item B<< $constraint->values >>
 
-=item B<create_child_type>
+Returns the array reference of acceptable values provided to the
+constructor.
+
+=item B<< $constraint->create_child_type >>
+
+This returns a new L<Moose::Meta::TypeConstraint> object with the type
+as its parent.
+
+Note that it does I<not> return a C<Moose::Meta::TypeConstraint::Enum>
+object!
 
 =back
 

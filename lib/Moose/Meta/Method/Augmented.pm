@@ -3,7 +3,7 @@ package Moose::Meta::Method::Augmented;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -66,19 +66,42 @@ Moose::Meta::Method::Augmented - A Moose Method metaclass for augmented methods
 
 =head1 DESCRIPTION
 
-This class implements method augmenting logic for the L<Moose> C<augment> keyword.
+This class implements method augmentation logic for the L<Moose>
+C<augment> keyword.
 
-This involves setting up C<inner> for the superclass body, and dispatching to
-the superclass from the normal body.
+The augmentation subroutine reference will be invoked explicitly using
+the C<inner> keyword from the parent class's method definition.
 
-The subclass definition (the augmentation itself) will be invoked explicitly
-using the C<inner> keyword from the parent class's method definition.
+=head1 INHERITANCE
+
+C<Moose::Meta::Method::Augmented> is a subclass of L<Moose::Meta::Method>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::Method::Augmented->new(%options) >>
+
+This constructs a new object. It accepts the following options:
+
+=over 8
+
+=item * class
+
+The metaclass object for the class in which the augmentation is being
+declared. This option is required.
+
+=item * name
+
+The name of the method which we are augmenting. This method must exist
+in one of the class's superclasses. This option is required.
+
+=item * method
+
+The subroutine reference which implements the augmentation. This
+option is required.
+
+=back
 
 =back
 

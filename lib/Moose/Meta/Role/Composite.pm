@@ -6,7 +6,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -86,19 +86,36 @@ Moose::Meta::Role::Composite - An object to represent the set of roles
 
 =head1 DESCRIPTION
 
+A composite is a role that consists of a set of two or more roles.
+
+The API of a composite role is almost identical to that of a regular
+role.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Role::Composite> is a subclass of L<Moose::Meta::Role>.
+
 =head2 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::Role::Composite->new(%options) >>
 
-=item B<meta>
+This returns a new composite role object. It accepts the same
+options as its parent class, with a few changes:
 
-=item B<name>
+=over 8
 
-=item B<get_method_map>
+=item * roles
 
-=item B<add_method>
+This option is an array reference containing a list of
+L<Moose::Meta::Role> object. This is a required option.
+
+=item * name
+
+If a name is not given, one is generated from the roles provided.
+
+=back
 
 =back
 

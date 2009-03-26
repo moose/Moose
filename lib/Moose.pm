@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +15,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.77_01;
+use Class::MOP 0.78_02;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -340,9 +340,9 @@ metaclass programming as well.
 
 =head2 New to Moose?
 
-If you're new to Moose, the best place to start is the L<Moose::Intro>
-docs, followed by the L<Moose::Cookbook>. The intro will show you what
-Moose is, and how it makes Perl 5 OO better.
+If you're new to Moose, the best place to start is the
+L<Moose::Manual> docs, followed by the L<Moose::Cookbook>. The intro
+will show you what Moose is, and how it makes Perl 5 OO better.
 
 The cookbook recipes on Moose basics will get you up to speed with
 many of Moose's features quickly. Once you have an idea of what Moose
@@ -830,7 +830,7 @@ This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
 applied to it. See L<TRAIT NAME RESOLUTION> for more details.
 
-=head1 TRAIT NAME RESOLUTION
+=head2 Trait Name Resolution
 
 By default, when given a trait name, Moose simply tries to load a
 class of the same name. If such a class does not exist, it then looks
@@ -1071,7 +1071,9 @@ the user-visible features. Instead we have made sure that the underlying
 meta-system of Moose is as extensible as possible so that you can add your 
 own features easily. That said, occasionally there is a feature needed in the 
 meta-system to support your planned extension, in which case you should 
-either email the mailing list or join us on irc at #moose to discuss.
+either email the mailing list or join us on irc at #moose to discuss. The
+L<Moose::Manual::Contributing> has more detail about how and when you can
+contribute.
 
 =head1 AUTHOR
 

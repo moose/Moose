@@ -7,7 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,27 +20,36 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
 
 sub new { 
     my ($class, %options) = @_;
+
+    my $name = join '|' => sort { $a cmp $b }
+        map { $_->name } @{ $options{type_constraints} };
+
     my $self = $class->SUPER::new(
-        name     => (join '|' => sort {$a cmp $b}
-                     map { $_->name } @{$options{type_constraints}}),
-        parent   => undef,
-        message  => undef,
-        hand_optimized_type_constraint => undef,
-        compiled_type_constraint => sub {
-            my $value = shift;
-            foreach my $type (@{$options{type_constraints}}) {
-                return 1 if $type->check($value);
-            }
-            return undef;    
-        },
-        %options
+        name => $name,
+        %options,
     );
+
     $self->_set_constraint(sub { $self->check($_[0]) });
     $self->coercion(Moose::Meta::TypeCoercion::Union->new(
         type_constraint => $self
     ));
     return $self;
 }
+
+sub _actually_compile_type_constraint {
+    my $self = shift;
+
+    my @constraints = @{ $self->type_constraints };
+
+    return sub {
+        my $value = shift;
+        foreach my $type (@constraints) {
+            return 1 if $type->check($value);
+        }
+        return undef;
+    };
+}
+
 
 sub equals {
     my ( $self, $type_or_name ) = @_;
@@ -135,77 +144,73 @@ Moose::Meta::TypeConstraint::Union - A union of Moose type constraints
 
 =head1 DESCRIPTION
 
-This metaclass represents a union of Moose type constraints. More 
-details to be explained later (possibly in a Cookbook recipe).
+This metaclass represents a union of type constraints. A union takes
+multiple type constraints, and is true if any one of its member
+constraints is true.
 
-This actually used to be part of Moose::Meta::TypeConstraint, but it 
-is now better off in it's own file. 
+=head1 INHERITANCE
 
-=head1 METHODS
-
-This class is not a subclass of Moose::Meta::TypeConstraint, 
-but it does provide the same API
+C<Moose::Meta::TypeConstraint::Union> is a subclass of
+L<Moose::Meta::TypeConstraint>.
 
 =over 4
 
-=item B<meta>
+=item B<< Moose::Meta::TypeConstraint::Union->new(%options) >>
 
-=item B<new>
+This creates a new class type constraint based on the given
+C<%options>.
 
-=item B<name>
+It takes the same options as its parent. It also requires an
+additional option, C<type_constraints>. This is an array reference
+containing the L<Moose::Meta::TypeConstraint> objects that are the
+members of the union type. The C<name> option defaults to the names
+all of these member types sorted and then joined by a pipe (|).
 
-=item B<type_constraints>
+The constructor sets the implementation of the constraint so that is
+simply calls C<check> on the newly created object.
 
-=item B<parents>
+Finally, the constructor also makes sure that the object's C<coercion>
+attribute is a L<Moose::Meta::TypeCoercion::Union> object.
 
-=item B<constraint>
+=item B<< $constraint->type_constraints >>
 
-=item B<includes_type>
+This returns the array reference of C<type_constraints> provided to
+the constructor.
 
-=item B<equals>
+=item B<< $constraint->parents >>
 
-=back
+This returns the same constraint as the C<type_constraints> method.
 
-=head2 Overridden methods 
+=item B<< $constraint->check($value) >>
 
-=over 4
+=item B<< $constraint->validate($value) >>
 
-=item B<check>
+These two methods simply call the relevant method on each of the
+member type constraints in the union. If any type accepts the value,
+the value is valid.
 
-=item B<coerce>
+With C<validate> the error message returned includes all of the error
+messages returned by the member type constraints.
 
-=item B<validate>
+=item B<< $constraint->equals($type_name_or_object) >>
 
-=item B<is_a_type_of>
+A type is considered equal if it is also a union type, and the two
+unions have the same member types.
 
-=item B<is_subtype_of>
+=item B<< $constraint->is_a_type_of($type_name_or_object) >>
 
-=back
+This returns true if any of the member type constraints return true
+for the C<is_a_type_of> method.
 
-=head2 Empty or Stub methods
+=item B<< $constraint->is_subtype_of >>
 
-These methods tend to not be very relevant in 
-the context of a union. Either that or they are 
-just difficult to specify and not very useful 
-anyway. They are here for completeness.
+This returns true if any of the member type constraints return true
+for the C<is_a_subtype_of> method.
 
-=over 4
+=item B<< $constraint->create_child_type(%options) >>
 
-=item B<parent>
-
-=item B<coercion>
-
-=item B<has_coercion>
-
-=item B<message>
-
-=item B<has_message>
-
-=item B<hand_optimized_type_constraint>
-
-=item B<has_hand_optimized_type_constraint>
-
-=item B<create_child_type>
+This returns a new L<Moose::Meta::TypeConstraint> object with the type
+as its parent.
 
 =back
 

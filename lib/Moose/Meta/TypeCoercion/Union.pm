@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -59,26 +59,25 @@ Moose::Meta::TypeCoercion::Union - The Moose Type Coercion metaclass for Unions
 
 =head1 DESCRIPTION
 
-For the most part, the only time you will ever encounter an 
-instance of this class is if you are doing some serious deep 
-introspection. This API should not be considered final, but 
-it is B<highly unlikely> that this will matter to a regular 
-Moose user.
-
-If you wish to use features at this depth, please come to the 
-#moose IRC channel on irc.perl.org and we can talk :)
-
+This is a subclass of L<Moose::Meta::TypeCoercion> that is used for
+L<Moose::Meta::TypeConstraint::Union> objects.
 =head1 METHODS
 
 =over 4
 
-=item B<meta>
+=item B<< $coercion->has_coercion_for_type >>
 
-=item B<compile_type_coercion>
+This method always returns false.
 
-=item B<has_coercion_for_type>
+=item B<< $coercion->add_type_coercions >>
 
-=item B<add_type_coercions>
+This method always throws an error. You cannot add coercions to a
+union type coercion.
+
+=item B<< $coercion->coerce($value) >>
+
+This method will coerce by trying the coercions for each type in the
+union.
 
 =back
 

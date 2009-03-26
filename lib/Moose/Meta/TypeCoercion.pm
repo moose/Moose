@@ -8,7 +8,7 @@ use metaclass;
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -109,34 +109,66 @@ Moose::Meta::TypeCoercion - The Moose Type Coercion metaclass
 
 =head1 DESCRIPTION
 
-For the most part, the only time you will ever encounter an 
-instance of this class is if you are doing some serious deep 
-introspection. This API should not be considered final, but 
-it is B<highly unlikely> that this will matter to a regular 
-Moose user.
+A type coercion object is basically a mapping of one or more type
+constraints and the associated coercions subroutines.
 
-If you wish to use features at this depth, please come to the 
-#moose IRC channel on irc.perl.org and we can talk :)
+It's unlikely that you will need to instantiate an object of this
+class directly, as it's part of the deep internals of Moose.
 
 =head1 METHODS
 
 =over 4
 
-=item B<meta>
+=item B<< Moose::Meta::TypeCoercion->new(%options) >>
 
-=item B<new>
+Creates a new type coercion object, based on the options provided.
 
-=item B<compile_type_coercion>
+=over 8
 
-=item B<coerce>
+=item * type_constraint
 
-=item B<type_coercion_map>
+This is the L<Moose::Meta::TypeConstraint> object for the type that is
+being coerced I<to>.
 
-=item B<type_constraint>
+=back
 
-=item B<has_coercion_for_type>
+=item B<< $coercion->type_coercion_map >>
 
-=item B<add_type_coercions>
+This returns the map of type constraints to coercions as an array
+reference. The values of the array alternate between type names and
+subroutine references which implement the coercion.
+
+The value is an array reference because coercions are tried in the
+order they are added.
+
+=item B<< $coercion->type_constraint >>
+
+This returns the L<Moose::Meta::TypeConstraint> that was passed to the
+constructor.
+
+=item B<< $coercion->has_coercion_for_type($type_name) >>
+
+Returns true if the coercion can coerce the named type.
+
+=item B<< $coercion->add_type_coercions( $type_name => $sub, ... ) >>
+
+This method takes a list of type names and subroutine references. If
+the coercion already has a mapping for a given type, it throws an
+exception.
+
+Coercions are actually
+
+=item B<< $coercion->coerce($value) >>
+
+This method takes a value and applies the first valid coercion it
+finds.
+
+This means that if the value could belong to more than type in the
+coercion object, the first coercion added is used.
+
+=item B<< Moose::Meta::TypeCoercion->meta >>
+
+This will return a L<Class::MOP::Class> instance for this class.
 
 =back
 

@@ -4,7 +4,7 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -26,16 +26,20 @@ Moose::Meta::Instance - The Moose Instance metaclass
 
 =head1 DESCRIPTION
 
-This class provides the low level data storage abstractions for attributes.
+This class provides the low level data storage abstractions for
+attributes.
 
-Using this API generally violates attribute encapsulation and is not
-recommended, instead look at L<Class::MOP::Attribute/get_value>,
-L<Class::MOP::Attribute/set_value>, etc, as well as L<Moose::Meta::Attribute>
-for the recommended way to fiddle with attribute values in a generic way,
-independent of how/whether accessors have been defined. Accessors can be found
-using L<Class::MOP::Class/get_attribute>.
+Using this API directly in your own code violates encapsulation, and
+we recommend that you use the appropriate APIs in
+L<Moose::Meta::Class> and L<Moose::Meta::Attribute> instead. Those
+APIs in turn call the methods in this class as appropriate.
 
-See the L<Class::MOP::Instance> docs for details on the instance protocol.
+At present, this is an empty subclass of L<Class::MOP::Instance>, so
+you should see that class for all API details.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::Instance> is a subclass of L<Class::MOP::Instance>.
 
 =head1 BUGS
 
@@ -56,6 +60,6 @@ Copyright 2006-2009 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

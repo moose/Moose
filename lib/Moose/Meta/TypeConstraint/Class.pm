@@ -7,7 +7,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -116,31 +116,56 @@ __END__
 
 Moose::Meta::TypeConstraint::Class - Class/TypeConstraint parallel hierarchy
 
+=head1 DESCRIPTION
+
+This class represents type constraints for a class.
+
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint::Class> is a subclass of
+L<Moose::Meta::TypeConstraint>.
+
 =head1 METHODS
 
 =over 4
 
-=item B<new>
+=item B<< Moose::Meta::TypeConstraint::Class->new(%options) >>
 
-=item B<class>
+This creates a new class type constraint based on the given
+C<%options>.
 
-=item B<hand_optimized_type_constraint>
+It takes the same options as its parent, with two exceptions. First,
+it requires an additional option, C<class>, which is name of the
+constraint's class.  Second, it automatically sets the parent to the
+C<Object> type.
 
-=item B<has_hand_optimized_type_constraint>
+The constructor also overrides the hand optimized type constraint with
+one it creates internally.
 
-=item B<equals>
+=item B<< $constraint->class >>
 
-=item B<is_a_type_of>
+Returns the class name associated with the constraint.
 
-=item B<is_subtype_of>
+=item B<< $constraint->parents >>
 
-=item B<parents>
+Returns all the type's parent types, corresponding to its parent
+classes.
 
-Return all the parent types, corresponding to the parent classes.
+=item B<< $constraint->is_subtype_of($type_name_or_object) >>
 
-=item B<meta>
+If the given type is also a class type, then this checks that the
+type's class is a subclass of the other type's class.
 
-=item B<create_child_type>
+Otherwise it falls back to the implementation in
+L<Moose::Meta::TypeConstraint>.
+
+=item B<< $constraint->create_child_type(%options) >>
+
+This returns a new L<Moose::Meta::TypeConstraint> object with the type
+as its parent.
+
+Note that it does I<not> return a
+C<Moose::Meta::TypeConstraint::Class> object!
 
 =back
 

@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.72';
+our $VERSION   = '0.72_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -301,118 +301,150 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 DESCRIPTION
 
-For the most part, the only time you will ever encounter an
-instance of this class is if you are doing some serious deep
-introspection. This API should not be considered final, but
-it is B<highly unlikely> that this will matter to a regular
-Moose user.
+This class represents a single type constraint. Moose's built-in type
+constraints, as well as constraints you define, are all store in a
+L<Moose::Meta::TypeConstraint::Registry> object as objects of this
+class.
 
-If you wish to use features at this depth, please come to the
-#moose IRC channel on irc.perl.org and we can talk :)
+=head1 INHERITANCE
+
+C<Moose::Meta::TypeConstraint> is a subclass of L<Class::MOP::Object>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<meta>
+=item B<< Moose::Meta::TypeConstraint->new(%options) >>
 
-=item B<new>
+This creates a new type constraint based on the provided C<%options>:
 
-=item B<equals ($type_name_or_object)>
+=over 8
 
-This checks the current type against the supplied type (only).
-Returns false if the two types are not equal. It also returns false if
-you provide the type as a name, and the type name isn't found in the
-type registry.
+=item * name
 
-=item B<is_a_type_of ($type_name_or_object)>
+The constraint name. If a name is not provided, it will be set to
+"__ANON__".
 
-This checks the current type against the supplied type, or if the
-current type is a sub-type of the type name or object supplied. It
-also returns false if you provide the type as a name, and the type
-name isn't found in the type registry.
+=item * parent
 
-=item B<is_subtype_of ($type_name_or_object)>
+A C<Moose::Meta::TypeConstraint> object which is the parent type for
+the type being created. This is optional.
 
-This checks the current type is a sub-type of the type name or object
-supplied. It also returns false if you provide the type as a name, and
-the type name isn't found in the type registry.
+=item * constraint
 
-=item B<compile_type_constraint>
+This is the subroutine reference that implements the actual constraint
+check. This defaults to a subroutine which always returns true.
 
-=item B<coerce ($value)>
+=item * message
 
-This will apply the type-coercion if applicable.
+A subroutine reference which is used to generate an error message when
+the constraint fails. This is optional.
 
-=item B<check ($value)>
+=item * coercion
 
-This method will return a true (C<1>) if the C<$value> passes the
-constraint, and false (C<0>) otherwise.
+A L<Moose::Meta::TypeCoercion> object representing the coercions to
+the type. This is optional.
 
-=item B<validate ($value)>
+=item * optimized
 
-This method is similar to C<check>, but it deals with the error
-message. If the C<$value> passes the constraint, C<undef> will be
-returned. If the C<$value> does B<not> pass the constraint, then
-the C<message> will be used to construct a custom error message.
-
-=item B<name>
-
-The name of the type in the global type registry.
-
-=item B<parent>
-
-This type's parent type.
-
-=item B<has_parent>
-
-Returns true if this type has a parent type.
-
-=item B<parents>
-
-Synonym for C<parent>.
-
-=item B<constraint>
-
-Returns this type's constraint.  This is the value of C<where> provided
-when defining a type.
-
-=item B<has_message>
-
-Returns true if this type has a message.
-
-=item B<message>
-
-Returns this type's message.
-
-=item B<get_message ($value)>
-
-Generate message for $value.
-
-=item B<has_coercion>
-
-Returns true if this type has a coercion.
-
-=item B<coercion>
-
-Returns this type's L<Moose::Meta::TypeCoercion> if one exists.
-
-=item B<hand_optimized_type_constraint>
-
-=item B<has_hand_optimized_type_constraint>
-
-=item B<create_child_type>
+This is a variant of the C<constraint> parameter that is somehow
+optimized. Typically, this means incorporating both the type's
+constraint and all of its parents' constraints into a single
+subroutine reference.
 
 =back
 
-=head2 DEPRECATED METHOD
+=item B<< $constraint->equals($type_name_or_object) >>
 
-=over 4
+Returns true if the supplied name or type object is the same as the
+current type.
 
-=item B<union>
+=item B<< $constraint->is_subtype_of($type_name_or_object) >>
 
-This was just bad idea on my part,.. use the L<Moose::Meta::TypeConstraint::Union>
-itself instead.
+Returns true if the supplied name or type object is a parent of the
+current type.
+
+=item B<< $constraint->is_a_type_of($type_name_or_object) >>
+
+Returns true if the given type is the same as the current type, or is
+a parent of the current type. This is a shortcut for checking
+C<equals> and C<is_subtype_of>.
+
+=item B<< $constraint->coerce($value) >>
+
+This will attempt to coerce the value to the type. If the type does
+have any defined coercions this will throw an error.
+
+=item B<< $constraint->check($value) >>
+
+Returns true if the given value passes the constraint for the type.
+
+=item B<< $constraint->validate($value) >>
+
+This is similar to C<check>. However, if the type I<is valid> then the
+method returns an explicit C<undef>. If the type is not valid, we call
+C<< $self->get_message($value) >> internally to generate an error
+message.
+
+=item B<< $constraint->name >>
+
+Returns the type's name, as provided to the constructor.
+
+=item B<< $constraint->parent >>
+
+Returns the type's parent, as provided to the constructor, if any.
+
+=item B<< $constraint->has_parent >>
+
+Returns true if the type has a parent type.
+
+=item B<< $constraint->parents >>
+
+A synonym for C<parent>. This is useful for polymorphism with types
+that can have more than one parent.
+
+=item B<< $constraint->constraint >>
+
+Returns the type's constraint, as provided to the constructor.
+
+=item B<< $constraint->get_message($value) >>
+
+This generates a method for the given value. If the type does not have
+an explicit message, we generate a default message.
+
+=item B<< $constraint->has_message >>
+
+Returns true if the type has a message.
+
+=item B<< $constraint->message >>
+
+Returns the type's message as a subroutine reference.
+
+=item B<< $constraint->coercion >>
+
+Returns the type's L<Moose::Meta::TypeCoercion> object, if one
+exists.
+
+=item B<< $constraint->has_coercion >>
+
+Returns true if the type has a coercion.
+
+=item B<< $constraint->hand_optimized_type_constraint >>
+
+Returns the type's hand optimized constraint, as provided to the
+constructor via the C<optimized> option.
+
+=item B<< $constraint->has_hand_optimized_type_constraint >>
+
+Returns true if the type has an optimized constraint.
+
+=item B<< $constraint->create_child_type(%options) >>
+
+This returns a new type constraint of the same class using the
+provided C<%options>. The C<parent> option will be the current type.
+
+This method exists so that subclasses of this class can override this
+behavior and change how child types are created.
 
 =back
 
