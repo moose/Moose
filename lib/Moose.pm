@@ -830,7 +830,7 @@ This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
 applied to it. See L<TRAIT NAME RESOLUTION> for more details.
 
-=head1 TRAIT NAME RESOLUTION
+=head2 Trait Name Resolution
 
 By default, when given a trait name, Moose simply tries to load a
 class of the same name. If such a class does not exist, it then looks
