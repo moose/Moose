@@ -418,6 +418,8 @@ sub get_method_list {
 }
 
 sub alias_method {
+    warn "The alias_method method is deprecated. Use add_method instead.\n";
+
     my $self = shift;
 
     $self->add_method(@_);
