@@ -142,10 +142,21 @@ L<Moose::Cookbook::Extending::Recipe2> as well.
 
 =item L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented as a metaclass trait
 
-This example takes the class metaclass we saw in the previous recipe
+This recipe takes the class metaclass we saw in the previous recipe
 and reimplements it as a metaclass trait.
 
-=item L<Moose::Cookbook::Meta::Recipe6> - Hooking into the immutabilization system (TODO)
+=item L<Moose::Cookbook::Meta::Recipe6> - A method metaclass for marking methods public or private
+
+This recipe shows a custom method metaclass that implements making a
+method private.
+
+=item L<Moose::Cookbook::Meta::Recipe7> - Using a blessed array reference as an object instance
+
+This recipe shows an example of how you create your own meta-instance
+class. The meta-instance determines the internal structure of object
+instances and provide access to attribute slots.
+
+=item L<Moose::Cookbook::Meta::Recipe8> - Hooking into immutabilization (TODO)
 
 Moose has a feature known as "immutabilization". By calling C<<
 __PACKAGE__->meta()->make_immutable() >> after defining your class
@@ -159,12 +170,6 @@ meta-instance class as well.
 
 This recipe shows you how to write extensions which immutabilize
 properly.
-
-=item L<Moose::Cookbook::Meta::Recipe7> - Using a blessed array reference as an object instance
-
-This recipe shows an example of how you create your own meta-instance
-class. The meta-instance determines the internal structure of object
-instances and provide access to attribute slots.
 
 =back
 
