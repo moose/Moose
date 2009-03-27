@@ -362,19 +362,20 @@ sub maybe_type {
 }
 
 sub duck_type {
-    my ($type_name, @methods) = @_;
+    my ( $type_name, @methods ) = @_;
     if ( ref $type_name eq 'ARRAY' && !@methods ) {
-        @methods    = @$type_name;
+        @methods   = @$type_name;
         $type_name = undef;
     }
 
     register_type_constraint(
         _create_type_constraint(
-            $type_name, 'Object',
+            $type_name,
+            'Object',
             sub {
                 my $obj = $_;
-                my @missing_methods = grep { !$obj->can($_) } @methods;
-                return ! scalar @missing_methods;
+                for (@methods) { return 0 unless $obj->can($_) }
+                return 1;
             },
             sub {
                 my $obj = $_;
