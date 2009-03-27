@@ -374,7 +374,7 @@ sub duck_type {
             'Object',
             sub {
                 my $obj = $_;
-                for (@methods) { return 0 unless $obj->can($_) }
+                return 0 unless all { $obj->can($_) } @methods;
                 return 1;
             },
             sub {
