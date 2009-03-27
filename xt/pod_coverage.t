@@ -37,8 +37,6 @@ my %trustme = (
     ],
     'Moose::Meta::Method::Constructor' => [
         qw( attributes
-            generate_constructor_method
-            generate_constructor_method_inline
             initialize_body
             meta_instance
             new
