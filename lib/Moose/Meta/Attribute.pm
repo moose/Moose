@@ -481,19 +481,11 @@ sub set_value {
         $self->throw_error("Attribute ($attr_name) is required", object => $instance);
     }
 
-    if ($self->has_type_constraint) {
-
-        my $type_constraint = $self->type_constraint;
-
-        if ($self->should_coerce) {
-            $value = $type_constraint->coerce($value);
-        }        
-        $type_constraint->_compiled_type_constraint->($value)
-            || $self->throw_error("Attribute (" 
-                     . $self->name 
-                     . ") does not pass the type constraint because " 
-                     . $type_constraint->get_message($value), object => $instance, data => $value);
+    my $type_constraint = $self->type_constraint;
+    if ($self->should_coerce && $type_constraint->has_coercion) {
+        $value = $type_constraint->coerce($value);
     }
+    $self->verify_against_type_constraint($value, instance => $instance);
 
     my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
                                          ->get_meta_instance;
