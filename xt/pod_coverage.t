@@ -20,7 +20,6 @@ my %trustme = (
         qw( check_metaclass_compatibility
             construct_instance
             create_error
-            create_immutable_transformer
             raise_error
             )
     ],
@@ -69,14 +68,20 @@ my %trustme = (
             super
             with )
     ],
+    'Moose::Meta::TypeCoercion' => ['compile_type_coercion'],
     'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
     'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint', 'union' ],
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
+    'Moose::Meta::TypeConstraint::Enum' =>
+        [qw( constraint equals )],
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
+    'Moose::Meta::TypeConstraint::Role' =>
+        [qw( equals is_a_type_of )],
     'Moose::Meta::TypeConstraint::Union' => ['compile_type_constraint'],
     'Moose::Util'                        => ['add_method_modifier'],
+    'Moose::Util::TypeConstraints'       => ['find_or_create_type_constraint'],
 );
 
 for my $module ( sort @modules ) {
