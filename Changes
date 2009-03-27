@@ -1,5 +1,12 @@
 Revision history for Perl extension Moose
 
+0.75
+    * Moose::Meta::Method::Accessor
+      - If an attribute had a lazy default, and that value did not
+        pass the attribute's type constraint, it did not get the
+        message from the type constraint, instead using a generic
+        message. Test provided by perigrin.
+
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
 
