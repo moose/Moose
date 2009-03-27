@@ -9,7 +9,8 @@ Revision history for Perl extension Moose
 
     * Moose::Util::TypeConstraints
       - Add duck_type keyword. It's sugar over making sure an object
-        can() a list of methods. (perigrin)
+        can() a list of methods. This is easier than jrockway's suggestion
+        to fork all of CPAN. (perigrin)
         - add tests and documentation (perigrin)
 
 0.73 Fri, March 29, 2009
