@@ -1094,6 +1094,11 @@ L<Moose::Meta::TypeConstraint::Role> object for that role name.
 The C<$options> is a hash reference that will be passed to the
 L<Moose::Meta::TypeConstraint::Role> constructor (as a hash).
 
+=item B<create_enum_type_constraint($name, $values)>
+
+Given a enum name this function will create a new
+L<Moose::Meta::TypeConstraint::Enum> object for that enum name.
+
 =item B<find_or_parse_type_constraint($type_name)>
 
 Given a type name, this first attempts to find a matching constraint
