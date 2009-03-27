@@ -16,6 +16,12 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.74
+
+Added a C<duck_type> keyword to L<Moose::Util::TypeConstraints> to make
+integration with non-Moose classes easier. It simply checks if $obj->can() 
+a list of methods.
+
 =head1 Version 0.73
 
 Calling C<subtype> with a name as the only argument now throws an

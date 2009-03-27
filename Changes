@@ -1,11 +1,16 @@
 Revision history for Perl extension Moose
 
-0.75
+0.74
     * Moose::Meta::Method::Accessor
       - If an attribute had a lazy default, and that value did not
         pass the attribute's type constraint, it did not get the
         message from the type constraint, instead using a generic
         message. Test provided by perigrin.
+
+    * Moose::Util::TypeConstraints
+      - Add duck_type keyword. It's sugar over making sure an object
+        can() a list of methods. (perigrin)
+        - add tests and documentation (perigrin)
 
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
