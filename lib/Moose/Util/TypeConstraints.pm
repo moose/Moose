@@ -998,19 +998,23 @@ given type.
 
 =item B<duck_type ($name, @methods)>
 
-This will create a subtype of Object and test to make sure the value C<can()>
-do the methods in C<@methods>
+This will create a subtype of Object and test to make sure the value
+C<can()> do the methods in C<@methods>.
+
+This is intended as an easy way to accept non-Moose objects that
+provide a certain interface. If you're using Moose classes, we
+recommend that you use a C<requires>-only Role instead.
 
 =item B<duck_type (\@methods)>
 
-If passed an ARRRAY reference instead of the C<$name>, C<@methods> pair, this
-will create an unnamed duck type. This can be used in an attribute definiton
-like so:
+If passed an ARRAY reference instead of the C<$name>, C<@methods>
+pair, this will create an unnamed duck type. This can be used in an
+attribute definiton like so:
 
-    has 'cache' => (
-        is  => 'ro',
-        isa => duck_type([qw[ get_set ]]),
-    );
+  has 'cache' => (
+      is  => 'ro',
+      isa => duck_type( [qw( get_set )] ),
+  );
 
 =item B<enum ($name, @values)>
 
