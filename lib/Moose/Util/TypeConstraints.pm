@@ -996,6 +996,22 @@ metaclass L<Moose::Meta::TypeConstraint::Role>.
 Creates a type constraint for either C<undef> or something of the
 given type.
 
+=item B<duck_type ($name, @methods)>
+
+This will create a subtype of Object and test to make sure the value C<can()>
+do the methods in C<@methods>
+
+=item B<duck_type (\@methods)>
+
+If passed an ARRRAY reference instead of the C<$name>, C<@methods> pair, this
+will create an unnamed duck type. This can be used in an attribute definiton
+like so:
+
+    has 'cache' => (
+        is  => 'ro',
+        isa => duck_type([qw[ get_set ]]),
+    );
+
 =item B<enum ($name, @values)>
 
 This will create a basic subtype for a given set of strings.
