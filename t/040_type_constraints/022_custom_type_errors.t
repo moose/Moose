@@ -25,9 +25,7 @@ use Test::Exception;
         isa     => 'NaturalLessThanTen',
         lazy    => 1,
         default => 0,
-
     );
-
 }
 
 lives_ok { my $goat = Animal->new( leg_count => 4 ) }
