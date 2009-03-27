@@ -3,7 +3,7 @@ package Moose::Util::MetaRole;
 use strict;
 use warnings;
 
-our $VERSION   = '0.72_01';
+our $VERSION   = '0.73';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

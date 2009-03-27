@@ -7,7 +7,7 @@ use metaclass;
 use Moose::Util  'english_list';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.72_01';
+our $VERSION   = '0.73';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+0.73 Fri, March 29, 2009
+    * No changes from 0.72_01.
+
 0.72_01 Thu, March 26, 2009
     * Everything
       - Almost every module has complete API documentation. A few

@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.72_01';
+our $VERSION   = '0.73';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
