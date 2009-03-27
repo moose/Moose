@@ -403,13 +403,7 @@ sub initialize_instance_slot {
 
     return unless $value_is_set;
 
-    if ($self->has_type_constraint) {
-        my $type_constraint = $self->type_constraint;
-        if ($self->should_coerce && $type_constraint->has_coercion) {
-            $val = $type_constraint->coerce($val);
-        }
-        $self->verify_against_type_constraint($val, instance => $instance);
-    }
+    $val = $self->_coerce_and_verify( $val, $instance );
 
     $self->set_initial_value($instance, $val);
     $meta_instance->weaken_slot_value($instance, $self->name)
@@ -456,12 +450,8 @@ sub _set_initial_slot_value {
     }
 
     my $callback = sub {
-        my $val = shift;
-        if ($type_constraint) {
-            $val = $type_constraint->coerce($val)
-                if $can_coerce;
-            $self->verify_against_type_constraint($val, object => $instance);
-        }
+        my $val = $self->_coerce_and_verify( shift, $instance );;
+
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
     
@@ -481,11 +471,7 @@ sub set_value {
         $self->throw_error("Attribute ($attr_name) is required", object => $instance);
     }
 
-    my $type_constraint = $self->type_constraint;
-    if ($self->should_coerce && $type_constraint->has_coercion) {
-        $value = $type_constraint->coerce($value);
-    }
-    $self->verify_against_type_constraint($value, instance => $instance);
+    $value = $self->_coerce_and_verify( $value, $instance );
 
     my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
                                          ->get_meta_instance;
@@ -512,12 +498,9 @@ sub get_value {
             } elsif ( $self->has_builder ) {
                 $value = $self->_call_builder($instance);
             }
-            if ($self->has_type_constraint) {
-                my $type_constraint = $self->type_constraint;
-                $value = $type_constraint->coerce($value)
-                    if ($self->should_coerce);
-                $self->verify_against_type_constraint($value);
-            }
+
+            $value = $self->_coerce_and_verify( $value, $instance );
+
             $self->set_initial_value($instance, $value);
         }
     }
@@ -709,6 +692,23 @@ sub _make_delegation_method {
         attribute          => $self,
         delegate_to_method => $method_to_call,
     );
+}
+
+sub _coerce_and_verify {
+    my $self     = shift;
+    my $val      = shift;
+    my $instance = shift;
+
+    return $val unless $self->has_type_constraint;
+
+    my $type_constraint = $self->type_constraint;
+    if ($self->should_coerce && $type_constraint->has_coercion) {
+        $val = $type_constraint->coerce($val);
+    }
+
+    $self->verify_against_type_constraint($val, instance => $instance);
+
+    return $val;
 }
 
 sub verify_against_type_constraint {
