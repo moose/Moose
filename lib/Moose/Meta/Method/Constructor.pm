@@ -42,7 +42,7 @@ sub new {
     # needed
     weaken($self->{'associated_metaclass'});
 
-    $self->initialize_body;
+    $self->_initialize_body;
 
     return $self;
 }
@@ -133,7 +133,7 @@ sub _generate_slot_initializers {
     } 0 .. (@{$self->attributes} - 1)) . ";\n";
 }
 
-sub initialize_body {
+sub _initialize_body {
     my $self = shift;
     # TODO:
     # the %options should also include a both
