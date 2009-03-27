@@ -18,9 +18,9 @@ send us a patch.
 
 =head1 Version 0.74
 
-Added a C<duck_type> keyword to L<Moose::Util::TypeConstraints> to make
-integration with non-Moose classes easier. It simply checks if $obj->can() 
-a list of methods.
+Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
+to make integration with non-Moose classes easier. It simply checks if
+C<< $obj->can() >> a list of methods.
 
 =head1 Version 0.73
 
