@@ -88,7 +88,7 @@ sub is_subtype_of {
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch
-        return $self->role->meta->does_role( $type->role );
+        return Class::MOP::class_of($self->role)->does_role( $type->role );
     } else {
         # the only other thing we are a subtype of is Object
         $self->SUPER::is_subtype_of($type);
