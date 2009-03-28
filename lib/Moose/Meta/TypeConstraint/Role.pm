@@ -50,7 +50,7 @@ sub parents {
             Moose::Util::TypeConstraints::find_type_constraint($_) 
                 || 
             __PACKAGE__->new( role => $_, name => "__ANON__" )
-        } @{ $self->role->meta->get_roles },
+        } @{ Class::MOP::class_of($self->role)->get_roles },
     );
 }
 
