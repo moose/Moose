@@ -121,11 +121,14 @@ sub calculate_all_roles {
 
 sub does_role {
     my ($self, $role_name) = @_;
+
     (defined $role_name)
         || $self->throw_error("You must supply a role name to look for");
+
     foreach my $class ($self->class_precedence_list) {
-        next unless $class->can('meta') && $class->meta->can('roles');
-        foreach my $role (@{$class->meta->roles}) {
+        my $meta = Class::MOP::class_of($class);
+        next unless $meta && $meta->can('roles');
+        foreach my $role (@{$meta->roles}) {
             return 1 if $role->does_role($role_name);
         }
     }
