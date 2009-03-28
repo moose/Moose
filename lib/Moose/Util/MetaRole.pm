@@ -77,7 +77,7 @@ sub apply_base_class_roles {
 
     my $for = $options{for_class};
 
-    my $meta = $for->meta();
+    my $meta = Class::MOP::class_of($for);
 
     my $new_base = _make_new_class(
         $for,
