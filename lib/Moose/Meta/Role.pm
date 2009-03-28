@@ -256,7 +256,7 @@ sub update_package_cache_flag {
 ## ------------------------------------------------------------------
 ## subroles
 
-__PACKAGE__->meta->add_attribute('roles' => (
+$META->add_attribute('roles' => (
     reader  => 'get_roles',
     default => sub { [] }
 ));
