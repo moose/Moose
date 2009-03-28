@@ -462,7 +462,7 @@ sub _all_roles_until {
 sub _reconcile_role_differences {
     my ($self, $super_meta) = @_;
 
-    my $self_meta = $self->meta;
+    my $self_meta = Class::MOP::class_of($self);
 
     my %roles;
 
