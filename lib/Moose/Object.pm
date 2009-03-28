@@ -40,7 +40,7 @@ sub BUILDALL {
     # extra meta level calls
     return unless $_[0]->can('BUILD');    
     my ($self, $params) = @_;
-    foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
+    foreach my $method (reverse Class::MOP::class_of($self)->find_all_methods_by_name('BUILD')) {
         $method->{code}->execute($self, $params);
     }
 }
