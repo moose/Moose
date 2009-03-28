@@ -127,6 +127,10 @@ sub does_role {
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
+        # when a Moose metaclass is itself extended with a role,
+        # this check needs to be done since some items in the
+        # class_precedence_list might in fact be Class::MOP
+        # based still.
         next unless $meta && $meta->can('roles');
         foreach my $role (@{$meta->roles}) {
             return 1 if $role->does_role($role_name);
