@@ -1,6 +1,11 @@
 Revision history for Perl extension Moose
 
 0.74
+    * Moose::*
+      - Call user_class->meta in fewer places, with the eventual
+        goal of allowing the user to rename or exclude ->meta
+        altogether. Instead uses Class::MOP::class_of. (Sartak)
+
     * Moose::Meta::Method::Accessor
       - If an attribute had a lazy default, and that value did not
         pass the attribute's type constraint, it did not get the
