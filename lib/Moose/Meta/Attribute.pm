@@ -638,13 +638,9 @@ sub _canonicalize_handles {
 sub _find_delegate_metaclass {
     my $self = shift;
     if (my $class = $self->_isa_metadata) {
-        # if the class does have
-        # a meta method, use it
-        return $class->meta if $class->can('meta');
-        # otherwise we might be
-        # dealing with a non-Moose
-        # class, and need to make
-        # our own metaclass
+        # we might be dealing with a non-Moose class,
+        # and need to make our own metaclass. if there's
+        # already a metaclass, it will be returned
         return Moose::Meta::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
