@@ -51,7 +51,7 @@ sub DEMOLISHALL {
     # need to do this first, to avoid
     # extra meta level calls    
     return unless $self->can('DEMOLISH');
-    foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
+    foreach my $method (Class::MOP::class_of($self)->find_all_methods_by_name('DEMOLISH')) {
         $method->{code}->execute($self);
     }
 }
