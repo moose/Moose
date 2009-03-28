@@ -87,8 +87,7 @@ sub apply_all_roles {
     }
 
     foreach my $role (@$roles) {
-        unless ( $role->[0]->can('meta')
-            && $role->[0]->meta->isa('Moose::Meta::Role') ) {
+        unless (Class::MOP::class_of($role->[0])->isa('Moose::Meta::Role') ) {
 
             require Moose;
             Moose->throw_error( "You can only consume roles, "
