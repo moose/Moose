@@ -623,13 +623,10 @@ sub _canonicalize_handles {
         Class::MOP::load_class($handles) 
             unless Class::MOP::is_class_loaded($handles);
             
-        my $role_meta = eval { $handles->meta };
-        if ($@) {
-            $self->throw_error("Unable to canonicalize the 'handles' option with $handles because : $@", data => $handles, error => $@);
-        }
+        my $role_meta = Class::MOP::class_of($handles);
 
         (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
-            || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because ->meta is not a Moose::Meta::Role", data => $handles);
+            || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
             
         return map { $_ => $_ } (
             $role_meta->get_method_list,
