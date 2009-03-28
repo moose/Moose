@@ -57,7 +57,7 @@ sub is_needed {
         || $self->throw_error(
         "The is_needed method expected a metaclass object as its arugment");
 
-    return $metaclass->meta->can('DEMOLISH');
+    return Class::MOP::class_of($metaclass)->can('DEMOLISH');
 }
 
 sub initialize_body {

@@ -298,7 +298,7 @@ sub _apply_meta_traits {
 
     return unless @{$traits};
 
-    my $meta = $class->meta();
+    my $meta = Class::MOP::class_of($class);
 
     my $type = ( split /::/, ref $meta )[-1]
         or Moose->throw_error(

@@ -56,11 +56,9 @@ sub extends {
 
     my @supers = @_;
     foreach my $super (@supers) {
-        Class::MOP::load_class($super);
+        my $meta = Class::MOP::load_class($super);
         Moose->throw_error("You cannot inherit from a Moose Role ($super)")
-            if $super->can('meta')  && 
-               blessed $super->meta &&
-               $super->meta->isa('Moose::Meta::Role')
+            if $meta && $meta->isa('Moose::Meta::Role')
     }
 
 

@@ -256,7 +256,7 @@ sub update_package_cache_flag {
 ## ------------------------------------------------------------------
 ## subroles
 
-__PACKAGE__->meta->add_attribute('roles' => (
+$META->add_attribute('roles' => (
     reader  => 'get_roles',
     default => sub { [] }
 ));
@@ -323,18 +323,10 @@ sub get_method_map {
                         $map->{$symbol}->body == $code;
 
         my ($pkg, $name) = Class::MOP::get_code_info($code);
+        my $meta = Class::MOP::class_of($pkg);
 
-        if ($pkg->can('meta')
-            # NOTE:
-            # we don't know what ->meta we are calling
-            # here, so we need to be careful cause it
-            # just might blow up at us, or just complain
-            # loudly (in the case of Curses.pm) so we
-            # just be a little overly cautious here.
-            # - SL
-            && eval { no warnings; blessed($pkg->meta) } # FIXME calls meta
-            && $pkg->meta->isa('Moose::Meta::Role')) {
-            my $role = $pkg->meta->name;
+        if ($meta && $meta->isa('Moose::Meta::Role')) {
+            my $role = $meta->name;
             next unless $self->does_role($role);
         }
         else {
@@ -464,7 +456,7 @@ sub combine {
     my (@roles, %role_params);
     while (@role_specs) {
         my ($role, $params) = @{ splice @role_specs, 0, 1 };
-        push @roles => $role->meta;
+        push @roles => Class::MOP::class_of($role);
         next unless defined $params;
         $role_params{$role} = $params; 
     }

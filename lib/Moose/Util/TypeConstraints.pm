@@ -598,7 +598,7 @@ $_->make_immutable(
     # these are Class::MOP accessors, so they need inlining
     inline_accessors => 1
     ) for grep { $_->is_mutable }
-    map { $_->meta }
+    map { Class::MOP::class_of($_) }
     qw(
     Moose::Meta::TypeConstraint
     Moose::Meta::TypeConstraint::Union
@@ -670,8 +670,7 @@ subtype 'ClassName' => as 'Str' =>
     \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
 
 subtype 'RoleName' => as 'ClassName' => where {
-    ( ( $_->can('meta') || return )->($_) || return )
-        ->isa('Moose::Meta::Role');
+    (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
 } => optimize_as
     \&Moose::Util::TypeConstraints::OptimizedConstraints::RoleName;
 

@@ -50,7 +50,7 @@ sub parents {
             Moose::Util::TypeConstraints::find_type_constraint($_) 
                 || 
             __PACKAGE__->new( role => $_, name => "__ANON__" )
-        } @{ $self->role->meta->get_roles },
+        } @{ Class::MOP::class_of($self->role)->get_roles },
     );
 }
 
@@ -78,7 +78,7 @@ sub is_subtype_of {
 
     if ( not ref $type_or_name_or_role ) {
         # it might be a role
-        return 1 if $self->role->meta->does_role( $type_or_name_or_role );
+        return 1 if Class::MOP::class_of($self->role)->does_role( $type_or_name_or_role );
     }
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
@@ -88,7 +88,7 @@ sub is_subtype_of {
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch
-        return $self->role->meta->does_role( $type->role );
+        return Class::MOP::class_of($self->role)->does_role( $type->role );
     } else {
         # the only other thing we are a subtype of is Object
         $self->SUPER::is_subtype_of($type);

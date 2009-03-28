@@ -16,8 +16,9 @@ sub apply_metaclass_roles {
 
     my $for = $options{for_class};
 
-    my %old_classes
-        = map { $_ => $for->meta->$_ } grep { $for->meta->can($_) } @Classes;
+    my %old_classes = map { $_ => Class::MOP::class_of($for)->$_ }
+                      grep { Class::MOP::class_of($for)->can($_) }
+                      @Classes;
 
     my $meta = _make_new_metaclass( $for, \%options );
 
@@ -42,7 +43,7 @@ sub _make_new_metaclass {
     my $for     = shift;
     my $options = shift;
 
-    return $for->meta()
+    return Class::MOP::class_of($for)
         unless grep { exists $options->{ $_ . '_roles' } }
             qw(
             metaclass
@@ -52,10 +53,9 @@ sub _make_new_metaclass {
             instance_metaclass
     );
 
+    my $old_meta = Class::MOP::class_of($for);
     my $new_metaclass
-        = _make_new_class( ref $for->meta(), $options->{metaclass_roles} );
-
-    my $old_meta = $for->meta();
+        = _make_new_class( ref $old_meta, $options->{metaclass_roles} );
 
     # This could get called for a Moose::Meta::Role as well as a Moose::Meta::Class
     my %classes = map {
@@ -77,7 +77,7 @@ sub apply_base_class_roles {
 
     my $for = $options{for_class};
 
-    my $meta = $for->meta();
+    my $meta = Class::MOP::class_of($for);
 
     my $new_base = _make_new_class(
         $for,

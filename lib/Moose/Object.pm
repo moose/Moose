@@ -4,6 +4,8 @@ package Moose::Object;
 use strict;
 use warnings;
 
+use Scalar::Util;
+
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
@@ -13,9 +15,16 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
+
     my $params = $class->BUILDARGS(@_);
-    my $self = $class->meta->new_object($params);
+
+    # We want to support passing $self->new, but initialize
+    # takes only an unblessed class name
+    my $real_class = Scalar::Util::blessed($class) || $class;
+    my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
+
     $self->BUILDALL($params);
+
     return $self;
 }
 
@@ -23,7 +32,7 @@ sub BUILDARGS {
     my $class = shift;
     if ( scalar @_ == 1 ) {
         unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            $class->meta->throw_error(
+            Class::MOP::class_of($class)->throw_error(
                 "Single parameters to new() must be a HASH ref",
                 data => $_[0] );
         }
@@ -40,7 +49,7 @@ sub BUILDALL {
     # extra meta level calls
     return unless $_[0]->can('BUILD');    
     my ($self, $params) = @_;
-    foreach my $method (reverse $self->meta->find_all_methods_by_name('BUILD')) {
+    foreach my $method (reverse Class::MOP::class_of($self)->find_all_methods_by_name('BUILD')) {
         $method->{code}->execute($self, $params);
     }
 }
@@ -51,7 +60,7 @@ sub DEMOLISHALL {
     # need to do this first, to avoid
     # extra meta level calls    
     return unless $self->can('DEMOLISH');
-    foreach my $method ($self->meta->find_all_methods_by_name('DEMOLISH')) {
+    foreach my $method (Class::MOP::class_of($self)->find_all_methods_by_name('DEMOLISH')) {
         $method->{code}->execute($self);
     }
 }
@@ -84,7 +93,7 @@ BEGIN {
 # as appropiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
-    my $meta = $self->meta;
+    my $meta = Class::MOP::class_of($self);
     (defined $role_name)
         || $meta->throw_error("You much supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {

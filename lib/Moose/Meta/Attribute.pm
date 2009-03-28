@@ -248,7 +248,7 @@ sub clone {
 
     my ( @init, @non_init );
 
-    foreach my $attr ( grep { $_->has_value($self) } $self->meta->compute_all_applicable_attributes ) {
+    foreach my $attr ( grep { $_->has_value($self) } Class::MOP::class_of($self)->compute_all_applicable_attributes ) {
         push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
     }
 
@@ -623,13 +623,10 @@ sub _canonicalize_handles {
         Class::MOP::load_class($handles) 
             unless Class::MOP::is_class_loaded($handles);
             
-        my $role_meta = eval { $handles->meta };
-        if ($@) {
-            $self->throw_error("Unable to canonicalize the 'handles' option with $handles because : $@", data => $handles, error => $@);
-        }
+        my $role_meta = Class::MOP::class_of($handles);
 
         (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
-            || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because ->meta is not a Moose::Meta::Role", data => $handles);
+            || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
             
         return map { $_ => $_ } (
             $role_meta->get_method_list,
@@ -641,19 +638,13 @@ sub _canonicalize_handles {
 sub _find_delegate_metaclass {
     my $self = shift;
     if (my $class = $self->_isa_metadata) {
-        # if the class does have
-        # a meta method, use it
-        return $class->meta if $class->can('meta');
-        # otherwise we might be
-        # dealing with a non-Moose
-        # class, and need to make
-        # our own metaclass
+        # we might be dealing with a non-Moose class,
+        # and need to make our own metaclass. if there's
+        # already a metaclass, it will be returned
         return Moose::Meta::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
-        # our role will always have
-        # a meta method
-        return $role->meta;
+        return Class::MOP::class_of($role);
     }
     else {
         $self->throw_error("Cannot find delegate metaclass for attribute " . $self->name);

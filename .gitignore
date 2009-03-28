@@ -7,3 +7,4 @@ blib/
 inc/
 pm_to_blib
 t/000_recipes/*
+.prove

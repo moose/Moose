@@ -121,11 +121,18 @@ sub calculate_all_roles {
 
 sub does_role {
     my ($self, $role_name) = @_;
+
     (defined $role_name)
         || $self->throw_error("You must supply a role name to look for");
+
     foreach my $class ($self->class_precedence_list) {
-        next unless $class->can('meta') && $class->meta->can('roles');
-        foreach my $role (@{$class->meta->roles}) {
+        my $meta = Class::MOP::class_of($class);
+        # when a Moose metaclass is itself extended with a role,
+        # this check needs to be done since some items in the
+        # class_precedence_list might in fact be Class::MOP
+        # based still.
+        next unless $meta && $meta->can('roles');
+        foreach my $role (@{$meta->roles}) {
             return 1 if $role->does_role($role_name);
         }
     }
@@ -134,17 +141,18 @@ sub does_role {
 
 sub excludes_role {
     my ($self, $role_name) = @_;
+
     (defined $role_name)
         || $self->throw_error("You must supply a role name to look for");
+
     foreach my $class ($self->class_precedence_list) {
-        next unless $class->can('meta');
-        # NOTE:
-        # in the pretty rare instance when a Moose metaclass
-        # is itself extended with a role, this check needs to
-        # be done since some items in the class_precedence_list
-        # might in fact be Class::MOP based still.
-        next unless $class->meta->can('roles');
-        foreach my $role (@{$class->meta->roles}) {
+        my $meta = Class::MOP::class_of($class);
+        # when a Moose metaclass is itself extended with a role,
+        # this check needs to be done since some items in the
+        # class_precedence_list might in fact be Class::MOP
+        # based still.
+        next unless $meta && $meta->can('roles');
+        foreach my $role (@{$meta->roles}) {
             return 1 if $role->excludes_role($role_name);
         }
     }
@@ -287,7 +295,7 @@ my @MetaClassTypes =
 sub _reconcile_with_superclass_meta {
     my ($self, $super) = @_;
 
-    my $super_meta = $super->meta;
+    my $super_meta = Class::MOP::class_of($super);
 
     my $super_meta_name
         = $super_meta->is_immutable
@@ -454,7 +462,7 @@ sub _all_roles_until {
 sub _reconcile_role_differences {
     my ($self, $super_meta) = @_;
 
-    my $self_meta = $self->meta;
+    my $self_meta = Class::MOP::class_of($self);
 
     my %roles;
 
