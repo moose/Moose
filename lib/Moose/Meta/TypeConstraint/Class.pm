@@ -52,7 +52,7 @@ sub parents {
             Moose::Util::TypeConstraints::find_type_constraint($_) 
                 || 
             __PACKAGE__->new( class => $_, name => "__ANON__" )
-        } $self->class->meta->superclasses,
+        } Class::MOP::class_of($self->class)->superclasses,
     );
 }
 
