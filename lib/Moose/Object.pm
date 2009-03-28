@@ -23,7 +23,7 @@ sub BUILDARGS {
     my $class = shift;
     if ( scalar @_ == 1 ) {
         unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            $class->meta->throw_error(
+            Class::MOP::class_of($class)->throw_error(
                 "Single parameters to new() must be a HASH ref",
                 data => $_[0] );
         }
