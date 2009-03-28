@@ -456,7 +456,7 @@ sub combine {
     my (@roles, %role_params);
     while (@role_specs) {
         my ($role, $params) = @{ splice @role_specs, 0, 1 };
-        push @roles => $role->meta;
+        push @roles => Class::MOP::class_of($role);
         next unless defined $params;
         $role_params{$role} = $params; 
     }
