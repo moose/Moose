@@ -1,5 +1,8 @@
 Revision history for Perl extension Moose
 
+See also Moose::Manual::Delta for more details of and workarounds
+for noteworthy changes.
+
 0.74
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual
