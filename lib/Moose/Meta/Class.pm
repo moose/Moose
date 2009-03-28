@@ -137,17 +137,18 @@ sub does_role {
 
 sub excludes_role {
     my ($self, $role_name) = @_;
+
     (defined $role_name)
         || $self->throw_error("You must supply a role name to look for");
+
     foreach my $class ($self->class_precedence_list) {
-        next unless $class->can('meta');
-        # NOTE:
-        # in the pretty rare instance when a Moose metaclass
-        # is itself extended with a role, this check needs to
-        # be done since some items in the class_precedence_list
-        # might in fact be Class::MOP based still.
-        next unless $class->meta->can('roles');
-        foreach my $role (@{$class->meta->roles}) {
+        my $meta = Class::MOP::class_of($class);
+        # when a Moose metaclass is itself extended with a role,
+        # this check needs to be done since some items in the
+        # class_precedence_list might in fact be Class::MOP
+        # based still.
+        next unless $meta && $meta->can('roles');
+        foreach my $role (@{$meta->roles}) {
             return 1 if $role->excludes_role($role_name);
         }
     }
