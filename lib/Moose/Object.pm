@@ -84,7 +84,7 @@ BEGIN {
 # as appropiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
-    my $meta = $self->meta;
+    my $meta = Class::MOP::class_of($self);
     (defined $role_name)
         || $meta->throw_error("You much supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
