@@ -16,8 +16,9 @@ sub apply_metaclass_roles {
 
     my $for = $options{for_class};
 
-    my %old_classes
-        = map { $_ => $for->meta->$_ } grep { $for->meta->can($_) } @Classes;
+    my %old_classes = map { $_ => Class::MOP::class_of($for)->$_ }
+                      grep { Class::MOP::class_of($for)->can($_) }
+                      @Classes;
 
     my $meta = _make_new_metaclass( $for, \%options );
 
