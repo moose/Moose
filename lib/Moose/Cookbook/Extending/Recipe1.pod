@@ -196,6 +196,9 @@ subclasses:
       );
   }
 
+NOTE: Make sure that your C<init_meta> returns the metaclass object, just as
+C<< Moose->init_meta >> does.
+
 =head2 Extensions as Metaclass (and Base Object) Roles
 
 Implementing your extensions as metaclass roles makes your extensions

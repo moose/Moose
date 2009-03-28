@@ -22,12 +22,14 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
       shift;
       my %options = @_;
 
-      Moose->init_meta(%options);
+      my $meta = Moose->init_meta(%options);
 
       Moose::Util::MetaRole::apply_base_class_roles(
           for_class => $options{for_class},
           roles     => ['MooseX::Debugging::Role::Object'],
       );
+
+      return $meta;
   }
 
   package MooseX::Debugging::Role::Object;

@@ -13,6 +13,18 @@ Revision history for Perl extension Moose
         to fork all of CPAN. (perigrin)
         - add tests and documentation (perigrin)
 
+    * Moose
+      - Document the fact that init_meta() returns the target class' metaclass
+        object. (Dieter Pearcey)
+
+    * Moose::Cookbook::Extending::Recipe1
+    * Moose::Cookbook::Extending::Recipe2
+    * Moose::Cookbook::Extending::Recipe3
+    * Moose::Cookbook::Extending::Recipe4
+      - Make init_meta() examples explicitly return the metaclass and point out
+        this fact. (Dieter Pearcey)
+
+
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
 

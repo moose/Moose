@@ -22,7 +22,7 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
 
   sub init_meta {
       shift;
-      Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
+      return Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
   }
 
   sub has_table {

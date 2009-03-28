@@ -37,7 +37,7 @@ Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
 
   sub init_meta {
       shift;
-      Moose->init_meta( @_, base_class => 'MyApp::Base' );
+      return Moose->init_meta( @_, base_class => 'MyApp::Base' );
   }
 
 =head1 DESCRIPTION
