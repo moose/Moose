@@ -644,9 +644,7 @@ sub _find_delegate_metaclass {
         return Moose::Meta::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
-        # our role will always have
-        # a meta method
-        return $role->meta;
+        return Class::MOP::class_of($role);
     }
     else {
         $self->throw_error("Cannot find delegate metaclass for attribute " . $self->name);
