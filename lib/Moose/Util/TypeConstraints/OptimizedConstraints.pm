@@ -38,8 +38,8 @@ sub ClassName {
 }
 
 sub RoleName {
-    ClassName($_[0]) 
-        && (($_[0]->can('meta') || return)->($_[0]) || return)->isa('Moose::Meta::Role')
+    ClassName($_[0])
+    && (Class::MOP::class_of($_[0]) || return)->isa('Moose::Meta::Role')
 }
 
 # NOTE:
