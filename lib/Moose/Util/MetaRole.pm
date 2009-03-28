@@ -43,7 +43,7 @@ sub _make_new_metaclass {
     my $for     = shift;
     my $options = shift;
 
-    return $for->meta()
+    return Class::MOP::class_of($for)
         unless grep { exists $options->{ $_ . '_roles' } }
             qw(
             metaclass
