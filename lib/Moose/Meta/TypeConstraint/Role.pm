@@ -78,7 +78,7 @@ sub is_subtype_of {
 
     if ( not ref $type_or_name_or_role ) {
         # it might be a role
-        return 1 if $self->role->meta->does_role( $type_or_name_or_role );
+        return 1 if Class::MOP::class_of($self->role)->does_role( $type_or_name_or_role );
     }
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
