@@ -80,21 +80,18 @@ sub apply_all_roles {
 
     my $roles = Data::OptList::mkopt( [@_] );
 
-    my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
-
-    foreach my $role_spec (@$roles) {
-        Class::MOP::load_class( $role_spec->[0] );
-    }
-
     foreach my $role (@$roles) {
-        unless (Class::MOP::class_of($role->[0])->isa('Moose::Meta::Role') ) {
+        my $meta = Class::MOP::load_class( $role->[0] );
 
+        unless ($meta->isa('Moose::Meta::Role') ) {
             require Moose;
             Moose->throw_error( "You can only consume roles, "
                     . $role->[0]
                     . " is not a Moose role" );
         }
     }
+
+    my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
 
     if ( scalar @$roles == 1 ) {
         my ( $role, $params ) = @{ $roles->[0] };
