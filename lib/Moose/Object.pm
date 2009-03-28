@@ -4,6 +4,8 @@ package Moose::Object;
 use strict;
 use warnings;
 
+use Scalar::Util;
+
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
@@ -13,9 +15,16 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
+
     my $params = $class->BUILDARGS(@_);
-    my $self = Class::MOP::Class->initialize($class)->new_object($params);
+
+    # We want to support passing $self->new, but initialize
+    # takes only an unblessed class name
+    my $real_class = Scalar::Util::blessed($class) || $class;
+    my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
+
     $self->BUILDALL($params);
+
     return $self;
 }
 
