@@ -14,7 +14,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 sub new {
     my $class = shift;
     my $params = $class->BUILDARGS(@_);
-    my $self = $class->meta->new_object($params);
+    my $self = Class::MOP::Class->initialize($class)->new_object($params);
     $self->BUILDALL($params);
     return $self;
 }
