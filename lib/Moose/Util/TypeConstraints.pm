@@ -670,8 +670,7 @@ subtype 'ClassName' => as 'Str' =>
     \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
 
 subtype 'RoleName' => as 'ClassName' => where {
-    ( ( $_->can('meta') || return )->($_) || return )
-        ->isa('Moose::Meta::Role');
+    (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
 } => optimize_as
     \&Moose::Util::TypeConstraints::OptimizedConstraints::RoleName;
 
