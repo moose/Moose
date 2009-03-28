@@ -29,7 +29,7 @@ sub apply {
         $class = $ANON_CLASSES{$anon_role_key};
     }
     else {
-        my $obj_meta = eval { $object->meta } || 'Moose::Meta::Class';
+        my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
         $class = $obj_meta->create_anon_class(
             superclasses => [ blessed($object) ]
         );
