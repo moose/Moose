@@ -295,7 +295,7 @@ my @MetaClassTypes =
 sub _reconcile_with_superclass_meta {
     my ($self, $super) = @_;
 
-    my $super_meta = $super->meta;
+    my $super_meta = Class::MOP::class_of($super);
 
     my $super_meta_name
         = $super_meta->is_immutable
