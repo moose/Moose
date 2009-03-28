@@ -53,10 +53,9 @@ sub _make_new_metaclass {
             instance_metaclass
     );
 
+    my $old_meta = Class::MOP::class_of($for);
     my $new_metaclass
-        = _make_new_class( ref $for->meta(), $options->{metaclass_roles} );
-
-    my $old_meta = $for->meta();
+        = _make_new_class( ref $old_meta, $options->{metaclass_roles} );
 
     # This could get called for a Moose::Meta::Role as well as a Moose::Meta::Class
     my %classes = map {
