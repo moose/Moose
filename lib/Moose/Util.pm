@@ -98,7 +98,8 @@ sub apply_all_roles {
 
     if ( scalar @$roles == 1 ) {
         my ( $role, $params ) = @{ $roles->[0] };
-        $role->meta->apply( $meta, ( defined $params ? %$params : () ) );
+        my $role_meta = Class::MOP::class_of($role);
+        $role_meta->apply( $meta, ( defined $params ? %$params : () ) );
     }
     else {
         Moose::Meta::Role->combine( @$roles )->apply($meta);
