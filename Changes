@@ -1,5 +1,5 @@
-Also see Moose::Manual::Delta for more details of and workarounds for
-noteworthy changes.
+Also see Moose::Manual::Delta for more details of, and workarounds
+for, noteworthy changes.
 
 0.74
     * Moose::*
