@@ -23,14 +23,14 @@ for noteworthy changes.
 
     * Moose
       - Document the fact that init_meta() returns the target class' metaclass
-        object. (Dieter Pearcey)
+        object. (hdp)
 
     * Moose::Cookbook::Extending::Recipe1
     * Moose::Cookbook::Extending::Recipe2
     * Moose::Cookbook::Extending::Recipe3
     * Moose::Cookbook::Extending::Recipe4
       - Make init_meta() examples explicitly return the metaclass and point out
-        this fact. (Dieter Pearcey)
+        this fact. (hdp)
 
 
 0.73 Fri, March 29, 2009
@@ -65,7 +65,7 @@ for noteworthy changes.
 
     * Moose::Meta::Attribute
       - Allow a subclass to set lazy_build for an inherited
-        attribute. (Dieter Pearcey)
+        attribute. (hdp)
 
     * Makefile.PL
       - Explicitly depend on Data::OptList. We already had this dependency
