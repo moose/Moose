@@ -20,8 +20,8 @@ for noteworthy changes.
         - add tests and documentation (perigrin)
 
     * Moose
-      - Document the fact that init_meta() returns the target class' metaclass
-        object. (hdp)
+      - Document the fact that init_meta() returns the target class's
+        metaclass object. (hdp)
 
     * Moose::Cookbook::Extending::Recipe1
     * Moose::Cookbook::Extending::Recipe2
