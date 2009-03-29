@@ -67,8 +67,8 @@ method names, B<delegations>, a default value, and more.
 
 Attributes I<are not> methods, but defining them causes various
 accessor methods to be created. At a minimum, a normal attribute will
-always have a reader accessor method. Many attributes also other
-methods such as a writer method, clearer method, and predicate method
+always have a reader accessor method. Many attributes also have other
+methods, such as a writer method, clearer method, and predicate method
 ("has it been set?").
 
 An attribute may also define B<delegations>, which will create
@@ -177,7 +177,7 @@ define types for attributes. Moose has a set of built-in types based
 on what Perl provides, such as C<Str>, C<Num>, C<Bool>, C<HashRef>, etc.
 
 In addition, every class name in your application can also be used as
-a type name. We saw an example using C<DateTime> earlier.
+a type name.
 
 Finally, you can define your own types, either as subtypes or entirely
 new types, with their own constraints. For example, you could define a
@@ -355,9 +355,10 @@ extensions.
 
 So you're sold on Moose. Time to learn how to really use it.
 
-If you want to see how Moose would translate directly old school Perl
-5 OO code, check out L<Moose::Unsweetened>. This might be helpful for
-quickly wrapping your brain around some aspects of "the Moose way".
+If you want to see how Moose would translate directly into old school
+Perl 5 OO code, check out L<Moose::Unsweetened>. This might be
+helpful for quickly wrapping your brain around some aspects of "the
+Moose way".
 
 Obviously, the next thing to read is the rest of the L<Moose::Manual>.
 

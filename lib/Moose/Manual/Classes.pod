@@ -31,12 +31,12 @@ example, you might define an attribute ...
 Attributes are described in the L<Moose::Manual::Attributes>
 documentation.
 
-Loading Moose also turns enables C<strict> and C<warnings> pragmas in
-your class.
+Loading Moose also enables C<strict> and C<warnings> pragmas in your
+class.
 
 When you load Moose, your class will become a subclass of
 L<Moose::Object>. The L<Moose::Object> class provides a default
-constructor, destructor, as well as object construction helper
+constructor and destructor, as well as object construction helper
 methods. You can read more about this in the
 L<Moose::Manual::Construction> document.
 
@@ -107,8 +107,8 @@ class's metaclass object.
 
 If you override C<new()> in your class, then the immutabilization code
 will not be able to provide an optimized constructor for your
-class. Instead, you should use C<BUILD()> method, which will be called
-from the inlined constructor.
+class. Instead, you should use a C<BUILD()> method, which will be
+called from the inlined constructor.
 
 Alternately, if you really need to provide a different C<new()>, you
 can also provide your own immutabilization method. Doing so requires

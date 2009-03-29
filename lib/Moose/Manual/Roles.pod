@@ -196,7 +196,7 @@ If a class composes multiple roles, and those roles have methods of
 the same name, we will have a conflict. In that case, the composing
 class is required to provide its I<own> method of the same name.
 
-  package Breakdances;
+  package Breakdancer;
 
   use Moose::Role
 

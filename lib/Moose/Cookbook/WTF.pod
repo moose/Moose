@@ -36,7 +36,7 @@ L<Moose::Cookbook::FAQ>.
 
 =head2 Constructors & Immutability
 
-=head3 I made my class immutable, but C<new> it is still slow!
+=head3 I made my class immutable, but C<new> is still slow!
 
 Do you have a custom C<new> method in your class? Moose 
 will not overwrite your custom C<new> method, you would 
@@ -48,7 +48,7 @@ the attribute declaration.
        around) C<new> is not being called?
 
 Making a I<before>, I<after> or I<around> wrap around the 
-C<new> method, will actually create a C<new> method within 
+C<new> method will actually create a C<new> method within 
 your class. This will prevent Moose from creating one itself
 when you make the class immutable. 
 
@@ -65,18 +65,18 @@ when what you really want to say is:
 
   has 'foo' => (isa => 'Bar', is => 'rw');
 
-The reason this is so, is because it is a perfectly valid use 
+The reason this is so is because it is a perfectly valid use 
 case to I<not> have an accessor. The simplest one is that you 
-want to write your own. If Moose created on automatically, then
+want to write your own. If Moose created one automatically, then
 because of the order in which classes are constructed, Moose 
 would overwrite your custom accessor. You wouldn't want that 
 would you?
 
 =head2 Method Modifiers
 
-=head3 How come I can't change C<@_> in a C<before> modifier?
+=head3 Why can't I change C<@_> in a C<before> modifier?
 
-The C<before> modifier simply is called I<before> the main method. 
+The C<before> modifier is called I<before> the main method. 
 Its return values are simply ignored, and are B<not> passed onto 
 the main method body. 
 
@@ -91,7 +91,7 @@ modifier instead. Here is some sample code:
       $next->($self, reverse(@args));  
   };
 
-=head3 How come I can't see return values in an C<after> modifier?
+=head3 Why can't I see return values in an C<after> modifier?
 
 As with the C<before> modifier, the C<after> modifier is simply 
 called I<after> the main method. It is passed the original contents 
@@ -134,7 +134,7 @@ See L<Moose and Attributes>.
 
 =head2 Roles
 
-=head3 How come BUILD is not called for my composed roles?
+=head3 Why is BUILD not called for my composed roles?
 
 BUILD is never called in composed roles. The primary reason is that 
 roles are B<not> order sensitive. Roles are composed in such a way 
@@ -158,13 +158,13 @@ L<Moose::Cookbook::Basics::Recipe3>)
 
 =item *
 
-Use attributes triggers, which fire after an attribute it set, to facilitate 
-initialization. These are described in the L<Moose> docs and examples can be 
+Use attribute triggers, which fire after an attribute is set, to facilitate 
+initialization. These are described in the L<Moose> docs, and examples can be 
 found in the test suite.
 
 =back
 
-In general, roles should not I<require> initialization, they should either 
+In general, roles should not I<require> initialization; they should either 
 provide sane defaults or should be documented as needing specific 
 initialization. One such way to "document" this is to have a separate
 attribute initializer which is required for the role. Here is an example of 

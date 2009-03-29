@@ -24,9 +24,9 @@ method that you're looking for is defined in a C<Class::MOP> class,
 rather than Moose itself.
 
 The MOP provides more than just I<read-only> introspection. It also
-lets you add attributes, method, apply roles, and much more. In fact,
-all of the declarative Moose sugar is simply a thin layer on top of
-the MOP API.
+lets you add attributes and methods, apply roles, and much more. In
+fact, all of the declarative Moose sugar is simply a thin layer on top
+of the MOP API.
 
 If you want to write Moose extensions, you'll need to learn some of
 the MOP API. The introspection methods are also handy if you want to
@@ -80,7 +80,7 @@ and its parents.
 You can also get a list of methods:
 
   for my $method ( $meta->get_all_methods ) {
-      print $meth->fully_qualified_name, "\n";
+      print $method->fully_qualified_name, "\n";
   }
 
 Now we're looping over a list of L<Moose::Meta::Method> objects. Note
@@ -137,7 +137,7 @@ being run before you make a class immutable.
 
 =head1 GOING FURTHER
 
-If you're interested in extending moose, we recommend reading all of
+If you're interested in extending Moose, we recommend reading all of
 the "Meta" and "Extending" recipes in the L<Moose::Cookbook>. Those
 recipes show various practical applications of the MOP.
 

@@ -220,8 +220,8 @@ email address?").
 Also, did you spot the (intentional) bug?
 
 It's in the C<_validate_birth_date()> method. We should check that
-that value in C<$birth_date> is actually defined and object before we
-go and call C<isa()> on it! Leaving out those checks means our data
+the value in C<$birth_date> is actually defined and an object before
+we go and call C<isa()> on it! Leaving out those checks means our data
 validation code could actually cause our program to die. Oops.
 
 Note that if we add a superclass to Person we'll have to change the

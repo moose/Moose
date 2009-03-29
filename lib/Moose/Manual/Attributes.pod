@@ -36,10 +36,10 @@ Use the C<has> function to declare an attribute:
 This says that all C<Person> objects have an optional read-write
 "first_name" attribute.
 
-=head2 Read-write Vs read-only
+=head2 Read-write vs. read-only
 
 The options passed to C<has> define the properties of the
-attribute. There are a many options, but in the simplest form you just
+attribute. There are many options, but in the simplest form you just
 need to set C<is>, which can be either C<rw> (read-write) or C<ro>
 (read-only).
 
@@ -67,12 +67,12 @@ particularly handy when you'd like an attribute to be publicly
 readable, but only privately settable. For example:
 
   has 'weight' => (
-      is     => 'rw',
+      is     => 'ro',
       writer => '_set_weight',
   );
 
-This might be useful if weight is calculated based on other methods,
-for example every time the C<eat> method is called, we might adjust
+This might be useful if weight is calculated based on other methods.
+For example, every time the C<eat> method is called, we might adjust
 weight. This lets us hide the implementation details of weight
 changes, but still provide the weight value to users of the class.
 
@@ -91,7 +91,7 @@ C<writer> methods:
 
 If you're thinking that doing this over and over would be insanely
 tedious, you're right! Fortunately, Moose provides a powerful
-extension system that lets override the default naming
+extension system that lets you override the default naming
 conventions. See L<Moose::Manual::MooseX> for more details.
 
 =head2 Predicate and clearer methods
@@ -102,8 +102,9 @@ you want to access this information, you must define clearer and
 predicate methods for an attribute.
 
 A predicate method tells you whether or not a given attribute is
-currently set. Note an attribute can be explicitly set to C<undef> or
-some other false value, but the predicate will return true.
+currently set. Note that an attribute can be explicitly set to
+C<undef> or some other false value, but the predicate will return
+true.
 
 The clearer method unsets the attribute. This is I<not> the
 same as setting the value to C<undef>, but you can only distinguish
@@ -459,8 +460,8 @@ The trigger is called I<after> the value is set.
 This differs from an after method modifier in two ways. First, a
 trigger is only called when the attribute is set, as opposed to
 whenever the accessor method is called (for reading or
-writing). Second, it is also called if the when an attribute's value
-is passed to the constructor.
+writing). Second, it is also called when an attribute's value is
+passed to the constructor.
 
 However, triggers are I<not> called when an attribute is populated
 from a C<default> or C<builder>
@@ -599,9 +600,9 @@ of an inherited attribute.
 =head1 MORE ON ATTRIBUTES
 
 Moose attributes are a big topic, and this document glosses over a few
-aspects of their aspects. We recommend that you read the
-L<Moose::Manual::Delegation> and L<Moose::Manual::Types> documents to
-get a more complete understanding of attribute features.
+aspects. We recommend that you read the L<Moose::Manual::Delegation>
+and L<Moose::Manual::Types> documents to get a more complete
+understanding of attribute features.
 
 =head1 A FEW MORE OPTIONS
 

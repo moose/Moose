@@ -59,7 +59,7 @@ In practice, the only difference between C<Any> and C<Item> is
 conceptual. C<Item> is used as the top-level type in the hierarchy.
 
 The rest of these types correspond to existing Perl concepts. For
-example, a C<Num> is anything that Perl thinks looks like a number. An
+example, a C<Num> is anything that Perl thinks looks like a number, an
 C<Object> is a blessed reference, etc.
 
 The types followed by "[`a]" can be parameterized. So instead of just
@@ -124,13 +124,13 @@ instances.
 
 =head1 SUBTYPES
 
-Moose uses subtypes in its built-in hierarchy. C<Int> is a child of
-C<Num> for example.
+Moose uses subtypes in its built-in hierarchy. For example, C<Int> is
+a child of C<Num>.
 
 A subtype is defined in terms of a parent type and a constraint. Any
-constraints defined by the parent(s) will be checked first, and then
-the the subtype's. A value must pass I<all> of these checks to be
-valid for the subtype.
+constraints defined by the parent(s) will be checked first, followed by
+constraints defined by the subtype. A value must pass I<all> of these
+checks to be valid for the subtype.
 
 Typically, a subtype takes the parent's constraint and makes it more
 specific.
@@ -339,7 +339,7 @@ subtype of C<Str> that only allows the specified values:
 
   enum 'RGB' => qw( red green blue );
 
-This creates a type named C<RGB>
+This creates a type named C<RGB>.
 
 =head1 ANONYMOUS TYPES
 

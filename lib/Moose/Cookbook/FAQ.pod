@@ -73,7 +73,7 @@ Perl 6. Every C<BUILD> method in your inheritance chain is called
 (in the correct order) immediately after the instance is constructed. 
 This allows you to ensure that all your superclasses are initialized 
 properly as well. This is the best approach to take (when possible)
-because it makes sub classing your class much easier.
+because it makes subclassing your class much easier.
 
 If you need to affect the constructor's parameters prior to the 
 instance actually being constructed, you have a number of options.
@@ -278,10 +278,10 @@ release.
 
 =head3 How do I get Moose to call BUILD in all my composed roles?
 
-See L<Moose::Cookbook::WTF> and specifically the B<How come BUILD 
-is not called for my composed roles?> question in the B<Roles> section.
+See L<Moose::Cookbook::WTF> and specifically the B<Why is BUILD 
+not called for my composed roles?> question in the B<Roles> section.
 
-=head3 What are Traits, and how are they different to Roles?
+=head3 What are Traits, and how are they different from Roles?
 
 In Moose, a trait is almost exactly the same thing as a role, except
 that traits typically register themselves, which allows you to refer

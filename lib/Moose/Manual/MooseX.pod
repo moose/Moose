@@ -12,7 +12,7 @@ add new features, and generally customize your Moose.
 
 Writing your own extensions does require a good understanding of the
 meta-model. You can start learning about this with the
-L<Moose::Manual::MOP> docs. There are also several extensions recipes
+L<Moose::Manual::MOP> docs. There are also several extension recipes
 in the L<Moose::Cookbook>.
 
 Explaining how to write extensions is beyond the scope of this

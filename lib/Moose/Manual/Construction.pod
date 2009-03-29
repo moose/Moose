@@ -68,10 +68,10 @@ between a hash reference and a plain hash for you.
 =head2 BUILD
 
 The C<BUILD> method is called I<after> an object is created. There are
-ways to use a C<BUILD> method. One of the most common is to check that
-the object state is valid. While we can validate individual attributes
-through the use of types, we can't validate the state of a whole
-object that way.
+several ways to use a C<BUILD> method. One of the most common is to
+check that the object state is valid. While we can validate individual
+attributes through the use of types, we can't validate the state of a
+whole object that way.
 
   sub BUILD {
       my $self = shift;

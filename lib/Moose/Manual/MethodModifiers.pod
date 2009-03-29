@@ -67,14 +67,14 @@ Method modifiers have many uses. One very common use is in roles. This
 lets roles alter the behavior of methods in the classes that use
 them. See L<Moose::Manual::Roles> for more information about roles.
 
-Most of the modifiers are most useful in roles, so some of the
-examples below are a bit artificial. They're intended to give you an
-idea of how modifiers work, but may not be the most natural usage.
+Since modifiers are mostly useful in roles, some of the examples below
+are a bit artificial. They're intended to give you an idea of how
+modifiers work, but may not be the most natural usage.
 
 =head1 BEFORE, AFTER, AND AROUND
 
-Method modifiers can also be used to add behavior to a method that
-Moose generates for you, such as an attribute accessor:
+Method modifiers can be used to add behavior to a method that Moose
+generates for you, such as an attribute accessor:
 
   has 'size' => ( is => 'rw' );
 
@@ -109,8 +109,8 @@ ignored.
 An around modifier is a bit more powerful than either a before or
 after modifier. It can modify the arguments being passed to the
 original method, and you can even decide to simply not call the
-original method at all. Finally, you can modify the return value with
-an around modifier.
+original method at all. You can also modify the return value with an
+around modifier.
 
 An around modifier receives the original method as its first argument,
 I<then> the object, and finally any arguments passed to the method.

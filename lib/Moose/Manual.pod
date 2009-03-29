@@ -22,7 +22,7 @@ With Moose, you can concentrate on the I<logical> structure of your
 classes, focusing on "what" rather than "how". A class definition with
 Moose reads like a list of very concise English sentences.
 
-Moose is built in top of C<Class::MOP>, a meta-object protocol (aka
+Moose is built on top of C<Class::MOP>, a meta-object protocol (aka
 MOP). Using the MOP, Moose provides complete introspection for all
 Moose-using classes. This means you can ask classes about their
 attributes, parents, children, methods, etc., all using a well-defined
@@ -123,7 +123,7 @@ features!
 
 =item L<Moose::Manual::Delegation>
 
-Delegation is a powerful way to make use of attribute which are
+Delegation is a powerful way to make use of attributes which are
 themselves objects.
 
 =item L<Moose::Manual::Construction>
@@ -156,7 +156,8 @@ children, methods, attributes, etc.
 
 =item L<Moose::Manual::MooseX>
 
-This document shows a few of the most useful Moose extensions on CPAN.
+This document describes a few of the most useful Moose extensions on
+CPAN.
 
 =item L<Moose::Manual::BestPractices>
 
@@ -177,7 +178,7 @@ changes to Moose.
 
 =head1 JUSTIFICATION
 
-If you're still still asking yourself "Why do I need this?", then this
+If you're still asking yourself "Why do I need this?", then this
 section is for you.
 
 =over 4
@@ -210,8 +211,9 @@ production with little or no issue now for years. We consider it
 highly stable and we are committed to keeping it stable.
 
 Of course, in the end, you need to make this call yourself. If you
-have any questions or concerns, please feel free to email Stevan, the
-moose@perl.org list, or just stop by irc.perl.org#moose and ask away.
+have any questions or concerns, please feel free to email Stevan or
+the moose@perl.org list, or just stop by irc.perl.org#moose and ask
+away.
 
 =item Is Moose just Perl 6 in Perl 5?
 

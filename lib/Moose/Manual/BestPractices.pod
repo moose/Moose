@@ -207,7 +207,7 @@ will be faster when immutabilized.
 Many of these practices also help get the most out of meta
 programming. If you used an overridden C<new> to do type coercion by
 hand, rather than defining a real coercion, there is no introspectable
-metadata. This sort of thing is particularly problematic MooseX
+metadata. This sort of thing is particularly problematic for MooseX
 extensions which rely on introspection to do the right thing.
 
 =head1 AUTHOR

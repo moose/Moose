@@ -18,7 +18,7 @@ explains Moose concepts without being too code-heavy.
 
 =head2 Basic Moose
 
-These recipes will give you a good idea of what Moose is capable,
+These recipes will give you a good idea of what Moose is capable of,
 starting with simple attribute declaration, and moving on to more
 powerful features like laziness, types, type coercion, method
 modifiers, and more.
@@ -27,7 +27,7 @@ modifiers, and more.
 
 =item L<Moose::Cookbook::Basics::Recipe1> - The (always classic) B<Point> example
 
-A simple Moose-based class. Demonstrated Moose attributes and subclassing.
+A simple Moose-based class. Demonstrates Moose attributes and subclassing.
 
 =item L<Moose::Cookbook::Basics::Recipe2> - A simple B<BankAccount> example
 
@@ -97,7 +97,7 @@ subclassing.
 =item L<Moose::Cookbook::Roles::Recipe2> - Advanced Role Composition - method exclusion and aliasing
 
 Sometimes you just want to include part of a role in your
-class. Sometimes you want the whole role but one if its methods
+class. Sometimes you want the whole role but one of its methods
 conflicts with one in your class. With method exclusion and aliasing,
 you can work around these problems.
 
@@ -110,7 +110,7 @@ In this recipe, we apply a role to an existing object instance.
 =head2 Meta Moose
 
 These recipes show you how to write your own meta classes, which lets
-you extend the object system provide by Moose.
+you extend the object system provided by Moose.
 
 =over 4
 
@@ -182,9 +182,9 @@ if you plan to write your own C<MooseX> module.
 
 =item L<Moose::Cookbook::Extending::Recipe1> - Moose extension overview
 
-There are quite a number of ways to extend Moose. This recipe explains
-provides an overview of each method, and provides recommendations for
-when each is appropriate.
+There are quite a few ways to extend Moose. This recipe provides an
+overview of each method, and provides recommendations for when each is
+appropriate.
 
 =item L<Moose::Cookbook::Extending::Recipe2> - Providing a base object class role
 
