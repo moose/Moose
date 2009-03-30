@@ -30,6 +30,9 @@ for, noteworthy changes.
       - Make init_meta() examples explicitly return the metaclass and point out
         this fact. (hdp)
 
+    * Moose::Cookbook::Meta::Recipe6
+      - A new recipe, creating a custom meta-method class.
+
     * Moose::Meta::Class
     * Moose::Meta::Method::Constructor
       - Attribute triggers now consistently do not receive the meta-attribute
