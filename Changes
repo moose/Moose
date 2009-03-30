@@ -45,6 +45,10 @@ for, noteworthy changes.
       - Remove references to triggers receving the meta-attribute object as an
         argument.  (hdp)
 
+    * Moose::Cookbook::FAQ
+      - Remove recommendation for deprecated Moose::Policy and
+        Moose::Policy::PBP; recommend MooseX::PBP instead.  (hdp)
+
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
 

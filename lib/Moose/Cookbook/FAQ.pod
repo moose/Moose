@@ -163,9 +163,8 @@ C<writer> attribute options. Here is some example code:
 Moose will still take advantage of type constraints, triggers, etc. 
 when creating these methods. 
 
-If you do not like this much typing, and wish it to be a default for
-your class, please see L<Moose::Policy>, and more specifically
-L<Moose::Policy::FollowPBP>. This will allow you to write:
+If you do not like this much typing, and wish it to be a default for your
+class, please see L<MooseX::FollowPBP>. This will allow you to write:
 
   has 'bar' => (
       isa => 'Baz',
