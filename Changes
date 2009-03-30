@@ -30,6 +30,17 @@ for, noteworthy changes.
       - Make init_meta() examples explicitly return the metaclass and point out
         this fact. (hdp)
 
+    * Moose::Meta::Class
+    * Moose::Meta::Method::Constructor
+      - Attribute triggers now consistently do not receive the meta-attribute
+        object as an argument.  Previously, triggers called during instance
+        construction were passed the meta-attribute, but triggers called by
+        normal accessors were not.  Fixes RT#44429, reported by Mark Swayne.
+        (hdp)
+    
+    * Moose::Manual::Attributes
+      - Remove references to triggers receving the meta-attribute object as an
+        argument.  (hdp)
 
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.

@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 36;
+use Test::More tests => 40;
 use Test::Exception;
 
 
@@ -157,4 +157,34 @@ use Test::Exception;
     is_deeply(\%Blarg::trigger_calls, { map { $_ => 2 } qw/foo bar baz/ }, 'All triggers fired once on construct');
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Yet another $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 }
+
+# Triggers receive the meta-attribute as an argument
+
+{
+    package Foo;
+    use Moose;
+    our @calls;
+    has foo => (is => 'rw', trigger => sub { push @calls, [@_] });
+}
+
+{
+    my $attr = Foo->meta->get_attribute('foo');
+    my $foo = Foo->new(foo => 2);
+    is_deeply(
+        \@Foo::calls,
+        [ [ $foo, 2 ] ],
+        'trigger called correctly on construction',
+    );
+    @Foo::calls = ();
+
+    $foo->foo(3);
+    is_deeply(
+        \@Foo::calls,
+        [ [ $foo, 3 ] ],
+        'trigger called correctly on set',
+    );
+    @Foo::calls = ();
+    Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
+}
+
 

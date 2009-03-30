@@ -181,7 +181,6 @@ sub new_object {
                 ? $attr->get_read_method_ref->($self)
                 : $params->{$init_arg}
             ),
-            $attr
         );
     }
 

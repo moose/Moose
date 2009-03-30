@@ -244,8 +244,7 @@ sub _generate_triggers {
                   $attr->name,
               )
             . ', '
-            . '$attrs->['
-            . $i . ']' . ');' . "\n}";
+            . ');' . "\n}";
     }
 
     return join ";\n" => @trigger_calls;
