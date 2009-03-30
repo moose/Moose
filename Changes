@@ -36,18 +36,18 @@ for, noteworthy changes.
     * Moose::Meta::Class
     * Moose::Meta::Method::Constructor
       - Attribute triggers now consistently do not receive the meta-attribute
-        object as an argument.  Previously, triggers called during instance
+        object as an argument. Previously, triggers called during instance
         construction were passed the meta-attribute, but triggers called by
-        normal accessors were not.  Fixes RT#44429, reported by Mark Swayne.
+        normal accessors were not. Fixes RT#44429, reported by Mark Swayne.
         (hdp)
     
     * Moose::Manual::Attributes
       - Remove references to triggers receving the meta-attribute object as an
-        argument.  (hdp)
+        argument. (hdp)
 
     * Moose::Cookbook::FAQ
       - Remove recommendation for deprecated Moose::Policy and
-        Moose::Policy::PBP; recommend MooseX::PBP instead.  (hdp)
+        Moose::Policy::PBP; recommend MooseX::PBP instead. (hdp)
 
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
@@ -436,7 +436,7 @@ for, noteworthy changes.
         them, but MooseX modules can create them in some other
         way. See the 0.58 changes for more details. (jnapiorkowski)
       - Changed the way subtypes are created so that the job is
-        delegated to a type constraint parent.  This clears up some
+        delegated to a type constraint parent. This clears up some
         hardcoded checking and should allow correct subtypes of
         Moose::Meta::Type::Constraint. Don't rely on this new API too
         much (create_child_type) because it may go away in the
@@ -531,7 +531,7 @@ for, noteworthy changes.
 
     * Moose::Meta::TypeConstraint::Parameterizable
       - Added a new method 'parameterize' which is basically a factory
-        for the containing constraint.  This makes it easier to create
+        for the containing constraint. This makes it easier to create
         new types of parameterized constraints. (jnapiorkowski)
 
     * Moose::Meta::TypeConstraint::Union
@@ -550,7 +550,7 @@ for, noteworthy changes.
         all whitespace differences. (jnapiorkowski)
       - Changed the way we parse type constraint strings so that we now
         match TC[Int,Int,...] and TC[name=>Str] as parameterized type
-        constraints.  This lays the foundation for more flexible type
+        constraints. This lays the foundation for more flexible type
         constraint implementations.
 
     * Tests and docs for all the above. (jnapiorkowski)
@@ -1235,7 +1235,7 @@ for, noteworthy changes.
     
     * t/
       - making test for using '+name' on attributes consumed 
-        from a role, it works and makes sense too.    
+        from a role, it works and makes sense too.  
 
     * Moose::Meta::Attribute 
       - fix handles so that it doesn't return nothing 
