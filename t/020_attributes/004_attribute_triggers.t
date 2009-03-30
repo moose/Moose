@@ -158,7 +158,7 @@ use Test::Exception;
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Yet another $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 }
 
-# Triggers receive the meta-attribute as an argument
+# Triggers do not receive the meta-attribute as an argument
 
 {
     package Foo;
