@@ -1235,7 +1235,7 @@ for, noteworthy changes.
     
     * t/
       - making test for using '+name' on attributes consumed 
-        from a role, it works and makes sense too.  
+        from a role, it works and makes sense too.
 
     * Moose::Meta::Attribute 
       - fix handles so that it doesn't return nothing 
