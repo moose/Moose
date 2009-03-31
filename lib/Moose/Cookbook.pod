@@ -18,7 +18,7 @@ explains Moose concepts without being too code-heavy.
 
 =head2 Basic Moose
 
-These recipes will give you a good idea of what Moose is capable of,
+These recipes will give you a good idea of what Moose is capable,
 starting with simple attribute declaration, and moving on to more
 powerful features like laziness, types, type coercion, method
 modifiers, and more.
