@@ -116,14 +116,14 @@ sub attributes    { (shift)->{'attributes'}    }
 ## method
 
 sub _generate_params {
-  my ($self, $var, $class_var) = @_;
-  "my $var = " . $self->_generate_BUILDARGS($class_var, '@_') . ";\n";
+    my ( $self, $var, $class_var ) = @_;
+    "my $var = " . $self->_generate_BUILDARGS( $class_var, '@_' ) . ";\n";
 }
 
 sub _generate_instance {
-  my ($self, $var, $class_var) = @_;
-  "my $var = " . $self->meta_instance->inline_create_instance($class_var) 
-               . ";\n";
+    my ( $self, $var, $class_var ) = @_;
+    "my $var = "
+        . $self->meta_instance->inline_create_instance($class_var) . ";\n";
 }
 
 sub _generate_slot_initializers {
