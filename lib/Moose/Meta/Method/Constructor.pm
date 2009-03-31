@@ -115,24 +115,6 @@ sub attributes    { (shift)->{'attributes'}    }
 
 ## method
 
-sub _generate_params {
-    my ( $self, $var, $class_var ) = @_;
-    "my $var = " . $self->_generate_BUILDARGS( $class_var, '@_' ) . ";\n";
-}
-
-sub _generate_instance {
-    my ( $self, $var, $class_var ) = @_;
-    "my $var = "
-        . $self->meta_instance->inline_create_instance($class_var) . ";\n";
-}
-
-sub _generate_slot_initializers {
-    my ($self) = @_;
-    return (join ";\n" => map {
-        $self->_generate_slot_initializer($_)
-    } 0 .. (@{$self->attributes} - 1)) . ";\n";
-}
-
 sub initialize_body {
     my $self = shift;
     # TODO:
@@ -190,6 +172,24 @@ sub initialize_body {
     ) or $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source );
     
     $self->{'body'} = $code;
+}
+
+sub _generate_params {
+    my ( $self, $var, $class_var ) = @_;
+    "my $var = " . $self->_generate_BUILDARGS( $class_var, '@_' ) . ";\n";
+}
+
+sub _generate_instance {
+    my ( $self, $var, $class_var ) = @_;
+    "my $var = "
+        . $self->meta_instance->inline_create_instance($class_var) . ";\n";
+}
+
+sub _generate_slot_initializers {
+    my ($self) = @_;
+    return (join ";\n" => map {
+        $self->_generate_slot_initializer($_)
+    } 0 .. (@{$self->attributes} - 1)) . ";\n";
 }
 
 sub _generate_BUILDARGS {
