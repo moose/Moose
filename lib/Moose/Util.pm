@@ -31,10 +31,7 @@ Sub::Exporter::setup_exporter({
 
 ## some utils for the utils ...
 
-sub find_meta { 
-    return unless $_[0];
-    return Class::MOP::get_metaclass_by_name(blessed($_[0]) || $_[0]);
-}
+sub find_meta { Class::MOP::class_of(@_) }
 
 ## the functions ...
 
