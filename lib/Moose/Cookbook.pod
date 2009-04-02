@@ -79,6 +79,11 @@ model how eye color is determined during reproduction.
 This recipe demonstrates the use of C<BUILDARGS> and C<BUILD> to hook
 into object construction.
 
+=item L<Moose::Cookbook::Basics::Recipe12> - Extending a non-Moose base class
+
+In this recipe, we make a Moose-based subclass of L<DateTime>, a
+module which does not use Moose itself.
+
 =back
 
 =head2 Moose Roles
