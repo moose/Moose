@@ -35,9 +35,9 @@ for, noteworthy changes.
 
     * Moose::Meta::Class
     * Moose::Meta::Method::Constructor
-      - Attribute triggers no longer do not receive the meta-attribute
-        object as an argument in any circumstance. Previously,
-        triggers called during instance construction were passed the
+      - Attribute triggers no longer receive the meta-attribute object
+        as an argument in any circumstance. Previously, triggers
+        called during instance construction were passed the
         meta-attribute, but triggers called by normal accessors were
         not. Fixes RT#44429, reported by Mark Swayne. (hdp)
     
