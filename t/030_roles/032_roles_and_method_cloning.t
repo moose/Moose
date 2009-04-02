@@ -3,14 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 
 {
     package Role::Foo;
     use Moose::Role;
 
-    sub foo { }
+    sub foo { (caller(0))[3] }
 }
 
 {
@@ -69,4 +69,11 @@ use Test::More tests => 14;
         'fq name is ClassA::foo' );
     is( $meth->original_fully_qualified_name, 'Role::Foo::foo',
         'original fq name is Role::Foo::foo' );
+}
+
+is( ClassB->foo, 'ClassB::foo', 'ClassB::foo knows its name' );
+{
+    local $TODO =
+      "multiply-consumed roles' subs take on their most recently used name";
+    is( ClassA->foo, 'ClassA::foo', 'ClassA::foo knows its name' );
 }
