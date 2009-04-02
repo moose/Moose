@@ -47,7 +47,8 @@ for, noteworthy changes.
 
     * Moose::Cookbook::FAQ
       - Remove recommendation for deprecated Moose::Policy and
-        Moose::Policy::PBP; recommend MooseX::PBP instead. (hdp)
+        Moose::Policy::FollowPBP; recommend MooseX::FollowPBP
+        instead. (hdp)
 
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
