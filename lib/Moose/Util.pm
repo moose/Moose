@@ -222,7 +222,7 @@ some of them may be useful for use in your own code.
 =item B<find_meta($class_or_obj)>
 
 This method takes a class name or object and attempts to find a
-metaclass for the class, if one exists. It will not create one if it
+metaclass for the class, if one exists. It will B<not> create one if it
 does not yet exist.
 
 =item B<does_role($class_or_obj, $role_name)>

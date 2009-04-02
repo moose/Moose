@@ -1,6 +1,9 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Util
+      - Bold the word 'not' in the POD for find_meta (t0m)
+
 0.74
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual
