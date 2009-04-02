@@ -1009,7 +1009,7 @@ recommend that you use a C<requires>-only Role instead.
 
 If passed an ARRAY reference instead of the C<$name>, C<@methods>
 pair, this will create an unnamed duck type. This can be used in an
-attribute definiton like so:
+attribute definition like so:
 
   has 'cache' => (
       is  => 'ro',
