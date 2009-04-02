@@ -18,12 +18,6 @@ send us a patch.
 
 =head1 Version 0.74
 
-Internal code now calls C<< ->meta >> in fewer places. We'd like to
-eventually stop calling C<< ->meta >> entirely so that users may rename
-or exclude that method altogether. This work is not yet complete, but
-the bulk of it, all the easy stuff, has been done. This release uses
-C<Class::MOP::class_of> instead of C<< ->meta >>.
-
 Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
 to make integration with non-Moose classes easier. It simply checks if
 C<< $obj->can() >> a list of methods.
