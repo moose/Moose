@@ -3,8 +3,8 @@ for, noteworthy changes.
 
 0.74
     * Moose::*
-      - Call user_class->meta in fewer places, with the eventual
-        goal of allowing the user to rename or exclude ->meta
+      - Call user_class->meta in fewer places, with the eventual goal
+        of allowing the user to rename or exclude ->meta
         altogether. Instead uses Class::MOP::class_of. (Sartak)
 
     * Moose::Meta::Method::Accessor
@@ -15,8 +15,8 @@ for, noteworthy changes.
 
     * Moose::Util::TypeConstraints
       - Add duck_type keyword. It's sugar over making sure an object
-        can() a list of methods. This is easier than jrockway's suggestion
-        to fork all of CPAN. (perigrin)
+        can() a list of methods. This is easier than jrockway's
+        suggestion to fork all of CPAN. (perigrin)
         - add tests and documentation (perigrin)
 
     * Moose
@@ -27,19 +27,19 @@ for, noteworthy changes.
     * Moose::Cookbook::Extending::Recipe2
     * Moose::Cookbook::Extending::Recipe3
     * Moose::Cookbook::Extending::Recipe4
-      - Make init_meta() examples explicitly return the metaclass and point out
-        this fact. (hdp)
+      - Make init_meta() examples explicitly return the metaclass and
+        point out this fact. (hdp)
 
     * Moose::Cookbook::Meta::Recipe6
       - A new recipe, creating a custom meta-method class.
 
     * Moose::Meta::Class
     * Moose::Meta::Method::Constructor
-      - Attribute triggers now consistently do not receive the meta-attribute
-        object as an argument. Previously, triggers called during instance
-        construction were passed the meta-attribute, but triggers called by
-        normal accessors were not. Fixes RT#44429, reported by Mark Swayne.
-        (hdp)
+      - Attribute triggers no longer do not receive the meta-attribute
+        object as an argument in any circumstance. Previously,
+        triggers called during instance construction were passed the
+        meta-attribute, but triggers called by normal accessors were
+        not. Fixes RT#44429, reported by Mark Swayne. (hdp)
     
     * Moose::Manual::Attributes
       - Remove references to triggers receving the meta-attribute object as an
