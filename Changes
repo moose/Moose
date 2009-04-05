@@ -50,6 +50,30 @@ for, noteworthy changes.
         Moose::Policy::FollowPBP; recommend MooseX::FollowPBP
         instead. (hdp)
 
+    * Many methods have been renamed with a leading underscore, and a
+      few have been deprecated entirely. The methods with a leading
+      underscore are consider "internals only". People writing
+      subclasses or extensions to Moose should feel free to override
+      them, but they are not for "public" use.
+
+      - Moose::Meta::Class
+        - check_metaclass_compatibility => _check_metaclass_compatibility
+
+      - Moose::Meta::Method::Accessor
+        - initialize_body => _initialize_body (this is always called
+          when an object is constructed)
+        - /(generate_.*_method(?:_inline)?)/ => '_' . $1
+
+      - Moose::Meta::Method::Constructor
+        - initialize_body => _initialize_body (this is always called
+          when an object is constructed)
+        - /(generate_constructor_method(?:_inline)?)/ => '_' . $1
+        - attributes => _attributes (now inherited from parent)
+        - meta_instance => _meta_instance (now inherited from parent)
+
+      - Moose::Meta::Role
+        - alias_method is deprecated. Use add_method
+
 0.73 Fri, March 29, 2009
     * No changes from 0.72_01.
 
