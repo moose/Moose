@@ -113,7 +113,7 @@ sub get_all_attribute_values {
     return +{
         map { $_->name => $_->get_value($instance) }
             grep { $_->has_value($instance) }
-                $class->compute_all_applicable_attributes
+                $class->get_all_attributes
     };
 }
 
@@ -123,7 +123,7 @@ sub get_all_init_args {
         map { $_->init_arg => $_->get_value($instance) }
             grep { $_->has_value($instance) }
                 grep { defined($_->init_arg) } 
-                    $class->compute_all_applicable_attributes
+                    $class->get_all_attributes
     };
 }
 

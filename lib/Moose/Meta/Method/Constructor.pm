@@ -32,7 +32,7 @@ sub new {
         # specific to this subclass
         'options'       => $options{options},
         'meta_instance' => $meta->get_meta_instance,
-        'attributes'    => [ $meta->compute_all_applicable_attributes ],
+        'attributes'    => [ $meta->get_all_attributes ],
         # ...
         'associated_metaclass' => $meta,
     } => $class;

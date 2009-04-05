@@ -156,7 +156,7 @@ sub new_object {
     my $params = @_ == 1 ? $_[0] : {@_};
     my $self   = $class->SUPER::new_object($params);
 
-    foreach my $attr ( $class->compute_all_applicable_attributes() ) {
+    foreach my $attr ( $class->get_all_attributes() ) {
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
@@ -180,7 +180,7 @@ sub new_object {
     return $self;
 }
 
-sub construct_instance {
+sub _construct_instance {
     my $class = shift;
     my $params = @_ == 1 ? $_[0] : {@_};
     my $meta_instance = $class->get_meta_instance;
@@ -189,7 +189,7 @@ sub construct_instance {
     # but this is foreign inheritance, so we might
     # have to kludge it in the end.
     my $instance = $params->{'__INSTANCE__'} || $meta_instance->create_instance();
-    foreach my $attr ($class->compute_all_applicable_attributes()) {
+    foreach my $attr ($class->get_all_attributes()) {
         $attr->initialize_instance_slot($meta_instance, $instance, $params);
     }
     return $instance;

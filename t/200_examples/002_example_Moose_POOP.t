@@ -137,7 +137,7 @@ BEGIN {
     
     extends 'Moose::Meta::Class';    
     
-    override 'construct_instance' => sub {
+    override '_construct_instance' => sub {
         my $class = shift;
         my $params = @_ == 1 ? $_[0] : {@_};
         return $class->get_meta_instance->find_instance($params->{oid}) 
