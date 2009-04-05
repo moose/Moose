@@ -8,7 +8,7 @@ use Test::Builder;
 
 use Moose::Util 'does_role', 'find_meta';
 
-our $VERSION   = '0.73';
+our $VERSION   = '0.73_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

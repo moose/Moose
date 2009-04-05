@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.73';
+our $VERSION   = '0.73_01';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
