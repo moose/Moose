@@ -248,7 +248,7 @@ sub clone {
 
     my ( @init, @non_init );
 
-    foreach my $attr ( grep { $_->has_value($self) } Class::MOP::class_of($self)->compute_all_applicable_attributes ) {
+    foreach my $attr ( grep { $_->has_value($self) } Class::MOP::class_of($self)->get_all_attributes ) {
         push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
     }
 

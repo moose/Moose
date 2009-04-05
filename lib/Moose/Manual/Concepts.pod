@@ -312,7 +312,7 @@ class it represents.
 
   my $meta = User->meta();
 
-  for my $attribute ( $meta->compute_all_applicable_attributes ) {
+  for my $attribute ( $meta->get_all_attributes ) {
       print $attribute->name(), "\n";
 
       if ( $attribute->has_type_constraint ) {
@@ -320,7 +320,7 @@ class it represents.
       }
   }
 
-  for my $method ( $meta->compute_all_applicable_methods ) {
+  for my $method ( $meta->get_all_methods ) {
       print $method->name, "\n";
   }
 

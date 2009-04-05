@@ -72,19 +72,20 @@ BEGIN {
             
             $db->{$class}->[($oid - 1)] = {};
             
-            $self->bless_instance_structure({
+            bless {
                 oid      => $oid,
                 instance => $db->{$class}->[($oid - 1)]
-            });
+            }, $class;
         }
         
         sub find_instance {
             my ($self, $oid) = @_;
             my $instance = $db->{$self->associated_metaclass->name}->[($oid - 1)];  
-            $self->bless_instance_structure({
+
+            bless {
                 oid      => $oid,
-                instance => $instance
-            });                  
+                instance => $instance,
+            }, $self->associated_metaclass->name;
         } 
         
         sub clone_instance {
@@ -95,10 +96,10 @@ BEGIN {
                         
             my $clone = tied($instance)->clone;
             
-            $self->bless_instance_structure({
+            bless {
                 oid      => $oid,
-                instance => $clone
-            });        
+                instance => $clone,
+            }, $class;
         }               
     }
     
@@ -136,7 +137,7 @@ BEGIN {
     
     extends 'Moose::Meta::Class';    
     
-    override 'construct_instance' => sub {
+    override '_construct_instance' => sub {
         my $class = shift;
         my $params = @_ == 1 ? $_[0] : {@_};
         return $class->get_meta_instance->find_instance($params->{oid}) 

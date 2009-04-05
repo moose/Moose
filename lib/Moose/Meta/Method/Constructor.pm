@@ -25,15 +25,10 @@ sub new {
         || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
 
     my $self = bless {
-        # from our superclass
         'body'          => undef, 
         'package_name'  => $options{package_name},
         'name'          => $options{name},
-        # specific to this subclass
         'options'       => $options{options},
-        'meta_instance' => $meta->get_meta_instance,
-        'attributes'    => [ $meta->compute_all_applicable_attributes ],
-        # ...
         'associated_metaclass' => $meta,
     } => $class;
 
@@ -42,7 +37,7 @@ sub new {
     # needed
     weaken($self->{'associated_metaclass'});
 
-    $self->initialize_body;
+    $self->_initialize_body;
 
     return $self;
 }
@@ -108,14 +103,9 @@ sub _expected_constructor_class {
     return 'Moose::Object';
 }
 
-## accessors
-
-sub meta_instance { (shift)->{'meta_instance'} }
-sub attributes    { (shift)->{'attributes'}    }
-
 ## method
 
-sub initialize_body {
+sub _initialize_body {
     my $self = shift;
     # TODO:
     # the %options should also include a both
@@ -151,7 +141,7 @@ sub initialize_body {
     # because the inlined code is using the index of the attributes
     # to determine where to find the type constraint
 
-    my $attrs = $self->attributes;
+    my $attrs = $self->_attributes;
 
     my @type_constraints = map {
         $_->can('type_constraint') ? $_->type_constraint : undef
@@ -182,14 +172,14 @@ sub _generate_params {
 sub _generate_instance {
     my ( $self, $var, $class_var ) = @_;
     "my $var = "
-        . $self->meta_instance->inline_create_instance($class_var) . ";\n";
+        . $self->_meta_instance->inline_create_instance($class_var) . ";\n";
 }
 
 sub _generate_slot_initializers {
     my ($self) = @_;
     return (join ";\n" => map {
         $self->_generate_slot_initializer($_)
-    } 0 .. (@{$self->attributes} - 1)) . ";\n";
+    } 0 .. (@{$self->_attributes} - 1)) . ";\n";
 }
 
 sub _generate_BUILDARGS {
@@ -222,8 +212,8 @@ sub _generate_BUILDALL {
 sub _generate_triggers {
     my $self = shift;
     my @trigger_calls;
-    foreach my $i ( 0 .. $#{ $self->attributes } ) {
-        my $attr = $self->attributes->[$i];
+    foreach my $i ( 0 .. $#{ $self->_attributes } ) {
+        my $attr = $self->_attributes->[$i];
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
@@ -239,7 +229,7 @@ sub _generate_triggers {
             . $i
             . ']->trigger->('
             . '$instance, '
-            . $self->meta_instance->inline_get_slot_value(
+            . $self->_meta_instance->inline_get_slot_value(
                   '$instance',
                   $attr->name,
               )
@@ -254,7 +244,7 @@ sub _generate_slot_initializer {
     my $self  = shift;
     my $index = shift;
 
-    my $attr = $self->attributes->[$index];
+    my $attr = $self->_attributes->[$index];
 
     my @source = ('## ' . $attr->name);
 
@@ -333,7 +323,7 @@ sub _generate_slot_assignment {
     }
     else {
         $source = (
-            $self->meta_instance->inline_set_slot_value(
+            $self->_meta_instance->inline_set_slot_value(
                 '$instance',
                 $attr->name,
                 $value
@@ -346,7 +336,7 @@ sub _generate_slot_assignment {
     if ($is_moose && $attr->is_weak_ref) {
         $source .= (
             "\n" .
-            $self->meta_instance->inline_weaken_slot_value(
+            $self->_meta_instance->inline_weaken_slot_value(
                 '$instance',
                 $attr->name
             ) .

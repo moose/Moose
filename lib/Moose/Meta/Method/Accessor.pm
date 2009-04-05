@@ -39,7 +39,7 @@ sub _eval_code {
         or $self->throw_error("Could not create writer for '${\$self->associated_attribute->name}' because $@ \n code: $code", error => $@, data => $code );
 }
 
-sub generate_accessor_method_inline {
+sub _generate_accessor_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
@@ -63,7 +63,7 @@ sub generate_accessor_method_inline {
     . ' }');
 }
 
-sub generate_writer_method_inline {
+sub _generate_writer_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
@@ -83,7 +83,7 @@ sub generate_writer_method_inline {
     . ' }');
 }
 
-sub generate_reader_method_inline {
+sub _generate_reader_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
@@ -109,11 +109,11 @@ sub _value_needs_copy {
     return $attr->should_coerce;
 }
 
-sub generate_reader_method { shift->generate_reader_method_inline(@_) }
-sub generate_writer_method { shift->generate_writer_method_inline(@_) }
-sub generate_accessor_method { shift->generate_accessor_method_inline(@_) }
-sub generate_predicate_method { shift->generate_predicate_method_inline(@_) }
-sub generate_clearer_method { shift->generate_clearer_method_inline(@_) }
+sub _generate_reader_method { shift->_generate_reader_method_inline(@_) }
+sub _generate_writer_method { shift->_generate_writer_method_inline(@_) }
+sub _generate_accessor_method { shift->_generate_accessor_method_inline(@_) }
+sub _generate_predicate_method { shift->_generate_predicate_method_inline(@_) }
+sub _generate_clearer_method { shift->_generate_clearer_method_inline(@_) }
 
 sub _inline_pre_body  { '' }
 sub _inline_post_body { '' }
