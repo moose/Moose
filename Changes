@@ -7,6 +7,11 @@ for, noteworthy changes.
         - initialize_body => _initialize_body (this is always called
           when an object is constructed)
 
+    * Moose::Meta::Method::Destructor   
+      - Destructor inlining was totally broken by the change to the
+        is_needed method in 0.72_01. Now there is a test for this
+        feature, and it works again.
+
 0.73_01
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
