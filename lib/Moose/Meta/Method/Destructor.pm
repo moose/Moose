@@ -38,7 +38,7 @@ sub new {
     # needed
     weaken($self->{'associated_metaclass'});    
 
-    $self->initialize_body;
+    $self->_initialize_body;
 
     return $self;    
 }
@@ -61,6 +61,12 @@ sub is_needed {
 }
 
 sub initialize_body {
+    warn 'The initialize_body method has been made private.'
+        . " The public version is deprecated and will be removed in a future release.\n";
+    shift->_initialize_body;
+}
+
+sub _initialize_body {
     my $self = shift;
     # TODO:
     # the %options should also include a both 
