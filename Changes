@@ -1,23 +1,23 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-??
+0.73_02 Mon, April 6, 2009
     * More deprecations and renamings
       - Moose::Meta::Method::Constructor
         - initialize_body => _initialize_body (this is always called
           when an object is constructed)
-
-    * Moose::Meta::Method::Destructor   
-      - Destructor inlining was totally broken by the change to the
-        is_needed method in 0.72_01. Now there is a test for this
-        feature, and it works again.
 
     * Moose::Object
       - The DEMOLISHALL method could throw an exception during global
         destruction, meaning that your class's DEMOLISH methods would
         not be properly called. Reported by t0m.
 
-0.73_01
+    * Moose::Meta::Method::Destructor   
+      - Destructor inlining was totally broken by the change to the
+        is_needed method in 0.72_01. Now there is a test for this
+        feature, and it works again.
+
+0.73_01 Sun, April 5, 2009
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
         of allowing the user to rename or exclude ->meta
