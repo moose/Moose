@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+??
+    * More deprecations and renamings
+      - Moose::Meta::Method::Constructor
+        - initialize_body => _initialize_body (this is always called
+          when an object is constructed)
+
 0.73_01
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
