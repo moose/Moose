@@ -55,12 +55,21 @@ sub BUILDALL {
 }
 
 sub DEMOLISHALL {
-    my $self = shift;    
-    # NOTE: we ask Perl if we even 
+    my $self = shift;
+
+    # NOTE: we ask Perl if we even
     # need to do this first, to avoid
-    # extra meta level calls    
+    # extra meta level calls
     return unless $self->can('DEMOLISH');
-    foreach my $method (Class::MOP::class_of($self)->find_all_methods_by_name('DEMOLISH')) {
+
+    # This is a hack, because Moose::Meta::Class may not be the right
+    # metaclass, but class_of may return undef during global
+    # destruction, if the metaclass object has already been cleaned
+    # up.
+    my $meta = Class::MOP::class_of($self)
+        || Moose::Meta::Class->initialize( ref $self );
+
+    foreach my $method ( $meta->find_all_methods_by_name('DEMOLISH') ) {
         $method->{code}->execute($self);
     }
 }
