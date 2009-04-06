@@ -12,6 +12,11 @@ for, noteworthy changes.
         is_needed method in 0.72_01. Now there is a test for this
         feature, and it works again.
 
+    * Moose::Object
+      - The DEMOLISHALL method could throw an exception during global
+        destruction, meaning that your class's DEMOLISH methods would
+        not be properly called. Reported by t0m.
+
 0.73_01
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
