@@ -57,7 +57,7 @@ sub is_needed {
         || $self->throw_error(
         "The is_needed method expected a metaclass object as its arugment");
 
-    return $metaclass->find_next_method_by_name('DEMOLISH');
+    return $metaclass->find_method_by_name('DEMOLISH');
 }
 
 sub initialize_body {
