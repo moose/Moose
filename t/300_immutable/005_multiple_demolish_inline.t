@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Test::Exception;
 
 
@@ -32,6 +32,8 @@ lives_ok {
 } 'Bar->new()';
 
 lives_ok {
-    my $bar = Bar->new();
-    $bar->meta->make_immutable;
+    Bar->meta->make_immutable;
 } 'Bar->meta->make_immutable';
+
+is( Bar->meta->get_method('DESTROY')->package_name, 'Bar',
+    'Bar has a DESTROY method in the Bar class (not inherited)' );
