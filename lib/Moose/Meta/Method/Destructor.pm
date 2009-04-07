@@ -61,8 +61,8 @@ sub is_needed {
 }
 
 sub initialize_body {
-    warn 'The initialize_body method has been made private.'
-        . " The public version is deprecated and will be removed in a future release.\n";
+    Carp::cluck('The initialize_body method has been made private.'
+        . " The public version is deprecated and will be removed in a future release.\n");
     shift->_initialize_body;
 }
 
