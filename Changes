@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Meta::Role
+    * Moose::Meta::Method::Destructor
+      - Include stack traces in the deprecation warnings.
+        (Florian Ragwitz)
+
 0.73_02 Mon, April 6, 2009
     * More deprecations and renamings
       - Moose::Meta::Method::Constructor
@@ -12,7 +17,7 @@ for, noteworthy changes.
         destruction, meaning that your class's DEMOLISH methods would
         not be properly called. Reported by t0m.
 
-    * Moose::Meta::Method::Destructor   
+    * Moose::Meta::Method::Destructor
       - Destructor inlining was totally broken by the change to the
         is_needed method in 0.72_01. Now there is a test for this
         feature, and it works again.
