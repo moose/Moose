@@ -136,15 +136,6 @@ sub add_attribute {
     $self->get_attribute_map->{$name} = $attr_desc;
 }
 
-# DEPRECATED 
-# sub _clean_up_required_methods {
-#     my $self = shift;
-#     foreach my $method ($self->get_required_method_list) {
-#         $self->remove_required_methods($method)
-#             if $self->has_method($method);
-#     }
-# }
-
 ## ------------------------------------------------------------------
 ## method modifiers
 
