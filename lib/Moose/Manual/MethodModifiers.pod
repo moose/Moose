@@ -194,7 +194,7 @@ subclassing and adding more content inside the document:
 
       my $xml = '<income>' . $self->income . '</income>';
       $xml .= "\n";
-      my $xml = '<expenses>' . $self->expenses . '</expenses>';
+      $xml .= '<expenses>' . $self->expenses . '</expenses>';
       $xml .= "\n";
 
       $xml .= inner() || q{};
