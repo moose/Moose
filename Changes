@@ -17,6 +17,9 @@ for, noteworthy changes.
         is_needed method in 0.72_01. Now there is a test for this
         feature, and it works again.
 
+    * Moose::Util
+      - Bold the word 'not' in the POD for find_meta (t0m)
+
 0.73_01 Sun, April 5, 2009
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
