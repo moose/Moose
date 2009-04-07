@@ -1,10 +1,18 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.74 Tue, April 7, 2009
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor
       - Include stack traces in the deprecation warnings.
         (Florian Ragwitz)
+
+    * Moose::Meta::Class
+      - Removed the long-deprecated _apply_all_roles method.
+
+    * Moose::Meta::TypeContsraint
+      - Removed the long-deprecated union method.
+
 
 0.73_02 Mon, April 6, 2009
     * More deprecations and renamings

@@ -490,14 +490,6 @@ sub _reconcile_role_differences {
     return $self;
 }
 
-# NOTE:
-# this was crap anyway, see
-# Moose::Util::apply_all_roles
-# instead
-sub _apply_all_roles { 
-    Carp::croak 'DEPRECATED: use Moose::Util::apply_all_roles($meta, @roles) instead' 
-}
-
 sub _process_attribute {
     my ( $self, $name, @args ) = @_;
 

@@ -285,10 +285,6 @@ sub create_child_type {
     return $class->new(%opts, parent => $self);
 }
 
-## this should get deprecated actually ...
-
-sub union { Carp::croak "DEPRECATED" }
-
 1;
 
 __END__
