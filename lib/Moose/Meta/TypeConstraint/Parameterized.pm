@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints;
 use Moose::Meta::TypeConstraint::Parameterizable;
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.74';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

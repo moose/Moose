@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.74';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
