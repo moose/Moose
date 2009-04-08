@@ -318,6 +318,10 @@ sugar, nor are these other modules designed for extensibility in the
 same way as Moose. With Moose, it's easy to write a MooseX module to
 replace or extend a piece of built-in functionality.
 
+Moose is a complete OO package in and of itself, and is part of a rich
+ecosystem of extensions. It also has an enthusiastic community of
+users, and is being actively maintained and developed.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
