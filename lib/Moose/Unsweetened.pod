@@ -153,7 +153,7 @@ helpers like C<Class::Accessor>.
 
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
-      $birth_date->isa('DateTime') )
+      $birth_date->isa('DateTime')
           or confess 'birth_date must be a DateTime object';
   }
 
