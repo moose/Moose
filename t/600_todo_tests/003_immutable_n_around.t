@@ -48,6 +48,7 @@ tests: {
     }
 
     if ( @classes ) {
+        local $SIG{__WARN__} = sub {};
         ( shift @classes )->meta->make_immutable;
         redo tests;
     }
