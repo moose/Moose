@@ -22,6 +22,13 @@ Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
 to make integration with non-Moose classes easier. It simply checks if
 C<< $obj->can() >> a list of methods.
 
+A number of methods (mostly inherited from L<Class::MOP>) have been
+renamed with a leading underscore to indicate their internal-ness. The
+old method names will still work for a while, but will warn that the
+method has been renamed. In a few cases, the method will be removed
+entirely in the future. This may affect MooseX authors who were using
+these methods.
+
 =head1 Version 0.73
 
 Calling C<subtype> with a name as the only argument now throws an
