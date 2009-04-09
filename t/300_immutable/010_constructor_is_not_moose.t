@@ -46,16 +46,16 @@ is(
     extends 'NotMoose';
 
     ::stderr_is(
-        sub { Foo->meta->make_immutable( replace_constructor => 1 ) },
+        sub { Bar->meta->make_immutable( replace_constructor => 1 ) },
         q{},
         'no warning when replace_constructor is true'
     );
 }
 
-isnt(
-    Bar->meta->find_method_by_name('new')->body,
-    Moose::Object->can('new'),
-    'Bar->new is not inherited from NotMoose because it was inlined'
+is(
+    Bar->meta->find_method_by_name('new')->package_name,
+   'Bar',
+    'Bar->new is inlined, and not inherited from NotMoose'
 );
 
 {
