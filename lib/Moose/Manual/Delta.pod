@@ -158,9 +158,9 @@ error thrown now mentions all of the missing methods, as opposed to
 just the first missing method.
 
 Moose will no longer inline a constructor for your class unless it
-inherits its constructor is inherited from Moose::Object, and will
-warn when it doesn't inline. If you want to force inlining anyway,
-pass C<< "replace_constructor => 1 >> to C<make_immutable>.
+inherits its constructor from Moose::Object, and will warn when it
+doesn't inline. If you want to force inlining anyway, pass
+C<< "replace_constructor => 1 >> to C<make_immutable>.
 
 If you want to get rid of the warning, pass C<< inline_constructor =>
 1 >>.
