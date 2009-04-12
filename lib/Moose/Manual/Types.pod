@@ -69,7 +69,7 @@ can even do something like C<HashRef[ArrayRef[Str]]>.
 The C<Maybe[`a]> type deserves a special mention. Used by itself, it
 doesn't really mean anything (and is equivalent to C<Item>). When it
 is parameterized, it means that the value is either C<undef> or the
-parameterized type. So C<Maybe[Int]> means an integer or C<undef>
+parameterized type. So C<Maybe[Int]> means an integer or C<undef>.
 
 For more details on the type hierarchy, see
 L<Moose::Util::TypeConstraints>.
@@ -403,7 +403,7 @@ C<find_type_constraint> function exported by
 L<Moose::Util::TypeConstraints>:
 
   class_type('MyApp::User')
-      unless find_type_constraint('MyApp::User') || ;
+      unless find_type_constraint('MyApp::User');
 
 This sort of "find or create" logic is simple to write, and will let
 you work around load order issues.

@@ -128,10 +128,10 @@ class is immutable, calling any of these update methods will throw an
 exception.
 
 You can make a class mutable again simply by calling C<<
-$metaclass->make_mutable >>. Once you're done changing it, you can
-restore immutability by calling C<< $metaclass->make_immutable >>.
+$meta->make_mutable >>. Once you're done changing it, you can
+restore immutability by calling C<< $meta->make_immutable >>.
 
-However, the most common use for this part of of the meta API is as
+However, the most common use for this part of the meta API is as
 part of Moose extensions. These extensions should assume that they are
 being run before you make a class immutable.
 
