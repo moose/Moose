@@ -2,8 +2,6 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 ???
-    * Moose::Cookbook::Basics::Recipe12
-      - A new recipe, creating a custom meta-method class.        
 
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
@@ -62,6 +60,9 @@ for, noteworthy changes.
     * Moose::Cookbook::Extending::Recipe4
       - Make init_meta() examples explicitly return the metaclass and
         point out this fact. (hdp)
+
+    * Moose::Cookbook::Basics::Recipe12
+      - A new recipe, creating a custom meta-method class.        
 
     * Moose::Cookbook::Meta::Recipe6
       - A new recipe, creating a custom meta-method class.
