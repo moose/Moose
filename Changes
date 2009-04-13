@@ -10,7 +10,7 @@ for, noteworthy changes.
     * Moose::Meta::Class
       - Removed the long-deprecated _apply_all_roles method.
 
-    * Moose::Meta::TypeContsraint
+    * Moose::Meta::TypeConstraint
       - Removed the long-deprecated union method.
 
 
