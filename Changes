@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+???
+    * Moose::Cookbook::Basics::Recipe12
+      - A new recipe, creating a custom meta-method class.        
+
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor
