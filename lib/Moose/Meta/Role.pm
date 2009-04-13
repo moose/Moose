@@ -767,6 +767,10 @@ L<Moose::Meta::Role>, object, a L<Moose::Meta::Class> object, or a
 The options are passed directly to the constructor for the appropriate
 L<Moose::Meta::Role::Application> subclass.
 
+Note that this will apply the role even if the C<$thing> in question already
+C<does> this role.  L<Moose::Util/does_role> is a convenient wrapper for
+finding out if role application is necessary.
+
 =back
 
 =head2 Roles and other roles
