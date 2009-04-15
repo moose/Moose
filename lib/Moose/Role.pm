@@ -139,6 +139,19 @@ sub init_meta {
     my $meta;
     if ($role->can('meta')) {
         $meta = $role->meta();
+        # we might have had metaclass called on us
+
+        if (blessed($meta) && $meta->isa('Moose::Meta::Class')) {
+            $metaclass = $meta->{'role_metaclass'} || $metaclass;
+            Class::MOP::remove_metaclass_by_name($role);
+            $meta = $metaclass->initialize($role);
+            $meta->add_method(
+                'meta' => sub {
+                    # re-initialize so it inherits properly
+                    $metaclass->initialize( ref($_[0]) || $_[0] );
+                }
+            );
+        }
 
         unless ( blessed($meta) && $meta->isa('Moose::Meta::Role') ) {
             require Moose;
@@ -147,7 +160,6 @@ sub init_meta {
     }
     else {
         $meta = $metaclass->initialize($role);
-
         $meta->add_method(
             'meta' => sub {
                 # re-initialize so it inherits properly

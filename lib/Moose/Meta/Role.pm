@@ -119,6 +119,15 @@ foreach my $action (
 
 ## some things don't always fit, so they go here ...
 
+sub initialize {
+    my $class = shift;
+    my $pkg   = shift;
+    if (my $meta = Class::MOP::get_metaclass_by_name($pkg)) {
+        return $meta;
+    }
+    return $class->SUPER::initialize($pkg, @_);
+}
+
 sub add_attribute {
     my $self = shift;
     my $name = shift;

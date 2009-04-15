@@ -41,17 +41,24 @@ __PACKAGE__->meta->add_attribute('error_class' => (
     default  => 'Moose::Error::Default',
 ));
 
+__PACKAGE__->meta->add_attribute('role_metaclass' => (
+    accessor => 'role_metaclass',
+    default => 'Moose::Meta::Role',
+));
+
 
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
-    return Class::MOP::get_metaclass_by_name($pkg) 
-        || $class->SUPER::initialize($pkg,
+    if (my $meta = Class::MOP::get_metaclass_by_name($pkg)) {
+        return $meta;
+    }
+    return $class->SUPER::initialize($pkg,
                 'attribute_metaclass' => 'Moose::Meta::Attribute',
                 'method_metaclass'    => 'Moose::Meta::Method',
                 'instance_metaclass'  => 'Moose::Meta::Instance',
                 @_
-            );    
+            );
 }
 
 sub create {
