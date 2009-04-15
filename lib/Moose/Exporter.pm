@@ -259,7 +259,7 @@ sub _make_import_sub {
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
-            $c->init_meta( for_class => $CALLER );
+            $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
             $did_init_meta = 1;
         }
 
