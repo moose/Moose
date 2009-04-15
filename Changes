@@ -7,6 +7,10 @@ for, noteworthy changes.
       - Move validation of not inheriting from roles from Moose::extends to
         Moose::Meta::Class::superclasses (doy)
 
+    * Moose::Util
+      - add ensure_all_roles() function to encapsulate the common "apply this
+        role unless the object already does it" pattern (hdp)
+
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor
