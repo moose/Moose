@@ -202,6 +202,17 @@ sub _construct_instance {
     return $instance;
 }
 
+sub superclasses {
+    my $self = shift;
+    my @supers = @_;
+    foreach my $super (@supers) {
+        my $meta = Class::MOP::load_class($super);
+        Moose->throw_error("You cannot inherit from a Moose Role ($super)")
+            if $meta && $meta->isa('Moose::Meta::Role')
+    }
+    return $self->SUPER::superclasses(@supers);
+}
+
 ### ---------------------------------------------
 
 sub add_attribute {

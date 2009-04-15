@@ -54,20 +54,10 @@ sub extends {
 
     Moose->throw_error("Must derive at least one class") unless @_;
 
-    my @supers = @_;
-    foreach my $super (@supers) {
-        my $meta = Class::MOP::load_class($super);
-        Moose->throw_error("You cannot inherit from a Moose Role ($super)")
-            if $meta && $meta->isa('Moose::Meta::Role')
-    }
-
-
-
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    my $meta = Moose::Meta::Class->initialize($class);
-    $meta->superclasses(@supers);
+    Moose::Meta::Class->initialize($class)->superclasses(@_);
 }
 
 sub with {
