@@ -227,6 +227,9 @@ sub _make_import_sub {
         my $traits;
         ( $traits, @_ ) = _strip_traits(@_);
 
+        my $metaclass;
+        ( $metaclass, @_ ) = _strip_metaclass(@_);
+
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
         # else (like Squirrel).
@@ -291,6 +294,18 @@ sub _strip_traits {
     $traits = [ $traits ] unless ref $traits;
 
     return ( $traits, @_ );
+}
+
+sub _strip_metaclass {
+    my $idx = first_index { $_ eq '-metaclass' } @_;
+
+    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+
+    my $metaclass = $_[ $idx + 1 ];
+
+    splice @_, $idx, 2;
+
+    return ( $metaclass, @_ );
 }
 
 sub _apply_meta_traits {
