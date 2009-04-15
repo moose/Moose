@@ -241,6 +241,20 @@ the role so you can get at this object.
 The default metaclass is L<Moose::Meta::Role>. You can specify an
 alternate metaclass with the C<metaclass> parameter.
 
+=head1 METACLASS
+
+When you use Moose::Role, you can specify which metaclass to use:
+
+    use Moose::Role -metaclass => 'My::Meta::Role';
+
+You can also specify traits which will be applied to your role metaclass:
+
+    use Moose::Role -traits => 'My::Trait';
+
+This is very similar to the attribute traits feature. When you do
+this, your class's C<meta> object will have the specified traits
+applied to it. See L<Moose/TRAIT NAME RESOLUTION> for more details.
+
 =head1 CAVEATS
 
 Role support has only a few caveats:
