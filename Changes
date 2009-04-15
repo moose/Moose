@@ -11,6 +11,10 @@ for, noteworthy changes.
       - add ensure_all_roles() function to encapsulate the common "apply this
         role unless the object already does it" pattern (hdp)
 
+    * Moose::Exporter
+      - Users can now select a different metaclass with the "-metaclass"
+        option to import, for classes and roles (Sartak)
+
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor

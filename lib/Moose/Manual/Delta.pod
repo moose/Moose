@@ -16,6 +16,12 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.75
+
+L<Moose::Exporter> now accepts the C<-metaclass> option for easily
+overriding the metaclass (without L<metaclass>). This works for classes
+and roles.
+
 =head1 Version 0.74
 
 Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
