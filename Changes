@@ -16,8 +16,8 @@ for, noteworthy changes.
         option to import, for classes and roles (Sartak)
 
     * Moose::Meta::Role
-      - Make method_metaclass an attr so can accept a metarole application.
-       (jdv)
+      - Make method_metaclass an attr so that it can accept a metarole
+        application.  (jdv)
 
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
