@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 78;
+use Test::More tests => 80;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
@@ -531,3 +531,50 @@ lives_ok {
     ExportsMoose->import;
 } 'import module which loads a role from disk during init_meta';
 
+{
+    package Foo::Meta::Role;
+
+    use Moose::Role;
+}
+{
+    package Foo::Role;
+
+    Moose::Exporter->setup_import_methods(
+        also        => 'Moose::Role',
+    );
+
+    sub init_meta {
+        shift;
+        my %p = @_;
+        Moose::Role->init_meta(%p);
+        return Moose::Util::MetaRole::apply_metaclass_roles(
+            for_class              => $p{for_class},
+            method_metaclass_roles => [ 'Foo::Meta::Role', ],
+        );
+    }
+}
+{
+    package Role::Baz;
+
+    Foo::Role->import;
+
+    sub bla {}
+}
+{
+    package My::Class12;
+
+    use Moose;
+
+    with( 'Role::Baz' );
+}
+{
+    ok(
+        My::Class12->meta->does_role( 'Role::Baz' ),
+        'role applied'
+    );
+    my $method = My::Class12->meta->get_method( 'bla' );
+    ok(
+        $method->meta->does_role( 'Foo::Meta::Role' ),
+        'method_metaclass_role applied'
+    );
+}

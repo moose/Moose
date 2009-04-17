@@ -117,6 +117,12 @@ foreach my $action (
     }) if exists $methods->{remove};
 }
 
+$META->add_attribute(
+    'method_metaclass',
+    reader  => 'method_metaclass',
+    default => 'Moose::Meta::Role::Method',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
@@ -285,8 +291,6 @@ sub does_role {
 
 ## ------------------------------------------------------------------
 ## methods
-
-sub method_metaclass { 'Moose::Meta::Role::Method' }
 
 sub get_method_map {
     my $self = shift;

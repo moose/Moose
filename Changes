@@ -15,6 +15,10 @@ for, noteworthy changes.
       - Users can now select a different metaclass with the "-metaclass"
         option to import, for classes and roles (Sartak)
 
+    * Moose::Meta::Role
+      - Make method_metaclass an attr so can accept a metarole application.
+       (jdv)
+
 0.74 Tue, April 7, 2009
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor
