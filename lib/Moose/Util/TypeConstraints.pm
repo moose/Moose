@@ -611,7 +611,7 @@ $_->make_immutable(
 );
 
 type 'Any'  => where {1};    # meta-type including all
-type 'Item' => where {1};    # base-type
+subtype 'Item' => as 'Any';  # base-type
 
 subtype 'Undef'   => as 'Item' => where { !defined($_) };
 subtype 'Defined' => as 'Item' => where { defined($_) };
