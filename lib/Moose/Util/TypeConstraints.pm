@@ -628,7 +628,7 @@ subtype 'Ref' => as 'Defined' => where { ref($_) } =>
 subtype 'Str' => as 'Value' => where {1} =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
 
-subtype 'Num' => as 'Value' =>
+subtype 'Num' => as 'Str' =>
     where { Scalar::Util::looks_like_number($_) } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Num;
 
