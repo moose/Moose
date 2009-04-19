@@ -4,7 +4,7 @@ package Moose::Meta::Method::Constructor;
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed', 'weaken', 'looks_like_number';
+use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
 our $VERSION   = '0.74';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -30,6 +30,7 @@ sub new {
         'name'          => $options{name},
         'options'       => $options{options},
         'associated_metaclass' => $meta,
+        '_expected_method_class' => $options{_expected_method_class} || 'Moose::Object',
     } => $class;
 
     # we don't want this creating
@@ -40,62 +41,6 @@ sub new {
     $self->_initialize_body;
 
     return $self;
-}
-
-sub can_be_inlined {
-    my $self      = shift;
-    my $metaclass = $self->associated_metaclass;
-
-    my $expected_class = $self->_expected_constructor_class;
-
-    # If any of our parents have been made immutable, we are okay to
-    # inline our own new method. The assumption is that an inlined new
-    # method provided by a parent does not actually get used by
-    # children anyway.
-    for my $meta (
-        grep { $_->is_immutable }
-        map  { ( ref $metaclass )->initialize($_) }
-        grep { $_ ne $expected_class }
-        $metaclass->linearized_isa
-        ) {
-        my $transformer = $meta->immutable_transformer;
-
-        # This is actually a false positive if we're in a subclass of
-        # this class, _and_ the expected class is not overridden (but
-        # should be), and the real expected class is actually
-        # immutable itself (see Fey::Object::Table for an example of
-        # how this can happen). I'm not sure how to actually handle
-        # that case, since it's effectively a bug in the subclass (for
-        # not overriding _expected_constructor_class).
-        return 1 if $transformer->inlined_constructor;
-    }
-
-    if ( my $constructor = $metaclass->find_method_by_name( $self->name ) ) {
-        my $class = $self->associated_metaclass->name;
-
-        if ( $constructor->body != $expected_class->can('new') ) {
-            my $warning
-                = "Not inlining a constructor for $class since it is not"
-                . " inheriting the default $expected_class constructor\n"
-                . "If you are certain you don't need to inline your"
-                . " constructor, specify inline_constructor => 0 in your"
-                . " call to $class->meta->make_immutable\n";
-
-            $warning .= " (constructor has method modifiers which would be lost if it were inlined)\n"
-                if $constructor->isa('Class::MOP::Method::Wrapped');
-
-            warn $warning;
-
-            return 0;
-        }
-        else {
-            return 1;
-        }
-    }
-
-    # This would be a rather weird case where we have no constructor
-    # in the inheritance chain.
-    return 1;
 }
 
 # This is here so can_be_inlined can be inherited by MooseX modules.
