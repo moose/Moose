@@ -5,6 +5,10 @@ use warnings;
 
 use Class::MOP;
 
+our $VERSION   = '0.75';
+$VERSION = eval $VERSION;
+our $AUTHORITY = 'cpan:STEVAN';
+
 use base 'Class::MOP::Class::Immutable::Trait';
 
 sub add_role { shift->_immutable_cannot_call }
