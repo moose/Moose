@@ -26,8 +26,6 @@ plan tests => 6;
 
     extends 'NotMoose';
 
-    warn "oi";
-
     ::stderr_is(
         sub { Foo->meta->make_immutable },
         "Not inlining 'new' for Foo since it is not inheriting the default Moose::Object::new\nIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\n",
