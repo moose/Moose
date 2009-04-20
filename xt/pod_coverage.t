@@ -21,6 +21,7 @@ my %trustme = (
             construct_instance
             create_error
             raise_error
+            superclasses
             )
     ],
     'Moose::Meta::Method'           => ['throw_error'],
