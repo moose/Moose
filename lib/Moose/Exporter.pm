@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -227,6 +227,9 @@ sub _make_import_sub {
         my $traits;
         ( $traits, @_ ) = _strip_traits(@_);
 
+        my $metaclass;
+        ( $metaclass, @_ ) = _strip_metaclass(@_);
+
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
         # else (like Squirrel).
@@ -256,7 +259,7 @@ sub _make_import_sub {
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
-            $c->init_meta( for_class => $CALLER );
+            $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
             $did_init_meta = 1;
         }
 
@@ -291,6 +294,18 @@ sub _strip_traits {
     $traits = [ $traits ] unless ref $traits;
 
     return ( $traits, @_ );
+}
+
+sub _strip_metaclass {
+    my $idx = first_index { $_ eq '-metaclass' } @_;
+
+    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+
+    my $metaclass = $_[ $idx + 1 ];
+
+    splice @_, $idx, 2;
+
+    return ( $metaclass, @_ );
 }
 
 sub _apply_meta_traits {

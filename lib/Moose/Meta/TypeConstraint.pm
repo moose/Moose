@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -284,10 +284,6 @@ sub create_child_type {
     my $class = ref $self;
     return $class->new(%opts, parent => $self);
 }
-
-## this should get deprecated actually ...
-
-sub union { Carp::croak "DEPRECATED" }
 
 1;
 

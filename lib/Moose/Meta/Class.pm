@@ -11,13 +11,16 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
 use Moose::Error::Default;
+use Moose::Meta::Class::Immutable::Trait;
+use Moose::Meta::Method::Constructor;
+use Moose::Meta::Method::Destructor;
 
 use base 'Class::MOP::Class';
 
@@ -25,6 +28,14 @@ __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
     default => sub { [] }
 ));
+
+
+__PACKAGE__->meta->add_attribute(
+    Class::MOP::Attribute->new('immutable_trait' => (
+        accessor => "immutable_trait",
+        default  => 'Moose::Meta::Class::Immutable::Trait',
+    ))
+);
 
 __PACKAGE__->meta->add_attribute('constructor_class' => (
     accessor => 'constructor_class',
@@ -41,7 +52,6 @@ __PACKAGE__->meta->add_attribute('error_class' => (
     default  => 'Moose::Error::Default',
 ));
 
-
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
@@ -52,6 +62,19 @@ sub initialize {
                 'instance_metaclass'  => 'Moose::Meta::Instance',
                 @_
             );    
+}
+
+sub _immutable_options {
+    my ( $self, @args ) = @_;
+
+    $self->SUPER::_immutable_options(
+        inline_destructor => 1,
+
+        # Moose always does this when an attribute is created
+        inline_accessors => 0,
+
+        @args,
+    );
 }
 
 sub create {
@@ -202,6 +225,17 @@ sub _construct_instance {
     return $instance;
 }
 
+sub superclasses {
+    my $self = shift;
+    my @supers = @_;
+    foreach my $super (@supers) {
+        my $meta = Class::MOP::load_class($super);
+        Moose->throw_error("You cannot inherit from a Moose Role ($super)")
+            if $meta && $meta->isa('Moose::Meta::Role')
+    }
+    return $self->SUPER::superclasses(@supers);
+}
+
 ### ---------------------------------------------
 
 sub add_attribute {
@@ -288,8 +322,13 @@ sub _superclass_meta_is_compatible {
 
 # I don't want to have to type this >1 time
 my @MetaClassTypes =
-    qw( attribute_metaclass method_metaclass instance_metaclass
-        constructor_class destructor_class error_class );
+    qw( attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class );
 
 sub _reconcile_with_superclass_meta {
     my ($self, $super) = @_;
@@ -490,14 +529,6 @@ sub _reconcile_role_differences {
     return $self;
 }
 
-# NOTE:
-# this was crap anyway, see
-# Moose::Util::apply_all_roles
-# instead
-sub _apply_all_roles { 
-    Carp::croak 'DEPRECATED: use Moose::Util::apply_all_roles($meta, @roles) instead' 
-}
-
 sub _process_attribute {
     my ( $self, $name, @args ) = @_;
 
@@ -533,36 +564,6 @@ sub _process_inherited_attribute {
 }
 
 ## -------------------------------------------------
-
-use Moose::Meta::Method::Constructor;
-use Moose::Meta::Method::Destructor;
-
-
-sub _default_immutable_transformer_options {
-    my $self = shift;
-
-    my %options = $self->SUPER::_default_immutable_transformer_options;
-
-    # We need to copy the references as we do not want to alter the
-    # superclass's references.
-    $options{cannot_call} = [ @{ $options{cannot_call} }, 'add_role' ];
-    $options{memoize} = {
-        %{ $options{memoize} },
-        calculate_all_roles => 'ARRAY',
-    };
-
-    %options = (
-        %options,
-        constructor_class => $self->constructor_class,
-        destructor_class  => $self->destructor_class,
-        inline_destructor => 1,
-
-        # Moose always does this when an attribute is created
-        inline_accessors => 0,
-    );
-
-    return %options
-}
 
 our $error_level;
 

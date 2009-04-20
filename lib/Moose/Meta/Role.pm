@@ -8,7 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -117,6 +117,12 @@ foreach my $action (
     }) if exists $methods->{remove};
 }
 
+$META->add_attribute(
+    'method_metaclass',
+    reader  => 'method_metaclass',
+    default => 'Moose::Meta::Role::Method',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
@@ -135,15 +141,6 @@ sub add_attribute {
     }
     $self->get_attribute_map->{$name} = $attr_desc;
 }
-
-# DEPRECATED 
-# sub _clean_up_required_methods {
-#     my $self = shift;
-#     foreach my $method ($self->get_required_method_list) {
-#         $self->remove_required_methods($method)
-#             if $self->has_method($method);
-#     }
-# }
 
 ## ------------------------------------------------------------------
 ## method modifiers
@@ -295,8 +292,6 @@ sub does_role {
 ## ------------------------------------------------------------------
 ## methods
 
-sub method_metaclass { 'Moose::Meta::Role::Method' }
-
 sub get_method_map {
     my $self = shift;
 
@@ -418,7 +413,7 @@ sub get_method_list {
 }
 
 sub alias_method {
-    warn "The alias_method method is deprecated. Use add_method instead.\n";
+    Carp::cluck("The alias_method method is deprecated. Use add_method instead.\n");
 
     my $self = shift;
 
@@ -775,6 +770,10 @@ L<Moose::Meta::Role>, object, a L<Moose::Meta::Class> object, or a
 
 The options are passed directly to the constructor for the appropriate
 L<Moose::Meta::Role::Application> subclass.
+
+Note that this will apply the role even if the C<$thing> in question already
+C<does> this role.  L<Moose::Util/does_role> is a convenient wrapper for
+finding out if role application is necessary.
 
 =back
 

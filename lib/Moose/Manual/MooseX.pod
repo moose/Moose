@@ -80,7 +80,7 @@ arguments.
   package User;
 
   use Moose;
-  use MooseX::Params::Validate qw( validatep );
+  use MooseX::Params::Validate;
 
   sub login {
       my $self = shift;
@@ -166,7 +166,7 @@ cool, but still new and experimental.
 This extension helps you build a type library for your application. It
 also lets you predeclare type names and use them as barewords.
 
-  use MooseX::Types -declare => ['PosInt'];
+  use MooseX::Types -declare => ['PositiveInt'];
   use MooseX::Types::Moose 'Int';
 
   subtype PositiveInt
@@ -221,7 +221,7 @@ file, and signal handling.
 
 If you find yourself wanting a role that customizes itself for each
 consumer, this is the tool for you. With this module, you can create a
-role that accepts parameters and generates attributes, methods, etc on
+role that accepts parameters and generates attributes, methods, etc. on
 a customized basis for each consumer.
 
 =head2 L<MooseX::POE>

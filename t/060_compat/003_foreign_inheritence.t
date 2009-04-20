@@ -34,7 +34,7 @@ use Test::Exception;
         return $class->meta->new_object( '__INSTANCE__' => $super, @_ );
     }
 
-    __PACKAGE__->meta->make_immutable( debug => 0 );
+    __PACKAGE__->meta->make_immutable( inline_constructor => 0, debug => 0 );
 
     package Bucket;
     use metaclass 'Class::MOP::Class';

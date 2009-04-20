@@ -16,11 +16,24 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.75
+
+L<Moose::Exporter> now accepts the C<-metaclass> option for easily
+overriding the metaclass (without L<metaclass>). This works for classes
+and roles.
+
 =head1 Version 0.74
 
 Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
 to make integration with non-Moose classes easier. It simply checks if
 C<< $obj->can() >> a list of methods.
+
+A number of methods (mostly inherited from L<Class::MOP>) have been
+renamed with a leading underscore to indicate their internal-ness. The
+old method names will still work for a while, but will warn that the
+method has been renamed. In a few cases, the method will be removed
+entirely in the future. This may affect MooseX authors who were using
+these methods.
 
 =head1 Version 0.73
 
@@ -151,9 +164,9 @@ error thrown now mentions all of the missing methods, as opposed to
 just the first missing method.
 
 Moose will no longer inline a constructor for your class unless it
-inherits its constructor is inherited from Moose::Object, and will
-warn when it doesn't inline. If you want to force inlining anyway,
-pass C<< "replace_constructor => 1 >> to C<make_immutable>.
+inherits its constructor from Moose::Object, and will warn when it
+doesn't inline. If you want to force inlining anyway, pass
+C<< "replace_constructor => 1 >> to C<make_immutable>.
 
 If you want to get rid of the warning, pass C<< inline_constructor =>
 1 >>.

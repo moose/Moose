@@ -21,6 +21,7 @@ my %trustme = (
             construct_instance
             create_error
             raise_error
+            superclasses
             )
     ],
     'Moose::Meta::Method'           => ['throw_error'],
@@ -68,7 +69,7 @@ my %trustme = (
     ],
     'Moose::Meta::TypeCoercion' => ['compile_type_coercion'],
     'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
-    'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint', 'union' ],
+    'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint' ],
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
     'Moose::Meta::TypeConstraint::Enum' =>

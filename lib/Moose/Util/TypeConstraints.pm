@@ -9,7 +9,7 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $VERSION = '0.73_02';
+our $VERSION = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -611,7 +611,7 @@ $_->make_immutable(
 );
 
 type 'Any'  => where {1};    # meta-type including all
-type 'Item' => where {1};    # base-type
+subtype 'Item' => as 'Any';  # base-type
 
 subtype 'Undef'   => as 'Item' => where { !defined($_) };
 subtype 'Defined' => as 'Item' => where { defined($_) };
@@ -628,7 +628,7 @@ subtype 'Ref' => as 'Defined' => where { ref($_) } =>
 subtype 'Str' => as 'Value' => where {1} =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
 
-subtype 'Num' => as 'Value' =>
+subtype 'Num' => as 'Str' =>
     where { Scalar::Util::looks_like_number($_) } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Num;
 

@@ -28,7 +28,7 @@ plan tests => 6;
 
     ::stderr_is(
         sub { Foo->meta->make_immutable },
-        "Not inlining a constructor for Foo since it is not inheriting the default Moose::Object constructor\nIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\n",
+        "Not inlining 'new' for Foo since it is not inheriting the default Moose::Object::new\nIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\n",
         'got a warning that Foo may not have an inlined constructor'
     );
 }
@@ -46,16 +46,16 @@ is(
     extends 'NotMoose';
 
     ::stderr_is(
-        sub { Foo->meta->make_immutable( replace_constructor => 1 ) },
+        sub { Bar->meta->make_immutable( replace_constructor => 1 ) },
         q{},
         'no warning when replace_constructor is true'
     );
 }
 
-isnt(
-    Bar->meta->find_method_by_name('new')->body,
-    Moose::Object->can('new'),
-    'Bar->new is not inherited from NotMoose because it was inlined'
+is(
+    Bar->meta->find_method_by_name('new')->package_name,
+   'Bar',
+    'Bar->new is inlined, and not inherited from NotMoose'
 );
 
 {

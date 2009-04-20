@@ -153,7 +153,7 @@ helpers like C<Class::Accessor>.
 
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
-      $birth_date->isa('DateTime') )
+      $birth_date->isa('DateTime')
           or confess 'birth_date must be a DateTime object';
   }
 
@@ -317,6 +317,10 @@ put together all of Moose's features along with a layer of declarative
 sugar, nor are these other modules designed for extensibility in the
 same way as Moose. With Moose, it's easy to write a MooseX module to
 replace or extend a piece of built-in functionality.
+
+Moose is a complete OO package in and of itself, and is part of a rich
+ecosystem of extensions. It also has an enthusiastic community of
+users, and is being actively maintained and developed.
 
 =head1 AUTHOR
 

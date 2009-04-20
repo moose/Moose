@@ -1,6 +1,37 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.75 Mon, April 20, 2009
+    * Moose
+    * Moose::Meta::Class
+      - Move validation of not inheriting from roles from Moose::extends to
+        Moose::Meta::Class::superclasses (doy)
+
+    * Moose::Util
+      - add ensure_all_roles() function to encapsulate the common "apply this
+        role unless the object already does it" pattern (hdp)
+
+    * Moose::Exporter
+      - Users can now select a different metaclass with the "-metaclass"
+        option to import, for classes and roles (Sartak)
+
+    * Moose::Meta::Role
+      - Make method_metaclass an attr so that it can accept a metarole
+        application.  (jdv)
+
+0.74 Tue, April 7, 2009
+    * Moose::Meta::Role
+    * Moose::Meta::Method::Destructor
+      - Include stack traces in the deprecation warnings.
+        (Florian Ragwitz)
+
+    * Moose::Meta::Class
+      - Removed the long-deprecated _apply_all_roles method.
+
+    * Moose::Meta::TypeConstraint
+      - Removed the long-deprecated union method.
+
+
 0.73_02 Mon, April 6, 2009
     * More deprecations and renamings
       - Moose::Meta::Method::Constructor
@@ -12,7 +43,7 @@ for, noteworthy changes.
         destruction, meaning that your class's DEMOLISH methods would
         not be properly called. Reported by t0m.
 
-    * Moose::Meta::Method::Destructor   
+    * Moose::Meta::Method::Destructor
       - Destructor inlining was totally broken by the change to the
         is_needed method in 0.72_01. Now there is a test for this
         feature, and it works again.
@@ -48,6 +79,9 @@ for, noteworthy changes.
     * Moose::Cookbook::Extending::Recipe4
       - Make init_meta() examples explicitly return the metaclass and
         point out this fact. (hdp)
+
+    * Moose::Cookbook::Basics::Recipe12
+      - A new recipe, creating a custom meta-method class.        
 
     * Moose::Cookbook::Meta::Recipe6
       - A new recipe, creating a custom meta-method class.

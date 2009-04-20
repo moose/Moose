@@ -7,7 +7,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,6 +15,7 @@ my @exports = qw[
     find_meta 
     does_role
     search_class_by_role   
+    ensure_all_roles
     apply_all_roles
     get_all_init_args
     get_all_attribute_values
@@ -67,8 +68,22 @@ sub search_class_by_role {
     return;
 }
 
+# this can possibly behave in unexpected ways because the roles being composed
+# before being applied could differ from call to call; I'm not sure if or how
+# to document this possible quirk.
+sub ensure_all_roles {
+    my $applicant = shift;
+    _apply_all_roles($applicant, sub { !does_role($applicant, $_) }, @_);
+}
+
 sub apply_all_roles {
     my $applicant = shift;
+    _apply_all_roles($applicant, sub { 1 }, @_);
+}
+
+sub _apply_all_roles {
+    my $applicant = shift;
+    my $role_filter = shift;
 
     unless (@_) {
         require Moose;
@@ -87,6 +102,10 @@ sub apply_all_roles {
                     . " is not a Moose role" );
         }
     }
+
+    @$roles = grep { local $_ = $_->[0]; $role_filter->() } @$roles;
+
+    return unless @$roles;
 
     my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
 
@@ -248,6 +267,11 @@ The C<$applicant> must already have a metaclass object.
 The list of C<@roles> should be a list of names, each of which can be
 followed by an optional hash reference of options (C<exclude> and
 C<alias>).
+
+=item B<ensure_all_roles($applicant, @roles)>
+
+This function is similar to L</apply_all_roles>, but only applies roles that
+C<$applicant> does not already consume.
 
 =item B<get_all_attribute_values($meta, $instance)>
 

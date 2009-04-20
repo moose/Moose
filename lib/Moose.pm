@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.73_02';
+our $VERSION   = '0.75';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +15,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.80_01;
+use Class::MOP 0.81;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -54,20 +54,10 @@ sub extends {
 
     Moose->throw_error("Must derive at least one class") unless @_;
 
-    my @supers = @_;
-    foreach my $super (@supers) {
-        my $meta = Class::MOP::load_class($super);
-        Moose->throw_error("You cannot inherit from a Moose Role ($super)")
-            if $meta && $meta->isa('Moose::Meta::Role')
-    }
-
-
-
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    my $meta = Moose::Meta::Class->initialize($class);
-    $meta->superclasses(@supers);
+    Moose::Meta::Class->initialize($class)->superclasses(@_);
 }
 
 sub with {
@@ -817,10 +807,13 @@ C<ref> anywhere you need to test for an object's class name.
 
 =back
 
-=head1 METACLASS TRAITS
+=head1 METACLASS
 
-When you use Moose, you can also specify traits which will be applied
-to your metaclass:
+When you use Moose, you can specify which metaclass to use:
+
+    use Moose -metaclass => 'My::Meta::Class';
+
+You can also specify traits which will be applied to your metaclass:
 
     use Moose -traits => 'My::Trait';
 
