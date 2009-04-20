@@ -322,8 +322,13 @@ sub _superclass_meta_is_compatible {
 
 # I don't want to have to type this >1 time
 my @MetaClassTypes =
-    qw( attribute_metaclass method_metaclass instance_metaclass
-        constructor_class destructor_class error_class );
+    qw( attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class );
 
 sub _reconcile_with_superclass_meta {
     my ($self, $super) = @_;
