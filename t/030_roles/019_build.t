@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 10;
+use Test::Output;
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD
@@ -22,7 +23,10 @@ do {
 do {
     package ClassWithBUILD;
     use Moose;
-    with 'TestRole';
+
+    ::stderr_like {
+        with 'TestRole';
+    } qr/The ClassWithBUILD class has implicitly overridden the method \(BUILD\) from role TestRole\./;
 
     sub BUILD { push @CALLS, 'ClassWithBUILD::BUILD' }
 };
@@ -30,7 +34,10 @@ do {
 do {
     package ExplicitClassWithBUILD;
     use Moose;
-    with 'TestRole' => { excludes => 'BUILD' };
+
+    ::stderr_is {
+        with 'TestRole' => { excludes => 'BUILD' };
+    } '';
 
     sub BUILD { push @CALLS, 'ExplicitClassWithBUILD::BUILD' }
 };
