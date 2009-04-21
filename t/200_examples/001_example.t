@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 22;
 use Test::Exception;
+use Test::Output;
 
 
 
@@ -52,7 +53,9 @@ use Test::Exception;
     package Constraint::AtLeast;
     use Moose;
 
-    with 'Constraint';
+    ::stderr_is {
+        with 'Constraint' => { excludes => 'error_message' };
+    } "";
 
     sub validate {
         my ($self, $field) = @_;
@@ -64,7 +67,9 @@ use Test::Exception;
     package Constraint::NoMoreThan;
     use Moose;
 
-    with 'Constraint';
+    ::stderr_is {
+        with 'Constraint' => { excludes => 'error_message' };
+    } '';
 
     sub validate {
         my ($self, $field) = @_;

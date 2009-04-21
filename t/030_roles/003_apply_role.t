@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 86;
+use Test::More tests => 87;
 use Test::Exception;
+use Test::Output;
 
 {
     package FooRole;
@@ -43,7 +44,10 @@ use Test::Exception;
     use Moose;
 
     extends 'BarClass';
-    with 'FooRole';
+
+    ::stderr_like {
+        with 'FooRole';
+    } qr/The FooClass class has implicitly overridden the method \(goo\) from role FooRole\. If this is intentional, please exclude the method from composition to silence this warning \(see Moose::Cookbook::Roles::Recipe2\)/;
 
     sub blau {'FooClass::blau'}    # << the role wraps this ...
 

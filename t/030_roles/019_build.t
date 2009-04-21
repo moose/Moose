@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD
@@ -28,6 +28,14 @@ do {
 };
 
 do {
+    package ExplicitClassWithBUILD;
+    use Moose;
+    with 'TestRole' => { excludes => 'BUILD' };
+
+    sub BUILD { push @CALLS, 'ExplicitClassWithBUILD::BUILD' }
+};
+
+do {
     package ClassWithoutBUILD;
     use Moose;
     with 'TestRole';
@@ -44,6 +52,14 @@ do {
         'TestRole::BUILD:after',
     ]);
 
+    ExplicitClassWithBUILD->new;
+
+    is_deeply([splice @CALLS], [
+        'TestRole::BUILD:before',
+        'ExplicitClassWithBUILD::BUILD',
+        'TestRole::BUILD:after',
+    ]);
+
     ClassWithoutBUILD->new;
 
     is_deeply([splice @CALLS], [
@@ -54,6 +70,7 @@ do {
 
     if (ClassWithBUILD->meta->is_mutable) {
         ClassWithBUILD->meta->make_immutable;
+        ExplicitClassWithBUILD->meta->make_immutable;
         ClassWithoutBUILD->meta->make_immutable;
         redo;
     }

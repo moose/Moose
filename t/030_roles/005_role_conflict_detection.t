@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 87; # it's really 124 with kolibrie's tests;
+use Test::More tests => 89;
 use Test::Exception;
+use Test::Output;
 
 =pod
 
@@ -107,7 +108,11 @@ Role method conflicts
     
     ::lives_ok {
         with 'Role::Bling';
-        with 'Role::Bling::Bling';
+
+        ::stderr_like {
+            with 'Role::Bling::Bling';
+        } qr/The My::Test4 class has implicitly overridden the method \(bling\) from role Role::Bling::Bling\./;
+
     } '... role methods didnt conflict when manually combined';    
     
     package My::Test5;
@@ -115,7 +120,10 @@ Role method conflicts
     
     ::lives_ok {
         with 'Role::Bling::Bling';
-        with 'Role::Bling';
+
+        ::stderr_like {
+            with 'Role::Bling';
+        } qr/The My::Test5 class has implicitly overridden the method \(bling\) from role Role::Bling\./;
     } '... role methods didnt conflict when manually combined (in opposite order)';    
     
     package My::Test6;

@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 44;
 use Test::Exception;
+use Test::Output;
 
 
 
@@ -34,7 +35,9 @@ use Test::Exception;
     use Moose;
 
     ::lives_ok {
-        with qw(Role::C);
+        ::stderr_like {
+            with qw(Role::C);
+        } qr/The Class::A class has implicitly overridden the method \(zot\) from role Role::C\./;
     } "define class A";
     
     sub zot { 'Class::A::zot' }
@@ -70,7 +73,9 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
     use Moose;
     
     ::lives_ok {
-        with 'Role::A::Conflict';
+        ::stderr_like {
+            with 'Role::A::Conflict';
+        } qr/The Class::A::Resolved class has implicitly overridden the method \(bar\) from role Role::A::Conflict\./;
     } '... did fufill the requirement of &bar method';    
     
     sub bar { 'Class::A::Resolved::bar' }
@@ -112,7 +117,9 @@ is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right 
     use Moose;
     
     ::lives_ok {
-        with qw(Role::F);
+        ::stderr_like {
+            with qw(Role::F);
+        } qr/The Class::B class has implicitly overridden the method \(zot\) from role Role::F\./;
     } "define class Class::B";
     
     sub zot { 'Class::B::zot' }
@@ -189,7 +196,9 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     use Moose;
 
     ::lives_ok {
-        with qw(Role::I);
+        ::stderr_like {
+            with qw(Role::I);
+        } qr/The Class::E class has implicitly overridden the method \(zot\) from role Role::I\./;
     } "resolved with method";        
 
     sub foo { 'Class::E::foo' }
@@ -214,7 +223,9 @@ ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requi
 
         sub zot { 'Class::D::zot' }
 
-        with qw(Role::I);
+        ::stderr_like {
+            with qw(Role::I);
+        } qr/The Class::D class has implicitly overridden the method \(zot\) from role Role::I\./;
 
     } "resolved with attr";
 

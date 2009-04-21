@@ -3,8 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 40;
 use Test::Exception;
+use Test::Output;
 
 sub req_or_has ($$) {
     my ( $role, $method ) = @_;
@@ -99,7 +100,9 @@ sub req_or_has ($$) {
     package Foo;
     use Moose;
 
-    with qw(Bar);
+    ::stderr_like {
+        with qw(Bar);
+    } qr/The Foo class has implicitly overridden the method \(xxy\) from role Bar\./;
 
     has oink => (
         is => "rw",
@@ -135,6 +138,7 @@ sub req_or_has ($$) {
 
     {
         local our $TODO = "attrs and methods from a role should clash";
+        local $SIG{__WARN__} = sub { 'Ignore!' };
         ::dies_ok { with qw(Tree Dog) }
     }
 }
