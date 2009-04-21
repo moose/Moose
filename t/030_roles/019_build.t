@@ -33,42 +33,29 @@ do {
     with 'TestRole';
 };
 
-is_deeply([splice @CALLS], [], "no calls to BUILD yet");
+{
+    is_deeply([splice @CALLS], [], "no calls to BUILD yet");
 
-ClassWithBUILD->new;
+    ClassWithBUILD->new;
 
-is_deeply([splice @CALLS], [
-    'TestRole::BUILD:before',
-    'ClassWithBUILD::BUILD',
-    'TestRole::BUILD:after',
-]);
+    is_deeply([splice @CALLS], [
+        'TestRole::BUILD:before',
+        'ClassWithBUILD::BUILD',
+        'TestRole::BUILD:after',
+    ]);
 
-ClassWithoutBUILD->new;
+    ClassWithoutBUILD->new;
 
-is_deeply([splice @CALLS], [
-    'TestRole::BUILD:before',
-    'TestRole::BUILD',
-    'TestRole::BUILD:after',
-]);
+    is_deeply([splice @CALLS], [
+        'TestRole::BUILD:before',
+        'TestRole::BUILD',
+        'TestRole::BUILD:after',
+    ]);
 
-ClassWithBUILD->meta->make_immutable;
-ClassWithoutBUILD->meta->make_immutable;
-
-is_deeply([splice @CALLS], [], "no calls to BUILD yet");
-
-ClassWithBUILD->new;
-
-is_deeply([splice @CALLS], [
-    'TestRole::BUILD:before',
-    'ClassWithBUILD::BUILD',
-    'TestRole::BUILD:after',
-]);
-
-ClassWithoutBUILD->new;
-
-is_deeply([splice @CALLS], [
-    'TestRole::BUILD:before',
-    'TestRole::BUILD',
-    'TestRole::BUILD:after',
-]);
+    if (ClassWithBUILD->meta->is_mutable) {
+        ClassWithBUILD->meta->make_immutable;
+        ClassWithoutBUILD->meta->make_immutable;
+        redo;
+    }
+}
 
