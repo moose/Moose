@@ -3,12 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More;
-
-eval "use Test::Output";
-plan skip_all => "Test::Output is required for this test" if $@;
-
-plan tests => 1;
+use Test::More tests => 1;
+use Test::Output;
 
 {
     package Foo;

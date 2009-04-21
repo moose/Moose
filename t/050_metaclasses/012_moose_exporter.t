@@ -3,17 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 45;
 use Test::Exception;
-
-BEGIN {
-    unless ( eval 'use Test::Warn 0.11; 1' )  {
-        plan skip_all => 'These tests require Test::Warn 0.11';
-    }
-    else {
-        plan tests => 45;
-    }
-}
+use Test::Output;
 
 
 {
@@ -23,7 +15,7 @@ BEGIN {
 
     no Moose;
 
-    ::warning_is( sub { eval q[sub make_immutable { return 'foo' }] },
+    ::stderr_is( sub { eval q[sub make_immutable { return 'foo' }] },
                   '',
                   'no warning when defining our own make_immutable sub' );
 }
