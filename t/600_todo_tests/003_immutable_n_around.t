@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 20;
 
 # if make_immutable is removed from the following code the tests pass
 
