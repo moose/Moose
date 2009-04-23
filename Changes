@@ -11,8 +11,7 @@ for, noteworthy changes.
         unconditionally dependency (Sartak)
 
     * Moose::Meta::Class
-      - Changes to work with latest Class::MOP changes to
-        immutabilization.
+      - Changes to immutabilization to work with Class::MOP 0.82_01+.
 
 0.75 Mon, April 20, 2009
     * Moose
