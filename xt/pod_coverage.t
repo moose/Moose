@@ -24,8 +24,9 @@ my %trustme = (
             superclasses
             )
     ],
-    'Moose::Meta::Method'           => ['throw_error'],
-    'Moose::Meta::Method::Accessor' => [
+    'Moose::Meta::Class::Immutable::Trait' => ['.+'],
+    'Moose::Meta::Method'                  => ['throw_error'],
+    'Moose::Meta::Method::Accessor'        => [
         qw( generate_accessor_method
             generate_accessor_method_inline
             generate_clearer_method
@@ -67,20 +68,18 @@ my %trustme = (
             super
             with )
     ],
-    'Moose::Meta::TypeCoercion' => ['compile_type_coercion'],
+    'Moose::Meta::TypeCoercion'        => ['compile_type_coercion'],
     'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
-    'Moose::Meta::TypeConstraint' => [ 'compile_type_constraint' ],
+    'Moose::Meta::TypeConstraint'      => ['compile_type_constraint'],
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
-    'Moose::Meta::TypeConstraint::Enum' =>
-        [qw( constraint equals )],
+    'Moose::Meta::TypeConstraint::Enum' => [qw( constraint equals )],
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
-    'Moose::Meta::TypeConstraint::Role' =>
-        [qw( equals is_a_type_of )],
+    'Moose::Meta::TypeConstraint::Role'  => [qw( equals is_a_type_of )],
     'Moose::Meta::TypeConstraint::Union' => ['compile_type_constraint'],
     'Moose::Util'                        => ['add_method_modifier'],
-    'Moose::Util::TypeConstraints'       => ['find_or_create_type_constraint'],
+    'Moose::Util::TypeConstraints' => ['find_or_create_type_constraint'],
 );
 
 for my $module ( sort @modules ) {
