@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.xx
+    * Moose::Meta::TypeConstraint
+      - Do not run coercions in coerce() if the value already passes the type
+        constraint (hdp)
+
 0.75_01 Thu, April 23, 2009
     * Moose::Meta::Role::Application::ToClass
       - Moose now warns about each class overriding methods from roles it
