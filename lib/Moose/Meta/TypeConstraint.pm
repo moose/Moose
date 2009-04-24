@@ -82,6 +82,8 @@ sub coerce {
         Moose->throw_error("Cannot coerce without a type coercion");
     }
 
+    return $_[0] if $self->check($_[0]);
+
     return $coercion->coerce(@_);
 }
 
