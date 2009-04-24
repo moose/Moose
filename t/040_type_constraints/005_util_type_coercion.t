@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 use Test::Exception;
 
 BEGIN {
@@ -88,3 +88,23 @@ foreach my $coercion (
         is($coerced, "Foo", '... got back what we put in');
     }
 }
+
+subtype 'MyHashRef'
+    => as 'HashRef'
+    => where { $_->{is_awesome} };
+
+coerce 'MyHashRef'
+    => from 'HashRef'
+    => via { $_->{my_hash_ref} };
+
+my $tc = find_type_constraint('MyHashRef');
+is_deeply(
+    $tc->coerce({ my_hash_ref => { is_awesome => 1 } }),
+    { is_awesome => 1 },
+    "coercion runs on HashRef (not MyHashRef)",
+);
+is_deeply(
+    $tc->coerce({ is_awesome => 1 }),
+    { is_awesome => 1 },
+    "did not coerce MyHashRef",
+);
