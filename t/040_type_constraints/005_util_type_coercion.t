@@ -89,22 +89,14 @@ foreach my $coercion (
     }
 }
 
-subtype 'MyHashRef'
-    => as 'HashRef'
-    => where { $_->{is_awesome} };
+subtype 'StrWithTrailingX'
+    => as 'Str'
+    => where { /X$/ };
 
-coerce 'MyHashRef'
-    => from 'HashRef'
-    => via { $_->{my_hash_ref} };
+coerce 'StrWithTrailingX'
+    => from 'Str'
+    => via { $_ . 'X' };
 
-my $tc = find_type_constraint('MyHashRef');
-is_deeply(
-    $tc->coerce({ my_hash_ref => { is_awesome => 1 } }),
-    { is_awesome => 1 },
-    "coercion runs on HashRef (not MyHashRef)",
-);
-is_deeply(
-    $tc->coerce({ is_awesome => 1 }),
-    { is_awesome => 1 },
-    "did not coerce MyHashRef",
-);
+my $tc = find_type_constraint('StrWithTrailingX');
+is($tc->coerce("foo"), "fooX", "coerce when needed");
+is($tc->coerce("fooX"), "fooX", "do not coerce when unneeded");
