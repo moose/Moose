@@ -6,6 +6,11 @@ for, noteworthy changes.
       - Do not run coercions in coerce() if the value already passes the type
         constraint (hdp)
 
+    * Moose::Meta::TypeConstraint::Class
+      - In validation error messages, specifically say that the value is not
+        an instance of the class. This should alleviate some frustrating
+        forgot-to-load-my-type bugs. rt.cpan.org #44639 (Sartak)
+
 0.75_01 Thu, April 23, 2009
     * Moose::Meta::Role::Application::ToClass
       - Moose now warns about each class overriding methods from roles it

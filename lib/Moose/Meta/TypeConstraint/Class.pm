@@ -106,6 +106,18 @@ sub create_child_type {
     return Moose::Meta::TypeConstraint->new(@args, parent => $self);
 }
 
+sub get_message {
+    my $self = shift;
+    my ($value) = @_;
+
+    if ($self->has_message) {
+        return $self->SUPER::get_message(@_);
+    }
+
+    $value = (defined $value ? overload::StrVal($value) : 'undef');
+    return "Validation failed for '" . $self->name . "' failed with value $value (not isa " . $self->class . ")";
+}
+
 1;
 
 __END__
