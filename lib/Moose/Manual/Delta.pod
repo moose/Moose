@@ -37,6 +37,10 @@ we ask that you provide feedback about whether this warning has helped or
 hindered you. If it turns out to have been a bad idea, we will not
 hesitate to remove it from future versions.
 
+Type constraints no longer run coercions for a value that already matches the
+constraint.  This may affect some (arguably buggy) edge case coercions that
+rely on side effects in the C<via> clause.
+
 =head1 Version 0.75
 
 L<Moose::Exporter> now accepts the C<-metaclass> option for easily
