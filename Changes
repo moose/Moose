@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.xx
+0.76
     * Moose::Meta::TypeConstraint
       - Do not run coercions in coerce() if the value already passes the type
         constraint (hdp)
