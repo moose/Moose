@@ -1064,11 +1064,14 @@ interface at L<http://rt.cpan.org>.
 We are very strict about what features we add to the Moose core, especially
 the user-visible features. Instead we have made sure that the underlying
 meta-system of Moose is as extensible as possible so that you can add your
-own features easily. That said, occasionally there is a feature needed in the
-meta-system to support your planned extension, in which case you should
-either email the mailing list or join us on irc at #moose to discuss. The
-L<Moose::Manual::Contributing> has more detail about how and when you can
-contribute.
+own features easily.
+
+That said, occasionally there is a feature needed in the meta-system
+to support your planned extension, in which case you should either
+email the mailing list (moose@perl.org) or join us on IRC at
+L<irc://irc.perl.org/#moose> to discuss. The
+L<Moose::Manual::Contributing> has more detail about how and when you
+can contribute.
 
 =head1 AUTHOR
 
