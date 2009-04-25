@@ -98,15 +98,13 @@ sub apply_attributes {
 
 sub apply_methods {
     my ($self, $role, $class) = @_;
-    my @implicitly_overridden;
-
     foreach my $method_name ($role->get_method_list) {
+        
         unless ($self->is_method_excluded($method_name)) {
             # it if it has one already
             if ($class->has_method($method_name) &&
                 # and if they are not the same thing ...
                 $class->get_method($method_name)->body != $role->get_method($method_name)->body) {
-                push @implicitly_overridden, $method_name;
                 next;
             }
             else {
@@ -132,14 +130,6 @@ sub apply_methods {
             );                
         }        
     }
-
-    if (@implicitly_overridden) {
-        my $plural = @implicitly_overridden > 1 ? "s" : "";
-        # we use \n because we have no hope of guessing the right stack frame,
-        # it's almost certainly never going to be the one above us
-        warn "The " . $class->name . " class has implicitly overridden the method$plural (" . join(', ', @implicitly_overridden) . ") from role " . $role->name . ". If this is intentional, please exclude the method$plural from composition to silence this warning (see Moose::Cookbook::Roles::Recipe2)\n";
-    }
-
     # we must reset the cache here since
     # we are just aliasing methods, otherwise
     # the modifiers go wonky.
