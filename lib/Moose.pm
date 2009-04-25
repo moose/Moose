@@ -1054,8 +1054,10 @@ want to understand them, I suggest you read this.
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+exception.
+
+Please report any bugs to C<bug-moose@rt.cpan.org>, or through the web
+interface at L<http://rt.cpan.org>.
 
 =head1 FEATURE REQUESTS
 
