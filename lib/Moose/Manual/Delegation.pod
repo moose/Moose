@@ -6,8 +6,8 @@ Moose::Manual::Delegation - Attribute delegation
 
 =head1 WHAT IS DELEGATION?
 
-Delegation is a feature that lets you create create "shadow" methods
-that do nothing more than call some other method on an attribute. This
+Delegation is a feature that lets you create "shadow" methods that
+do nothing more than call some other method on an attribute. This
 is quite handy since it lets you simplify a complex set of "has-a"
 relationships and present a single unified API from one class.
 
