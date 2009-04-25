@@ -11,6 +11,10 @@ for, noteworthy changes.
         an instance of the class. This should alleviate some frustrating
         forgot-to-load-my-type bugs. rt.cpan.org #44639 (Sartak)
 
+    * Moose::Meta::Role::Application::ToClass
+      - Revert the class-overrides-role warning in favor of a solution outside
+        of the Moose core (Sartak)
+
 0.75_01 Thu, April 23, 2009
     * Moose::Meta::Role::Application::ToClass
       - Moose now warns about each class overriding methods from roles it
