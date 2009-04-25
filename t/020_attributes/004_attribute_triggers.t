@@ -13,32 +13,32 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
-    has 'bar' => (is      => 'rw', 
+
+    has 'bar' => (is      => 'rw',
                   isa     => 'Maybe[Bar]',
-                  trigger => sub { 
+                  trigger => sub {
                       my ($self, $bar) = @_;
                       $bar->foo($self) if defined $bar;
                   });
-                  
+
     has 'baz' => (writer => 'set_baz',
                   reader => 'get_baz',
                   isa    => 'Baz',
-                  trigger => sub { 
+                  trigger => sub {
                       my ($self, $baz) = @_;
                       $baz->foo($self);
-                  });              
-     
-                  
+                  });
+
+
     package Bar;
     use Moose;
-    
-    has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);           
-    
+
+    has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);
+
     package Baz;
     use Moose;
-    
-    has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);           
+
+    has 'foo' => (is => 'rw', isa => 'Foo', weak_ref => 1);
 }
 
 {
@@ -59,13 +59,13 @@ use Test::Exception;
     is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
 
     ok(isweak($bar->{foo}), '... bar.foo is a weak reference');
-    
+
     lives_ok {
         $foo->bar(undef);
     } '... did not die un-setting bar';
 
     is($foo->bar, undef, '... set the value foo.bar correctly');
-    is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');    
+    is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
 
     # test the writer
 
@@ -85,9 +85,9 @@ use Test::Exception;
 
     my $baz = Baz->new;
     isa_ok($baz, 'Baz');
-    
+
     my $foo = Foo->new(bar => $bar, baz => $baz);
-    isa_ok($foo, 'Foo');    
+    isa_ok($foo, 'Foo');
 
     is($foo->bar, $bar, '... set the value foo.bar correctly');
     is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
@@ -105,14 +105,14 @@ use Test::Exception;
 {
     package Bling;
     use Moose;
-    
-    ::dies_ok { 
+
+    ::dies_ok {
         has('bling' => (is => 'rw', trigger => 'Fail'));
     } '... a trigger must be a CODE ref';
-    
-    ::dies_ok { 
+
+    ::dies_ok {
         has('bling' => (is => 'rw', trigger => []));
-    } '... a trigger must be a CODE ref';    
+    } '... a trigger must be a CODE ref';
 }
 
 # Triggers do not fire on built values

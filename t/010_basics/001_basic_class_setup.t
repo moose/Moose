@@ -21,18 +21,18 @@ ok(Foo->meta->has_method('meta'), '... we got the &meta method');
 ok(Foo->isa('Moose::Object'), '... Foo is automagically a Moose::Object');
 
 dies_ok {
-   Foo->meta->has_method() 
+   Foo->meta->has_method()
 } '... has_method requires an arg';
 
 dies_ok {
-   Foo->meta->has_method('') 
+   Foo->meta->has_method('')
 } '... has_method requires an arg';
 
 can_ok('Foo', 'does');
 
 foreach my $function (qw(
 						 extends
-    	                 has 
+    	                 has
 	                     before after around
 	                     blessed confess
 						 type subtype as where

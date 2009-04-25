@@ -17,7 +17,7 @@
     package CMMChild::Before;
     use Class::Method::Modifiers;
     use base 'PlainParent';
-    
+
     before method => sub { "B" };
 }
 {
@@ -32,7 +32,7 @@
     package CMMChild::Around;
     use Class::Method::Modifiers;
     use base 'PlainParent';
-    
+
     around method => sub { shift->() . "A" };
 }
 {
@@ -47,7 +47,7 @@
     package CMMChild::AllThree;
     use Class::Method::Modifiers;
     use base 'PlainParent';
- 
+
     before method => sub { "B" };
     around method => sub { shift->() . "A" };
     after  method => sub { "Z" };

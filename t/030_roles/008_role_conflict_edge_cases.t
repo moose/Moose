@@ -8,8 +8,8 @@ use Test::Exception;
 
 =pod
 
-Check for repeated inheritance causing 
-a method conflict (which is not really 
+Check for repeated inheritance causing
+a method conflict (which is not really
 a conflict)
 
 =cut
@@ -17,24 +17,24 @@ a conflict)
 {
     package Role::Base;
     use Moose::Role;
-    
+
     sub foo { 'Role::Base::foo' }
-    
+
     package Role::Derived1;
-    use Moose::Role;  
-    
-    with 'Role::Base';
-    
-    package Role::Derived2;
-    use Moose::Role; 
+    use Moose::Role;
 
     with 'Role::Base';
-    
+
+    package Role::Derived2;
+    use Moose::Role;
+
+    with 'Role::Base';
+
     package My::Test::Class1;
-    use Moose;      
-    
+    use Moose;
+
     ::lives_ok {
-        with 'Role::Derived1', 'Role::Derived2';   
+        with 'Role::Derived1', 'Role::Derived2';
     } '... roles composed okay (no conflicts)';
 }
 
@@ -47,8 +47,8 @@ is(My::Test::Class1->foo, 'Role::Base::foo', '... got the right value from metho
 
 =pod
 
-Check for repeated inheritance causing 
-a method conflict with method modifiers 
+Check for repeated inheritance causing
+a method conflict with method modifiers
 (which is not really a conflict)
 
 =cut
@@ -56,31 +56,31 @@ a method conflict with method modifiers
 {
     package Role::Base2;
     use Moose::Role;
-    
+
     override 'foo' => sub { super() . ' -> Role::Base::foo' };
-    
+
     package Role::Derived3;
-    use Moose::Role;  
-    
+    use Moose::Role;
+
     with 'Role::Base2';
-    
+
     package Role::Derived4;
-    use Moose::Role; 
+    use Moose::Role;
 
     with 'Role::Base2';
 
     package My::Test::Class2::Base;
     use Moose;
-    
+
     sub foo { 'My::Test::Class2::Base' }
-    
+
     package My::Test::Class2;
-    use Moose;  
-    
-    extends 'My::Test::Class2::Base';    
-    
+    use Moose;
+
+    extends 'My::Test::Class2::Base';
+
     ::lives_ok {
-        with 'Role::Derived3', 'Role::Derived4';   
+        with 'Role::Derived3', 'Role::Derived4';
     } '... roles composed okay (no conflicts)';
 }
 
@@ -97,11 +97,11 @@ is(My::Test::Class2->foo, 'My::Test::Class2::Base -> Role::Base::foo', '... got 
 
 =pod
 
-Check for repeated inheritance of the 
-same code. There are no conflicts with 
+Check for repeated inheritance of the
+same code. There are no conflicts with
 before/around/after method modifiers.
 
-This tests around, but should work the 
+This tests around, but should work the
 same for before/afters as well
 
 =cut
@@ -109,31 +109,31 @@ same for before/afters as well
 {
     package Role::Base3;
     use Moose::Role;
-    
+
     around 'foo' => sub { 'Role::Base::foo(' . (shift)->() . ')' };
-    
+
     package Role::Derived5;
-    use Moose::Role;  
-    
+    use Moose::Role;
+
     with 'Role::Base3';
-    
+
     package Role::Derived6;
-    use Moose::Role; 
+    use Moose::Role;
 
     with 'Role::Base3';
 
     package My::Test::Class3::Base;
     use Moose;
-    
+
     sub foo { 'My::Test::Class3::Base' }
-    
+
     package My::Test::Class3;
-    use Moose;  
-    
-    extends 'My::Test::Class3::Base';    
-    
+    use Moose;
+
+    extends 'My::Test::Class3::Base';
+
     ::lives_ok {
-        with 'Role::Derived5', 'Role::Derived6';   
+        with 'Role::Derived5', 'Role::Derived6';
     } '... roles composed okay (no conflicts)';
 }
 
@@ -150,8 +150,8 @@ is(My::Test::Class3->foo, 'Role::Base::foo(My::Test::Class3::Base)', '... got th
 
 =pod
 
-Check for repeated inheritance causing 
-a attr conflict (which is not really 
+Check for repeated inheritance causing
+a attr conflict (which is not really
 a conflict)
 
 =cut
@@ -159,24 +159,24 @@ a conflict)
 {
     package Role::Base4;
     use Moose::Role;
-    
+
     has 'foo' => (is => 'ro', default => 'Role::Base::foo');
-    
+
     package Role::Derived7;
-    use Moose::Role;  
-    
-    with 'Role::Base4';
-    
-    package Role::Derived8;
-    use Moose::Role; 
+    use Moose::Role;
 
     with 'Role::Base4';
-    
+
+    package Role::Derived8;
+    use Moose::Role;
+
+    with 'Role::Base4';
+
     package My::Test::Class4;
-    use Moose;      
-    
+    use Moose;
+
     ::lives_ok {
-        with 'Role::Derived7', 'Role::Derived8';   
+        with 'Role::Derived7', 'Role::Derived8';
     } '... roles composed okay (no conflicts)';
 }
 

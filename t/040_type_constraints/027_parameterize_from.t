@@ -7,7 +7,7 @@ use Test::More tests => 12;
 use Test::Exception;
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 # testing the parameterize method

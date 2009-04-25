@@ -38,7 +38,7 @@ lives_ok {
 }
 
 lives_ok {
-    subtype 'MySpecialHashExtended' 
+    subtype 'MySpecialHashExtended'
         => as 'HashRef[Int]'
         => where {
             # all values are less then 10
@@ -96,7 +96,7 @@ lives_ok {
     ## never a real problem since you are likely to use Moose somewhere when you
     ## are creating type constraints.
     use Moose ();
-    
+
     my $MyArrayRefInt =  subtype 'MyArrayRefInt',
         as 'ArrayRef[Int]';
 
@@ -106,16 +106,16 @@ lives_ok {
 
     my $SubOfMyArrayRef = subtype 'SubOfMyArrayRef',
         as 'MyArrayRefInt[BiggerInt]';
-        
+
     ok $MyArrayRefInt->check([1,2,3]), '[1,2,3] is okay';
-    ok ! $MyArrayRefInt->check(["a","b"]), '["a","b"] is not';  
+    ok ! $MyArrayRefInt->check(["a","b"]), '["a","b"] is not';
     ok $BiggerInt->check(100), '100 is  big enough';
-    ok ! $BiggerInt->check(5), '5 is  big enough';   
+    ok ! $BiggerInt->check(5), '5 is  big enough';
     ok $SubOfMyArrayRef->check([15,20,25]), '[15,20,25] is a bunch of big ints';
     ok ! $SubOfMyArrayRef->check([15,5,25]), '[15,5,25] is NOT a bunch of big ints';
-    
+
     throws_ok sub {
         my $SubOfMyArrayRef = subtype 'SubSubOfMyArrayRef',
-            as 'SubOfMyArrayRef[Str]';        
+            as 'SubOfMyArrayRef[Str]';
     }, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
 }

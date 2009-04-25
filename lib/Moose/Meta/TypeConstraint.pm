@@ -110,9 +110,9 @@ sub get_message {
         return $msg->($value);
     }
     else {
-        $value = (defined $value ? overload::StrVal($value) : 'undef');        
+        $value = (defined $value ? overload::StrVal($value) : 'undef');
         return "Validation failed for '" . $self->name . "' failed with value $value";
-    }    
+    }
 }
 
 ## type predicates ...

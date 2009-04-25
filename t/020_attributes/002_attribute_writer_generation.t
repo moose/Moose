@@ -13,7 +13,7 @@ use Scalar::Util 'isweak';
 {
     package Foo;
     use Moose;
-    
+
     eval {
         has 'foo' => (
             reader => 'get_foo',
@@ -38,8 +38,8 @@ use Scalar::Util 'isweak';
             isa    => 'Int',
         );
     };
-    ::ok(!$@, '... created the writer method with type constraint okay');    
-    
+    ::ok(!$@, '... created the writer method with type constraint okay');
+
     eval {
         has 'foo_weak' => (
             reader   => 'get_foo_weak',
@@ -47,7 +47,7 @@ use Scalar::Util 'isweak';
             weak_ref => 1
         );
     };
-    ::ok(!$@, '... created the writer method with weak_ref okay');    
+    ::ok(!$@, '... created the writer method with weak_ref okay');
 }
 
 {
@@ -61,12 +61,12 @@ use Scalar::Util 'isweak';
     lives_ok {
         $foo->set_foo(100);
     } '... set_foo wrote successfully';
-    is($foo->get_foo(), 100, '... got the correct set value');   
-    
-    ok(!isweak($foo->{foo}), '... it is not a weak reference');             
-    
+    is($foo->get_foo(), 100, '... got the correct set value');
+
+    ok(!isweak($foo->{foo}), '... it is not a weak reference');
+
     # required writer
-    
+
     dies_ok {
         Foo->new;
     } '... cannot create without the required attribute';
@@ -76,44 +76,44 @@ use Scalar::Util 'isweak';
     lives_ok {
         $foo->set_foo_required(100);
     } '... set_foo_required wrote successfully';
-    is($foo->get_foo_required(), 100, '... got the correct set value');    
-    
+    is($foo->get_foo_required(), 100, '... got the correct set value');
+
     dies_ok {
         $foo->set_foo_required();
     } '... set_foo_required died successfully with no value';
 
     lives_ok {
         $foo->set_foo_required(undef);
-    } '... set_foo_required did accept undef';    
+    } '... set_foo_required did accept undef';
 
-    ok(!isweak($foo->{foo_required}), '... it is not a weak reference');        
-    
+    ok(!isweak($foo->{foo_required}), '... it is not a weak reference');
+
     # with type constraint
-    
+
     can_ok($foo, 'set_foo_int');
     is($foo->get_foo_int(), undef, '... got an unset value');
     lives_ok {
         $foo->set_foo_int(100);
     } '... set_foo_int wrote successfully';
-    is($foo->get_foo_int(), 100, '... got the correct set value'); 
-    
+    is($foo->get_foo_int(), 100, '... got the correct set value');
+
     dies_ok {
         $foo->set_foo_int("Foo");
-    } '... set_foo_int died successfully';   
-        
-    ok(!isweak($foo->{foo_int}), '... it is not a weak reference');        
-        
+    } '... set_foo_int died successfully';
+
+    ok(!isweak($foo->{foo_int}), '... it is not a weak reference');
+
     # with weak_ref
-    
+
     my $test = [];
-    
+
     can_ok($foo, 'set_foo_weak');
     is($foo->get_foo_weak(), undef, '... got an unset value');
     lives_ok {
         $foo->set_foo_weak($test);
     } '... set_foo_weak wrote successfully';
-    is($foo->get_foo_weak(), $test, '... got the correct set value'); 
-    
+    is($foo->get_foo_weak(), $test, '... got the correct set value');
+
     ok(isweak($foo->{foo_weak}), '... it is a weak reference');
 }
 

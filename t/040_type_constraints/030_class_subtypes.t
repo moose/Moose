@@ -16,7 +16,7 @@ use Moose::Meta::TypeConstraint;
     package Test::Moose::Meta::TypeConstraint::AnySubType;
     use Moose;
     extends 'Moose::Meta::TypeConstraint';
-    
+
     sub my_custom_method {
         return 1;
     }

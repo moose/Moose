@@ -7,14 +7,14 @@ use Test::More tests => 8;
 
 use Moose::Meta::Class;
 
-{ 
+{
     package Class;
     use Moose;
-    
+
     package Foo;
     use Moose::Role;
     sub foo_role_applied { 1 }
-    
+
     package Bar;
     use Moose::Role;
     sub bar_role_applied { 1 }
@@ -27,12 +27,12 @@ use Moose::Meta::Class;
         superclasses => ['Class'],
         roles        => ['Foo'],
     );
-    
+
     my $class_and_foo_2 = Moose::Meta::Class->create_anon_class(
         superclasses => ['Class'],
         roles        => ['Foo'],
     );
-    
+
     isnt $class_and_foo_1->name, $class_and_foo_2->name,
       'creating the same class twice without caching results in 2 classes';
 
@@ -47,18 +47,18 @@ use Moose::Meta::Class;
         roles        => ['Foo'],
         cache        => 1,
     );
-    
+
     my $class_and_foo_2 = Moose::Meta::Class->create_anon_class(
         superclasses => ['Class'],
         roles        => ['Foo'],
         cache        => 1,
     );
-    
+
     is $class_and_foo_1->name, $class_and_foo_2->name,
       'with cache, the same class is the same class';
-    
+
     map { ok $_->name->foo_role_applied } ($class_and_foo_1, $class_and_foo_2);
-    
+
     my $class_and_bar = Moose::Meta::Class->create_anon_class(
         superclasses => ['Class'],
         roles        => ['Bar'],
@@ -67,6 +67,6 @@ use Moose::Meta::Class;
 
     isnt $class_and_foo_1->name, $class_and_bar,
       'class_and_foo and class_and_bar are different';
-    
+
     ok $class_and_bar->name->bar_role_applied;
 }

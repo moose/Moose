@@ -6,9 +6,9 @@ use warnings;
 use Test::More tests => 24;
 use Test::Exception;
 
-BEGIN {    
-    use_ok('Moose::Util::TypeConstraints');               
-    use_ok('Moose::Meta::TypeConstraint::Parameterized');               
+BEGIN {
+    use_ok('Moose::Util::TypeConstraints');
+    use_ok('Moose::Meta::TypeConstraint::Parameterized');
 }
 
 # Array of Ints

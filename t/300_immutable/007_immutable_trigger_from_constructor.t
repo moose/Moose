@@ -16,12 +16,12 @@ use Test::Exception;
     has 'foo' => (is => 'rw', isa => 'Maybe[Str]', trigger => sub {
         die "Pulling the Foo trigger\n"
     });
-    
-    has 'bar' => (is => 'rw', isa => 'Maybe[Str]');    
-    
+
+    has 'bar' => (is => 'rw', isa => 'Maybe[Str]');
+
     has 'baz' => (is => 'rw', isa => 'Maybe[Str]', trigger => sub {
         die "Pulling the Baz trigger\n"
-    });    
+    });
 
     __PACKAGE__->meta->make_immutable; #(debug => 1);
 

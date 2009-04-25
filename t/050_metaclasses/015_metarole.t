@@ -517,7 +517,7 @@ use Moose::Util::MetaRole;
         shift;
         my %p = @_;
         Moose->init_meta(%p);
-        return Moose::Util::MetaRole::apply_metaclass_roles( 
+        return Moose::Util::MetaRole::apply_metaclass_roles(
             for_class       => $p{for_class},
             # Causes us to recurse through init_meta, as we have to
             # load MyMetaclassRole from disk.

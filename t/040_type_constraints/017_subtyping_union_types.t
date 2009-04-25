@@ -27,19 +27,19 @@ lives_ok {
     is($p->name, 'ArrayRef|HashRef', '... parent name is correct');
 
     ok($t->check([]), '... validated it correctly');
-    ok($t->check({}), '... validated it correctly');    
+    ok($t->check({}), '... validated it correctly');
     ok(!$t->check(1), '... validated it correctly');
 }
 
 lives_ok {
-    subtype 'MyCollectionsExtended' 
+    subtype 'MyCollectionsExtended'
         => as 'ArrayRef|HashRef'
         => where {
             if (ref($_) eq 'ARRAY') {
                 return if scalar(@$_) < 2;
             }
             elsif (ref($_) eq 'HASH') {
-                return if scalar(keys(%$_)) < 2;                
+                return if scalar(keys(%$_)) < 2;
             }
             1;
         };
@@ -58,11 +58,11 @@ lives_ok {
     is($p->name, 'ArrayRef|HashRef', '... parent name is correct');
 
     ok(!$t->check([]), '... validated it correctly');
-    ok($t->check([1, 2]), '... validated it correctly');    
-    
-    ok(!$t->check({}), '... validated it correctly');    
-    ok($t->check({ one => 1, two => 2 }), '... validated it correctly');    
-    
+    ok($t->check([1, 2]), '... validated it correctly');
+
+    ok(!$t->check({}), '... validated it correctly');
+    ok($t->check({ one => 1, two => 2 }), '... validated it correctly');
+
     ok(!$t->check(1), '... validated it correctly');
 }
 

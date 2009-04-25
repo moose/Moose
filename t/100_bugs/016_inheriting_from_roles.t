@@ -15,9 +15,9 @@ use Test::Exception;
 {
     package My::Class;
     use Moose;
-    
+
     ::throws_ok {
         extends 'My::Role';
-    } qr/You cannot inherit from a Moose Role \(My\:\:Role\)/, 
+    } qr/You cannot inherit from a Moose Role \(My\:\:Role\)/,
     '... this croaks correctly';
 }

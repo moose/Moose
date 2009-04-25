@@ -10,20 +10,20 @@ use Moose::Util::TypeConstraints;
 
 =pod
 
-This tests demonstrates that Moose will not override 
-a preexisting type constraint of the same name when 
+This tests demonstrates that Moose will not override
+a preexisting type constraint of the same name when
 making constraints for a Moose-class.
 
 It also tests that an attribute which uses a 'Foo' for
-it's isa option will get the subtype Foo, and not a 
+it's isa option will get the subtype Foo, and not a
 type representing the Foo moose class.
 
 =cut
 
-BEGIN { 
+BEGIN {
     # create this subtype first (in BEGIN)
-    subtype Foo 
-        => as 'Value' 
+    subtype Foo
+        => as 'Value'
         => where { $_ eq 'Foo' };
 }
 
@@ -43,7 +43,7 @@ ok(!$foo_constraint->check('Bar'), '... my constraint failed correctly');
 {
     package Bar;
     use Moose;
-    
+
     has 'foo' => (is => 'rw', isa => 'Foo');
 }
 
@@ -51,11 +51,11 @@ my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 
 lives_ok {
-    $bar->foo('Foo');       
+    $bar->foo('Foo');
 } '... checked the type constraint correctly';
 
 dies_ok {
-    $bar->foo(Foo->new);       
+    $bar->foo(Foo->new);
 } '... checked the type constraint correctly';
 
 

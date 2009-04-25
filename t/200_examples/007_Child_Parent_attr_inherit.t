@@ -7,7 +7,7 @@ use Test::More tests => 23;
 
 =pod
 
-Some examples of triggers and how they can 
+Some examples of triggers and how they can
 be used to manage parent-child relationships.
 
 =cut

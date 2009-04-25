@@ -14,8 +14,8 @@ use Test::More tests => 2;
         => where { /^6$/ };
     subtype 'TextSix' => as 'Str'
         => where { /Six/i };
-    coerce 'TextSix' 
-        => from 'DigitSix' 
+    coerce 'TextSix'
+        => from 'DigitSix'
         => via { confess("Cannot live without 6 ($_)") unless /^6$/; 'Six' };
 
     has foo => (

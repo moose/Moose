@@ -37,7 +37,7 @@ sub get_method_aliases_for_role {
     if ($self->role_params->{$role} && defined $self->role_params->{$role}->{alias}) {
         return $self->role_params->{$role}->{alias};
     }
-    return {};    
+    return {};
 }
 
 sub is_method_excluded {
@@ -55,7 +55,7 @@ sub is_method_aliased {
 
 sub is_aliased_method {
     my ($self, $role, $method_name) = @_;
-    my %aliased_names = reverse %{$self->get_method_aliases_for_role($role->name)};    
+    my %aliased_names = reverse %{$self->get_method_aliases_for_role($role->name)};
     exists $aliased_names{$method_name} ? 1 : 0;
 }
 
@@ -97,7 +97,7 @@ sub check_required_methods {
 
     foreach my $role (@{$c->get_roles}) {
         foreach my $required (keys %all_required_methods) {
-            
+
             delete $all_required_methods{$required}
                 if $role->has_method($required)
                 || $self->is_aliased_method($role, $required);
@@ -108,65 +108,65 @@ sub check_required_methods {
 }
 
 sub check_required_attributes {
-    
+
 }
 
 sub apply_attributes {
     my ($self, $c) = @_;
-    
+
     my @all_attributes = map {
         my $role = $_;
-        map { 
-            +{ 
+        map {
+            +{
                 name => $_,
                 attr => $role->get_attribute($_),
             }
         } $role->get_attribute_list
     } @{$c->get_roles};
-    
+
     my %seen;
     foreach my $attr (@all_attributes) {
         if (exists $seen{$attr->{name}}) {
             if ( $seen{$attr->{name}} != $attr->{attr} ) {
                 require Moose;
-                Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' " 
+                Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' "
                                    . "during composition. This is fatal error and cannot be disambiguated.")
             }
         }
         $seen{$attr->{name}} = $attr->{attr};
     }
 
-    foreach my $attr (@all_attributes) {    
+    foreach my $attr (@all_attributes) {
         $c->add_attribute($attr->{name}, $attr->{attr});
     }
 }
 
 sub apply_methods {
     my ($self, $c) = @_;
-    
+
     my @all_methods = map {
         my $role     = $_;
         my $aliases  = $self->get_method_aliases_for_role($role);
         my %excludes = map { $_ => undef } @{ $self->get_exclusions_for_role($role) };
         (
-            (map { 
+            (map {
                 exists $excludes{$_} ? () :
-                +{ 
+                +{
                     role   => $role,
                     name   => $_,
                     method => $role->get_method($_),
                 }
             } $role->get_method_list),
-            (map { 
-                +{ 
+            (map {
+                +{
                     role   => $role,
                     name   => $aliases->{$_},
                     method => $role->get_method($_),
-                }            
+                }
             } keys %$aliases)
         );
     } @{$c->get_roles};
-    
+
     my (%seen, %method_map);
     foreach my $method (@all_methods) {
         if (exists $seen{$method->{name}}) {
@@ -174,9 +174,9 @@ sub apply_methods {
                 $c->add_required_methods($method->{name});
                 delete $method_map{$method->{name}};
                 next;
-            }           
-        }       
-        
+            }
+        }
+
         $seen{$method->{name}}       = $method->{method};
         $method_map{$method->{name}} = $method->{method};
     }
@@ -186,17 +186,17 @@ sub apply_methods {
 
 sub apply_override_method_modifiers {
     my ($self, $c) = @_;
-    
+
     my @all_overrides = map {
         my $role = $_;
-        map { 
-            +{ 
+        map {
+            +{
                 name   => $_,
                 method => $role->get_override_method_modifier($_),
             }
         } $role->get_method_modifier_list('override');
     } @{$c->get_roles};
-    
+
     my %seen;
     foreach my $override (@all_overrides) {
         if ( $c->has_method($override->{name}) ){
@@ -215,11 +215,11 @@ sub apply_override_method_modifiers {
         }
         $seen{$override->{name}} = $override->{method};
     }
-        
+
     $c->add_override_method_modifier(
         $_->{name}, $_->{method}
     ) for @all_overrides;
-            
+
 }
 
 sub apply_method_modifiers {
@@ -248,7 +248,7 @@ Moose::Meta::Role::Application::RoleSummation - Combine two or more roles
 
 =head1 DESCRIPTION
 
-Summation composes two traits, forming the union of non-conflicting 
+Summation composes two traits, forming the union of non-conflicting
 bindings and 'disabling' the conflicting bindings
 
 =head2 METHODS

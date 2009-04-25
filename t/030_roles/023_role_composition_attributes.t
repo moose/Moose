@@ -11,23 +11,23 @@ use Moose::Meta::Role::Composite;
 
 {
     package Role::Foo;
-    use Moose::Role;    
+    use Moose::Role;
     has 'foo' => (is => 'rw');
-    
+
     package Role::Bar;
     use Moose::Role;
     has 'bar' => (is => 'rw');
-    
+
     package Role::FooConflict;
-    use Moose::Role;    
+    use Moose::Role;
     has 'foo' => (is => 'rw');
-    
+
     package Role::BarConflict;
     use Moose::Role;
     has 'bar' => (is => 'rw');
-    
+
     package Role::AnotherFooConflict;
-    use Moose::Role;    
+    use Moose::Role;
     with 'Role::FooConflict';
 }
 
@@ -41,12 +41,12 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');    
-    
+    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';    
-    
+    } '... this succeeds as expected';
+
     is_deeply(
         [ sort $c->get_attribute_list ],
         [ 'bar', 'foo' ],
@@ -72,9 +72,9 @@ dies_ok {
         Moose::Meta::Role::Composite->new(
             roles => [
                 Role::Foo->meta,
-                Role::Bar->meta,            
+                Role::Bar->meta,
                 Role::FooConflict->meta,
-                Role::BarConflict->meta,            
+                Role::BarConflict->meta,
             ]
         )
     );

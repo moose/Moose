@@ -33,8 +33,8 @@ sub _create_hand_optimized_type_constraint {
     my $self = shift;
     my $class = $self->class;
     $self->hand_optimized_type_constraint(
-        sub { 
-            blessed( $_[0] ) && $_[0]->isa($class) 
+        sub {
+            blessed( $_[0] ) && $_[0]->isa($class)
         }
     );
 }
@@ -49,8 +49,8 @@ sub parents {
             # if anybody thinks this problematic please discuss on IRC.
             # a possible fix is to add by attr indexing to the type registry to find types of a certain property
             # regardless of their name
-            Moose::Util::TypeConstraints::find_type_constraint($_) 
-                || 
+            Moose::Util::TypeConstraints::find_type_constraint($_)
+                ||
             __PACKAGE__->new( class => $_, name => "__ANON__" )
         } Class::MOP::class_of($self->class)->superclasses,
     );
@@ -84,7 +84,7 @@ sub is_subtype_of {
     }
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_class);
-    
+
     return unless defined $type;
 
     if ( $type->isa(__PACKAGE__) ) {
@@ -183,7 +183,7 @@ C<Moose::Meta::TypeConstraint::Class> object!
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

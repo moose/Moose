@@ -9,7 +9,7 @@ use Test::Exception;
 use Scalar::Util ();
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 my $SCALAR_REF = \(my $var);

@@ -19,36 +19,36 @@ sub Y {
 {
     package List;
     use Moose::Role;
-    
+
     has '_list' => (
         is       => 'ro',
-        isa      => 'ArrayRef', 
+        isa      => 'ArrayRef',
         init_arg => '::',
         default  => sub { [] }
     );
-    
+
     sub head { (shift)->_list->[0] }
     sub tail {
         my $self = shift;
         $self->new(
-            '::' => [ 
-                @{$self->_list}[1 .. $#{$self->_list}] 
+            '::' => [
+                @{$self->_list}[1 .. $#{$self->_list}]
             ]
         );
-    }  
-    
+    }
+
     sub print {
         join ", " => @{$_[0]->_list};
-    }     
-    
+    }
+
     package List::Immutable;
     use Moose::Role;
-    
+
     requires 'head';
-    requires 'tail';    
-    
+    requires 'tail';
+
     sub is_empty { not defined ($_[0]->head) }
-    
+
     sub length {
         my $self = shift;
         (::Y(sub {
@@ -60,38 +60,38 @@ sub Y {
             }
         }))->($self, 0);
     }
-    
+
     sub apply {
         my ($self, $function) = @_;
         (::Y(sub {
             my $redo = shift;
             sub {
                 my ($list, $func, $acc) = @_;
-                return $list->new('::' => $acc) 
+                return $list->new('::' => $acc)
                     if $list->is_empty;
                 $redo->(
-                    $list->tail, 
+                    $list->tail,
                     $func,
                     [ @{$acc}, $func->($list->head) ]
                 );
             }
-        }))->($self, $function, []);        
+        }))->($self, $function, []);
     }
-    
+
     package My::List1;
     use Moose;
-    
+
     ::lives_ok {
         with 'List', 'List::Immutable';
     } '... successfully composed roles together';
-    
+
     package My::List2;
-    use Moose;    
-    
+    use Moose;
+
     ::lives_ok {
         with 'List::Immutable', 'List';
-    } '... successfully composed roles together';    
-    
+    } '... successfully composed roles together';
+
 }
 
 {
@@ -102,7 +102,7 @@ sub Y {
     ok($coll->does('List::Immutable'), '... $coll does List::Immutable');
 
     ok($coll->is_empty, '... we have an empty collection');
-    is($coll->length, 0, '... we have a length of 1 for the collection');    
+    is($coll->length, 0, '... we have a length of 1 for the collection');
 }
 
 {
@@ -113,7 +113,7 @@ sub Y {
     ok($coll->does('List::Immutable'), '... $coll does List::Immutable');
 
     ok($coll->is_empty, '... we have an empty collection');
-    is($coll->length, 0, '... we have a length of 1 for the collection');    
+    is($coll->length, 0, '... we have a length of 1 for the collection');
 }
 
 {
@@ -124,15 +124,15 @@ sub Y {
     ok($coll->does('List::Immutable'), '... $coll does List::Immutable');
 
     ok(!$coll->is_empty, '... we do not have an empty collection');
-    is($coll->length, 10, '... we have a length of 10 for the collection');   
-    
+    is($coll->length, 10, '... we have a length of 10 for the collection');
+
     is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... got the right printed value');
 
     my $coll2 = $coll->apply(sub { $_[0] * $_[0] });
     isa_ok($coll2, 'My::List1');
-    
-    is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... original is still the same');    
-    is($coll2->print, '1, 4, 9, 16, 25, 36, 49, 64, 81, 100', '... new collection is changed');     
+
+    is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... original is still the same');
+    is($coll2->print, '1, 4, 9, 16, 25, 36, 49, 64, 81, 100', '... new collection is changed');
 }
 
 {
@@ -143,15 +143,15 @@ sub Y {
     ok($coll->does('List::Immutable'), '... $coll does List::Immutable');
 
     ok(!$coll->is_empty, '... we do not have an empty collection');
-    is($coll->length, 10, '... we have a length of 10 for the collection');   
-    
+    is($coll->length, 10, '... we have a length of 10 for the collection');
+
     is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... got the right printed value');
 
     my $coll2 = $coll->apply(sub { $_[0] * $_[0] });
     isa_ok($coll2, 'My::List2');
-    
-    is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... original is still the same');    
-    is($coll2->print, '1, 4, 9, 16, 25, 36, 49, 64, 81, 100', '... new collection is changed');     
+
+    is($coll->print, '1, 2, 3, 4, 5, 6, 7, 8, 9, 10', '... original is still the same');
+    is($coll2->print, '1, 4, 9, 16, 25, 36, 49, 64, 81, 100', '... new collection is changed');
 }
 
 

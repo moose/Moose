@@ -7,8 +7,8 @@ use Benchmark qw[cmpthese];
 
 =pod
 
-This benchmark compares the overhead of a 
-auto-created type constraint vs. none at 
+This benchmark compares the overhead of a
+auto-created type constraint vs. none at
 all vs. a custom-created type.
 
 =cut
@@ -17,16 +17,16 @@ all vs. a custom-created type.
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     has 'baz' => (is => 'rw');
     has 'bar' => (is => 'rw', isa => 'Foo');
 }
 
 {
     package Bar;
-    
+
     sub new { bless {} => __PACKAGE__ }
-    sub bar { 
+    sub bar {
         my $self = shift;
         $self->{bar} = shift if @_;
         $self->{bar};
@@ -36,7 +36,7 @@ all vs. a custom-created type.
 my $foo = Foo->new;
 my $bar = Bar->new;
 
-cmpthese(200_000, 
+cmpthese(200_000,
     {
         'hand coded' => sub {
             $bar->bar($bar);
@@ -45,8 +45,8 @@ cmpthese(200_000,
             $foo->baz($foo);
         },
         'w_constraint' => sub {
-            $foo->bar($foo);            
-        },        
+            $foo->bar($foo);
+        },
     }
 );
 

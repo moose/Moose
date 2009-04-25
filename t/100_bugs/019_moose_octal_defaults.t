@@ -33,7 +33,7 @@ use lib qw(lib);
 has id => (
     isa     => 'Str',
     is      => 'ro',
-    default => 017600, 
+    default => 017600,
 );
 
 no Moose;
@@ -56,7 +56,7 @@ use lib qw(lib);
 has id => (
     isa     => 'Str',
     is      => 'ro',
-    default => 0xFF,  
+    default => 0xFF,
 );
 
 no Moose;
@@ -79,7 +79,7 @@ use lib qw(lib);
 has id => (
     isa     => 'Str',
     is      => 'ro',
-    default => '0xFF',  
+    default => '0xFF',
 );
 
 no Moose;
@@ -102,7 +102,7 @@ use lib qw(lib);
 has id => (
     isa     => 'Str',
     is      => 'ro',
-    default => '0 but true',  
+    default => '0 but true',
 );
 
 no Moose;

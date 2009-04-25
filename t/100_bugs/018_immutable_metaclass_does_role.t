@@ -18,8 +18,8 @@ BEGIN {
     use Moose qw(extends with);
     extends 'Moose::Meta::Class';
        with 'MyRole';
-        
-    sub foo { 'i am foo' }        
+
+    sub foo { 'i am foo' }
 }
 
 {

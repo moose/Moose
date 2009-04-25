@@ -6,9 +6,9 @@ use warnings;
 use Test::More tests => 33;
 use Test::Exception;
 
-BEGIN {    
-    use_ok('Moose::Util::TypeConstraints');               
-    use_ok('Moose::Meta::TypeConstraint::Parameterized');               
+BEGIN {
+    use_ok('Moose::Util::TypeConstraints');
+    use_ok('Moose::Meta::TypeConstraint::Parameterized');
 }
 
 my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
@@ -43,7 +43,7 @@ $r->add_type_constraint($array_of_ints_or_hash_ref);
 
 # union of Arrays of Str | Int or Arrays of Int | Hash
 
-# we can't build this using the simplistic parser 
+# we can't build this using the simplistic parser
 # we have, so we have to do it by hand - SL
 
 my $pure_insanity = Moose::Util::TypeConstraints::create_type_constraint_union('ArrayRef[Int|Str] | ArrayRef[Int | HashRef]');

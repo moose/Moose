@@ -32,8 +32,8 @@ ok(!$type->check([]), '... checked type correctly (fail)');
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
-    has 'arr' => (is => 'rw', isa => 'Maybe[ArrayRef]', required => 1);    
+
+    has 'arr' => (is => 'rw', isa => 'Maybe[ArrayRef]', required => 1);
     has 'bar' => (is => 'rw', isa => class_type('Bar'));
     has 'maybe_bar' => (is => 'rw', isa => maybe_type(class_type('Bar')));
 }
@@ -80,10 +80,10 @@ dies_ok {
     use Moose;
 
     has 'Maybe_Int' => (is=>'rw', isa=>'Maybe[Int]');
-    has 'Maybe_ArrayRef' => (is=>'rw', isa=>'Maybe[ArrayRef]');	
-    has 'Maybe_HashRef' => (is=>'rw', isa=>'Maybe[HashRef]');	
-    has 'Maybe_ArrayRefInt' => (is=>'rw', isa=>'Maybe[ArrayRef[Int]]');	
-    has 'Maybe_HashRefInt' => (is=>'rw', isa=>'Maybe[HashRef[Int]]');	
+    has 'Maybe_ArrayRef' => (is=>'rw', isa=>'Maybe[ArrayRef]');
+    has 'Maybe_HashRef' => (is=>'rw', isa=>'Maybe[HashRef]');
+    has 'Maybe_ArrayRefInt' => (is=>'rw', isa=>'Maybe[ArrayRef[Int]]');
+    has 'Maybe_HashRefInt' => (is=>'rw', isa=>'Maybe[HashRef[Int]]');
 }
 
 ok my $obj = Test::MooseX::Types::Maybe->new
@@ -93,13 +93,13 @@ ok my $obj = Test::MooseX::Types::Maybe->new
 
 ok my $Maybe_Int  = Moose::Util::TypeConstraints::find_or_parse_type_constraint('Maybe[Int]')
  => 'made TC Maybe[Int]';
- 
+
 ok $Maybe_Int->check(1)
  => 'passed (1)';
- 
+
 ok $obj->Maybe_Int(1)
  => 'assigned (1)';
- 
+
 ok $Maybe_Int->check()
  => 'passed ()';
 
@@ -111,23 +111,23 @@ ok $Maybe_Int->check(0)
 
 ok defined $obj->Maybe_Int(0)
  => 'assigned (0)';
- 
+
 ok $Maybe_Int->check(undef)
  => 'passed (undef)';
- 
+
 ok sub {$obj->Maybe_Int(undef); 1}->()
  => 'assigned (undef)';
- 
+
 ok !$Maybe_Int->check("")
  => 'failed ("")';
- 
-throws_ok sub { $obj->Maybe_Int("") }, 
+
+throws_ok sub { $obj->Maybe_Int("") },
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("")';
 
 ok !$Maybe_Int->check("a")
  => 'failed ("a")';
 
-throws_ok sub { $obj->Maybe_Int("a") }, 
+throws_ok sub { $obj->Maybe_Int("a") },
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("a")';

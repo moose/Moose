@@ -11,14 +11,14 @@ use Test::Exception;
 {
     package My::Custom::Meta::Attr;
     use Moose;
-    
+
     extends 'Moose::Meta::Attribute';
 }
 
 {
     package My::Fancy::Role;
     use Moose::Role;
-    
+
     has 'bling_bling' => (
         metaclass => 'My::Custom::Meta::Attr',
         is        => 'rw',
@@ -29,7 +29,7 @@ use Test::Exception;
 {
     package My::Class;
     use Moose;
-    
+
     with 'My::Fancy::Role';
 }
 

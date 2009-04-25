@@ -7,8 +7,8 @@ use Test::More tests => 41;
 
 
 my @moose_exports = qw(
-    extends with 
-    has 
+    extends with
+    has
     before after around
     override
     augment
@@ -36,8 +36,8 @@ ok(!Foo->can($_), '... Foo can no longer do ' . $_) for @moose_exports;
 # and check the type constraints as well
 
 my @moose_type_constraint_exports = qw(
-    type subtype as where message 
-    coerce from via 
+    type subtype as where message
+    coerce from via
     enum
     find_type_constraint
 );

@@ -16,7 +16,7 @@ lives_ok {
 lives_ok {
     package Moose::Meta::Attribute::Custom::Test;
     use Moose;
-    
+
     extends 'Moose::Meta::Attribute';
     with 'MooseX::Attribute::Test';
 } 'custom attribute metaclass extending role is okay';

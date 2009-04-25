@@ -11,7 +11,7 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     has 'bar' => (is => 'rw', isa => 'ArrayRef | HashRef');
 }
 
@@ -55,7 +55,7 @@ dies_ok {
 {
     package Bar;
     use Moose;
-    
+
     has 'baz' => (is => 'rw', isa => 'Str | CodeRef');
 }
 

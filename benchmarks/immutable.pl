@@ -23,18 +23,18 @@ coerce 'Foo'
     use Moose;
 
     has 'default'         => (is => 'rw', default => 10);
-    has 'default_sub'     => (is => 'rw', default => sub { [] });        
+    has 'default_sub'     => (is => 'rw', default => sub { [] });
     has 'lazy'            => (is => 'rw', default => 10, lazy => 1);
-    has 'required'        => (is => 'rw', required => 1);    
-    has 'weak_ref'        => (is => 'rw', weak_ref => 1);    
-    has 'type_constraint' => (is => 'rw', isa => 'Foo');    
-    has 'coercion'        => (is => 'rw', isa => 'Foo', coerce => 1);    
-    
+    has 'required'        => (is => 'rw', required => 1);
+    has 'weak_ref'        => (is => 'rw', weak_ref => 1);
+    has 'type_constraint' => (is => 'rw', isa => 'Foo');
+    has 'coercion'        => (is => 'rw', isa => 'Foo', coerce => 1);
+
     package Bar::Normal;
     use Moose;
-    
+
     extends 'Foo::Normal';
-    
+
     has 'default_w_type_constraint' => (
         is      => 'rw',
         isa     => 'Int',
@@ -45,40 +45,40 @@ coerce 'Foo'
 {
     package Foo::Immutable;
     use Moose;
-    
+
     has 'default'         => (is => 'rw', default => 10);
-    has 'default_sub'     => (is => 'rw', default => sub { [] });        
+    has 'default_sub'     => (is => 'rw', default => sub { [] });
     has 'lazy'            => (is => 'rw', default => 10, lazy => 1);
-    has 'required'        => (is => 'rw', required => 1);    
-    has 'weak_ref'        => (is => 'rw', weak_ref => 1);    
-    has 'type_constraint' => (is => 'rw', isa => 'Foo');    
+    has 'required'        => (is => 'rw', required => 1);
+    has 'weak_ref'        => (is => 'rw', weak_ref => 1);
+    has 'type_constraint' => (is => 'rw', isa => 'Foo');
     has 'coercion'        => (is => 'rw', isa => 'Foo', coerce => 1);
-    
+
     #sub BUILD {
     #    # ...
     #}
-    
+
     Foo::Immutable->meta->make_immutable(debug => 0);
-    
+
     package Bar::Immutable;
     use Moose;
-    
-    extends 'Foo::Immutable';    
-    
+
+    extends 'Foo::Immutable';
+
     has 'default_w_type_constraint' => (
         is      => 'rw',
         isa     => 'Int',
         default => 10,
-    );    
-    
-    Bar::Immutable->meta->make_immutable(debug => 0);    
+    );
+
+    Bar::Immutable->meta->make_immutable(debug => 0);
 }
 
 #__END__
 
 my $foo = Foo->new;
 
-cmpthese(10_000, 
+cmpthese(10_000,
     {
         'normal' => sub {
             Foo::Normal->new(
@@ -93,7 +93,7 @@ cmpthese(10_000,
                 required        => 'BAR',
                 type_constraint => $foo,
                 coercion        => [],
-                weak_ref        => {},                
+                weak_ref        => {},
             );
         },
     }

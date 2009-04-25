@@ -10,11 +10,11 @@ use Test::Exception;
 
 =pod
 
-This test demonstrates that Moose will respect 
-a previously set @ISA using use base, and not 
-try to add Moose::Object to it. 
+This test demonstrates that Moose will respect
+a previously set @ISA using use base, and not
+try to add Moose::Object to it.
 
-However, this is extremely order sensitive as 
+However, this is extremely order sensitive as
 this test also demonstrates.
 
 =cut
@@ -23,18 +23,18 @@ this test also demonstrates.
     package Foo;
     use strict;
     use warnings;
-    
+
     sub foo { 'Foo::foo' }
-    
-    package Bar;    
+
+    package Bar;
     use base 'Foo';
     use Moose;
-    
-    sub new { (shift)->meta->new_object(@_) }    
-    
+
+    sub new { (shift)->meta->new_object(@_) }
+
     package Baz;
-    use Moose;    
-    use base 'Foo'; 
+    use Moose;
+    use base 'Foo';
 }
 
 my $bar = Bar->new;

@@ -10,9 +10,9 @@ sub req_or_has ($$) {
     my ( $role, $method ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     if ( $role ) {
-        ok( 
-            $role->has_method($method) || $role->requires_method($method), 
-            $role->name . " has or requires method $method" 
+        ok(
+            $role->has_method($method) || $role->requires_method($method),
+            $role->name . " has or requires method $method"
         );
     } else {
         fail("role has or requires method $method");
@@ -122,12 +122,12 @@ sub req_or_has ($$) {
 
     package Tree;
     use Moose::Role;
-    
+
     has bark => ( is => "rw" );
 
     package Dog;
     use Moose::Role;
-    
+
     sub bark { warn "woof!" };
 
     package EntPuppy;

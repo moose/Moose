@@ -30,7 +30,7 @@ use Test::More tests => 7;
 
     after qw/scalar_or_array void/ => sub {
         my $self = shift;
-        $self->inc;        
+        $self->inc;
     }
 }
 

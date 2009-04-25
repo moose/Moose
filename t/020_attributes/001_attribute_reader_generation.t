@@ -11,22 +11,22 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     eval {
         has 'foo' => (
             reader => 'get_foo'
         );
     };
     ::ok(!$@, '... created the reader method okay');
-    
+
     eval {
         has 'lazy_foo' => (
-            reader => 'get_lazy_foo', 
-            lazy => 1, 
+            reader => 'get_lazy_foo',
+            lazy => 1,
             default => sub { 10 }
         );
     };
-    ::ok(!$@, '... created the lazy reader method okay') or warn $@;    
+    ::ok(!$@, '... created the lazy reader method okay') or warn $@;
 }
 
 {
@@ -38,14 +38,14 @@ use Test::Exception;
     dies_ok {
         $foo->get_foo(100);
     } '... get_foo is a read-only';
-    
+
     ok(!exists($foo->{lazy_foo}), '... no value in get_lazy_foo slot');
-    
+
     can_ok($foo, 'get_lazy_foo');
     is($foo->get_lazy_foo(), 10, '... got an deferred value');
     dies_ok {
         $foo->get_lazy_foo(100);
-    } '... get_lazy_foo is a read-only';    
+    } '... get_lazy_foo is a read-only';
 }
 
 {
@@ -53,7 +53,7 @@ use Test::Exception;
     isa_ok($foo, 'Foo');
 
     is($foo->get_foo(), 10, '... got the correct value');
-    is($foo->get_lazy_foo(), 100, '... got the correct value');    
+    is($foo->get_lazy_foo(), 100, '... got the correct value');
 }
 
 

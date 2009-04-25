@@ -9,18 +9,18 @@ use Test::Moose;
 {
     package My::Role;
     use Moose::Role;
-    
+
     sub foo { "FOO" }
-    sub bar { "BAR" }    
+    sub bar { "BAR" }
 }
 
 {
     package My::Class;
     use Moose;
-    
+
     with 'My::Role' => {
         alias    => { foo => 'baz', bar => 'gorch' },
-        excludes => ['foo', 'bar'],        
+        excludes => ['foo', 'bar'],
     };
 }
 
@@ -40,15 +40,15 @@ use Test::Moose;
 {
     package My::Role::Again;
     use Moose::Role;
-    
+
     with 'My::Role' => {
         alias    => { foo => 'baz', bar => 'gorch' },
-        excludes => ['foo', 'bar'],        
+        excludes => ['foo', 'bar'],
     };
-    
+
     package My::Class::Again;
     use Moose;
-    
+
     with 'My::Role::Again';
 }
 

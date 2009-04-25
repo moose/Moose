@@ -7,7 +7,7 @@ use Test::More tests => 37;
 use Test::Exception;
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 ## First, we check that the new regex parsing works

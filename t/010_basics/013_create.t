@@ -6,14 +6,14 @@ use warnings;
 use Test::More tests => 7;
 use Test::Exception;
 
-{ 
+{
     package Class;
     use Moose;
-    
+
     package Foo;
     use Moose::Role;
     sub foo_role_applied { 1 }
-    
+
     package Conflicts::With::Foo;
     use Moose::Role;
     sub foo_role_applied { 0 }

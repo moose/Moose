@@ -13,20 +13,20 @@ The code:
   subtype Stuff
     => as Object
     => where { ... }
-  
-will break if the Object:: namespace exists. So the 
+
+will break if the Object:: namespace exists. So the
 solution is to quote 'Object', like so:
 
   subtype Stuff
     => as 'Object'
     => where { ... }
 
-Moose 0.03 did this, now it doesn't, so all should 
-be well from now on. 
+Moose 0.03 did this, now it doesn't, so all should
+be well from now on.
 
 =cut
 
 { package Object::Test; }
 
 package Foo;
-::use_ok('Moose');      
+::use_ok('Moose');

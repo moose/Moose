@@ -15,13 +15,13 @@ use Test::Exception;
 
     extends 'Moose::Meta::Class';
 
-    has 'meta_size' => ( 
+    has 'meta_size' => (
         is  => 'rw',
         isa => 'Int',
     );
 }
 
-lives_ok { 
-    My::Meta->meta()->make_immutable(debug => 0) 
+lives_ok {
+    My::Meta->meta()->make_immutable(debug => 0)
 } '... can make a meta class immutable';
 

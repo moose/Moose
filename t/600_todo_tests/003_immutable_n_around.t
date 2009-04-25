@@ -31,7 +31,7 @@ use Test::More tests => 20;
 
     package Zoink;
     use Moose;
-    
+
     extends qw(Gorch);
 
 }

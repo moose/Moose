@@ -11,7 +11,7 @@ use Test::Exception;
 NOTE:
 
 Should we be testing here that the has & override
-are injecting their methods correctly? In other 
+are injecting their methods correctly? In other
 words, should 'has_method' return true for them?
 
 =cut
@@ -19,28 +19,28 @@ words, should 'has_method' return true for them?
 {
     package FooRole;
     use Moose::Role;
-    
+
     our $VERSION = '0.01';
-    
+
     has 'bar' => (is => 'rw', isa => 'Foo');
-    has 'baz' => (is => 'ro');    
-    
+    has 'baz' => (is => 'ro');
+
     sub foo { 'FooRole::foo' }
-    sub boo { 'FooRole::boo' }    
-    
+    sub boo { 'FooRole::boo' }
+
     before 'boo' => sub { "FooRole::boo:before" };
-    
-    after  'boo' => sub { "FooRole::boo:after1"  }; 
-    after  'boo' => sub { "FooRole::boo:after2"  };        
-    
-    around 'boo' => sub { "FooRole::boo:around" };  
-    
-    override 'bling' => sub { "FooRole::bling:override" };   
-    override 'fling' => sub { "FooRole::fling:override" };  
-    
+
+    after  'boo' => sub { "FooRole::boo:after1"  };
+    after  'boo' => sub { "FooRole::boo:after2"  };
+
+    around 'boo' => sub { "FooRole::boo:around" };
+
+    override 'bling' => sub { "FooRole::bling:override" };
+    override 'fling' => sub { "FooRole::fling:override" };
+
     ::dies_ok { extends() } '... extends() is not supported';
-    ::dies_ok { augment() } '... augment() is not supported';    
-    ::dies_ok { inner()   } '... inner() is not supported';        
+    ::dies_ok { augment() } '... augment() is not supported';
+    ::dies_ok { inner()   } '... inner() is not supported';
 
     no Moose::Role;
 }
@@ -96,8 +96,8 @@ is_deeply(
 # method modifiers
 
 ok($foo_role->has_before_method_modifiers('boo'), '... now we have a boo:before modifier');
-is(($foo_role->get_before_method_modifiers('boo'))[0]->(), 
-    "FooRole::boo:before", 
+is(($foo_role->get_before_method_modifiers('boo'))[0]->(),
+    "FooRole::boo:before",
     '... got the right method back');
 
 is_deeply(
@@ -106,21 +106,21 @@ is_deeply(
     '... got the right list of before method modifiers');
 
 ok($foo_role->has_after_method_modifiers('boo'), '... now we have a boo:after modifier');
-is(($foo_role->get_after_method_modifiers('boo'))[0]->(), 
-    "FooRole::boo:after1", 
+is(($foo_role->get_after_method_modifiers('boo'))[0]->(),
+    "FooRole::boo:after1",
     '... got the right method back');
-is(($foo_role->get_after_method_modifiers('boo'))[1]->(), 
-    "FooRole::boo:after2", 
-    '... got the right method back');    
+is(($foo_role->get_after_method_modifiers('boo'))[1]->(),
+    "FooRole::boo:after2",
+    '... got the right method back');
 
 is_deeply(
     [ $foo_role->get_method_modifier_list('after') ],
     [ 'boo' ],
     '... got the right list of after method modifiers');
-    
+
 ok($foo_role->has_around_method_modifiers('boo'), '... now we have a boo:around modifier');
-is(($foo_role->get_around_method_modifiers('boo'))[0]->(), 
-    "FooRole::boo:around", 
+is(($foo_role->get_around_method_modifiers('boo'))[0]->(),
+    "FooRole::boo:around",
     '... got the right method back');
 
 is_deeply(
@@ -131,13 +131,13 @@ is_deeply(
 ## overrides
 
 ok($foo_role->has_override_method_modifier('bling'), '... now we have a bling:override modifier');
-is($foo_role->get_override_method_modifier('bling')->(), 
-    "FooRole::bling:override", 
+is($foo_role->get_override_method_modifier('bling')->(),
+    "FooRole::bling:override",
     '... got the right method back');
 
 ok($foo_role->has_override_method_modifier('fling'), '... now we have a fling:override modifier');
-is($foo_role->get_override_method_modifier('fling')->(), 
-    "FooRole::fling:override", 
+is($foo_role->get_override_method_modifier('fling')->(),
+    "FooRole::fling:override",
     '... got the right method back');
 
 is_deeply(

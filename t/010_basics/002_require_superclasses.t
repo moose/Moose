@@ -12,7 +12,7 @@ use Test::More tests => 5;
 {
     package Bar;
     use Moose;
-    
+
     eval { extends 'Foo'; };
     ::ok(!$@, '... loaded Foo superclass correctly');
 }
@@ -20,7 +20,7 @@ use Test::More tests => 5;
 {
     package Baz;
     use Moose;
-    
+
     eval { extends 'Bar'; };
     ::ok(!$@, '... loaded (inline) Bar superclass correctly');
 }
@@ -28,7 +28,7 @@ use Test::More tests => 5;
 {
     package Foo::Bar;
     use Moose;
-    
+
     eval { extends 'Foo', 'Bar'; };
     ::ok(!$@, '... loaded Foo and (inline) Bar superclass correctly');
 }
@@ -36,7 +36,7 @@ use Test::More tests => 5;
 {
     package Bling;
     use Moose;
-    
+
     eval { extends 'No::Class'; };
     ::ok($@, '... could not find the superclass (as expected)');
     ::like($@, qr/^Could not load class \(No\:\:Class\) because \:/, '... and got the error we expected');

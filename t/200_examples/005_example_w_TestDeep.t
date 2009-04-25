@@ -7,18 +7,18 @@ use Test::More;
 
 =pod
 
-This tests how well Moose type constraints 
-play with Test::Deep. 
+This tests how well Moose type constraints
+play with Test::Deep.
 
-Its not as pretty as Declare::Constraints::Simple, 
+Its not as pretty as Declare::Constraints::Simple,
 but it is not completely horrid either.
 
 =cut
 
 BEGIN {
     eval "use Test::Deep;";
-    plan skip_all => "Test::Deep is required for this test" if $@;        
-    plan tests => 5;    
+    plan skip_all => "Test::Deep is required for this test" if $@;
+    plan tests => 5;
 }
 
 use Test::Exception;
@@ -31,11 +31,11 @@ use Test::Exception;
     use Test::Deep qw[
         eq_deeply array_each subhashof ignore
     ];
-    
+
     # define your own type ...
-    type 'ArrayOfHashOfBarsAndRandomNumbers' 
+    type 'ArrayOfHashOfBarsAndRandomNumbers'
         => where {
-            eq_deeply($_, 
+            eq_deeply($_,
                 array_each(
                     subhashof({
                         bar           => Test::Deep::isa('Bar'),
@@ -43,8 +43,8 @@ use Test::Exception;
                     })
                 )
             )
-        };    
-    
+        };
+
     has 'bar' => (
         is  => 'rw',
         isa => 'ArrayOfHashOfBarsAndRandomNumbers',
@@ -56,12 +56,12 @@ use Test::Exception;
 
 my $array_of_hashes = [
     { bar => Bar->new, random_number => 10 },
-    { bar => Bar->new },    
+    { bar => Bar->new },
 ];
 
 my $foo;
 lives_ok {
-    $foo = Foo->new('bar' => $array_of_hashes); 
+    $foo = Foo->new('bar' => $array_of_hashes);
 } '... construction succeeded';
 isa_ok($foo, 'Foo');
 

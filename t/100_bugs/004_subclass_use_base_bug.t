@@ -9,20 +9,20 @@ use Test::More tests => 2;
 
 =pod
 
-This just makes sure that the Bar gets 
+This just makes sure that the Bar gets
 a metaclass initialized for it correctly.
 
 =cut
 
 {
-    package Foo; 
-    use Moose; 
+    package Foo;
+    use Moose;
 
-    package Bar; 
+    package Bar;
     use strict;
     use warnings;
-        
-    use base 'Foo'; 
+
+    use base 'Foo';
 }
 
 my $bar = Bar->new;

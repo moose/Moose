@@ -11,28 +11,28 @@ use Test::Exception;
 {
     package Foo::Role;
     use Moose::Role;
-    use Moose::Util::TypeConstraints;    
+    use Moose::Util::TypeConstraints;
 
-    # if does() exists on its own, then 
-    # we create a type constraint for 
+    # if does() exists on its own, then
+    # we create a type constraint for
     # it, just as we do for isa()
-    has 'bar' => (is => 'rw', does => 'Bar::Role'); 
+    has 'bar' => (is => 'rw', does => 'Bar::Role');
     has 'baz' => (
-        is   => 'rw', 
+        is   => 'rw',
         does => subtype('Role', where { $_->does('Bar::Role') })
-    ); 
+    );
 
     package Bar::Role;
     use Moose::Role;
 
     # if isa and does appear together, then see if Class->does(Role)
-    # if it does work... then the does() check is actually not needed 
-    # since the isa() check will imply the does() check    
-    has 'foo' => (is => 'rw', isa => 'Foo::Class', does => 'Foo::Role');    
-    
+    # if it does work... then the does() check is actually not needed
+    # since the isa() check will imply the does() check
+    has 'foo' => (is => 'rw', isa => 'Foo::Class', does => 'Foo::Role');
+
     package Foo::Class;
     use Moose;
-    
+
     with 'Foo::Role';
 
     package Bar::Class;
@@ -68,7 +68,7 @@ lives_ok {
     $bar->foo($foo);
 } '... foo passed the type constraint okay';
 
-    
+
 
 # some error conditions
 
@@ -81,15 +81,15 @@ lives_ok {
     ::dies_ok {
         has 'foo' => (isa => 'Foo::Class', does => 'Bar::Class');
     } '... cannot have a does() which is not done by the isa()';
-}    
+}
 
 {
     package Bling;
     use strict;
     use warnings;
-    
+
     sub bling { 'Bling::bling' }
-    
+
     package Bling::Bling;
     use Moose;
 
@@ -101,4 +101,4 @@ lives_ok {
 }
 
 
-    
+

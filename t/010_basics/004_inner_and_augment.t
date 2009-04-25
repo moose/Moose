@@ -11,32 +11,32 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     sub foo { 'Foo::foo(' . (inner() || '') . ')' }
-    sub bar { 'Foo::bar(' . (inner() || '') . ')' }    
-    sub baz { 'Foo::baz(' . (inner() || '') . ')' }        
-    
+    sub bar { 'Foo::bar(' . (inner() || '') . ')' }
+    sub baz { 'Foo::baz(' . (inner() || '') . ')' }
+
     package Bar;
     use Moose;
-    
+
     extends 'Foo';
-    
-    augment foo => sub { 'Bar::foo(' . (inner() || '') . ')' };   
-    augment bar => sub { 'Bar::bar' };       
+
+    augment foo => sub { 'Bar::foo(' . (inner() || '') . ')' };
+    augment bar => sub { 'Bar::bar' };
 
     no Moose; # ensure inner() still works after unimport
-    
+
     package Baz;
     use Moose;
-    
-    extends 'Bar';
-    
-    augment foo => sub { 'Baz::foo' }; 
-    augment baz => sub { 'Baz::baz' };       
 
-    # this will actually never run, 
+    extends 'Bar';
+
+    augment foo => sub { 'Baz::foo' };
+    augment baz => sub { 'Baz::baz' };
+
+    # this will actually never run,
     # because Bar::bar does not call inner()
-    augment bar => sub { 'Baz::bar' };  
+    augment bar => sub { 'Baz::bar' };
 }
 
 my $baz = Baz->new();
@@ -68,19 +68,19 @@ is($foo->baz(), 'Foo::baz()', '... got the right value from &baz');
 {
     package Bling;
     use Moose;
-    
+
     sub bling { 'Bling::bling' }
-    
+
     package Bling::Bling;
     use Moose;
-    
+
     extends 'Bling';
-    
-    sub bling { 'Bling::bling' }    
-    
+
+    sub bling { 'Bling::bling' }
+
     ::dies_ok {
         augment 'bling' => sub {};
     } '... cannot augment a method which has a local equivalent';
-    
+
 }
 

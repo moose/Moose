@@ -37,7 +37,7 @@ can_ok($obj, qw/foo _foo/);
 lives_ok {$obj->_foo(1)} "$class->_foo is writer";
 is($obj->foo(), 1, "$class->foo is reader");
 dies_ok {$obj->foo(2)} "$class->foo is not writer"; # this should fail
-ok(!defined $obj->_foo(), "$class->_foo is not reader"); 
+ok(!defined $obj->_foo(), "$class->_foo is not reader");
 
 $class = make_class('ro', 'writer', 'Test::Class::WriterRO');
 ok($class, "Can define attr with ro + writer");

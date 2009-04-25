@@ -7,7 +7,7 @@ use Test::More tests => 35;
 use Test::Exception;
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 my $Str = find_type_constraint('Str');
@@ -66,15 +66,15 @@ diag $HashOrArray->validate([]);
 ok(!defined($HashOrArray->validate([])), '... (ArrayRef | HashRef) can accept []');
 ok(!defined($HashOrArray->validate({})), '... (ArrayRef | HashRef) can accept {}');
 
-like($HashOrArray->validate(\(my $var2)), 
-qr/Validation failed for \'ArrayRef\' failed with value SCALAR\(0x.+?\) and Validation failed for \'HashRef\' failed with value SCALAR\(0x.+?\) in \(ArrayRef\|HashRef\)/, 
+like($HashOrArray->validate(\(my $var2)),
+qr/Validation failed for \'ArrayRef\' failed with value SCALAR\(0x.+?\) and Validation failed for \'HashRef\' failed with value SCALAR\(0x.+?\) in \(ArrayRef\|HashRef\)/,
 '... (ArrayRef | HashRef) cannot accept scalar refs');
 
-like($HashOrArray->validate(sub {}),      
-qr/Validation failed for \'ArrayRef\' failed with value CODE\(0x.+?\) and Validation failed for \'HashRef\' failed with value CODE\(0x.+?\) in \(ArrayRef\|HashRef\)/, 
+like($HashOrArray->validate(sub {}),
+qr/Validation failed for \'ArrayRef\' failed with value CODE\(0x.+?\) and Validation failed for \'HashRef\' failed with value CODE\(0x.+?\) in \(ArrayRef\|HashRef\)/,
 '... (ArrayRef | HashRef) cannot accept code refs');
 
 is($HashOrArray->validate(50),
-'Validation failed for \'ArrayRef\' failed with value 50 and Validation failed for \'HashRef\' failed with value 50 in (ArrayRef|HashRef)', 
+'Validation failed for \'ArrayRef\' failed with value 50 and Validation failed for \'HashRef\' failed with value 50 in (ArrayRef|HashRef)',
 '... (ArrayRef | HashRef) cannot accept Numbers');
 

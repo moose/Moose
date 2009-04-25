@@ -216,7 +216,7 @@ L<MooseX::GlobRef::Object>).
 
 =item Method Modifiers
 
-The concept of method modifiers is directly ripped off from CLOS. A 
+The concept of method modifiers is directly ripped off from CLOS. A
 great explanation of them can be found by following this link.
 
 L<http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html>

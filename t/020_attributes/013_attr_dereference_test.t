@@ -19,7 +19,7 @@ use Test::Exception;
     ::lives_ok {
         has 'customers' => (
             is         => 'ro',
-            isa        => subtype('ArrayRef' => where { 
+            isa        => subtype('ArrayRef' => where {
                             (blessed($_) && $_->isa('Customer') || return) for @$_; 1 }),
             auto_deref => 1,
         );
@@ -68,13 +68,13 @@ use Test::Exception;
 
 {
     my $autoderef = AutoDeref->new;
-    
+
     dies_ok {
         $autoderef->bar(1, 2, 3);
     } '... its auto-de-ref-ing, not auto-en-ref-ing';
-    
-    lives_ok  { 
-        $autoderef->bar([ 1, 2, 3 ]) 
+
+    lives_ok  {
+        $autoderef->bar([ 1, 2, 3 ])
     } '... set the results of bar correctly';
 
     is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], '... auto-dereffed correctly';
