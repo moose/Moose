@@ -5,6 +5,7 @@ use warnings;
 use metaclass;
 
 use Scalar::Util    'blessed';
+use List::MoreUtils qw(uniq);
 
 use Moose::Meta::Role::Composite;
 
@@ -59,9 +60,6 @@ sub is_aliased_method {
     exists $aliased_names{$method_name} ? 1 : 0;
 }
 
-# stolen from List::MoreUtils ...
-my $uniq = sub { my %h; map { $h{$_}++ == 0 ? $_ : () } @_ };
-
 sub check_role_exclusions {
     my ($self, $c) = @_;
 
@@ -91,7 +89,7 @@ sub check_role_exclusions {
 sub check_required_methods {
     my ($self, $c) = @_;
 
-    my %all_required_methods = map { $_ => undef } $uniq->(map {
+    my %all_required_methods = map { $_ => undef } uniq(map {
         $_->get_required_method_list
     } @{$c->get_roles});
 
