@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -51,8 +51,8 @@ __PACKAGE__->meta->add_attribute('traits' => (
     predicate => 'has_applied_traits',
 ));
 
-# we need to have a ->does method in here to 
-# more easily support traits, and the introspection 
+# we need to have a ->does method in here to
+# more easily support traits, and the introspection
 # of those traits. We extend the does check to look
 # for metatrait aliases.
 sub does {
@@ -84,7 +84,7 @@ sub interpolate_class_and_new {
     my ($class, $name, @args) = @_;
 
     my ( $new_class, @traits ) = $class->interpolate_class(@args);
-    
+
     $new_class->new($name, @args, ( scalar(@traits) ? ( traits => \@traits ) : () ) );
 }
 
@@ -95,7 +95,7 @@ sub interpolate_class {
 
     if ( my $metaclass_name = delete $options{metaclass} ) {
         my $new_class = Moose::Util::resolve_metaclass_alias( Attribute => $metaclass_name );
-        
+
         if ( $class ne $new_class ) {
             if ( $new_class->can("interpolate_class") ) {
                 return $new_class->interpolate_class(%options);
@@ -142,8 +142,8 @@ sub interpolate_class {
 # ...
 
 my @legal_options_for_inheritance = qw(
-    default coerce required 
-    documentation lazy handles 
+    default coerce required
+    documentation lazy handles
     builder type_constraint
     definition_context
     lazy_build
@@ -152,43 +152,43 @@ my @legal_options_for_inheritance = qw(
 sub legal_options_for_inheritance { @legal_options_for_inheritance }
 
 # NOTE/TODO
-# This method *must* be able to handle 
-# Class::MOP::Attribute instances as 
-# well. Yes, I know that is wrong, but 
-# apparently we didn't realize it was 
-# doing that and now we have some code 
-# which is dependent on it. The real 
-# solution of course is to push this 
+# This method *must* be able to handle
+# Class::MOP::Attribute instances as
+# well. Yes, I know that is wrong, but
+# apparently we didn't realize it was
+# doing that and now we have some code
+# which is dependent on it. The real
+# solution of course is to push this
 # feature back up into Class::MOP::Attribute
 # but I not right now, I am too lazy.
-# However if you are reading this and 
-# looking for something to do,.. please 
+# However if you are reading this and
+# looking for something to do,.. please
 # be my guest.
 # - stevan
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
-    
+
     my %copy = %options;
-    
+
     my %actual_options;
-    
+
     # NOTE:
     # we may want to extends a Class::MOP::Attribute
-    # in which case we need to be able to use the 
-    # core set of legal options that have always 
+    # in which case we need to be able to use the
+    # core set of legal options that have always
     # been here. But we allows Moose::Meta::Attribute
     # instances to changes them.
     # - SL
     my @legal_options = $self->can('legal_options_for_inheritance')
         ? $self->legal_options_for_inheritance
         : @legal_options_for_inheritance;
-    
+
     foreach my $legal_option (@legal_options) {
         if (exists $options{$legal_option}) {
             $actual_options{$legal_option} = $options{$legal_option};
             delete $options{$legal_option};
         }
-    }    
+    }
 
     if ($options{isa}) {
         my $type_constraint;
@@ -204,7 +204,7 @@ sub clone_and_inherit_options {
         $actual_options{type_constraint} = $type_constraint;
         delete $options{isa};
     }
-    
+
     if ($options{does}) {
         my $type_constraint;
         if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
@@ -218,10 +218,10 @@ sub clone_and_inherit_options {
 
         $actual_options{type_constraint} = $type_constraint;
         delete $options{does};
-    }    
+    }
 
     # NOTE:
-    # this doesn't apply to Class::MOP::Attributes, 
+    # this doesn't apply to Class::MOP::Attributes,
     # so we can ignore it for them.
     # - SL
     if ($self->can('interpolate_class')) {
@@ -276,7 +276,7 @@ sub _process_options {
         ## is => rw, accessor => _foo  # turns into (accessor => _foo)
         ## is => ro, accessor => _foo  # error, accesor is rw
         ### -------------------------
-        
+
         if ($options->{is} eq 'ro') {
             $class->throw_error("Cannot define an accessor name on a read-only attribute, accessors are read/write", data => $options)
                 if exists $options->{accessor};
@@ -353,7 +353,7 @@ sub _process_options {
         if ($name =~ /^_/) {
             $options->{clearer}   ||= "_clear${name}";
             $options->{predicate} ||= "_has${name}";
-        } 
+        }
         else {
             $options->{clearer}   ||= "clear_${name}";
             $options->{predicate} ||= "has_${name}";
@@ -380,7 +380,7 @@ sub initialize_instance_slot {
     my $value_is_set;
     if ( defined($init_arg) and exists $params->{$init_arg}) {
         $val = $params->{$init_arg};
-        $value_is_set = 1;    
+        $value_is_set = 1;
     }
     else {
         # skip it if it's lazy
@@ -394,7 +394,7 @@ sub initialize_instance_slot {
         if ($self->has_default) {
             $val = $self->default($instance);
             $value_is_set = 1;
-        } 
+        }
         elsif ($self->has_builder) {
             $val = $self->_call_builder($instance);
             $value_is_set = 1;
@@ -431,8 +431,8 @@ sub _call_builder {
 ## Slot management
 
 # FIXME:
-# this duplicates too much code from 
-# Class::MOP::Attribute, we need to 
+# this duplicates too much code from
+# Class::MOP::Attribute, we need to
 # refactor these bits eventually.
 # - SL
 sub _set_initial_slot_value {
@@ -454,7 +454,7 @@ sub _set_initial_slot_value {
 
         $meta_instance->set_slot_value($instance, $slot_name, $val);
     };
-    
+
     my $initializer = $self->initializer;
 
     # most things will just want to set a value, so make it first arg
@@ -582,7 +582,7 @@ sub install_delegation {
         my $method = $self->_make_delegation_method($handle, $method_to_call);
 
         $self->associated_class->add_method($method->name, $method);
-    }    
+    }
 }
 
 sub remove_delegation {
@@ -624,7 +624,7 @@ sub _canonicalize_handles {
 
         (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
             || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
-            
+
         return map { $_ => $_ } (
             $role_meta->get_method_list,
             $role_meta->get_required_method_list

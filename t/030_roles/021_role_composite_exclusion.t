@@ -12,21 +12,21 @@ use Moose::Meta::Role::Composite;
 {
     package Role::Foo;
     use Moose::Role;
-    
+
     package Role::Bar;
     use Moose::Role;
-    
+
     package Role::ExcludesFoo;
     use Moose::Role;
     excludes 'Role::Foo';
-    
+
     package Role::DoesExcludesFoo;
     use Moose::Role;
-    with 'Role::ExcludesFoo';  
-    
+    with 'Role::ExcludesFoo';
+
     package Role::DoesFoo;
     use Moose::Role;
-    with 'Role::Foo';    
+    with 'Role::Foo';
 }
 
 ok(Role::ExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
@@ -55,10 +55,10 @@ dies_ok {
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
     is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
-    
+
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';    
+    } '... this lives as expected';
 }
 
 # test no conflicts w/exclusion
@@ -66,18 +66,18 @@ dies_ok {
     my $c = Moose::Meta::Role::Composite->new(
         roles => [
             Role::Bar->meta,
-            Role::ExcludesFoo->meta,            
+            Role::ExcludesFoo->meta,
         ]
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
     is($c->name, 'Role::Bar|Role::ExcludesFoo', '... got the composite role name');
-    
+
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';    
-    
-    is_deeply([$c->get_excluded_roles_list], ['Role::Foo'], '... has excluded roles');    
+    } '... this lives as expected';
+
+    is_deeply([$c->get_excluded_roles_list], ['Role::Foo'], '... has excluded roles');
 }
 
 
@@ -91,15 +91,15 @@ dies_ok {
             ]
         )
     );
-    
+
 } '... this fails as expected';
 
 # test conflict with an "inherited" exclusion of an "inherited" role
 dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
-        Moose::Meta::Role::Composite->new(        
+        Moose::Meta::Role::Composite->new(
             roles => [
-                Role::DoesFoo->meta,            
+                Role::DoesFoo->meta,
                 Role::DoesExcludesFoo->meta,
             ]
         )

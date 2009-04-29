@@ -13,10 +13,10 @@ from the Fortress spec.
 
 http://research.sun.com/projects/plrg/fortress0903.pdf
 
-trait OrganicMolecule extends Molecule 
-    excludes { InorganicMolecule } 
-end 
-trait InorganicMolecule extends Molecule end 
+trait OrganicMolecule extends Molecule
+    excludes { InorganicMolecule }
+end
+trait InorganicMolecule extends Molecule end
 
 =cut
 
@@ -26,25 +26,25 @@ trait InorganicMolecule extends Molecule end
 
     package Molecule::Organic;
     use Moose::Role;
-    
+
     with 'Molecule';
     excludes 'Molecule::Inorganic';
-    
+
     package Molecule::Inorganic;
-    use Moose::Role;     
-    
-    with 'Molecule';       
+    use Moose::Role;
+
+    with 'Molecule';
 }
 
 ok(Molecule::Organic->meta->excludes_role('Molecule::Inorganic'), '... Molecule::Organic exludes Molecule::Inorganic');
 is_deeply(
-   [ Molecule::Organic->meta->get_excluded_roles_list() ], 
+   [ Molecule::Organic->meta->get_excluded_roles_list() ],
    [ 'Molecule::Inorganic' ],
    '... Molecule::Organic exludes Molecule::Inorganic');
 
 =pod
 
-Check some basic conflicts when combining  
+Check some basic conflicts when combining
 the roles into the same class
 
 =cut
@@ -52,30 +52,30 @@ the roles into the same class
 {
     package My::Test1;
     use Moose;
-    
+
     ::lives_ok {
         with 'Molecule::Organic';
     } '... adding the role (w/ excluded roles) okay';
 
     package My::Test2;
     use Moose;
-    
+
     ::throws_ok {
         with 'Molecule::Organic', 'Molecule::Inorganic';
-    } qr/Conflict detected: Role Molecule::Organic excludes role 'Molecule::Inorganic'/, 
-    '... adding the role w/ excluded role conflict dies okay';    
-    
+    } qr/Conflict detected: Role Molecule::Organic excludes role 'Molecule::Inorganic'/,
+    '... adding the role w/ excluded role conflict dies okay';
+
     package My::Test3;
     use Moose;
-    
+
     ::lives_ok {
         with 'Molecule::Organic';
-    } '... adding the role (w/ excluded roles) okay';   
-    
+    } '... adding the role (w/ excluded roles) okay';
+
     ::throws_ok {
         with 'Molecule::Inorganic';
-    } qr/Conflict detected: My::Test3 excludes role 'Molecule::Inorganic'/, 
-    '... adding the role w/ excluded role conflict dies okay'; 
+    } qr/Conflict detected: My::Test3 excludes role 'Molecule::Inorganic'/,
+    '... adding the role w/ excluded role conflict dies okay';
 }
 
 ok(My::Test1->does('Molecule::Organic'), '... My::Test1 does Molecule::Organic');
@@ -92,7 +92,7 @@ ok(!My::Test3->does('Molecule::Inorganic'), '... ! My::Test3 does Molecule::Inor
 
 =pod
 
-Check some basic conflicts when combining  
+Check some basic conflicts when combining
 the roles into the a superclass
 
 =cut
@@ -100,16 +100,16 @@ the roles into the a superclass
 {
     package Methane;
     use Moose;
-    
+
     with 'Molecule::Organic';
-    
+
     package My::Test4;
     use Moose;
-    
-    extends 'Methane';    
-    
+
+    extends 'Methane';
+
     ::throws_ok {
-        with 'Molecule::Inorganic';    
+        with 'Molecule::Inorganic';
     } qr/Conflict detected: My::Test4 excludes role \'Molecule::Inorganic\'/,
     '... cannot add exculded role into class which extends Methane';
 }

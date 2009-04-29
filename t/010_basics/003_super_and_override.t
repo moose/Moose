@@ -11,25 +11,25 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     sub foo { 'Foo::foo' }
-    sub bar { 'Foo::bar' }    
+    sub bar { 'Foo::bar' }
     sub baz { 'Foo::baz' }
-    
+
     package Bar;
     use Moose;
-    
+
     extends 'Foo';
-    
-    override bar => sub { 'Bar::bar -> ' . super() };   
-    
+
+    override bar => sub { 'Bar::bar -> ' . super() };
+
     package Baz;
     use Moose;
-    
+
     extends 'Bar';
-    
-    override bar => sub { 'Baz::bar -> ' . super() };       
-    override baz => sub { 'Baz::baz -> ' . super() }; 
+
+    override bar => sub { 'Baz::bar -> ' . super() };
+    override baz => sub { 'Baz::baz -> ' . super() };
 
     no Moose; # ensure super() still works after unimport
 }
@@ -63,19 +63,19 @@ is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
 {
     package Bling;
     use Moose;
-    
+
     sub bling { 'Bling::bling' }
-    
+
     package Bling::Bling;
     use Moose;
-    
+
     extends 'Bling';
-    
-    sub bling { 'Bling::bling' }    
-    
+
+    sub bling { 'Bling::bling' }
+
     ::dies_ok {
         override 'bling' => sub {};
     } '... cannot override a method which has a local equivalent';
-    
+
 }
 

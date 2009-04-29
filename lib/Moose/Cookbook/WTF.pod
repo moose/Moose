@@ -11,52 +11,52 @@ Moose::Cookbook::WTF - For when things go wrong with Moose
 
 =head3 Why is my code taking so long to load?
 
-Moose does have a compile time performance burden, 
-which it inherits from Class::MOP. If load/compile 
-time is a concern for your application, Moose may not 
-be the right tool for you. 
+Moose does have a compile time performance burden,
+which it inherits from Class::MOP. If load/compile
+time is a concern for your application, Moose may not
+be the right tool for you.
 
-Although, you should note that we are exploring the 
-use of L<Module::Compile> to try and reduce this problem, 
+Although, you should note that we are exploring the
+use of L<Module::Compile> to try and reduce this problem,
 but nothing is ready yet.
 
 =head3 Why are my objects taking so long to construct?
 
-Moose uses a lot of introspection when constructing an 
-instance, and introspection can be slow. This problem 
-can be solved by making your class immutable. This can 
+Moose uses a lot of introspection when constructing an
+instance, and introspection can be slow. This problem
+can be solved by making your class immutable. This can
 be done with the following code:
 
   MyClass->meta->make_immutable();
 
 Moose will then memoize a number of meta-level methods
-and inline a constructor for you. For more information 
-on this see the L<Constructors> section below and in the 
+and inline a constructor for you. For more information
+on this see the L<Constructors> section below and in the
 L<Moose::Cookbook::FAQ>.
 
 =head2 Constructors & Immutability
 
 =head3 I made my class immutable, but C<new> is still slow!
 
-Do you have a custom C<new> method in your class? Moose 
-will not overwrite your custom C<new> method, you would 
-probably do better to try and convert this to use the 
-C<BUILD> method or possibly set C<default> values in 
-the attribute declaration. 
+Do you have a custom C<new> method in your class? Moose
+will not overwrite your custom C<new> method, you would
+probably do better to try and convert this to use the
+C<BUILD> method or possibly set C<default> values in
+the attribute declaration.
 
-=head3 I made my class immutable, and now my (before | after | 
+=head3 I made my class immutable, and now my (before | after |
        around) C<new> is not being called?
 
-Making a I<before>, I<after> or I<around> wrap around the 
-C<new> method will actually create a C<new> method within 
+Making a I<before>, I<after> or I<around> wrap around the
+C<new> method will actually create a C<new> method within
 your class. This will prevent Moose from creating one itself
-when you make the class immutable. 
+when you make the class immutable.
 
 =head2 Accessors
 
 =head3 I created an attribute, where are my accessors?
 
-Accessors are B<not> created implicitly, you B<must> ask Moose 
+Accessors are B<not> created implicitly, you B<must> ask Moose
 to create them for you. My guess is that you have this:
 
   has 'foo' => (isa => 'Bar');
@@ -65,46 +65,46 @@ when what you really want to say is:
 
   has 'foo' => (isa => 'Bar', is => 'rw');
 
-The reason this is so is because it is a perfectly valid use 
-case to I<not> have an accessor. The simplest one is that you 
+The reason this is so is because it is a perfectly valid use
+case to I<not> have an accessor. The simplest one is that you
 want to write your own. If Moose created one automatically, then
-because of the order in which classes are constructed, Moose 
-would overwrite your custom accessor. You wouldn't want that 
+because of the order in which classes are constructed, Moose
+would overwrite your custom accessor. You wouldn't want that
 would you?
 
 =head2 Method Modifiers
 
 =head3 Why can't I change C<@_> in a C<before> modifier?
 
-The C<before> modifier is called I<before> the main method. 
-Its return values are simply ignored, and are B<not> passed onto 
-the main method body. 
+The C<before> modifier is called I<before> the main method.
+Its return values are simply ignored, and are B<not> passed onto
+the main method body.
 
-There are a number of reasons for this, but those arguments are 
-too lengthy for this document. Instead, I suggest using an C<around> 
+There are a number of reasons for this, but those arguments are
+too lengthy for this document. Instead, I suggest using an C<around>
 modifier instead. Here is some sample code:
 
   around 'foo' => sub {
       my $next = shift;
       my ($self, @args) = @_;
-      # do something silly here to @args 
-      $next->($self, reverse(@args));  
+      # do something silly here to @args
+      $next->($self, reverse(@args));
   };
 
 =head3 Why can't I see return values in an C<after> modifier?
 
-As with the C<before> modifier, the C<after> modifier is simply 
-called I<after> the main method. It is passed the original contents 
-of C<@_> and B<not> the return values of the main method. 
+As with the C<before> modifier, the C<after> modifier is simply
+called I<after> the main method. It is passed the original contents
+of C<@_> and B<not> the return values of the main method.
 
-Again, the arguments are too lengthy as to why this has to be. And 
+Again, the arguments are too lengthy as to why this has to be. And
 as with C<before> I recommend using an C<around> modifier instead.
 Here is some sample code:
 
   around 'foo' => sub {
       my $next = shift;
       my ($self, @args) = @_;
-      my @rv = $next->($self, @args);  
+      my @rv = $next->($self, @args);
       # do something silly with the return values
       return reverse @rv;
   };
@@ -136,43 +136,43 @@ See L<Moose and Attributes>.
 
 =head3 Why is BUILD not called for my composed roles?
 
-BUILD is never called in composed roles. The primary reason is that 
-roles are B<not> order sensitive. Roles are composed in such a way 
-that the order of composition does not matter (for information on 
-the deeper theory of this read the original traits papers here 
-L<http://www.iam.unibe.ch/~scg/Research/Traits/>). 
+BUILD is never called in composed roles. The primary reason is that
+roles are B<not> order sensitive. Roles are composed in such a way
+that the order of composition does not matter (for information on
+the deeper theory of this read the original traits papers here
+L<http://www.iam.unibe.ch/~scg/Research/Traits/>).
 
-Because roles are essentially unordered, it would be impossible to 
-determine the order in which to execute the BUILD methods. 
+Because roles are essentially unordered, it would be impossible to
+determine the order in which to execute the BUILD methods.
 
 As for alternate solutions, there are a couple.
 
 =over 4
 
-=item * 
+=item *
 
-Using a combination of lazy and default in your attributes to 
+Using a combination of lazy and default in your attributes to
 defer initialization (see the Binary Tree example in the cookbook
 for a good example of lazy/default usage
 L<Moose::Cookbook::Basics::Recipe3>)
 
 =item *
 
-Use attribute triggers, which fire after an attribute is set, to facilitate 
-initialization. These are described in the L<Moose> docs, and examples can be 
+Use attribute triggers, which fire after an attribute is set, to facilitate
+initialization. These are described in the L<Moose> docs, and examples can be
 found in the test suite.
 
 =back
 
-In general, roles should not I<require> initialization; they should either 
-provide sane defaults or should be documented as needing specific 
+In general, roles should not I<require> initialization; they should either
+provide sane defaults or should be documented as needing specific
 initialization. One such way to "document" this is to have a separate
-attribute initializer which is required for the role. Here is an example of 
+attribute initializer which is required for the role. Here is an example of
 how to do this:
 
   package My::Role;
   use Moose::Role;
-  
+
   has 'height' => (
       is      => 'rw',
       isa     => 'Int',
@@ -180,15 +180,15 @@ how to do this:
       default => sub {
           my $self = shift;
           $self->init_height;
-      } 
+      }
   );
-  
+
   requires 'init_height';
 
-In this example, the role will not compose successfully unless the class 
-provides a C<init_height> method. 
+In this example, the role will not compose successfully unless the class
+provides a C<init_height> method.
 
-If none of those solutions work, then it is possible that a role is not 
+If none of those solutions work, then it is possible that a role is not
 the best tool for the job, and you really should be using classes. Or, at
 the very least, you should reduce the amount of functionality in your role
 so that it does not require initialization.

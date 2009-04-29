@@ -36,10 +36,10 @@ WriteAll();
 sub check_conflicts {
     my %conflicts = (
         'MooseX::ClassAttribute'    => '0.07',
-        'MooseX::Singleton'         => '0.14',
+        'MooseX::Singleton'         => '0.15',
         'MooseX::StrictConstructor' => '0.07',
         'MooseX::Params::Validate'  => '0.05',
-        'Fey::ORM'                  => '0.22',
+        'Fey::ORM'                  => '0.23',
     );
 
     my $found = 0;

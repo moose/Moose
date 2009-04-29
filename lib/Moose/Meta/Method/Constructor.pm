@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -25,7 +25,7 @@ sub new {
         || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
 
     my $self = bless {
-        'body'          => undef, 
+        'body'          => undef,
         'package_name'  => $options{package_name},
         'name'          => $options{name},
         'options'       => $options{options},
@@ -63,7 +63,7 @@ sub _initialize_body {
     $source .= "\n" . 'my $class = shift;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
-    $source .= "\n    if \$class ne '" . $self->associated_metaclass->name 
+    $source .= "\n    if \$class ne '" . $self->associated_metaclass->name
             .  "';\n";
 
     $source .= $self->_generate_params('$params', '$class');
@@ -105,7 +105,7 @@ sub _initialize_body {
             '@type_constraint_bodies' => \@type_constraint_bodies,
         },
     ) or $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source );
-    
+
     $self->{'body'} = $code;
 }
 
@@ -213,18 +213,18 @@ sub _generate_slot_initializer {
             my $default;
             if ( $attr->has_default ) {
                 $default = $self->_generate_default_value($attr, $index);
-            } 
+            }
             else {
                my $builder = $attr->builder;
                $default = '$instance->' . $builder;
             }
-            
+
             push @source => '{'; # wrap this to avoid my $val overwrite warnings
             push @source => ('my $val = ' . $default . ';');
             push @source => $self->_generate_type_constraint_and_coercion($attr, $index)
-                if $is_moose; 
+                if $is_moose;
             push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-            push @source => '}'; # close - wrap this to avoid my $val overrite warnings           
+            push @source => '}'; # close - wrap this to avoid my $val overrite warnings
 
         push @source => "}" if defined $attr->init_arg;
     }
@@ -235,16 +235,16 @@ sub _generate_slot_initializer {
             if ($is_moose && $attr->has_type_constraint) {
                 if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
                     push @source => $self->_generate_type_coercion(
-                        $attr, 
-                        '$type_constraints[' . $index . ']', 
-                        '$val', 
+                        $attr,
+                        '$type_constraints[' . $index . ']',
+                        '$val',
                         '$val'
                     );
                 }
                 push @source => $self->_generate_type_constraint_check(
-                    $attr, 
-                    '$type_constraint_bodies[' . $index . ']', 
-                    '$type_constraints[' . $index . ']',                     
+                    $attr,
+                    '$type_constraint_bodies[' . $index . ']',
+                    '$type_constraints[' . $index . ']',
                     '$val'
                 );
             }
@@ -260,11 +260,11 @@ sub _generate_slot_assignment {
     my ($self, $attr, $value, $index) = @_;
 
     my $source;
-    
+
     if ($attr->has_initializer) {
         $source = (
             '$attrs->[' . $index . ']->set_initial_value($instance, ' . $value . ');'
-        );        
+        );
     }
     else {
         $source = (
@@ -273,10 +273,10 @@ sub _generate_slot_assignment {
                 $attr->name,
                 $value
             ) . ';'
-        );        
+        );
     }
-    
-    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME        
+
+    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
 
     if ($is_moose && $attr->is_weak_ref) {
         $source .= (
@@ -294,9 +294,9 @@ sub _generate_slot_assignment {
 
 sub _generate_type_constraint_and_coercion {
     my ($self, $attr, $index) = @_;
-    
+
     return unless $attr->has_type_constraint;
-    
+
     my @source;
     if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
         push @source => $self->_generate_type_coercion(
@@ -309,7 +309,7 @@ sub _generate_type_constraint_and_coercion {
     push @source => $self->_generate_type_constraint_check(
         $attr,
         ('$type_constraint_bodies[' . $index . ']'),
-        ('$type_constraints[' . $index . ']'),            
+        ('$type_constraints[' . $index . ']'),
         '$val'
     );
     return @source;
@@ -324,8 +324,8 @@ sub _generate_type_constraint_check {
     my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
     return (
         $self->_inline_throw_error('"Attribute (' # FIXME add 'dad'
-        . $attr->name 
-        . ') does not pass the type constraint because: " . ' 
+        . $attr->name
+        . ') does not pass the type constraint because: " . '
         . $type_constraint_obj . '->get_message(' . $value_name . ')')
         . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'
     );

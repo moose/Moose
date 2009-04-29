@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -55,13 +55,13 @@ __PACKAGE__->meta->add_attribute('error_class' => (
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
-    return Class::MOP::get_metaclass_by_name($pkg) 
+    return Class::MOP::get_metaclass_by_name($pkg)
         || $class->SUPER::initialize($pkg,
                 'attribute_metaclass' => 'Moose::Meta::Attribute',
                 'method_metaclass'    => 'Moose::Meta::Method',
                 'instance_metaclass'  => 'Moose::Meta::Instance',
                 @_
-            );    
+            );
 }
 
 sub _immutable_options {
@@ -79,7 +79,7 @@ sub _immutable_options {
 
 sub create {
     my ($self, $package_name, %options) = @_;
-    
+
     (ref $options{roles} eq 'ARRAY')
         || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
@@ -90,7 +90,7 @@ sub create {
     if ($roles) {
         Moose::Util::apply_all_roles( $class, @$roles );
     }
-    
+
     return $class;
 }
 
@@ -110,17 +110,17 @@ sub create_anon_class {
     my ($self, %options) = @_;
 
     my $cache_ok = delete $options{cache};
-    
+
     # something like Super::Class|Super::Class::2=Role|Role::1
     my $cache_key = join '=' => (
         join('|', @{$options{superclasses} || []}),
         join('|', sort @{$options{roles}   || []}),
     );
-    
+
     if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
         return $ANON_CLASSES{$cache_key};
     }
-    
+
     my $new_class = $self->SUPER::create_anon_class(%options);
 
     $ANON_CLASSES{$cache_key} = $new_class
@@ -242,8 +242,8 @@ sub add_attribute {
     my $self = shift;
     $self->SUPER::add_attribute(
         (blessed $_[0] && $_[0]->isa('Class::MOP::Attribute')
-            ? $_[0] 
-            : $self->_process_attribute(@_))    
+            ? $_[0]
+            : $self->_process_attribute(@_))
     );
 }
 

@@ -5,13 +5,13 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 BEGIN {
     my $package;
-    sub import { 
+    sub import {
         $package = $_[1] || 'Class';
         if ($package =~ /^\+/) {
             $package =~ s/^\+//;
@@ -35,19 +35,19 @@ oose - syntactic sugar to make Moose one-liners easier
 
   # create a Moose class on the fly ...
   perl -Moose=Foo -e 'has bar => ( is=>q[ro], default => q[baz] ); print Foo->new->bar' # prints baz
-  
+
   # loads an existing class (Moose or non-Moose)
   # and re-"opens" the package definition to make
   # debugging/introspection easier
-  perl -Moose=+My::Class -e 'print join ", " => __PACKAGE__->meta->get_method_list' 
+  perl -Moose=+My::Class -e 'print join ", " => __PACKAGE__->meta->get_method_list'
 
 =head1 DESCRIPTION
 
-oose.pm is a simple source filter that adds C<package $name; use Moose;> 
-to the beginning of your script and was entirely created because typing 
+oose.pm is a simple source filter that adds C<package $name; use Moose;>
+to the beginning of your script and was entirely created because typing
 C<perl -e'package Foo; use Moose; ...'> was annoying me.
 
-=head1 INTERFACE 
+=head1 INTERFACE
 
 oose provides exactly one method and it's automatically called by perl:
 

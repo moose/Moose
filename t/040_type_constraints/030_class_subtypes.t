@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 26;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -16,7 +16,7 @@ use Moose::Meta::TypeConstraint;
     package Test::Moose::Meta::TypeConstraint::AnySubType;
     use Moose;
     extends 'Moose::Meta::TypeConstraint';
-    
+
     sub my_custom_method {
         return 1;
     }
@@ -80,3 +80,60 @@ ok $isa_foo, 'Created subtype of Foo type';
 ok $isa_foo->check( Foo->new ), 'Foo passes check';
 ok $isa_foo->check( Bar->new ), 'Bar passes check';
 ok ! $isa_foo->check( Baz->new ), 'Baz does not pass check';
+like $foo->get_message( Baz->new ), qr/^Validation failed for 'Foo' failed with value Baz=HASH\(0x\w+\) \(not isa Foo\)/, 'Better validation message';
+
+# Maybe in the future this *should* inherit?
+like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' failed with value Baz=HASH\(0x\w+\)$/, "Subtypes do not automatically inherit parent type's message";
+
+
+# Implicit types
+{
+    package Quux;
+
+    use Moose;
+
+    has age => (
+        isa => 'Positive',
+    );
+}
+
+throws_ok {
+    Quux->new(age => 3)
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' failed with value 3 \(not isa Positive\)/;
+
+lives_ok {
+    Quux->new(age => (bless {}, 'Positive'));
+};
+
+eval "
+    package Positive;
+    use Moose;
+";
+
+throws_ok {
+    Quux->new(age => 3)
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' failed with value 3 \(not isa Positive\)/;
+
+lives_ok {
+    Quux->new(age => Positive->new)
+};
+
+class_type 'Negative' => message { "$_ is not a Negative Nancy" };
+
+{
+    package Quux::Ier;
+
+    use Moose;
+
+    has age => (
+        isa => 'Negative',
+    );
+}
+
+throws_ok {
+    Quux::Ier->new(age => 3)
+} qr/^Attribute \(age\) does not pass the type constraint because: 3 is not a Negative Nancy /;
+
+lives_ok {
+    Quux::Ier->new(age => (bless {}, 'Negative'))
+};

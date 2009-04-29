@@ -7,7 +7,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -47,8 +47,8 @@ sub parents {
             # if anybody thinks this problematic please discuss on IRC.
             # a possible fix is to add by attr indexing to the type registry to find types of a certain property
             # regardless of their name
-            Moose::Util::TypeConstraints::find_type_constraint($_) 
-                || 
+            Moose::Util::TypeConstraints::find_type_constraint($_)
+                ||
             __PACKAGE__->new( role => $_, name => "__ANON__" )
         } @{ Class::MOP::class_of($self->role)->get_roles },
     );
@@ -84,7 +84,7 @@ sub is_subtype_of {
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
 
     return unless defined $type;
-    
+
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch
@@ -165,7 +165,7 @@ object!
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

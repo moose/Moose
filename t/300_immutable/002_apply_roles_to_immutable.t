@@ -11,8 +11,8 @@ use Test::Exception;
 {
     package My::Role;
     use Moose::Role;
-    
-    around 'baz' => sub { 
+
+    around 'baz' => sub {
         my $next = shift;
         'My::Role::baz(' . $next->(@_) . ')';
     };
@@ -21,9 +21,9 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     sub baz { 'Foo::baz' }
-    
+
 	__PACKAGE__->meta->make_immutable(debug => 0);
 }
 

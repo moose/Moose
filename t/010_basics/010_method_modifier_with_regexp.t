@@ -76,11 +76,11 @@ is( $Cat::AFTER_BARK_COUNTER,  2, 'after modifier is called twice' );
 
     ::dies_ok {
         around qr/bark.*/ => sub {};
-    } '... this is not currently supported';    
-    
-    ::dies_ok {    
+    } '... this is not currently supported';
+
+    ::dies_ok {
         after  qr/bark.*/ => sub {};
-    } '... this is not currently supported';    
+    } '... this is not currently supported';
 
 }
 

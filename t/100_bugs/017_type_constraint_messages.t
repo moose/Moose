@@ -21,7 +21,7 @@ use Test::Exception;
     subtype 'MyArrayRef'
        => as 'ArrayRef'
        => where { defined $_->[0] }
-       => message { ref $_ ? "ref: ". ref $_ : 'scalar' }  # stringy  
+       => message { ref $_ ? "ref: ". ref $_ : 'scalar' }  # stringy
     ;
 
     subtype 'MyObjectType'

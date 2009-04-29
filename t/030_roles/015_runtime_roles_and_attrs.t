@@ -32,7 +32,7 @@ use Scalar::Util 'blessed';
 }
 
 my $obj = Foo->new;
-isa_ok($obj, 'Foo');    
+isa_ok($obj, 'Foo');
 
 ok(!$obj->can( 'talk' ), "... the role is not composed yet");
 ok(!$obj->can( 'fur' ), 'ditto');

@@ -11,7 +11,7 @@ use Test::Exception;
 {
     package Foo;
     use Moose;
-    
+
     eval {
         has 'foo' => (
             is => "rw",

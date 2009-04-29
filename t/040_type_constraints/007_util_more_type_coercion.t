@@ -12,24 +12,24 @@ use Test::Exception;
     package HTTPHeader;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     coerce 'HTTPHeader'
-        => from ArrayRef 
+        => from ArrayRef
             => via { HTTPHeader->new(array => $_[0]) };
-            
+
     coerce 'HTTPHeader'
-        => from HashRef 
-            => via { HTTPHeader->new(hash => $_[0]) };    
-    
+        => from HashRef
+            => via { HTTPHeader->new(hash => $_[0]) };
+
     has 'array' => (is => 'ro');
-    has 'hash'  => (is => 'ro');    
+    has 'hash'  => (is => 'ro');
 
     package Engine;
     use strict;
     use warnings;
     use Moose;
-    
-    has 'header' => (is => 'rw', isa => 'HTTPHeader', coerce => 1);    
+
+    has 'header' => (is => 'rw', isa => 'HTTPHeader', coerce => 1);
 }
 
 {
@@ -63,11 +63,11 @@ use Test::Exception;
     ok(!defined($engine->header->array), '... no array value set');
 
     dies_ok {
-       $engine->header("Foo"); 
+       $engine->header("Foo");
     } '... dies with the wrong type, even after coercion';
 
     lives_ok {
-       $engine->header(HTTPHeader->new); 
+       $engine->header(HTTPHeader->new);
     } '... lives with the right type, even after coercion';
 }
 

@@ -11,41 +11,41 @@ use Test::Exception;
 {
     package Foo;
     use Moose::Role;
-    
+
     sub foo   { 'Foo::foo'   }
     sub bar   { 'Foo::bar'   }
     sub baz   { 'Foo::baz'   }
-    sub gorch { 'Foo::gorch' }            
-    
+    sub gorch { 'Foo::gorch' }
+
     package Bar;
     use Moose::Role;
 
     sub foo   { 'Bar::foo'   }
     sub bar   { 'Bar::bar'   }
     sub baz   { 'Bar::baz'   }
-    sub gorch { 'Bar::gorch' }    
+    sub gorch { 'Bar::gorch' }
 
     package Baz;
     use Moose::Role;
-    
+
     sub foo   { 'Baz::foo'   }
     sub bar   { 'Baz::bar'   }
     sub baz   { 'Baz::baz'   }
-    sub gorch { 'Baz::gorch' }            
-    
+    sub gorch { 'Baz::gorch' }
+
     package Gorch;
     use Moose::Role;
-    
+
     sub foo   { 'Gorch::foo'   }
     sub bar   { 'Gorch::bar'   }
     sub baz   { 'Gorch::baz'   }
-    sub gorch { 'Gorch::gorch' }        
+    sub gorch { 'Gorch::gorch' }
 }
 
 {
     package My::Class;
     use Moose;
-    
+
     ::lives_ok {
         with 'Foo'   => { excludes => [qw/bar baz gorch/], alias => { gorch => 'foo_gorch' } },
              'Bar'   => { excludes => [qw/foo baz gorch/] },

@@ -6,24 +6,24 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role';
 
 # NOTE:
-# we need to override the ->name 
+# we need to override the ->name
 # method from Class::MOP::Package
-# since we don't have an actual 
+# since we don't have an actual
 # package for this.
 # - SL
 __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 
 # NOTE:
-# Again, since we don't have a real 
-# package to store our methods in, 
-# we use a HASH ref instead. 
+# Again, since we don't have a real
+# package to store our methods in,
+# we use a HASH ref instead.
 # - SL
 __PACKAGE__->meta->add_attribute('methods' => (
     reader  => 'get_method_map',
@@ -62,7 +62,7 @@ sub add_method {
         if ($method->package_name ne $self->name) {
             $method = $method->clone(
                 package_name => $self->name,
-                name         => $method_name            
+                name         => $method_name
             ) if $method->can('clone');
         }
     }

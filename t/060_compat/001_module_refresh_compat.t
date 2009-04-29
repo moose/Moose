@@ -10,26 +10,26 @@ use Test::Exception;
 
 BEGIN {
     eval "use Module::Refresh;";
-    plan skip_all => "Module::Refresh is required for this test" if $@;        
-    plan tests => 23;    
+    plan skip_all => "Module::Refresh is required for this test" if $@;
+    plan tests => 23;
 }
 
 =pod
 
 First lets test some of our simple example modules ...
 
-=cut 
+=cut
 
 my @modules = qw[Foo Bar MyMooseA MyMooseB MyMooseObject];
 
 do {
     use_ok($_);
-    
+
     is($_->meta->name, $_, '... initialized the meta correctly');
-    
+
     lives_ok {
         Module::Refresh->new->refresh_module($_ . '.pm')
-    } '... successfully refreshed ' . $_;    
+    } '... successfully refreshed ' . $_;
 } foreach @modules;
 
 =pod
@@ -57,7 +57,7 @@ has 'foo' => (is => 'rw', isa => 'Int');
 |;
 
 {
-    open FILE, ">", $test_module_file 
+    open FILE, ">", $test_module_file
         || die "Could not open $test_module_file because $!";
     print FILE $test_module_source_1;
     close FILE;
@@ -69,7 +69,7 @@ ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
 ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
 
 {
-    open FILE, ">", $test_module_file 
+    open FILE, ">", $test_module_file
         || die "Could not open $test_module_file because $!";
     print FILE $test_module_source_2;
     close FILE;

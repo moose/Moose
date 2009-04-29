@@ -10,32 +10,32 @@ use Test::Exception;
     package Baz;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     coerce 'Baz' => from 'HashRef' => via { Baz->new($_) };
-    
+
     has 'hello' => (
         is      => 'ro',
-        isa     => 'Str',   
+        isa     => 'Str',
     );
-    
+
     package Bar;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     coerce 'Bar' => from 'HashRef' => via { Bar->new($_) };
-    
+
     has 'baz' => (
         is      => 'ro',
-        isa     => 'Baz',   
+        isa     => 'Baz',
         coerce  => 1
     );
-    
+
     package Foo;
     use Moose;
-    
+
     has 'bar' => (
         is      => 'ro',
-        isa     => 'Bar',   
+        isa     => 'Bar',
         coerce  => 1,
     );
 }

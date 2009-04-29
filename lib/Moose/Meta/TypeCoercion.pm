@@ -8,7 +8,7 @@ use metaclass;
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -29,7 +29,7 @@ __PACKAGE__->meta->add_attribute('compiled_type_coercion' => (
     accessor => '_compiled_type_coercion'
 ));
 
-sub new { 
+sub new {
     my $class = shift;
     my $self  = Class::MOP::class_of($class)->new_object(@_);
     $self->compile_type_coercion;
@@ -49,22 +49,22 @@ sub compile_type_coercion {
             Moose->throw_error("Could not find the type constraint ($constraint_name) to coerce from");
         }
 
-        push @coercions => [ 
-            $type_constraint->_compiled_type_constraint, 
-            $action 
+        push @coercions => [
+            $type_constraint->_compiled_type_constraint,
+            $action
         ];
     }
-    $self->_compiled_type_coercion(sub { 
+    $self->_compiled_type_coercion(sub {
         my $thing = shift;
         foreach my $coercion (@coercions) {
             my ($constraint, $converter) = @$coercion;
             if ($constraint->($thing)) {
-                local $_ = $thing;                
+                local $_ = $thing;
                 return $converter->($thing);
             }
         }
         return $thing;
-    });    
+    });
 }
 
 sub has_coercion_for_type {
@@ -75,12 +75,12 @@ sub has_coercion_for_type {
 
 sub add_type_coercions {
     my ($self, @new_coercion_map) = @_;
-        
-    my $coercion_map = $self->type_coercion_map;    
+
+    my $coercion_map = $self->type_coercion_map;
     my %has_coercion = @$coercion_map;
-    
+
     while (@new_coercion_map) {
-        my ($constraint_name, $action) = splice(@new_coercion_map, 0, 2);        
+        my ($constraint_name, $action) = splice(@new_coercion_map, 0, 2);
 
         if ( exists $has_coercion{$constraint_name} ) {
             require Moose;
@@ -89,7 +89,7 @@ sub add_type_coercions {
 
         push @{$coercion_map} => ($constraint_name, $action);
     }
-    
+
     # and re-compile ...
     $self->compile_type_coercion;
 }
@@ -174,7 +174,7 @@ This will return a L<Class::MOP::Class> instance for this class.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -189,6 +189,6 @@ Copyright 2006-2009 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

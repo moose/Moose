@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 20;
 use Test::Exception;
-use Test::Output;
 
 
 
@@ -21,16 +20,16 @@ use Test::Output;
         my $c = shift;
         my ($self, $field) = @_;
         return undef if $c->($self, $self->validation_value($field));
-        return $self->error_message;        
+        return $self->error_message;
     };
-    
+
     sub validation_value {
         my ($self, $field) = @_;
         return $field;
     }
-    
+
     sub error_message { confess "Abstract method!" }
-    
+
     package Constraint::OnLength;
     use Moose::Role;
 
@@ -43,19 +42,17 @@ use Test::Output;
     override 'error_message' => sub {
         my $self = shift;
         return super() . ' ' . $self->units;
-    };    
+    };
 
 }
 
-## Classes 
+## Classes
 
 {
     package Constraint::AtLeast;
     use Moose;
 
-    ::stderr_is {
-        with 'Constraint' => { excludes => 'error_message' };
-    } "";
+    with 'Constraint';
 
     sub validate {
         my ($self, $field) = @_;
@@ -67,9 +64,7 @@ use Test::Output;
     package Constraint::NoMoreThan;
     use Moose;
 
-    ::stderr_is {
-        with 'Constraint' => { excludes => 'error_message' };
-    } '';
+    with 'Constraint';
 
     sub validate {
         my ($self, $field) = @_;
@@ -83,12 +78,12 @@ use Test::Output;
 
     extends 'Constraint::NoMoreThan';
        with 'Constraint::OnLength';
-       
+
     package Constraint::LengthAtLeast;
     use Moose;
-    
+
     extends 'Constraint::AtLeast';
-       with 'Constraint::OnLength';       
+       with 'Constraint::OnLength';
 }
 
 my $no_more_than_10 = Constraint::NoMoreThan->new(value => 10);
@@ -117,8 +112,8 @@ ok($no_more_than_10_chars->does('Constraint'), '... Constraint::LengthNoMoreThan
 ok($no_more_than_10_chars->does('Constraint::OnLength'), '... Constraint::LengthNoMoreThan does Constraint::OnLength');
 
 ok(!defined($no_more_than_10_chars->validate('foo')), '... validated correctly');
-is($no_more_than_10_chars->validate('foooooooooo'), 
-    'must be no more than 10 chars', 
+is($no_more_than_10_chars->validate('foooooooooo'),
+    'must be no more than 10 chars',
     '... validation failed correctly');
 
 my $at_least_10_chars = Constraint::LengthAtLeast->new(value => 10, units => 'chars');

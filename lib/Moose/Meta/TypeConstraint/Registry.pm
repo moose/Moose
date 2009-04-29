@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,8 +15,8 @@ use base 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute('parent_registry' => (
     reader    => 'get_parent_registry',
-    writer    => 'set_parent_registry',    
-    predicate => 'has_parent_registry',    
+    writer    => 'set_parent_registry',
+    predicate => 'has_parent_registry',
 ));
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
@@ -24,7 +24,7 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
     default => sub { {} }
 ));
 
-sub new { 
+sub new {
     my $class = shift;
     my $self  = $class->_new(@_);
     return $self;
@@ -37,7 +37,7 @@ sub has_type_constraint {
 
 sub get_type_constraint {
     my ($self, $type_name) = @_;
-    return unless defined $type_name; 
+    return unless defined $type_name;
     $self->type_constraints->{$type_name}
 }
 
@@ -144,7 +144,7 @@ parent, if it has one.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

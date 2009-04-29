@@ -12,15 +12,15 @@ use Test::Moose;
 {
     package My::Attribute::Trait;
     use Moose::Role;
-    
+
     has 'alias_to' => (is => 'ro', isa => 'Str');
 
     has foo => ( is => "ro", default => "blah" );
-    
+
     after 'install_accessors' => sub {
         my $self = shift;
         $self->associated_class->add_method(
-            $self->alias_to, 
+            $self->alias_to,
             $self->get_read_method_ref
         );
     };
@@ -29,19 +29,19 @@ use Test::Moose;
 {
     package My::Class;
     use Moose;
-    
+
     has 'bar' => (
         traits   => [qw/My::Attribute::Trait/],
         is       => 'ro',
         isa      => 'Int',
         alias_to => 'baz',
     );
-    
+
     has 'gorch' => (
         is      => 'ro',
         isa     => 'Int',
         default => sub { 10 }
-    );    
+    );
 }
 
 my $c = My::Class->new(bar => 100);

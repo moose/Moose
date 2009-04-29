@@ -3,13 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 44;
+use Test::More tests => 39;
 use Test::Exception;
-use Test::Output;
 
 
 
-{ 
+{
     # test no conflicts here
     package Role::A;
     use Moose::Role;
@@ -23,7 +22,7 @@ use Test::Output;
 
     package Role::C;
     use Moose::Role;
-    
+
     ::lives_ok {
         with qw(Role::A Role::B); # no conflict here
     } "define role C";
@@ -35,11 +34,9 @@ use Test::Output;
     use Moose;
 
     ::lives_ok {
-        ::stderr_like {
-            with qw(Role::C);
-        } qr/The Class::A class has implicitly overridden the method \(zot\) from role Role::C\./;
+        with qw(Role::C);
     } "define class A";
-    
+
     sub zot { 'Class::A::zot' }
 }
 
@@ -53,31 +50,29 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
 {
     # check that when a role is added to another role
     # and they conflict and the method they conflicted
-    # with is then required. 
-    
+    # with is then required.
+
     package Role::A::Conflict;
     use Moose::Role;
-    
+
     with 'Role::A';
-    
+
     sub bar { 'Role::A::Conflict::bar' }
-    
+
     package Class::A::Conflict;
     use Moose;
-    
+
     ::throws_ok {
         with 'Role::A::Conflict';
     }  qr/requires.*'bar'/, '... did not fufill the requirement of &bar method';
-    
+
     package Class::A::Resolved;
     use Moose;
-    
+
     ::lives_ok {
-        ::stderr_like {
-            with 'Role::A::Conflict';
-        } qr/The Class::A::Resolved class has implicitly overridden the method \(bar\) from role Role::A::Conflict\./;
-    } '... did fufill the requirement of &bar method';    
-    
+        with 'Role::A::Conflict';
+    } '... did fufill the requirement of &bar method';
+
     sub bar { 'Class::A::Resolved::bar' }
 }
 
@@ -90,12 +85,12 @@ is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right 
 {
     # check that when two roles are composed, they conflict
     # but the composing role can resolve that conflict
-    
+
     package Role::D;
     use Moose::Role;
 
     sub foo { 'Role::D::foo' }
-    sub bar { 'Role::D::bar' }    
+    sub bar { 'Role::D::bar' }
 
     package Role::E;
     use Moose::Role;
@@ -109,19 +104,17 @@ is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right 
     ::lives_ok {
         with qw(Role::D Role::E); # conflict between 'foo's here
     } "define role Role::F";
-    
+
     sub foo { 'Role::F::foo' }
-    sub zot { 'Role::F::zot' }    
-    
+    sub zot { 'Role::F::zot' }
+
     package Class::B;
     use Moose;
-    
+
     ::lives_ok {
-        ::stderr_like {
-            with qw(Role::F);
-        } qr/The Class::B class has implicitly overridden the method \(zot\) from role Role::F\./;
+        with qw(Role::F);
     } "define class Class::B";
-    
+
     sub zot { 'Class::B::zot' }
 }
 
@@ -136,21 +129,21 @@ ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requir
 
 {
     # check that a conflict can be resolved
-    # by a role, but also new ones can be 
+    # by a role, but also new ones can be
     # created just as easily ...
-    
+
     package Role::D::And::E::Conflict;
     use Moose::Role;
 
     ::lives_ok {
         with qw(Role::D Role::E); # conflict between 'foo's here
     } "... define role Role::D::And::E::Conflict";
-    
+
     sub foo { 'Role::D::And::E::Conflict::foo' }  # this overrides ...
-      
-    # but these conflict      
-    sub xxy { 'Role::D::And::E::Conflict::xxy' }  
-    sub bar { 'Role::D::And::E::Conflict::bar' }        
+
+    # but these conflict
+    sub xxy { 'Role::D::And::E::Conflict::xxy' }
+    sub bar { 'Role::D::And::E::Conflict::bar' }
 
 }
 
@@ -160,12 +153,12 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
 
 {
     # conflict propagation
-    
+
     package Role::H;
     use Moose::Role;
 
     sub foo { 'Role::H::foo' }
-    sub bar { 'Role::H::bar' }    
+    sub bar { 'Role::H::bar' }
 
     package Role::J;
     use Moose::Role;
@@ -179,13 +172,13 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     ::lives_ok {
         with qw(Role::J Role::H); # conflict between 'foo's here
     } "define role Role::I";
-    
+
     sub zot { 'Role::I::zot' }
     sub zzy { 'Role::I::zzy' }
 
     package Class::C;
     use Moose;
-    
+
     ::throws_ok {
         with qw(Role::I);
     } qr/requires.*'foo'/, "defining class Class::C fails";
@@ -196,13 +189,11 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     use Moose;
 
     ::lives_ok {
-        ::stderr_like {
-            with qw(Role::I);
-        } qr/The Class::E class has implicitly overridden the method \(zot\) from role Role::I\./;
-    } "resolved with method";        
+        with qw(Role::I);
+    } "resolved with method";
 
     sub foo { 'Class::E::foo' }
-    sub zot { 'Class::E::zot' }    
+    sub zot { 'Class::E::zot' }
 }
 
 can_ok( Class::E->new, qw(foo bar xxy zot) );
@@ -223,9 +214,7 @@ ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requi
 
         sub zot { 'Class::D::zot' }
 
-        ::stderr_like {
-            with qw(Role::I);
-        } qr/The Class::D class has implicitly overridden the method \(zot\) from role Role::I\./;
+        with qw(Role::I);
 
     } "resolved with attr";
 

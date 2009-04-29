@@ -12,7 +12,7 @@ BEGIN {
 
 foreach my $type_name (qw(
     Any
-    Item 
+    Item
         Bool
         Undef
         Defined
@@ -26,11 +26,11 @@ foreach my $type_name (qw(
                 HashRef
                 CodeRef
                 RegexpRef
-                Object	
+                Object
                     Role
     )) {
-    is(find_type_constraint($type_name)->name, 
-       $type_name, 
+    is(find_type_constraint($type_name)->name,
+       $type_name,
        '... got the right name for ' . $type_name);
 }
 

@@ -18,24 +18,9 @@ send us a patch.
 
 =head1 Version 0.76
 
-L<Moose> now warns about a class overriding methods from roles it
-consumes. This warning is useful for discovering I<accidental> name
-collisions, which is part of why using roles is much less painful than
-multiple inheritance. You can silence this warning by explicitly
-excluding methods you override from roles. For example,
-
-    package Role;
-    sub foo { "Default role implementation" }
-
-    package Class;
-    with 'Role' => { excludes => 'foo' };
-    sub foo { "Overriding class implementation" }
-
-Since this warning has been decried by some (such as chromatic in
-L<http://www.modernperlbooks.com/mt/2009/04/the-value-of-a-warning.html>),
-we ask that you provide feedback about whether this warning has helped or
-hindered you. If it turns out to have been a bad idea, we will not
-hesitate to remove it from future versions.
+Type constraints no longer run coercions for a value that already matches the
+constraint.  This may affect some (arguably buggy) edge case coercions that
+rely on side effects in the C<via> clause.
 
 =head1 Version 0.75
 

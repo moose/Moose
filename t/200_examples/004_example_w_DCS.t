@@ -7,8 +7,8 @@ use Test::More;
 
 =pod
 
-This tests how well Moose type constraints 
-play with Declare::Constraints::Simple. 
+This tests how well Moose type constraints
+play with Declare::Constraints::Simple.
 
 Pretty well if I do say so myself :)
 
@@ -16,8 +16,8 @@ Pretty well if I do say so myself :)
 
 BEGIN {
     eval "use Declare::Constraints::Simple;";
-    plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;        
-    plan tests => 9;    
+    plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;
+    plan tests => 9;
 }
 
 use Test::Exception;
@@ -41,7 +41,7 @@ use Test::Exception;
         is  => 'rw',
         isa => 'HashOfArrayOfObjects',
     );
-    
+
     # inline the constraints as anon-subtypes
     has 'baz' => (
         is  => 'rw',
@@ -54,7 +54,7 @@ use Test::Exception;
 
 my $hash_of_arrays_of_objs = {
    foo1 => [ Bar->new ],
-   foo2 => [ Bar->new, Bar->new ],       
+   foo2 => [ Bar->new, Bar->new ],
 };
 
 my $array_of_ints = [ 1 .. 10 ];
@@ -64,7 +64,7 @@ lives_ok {
     $foo = Foo->new(
        'bar' => $hash_of_arrays_of_objs,
        'baz' => $array_of_ints,
-    ); 
+    );
 } '... construction succeeded';
 isa_ok($foo, 'Foo');
 

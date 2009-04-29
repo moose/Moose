@@ -9,10 +9,10 @@ use Test::Exception;
 {
     package Foo;
 
-    sub new { 
-        bless({}, 'Foo') 
+    sub new {
+        bless({}, 'Foo')
     }
-    
+
     sub a { 'Foo::a' }
 }
 
@@ -29,7 +29,7 @@ use Test::Exception;
             handles => qr/^a$/,
         );
     } '... can create the attribute with delegations';
-    
+
 }
 
 my $bar;
@@ -55,7 +55,7 @@ $SIG{__WARN__} = sub { push @w, "@_" };
             handles => qr/.*/,
         );
     } '... can create the attribute with delegations';
-    
+
 }
 
 is(@w, 0, "no warnings");
@@ -88,7 +88,7 @@ is($baz->a, 'Foo::a', '... got the right delgated value');
             handles => [qw(a new)],
         );
     } '... can create the attribute with delegations';
-    
+
 }
 
 {

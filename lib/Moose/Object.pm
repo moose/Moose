@@ -9,7 +9,7 @@ use Scalar::Util;
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -44,10 +44,10 @@ sub BUILDARGS {
 }
 
 sub BUILDALL {
-    # NOTE: we ask Perl if we even 
+    # NOTE: we ask Perl if we even
     # need to do this first, to avoid
     # extra meta level calls
-    return unless $_[0]->can('BUILD');    
+    return unless $_[0]->can('BUILD');
     my ($self, $params) = @_;
     foreach my $method (reverse Class::MOP::class_of($self)->find_all_methods_by_name('BUILD')) {
         $method->{code}->execute($self, $params);
@@ -74,7 +74,7 @@ sub DEMOLISHALL {
     }
 }
 
-sub DESTROY { 
+sub DESTROY {
     # if we have an exception here ...
     if ($@) {
         # localize the $@ ...
@@ -98,7 +98,7 @@ BEGIN {
     }';
 }
 
-# new does() methods will be created 
+# new does() methods will be created
 # as appropiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
@@ -107,13 +107,13 @@ sub does {
         || $meta->throw_error("You much supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
-        return 1 
-            if $m->can('does_role') && $m->does_role($role_name);            
+        return 1
+            if $m->can('does_role') && $m->does_role($role_name);
     }
-    return 0;   
+    return 0;
 }
 
-sub dump { 
+sub dump {
     my $self = shift;
     require Data::Dumper;
     local $Data::Dumper::Maxdepth = shift if @_;
@@ -202,7 +202,7 @@ the maximum depth is 1, to avoid making a mess.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -217,6 +217,6 @@ Copyright 2006-2009 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

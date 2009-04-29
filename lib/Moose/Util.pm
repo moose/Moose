@@ -7,14 +7,14 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
-    find_meta 
+    find_meta
     does_role
-    search_class_by_role   
+    search_class_by_role
     ensure_all_roles
     apply_all_roles
     get_all_init_args
@@ -40,7 +40,7 @@ sub does_role {
     my ($class_or_obj, $role) = @_;
 
     my $meta = find_meta($class_or_obj);
-    
+
     return unless defined $meta;
     return unless $meta->can('does_role');
     return 1 if $meta->does_role($role);
@@ -49,14 +49,14 @@ sub does_role {
 
 sub search_class_by_role {
     my ($class_or_obj, $role_name) = @_;
-    
+
     my $meta = find_meta($class_or_obj);
 
     return unless defined $meta;
 
     foreach my $class ($meta->class_precedence_list) {
-        
-        my $_meta = find_meta($class);        
+
+        my $_meta = find_meta($class);
 
         next unless defined $_meta;
 
@@ -135,7 +135,7 @@ sub get_all_init_args {
     return +{
         map { $_->init_arg => $_->get_value($instance) }
             grep { $_->has_value($instance) }
-                grep { defined($_->init_arg) } 
+                grep { defined($_->init_arg) }
                     $class->get_all_attributes
     };
 }
@@ -155,7 +155,7 @@ sub resolve_metatrait_alias {
             if $cache{$cache_key}{$metaclass_name};
 
         my $possible_full_name
-            = 'Moose::Meta::' 
+            = 'Moose::Meta::'
             . $type
             . '::Custom::'
             . ( $options{trait} ? "Trait::" : "" )
@@ -323,7 +323,7 @@ Here is a list of possible functions to write
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

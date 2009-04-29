@@ -34,10 +34,10 @@ use Scalar::Util 'blessed';
 }
 
 my $bar = Bar->new;
-isa_ok($bar, 'Bar');    
+isa_ok($bar, 'Bar');
 
 my $foo = Foo->new;
-isa_ok($foo, 'Foo');  
+isa_ok($foo, 'Foo');
 
 ok(!$bar->can( 'talk' ), "... the role is not composed yet");
 

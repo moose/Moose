@@ -6,7 +6,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -44,7 +44,7 @@ sub _caller_info {
 }
 
 sub throw_error {
-    # FIXME This 
+    # FIXME This
     shift;
     goto \&confess
 }
@@ -362,7 +362,7 @@ or coercion.
 
 =head1 PROVIDED METHODS
 
-Moose provides a number of methods to all your classes, mostly through the 
+Moose provides a number of methods to all your classes, mostly through the
 inheritance of L<Moose::Object>. There is however, one exception.
 
 =over 4
@@ -392,7 +392,7 @@ superclasses still properly inherit from L<Moose::Object>.
 
 =item B<with (@roles)>
 
-This will apply a given set of C<@roles> to the local class. 
+This will apply a given set of C<@roles> to the local class.
 
 =item B<has $name|@$names =E<gt> %options>
 
@@ -495,9 +495,9 @@ almost never want to do this, since it usually breaks your class. As with
 overriding locally defined methods, if you do want to do this, you should do it
 manually, not with Moose.
 
-You do not I<need> to have a reader (or accessor) for the attribute in order 
-to delegate to it. Moose will create a means of accessing the value for you, 
-however this will be several times B<less> efficient then if you had given 
+You do not I<need> to have a reader (or accessor) for the attribute in order
+to delegate to it. Moose will create a means of accessing the value for you,
+however this will be several times B<less> efficient then if you had given
 the attribute a reader (or accessor) to use.
 
 Below is the documentation for each option format:
@@ -581,7 +581,7 @@ a HASH ref) of the methods you want mapped.
 This tells the class to use a custom attribute metaclass for this particular
 attribute. Custom attribute metaclasses are useful for extending the
 capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
-but they are still a fairly advanced topic and too much to cover here, see 
+but they are still a fairly advanced topic and too much to cover here, see
 L<Moose::Cookbook::Meta::Recipe1> for more information.
 
 The default behavior here is to just load C<$metaclass_name>; however, we also
@@ -594,8 +594,8 @@ B<Moose::Meta::Attribute::Custom::$metaclass_name> as the metaclass name.
 
 =item I<traits =E<gt> [ @role_names ]>
 
-This tells Moose to take the list of C<@role_names> and apply them to the 
-attribute meta-object. This is very similar to the I<metaclass> option, but 
+This tells Moose to take the list of C<@role_names> and apply them to the
+attribute meta-object. This is very similar to the I<metaclass> option, but
 allows you to use more than one extension at a time.
 
 See L<TRAIT NAME RESOLUTION> for details on how a trait name is
@@ -654,7 +654,7 @@ information.
 =item B<has +$name =E<gt> %options>
 
 This is variation on the normal attribute creator C<has> which allows you to
-clone and extend an attribute from a superclass or from a role. Here is an 
+clone and extend an attribute from a superclass or from a role. Here is an
 example of the superclass usage:
 
   package Foo;
@@ -695,12 +695,12 @@ Here is another example, but within the context of a role:
 
   has '+message' => (default => 'Hello I am My::Foo');
 
-In this case, we are basically taking the attribute which the role supplied 
-and altering it within the bounds of this feature. 
+In this case, we are basically taking the attribute which the role supplied
+and altering it within the bounds of this feature.
 
-Aside from where the attributes come from (one from superclass, the other 
-from a role), this feature works exactly the same. This feature is restricted 
-somewhat, so as to try and force at least I<some> sanity into it. You are only 
+Aside from where the attributes come from (one from superclass, the other
+from a role), this feature works exactly the same. This feature is restricted
+somewhat, so as to try and force at least I<some> sanity into it. You are only
 allowed to change the following attributes:
 
 =over 4
@@ -727,12 +727,12 @@ Change if the attribute lazily initializes the slot.
 
 =item I<isa>
 
-You I<are> allowed to change the type without restriction. 
+You I<are> allowed to change the type without restriction.
 
-It is recommended that you use this freedom with caution. We used to 
-only allow for extension only if the type was a subtype of the parent's 
-type, but we felt that was too restrictive and is better left as a 
-policy decision. 
+It is recommended that you use this freedom with caution. We used to
+only allow for extension only if the type was a subtype of the parent's
+type, but we felt that was too restrictive and is better left as a
+policy decision.
 
 =item I<handles>
 
@@ -797,7 +797,7 @@ C<augment> work is best described in the L<Moose::Cookbook::Basics::Recipe6>.
 =item B<confess>
 
 This is the C<Carp::confess> function, and exported here because I use it
-all the time. 
+all the time.
 
 =item B<blessed>
 
@@ -941,11 +941,11 @@ unresolvable conflict.
 
 =head2 The MooseX:: namespace
 
-Generally if you're writing an extension I<for> Moose itself you'll want 
-to put your extension in the C<MooseX::> namespace. This namespace is 
-specifically for extensions that make Moose better or different in some 
-fundamental way. It is traditionally B<not> for a package that just happens 
-to use Moose. This namespace follows from the examples of the C<LWPx::> 
+Generally if you're writing an extension I<for> Moose itself you'll want
+to put your extension in the C<MooseX::> namespace. This namespace is
+specifically for extensions that make Moose better or different in some
+fundamental way. It is traditionally B<not> for a package that just happens
+to use Moose. This namespace follows from the examples of the C<LWPx::>
 and C<DBIx::> namespaces that perform the same function for C<LWP> and C<DBI>
 respectively.
 
@@ -1034,7 +1034,7 @@ See L<http://search.cpan.org/search?query=MooseX::> for extensions.
 
 =item The Art of the MetaObject Protocol
 
-I mention this in the L<Class::MOP> docs too, this book was critical in 
+I mention this in the L<Class::MOP> docs too, this book was critical in
 the development of both modules and is highly recommended.
 
 =back
@@ -1054,29 +1054,34 @@ want to understand them, I suggest you read this.
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+exception.
+
+Please report any bugs to C<bug-moose@rt.cpan.org>, or through the web
+interface at L<http://rt.cpan.org>.
 
 =head1 FEATURE REQUESTS
 
-We are very strict about what features we add to the Moose core, especially 
-the user-visible features. Instead we have made sure that the underlying 
-meta-system of Moose is as extensible as possible so that you can add your 
-own features easily. That said, occasionally there is a feature needed in the 
-meta-system to support your planned extension, in which case you should 
-either email the mailing list or join us on irc at #moose to discuss. The
-L<Moose::Manual::Contributing> has more detail about how and when you can
-contribute.
+We are very strict about what features we add to the Moose core, especially
+the user-visible features. Instead we have made sure that the underlying
+meta-system of Moose is as extensible as possible so that you can add your
+own features easily.
+
+That said, occasionally there is a feature needed in the meta-system
+to support your planned extension, in which case you should either
+email the mailing list (moose@perl.org) or join us on IRC at
+L<irc://irc.perl.org/#moose> to discuss. The
+L<Moose::Manual::Contributing> has more detail about how and when you
+can contribute.
 
 =head1 AUTHOR
 
-Moose is an open project, there are at this point dozens of people who have 
-contributed, and can contribute. If you have added anything to the Moose 
+Moose is an open project, there are at this point dozens of people who have
+contributed, and can contribute. If you have added anything to the Moose
 project you have a commit bit on this file and can add your name to the list.
 
 =head2 CABAL
 
-However there are only a few people with the rights to release a new version 
+However there are only a few people with the rights to release a new version
 of Moose. The Moose Cabal are the people to go to with questions regarding
 the wider purview of Moose, and help out maintaining not just the code
 but the community as well.

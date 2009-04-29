@@ -8,7 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -23,8 +23,8 @@ use base 'Class::MOP::Module';
 ## I normally don't do this, but I am doing
 ## a whole bunch of meta-programmin in this
 ## module, so it just makes sense. For a clearer
-## picture of what is going on in the next 
-## several lines of code, look at the really 
+## picture of what is going on in the next
+## several lines of code, look at the really
 ## big comment at the end of this file (right
 ## before the POD).
 ## - SL
@@ -41,7 +41,7 @@ my $META = __PACKAGE__->meta;
 # time when it is applied to a class. This means
 # keeping a lot of things in hash maps, so we are
 # using a little of that meta-programmin' magic
-# here an saving lots of extra typin. And since 
+# here an saving lots of extra typin. And since
 # many of these attributes above require similar
 # functionality to support them, so we again use
 # the wonders of meta-programmin' to deliver a
@@ -68,7 +68,7 @@ foreach my $action (
             get_list  => 'get_required_method_list',
             existence => 'requires_method',
         }
-    },  
+    },
     {
         name        => 'attribute_map',
         attr_reader => 'get_attribute_map',
@@ -156,12 +156,12 @@ sub add_attribute {
 foreach my $modifier_type (qw[ before around after ]) {
 
     my $attr_reader = "get_${modifier_type}_method_modifiers_map";
-    
+
     # create the attribute ...
     $META->add_attribute("${modifier_type}_method_modifiers" => (
         reader  => $attr_reader,
         default => sub { {} }
-    ));  
+    ));
 
     # and some helper methods ...
     $META->add_method("get_${modifier_type}_method_modifiers" => sub {
@@ -326,29 +326,29 @@ sub get_method_map {
         }
         else {
             # NOTE:
-            # in 5.10 constant.pm the constants show up 
+            # in 5.10 constant.pm the constants show up
             # as being in the right package, but in pre-5.10
-            # they show up as constant::__ANON__ so we 
+            # they show up as constant::__ANON__ so we
             # make an exception here to be sure that things
             # work as expected in both.
             # - SL
             unless ($pkg eq 'constant' && $name eq '__ANON__') {
                 next if ($pkg  || '') ne $role_name ||
                         (($name || '') ne '__ANON__' && ($pkg  || '') ne $role_name);
-            }            
+            }
         }
-        
+
         $map->{$symbol} = $method_metaclass->wrap(
             $code,
             package_name => $role_name,
-            name         => $name            
+            name         => $name
         );
     }
 
-    return $map;    
+    return $map;
 }
 
-sub get_method { 
+sub get_method {
     my ($self, $name) = @_;
     $self->get_method_map->{$name};
 }
@@ -383,7 +383,7 @@ sub add_method {
         if ($method->package_name ne $self->name) {
             $method = $method->clone(
                 package_name => $self->name,
-                name         => $method_name            
+                name         => $method_name
             ) if $method->can('clone');
         }
     }
@@ -429,7 +429,7 @@ sub apply {
 
     (blessed($other))
         || Moose->throw_error("You must pass in an blessed instance");
-        
+
     if ($other->isa('Moose::Meta::Role')) {
         require Moose::Meta::Role::Application::ToRole;
         return Moose::Meta::Role::Application::ToRole->new(@args)->apply($self, $other);
@@ -437,32 +437,32 @@ sub apply {
     elsif ($other->isa('Moose::Meta::Class')) {
         require Moose::Meta::Role::Application::ToClass;
         return Moose::Meta::Role::Application::ToClass->new(@args)->apply($self, $other);
-    }  
+    }
     else {
         require Moose::Meta::Role::Application::ToInstance;
-        return Moose::Meta::Role::Application::ToInstance->new(@args)->apply($self, $other);        
-    }  
+        return Moose::Meta::Role::Application::ToInstance->new(@args)->apply($self, $other);
+    }
 }
 
 sub combine {
     my ($class, @role_specs) = @_;
-    
+
     require Moose::Meta::Role::Application::RoleSummation;
-    require Moose::Meta::Role::Composite;  
-    
+    require Moose::Meta::Role::Composite;
+
     my (@roles, %role_params);
     while (@role_specs) {
         my ($role, $params) = @{ splice @role_specs, 0, 1 };
         push @roles => Class::MOP::class_of($role);
         next unless defined $params;
-        $role_params{$role} = $params; 
+        $role_params{$role} = $params;
     }
-    
+
     my $c = Moose::Meta::Role::Composite->new(roles => \@roles);
     Moose::Meta::Role::Application::RoleSummation->new(
         role_params => \%role_params
     )->apply($c);
-    
+
     return $c;
 }
 
@@ -581,8 +581,8 @@ sub create {
 
 #####################################################################
 ## NOTE:
-## This is Moose::Meta::Role as defined by Moose (plus the use of 
-## MooseX::AttributeHelpers module). It is here as a reference to 
+## This is Moose::Meta::Role as defined by Moose (plus the use of
+## MooseX::AttributeHelpers module). It is here as a reference to
 ## make it easier to see what is happening above with all the meta
 ## programming. - SL
 #####################################################################
@@ -596,7 +596,7 @@ sub create {
 #         'push' => 'add_role',
 #     }
 # );
-# 
+#
 # has 'excluded_roles_map' => (
 #     metaclass => 'Collection::Hash',
 #     reader    => 'get_excluded_roles_map',
@@ -608,95 +608,95 @@ sub create {
 #         'exists' => 'excludes_role',
 #     }
 # );
-# 
+#
 # has 'attribute_map' => (
 #     metaclass => 'Collection::Hash',
 #     reader    => 'get_attribute_map',
-#     isa       => 'HashRef[Str]',    
+#     isa       => 'HashRef[Str]',
 #     provides => {
 #         # 'set'  => 'add_attribute' # has some special crap in it
 #         'get'    => 'get_attribute',
 #         'keys'   => 'get_attribute_list',
 #         'exists' => 'has_attribute',
 #         # Not exactly delete, cause it sets multiple
-#         'delete' => 'remove_attribute',    
+#         'delete' => 'remove_attribute',
 #     }
 # );
-# 
+#
 # has 'required_methods' => (
 #     metaclass => 'Collection::Hash',
 #     reader    => 'get_required_methods_map',
 #     isa       => 'HashRef[Str]',
-#     provides  => {    
-#         # not exactly set, or delete since it works for multiple 
+#     provides  => {
+#         # not exactly set, or delete since it works for multiple
 #         'set'    => 'add_required_methods',
 #         'delete' => 'remove_required_methods',
 #         'keys'   => 'get_required_method_list',
-#         'exists' => 'requires_method',    
+#         'exists' => 'requires_method',
 #     }
 # );
-# 
-# # the before, around and after modifiers are 
-# # HASH keyed by method-name, with ARRAY of 
+#
+# # the before, around and after modifiers are
+# # HASH keyed by method-name, with ARRAY of
 # # CODE refs to apply in that order
-# 
+#
 # has 'before_method_modifiers' => (
-#     metaclass => 'Collection::Hash',    
+#     metaclass => 'Collection::Hash',
 #     reader    => 'get_before_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
 #         'keys'   => 'get_before_method_modifiers',
-#         'exists' => 'has_before_method_modifiers',   
-#         # This actually makes sure there is an 
+#         'exists' => 'has_before_method_modifiers',
+#         # This actually makes sure there is an
 #         # ARRAY at the given key, and pushed onto
 #         # it. It also checks for duplicates as well
-#         # 'add'  => 'add_before_method_modifier'     
-#     }    
+#         # 'add'  => 'add_before_method_modifier'
+#     }
 # );
-# 
+#
 # has 'after_method_modifiers' => (
-#     metaclass => 'Collection::Hash',    
+#     metaclass => 'Collection::Hash',
 #     reader    =>'get_after_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
 #         'keys'   => 'get_after_method_modifiers',
-#         'exists' => 'has_after_method_modifiers', 
-#         # This actually makes sure there is an 
+#         'exists' => 'has_after_method_modifiers',
+#         # This actually makes sure there is an
 #         # ARRAY at the given key, and pushed onto
-#         # it. It also checks for duplicates as well          
-#         # 'add'  => 'add_after_method_modifier'     
-#     }    
+#         # it. It also checks for duplicates as well
+#         # 'add'  => 'add_after_method_modifier'
+#     }
 # );
-#     
+#
 # has 'around_method_modifiers' => (
-#     metaclass => 'Collection::Hash',    
+#     metaclass => 'Collection::Hash',
 #     reader    =>'get_around_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
 #         'keys'   => 'get_around_method_modifiers',
-#         'exists' => 'has_around_method_modifiers',   
-#         # This actually makes sure there is an 
+#         'exists' => 'has_around_method_modifiers',
+#         # This actually makes sure there is an
 #         # ARRAY at the given key, and pushed onto
-#         # it. It also checks for duplicates as well        
-#         # 'add'  => 'add_around_method_modifier'     
-#     }    
+#         # it. It also checks for duplicates as well
+#         # 'add'  => 'add_around_method_modifier'
+#     }
 # );
-# 
+#
 # # override is similar to the other modifiers
 # # except that it is not an ARRAY of code refs
 # # but instead just a single name->code mapping
-#     
+#
 # has 'override_method_modifiers' => (
-#     metaclass => 'Collection::Hash',    
+#     metaclass => 'Collection::Hash',
 #     reader    =>'get_override_method_modifiers_map',
-#     isa       => 'HashRef[CodeRef]',   
+#     isa       => 'HashRef[CodeRef]',
 #     provides  => {
 #         'keys'   => 'get_override_method_modifier',
-#         'exists' => 'has_override_method_modifier',   
-#         'add'    => 'add_override_method_modifier', # checks for local method ..     
+#         'exists' => 'has_override_method_modifier',
+#         'add'    => 'add_override_method_modifier', # checks for local method ..
 #     }
 # );
-#     
+#
 #####################################################################
 
 

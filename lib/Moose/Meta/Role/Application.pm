@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,16 +20,16 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
     default  => sub { {} }
 ));
 
-sub new { 
+sub new {
     my ($class, %params) = @_;
-    
+
     if (exists $params{excludes}) {
         # I wish we had coercion here :)
-        $params{excludes} = (ref $params{excludes} eq 'ARRAY' 
-                                ? $params{excludes} 
+        $params{excludes} = (ref $params{excludes} eq 'ARRAY'
+                                ? $params{excludes}
                                 : [ $params{excludes} ]);
     }
-    
+
     $class->_new(\%params);
 }
 
@@ -58,12 +58,12 @@ sub apply {
     $self->check_role_exclusions(@_);
     $self->check_required_methods(@_);
     $self->check_required_attributes(@_);
-    
+
     $self->apply_attributes(@_);
-    $self->apply_methods(@_);    
-    
+    $self->apply_methods(@_);
+
     $self->apply_override_method_modifiers(@_);
-    
+
     $self->apply_before_method_modifiers(@_);
     $self->apply_around_method_modifiers(@_);
     $self->apply_after_method_modifiers(@_);

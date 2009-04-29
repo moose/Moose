@@ -6,16 +6,16 @@ use metaclass;
 
 use Scalar::Util    'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';
 
 sub apply {
-    my ($self, $role1, $role2) = @_;    
-    $self->SUPER::apply($role1, $role2);   
-    $role2->add_role($role1);     
+    my ($self, $role1, $role2) = @_;
+    $self->SUPER::apply($role1, $role2);
+    $role2->add_role($role1);
 }
 
 sub check_role_exclusions {
@@ -36,16 +36,16 @@ sub check_role_exclusions {
 sub check_required_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $required_method_name ($role1->get_required_method_list) {
-            
+
         next if $self->is_aliased_method($required_method_name);
-                    
+
         $role2->add_required_methods($required_method_name)
             unless $role2->find_method_by_name($required_method_name);
     }
 }
 
 sub check_required_attributes {
-    
+
 }
 
 sub apply_attributes {
@@ -95,10 +95,10 @@ sub apply_methods {
             }
 
             next;
-        }     
-        
-        next if $self->is_method_excluded($method_name);           
-        
+        }
+
+        next if $self->is_method_excluded($method_name);
+
         # it if it has one already
         if ($role2->has_method($method_name) &&
             # and if they are not the same thing ...
@@ -113,9 +113,9 @@ sub apply_methods {
                 $method_name,
                 $role1->get_method($method_name)
             );
-                        
+
         }
-        
+
     }
 }
 

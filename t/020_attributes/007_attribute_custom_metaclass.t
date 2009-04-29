@@ -8,12 +8,12 @@ use Test::Exception;
 
 
 
-{    
+{
     package Foo::Meta::Attribute;
     use Moose;
-    
+
     extends 'Moose::Meta::Attribute';
-    
+
     around 'new' => sub {
         my $next = shift;
         my $self = shift;
@@ -23,7 +23,7 @@ use Test::Exception;
 
     package Foo;
     use Moose;
-    
+
     has 'foo' => (metaclass => 'Foo::Meta::Attribute');
 }
 {
@@ -48,46 +48,46 @@ use Test::Exception;
 {
     package Bar::Meta::Attribute;
     use Moose;
-    
-    extends 'Class::MOP::Attribute';   
-    
+
+    extends 'Class::MOP::Attribute';
+
     package Bar;
     use Moose;
-    
+
     ::lives_ok {
-        has 'bar' => (metaclass => 'Bar::Meta::Attribute');     
+        has 'bar' => (metaclass => 'Bar::Meta::Attribute');
     } '... the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
 }
 
 {
     package Moose::Meta::Attribute::Custom::Foo;
     sub register_implementation { 'Foo::Meta::Attribute' }
-    
+
     package Moose::Meta::Attribute::Custom::Bar;
     use Moose;
-    
+
     extends 'Moose::Meta::Attribute';
-    
+
     package Another::Foo;
     use Moose;
-    
+
     ::lives_ok {
-        has 'foo' => (metaclass => 'Foo');    
+        has 'foo' => (metaclass => 'Foo');
     } '... the attribute metaclass alias worked correctly';
-    
+
     ::lives_ok {
-        has 'bar' => (metaclass => 'Bar');    
-    } '... the attribute metaclass alias worked correctly';    
+        has 'bar' => (metaclass => 'Bar');
+    } '... the attribute metaclass alias worked correctly';
 }
 
 {
     my $foo_attr = Another::Foo->meta->get_attribute('foo');
     isa_ok($foo_attr, 'Foo::Meta::Attribute');
     isa_ok($foo_attr, 'Moose::Meta::Attribute');
-    
+
     my $bar_attr = Another::Foo->meta->get_attribute('bar');
     isa_ok($bar_attr, 'Moose::Meta::Attribute::Custom::Bar');
-    isa_ok($bar_attr, 'Moose::Meta::Attribute');    
+    isa_ok($bar_attr, 'Moose::Meta::Attribute');
 }
 
 

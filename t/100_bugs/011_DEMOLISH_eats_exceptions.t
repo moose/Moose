@@ -115,32 +115,32 @@ sub check_em {
          ::is( $obj, undef, "... the object is undef" );
      }
      {
-         local $@;        
+         local $@;
          my $obj = eval { $pkg->new ( notanattr => 1 ); };
          ::like( $@, qr/is required/, "... $pkg undef" );
          ::is( $obj, undef, "... the object is undef" );
      }
 
      {
-         local $@;        
+         local $@;
          my $obj = eval { $pkg->new ( %param ); };
          ::like( $@, qr/is required/, "... $pkg undef param" );
          ::is( $obj, undef, "... the object is undef" );
      }
      {
-         local $@;        
+         local $@;
          my $obj = eval { $pkg->new ( path => '/' ); };
          ::like( $@, qr/does not pass the type constraint/, "... $pkg root path forbidden" );
          ::is( $obj, undef, "... the object is undef" );
      }
      {
-         local $@;        
+         local $@;
          my $obj = eval { $pkg->new ( path => '/this_path/does/not_exist' ); };
          ::like( $@, qr/does not exist/, "... $pkg non existing path" );
          ::is( $obj, undef, "... the object is undef" );
      }
      {
-         local $@;        
+         local $@;
          my $obj = eval { $pkg->new ( path => $FindBin::Bin ); };
          ::is( $@, '', "... $pkg no error" );
          ::isa_ok( $obj, $pkg );

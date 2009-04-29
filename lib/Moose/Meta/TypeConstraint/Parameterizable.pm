@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -19,16 +19,16 @@ __PACKAGE__->meta->add_attribute('constraint_generator' => (
 
 sub generate_constraint_for {
     my ($self, $type) = @_;
-    
+
     return unless $self->has_constraint_generator;
-    
+
     return $self->constraint_generator->($type->type_parameter)
         if $type->is_subtype_of($self->name);
-        
+
     return $self->_can_coerce_constraint_from($type)
         if $self->has_coercion
         && $self->coercion->has_coercion_for_type($type->parent->name);
-        
+
     return;
 }
 
@@ -51,10 +51,10 @@ sub parameterize {
     my ($self, $type_parameter) = @_;
 
     my $contained_tc = $self->_parse_type_parameter($type_parameter);
-    
+
     ## The type parameter should be a subtype of the parent's type parameter
     ## if there is one.
-    
+
     if(my $parent = $self->parent) {
         if($parent->can('type_parameter')) {
             unless ( $contained_tc->is_a_type_of($parent->type_parameter) ) {
@@ -114,7 +114,7 @@ confusing and needs some work.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 8;
 use Test::Output;
 
 # this test script ensures that my idiom of:
@@ -24,9 +24,9 @@ do {
     package ClassWithBUILD;
     use Moose;
 
-    ::stderr_like {
+    ::stderr_is {
         with 'TestRole';
-    } qr/The ClassWithBUILD class has implicitly overridden the method \(BUILD\) from role TestRole\./;
+    } '';
 
     sub BUILD { push @CALLS, 'ClassWithBUILD::BUILD' }
 };
@@ -59,14 +59,6 @@ do {
         'TestRole::BUILD:after',
     ]);
 
-    ExplicitClassWithBUILD->new;
-
-    is_deeply([splice @CALLS], [
-        'TestRole::BUILD:before',
-        'ExplicitClassWithBUILD::BUILD',
-        'TestRole::BUILD:after',
-    ]);
-
     ClassWithoutBUILD->new;
 
     is_deeply([splice @CALLS], [
@@ -77,7 +69,6 @@ do {
 
     if (ClassWithBUILD->meta->is_mutable) {
         ClassWithBUILD->meta->make_immutable;
-        ExplicitClassWithBUILD->meta->make_immutable;
         ClassWithoutBUILD->meta->make_immutable;
         redo;
     }

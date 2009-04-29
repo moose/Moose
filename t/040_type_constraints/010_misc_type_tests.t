@@ -7,7 +7,7 @@ use Test::More tests => 8;
 use Test::Exception;
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 # subtype 'aliasing' ...

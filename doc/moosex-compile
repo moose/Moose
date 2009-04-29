@@ -20,7 +20,7 @@ TODO: PLEASE EDIT ME
 19:23 <nothingmuch> except without the Moose test suite's assumptions
 19:23 <nothingmuch> about state and module loading, and all that
 19:24 <nothingmuch> and doing that is a much more daunting prospect than hacking on MXC itself
-19:24 <obra> understood. the problem is that I still don't have a good sense of how to get it going, even manually 
+19:24 <obra> understood. the problem is that I still don't have a good sense of how to get it going, even manually
 19:24 <nothingmuch> ah
 19:24 <obra> none of the test files seem to show off what I need
 19:24 <nothingmuch> i can walk you through thjat
@@ -105,7 +105,7 @@ TODO: PLEASE EDIT ME
 19:36 <obra> my tests aren't scientific.
 19:36 <nothingmuch> trunk moose as of you sending me nytprofs
 19:37 <nothingmuch> actually that's CPAN moose now
-19:37 <obra> 0.35 - 0.45 
+19:37 <obra> 0.35 - 0.45
 19:37 <nothingmuch> ouch
 19:37 <nothingmuch> well, part of the problem is that it loads *EVERYTHING*
 19:37 <nothingmuch> every type of meta method class, meta type constraint, the role system, etc
@@ -170,7 +170,7 @@ TODO: PLEASE EDIT ME
 19:46 <obra> yeah. but the goal is to turn it into written docs.
 19:46 <obra> ok. for now, it should end up in MooseX-Compile/doc/design
 19:46 <nothingmuch> sounds good
-19:46 <obra> . o O { Thank god I don't have a moose commit bit } 
+19:46 <obra> . o O { Thank god I don't have a moose commit bit }
 19:47 <nothingmuch> though most of this affects moose itself though
 19:47  * obra nods
 19:47 <obra> Moose/doc/moosex-compile, then

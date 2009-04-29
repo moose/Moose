@@ -10,11 +10,11 @@ use Test::Exception;
 
 {
     # NOTE:
-    # this tests that repeated role 
-    # composition will not cause 
+    # this tests that repeated role
+    # composition will not cause
     # a conflict between two methods
     # which are actually the same anyway
-    
+
     {
         package RootA;
         use Moose::Role;
@@ -31,8 +31,8 @@ use Test::Exception;
         package SubAB;
         use Moose;
 
-        ::lives_ok { 
-            with "SubAA", "RootA"; 
+        ::lives_ok {
+            with "SubAA", "RootA";
         } '... role was composed as expected';
     }
 
@@ -46,31 +46,31 @@ use Test::Exception;
 
     can_ok( $i, "foo" );
     my $foo_rv;
-    lives_ok { 
-        $foo_rv = $i->foo; 
+    lives_ok {
+        $foo_rv = $i->foo;
     } '... called foo successfully';
     is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
 
 {
     # NOTE:
-    # this edge cases shows the application of 
-    # an after modifier over a method which 
+    # this edge cases shows the application of
+    # an after modifier over a method which
     # was added during role composotion.
     # The way this will work is as follows:
-    #    role SubBA will consume RootB and 
-    #    get a local copy of RootB::foo, it 
+    #    role SubBA will consume RootB and
+    #    get a local copy of RootB::foo, it
     #    will also store a deferred after modifier
-    #    to be applied to whatever class SubBA is 
+    #    to be applied to whatever class SubBA is
     #    composed into.
     #    When class SubBB comsumed role SubBA, the
-    #    RootB::foo method is added to SubBB, then 
-    #    the deferred after modifier from SubBA is 
+    #    RootB::foo method is added to SubBB, then
+    #    the deferred after modifier from SubBA is
     #    applied to it.
-    # It is important to note that the application 
-    # of the after modifier does not happen until 
+    # It is important to note that the application
+    # of the after modifier does not happen until
     # role SubBA is composed into SubAA.
-    
+
     {
         package RootB;
         use Moose::Role;
@@ -95,7 +95,7 @@ use Test::Exception;
         package SubBB;
         use Moose;
 
-        ::lives_ok { 
+        ::lives_ok {
             with "SubBA";
         } '... composed the role successfully';
     }
@@ -106,21 +106,21 @@ use Test::Exception;
     isa_ok( my $i = SubBB->new, "SubBB" );
 
     can_ok( $i, "foo" );
-    
+
     my $foo_rv;
-    lives_ok { 
-        $foo_rv = $i->foo 
+    lives_ok {
+        $foo_rv = $i->foo
     } '... called foo successfully';
     is( $foo_rv, "RootB::foo", "foo rv" );
     is( $i->counter, 1, "after hook called" );
-    
+
     lives_ok { $i->foo } '... called foo successfully (again)';
     is( $i->counter, 2, "after hook called (again)" );
-    
+
     ok(SubBA->meta->has_method('foo'), '... this has the foo method');
     #my $subba_foo_rv;
-    #lives_ok { 
-    #    $subba_foo_rv = SubBA::foo(); 
+    #lives_ok {
+    #    $subba_foo_rv = SubBA::foo();
     #} '... called the sub as a function correctly';
     #is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
 }
@@ -129,9 +129,9 @@ use Test::Exception;
     # NOTE:
     # this checks that an override method
     # does not try to trample over a locally
-    # composed in method. In this case the 
-    # RootC::foo, which is composed into 
-    # SubCA cannot be trampled with an 
+    # composed in method. In this case the
+    # RootC::foo, which is composed into
+    # SubCA cannot be trampled with an
     # override of 'foo'
     {
         package RootC;
@@ -144,15 +144,15 @@ use Test::Exception;
 
         with "RootC";
 
-        ::dies_ok { 
+        ::dies_ok {
             override foo => sub { "overridden" };
         } '... cannot compose an override over a local method';
     }
 }
 
 # NOTE:
-# need to talk to Yuval about the motivation behind 
-# this test, I am not sure we are testing anything 
+# need to talk to Yuval about the motivation behind
+# this test, I am not sure we are testing anything
 # useful here (although more tests cant hurt)
 
 {
@@ -184,10 +184,10 @@ use Test::Exception;
         with "ConcreteA";
 
         # NOTE:
-        # this was originally override, but 
+        # this was originally override, but
         # that wont work (see above set of tests)
         # so I switched it to around.
-        # However, this may not be testing the 
+        # However, this may not be testing the
         # same thing that was originally intended
         around other => sub {
             return ( (shift)->() . " + c" );
@@ -218,12 +218,12 @@ use Test::Exception;
         is( eval { $class->another }, "abstract", "provided by abstract" );
         is( eval { $class->other }, "concrete a", "provided by concrete a" );
         is( eval { $class->method }, "concrete b", "provided by concrete b" );
-    }        
+    }
 
     {
         package ClassWithSome;
         use Moose;
-        
+
         eval { with ::shuffle qw/ConcreteC ConcreteB/ };
         ::ok( !$@, "composition without abstract" ) || ::diag $@;
 

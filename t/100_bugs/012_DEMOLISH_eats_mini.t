@@ -21,7 +21,7 @@ use Test::Exception;
     # if no call to ANY Moose::Object->new was done before.
     sub DEMOLISH {
         my ( $self ) = @_;
-        # ... Moose (kinda) eats exceptions in DESTROY/DEMOLISH";    
+        # ... Moose (kinda) eats exceptions in DESTROY/DEMOLISH";
     }
 }
 
@@ -33,7 +33,7 @@ use Test::Exception;
 
 {
     package Bar;
-    
+
     sub new { die "Bar died"; }
 
     sub DESTROY {

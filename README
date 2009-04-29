@@ -1,4 +1,4 @@
-Moose version 0.75_01
+Moose version 0.76
 ===========================
 
 See the individual module documentation for more information
@@ -28,5 +28,5 @@ Copyright (C) 2006-2009 Infinity Interactive, Inc.
 http://www.iinteractive.com
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 

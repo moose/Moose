@@ -7,7 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -18,7 +18,7 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
     default   => sub { [] }
 ));
 
-sub new { 
+sub new {
     my ($class, %options) = @_;
 
     my $name = join '|' => sort { $a cmp $b }
@@ -90,7 +90,7 @@ sub validate {
         $message .= ($message ? ' and ' : '') . $err
             if defined $err;
     }
-    return ($message . ' in (' . $self->name . ')') ;    
+    return ($message . ' in (' . $self->name . ')') ;
 }
 
 sub is_a_type_of {
@@ -98,7 +98,7 @@ sub is_a_type_of {
     foreach my $type (@{$self->type_constraints}) {
         return 1 if $type->is_a_type_of($type_name);
     }
-    return 0;    
+    return 0;
 }
 
 sub is_subtype_of {
@@ -216,7 +216,7 @@ as its parent.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

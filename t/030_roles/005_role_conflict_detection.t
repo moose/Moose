@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 89;
+use Test::More tests => 87; # it's really 124 with kolibrie's tests;
 use Test::Exception;
-use Test::Output;
 
 =pod
 
@@ -18,31 +17,31 @@ Mutually recursive roles.
     use Moose::Role;
 
     requires 'foo';
-    
+
     sub bar { 'Role::Foo::bar' }
-    
+
     package Role::Bar;
     use Moose::Role;
-    
+
     requires 'bar';
-    
-    sub foo { 'Role::Bar::foo' }    
+
+    sub foo { 'Role::Bar::foo' }
 }
 
 {
     package My::Test1;
     use Moose;
-    
+
     ::lives_ok {
         with 'Role::Foo', 'Role::Bar';
     } '... our mutually recursive roles combine okay';
-    
+
     package My::Test2;
     use Moose;
-    
+
     ::lives_ok {
         with 'Role::Bar', 'Role::Foo';
-    } '... our mutually recursive roles combine okay (no matter what order)';    
+    } '... our mutually recursive roles combine okay (no matter what order)';
 }
 
 my $test1 = My::Test1->new;
@@ -86,53 +85,46 @@ Role method conflicts
 {
     package Role::Bling;
     use Moose::Role;
-    
+
     sub bling { 'Role::Bling::bling' }
-    
+
     package Role::Bling::Bling;
     use Moose::Role;
-    
-    sub bling { 'Role::Bling::Bling::bling' }    
+
+    sub bling { 'Role::Bling::Bling::bling' }
 }
 
 {
     package My::Test3;
     use Moose;
-    
+
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
     } qr/requires the method \'bling\' to be implemented/, '... role methods conflicted and method was required';
-    
+
     package My::Test4;
     use Moose;
-    
+
     ::lives_ok {
         with 'Role::Bling';
+        with 'Role::Bling::Bling';
+    } '... role methods didnt conflict when manually combined';
 
-        ::stderr_like {
-            with 'Role::Bling::Bling';
-        } qr/The My::Test4 class has implicitly overridden the method \(bling\) from role Role::Bling::Bling\./;
-
-    } '... role methods didnt conflict when manually combined';    
-    
     package My::Test5;
     use Moose;
-    
+
     ::lives_ok {
         with 'Role::Bling::Bling';
+        with 'Role::Bling';
+    } '... role methods didnt conflict when manually combined (in opposite order)';
 
-        ::stderr_like {
-            with 'Role::Bling';
-        } qr/The My::Test5 class has implicitly overridden the method \(bling\) from role Role::Bling\./;
-    } '... role methods didnt conflict when manually combined (in opposite order)';    
-    
     package My::Test6;
     use Moose;
-    
+
     ::lives_ok {
         with 'Role::Bling::Bling', 'Role::Bling';
-    } '... role methods didnt conflict when manually resolved';    
-    
+    } '... role methods didnt conflict when manually resolved';
+
     sub bling { 'My::Test6::bling' }
 }
 
@@ -159,16 +151,16 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
 {
     package Role::Bling::Bling::Bling;
     use Moose::Role;
-    
+
     with 'Role::Bling::Bling';
-    
-    sub bling { 'Role::Bling::Bling::Bling::bling' }    
+
+    sub bling { 'Role::Bling::Bling::Bling::bling' }
 }
 
 ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
 ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), '... our role correctly does() the other role');
 ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... dont have the bling method in Role::Bling::Bling::Bling');
-is(Role::Bling::Bling::Bling->meta->get_method('bling')->(), 
+is(Role::Bling::Bling::Bling->meta->get_method('bling')->(),
     'Role::Bling::Bling::Bling::bling',
     '... still got the bling method in Role::Bling::Bling::Bling');
 
@@ -182,22 +174,22 @@ Role attribute conflicts
 {
     package Role::Boo;
     use Moose::Role;
-    
+
     has 'ghost' => (is => 'ro', default => 'Role::Boo::ghost');
-    
+
     package Role::Boo::Hoo;
     use Moose::Role;
-    
+
     has 'ghost' => (is => 'ro', default => 'Role::Boo::Hoo::ghost');
 }
 
 {
     package My::Test7;
     use Moose;
-    
+
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    } qr/We have encountered an attribute conflict/, 
+    } qr/We have encountered an attribute conflict/,
       '... role attrs conflicted and method was required';
 
     package My::Test8;
@@ -207,24 +199,24 @@ Role attribute conflicts
         with 'Role::Boo';
         with 'Role::Boo::Hoo';
     } '... role attrs didnt conflict when manually combined';
-    
+
     package My::Test9;
     use Moose;
 
     ::lives_ok {
         with 'Role::Boo::Hoo';
         with 'Role::Boo';
-    } '... role attrs didnt conflict when manually combined';    
+    } '... role attrs didnt conflict when manually combined';
 
     package My::Test10;
     use Moose;
-    
-    has 'ghost' => (is => 'ro', default => 'My::Test10::ghost');    
-    
+
+    has 'ghost' => (is => 'ro', default => 'My::Test10::ghost');
+
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    } qr/We have encountered an attribute conflict/, 
-      '... role attrs conflicted and cannot be manually disambiguted';  
+    } qr/We have encountered an attribute conflict/,
+      '... role attrs conflicted and cannot be manually disambiguted';
 
 }
 
@@ -259,14 +251,14 @@ Role override method conflicts
 {
     package Role::Plot;
     use Moose::Role;
-    
+
     override 'twist' => sub {
         super() . ' -> Role::Plot::twist';
     };
-    
+
     package Role::Truth;
     use Moose::Role;
-    
+
     override 'twist' => sub {
         super() . ' -> Role::Truth::twist';
     };
@@ -275,43 +267,43 @@ Role override method conflicts
 {
     package My::Test::Base;
     use Moose;
-    
+
     sub twist { 'My::Test::Base::twist' }
-        
+
     package My::Test11;
     use Moose;
-    
+
     extends 'My::Test::Base';
 
     ::lives_ok {
         with 'Role::Truth';
     } '... composed the role with override okay';
-       
+
     package My::Test12;
     use Moose;
 
     extends 'My::Test::Base';
 
-    ::lives_ok {    
+    ::lives_ok {
        with 'Role::Plot';
     } '... composed the role with override okay';
-              
+
     package My::Test13;
     use Moose;
 
     ::dies_ok {
-        with 'Role::Plot';       
+        with 'Role::Plot';
     } '... cannot compose it because we have no superclass';
-    
+
     package My::Test14;
     use Moose;
 
     extends 'My::Test::Base';
 
     ::throws_ok {
-        with 'Role::Plot', 'Role::Truth';       
-    } qr/Two \'override\' methods of the same name encountered/, 
-      '... cannot compose it because we have no superclass';       
+        with 'Role::Plot', 'Role::Truth';
+    } qr/Two \'override\' methods of the same name encountered/,
+      '... cannot compose it because we have no superclass';
 }
 
 ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
@@ -336,20 +328,20 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
     package Role::Reality;
     use Moose::Role;
 
-    ::throws_ok {    
+    ::throws_ok {
         with 'Role::Plot';
-    } qr/A local method of the same name as been found/, 
+    } qr/A local method of the same name as been found/,
     '... could not compose roles here, it dies';
 
     sub twist {
         'Role::Reality::twist';
     }
-}    
+}
 
 ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
 #ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
-is(Role::Reality->meta->get_method('twist')->(), 
-    'Role::Reality::twist', 
+is(Role::Reality->meta->get_method('twist')->(),
+    'Role::Reality::twist',
     '... the twist method returns the right value');
 
 =pod
@@ -381,22 +373,22 @@ Now I have to decide actually what happens, and how to fix it.
 {
     package Role::Method;
     use Moose::Role;
-    
+
     sub ghost { 'Role::Method::ghost' }
 
     package Role::Method2;
     use Moose::Role;
-    
+
     sub ghost { 'Role::Method2::ghost' }
 
     package Role::Attribute;
     use Moose::Role;
-    
+
     has 'ghost' => (is => 'ro', default => 'Role::Attribute::ghost');
 
     package Role::Attribute2;
     use Moose::Role;
-    
+
     has 'ghost' => (is => 'ro', default => 'Role::Attribute2::ghost');
 }
 
@@ -404,7 +396,7 @@ Now I have to decide actually what happens, and how to fix it.
     package My::Test15;
     use Moose;
 
-    ::lives_ok {    
+    ::lives_ok {
        with 'Role::Method';
     } '... composed the method role into the method class';
 

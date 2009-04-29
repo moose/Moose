@@ -3,7 +3,7 @@ package Moose::Meta::Method;
 use strict;
 use warnings;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -53,7 +53,7 @@ C<Moose::Meta::Method> is a subclass of L<Class::MOP::Method>.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

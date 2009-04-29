@@ -6,9 +6,9 @@ use warnings;
 use Test::More tests => 10;
 use Test::Exception;
 
-BEGIN {       
-    use_ok('Moose::Util::TypeConstraints');               
-    use_ok('Moose::Meta::TypeConstraint::Parameterized');               
+BEGIN {
+    use_ok('Moose::Util::TypeConstraints');
+    use_ok('Moose::Meta::TypeConstraint::Parameterized');
 }
 
 my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
@@ -47,17 +47,17 @@ is(find_type_constraint('HashRef[Int]'), $hash_of_ints, '... found the type we j
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     coerce 'ArrayRef[Int]'
         => from 'HashRef[Int]'
             => via { [ values %$_ ] };
-    
+
     has 'bar' => (
         is     => 'ro',
         isa    => 'ArrayRef[Int]',
         coerce => 1,
     );
-    
+
 }
 
 my $foo = Foo->new(bar => { one => 1, two => 2, three => 3 });

@@ -12,19 +12,19 @@ use Moose::Util::TypeConstraints;
 
 
 type Number => where { Scalar::Util::looks_like_number($_) };
-type String 
+type String
     => where { !ref($_) && !Number($_) }
     => message { "This is not a string ($_)" };
 
-subtype Natural 
-        => as Number 
+subtype Natural
+        => as Number
         => where { $_ > 0 };
 
-subtype NaturalLessThanTen 
+subtype NaturalLessThanTen
         => as Natural
         => where { $_ < 10 }
         => message { "The number '$_' is not less than 10" };
-        
+
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
 ok(Number(5), '... this is a Num');
@@ -45,9 +45,9 @@ ok(NaturalLessThanTen(5), '... this is a NaturalLessThanTen');
 is(NaturalLessThanTen(12), undef, '... this is not a NaturalLessThanTen');
 is(NaturalLessThanTen(-5), undef, '... this is not a NaturalLessThanTen');
 is(NaturalLessThanTen('Foo'), undef, '... this is not a NaturalLessThanTen');
-        
-# anon sub-typing       
-        
+
+# anon sub-typing
+
 my $negative = subtype Number => where  { $_ < 0 };
 ok(defined $negative, '... got a value back from negative');
 isa_ok($negative, 'Moose::Meta::TypeConstraint');
@@ -72,7 +72,7 @@ ok($negative2->is_subtype_of('Number'), '... $negative2 is a subtype of Number')
 ok(!$negative2->is_subtype_of('String'), '... $negative is not a subtype of String');
 
 ok($negative2->has_message, '... it has a message');
-is($negative2->validate(2), 
+is($negative2->validate(2),
    '2 is not a negative number',
    '... validated unsuccessfully (got error)');
 
@@ -89,8 +89,8 @@ ok($natural_less_than_ten->has_message, '... it has a message');
 
 ok(!defined($natural_less_than_ten->validate(5)), '... validated successfully (no error)');
 
-is($natural_less_than_ten->validate(15), 
-   "The number '15' is not less than 10", 
+is($natural_less_than_ten->validate(15),
+   "The number '15' is not less than 10",
    '... validated unsuccessfully (got error)');
 
 my $natural = find_type_constraint('Natural');
@@ -103,8 +103,8 @@ ok(!$natural->has_message, '... it does not have a message');
 
 ok(!defined($natural->validate(5)), '... validated successfully (no error)');
 
-is($natural->validate(-5), 
-  "Validation failed for 'Natural' failed with value -5", 
+is($natural->validate(-5),
+  "Validation failed for 'Natural' failed with value -5",
   '... validated unsuccessfully (got error)');
 
 my $string = find_type_constraint('String');
@@ -114,8 +114,8 @@ ok($string->has_message, '... it does have a message');
 
 ok(!defined($string->validate("Five")), '... validated successfully (no error)');
 
-is($string->validate(5), 
-"This is not a string (5)", 
+is($string->validate(5),
+"This is not a string (5)",
 '... validated unsuccessfully (got error)');
 
 lives_ok { Moose::Meta::Attribute->new('bob', isa => 'Spong') }

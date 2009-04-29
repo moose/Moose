@@ -13,17 +13,17 @@ BEGIN {
 {
     package Foo;
     use Moose;
-    
+
     has 'foo';
 }
 
 {
     package Bar;
     use Moose;
-    
+
     extends 'Foo';
-    
-    has 'bar';    
+
+    has 'bar';
 }
 
 

@@ -9,8 +9,8 @@ use Test::Exception;
 =pod
 
 This tests to make sure that the inlined constructor
-has all the type constraints in order, even in the 
-cases when there is no type constraint available, such 
+has all the type constraints in order, even in the
+cases when there is no type constraint available, such
 as with a Class::MOP::Attribute object.
 
 =cut
@@ -19,10 +19,10 @@ as with a Class::MOP::Attribute object.
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
-    
+
     coerce 'Int' => from 'Str' => via { length $_ ? $_ : 69 };
 
-    has 'foo' => (is => 'rw', isa => 'Int');    
+    has 'foo' => (is => 'rw', isa => 'Int');
     has 'baz' => (is => 'rw', isa => 'Int');
     has 'zot' => (is => 'rw', isa => 'Int', init_arg => undef);
     has 'moo' => (is => 'rw', isa => 'Int', coerce => 1, default => '', required => 1);

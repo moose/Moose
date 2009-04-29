@@ -11,42 +11,42 @@ Moose::Cookbook::FAQ - Frequently asked questions about Moose
 
 =head3 Is Moose "production ready"?
 
-Yes. I have several medium-to-large-ish web applications in 
-production using Moose, they have been running without 
-issue now for well over a year. 
+Yes. I have several medium-to-large-ish web applications in
+production using Moose, they have been running without
+issue now for well over a year.
 
-At C<$work> we are re-writing our core offering to use Moose, 
-so its continued development is assured. 
+At C<$work> we are re-writing our core offering to use Moose,
+so its continued development is assured.
 
-Several other people on #moose either have apps in production 
-which use Moose, or are in the process of deploying sites 
-which use Moose. 
+Several other people on #moose either have apps in production
+which use Moose, or are in the process of deploying sites
+which use Moose.
 
 =head3 Is Moose's API stable?
 
 Yes and No. The external API, the one 90% of users will interact
-with, is B<very stable> and any changes B<will be 100% backwards 
-compatible>. The introspection API is I<mostly> stable; I still 
-reserve the right to tweak that if needed, but I will do my 
+with, is B<very stable> and any changes B<will be 100% backwards
+compatible>. The introspection API is I<mostly> stable; I still
+reserve the right to tweak that if needed, but I will do my
 absolute best to maintain backwards compatibility here as well.
 
 =head3 I heard Moose is slow, is this true?
 
 Again, this one is tricky, so Yes I<and> No.
 
-First let me say that I<nothing> in life is free, and that some 
-Moose features do cost more than others. It is also the 
-policy of Moose to B<only charge you for the features you use>, 
-and to do our absolute best to not place any extra burdens on 
-the execution of your code for features you are not using. Of 
-course using Moose itself does involve some overhead, but it 
-is mostly compile time. At this point we do have some options 
-available for getting the speed you need. 
+First let me say that I<nothing> in life is free, and that some
+Moose features do cost more than others. It is also the
+policy of Moose to B<only charge you for the features you use>,
+and to do our absolute best to not place any extra burdens on
+the execution of your code for features you are not using. Of
+course using Moose itself does involve some overhead, but it
+is mostly compile time. At this point we do have some options
+available for getting the speed you need.
 
-Currently we have the option of making your classes immutable 
-as a means of boosting speed. This will mean a slightly larger compile 
+Currently we have the option of making your classes immutable
+as a means of boosting speed. This will mean a slightly larger compile
 time cost, but the runtime speed increase (especially in object
-construction) is pretty significant. This is not very well 
+construction) is pretty significant. This is not very well
 documented yet, so please ask on the list or on #moose for more
 information.
 
@@ -67,15 +67,15 @@ Ideally, you should never write your own C<new> method, and should
 use Moose's other features to handle your specific object construction
 needs. Here are a few scenarios, and the Moose way to solve them;
 
-If you need to call initialization code post instance construction, 
-then use the C<BUILD> method. This feature is taken directly from 
-Perl 6. Every C<BUILD> method in your inheritance chain is called 
-(in the correct order) immediately after the instance is constructed. 
-This allows you to ensure that all your superclasses are initialized 
+If you need to call initialization code post instance construction,
+then use the C<BUILD> method. This feature is taken directly from
+Perl 6. Every C<BUILD> method in your inheritance chain is called
+(in the correct order) immediately after the instance is constructed.
+This allows you to ensure that all your superclasses are initialized
 properly as well. This is the best approach to take (when possible)
 because it makes subclassing your class much easier.
 
-If you need to affect the constructor's parameters prior to the 
+If you need to affect the constructor's parameters prior to the
 instance actually being constructed, you have a number of options.
 
 To change the parameter processing as a whole, you can use
@@ -90,7 +90,7 @@ argument values into the correct expected types. This approach is the
 most flexible and robust, but does have a slightly higher learning
 curve.
 
-=head3 How do I make non-Moose constructors work with Moose? 
+=head3 How do I make non-Moose constructors work with Moose?
 
 Usually the correct approach to subclassing a non Moose class is
 delegation.  Moose makes this easy using the C<handles> keyword,
@@ -110,10 +110,10 @@ instantiate your Moose attributes:
 
   package My::HTML::Template;
   use Moose;
-  
-  # explicit inheritance 
+
+  # explicit inheritance
   extends 'HTML::Template', 'Moose::Object';
-  
+
   # explicit constructor
   sub new {
       my $class = shift;
@@ -127,41 +127,41 @@ instantiate your Moose attributes:
       );
   }
 
-Of course, this only works if both your Moose class and the 
-inherited non-Moose class use the same instance type (typically 
+Of course, this only works if both your Moose class and the
+inherited non-Moose class use the same instance type (typically
 HASH refs).
 
 Note that this doesn't call C<BUILDALL> automatically, you must do that
 yourself.
 
-Other techniques can be used as well, such as creating the object 
-using C<Moose::Object::new>, but calling the inherited non-Moose 
-class's initialization methods (if available). 
+Other techniques can be used as well, such as creating the object
+using C<Moose::Object::new>, but calling the inherited non-Moose
+class's initialization methods (if available).
 
 It is also entirely possible to just rely on HASH autovivification
 to create the slots needed for Moose based attributes, although this
 does restrict use of construction time attribute features somewhat.
 
-In short, there are several ways to go about this, it is best to 
-evaluate each case based on the class you wish to extend, and the 
-features you wish to employ. As always, both IRC and the mailing 
+In short, there are several ways to go about this, it is best to
+evaluate each case based on the class you wish to extend, and the
+features you wish to employ. As always, both IRC and the mailing
 list are great ways to get help finding the best approach.
 
 =head2 Accessors
 
 =head3 How do I tell Moose to use get/set accessors?
 
-The easiest way to accomplish this is to use the C<reader> and 
+The easiest way to accomplish this is to use the C<reader> and
 C<writer> attribute options. Here is some example code:
 
   has 'bar' => (
       isa    => 'Baz',
-      reader => 'get_bar', 
+      reader => 'get_bar',
       writer => 'set_bar',
   );
 
-Moose will still take advantage of type constraints, triggers, etc. 
-when creating these methods. 
+Moose will still take advantage of type constraints, triggers, etc.
+when creating these methods.
 
 If you do not like this much typing, and wish it to be a default for your
 class, please see L<MooseX::FollowPBP>. This will allow you to write:
@@ -174,44 +174,44 @@ class, please see L<MooseX::FollowPBP>. This will allow you to write:
 And have Moose create separate C<get_bar> and C<set_bar> methods
 instead of a single C<bar> method.
 
-NOTE: This B<cannot> be set globally in Moose, as that would break 
+NOTE: This B<cannot> be set globally in Moose, as that would break
 other classes which are built with Moose.
 
 =head3 How can I get Moose to inflate/deflate values in the accessor?
 
-Well, the first question to ask is if you actually need both inflate 
+Well, the first question to ask is if you actually need both inflate
 and deflate.
 
-If you only need to inflate, then I suggest using coercions. Here is 
+If you only need to inflate, then I suggest using coercions. Here is
 some basic sample code for inflating a L<DateTime> object:
 
   subtype 'DateTime'
       => as 'Object'
       => where { $_->isa('DateTime') };
-      
+
   coerce 'DateTime'
       => from 'Str'
         => via { DateTime::Format::MySQL->parse_datetime($_) };
-        
+
   has 'timestamp' => (is => 'rw', isa => 'DateTime', coerce => 1);
 
-This creates a custom subtype for L<DateTime> objects, then attaches 
-a coercion to that subtype. The C<timestamp> attribute is then told 
+This creates a custom subtype for L<DateTime> objects, then attaches
+a coercion to that subtype. The C<timestamp> attribute is then told
 to expect a C<DateTime> type, and to try to coerce it. When a C<Str>
-type is given to the C<timestamp> accessor, it will attempt to 
-coerce the value into a C<DateTime> object using the code in found 
-in the C<via> block. 
+type is given to the C<timestamp> accessor, it will attempt to
+coerce the value into a C<DateTime> object using the code in found
+in the C<via> block.
 
 For a more comprehensive example of using coercions, see the
 L<Moose::Cookbook::Basics::Recipe5>.
 
-If you need to deflate your attribute, the current best practice is to 
+If you need to deflate your attribute, the current best practice is to
 add an C<around> modifier to your accessor. Here is some example code:
 
-  # a timestamp which stores as 
+  # a timestamp which stores as
   # seconds from the epoch
   has 'timestamp' => (is => 'rw', isa => 'Int');
-  
+
   around 'timestamp' => sub {
       my $next = shift;
       my ($self, $timestamp) = @_;
@@ -219,28 +219,28 @@ add an C<around> modifier to your accessor. Here is some example code:
       $next->($self, $timestamp->epoch);
   };
 
-It is also possible to do deflation using coercion, but this tends 
-to get quite complex and require many subtypes. An example of this 
-is outside the scope of this document, ask on #moose or send a mail 
+It is also possible to do deflation using coercion, but this tends
+to get quite complex and require many subtypes. An example of this
+is outside the scope of this document, ask on #moose or send a mail
 to the list.
 
-Still another option is to write a custom attribute metaclass, which 
-is also outside the scope of this document, but I would be happy to 
+Still another option is to write a custom attribute metaclass, which
+is also outside the scope of this document, but I would be happy to
 explain it on #moose or the mailing list.
 
 =head2 Method Modifiers
 
 =head3 How can I affect the values in C<@_> using C<before>?
 
-You can't, actually: C<before> only runs before the main method, 
-and it cannot easily affect the method's execution. What you want is 
-an C<around> method. 
+You can't, actually: C<before> only runs before the main method,
+and it cannot easily affect the method's execution. What you want is
+an C<around> method.
 
 =head3 Can I use C<before> to stop execution of a method?
 
-Yes, but only if you throw an exception. If this is too drastic a 
-measure then I suggest using C<around> instead. The C<around> method 
-modifier is the only modifier which can gracefully prevent execution 
+Yes, but only if you throw an exception. If this is too drastic a
+measure then I suggest using C<around> instead. The C<around> method
+modifier is the only modifier which can gracefully prevent execution
 of the main method. Here is an example:
 
   around 'baz' => sub {
@@ -252,7 +252,7 @@ of the main method. Here is an example:
       $next->($self, %options);
   };
 
-By choosing not to call the C<$next> method, you can stop the 
+By choosing not to call the C<$next> method, you can stop the
 execution of the main method.
 
 =head2 Type Constraints
@@ -261,24 +261,24 @@ execution of the main method.
 
 Use the C<message> option when building the subtype, like so:
 
-  subtype 'NaturalLessThanTen' 
+  subtype 'NaturalLessThanTen'
       => as 'Natural'
       => where { $_ < 10 }
       => message { "This number ($_) is not less than ten!" };
 
 This will be called when a value fails to pass the C<NaturalLessThanTen>
-constraint check. 
+constraint check.
 
 =head3 Can I turn off type constraint checking?
 
-Not yet, but soon. This option will likely be coming in the next 
+Not yet, but soon. This option will likely be coming in the next
 release.
 
 =head2 Roles
 
 =head3 How do I get Moose to call BUILD in all my composed roles?
 
-See L<Moose::Cookbook::WTF> and specifically the B<Why is BUILD 
+See L<Moose::Cookbook::WTF> and specifically the B<Why is BUILD
 not called for my composed roles?> question in the B<Roles> section.
 
 =head3 What are Traits, and how are they different from Roles?

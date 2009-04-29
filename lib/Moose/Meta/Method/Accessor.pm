@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -120,12 +120,12 @@ sub _inline_post_body { '' }
 
 sub _inline_check_constraint {
     my ($self, $value) = @_;
-    
+
     my $attr = $self->associated_attribute;
     my $attr_name = $attr->name;
-    
+
     return '' unless $attr->has_type_constraint;
-    
+
     my $type_constraint_name = $attr->type_constraint->name;
 
     qq{\$type_constraint->($value) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
@@ -135,7 +135,7 @@ sub _inline_check_coercion {
     my ($self, $value) = @_;
 
     my $attr = $self->associated_attribute;
-    
+
     return '' unless $attr->should_coerce;
     return "$value = \$attr->type_constraint->coerce($value);";
 }
@@ -145,7 +145,7 @@ sub _inline_check_required {
     my $attr = $self->associated_attribute;
 
     my $attr_name = $attr->name;
-    
+
     return '' unless $attr->is_required;
     return qq{(\@_ >= 2) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) is required, so cannot be set to undef"}) . ';' # defined $_[1] is not good enough
 }
@@ -166,7 +166,7 @@ sub _inline_check_lazy {
         if ($attr->has_default || $attr->has_builder) {
             if ($attr->has_default) {
                 $code .= '    my $default = $attr->default(' . $instance . ');'."\n";
-            } 
+            }
             elsif ($attr->has_builder) {
                 $code .= '    my $default;'."\n".
                          '    if(my $builder = '.$instance.'->can($attr->builder)){ '."\n".
@@ -177,22 +177,22 @@ sub _inline_check_lazy {
             $code .= $self->_inline_check_coercion('$default') . "\n";
             $code .= $self->_inline_check_constraint('$default') . "\n";
             $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, '$default') . "\n";
-        } 
+        }
         else {
             $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
         }
 
     } else {
         if ($attr->has_default) {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, ('$attr->default(' . $instance . ')')) . "\n";            
-        } 
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, ('$attr->default(' . $instance . ')')) . "\n";
+        }
         elsif ($attr->has_builder) {
-            $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n" 
-                  .  '       ' . $self->_inline_init_slot($attr, $instance, $slot_access, ($instance . '->$builder'))           
+            $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n"
+                  .  '       ' . $self->_inline_init_slot($attr, $instance, $slot_access, ($instance . '->$builder'))
                   .  "\n    } else {\n"
                   .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name')
                   .  ';'. "\n    }";
-        } 
+        }
         else {
             $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
         }
@@ -208,15 +208,15 @@ sub _inline_init_slot {
     }
     else {
         return ($slot_access . ' = ' . $value . ';');
-    }    
+    }
 }
 
 sub _inline_store {
     my ($self, $instance, $value) = @_;
     my $attr = $self->associated_attribute;
-    
+
     my $mi = $attr->associated_class->get_meta_instance;
-    
+
     my $code = $mi->inline_set_slot_value($instance, $attr->slots, $value)    . ";";
     $code   .= $mi->inline_weaken_slot_value($instance, $attr->slots, $value) . ";"
         if $attr->is_weak_ref;
@@ -233,7 +233,7 @@ sub _inline_trigger {
 sub _inline_get {
     my ($self, $instance) = @_;
     my $attr = $self->associated_attribute;
-    
+
     my $mi = $attr->associated_class->get_meta_instance;
 
     return $mi->inline_get_slot_value($instance, $attr->slots);
@@ -242,7 +242,7 @@ sub _inline_get {
 sub _inline_access {
     my ($self, $instance) = @_;
     my $attr = $self->associated_attribute;
-    
+
     my $mi = $attr->associated_class->get_meta_instance;
 
     return $mi->inline_slot_access($instance, $attr->slots);
@@ -251,7 +251,7 @@ sub _inline_access {
 sub _inline_has {
     my ($self, $instance) = @_;
     my $attr = $self->associated_attribute;
-    
+
     my $mi = $attr->associated_class->get_meta_instance;
 
     return $mi->inline_is_slot_initialized($instance, $attr->slots);

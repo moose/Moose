@@ -11,12 +11,12 @@ use Test::Exception;
 BEGIN {
     package MyFramework::Base;
     use Moose;
-    
+
     package MyFramework::Meta::Base;
-    use Moose;  
-    
-    extends 'Moose::Meta::Class';  
-    
+    use Moose;
+
+    extends 'Moose::Meta::Class';
+
     package MyFramework;
     use Moose;
 
@@ -25,7 +25,7 @@ BEGIN {
 
         strict->import;
         warnings->import;
-        
+
         return if $CALLER eq 'main';
         Moose::init_meta( $CALLER, 'MyFramework::Base', 'MyFramework::Meta::Base' );
         Moose->import({ into => $CALLER });
@@ -34,10 +34,10 @@ BEGIN {
     }
 }
 
-{   
+{
     package MyClass;
     BEGIN { MyFramework->import }
-    
+
     has 'foo' => (is => 'rw');
 }
 

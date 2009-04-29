@@ -18,9 +18,9 @@ Moose meta-level classes using Moose itself.
 {
     package My::Meta::Class;
     use Moose;
-    
+
     extends 'Moose::Meta::Class';
-    
+
     around 'create_anon_class' => sub {
         my $next = shift;
         my ($self, %options) = @_;
@@ -36,23 +36,23 @@ isa_ok($anon, 'Moose::Meta::Class');
 isa_ok($anon, 'Class::MOP::Class');
 
 is_deeply(
-    [ $anon->superclasses ], 
-    [ 'Moose::Object' ], 
+    [ $anon->superclasses ],
+    [ 'Moose::Object' ],
     '... got the default superclasses');
 
 {
     package My::Meta::Attribute::DefaultReadOnly;
     use Moose;
-    
+
     extends 'Moose::Meta::Attribute';
-    
+
     around 'new' => sub {
         my $next = shift;
         my ($self, $name, %options) = @_;
-        $options{is} = 'ro' 
+        $options{is} = 'ro'
             unless exists $options{is};
         $next->($self, $name, %options);
-    };    
+    };
 }
 
 {

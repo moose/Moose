@@ -8,8 +8,8 @@ use Test::Exception;
 
 =pod
 
-This tests the more complex 
-delegation cases and that they 
+This tests the more complex
+delegation cases and that they
 do not fail at compile time.
 
 =cut
@@ -158,14 +158,14 @@ do not fail at compile time.
     } "subrefs on non moose class give no meta";
 
     ::is( $delegate_class, "ChildF", "plain classes are handed down to subs" );
-    
+
     ::lives_ok {
         has child_g => (
             isa     => "ChildG",
             default => sub { ChildG->new },
             handles => ["child_g_method_1"],
         );
-    } "can delegate to object even without explicit reader";    
+    } "can delegate to object even without explicit reader";
 
     sub parent_method { "p" }
 }

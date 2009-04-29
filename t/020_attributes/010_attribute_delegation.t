@@ -12,18 +12,18 @@ use Test::Exception;
 # HASH handles
 # -------------------------------------------------------------------
 # the canonical form of of the 'handles'
-# option is the hash ref mapping a 
+# option is the hash ref mapping a
 # method name to the delegated method name
 
 {
     package Foo;
     use Moose;
 
-    has 'bar' => (is => 'rw', default => 10);    
+    has 'bar' => (is => 'rw', default => 10);
 
     package Bar;
-    use Moose; 
-    
+    use Moose;
+
     has 'foo' => (
         is      => 'rw',
         default => sub { Foo->new },
@@ -60,7 +60,7 @@ is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
 
 $bar->foo_bar(50);
 
-# and make sure everyone sees it 
+# and make sure everyone sees it
 
 is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
 is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
@@ -82,10 +82,10 @@ is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
 is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
 
 # -------------------------------------------------------------------
-# ARRAY handles 
+# ARRAY handles
 # -------------------------------------------------------------------
 # we also support an array based format
-# which assumes that the name is the same 
+# which assumes that the name is the same
 # on either end
 
 {
@@ -93,11 +93,11 @@ is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
     use Moose;
 
     sub go   { 'Engine::go'   }
-    sub stop { 'Engine::stop' }    
+    sub stop { 'Engine::stop' }
 
     package Car;
-    use Moose; 
-    
+    use Moose;
+
     has 'engine' => (
         is      => 'rw',
         default => sub { Engine->new },
@@ -122,7 +122,7 @@ is($car->go, 'Engine::go', '... got the right value from ->go');
 is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
 # -------------------------------------------------------------------
-# REGEXP handles 
+# REGEXP handles
 # -------------------------------------------------------------------
 # and we support regexp delegation
 
@@ -131,38 +131,38 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     use Moose;
 
     sub foo { 'Baz::foo' }
-    sub bar { 'Baz::bar' }       
-    sub boo { 'Baz::boo' }            
+    sub bar { 'Baz::bar' }
+    sub boo { 'Baz::boo' }
 
     package Baz::Proxy1;
-    use Moose; 
-    
+    use Moose;
+
     has 'baz' => (
         is      => 'ro',
         isa     => 'Baz',
         default => sub { Baz->new },
         handles => qr/.*/
     );
-    
+
     package Baz::Proxy2;
-    use Moose; 
-    
+    use Moose;
+
     has 'baz' => (
         is      => 'ro',
         isa     => 'Baz',
         default => sub { Baz->new },
         handles => qr/.oo/
-    );    
-    
+    );
+
     package Baz::Proxy3;
-    use Moose; 
-    
+    use Moose;
+
     has 'baz' => (
         is      => 'ro',
         isa     => 'Baz',
         default => sub { Baz->new },
         handles => qr/b.*/
-    );    
+    );
 }
 
 {
@@ -175,10 +175,10 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     can_ok($baz_proxy, 'foo');
     can_ok($baz_proxy, 'bar');
     can_ok($baz_proxy, 'boo');
-    
+
     is($baz_proxy->foo, 'Baz::foo', '... got the right proxied return value');
     is($baz_proxy->bar, 'Baz::bar', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');    
+    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
 }
 {
     my $baz_proxy = Baz::Proxy2->new;
@@ -189,9 +189,9 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     can_ok($baz_proxy, 'foo');
     can_ok($baz_proxy, 'boo');
-    
+
     is($baz_proxy->foo, 'Baz::foo', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');    
+    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
 }
 {
     my $baz_proxy = Baz::Proxy3->new;
@@ -202,9 +202,9 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     can_ok($baz_proxy, 'bar');
     can_ok($baz_proxy, 'boo');
-    
+
     is($baz_proxy->bar, 'Baz::bar', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');    
+    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
 }
 
 # -------------------------------------------------------------------
@@ -214,22 +214,22 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 {
     package Foo::Bar;
     use Moose::Role;
-    
+
     requires 'foo';
     requires 'bar';
-    
+
     package Foo::Baz;
     use Moose;
-    
+
     sub foo { 'Foo::Baz::FOO' }
     sub bar { 'Foo::Baz::BAR' }
-    sub baz { 'Foo::Baz::BAZ' }    
-    
+    sub baz { 'Foo::Baz::BAZ' }
+
     package Foo::Thing;
     use Moose;
-    
+
     has 'thing' => (
-        is      => 'rw', 
+        is      => 'rw',
         isa     => 'Foo::Baz',
         handles => 'Foo::Bar',
     );
@@ -240,14 +240,14 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $foo = Foo::Thing->new(thing => Foo::Baz->new);
     isa_ok($foo, 'Foo::Thing');
     isa_ok($foo->thing, 'Foo::Baz');
-    
+
     ok($foo->meta->has_method('foo'), '... we have the method we expect');
     ok($foo->meta->has_method('bar'), '... we have the method we expect');
-    ok(!$foo->meta->has_method('baz'), '... we dont have the method we expect');  
-    
-    is($foo->foo, 'Foo::Baz::FOO', '... got the right value');      
+    ok(!$foo->meta->has_method('baz'), '... we dont have the method we expect');
+
+    is($foo->foo, 'Foo::Baz::FOO', '... got the right value');
     is($foo->bar, 'Foo::Baz::BAR', '... got the right value');
-    is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');        
+    is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');
 }
 
 # -------------------------------------------------------------------
@@ -272,32 +272,32 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     }
 
     package Bar::Autoloaded;
-    use Moose; 
-    
+    use Moose;
+
     has 'foo' => (
         is      => 'rw',
         default => sub { Foo::Autoloaded->new },
         handles => { 'foo_bar' => 'bar' }
     );
-    
+
     package Baz::Autoloaded;
-    use Moose; 
-    
+    use Moose;
+
     has 'foo' => (
         is      => 'rw',
         default => sub { Foo::Autoloaded->new },
         handles => ['bar']
-    );    
-    
+    );
+
     package Goorch::Autoloaded;
-    use Moose; 
-    
+    use Moose;
+
     ::dies_ok {
         has 'foo' => (
             is      => 'rw',
             default => sub { Foo::Autoloaded->new },
             handles => qr/bar/
-        );    
+        );
     } '... you cannot delegate to AUTOLOADED class with regexp';
 }
 
@@ -323,7 +323,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     $bar->foo_bar(50);
 
-    # and make sure everyone sees it 
+    # and make sure everyone sees it
 
     is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
     is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
@@ -334,7 +334,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     isa_ok($foo, 'Foo::Autoloaded');
 
     $foo->bar(25);
-    
+
     is($foo->bar, 25, '... got the right foo->bar');
 
     lives_ok {
@@ -369,7 +369,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     $baz->bar(50);
 
-    # and make sure everyone sees it 
+    # and make sure everyone sees it
 
     is($baz->foo->bar, 50, '... baz->foo->bar returned the right (changed) value');
     is($baz->bar, 50, '... baz->foo_bar delegated correctly');
@@ -380,7 +380,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     isa_ok($foo, 'Foo::Autoloaded');
 
     $foo->bar(25);
-    
+
     is($foo->bar, 25, '... got the right foo->bar');
 
     lives_ok {
@@ -398,8 +398,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     {
         package Quux;
         use Moose;
-        has foo => ( 
-            isa => 'Foo', 
+        has foo => (
+            isa => 'Foo',
             default => sub { Foo->new },
             handles => { 'foo_bar' => 'bar' }
         );

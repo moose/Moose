@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
  BUGS
-------------------------------------------------------------------------------- 
+-------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
 TODO
@@ -8,24 +8,24 @@ TODO
 
 - DDuncan's Str types
 
-subtype 'Str' 
-    => as 'Value' 
-    => where { Encode::is_utf8( $_[0] ) or $_[0] !~ m/[^0x00-0x7F]/x } 
+subtype 'Str'
+    => as 'Value'
+    => where { Encode::is_utf8( $_[0] ) or $_[0] !~ m/[^0x00-0x7F]/x }
     => optimize_as { defined($_[0]) && !ref($_[0]) };
 
-subtype 'Blob' 
-    => as 'Value' 
-    => where { !Encode::is_utf8( $_[0] ) } 
+subtype 'Blob'
+    => as 'Value'
+    => where { !Encode::is_utf8( $_[0] ) }
     => optimize_as { defined($_[0]) && !ref($_[0]) };
 
 
 - should handle some moose-specific options in &Moose::Meta::Class::create
-  things like roles, and method modifiers (although those can probably be 
+  things like roles, and method modifiers (although those can probably be
   ignored if i want to)
 
 - type unions
 
-Add support for doing it with Classes which do not have 
+Add support for doing it with Classes which do not have
 a type constraint yet created
 
 - type intersections
@@ -40,10 +40,10 @@ Mostly just for Roles
 - proxy attributes
 
 a proxied attribute is an attribute
-which looks like an attribute, 
-talks like an attribute, smells 
-like an attribute,.. but if you 
-look behind the curtain,.. its 
+which looks like an attribute,
+talks like an attribute, smells
+like an attribute,.. but if you
+look behind the curtain,.. its
 over there.. in that other object
 
 (... probably be a custom metaclass)
@@ -55,15 +55,15 @@ over there.. in that other object
 [22:57] 	stevan	:P
 [22:57] 	stevan	are you wanting to reuse it or something?
 [22:57] 	stevan	my $subtype = subtype 'Something' => where { ... };
-[22:58] 	stevan	then you can do isa => $subtype 
+[22:58] 	stevan	then you can do isa => $subtype
 [22:58] 	mst	but I can't subtype it again
-[22:59] 	stevan	mst: ahhh... 
+[22:59] 	stevan	mst: ahhh...
 [22:59] 	mst	well, I can. but it suddenly gets very "long way round" ish
 [23:00] 	stevan	my $constraint = Moose::Meta::TypeConstraint->new(
 [23:00] 	stevan	            name       => $name || '__ANON__',
-[23:00] 	stevan	            parent     => $parent,            
-[23:00] 	stevan	            constraint => $check,       
-[23:00] 	stevan	            message    => $message,    
+[23:00] 	stevan	            parent     => $parent,
+[23:00] 	stevan	            constraint => $check,
+[23:00] 	stevan	            message    => $message,
 [23:00] 	stevan	        );
 [23:00] 	stevan	yeah thats kinda the long way
 [23:00] 	stevan	mst: what would you like it to be?
@@ -73,7 +73,7 @@ over there.. in that other object
 [23:00] 	stevan	hmm
 [23:00] 	mst	should be all you need to change
 [23:00] 	stevan	yeah
-[23:01] 	stevan	so you can then say 
+[23:01] 	stevan	so you can then say
 [23:01] 	stevan	subtype $anon => where { ... };
 [23:01] 	mst	right
 [23:01] 	stevan	ok
@@ -85,7 +85,7 @@ over there.. in that other object
 [13:17] 	mst	so if I'm trying to declare it cast-style per-source-class rather than per-target-class
 [13:17] 	mst	I am extremely screwed
 [13:17] 	stevan	yes
-[13:17] 	stevan	they are not class specific 
+[13:17] 	stevan	they are not class specific
 [13:18] 	stevan	they are attached to the type constraint itself
 [13:18] 	*	stevan ponders anon-coercion-metaobjects
 [13:18] 	mst	yes, that's fine
@@ -104,9 +104,9 @@ over there.. in that other object
 [13:32] 	mst	stevan: I want to be able to say in package Bar
 [13:32] 	mst	stevan: coerce_to 'Foo' via { ... };
 [13:32] 	mst	etc.
-[13:53] 	stevan	hmm  
-  
-  
+[13:53] 	stevan	hmm
+
+
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------
@@ -114,8 +114,8 @@ TO PONDER
 - Moose "strict" mode
 
 use Moose 'strict'; This would allow us to have all sort of expensive tests
-which can be turned off in prod.     
-        
+which can be turned off in prod.
+
 - Moose::Philosophy.pod
 
 To explain Moose from a very high level
@@ -123,6 +123,6 @@ To explain Moose from a very high level
 - moosedoc
 
 We certainly have enough meta-information to make pretty complete POD docs.
-        
-        
-        
+
+
+

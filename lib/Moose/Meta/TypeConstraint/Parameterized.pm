@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints;
 use Moose::Meta::TypeConstraint::Parameterizable;
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -25,7 +25,7 @@ sub equals {
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
     return unless $other->isa(__PACKAGE__);
-    
+
     return (
         $self->type_parameter->equals( $other->type_parameter )
             and
@@ -35,14 +35,14 @@ sub equals {
 
 sub compile_type_constraint {
     my $self = shift;
-    
+
     unless ( $self->has_type_parameter ) {
         require Moose;
         Moose->throw_error("You cannot create a Higher Order type without a type parameter");
     }
 
     my $type_parameter = $self->type_parameter;
-    
+
     unless ( blessed $type_parameter && $type_parameter->isa('Moose::Meta::TypeConstraint') ) {
         require Moose;
         Moose->throw_error("The type parameter must be a Moose meta type");
@@ -51,14 +51,14 @@ sub compile_type_constraint {
     foreach my $type (Moose::Util::TypeConstraints::get_all_parameterizable_types()) {
         if (my $constraint = $type->generate_constraint_for($self)) {
             $self->_set_constraint($constraint);
-            return $self->SUPER::compile_type_constraint;            
+            return $self->SUPER::compile_type_constraint;
         }
     }
-    
-    # if we get here, then we couldn't 
+
+    # if we get here, then we couldn't
     # find a way to parameterize this type
     require Moose;
-    Moose->throw_error("The " . $self->name . " constraint cannot be used, because " 
+    Moose->throw_error("The " . $self->name . " constraint cannot be used, because "
           . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.");
 }
 
@@ -90,7 +90,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 

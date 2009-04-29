@@ -10,9 +10,9 @@ use Moose::Meta::Role;
 
 {
     package FooRole;
-    
+
     our $VERSION = '0.01';
-    
+
     sub foo { 'FooRole::foo' }
 }
 
@@ -34,7 +34,7 @@ is_deeply(
     [ $foo_role->get_method_list() ],
     [ 'foo' ],
     '... got the right method list');
-    
+
 # attributes ...
 
 is_deeply(

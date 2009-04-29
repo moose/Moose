@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed refaddr);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -82,6 +82,8 @@ sub coerce {
         Moose->throw_error("Cannot coerce without a type coercion");
     }
 
+    return $_[0] if $self->check($_[0]);
+
     return $coercion->coerce(@_);
 }
 
@@ -108,9 +110,9 @@ sub get_message {
         return $msg->($value);
     }
     else {
-        $value = (defined $value ? overload::StrVal($value) : 'undef');        
+        $value = (defined $value ? overload::StrVal($value) : 'undef');
         return "Validation failed for '" . $self->name . "' failed with value $value";
-    }    
+    }
 }
 
 ## type predicates ...

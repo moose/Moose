@@ -7,16 +7,16 @@ use metaclass;
 use Moose::Util  'english_list';
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';
 
 sub apply {
-    my ($self, $role, $class) = @_;    
+    my ($self, $role, $class) = @_;
     $self->SUPER::apply($role, $class);
-    $class->add_role($role);        
+    $class->add_role($role);
 }
 
 sub check_role_exclusions {
@@ -46,7 +46,7 @@ sub check_required_methods {
     foreach my $required_method_name ($role->get_required_method_list) {
 
         if (!$class->find_method_by_name($required_method_name)) {
-            
+
             next if $self->is_aliased_method($required_method_name);
 
             push @missing, $required_method_name;
@@ -75,7 +75,7 @@ sub check_required_methods {
 }
 
 sub check_required_attributes {
-    
+
 }
 
 sub apply_attributes {
@@ -98,15 +98,13 @@ sub apply_attributes {
 
 sub apply_methods {
     my ($self, $role, $class) = @_;
-    my @implicitly_overridden;
-
     foreach my $method_name ($role->get_method_list) {
+
         unless ($self->is_method_excluded($method_name)) {
             # it if it has one already
             if ($class->has_method($method_name) &&
                 # and if they are not the same thing ...
                 $class->get_method($method_name)->body != $role->get_method($method_name)->body) {
-                push @implicitly_overridden, $method_name;
                 next;
             }
             else {
@@ -114,10 +112,10 @@ sub apply_methods {
                 $class->add_method(
                     $method_name,
                     $role->get_method($method_name)
-                );         
+                );
             }
         }
-        
+
         if ($self->is_method_aliased($method_name)) {
             my $aliased_method_name = $self->get_method_aliases->{$method_name};
             # it if it has one already
@@ -125,25 +123,17 @@ sub apply_methods {
                 # and if they are not the same thing ...
                 $class->get_method($aliased_method_name)->body != $role->get_method($method_name)->body) {
                 $class->throw_error("Cannot create a method alias if a local method of the same name exists");
-            }            
+            }
             $class->add_method(
                 $aliased_method_name,
                 $role->get_method($method_name)
-            );                
-        }        
+            );
+        }
     }
-
-    if (@implicitly_overridden) {
-        my $plural = @implicitly_overridden > 1 ? "s" : "";
-        # we use \n because we have no hope of guessing the right stack frame,
-        # it's almost certainly never going to be the one above us
-        warn "The " . $class->name . " class has implicitly overridden the method$plural (" . join(', ', @implicitly_overridden) . ") from role " . $role->name . ". If this is intentional, please exclude the method$plural from composition to silence this warning (see Moose::Cookbook::Roles::Recipe2)\n";
-    }
-
     # we must reset the cache here since
     # we are just aliasing methods, otherwise
     # the modifiers go wonky.
-    $class->reset_package_cache_flag;        
+    $class->reset_package_cache_flag;
 }
 
 sub apply_override_method_modifiers {

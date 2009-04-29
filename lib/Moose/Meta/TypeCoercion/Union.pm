@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.75_01';
+our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -16,27 +16,27 @@ use base 'Moose::Meta::TypeCoercion';
 sub compile_type_coercion {
     my $self            = shift;
     my $type_constraint = $self->type_constraint;
-    
+
     (blessed $type_constraint && $type_constraint->isa('Moose::Meta::TypeConstraint::Union'))
      || Moose->throw_error("You can only a Moose::Meta::TypeCoercion::Union for a " .
                 "Moose::Meta::TypeConstraint::Union, not a $type_constraint");
-    
+
     $self->_compiled_type_coercion(sub {
         my $value = shift;
-        # go through all the type constraints 
+        # go through all the type constraints
         # in the union, and check em ...
         foreach my $type (@{$type_constraint->type_constraints}) {
             # if they have a coercion first
-            if ($type->has_coercion) {    
+            if ($type->has_coercion) {
                 # then try to coerce them ...
                 my $temp = $type->coerce($value);
-                # and if they get something 
+                # and if they get something
                 # make sure it still fits within
                 # the union type ...
                 return $temp if $type_constraint->check($temp);
             }
         }
-        return undef;    
+        return undef;
     });
 }
 
@@ -83,7 +83,7 @@ union.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
@@ -98,6 +98,6 @@ Copyright 2006-2009 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
