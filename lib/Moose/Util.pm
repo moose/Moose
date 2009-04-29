@@ -3,6 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
+use Data::OptList;
 use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
