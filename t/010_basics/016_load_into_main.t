@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
-use Test::Output;
+use Test::More;
+BEGIN {
+    eval "use Test::Output;";
+    plan skip_all => "Test::Output is required for this test" if $@;
+    plan tests => 2;
+}
 
 stderr_is( sub { package main; eval 'use Moose' },
            "Moose does not export its sugar to the 'main' package.\n",

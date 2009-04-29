@@ -1,8 +1,12 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 8;
-use Test::Output;
+use Test::More;
+BEGIN {
+    eval "use Test::Output;";
+    plan skip_all => "Test::Output is required for this test" if $@;
+    plan tests => 8;
+}
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD

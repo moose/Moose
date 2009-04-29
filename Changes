@@ -15,6 +15,10 @@ for, noteworthy changes.
       - Revert the class-overrides-role warning in favor of a solution outside
         of the Moose core (Sartak)
 
+    * Tests
+      - Make Test::Output optional again, since it's only used in a few files
+        (Sartak)
+
 0.75_01 Thu, April 23, 2009
     * Moose::Meta::Role::Application::ToClass
       - Moose now warns about each class overriding methods from roles it
