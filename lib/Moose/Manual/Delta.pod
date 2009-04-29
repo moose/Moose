@@ -16,6 +16,11 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.77
+
+C<DEMOLISHALL> and C<DEMOLISH> now receive an argument indicating whether or
+not we are in global destruction.
+
 =head1 Version 0.76
 
 Type constraints no longer run coercions for a value that already matches the

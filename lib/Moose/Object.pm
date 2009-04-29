@@ -177,7 +177,8 @@ C<BUILDARGS>.
 
 This will call every C<DEMOLISH> method in the inheritance hierarchy,
 starting with the object's class and ending with the most distant
-parent.
+parent. C<DEMOLISHALL> and C<DEMOLISH> will receive a boolean
+indicating whether or not we are currently in global destruction.
 
 =item B<< $object->does($role_name) >>
 
