@@ -3,9 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 45;
+use Test::More;
 use Test::Exception;
-use Test::Output;
+BEGIN {
+    eval "use Test::Output;";
+    plan skip_all => "Test::Output is required for this test" if $@;
+    plan tests => 45;
+}
 
 
 {

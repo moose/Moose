@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.77
+    * Moose::Object
+      - pass a boolean to DEMOLISHALL and DEMOLISH indicating whether or not
+        we are currently in global destruction (doy)
+
 0.76 Mon, April 27, 2009
     * Moose::Meta::TypeConstraint
       - Do not run coercions in coerce() if the value already passes the type
@@ -14,6 +19,10 @@ for, noteworthy changes.
     * Moose::Meta::Role::Application::ToClass
       - Revert the class-overrides-role warning in favor of a solution outside
         of the Moose core (Sartak)
+
+    * Tests
+      - Make Test::Output optional again, since it's only used in a few files
+        (Sartak)
 
 0.75_01 Thu, April 23, 2009
     * Moose::Meta::Role::Application::ToClass

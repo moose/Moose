@@ -179,6 +179,12 @@ as its parent.
 Note that it does I<not> return a
 C<Moose::Meta::TypeConstraint::Class> object!
 
+=item B<< $constraint->get_message($value) >>
+
+This is the same as L<Moose::Meta::TypeConstraint/get_message> except
+that it explicitly says C<isa> was checked. This is to help users deal
+with accidentally autovivified type constraints.
+
 =back
 
 =head1 BUGS

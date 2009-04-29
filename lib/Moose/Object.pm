@@ -56,6 +56,7 @@ sub BUILDALL {
 
 sub DEMOLISHALL {
     my $self = shift;
+    my ($in_global_destruction) = @_;
 
     # NOTE: we ask Perl if we even
     # need to do this first, to avoid
@@ -70,7 +71,7 @@ sub DEMOLISHALL {
         || Moose::Meta::Class->initialize( ref $self );
 
     foreach my $method ( $meta->find_all_methods_by_name('DEMOLISH') ) {
-        $method->{code}->execute($self);
+        $method->{code}->execute($self, $in_global_destruction);
     }
 }
 
@@ -80,12 +81,12 @@ sub DESTROY {
         # localize the $@ ...
         local $@;
         # run DEMOLISHALL ourselves, ...
-        $_[0]->DEMOLISHALL;
+        $_[0]->DEMOLISHALL(Class::MOP::in_global_destruction);
         # and return ...
         return;
     }
     # otherwise it is normal destruction
-    $_[0]->DEMOLISHALL;
+    $_[0]->DEMOLISHALL(Class::MOP::in_global_destruction);
 }
 
 # support for UNIVERSAL::DOES ...
@@ -176,7 +177,8 @@ C<BUILDARGS>.
 
 This will call every C<DEMOLISH> method in the inheritance hierarchy,
 starting with the object's class and ending with the most distant
-parent.
+parent. C<DEMOLISHALL> and C<DEMOLISH> will receive a boolean
+indicating whether or not we are currently in global destruction.
 
 =item B<< $object->does($role_name) >>
 
