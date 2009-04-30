@@ -8,6 +8,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Carp         'confess';
 use Sub::Name    'subname';
+use Devel::GlobalDestruction 'in_global_destruction';
 
 our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
@@ -555,7 +556,7 @@ sub create {
     sub DESTROY {
         my $self = shift;
 
-        return if Class::MOP::in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
+        return if in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
 
         no warnings 'uninitialized';
         return unless $self->name =~ /^$ANON_ROLE_PREFIX/;
