@@ -11,16 +11,12 @@ Moose::Cookbook::FAQ - Frequently asked questions about Moose
 
 =head3 Is Moose "production ready"?
 
-Yes. I have several medium-to-large-ish web applications in
-production using Moose, they have been running without
-issue now for well over a year.
+Yes! Many sites with household names are using Moose to build
+high-traffic services. Countless others are using Moose in
+production.
 
-At C<$work> we are re-writing our core offering to use Moose,
-so its continued development is assured.
-
-Several other people on #moose either have apps in production
-which use Moose, or are in the process of deploying sites
-which use Moose.
+As of this writing, Moose is a dependency of several hundred CPAN
+modules. L<http://cpants.perl.org/dist/used_by/Moose>
 
 =head3 Is Moose's API stable?
 
