@@ -104,9 +104,13 @@ to fix this is to simply explicitly inherit from L<Moose::Object>
 yourself.
 
 However, this does not always fix the issue of actually calling the Moose
-constructor. Fortunately L<Class::MOP::Class/new_object>, the low level
-constructor, accepts the special C<__INSTANCE__> parameter, allowing you to
-instantiate your Moose attributes:
+constructor. Fortunately, the modules L<MooseX::NonMoose> and
+L<MooseX::Alien> aim to make subclassing non-Moose classes easier.
+
+If neither extension fills your specific needs, you can use
+L<Class::MOP::Class/new_object>. This low-level constructor accepts the
+special C<__INSTANCE__> parameter, allowing you to instantiate your Moose
+attributes:
 
   package My::HTML::Template;
   use Moose;
@@ -138,14 +142,10 @@ Other techniques can be used as well, such as creating the object
 using C<Moose::Object::new>, but calling the inherited non-Moose
 class's initialization methods (if available).
 
-It is also entirely possible to just rely on HASH autovivification
-to create the slots needed for Moose based attributes, although this
-does restrict use of construction time attribute features somewhat.
-
-In short, there are several ways to go about this, it is best to
-evaluate each case based on the class you wish to extend, and the
-features you wish to employ. As always, both IRC and the mailing
-list are great ways to get help finding the best approach.
+In short, there are several ways to extend non-Moose classes. It is
+best to evaluate each case based on the class you wish to extend,
+and the features you wish to employ. As always, both IRC and the
+mailing list are great ways to get help finding the best approach.
 
 =head2 Accessors
 
