@@ -96,55 +96,8 @@ delegation.  Moose makes this easy using the C<handles> keyword,
 coercions, and C<lazy_build>, so subclassing is often not the
 ideal route.
 
-That said, the default Moose constructor is inherited from
-L<Moose::Object>. When inheriting from a non-Moose class, the
-inheritance chain to L<Moose::Object> is broken. The simplest way
-to fix this is to simply explicitly inherit from L<Moose::Object>
-yourself.
-
-However, this does not always fix the issue of actually calling the Moose
-constructor. Fortunately, the modules L<MooseX::NonMoose> and
-L<MooseX::Alien> aim to make subclassing non-Moose classes easier.
-
-If neither extension fills your specific needs, you can use
-L<Class::MOP::Class/new_object>. This low-level constructor accepts the
-special C<__INSTANCE__> parameter, allowing you to instantiate your Moose
-attributes:
-
-  package My::HTML::Template;
-  use Moose;
-
-  # explicit inheritance
-  extends 'HTML::Template', 'Moose::Object';
-
-  # explicit constructor
-  sub new {
-      my $class = shift;
-      # call HTML::Template's constructor
-      my $obj = $class->SUPER::new(@_);
-      return $class->meta->new_object(
-          # pass in the constructed object
-          # using the special key __INSTANCE__
-          __INSTANCE__ => $obj,
-          @_, # pass in the normal args
-      );
-  }
-
-Of course, this only works if both your Moose class and the
-inherited non-Moose class use the same instance type (typically
-HASH refs).
-
-Note that this doesn't call C<BUILDALL> automatically, you must do that
-yourself.
-
-Other techniques can be used as well, such as creating the object
-using C<Moose::Object::new>, but calling the inherited non-Moose
-class's initialization methods (if available).
-
-In short, there are several ways to extend non-Moose classes. It is
-best to evaluate each case based on the class you wish to extend,
-and the features you wish to employ. As always, both IRC and the
-mailing list are great ways to get help finding the best approach.
+That said, if you really need to inherit from a non-Moose class, see
+L<Moose::Cookbook::Basics::Recipe12> for an example of how to do it.
 
 =head2 Accessors
 
