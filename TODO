@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
- BUGS
+BUGS
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-TODO
+FEATURES
 -------------------------------------------------------------------------------
 
 - DDuncan's Str types
@@ -17,11 +17,6 @@ subtype 'Blob'
     => as 'Value'
     => where { !Encode::is_utf8( $_[0] ) }
     => optimize_as { defined($_[0]) && !ref($_[0]) };
-
-
-- should handle some moose-specific options in &Moose::Meta::Class::create
-  things like roles, and method modifiers (although those can probably be
-  ignored if i want to)
 
 - type unions
 
@@ -47,36 +42,6 @@ look behind the curtain,.. its
 over there.. in that other object
 
 (... probably be a custom metaclass)
-
-- subtype $anon_subtype => where { ... }
-
-[22:56] 	stevan	sub mst_doesnt_like_to_type { (shift)->meta->attr->type_contstraint }
-[22:57] 	mst	err
-[22:57] 	stevan	:P
-[22:57] 	stevan	are you wanting to reuse it or something?
-[22:57] 	stevan	my $subtype = subtype 'Something' => where { ... };
-[22:58] 	stevan	then you can do isa => $subtype
-[22:58] 	mst	but I can't subtype it again
-[22:59] 	stevan	mst: ahhh...
-[22:59] 	mst	well, I can. but it suddenly gets very "long way round" ish
-[23:00] 	stevan	my $constraint = Moose::Meta::TypeConstraint->new(
-[23:00] 	stevan	            name       => $name || '__ANON__',
-[23:00] 	stevan	            parent     => $parent,
-[23:00] 	stevan	            constraint => $check,
-[23:00] 	stevan	            message    => $message,
-[23:00] 	stevan	        );
-[23:00] 	stevan	yeah thats kinda the long way
-[23:00] 	stevan	mst: what would you like it to be?
-[23:00] 	mst	$parent = find_type_constraint($parent) if defined $parent;
-[23:00] 	mst	if $parent is already a type constraint
-[23:00] 	mst	skip that bit
-[23:00] 	stevan	hmm
-[23:00] 	mst	should be all you need to change
-[23:00] 	stevan	yeah
-[23:01] 	stevan	so you can then say
-[23:01] 	stevan	subtype $anon => where { ... };
-[23:01] 	mst	right
-[23:01] 	stevan	ok
 
 - local coerce
 
@@ -106,6 +71,70 @@ over there.. in that other object
 [13:32] 	mst	etc.
 [13:53] 	stevan	hmm
 
+-------------------------------------------------------------------------------
+INTERNALS
+-------------------------------------------------------------------------------
+
+- rationalize all the get_X methods for classes (and roles)
+
+We have get_attribute, get_attributes_list, get_all_attributes,
+etc. First, we need to make the method names consistent. If something
+returns an attribute vs a name, that needs to be clear from the method
+name. We also need to make sure that local vs. "entire inheritance
+chain" is clear from the name.
+
+Finally, kill all the public get_X_map methods. The hashref it returns
+is the internal reference, and the fact that it _is_ a hashref is just
+an implementation detail.
+
+This is mostly a CMOP change.
+
+- Metaclass constructors
+
+There's a _lot_ of different conventions in here. Some things to consider:
+
+* new vs _new
+* allowing new( 'name', %args ) vs ( name => 'name', %args )
+* Method->wrap vs Method->new
+
+- Role & Class
+
+These two share a _lot_ of logic, but it's not via shared code. Maybe
+implement some sort of role-lit internal thing so we can have a
+"HasAttributes" and "HasMethods" role for classes and roles.
+
+- Moose::Meta::TypeConstraint::Parameter{izable,ized}
+
+The relationship between these two classes is very odd. In particular,
+this line in Parameterized is insane:
+
+    foreach my $type (Moose::Util::TypeConstraints::get_all_parameterizable_types()) {
+
+Why does it need to loop through all parameterizable types? Shouldn't
+it know which parameterizable type it "came from"?
+
+- Moose::Util::TypeConstraints vs Moose::Meta::Type{Coercion,Constraint}
+
+The Util module has _way_ too much functionality. It needs to be
+refactored so it's a thin sugar layer on top of the meta API. As it
+stands now, it does things like parse type names (and determine if
+they're valid), manage the registry, and much more.
+
+- Moose::Meta::Role::Application::*
+
+These class names are hardcoded throughout Moose, making replacing
+them very difficult.
+
+- Moose::Meta::Role & attributes
+
+The way a role stores attributes is nasty and not very
+introspectable. It should store some sort of object, possibly one that
+knows how to turn itself into a "real" attribute.
+
+- Anything with a _(meta)?class method
+
+Every method that returns a class name needs to become a rw attribute
+that can be set via the constructor.
 
 -------------------------------------------------------------------------------
 TO PONDER
