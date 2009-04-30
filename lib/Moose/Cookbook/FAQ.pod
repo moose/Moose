@@ -233,8 +233,17 @@ explain it on #moose or the mailing list.
 =head3 How can I affect the values in C<@_> using C<before>?
 
 You can't, actually: C<before> only runs before the main method,
-and it cannot easily affect the method's execution. What you want is
-an C<around> method.
+and it cannot easily affect the method's execution.
+
+You similarly can't use C<after> to affect the return value of a
+method.
+
+We limit C<before> and C<after> because this lets you write more
+concise code. You do not have to worry about passing C<@_> to the
+original method, or forwarding its response (being careful to preserve
+context).
+
+The C<around> method modifier has neither of these limitations.
 
 =head3 Can I use C<before> to stop execution of a method?
 
