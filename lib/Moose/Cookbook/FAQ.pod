@@ -20,11 +20,15 @@ modules. L<http://cpants.perl.org/dist/used_by/Moose>
 
 =head3 Is Moose's API stable?
 
-Yes and No. The external API, the one 90% of users will interact
-with, is B<very stable> and any changes B<will be 100% backwards
-compatible>. The introspection API is I<mostly> stable; I still
-reserve the right to tweak that if needed, but I will do my
-absolute best to maintain backwards compatibility here as well.
+Yes. The sugary API, the one 95% of users will interact with, is
+B<very stable>. Any changes will be B<100% backwards compatible>.
+
+The meta API is less set in stone. We reserve the right to tweak
+parts of it to improve efficiency or consistency. This will not be
+done lightly. We do perform deprecation cycles. We I<really>
+do not like making ourselves look bad by breaking your code.
+Submitting test cases is the best way to ensure that your code is not
+inadvertantly broken by refactoring.
 
 =head3 I heard Moose is slow, is this true?
 
