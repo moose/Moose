@@ -7,6 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
+use Sub::Name    'subname';
 
 our $VERSION   = '0.76';
 $VERSION = eval $VERSION;
@@ -399,7 +400,7 @@ sub add_method {
     my $full_method_name = ($self->name . '::' . $method_name);
     $self->add_package_symbol(
         { sigil => '&', type => 'CODE', name => $method_name },
-        Class::MOP::subname($full_method_name => $body)
+        subname($full_method_name => $body)
     );
 
     $self->update_package_cache_flag; # still valid, since we just added the method to the map, and if it was invalid before that then get_method_map updated it

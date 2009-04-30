@@ -11,7 +11,7 @@ use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
 use Sub::Exporter;
-
+use Sub::Name qw(subname);
 
 my %EXPORT_SPEC;
 
@@ -184,7 +184,7 @@ sub _make_wrapped_sub {
 
         my $wrapper = $self->_make_wrapper($caller, $sub, $fq_name);
 
-        my $sub = Class::MOP::subname($fq_name => $wrapper);
+        my $sub = subname($fq_name => $wrapper);
 
         $export_recorder->{$sub} = 1;
 

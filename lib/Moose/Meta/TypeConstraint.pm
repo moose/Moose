@@ -9,6 +9,7 @@ use overload '""'     => sub { shift->name },   # stringify to tc name
              fallback => 1;
 
 use Scalar::Util qw(blessed refaddr);
+use Sub::Name qw(subname);
 
 use base qw(Class::MOP::Object);
 
@@ -234,7 +235,7 @@ sub _compile_subtype {
         if ( $check == $null_constraint ) {
             return $optimized_parent;
         } else {
-            return Class::MOP::subname($self->name, sub {
+            return subname($self->name, sub {
                 return undef unless $optimized_parent->($_[0]);
                 my (@args) = @_;
                 local $_ = $args[0];
@@ -245,7 +246,7 @@ sub _compile_subtype {
         # general case, check all the constraints, from the first parent to ourselves
         my @checks = @parents;
         push @checks, $check if $check != $null_constraint;
-        return Class::MOP::subname($self->name => sub {
+        return subname($self->name => sub {
             my (@args) = @_;
             local $_ = $args[0];
             foreach my $check (@checks) {
@@ -261,7 +262,7 @@ sub _compile_type {
 
     return $check if $check == $null_constraint; # Item, Any
 
-    return Class::MOP::subname($self->name => sub {
+    return subname($self->name => sub {
         my (@args) = @_;
         local $_ = $args[0];
         $check->(@args);
