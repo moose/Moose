@@ -57,7 +57,8 @@ conversion to XS.
 
 =head3 When will Moose 1.0 be ready?
 
-It is right now, I declared 0.18 to be "ready to use".
+It ready now! Stevan Little declared 0.18, released in March 2007,
+to be "ready to use".
 
 =head2 Constructors
 
