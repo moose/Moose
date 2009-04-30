@@ -2,9 +2,13 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 0.77
+    * Moose::Meta::Role
+      - Add Explicit use of Devel::GlobalDestruction and Sub::Name (perigrin)
+
     * Moose::Object
       - pass a boolean to DEMOLISHALL and DEMOLISH indicating whether or not
         we are currently in global destruction (doy)
+      - Add Explicit use of Devel::GlobalDestruction and Sub::Name (perigrin)
 
     * Moose::Cookbook::FAQ
       - Reworked much of the existing content to be more useful to modern
