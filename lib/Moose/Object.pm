@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util;
-use Devel::GlobalDestruction ();
+use Devel::GlobalDestruction qw(in_global_destruction);
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
@@ -82,12 +82,12 @@ sub DESTROY {
         # localize the $@ ...
         local $@;
         # run DEMOLISHALL ourselves, ...
-        $_[0]->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
+        $_[0]->DEMOLISHALL(in_global_destruction);
         # and return ...
         return;
     }
     # otherwise it is normal destruction
-    $_[0]->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
+    $_[0]->DEMOLISHALL(in_global_destruction);
 }
 
 # support for UNIVERSAL::DOES ...
