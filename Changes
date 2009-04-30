@@ -6,6 +6,10 @@ for, noteworthy changes.
       - pass a boolean to DEMOLISHALL and DEMOLISH indicating whether or not
         we are currently in global destruction (doy)
 
+    * Moose::Cookbook::FAQ
+      - Reworked much of the existing content to be more useful to modern
+        Moose hackers (Sartak)
+
 0.76 Mon, April 27, 2009
     * Moose::Meta::TypeConstraint
       - Do not run coercions in coerce() if the value already passes the type
