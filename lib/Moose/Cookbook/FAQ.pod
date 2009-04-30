@@ -279,8 +279,7 @@ constraint check.
 
 =head3 Can I turn off type constraint checking?
 
-Not yet, but soon. This option will likely be coming in the next
-release.
+Not yet. This option will likely be coming in a future release.
 
 =head2 Roles
 
