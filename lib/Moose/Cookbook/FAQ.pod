@@ -181,7 +181,7 @@ other classes which are built with Moose.
 Well, the first question to ask is if you actually need both inflate
 and deflate.
 
-If you only need to inflate, then I suggest using coercions. Here is
+If you only need to inflate, then we suggest using coercions. Here is
 some basic sample code for inflating a L<DateTime> object:
 
   subtype 'DateTime'
@@ -224,7 +224,7 @@ is outside the scope of this document, ask on #moose or send a mail
 to the list.
 
 Still another option is to write a custom attribute metaclass, which
-is also outside the scope of this document, but I would be happy to
+is also outside the scope of this document, but we would be happy to
 explain it on #moose or the mailing list.
 
 =head2 Method Modifiers
@@ -247,7 +247,7 @@ The C<around> method modifier has neither of these limitations.
 =head3 Can I use C<before> to stop execution of a method?
 
 Yes, but only if you throw an exception. If this is too drastic a
-measure then I suggest using C<around> instead. The C<around> method
+measure then we suggest using C<around> instead. The C<around> method
 modifier is the only modifier which can gracefully prevent execution
 of the main method. Here is an example:
 
