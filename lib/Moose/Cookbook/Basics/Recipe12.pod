@@ -58,10 +58,13 @@ Moose::Cookbook::Basics::Recipe12 - Extending a non-Moose base class
 
 =head1 DESCRIPTION
 
-This recipe demonstrates  how to use Moose to  subclass a parent which
-is not Moose based. This recipe  only works if the parent class uses a
-blessed hash reference  for object instances. If your  parent is doing
+This recipe demonstrates how to use Moose to subclass a parent which
+is not Moose based. This recipe only works if the parent class uses a
+blessed hash reference for object instances. If your parent is doing
 something funkier, you should check out L<MooseX::InsideOut>.
+
+You might also want to check out L<MooseX::NonMoose>, which does all
+the grunt work for you.
 
 There are a couple pieces worth noting:
 
