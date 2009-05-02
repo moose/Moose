@@ -3,16 +3,18 @@ for, noteworthy changes.
 
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
-      - Add Explicit use of Devel::GlobalDestruction and Sub::Name (perigrin)
+      - Add explicit use of Devel::GlobalDestruction and Sub::Name
+        (perigrin)
 
     * Moose::Object
-      - pass a boolean to DEMOLISHALL and DEMOLISH indicating whether or not
-        we are currently in global destruction (doy)
-      - Add Explicit use of Devel::GlobalDestruction and Sub::Name (perigrin)
+      - Pass a boolean to DEMOLISHALL and DEMOLISH indicating whether
+        or not we are currently in global destruction (doy)
+      - Add explicit use of Devel::GlobalDestruction and Sub::Name
+        (perigrin)
 
     * Moose::Cookbook::FAQ
-      - Reworked much of the existing content to be more useful to modern
-        Moose hackers (Sartak)
+      - Reworked much of the existing content to be more useful to
+        modern Moose hackers (Sartak)
 
     * Makefile.PL
       - Depend on Class::MOP 0.83 instead of 0.82_01. It seems that if
