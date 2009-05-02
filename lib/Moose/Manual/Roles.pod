@@ -153,8 +153,8 @@ set to true when C<break> is called.
 If you are familiar with the concept of abstract base classes in other
 languages, you may be tempted to use roles in the same way.
 
-You I<can> define a "interface-only" role, one that contains I<just> a
-list of required methods.
+You I<can> define an "interface-only" role, one that contains I<just>
+a list of required methods.
 
 However, any class which consumes this role must implement all of the
 required methods, either directly or through inheritance from a
