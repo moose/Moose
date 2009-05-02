@@ -83,6 +83,14 @@ namespace. We recommend that you take advantage of this feature, since
 it just makes your classes "cleaner". You can do this by simply adding
 C<no Moose> at the end of your module file.
 
+  package Person;
+
+  use Moose;
+
+  has 'ssn' => ( is => 'rw' );
+
+  no Moose;
+
 This deletes Moose's sugar functions from your class's namespace, so
 that C<< Person->can('has') >> will no longer return true.
 
