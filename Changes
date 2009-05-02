@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.77
+0.77 Sat, May 2, 2009
     * Moose::Meta::Role
       - Add Explicit use of Devel::GlobalDestruction and Sub::Name (perigrin)
 
