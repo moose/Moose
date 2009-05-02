@@ -114,8 +114,8 @@ declaratively create type constraints without building an entire
 class.
 
 In the recipe we also make use of L<Locale::US> and L<Regexp::Common>
-to build constraints, showing how how constraints can make use of
-existing CPAN tools for data validation.
+to build constraints, showing how constraints can make use of existing
+CPAN tools for data validation.
 
 Finally, we introduce the C<required> attribute option.
 
@@ -188,7 +188,7 @@ where each element of the array is an C<Employee> object. It's worth
 noting that an I<empty> array reference also satisfies this
 constraint.
 
-Parameterizable type constraints (or "container types), such as
+Parameterizable type constraints (or "container types"), such as
 C<ArrayRef[`a]>, can be made more specific with a type parameter. In
 fact, we can arbitrarily nest these types, producing something like
 C<HashRef[ArrayRef[Int]]>. However, you can also just use the type by
