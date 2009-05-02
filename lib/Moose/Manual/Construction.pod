@@ -6,7 +6,7 @@ Moose::Manual::Construction - Object construction (and destruction) with Moose
 
 =head1 WHERE'S THE CONSTRUCTOR?
 
-B<You do not need to define a C<new()> method for your classes!>
+B<Do not define a C<new()> method for your classes!>
 
 When you C<use Moose> in your class, you will become a subclass of
 L<Moose::Object>, which provides a C<new> method for you. If you
@@ -104,7 +104,8 @@ normal order of method inheritance.
 
 The theory behind this is that C<BUILD> methods can only be used for
 increasing specialization of a class's constraints, so it makes sense
-to call the least specific first (also, this is how Perl 6 does it).
+to call the least specific C<BUILD> method first. Also, this is how
+Perl 6 does it.
 
 =head1 OBJECT DESTRUCTION
 
