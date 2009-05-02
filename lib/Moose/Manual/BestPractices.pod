@@ -149,7 +149,7 @@ type.
     # very naughty!
     coerce 'ArrayRef'
         => from Str
-            => via { [ split /,/ ] };
+        => via { [ split /,/ ] };
 
 Instead, create a subtype and coerce that:
 
@@ -157,7 +157,7 @@ Instead, create a subtype and coerce that:
 
     coerce 'My::ArrayRef'
         => from 'Str'
-            => via { [ split /,/ ] };
+        => via { [ split /,/ ] };
 
 =head2 Do not coerce class names directly
 
@@ -168,7 +168,7 @@ have magical side effects elsewhere:
     # also very naughty!
     coerce 'HTTP::Headers'
         => from 'HashRef'
-            => via { HTTP::Headers->new( %{$_} ) };
+        => via { HTTP::Headers->new( %{$_} ) };
 
 Instead, we can create an "empty" subtype for the coercion:
 
@@ -176,7 +176,7 @@ Instead, we can create an "empty" subtype for the coercion:
 
     coerce 'My::HTTP::Headers'
         => from 'HashRef'
-            => via { HTTP::Headers->new( %{$_} ) };
+        => via { HTTP::Headers->new( %{$_} ) };
 
 =head2 Use coercion instead of unions
 
