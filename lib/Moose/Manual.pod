@@ -110,6 +110,11 @@ This manual consists of a number of documents.
 Introduces Moose concepts, and contrasts them against "old school"
 Perl 5 OO.
 
+=item L<Moose::Manual::Unsweetened>
+
+Show two examples classes, each written first with Moose and then with
+"plain old Perl 5".
+
 =item L<Moose::Manual::Classes>
 
 How do you make use of Moose in your classes? Now that I'm a Moose,

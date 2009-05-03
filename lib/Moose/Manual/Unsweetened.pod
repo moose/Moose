@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Moose::Unsweetened - Moose idioms in plain old Perl 5 without the sugar
+Moose::Manual::Unsweetened - Moose idioms in plain old Perl 5 without the sugar
 
 =head1 DESCRIPTION
 

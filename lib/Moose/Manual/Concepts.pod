@@ -356,11 +356,12 @@ extensions.
 So you're sold on Moose. Time to learn how to really use it.
 
 If you want to see how Moose would translate directly into old school
-Perl 5 OO code, check out L<Moose::Unsweetened>. This might be
+Perl 5 OO code, check out L<Moose::Manual::Unsweetened>. This might be
 helpful for quickly wrapping your brain around some aspects of "the
 Moose way".
 
-Obviously, the next thing to read is the rest of the L<Moose::Manual>.
+Or you can skip that and jump straight to L<Moose::Manual::Classes>
+and the rest of the L<Moose::Manual>.
 
 After that we recommend that you start with the L<Moose::Cookbook>. If
 you work your way through all the recipes under the basics section,
