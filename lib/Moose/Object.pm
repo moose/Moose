@@ -71,14 +71,14 @@ sub DEMOLISHALL {
     my $meta = Class::MOP::class_of($self)
         || Moose::Meta::Class->initialize( ref $self );
 
-    foreach my $method ( $meta->find_all_methods_by_name('DEMOLISH') ) {
-        $meta->throw_error(
-            "Couldn't call DEMOLISH on package $method->{class} because"
-          . " global destruction destroyed it first. Make sure all of"
-          . " your instances of $method->{class} are destroyed before"
-          . " global destruction to fix this."
-        ) if !$method->{code} && $in_global_destruction;
-        $method->{code}->execute($self, $in_global_destruction);
+    # can't just use find_all_methods_by_name here because during global
+    # destruction, the method meta-object may have already been
+    # destroyed
+    foreach my $class ( $meta->linearized_isa ) {
+        no strict 'refs';
+        my $demolish = *{"${class}::DEMOLISH"}{CODE};
+        $self->$demolish($in_global_destruction)
+            if defined $demolish;
     }
 }
 
