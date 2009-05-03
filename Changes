@@ -19,6 +19,11 @@ for, noteworthy changes.
       - Fix DEMOLISHALL sometimes not being able to find DEMOLISH
         methods during global destruction (doy)
 
+    * Moose::Meta::Class
+    * Moose::Meta::Role::Application::ToClass
+      - Track the Role::Application objects created during class-role
+        consumption (Sartak)
+
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
       - Add explicit use of Devel::GlobalDestruction and Sub::Name
