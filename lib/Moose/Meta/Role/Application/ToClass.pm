@@ -5,7 +5,7 @@ use warnings;
 use metaclass;
 
 use Moose::Util  'english_list';
-use Scalar::Util 'blessed';
+use Scalar::Util 'weaken', 'blessed';
 
 our $VERSION   = '0.77';
 $VERSION = eval $VERSION;
@@ -15,19 +15,18 @@ use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
-    writer => 'set_role',
 ));
 
 __PACKAGE__->meta->add_attribute('class' => (
     reader => 'class',
-    writer => 'set_class',
 ));
 
 sub apply {
     my ($self, $role, $class) = @_;
 
-    $self->set_role($role);
-    $self->set_class($class);
+    # We need weak_ref in CMOP :(
+    weaken($self->{role}  = $role);
+    weaken($self->{class} = $class);
 
     $self->SUPER::apply($role, $class);
 
