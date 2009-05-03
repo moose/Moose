@@ -144,7 +144,7 @@ some basic sample code for inflating a L<DateTime> object:
 
   coerce 'DateTime'
       => from 'Str'
-        => via { DateTime::Format::MySQL->parse_datetime($_) };
+      => via { DateTime::Format::MySQL->parse_datetime($_) };
 
   has 'timestamp' => (is => 'rw', isa => 'DateTime', coerce => 1);
 
@@ -169,7 +169,7 @@ is to add an C<around> modifier to your accessor:
       my $next = shift;
       my ($self, $timestamp) = @_;
       # assume we get a DateTime object ...
-      $next->($self, $timestamp->epoch);
+      $self->$next( $timestamp->epoch );
   };
 
 It is also possible to do deflation using coercion, but this tends
