@@ -435,9 +435,9 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
 This module encapsulates the logic to export sugar functions like
 C<Moose.pm>. It does this by building custom C<import> and C<unimport>
-methods for your module, based on a spec your provide.
+methods for your module, based on a spec you provide.
 
-It also lets your "stack" Moose-alike modules so you can export
+It also lets you "stack" Moose-alike modules so you can export
 Moose's sugar as well as your own, along with sugar from any random
 C<MooseX> module, as long as they all use C<Moose::Exporter>.
 
