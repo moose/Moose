@@ -27,6 +27,7 @@ if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
 }
 
+extra_tests();
 tests_recursive();
 
 WriteAll();
