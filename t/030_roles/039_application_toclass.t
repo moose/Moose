@@ -33,10 +33,10 @@ do {
     sub foo { }
 };
 
-my @basic     = @{ Consumer::Basic->meta->role_applications };
-my @excludes  = @{ Consumer::Excludes->meta->role_applications };
-my @aliases   = @{ Consumer::Aliases->meta->role_applications };
-my @overrides = @{ Consumer::Overrides->meta->role_applications };
+my @basic     = Consumer::Basic->meta->role_applications;
+my @excludes  = Consumer::Excludes->meta->role_applications;
+my @aliases   = Consumer::Aliases->meta->role_applications;
+my @overrides = Consumer::Overrides->meta->role_applications;
 
 is(@basic,     1);
 is(@excludes,  1);

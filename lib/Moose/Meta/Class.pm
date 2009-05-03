@@ -30,10 +30,9 @@ __PACKAGE__->meta->add_attribute('roles' => (
 ));
 
 __PACKAGE__->meta->add_attribute('role_applications' => (
-    reader  => 'role_applications',
+    reader  => '_get_role_applications',
     default => sub { [] }
 ));
-
 
 __PACKAGE__->meta->add_attribute(
     Class::MOP::Attribute->new('immutable_trait' => (
@@ -141,11 +140,17 @@ sub add_role {
     push @{$self->roles} => $role;
 }
 
+sub role_applications {
+    my ($self) = @_;
+
+    return @{$self->_get_role_applications};
+}
+
 sub add_role_application {
     my ($self, $application) = @_;
     (blessed($application) && $application->isa('Moose::Meta::Role::Application::ToClass'))
         || $self->throw_error("Role applications must be instances of Moose::Meta::Role::Application::ToClass", data => $application);
-    push @{$self->role_applications} => $application;
+    push @{$self->_get_role_applications} => $application;
 }
 
 sub calculate_all_roles {
@@ -709,7 +714,7 @@ list of roles. This I<does not> actually apply the role to the class.
 
 =item B<< $metaclass->role_applications >>
 
-Returns an array reference of L<Moose::Meta::Role::Application::ToClass>
+Returns a list of L<Moose::Meta::Role::Application::ToClass>
 objects, which contain the arguments to role application.
 
 =item B<< $metaclass->add_role_application($application) >>
