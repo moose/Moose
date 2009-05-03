@@ -27,7 +27,7 @@ parts of it to improve efficiency or consistency. This will not be
 done lightly. We do perform deprecation cycles. We I<really>
 do not like making ourselves look bad by breaking your code.
 Submitting test cases is the best way to ensure that your code is not
-inadvertantly broken by refactoring.
+inadvertently broken by refactoring.
 
 =head3 I heard Moose is slow, is this true?
 
