@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.78
+    * Moose::Exporter
+      - Make Moose::Exporter import strict and warnings into packages
+        that use it (doy)
+
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
       - Add explicit use of Devel::GlobalDestruction and Sub::Name
