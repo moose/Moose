@@ -3,123 +3,267 @@
 
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe9 - Builder methods and lazy_build
+Moose::Cookbook::Basics::Recipe10 - Operator overloading, subtypes, and coercion
 
 =head1 SYNOPSIS
 
-  package BinaryTree;
+  package Human;
+
   use Moose;
+  use Moose::Util::TypeConstraints;
 
-  has 'node' => (is => 'rw', isa => 'Any');
+  subtype 'Gender'
+      => as 'Str'
+      => where { $_ =~ m{^[mf]$}s };
 
-  has 'parent' => (
-      is        => 'rw',
-      isa       => 'BinaryTree',
-      predicate => 'has_parent',
-      weak_ref  => 1,
-  );
+  has 'gender' => ( is => 'ro', isa => 'Gender', required => 1 );
 
-  has 'left' => (
-      is        => 'rw',
-      isa       => 'BinaryTree',
-      predicate => 'has_left',
-      lazy      => 1,
-      builder   => '_build_child_tree',
-  );
+  has 'mother' => ( is => 'ro', isa => 'Human' );
+  has 'father' => ( is => 'ro', isa => 'Human' );
 
-  has 'right' => (
-      is        => 'rw',
-      isa       => 'BinaryTree',
-      predicate => 'has_right',
-      lazy      => 1,
-      builder   => '_build_child_tree',
-  );
+  use overload '+' => \&_overload_add, fallback => 1;
 
-  before 'right', 'left' => sub {
-      my ($self, $tree) = @_;
-      $tree->parent($self) if defined $tree;
-  };
+  sub _overload_add {
+      my ( $one, $two ) = @_;
 
-  sub _build_child_tree {
-      my $self = shift;
+      die('Only male and female humans may create children')
+          if ( $one->gender() eq $two->gender() );
 
-      return BinaryTree->new( parent => $self );
+      my ( $mother, $father )
+          = ( $one->gender eq 'f' ? ( $one, $two ) : ( $two, $one ) );
+
+      my $gender = 'f';
+      $gender = 'm' if ( rand() >= 0.5 );
+
+      return Human->new(
+          gender => $gender,
+          mother => $mother,
+          father => $father,
+      );
   }
 
 =head1 DESCRIPTION
 
-If you've already read L<Moose::Cookbook::Basics::Recipe3>, then this
-example should look very familiar. In fact, all we've done here is
-replace the attribute's C<default> parameter with a C<builder>.
+This Moose cookbook recipe shows how operator overloading, coercion,
+and sub types can be used to mimic the human reproductive system
+(well, the selection of genes at least).
 
-In this particular case, the C<default> and C<builder> options act in
-exactly the same way. When the C<left> or C<right> attribute is read,
-Moose calls the builder method to initialize the attribute.
+=head1 INTRODUCTION
 
-Note that Moose calls the builder method I<on the object which has the
-attribute>. Here's an example:
+Our C<Human> class uses operator overloading to allow us to "add" two
+humans together and produce a child. Our implementation does require
+that the two objects be of opposite genders. Remember, we're talking
+about biological reproduction, not marriage.
 
-  my $tree = BinaryTree->new();
+While this example works as-is, we can take it a lot further by adding
+genes into the mix. We'll add the two genes that control eye color,
+and use overloading to combine the genes from the parent to model the
+biology.
 
-  my $left = $tree->left();
+=head2 What is Operator Overloading?
 
-When C<< $tree->left() >> is called, Moose calls C<<
-$tree->_build_child_tree() >> in order to populate the C<left>
-attribute. If we had passed C<left> to the original constructor, the
-builder would not be called.
+Overloading is I<not> a Moose-specific feature. It's a general OO
+concept that is implemented in Perl with the C<overload>
+pragma. Overloading lets objects do something sane when used with
+Perl's built in operators, like addition (C<+>) or when used as a
+string.
 
-There are some differences between C<default> and C<builder>. Notably,
-a builder is subclassable, and can be composed from a role. See
-L<Moose::Manual::Attributes> for more details.
+In this example we overload addition so we can write code like
+C<$child = $mother + $father>.
 
-=head2 The lazy_build shortcut
+=head1 GENES
 
-The C<lazy_build> attribute option can be used as sugar to specify
-a whole set of attribute options at once:
+There are many genes which affect eye color, but there are two which
+are most important, I<gey> and I<bey2>. We will start by making a
+class for each gene.
 
-  has 'animal' => (
-      is         => 'ro',
-      isa        => 'Animal',
-      lazy_build => 1,
+=head2 Human::Gene::bey2
+
+  package Human::Gene::bey2;
+
+  use Moose;
+  use Moose::Util::TypeConstraints;
+
+  type 'bey2_color' => where { $_ =~ m{^(?:brown|blue)$} };
+
+  has 'color' => ( is => 'ro', isa => 'bey2_color' );
+
+This class is trivial, We have a type constraint for the allowed
+colors, and a C<color> attribute.
+
+=head2 Human::Gene::gey
+
+  package Human::Gene::gey;
+
+  use Moose;
+  use Moose::Util::TypeConstraints;
+
+  type 'gey_color' => where { $_ =~ m{^(?:green|blue)$} };
+
+  has 'color' => ( is => 'ro', isa => 'gey_color' );
+
+This is nearly identical to the C<Humane::Gene::bey2> class, except
+that the I<gey> gene allows for different colors.
+
+=head1 EYE COLOR
+
+We could just give add four attributes (two of each gene) to the
+C<Human> class, but this is a bit messy. Instead, we'll abstract the
+genes into a container class, C<Human::EyeColor>. Then a C<Human> can
+have a single C<eye_color> attribute.
+
+  package Human::EyeColor;
+
+  use Moose;
+  use Moose::Util::TypeConstraints;
+
+  coerce 'Human::Gene::bey2'
+      => from 'Str'
+          => via { Human::Gene::bey2->new( color => $_ ) };
+
+  coerce 'Human::Gene::gey'
+      => from 'Str'
+          => via { Human::Gene::gey->new( color => $_ ) };
+
+  has [qw( bey2_1 bey2_2 )] =>
+      ( is => 'ro', isa => 'Human::Gene::bey2', coerce => 1 );
+
+  has [qw( gey_1 gey_2 )] =>
+      ( is => 'ro', isa => 'Human::Gene::gey', coerce => 1 );
+
+The eye color class has two of each type of gene. We've also created a
+coercion for each class that coerces a string into a new object. Note
+that a coercion will fail if it attempts to coerce a string like
+"indigo", because that is not a valid color for either type of gene.
+
+As an aside, you can see that we can define several identical
+attributes at once by supply an array reference of names as the first
+argument to C<has>.
+
+We also need a method to calculate the actual eye color that results
+from a set of genes. The I<bey2> brown gene is dominant over both blue
+and green. The I<gey> green gene dominant over blue.
+
+  sub color {
+      my ($self) = @_;
+
+      return 'brown'
+          if ( $self->bey2_1->color() eq 'brown'
+          or $self->bey2_2->color() eq 'brown' );
+
+      return 'green'
+          if ( $self->gey_1->color() eq 'green'
+          or $self->gey_2->color() eq 'green' );
+
+      return 'blue';
+  }
+
+We'd like to be able to treat a C<Human::EyeColor> object as a string,
+so we define a string overloading for the class:
+
+  use overload '""' => \&color, fallback => 1;
+
+Finally, we need to define overloading for addition. That way we can
+add together to C<Human::EyeColor> objects and get a new one with a
+new (genetically correct) eye color.
+
+  use overload '+' => \&_overload_add, fallback => 1;
+
+  sub _overload_add {
+      my ( $one, $two ) = @_;
+
+      my $one_bey2 = 'bey2_' . _rand2();
+      my $two_bey2 = 'bey2_' . _rand2();
+
+      my $one_gey = 'gey_' . _rand2();
+      my $two_gey = 'gey_' . _rand2();
+
+      return Human::EyeColor->new(
+          bey2_1 => $one->$one_bey2->color(),
+          bey2_2 => $two->$two_bey2->color(),
+          gey_1  => $one->$one_gey->color(),
+          gey_2  => $two->$two_gey->color(),
+      );
+  }
+
+  sub _rand2 {
+      return 1 + int( rand(2) );
+  }
+
+When two eye color objects are added together the C<_overload_add()>
+method will be passed two C<Human::EyeColor> objects. These are the
+left and right side operands for the C<+> operator. This method
+returns a new C<Human::EyeColor> object.
+
+=head1 ADDING EYE COLOR TO C<Human>s
+
+Our original C<Human> class requires just a few changes to incorporate
+our new C<Human::EyeColor> class.
+
+  use List::MoreUtils qw( zip );
+
+  coerce 'Human::EyeColor'
+      => from 'ArrayRef'
+      => via { my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
+               return Human::EyeColor->new( zip( @genes, @{$_} ) ); };
+
+  has 'eye_color' => (
+      is       => 'ro',
+      isa      => 'Human::EyeColor',
+      coerce   => 1,
+      required => 1,
   );
 
-This is a shorthand for:
+We also need to modify C<_overload_add()> in the C<Human> class to
+account for eye color:
 
-  has 'animal' => (
-      is        => 'ro',
-      isa       => 'Animal',
-      required  => 1,
-      lazy      => 1,
-      builder   => '_build_animal',
-      predicate => 'has_animal',
-      clearer   => 'clear_animal',
+  return Human->new(
+      gender    => $gender,
+      eye_color => ( $one->eye_color() + $two->eye_color() ),
+      mother    => $mother,
+      father    => $father,
   );
-
-If your attribute starts with an underscore, Moose is smart and will
-do the right thing with the C<predicate> and C<clearer>, making them
-both start with an underscore. The C<builder> method I<always> starts
-with an underscore.
-
-You can read more about C<lazy_build> in L<Moose::Manual::Attributes>
 
 =head1 CONCLUSION
 
-The C<builder> option is a more OO-friendly version of the C<default>
-functionality. It also separates the default-generating code into a
-well-defined method. Sprinkling your attribute definitions with
-anonymous subroutines can be quite ugly and hard to follow.
+The three techniques we used, overloading, subtypes, and coercion,
+combine to provide a powerful interface.
 
-=head1 AUTHOR
+If you'd like to learn more about overloading, please read the
+documentation for the L<overload> pragma.
+
+To see all the code we created together, take a look at
+F<t/000_recipes/basics/010_genes.t>.
+
+=head1 NEXT STEPS
+
+Has this been a real project we'd probably want to:
+
+=over 4
+
+=item Better Randomization with Crypt::Random
+
+=item Characteristic Base Class
+
+=item Mutating Genes
+
+=item More Characteristics
+
+=item Artificial Life
+
+=back
+
+=head1 AUTHORS
+
+Aran Clary Deltac <bluefeet@cpan.org>
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+This work is licensed under a Creative Commons Attribution 3.0 Unported License.
 
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+License details are at: L<http://creativecommons.org/licenses/by/3.0/>
 
 =cut
+

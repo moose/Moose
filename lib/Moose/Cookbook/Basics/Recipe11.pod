@@ -1,117 +1,116 @@
 
 =pod
 
+=begin testing-SETUP
+
+BEGIN {
+    eval 'use DateTime; use DateTime::Calendar::Mayan;';
+    if ($@) {
+        diag 'DateTime & DateTime::Calendar::Mayan required for this test';
+        ok(1);
+        exit 0;
+    }
+}
+
+=end testing-SETUP
+
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe11 - Using BUILDARGS and BUILD to hook into object construction
+Moose::Cookbook::Basics::Recipe12 - Extending a non-Moose base class
 
 =head1 SYNOPSIS
 
-  package Person;
+  package My::DateTime;
 
-  has 'ssn' => (
+  use Moose;
+  extends qw( DateTime Moose::Object );
+
+  use DateTime::Calendar::Mayan;
+
+  has 'mayan_date' => (
       is        => 'ro',
-      isa       => 'Str',
-      predicate => 'has_ssn',
+      isa       => 'DateTime::Calendar::Mayan',
+      init_arg  => undef,
+      lazy      => 1,
+      builder   => '_build_mayan_date',
+      clearer   => '_clear_mayan_date',
+      predicate => 'has_mayan_date',
   );
 
-  has 'country_of_residence' => (
-      is      => 'ro',
-      isa     => 'Str',
-      default => 'usa'
-  );
-
-  has 'first_name' => (
-      is  => 'ro',
-      isa => 'Str',
-  );
-
-  has 'last_name' => (
-      is  => 'ro',
-      isa => 'Str',
-  );
-
-  sub BUILDARGS {
+  sub new {
       my $class = shift;
 
-      if ( @_ == 1 && ! ref $_[0] ) {
-          return { ssn => $_[0] };
-      }
-      else {
-          return $class->SUPER::BUILDARGS(@_);
-      }
+      my $obj = $class->SUPER::new(@_);
+
+      return $class->meta->new_object(
+          __INSTANCE__ => $obj,
+          @_,
+      );
   }
 
-  sub BUILD {
-      my $self = shift;
+  after 'set' => sub {
+      $_[0]->_clear_mayan_date;
+  };
 
-      if ( $self->country_of_residence eq 'usa' ) {
-          die 'Cannot create a Person who lives in the USA without an ssn.'
-              unless $self->has_ssn;
-      }
+  sub _build_mayan_date {
+      DateTime::Calendar::Mayan->from_object( object => $_[0] );
   }
 
 =head1 DESCRIPTION
 
-This recipe demonstrates the use of C<BUILDARGS> and C<BUILD>. By
-defining these methods, we can hook into the object construction
-process without overriding C<new>.
+This recipe demonstrates how to use Moose to subclass a parent which
+is not Moose based. This recipe only works if the parent class uses a
+blessed hash reference for object instances. If your parent is doing
+something funkier, you should check out L<MooseX::InsideOut>.
 
-The C<BUILDARGS> method is called I<before> an object has been
-created. It is called as a class method, and receives all of the
-parameters passed to the C<new> method. It is expected to do something
-with these arguments and return a hash reference. The keys of the hash
-must be attribute C<init_arg>s.
+You might also want to check out L<MooseX::NonMoose>, which does all
+the grunt work for you.
 
-The primary purpose of C<BUILDARGS> is to allow a class to accept
-something other than named arguments. In the case of our C<Person>
-class, we are allowing it to be called with a single argument, a
-social security number:
+There are a couple pieces worth noting:
 
-  my $person = Person->new('123-45-6789');
+  use Moose;
+  extends qw( DateTime Moose::Object );
 
-The key part of our C<BUILDARGS> is this conditional:
+First, we C<use Moose> just like we always do. This lets us declare
+attributes and use all the Moose sugar to which we are accustomed.
 
-      if ( @_ == 1 && ! ref $_[0] ) {
-          return { ssn => $_[0] };
-      }
+The C<extends> declaration explicitly include L<Moose::Object> as well
+as L<DateTime>. This lets us use methods which are provided by
+L<Moose::Object>, like C<does>.
 
-By default, Moose constructors accept a list of key-value pairs, or a
-hash reference. We need to make sure that C<$_[0]> is not a reference
-before assuming it is a social security number.
+The constructor demonstrates a particular hack/pattern (hacktern?) for
+working with non-Moose parent classes:
 
-We call C<< $class->SUPER::BUILDARGS(@_) >> to handle all the other
-cases. You should always do this in your own C<BUILDARGS> methods,
-since L<Moose::Object> provides its own C<BUILDARGS> method that
-handles hash references and a list of key-value pairs.
+  sub new {
+      my $class = shift;
 
-The C<BUILD> method is called I<after> the object is constructed, but
-before it is returned to the caller. The C<BUILD> method provides an
-opportunity to check the object state as a whole. This is a good place
-to put logic that cannot be expressed as a type constraint on a single
-attribute.
+      my $obj = $class->SUPER::new(@_);
 
-In the C<Person> class, we need to check the relationship between two
-attributes, C<ssn> and C<country_of_residence>. We throw an exception
-if the object is not logically consistent.
+      return $class->meta->new_object(
+          __INSTANCE__ => $obj,
+          @_,
+      );
+  }
 
-=head1 MORE CONSIDERATIONS
+We explicitly call C<< $class->meta->new_object >> and pass the
+already-created object in the C<__INSTANCE__> key. Internally, Moose
+will take the existing object and initialize any attributes defined in
+our subclass.
 
-This recipe is made significantly simpler because all of the
-attributes are read-only. If the C<country_of_residence> attribute
-were settable, we would need to check that a Person had an C<ssn> if
-the new country was C<usa>. This could be done with a C<before>
-modifier.
+The C<after> modifier works just like we'd expect. The fact that
+C<set> is defined in our non-Moose parent does not matter.
 
 =head1 CONCLUSION
 
-We have repeatedly discouraged overriding C<new> in Moose
-classes. This recipe shows how you can use C<BUILDARGS> and C<BUILD>
-to hook into object construction without overriding C<new>
+Moose can play nice with non-Moose classes when you follow the pattern
+shown here. Your subclass has access to all the power of Moose,
+including attribute declaration, method modifiers, type constraints
+(for new attributes), and roles.
 
-The C<BUILDARGS> method lets us expand on Moose's built-in parameter
-handling for constructors. The C<BUILD> method lets us implement
-logical constraints across the whole object after it is created.
+However, you won't be able to easily override a parent's "attributes",
+since they're not Moose attributes. Nor will you be able to inline a
+constructor, since you need to explicitly use the metaclass's object
+constructor.
 
 =head1 AUTHOR
 
@@ -119,11 +118,24 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2009 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=begin testing
+
+my $dt = My::DateTime->new( year => 1970, month => 2, day => 24 );
+
+can_ok( $dt, 'mayan_date' );
+isa_ok( $dt->mayan_date, 'DateTime::Calendar::Mayan' );
+is( $dt->mayan_date->date, '12.17.16.9.19', 'got expected mayan date' );
+
+$dt->set( year => 2009 );
+ok( ! $dt->has_mayan_date, 'mayan_date is cleared after call to ->set' );
+
+=end testing
 
 =cut

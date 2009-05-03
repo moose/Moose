@@ -58,28 +58,22 @@ the usual method overriding style "inside-out".
 Making a class immutable greatly increases the speed of accessors and
 object construction.
 
-=item L<Moose::Cookbook::Basics::Recipe8> - Managing complex relations with trigger (TODO)
-
-I<abstract goes here>
-
-Work off of this http://code2.0beta.co.uk/moose/svn/Moose/trunk/t/200_examples/007_Child_Parent_attr_inherit.t
-
-=item L<Moose::Cookbook::Basics::Recipe9> - Builder methods and lazy_build
+=item L<Moose::Cookbook::Basics::Recipe8> - Builder methods and lazy_build
 
 The builder feature provides an inheritable and role-composable way to
 provide a default attribute value.
 
-=item L<Moose::Cookbook::Basics::Recipe10> - Operator overloading, subtypes, and coercion
+=item L<Moose::Cookbook::Basics::Recipe9> - Operator overloading, subtypes, and coercion
 
 Demonstrates using operator overloading, coercion, and subtypes to
 model how eye color is determined during reproduction.
 
-=item L<Moose::Cookbook::Basics::Recipe11> - Using BUILDARGS and BUILD to hook into object construction
+=item L<Moose::Cookbook::Basics::Recipe10> - Using BUILDARGS and BUILD to hook into object construction
 
 This recipe demonstrates the use of C<BUILDARGS> and C<BUILD> to hook
 into object construction.
 
-=item L<Moose::Cookbook::Basics::Recipe12> - Extending a non-Moose base class
+=item L<Moose::Cookbook::Basics::Recipe11> - Extending a non-Moose base class
 
 In this recipe, we make a Moose-based subclass of L<DateTime>, a
 module which does not use Moose itself.
