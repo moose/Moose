@@ -120,9 +120,6 @@ Moose::Util::MetaRole - Apply roles to any metaclass, as well as the object base
 
   package MyApp::Moose;
 
-  use strict;
-  use warnings;
-
   use Moose ();
   use Moose::Exporter;
   use Moose::Util::MetaRole;

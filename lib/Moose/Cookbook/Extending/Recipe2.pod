@@ -9,9 +9,6 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
   package MooseX::Debugging;
 
-  use strict;
-  use warnings;
-
   use Moose ();
   use Moose::Exporter;
   use Moose::Util::MetaRole;

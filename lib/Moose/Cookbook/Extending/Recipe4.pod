@@ -9,9 +9,6 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
 
   package MyApp::Mooseish;
 
-  use strict;
-  use warnings;
-
   use Moose ();
   use Moose::Exporter;
 
