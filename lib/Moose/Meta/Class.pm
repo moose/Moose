@@ -707,6 +707,18 @@ which are attached to this class.
 This takes a L<Moose::Meta::Role> object, and adds it to the class's
 list of roles. This I<does not> actually apply the role to the class.
 
+=item B<< $metaclass->role_applications >>
+
+Returns an array reference of L<Moose::Meta::Role::Application::ToClass>
+objects, which contain the arguments to role application.
+
+=item B<< $metaclass->add_role_application($application) >>
+
+This takes a L<Moose::Meta::Role::Application::ToClass> object, and
+adds it to the class's list of role applications. This I<does not>
+actually apply any role to the class; it is only for tracking role
+applications.
+
 =item B<< $metaclass->does_role($role_name) >>
 
 This returns a boolean indicating whether or not the class does the
