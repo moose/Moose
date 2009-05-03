@@ -42,6 +42,7 @@ Pearcey
 perigrin
 phaylon
 Prather
+Ragwitz
 Reis
 rindolf
 rlb
@@ -117,6 +118,7 @@ destructors
 dev
 DWIM
 hashrefs
+hotspots
 immutabilize
 immutabilized
 inline
