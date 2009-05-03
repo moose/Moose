@@ -154,7 +154,7 @@ This recipe shows an example of how you create your own meta-instance
 class. The meta-instance determines the internal structure of object
 instances and provide access to attribute slots.
 
-=item L<Moose::Cookbook::Meta::Recipe8> - Hooking into immutabilization (TODO)
+=item Moose::Cookbook::Meta::Recipe8 - Hooking into immutabilization (TODO)
 
 Moose has a feature known as "immutabilization". By calling C<<
 __PACKAGE__->meta()->make_immutable() >> after defining your class
