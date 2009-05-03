@@ -403,9 +403,6 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
   package MyApp::Moose;
 
-  use strict;
-  use warnings;
-
   use Moose ();
   use Moose::Exporter;
 
@@ -443,6 +440,10 @@ methods for your module, based on a spec your provide.
 It also lets your "stack" Moose-alike modules so you can export
 Moose's sugar as well as your own, along with sugar from any random
 C<MooseX> module, as long as they all use C<Moose::Exporter>.
+
+To simplify writing exporter modules, C<Moose::Exporter> also imports
+C<strict> and C<warnings> into your exporter module, as well as into
+modules that use it.
 
 =head1 METHODS
 
