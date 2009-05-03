@@ -13,8 +13,22 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Role::Application';
 
+__PACKAGE__->meta->add_attribute('role' => (
+    reader => 'role',
+    writer => 'set_role',
+));
+
+__PACKAGE__->meta->add_attribute('class' => (
+    reader => 'class',
+    writer => 'set_class',
+));
+
 sub apply {
     my ($self, $role, $class) = @_;
+
+    $self->set_role($role);
+    $self->set_class($class);
+
     $self->SUPER::apply($role, $class);
     $class->add_role($role);
 }
