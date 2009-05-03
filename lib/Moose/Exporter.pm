@@ -386,6 +386,11 @@ sub _remove_keywords {
     }
 }
 
+sub import {
+    strict->import;
+    warnings->import;
+}
+
 1;
 
 __END__
