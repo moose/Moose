@@ -216,7 +216,7 @@ of the main method. Here is an example:
         unless ($options->{bar} eq 'foo') {
             return 'bar';
         }
-        $next->($self, %options);
+        $self->$next(%options);
     };
 
 By choosing not to call the C<$next> method, you can stop the
