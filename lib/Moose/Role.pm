@@ -1,9 +1,6 @@
 
 package Moose::Role;
 
-use strict;
-use warnings;
-
 use Scalar::Util 'blessed';
 use Carp         'croak';
 

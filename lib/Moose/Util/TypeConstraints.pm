@@ -1,9 +1,6 @@
 
 package Moose::Util::TypeConstraints;
 
-use strict;
-use warnings;
-
 use Carp ();
 use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
