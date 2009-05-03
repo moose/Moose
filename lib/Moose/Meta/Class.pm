@@ -29,6 +29,11 @@ __PACKAGE__->meta->add_attribute('roles' => (
     default => sub { [] }
 ));
 
+__PACKAGE__->meta->add_attribute('role_applications' => (
+    reader  => 'role_applications',
+    default => sub { [] }
+));
+
 
 __PACKAGE__->meta->add_attribute(
     Class::MOP::Attribute->new('immutable_trait' => (
@@ -134,6 +139,13 @@ sub add_role {
     (blessed($role) && $role->isa('Moose::Meta::Role'))
         || $self->throw_error("Roles must be instances of Moose::Meta::Role", data => $role);
     push @{$self->roles} => $role;
+}
+
+sub add_role_application {
+    my ($self, $application) = @_;
+    (blessed($application) && $application->isa('Moose::Meta::Role::Application::ToClass'))
+        || $self->throw_error("Role applications must be instances of Moose::Meta::Role::Application::ToClass", data => $application);
+    push @{$self->role_applications} => $application;
 }
 
 sub calculate_all_roles {

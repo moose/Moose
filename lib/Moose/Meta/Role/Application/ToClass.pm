@@ -30,7 +30,9 @@ sub apply {
     $self->set_class($class);
 
     $self->SUPER::apply($role, $class);
+
     $class->add_role($role);
+    $class->add_role_application($self);
 }
 
 sub check_role_exclusions {
