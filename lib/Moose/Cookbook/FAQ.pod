@@ -167,9 +167,13 @@ is to add an C<around> modifier to your accessor:
 
   around 'timestamp' => sub {
       my $next = shift;
-      my ($self, $timestamp) = @_;
+      my $self = shift;
+
+      return $self->$next unless @_;
+
       # assume we get a DateTime object ...
-      $self->$next( $timestamp->epoch );
+      my $timestamp = shift;
+      return $self->$next( $timestamp->epoch );
   };
 
 It is also possible to do deflation using coercion, but this tends
