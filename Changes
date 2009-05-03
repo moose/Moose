@@ -2,6 +2,15 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 0.78
+    * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
+      - Merged these documents into what is now Moose::Manual::FAQ
+
+    * Moose::Unsweetened
+      - Moved to Moose::Manual::Unsweetened
+
+    * Moose::Cookbook::Basics::Recipes 9-12
+      - Renamed to be 8-11, since recipe 8 did not exist
+
     * Moose::Exporter
       - Make Moose::Exporter import strict and warnings into packages
         that use it (doy)
