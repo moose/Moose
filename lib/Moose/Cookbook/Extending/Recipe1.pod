@@ -49,7 +49,7 @@ behavior to a non-object attribute (a hashref or simple number).
 
 A metaclass extension can be packaged as a subclass or a
 role/trait. If you can, we recommend using traits instead of
-subclasses, since it's much easier to combine disparate traits then it
+subclasses, since it's much easier to combine disparate traits than it
 is to combine a bunch of subclasses.
 
 When your extensions are implemented as roles, you can apply them with
