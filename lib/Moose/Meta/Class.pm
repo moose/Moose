@@ -8,7 +8,7 @@ use Class::MOP;
 
 use Carp ();
 use List::Util qw( first );
-use List::MoreUtils qw( any all uniq );
+use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
 our $VERSION   = '0.77';
@@ -305,24 +305,44 @@ sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
     foreach my $super (@superclasses) {
-        next if $self->_superclass_meta_is_compatible($super);
+        my $meta = Class::MOP::Class->initialize($super);
 
-        unless ( $self->is_pristine ) {
-            $self->throw_error(
-                      "Cannot attempt to reinitialize metaclass for "
-                    . $self->name
-                    . ", it isn't pristine" );
+        my @all_supers = $meta->linearized_isa;
+        shift(@all_supers); # Discard self
+        my @super_metas_to_fix = ( $meta );
+
+        # We need to check&fix the imediate superclass, and if its @ISA contains
+        # a class without a metaclass instance, followed by a class with a
+        # metaclass instance, init a metaclass instance for classes without
+        # one and fix compat up to and including the class which was already
+        # initialized.
+        my $idx = first_index { Class::MOP::class_of($_) } @all_supers;
+        push(@super_metas_to_fix,
+            map { Class::MOP::Class->initialize($_) } @all_supers[0..$idx]
+        ) if ($idx >= 0);
+
+        foreach my $super_meta (@super_metas_to_fix) {
+            $self->_fix_one_incompatible_metaclass($super_meta);
         }
-
-        $self->_reconcile_with_superclass_meta($super);
     }
 }
 
-sub _superclass_meta_is_compatible {
-    my ($self, $super) = @_;
+sub _fix_one_incompatible_metaclass {
+    my ($self, $meta) = @_;
 
-    my $super_meta = Class::MOP::Class->initialize($super)
-        or return 1;
+    return if $self->_superclass_meta_is_compatible($meta);
+
+    unless ( $self->is_pristine ) {
+        $self->throw_error(
+              "Cannot attempt to reinitialize metaclass for "
+            . $self->name
+            . ", it isn't pristine" );
+    }
+    $self->_reconcile_with_superclass_meta($meta);
+}
+
+sub _superclass_meta_is_compatible {
+    my ($self, $super_meta) = @_;
 
     next unless $super_meta->isa("Class::MOP::Class");
 
@@ -348,9 +368,7 @@ my @MetaClassTypes =
         error_class );
 
 sub _reconcile_with_superclass_meta {
-    my ($self, $super) = @_;
-
-    my $super_meta = Class::MOP::class_of($super);
+    my ($self, $super_meta) = @_;
 
     my $super_meta_name
         = $super_meta->is_immutable
