@@ -950,7 +950,7 @@ See the L<SYNOPSIS> for an example of how to use these.
 
 =over 4
 
-=item B<subtype 'Name' => as 'Parent' => where { } ...>
+=item B<< subtype 'Name' => as 'Parent' => where { } ... >>
 
 This creates a named subtype.
 
@@ -966,7 +966,7 @@ name and a hashref of parameters:
 The valid hashref keys are C<as> (the parent), C<where>, C<message>,
 and C<optimize_as>.
 
-=item B<subtype as 'Parent' => where { } ...>
+=item B<< subtype as 'Parent' => where { } ... >>
 
 This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
