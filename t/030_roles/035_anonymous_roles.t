@@ -31,5 +31,5 @@ like($role->name, qr/^Moose::Meta::Role::__ANON__::SERIAL::\d+$/, "");
 ok($role->is_anon_role, "the role knows it's anonymous");
 
 ok(Class::MOP::is_class_loaded(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes is_class_loaded");
-ok(Class::MOP::load_class(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes load_class");
+ok(Class::MOP::class_of(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes class_of");
 

@@ -620,7 +620,8 @@ sub _canonicalize_handles {
         }
     }
     else {
-        my $role_meta = Class::MOP::load_class($handles);
+        Class::MOP::load_class($handles);
+        my $role_meta = Class::MOP::class_of($handles);
 
         (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
             || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);

@@ -94,9 +94,10 @@ sub _apply_all_roles {
     my $roles = Data::OptList::mkopt( [@_] );
 
     foreach my $role (@$roles) {
-        my $meta = Class::MOP::load_class( $role->[0] );
+        Class::MOP::load_class( $role->[0] );
+        my $meta = Class::MOP::class_of( $role->[0] );
 
-        unless ($meta->isa('Moose::Meta::Role') ) {
+        unless ($meta && $meta->isa('Moose::Meta::Role') ) {
             require Moose;
             Moose->throw_error( "You can only consume roles, "
                     . $role->[0]

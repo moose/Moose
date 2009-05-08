@@ -246,7 +246,8 @@ sub superclasses {
     my $self = shift;
     my @supers = @_;
     foreach my $super (@supers) {
-        my $meta = Class::MOP::load_class($super);
+        Class::MOP::load_class($super);
+        my $meta = Class::MOP::class_of($super);
         Moose->throw_error("You cannot inherit from a Moose Role ($super)")
             if $meta && $meta->isa('Moose::Meta::Role')
     }
