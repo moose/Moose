@@ -1,10 +1,6 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-    * Moose::Meta::Class
-      - Fix metaclass incompatibility errors when extending a vanilla perl
-        class which isa Moose class with a metaclass role applied (t0m)
-
 0.78
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ
@@ -27,6 +23,10 @@ for, noteworthy changes.
     * Moose::Meta::Role::Application::ToClass
       - Track the Role::Application objects created during class-role
         consumption (Sartak)
+
+    * Moose::Meta::Class
+      - Fix metaclass incompatibility errors when extending a vanilla perl
+        class which isa Moose class with a metaclass role applied (t0m)
 
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
