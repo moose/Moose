@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 18;
+use Class::MOP ();
 
 {
     package My::Role;
@@ -34,6 +35,11 @@ use Test::More tests => 18;
         'SubSubClassUseBase meta metaclass does the My::Role role' );
 }
 
+# Note, remote metaclasses of the 'use base' classes after each test, so that
+# they have to be re-initialized - otherwise latter tests would not demonstrate
+# the original issue.
+Class::MOP::remove_metaclass_by_name('SubClassUseBase');
+
 {
     package OtherClass;
     use Moose;
@@ -61,6 +67,8 @@ use Test::More tests => 18;
         'MultiParent1 meta metaclass does the My::Role role' );
 }
 
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+
 {
     package MultiParent2;
     use Moose;
@@ -77,6 +85,8 @@ use Test::More tests => 18;
         && MultiParent2->meta->meta->does_role('My::Role'),
         'MultiParent2 meta metaclass does the My::Role role' );
 }
+
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
 
 {
     package MultiParent3;
@@ -95,6 +105,8 @@ use Test::More tests => 18;
         'MultiParent3 meta metaclass does the My::Role role' );
 }
 
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+
 {
     package MultiParent4;
     use Moose;
@@ -111,6 +123,8 @@ use Test::More tests => 18;
         && MultiParent4->meta->meta->does_role('My::Role'),
         'MultiParent4 meta metaclass does the My::Role role' );
 }
+
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
 
 {
     package MultiChild1;
@@ -129,6 +143,8 @@ use Test::More tests => 18;
         'MultiChild1 meta metaclass does the My::Role role' );
 }
 
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+
 {
     package MultiChild2;
     use Moose;
@@ -145,6 +161,8 @@ use Test::More tests => 18;
         && MultiChild2->meta->meta->does_role('My::Role'),
         'MultiChild2 meta metaclass does the My::Role role' );
 }
+
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
 
 {
     package MultiChild3;
@@ -163,6 +181,8 @@ use Test::More tests => 18;
         'MultiChild3 meta metaclass does the My::Role role' );
 }
 
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+
 {
     package MultiChild4;
     use Moose;
@@ -179,4 +199,6 @@ use Test::More tests => 18;
         && MultiChild4->meta->meta->does_role('My::Role'),
         'MultiChild4 meta metaclass does the My::Role role' );
 }
+
+Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
 
