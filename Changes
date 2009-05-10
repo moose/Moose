@@ -28,6 +28,10 @@ for, noteworthy changes.
       - Fix metaclass incompatibility errors when extending a vanilla perl
         class which isa Moose class with a metaclass role applied (t0m)
 
+    * Moose::Meta::Role
+      - Add a role-combination hook, role_for_combination, for the
+        benefit of MooseX::Role::Parameterized (Sartak)
+
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
       - Add explicit use of Devel::GlobalDestruction and Sub::Name
