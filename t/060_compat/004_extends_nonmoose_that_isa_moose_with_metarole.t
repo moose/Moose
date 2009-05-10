@@ -35,9 +35,9 @@ use Class::MOP ();
         'SubSubClassUseBase meta metaclass does the My::Role role' );
 }
 
-# Note, remote metaclasses of the 'use base' classes after each test, so that
-# they have to be re-initialized - otherwise latter tests would not demonstrate
-# the original issue.
+# Note, remove metaclasses of the 'use base' classes after each test,
+# so that they have to be re-initialized - otherwise latter tests
+# would not demonstrate the original issue.
 Class::MOP::remove_metaclass_by_name('SubClassUseBase');
 
 {
@@ -67,7 +67,8 @@ Class::MOP::remove_metaclass_by_name('SubClassUseBase');
         'MultiParent1 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiParent2;
@@ -86,7 +87,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiParent2 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiParent3;
@@ -105,7 +107,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiParent3 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiParent4;
@@ -124,7 +127,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiParent4 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiChild1;
@@ -143,7 +147,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiChild1 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiChild2;
@@ -162,7 +167,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiChild2 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiChild3;
@@ -181,7 +187,8 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiChild3 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
 {
     package MultiChild4;
@@ -200,5 +207,6 @@ Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
         'MultiChild4 meta metaclass does the My::Role role' );
 }
 
-Class::MOP::remove_metaclass_by_name(qw/SubClassUseBase OtherSubClassUseBase/);
+Class::MOP::remove_metaclass_by_name($_)
+    for qw( SubClassUseBase OtherSubClassUseBase );
 
