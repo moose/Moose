@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 18;
 
 {
     package My::Role;
@@ -25,5 +25,158 @@ use Test::More tests => 1;
     lives_ok {
         extends 'SubClassUseBase';
     }
-    'Can extend non-moose class with parent class that is a Moose class with a meta role';
+    'Can extend non-Moose class with parent class that is a Moose class with a meta role';
 }
+
+{
+    ok( SubSubClassUseBase->meta->meta->can('does_role')
+        && SubSubClassUseBase->meta->meta->does_role('My::Role'),
+        'SubSubClassUseBase meta metaclass does the My::Role role' );
+}
+
+{
+    package OtherClass;
+    use Moose;
+}
+
+{
+    package OtherSubClassUseBase;
+    use base 'OtherClass';
+}
+
+{
+    package MultiParent1;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends qw( SubClassUseBase OtherSubClassUseBase );
+    }
+    'Can extend two non-Moose classes with parents that are different Moose metaclasses';
+}
+
+{
+    ok( MultiParent1->meta->meta->can('does_role')
+        && MultiParent1->meta->meta->does_role('My::Role'),
+        'MultiParent1 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiParent2;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends qw( OtherSubClassUseBase SubClassUseBase );
+    }
+    'Can extend two non-Moose classes with parents that are different Moose metaclasses (reverse order)';
+}
+
+{
+    ok( MultiParent2->meta->meta->can('does_role')
+        && MultiParent2->meta->meta->does_role('My::Role'),
+        'MultiParent2 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiParent3;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends qw( OtherClass SubClassUseBase );
+    }
+    'Can extend one Moose class and one non-Moose class';
+}
+
+{
+    ok( MultiParent3->meta->meta->can('does_role')
+        && MultiParent3->meta->meta->does_role('My::Role'),
+        'MultiParent3 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiParent4;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends qw( SubClassUseBase OtherClass );
+    }
+    'Can extend one non-Moose class and one Moose class';
+}
+
+{
+    ok( MultiParent4->meta->meta->can('does_role')
+        && MultiParent4->meta->meta->does_role('My::Role'),
+        'MultiParent4 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiChild1;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends 'MultiParent1';
+    }
+    'Can extend class that itself extends two non-Moose classes with Moose parents';
+}
+
+{
+    ok( MultiChild1->meta->meta->can('does_role')
+        && MultiChild1->meta->meta->does_role('My::Role'),
+        'MultiChild1 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiChild2;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends 'MultiParent2';
+    }
+    'Can extend class that itself extends two non-Moose classes with Moose parents (reverse order)';
+}
+
+{
+    ok( MultiChild2->meta->meta->can('does_role')
+        && MultiChild2->meta->meta->does_role('My::Role'),
+        'MultiChild2 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiChild3;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends 'MultiParent3';
+    }
+    'Can extend class that itself extends one Moose and one non-Moose parent';
+}
+
+{
+    ok( MultiChild3->meta->meta->can('does_role')
+        && MultiChild3->meta->meta->does_role('My::Role'),
+        'MultiChild3 meta metaclass does the My::Role role' );
+}
+
+{
+    package MultiChild4;
+    use Moose;
+    use Test::More;
+    use Test::Exception;
+    lives_ok {
+        extends 'MultiParent4';
+    }
+    'Can extend class that itself extends one non-Moose and one Moose parent';
+}
+
+{
+    ok( MultiChild4->meta->meta->can('does_role')
+        && MultiChild4->meta->meta->does_role('My::Role'),
+        'MultiChild4 meta metaclass does the My::Role role' );
+}
+
