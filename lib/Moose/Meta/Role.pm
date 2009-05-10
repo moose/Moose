@@ -446,11 +446,6 @@ sub apply {
     }
 }
 
-sub role_for_combination {
-    my ($self, $params) = @_;
-    return $self;
-}
-
 sub combine {
     my ($class, @role_specs) = @_;
 
@@ -475,6 +470,11 @@ sub combine {
     )->apply($c);
 
     return $c;
+}
+
+sub role_for_combination {
+    my ($self, $params) = @_;
+    return $self;
 }
 
 sub create {
