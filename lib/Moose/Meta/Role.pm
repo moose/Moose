@@ -756,7 +756,7 @@ represents the combined roles.
 =item B<< Moose::Meta::Role->role_for_combination($options) >>
 
 This is a hook for incorporating role-combination parameters. This
-method returns a role metaobject (by default the invocant role) to be
+method returns a role meta-object (by default the invocant role) to be
 used for the combination.
 
 =item B<< Moose::Meta::Role->create($name, %options) >>
