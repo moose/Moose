@@ -25,5 +25,5 @@ use Test::More tests => 1;
     lives_ok {
         extends 'SubClassUseBase';
     }
-    'Can extend non-moose class whos parent class is a Moose class with a meta role';
+    'Can extend non-moose class with parent class that is a Moose class with a meta role';
 }
