@@ -457,7 +457,7 @@ sub combine {
         my ($role_name, $params) = @{ splice @role_specs, 0, 1 };
         my $requested_role = Class::MOP::class_of($role_name);
 
-        my $actual_role = $requested_role->role_for_combination($params);
+        my $actual_role = $requested_role->_role_for_combination($params);
         push @roles => $actual_role;
 
         next unless defined $params;
@@ -472,7 +472,7 @@ sub combine {
     return $c;
 }
 
-sub role_for_combination {
+sub _role_for_combination {
     my ($self, $params) = @_;
     return $self;
 }
@@ -752,12 +752,6 @@ and C<alias> keys to control how methods are composed from the role.
 
 The return value is a new L<Moose::Meta::Role::Composite> that
 represents the combined roles.
-
-=item B<< Moose::Meta::Role->role_for_combination($options) >>
-
-This is a hook for incorporating role-combination parameters. This
-method returns a role meta-object (by default the invocant role) to be
-used for the combination.
 
 =item B<< Moose::Meta::Role->create($name, %options) >>
 

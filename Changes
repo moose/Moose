@@ -29,7 +29,7 @@ for, noteworthy changes.
         class which isa Moose class with a metaclass role applied (t0m)
 
     * Moose::Meta::Role
-      - Add a role-combination hook, role_for_combination, for the
+      - Add a role-combination hook, _role_for_combination, for the
         benefit of MooseX::Role::Parameterized (Sartak)
 
 0.77 Sat, May 2, 2009

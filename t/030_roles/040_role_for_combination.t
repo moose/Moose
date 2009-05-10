@@ -14,7 +14,7 @@ do {
     use Moose;
     BEGIN { extends 'Moose::Meta::Role' };
 
-    sub role_for_combination {
+    sub _role_for_combination {
         my ($self, $opts) = @_;
         $OPTS = $opts;
         return My::Singleton::Role->meta;
