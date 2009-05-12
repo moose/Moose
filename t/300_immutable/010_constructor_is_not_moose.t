@@ -26,9 +26,9 @@ BEGIN {
 
     extends 'NotMoose';
 
-    ::stderr_is(
+    ::stderr_like(
         sub { Foo->meta->make_immutable },
-        "Not inlining 'new' for Foo since it is not inheriting the default Moose::Object::new\nIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\n",
+        qr/\QNot inlining 'new' for Foo since it is not inheriting the default Moose::Object::new\E\s+\QIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable/,
         'got a warning that Foo may not have an inlined constructor'
     );
 }
