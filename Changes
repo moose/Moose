@@ -32,6 +32,10 @@ for, noteworthy changes.
       - Add a role-combination hook, _role_for_combination, for the
         benefit of MooseX::Role::Parameterized (Sartak)
 
+    * Tests
+      - Some tests were failing on Win32 because they explicit checked
+        warning output for newlines. Reported by Nickolay Platonov.
+
 0.77 Sat, May 2, 2009
     * Moose::Meta::Role
       - Add explicit use of Devel::GlobalDestruction and Sub::Name
