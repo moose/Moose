@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.78
+0.78 Tue, May 12, 2009
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ
 
