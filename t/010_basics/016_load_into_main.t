@@ -10,10 +10,10 @@ BEGIN {
     plan tests => 2;
 }
 
-stderr_is( sub { package main; eval 'use Moose' },
-           "Moose does not export its sugar to the 'main' package.\n",
-           'Moose warns when loaded from the main package' );
+stderr_like( sub { package main; eval 'use Moose' },
+             qr/\QMoose does not export its sugar to the 'main' package/,
+             'Moose warns when loaded from the main package' );
 
-stderr_is( sub { package main; eval 'use Moose::Role' },
-           "Moose::Role does not export its sugar to the 'main' package.\n",
-           'Moose::Role warns when loaded from the main package' );
+stderr_like( sub { package main; eval 'use Moose::Role' },
+             qr/\QMoose::Role does not export its sugar to the 'main' package/,
+             'Moose::Role warns when loaded from the main package' );
