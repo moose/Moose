@@ -9,7 +9,7 @@ use List::MoreUtils qw(uniq);
 
 use Moose::Meta::Role::Composite;
 
-our $VERSION   = '0.77';
+our $VERSION   = '0.78';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

@@ -10,7 +10,7 @@ use Devel::GlobalDestruction qw(in_global_destruction);
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $VERSION   = '0.77';
+our $VERSION   = '0.78';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
