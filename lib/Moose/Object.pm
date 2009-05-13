@@ -65,12 +65,19 @@ sub DEMOLISHALL {
     # extra meta level calls
     return unless $self->can('DEMOLISH');
 
-    # We cannot count on being able to retrieve a previously made
-    # metaclass, _or_ being able to make a new one during global
-    # destruction. However, we should still be able to use mro at that
-    # time (at least tests suggest so ;)
-    my $class_name = ref $self;
-    foreach my $class ( @{ mro::get_linear_isa($class_name) } ) {
+    my @isa;
+    if ( my $meta = Class::MOP::class_of($self ) ) {
+        @isa = $meta->linearized_isa;
+    } else {
+        # We cannot count on being able to retrieve a previously made
+        # metaclass, _or_ being able to make a new one during global
+        # destruction. However, we should still be able to use mro at
+        # that time (at least tests suggest so ;)
+        my $class_name = ref $self;
+        @isa = @{ mro::get_linear_isa($class_name) }
+    }
+
+    foreach my $class (@isa) {
         no strict 'refs';
         my $demolish = *{"${class}::DEMOLISH"}{CODE};
         $self->$demolish($in_global_destruction)
