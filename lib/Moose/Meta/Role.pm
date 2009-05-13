@@ -10,7 +10,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION   = '0.78';
+our $VERSION   = '0.79';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
