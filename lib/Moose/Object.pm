@@ -4,8 +4,9 @@ package Moose::Object;
 use strict;
 use warnings;
 
-use Scalar::Util;
 use Devel::GlobalDestruction qw(in_global_destruction);
+use MRO::Compat;
+use Scalar::Util;
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
@@ -64,17 +65,12 @@ sub DEMOLISHALL {
     # extra meta level calls
     return unless $self->can('DEMOLISH');
 
-    # This is a hack, because Moose::Meta::Class may not be the right
-    # metaclass, but class_of may return undef during global
-    # destruction, if the metaclass object has already been cleaned
-    # up.
-    my $meta = Class::MOP::class_of($self)
-        || Moose::Meta::Class->initialize( ref $self );
-
-    # can't just use find_all_methods_by_name here because during global
-    # destruction, the method meta-object may have already been
-    # destroyed
-    foreach my $class ( $meta->linearized_isa ) {
+    # We cannot count on being able to retrieve a previously made
+    # metaclass, _or_ being able to make a new one during global
+    # destruction. However, we should still be able to use mro at that
+    # time (at least tests suggest so ;)
+    my $class_name = ref $self;
+    foreach my $class ( @{ mro::get_linear_isa($class_name) } ) {
         no strict 'refs';
         my $demolish = *{"${class}::DEMOLISH"}{CODE};
         $self->$demolish($in_global_destruction)
