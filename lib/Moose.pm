@@ -67,7 +67,7 @@ sub has {
     my $name  = shift;
 
     Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
-        if @_ == 1;
+        if @_ % 2 == 1;
 
     my %options = ( definition_context => _caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 48;
 use Test::Exception;
 
 
@@ -262,3 +262,15 @@ lives_ok { OutOfClassTest->can('has')->('bar'); } 'create attr via can';
 
 ok(OutOfClassTest->meta->get_attribute('foo'), 'attr created from sub call');
 ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
+
+
+{
+    {
+        package Foo;
+        use Moose;
+
+        ::throws_ok { has 'foo' => ( 'ro', isa => 'Str' ) }
+            qr/^Usage/, 'has throws error with odd number of attribute options';
+    }
+
+}
