@@ -1,6 +1,16 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.79 Wed, May 13, 2009
+    * Tests
+      - More fixes for Win32 problems. Reported by Robert Krimen.
+
+    * Moose::Object
+      - The DEMOLISHALL method could still blow up in some cases
+        during global destruction. This method has been made more
+        resilient in the face of global destruction's random garbage
+        collection order.
+
 0.78 Tue, May 12, 2009
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ
