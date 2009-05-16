@@ -76,8 +76,13 @@ sub build_import_methods {
     sub _follow_also_real {
         my $exporting_package = shift;
 
-        die "Package in also ($exporting_package) does not seem to use Moose::Exporter"
-            unless exists $EXPORT_SPEC{$exporting_package};
+        if (!exists $EXPORT_SPEC{$exporting_package}) {
+            my $loaded = Class::MOP::is_class_loaded($exporting_package);
+
+            die "Package in also ($exporting_package) does not seem to "
+              . "use Moose::Exporter"
+              . ($loaded ? "" : " (is it loaded?)");
+        }
 
         my $also = $EXPORT_SPEC{$exporting_package}{also};
 

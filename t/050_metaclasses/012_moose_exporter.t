@@ -8,7 +8,7 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 45;
+    plan tests => 47;
 }
 
 
@@ -216,7 +216,7 @@ BEGIN {
 }
 
 {
-    package MooseX::CircularAlso;
+    package MooseX::NoAlso;
 
     use Moose ();
 
@@ -231,7 +231,28 @@ BEGIN {
 
     ::like(
         $@,
-        qr/\QPackage in also (NoSuchThing) does not seem to use Moose::Exporter/,
+        qr/\QPackage in also (NoSuchThing) does not seem to use Moose::Exporter (is it loaded?) at /,
+        'got the expected error from a reference in also to a package which is not loaded'
+    );
+}
+
+{
+    package MooseX::NotExporter;
+
+    use Moose ();
+
+    ::dies_ok(
+        sub {
+            Moose::Exporter->setup_import_methods(
+                also => [ 'Moose::Meta::Method' ],
+            );
+        },
+        'a package which does not use Moose::Exporter in also dies with an error'
+    );
+
+    ::like(
+        $@,
+        qr/\QPackage in also (Moose::Meta::Method) does not seem to use Moose::Exporter at /,
         'got the expected error from a reference in also to a package which does not use Moose::Exporter'
     );
 }

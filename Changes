@@ -11,6 +11,10 @@ for, noteworthy changes.
         resilient in the face of global destruction's random garbage
         collection order.
 
+    * Moose::Exporter
+      - If you "also" a module that isn't loaded, the error message
+        now acknowledges that (Sartak)
+
 0.78 Tue, May 12, 2009
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ
