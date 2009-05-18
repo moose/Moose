@@ -15,6 +15,10 @@ for, noteworthy changes.
       - If you "also" a module that isn't loaded, the error message
         now acknowledges that (Sartak)
 
+    * Moose
+      - When your ->meta method does not return a Moose::Meta::Class,
+        the error message gave the wrong output (Sartak)
+
 0.78 Tue, May 12, 2009
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ

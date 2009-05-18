@@ -209,7 +209,7 @@ sub init_meta {
         my $method_meta = $class->meta;
 
         ( blessed($method_meta) && $method_meta->isa('Moose::Meta::Class') )
-            || Moose->throw_error("$class already has a &meta function, but it does not return a Moose::Meta::Class ($meta)");
+            || Moose->throw_error("$class already has a &meta function, but it does not return a Moose::Meta::Class ($method_meta)");
 
         $meta = $method_meta;
     }
