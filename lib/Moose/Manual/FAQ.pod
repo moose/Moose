@@ -281,6 +281,19 @@ C<NaturalLessThanTen> constraint check.
 
 Not yet. This option may come in a future release.
 
+=head3 My coercions stopped working with recent Moose, why did you break it?
+
+Moose 0.76 fixed a case where Coercions were being applied even if the original constraint passed. This has caused some edge cases to fail where people were doing something like
+
+    subtype Address => as 'Str';
+    coerce Address => from Str => via { get_address($_) };
+    
+Which is not what they intended. The Type Constraint C<Address> is too loose in this case, it is saying that all Strings are Addresses, which is obviously not the case. The solution is to provide a where clause that properly restricts the Type Constraint.
+
+    subtype Address => as Str => where { looks_like_address($_) };
+
+This will allow the coercion to apply only to strings that fail to look like an Address.
+
 =head2 Roles
 
 =head3 Why is BUILD not called for my composed roles?
