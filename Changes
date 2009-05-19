@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.80 ???
+
+    * Moose::Manual::FAQ 
+      - Add FAQ about the coercion change from 0.76 because it came 
+        up three times today (perigrin)
+        - Win doy $10 dollars because Sartak didn't think anybody 
+          would document this fast enough (perigrin)
+
 0.79 Wed, May 13, 2009
     * Tests
       - More fixes for Win32 problems. Reported by Robert Krimen.
