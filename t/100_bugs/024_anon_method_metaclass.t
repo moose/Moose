@@ -32,10 +32,12 @@ Ball->meta->add_method(bounce => $method_object);
 for (1, 2) {
     is(Ball->bounce, 'ok', "method still exists on Ball");
     is(Ball->meta->get_method('bounce')->meta->name, $method_class, "method's package still exists");
+
+    local $TODO = "method seems to be reinitialized" if !$method_meta;
+
     is(Ball->meta->get_method('bounce')->meta . '', $original_meta, "method's metaclass still exists");
     ok(Ball->meta->get_method('bounce')->meta->does_role('Arbitrary::Roll'), "method still does Arbitrary::Roll");
 
-    diag 'undef $method_meta' if $method_meta;
     undef $method_meta;
 };
 
