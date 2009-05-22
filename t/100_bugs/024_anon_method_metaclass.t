@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 {
     package Ball;
@@ -35,6 +35,9 @@ for ( 1, 2 ) {
     is( Ball->bounce, 'ok', "method still exists on Ball" );
     is( Ball->meta->get_method('bounce')->meta->name, $method_class,
         "method's package still exists" );
+
+    is( Ball->meta->get_method('bounce'), $method_object,
+        'original method object is preserved' );
 
     local $TODO = "method seems to be reinitialized" if !$method_meta;
 
