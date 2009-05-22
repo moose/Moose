@@ -419,7 +419,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
   sub has_rw {
       my ($caller, $name, %options) = @_;
-      Class::MOP::Class->initialize($caller)->add_attribute($name,
+      Class::MOP::class_of($caller)->add_attribute($name,
           is => 'rw',
           %options,
       );
