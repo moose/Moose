@@ -2,13 +2,15 @@ use strict;
 use warnings;
 use Test::More tests => 8;
 
-do {
+{
     package Ball;
     use Moose;
+}
 
+{
     package Arbitrary::Roll;
     use Moose::Role;
-};
+}
 
 my $method_meta = Moose::Meta::Class->create_anon_class(
     superclasses => ['Moose::Meta::Method'],
