@@ -187,7 +187,7 @@ sub _make_wrapped_sub {
     return sub {
         my $caller = $CALLER;
 
-        my $wrapper = $self->_make_wrapper($caller, $sub, $fq_name);
+        my $wrapper = $self->_curry_wrapper($sub, $fq_name, $caller);
 
         my $sub = subname($fq_name => $wrapper);
 
@@ -197,16 +197,16 @@ sub _make_wrapped_sub {
     };
 }
 
-sub _make_wrapper {
+sub _curry_wrapper {
     my $class   = shift;
-    my $caller  = shift;
     my $sub     = shift;
     my $fq_name = shift;
+    my @extra   = @_;
 
-    my $wrapper = sub { $sub->($caller, @_) };
+    my $wrapper = sub { $sub->(@extra, @_) };
     if (my $proto = prototype $sub) {
         # XXX - Perl's prototype sucks. Use & to make set_prototype
-        # ignore the fact that we're passing a "provate variable"
+        # ignore the fact that we're passing "private variables"
         &Scalar::Util::set_prototype($wrapper, $proto);
     }
     return $wrapper;
