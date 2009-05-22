@@ -9,10 +9,6 @@ for, noteworthy changes.
         - Win doy $10 dollars because Sartak didn't think anybody 
           would document this fast enough (perigrin)
 
-    * Moose::Exporter
-      - Rename _make_wrapper to _curry_wrapper and fiddle its
-        interface a bit (Sartak)
-
 0.79 Wed, May 13, 2009
     * Tests
       - More fixes for Win32 problems. Reported by Robert Krimen.
