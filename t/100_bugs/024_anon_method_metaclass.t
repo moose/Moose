@@ -20,16 +20,16 @@ my $method_meta = Moose::Meta::Class->create_anon_class(
 # For comparing identity without actually keeping $original_meta around
 my $original_meta = "$method_meta";
 
-my $method_class  = $method_meta->name;
+my $method_class = $method_meta->name;
 
 my $method_object = $method_class->wrap(
-    sub { 'ok' },
+    sub {'ok'},
     associated_metaclass => Ball->meta,
     package_name         => 'Ball',
     name                 => 'bounce',
 );
 
-Ball->meta->add_method(bounce => $method_object);
+Ball->meta->add_method( bounce => $method_object );
 
 for ( 1, 2 ) {
     is( Ball->bounce, 'ok', "method still exists on Ball" );
