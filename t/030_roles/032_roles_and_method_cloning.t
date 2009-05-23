@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 
 {
@@ -71,9 +71,11 @@ use Test::More tests => 16;
         'original fq name is Role::Foo::foo' );
 }
 
-is( ClassB->foo, 'ClassB::foo', 'ClassB::foo knows its name' );
+isnt( ClassA->foo, "ClassB::foo", "ClassA::foo is not confused with ClassB::foo");
+
 {
     local $TODO =
       "multiply-consumed roles' subs take on their most recently used name";
+    is( ClassB->foo, 'ClassB::foo', 'ClassB::foo knows its name' );
     is( ClassA->foo, 'ClassA::foo', 'ClassA::foo knows its name' );
 }

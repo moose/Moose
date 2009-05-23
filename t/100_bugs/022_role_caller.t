@@ -11,11 +11,15 @@ package MyClass2; use Moose; with 'MyRole'; no Moose;
 
 package main;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 {
-  local $TODO = 'for rafl';
+  local $TODO = 'Role composition does not clone methods yet';
   is(MyClass1->foo, 'MyClass1::foo',
     'method from role has correct name in caller()');
+  is(MyClass2->foo, 'MyClass2::foo',
+    'method from role has correct name in caller()');
 }
-is(MyClass2->foo, 'MyClass2::foo');
+
+isnt(MyClass1->foo, "MyClass2::foo", "role method is not confused with other class" );
+isnt(MyClass2->foo, "MyClass1::foo", "role method is not confused with other class" );
