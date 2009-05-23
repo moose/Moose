@@ -8,6 +8,9 @@ for, noteworthy changes.
         up three times today (perigrin)
         - Win doy $10 dollars because Sartak didn't think anybody 
           would document this fast enough (perigrin)
+    * Moose::Meta::Method::Destructor
+        - Inline a DESTROY method even if there are no DEMOLISH methods to
+          prevent unnecessary introspection in Moose::Object::DEMOLISHALL
 
 0.79 Wed, May 13, 2009
     * Tests

@@ -57,7 +57,7 @@ sub is_needed {
         || $self->throw_error(
         "The is_needed method expected a metaclass object as its arugment");
 
-    return $metaclass->find_method_by_name('DEMOLISH');
+    return $metaclass->find_method_by_name("DEMOLISHALL");
 }
 
 sub initialize_body {
@@ -78,18 +78,22 @@ sub _initialize_body {
 
     my @DEMOLISH_methods = $self->associated_metaclass->find_all_methods_by_name('DEMOLISH');
 
-    return unless @DEMOLISH_methods;
+    my $source;
+    if ( @DEMOLISH_methods ) {
+        $source = 'sub {';
 
-    my $source = 'sub {';
+        my @DEMOLISH_calls;
+        foreach my $method (@DEMOLISH_methods) {
+            push @DEMOLISH_calls => '$_[0]->' . $method->{class} . '::DEMOLISH()';
+        }
 
-    my @DEMOLISH_calls;
-    foreach my $method (@DEMOLISH_methods) {
-        push @DEMOLISH_calls => '$_[0]->' . $method->{class} . '::DEMOLISH()';
+        $source .= join ";\n" => @DEMOLISH_calls;
+
+        $source .= ";\n" . '}';
+    } else {
+        $source = 'sub { }';
     }
 
-    $source .= join ";\n" => @DEMOLISH_calls;
-
-    $source .= ";\n" . '}';
     warn $source if $self->options->{debug};
 
     my $code = $self->_compile_code(
