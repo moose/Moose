@@ -215,7 +215,6 @@ use Test::Exception;
     my $_foo_attr = $meta->get_attribute("_foo");
 
     ok($foo_attr->is_lazy, "foo is lazy");
-    ok($foo_attr->is_required, "foo is required");
     ok($foo_attr->is_lazy_build, "foo is lazy_build");
 
     ok($foo_attr->has_clearer, "foo has clearer");
