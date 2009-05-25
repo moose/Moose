@@ -843,6 +843,7 @@ is equivalent to this:
 
   has 'size' => (
       is        => 'ro',
+      required  => 1,
       lazy      => 1,
       builder   => '_build_size',
       clearer   => 'clear_size',

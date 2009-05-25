@@ -353,6 +353,7 @@ This is the same as specifying all of these options:
 
   has 'size' => (
       is        => 'ro',
+      required  => 1,
       lazy      => 1,
       builder   => '_build_size',
       clearer   => 'clear_size',
@@ -371,6 +372,7 @@ becomes:
 
   has '_size' => (
       is        => 'ro',
+      required  => 1,
       lazy      => 1,
       builder   => '_build__size',
       clearer   => '_clear_size',

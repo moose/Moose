@@ -635,8 +635,9 @@ Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more information.
 
 =item I<lazy_build> => (0|1)
 
-Automatically define lazy => 1 as well as builder => "_build_$attr", clearer =>
-"clear_$attr', predicate => 'has_$attr' unless they are already defined.
+Automatically define lazy => 1 as well as required => 1, builder =>
+"_build_$attr", clearer => "clear_$attr', predicate => 'has_$attr' unless they
+are already defined.
 
 =item I<initializer> => Str
 
