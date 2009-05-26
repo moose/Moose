@@ -1,24 +1,32 @@
 #!perl
 
+# UNIVERSAL methods should be wrappable
+
 use strict;
 use warnings;
-
-use Test::More;
-
+    
 {
+    package FakeBar;
+    use Moose::Role;
+
+    around isa => sub {
+        my ($orig, $self, $v) = @_;
+        return 1 if $v eq 'Bar';
+        return $orig->($self, $v);
+    };
+
     package Foo;
     use Moose;
+   
+    use Test::Exception;
+    use Test::More tests => 2;
+
+    TODO: {
+        local $TODO = 'UNIVERSAL methods should be wrappable';
+
+        lives_ok { with 'FakeBar' } 'applied role';
+
+        my $foo = Foo->new;
+        isa_ok $foo, 'Bar';
+    };
 }
-
-
-plan tests => scalar ( my @universal_methods = qw/isa can VERSION/ );
-
-my $foo = Foo->new;
-
-TODO: {
-    local $TODO = 'UNIVERSAL methods should be available';
-
-    for my $method ( @universal_methods ) {
-       ok $foo->meta->find_method_by_name($method), "has UNIVERSAL method $method";
-    }
-};
