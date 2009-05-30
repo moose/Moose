@@ -627,7 +627,7 @@ sub _canonicalize_handles {
 
         return map { $_ => $_ } (
             $role_meta->get_method_list,
-            $role_meta->get_required_method_list
+            map { $_->name } $role_meta->get_required_method_list,
         );
     }
 }
