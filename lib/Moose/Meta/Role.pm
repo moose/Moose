@@ -898,7 +898,7 @@ Returns the list of methods required by the role.
 
 Returns true if the role requires the named method.
 
-=item B<< $metarole->add_required_methods(@names >>
+=item B<< $metarole->add_required_methods(@names) >>
 
 Adds the named methods to the roles list of required methods.
 
