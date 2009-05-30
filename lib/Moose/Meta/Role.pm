@@ -102,6 +102,11 @@ foreach my $action (
         keys %{$self->$attr_reader};
     }) if exists $methods->{get_keys};
 
+    $META->add_method($methods->{get_values} => sub {
+        my ($self) = @_;
+        values %{$self->$attr_reader};
+    }) if exists $methods->{get_values};
+
     $META->add_method($methods->{get} => sub {
         my ($self, $name) = @_;
         $self->$attr_reader->{$name}
