@@ -65,9 +65,9 @@ foreach my $action (
         name        => 'required_methods',
         attr_reader => 'get_required_methods_map',
         methods     => {
-            remove    => 'remove_required_methods',
-            get_keys  => 'get_required_method_list',
-            existence => 'requires_method',
+            remove     => 'remove_required_methods',
+            get_values => 'get_required_method_list',
+            existence  => 'requires_method',
         }
     },
     {
