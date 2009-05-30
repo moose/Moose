@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More tests => 47;
 use Test::Exception;
 
 
@@ -227,7 +227,7 @@ use Test::Exception;
     is($foo_attr->predicate, "has_foo",  ".. and it's named has_foo");
 
     ok($_foo_attr->is_lazy, "_foo is lazy");
-    ok($_foo_attr->is_required, "_foo is required");
+    ok(!$_foo_attr->is_required, "lazy_build attributes are no longer automatically required");
     ok($_foo_attr->is_lazy_build, "_foo is lazy_build");
 
     ok($_foo_attr->has_clearer, "_foo has clearer");
