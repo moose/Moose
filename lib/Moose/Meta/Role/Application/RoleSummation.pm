@@ -89,7 +89,7 @@ sub check_required_methods {
     my ($self, $c) = @_;
 
     my %all_required_methods =
-        map { $_ => undef }
+        map { $_->name => $_ }
         map { $_->get_required_method_list }
         @{$c->get_roles};
 
@@ -102,7 +102,7 @@ sub check_required_methods {
         }
     }
 
-    $c->add_required_methods(keys %all_required_methods);
+    $c->add_required_methods(values %all_required_methods);
 }
 
 sub check_required_attributes {
