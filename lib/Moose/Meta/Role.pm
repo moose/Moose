@@ -154,7 +154,7 @@ sub add_required_methods {
 
     for (@_) {
         my $method = $_;
-        if (!ref($method)) {
+        if (!blessed($method)) {
             $method = $self->required_method_metaclass->new(
                 name => $method,
             );
