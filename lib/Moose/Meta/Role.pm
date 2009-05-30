@@ -17,6 +17,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
+use Moose::Meta::Role::Method::Conflicted;
 
 use base 'Class::MOP::Module';
 
@@ -133,6 +134,12 @@ $META->add_attribute(
     'required_method_metaclass',
     reader  => 'required_method_metaclass',
     default => 'Moose::Meta::Role::Method::Required',
+);
+
+$META->add_attribute(
+    'conflicted_method_metaclass',
+    reader  => 'conflicted_method_metaclass',
+    default => 'Moose::Meta::Role::Method::Conflicted',
 );
 
 ## some things don't always fit, so they go here ...
