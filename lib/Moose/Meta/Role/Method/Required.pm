@@ -3,12 +3,21 @@ package Moose::Meta::Role::Method::Required;
 
 use strict;
 use warnings;
+use metaclass;
+
+use overload '""'     => sub { shift->name },   # stringify to method name
+             fallback => 1;
+
+use base qw(Class::MOP::Object);
 
 our $VERSION   = '0.79';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Role::Method';
+# This is not a Moose::Meta::Role::Method because it has no implementation, it
+# is just a name
+
+__PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 
 1;
 
