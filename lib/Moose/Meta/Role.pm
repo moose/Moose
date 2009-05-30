@@ -620,7 +620,7 @@ sub create {
 # has 'roles' => (
 #     metaclass => 'Collection::Array',
 #     reader    => 'get_roles',
-#     isa       => 'ArrayRef[Moose::Meta::Roles]',
+#     isa       => 'ArrayRef[Moose::Meta::Role]',
 #     default   => sub { [] },
 #     provides  => {
 #         'push' => 'add_role',
