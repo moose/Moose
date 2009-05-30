@@ -4,8 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-use Scalar::Util    'blessed';
-use List::MoreUtils qw(uniq);
+use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
 
@@ -89,9 +88,10 @@ sub check_role_exclusions {
 sub check_required_methods {
     my ($self, $c) = @_;
 
-    my %all_required_methods = map { $_ => undef } uniq(map {
-        $_->get_required_method_list
-    } @{$c->get_roles});
+    my %all_required_methods =
+        map { $_ => undef }
+        map { $_->get_required_method_list }
+        @{$c->get_roles};
 
     foreach my $role (@{$c->get_roles}) {
         foreach my $required (keys %all_required_methods) {
