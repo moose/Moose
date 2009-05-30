@@ -19,6 +19,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 
+sub new { shift->_new(@_) }
+
 1;
 
 __END__
