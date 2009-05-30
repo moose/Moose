@@ -125,6 +125,12 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Method',
 );
 
+$META->add_attribute(
+    'required_method_metaclass',
+    reader  => 'required_method_metaclass',
+    default => 'Moose::Meta::Role::Method::Required',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
