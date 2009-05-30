@@ -17,7 +17,10 @@ our $AUTHORITY = 'cpan:STEVAN';
 # This is not a Moose::Meta::Role::Method because it has no implementation, it
 # is just a name
 
-__PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
+__PACKAGE__->meta->add_attribute('name' => (
+    reader   => 'name',
+    required => 1,
+));
 
 sub new { shift->_new(@_) }
 
