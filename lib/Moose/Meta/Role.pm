@@ -175,6 +175,20 @@ sub add_required_methods {
     }
 }
 
+sub add_conflicted_method {
+    my $self = shift;
+
+    my $method;
+    if (@_ == 1 && blessed($_[0])) {
+        $method = shift;
+    }
+    else {
+        $method = $self->conflicted_method_metaclass->new(@_);
+    }
+
+    $self->add_required_methods($method);
+}
+
 ## ------------------------------------------------------------------
 ## method modifiers
 
@@ -936,6 +950,11 @@ Adds the named methods to the role's list of required methods.
 =item B<< $metarole->remove_required_methods(@names) >>
 
 Removes the named methods from the role's list of required methods.
+
+=item B<< $metarole->add_conflicted_method(%params) >>
+
+Instantiate the parameters as a L<Moose::Meta::Role::Method::Conflicted>
+object, then add it to the required method list.
 
 =back
 
