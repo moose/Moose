@@ -57,7 +57,7 @@ foreach my $action (
         attr_reader => 'get_excluded_roles_map' ,
         methods     => {
             add       => 'add_excluded_roles',
-            get_list  => 'get_excluded_roles_list',
+            get_keys  => 'get_excluded_roles_list',
             existence => 'excludes_role',
         }
     },
@@ -66,7 +66,7 @@ foreach my $action (
         attr_reader => 'get_required_methods_map',
         methods     => {
             remove    => 'remove_required_methods',
-            get_list  => 'get_required_method_list',
+            get_keys  => 'get_required_method_list',
             existence => 'requires_method',
         }
     },
@@ -75,7 +75,7 @@ foreach my $action (
         attr_reader => 'get_attribute_map',
         methods     => {
             get       => 'get_attribute',
-            get_list  => 'get_attribute_list',
+            get_keys  => 'get_attribute_list',
             existence => 'has_attribute',
             remove    => 'remove_attribute',
         }
@@ -97,10 +97,10 @@ foreach my $action (
         $self->$attr_reader->{$_} = undef foreach @values;
     }) if exists $methods->{add};
 
-    $META->add_method($methods->{get_list} => sub {
+    $META->add_method($methods->{get_keys} => sub {
         my ($self) = @_;
         keys %{$self->$attr_reader};
-    }) if exists $methods->{get_list};
+    }) if exists $methods->{get_keys};
 
     $META->add_method($methods->{get} => sub {
         my ($self, $name) = @_;
