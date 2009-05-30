@@ -12,6 +12,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('roles' => (reader => 'roles'));
 
+sub is_conflict { 1 }
+
 1;
 
 __END__
@@ -28,6 +30,17 @@ Moose::Meta::Role::Method::Conflicted - A Moose metaclass for conflicted methods
 
 C<Moose::Meta::Role::Method::Conflicted> is a subclass of
 L<Moose::Meta::Role::Method::Required>.
+
+=head1 METHODS
+
+=over 4
+
+=item B<< $method->is_conflict >>
+
+Returns whether the method requirement is due to a conflict. By default for
+this class, it's true.
+
+=back
 
 =head1 BUGS
 

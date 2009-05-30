@@ -21,6 +21,8 @@ __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 
 sub new { shift->_new(@_) }
 
+sub is_conflict { 0 }
+
 1;
 
 __END__
@@ -58,6 +60,11 @@ The method name. This is required.
 =item B<< $method->name >>
 
 Returns the required method's name, as provided to the constructor.
+
+=item B<< $method->is_conflict >>
+
+Returns whether the method requirement is due to a conflict. By default for
+this class, it's false.
 
 =back
 
