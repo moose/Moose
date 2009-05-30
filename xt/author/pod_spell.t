@@ -152,6 +152,7 @@ refactoring
 runtime
 stacktrace
 subclassable
+subname
 subtyping
 TODO
 unblessed
