@@ -900,11 +900,11 @@ Returns true if the role requires the named method.
 
 =item B<< $metarole->add_required_methods(@names) >>
 
-Adds the named methods to the roles list of required methods.
+Adds the named methods to the role's list of required methods.
 
 =item B<< $metarole->remove_required_methods(@names) >>
 
-Removes the named methods to the roles list of required methods.
+Removes the named methods to the role's list of required methods.
 
 =back
 
