@@ -65,7 +65,6 @@ foreach my $action (
         name        => 'required_methods',
         attr_reader => 'get_required_methods_map',
         methods     => {
-            add       => 'add_required_methods',
             remove    => 'remove_required_methods',
             get_list  => 'get_required_method_list',
             existence => 'requires_method',
@@ -148,6 +147,20 @@ sub add_attribute {
         $attr_desc = { @_ };
     }
     $self->get_attribute_map->{$name} = $attr_desc;
+}
+
+sub add_required_methods {
+    my $self = shift;
+
+    for (@_) {
+        my $method = $_;
+        if (!ref($method)) {
+            $method = $self->required_method_metaclass->new(
+                name => $method,
+            );
+        }
+        $self->get_required_methods_map->{$method->name} = $method;
+    }
 }
 
 ## ------------------------------------------------------------------
