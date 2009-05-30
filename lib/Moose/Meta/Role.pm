@@ -656,7 +656,7 @@ sub create {
 # has 'required_methods' => (
 #     metaclass => 'Collection::Hash',
 #     reader    => 'get_required_methods_map',
-#     isa       => 'HashRef[Str]',
+#     isa       => 'HashRef[Moose::Meta::Role::Method::Required]',
 #     provides  => {
 #         # not exactly set, or delete since it works for multiple
 #         'set'    => 'add_required_methods',
