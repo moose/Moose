@@ -58,13 +58,14 @@ sub check_required_methods {
     # attribute accessors. However I am thinking
     # that maybe those are somehow exempt from
     # the require methods stuff.
-    foreach my $required_method_name ($role->get_required_method_list) {
+    foreach my $required_method ($role->get_required_method_list) {
+        my $required_method_name = $required_method->name;
 
         if (!$class->find_method_by_name($required_method_name)) {
 
             next if $self->is_aliased_method($required_method_name);
 
-            push @missing, $required_method_name;
+            push @missing, $required_method;
         }
     }
 
