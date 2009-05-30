@@ -106,7 +106,10 @@ sub apply_methods {
             $role2->get_method($method_name)->body != $role1->get_method($method_name)->body) {
             # method conflicts between roles result
             # in the method becoming a requirement
-            $role2->add_required_methods($method_name);
+            $role2->add_conflicted_method(
+                name  => $method_name,
+                roles => [$role1->name, $role2->name],
+            );
         }
         else {
             # add it, although it could be overridden

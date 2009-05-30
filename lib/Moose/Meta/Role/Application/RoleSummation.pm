@@ -169,7 +169,7 @@ sub apply_methods {
     foreach my $method (@all_methods) {
         if (exists $seen{$method->{name}}) {
             if ($seen{$method->{name}}->body != $method->{method}->body) {
-                $c->add_required_methods($method->{name});
+                $c->add_conflicted_method(name => $method->{name});
                 delete $method_map{$method->{name}};
                 next;
             }
