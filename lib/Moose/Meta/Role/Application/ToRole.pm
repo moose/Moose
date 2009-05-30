@@ -35,11 +35,12 @@ sub check_role_exclusions {
 
 sub check_required_methods {
     my ($self, $role1, $role2) = @_;
-    foreach my $required_method_name ($role1->get_required_method_list) {
+    foreach my $required_method ($role1->get_required_method_list) {
+        my $required_method_name = $required_method->name;
 
         next if $self->is_aliased_method($required_method_name);
 
-        $role2->add_required_methods($required_method_name)
+        $role2->add_required_methods($required_method)
             unless $role2->find_method_by_name($required_method_name);
     }
 }
