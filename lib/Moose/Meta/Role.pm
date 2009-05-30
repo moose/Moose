@@ -923,7 +923,7 @@ Adds the named methods to the role's list of required methods.
 
 =item B<< $metarole->remove_required_methods(@names) >>
 
-Removes the named methods to the role's list of required methods.
+Removes the named methods from the role's list of required methods.
 
 =back
 
