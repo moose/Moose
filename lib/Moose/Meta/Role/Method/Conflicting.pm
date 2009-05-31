@@ -38,6 +38,31 @@ L<Moose::Meta::Role::Method::Required>.
 
 =over 4
 
+=item B<< Moose::Meta::Role::Method::Conflicting->new(%options) >>
+
+This creates a new type constraint based on the provided C<%options>:
+
+=over 8
+
+=item * name
+
+The method name. This is required.
+
+=item * roles
+
+The list of role names that generated the conflict. This is required.
+
+=back
+
+=item B<< $method->name >>
+
+Returns the conflicting method's name, as provided to the constructor.
+
+=item B<< $method->roles >>
+
+Returns the roles that generated this conflicting method, as provided to the
+constructor.
+
 =item B<< $method->is_conflict >>
 
 Returns whether the method requirement is due to a conflict. By default for
