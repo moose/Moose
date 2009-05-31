@@ -173,7 +173,7 @@ sub apply_methods {
             if ($seen->{method}->body != $method->{method}->body) {
                 $c->add_conflicted_method(
                     name  => $method->{name},
-                    roles => [$method->{role}, $seen->{role}],
+                    roles => [$method->{role}->name, $seen->{role}->name],
                 );
 
                 delete $method_map{$method->{name}};
