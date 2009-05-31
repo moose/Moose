@@ -264,7 +264,7 @@ $_->make_immutable(
     Moose::Meta::Role
     Moose::Meta::Role::Method
     Moose::Meta::Role::Method::Required
-    Moose::Meta::Role::Method::Conflicted
+    Moose::Meta::Role::Method::Conflicting
 
     Moose::Meta::Role::Composite
 

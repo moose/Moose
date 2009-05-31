@@ -100,7 +100,7 @@ Role method conflicts
 
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented by 'My::Test3'/, '... role methods conflicted and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented by 'My::Test3'/, '... role methods conflict and method was required';
 
     package My::Test4;
     use Moose;
@@ -190,7 +190,7 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflicted and method was required';
+      '... role attrs conflict and method was required';
 
     package My::Test8;
     use Moose;
@@ -216,7 +216,7 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflicted and cannot be manually disambiguted';
+      '... role attrs conflict and cannot be manually disambiguted';
 
 }
 

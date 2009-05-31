@@ -49,7 +49,7 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
 
 {
     # check that when a role is added to another role
-    # and they conflict and the method they conflicted
+    # and they conflict and the method they conflict
     # with is then required.
 
     package Role::A::Conflict;

@@ -1,5 +1,5 @@
 
-package Moose::Meta::Role::Method::Conflicted;
+package Moose::Meta::Role::Method::Conflicting;
 
 use strict;
 use warnings;
@@ -22,13 +22,13 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Method::Conflicted - A Moose metaclass for conflicted methods in Roles
+Moose::Meta::Role::Method::Conflicting - A Moose metaclass for conflicting methods in Roles
 
 =head1 DESCRIPTION
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Role::Method::Conflicted> is a subclass of
+C<Moose::Meta::Role::Method::Conflicting> is a subclass of
 L<Moose::Meta::Role::Method::Required>.
 
 =head1 METHODS

@@ -17,7 +17,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
-use Moose::Meta::Role::Method::Conflicted;
+use Moose::Meta::Role::Method::Conflicting;
 
 use base 'Class::MOP::Module';
 
@@ -137,9 +137,9 @@ $META->add_attribute(
 );
 
 $META->add_attribute(
-    'conflicted_method_metaclass',
-    reader  => 'conflicted_method_metaclass',
-    default => 'Moose::Meta::Role::Method::Conflicted',
+    'conflicting_method_metaclass',
+    reader  => 'conflicting_method_metaclass',
+    default => 'Moose::Meta::Role::Method::Conflicting',
 );
 
 ## some things don't always fit, so they go here ...
@@ -175,7 +175,7 @@ sub add_required_methods {
     }
 }
 
-sub add_conflicted_method {
+sub add_conflicting_method {
     my $self = shift;
 
     my $method;
@@ -183,7 +183,7 @@ sub add_conflicted_method {
         $method = shift;
     }
     else {
-        $method = $self->conflicted_method_metaclass->new(@_);
+        $method = $self->conflicting_method_metaclass->new(@_);
     }
 
     $self->add_required_methods($method);
@@ -951,9 +951,9 @@ Adds the named methods to the role's list of required methods.
 
 Removes the named methods from the role's list of required methods.
 
-=item B<< $metarole->add_conflicted_method(%params) >>
+=item B<< $metarole->add_conflicting_method(%params) >>
 
-Instantiate the parameters as a L<Moose::Meta::Role::Method::Conflicted>
+Instantiate the parameters as a L<Moose::Meta::Role::Method::Conflicting>
 object, then add it to the required method list.
 
 =back
