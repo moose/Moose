@@ -167,15 +167,21 @@ sub apply_methods {
 
     my (%seen, %method_map);
     foreach my $method (@all_methods) {
-        if (exists $seen{$method->{name}}) {
-            if ($seen{$method->{name}}->body != $method->{method}->body) {
-                $c->add_conflicted_method(name => $method->{name});
+        my $seen = $seen{$method->{name}};
+
+        if ($seen) {
+            if ($seen->{method}->body != $method->{method}->body) {
+                $c->add_conflicted_method(
+                    name  => $method->{name},
+                    roles => [$method->{role}, $seen->{role}],
+                );
+
                 delete $method_map{$method->{name}};
                 next;
             }
         }
 
-        $seen{$method->{name}}       = $method->{method};
+        $seen{$method->{name}}       = $method;
         $method_map{$method->{name}} = $method->{method};
     }
 
