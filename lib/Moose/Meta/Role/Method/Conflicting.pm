@@ -10,7 +10,10 @@ our $VERSION   = '0.79';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-__PACKAGE__->meta->add_attribute('roles' => (reader => 'roles'));
+__PACKAGE__->meta->add_attribute('roles' => (
+    reader   => 'roles',
+    required => 1,
+));
 
 sub is_conflict { 1 }
 
