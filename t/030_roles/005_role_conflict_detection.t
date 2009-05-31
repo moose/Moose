@@ -100,7 +100,7 @@ Role method conflicts
 
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/requires the method \'bling\' to be implemented/, '... role methods conflicted and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented by 'My::Test3'/, '... role methods conflicted and method was required';
 
     package My::Test4;
     use Moose;

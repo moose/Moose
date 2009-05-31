@@ -77,15 +77,16 @@ sub check_required_methods {
 
     if (@conflicts) {
         my $conflict = $conflicts[0];
+        my $roles = Moose::Util::english_list( map { q{'} . $_ . q{'} } @{ $conflict->roles } );
 
         $error
-            .= q{'}
-            . $role->name
-            . "' requires the method '"
+            .= "Due to a method name conflict in roles "
+            .  $roles
+            . ", the method '"
             . $conflict->name
-            . "' to be implemented by '"
+            . "' must be implemented by '"
             . $class->name
-            . "' due to a method conflict"
+            . q{'};
     }
     elsif (@missing) {
         my $noun = @missing == 1 ? 'method' : 'methods';

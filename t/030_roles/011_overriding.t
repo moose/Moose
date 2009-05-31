@@ -64,7 +64,7 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
 
     ::throws_ok {
         with 'Role::A::Conflict';
-    }  qr/requires.*'bar'/, '... did not fufill the requirement of &bar method';
+    }  qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented by 'Class::A::Conflict'/, '... did not fufill the requirement of &bar method';
 
     package Class::A::Resolved;
     use Moose;
@@ -181,7 +181,7 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
 
     ::throws_ok {
         with qw(Role::I);
-    } qr/requires.*'foo'/, "defining class Class::C fails";
+    } qr/Due to a method name conflict in roles 'Role::H' and 'Role::J', the method 'foo' must be implemented by 'Class::C'/, "defining class Class::C fails";
 
     sub zot { 'Class::C::zot' }
 
