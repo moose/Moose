@@ -15,8 +15,6 @@ __PACKAGE__->meta->add_attribute('roles' => (
     required => 1,
 ));
 
-sub is_conflict { 1 }
-
 1;
 
 __END__
@@ -62,11 +60,6 @@ Returns the conflicting method's name, as provided to the constructor.
 
 Returns the roles that generated this conflicting method, as provided to the
 constructor.
-
-=item B<< $method->is_conflict >>
-
-Returns whether the method requirement is due to a conflict. By default for
-this class, it's true.
 
 =back
 
