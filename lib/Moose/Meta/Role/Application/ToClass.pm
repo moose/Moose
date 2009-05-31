@@ -73,7 +73,21 @@ sub check_required_methods {
 
     my $error = '';
 
-    if (@missing) {
+    my @conflicts = grep { $_->is_conflict } @missing;
+
+    if (@conflicts) {
+        my $conflict = $conflicts[0];
+
+        $error
+            .= q{'}
+            . $role->name
+            . "' requires the method '"
+            . $conflict->name
+            . "' to be implemented by '"
+            . $class->name
+            . "' due to a method conflict"
+    }
+    elsif (@missing) {
         my $noun = @missing == 1 ? 'method' : 'methods';
 
         my $list
