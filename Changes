@@ -11,6 +11,13 @@ for, noteworthy changes.
     * Moose::Meta::Method::Destructor
         - Inline a DESTROY method even if there are no DEMOLISH methods to
           prevent unnecessary introspection in Moose::Object::DEMOLISHALL
+    * Moose::*
+        - Required methods of roles are now represented by
+          Moose::Meta::Role::Method::Required objects. Conflicts are now
+          represented by Moose::Meta::Role::Method::Conflicting objects.
+          There's benefit for end-users in that unresolved conflicts
+          generate different, more instructive, errors, resolving Ovid's
+          #44895. (Sartak)
 
 0.79 Wed, May 13, 2009
     * Tests
