@@ -16,10 +16,6 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version 0.80
-
-Update test suite for subname change in Class::MOP
-
 =head1 Version 0.78
 
 C<use Moose::Exporter;> now imports C<strict> and C<warnings> into packages
