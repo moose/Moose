@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 87; # it's really 124 with kolibrie's tests;
+use Test::More tests => 88;
 use Test::Exception;
 
 =pod
@@ -343,6 +343,28 @@ ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been 
 is(Role::Reality->meta->get_method('twist')->(),
     'Role::Reality::twist',
     '... the twist method returns the right value');
+
+# Ovid's test case from rt.cpan.org #44
+{
+    package Role1;
+    use Moose::Role;
+
+    sub foo {}
+}
+{
+    package Role2;
+    use Moose::Role;
+
+    sub foo {}
+}
+{
+    package Conflicts;
+    use Moose;
+
+    ::throws_ok {
+        with qw(Role1 Role2);
+    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented by 'Conflicts'/;
+}
 
 =pod
 
