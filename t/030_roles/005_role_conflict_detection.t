@@ -100,7 +100,7 @@ Role method conflicts
 
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented by 'My::Test3'/, '... role methods conflict and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
 
     package My::Test4;
     use Moose;
@@ -363,7 +363,7 @@ is(Role::Reality->meta->get_method('twist')->(),
 
     ::throws_ok {
         with qw(Role1 Role2);
-    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented by 'Conflicts'/;
+    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/;
 }
 
 =pod

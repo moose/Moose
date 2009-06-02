@@ -84,7 +84,7 @@ sub check_required_methods {
             .  $roles
             . ", the method '"
             . $conflict->name
-            . "' must be implemented by '"
+            . "' must be implemented or excluded by '"
             . $class->name
             . q{'};
     }
