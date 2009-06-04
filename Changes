@@ -26,6 +26,8 @@ for, noteworthy changes.
     * Moose::Role
       - Improve the error message of "extends" as suggested by Adam
         Kennedy and confound (Sartak)
+      - Link to Moose::Manual::Roles from Moose::Role as we now have
+        excellent documentation (Adam Kennedy)
 
     * Tests
         - Update test suite for subname change in Class::MOP
