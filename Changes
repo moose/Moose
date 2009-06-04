@@ -23,6 +23,10 @@ for, noteworthy changes.
         conflicts generate different, more instructive, errors,
         resolving Ovid's #44895. (Sartak)
 
+    * Moose::Role
+      - Improve the error message of "extends" as suggested by Adam
+        Kennedy and confound (Sartak)
+
     * Tests
         - Update test suite for subname change in Class::MOP
           (nothingmuch)

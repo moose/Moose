@@ -18,7 +18,7 @@ use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
 sub extends {
-    croak "Roles do not currently support 'extends'";
+    croak "Roles do not support 'extends' (you can use 'with' to specialize a role)";
 }
 
 sub with {
