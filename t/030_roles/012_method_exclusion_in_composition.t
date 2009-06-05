@@ -72,7 +72,7 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
         with 'Foo::Role',
              'Bar::Role' => { excludes => 'foo' },
              'Baz::Role';
-    } qr/\'Foo::Role\|Bar::Role\|Baz::Role\' requires the method \'foo\' to be implemented by \'My::Foo::Class::Broken\'/,
+    } qr/Due to a method name conflict in roles 'Baz::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'/,
       '... composed our roles correctly';
 }
 

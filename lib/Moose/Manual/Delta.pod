@@ -16,10 +16,6 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version 0.80
-
-Update test suite for subname change in Class::MOP
-
 =head1 Version 0.78
 
 C<use Moose::Exporter;> now imports C<strict> and C<warnings> into packages
@@ -189,7 +185,7 @@ doesn't inline. If you want to force inlining anyway, pass
 C<< "replace_constructor => 1 >> to C<make_immutable>.
 
 If you want to get rid of the warning, pass C<< inline_constructor =>
-1 >>.
+0 >>.
 
 =head1 Version 0.62
 

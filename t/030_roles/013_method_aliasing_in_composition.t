@@ -105,7 +105,7 @@ ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is r
         with 'Foo::Role' => { alias => { 'foo' => 'foo_foo' }, excludes => 'foo' },
              'Bar::Role' => { alias => { 'foo' => 'foo_foo' }, excludes => 'foo' },
              'Baz::Role';
-    } qr/\'Foo::Role\|Bar::Role\|Baz::Role\' requires the method \'foo_foo\' to be implemented by \'My::Foo::Class::Broken\'/,
+    } qr/Due to a method name conflict in roles 'Bar::Role' and 'Foo::Role', the method 'foo_foo' must be implemented or excluded by 'My::Foo::Class::Broken'/,
       '... composed our roles correctly';
 }
 

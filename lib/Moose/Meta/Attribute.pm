@@ -348,7 +348,6 @@ sub _process_options {
         $class->throw_error("You can not use lazy_build and default for the same attribute ($name)", data => $options)
             if exists $options->{default};
         $options->{lazy}      = 1;
-        $options->{required}  = 1;
         $options->{builder} ||= "_build_${name}";
         if ($name =~ /^_/) {
             $options->{clearer}   ||= "_clear${name}";
@@ -628,7 +627,7 @@ sub _canonicalize_handles {
 
         return map { $_ => $_ } (
             $role_meta->get_method_list,
-            $role_meta->get_required_method_list
+            map { $_->name } $role_meta->get_required_method_list,
         );
     }
 }

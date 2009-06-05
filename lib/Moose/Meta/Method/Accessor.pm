@@ -291,12 +291,12 @@ Moose::Meta::Method::Accessor - A Moose Method metaclass for accessors
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Class::Accessor> that
+This class is a subclass of L<Class::MOP::Method::Accessor> that
 provides additional Moose-specific functionality, all of which is
 private.
 
 To understand this class, you should read the the
-L<Class::MOP::Class::Accessor> documentation.
+L<Class::MOP::Method::Accessor> documentation.
 
 =head1 BUGS
 

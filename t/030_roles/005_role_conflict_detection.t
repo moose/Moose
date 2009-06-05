@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 87; # it's really 124 with kolibrie's tests;
+use Test::More tests => 88;
 use Test::Exception;
 
 =pod
@@ -100,7 +100,7 @@ Role method conflicts
 
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/requires the method \'bling\' to be implemented/, '... role methods conflicted and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
 
     package My::Test4;
     use Moose;
@@ -190,7 +190,7 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflicted and method was required';
+      '... role attrs conflict and method was required';
 
     package My::Test8;
     use Moose;
@@ -216,7 +216,7 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflicted and cannot be manually disambiguted';
+      '... role attrs conflict and cannot be manually disambiguted';
 
 }
 
@@ -343,6 +343,28 @@ ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been 
 is(Role::Reality->meta->get_method('twist')->(),
     'Role::Reality::twist',
     '... the twist method returns the right value');
+
+# Ovid's test case from rt.cpan.org #44
+{
+    package Role1;
+    use Moose::Role;
+
+    sub foo {}
+}
+{
+    package Role2;
+    use Moose::Role;
+
+    sub foo {}
+}
+{
+    package Conflicts;
+    use Moose;
+
+    ::throws_ok {
+        with qw(Role1 Role2);
+    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/;
+}
 
 =pod
 

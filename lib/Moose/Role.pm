@@ -18,7 +18,7 @@ use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
 sub extends {
-    croak "Roles do not currently support 'extends'";
+    croak "Roles do not support 'extends' (you can use 'with' to specialize a role)";
 }
 
 sub with {
@@ -174,13 +174,8 @@ Moose::Role - The Moose Role
 
 =head1 DESCRIPTION
 
-Role support in Moose is pretty solid at this point. However, the best
-documentation is still the the test suite. It is fairly safe to assume Perl 6
-style behavior and then either refer to the test suite, or ask questions on
-#moose if something doesn't quite do what you expect.
-
-We are planning writing some more documentation in the near future, but nothing
-is ready yet, sorry.
+The concept of roles is documented in L<Moose::Manual::Role>. This document
+serves as API documentation.
 
 =head1 EXPORTED FUNCTIONS
 

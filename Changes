@@ -4,13 +4,36 @@ for, noteworthy changes.
 0.80 ???
 
     * Moose::Manual::FAQ 
-      - Add FAQ about the coercion change from 0.76 because it came 
-        up three times today (perigrin)
-        - Win doy $10 dollars because Sartak didn't think anybody 
+      - Add FAQ about the coercion change from 0.76 because it came up
+        three times today (perigrin)
+        - Win doy $10 dollars because Sartak didn't think anybody
           would document this fast enough (perigrin)
+
     * Moose::Meta::Method::Destructor
-        - Inline a DESTROY method even if there are no DEMOLISH methods to
-          prevent unnecessary introspection in Moose::Object::DEMOLISHALL
+
+      - Inline a DESTROY method even if there are no DEMOLISH methods
+        to prevent unnecessary introspection in
+        Moose::Object::DEMOLISHALL
+
+    * Moose::*
+      - A role's required methods are now represented by
+        Moose::Meta::Role::Method::Required objects. Conflicts are now
+        represented by Moose::Meta::Role::Method::Conflicting
+        objects. The benefit for end-users in that unresolved
+        conflicts generate different, more instructive, errors,
+        resolving Ovid's #44895. (Sartak)
+
+    * Moose::Role
+      - Improve the error message of "extends" as suggested by Adam
+        Kennedy and confound (Sartak)
+      - Link to Moose::Manual::Roles from Moose::Role as we now have
+        excellent documentation (Adam Kennedy)
+
+    * Tests
+        - Update test suite for subname change in Class::MOP
+          (nothingmuch)
+        - Add test for infinite recursion in Moose::Meta::Class
+          (groditi)
 
 0.79 Wed, May 13, 2009
     * Tests

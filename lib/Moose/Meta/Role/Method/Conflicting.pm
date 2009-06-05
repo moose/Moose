@@ -1,28 +1,19 @@
 
-package Moose::Meta::Role::Method::Required;
+package Moose::Meta::Role::Method::Conflicting;
 
 use strict;
 use warnings;
-use metaclass;
 
-use overload '""'     => sub { shift->name },   # stringify to method name
-             fallback => 1;
-
-use base qw(Class::MOP::Object);
+use base qw(Moose::Meta::Role::Method::Required);
 
 our $VERSION   = '0.79';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-# This is not a Moose::Meta::Role::Method because it has no implementation, it
-# is just a name
-
-__PACKAGE__->meta->add_attribute('name' => (
-    reader   => 'name',
+__PACKAGE__->meta->add_attribute('roles' => (
+    reader   => 'roles',
     required => 1,
 ));
-
-sub new { shift->_new(@_) }
 
 1;
 
@@ -32,21 +23,20 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Role::Method::Required - A Moose metaclass for required methods in Roles
+Moose::Meta::Role::Method::Conflicting - A Moose metaclass for conflicting methods in Roles
 
 =head1 DESCRIPTION
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Role::Method::Required> is a subclass of L<Class::MOP::Object>.
-It is B<not> a subclass of C<Moose::Meta::Role::Method> since it does not
-provide an implementation of the method.
+C<Moose::Meta::Role::Method::Conflicting> is a subclass of
+L<Moose::Meta::Role::Method::Required>.
 
 =head1 METHODS
 
 =over 4
 
-=item B<< Moose::Meta::Role::Method::Required->new(%options) >>
+=item B<< Moose::Meta::Role::Method::Conflicting->new(%options) >>
 
 This creates a new type constraint based on the provided C<%options>:
 
@@ -56,11 +46,20 @@ This creates a new type constraint based on the provided C<%options>:
 
 The method name. This is required.
 
+=item * roles
+
+The list of role names that generated the conflict. This is required.
+
 =back
 
 =item B<< $method->name >>
 
-Returns the required method's name, as provided to the constructor.
+Returns the conflicting method's name, as provided to the constructor.
+
+=item B<< $method->roles >>
+
+Returns the roles that generated this conflicting method, as provided to the
+constructor.
 
 =back
 

@@ -506,7 +506,7 @@ sub _install_type_coercions ($$) {
     my $type = find_type_constraint($type_name);
     ( defined $type )
         || __PACKAGE__->_throw_error(
-        "Cannot find type '$type_name', perhaps you forgot to load it.");
+        "Cannot find type '$type_name', perhaps you forgot to load it");
     if ( $type->has_coercion ) {
         $type->coercion->add_type_coercions(@$coercion_map);
     }

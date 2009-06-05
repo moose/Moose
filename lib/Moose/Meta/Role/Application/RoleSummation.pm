@@ -4,8 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-use Scalar::Util    'blessed';
-use List::MoreUtils qw(uniq);
+use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
 
@@ -89,9 +88,10 @@ sub check_role_exclusions {
 sub check_required_methods {
     my ($self, $c) = @_;
 
-    my %all_required_methods = map { $_ => undef } uniq(map {
-        $_->get_required_method_list
-    } @{$c->get_roles});
+    my %all_required_methods =
+        map { $_->name => $_ }
+        map { $_->get_required_method_list }
+        @{$c->get_roles};
 
     foreach my $role (@{$c->get_roles}) {
         foreach my $required (keys %all_required_methods) {
@@ -102,7 +102,7 @@ sub check_required_methods {
         }
     }
 
-    $c->add_required_methods(keys %all_required_methods);
+    $c->add_required_methods(values %all_required_methods);
 }
 
 sub check_required_attributes {
@@ -167,15 +167,21 @@ sub apply_methods {
 
     my (%seen, %method_map);
     foreach my $method (@all_methods) {
-        if (exists $seen{$method->{name}}) {
-            if ($seen{$method->{name}}->body != $method->{method}->body) {
-                $c->add_required_methods($method->{name});
+        my $seen = $seen{$method->{name}};
+
+        if ($seen) {
+            if ($seen->{method}->body != $method->{method}->body) {
+                $c->add_conflicting_method(
+                    name  => $method->{name},
+                    roles => [$method->{role}->name, $seen->{role}->name],
+                );
+
                 delete $method_map{$method->{name}};
                 next;
             }
         }
 
-        $seen{$method->{name}}       = $method->{method};
+        $seen{$method->{name}}       = $method;
         $method_map{$method->{name}} = $method->{method};
     }
 

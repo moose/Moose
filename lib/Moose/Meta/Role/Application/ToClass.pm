@@ -58,13 +58,14 @@ sub check_required_methods {
     # attribute accessors. However I am thinking
     # that maybe those are somehow exempt from
     # the require methods stuff.
-    foreach my $required_method_name ($role->get_required_method_list) {
+    foreach my $required_method ($role->get_required_method_list) {
+        my $required_method_name = $required_method->name;
 
         if (!$class->find_method_by_name($required_method_name)) {
 
             next if $self->is_aliased_method($required_method_name);
 
-            push @missing, $required_method_name;
+            push @missing, $required_method;
         }
     }
 
@@ -72,7 +73,22 @@ sub check_required_methods {
 
     my $error = '';
 
-    if (@missing) {
+    my @conflicts = grep { $_->isa('Moose::Meta::Role::Method::Conflicting') } @missing;
+
+    if (@conflicts) {
+        my $conflict = $conflicts[0];
+        my $roles = Moose::Util::english_list( map { q{'} . $_ . q{'} } @{ $conflict->roles } );
+
+        $error
+            .= "Due to a method name conflict in roles "
+            .  $roles
+            . ", the method '"
+            . $conflict->name
+            . "' must be implemented or excluded by '"
+            . $class->name
+            . q{'};
+    }
+    elsif (@missing) {
         my $noun = @missing == 1 ? 'method' : 'methods';
 
         my $list

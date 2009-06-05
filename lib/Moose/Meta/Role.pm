@@ -17,6 +17,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
+use Moose::Meta::Role::Method::Conflicting;
 
 use base 'Class::MOP::Module';
 
@@ -57,7 +58,7 @@ foreach my $action (
         attr_reader => 'get_excluded_roles_map' ,
         methods     => {
             add       => 'add_excluded_roles',
-            get_list  => 'get_excluded_roles_list',
+            get_keys  => 'get_excluded_roles_list',
             existence => 'excludes_role',
         }
     },
@@ -65,10 +66,9 @@ foreach my $action (
         name        => 'required_methods',
         attr_reader => 'get_required_methods_map',
         methods     => {
-            add       => 'add_required_methods',
-            remove    => 'remove_required_methods',
-            get_list  => 'get_required_method_list',
-            existence => 'requires_method',
+            remove     => 'remove_required_methods',
+            get_values => 'get_required_method_list',
+            existence  => 'requires_method',
         }
     },
     {
@@ -76,7 +76,7 @@ foreach my $action (
         attr_reader => 'get_attribute_map',
         methods     => {
             get       => 'get_attribute',
-            get_list  => 'get_attribute_list',
+            get_keys  => 'get_attribute_list',
             existence => 'has_attribute',
             remove    => 'remove_attribute',
         }
@@ -98,10 +98,15 @@ foreach my $action (
         $self->$attr_reader->{$_} = undef foreach @values;
     }) if exists $methods->{add};
 
-    $META->add_method($methods->{get_list} => sub {
+    $META->add_method($methods->{get_keys} => sub {
         my ($self) = @_;
         keys %{$self->$attr_reader};
-    }) if exists $methods->{get_list};
+    }) if exists $methods->{get_keys};
+
+    $META->add_method($methods->{get_values} => sub {
+        my ($self) = @_;
+        values %{$self->$attr_reader};
+    }) if exists $methods->{get_values};
 
     $META->add_method($methods->{get} => sub {
         my ($self, $name) = @_;
@@ -125,6 +130,18 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Method',
 );
 
+$META->add_attribute(
+    'required_method_metaclass',
+    reader  => 'required_method_metaclass',
+    default => 'Moose::Meta::Role::Method::Required',
+);
+
+$META->add_attribute(
+    'conflicting_method_metaclass',
+    reader  => 'conflicting_method_metaclass',
+    default => 'Moose::Meta::Role::Method::Conflicting',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
@@ -142,6 +159,34 @@ sub add_attribute {
         $attr_desc = { @_ };
     }
     $self->get_attribute_map->{$name} = $attr_desc;
+}
+
+sub add_required_methods {
+    my $self = shift;
+
+    for (@_) {
+        my $method = $_;
+        if (!blessed($method)) {
+            $method = $self->required_method_metaclass->new(
+                name => $method,
+            );
+        }
+        $self->get_required_methods_map->{$method->name} = $method;
+    }
+}
+
+sub add_conflicting_method {
+    my $self = shift;
+
+    my $method;
+    if (@_ == 1 && blessed($_[0])) {
+        $method = shift;
+    }
+    else {
+        $method = $self->conflicting_method_metaclass->new(@_);
+    }
+
+    $self->add_required_methods($method);
 }
 
 ## ------------------------------------------------------------------
@@ -601,7 +646,7 @@ sub create {
 # has 'roles' => (
 #     metaclass => 'Collection::Array',
 #     reader    => 'get_roles',
-#     isa       => 'ArrayRef[Moose::Meta::Roles]',
+#     isa       => 'ArrayRef[Moose::Meta::Role]',
 #     default   => sub { [] },
 #     provides  => {
 #         'push' => 'add_role',
@@ -637,7 +682,7 @@ sub create {
 # has 'required_methods' => (
 #     metaclass => 'Collection::Hash',
 #     reader    => 'get_required_methods_map',
-#     isa       => 'HashRef[Str]',
+#     isa       => 'HashRef[Moose::Meta::Role::Method::Required]',
 #     provides  => {
 #         # not exactly set, or delete since it works for multiple
 #         'set'    => 'add_required_methods',
@@ -898,13 +943,18 @@ Returns the list of methods required by the role.
 
 Returns true if the role requires the named method.
 
-=item B<< $metarole->add_required_methods(@names >>
+=item B<< $metarole->add_required_methods(@names) >>
 
-Adds the named methods to the roles list of required methods.
+Adds the named methods to the role's list of required methods.
 
 =item B<< $metarole->remove_required_methods(@names) >>
 
-Removes the named methods to the roles list of required methods.
+Removes the named methods from the role's list of required methods.
+
+=item B<< $metarole->add_conflicting_method(%params) >>
+
+Instantiate the parameters as a L<Moose::Meta::Role::Method::Conflicting>
+object, then add it to the required method list.
 
 =back
 
