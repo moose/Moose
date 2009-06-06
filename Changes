@@ -9,7 +9,6 @@ for, noteworthy changes.
           would document this fast enough (perigrin)
 
     * Moose::Meta::Method::Destructor
-
       - Inline a DESTROY method even if there are no DEMOLISH methods
         to prevent unnecessary introspection in
         Moose::Object::DEMOLISHALL
@@ -29,10 +28,10 @@ for, noteworthy changes.
         excellent documentation (Adam Kennedy)
 
     * Tests
-        - Update test suite for subname change in Class::MOP
-          (nothingmuch)
-        - Add test for infinite recursion in Moose::Meta::Class
-          (groditi)
+      - Update test suite for subname change in Class::MOP
+        (nothingmuch)
+      - Add test for infinite recursion in Moose::Meta::Class
+        (groditi)
 
 0.79 Wed, May 13, 2009
     * Tests
