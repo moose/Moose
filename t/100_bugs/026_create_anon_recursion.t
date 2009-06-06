@@ -1,8 +1,9 @@
-#!/usr/bin/perl -w
-
 use strict;
+use warnings;
+
 use Test::More tests => 1;
 use Test::Exception;
+
 use Moose::Meta::Class;
 
 $SIG{__WARN__} = sub { die if shift =~ /recurs/ };
