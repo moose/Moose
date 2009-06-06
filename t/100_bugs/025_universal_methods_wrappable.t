@@ -18,13 +18,12 @@ use Test::More tests => 2;
     package Foo;
     use Moose;
 
- TODO:
-    {
-        local $TODO = 'UNIVERSAL methods should be wrappable';
+    use Test::More; # for $TODO
 
-        lives_ok { with 'FakeBar' } 'applied role';
+    local $TODO = 'UNIVERSAL methods should be wrappable';
 
-        my $foo = Foo->new;
-        isa_ok $foo, 'Bar';
-    }
+    ::lives_ok { with 'FakeBar' } 'applied role';
+
+    my $foo = Foo->new;
+    ::isa_ok $foo, 'Bar';
 }
