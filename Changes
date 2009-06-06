@@ -30,7 +30,7 @@ for, noteworthy changes.
     * Tests
       - Update test suite for subname change in Class::MOP
         (nothingmuch)
-      - Add test for infinite recursion in Moose::Meta::Class
+      - Add TODO test for infinite recursion in Moose::Meta::Class
         (groditi)
 
 0.79 Wed, May 13, 2009
