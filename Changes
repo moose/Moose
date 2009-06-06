@@ -1,8 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.80 ???
-
+0.80 Sat, Jun 6, 2009
     * Moose::Manual::FAQ 
       - Add FAQ about the coercion change from 0.76 because it came up
         three times today (perigrin)
