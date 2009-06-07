@@ -102,9 +102,7 @@ for, noteworthy changes.
         modern Moose hackers (Sartak)
 
     * Makefile.PL
-      - Depend on Class::MOP 0.83 instead of 0.82_01. It seems that if
-        we use a dev version number there CPAN.pm will not follow the
-        dependency.
+      - Depend on Class::MOP 0.83 instead of 0.82_01.
 
 0.76 Mon, April 27, 2009
     * Moose::Meta::TypeConstraint
