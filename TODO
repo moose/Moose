@@ -136,6 +136,15 @@ knows how to turn itself into a "real" attribute.
 Every method that returns a class name needs to become a rw attribute
 that can be set via the constructor.
 
+- The Moose::Error stuff
+
+This is sort of half-implemented. We still use Carp directly, and the
+internals can't decide how to throw an error (is it
+Moose->throw_error, __PACKAGE__->throw_error, what?).
+
+The internals need to be made consistent before we expose this to the
+rest of the world.
+
 -------------------------------------------------------------------------------
 TO PONDER
 -------------------------------------------------------------------------------
