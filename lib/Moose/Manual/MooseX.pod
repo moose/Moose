@@ -49,6 +49,19 @@ This lets you create I<much> cleaner and fluent APIs.
 Instead of directly exposing an array reference, we have three
 well-named, easy to use methods.
 
+=head1 L<Moose::Autobox>
+
+MooseX::AttributeHelpers, but turned inside out, Moose::Autobox provides
+methods on both arrays/hashes/etc. but also references to them, using
+Moose roles, allowing you do to things like:
+
+  use Moose::Autobox;
+
+  $somebody_elses_object->orders->push($order);
+
+Lexically scoped and not to everybody's taste, but very handy for sugaring
+up other people's APIs and your own code.
+
 =head1 L<MooseX::StrictConstructor>
 
 By default, Moose lets you pass any old junk into a class's
@@ -72,7 +85,12 @@ silently ignored.
 =head1 L<MooseX::Params::Validate>
 
 We have high hopes for the future of L<MooseX::Method::Signatures> and
-L<MooseX::Declare>. However, for now we recommend the decidedly more
+L<MooseX::Declare>. However, these modules, while used regularly in
+production by some of the more insane members of the community, are
+still marked alpha just in case backwards incompatible changes need to
+be made.
+
+If you don't want to risk that, for now we recommend the decidedly more
 clunky (but also faster and simpler) L<MooseX::Params::Validate>. This
 module lets you apply Moose types and coercions to any method
 arguments.
@@ -130,9 +148,14 @@ From the command line, someone can execute the script:
 
 =head1 L<MooseX::Singleton>
 
-To be honest, using a singleton is often a hack, but it sure is a
-handy hack. L<MooseX::Singleton> lets you have a Moose class that's a
-singleton:
+To be honest, using a singleton is just a way to have a magic global
+variable in languages that don't actually have global variables.
+
+In perl, you should almost certaintly just use a global.
+
+However, if your colleagues are too used to java to understand that a
+singleton is a slow, stupid way of hacking around its lack of globals,
+L<MooseX::Singleton> lets you have a Moose class that's a singleton:
 
   package Config;
 
@@ -210,6 +233,16 @@ attributes.
   has 'name' => ( ... );
 
   class_has 'Cache' => ( ... );
+
+Note however that this class attribute does -not- inherit like a
+L<Class::Data::Inheritable> or similar attribute - calling
+
+  $subclass->Cache($cache);
+
+will set it for the superclass as well. Additionally, class data is usually
+The Wrong Thing To Do in a strongly OO program since it makes testing a
+lot harder - consider carefully whether you'd be better off with an object
+that's passed around instead.
 
 =head2 L<MooseX::Daemonize>
 
