@@ -1,4 +1,3 @@
-
 package Moose;
 
 use 5.008;
@@ -647,6 +646,13 @@ instance initialization (but not when the value is being assigned
 to). See the L<initializer option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
 information.
+
+=item I<documentation> => $string
+
+An arbitrary string that can be retrieved later by calling C<<
+$attr->documentation >>.
+
+
 
 =back
 
