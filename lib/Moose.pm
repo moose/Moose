@@ -463,7 +463,7 @@ This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 The I<trigger> option is a CODE reference which will be called after
 the value of the attribute is set. The CODE ref will be passed the
-instance itself and the updated value. You B<cannot> have a trigger on
+instance itself and the updated value. You B<can> have a trigger on
 a read-only attribute.
 
 B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
@@ -1138,6 +1138,8 @@ Piotr (dexter) Roszatycki
 Sam (mugwump) Vilain
 
 Cory (gphat) Watson
+
+Dylan Hardison (doc fixes)
 
 ... and many other #moose folks
 
