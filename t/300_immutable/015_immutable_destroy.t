@@ -13,6 +13,6 @@ use Test::More tests => 1;
     __PACKAGE__->meta->make_immutable;
 }
 
-my $f = FooBar->new( name => "SUSAN" );
+my $f = FooBar->new( name => 'SUSAN' );
 
-is( $f->DESTROY, "SUSAN", "Did moose overload DESTROY?" );
+is( $f->DESTROY, 'SUSAN', 'Did moose overload DESTROY?' );
