@@ -697,6 +697,10 @@ Here is another example, but within the context of a role:
 In this case, we are basically taking the attribute which the role supplied
 and altering it within the bounds of this feature.
 
+Note that you can only extend an attribute from either a superclass or a role,
+you cannot extend an attribute in a role that composes over an attribute from
+another role.
+
 Aside from where the attributes come from (one from superclass, the other
 from a role), this feature works exactly the same. This feature is restricted
 somewhat, so as to try and force at least I<some> sanity into it. You are only
