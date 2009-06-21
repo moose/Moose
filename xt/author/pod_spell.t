@@ -28,6 +28,7 @@ ewilhelm
 Goulah
 gphat
 groditi
+Hardison
 jrockway
 Kinyon's
 Kogman
@@ -196,6 +197,7 @@ Nuff
 ## things that should be in the dictionary, but are not
 attribute's
 declaratively
+everybody's
 everyone's
 human's
 initializers
