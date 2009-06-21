@@ -10,6 +10,7 @@ use Test::More tests => 1;
 
     sub DESTROY { shift->name }
 
+    local $SIG{__WARN__} = sub {};
     __PACKAGE__->meta->make_immutable;
 }
 
