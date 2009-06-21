@@ -151,11 +151,10 @@ From the command line, someone can execute the script:
 To be honest, using a singleton is just a way to have a magic global
 variable in languages that don't actually have global variables.
 
-In perl, you should almost certaintly just use a global.
-
-However, if your colleagues are too used to java to understand that a
-singleton is a slow, stupid way of hacking around its lack of globals,
-L<MooseX::Singleton> lets you have a Moose class that's a singleton:
+In perl, you can just as easily use a global. However, if your
+colleagues are Java-infected, they might prefer a singleton. Also, if
+you have an existing class that I<isn't> a singleton but should be,
+using L<MooseX::Singleton> is the easiest way to convert it.
 
   package Config;
 
