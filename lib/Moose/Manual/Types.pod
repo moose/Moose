@@ -194,7 +194,7 @@ rather than needing to fully qualify them everywhere. It also allows
 
   has 'counts' => (is => 'ro', isa => HashRef[PositiveInt]);
 
-and similarly for the union and other syntaxes discussed below, which
+and similarly for the union and other syntax discussed below, which
 will compile time check your use of names and is generally more robust
 than the string type parsing for complex cases.
 
