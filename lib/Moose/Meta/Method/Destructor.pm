@@ -11,7 +11,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Generated';
+         'Class::MOP::Method::Inlined';
 
 sub new {
     my $class   = shift;
