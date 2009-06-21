@@ -25,7 +25,7 @@ BEGIN {
 
     ::stderr_like(
         sub { Foo->meta->make_immutable },
-        qr/\QNot inlining 'new' for Foo since it is not inheriting the default Moose::Object::new\E\s+\QIf you are certain you don't need to inline your constructor, specify inline_constructor => 0 in your call to Foo->meta->make_immutable\E\s+\Q ('new' has method modifiers which would be lost if it were inlined)/,
+        qr/\QNot inlining 'new' for Foo since it has method modifiers which would be lost if it were inlined/,
         'got a warning that Foo may not have an inlined constructor'
     );
 }
