@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.81';
+our $VERSION   = '0.82';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
