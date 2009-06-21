@@ -1,6 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.82 Sun, Jun 21, 2009
     * Moose::Manual::Types
       - Mention MooseX::Types early to avoid users falling down the
         string parsing rathole (mst)
