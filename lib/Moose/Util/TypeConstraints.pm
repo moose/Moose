@@ -371,14 +371,17 @@ sub duck_type {
             'Object',
             sub {
                 my $obj = $_;
+                my $class = blessed($obj) || return;
+                return if $class eq 'Regexp';
                 return 0 unless all { $obj->can($_) } @methods;
                 return 1;
             },
             sub {
                 my $obj = $_;
+                my $class = blessed($obj);
                 my @missing_methods = grep { !$obj->can($_) } @methods;
                 return
-                    "${\blessed($obj)} is missing methods '@missing_methods'";
+                    "$class is missing methods '@missing_methods'";
             },
         )
     );
