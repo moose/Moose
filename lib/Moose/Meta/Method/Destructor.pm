@@ -96,10 +96,15 @@ sub _initialize_body {
 
     warn $source if $self->options->{debug};
 
-    my $code = $self->_compile_code(
+    my ( $code, $e ) = $self->_compile_code(
         environment => {},
         code => $source,
-    ) or $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source);
+    );
+
+    $self->throw_error(
+        "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$e",
+        error => $e, data => $source )
+        if $e;
 
     $self->{'body'} = $code;
 }
