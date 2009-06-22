@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe9 - Builder methods and lazy_build
+Moose::Cookbook::Basics::Recipe8 - Builder methods and lazy_build
 
 =head1 SYNOPSIS
 
