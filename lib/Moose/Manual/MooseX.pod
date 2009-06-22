@@ -272,6 +272,14 @@ Automatically names all accessors I<Perl Best Practices>-style,
 Automatically names all accessors with an explicit set and implicit
 get, "size" and "set_size".
 
+=head2 L<MooseX::NonMoose>
+
+MooseX::NonMoose allows for easily subclassing non-Moose classes with Moose,
+taking care of the annoying details connected with doing this, such as
+setting up proper inheritance from Moose::Object and installing
+(and inlining, at make_immutable time) a constructor that makes sure things
+like BUILD methods are called.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
