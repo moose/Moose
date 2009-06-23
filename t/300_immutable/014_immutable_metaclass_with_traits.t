@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 14;
 
 {
     package FooTrait;
@@ -21,6 +21,7 @@ isa_ok(Class::MOP::class_of($meta), 'Moose::Meta::Class');
 isa_ok($meta->meta, 'Moose::Meta::Class');
 ok($meta->is_mutable, "class is mutable");
 ok(Class::MOP::class_of($meta)->is_mutable, "metaclass is mutable");
+ok($meta->meta->does_role('FooTrait'), "does the trait");
 Foo->meta->make_immutable;
 is(Class::MOP::class_of('Foo'), Foo->meta,
     "class_of and ->meta are the same on Foo (immutable)");
@@ -34,3 +35,4 @@ TODO: {
         "class_of and ->meta are the same on Foo's metaclass (immutable)");
     isa_ok(Class::MOP::class_of($meta), 'Moose::Meta::Class');
 }
+ok($meta->meta->does_role('FooTrait'), "still does the trait after immutable");
