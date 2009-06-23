@@ -29,10 +29,7 @@ $meta = Foo->meta;
 isa_ok($meta->meta, 'Moose::Meta::Class');
 ok($meta->is_immutable, "class is immutable");
 ok($meta->meta->is_immutable, "metaclass is immutable (immutable class)");
-TODO: {
-    local $TODO = "immutable metaclasses with traits do weird things";
-    is(Class::MOP::class_of($meta), $meta->meta,
-        "class_of and ->meta are the same on Foo's metaclass (immutable)");
-    isa_ok(Class::MOP::class_of($meta), 'Moose::Meta::Class');
-}
+is(Class::MOP::class_of($meta), $meta->meta,
+    "class_of and ->meta are the same on Foo's metaclass (immutable)");
+isa_ok(Class::MOP::class_of($meta), 'Moose::Meta::Class');
 ok($meta->meta->does_role('FooTrait'), "still does the trait after immutable");
