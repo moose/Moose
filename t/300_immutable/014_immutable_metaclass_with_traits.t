@@ -28,7 +28,7 @@ is(Class::MOP::class_of('Foo'), Foo->meta,
 $meta = Foo->meta;
 isa_ok($meta->meta, 'Moose::Meta::Class');
 ok($meta->is_immutable, "class is immutable");
-ok($meta->meta->is_mutable, "metaclass is mutable (immutable class)");
+ok($meta->meta->is_immutable, "metaclass is immutable (immutable class)");
 TODO: {
     local $TODO = "immutable metaclasses with traits do weird things";
     is(Class::MOP::class_of($meta), $meta->meta,
