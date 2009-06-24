@@ -534,14 +534,15 @@ sub get_value {
 
 ## installing accessors
 
-sub attach_to_class {
+sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
+
+sub install_accessors {
     my $self = shift;
+    $self->SUPER::install_accessors(@_);
+    $self->install_delegation if $self->has_handles;
     unless (
-        $self->has_accessor
-        || $self->has_reader
-        || $self->has_writer
-        || $self->has_handles
-        # init_arg?
+        # XXX handles should be in associated_methods
+        $self->has_handles
         || @{ $self->associated_methods }
         || ($self->_is_metadata || '') eq 'bare'
     ) {
@@ -550,15 +551,6 @@ sub attach_to_class {
             . ' (did you mean to provide an "is" argument?)'
         )
     }
-    return $self->SUPER::attach_to_class(@_);
-}
-
-sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
-
-sub install_accessors {
-    my $self = shift;
-    $self->SUPER::install_accessors(@_);
-    $self->install_delegation if $self->has_handles;
     return;
 }
 
