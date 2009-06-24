@@ -910,6 +910,11 @@ for an example.
 
 This method overrides the parent to also install delegation methods.
 
+If, after installing all methods, the attribute object has no associated
+methods, it throws an error unless C<< is => 'bare' >> was passed to the
+attribute constructor.  (Trying to add an attribute that has no associated
+methods is almost always an error.)
+
 =item B<< $attr->remove_accessors >>
 
 This method overrides the parent to also remove delegation methods.
