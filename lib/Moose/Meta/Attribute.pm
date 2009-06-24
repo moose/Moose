@@ -541,9 +541,7 @@ sub install_accessors {
     $self->SUPER::install_accessors(@_);
     $self->install_delegation if $self->has_handles;
     unless (
-        # XXX handles should be in associated_methods
-        $self->has_handles
-        || @{ $self->associated_methods }
+        @{ $self->associated_methods }
         || ($self->_is_metadata || '') eq 'bare'
     ) {
         Carp::cluck(
@@ -596,6 +594,7 @@ sub install_delegation {
         my $method = $self->_make_delegation_method($handle, $method_to_call);
 
         $self->associated_class->add_method($method->name, $method);
+        $self->associate_method($method);
     }
 }
 
