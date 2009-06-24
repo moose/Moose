@@ -15,7 +15,12 @@ plan tests => scalar @modules;
 
 my %trustme = (
     'Moose'                  => ['make_immutable'],
-    'Moose::Meta::Attribute' => [ 'interpolate_class', 'throw_error' ],
+    'Moose::Meta::Attribute' => [
+        qw( interpolate_class
+            throw_error
+            attach_to_class
+            )
+    ],
     'Moose::Meta::Class'     => [
         qw( check_metaclass_compatibility
             construct_instance

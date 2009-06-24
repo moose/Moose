@@ -42,8 +42,8 @@ use Test::Exception;
     has 'one_last_one' => (is => 'rw', isa => 'Ref');
 
     # this one will work here ....
-    has 'fail' => (isa => 'CodeRef');
-    has 'other_fail';
+    has 'fail' => (isa => 'CodeRef', is => 'bare');
+    has 'other_fail' => (is => 'bare');
 
     package Bar;
     use Moose;

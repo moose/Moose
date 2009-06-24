@@ -26,7 +26,8 @@ use Test::More tests => 2;
 
     has 'bar' => (
       metaclass       => 'Bar::Meta::Attribute',
-      my_legal_option => sub { 'Bar' }
+      my_legal_option => sub { 'Bar' },
+      is => 'bare',
     );
 
     package Bar::B;

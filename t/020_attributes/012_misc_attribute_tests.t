@@ -17,7 +17,8 @@ use Test::Exception;
             documentation => q{
                 The 'foo' attribute is my favorite
                 attribute in the whole wide world.
-            }
+            },
+            is => 'bare',
         );
     }
 
@@ -256,8 +257,8 @@ use Test::Exception;
     use Moose;
 }
 
-lives_ok { OutOfClassTest::has('foo'); } 'create attr via direct sub call';
-lives_ok { OutOfClassTest->can('has')->('bar'); } 'create attr via can';
+lives_ok { OutOfClassTest::has('foo', is => 'bare'); } 'create attr via direct sub call';
+lives_ok { OutOfClassTest->can('has')->('bar', is => 'bare'); } 'create attr via can';
 
 ok(OutOfClassTest->meta->get_attribute('foo'), 'attr created from sub call');
 ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');

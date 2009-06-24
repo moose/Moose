@@ -290,6 +290,9 @@ sub _process_options {
                 $options->{accessor} ||= $name;
             }
         }
+        elsif ($options->{is} eq 'bare') {
+            # do nothing, but don't complain (later) about missing methods
+        }
         else {
             $class->throw_error("I do not understand this option (is => " . $options->{is} . ") on attribute ($name)", data => $options->{is});
         }
@@ -530,6 +533,25 @@ sub get_value {
 }
 
 ## installing accessors
+
+sub attach_to_class {
+    my $self = shift;
+    unless (
+        $self->has_accessor
+        || $self->has_reader
+        || $self->has_writer
+        || $self->has_handles
+        # init_arg?
+        || @{ $self->associated_methods }
+        || ($self->_is_metadata || '') eq 'bare'
+    ) {
+        $self->throw_error(
+            'Attribute (' . $self->name . ') has no associated methods'
+            . ' (did you mean to provide an "is" argument?)'
+        )
+    }
+    return $self->SUPER::attach_to_class(@_);
+}
 
 sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
 
