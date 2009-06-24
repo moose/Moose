@@ -776,7 +776,7 @@ It adds the following options to the constructor:
 
 =over 8
 
-=item * is => 'ro' or 'rw'
+=item * is => 'ro', 'rw', 'bare'
 
 This provides a shorthand for specifying the C<reader>, C<writer>, or
 C<accessor> names. If the attribute is read-only ('ro') then it will
@@ -786,6 +786,11 @@ If it is read-write ('rw') then it will have an C<accessor> method
 with the same name. If you provide an explicit C<writer> for a
 read-write attribute, then you will have a C<reader> with the same
 name as the attribute, and a C<writer> with the name you provided.
+
+Use 'bare' when you are deliberately not installing any methods
+(accessor, reader, etc.) associated with this attribute; otherwise,
+Moose will issue a deprecation warning when this attribute is added to a
+metaclass.
 
 =item * isa => $type
 
