@@ -537,6 +537,18 @@ sub install_accessors {
     my $self = shift;
     $self->SUPER::install_accessors(@_);
     $self->install_delegation if $self->has_handles;
+    unless (
+        # XXX handles should be in associated_methods
+        $self->has_handles
+        || @{ $self->associated_methods }
+        || ($self->_is_metadata || '') eq 'bare'
+    ) {
+        Carp::cluck(
+            'Attribute (' . $self->name . ') has no associated methods'
+            . ' (did you mean to provide an "is" argument?)'
+            . "\n"
+        )
+    }
     return;
 }
 
