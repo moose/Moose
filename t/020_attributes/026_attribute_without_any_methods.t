@@ -10,13 +10,13 @@ use Moose::Meta::Class;
 
 my $meta = Moose::Meta::Class->create_anon_class;
 
-#local $TODO = 'not implemented yet';
+my $warn;
+$SIG{__WARN__} = sub { $warn = "@_" };
 
-eval { $meta->add_attribute('foo') };
-like $@, qr/Attribute \(foo\) has no associated methods/,
+$meta->add_attribute('foo');
+like $warn, qr/Attribute \(foo\) has no associated methods/,
   'correct error message';
 
-ok(
-    eval { $meta->add_attribute('bar', is => 'bare'); 1 },
-    'add attribute with no methods',
-) or diag $@;
+$warn = '';
+$meta->add_attribute('bar', is => 'bare');
+is $warn, '', 'add attribute with no methods and is => "bare"';

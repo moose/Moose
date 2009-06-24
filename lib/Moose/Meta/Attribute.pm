@@ -546,9 +546,10 @@ sub install_accessors {
         || @{ $self->associated_methods }
         || ($self->_is_metadata || '') eq 'bare'
     ) {
-        $self->throw_error(
+        Carp::cluck(
             'Attribute (' . $self->name . ') has no associated methods'
             . ' (did you mean to provide an "is" argument?)'
+            . "\n"
         )
     }
     return;
