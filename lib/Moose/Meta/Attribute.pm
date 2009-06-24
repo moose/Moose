@@ -290,6 +290,9 @@ sub _process_options {
                 $options->{accessor} ||= $name;
             }
         }
+        elsif ($options->{is} eq 'bare') {
+            # do nothing, but don't complain (later) about missing methods
+        }
         else {
             $class->throw_error("I do not understand this option (is => " . $options->{is} . ") on attribute ($name)", data => $options->{is});
         }

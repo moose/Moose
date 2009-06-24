@@ -31,7 +31,7 @@ use Test::Exception;
 
     MooseAlike1->import();
 
-    ::lives_ok( sub { has( 'size' ) },
+    ::lives_ok( sub { has( 'size', is => 'bare' ) },
                 'has was exported via MooseAlike1' );
 
     MooseAlike1->unimport();
@@ -68,7 +68,7 @@ isa_ok( Foo->meta(), 'Moose::Meta::Class' );
 
     MooseAlike2->import();
 
-    ::lives_ok( sub { has( 'size' ) },
+    ::lives_ok( sub { has( 'size', is => 'bare' ) },
                 'has was exported via MooseAlike2' );
 
     MooseAlike2->unimport();

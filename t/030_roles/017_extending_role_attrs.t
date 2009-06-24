@@ -151,6 +151,7 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
     for (1..3) {
         has "err$_" => (
             isa => 'Str | Int',
+            is => 'bare',
         );
     }
 

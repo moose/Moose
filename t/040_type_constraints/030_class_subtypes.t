@@ -94,6 +94,7 @@ like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' faile
 
     has age => (
         isa => 'Positive',
+        is => 'bare',
     );
 }
 
@@ -127,6 +128,7 @@ class_type 'Negative' => message { "$_ is not a Negative Nancy" };
 
     has age => (
         isa => 'Negative',
+        is => 'bare',
     );
 }
 
