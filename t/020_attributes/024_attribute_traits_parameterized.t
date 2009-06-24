@@ -25,7 +25,6 @@ use Test::More tests => 4;
                 },
             },
         ],
-        is => 'bare',
     );
 }
 
@@ -41,7 +40,6 @@ use Test::More tests => 4;
                 },
             },
         ],
-        is => 'bare',
     );
 }
 

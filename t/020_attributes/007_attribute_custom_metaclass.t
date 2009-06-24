@@ -76,7 +76,7 @@ use Test::Exception;
     } '... the attribute metaclass alias worked correctly';
 
     ::lives_ok {
-        has 'bar' => (metaclass => 'Bar', is => 'bare');
+        has 'bar' => (metaclass => 'Bar');
     } '... the attribute metaclass alias worked correctly';
 }
 

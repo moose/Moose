@@ -14,7 +14,7 @@ BEGIN {
     package Foo;
     use Moose;
 
-    has 'foo', is => 'bare';
+    has 'foo';
 }
 
 {
@@ -23,7 +23,7 @@ BEGIN {
 
     extends 'Foo';
 
-    has 'bar', is => 'bare';
+    has 'bar';
 }
 
 
