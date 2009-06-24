@@ -4,7 +4,7 @@ for, noteworthy changes.
 0.XX
     * Moose::Meta::Attribute
       - When adding an attribute to a metaclass, if the attribute has no
-        methods associated with, it will give a deprecation warning. (hdp)
+        associated methods, it will give a deprecation warning. (hdp)
 
 0.83 Tue, Jun 23, 2009
     * Moose::Meta::Class
