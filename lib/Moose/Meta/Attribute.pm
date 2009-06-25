@@ -553,6 +553,20 @@ sub install_accessors {
     return;
 }
 
+sub _process_accessors {
+    my $self = shift;
+    my ($type, $accessor, $generate_as_inline_methods) = @_;
+    $accessor = (keys %$accessor)[0] if (ref($accessor)||'') eq 'HASH';
+    if ($self->associated_class->has_method($accessor)
+     && !$self->associated_class->get_method($accessor)->isa('Class::MOP::Method::Accessor')) {
+        Carp::cluck(
+            "You cannot overwrite a locally defined method ($accessor) with "
+          . "an accessor"
+        );
+    }
+    $self->SUPER::_process_accessors(@_);
+}
+
 sub remove_accessors {
     my $self = shift;
     $self->SUPER::remove_accessors(@_);
