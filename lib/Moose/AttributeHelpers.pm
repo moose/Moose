@@ -7,9 +7,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose 0.56 ();
 
-use Moose::AttributeHelpers::Meta::Method::Provided;
-use Moose::AttributeHelpers::Meta::Method::Curried;
-
 use Moose::AttributeHelpers::Trait::Bool;
 use Moose::AttributeHelpers::Trait::Counter;
 use Moose::AttributeHelpers::Trait::Number;
