@@ -98,7 +98,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =item B<< Moose::Meta::TypeConstraint::Enum->new(%options) >>
 
-This creates a new class type constraint based on the given
+This creates a new enum type constraint based on the given
 C<%options>.
 
 It takes the same options as its parent, with several
