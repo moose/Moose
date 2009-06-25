@@ -8,16 +8,16 @@ use Test::Exception;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('Moose::AttributeHelpers');
+    use_ok('MooseX::AttributeHelpers');
 }
 
 {
     package Stuff;
     use Moose;
-    use Moose::AttributeHelpers;
+    use MooseX::AttributeHelpers;
 
     has 'word_histogram' => (
-        traits    => [qw/Collection::Bag/],
+        traits    => [qw/MooseX::AttributeHelpers::Trait::Collection::Bag/],
         is        => 'ro',
         handles  => {
            'add_word'      => 'add',
@@ -65,7 +65,7 @@ is($stuff->get_count_for('baz'), 11, '... got words now');
 ## test the meta
 
 my $words = $stuff->meta->get_attribute('word_histogram');
-does_ok($words, 'Moose::AttributeHelpers::Trait::Collection::Bag');
+does_ok($words, 'MooseX::AttributeHelpers::Trait::Collection::Bag');
 
 is_deeply($words->handles, {
    'add_word'      => 'add',

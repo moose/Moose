@@ -3,31 +3,41 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 47;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('Moose::AttributeHelpers');
+    use_ok('MooseX::AttributeHelpers');
 }
 
 {
     package Stuff;
     use Moose;
-    use Moose::AttributeHelpers;
+    use MooseX::AttributeHelpers;
 
     has 'options' => (
-        traits    => [qw/Collection::Hash/],
+        traits    => [qw/MooseX::AttributeHelpers::Trait::Collection::Hash/],
         is        => 'ro',
         isa       => 'HashRef[Str]',
         default   => sub { {} },
         provides  => {
-            'set'    => 'set_option',
-            'get'    => 'get_option',
-            'empty'  => 'has_options',
-            'count'  => 'num_options',
-            'clear'  => 'clear_options',
-            'delete' => 'delete_option',
+            'set'      => 'set_option',
+            'get'      => 'get_option',
+            'empty'    => 'has_options',
+            'count'    => 'num_options',
+            'clear'    => 'clear_options',
+            'delete'   => 'delete_option',
+            'exists'   => 'has_option',
+            'defined'  => 'is_defined',
+            'accessor' => 'option_accessor',
+            'kv'       => 'key_value',
+            'elements' => 'options_elements',
+        },
+        curries   => {
+            'accessor' => {
+                quantity => ['quantity'],
+            },
         }
     );
 }
@@ -42,19 +52,27 @@ can_ok($stuff, $_) for qw[
     num_options
     delete_option
     clear_options
+    is_defined
+    has_option
+    quantity
+    option_accessor
 ];
 
 ok(!$stuff->has_options, '... we have no options');
 is($stuff->num_options, 0, '... we have no options');
 
 is_deeply($stuff->options, {}, '... no options yet');
+ok(!$stuff->has_option('foo'), '... we have no foo option');
 
 lives_ok {
     $stuff->set_option(foo => 'bar');
 } '... set the option okay';
 
+ok($stuff->is_defined('foo'), '... foo is defined');
+
 ok($stuff->has_options, '... we have options');
 is($stuff->num_options, 1, '... we have 1 option(s)');
+ok($stuff->has_option('foo'), '... we have a foo option');
 is_deeply($stuff->options, { foo => 'bar' }, '... got options now');
 
 lives_ok {
@@ -95,6 +113,14 @@ $stuff->clear_options;
 is_deeply($stuff->options, { }, "... cleared options" );
 
 lives_ok {
+    $stuff->quantity(4);
+} '... options added okay with defaults';
+
+is($stuff->quantity, 4, 'reader part of curried accessor works');
+
+is_deeply($stuff->options, {quantity => 4}, '... returns what we expect');
+
+lives_ok {
     Stuff->new(options => { foo => 'BAR' });
 } '... good constructor params';
 
@@ -111,15 +137,39 @@ dies_ok {
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Hash');
+does_ok($options, 'MooseX::AttributeHelpers::Trait::Collection::Hash');
 
 is_deeply($options->provides, {
-    'set'    => 'set_option',
-    'get'    => 'get_option',
-    'empty'  => 'has_options',
-    'count'  => 'num_options',
-    'clear'  => 'clear_options',
-    'delete' => 'delete_option',
-}, '... got the right provies mapping');
+    'set'      => 'set_option',
+    'get'      => 'get_option',
+    'empty'    => 'has_options',
+    'count'    => 'num_options',
+    'clear'    => 'clear_options',
+    'delete'   => 'delete_option',
+    'defined'  => 'is_defined',
+    'exists'   => 'has_option',
+    'accessor' => 'option_accessor',
+    'kv'       => 'key_value',
+    'elements' => 'options_elements',
+}, '... got the right provides mapping');
 
 is($options->type_constraint->type_parameter, 'Str', '... got the right container type');
+
+$stuff->set_option( oink => "blah", xxy => "flop" );
+my @key_value = $stuff->key_value;
+is_deeply(
+    \@key_value,
+    [ [ 'xxy', 'flop' ], [ 'quantity', 4 ], [ 'oink', 'blah' ] ],
+    '... got the right key value pairs'
+);
+
+my %options_elements = $stuff->options_elements;
+is_deeply(
+    \%options_elements,
+    {
+        'oink'     => 'blah',
+        'quantity' => 4,
+        'xxy'      => 'flop'
+    },
+    '... got the right hash elements'
+);

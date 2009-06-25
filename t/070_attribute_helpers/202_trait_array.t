@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 
-use Test::More tests => 51;
+use Test::More tests => 69;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('Moose::AttributeHelpers');
+    use_ok('MooseX::AttributeHelpers');
 }
 
 {
@@ -16,20 +16,33 @@ BEGIN {
     use Moose;
 
     has 'options' => (
-        traits    => [qw/Collection::Array/],
+        traits    => [qw/MooseX::AttributeHelpers::Trait::Collection::Array/],
         is        => 'ro',
-        isa       => 'ArrayRef[Int]',
+        isa       => 'ArrayRef[Str]',
         default   => sub { [] },
-        provides  => {
-            'push'    => 'add_options',
-            'pop'     => 'remove_last_option',
-            'shift'   => 'remove_first_option',
-            'unshift' => 'insert_options',
-            'get'     => 'get_option_at',
-            'set'     => 'set_option_at',
-            'count'   => 'num_options',
-            'empty'   => 'has_options',
-            'clear'   => 'clear_options',
+        provides => {
+            'push'          => 'add_options',
+            'pop'           => 'remove_last_option',
+            'shift'         => 'remove_first_option',
+            'unshift'       => 'insert_options',
+            'get'           => 'get_option_at',
+            'set'           => 'set_option_at',
+            'count'         => 'num_options',
+            'empty'         => 'has_options',
+            'clear'         => 'clear_options',
+            'splice'        => 'splice_options',
+            'sort_in_place' => 'sort_options_in_place',
+            'accessor'      => 'option_accessor',
+            },
+        curries   => {
+            'push'    => {
+                add_options_with_speed => ['funrolls', 'funbuns']
+            },
+            'unshift'  => {
+                prepend_prerequisites_along_with => ['first', 'second']
+            },
+            'sort_in_place' => { descending_options => [ sub { $_[1] <=> $_[0] } ],
+            },
         }
     );
 }
@@ -47,6 +60,8 @@ can_ok($stuff, $_) for qw[
     num_options
     clear_options
     has_options
+    sort_options_in_place
+    option_accessor
 ];
 
 is_deeply($stuff->options, [10, 12], '... got options');
@@ -113,28 +128,104 @@ is($stuff->get_option_at(0), 20, '... get option at index 0');
 $stuff->clear_options;
 is_deeply( $stuff->options, [], "... clear options" );
 
+$stuff->add_options(5, 1, 2, 3);
+$stuff->sort_options_in_place;
+is_deeply( $stuff->options, [1, 2, 3, 5], "... sort options in place (default sort order)" );
+
+$stuff->sort_options_in_place( sub { $_[1] <=> $_[0] } );
+is_deeply( $stuff->options, [5, 3, 2, 1], "... sort options in place (descending order)" );
+
+$stuff->clear_options();
+$stuff->add_options(5, 1, 2, 3);
+lives_ok {
+   $stuff->descending_options();
+} '... curried sort in place lives ok';
+
+is_deeply( $stuff->options, [5, 3, 2, 1], "... sort currying" );
+
+throws_ok { $stuff->sort_options_in_place('foo') } qr/Argument must be a code reference/,
+    'error when sort_in_place receives a non-coderef argument';
+
+$stuff->clear_options;
+
+lives_ok {
+    $stuff->add_options('tree');
+} '... set the options okay';
+
+lives_ok {
+    $stuff->add_options_with_speed('compatible', 'safe');
+} '... add options with speed okay';
+
+is_deeply($stuff->options, [qw/tree funrolls funbuns compatible safe/],
+          'check options after add_options_with_speed');
+
+lives_ok {
+    $stuff->prepend_prerequisites_along_with();
+} '... add prerequisite options okay';
+
+$stuff->clear_options;
+$stuff->add_options( 1, 2 );
+
+lives_ok {
+    $stuff->splice_options( 1, 0, 'foo' );
+} '... splice_options works';
+
+is_deeply(
+    $stuff->options, [ 1, 'foo', 2 ],
+    'splice added expected option'
+);
+
+is($stuff->option_accessor(1 => 'foo++'), 'foo++');
+is($stuff->option_accessor(1), 'foo++');
+
 ## check some errors
 
-dies_ok {
-    $stuff->add_options([]);
-} '... could not add an array ref where an int is expected';
+#dies_ok {
+#    $stuff->insert_options(undef);
+#} '... could not add an undef where a string is expected';
+#
+#dies_ok {
+#    $stuff->set_option(5, {});
+#} '... could not add a hash ref where a string is expected';
 
 dies_ok {
-    $stuff->insert_options(undef);
-} '... could not add an undef where an int is expected';
-
-dies_ok {
-    $stuff->set_option(5, {});
-} '... could not add a hash ref where an int is expected';
-
-dies_ok {
-    Stuff->new(options => [ 'Foo', 10, 'Bar', 20 ]);
+    Stuff->new(options => [ undef, 10, undef, 20 ]);
 } '... bad constructor params';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->add_options(undef);
+} '... rejects push of an invalid type';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->insert_options(undef);
+} '... rejects unshift of an invalid type';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->set_option_at( 0, undef );
+} '... rejects set of an invalid type';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->sort_in_place_options( undef );
+} '... sort rejects arg of invalid type';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->option_accessor();
+} '... accessor rejects 0 args';
+
+dies_ok {
+    my $stuff = Stuff->new();
+    $stuff->option_accessor(1, 2, 3);
+} '... accessor rejects 3 args';
 
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Array');
+does_ok($options, 'MooseX::AttributeHelpers::Trait::Collection::Array');
 
 is_deeply($options->provides, {
     'push'    => 'add_options',
@@ -146,6 +237,9 @@ is_deeply($options->provides, {
     'count'   => 'num_options',
     'empty'   => 'has_options',
     'clear'   => 'clear_options',
-}, '... got the right provies mapping');
+    'splice'  => 'splice_options',
+    'sort_in_place' => 'sort_options_in_place',
+    'accessor' => 'option_accessor',
+}, '... got the right provides mapping');
 
-is($options->type_constraint->type_parameter, 'Int', '... got the right container type');
+is($options->type_constraint->type_parameter, 'Str', '... got the right container type');
