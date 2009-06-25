@@ -19,16 +19,16 @@ BEGIN {
         is        => 'rw',
         isa       => 'Str',
         default   => sub { '' },
-        provides => {
-            inc     => 'inc_string',
-            append  => 'append_string',
-            prepend => 'prepend_string',
-            match   => 'match_string',
-            replace => 'replace_string',
-            chop    => 'chop_string',
-            chomp   => 'chomp_string',
-            clear   => 'clear_string',
-        }
+        handles => {
+                    inc_string     => 'inc',
+                    append_string  => 'append',
+                    prepend_string => 'prepend',
+                    match_string   => 'match',
+                    replace_string => 'replace',
+                    chop_string    => 'chop',
+                    chomp_string   => 'chomp',
+                    clear_string   => 'clear',
+                   },
     );
 }
 
@@ -77,14 +77,14 @@ is($string->helper_type, 'Str', '... got the expected helper type');
 
 is($string->type_constraint->name, 'Str', '... got the expected type constraint');
 
-is_deeply($string->provides, {
-    inc     => 'inc_string',
-    append  => 'append_string',
-    prepend => 'prepend_string',
-    match   => 'match_string',
-    replace => 'replace_string',
-    chop    => 'chop_string',
-    chomp   => 'chomp_string',
-    clear   => 'clear_string',
+is_deeply($string->handles, {
+    inc_string     => 'inc',
+    append_string  => 'append',
+    prepend_string => 'prepend',
+    match_string   => 'match',
+    replace_string => 'replace',
+    chop_string    => 'chop',
+    chomp_string   => 'chomp',
+    clear_string   => 'clear',
 }, '... got the right provides methods');
 
