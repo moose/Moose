@@ -12,6 +12,7 @@ for, noteworthy changes.
     * Moose::Meta::TypeConstraint::DuckType
       - Reify duck type from a regular subtype into an actual class
         (Sartak)
+	  - Document this because Sartak did all my work for me (perigrin)
 
     * Moose::Meta::Attribute
       - Allow Moose::Meta::TypeConstraint::DuckType in handles, since
