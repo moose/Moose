@@ -9,9 +9,15 @@ for, noteworthy changes.
         associated_methods. (hdp)
 
     * Moose::Util::TypeConstraints
+      - Deprecated the totally useless Role type name, which just
+        checked if $object->can('does'). Note that this is _not_ the
+        same as a type created by calling role_type('RoleName').
+
+    * Moose::Util::TypeConstraints
     * Moose::Meta::TypeConstraint::DuckType
       - Reify duck type from a regular subtype into an actual class
         (Sartak)
+	  - Document this because Sartak did all my work for me (perigrin)
 
     * Moose::Meta::Attribute
       - Allow Moose::Meta::TypeConstraint::DuckType in handles, since

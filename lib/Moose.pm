@@ -563,10 +563,10 @@ methods (which is consistent with role composition).
 
 =item C<DUCKTYPE>
 
-With the ducktype option, you pass a ducktype type constraint object whose
-"interface" then becomes the list of methods to handle. The "interface" can be
-defined as; the list of methods passed to C<duck_type> to create a ducktype
-type constraint. For more information on C<duck_type> please check
+With the duck type option, you pass a duck type object whose "interface" then
+becomes the list of methods to handle. The "interface" can be defined as; the
+list of methods passed to C<duck_type> to create a duck type object. For more
+information on C<duck_type> please check
 L<Moose::Util::TypeConstraint|Moose::Util::TypeConstraint>.
 
 =item C<CODE>

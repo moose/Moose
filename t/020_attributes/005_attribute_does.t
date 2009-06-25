@@ -19,7 +19,7 @@ use Test::Exception;
     has 'bar' => (is => 'rw', does => 'Bar::Role');
     has 'baz' => (
         is   => 'rw',
-        does => subtype('Role', where { $_->does('Bar::Role') })
+        does => role_type('Bar::Role')
     );
 
     package Bar::Role;
