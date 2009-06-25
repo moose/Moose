@@ -220,7 +220,7 @@ L<Moose::AttributeHelpers::Collection::Array>.
 =head1 PROVIDED METHODS
 
 This module also consumes the B<List> method providers, to
-see those provied methods, refer to that documentation.
+see those provided methods, refer to that documentation.
 
 =over 4
 
