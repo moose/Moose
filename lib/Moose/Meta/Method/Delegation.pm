@@ -36,13 +36,12 @@ sub new {
         || confess
         'You must supply a delegate_to_method which is a method name or a CODE reference';
 
-    ( !exists $options{curried_arguments} || (
-        $options{curried_arguments} &&
-            ( 'ARRAY' eq ref $options{curried_arguments} )
-        ) ) || confess
-        'You must supply a curried_arguments which is an ARRAY reference';
+    exists $options{curried_arguments}
+        || ( $options{curried_arguments} = [] );
 
-    $options{curried_arguments} ||= [];
+    ( $options{curried_arguments} &&
+        ( 'ARRAY' eq ref $options{curried_arguments} ) )
+        || confess 'You must supply a curried_arguments which is an ARRAY reference';
 
     my $self = $class->_new( \%options );
 
