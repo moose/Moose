@@ -19,12 +19,12 @@ BEGIN {
     has 'word_histogram' => (
         traits    => [qw/Collection::Bag/],
         is        => 'ro',
-        provides  => {
-            'add'    => 'add_word',
-            'get'    => 'get_count_for',
-            'empty'  => 'has_any_words',
-            'count'  => 'num_words',
-            'delete' => 'delete_word',
+        handles  => {
+           'add_word'      => 'add',
+           'get_count_for' => 'get',
+           'has_any_words' => 'empty', 
+           'num_words'     => 'count',
+           'delete_word'   => 'delete',
         }
     );
 }
@@ -67,11 +67,11 @@ is($stuff->get_count_for('baz'), 11, '... got words now');
 my $words = $stuff->meta->get_attribute('word_histogram');
 does_ok($words, 'Moose::AttributeHelpers::Trait::Collection::Bag');
 
-is_deeply($words->provides, {
-    'add'    => 'add_word',
-    'get'    => 'get_count_for',
-    'empty'  => 'has_any_words',
-    'count'  => 'num_words',
-    'delete' => 'delete_word',
-}, '... got the right provides mapping');
+is_deeply($words->handles, {
+   'add_word'      => 'add',
+   'get_count_for' => 'get',
+   'has_any_words' => 'empty', 
+   'num_words'     => 'count',
+   'delete_word'   => 'delete',
+}, '... got the right handles mapping');
 
