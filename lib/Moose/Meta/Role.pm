@@ -214,7 +214,8 @@ foreach my $modifier_type (qw[ before around after ]) {
     $META->add_method("get_${modifier_type}_method_modifiers" => sub {
         my ($self, $method_name) = @_;
         #return () unless exists $self->$attr_reader->{$method_name};
-        @{$self->$attr_reader->{$method_name}};
+        my $mm = $self->$attr_reader->{$method_name};
+        $mm ? @$mm : ();
     });
 
     $META->add_method("has_${modifier_type}_method_modifiers" => sub {
