@@ -2,7 +2,6 @@
 package Moose::AttributeHelpers::Trait::Base;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
-use Moose::AttributeHelpers::Meta::Method::Delegation;
 
 our $VERSION   = '0.19';
 $VERSION = eval $VERSION;
@@ -63,10 +62,6 @@ sub process_options_for_handles {
     }
 }
 
-sub delegation_metaclass {
-    'Moose::AttributeHelpers::Meta::Method::Delegation'
-}
-
 before '_process_options' => sub {
     my ($self, $name, $options) = @_;
     $self->process_options_for_handles($options, $name);
@@ -107,6 +102,32 @@ sub check_handles_values {
     }
 
 }
+
+around '_make_delegation_method' => sub {
+    my $next = shift;
+    my ($self, $handle_name, $method_to_call) = @_;
+
+    my ($name, $curried_args) = @$method_to_call;
+
+    $curried_args ||= [];
+
+    my $method_constructors = $self->method_constructors;
+
+    my $code = $method_constructors->{$name}->(
+        $self,
+        $self->get_read_method_ref,
+        $self->get_write_method_ref,
+    );
+
+    return $next->(
+        $self,
+        $handle_name,
+        sub {
+            my $instance = shift;
+            return $code->($instance, @$curried_args, @_);
+        },
+    );
+};
 
 no Moose::Role;
 no Moose::Util::TypeConstraints;

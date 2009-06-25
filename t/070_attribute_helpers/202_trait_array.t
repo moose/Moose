@@ -11,6 +11,7 @@ BEGIN {
     use_ok('Moose::AttributeHelpers');
 }
 
+my $sort;
 {
     package Stuff;
     use Moose;
@@ -33,13 +34,12 @@ BEGIN {
             'splice_options'        => 'splice',
             'sort_options_in_place' => 'sort_in_place',
             'option_accessor'       => 'accessor',
-            'add_optons_with_speed' =>
+            'add_options_with_speed' =>
                [ 'push' => ['funrolls', 'funbuns'] ],
             'prepend_prerequisites_along_with' =>
                [ 'unshift' => ['first', 'second'] ],
             'descending_options' =>
-               [ 'sort_in_place' => [ sub { $_[1] <=> $_[0] } ] ],
-            },
+               [ 'sort_in_place' => [ $sort = sub { $_[1] <=> $_[0] } ] ],
         }
     );
 }
@@ -224,7 +224,7 @@ dies_ok {
 my $options = $stuff->meta->get_attribute('options');
 does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Array');
 
-is_deeply($options->handles,
+is_deeply($options->handles, {
     'add_options'           => 'push',
     'remove_last_option'    => 'pop',
     'remove_first_option'   => 'shift',
@@ -237,6 +237,12 @@ is_deeply($options->handles,
     'splice_options'        => 'splice',
     'sort_options_in_place' => 'sort_in_place',
     'option_accessor'       => 'accessor',
+    'add_options_with_speed' =>
+       [ 'push' => ['funrolls', 'funbuns'] ],
+    'prepend_prerequisites_along_with' =>
+       [ 'unshift' => ['first', 'second'] ],
+    'descending_options' =>
+       [ 'sort_in_place' => [ $sort ] ],
 }, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Str', '... got the right container type');

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 34;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -11,6 +11,9 @@ BEGIN {
     use_ok('Moose::AttributeHelpers');
 }
 
+my $sort;
+my $less;
+my $up;
 {
     package Stuff;
     use Moose;
@@ -33,24 +36,13 @@ BEGIN {
             'get_first_option' => 'first',
             'get_last_option'  => 'last',
             'sorted_options'   => 'sort',
-            'less_than_five' => [ grep => [ sub { $_ < 5 } ] ],
-            'up_by_one'      => [ map  => [ sub { $_ + 1 } ] ],
+            'less_than_five' => [ grep => [ $less = sub { $_ < 5 } ] ],
+            'up_by_one'      => [ map  => [ $up   = sub { $_ + 1 } ] ],
             'dashify'        => [ join => [ '-'            ] ],
-            'descending'     => [ sort => [ sub { $_[1] <=> $_[0] ] ],
+            'descending'     => [ sort => [ $sort = sub { $_[1] <=> $_[0] } ] ],
         },
     );
 
-    has animals => (
-        is       => 'rw',
-        isa      => 'ArrayRef[Str]',
-        metaclass => 'Collection::List',
-        handles => {
-           double_length_of => [ grep => [ sub  {
-              my ($self, $body, $arg) = @_;
-              $body->($self, sub { length($_) == length($arg) * 2 });
-           } ] ],
-        }
-    )
 }
 
 my $stuff = Stuff->new(options => [ 1 .. 10 ]);
@@ -110,15 +102,6 @@ is_deeply([ $stuff->up_by_one() ], [2 .. 11]);
 
 is($stuff->dashify, '1-2-3-4-5-6-7-8-9-10');
 
-$stuff->animals([ qw/cat duck horse cattle gorilla elephant flamingo kangaroo/ ]);
-
-# 4 * 2 = 8
-is_deeply(
-        [ sort $stuff->double_length_of('fish') ],
-        [ sort qw/elephant flamingo kangaroo/ ],
-        'returns all elements with double length of string "fish"'
-);
-
 is_deeply([$stuff->descending], [reverse 1 .. 10]);
 
 ## test the meta
@@ -127,21 +110,21 @@ my $options = $stuff->meta->get_attribute('_options');
 does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::List');
 
 is_deeply($options->handles, {
-   'num_options'      => 'count',
-   'has_options'      => 'empty',
-   'map_options',     => 'map',
-   'filter_options'   => 'grep',
-   'find_option'      => 'find',
-   'options'          => 'elements',
-   'join_options'     => 'join',
-   'get_option_at'    => 'get',
-   'get_first_option' => 'first',
-   'get_last_option'  => 'last',
-   'sorted_options'   => 'sort',
-   'less_than_five' => [ grep ],
-   'up_by_one'      => [ map  ],
-   'dashify'        => [ join ],
-   'descending'     => [ sort ],
+    'num_options'      => 'count',
+    'has_options'      => 'empty',
+    'map_options',     => 'map',
+    'filter_options'   => 'grep',
+    'find_option'      => 'find',
+    'options'          => 'elements',
+    'join_options'     => 'join',
+    'get_option_at'    => 'get',
+    'get_first_option' => 'first',
+    'get_last_option'  => 'last',
+    'sorted_options'   => 'sort',
+    'less_than_five' => [ grep => [ $less ] ],
+    'up_by_one'      => [ map  => [ $up ] ],
+    'dashify'        => [ join => [ '-'            ] ],
+    'descending'     => [ sort => [ $sort ] ],
 }, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Int', '... got the right container type');

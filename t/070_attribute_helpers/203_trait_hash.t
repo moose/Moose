@@ -136,18 +136,18 @@ my $options = $stuff->meta->get_attribute('options');
 does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Hash');
 
 is_deeply($options->handles, {
-   'add_options'           => 'push',
-   'remove_last_option'    => 'pop',
-   'remove_first_option'   => 'shift',
-   'insert_options'        => 'unshift',
-   'get_option_at'         => 'get',
-   'set_option_at'         => 'set',
-   'num_options'           => 'count',
-   'has_options'           => 'empty',
-   'clear_options'         => 'clear',
-   'splice_options'        => 'splice',
-   'sort_options_in_place' => 'sort_in_place',
-   'option_accessor'       => 'accessor',
+    'set_option'       => 'set',
+    'get_option'       => 'get',
+    'has_options'      => 'empty',
+    'num_options'      => 'count',
+    'clear_options'    => 'clear',
+    'delete_option'    => 'delete',
+    'has_option'       => 'exists',
+    'is_defined'       => 'defined',
+    'option_accessor'  => 'accessor',
+    'key_value'        => 'kv',
+    'options_elements' => 'elements',
+    'quantity' => [ accessor => ['quantity'] ],
 }, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Str', '... got the right container type');
