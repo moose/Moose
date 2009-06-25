@@ -13,6 +13,10 @@ for, noteworthy changes.
       - Reify duck type from a regular subtype into an actual class
         (Sartak)
 
+    * Moose::Meta::Attribute
+      - Allow Moose::Meta::TypeConstraint::DuckType in handles, since
+        it is just a list of methods (Sartak)
+
 0.83 Tue, Jun 23, 2009
     * Moose::Meta::Class
       - Fix _construct_instance not setting the special __MOP__ object

@@ -628,6 +628,9 @@ sub _canonicalize_handles {
         elsif ($handle_type eq 'CODE') {
             return $handles->($self, $self->_find_delegate_metaclass);
         }
+        elsif (blessed($handles) && $handles->isa('Moose::Meta::TypeConstraint::DuckType')) {
+            return map { $_ => $_ } @{ $handles->methods };
+        }
         else {
             $self->throw_error("Unable to canonicalize the 'handles' option with $handles", data => $handles);
         }
