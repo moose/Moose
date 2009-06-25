@@ -701,7 +701,7 @@ sub _make_delegation_method {
         package_name       => $self->associated_class->name,
         attribute          => $self,
         delegate_to_method => $method_to_call,
-        curried_arguments  => $curried_arguments,
+        curried_arguments  => $curried_arguments || [],
     );
 }
 
