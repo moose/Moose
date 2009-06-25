@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 88;
+use Test::More tests => 89;
 use Test::Exception;
 
 
@@ -27,7 +27,10 @@ use Test::Exception;
     has 'foo' => (
         is      => 'rw',
         default => sub { Foo->new },
-        handles => { 'foo_bar' => 'bar' }
+        handles => {
+            'foo_bar' => 'bar',
+            'foo_bar_to_20' => [ bar => [ 20 ] ],
+        }
     );
 }
 
@@ -80,6 +83,10 @@ is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
 
 is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
 is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
+
+# curried handles
+$bar->foo_bar_to_20;
+is($bar->foo_bar, 20, '... correctly curried a single argument');
 
 # -------------------------------------------------------------------
 # ARRAY handles
