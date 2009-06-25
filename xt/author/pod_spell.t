@@ -35,6 +35,7 @@ Kogman
 kolibrie
 konobi
 lbr
+Luehrs
 McWhirter
 merlyn
 mst
