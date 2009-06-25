@@ -543,6 +543,18 @@ In this example, the Tree package gets C<parent_node> and C<siblings> methods,
 which delegate to the C<node> and C<children> methods (respectively) of the Tree
 instance stored in the C<parent> slot.
 
+You may also use an array reference to curry arguments to the original method.
+
+  has 'thing' => (
+      ...
+      handles => { set_foo => [ set => [ 'foo' ] ] },
+  );
+
+  # $self->set_foo(...) calls $self->thing->set('foo', ...)
+
+The first element of the array reference is the original method name, and the
+second is an array reference of curried arguments.
+
 =item C<REGEXP>
 
 The regexp option works very similar to the ARRAY option, except that it builds
