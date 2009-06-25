@@ -9,21 +9,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 requires 'helper_type';
 
-# this is the method map you define ...
-has 'provides' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    default => sub {{}}
-);
-
-has 'curries' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    default => sub {{}}
-);
-
 # these next two are the possible methods
-# you can use in the 'provides' map.
+# you can use in the 'handles' map.
 
 # provide a Class or Role which we can
 # collect the method providers from
@@ -57,7 +44,7 @@ has '+type_constraint' => (required => 1);
 
 ## Methods called prior to instantiation
 
-sub process_options_for_provides {
+sub process_options_for_handles {
     my ($self, $options) = @_;
 
     if (my $type = $self->helper_type) {
@@ -77,47 +64,21 @@ sub process_options_for_provides {
 
 before '_process_options' => sub {
     my ($self, $name, $options) = @_;
-    $self->process_options_for_provides($options, $name);
+    $self->process_options_for_handles($options, $name);
 };
 
 ## methods called after instantiation
 
-sub check_provides_values {
+sub check_handles_values {
     my $self = shift;
 
     my $method_constructors = $self->method_constructors;
 
-    foreach my $key (keys %{$self->provides}) {
+    foreach my $key (keys %{$self->handles}) {
         (exists $method_constructors->{$key})
             || confess "$key is an unsupported method type";
     }
 
-    foreach my $key (keys %{$self->curries}) {
-        (exists $method_constructors->{$key})
-            || confess "$key is an unsupported method type";
-    }
-}
-
-sub _curry {
-    my $self = shift;
-    my $code = shift;
-
-    my @args = @_;
-    return sub {
-        my $self = shift;
-        $code->($self, @args, @_)
-    };
-}
-
-sub _curry_sub {
-    my $self = shift;
-    my $body = shift;
-    my $code = shift;
-
-    return sub {
-        my $self = shift;
-        $code->($self, $body, @_)
-    };
 }
 
 after 'install_accessors' => sub {
@@ -130,53 +91,17 @@ after 'install_accessors' => sub {
     my $attr_reader = $attr->get_read_method_ref;
     my $attr_writer = $attr->get_write_method_ref;
 
-
     # before we install them, lets
     # make sure they are valid
-    $attr->check_provides_values;
+    $attr->check_handles_values;
 
     my $method_constructors = $attr->method_constructors;
 
     my $class_name = $class->name;
 
-    while (my ($constructor, $constructed) = each %{$attr->curries}) {
-        my $method_code;
-        while (my ($curried_name, $curried_arg) = each(%$constructed)) {
-            if ($class->has_method($curried_name)) {
-                confess
-                    "The method ($curried_name) already ".
-                    "exists in class (" . $class->name . ")";
-            }
-            my $body = $method_constructors->{$constructor}->(
-                       $attr,
-                       $attr_reader,
-                       $attr_writer,
-            );
+    foreach my $key (keys %{$attr->handles}) {
 
-            if (ref $curried_arg eq 'ARRAY') {
-                $method_code = $attr->_curry($body, @$curried_arg);
-            }
-            elsif (ref $curried_arg eq 'CODE') {
-                $method_code = $attr->_curry_sub($body, $curried_arg);
-            }
-            else {
-                confess "curries parameter must be ref type HASH or CODE";
-            }
-
-            my $method = Moose::AttributeHelpers::Meta::Method::Curried->wrap(
-                $method_code,
-                package_name => $class_name,
-                name => $curried_name,
-            );
-
-            $attr->associate_method($method);
-            $class->add_method($curried_name => $method);
-        }
-    }
-
-    foreach my $key (keys %{$attr->provides}) {
-
-        my $method_name = $attr->provides->{$key};
+        my $method_name = $attr->handles->{$key};
 
         if ($class->has_method($method_name)) {
             confess "The method ($method_name) already exists in class (" . $class->name . ")";
@@ -202,17 +127,8 @@ after 'remove_accessors' => sub {
     my $class = $attr->associated_class;
 
     # provides accessors
-    foreach my $key (keys %{$attr->provides}) {
-        my $method_name = $attr->provides->{$key};
-        my $method = $class->get_method($method_name);
-        $class->remove_method($method_name)
-            if blessed($method) &&
-               $method->isa('Moose::AttributeHelpers::Meta::Method::Provided');
-    }
-
-    # curries accessors
-    foreach my $key (keys %{$attr->curries}) {
-        my $method_name = $attr->curries->{$key};
+    foreach my $key (keys %{$attr->handles}) {
+        my $method_name = $attr->handles->{$key};
         my $method = $class->get_method($method_name);
         $class->remove_method($method_name)
             if blessed($method) &&
@@ -233,11 +149,11 @@ Moose::AttributeHelpers::Trait::Base - base role for helpers
 
 =head1 METHODS
 
-=head2 check_provides_values
+=head2 check_handles_values
 
-Confirms that provides (and curries) has all valid possibilities in it.
+Confirms that handles has all valid possibilities in it.
 
-=head2 process_options_for_provides
+=head2 process_options_for_handles
 
 Ensures that the type constraint (C<isa>) matches the helper type.
 
