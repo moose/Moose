@@ -107,7 +107,7 @@ should be an array reference containing a list of valid string
 values. Second, it automatically sets the parent to the C<Str> type.
 
 Finally, it ignores any provided C<constraint> option. The constraint
-is generated automatically based on the provided C<values>
+is generated automatically based on the provided C<values>.
 
 =item B<< $constraint->values >>
 
