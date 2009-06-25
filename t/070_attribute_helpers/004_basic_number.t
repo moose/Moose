@@ -19,7 +19,7 @@ BEGIN {
         is        => 'ro',
         isa       => 'Int',
         default   => sub { 5 },
-        provides  => {
+        handles  => {
             set       => 'set',
             add       => 'add',
             sub       => 'sub',
@@ -27,13 +27,12 @@ BEGIN {
             div       => 'div',
             mod       => 'mod',
             abs       => 'abs',
+            inc         => [ add => [ 1 ] ],
+            dec         => [ sub => [ 1 ] ],
+            odd         => [ mod => [ 2 ] ],
+            cut_in_half => [ div => [ 2 ] ],
+
         },
-        curries   => {
-            add       => {inc         => [ 1 ]},
-            sub       => {dec         => [ 1 ]},
-            mod       => {odd         => [ 2 ]},
-            div       => {cut_in_half => [ 2 ]}
-        }
     );
 }
 
@@ -97,7 +96,7 @@ is $real->integer, 12, 'dec 13';
 my $attr = $real->meta->get_attribute('integer');
 isa_ok($attr, 'Moose::AttributeHelpers::Number');
 
-is_deeply($attr->provides, {
+is_deeply($attr->handles, {
     set => 'set',
     add => 'add',
     sub => 'sub',
@@ -105,5 +104,5 @@ is_deeply($attr->provides, {
     div => 'div',
     mod => 'mod',
     abs => 'abs',
-}, '... got the right provides mapping');
+}, '... got the right handles mapping');
 

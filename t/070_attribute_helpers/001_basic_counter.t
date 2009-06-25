@@ -18,11 +18,11 @@ BEGIN {
         is        => 'ro',
         isa       => 'Int',
         default   => sub { 0 },
-        provides  => {
-            inc   => 'inc_counter',
-            dec   => 'dec_counter',
-            reset => 'reset_counter',
-            set   => 'set_counter'
+        handles  => {
+            inc_counter   => 'inc',
+            dec_counter   => 'dec',
+            reset_counter => 'reset',
+            set_counter   => 'set'
         }
     );
 }
@@ -69,10 +69,10 @@ is($counter->helper_type, 'Num', '... got the expected helper type');
 
 is($counter->type_constraint->name, 'Int', '... got the expected type constraint');
 
-is_deeply($counter->provides, {
-    inc   => 'inc_counter',
-    dec   => 'dec_counter',
-    reset => 'reset_counter',
-    set   => 'set_counter'
-}, '... got the right provides methods');
+is_deeply($counter->handles, {
+    inc_counter   => 'inc',
+    dec_counter   => 'dec',
+    reset_counter => 'reset',
+    set_counter   => 'set'
+}, '... got the right handles methods');
 

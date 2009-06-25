@@ -19,28 +19,25 @@ BEGIN {
         is        => 'ro',
         isa       => 'ArrayRef[Str]',
         default   => sub { [] },
-        provides => {
-            'push'          => 'add_options',
-            'pop'           => 'remove_last_option',
-            'shift'         => 'remove_first_option',
-            'unshift'       => 'insert_options',
-            'get'           => 'get_option_at',
-            'set'           => 'set_option_at',
-            'count'         => 'num_options',
-            'empty'         => 'has_options',
-            'clear'         => 'clear_options',
-            'splice'        => 'splice_options',
-            'sort_in_place' => 'sort_options_in_place',
-            'accessor'      => 'option_accessor',
-            },
-        curries   => {
-            'push'    => {
-                add_options_with_speed => ['funrolls', 'funbuns']
-            },
-            'unshift'  => {
-                prepend_prerequisites_along_with => ['first', 'second']
-            },
-            'sort_in_place' => { descending_options => [ sub { $_[1] <=> $_[0] } ],
+        handles => {
+            'add_options'           => 'push',
+            'remove_last_option'    => 'pop',
+            'remove_first_option'   => 'shift',
+            'insert_options'        => 'unshift',
+            'get_option_at'         => 'get',
+            'set_option_at'         => 'set', 
+            'num_options'           => 'count',
+            'has_options'           => 'empty',
+            'clear_options'         => 'clear',
+            'splice_options'        => 'splice', 
+            'sort_options_in_place' => 'sort_in_place',
+            'option_accessor'       => 'accessor',
+            'add_optons_with_speed' => 
+               [ 'push' => ['funrolls', 'funbuns'] ],
+            'prepend_prerequisites_along_with' => 
+               [ 'unshift' => ['first', 'second'] ],
+            'descending_options' => 
+               [ 'sort_in_place' => [ sub { $_[1] <=> $_[0] } ] ],
             },
         }
     );
@@ -226,19 +223,19 @@ dies_ok {
 my $options = $stuff->meta->get_attribute('options');
 isa_ok($options, 'Moose::AttributeHelpers::Collection::Array');
 
-is_deeply($options->provides, {
-    'push'    => 'add_options',
-    'pop'     => 'remove_last_option',
-    'shift'   => 'remove_first_option',
-    'unshift' => 'insert_options',
-    'get'     => 'get_option_at',
-    'set'     => 'set_option_at',
-    'count'   => 'num_options',
-    'empty'   => 'has_options',
-    'clear'   => 'clear_options',
-    'splice'  => 'splice_options',
-    'sort_in_place' => 'sort_options_in_place',
-    'accessor' => 'option_accessor',
-}, '... got the right provides mapping');
+is_deeply($options->handles, 
+    'add_options'           => 'push',
+    'remove_last_option'    => 'pop',
+    'remove_first_option'   => 'shift',
+    'insert_options'        => 'unshift',
+    'get_option_at'         => 'get',
+    'set_option_at'         => 'set',
+    'num_options'           => 'count',
+    'has_options'           => 'empty',
+    'clear_options'         => 'clear',
+    'splice_options'        => 'splice',
+    'sort_options_in_place' => 'sort_in_place',
+    'option_accessor'       => 'accessor',
+}, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Str', '... got the right container type');

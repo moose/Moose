@@ -20,39 +20,34 @@ BEGIN {
         isa       => 'ArrayRef[Int]',
         init_arg  => 'options',
         default   => sub { [] },
-        provides  => {
-            'count'    => 'num_options',
-            'empty'    => 'has_options',
-            'map'      => 'map_options',
-            'grep'     => 'filter_options',
-            'find'     => 'find_option',
-            'elements' => 'options',
-            'join'     => 'join_options',
-            'get'      => 'get_option_at',
-            'first'    => 'get_first_option',
-            'last'     => 'get_last_option',
-            'sort'     => 'sorted_options',
+        handles  => {
+            'num_options'      => 'count',
+            'has_options'      => 'empty',
+            'map_options',     => 'map', 
+            'filter_options'   => 'grep',
+            'find_option'      => 'find',
+            'options'          => 'elements', 
+            'join_options'     => 'join', 
+            'get_option_at'    => 'get',
+            'get_first_option' => 'first',
+            'get_last_option'  => 'last',
+            'sorted_options'   => 'sort',
+            'less_than_five' => [ grep => [ sub { $_ < 5 } ] ],
+            'up_by_one'      => [ map  => [ sub { $_ + 1 } ] ],
+            'dashify'        => [ join => [ '-'            ] ],
+            'descending'     => [ sort => [ sub { $_[1] <=> $_[0] ] ],
         },
-        curries   => {
-            'grep'     => {less_than_five => [ sub { $_ < 5 } ]},
-            'map'      => {up_by_one      => [ sub { $_ + 1 } ]},
-            'join'     => {dashify        => [ '-' ]},
-            'sort'     => {descending     => [ sub { $_[1] <=> $_[0] } ]},
-        }
     );
 
     has animals => (
         is       => 'rw',
         isa      => 'ArrayRef[Str]',
         metaclass => 'Collection::List',
-        curries => {
-            grep =>  {
-                double_length_of => sub {
-                    my ($self, $body, $arg) = @_;
-
-                    $body->($self, sub { length($_) == length($arg) * 2 });
-                }
-            }
+        handles => {
+           double_length_of => [ grep => [ sub  {
+              my ($self, $body, $arg) = @_;
+              $body->($self, sub { length($_) == length($arg) * 2 });
+           } ] ],
         }
     )
 }
@@ -130,19 +125,23 @@ is_deeply([$stuff->descending], [reverse 1 .. 10]);
 my $options = $stuff->meta->get_attribute('_options');
 isa_ok($options, 'Moose::AttributeHelpers::Collection::List');
 
-is_deeply($options->provides, {
-    'map'      => 'map_options',
-    'grep'     => 'filter_options',
-    'find'     => 'find_option',
-    'count'    => 'num_options',
-    'empty'    => 'has_options',
-    'elements' => 'options',
-    'join'     => 'join_options',
-    'get'      => 'get_option_at',
-    'first'    => 'get_first_option',
-    'last'     => 'get_last_option',
-    'sort'     => 'sorted_options',
-}, '... got the right provides mapping');
+is_deeply($options->handles, {
+   'num_options'      => 'count',
+   'has_options'      => 'empty',
+   'map_options',     => 'map', 
+   'filter_options'   => 'grep',
+   'find_option'      => 'find',
+   'options'          => 'elements', 
+   'join_options'     => 'join', 
+   'get_option_at'    => 'get',
+   'get_first_option' => 'first',
+   'get_last_option'  => 'last',
+   'sorted_options'   => 'sort',
+   'less_than_five' => [ grep ],
+   'up_by_one'      => [ map  ],
+   'dashify'        => [ join ],
+   'descending'     => [ sort ],
+}, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Int', '... got the right container type');
 

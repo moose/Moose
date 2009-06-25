@@ -20,24 +20,20 @@ BEGIN {
         is        => 'ro',
         isa       => 'HashRef[Str]',
         default   => sub { {} },
-        provides  => {
-            'set'      => 'set_option',
-            'get'      => 'get_option',
-            'empty'    => 'has_options',
-            'count'    => 'num_options',
-            'clear'    => 'clear_options',
-            'delete'   => 'delete_option',
-            'exists'   => 'has_option',
-            'defined'  => 'is_defined',
-            'accessor' => 'option_accessor',
-            'kv'       => 'key_value',
-            'elements' => 'options_elements',
+        handles  => {
+            'set_option'       => 'set',
+            'get_option'       => 'get',
+            'has_options'      => 'empty',
+            'num_options'      => 'count',
+            'clear_options'    => 'clear', 
+            'delete_option'    => 'delete', 
+            'has_option'       => 'exists',
+            'is_defined'       => 'defined',
+            'option_accessor'  => 'accessor',
+            'key_value'        => 'kv', 
+            'options_elements' => 'elements',
+            'quantity' => [ accessor => ['quantity'] ],
         },
-        curries   => {
-            'accessor' => {
-                quantity => ['quantity'],
-            },
-        }
     );
 }
 
@@ -153,19 +149,20 @@ dies_ok {
 my $options = $stuff->meta->get_attribute('options');
 isa_ok($options, 'Moose::AttributeHelpers::Collection::Hash');
 
-is_deeply($options->provides, {
-    'set'      => 'set_option',
-    'get'      => 'get_option',
-    'empty'    => 'has_options',
-    'count'    => 'num_options',
-    'clear'    => 'clear_options',
-    'delete'   => 'delete_option',
-    'defined'  => 'is_defined',
-    'exists'   => 'has_option',
-    'accessor' => 'option_accessor',
-    'kv'       => 'key_value',
-    'elements' => 'options_elements',
-}, '... got the right provides mapping');
+is_deeply($options->handles, {
+   'add_options'           => 'push',
+   'remove_last_option'    => 'pop',
+   'remove_first_option'   => 'shift',
+   'insert_options'        => 'unshift',
+   'get_option_at'         => 'get',
+   'set_option_at'         => 'set',
+   'num_options'           => 'count',
+   'has_options'           => 'empty',
+   'clear_options'         => 'clear',
+   'splice_options'        => 'splice',
+   'sort_options_in_place' => 'sort_in_place',
+   'option_accessor'       => 'accessor',
+}, '... got the right handles mapping');
 
 is($options->type_constraint->type_parameter, 'Str', '... got the right container type');
 
