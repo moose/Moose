@@ -15,12 +15,15 @@ use Moose::Role;
 use Moose::AttributeHelpers;
 
 has observers => (
-    metaclass  => 'Collection::Array',
+    traits     => [ 'Collection::Array' ],
     is         => 'ro',
     isa        => 'ArrayRef[Observer]',
     auto_deref => 1,
     default    => sub { [] },
-    provides   => { 'push' => 'add_observer', count => 'count_observers' }
+    handles    => {
+        'add_observer'    => 'push',
+        'count_observers' => 'count',
+    },
 );
 
 sub notify {
@@ -48,17 +51,17 @@ use Moose::AttributeHelpers;
 with 'Subject';
 
 has count => (
-    metaclass => 'Counter',
+    trait     => [ 'Counter' ],
     is        => 'ro',
     isa       => 'Int',
     default   => 0,
-    provides  => {
-        inc => 'inc_counter',
-        dec => 'dec_counter',
-    }
+    handles  => {
+        inc_counter => 'inc',
+        dec_counter => 'dec',
+    },
 );
 
-after 'inc_counter','dec_counter' => sub {
+after 'inc_counter', 'dec_counter' => sub {
     my ($self) = @_;
     $self->notify();
 };
