@@ -372,7 +372,6 @@ sub duck_type {
             sub {
                 my $obj = $_;
                 my $class = blessed($obj) || return;
-                return if $class eq 'Regexp';
                 return 0 unless all { $obj->can($_) } @methods;
                 return 1;
             },
