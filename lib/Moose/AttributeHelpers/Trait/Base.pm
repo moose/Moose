@@ -2,6 +2,7 @@
 package Moose::AttributeHelpers::Trait::Base;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
+use Moose::AttributeHelpers::Meta::Method::Delegation;
 
 our $VERSION   = '0.19';
 $VERSION = eval $VERSION;
@@ -62,79 +63,50 @@ sub process_options_for_handles {
     }
 }
 
+sub delegation_metaclass {
+    'Moose::AttributeHelpers::Meta::Method::Delegation'
+}
+
 before '_process_options' => sub {
     my ($self, $name, $options) = @_;
     $self->process_options_for_handles($options, $name);
 };
 
+around '_canonicalize_handles' => sub {
+    my $next    = shift;
+    my $self    = shift;
+    my $handles = $self->handles;
+    return unless $handles;
+    unless ('HASH' eq ref $handles) {
+        $self->throw_error(
+            "The 'handles' option must be a HASH reference, not $handles"
+        );
+    }
+    return map {
+        my $to = $handles->{$_};
+        $to = [ $to ] unless ref $to;
+        $_ => $to
+    } keys %$handles;
+};
+
 ## methods called after instantiation
+
+before 'install_delegation' => sub { (shift)->check_handles_values };
 
 sub check_handles_values {
     my $self = shift;
 
     my $method_constructors = $self->method_constructors;
 
-    foreach my $key (keys %{$self->handles}) {
-        (exists $method_constructors->{$key})
-            || confess "$key is an unsupported method type";
+    my %handles = $self->_canonicalize_handles;
+
+    for my $original_method (values %handles) {
+        my $name = $original_method->[0];
+        (exists $method_constructors->{$name})
+            || confess "$name is an unsupported method type";
     }
 
 }
-
-after 'install_accessors' => sub {
-    my $attr  = shift;
-    my $class = $attr->associated_class;
-
-    # grab the reader and writer methods
-    # as well, this will be useful for
-    # our method provider constructors
-    my $attr_reader = $attr->get_read_method_ref;
-    my $attr_writer = $attr->get_write_method_ref;
-
-    # before we install them, lets
-    # make sure they are valid
-    $attr->check_handles_values;
-
-    my $method_constructors = $attr->method_constructors;
-
-    my $class_name = $class->name;
-
-    foreach my $key (keys %{$attr->handles}) {
-
-        my $method_name = $attr->handles->{$key};
-
-        if ($class->has_method($method_name)) {
-            confess "The method ($method_name) already exists in class (" . $class->name . ")";
-        }
-
-        my $method = Moose::AttributeHelpers::Meta::Method::Provided->wrap(
-            $method_constructors->{$key}->(
-                $attr,
-                $attr_reader,
-                $attr_writer,
-            ),
-            package_name => $class_name,
-            name => $method_name,
-        );
-
-        $attr->associate_method($method);
-        $class->add_method($method_name => $method);
-    }
-};
-
-after 'remove_accessors' => sub {
-    my $attr  = shift;
-    my $class = $attr->associated_class;
-
-    # provides accessors
-    foreach my $key (keys %{$attr->handles}) {
-        my $method_name = $attr->handles->{$key};
-        my $method = $class->get_method($method_name);
-        $class->remove_method($method_name)
-            if blessed($method) &&
-               $method->isa('Moose::AttributeHelpers::Meta::Method::Provided');
-    }
-};
 
 no Moose::Role;
 no Moose::Util::TypeConstraints;
