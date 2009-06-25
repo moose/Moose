@@ -79,6 +79,7 @@ my %trustme = (
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
     'Moose::Meta::TypeConstraint::Enum' => [qw( constraint equals )],
+    'Moose::Meta::TypeConstraint::DuckType' => [qw( constraint equals get_message )],
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
     'Moose::Meta::TypeConstraint::Role'  => [qw( equals is_a_type_of )],
