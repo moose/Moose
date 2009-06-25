@@ -8,7 +8,7 @@ use Test::Exception;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('MooseX::AttributeHelpers');
+    use_ok('Moose::AttributeHelpers');
 }
 
 {
@@ -16,7 +16,7 @@ BEGIN {
     use Moose;
 
     has 'options' => (
-        traits    => [qw/MooseX::AttributeHelpers::Trait::Collection::Array/],
+        traits    => [qw/Collection::Array/],
         is        => 'ro',
         isa       => 'ArrayRef[Str]',
         default   => sub { [] },
@@ -222,7 +222,7 @@ dies_ok {
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok($options, 'MooseX::AttributeHelpers::Trait::Collection::Array');
+does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Array');
 
 is_deeply($options->handles,
     'add_options'           => 'push',

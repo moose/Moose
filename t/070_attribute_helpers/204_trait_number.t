@@ -7,7 +7,7 @@ use Test::More tests => 26;
 use Test::Moose;
 
 BEGIN {
-    use_ok('MooseX::AttributeHelpers');
+    use_ok('Moose::AttributeHelpers');
 }
 
 {
@@ -15,7 +15,7 @@ BEGIN {
     use Moose;
 
     has 'integer' => (
-        traits    => [qw/MooseX::AttributeHelpers::Trait::Number/],
+        traits    => [qw/Number/],
         is        => 'ro',
         isa       => 'Int',
         default   => sub { 5 },
@@ -94,7 +94,7 @@ is $real->integer, 12, 'dec 13';
 ## test the meta
 
 my $attr = $real->meta->get_attribute('integer');
-does_ok($attr, 'MooseX::AttributeHelpers::Trait::Number');
+does_ok($attr, 'Moose::AttributeHelpers::Trait::Number');
 
 is_deeply($attr->handles, {
     set => 'set',

@@ -7,7 +7,7 @@ use Test::More tests => 27;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('MooseX::AttributeHelpers');
+    use_ok('Moose::AttributeHelpers');
 }
 
 {
@@ -15,7 +15,7 @@ BEGIN {
     use Moose;
 
     has 'string' => (
-        traits    => [qw/MooseX::AttributeHelpers::Trait::String/],
+        traits    => [qw/String/],
         is        => 'rw',
         isa       => 'Str',
         default   => sub { '' },
@@ -96,7 +96,7 @@ is($page->string, '', "clear");
 # check the meta ..
 
 my $string = $page->meta->get_attribute('string');
-does_ok($string, 'MooseX::AttributeHelpers::Trait::String');
+does_ok($string, 'Moose::AttributeHelpers::Trait::String');
 
 is($string->helper_type, 'Str', '... got the expected helper type');
 

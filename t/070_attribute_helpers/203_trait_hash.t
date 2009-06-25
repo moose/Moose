@@ -8,16 +8,16 @@ use Test::Exception;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('MooseX::AttributeHelpers');
+    use_ok('Moose::AttributeHelpers');
 }
 
 {
     package Stuff;
     use Moose;
-    use MooseX::AttributeHelpers;
+    use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits    => [qw/MooseX::AttributeHelpers::Trait::Collection::Hash/],
+        traits    => [qw/Collection::Hash/],
         is        => 'ro',
         isa       => 'HashRef[Str]',
         default   => sub { {} },
@@ -133,7 +133,7 @@ dies_ok {
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok($options, 'MooseX::AttributeHelpers::Trait::Collection::Hash');
+does_ok($options, 'Moose::AttributeHelpers::Trait::Collection::Hash');
 
 is_deeply($options->handles, {
    'add_options'           => 'push',

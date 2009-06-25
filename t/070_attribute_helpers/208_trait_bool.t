@@ -4,13 +4,13 @@ use strict;
 use warnings;
 
 use Test::More tests => 8;
-use MooseX::AttributeHelpers;
+use Moose::AttributeHelpers;
 
 {
     package Room;
     use Moose;
     has 'is_lit' => (
-        traits    => ['MooseX::AttributeHelpers::Trait::Bool'],
+        traits    => ['Bool'],
         is        => 'rw',
         isa       => 'Bool',
         default   => sub { 0 },

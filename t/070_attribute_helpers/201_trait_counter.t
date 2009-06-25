@@ -7,7 +7,7 @@ use Test::More tests => 18;
 use Test::Moose 'does_ok';
 
 BEGIN {
-    use_ok('MooseX::AttributeHelpers');
+    use_ok('Moose::AttributeHelpers');
 }
 
 {
@@ -15,7 +15,7 @@ BEGIN {
     use Moose;
 
     has 'counter' => (
-        traits    => [qw/MooseX::AttributeHelpers::Trait::Counter/],
+        traits    => [qw/Counter/],
         is        => 'ro',
         isa       => 'Int',
         default   => sub { 0 },
@@ -64,7 +64,7 @@ is($page->counter, 2, '... decrement by arg');
 # check the meta ..
 
 my $counter = $page->meta->get_attribute('counter');
-does_ok($counter, 'MooseX::AttributeHelpers::Trait::Counter');
+does_ok($counter, 'Moose::AttributeHelpers::Trait::Counter');
 
 is($counter->helper_type, 'Num', '... got the expected helper type');
 
