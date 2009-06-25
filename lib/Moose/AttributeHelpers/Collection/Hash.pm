@@ -2,7 +2,7 @@
 package Moose::AttributeHelpers::Collection::Hash;
 use Moose;
 
-our $VERSION   = '0.19';
+our $VERSION   = '0.83';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
