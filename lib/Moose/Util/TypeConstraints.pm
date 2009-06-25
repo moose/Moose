@@ -32,6 +32,7 @@ use Moose::Meta::TypeConstraint::Parameterizable;
 use Moose::Meta::TypeConstraint::Class;
 use Moose::Meta::TypeConstraint::Role;
 use Moose::Meta::TypeConstraint::Enum;
+use Moose::Meta::TypeConstraint::DuckType;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
@@ -366,20 +367,9 @@ sub duck_type {
     }
 
     register_type_constraint(
-        _create_type_constraint(
+        create_duck_type_constraint(
             $type_name,
-            'Object',
-            sub {
-                my $obj = $_;
-                return all { $obj->can($_) } @methods;
-            },
-            sub {
-                my $obj = $_;
-                my $class = blessed($obj);
-                my @missing_methods = grep { !$obj->can($_) } @methods;
-                return
-                    "$class is missing methods '@missing_methods'";
-            },
+            \@methods,
         )
     );
 }
@@ -440,6 +430,15 @@ sub create_enum_type_constraint {
     Moose::Meta::TypeConstraint::Enum->new(
         name => $type_name || '__ANON__',
         values => $values,
+    );
+}
+
+sub create_duck_type_constraint {
+    my ( $type_name, $methods ) = @_;
+
+    Moose::Meta::TypeConstraint::DuckType->new(
+        name => $type_name || '__ANON__',
+        methods => $methods,
     );
 }
 
@@ -604,6 +603,7 @@ $_->make_immutable(
     Moose::Meta::TypeConstraint::Class
     Moose::Meta::TypeConstraint::Role
     Moose::Meta::TypeConstraint::Enum
+    Moose::Meta::TypeConstraint::DuckType
     Moose::Meta::TypeConstraint::Registry
 );
 
@@ -1177,6 +1177,11 @@ L<Moose::Meta::TypeConstraint::Role> constructor (as a hash).
 
 Given a enum name this function will create a new
 L<Moose::Meta::TypeConstraint::Enum> object for that enum name.
+
+=item B<create_duck_type_constraint($name, $methods)>
+
+Given a duck type name this function will create a new
+L<Moose::Meta::TypeConstraint::DuckType> object for that enum name.
 
 =item B<find_or_parse_type_constraint($type_name)>
 
