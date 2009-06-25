@@ -40,9 +40,11 @@ after 'check_handles_values' => sub {
         my $attr_name           = $self->name;
 
         foreach my $method (keys %$method_constructors) {
-            $handles->{$method} = ($method . '_' . $attr_name);
+            $handles->{$method . '_' . $attr_name} = $method;
         }
     }
+
+    $self->_set_handles($handles);
 };
 
 no Moose::Role;

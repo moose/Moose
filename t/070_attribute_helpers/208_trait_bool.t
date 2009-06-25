@@ -20,7 +20,6 @@ use Moose::AttributeHelpers;
                      flip_switch => 'toggle',
                      is_dark => 'not',
                     },
-        }
     )
 }
 

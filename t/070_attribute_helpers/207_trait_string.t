@@ -3,13 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 21;
 use Test::Moose 'does_ok';
 
 BEGIN {
     use_ok('Moose::AttributeHelpers');
 }
 
+my $uc;
 {
     package MyHomePage;
     use Moose;
@@ -28,10 +29,9 @@ BEGIN {
                     chop_string    => 'chop',
                     chomp_string   => 'chomp',
                     clear_string   => 'clear',
-                    exclaim         => { append  => [ '!' ]},
-                    capitalize_last => { replace => [ qr/(.)$/, sub { uc $1 } ]},
-                    invalid_number  => { match   => [ qr/\D/ ]},
-                    shift_chars     => { substr  => sub { $_[1]->($_[0], 0, $_[2], '') } },
+                    exclaim         => [ append  => [ '!' ] ],
+                    capitalize_last => [ replace => [ qr/(.)$/, $uc = sub { uc $1 } ] ],
+                    invalid_number  => [ match   => [ qr/\D/ ] ],
                    },
     );
 }
@@ -72,14 +72,6 @@ is($page->string, 'bArcfo', "substitution");
 $page->exclaim;
 is($page->string, 'bArcfo!', 'exclaim!');
 
-is($page->sub_string(2), 'rcfo!', 'substr(offset)');
-is($page->sub_string(2, 2), 'rc', 'substr(offset, length)');
-is($page->sub_string(2, 2, ''), 'rc', 'substr(offset, length, replacement)');
-is($page->string, 'bAfo!', 'replacement got inserted');
-
-is($page->shift_chars(2), 'bA', 'curried substr');
-is($page->string, 'fo!', 'replacement got inserted');
-
 $page->string('Moosex');
 $page->capitalize_last;
 is($page->string, 'MooseX', 'capitalize last');
@@ -111,5 +103,8 @@ is_deeply($string->handles, {
     chop_string    => 'chop',
     chomp_string   => 'chomp',
     clear_string   => 'clear',
+    exclaim         => [ append  => [ '!' ] ],
+    capitalize_last => [ replace => [ qr/(.)$/, $uc ] ],
+    invalid_number  => [ match   => [ qr/\D/ ] ],
 }, '... got the right provides methods');
 

@@ -86,7 +86,7 @@ around '_canonicalize_handles' => sub {
 
 ## methods called after instantiation
 
-before 'install_delegation' => sub { (shift)->check_handles_values };
+before 'install_accessors' => sub { (shift)->check_handles_values };
 
 sub check_handles_values {
     my $self = shift;

@@ -40,6 +40,7 @@ __PACKAGE__->meta->add_attribute('trigger' => (
 ));
 __PACKAGE__->meta->add_attribute('handles' => (
     reader    => 'handles',
+    writer    => '_set_handles',
     predicate => 'has_handles',
 ));
 __PACKAGE__->meta->add_attribute('documentation' => (

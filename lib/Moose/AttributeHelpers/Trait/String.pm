@@ -33,14 +33,14 @@ before 'process_options_for_handles' => sub {
 
 after 'check_handles_values' => sub {
     my $self     = shift;
-    my $provides = $self->provides;
+    my $handles = $self->handles;
 
-    unless (scalar keys %$provides) {
+    unless (scalar keys %$handles) {
         my $method_constructors = $self->method_constructors;
         my $attr_name           = $self->name;
 
         foreach my $method (keys %$method_constructors) {
-            $provides->{$method} = ($method . '_' . $attr_name);
+            $handles->{$method} = ($method . '_' . $attr_name);
         }
     }
 };
