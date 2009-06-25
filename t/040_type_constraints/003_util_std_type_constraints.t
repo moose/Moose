@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 291;
+use Test::More tests => 277;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -282,26 +282,6 @@ ok(!defined Object($fh),              '... Object rejects anything which is not 
 ok(!defined Object(qr/../),           '... Object rejects anything which is not blessed');
 ok(defined Object(bless {}, 'Foo'),   '... Object accepts anything which is blessed');
 ok(!defined Object(undef),             '... Object accepts anything which is blessed');
-
-{
-    package My::Role;
-    sub does { 'fake' }
-}
-
-ok(!defined Role(0),                    '... Role rejects anything which is not a Role');
-ok(!defined Role(100),                  '... Role rejects anything which is not a Role');
-ok(!defined Role(''),                   '... Role rejects anything which is not a Role');
-ok(!defined Role('Foo'),                '... Role rejects anything which is not a Role');
-ok(!defined Role([]),                   '... Role rejects anything which is not a Role');
-ok(!defined Role({}),                   '... Role rejects anything which is not a Role');
-ok(!defined Role(sub {}),               '... Role rejects anything which is not a Role');
-ok(!defined Role($SCALAR_REF),          '... Role rejects anything which is not a Role');
-ok(!defined Role($GLOB_REF),            '... Role rejects anything which is not a Role');
-ok(!defined Role($fh),                  '... Role rejects anything which is not a Role');
-ok(!defined Role(qr/../),               '... Role rejects anything which is not a Role');
-ok(!defined Role(bless {}, 'Foo'),      '... Role rejects anything which is not a Role');
-ok(defined Role(bless {}, 'My::Role'),  '... Role accepts anything which is a Role');
-ok(!defined Role(undef),                '... Role rejects anything which is not a Role');
 
 ok(!defined ClassName(0),               '... ClassName rejects anything which is not a ClassName');
 ok(!defined ClassName(100),             '... ClassName rejects anything which is not a ClassName');

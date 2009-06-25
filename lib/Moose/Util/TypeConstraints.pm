@@ -657,6 +657,7 @@ subtype 'Object' => as 'Ref' =>
     where { blessed($_) && blessed($_) ne 'Regexp' } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Object;
 
+# This type is deprecated.
 subtype 'Role' => as 'Object' => where { $_->can('does') } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
@@ -861,7 +862,6 @@ that hierarchy represented visually.
               GlobRef
                   FileHandle
               Object
-                  Role
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
@@ -887,8 +887,7 @@ existence check. This means that your class B<must> be loaded for this
 type constraint to pass.
 
 B<NOTE:> The C<RoleName> constraint checks a string is a I<package
-name> which is a role, like C<'MyApp::Role::Comparable'>. The C<Role>
-constraint checks that an I<object> has a C<does> method.
+name> which is a role, like C<'MyApp::Role::Comparable'>.
 
 =head2 Type Constraint Naming
 

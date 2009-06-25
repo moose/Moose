@@ -16,6 +16,13 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.84
+
+The C<Role> type has been deprecated. On its own, it was useless,
+since it just checked C<< $object->can('does') >>. If you were using
+it as a parent type, just call C<role_type('Role::Name')> to create an
+appropriate type instead.
+
 =head1 Version 0.78
 
 C<use Moose::Exporter;> now imports C<strict> and C<warnings> into packages
