@@ -888,7 +888,7 @@ type constraint to pass.
 
 B<NOTE:> The C<RoleName> constraint checks a string is a I<package
 name> which is a role, like C<'MyApp::Role::Comparable'>. The C<Role>
-constraint checks that an I<object does> the named role.
+constraint checks that an I<object> has a C<does> method.
 
 =head2 Type Constraint Naming
 
