@@ -22,7 +22,7 @@ subtype 'Bag' => as 'HashRef[Int]';
 
 sub helper_type { 'Bag' }
 
-before 'process_options_for_provides' => sub {
+before 'process_options_for_handles' => sub {
     my ($self, $options, $name) = @_;
 
     # Set some default attribute options here unless already defined
@@ -90,7 +90,7 @@ for more details.
 
 =item B<helper_type>
 
-=item B<process_options_for_provides>
+=item B<process_options_for_handles>
 
 =back
 

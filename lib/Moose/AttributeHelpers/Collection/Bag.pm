@@ -63,7 +63,7 @@ for more details.
 
 =item B<helper_type>
 
-=item B<process_options_for_provides>
+=item B<process_options_for_handles>
 
 =back
 

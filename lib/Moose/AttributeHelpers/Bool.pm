@@ -37,11 +37,11 @@ Moose::AttributeHelpers::Bool
 
 =item B<helper_type>
 
-=item B<process_options_for_provides>
+=item B<process_options_for_handles>
 
 Run before its superclass method.
 
-=item B<check_provides_values>
+=item B<check_handles_values>
 
 Run after its superclass method.
 

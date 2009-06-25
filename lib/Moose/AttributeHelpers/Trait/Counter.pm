@@ -19,7 +19,7 @@ has 'method_provider' => (
 
 sub helper_type { 'Num' }
 
-before 'process_options_for_provides' => sub {
+before 'process_options_for_handles' => sub {
     my ($self, $options, $name) = @_;
 
     # Set some default attribute options here unless already defined
@@ -31,7 +31,7 @@ before 'process_options_for_provides' => sub {
     $options->{default} = 0    unless exists $options->{default};
 };
 
-after 'check_provides_values' => sub {
+after 'check_handles_values' => sub {
     my $self     = shift;
     my $provides = $self->provides;
 
@@ -109,11 +109,11 @@ above. This allows for a very basic counter definition:
 
 =item B<helper_type>
 
-=item B<process_options_for_provides>
+=item B<process_options_for_handles>
 
 Run before its superclass method.
 
-=item B<check_provides_values>
+=item B<check_handles_values>
 
 Run after its superclass method.
 

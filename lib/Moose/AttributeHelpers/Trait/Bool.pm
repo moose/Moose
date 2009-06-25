@@ -23,7 +23,7 @@ has 'method_provider' => (
     default   => 'Moose::AttributeHelpers::MethodProvider::Bool'
 );
 
-before 'process_options_for_provides' => sub {
+before 'process_options_for_handles' => sub {
     my ($self, $options, $name) = @_;
 
     # Set some default attribute options here unless already defined
