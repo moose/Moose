@@ -848,10 +848,10 @@ that hierarchy represented visually.
       Defined
           Value
               Num
-                Int
+                  Int
               Str
-                ClassName
-                RoleName
+                  ClassName
+                  RoleName
           Ref
               ScalarRef
               ArrayRef[`a]
@@ -859,9 +859,9 @@ that hierarchy represented visually.
               CodeRef
               RegexpRef
               GlobRef
-                FileHandle
+                  FileHandle
               Object
-                Role
+                  Role
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
