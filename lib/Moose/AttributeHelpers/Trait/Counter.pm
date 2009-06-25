@@ -89,7 +89,7 @@ Moose::AttributeHelpers::Counter
 =head1 DESCRIPTION
 
 This module provides a simple counter attribute, which can be
-incremented and decremeneted.
+incremented and decremented.
 
 If your attribute definition does not include any of I<is>, I<isa>,
 I<default> or I<provides> but does use the C<Counter> metaclass,

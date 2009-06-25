@@ -93,7 +93,7 @@ modification of the value stored in the attribute.
 =item I<inc>
 
 Increments the value stored in this slot using the magical string autoincrement
-operator. Note that Perl doesn't provide analogeous behavior in C<-->, so
+operator. Note that Perl doesn't provide analogous behavior in C<-->, so
 C<dec> is not available.
 
 =item I<append> C<$string>

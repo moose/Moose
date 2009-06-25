@@ -24,7 +24,9 @@ chromatic's
 Debolaz
 Deltac
 dexter
+doy
 ewilhelm
+frodwith
 Goulah
 gphat
 groditi
@@ -34,6 +36,7 @@ Kinyon's
 Kogman
 kolibrie
 konobi
+Lanyon
 lbr
 Luehrs
 McWhirter
@@ -46,6 +49,7 @@ phaylon
 Prather
 Ragwitz
 Reis
+rafl
 rindolf
 rlb
 Rockway
@@ -114,6 +118,7 @@ Baz
 Changelog
 compat
 datetimes
+dec
 definedness
 destructor
 destructors
@@ -130,7 +135,9 @@ invocant's
 irc
 IRC
 isa
+kv
 login
+mul
 namespace
 namespaced
 namespaces
