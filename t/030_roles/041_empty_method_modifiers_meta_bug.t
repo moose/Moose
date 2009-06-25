@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use English;
 
 use Test::More tests => 6;
 
