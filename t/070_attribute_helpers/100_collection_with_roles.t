@@ -51,7 +51,7 @@ use Moose::AttributeHelpers;
 with 'Subject';
 
 has count => (
-    trait     => [ 'Counter' ],
+    traits    => [ 'Counter' ],
     is        => 'ro',
     isa       => 'Int',
     default   => 0,
@@ -61,7 +61,7 @@ has count => (
     },
 );
 
-after 'inc_counter', 'dec_counter' => sub {
+after qw(inc_counter dec_counter) => sub {
     my ($self) = @_;
     $self->notify();
 };
