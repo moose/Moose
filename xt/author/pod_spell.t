@@ -118,6 +118,7 @@ destructor
 destructors
 dev
 DWIM
+DUCKTYPE
 hashrefs
 hotspots
 immutabilize
