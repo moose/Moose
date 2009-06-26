@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 41;
 use Test::Exception;
 
 =pod
@@ -81,17 +81,25 @@ is_deeply(
 
 ok($foo_role->has_attribute('bar'), '... FooRole does have the bar attribute');
 
-is_deeply(
-    $foo_role->get_attribute('bar'),
-    { is => 'rw', isa => 'Foo' },
-    '... got the correct description of the bar attribute');
+my $bar_attr = $foo_role->get_attribute('bar');
+is($bar_attr->{is}, 'rw',
+   'bar attribute is rw');
+is($bar_attr->{isa}, 'Foo',
+   'bar attribute isa Foo');
+is(ref($bar_attr->{definition_context}), 'HASH',
+   'bar\'s definition context is a hash');
+is($bar_attr->{definition_context}->{package}, 'FooRole',
+   'bar was defined in FooRole');
 
 ok($foo_role->has_attribute('baz'), '... FooRole does have the baz attribute');
 
-is_deeply(
-    $foo_role->get_attribute('baz'),
-    { is => 'ro' },
-    '... got the correct description of the baz attribute');
+my $baz_attr = $foo_role->get_attribute('baz');
+is($baz_attr->{is}, 'ro',
+   'baz attribute is ro');
+is(ref($baz_attr->{definition_context}), 'HASH',
+   'bar\'s definition context is a hash');
+is($baz_attr->{definition_context}->{package}, 'FooRole',
+   'baz was defined in FooRole');
 
 # method modifiers
 
