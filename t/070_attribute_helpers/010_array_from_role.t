@@ -3,12 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 2;
 use Test::Exception;
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
 
 {
     package Foo;
@@ -18,6 +14,7 @@ BEGIN {
 
     package Stuffed::Role;
     use Moose::Role;
+    use Moose::AttributeHelpers;
 
     has 'options' => (
         traits => ['Collection::Array'],
@@ -27,6 +24,7 @@ BEGIN {
 
     package Bulkie::Role;
     use Moose::Role;
+    use Moose::AttributeHelpers;
 
     has 'stuff' => (
         traits  => ['Collection::Array'],

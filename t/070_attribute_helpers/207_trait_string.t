@@ -3,17 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 19;
 use Test::Moose 'does_ok';
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
 
 my $uc;
 {
     package MyHomePage;
     use Moose;
+    use Moose::AttributeHelpers;
 
     has 'string' => (
         traits  => [qw/String/],

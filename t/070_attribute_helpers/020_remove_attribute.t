@@ -3,16 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 use Test::Exception;
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
 
 {
     package MyHomePage;
     use Moose;
+    use Moose::AttributeHelpers;
 
     has 'counter' => (
         traits  => ['Counter'],

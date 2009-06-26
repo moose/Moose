@@ -4,12 +4,12 @@ use strict;
 use warnings;
 
 use Test::More tests => 8;
-use Moose::AttributeHelpers;
 
 {
-
     package Room;
     use Moose;
+    use Moose::AttributeHelpers;
+
     has 'is_lit' => (
         traits  => ['Bool'],
         is      => 'rw',

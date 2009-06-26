@@ -3,13 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 46;
 use Test::Exception;
 use Test::Moose 'does_ok';
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
 
 {
     package Stuff;

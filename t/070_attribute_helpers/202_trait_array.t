@@ -3,13 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 69;
+use Test::More tests => 68;
 use Test::Exception;
 use Test::Moose 'does_ok';
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
 
 my $sort;
 
@@ -17,6 +13,7 @@ my $sort;
 
     package Stuff;
     use Moose;
+    use Moose::AttributeHelpers;
 
     has 'options' => (
         traits  => [qw/Collection::Array/],

@@ -3,11 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
-
-BEGIN {
-    use_ok('Moose::AttributeHelpers');
-}
+use Test::More tests => 28;
 
 {
     package Subject;
