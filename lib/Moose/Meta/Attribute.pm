@@ -561,7 +561,7 @@ sub install_accessors {
     return;
 }
 
-sub check_associated_methods {
+sub _check_associated_methods {
     my $self = shift;
     unless (
         @{ $self->associated_methods }
@@ -838,7 +838,7 @@ name as the attribute, and a C<writer> with the name you provided.
 Use 'bare' when you are deliberately not installing any methods
 (accessor, reader, etc.) associated with this attribute; otherwise,
 Moose will issue a deprecation warning when this attribute is added to a
-metaclass.  See L</check_associated_methods>.
+metaclass.
 
 =item * isa => $type
 
@@ -1069,13 +1069,6 @@ Returns true if this attribute has a type constraint.
 Given a value, this method returns true if the value is valid for the
 attribute's type constraint. If the value is not valid, it throws an
 error.
-
-=item B<< $attr->check_associated_methods >>
-
-This method makes sure that either an explicit C<< is => 'bare' >> was passed
-to the attribute's constructor or that the attribute has at least one
-associated method (reader, writer, delegation, etc.).  Otherwise, it issues a
-warning.
 
 =item B<< $attr->handles >>
 
