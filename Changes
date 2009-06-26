@@ -33,6 +33,10 @@ for, noteworthy changes.
       - Allow Moose::Meta::TypeConstraint::DuckType in handles, since
         it is just a list of methods (Sartak)
 
+    * Moose::Meta::Role
+      - The get_*_method_modifiers methods would die if the role had
+        no modifiers of the given type (Robert Buels).
+
 0.83 Tue, Jun 23, 2009
     * Moose::Meta::Class
       - Fix _construct_instance not setting the special __MOP__ object
