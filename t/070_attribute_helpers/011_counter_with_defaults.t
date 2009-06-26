@@ -54,5 +54,5 @@ is_deeply($counter->handles, {
     'dec_counter'   => 'dec',
     'reset_counter' => 'reset',
     'set_counter'   => 'set',
-}, '... got the right default provides methods');
+}, '... got the right default handles methods');
 

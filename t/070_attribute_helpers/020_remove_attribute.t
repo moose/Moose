@@ -15,14 +15,14 @@ BEGIN {
     use Moose;
 
     has 'counter' => (
-        metaclass => 'Counter',
+        traits    => [ 'Counter' ],
         is        => 'ro',
         isa       => 'Int',
         default   => sub { 0 },
-        provides  => {
-            inc   => 'inc_counter',
-            dec   => 'dec_counter',
-            reset => 'reset_counter',
+        handles   => {
+            inc_counter   => 'inc',
+            dec_counter   => 'dec',
+            reset_counter => 'reset',
         }
     );
 }

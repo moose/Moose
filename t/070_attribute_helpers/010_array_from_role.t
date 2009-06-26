@@ -20,7 +20,7 @@ BEGIN {
     use Moose::Role;
 
     has 'options' => (
-        metaclass => 'Collection::Array',
+        traits    => [ 'Collection::Array' ],
         is        => 'ro',
         isa       => 'ArrayRef[Foo]',
     );
@@ -29,11 +29,11 @@ BEGIN {
     use Moose::Role;
 
     has 'stuff' => (
-        metaclass => 'Collection::Array',
+        traits    => [ 'Collection::Array' ],
         is        => 'ro',
         isa       => 'ArrayRef',
-        provides  => {
-            'get' => 'get_stuff'
+        handles   => {
+            get_stuff => 'get',
         }
     );
 

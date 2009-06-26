@@ -17,16 +17,6 @@ use Moose::AttributeHelpers::Trait::Collection::Hash;
 use Moose::AttributeHelpers::Trait::Collection::ImmutableHash;
 use Moose::AttributeHelpers::Trait::Collection::Bag;
 
-use Moose::AttributeHelpers::Counter;
-use Moose::AttributeHelpers::Number;
-use Moose::AttributeHelpers::String;
-use Moose::AttributeHelpers::Bool;
-use Moose::AttributeHelpers::Collection::List;
-use Moose::AttributeHelpers::Collection::Array;
-use Moose::AttributeHelpers::Collection::Hash;
-use Moose::AttributeHelpers::Collection::ImmutableHash;
-use Moose::AttributeHelpers::Collection::Bag;
-
 1;
 
 __END__
@@ -44,7 +34,7 @@ Moose::AttributeHelpers - Extend your attribute interfaces
   use Moose::AttributeHelpers;
 
   has 'mapping' => (
-      metaclass => 'Collection::Hash',
+      traits    => [ 'Collection::Hash' ],
       is        => 'rw',
       isa       => 'HashRef[Str]',
       default   => sub { {} },

@@ -106,5 +106,5 @@ is_deeply($string->handles, {
     exclaim         => [ append  => [ '!' ] ],
     capitalize_last => [ replace => [ qr/(.)$/, $uc ] ],
     invalid_number  => [ match   => [ qr/\D/ ] ],
-}, '... got the right provides methods');
+}, '... got the right handles methods');
 
