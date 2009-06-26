@@ -12,7 +12,7 @@ use Test::Moose 'does_ok';
     use Moose::AttributeHelpers;
 
     has 'counter' => (
-        traits  => [qw/Counter/],
+        traits  => ['Counter'],
         is      => 'ro',
         isa     => 'Int',
         default => 0,

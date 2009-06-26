@@ -12,7 +12,7 @@ use Test::Moose;
     use Moose::AttributeHelpers;
 
     has 'integer' => (
-        traits  => [qw/Number/],
+        traits  => ['Number'],
         is      => 'ro',
         isa     => 'Int',
         default => 5,

@@ -13,7 +13,7 @@ my $uc;
     use Moose::AttributeHelpers;
 
     has 'string' => (
-        traits  => [qw/String/],
+        traits  => ['String'],
         is      => 'rw',
         isa     => 'Str',
         default => sub {''},

@@ -13,7 +13,7 @@ use Test::Moose 'does_ok';
     use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits  => [qw/Collection::Hash/],
+        traits  => ['Collection::Hash'],
         is      => 'ro',
         isa     => 'HashRef[Str]',
         default => sub { {} },

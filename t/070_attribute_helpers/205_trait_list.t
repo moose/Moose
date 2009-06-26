@@ -16,7 +16,7 @@ my $up;
     use Moose::AttributeHelpers;
 
     has '_options' => (
-        traits   => [qw/Collection::List/],
+        traits   => ['Collection::List'],
         is       => 'ro',
         isa      => 'ArrayRef[Int]',
         init_arg => 'options',

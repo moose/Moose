@@ -16,7 +16,7 @@ my $sort;
     use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits  => [qw/Collection::Array/],
+        traits  => ['Collection::Array'],
         is      => 'ro',
         isa     => 'ArrayRef[Str]',
         default => sub { [] },
