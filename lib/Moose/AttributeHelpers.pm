@@ -72,13 +72,19 @@ used attribute helper methods for more specific types of data.
 As seen in the L</SYNOPSIS>, you specify the extension via the
 C<trait> parameter. Available meta classes are below; see L</METHOD PROVIDERS>.
 
+This module used to exist as the L<MooseX::AttributeHelpers> extension. It was
+very commonly used, so we moved it into core Moose. Since this gave us a chance
+to change the interface, you will have to change your code or continue using
+the L<MooseX::AttributeHelpers> extension.
+
 =head1 PARAMETERS
 
 =head2 handles
 
 This is like C<< handles >> in L<Moose/has>, but only HASH references are
 allowed.  Keys are method names that you want installed locally, and values are
-methods from the method providers (below).  Currying with delegated methods works normally for C<< handles >>.
+methods from the method providers (below).  Currying with delegated methods
+works normally for C<< handles >>.
 
 =head1 METHOD PROVIDERS
 
@@ -117,21 +123,6 @@ Common methods for array references.
 Common list methods for array references.
 
 =back
-
-=head1 CAVEAT
-
-This is an early release of this module. Right now it is in great need
-of documentation and tests in the test suite. However, we have used this
-module to great success at C<$work> where it has been tested very thoroughly
-and deployed into a major production site.
-
-I plan on getting better docs and tests in the next few releases, but until
-then please refer to the few tests we do have and feel free email and/or
-message me on irc.perl.org if you have any questions.
-
-=head1 TODO
-
-We need tests and docs badly.
 
 =head1 BUGS
 
