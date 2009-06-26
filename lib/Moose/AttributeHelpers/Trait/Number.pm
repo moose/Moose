@@ -7,7 +7,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 with 'Moose::AttributeHelpers::Trait::Base';
 
-sub helper_type { 'Num' }
+sub _helper_type { 'Num' }
 
 # NOTE:
 # we don't use the method provider for this
@@ -104,8 +104,6 @@ basic math operations.
 =over 4
 
 =item B<meta>
-
-=item B<helper_type>
 
 =item B<method_constructors>
 

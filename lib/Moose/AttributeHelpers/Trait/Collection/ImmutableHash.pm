@@ -17,7 +17,7 @@ has 'method_provider' => (
     default   => 'Moose::AttributeHelpers::MethodProvider::ImmutableHash'
 );
 
-sub helper_type { 'HashRef' }
+sub _helper_type { 'HashRef' }
 
 no Moose::Role;
 
@@ -72,8 +72,6 @@ for more details.
 =item B<method_provider>
 
 =item B<has_method_provider>
-
-=item B<helper_type>
 
 =back
 

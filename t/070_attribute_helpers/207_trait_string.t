@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 20;
 use Test::Moose 'does_ok';
 
 BEGIN {
@@ -89,8 +89,6 @@ is($page->string, '', "clear");
 
 my $string = $page->meta->get_attribute('string');
 does_ok($string, 'Moose::AttributeHelpers::Trait::String');
-
-is($string->helper_type, 'Str', '... got the expected helper type');
 
 is($string->type_constraint->name, 'Str', '... got the expected type constraint');
 

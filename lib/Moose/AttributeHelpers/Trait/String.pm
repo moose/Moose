@@ -17,10 +17,9 @@ has 'method_provider' => (
     default   => 'Moose::AttributeHelpers::MethodProvider::String',
 );
 
-sub helper_type { 'Str' }
-
 sub _default_default { q{} }
 sub _default_is { 'rw' }
+sub _helper_type { 'Str' }
 
 after '_check_handles_values' => sub {
     my $self    = shift;
@@ -97,16 +96,6 @@ above. This allows for a very basic counter definition:
 =item B<method_provider>
 
 =item B<has_method_provider>
-
-=item B<helper_type>
-
-=item B<process_options_for_handles>
-
-Run before its superclass method.
-
-=item B<check_handles_values>
-
-Run after its superclass method.
 
 =back
 

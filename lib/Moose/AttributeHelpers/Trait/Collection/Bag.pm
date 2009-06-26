@@ -20,7 +20,7 @@ has 'method_provider' => (
 
 subtype 'Bag' => as 'HashRef[Int]';
 
-sub helper_type { 'Bag' }
+sub _helper_type { 'Bag' }
 
 sub _default_default { sub { {} } }
 
@@ -78,10 +78,6 @@ for more details.
 =item B<method_provider>
 
 =item B<has_method_provider>
-
-=item B<helper_type>
-
-=item B<process_options_for_handles>
 
 =back
 

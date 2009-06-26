@@ -19,8 +19,7 @@ has 'method_provider' => (
 
 sub _default_default { 0 }
 sub _default_is { 'ro' }
-
-sub helper_type { 'Num' }
+sub _helper_type { 'Num' }
 
 after '_check_handles_values' => sub {
     my $self    = shift;
@@ -99,8 +98,6 @@ above. This allows for a very basic counter definition:
 =item B<method_provider>
 
 =item B<has_method_provider>
-
-=item B<helper_type>
 
 =back
 

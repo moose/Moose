@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 13;
 use Test::Moose;
 
 BEGIN {
@@ -44,8 +44,6 @@ is($page->counter, 0, '... got the original value');
 
 my $counter = $page->meta->get_attribute('counter');
 does_ok($counter, 'Moose::AttributeHelpers::Trait::Counter');
-
-is($counter->helper_type, 'Num', '... got the expected helper type');
 
 is($counter->type_constraint->name, 'Num', '... got the expected default type constraint');
 

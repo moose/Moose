@@ -8,9 +8,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 with 'Moose::AttributeHelpers::Trait::Base';
 
-sub helper_type { 'Bool' }
-
 sub _default_is { 'rw' }
+sub _helper_type { 'Bool' }
 
 # NOTE:
 # we don't use the method provider for this
@@ -75,8 +74,6 @@ basic math operations.
 =over 4
 
 =item B<meta>
-
-=item B<helper_type>
 
 =item B<method_constructors>
 

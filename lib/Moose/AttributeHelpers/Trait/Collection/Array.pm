@@ -17,7 +17,7 @@ has 'method_provider' => (
     default   => 'Moose::AttributeHelpers::MethodProvider::Array'
 );
 
-sub helper_type { 'ArrayRef' }
+sub _helper_type { 'ArrayRef' }
 
 no Moose::Role;
 
@@ -71,8 +71,6 @@ for more details.
 =item B<method_provider>
 
 =item B<has_method_provider>
-
-=item B<helper_type>
 
 =back
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 17;
 use Test::Moose 'does_ok';
 
 BEGIN {
@@ -65,8 +65,6 @@ is($page->counter, 2, '... decrement by arg');
 
 my $counter = $page->meta->get_attribute('counter');
 does_ok($counter, 'Moose::AttributeHelpers::Trait::Counter');
-
-is($counter->helper_type, 'Num', '... got the expected helper type');
 
 is($counter->type_constraint->name, 'Int', '... got the expected type constraint');
 

@@ -7,7 +7,7 @@ our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-requires 'helper_type';
+requires '_helper_type';
 
 # these next two are the possible methods
 # you can use in the 'handles' map.
@@ -59,9 +59,9 @@ before '_process_options' => sub {
 sub _check_helper_type {
     my ( $self, $options, $name ) = @_;
 
-    my $type = $self->helper_type;
+    my $type = $self->_helper_type;
 
-    $options->{isa} = $self->helper_type
+    $options->{isa} = $type
         unless exists $options->{isa};
 
     my $isa = Moose::Util::TypeConstraints::find_or_create_type_constraint(
