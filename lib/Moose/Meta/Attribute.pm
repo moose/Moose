@@ -585,7 +585,7 @@ sub _process_accessors {
      && (!$self->definition_context
       || $method->package_name eq $self->definition_context->{package})) {
         Carp::cluck(
-            "You cannot overwrite a locally defined method ($accessor) with "
+            "You are overwriting a locally defined method ($accessor) with "
           . "an accessor"
         );
     }
