@@ -78,7 +78,7 @@ Moose::AttributeHelpers::Number
       metaclass => 'Number',
       is        => 'ro',
       isa       => 'Int',
-      default   => sub { 5 },
+      default   => 5,
       handles  => {
           set => 'set',
           add => 'add',

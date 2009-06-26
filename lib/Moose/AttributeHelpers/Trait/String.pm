@@ -19,19 +19,10 @@ has 'method_provider' => (
 
 sub helper_type { 'Str' }
 
-before 'process_options_for_handles' => sub {
-    my ( $self, $options, $name ) = @_;
+sub _default_default { q{} }
+sub _default_is { 'rw' }
 
-    # Set some default attribute options here unless already defined
-    if ( ( my $type = $self->helper_type ) && !exists $options->{isa} ) {
-        $options->{isa} = $type;
-    }
-
-    $options->{is}      = 'rw' unless exists $options->{is};
-    $options->{default} = ''   unless exists $options->{default};
-};
-
-after 'check_handles_values' => sub {
+after '_check_handles_values' => sub {
     my $self    = shift;
     my $handles = $self->handles;
 
@@ -72,7 +63,7 @@ Moose::AttributeHelpers::String
       metaclass => 'String',
       is        => 'rw',
       isa       => 'Str',
-      default   => sub { '' },
+      default   => q{},
       handles  => {
           add_text     => 'append',
           replace_text => 'replace',

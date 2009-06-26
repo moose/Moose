@@ -10,6 +10,8 @@ with 'Moose::AttributeHelpers::Trait::Base';
 
 sub helper_type { 'Bool' }
 
+sub _default_is { 'rw' }
+
 # NOTE:
 # we don't use the method provider for this
 # module since many of the names of the provied
@@ -22,15 +24,6 @@ has 'method_provider' => (
     predicate => 'has_method_provider',
     default   => 'Moose::AttributeHelpers::MethodProvider::Bool'
 );
-
-before 'process_options_for_handles' => sub {
-    my ( $self, $options, $name ) = @_;
-
-    # Set some default attribute options here unless already defined
-    if ( ( my $type = $self->helper_type ) && !exists $options->{isa} ) {
-        $options->{isa} = $type;
-    }
-};
 
 no Moose::Role;
 
@@ -57,7 +50,7 @@ Moose::AttributeHelpers::Bool
       metaclass => 'Bool',
       is        => 'rw',
       isa       => 'Bool',
-      default   => sub { 0 },
+      default   => 0,
       handles   => {
           illuminate  => 'set',
           darken      => 'unset',

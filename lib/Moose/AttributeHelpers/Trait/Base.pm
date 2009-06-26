@@ -44,31 +44,33 @@ has '+type_constraint' => ( required => 1 );
 
 ## Methods called prior to instantiation
 
-sub process_options_for_handles {
-    my ( $self, $options ) = @_;
-
-    if ( my $type = $self->helper_type ) {
-        ( exists $options->{isa} )
-            || confess "You must define a type with the $type metaclass";
-
-        my $isa = $options->{isa};
-
-        unless ( blessed($isa) && $isa->isa('Moose::Meta::TypeConstraint') ) {
-            $isa
-                = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-                $isa);
-        }
-
-        ( $isa->is_a_type_of($type) )
-            || confess
-            "The type constraint for a $type ($options->{isa}) must be a subtype of $type";
-    }
-}
-
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
-    $self->process_options_for_handles( $options, $name );
+
+    $self->_check_helper_type( $options, $name );
+
+    $options->{is} = $self->_default_is
+        if ! exists $options->{is} && $self->can('_default_is');
+
+    $options->{default} = $self->_default_default
+        if ! exists $options->{default} && $self->can('_default_default');
 };
+
+sub _check_helper_type {
+    my ( $self, $options, $name ) = @_;
+
+    my $type = $self->helper_type;
+
+    $options->{isa} = $self->helper_type
+        unless exists $options->{isa};
+
+    my $isa = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+        $options->{isa} );
+
+    ( $isa->is_a_type_of($type) )
+        || confess
+        "The type constraint for $name must be a subtype of $type but it's a $isa";
+}
 
 around '_canonicalize_handles' => sub {
     my $next    = shift;
@@ -91,9 +93,9 @@ around '_canonicalize_handles' => sub {
 
 ## methods called after instantiation
 
-before 'install_accessors' => sub { (shift)->check_handles_values };
+before 'install_accessors' => sub { (shift)->_check_handles_values };
 
-sub check_handles_values {
+sub _check_handles_values {
     my $self = shift;
 
     my $method_constructors = $self->method_constructors;
@@ -144,16 +146,6 @@ __END__
 =head1 NAME
 
 Moose::AttributeHelpers::Trait::Base - base role for helpers
-
-=head1 METHODS
-
-=head2 check_handles_values
-
-Confirms that handles has all valid possibilities in it.
-
-=head2 process_options_for_handles
-
-Ensures that the type constraint (C<isa>) matches the helper type.
 
 =head1 BUGS
 

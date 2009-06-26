@@ -17,21 +17,12 @@ has 'method_provider' => (
     default   => 'Moose::AttributeHelpers::MethodProvider::Counter',
 );
 
+sub _default_default { 0 }
+sub _default_is { 'ro' }
+
 sub helper_type { 'Num' }
 
-before 'process_options_for_handles' => sub {
-    my ( $self, $options, $name ) = @_;
-
-    # Set some default attribute options here unless already defined
-    if ( ( my $type = $self->helper_type ) && !exists $options->{isa} ) {
-        $options->{isa} = $type;
-    }
-
-    $options->{is}      = 'ro' unless exists $options->{is};
-    $options->{default} = 0    unless exists $options->{default};
-};
-
-after 'check_handles_values' => sub {
+after '_check_handles_values' => sub {
     my $self    = shift;
     my $handles = $self->handles;
 
@@ -74,7 +65,7 @@ Moose::AttributeHelpers::Counter
       metaclass => 'Counter',
       is        => 'ro',
       isa       => 'Num',
-      default   => sub { 0 },
+      default   => 0,
       handles   => {
           inc_counter   => 'inc',
           dec_counter   => 'dec',
@@ -83,8 +74,8 @@ Moose::AttributeHelpers::Counter
   );
 
   my $page = MyHomePage->new();
-  $page->inc_counter; # same as $page->counter($page->counter + 1);
-  $page->dec_counter; # same as $page->counter($page->counter - 1);
+  $page->inc_counter; # same as $page->counter( $page->counter + 1 );
+  $page->dec_counter; # same as $page->counter( $page->counter - 1 );
 
 =head1 DESCRIPTION
 
@@ -110,14 +101,6 @@ above. This allows for a very basic counter definition:
 =item B<has_method_provider>
 
 =item B<helper_type>
-
-=item B<process_options_for_handles>
-
-Run before its superclass method.
-
-=item B<check_handles_values>
-
-Run after its superclass method.
 
 =back
 
