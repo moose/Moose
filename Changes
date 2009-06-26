@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.85
+    * Moose::Meta::Attribute
+      - The warning for 'no associated methods' is now split out into the
+        check_associated_methods method, so that extensions can safely call
+        'after install_accessors => ...'. (hdp)
+
 0.84 Fri, Jun 26, 2009
     * Moose::Role
       - has now sets definition_context for attributes defined in

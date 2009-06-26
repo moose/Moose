@@ -243,11 +243,17 @@ sub superclasses {
 
 sub add_attribute {
     my $self = shift;
-    $self->SUPER::add_attribute(
+    my $attr =
         (blessed $_[0] && $_[0]->isa('Class::MOP::Attribute')
             ? $_[0]
-            : $self->_process_attribute(@_))
-    );
+            : $self->_process_attribute(@_));
+    $self->SUPER::add_attribute($attr);
+    # it may be a Class::MOP::Attribute, theoretically, which doesn't have
+    # 'bare' and doesn't implement this method
+    if ($attr->can('check_associated_methods')) {
+        $attr->check_associated_methods;
+    }
+    return $attr;
 }
 
 sub add_override_method_modifier {
