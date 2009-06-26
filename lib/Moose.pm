@@ -2,7 +2,7 @@ package Moose;
 
 use 5.008;
 
-our $VERSION   = '0.83';
+our $VERSION   = '0.84';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -31,13 +31,6 @@ use Moose::Meta::Role::Application::ToInstance;
 
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
-
-sub _caller_info {
-    my $level = @_ ? ($_[0] + 1) : 2;
-    my %info;
-    @info{qw(package file line)} = caller($level);
-    return \%info;
-}
 
 sub throw_error {
     # FIXME This
@@ -68,7 +61,7 @@ sub has {
     Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
         if @_ % 2 == 1;
 
-    my %options = ( definition_context => _caller_info(), @_ );
+    my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
 }
@@ -469,7 +462,7 @@ B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will
 B<not> cause the trigger to be fired.
 
-=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
+=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | DUCKTYPE | CODE>
 
 The I<handles> option provides Moose classes with automated delegation features.
 This is a pretty complex and powerful option. It accepts many different option
@@ -572,6 +565,14 @@ becomes the list of methods to handle. The "interface" can be defined as; the
 methods of the role and any required methods of the role. It should be noted
 that this does B<not> include any method modifiers or generated attribute
 methods (which is consistent with role composition).
+
+=item C<DUCKTYPE>
+
+With the duck type option, you pass a duck type object whose "interface" then
+becomes the list of methods to handle. The "interface" can be defined as; the
+list of methods passed to C<duck_type> to create a duck type object. For more
+information on C<duck_type> please check
+L<Moose::Util::TypeConstraint|Moose::Util::TypeConstraint>.
 
 =item C<CODE>
 

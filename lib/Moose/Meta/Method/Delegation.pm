@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.83';
+our $VERSION   = '0.84';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -79,7 +79,7 @@ sub _initialize_body {
     # NOTE: we used to do a goto here, but the goto didn't handle
     # failure correctly (it just returned nothing), so I took that
     # out. However, the more I thought about it, the less I liked it
-    # doing the goto, and I prefered the act of delegation being
+    # doing the goto, and I preferred the act of delegation being
     # actually represented in the stack trace.  - SL
     # not inlining this, since it won't really speed things up at
     # all... the only thing that would end up different would be

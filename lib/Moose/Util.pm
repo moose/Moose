@@ -8,7 +8,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.83';
+our $VERSION   = '0.84';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -205,6 +205,13 @@ sub english_list {
     $list .= ', and ' . $tail;
 
     return $list;
+}
+
+sub _caller_info {
+    my $level = @_ ? ($_[0] + 1) : 2;
+    my %info;
+    @info{qw(package file line)} = caller($level);
+    return \%info;
 }
 
 1;

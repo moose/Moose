@@ -3,14 +3,14 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.83';
+our $VERSION   = '0.84';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
-use Sub::Exporter;
+use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
 
 my %EXPORT_SPEC;
@@ -38,14 +38,14 @@ sub build_import_methods {
 
     my $export_recorder = {};
 
-    my ( $exports, $is_removable )
+    my ( $exports, $is_removable, $groups )
         = $class->_make_sub_exporter_params(
         [ @exports_from, $exporting_package ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
             exports => $exports,
-            groups  => { default => [':all'] }
+            groups  => { default => [':all'], %$groups }
         }
     );
 
@@ -107,12 +107,22 @@ sub _make_sub_exporter_params {
     my $packages          = shift;
     my $export_recorder   = shift;
 
+    my %groups;
     my %exports;
     my %is_removable;
 
     for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
             or die "The $package package does not use Moose::Exporter\n";
+
+        # one group for each 'also' package
+        $groups{$package} = [
+            @{ $args->{with_caller} || [] },
+            @{ $args->{with_meta}   || [] },
+            @{ $args->{as_is}       || [] },
+            map ":$_",
+            keys %{ $args->{groups} || {} }
+        ];
 
         for my $name ( @{ $args->{with_caller} } ) {
             my $sub = do {
@@ -123,6 +133,23 @@ sub _make_sub_exporter_params {
             my $fq_name = $package . '::' . $name;
 
             $exports{$name} = $class->_make_wrapped_sub(
+                $fq_name,
+                $sub,
+                $export_recorder,
+            );
+
+            $is_removable{$name} = 1;
+        }
+
+        for my $name ( @{ $args->{with_meta} } ) {
+            my $sub = do {
+                no strict 'refs';
+                \&{ $package . '::' . $name };
+            };
+
+            my $fq_name = $package . '::' . $name;
+
+            $exports{$name} = $class->_make_wrapped_sub_with_meta(
                 $fq_name,
                 $sub,
                 $export_recorder,
@@ -165,9 +192,26 @@ sub _make_sub_exporter_params {
 
             $exports{$name} = sub {$sub};
         }
+
+        for my $name ( keys %{ $args->{groups} } ) {
+            my $group = $args->{groups}{$name};
+
+            if (ref $group eq 'CODE') {
+                $groups{$name} = $class->_make_wrapped_group(
+                    $package,
+                    $group,
+                    $export_recorder,
+                    \%exports,
+                    \%is_removable
+                );
+            }
+            elsif (ref $group eq 'ARRAY') {
+                $groups{$name} = $group;
+            }
+        }
     }
 
-    return ( \%exports, \%is_removable );
+    return ( \%exports, \%is_removable, \%groups );
 }
 
 our $CALLER;
@@ -197,6 +241,76 @@ sub _make_wrapped_sub {
     };
 }
 
+sub _make_wrapped_sub_with_meta {
+    my $self            = shift;
+    my $fq_name         = shift;
+    my $sub             = shift;
+    my $export_recorder = shift;
+
+    return sub {
+        my $caller = $CALLER;
+
+        my $wrapper = $self->_late_curry_wrapper($sub, $fq_name,
+            sub { Class::MOP::class_of(shift) } => $caller);
+
+        my $sub = subname($fq_name => $wrapper);
+
+        $export_recorder->{$sub} = 1;
+
+        return $sub;
+    };
+}
+
+sub _make_wrapped_group {
+    my $class           = shift;
+    my $package         = shift; # package calling use Moose::Exporter
+    my $sub             = shift;
+    my $export_recorder = shift;
+    my $keywords        = shift;
+    my $is_removable    = shift;
+
+    return sub {
+        my $caller = $CALLER; # package calling use PackageUsingMooseExporter -group => {args}
+
+        # there are plenty of ways to deal with telling the code which
+        # package it lives in. the last arg (collector hashref) is
+        # otherwise unused, so we'll stick the original package in
+        # there and act like 'with_caller' by putting the calling
+        # package name as the first arg
+        $_[0] = $caller;
+        $_[3]{from} = $package;
+
+        my $named_code = $sub->(@_);
+        $named_code ||= { };
+
+        # send invalid return value error up to Sub::Exporter
+        unless (ref $named_code eq 'HASH') {
+            return $named_code;
+        }
+
+        for my $name (keys %$named_code) {
+            my $code = $named_code->{$name};
+
+            my $fq_name = $package . '::' . $name;
+            my $wrapper = $class->_curry_wrapper(
+                $code,
+                $fq_name,
+                $caller
+            );
+
+            my $sub = subname( $fq_name => $wrapper );
+            $named_code->{$name} = $sub;
+
+            # mark each coderef as ours
+            $keywords->{$name} = 1;
+            $is_removable->{$name} = 1;
+            $export_recorder->{$sub} = 1;
+        }
+
+        return $named_code;
+    };
+}
+
 sub _curry_wrapper {
     my $class   = shift;
     my $sub     = shift;
@@ -204,6 +318,27 @@ sub _curry_wrapper {
     my @extra   = @_;
 
     my $wrapper = sub { $sub->(@extra, @_) };
+    if (my $proto = prototype $sub) {
+        # XXX - Perl's prototype sucks. Use & to make set_prototype
+        # ignore the fact that we're passing "private variables"
+        &Scalar::Util::set_prototype($wrapper, $proto);
+    }
+    return $wrapper;
+}
+
+sub _late_curry_wrapper {
+    my $class   = shift;
+    my $sub     = shift;
+    my $fq_name = shift;
+    my $extra   = shift;
+    my @ex_args = @_;
+
+    my $wrapper = sub {
+        # resolve curried arguments at runtime via this closure
+        my @curry = ( $extra->( @ex_args ) );
+        return $sub->(@curry, @_);
+    };
+
     if (my $proto = prototype $sub) {
         # XXX - Perl's prototype sucks. Use & to make set_prototype
         # ignore the fact that we're passing "private variables"

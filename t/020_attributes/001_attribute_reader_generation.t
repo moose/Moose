@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 use Test::Exception;
 
 
@@ -27,6 +27,16 @@ use Test::Exception;
         );
     };
     ::ok(!$@, '... created the lazy reader method okay') or warn $@;
+
+    my $warn;
+
+    eval {
+        local $SIG{__WARN__} = sub { $warn = $_[0] };
+        has 'mtfnpy' => (
+            reder => 'get_mftnpy'
+        );
+    };
+    ::ok($warn, '... got a warning for mispelled attribute argument');
 }
 
 {

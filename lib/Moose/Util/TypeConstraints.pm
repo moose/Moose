@@ -6,7 +6,7 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $VERSION = '0.83';
+our $VERSION = '0.84';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -657,6 +657,7 @@ subtype 'Object' => as 'Ref' =>
     where { blessed($_) && blessed($_) ne 'Regexp' } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Object;
 
+# This type is deprecated.
 subtype 'Role' => as 'Object' => where { $_->can('does') } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
@@ -848,10 +849,10 @@ that hierarchy represented visually.
       Defined
           Value
               Num
-                Int
+                  Int
               Str
-                ClassName
-                RoleName
+                  ClassName
+                  RoleName
           Ref
               ScalarRef
               ArrayRef[`a]
@@ -859,9 +860,8 @@ that hierarchy represented visually.
               CodeRef
               RegexpRef
               GlobRef
-                FileHandle
+                  FileHandle
               Object
-                Role
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:
@@ -887,8 +887,7 @@ existence check. This means that your class B<must> be loaded for this
 type constraint to pass.
 
 B<NOTE:> The C<RoleName> constraint checks a string is a I<package
-name> which is a role, like C<'MyApp::Role::Comparable'>. The C<Role>
-constraint checks that an I<object does> the named role.
+name> which is a role, like C<'MyApp::Role::Comparable'>.
 
 =head2 Type Constraint Naming
 
