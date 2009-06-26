@@ -250,8 +250,8 @@ sub add_attribute {
     $self->SUPER::add_attribute($attr);
     # it may be a Class::MOP::Attribute, theoretically, which doesn't have
     # 'bare' and doesn't implement this method
-    if ($attr->can('check_associated_methods')) {
-        $attr->check_associated_methods;
+    if ($attr->can('_check_associated_methods')) {
+        $attr->_check_associated_methods;
     }
     return $attr;
 }
