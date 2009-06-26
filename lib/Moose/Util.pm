@@ -207,6 +207,13 @@ sub english_list {
     return $list;
 }
 
+sub _caller_info {
+    my $level = @_ ? ($_[0] + 1) : 2;
+    my %info;
+    @info{qw(package file line)} = caller($level);
+    return \%info;
+}
+
 1;
 
 __END__
