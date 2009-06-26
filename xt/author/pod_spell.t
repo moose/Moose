@@ -77,6 +77,7 @@ ohloh
 SVN
 
 ## Moose
+AttributeHelpers
 BankAccount
 BankAccount's
 BinaryTree
