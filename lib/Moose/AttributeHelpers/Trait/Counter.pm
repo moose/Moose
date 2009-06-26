@@ -20,10 +20,10 @@ has 'method_provider' => (
 sub helper_type { 'Num' }
 
 before 'process_options_for_handles' => sub {
-    my ($self, $options, $name) = @_;
+    my ( $self, $options, $name ) = @_;
 
     # Set some default attribute options here unless already defined
-    if ((my $type = $self->helper_type) && !exists $options->{isa}){
+    if ( ( my $type = $self->helper_type ) && !exists $options->{isa} ) {
         $options->{isa} = $type;
     }
 
@@ -32,15 +32,15 @@ before 'process_options_for_handles' => sub {
 };
 
 after 'check_handles_values' => sub {
-    my $self     = shift;
+    my $self    = shift;
     my $handles = $self->handles;
 
-    unless (scalar keys %$handles) {
+    unless ( scalar keys %$handles ) {
         my $method_constructors = $self->method_constructors;
         my $attr_name           = $self->name;
 
-        foreach my $method (keys %$method_constructors) {
-            $handles->{$method . '_' . $attr_name} = $method;
+        foreach my $method ( keys %$method_constructors ) {
+            $handles->{ $method . '_' . $attr_name } = $method;
         }
 
         $self->_set_handles($handles);

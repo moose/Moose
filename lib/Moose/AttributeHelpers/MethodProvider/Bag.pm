@@ -8,18 +8,18 @@ our $AUTHORITY = 'cpan:STEVAN';
 with 'Moose::AttributeHelpers::MethodProvider::ImmutableHash';
 
 sub add : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $reader->($_[0])->{$_[1]}++ };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $reader->( $_[0] )->{ $_[1] }++ };
 }
 
 sub delete : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { CORE::delete $reader->($_[0])->{$_[1]} };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::delete $reader->( $_[0] )->{ $_[1] } };
 }
 
 sub reset : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $reader->($_[0])->{$_[1]} = 0 };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $reader->( $_[0] )->{ $_[1] } = 0 };
 }
 
 1;

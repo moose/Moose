@@ -7,23 +7,29 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub reset : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], $attr->default($_[0])) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $writer->( $_[0], $attr->default( $_[0] ) ) };
 }
 
 sub set : method {
-    my ($attr, $reader, $writer, $value) = @_;
-    return sub { $writer->($_[0], $_[1]) };
+    my ( $attr, $reader, $writer, $value ) = @_;
+    return sub { $writer->( $_[0], $_[1] ) };
 }
 
 sub inc {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], $reader->($_[0]) + (defined($_[1]) ? $_[1] : 1) ) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        $writer->( $_[0],
+            $reader->( $_[0] ) + ( defined( $_[1] ) ? $_[1] : 1 ) );
+    };
 }
 
 sub dec {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], $reader->($_[0]) - (defined($_[1]) ? $_[1] : 1) ) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        $writer->( $_[0],
+            $reader->( $_[0] ) - ( defined( $_[1] ) ? $_[1] : 1 ) );
+    };
 }
 
 1;

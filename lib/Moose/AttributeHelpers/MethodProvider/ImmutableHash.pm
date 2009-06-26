@@ -6,65 +6,62 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub exists : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { CORE::exists $reader->($_[0])->{$_[1]} ? 1 : 0 };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::exists $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
 }
 
 sub defined : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { CORE::defined $reader->($_[0])->{$_[1]} ? 1 : 0 };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::defined $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
 }
 
 sub get : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
         if ( @_ == 2 ) {
-            $reader->($_[0])->{$_[1]}
-        } else {
+            $reader->( $_[0] )->{ $_[1] };
+        }
+        else {
             my ( $self, @keys ) = @_;
-            @{ $reader->($self) }{@keys}
+            @{ $reader->($self) }{@keys};
         }
     };
 }
 
 sub keys : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { CORE::keys %{$reader->($_[0])} };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::keys %{ $reader->( $_[0] ) } };
 }
 
 sub values : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { CORE::values %{$reader->($_[0])} };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::values %{ $reader->( $_[0] ) } };
 }
 
 sub kv : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my $h = $reader->($_[0]);
-        map {
-            [ $_, $h->{$_} ]
-        } CORE::keys %{$h}
+        my $h = $reader->( $_[0] );
+        map { [ $_, $h->{$_} ] } CORE::keys %{$h};
     };
 }
 
 sub elements : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my $h = $reader->($_[0]);
-        map {
-            $_, $h->{$_}
-        } CORE::keys %{$h}
+        my $h = $reader->( $_[0] );
+        map { $_, $h->{$_} } CORE::keys %{$h};
     };
 }
 
 sub count : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { scalar CORE::keys %{$reader->($_[0])} };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } };
 }
 
 sub empty : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { scalar CORE::keys %{$reader->($_[0])} ? 1 : 0 };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } ? 1 : 0 };
 }
 
 1;

@@ -39,47 +39,52 @@ has 'method_constructors' => (
 
 # extend the parents stuff to make sure
 # certain bits are now required ...
-has '+default'         => (required => 1);
-has '+type_constraint' => (required => 1);
+has '+default'         => ( required => 1 );
+has '+type_constraint' => ( required => 1 );
 
 ## Methods called prior to instantiation
 
 sub process_options_for_handles {
-    my ($self, $options) = @_;
+    my ( $self, $options ) = @_;
 
-    if (my $type = $self->helper_type) {
-        (exists $options->{isa})
+    if ( my $type = $self->helper_type ) {
+        ( exists $options->{isa} )
             || confess "You must define a type with the $type metaclass";
 
         my $isa = $options->{isa};
 
-        unless (blessed($isa) && $isa->isa('Moose::Meta::TypeConstraint')) {
-            $isa = Moose::Util::TypeConstraints::find_or_create_type_constraint($isa);
+        unless ( blessed($isa) && $isa->isa('Moose::Meta::TypeConstraint') ) {
+            $isa
+                = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+                $isa);
         }
 
-        ($isa->is_a_type_of($type))
-            || confess "The type constraint for a $type ($options->{isa}) must be a subtype of $type";
+        ( $isa->is_a_type_of($type) )
+            || confess
+            "The type constraint for a $type ($options->{isa}) must be a subtype of $type";
     }
 }
 
 before '_process_options' => sub {
-    my ($self, $name, $options) = @_;
-    $self->process_options_for_handles($options, $name);
+    my ( $self, $name, $options ) = @_;
+    $self->process_options_for_handles( $options, $name );
 };
 
 around '_canonicalize_handles' => sub {
     my $next    = shift;
     my $self    = shift;
     my $handles = $self->handles;
+
     return unless $handles;
-    unless ('HASH' eq ref $handles) {
+
+    unless ( 'HASH' eq ref $handles ) {
         $self->throw_error(
-            "The 'handles' option must be a HASH reference, not $handles"
-        );
+            "The 'handles' option must be a HASH reference, not $handles" );
     }
+
     return map {
         my $to = $handles->{$_};
-        $to = [ $to ] unless ref $to;
+        $to = [$to] unless ref $to;
         $_ => $to
     } keys %$handles;
 };
@@ -95,9 +100,9 @@ sub check_handles_values {
 
     my %handles = $self->_canonicalize_handles;
 
-    for my $original_method (values %handles) {
+    for my $original_method ( values %handles ) {
         my $name = $original_method->[0];
-        (exists $method_constructors->{$name})
+        ( exists $method_constructors->{$name} )
             || confess "$name is an unsupported method type";
     }
 
@@ -105,9 +110,9 @@ sub check_handles_values {
 
 around '_make_delegation_method' => sub {
     my $next = shift;
-    my ($self, $handle_name, $method_to_call) = @_;
+    my ( $self, $handle_name, $method_to_call ) = @_;
 
-    my ($name, $curried_args) = @$method_to_call;
+    my ( $name, $curried_args ) = @$method_to_call;
 
     $curried_args ||= [];
 
@@ -124,7 +129,7 @@ around '_make_delegation_method' => sub {
         $handle_name,
         sub {
             my $instance = shift;
-            return $code->($instance, @$curried_args, @_);
+            return $code->( $instance, @$curried_args, @_ );
         },
     );
 };

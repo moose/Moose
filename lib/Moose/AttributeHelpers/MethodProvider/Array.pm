@@ -8,99 +8,127 @@ our $AUTHORITY = 'cpan:STEVAN';
 with 'Moose::AttributeHelpers::MethodProvider::List';
 
 sub push : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
 
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my $instance = CORE::shift;
             $container_type_constraint->check($_)
-                || confess "Value " . ($_||'undef') . " did not pass container type constraint '$container_type_constraint'"
-                    foreach @_;
-            CORE::push @{$reader->($instance)} => @_;
+                || confess "Value "
+                . ( $_ || 'undef' )
+                . " did not pass container type constraint '$container_type_constraint'"
+                foreach @_;
+            CORE::push @{ $reader->($instance) } => @_;
         };
     }
     else {
         return sub {
             my $instance = CORE::shift;
-            CORE::push @{$reader->($instance)} => @_;
+            CORE::push @{ $reader->($instance) } => @_;
         };
     }
 }
 
 sub pop : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        CORE::pop @{$reader->($_[0])}
+        CORE::pop @{ $reader->( $_[0] ) };
     };
 }
 
 sub unshift : method {
-    my ($attr, $reader, $writer) = @_;
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my $instance = CORE::shift;
             $container_type_constraint->check($_)
-                || confess "Value " . ($_||'undef') . " did not pass container type constraint '$container_type_constraint'"
-                    foreach @_;
-            CORE::unshift @{$reader->($instance)} => @_;
+                || confess "Value "
+                . ( $_ || 'undef' )
+                . " did not pass container type constraint '$container_type_constraint'"
+                foreach @_;
+            CORE::unshift @{ $reader->($instance) } => @_;
         };
     }
     else {
         return sub {
             my $instance = CORE::shift;
-            CORE::unshift @{$reader->($instance)} => @_;
+            CORE::unshift @{ $reader->($instance) } => @_;
         };
     }
 }
 
 sub shift : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        CORE::shift @{$reader->($_[0])}
+        CORE::shift @{ $reader->( $_[0] ) };
     };
 }
 
 sub get : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        $reader->($_[0])->[$_[1]]
+        $reader->( $_[0] )->[ $_[1] ];
     };
 }
 
 sub set : method {
-    my ($attr, $reader, $writer) = @_;
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
-            ($container_type_constraint->check($_[2]))
-                || confess "Value " . ($_[2]||'undef') . " did not pass container type constraint '$container_type_constraint'";
-            $reader->($_[0])->[$_[1]] = $_[2]
+            ( $container_type_constraint->check( $_[2] ) )
+                || confess "Value "
+                . ( $_[2] || 'undef' )
+                . " did not pass container type constraint '$container_type_constraint'";
+            $reader->( $_[0] )->[ $_[1] ] = $_[2];
         };
     }
     else {
         return sub {
-            $reader->($_[0])->[$_[1]] = $_[2]
+            $reader->( $_[0] )->[ $_[1] ] = $_[2];
         };
     }
 }
 
 sub accessor : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
 
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my $self = shift;
 
-            if (@_ == 1) { # reader
-                return $reader->($self)->[$_[0]];
+            if ( @_ == 1 ) {    # reader
+                return $reader->($self)->[ $_[0] ];
             }
-            elsif (@_ == 2) { # writer
-                ($container_type_constraint->check($_[1]))
-                    || confess "Value " . ($_[1]||'undef') . " did not pass container type constraint '$container_type_constraint'";
-                $reader->($self)->[$_[0]] = $_[1];
+            elsif ( @_ == 2 ) {    # writer
+                ( $container_type_constraint->check( $_[1] ) )
+                    || confess "Value "
+                    . ( $_[1] || 'undef' )
+                    . " did not pass container type constraint '$container_type_constraint'";
+                $reader->($self)->[ $_[0] ] = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -111,11 +139,11 @@ sub accessor : method {
         return sub {
             my $self = shift;
 
-            if (@_ == 1) { # reader
-                return $reader->($self)->[$_[0]];
+            if ( @_ == 1 ) {    # reader
+                return $reader->($self)->[ $_[0] ];
             }
-            elsif (@_ == 2) { # writer
-                $reader->($self)->[$_[0]] = $_[1];
+            elsif ( @_ == 2 ) {    # writer
+                $reader->($self)->[ $_[0] ] = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -125,72 +153,88 @@ sub accessor : method {
 }
 
 sub clear : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        @{$reader->($_[0])} = ()
+        @{ $reader->( $_[0] ) } = ();
     };
 }
 
 sub delete : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        CORE::splice @{$reader->($_[0])}, $_[1], 1;
-    }
+        CORE::splice @{ $reader->( $_[0] ) }, $_[1], 1;
+        }
 }
 
 sub insert : method {
-    my ($attr, $reader, $writer) = @_;
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
-            ($container_type_constraint->check($_[2]))
-                || confess "Value " . ($_[2]||'undef') . " did not pass container type constraint '$container_type_constraint'";
-            CORE::splice @{$reader->($_[0])}, $_[1], 0, $_[2];
+            ( $container_type_constraint->check( $_[2] ) )
+                || confess "Value "
+                . ( $_[2] || 'undef' )
+                . " did not pass container type constraint '$container_type_constraint'";
+            CORE::splice @{ $reader->( $_[0] ) }, $_[1], 0, $_[2];
         };
     }
     else {
         return sub {
-            CORE::splice @{$reader->($_[0])}, $_[1], 0, $_[2];
+            CORE::splice @{ $reader->( $_[0] ) }, $_[1], 0, $_[2];
         };
     }
 }
 
 sub splice : method {
-    my ($attr, $reader, $writer) = @_;
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my ( $self, $i, $j, @elems ) = @_;
-            ($container_type_constraint->check($_))
-                || confess "Value " . (defined($_) ? $_ : 'undef') . " did not pass container type constraint '$container_type_constraint'" for @elems;
-            CORE::splice @{$reader->($self)}, $i, $j, @elems;
+            ( $container_type_constraint->check($_) )
+                || confess "Value "
+                . ( defined($_) ? $_ : 'undef' )
+                . " did not pass container type constraint '$container_type_constraint'"
+                for @elems;
+            CORE::splice @{ $reader->($self) }, $i, $j, @elems;
         };
     }
     else {
         return sub {
             my ( $self, $i, $j, @elems ) = @_;
-            CORE::splice @{$reader->($self)}, $i, $j, @elems;
+            CORE::splice @{ $reader->($self) }, $i, $j, @elems;
         };
     }
 }
 
 sub sort_in_place : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $predicate) = @_;
+        my ( $instance, $predicate ) = @_;
 
         die "Argument must be a code reference"
             if $predicate && ref $predicate ne 'CODE';
 
         my @sorted;
         if ($predicate) {
-            @sorted = CORE::sort { $predicate->($a, $b) } @{$reader->($instance)};
+            @sorted = CORE::sort { $predicate->( $a, $b ) }
+            @{ $reader->($instance) };
         }
         else {
-            @sorted = CORE::sort @{$reader->($instance)};
+            @sorted = CORE::sort @{ $reader->($instance) };
         }
 
-        $writer->($instance, \@sorted);
+        $writer->( $instance, \@sorted );
     };
 }
 

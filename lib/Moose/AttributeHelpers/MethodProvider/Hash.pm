@@ -8,63 +8,79 @@ our $AUTHORITY = 'cpan:STEVAN';
 with 'Moose::AttributeHelpers::MethodProvider::ImmutableHash';
 
 sub set : method {
-    my ($attr, $reader, $writer) = @_;
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my ( $self, @kvp ) = @_;
 
             my ( @keys, @values );
 
-            while ( @kvp ) {
+            while (@kvp) {
                 my ( $key, $value ) = ( shift(@kvp), shift(@kvp) );
-                ($container_type_constraint->check($value))
-                    || confess "Value " . ($value||'undef') . " did not pass container type constraint '$container_type_constraint'";
-                push @keys, $key;
+                ( $container_type_constraint->check($value) )
+                    || confess "Value "
+                    . ( $value || 'undef' )
+                    . " did not pass container type constraint '$container_type_constraint'";
+                push @keys,   $key;
                 push @values, $value;
             }
 
             if ( @values > 1 ) {
                 @{ $reader->($self) }{@keys} = @values;
-            } else {
-                $reader->($self)->{$keys[0]} = $values[0];
+            }
+            else {
+                $reader->($self)->{ $keys[0] } = $values[0];
             }
         };
     }
     else {
         return sub {
             if ( @_ == 3 ) {
-                $reader->($_[0])->{$_[1]} = $_[2]
-            } else {
+                $reader->( $_[0] )->{ $_[1] } = $_[2];
+            }
+            else {
                 my ( $self, @kvp ) = @_;
                 my ( @keys, @values );
 
-                while ( @kvp ) {
-                    push @keys, shift @kvp;
+                while (@kvp) {
+                    push @keys,   shift @kvp;
                     push @values, shift @kvp;
                 }
 
-                @{ $reader->($_[0]) }{@keys} = @values;
+                @{ $reader->( $_[0] ) }{@keys} = @values;
             }
         };
     }
 }
 
 sub accessor : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
 
-    if ($attr->has_type_constraint && $attr->type_constraint->isa('Moose::Meta::TypeConstraint::Parameterized')) {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+        ) {
+        my $container_type_constraint
+            = $attr->type_constraint->type_parameter;
         return sub {
             my $self = shift;
 
-            if (@_ == 1) { # reader
-                return $reader->($self)->{$_[0]};
+            if ( @_ == 1 ) {    # reader
+                return $reader->($self)->{ $_[0] };
             }
-            elsif (@_ == 2) { # writer
-                ($container_type_constraint->check($_[1]))
-                    || confess "Value " . ($_[1]||'undef') . " did not pass container type constraint '$container_type_constraint'";
-                $reader->($self)->{$_[0]} = $_[1];
+            elsif ( @_ == 2 ) {    # writer
+                ( $container_type_constraint->check( $_[1] ) )
+                    || confess "Value "
+                    . ( $_[1] || 'undef' )
+                    . " did not pass container type constraint '$container_type_constraint'";
+                $reader->($self)->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -75,11 +91,11 @@ sub accessor : method {
         return sub {
             my $self = shift;
 
-            if (@_ == 1) { # reader
-                return $reader->($self)->{$_[0]};
+            if ( @_ == 1 ) {    # reader
+                return $reader->($self)->{ $_[0] };
             }
-            elsif (@_ == 2) { # writer
-                $reader->($self)->{$_[0]} = $_[1];
+            elsif ( @_ == 2 ) {    # writer
+                $reader->($self)->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -89,12 +105,12 @@ sub accessor : method {
 }
 
 sub clear : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { %{$reader->($_[0])} = () };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { %{ $reader->( $_[0] ) } = () };
 }
 
 sub delete : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
         my $hashref = $reader->(shift);
         CORE::delete @{$hashref}{@_};

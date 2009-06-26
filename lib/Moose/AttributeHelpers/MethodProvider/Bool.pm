@@ -7,23 +7,23 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub set : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], 1) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $writer->( $_[0], 1 ) };
 }
 
 sub unset : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], 0) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $writer->( $_[0], 0 ) };
 }
 
 sub toggle : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { $writer->($_[0], !$reader->($_[0])) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { $writer->( $_[0], !$reader->( $_[0] ) ) };
 }
 
 sub not : method {
-    my ($attr, $reader, $writer) = @_;
-    return sub { !$reader->($_[0]) };
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { !$reader->( $_[0] ) };
 }
 
 1;

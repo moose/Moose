@@ -6,24 +6,24 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub count : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        scalar @{$reader->($_[0])}
+        scalar @{ $reader->( $_[0] ) };
     };
 }
 
 sub empty : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        scalar @{$reader->($_[0])} ? 1 : 0
+        scalar @{ $reader->( $_[0] ) } ? 1 : 0;
     };
 }
 
 sub find : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $predicate) = @_;
-        foreach my $val (@{$reader->($instance)}) {
+        my ( $instance, $predicate ) = @_;
+        foreach my $val ( @{ $reader->($instance) } ) {
             return $val if $predicate->($val);
         }
         return;
@@ -31,71 +31,71 @@ sub find : method {
 }
 
 sub map : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $f) = @_;
-        CORE::map { $f->($_) } @{$reader->($instance)}
+        my ( $instance, $f ) = @_;
+        CORE::map { $f->($_) } @{ $reader->($instance) };
     };
 }
 
 sub sort : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $predicate) = @_;
+        my ( $instance, $predicate ) = @_;
         die "Argument must be a code reference"
             if $predicate && ref $predicate ne 'CODE';
 
         if ($predicate) {
-            CORE::sort { $predicate->($a, $b) } @{$reader->($instance)};
+            CORE::sort { $predicate->( $a, $b ) } @{ $reader->($instance) };
         }
         else {
-            CORE::sort @{$reader->($instance)};
+            CORE::sort @{ $reader->($instance) };
         }
     };
 }
 
 sub grep : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $predicate) = @_;
-        CORE::grep { $predicate->($_) } @{$reader->($instance)}
+        my ( $instance, $predicate ) = @_;
+        CORE::grep { $predicate->($_) } @{ $reader->($instance) };
     };
 }
 
 sub elements : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ($instance) = @_;
-        @{$reader->($instance)}
+        @{ $reader->($instance) };
     };
 }
 
 sub join : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        my ($instance, $separator) = @_;
-        join $separator, @{$reader->($instance)}
+        my ( $instance, $separator ) = @_;
+        join $separator, @{ $reader->($instance) };
     };
 }
 
 sub get : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        $reader->($_[0])->[$_[1]]
+        $reader->( $_[0] )->[ $_[1] ];
     };
 }
 
 sub first : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        $reader->($_[0])->[0]
+        $reader->( $_[0] )->[0];
     };
 }
 
 sub last : method {
-    my ($attr, $reader, $writer) = @_;
+    my ( $attr, $reader, $writer ) = @_;
     return sub {
-        $reader->($_[0])->[-1]
+        $reader->( $_[0] )->[-1];
     };
 }
 

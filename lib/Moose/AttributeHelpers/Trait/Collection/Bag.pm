@@ -23,14 +23,15 @@ subtype 'Bag' => as 'HashRef[Int]';
 sub helper_type { 'Bag' }
 
 before 'process_options_for_handles' => sub {
-    my ($self, $options, $name) = @_;
+    my ( $self, $options, $name ) = @_;
 
     # Set some default attribute options here unless already defined
-    if ((my $type = $self->helper_type) && !exists $options->{isa}){
+    if ( ( my $type = $self->helper_type ) && !exists $options->{isa} ) {
         $options->{isa} = $type;
     }
 
-    $options->{default} = sub { +{} } unless exists $options->{default};
+    $options->{default} = sub { +{} }
+        unless exists $options->{default};
 };
 
 no Moose::Role;
