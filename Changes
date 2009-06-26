@@ -2,6 +2,9 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 0.84 Thu, Jun 25, 2009
+    * Moose::Role
+      - has now sets definition_context for attributes defined in roles. (doy)
+
     * Moose::Meta::Attribute
       - When adding an attribute to a metaclass, if the attribute has
         no associated methods, it will give a deprecation
