@@ -24,7 +24,7 @@ use Test::Exception;
 
     sub baz { 'Foo::baz' }
 
-	__PACKAGE__->meta->make_immutable(debug => 0);
+    __PACKAGE__->meta->make_immutable(debug => 0);
 }
 
 my $foo = Foo->new;

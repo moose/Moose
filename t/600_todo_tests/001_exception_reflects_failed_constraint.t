@@ -11,23 +11,23 @@ use Test::More tests => 4;
 use Test::Exception;
 
 BEGIN {
-	use_ok('Moose::Util::TypeConstraints');
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 lives_ok {
-	subtype 'ParentConstraint' => as 'Str' => where {0};
+    subtype 'ParentConstraint' => as 'Str' => where {0};
 } 'specified parent type constraint';
 
 my $tc;
 lives_ok {
-	$tc = subtype 'ChildConstraint' => as 'ParentConstraint' => where {1};
+    $tc = subtype 'ChildConstraint' => as 'ParentConstraint' => where {1};
 } 'specified child type constraint';
 
 {
-	my $errmsg = $tc->validate();
+    my $errmsg = $tc->validate();
 
-	TODO: {
-		local $TODO = 'Not yet supported';
-		ok($errmsg !~ /Validation failed for 'ChildConstraint'/, 'exception references failing parent constraint');
-	};
+    TODO: {
+        local $TODO = 'Not yet supported';
+        ok($errmsg !~ /Validation failed for 'ChildConstraint'/, 'exception references failing parent constraint');
+    };
 }

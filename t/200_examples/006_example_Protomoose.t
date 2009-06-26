@@ -166,9 +166,9 @@ Well cause merlyn asked if it could :)
             ? $_[0]
             : $_[0]->meta->prototype_instance;
         my (undef, %params) = @_;
-    	my $self = $prototype->meta->clone_object($prototype, %params);
-    	$self->BUILDALL(\%params);
-    	return $self;
+        my $self = $prototype->meta->clone_object($prototype, %params);
+        $self->BUILDALL(\%params);
+        return $self;
     }
 }
 
