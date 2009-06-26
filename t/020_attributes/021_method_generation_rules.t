@@ -18,11 +18,11 @@ use Test::Exception;
 =cut
 
 sub make_class {
-	my ($is, $attr, $class) = @_;
+    my ($is, $attr, $class) = @_;
 
-	eval "package $class; use Moose; has 'foo' => ( is => '$is', $attr => '_foo' );";
+    eval "package $class; use Moose; has 'foo' => ( is => '$is', $attr => '_foo' );";
 
-	return $@ ? die $@ : $class;
+    return $@ ? die $@ : $class;
 }
 
 my $obj;
