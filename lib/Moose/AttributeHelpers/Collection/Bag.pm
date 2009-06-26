@@ -36,12 +36,12 @@ Moose::AttributeHelpers::Collection::Bag
       metaclass => 'Collection::Bag',
       is        => 'ro',
       isa       => 'Bag', # optional ... as is defalt
-      provides  => {
-          'add'    => 'add_word',
-          'get'    => 'get_count_for',
-          'empty'  => 'has_any_words',
-          'count'  => 'num_words',
-          'delete' => 'delete_word',
+      handles   => {
+          add_word      => 'add',
+          get_count_for => 'get',
+          has_any_words => 'empty',
+          num_words     => 'count',
+          delete_word   => 'delete',
       }
   );
 

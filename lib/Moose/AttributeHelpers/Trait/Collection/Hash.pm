@@ -50,12 +50,12 @@ Moose::AttributeHelpers::Collection::Hash
       is        => 'ro',
       isa       => 'HashRef[Str]',
       default   => sub { {} },
-      provides  => {
-          'set'    => 'set_option',
-          'get'    => 'get_option',
-          'empty'  => 'has_options',
-          'count'  => 'num_options',
-          'delete' => 'delete_option',
+      handles   => {
+          set_option    => 'set',
+          get_option    => 'get',
+          has_options   => 'empty',
+          num_options   => 'count',
+          delete_option => 'delete',
       }
   );
 

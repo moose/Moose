@@ -121,18 +121,18 @@ Moose::AttributeHelpers::MethodProvider::List
        isa        => 'ArrayRef[Str]',
        default    => sub { [] },
        auto_deref => 1,
-       provides   => {
-           elements => 'all_options',
-           map      => 'map_options',
-           grep     => 'filter_options',
-           find     => 'find_option',
-           first    => 'first_option',
-           last     => 'last_option',
-           get      => 'get_option',
-           join     => 'join_options',
-           count    => 'count_options',
-           empty    => 'do_i_have_options',
-           sort     => 'sorted_options',
+       handles   => {
+           all_options       => 'elements',
+           map_options       => 'map',
+           filter_options    => 'grep',
+           find_option       => 'find',
+           first_option      => 'first',
+           last_option       => 'last',
+           get_option        => 'get',
+           join_options      => 'join',
+           count_options     => 'count',
+           do_i_have_options => 'empty',
+           sorted_options    => 'sort',
        }
    );
 

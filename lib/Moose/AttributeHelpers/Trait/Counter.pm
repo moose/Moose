@@ -75,10 +75,10 @@ Moose::AttributeHelpers::Counter
       is        => 'ro',
       isa       => 'Num',
       default   => sub { 0 },
-      provides  => {
-          inc => 'inc_counter',
-          dec => 'dec_counter',
-          reset => 'reset_counter',
+      handles   => {
+          inc_counter   => 'inc',
+          dec_counter   => 'dec',
+          reset_counter => 'reset',
       }
   );
 
@@ -92,7 +92,7 @@ This module provides a simple counter attribute, which can be
 incremented and decremented.
 
 If your attribute definition does not include any of I<is>, I<isa>,
-I<default> or I<provides> but does use the C<Counter> metaclass,
+I<default> or I<handles> but does use the C<Counter> metaclass,
 then this module applies defaults as in the L</SYNOPSIS>
 above. This allows for a very basic counter definition:
 

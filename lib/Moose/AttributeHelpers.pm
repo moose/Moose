@@ -80,77 +80,49 @@ readers, writers, clearers and predicates, this library provides commonly
 used attribute helper methods for more specific types of data.
 
 As seen in the L</SYNOPSIS>, you specify the extension via the
-C<metaclass> parameter. Available meta classes are:
+C<trait> parameter. Available meta classes are below; see L</METHOD PROVIDERS>.
 
 =head1 PARAMETERS
 
 =head2 handles
 
-This points to a hashref that uses C<method> for the keys and
-C<stuff> for the values.  The method will be added to
-the object itself and do what you want.
-
-=head2 curries
-
-This points to a hashref that uses C<provider> for the keys and
-has two choices for the value:
-
-You can supply C<< {method => [ @args ]} >> for the values.  The method will be
-added to the object itself (always using C<@args> as the beginning arguments).
-
-Another approach to curry a method provider is to supply a coderef instead of an
-arrayref. The code ref takes C<$self>, C<$body>, and any additional arguments
-passed to the final method.
-
-  # ...
-
-  curries => {
-      grep => {
-          times_with_day => sub {
-              my ($self, $body, $datetime) = @_;
-              $body->($self, sub { $_->ymd eq $datetime->ymd });
-          }
-      }
-  }
-
-  # ...
-
-  $obj->times_with_day(DateTime->now); # takes datetime argument, checks day
-
+This is like C<< handles >> in L<Moose/has>, but only HASH references are
+allowed.  Keys are method names that you want installed locally, and values are
+methods from the method providers (below).  Currying with delegated methods works normally for C<< handles >>.
 
 =head1 METHOD PROVIDERS
 
 =over
 
-=item L<Number|Moose::AttributeHelpers::Number>
+=item L<Number|Moose::AttributeHelpers::Trait::Number>
 
 Common numerical operations.
 
-=item L<String|Moose::AttributeHelpers::String>
+=item L<String|Moose::AttributeHelpers::Trait::String>
 
 Common methods for string operations.
 
-=item L<Counter|Moose::AttributeHelpers::Counter>
+=item L<Counter|Moose::AttributeHelpers::Trait::Counter>
 
 Methods for incrementing and decrementing a counter attribute.
 
-=item L<Bool|Moose::AttributeHelpers::Bool>
+=item L<Bool|Moose::AttributeHelpers::Trait::Bool>
 
 Common methods for boolean values.
 
-=item L<Collection::Hash|Moose::AttributeHelpers::Collection::Hash>
+=item L<Collection::Hash|Moose::AttributeHelpers::Trait::Collection::Hash>
 
 Common methods for hash references.
 
-=item L<Collection::ImmutableHash|Moose::AttributeHelpers::Collection::ImmutableHash>
+=item L<Collection::ImmutableHash|Moose::AttributeHelpers::Trait::Collection::ImmutableHash>
 
 Common methods for inspecting hash references.
 
-=item L<Collection::Array|Moose::AttributeHelpers::Collection::Array>
+=item L<Collection::Array|Moose::AttributeHelpers::Trait::Collection::Array>
 
 Common methods for array references.
 
-=item L<Collection::List|Moose::AttributeHelpers::Collection::List>
+=item L<Collection::List|Moose::AttributeHelpers::Trait::Collection::List>
 
 Common list methods for array references.
 

@@ -50,9 +50,9 @@ Moose::AttributeHelpers::Collection::List
       is        => 'ro',
       isa       => 'ArrayRef[Int]',
       default   => sub { [] },
-      provides  => {
-          map  => 'map_options',
-          grep => 'filter_options',
+      handles   => {
+          map_options    => 'map',
+          filter_options => 'grep',
       }
   );
 

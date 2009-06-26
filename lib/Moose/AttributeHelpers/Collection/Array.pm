@@ -38,9 +38,9 @@ Moose::AttributeHelpers::Collection::Array
       is        => 'ro',
       isa       => 'ArrayRef[Int]',
       default   => sub { [] },
-      provides  => {
-          'push' => 'add_options',
-          'pop'  => 'remove_last_option',
+      handles   => {
+          add_options        => 'push',
+          remove_last_option => 'pop',
       }
   );
 

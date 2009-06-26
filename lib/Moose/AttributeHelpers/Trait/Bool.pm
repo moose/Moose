@@ -58,11 +58,11 @@ Moose::AttributeHelpers::Bool
       is        => 'rw',
       isa       => 'Bool',
       default   => sub { 0 },
-      provides  => {
-          set     => 'illuminate',
-          unset   => 'darken',
-          toggle  => 'flip_switch',
-          not     => 'is_dark'
+      handles   => {
+          illuminate  => 'set',
+          darken      => 'unset',
+          flip_switch => 'toggle',
+          is_dark     => 'not',
       }
   );
 

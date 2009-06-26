@@ -37,9 +37,9 @@ Moose::AttributeHelpers::String
       is        => 'rw',
       isa       => 'Str',
       default   => sub { '' },
-      provides  => {
-          append => "add_text",
-          replace => "replace_text",
+      handles  => {
+          "add_text"     => "append",
+          "replace_text" => "replace",
       }
   );
 
@@ -53,10 +53,10 @@ operations can be applied more easily (no need to make an lvalue attribute
 metaclass or use temporary variables). Additional methods are provided for
 completion.
 
-If your attribute definition does not include any of I<is>, I<isa>,
-I<default> or I<provides> but does use the C<String> metaclass,
-then this module applies defaults as in the L</SYNOPSIS>
-above. This allows for a very basic counter definition:
+If your attribute definition does not include any of I<is>, I<isa>, I<default>
+or I<handles> but does use the C<String> metaclass, then this module applies
+defaults as in the L</SYNOPSIS> above. This allows for a very basic counter
+definition:
 
   has 'foo' => (metaclass => 'String');
   $obj->append_foo;

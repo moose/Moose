@@ -50,10 +50,10 @@ Moose::AttributeHelpers::Collection::ImmutableHash
       is        => 'ro',
       isa       => 'HashRef[Str]',
       default   => sub { {} },
-      provides  => {
-          'get'    => 'get_option',
-          'empty'  => 'has_options',
-          'keys'   => 'get_option_list',
+      handles  => {
+          get_option      => 'get',
+          has_options     => 'empty',
+          get_option_list => 'keys',
       }
   );
 

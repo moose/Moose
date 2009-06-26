@@ -34,7 +34,7 @@ Moose::AttributeHelpers::Number
       is        => 'ro',
       isa       => 'Int',
       default   => sub { 5 },
-      provides  => {
+      handles   => {
           set => 'set',
           add => 'add',
           sub => 'sub',
