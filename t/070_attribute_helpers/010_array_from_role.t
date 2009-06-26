@@ -14,25 +14,25 @@ BEGIN {
     package Foo;
     use Moose;
 
-    has 'bar' => (is => 'rw');
+    has 'bar' => ( is => 'rw' );
 
     package Stuffed::Role;
     use Moose::Role;
 
     has 'options' => (
-        traits    => [ 'Collection::Array' ],
-        is        => 'ro',
-        isa       => 'ArrayRef[Foo]',
+        traits => ['Collection::Array'],
+        is     => 'ro',
+        isa    => 'ArrayRef[Foo]',
     );
 
     package Bulkie::Role;
     use Moose::Role;
 
     has 'stuff' => (
-        traits    => [ 'Collection::Array' ],
-        is        => 'ro',
-        isa       => 'ArrayRef',
-        handles   => {
+        traits  => ['Collection::Array'],
+        is      => 'ro',
+        isa     => 'ArrayRef',
+        handles => {
             get_stuff => 'get',
         }
     );
@@ -40,12 +40,9 @@ BEGIN {
     package Stuff;
     use Moose;
 
-    ::lives_ok {
-        with 'Stuffed::Role';
-    } '... this should work correctly';
+    ::lives_ok{ with 'Stuffed::Role';
+        } '... this should work correctly';
 
-    ::lives_ok {
-        with 'Bulkie::Role';
-    } '... this should work correctly';
-
+    ::lives_ok{ with 'Bulkie::Role';
+        } '... this should work correctly';
 }

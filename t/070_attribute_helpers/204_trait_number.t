@@ -15,31 +15,31 @@ BEGIN {
     use Moose;
 
     has 'integer' => (
-        traits    => [qw/Number/],
-        is        => 'ro',
-        isa       => 'Int',
-        default   => sub { 5 },
-        handles  => {
-            set       => 'set',
-            add       => 'add',
-            sub       => 'sub',
-            mul       => 'mul',
-            div       => 'div',
-            mod       => 'mod',
-            abs       => 'abs',
-            inc         => [ add => [ 1 ] ],
-            dec         => [ sub => [ 1 ] ],
-            odd         => [ mod => [ 2 ] ],
-            cut_in_half => [ div => [ 2 ] ],
+        traits  => [qw/Number/],
+        is      => 'ro',
+        isa     => 'Int',
+        default => 5,
+        handles => {
+            set         => 'set',
+            add         => 'add',
+            sub         => 'sub',
+            mul         => 'mul',
+            div         => 'div',
+            mod         => 'mod',
+            abs         => 'abs',
+            inc         => [ add => [1] ],
+            dec         => [ sub => [1] ],
+            odd         => [ mod => [2] ],
+            cut_in_half => [ div => [2] ],
 
         },
     );
 }
 
 my $real = Real->new;
-isa_ok($real, 'Real');
+isa_ok( $real, 'Real' );
 
-can_ok($real, $_) for qw[
+can_ok( $real, $_ ) for qw[
     set add sub mul div mod abs inc dec odd cut_in_half
 ];
 
@@ -94,19 +94,23 @@ is $real->integer, 12, 'dec 13';
 ## test the meta
 
 my $attr = $real->meta->get_attribute('integer');
-does_ok($attr, 'Moose::AttributeHelpers::Trait::Number');
+does_ok( $attr, 'Moose::AttributeHelpers::Trait::Number' );
 
-is_deeply($attr->handles, {
-    set => 'set',
-    add => 'add',
-    sub => 'sub',
-    mul => 'mul',
-    div => 'div',
-    mod => 'mod',
-    abs => 'abs',
-    inc         => [ add => [ 1 ] ],
-    dec         => [ sub => [ 1 ] ],
-    odd         => [ mod => [ 2 ] ],
-    cut_in_half => [ div => [ 2 ] ],
-}, '... got the right handles mapping');
+is_deeply(
+    $attr->handles,
+    {
+        set         => 'set',
+        add         => 'add',
+        sub         => 'sub',
+        mul         => 'mul',
+        div         => 'div',
+        mod         => 'mod',
+        abs         => 'abs',
+        inc         => [ add => [1] ],
+        dec         => [ sub => [1] ],
+        odd         => [ mod => [2] ],
+        cut_in_half => [ div => [2] ],
+    },
+    '... got the right handles mapping'
+);
 
