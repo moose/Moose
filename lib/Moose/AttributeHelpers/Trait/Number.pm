@@ -9,11 +9,8 @@ with 'Moose::AttributeHelpers::Trait::Base';
 
 sub _helper_type { 'Num' }
 
-# NOTE:
-# we don't use the method provider for this
-# module since many of the names of the provied
-# methods would conflict with keywords
-# - SL
+# NOTE: we don't use the method provider for this module since many of
+# the names of the provided methods would conflict with keywords - SL
 
 has 'method_constructors' => (
     is      => 'ro',
@@ -55,7 +52,6 @@ has 'method_constructors' => (
 
 no Moose::Role;
 
-# register the alias ...
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::Number;
 sub register_implementation { 'Moose::AttributeHelpers::Trait::Number' }

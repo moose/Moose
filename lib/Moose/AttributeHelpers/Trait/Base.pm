@@ -9,17 +9,14 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 requires '_helper_type';
 
-# these next two are the possible methods
-# you can use in the 'handles' map.
+# these next two are the possible methods you can use in the 'handles'
+# map.
 
-# provide a Class or Role which we can
-# collect the method providers from
+# provide a Class or Role which we can collect the method providers
+# from
 
-# requires_attr 'method_provider'
-
-# or you can provide a HASH ref of anon subs
-# yourself. This will also collect and store
-# the methods from a method_provider as well
+# or you can provide a HASH ref of anon subs yourself. This will also
+# collect and store the methods from a method_provider as well
 has 'method_constructors' => (
     is      => 'ro',
     isa     => 'HashRef',
@@ -37,12 +34,10 @@ has 'method_constructors' => (
     },
 );
 
-# extend the parents stuff to make sure
-# certain bits are now required ...
 has '+default'         => ( required => 1 );
 has '+type_constraint' => ( required => 1 );
 
-## Methods called prior to instantiation
+# methods called prior to instantiation
 
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
@@ -91,7 +86,7 @@ around '_canonicalize_handles' => sub {
     } keys %$handles;
 };
 
-## methods called after instantiation
+# methods called after instantiation
 
 before 'install_accessors' => sub { (shift)->_check_handles_values };
 

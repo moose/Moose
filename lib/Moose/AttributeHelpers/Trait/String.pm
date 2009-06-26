@@ -37,7 +37,6 @@ after '_check_handles_values' => sub {
 
 no Moose::Role;
 
-# register the alias ...
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::String;
 sub register_implementation { 'Moose::AttributeHelpers::Trait::String' }

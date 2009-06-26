@@ -11,11 +11,8 @@ with 'Moose::AttributeHelpers::Trait::Base';
 sub _default_is { 'rw' }
 sub _helper_type { 'Bool' }
 
-# NOTE:
-# we don't use the method provider for this
-# module since many of the names of the provied
-# methods would conflict with keywords
-# - SL
+# NOTE: we don't use the method provider for this module since many of
+# the names of the provided methods would conflict with keywords - SL
 
 has 'method_provider' => (
     is        => 'ro',
@@ -26,7 +23,6 @@ has 'method_provider' => (
 
 no Moose::Role;
 
-# register the alias ...
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::Bool;
 sub register_implementation { 'Moose::AttributeHelpers::Trait::Bool' }
