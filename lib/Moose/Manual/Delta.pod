@@ -16,6 +16,33 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version 0.85
+
+L<Moose::AttributeHelpers> has been moved into the Moose core from
+L<MooseX::AttributeHelpers>.  Major changes include:
+
+=over
+
+=item C<traits>, not C<metaclass>
+
+All of the method providers are available via traits only.  The custom
+metaclasses were strictly inferior to applying attribute metaclass traits.
+
+=item C<handles>, not C<provides> or C<curries>
+
+C<provides> syntax was like core Moose C<< handles => HASHREF >> syntax, but
+with the keys and values reversed.  This was confusing, and
+AttributeHelpers now uses C<< handles => HASHREF >> in a way that
+should be intuitive to anyone already familiar with it for normal attributes.
+
+The C<curries> functionality provided by AttributeHelpers has been generalized
+to apply to all cases of C<< handles => HASHREF >>, though not every piece of
+functionality has been ported (currying with a CODEREF is not supported).
+
+=back
+
+See L<Moose::AttributeHelpers> for the new documentation.
+
 =head1 Version 0.84
 
 The C<Role> type has been deprecated. On its own, it was useless,

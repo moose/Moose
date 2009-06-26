@@ -8,6 +8,10 @@ for, noteworthy changes.
         'after install_accessors => ...'. (hdp)
       - Move currying syntax for delegation in from AttributeHelpers. (hdp)
 
+    * Moose::AttributeHelpers
+      - Moved in from MooseX with API tweaks. See Moose::Manual::Delta for
+        details. (hdp, jhannah, rbuels)
+
 0.84 Fri, Jun 26, 2009
     * Moose::Role
       - has now sets definition_context for attributes defined in
