@@ -10,7 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
-use Sub::Exporter;
+use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
 
 my %EXPORT_SPEC;
