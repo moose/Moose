@@ -8,13 +8,13 @@ use Test::More tests => 2;
 use Moose ();
 use Moose::Meta::Class;
 
-my $meta = Moose::Meta::Class->create_anon_class;
+my $meta = Moose::Meta::Class->create('Banana');
 
 my $warn;
 $SIG{__WARN__} = sub { $warn = "@_" };
 
 $meta->add_attribute('foo');
-like $warn, qr/Attribute \(foo\) has no associated methods/,
+like $warn, qr/Attribute \(foo\) of class Banana has no associated methods/,
   'correct error message';
 
 $warn = '';
