@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -77,28 +77,45 @@ sub throw_error {
 sub new {
     my ($class, $name, %options) = @_;
     $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
+    
+    delete $options{__hack_no_process_options};
+
+    my %attrs =
+        ( map { $_ => 1 }
+          grep { defined }
+          map { $_->init_arg() }
+          $class->meta()->get_all_attributes()
+        );
+
+    my @bad = sort grep { ! $attrs{$_} }  keys %options;
+
+    if (@bad)
+    {
+        Carp::cluck "Found unknown argument(s) passed to '$name' attribute constructor in '$class': @bad";
+    }
+
     return $class->SUPER::new($name, %options);
 }
 
 sub interpolate_class_and_new {
-    my ($class, $name, @args) = @_;
+    my ($class, $name, %args) = @_;
 
-    my ( $new_class, @traits ) = $class->interpolate_class(@args);
+    my ( $new_class, @traits ) = $class->interpolate_class(\%args);
 
-    $new_class->new($name, @args, ( scalar(@traits) ? ( traits => \@traits ) : () ) );
+    $new_class->new($name, %args, ( scalar(@traits) ? ( traits => \@traits ) : () ) );
 }
 
 sub interpolate_class {
-    my ($class, %options) = @_;
+    my ($class, $options) = @_;
 
     $class = ref($class) || $class;
 
-    if ( my $metaclass_name = delete $options{metaclass} ) {
+    if ( my $metaclass_name = delete $options->{metaclass} ) {
         my $new_class = Moose::Util::resolve_metaclass_alias( Attribute => $metaclass_name );
 
         if ( $class ne $new_class ) {
             if ( $new_class->can("interpolate_class") ) {
-                return $new_class->interpolate_class(%options);
+                return $new_class->interpolate_class($options);
             } else {
                 $class = $new_class;
             }
@@ -107,7 +124,7 @@ sub interpolate_class {
 
     my @traits;
 
-    if (my $traits = $options{traits}) {
+    if (my $traits = $options->{traits}) {
         my $i = 0;
         while ($i < @$traits) {
             my $trait = $traits->[$i++];
@@ -225,7 +242,7 @@ sub clone_and_inherit_options {
     # so we can ignore it for them.
     # - SL
     if ($self->can('interpolate_class')) {
-        ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(%options);
+        ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(\%options);
 
         my %seen;
         my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
@@ -244,7 +261,7 @@ sub clone_and_inherit_options {
 sub clone {
     my ( $self, %params ) = @_;
 
-    my $class = $params{metaclass} || ref $self;
+    my $class = delete $params{metaclass} || ref $self;
 
     my ( @init, @non_init );
 
@@ -289,6 +306,9 @@ sub _process_options {
             else {
                 $options->{accessor} ||= $name;
             }
+        }
+        elsif ($options->{is} eq 'bare') {
+            # do nothing, but don't complain (later) about missing methods
         }
         else {
             $class->throw_error("I do not understand this option (is => " . $options->{is} . ") on attribute ($name)", data => $options->{is});
@@ -540,6 +560,38 @@ sub install_accessors {
     return;
 }
 
+sub _check_associated_methods {
+    my $self = shift;
+    unless (
+        @{ $self->associated_methods }
+        || ($self->_is_metadata || '') eq 'bare'
+    ) {
+        Carp::cluck(
+            'Attribute (' . $self->name . ') of class '
+            . $self->associated_class->name
+            . ' has no associated methods'
+            . ' (did you mean to provide an "is" argument?)'
+            . "\n"
+        )
+    }
+}
+
+sub _process_accessors {
+    my $self = shift;
+    my ($type, $accessor, $generate_as_inline_methods) = @_;
+    $accessor = (keys %$accessor)[0] if (ref($accessor)||'') eq 'HASH';
+    my $method = $self->associated_class->get_method($accessor);
+    if ($method && !$method->isa('Class::MOP::Method::Accessor')
+     && (!$self->definition_context
+      || $method->package_name eq $self->definition_context->{package})) {
+        Carp::cluck(
+            "You are overwriting a locally defined method ($accessor) with "
+          . "an accessor"
+        );
+    }
+    $self->SUPER::_process_accessors(@_);
+}
+
 sub remove_accessors {
     my $self = shift;
     $self->SUPER::remove_accessors(@_);
@@ -581,6 +633,7 @@ sub install_delegation {
         my $method = $self->_make_delegation_method($handle, $method_to_call);
 
         $self->associated_class->add_method($method->name, $method);
+        $self->associate_method($method);
     }
 }
 
@@ -613,6 +666,9 @@ sub _canonicalize_handles {
         }
         elsif ($handle_type eq 'CODE') {
             return $handles->($self, $self->_find_delegate_metaclass);
+        }
+        elsif (blessed($handles) && $handles->isa('Moose::Meta::TypeConstraint::DuckType')) {
+            return map { $_ => $_ } @{ $handles->methods };
         }
         else {
             $self->throw_error("Unable to canonicalize the 'handles' option with $handles", data => $handles);
@@ -761,7 +817,7 @@ It adds the following options to the constructor:
 
 =over 8
 
-=item * is => 'ro' or 'rw'
+=item * is => 'ro', 'rw', 'bare'
 
 This provides a shorthand for specifying the C<reader>, C<writer>, or
 C<accessor> names. If the attribute is read-only ('ro') then it will
@@ -771,6 +827,11 @@ If it is read-write ('rw') then it will have an C<accessor> method
 with the same name. If you provide an explicit C<writer> for a
 read-write attribute, then you will have a C<reader> with the same
 name as the attribute, and a C<writer> with the name you provided.
+
+Use 'bare' when you are deliberately not installing any methods
+(accessor, reader, etc.) associated with this attribute; otherwise,
+Moose will issue a deprecation warning when this attribute is added to a
+metaclass.
 
 =item * isa => $type
 
@@ -910,6 +971,11 @@ for an example.
 =item B<< $attr->install_accessors >>
 
 This method overrides the parent to also install delegation methods.
+
+If, after installing all methods, the attribute object has no associated
+methods, it throws an error unless C<< is => 'bare' >> was passed to the
+attribute constructor.  (Trying to add an attribute that has no associated
+methods is almost always an error.)
 
 =item B<< $attr->remove_accessors >>
 

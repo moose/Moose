@@ -91,6 +91,13 @@ object creation.
       debug( 'Made a new person - SSN = ', $self->ssn, );
   }
 
+Note that while it is not shown here, the C<BUILD> method receives  
+not only the created object, but also a hashref of the original 
+arguments passed to new (or the results of your C<BUILDARGS>, 
+if you have overridden the default C<BUILDARGS>.)  This can be 
+useful if you need to venture beyond what the default 
+initialization behavior and coercions can accomplish.
+
 =head3 BUILD and parent classes
 
 The interaction between multiple C<BUILD> methods in an inheritance

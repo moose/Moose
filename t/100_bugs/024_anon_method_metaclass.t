@@ -39,8 +39,6 @@ for ( 1, 2 ) {
     is( Ball->meta->get_method('bounce'), $method_object,
         'original method object is preserved' );
 
-    local $TODO = "method metaclass seems to be reinitialized" if !$method_meta;
-
     is( Ball->meta->get_method('bounce')->meta . '', $original_meta,
         "method's metaclass still exists" );
     ok( Ball->meta->get_method('bounce')->meta->does_role('Arbitrary::Roll'),

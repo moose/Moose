@@ -98,8 +98,8 @@ coercions, and C<lazy_build>, so subclassing is often not the ideal
 route.
 
 That said, if you really need to inherit from a non-Moose class, see
-L<Moose::Cookbook::Basics::Recipe12> for an example of how to do it,
-or take a look at L<MooseX::NonMoose> on CPAN.
+L<Moose::Cookbook::Basics::Recipe11> for an example of how to do it,
+or take a look at L<Moose::Manual::MooseX/"MooseX::NonMoose">.
 
 =head2 Accessors
 
@@ -287,7 +287,7 @@ Moose 0.76 fixed a case where Coercions were being applied even if the original 
 
     subtype Address => as 'Str';
     coerce Address => from Str => via { get_address($_) };
-    
+
 Which is not what they intended. The Type Constraint C<Address> is too loose in this case, it is saying that all Strings are Addresses, which is obviously not the case. The solution is to provide a where clause that properly restricts the Type Constraint.
 
     subtype Address => as Str => where { looks_like_address($_) };

@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -96,7 +96,7 @@ sub _initialize_body {
         defined $_ ? $_->_compiled_type_constraint : undef;
     } @type_constraints;
 
-    my $code = $self->_compile_code(
+    my ( $code, $e ) = $self->_compile_code(
         code => $source,
         environment => {
             '$meta'  => \$self,
@@ -104,7 +104,12 @@ sub _initialize_body {
             '@type_constraints' => \@type_constraints,
             '@type_constraint_bodies' => \@type_constraint_bodies,
         },
-    ) or $self->throw_error("Could not eval the constructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source );
+    );
+
+    $self->throw_error(
+        "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$e",
+        error => $e, data => $source )
+        if $e;
 
     $self->{'body'} = $code;
 }

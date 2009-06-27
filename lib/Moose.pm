@@ -1,9 +1,10 @@
-
 package Moose;
+use strict;
+use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -12,7 +13,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.83;
+use Class::MOP 0.88;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -32,13 +33,6 @@ use Moose::Meta::Role::Application::ToInstance;
 
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
-
-sub _caller_info {
-    my $level = @_ ? ($_[0] + 1) : 2;
-    my %info;
-    @info{qw(package file line)} = caller($level);
-    return \%info;
-}
 
 sub throw_error {
     # FIXME This
@@ -69,7 +63,7 @@ sub has {
     Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
         if @_ % 2 == 1;
 
-    my %options = ( definition_context => _caller_info(), @_ );
+    my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
 }
@@ -463,14 +457,14 @@ This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 The I<trigger> option is a CODE reference which will be called after
 the value of the attribute is set. The CODE ref will be passed the
-instance itself and the updated value. You B<cannot> have a trigger on
+instance itself and the updated value. You B<can> have a trigger on
 a read-only attribute.
 
 B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will
 B<not> cause the trigger to be fired.
 
-=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | CODE>
+=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | DUCKTYPE | CODE>
 
 The I<handles> option provides Moose classes with automated delegation features.
 This is a pretty complex and powerful option. It accepts many different option
@@ -562,6 +556,14 @@ methods of the role and any required methods of the role. It should be noted
 that this does B<not> include any method modifiers or generated attribute
 methods (which is consistent with role composition).
 
+=item C<DUCKTYPE>
+
+With the duck type option, you pass a duck type object whose "interface" then
+becomes the list of methods to handle. The "interface" can be defined as; the
+list of methods passed to C<duck_type> to create a duck type object. For more
+information on C<duck_type> please check
+L<Moose::Util::TypeConstraint|Moose::Util::TypeConstraint>.
+
 =item C<CODE>
 
 This is the option to use when you really want to do something funky. You should
@@ -649,6 +651,13 @@ to). See the L<initializer option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
 information.
 
+=item I<documentation> => $string
+
+An arbitrary string that can be retrieved later by calling C<<
+$attr->documentation >>.
+
+
+
 =back
 
 =item B<has +$name =E<gt> %options>
@@ -697,6 +706,10 @@ Here is another example, but within the context of a role:
 
 In this case, we are basically taking the attribute which the role supplied
 and altering it within the bounds of this feature.
+
+Note that you can only extend an attribute from either a superclass or a role,
+you cannot extend an attribute in a role that composes over an attribute from
+another role.
 
 Aside from where the attributes come from (one from superclass, the other
 from a role), this feature works exactly the same. This feature is restricted
@@ -1135,6 +1148,8 @@ Piotr (dexter) Roszatycki
 Sam (mugwump) Vilain
 
 Cory (gphat) Watson
+
+Dylan Hardison (doc fixes)
 
 ... and many other #moose folks
 

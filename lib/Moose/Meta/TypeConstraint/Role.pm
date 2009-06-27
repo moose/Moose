@@ -7,7 +7,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,7 +20,7 @@ __PACKAGE__->meta->add_attribute('role' => (
 sub new {
     my ( $class, %args ) = @_;
 
-    $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Role');
+    $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
     my $self      = $class->_new(\%args);
 
     $self->_create_hand_optimized_type_constraint;

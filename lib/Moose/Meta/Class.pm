@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -227,21 +227,6 @@ sub new_object {
     return $self;
 }
 
-sub _construct_instance {
-    my $class = shift;
-    my $params = @_ == 1 ? $_[0] : {@_};
-    my $meta_instance = $class->get_meta_instance;
-    # FIXME:
-    # the code below is almost certainly incorrect
-    # but this is foreign inheritance, so we might
-    # have to kludge it in the end.
-    my $instance = $params->{'__INSTANCE__'} || $meta_instance->create_instance();
-    foreach my $attr ($class->get_all_attributes()) {
-        $attr->initialize_instance_slot($meta_instance, $instance, $params);
-    }
-    return $instance;
-}
-
 sub superclasses {
     my $self = shift;
     my @supers = @_;
@@ -258,11 +243,17 @@ sub superclasses {
 
 sub add_attribute {
     my $self = shift;
-    $self->SUPER::add_attribute(
+    my $attr =
         (blessed $_[0] && $_[0]->isa('Class::MOP::Attribute')
             ? $_[0]
-            : $self->_process_attribute(@_))
-    );
+            : $self->_process_attribute(@_));
+    $self->SUPER::add_attribute($attr);
+    # it may be a Class::MOP::Attribute, theoretically, which doesn't have
+    # 'bare' and doesn't implement this method
+    if ($attr->can('_check_associated_methods')) {
+        $attr->_check_associated_methods;
+    }
+    return $attr;
 }
 
 sub add_override_method_modifier {

@@ -1,12 +1,13 @@
-
 package Moose::Role;
+use strict;
+use warnings;
 
 use Scalar::Util 'blessed';
 use Carp         'croak';
 
 use Sub::Exporter;
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -41,7 +42,7 @@ sub has {
     my $meta = Moose::Meta::Role->initialize(shift);
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-    my %options = @_;
+    my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     $meta->add_attribute( $_, %options ) for @$attrs;
 }

@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -17,7 +17,7 @@ sub _error_thrower {
 }
 
 sub _eval_code {
-    my ( $self, $code ) = @_;
+    my ( $self, $source ) = @_;
 
     # NOTE:
     # set up the environment
@@ -34,9 +34,15 @@ sub _eval_code {
                                    : undef),
     };
 
-    #warn "code for $attr_name =>\n" . $code . "\n";
-    $self->_compile_code( environment => $environment, code => $code )
-        or $self->throw_error("Could not create writer for '${\$self->associated_attribute->name}' because $@ \n code: $code", error => $@, data => $code );
+    #warn "code for $attr_name =>\n" . $source . "\n";
+    my ( $code, $e ) = $self->_compile_code( environment => $environment, code => $source );
+
+    $self->throw_error(
+        "Could not create writer for '${\$self->associated_attribute->name}' because $e \n code: $source",
+        error => $e, data => $source )
+        if $e;
+
+    return $code;
 }
 
 sub _generate_accessor_method_inline {

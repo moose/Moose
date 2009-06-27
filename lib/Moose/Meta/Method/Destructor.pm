@@ -6,12 +6,12 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Generated';
+         'Class::MOP::Method::Inlined';
 
 sub new {
     my $class   = shift;
@@ -96,10 +96,15 @@ sub _initialize_body {
 
     warn $source if $self->options->{debug};
 
-    my $code = $self->_compile_code(
+    my ( $code, $e ) = $self->_compile_code(
         environment => {},
         code => $source,
-    ) or $self->throw_error("Could not eval the destructor :\n\n$source\n\nbecause :\n\n$@", error => $@, data => $source);
+    );
+
+    $self->throw_error(
+        "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$e",
+        error => $e, data => $source )
+        if $e;
 
     $self->{'body'} = $code;
 }

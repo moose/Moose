@@ -6,7 +6,7 @@ use metaclass;
 
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.79';
+our $VERSION   = '0.85';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -98,7 +98,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =item B<< Moose::Meta::TypeConstraint::Enum->new(%options) >>
 
-This creates a new class type constraint based on the given
+This creates a new enum type constraint based on the given
 C<%options>.
 
 It takes the same options as its parent, with several
@@ -107,7 +107,7 @@ should be an array reference containing a list of valid string
 values. Second, it automatically sets the parent to the C<Str> type.
 
 Finally, it ignores any provided C<constraint> option. The constraint
-is generated automatically based on the provided C<values>
+is generated automatically based on the provided C<values>.
 
 =item B<< $constraint->values >>
 

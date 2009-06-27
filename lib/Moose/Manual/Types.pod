@@ -183,6 +183,21 @@ recommend that you centralize all of these definitions in a single
 package, C<MyApp::Types>, which can be loaded by other classes in your
 application.
 
+Once you're doing this, you should almost certainly look at the
+L<MooseX::Types> extension which allows easy declaration of type libraries
+and can export your types as perl constants so that you can refer to them
+as just
+
+  has 'counter' => (is => 'rw', isa => PositiveInt);
+
+rather than needing to fully qualify them everywhere. It also allows
+
+  has 'counts' => (is => 'ro', isa => HashRef[PositiveInt]);
+
+and similarly for the union and other syntax discussed below, which
+will compile time check your use of names and is generally more robust
+than the string type parsing for complex cases.
+
 =head1 COERCION
 
 One of the most powerful features of Moose's type system is its
