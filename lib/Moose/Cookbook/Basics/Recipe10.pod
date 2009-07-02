@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe11 - Using BUILDARGS and BUILD to hook into object construction
+Moose::Cookbook::Basics::Recipe10 - Using BUILDARGS and BUILD to hook into object construction
 
 =head1 SYNOPSIS
 
