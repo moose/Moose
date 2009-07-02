@@ -79,24 +79,23 @@ sub _initialize_body {
     $self->{body} = sub {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
-        ( defined $proxy )
-            || $self->throw_error(
-            "Cannot delegate $handle_name to $method_to_call because "
-                . "the value of "
-                . $self->associated_attribute->name
-                . " is not defined",
-            method_name => $method_to_call,
-            object      => $instance
+
+        my $error
+            = !defined $proxy ? ' is not defined'
+            : !blessed $proxy ? qq{ is not an object (got '$proxy')}
+            :                   undef;
+
+        if ($error) {
+            $self->throw_error(
+                "Cannot delegate $handle_name to $method_to_call because "
+                    . "the value of "
+                    . $self->associated_attribute->name
+                    . $error,
+                method_name => $method_to_call,
+                object      => $instance
             );
-        ( blessed $proxy )
-            || $self->throw_error(
-            "Cannot delegate $handle_name to $method_to_call because "
-                . "the value of "
-                . $self->associated_attribute->name
-                . " is not an object (got '$proxy')",
-            method_name => $method_to_call,
-            object      => $instance
-            );
+        }
+
         $proxy->$method_to_call(@_);
     };
 }

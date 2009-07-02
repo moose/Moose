@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 89;
+use Test::More tests => 90;
 use Test::Exception;
 
 
@@ -413,7 +413,11 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 # Make sure that a useful error message is thrown when the delegation target is
 # not an object
 {
-    my $i = Bar->new(foo => []);
-    throws_ok { $i->foo_bar } qr/is not an object \(got 'ARRAY/,
+    my $i = Bar->new(foo => undef);
+    throws_ok { $i->foo_bar } qr/is not defined/,
+        'useful error from unblessed reference';
+
+    my $j = Bar->new(foo => []);
+    throws_ok { $j->foo_bar } qr/is not an object \(got 'ARRAY/,
         'useful error from unblessed reference';
 }
