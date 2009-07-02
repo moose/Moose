@@ -88,6 +88,15 @@ sub _initialize_body {
             method_name => $method_to_call,
             object      => $instance
             );
+        ( blessed $proxy )
+            || $self->throw_error(
+            "Cannot delegate $handle_name to $method_to_call because "
+                . "the value of "
+                . $self->associated_attribute->name
+                . " is not an object (got '$proxy')",
+            method_name => $method_to_call,
+            object      => $instance
+            );
         $proxy->$method_to_call(@_);
     };
 }
