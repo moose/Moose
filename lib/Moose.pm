@@ -775,7 +775,7 @@ B<are not> overridden, or removed.
 
 =item B<around $name|@names =E<gt> sub { ... }>
 
-This three items are syntactic sugar for the before, after, and around method
+These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
 found in the L<Class::MOP::Class documentation|Class::MOP::Class/"Method
 Modifiers"> for now.
