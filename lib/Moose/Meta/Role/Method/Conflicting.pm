@@ -6,7 +6,7 @@ use warnings;
 
 use base qw(Moose::Meta::Role::Method::Required);
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.86';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
