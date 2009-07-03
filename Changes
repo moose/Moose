@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.86 Thu Jul 2, 2009
+0.86 Fri Jul 3, 2009
     * Moose::Meta::Class::Immutable::Trait
       - Fixes to work with the latest Class::MOP.
 
