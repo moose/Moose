@@ -31,14 +31,14 @@ dies_ok {
 can_ok('Foo', 'does');
 
 foreach my $function (qw(
-						 extends
-    	                 has
-	                     before after around
-	                     blessed confess
-						 type subtype as where
-						 coerce from via
-						 find_type_constraint
-	                     )) {
+                         extends
+                         has
+                         before after around
+                         blessed confess
+                         type subtype as where
+                         coerce from via
+                         find_type_constraint
+                         )) {
     ok(!Foo->meta->has_method($function), '... the meta does not treat "' . $function . '" as a method');
 }
 

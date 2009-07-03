@@ -262,7 +262,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
         my $self = shift;
 
         my $name = our $AUTOLOAD;
-        $name =~ s/.*://;		# strip fully-qualified portion
+        $name =~ s/.*://; # strip fully-qualified portion
 
         if (@_) {
             return $self->{$name} = shift;
