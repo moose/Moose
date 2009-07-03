@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.86';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -13,7 +13,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.88;
+use Class::MOP 0.89;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -562,7 +562,7 @@ With the duck type option, you pass a duck type object whose "interface" then
 becomes the list of methods to handle. The "interface" can be defined as; the
 list of methods passed to C<duck_type> to create a duck type object. For more
 information on C<duck_type> please check
-L<Moose::Util::TypeConstraints|Moose::Util::TypeConstraints>.
+L<Moose::Util::TypeConstraints>.
 
 =item C<CODE>
 

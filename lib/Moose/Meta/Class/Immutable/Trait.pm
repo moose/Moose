@@ -5,16 +5,18 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.86';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Class::Immutable::Trait';
 
-sub add_role { shift->_immutable_cannot_call }
+sub add_role { $_[1]->_immutable_cannot_call }
 
 sub calculate_all_roles {
-    @{ $_[0]{__immutable}{calculate_all_roles} ||= [ shift->next::method ] };
+    my $orig = shift;
+    my $self = shift;
+    @{ $self->{__immutable}{calculate_all_roles} ||= [ $self->$orig ] };
 }
 
 1;

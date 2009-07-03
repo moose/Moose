@@ -1,6 +1,15 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.86 Thu Jul 2, 2009
+    * Moose::Meta::Class::Immutable::Trait
+      - Fixes to work with the latest Class::MOP.
+
+    * Moose::Meta::Method::Delegation
+      - Delegation now dies with a more useful error message if the
+        attribute's accessor returns something defined but
+        unblessed. (hdp)
+
 0.85 Fri, Jun 26, 2009
     * Moose::Meta::Attribute
       - The warning for 'no associated methods' is now split out into

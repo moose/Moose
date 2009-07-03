@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 88;
+use Test::More tests => 90;
 use Test::Exception;
 
 
@@ -262,7 +262,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
         my $self = shift;
 
         my $name = our $AUTOLOAD;
-        $name =~ s/.*://;		# strip fully-qualified portion
+        $name =~ s/.*://; # strip fully-qualified portion
 
         if (@_) {
             return $self->{$name} = shift;
@@ -410,3 +410,14 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     ok(!$i->meta->has_method('foo_bar'), 'handles method foo_bar is removed');
 }
 
+# Make sure that a useful error message is thrown when the delegation target is
+# not an object
+{
+    my $i = Bar->new(foo => undef);
+    throws_ok { $i->foo_bar } qr/is not defined/,
+        'useful error from unblessed reference';
+
+    my $j = Bar->new(foo => []);
+    throws_ok { $j->foo_bar } qr/is not an object \(got 'ARRAY/,
+        'useful error from unblessed reference';
+}
