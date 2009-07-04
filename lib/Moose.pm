@@ -457,8 +457,10 @@ This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 The I<trigger> option is a CODE reference which will be called after
 the value of the attribute is set. The CODE ref will be passed the
-instance itself and the updated value. You B<can> have a trigger on
-a read-only attribute.
+instance itself and the updated value. If the attribute already had a
+value, this will be passed as the third value to the trigger.
+
+You B<can> have a trigger on a read-only attribute.
 
 B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will

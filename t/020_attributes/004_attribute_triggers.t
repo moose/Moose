@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 40;
+use Test::More tests => 42;
 use Test::Exception;
 
 
@@ -158,7 +158,8 @@ use Test::Exception;
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Yet another $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 }
 
-# Triggers do not receive the meta-attribute as an argument
+# Triggers do not receive the meta-attribute as an argument, but do
+# receive the old value
 
 {
     package Foo;
@@ -169,6 +170,28 @@ use Test::Exception;
 
 {
     my $attr = Foo->meta->get_attribute('foo');
+
+    my $foo = Foo->new;
+    $attr->set_value( $foo, 2 );
+
+    is_deeply(
+        \@Foo::calls,
+        [ [ $foo, 2 ] ],
+        'trigger called correctly on initial set via meta-API',
+    );
+    @Foo::calls = ();
+
+    $attr->set_value( $foo, 3 );
+
+    is_deeply(
+        \@Foo::calls,
+        [ [ $foo, 3, 2 ] ],
+        'trigger called correctly on second set via meta-API',
+    );
+    @Foo::calls = ();
+}
+
+{
     my $foo = Foo->new(foo => 2);
     is_deeply(
         \@Foo::calls,
@@ -180,8 +203,8 @@ use Test::Exception;
     $foo->foo(3);
     is_deeply(
         \@Foo::calls,
-        [ [ $foo, 3 ] ],
-        'trigger called correctly on set',
+        [ [ $foo, 3, 2 ] ],
+        'trigger called correctly on set (with old value)',
     );
     @Foo::calls = ();
     Foo->meta->make_immutable, redo if Foo->meta->is_mutable;

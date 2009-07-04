@@ -458,11 +458,21 @@ set:
   sub _size_set {
       my ( $self, $size ) = @_;
 
-      warn $self->name, " size is now $size\n";
+      my $msg = $self->name;
+
+      if (@_) {
+          $msg .= " - old size was $_[0]";
+      }
+
+      $msg .= " - size is now $size";
+      warn $msg.
   }
 
-The trigger is called as a method, and receives the new value as its argument.
-The trigger is called I<after> the value is set.
+The trigger is called I<after> an attribute's value is set. It is
+called as a method on the object, and receives the new and values as
+its arguments. If the attribute had not previously been set at all,
+then only the new value is passed. This lets you distinguish between
+the case where the attribute had no value versus when it was C<undef>.
 
 This differs from an C<after> method modifier in two ways. First, a
 trigger is only called when the attribute is set, as opposed to

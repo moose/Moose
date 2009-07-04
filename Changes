@@ -22,6 +22,11 @@ next version
       - Add functions meta_class_alias and meta_attribute_alias for creating
         aliases for class and attribute metaclasses and metatraits. (doy)
 
+    * Moose::Meta::Attribute
+    * Moose::Meta::Method::Accessor
+      - A trigger now receives the old value as a second argument, if
+        the attribute had one.
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect

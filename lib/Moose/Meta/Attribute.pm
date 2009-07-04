@@ -495,6 +495,11 @@ sub set_value {
     my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
                                          ->get_meta_instance;
 
+    my @old;
+    if ( $self->has_trigger && $self->has_value($instance) ) {
+        @old = $self->get_value($instance, 'for trigger');
+    }
+
     $meta_instance->set_slot_value($instance, $attr_name, $value);
 
     if (ref $value && $self->is_weak_ref) {
@@ -502,12 +507,12 @@ sub set_value {
     }
 
     if ($self->has_trigger) {
-        $self->trigger->($instance, $value);
+        $self->trigger->($instance, $value, @old);
     }
 }
 
 sub get_value {
-    my ($self, $instance) = @_;
+    my ($self, $instance, $for_trigger) = @_;
 
     if ($self->is_lazy) {
         unless ($self->has_value($instance)) {
@@ -524,7 +529,7 @@ sub get_value {
         }
     }
 
-    if ($self->should_auto_deref) {
+    if ( $self->should_auto_deref && ! $for_trigger ) {
 
         my $type_constraint = $self->type_constraint;
 
