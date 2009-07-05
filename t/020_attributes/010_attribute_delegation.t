@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 90;
+use Test::More tests => 91;
 use Test::Exception;
 
 
@@ -21,13 +21,15 @@ use Test::Exception;
 
     has 'bar' => (is => 'rw', default => 10);
 
+    sub baz { 42 }
+
     package Bar;
     use Moose;
 
     has 'foo' => (
         is      => 'rw',
         default => sub { Foo->new },
-        handles => { 'foo_bar' => 'bar' }
+        handles => { 'foo_bar' => 'bar', foo_baz => 'baz' }
     );
 }
 
@@ -420,4 +422,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $j = Bar->new(foo => []);
     throws_ok { $j->foo_bar } qr/is not an object \(got 'ARRAY/,
         'useful error from unblessed reference';
+
+    my $k = Bar->new(foo => "Foo");
+    lives_ok { $k->foo_baz } "but not for class name";
 }
