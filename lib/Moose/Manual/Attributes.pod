@@ -460,7 +460,7 @@ set:
 
       my $msg = $self->name;
 
-      if (@_ > 2) {
+      if ( @_ > 2 ) {
           $msg .= " - old size was $old_size";
       }
 
