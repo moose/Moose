@@ -81,9 +81,9 @@ sub _initialize_body {
         my $proxy    = $instance->$accessor();
 
         my $error
-            = !defined $proxy ? ' is not defined'
-            : !blessed $proxy ? qq{ is not an object (got '$proxy')}
-            :                   undef;
+            = !defined $proxy                 ? ' is not defined'
+            : ref($proxy) && !blessed($proxy) ? qq{ is not an object (got '$proxy')}
+            : undef;
 
         if ($error) {
             $self->throw_error(
