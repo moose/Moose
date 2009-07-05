@@ -456,12 +456,12 @@ set:
   );
 
   sub _size_set {
-      my ( $self, $size ) = @_;
+      my ( $self, $size, $old_size ) = @_;
 
       my $msg = $self->name;
 
-      if (@_) {
-          $msg .= " - old size was $_[0]";
+      if (@_ > 2) {
+          $msg .= " - old size was $old_size";
       }
 
       $msg .= " - size is now $size";
