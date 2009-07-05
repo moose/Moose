@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.87
+    * Moose::Meta::Method::Delegation
+      - The new error condition was laxened to allow class names.
+
 0.86 Fri Jul 3, 2009
     * Moose::Meta::Class::Immutable::Trait
       - Fixes to work with the latest Class::MOP.
