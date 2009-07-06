@@ -113,6 +113,15 @@ If you I<must> make an attribute read-write, consider making the
 writer a separate private method. Narrower APIs are easy to maintain,
 and mutable state is trouble.
 
+In order to declare such attributes, provide a private C<writer>
+parameter:
+
+    has pizza => (
+        isa    => "Pizza",
+        is     => "ro",
+        writer => "_pizza",
+    );
+
 =head2 Think twice before changing an attribute's type in a subclass
 
 Down this path lies great confusion. If the attribute is an object
