@@ -117,9 +117,9 @@ In order to declare such attributes, provide a private C<writer>
 parameter:
 
     has pizza => (
-        isa    => "Pizza",
-        is     => "ro",
-        writer => "_pizza",
+        is     => 'ro',
+        isa    => 'Pizza',
+        writer => '_pizza',
     );
 
 =head2 Think twice before changing an attribute's type in a subclass
