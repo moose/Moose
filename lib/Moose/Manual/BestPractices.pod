@@ -32,8 +32,11 @@ Moose sugar and making your class immutable.
 
   1;
 
-The C<no Moose> bit is simply good code hygiene, and making classes
-immutable speeds up a lot of things, most notably object construction.
+The C<no Moose> bit simply good code hygiene, as it removes all the
+Moose keywords that are no longer needed once your class has been
+built.  C<make_immutable> relinquishes your right to make further
+changes to your class, and allows Moose to speed up a lot of things,
+most notably object construction.
 
 =head2 Never override C<new>
 
