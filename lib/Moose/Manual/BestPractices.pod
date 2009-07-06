@@ -38,6 +38,10 @@ built.  C<make_immutable> relinquishes your right to make further
 changes to your class, and allows Moose to speed up a lot of things,
 most notably object construction.
 
+A more generic way to unimport not only L<Moose>'s exports but also those from
+type libraries and other modules is L<namespace::clean> and
+L<namespace::autoclean>.
+
 =head2 Never override C<new>
 
 Overriding C<new> is a very bad practice. Instead, you should use a
