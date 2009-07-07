@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.87
+0.87 Tue Jul 7, 2009
     * Moose::Meta::Method::Delegation
       - Once again allow class names as well as objects for
         delegation. This was changed in 0.86.
