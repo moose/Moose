@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -13,7 +13,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.88;
+use Class::MOP 0.89;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -574,7 +574,7 @@ With the duck type option, you pass a duck type object whose "interface" then
 becomes the list of methods to handle. The "interface" can be defined as; the
 list of methods passed to C<duck_type> to create a duck type object. For more
 information on C<duck_type> please check
-L<Moose::Util::TypeConstraint|Moose::Util::TypeConstraint>.
+L<Moose::Util::TypeConstraints>.
 
 =item C<CODE>
 
@@ -787,7 +787,7 @@ B<are not> overridden, or removed.
 
 =item B<around $name|@names =E<gt> sub { ... }>
 
-This three items are syntactic sugar for the before, after, and around method
+These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
 found in the L<Class::MOP::Class documentation|Class::MOP::Class/"Method
 Modifiers"> for now.

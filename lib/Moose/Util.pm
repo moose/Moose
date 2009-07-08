@@ -8,7 +8,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -274,7 +274,7 @@ applicant can be a role name, class name, or object.
 The C<$applicant> must already have a metaclass object.
 
 The list of C<@roles> should be a list of names, each of which can be
-followed by an optional hash reference of options (C<exclude> and
+followed by an optional hash reference of options (C<excludes> and
 C<alias>).
 
 =item B<ensure_all_roles($applicant, @roles)>

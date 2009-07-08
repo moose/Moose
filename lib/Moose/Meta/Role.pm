@@ -10,7 +10,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -793,7 +793,7 @@ This method creates a new role object with the provided name.
 
 This method accepts a list of array references. Each array reference
 should contain a role name as its first element. The second element is
-an optional hash reference. The hash reference can contain C<exclude>
+an optional hash reference. The hash reference can contain C<excludes>
 and C<alias> keys to control how methods are composed from the role.
 
 The return value is a new L<Moose::Meta::Role::Composite> that

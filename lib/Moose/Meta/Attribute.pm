@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -586,7 +586,7 @@ sub _process_accessors {
      && (!$self->definition_context
       || $method->package_name eq $self->definition_context->{package})) {
         Carp::cluck(
-            "You cannot overwrite a locally defined method ($accessor) with "
+            "You are overwriting a locally defined method ($accessor) with "
           . "an accessor"
         );
     }

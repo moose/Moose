@@ -3,7 +3,7 @@
 
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe10 - Operator overloading, subtypes, and coercion
+Moose::Cookbook::Basics::Recipe9 - Operator overloading, subtypes, and coercion
 
 =head1 SYNOPSIS
 

@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -88,15 +88,22 @@ sub _initialize_body {
     $self->{body} = sub {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
-        ( defined $proxy )
-            || $self->throw_error(
-            "Cannot delegate $handle_name to $method_to_call because "
-                . "the value of "
-                . $self->associated_attribute->name
-                . " is not defined",
-            method_name => $method_to_call,
-            object      => $instance
+
+        my $error
+            = !defined $proxy                 ? ' is not defined'
+            : ref($proxy) && !blessed($proxy) ? qq{ is not an object (got '$proxy')}
+            : undef;
+
+        if ($error) {
+            $self->throw_error(
+                "Cannot delegate $handle_name to $method_to_call because "
+                    . "the value of "
+                    . $self->associated_attribute->name
+                    . $error,
+                method_name => $method_to_call,
+                object      => $instance
             );
+        }
         my @args = (@{ $self->curried_arguments }, @_);
         $proxy->$method_to_call(@args);
     };

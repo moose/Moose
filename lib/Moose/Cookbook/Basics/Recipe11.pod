@@ -16,7 +16,7 @@ BEGIN {
 
 =head1 NAME
 
-Moose::Cookbook::Basics::Recipe12 - Extending a non-Moose base class
+Moose::Cookbook::Basics::Recipe11 - Extending a non-Moose base class
 
 =head1 SYNOPSIS
 

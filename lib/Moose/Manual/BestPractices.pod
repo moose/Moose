@@ -32,8 +32,16 @@ Moose sugar and making your class immutable.
 
   1;
 
-The C<no Moose> bit is simply good code hygiene, and making classes
-immutable speeds up a lot of things, most notably object construction.
+The C<no Moose> bit is simply good code hygiene, as it removes all the
+Moose keywords from your class's namespace. Once the class has been
+built, these keywords are not needed needed. The C<make_immutable>
+call allows Moose to speed up a lot of things, most notably object
+construction. The tradeoff is that you can no longer change the class
+definition.
+
+A more generic way to unimport not only L<Moose>'s exports but also
+those from type libraries and other modules is to use
+L<namespace::clean> or L<namespace::autoclean>.
 
 =head2 Never override C<new>
 
@@ -84,7 +92,7 @@ Also, keep your builder methods private.
 
 Lazy is good, and often solves initialization ordering problems. It's
 also good for deferring work that may never have to be done. If you're
-going to be lazy, use I<lazy_build> to save yourself some typing and
+going to be lazy, use C<lazy_build> to save yourself some typing and
 standardize names.
 
 =head2 Consider keeping clearers and predicates private
@@ -105,6 +113,15 @@ of your class to simply make new objects as needed.
 If you I<must> make an attribute read-write, consider making the
 writer a separate private method. Narrower APIs are easy to maintain,
 and mutable state is trouble.
+
+In order to declare such attributes, provide a private C<writer>
+parameter:
+
+    has pizza => (
+        is     => 'ro',
+        isa    => 'Pizza',
+        writer => '_pizza',
+    );
 
 =head2 Think twice before changing an attribute's type in a subclass
 

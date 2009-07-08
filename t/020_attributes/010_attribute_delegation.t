@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 89;
+use Test::More tests => 92;
 use Test::Exception;
 
 
@@ -21,6 +21,8 @@ use Test::Exception;
 
     has 'bar' => (is => 'rw', default => 10);
 
+    sub baz { 42 }
+
     package Bar;
     use Moose;
 
@@ -29,8 +31,9 @@ use Test::Exception;
         default => sub { Foo->new },
         handles => {
             'foo_bar' => 'bar',
+            foo_baz => 'baz',
             'foo_bar_to_20' => [ bar => [ 20 ] ],
-        }
+        },
     );
 }
 
@@ -269,7 +272,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
         my $self = shift;
 
         my $name = our $AUTOLOAD;
-        $name =~ s/.*://;		# strip fully-qualified portion
+        $name =~ s/.*://; # strip fully-qualified portion
 
         if (@_) {
             return $self->{$name} = shift;
@@ -417,3 +420,17 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     ok(!$i->meta->has_method('foo_bar'), 'handles method foo_bar is removed');
 }
 
+# Make sure that a useful error message is thrown when the delegation target is
+# not an object
+{
+    my $i = Bar->new(foo => undef);
+    throws_ok { $i->foo_bar } qr/is not defined/,
+        'useful error from unblessed reference';
+
+    my $j = Bar->new(foo => []);
+    throws_ok { $j->foo_bar } qr/is not an object \(got 'ARRAY/,
+        'useful error from unblessed reference';
+
+    my $k = Bar->new(foo => "Foo");
+    lives_ok { $k->foo_baz } "but not for class name";
+}

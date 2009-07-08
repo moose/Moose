@@ -217,7 +217,7 @@ just the first missing method.
 Moose will no longer inline a constructor for your class unless it
 inherits its constructor from Moose::Object, and will warn when it
 doesn't inline. If you want to force inlining anyway, pass
-C<< "replace_constructor => 1 >> to C<make_immutable>.
+C<< replace_constructor => 1 >> to C<make_immutable>.
 
 If you want to get rid of the warning, pass C<< inline_constructor =>
 0 >>.

@@ -7,7 +7,7 @@ use Carp         'croak';
 
 use Sub::Exporter;
 
-our $VERSION   = '0.85';
+our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -175,7 +175,7 @@ Moose::Role - The Moose Role
 
 =head1 DESCRIPTION
 
-The concept of roles is documented in L<Moose::Manual::Role>. This document
+The concept of roles is documented in L<Moose::Manual::Roles>. This document
 serves as API documentation.
 
 =head1 EXPORTED FUNCTIONS
