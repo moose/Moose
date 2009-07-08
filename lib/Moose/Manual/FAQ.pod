@@ -298,14 +298,14 @@ This will allow the coercion to apply only to strings that fail to look like an 
 
 =head3 Why is BUILD not called for my composed roles?
 
-BUILD is never called in composed roles. The primary reason is that
+C<BUILD> is never called in composed roles. The primary reason is that
 roles are B<not> order sensitive. Roles are composed in such a way
 that the order of composition does not matter (for information on the
 deeper theory of this read the original traits papers here
 L<http://www.iam.unibe.ch/~scg/Research/Traits/>).
 
 Because roles are essentially unordered, it would be impossible to
-determine the order in which to execute the BUILD methods.
+determine the order in which to execute the C<BUILD> methods.
 
 As for alternate solutions, there are a couple.
 

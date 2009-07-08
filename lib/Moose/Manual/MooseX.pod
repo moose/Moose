@@ -233,7 +233,7 @@ attributes.
 
   class_has 'Cache' => ( ... );
 
-Note however that this class attribute does -not- inherit like a
+Note however that this class attribute does I<not> inherit like a
 L<Class::Data::Inheritable> or similar attribute - calling
 
   $subclass->Cache($cache);

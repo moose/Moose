@@ -99,7 +99,7 @@ We'll leave the line-by-line explanation of this code to other
 documentation, but you can see how Moose reduces common OO idioms to
 simple declarative constructs.
 
-=head2 TABLE OF CONTENTS
+=head1 TABLE OF CONTENTS
 
 This manual consists of a number of documents.
 

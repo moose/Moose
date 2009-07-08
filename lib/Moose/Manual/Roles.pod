@@ -231,15 +231,15 @@ However, aliasing a method simply makes a I<copy> of the method with
 the new name. We also need to exclude the original name:
 
   with 'Breakable' => {
-      alias   => { break => 'break_bone' },
-      exclude => 'break',
+      alias    => { break => 'break_bone' },
+      excludes => 'break',
       },
       'Breakdancer' => {
-      alias   => { break => 'break_dance' },
-      exclude => 'break',
+      alias    => { break => 'break_dance' },
+      excludes => 'break',
       };
 
-The exclude parameter prevents the C<break> method from being composed
+The excludes parameter prevents the C<break> method from being composed
 into the C<FragileDancer> class, so we don't have a conflict. This
 means that C<FragileDancer> does not need to implement its own
 C<break> method.

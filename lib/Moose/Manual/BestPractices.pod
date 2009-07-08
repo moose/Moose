@@ -92,7 +92,7 @@ Also, keep your builder methods private.
 
 Lazy is good, and often solves initialization ordering problems. It's
 also good for deferring work that may never have to be done. If you're
-going to be lazy, use I<lazy_build> to save yourself some typing and
+going to be lazy, use C<lazy_build> to save yourself some typing and
 standardize names.
 
 =head2 Consider keeping clearers and predicates private
