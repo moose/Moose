@@ -8,14 +8,14 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 Moose is a pretty open project and we are always willing to accept bug
 fixes, more tests and doc patches. Doing these things is as simple as
-cloning a copy of the git repository and hacking.
+cloning a copy of the Git repository and hacking.
 
 Commit bits are given out freely. All we ask is that for any
 non-trivial code patches, you check with one of the core developers
 before applying said patch.
 
 Alternatively, you can make a new branch with your change and push it
-back to the Moose git server, then ask a core dev to review your
+back to the Moose Git server, then ask a core dev to review your
 branch.
 
 =head2 IRC and Email
