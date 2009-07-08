@@ -7,7 +7,7 @@ Moose::Manual::Contributing - How to get involved in Moose
 =head1 GETTING INVOLVED
 
 Moose is a pretty open project and we are always willing to accept bug
-fixes, more tests and doc patches. Doing these things is as simple as
+fixes, more tests and documentation patches. Doing these things is as simple as
 cloning a copy of the Git repository and hacking.
 
 Commit bits are given out freely. All we ask is that for any
