@@ -50,7 +50,6 @@ sub _generate_accessor_method_inline {
     my $attr        = $self->associated_attribute;
     my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_access($inv, $attr_name);
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
     $self->_eval_code('sub { ' . "\n"
@@ -163,8 +162,6 @@ sub _inline_check_lazy {
 
     return '' unless $attr->is_lazy;
 
-    my $slot_access = $self->_inline_access($instance, $attr->name);
-
     my $slot_exists = $self->_inline_has($instance, $attr->name);
 
     my $code = 'unless (' . $slot_exists . ') {' . "\n";
@@ -182,25 +179,25 @@ sub _inline_check_lazy {
             }
             $code .= $self->_inline_check_coercion('$default') . "\n";
             $code .= $self->_inline_check_constraint('$default') . "\n";
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, '$default') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, '$default') . "\n";
         }
         else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, 'undef') . "\n";
         }
 
     } else {
         if ($attr->has_default) {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, ('$attr->default(' . $instance . ')')) . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, ('$attr->default(' . $instance . ')')) . "\n";
         }
         elsif ($attr->has_builder) {
             $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n"
-                  .  '       ' . $self->_inline_init_slot($attr, $instance, $slot_access, ($instance . '->$builder'))
+                  .  '       ' . $self->_inline_init_slot($attr, $instance, ($instance . '->$builder'))
                   .  "\n    } else {\n"
                   .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name')
                   .  ';'. "\n    }";
         }
         else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $slot_access, 'undef') . "\n";
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, 'undef') . "\n";
         }
     }
     $code .= "}\n";
@@ -208,12 +205,12 @@ sub _inline_check_lazy {
 }
 
 sub _inline_init_slot {
-    my ($self, $attr, $inv, $slot_access, $value) = @_;
+    my ($self, $attr, $inv, $value) = @_;
     if ($attr->has_initializer) {
         return ('$attr->set_initial_value(' . $inv . ', ' . $value . ');');
     }
     else {
-        return ($slot_access . ' = ' . $value . ';');
+        return $self->_inline_store($inv, $value);
     }
 }
 
