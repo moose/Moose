@@ -15,7 +15,6 @@ use Moose::AttributeHelpers::Trait::Collection::List;
 use Moose::AttributeHelpers::Trait::Collection::Array;
 use Moose::AttributeHelpers::Trait::Collection::Hash;
 use Moose::AttributeHelpers::Trait::Collection::ImmutableHash;
-use Moose::AttributeHelpers::Trait::Collection::Bag;
 
 1;
 
