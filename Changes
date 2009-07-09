@@ -2,6 +2,10 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 0.88
+    * Moose::Meta::Method::Accessor
+      - No longer uses inline_slot_access in accessors, to support
+        non-lvalue-based meta instances.
+
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers
         to the existing delegation API. (hdp)

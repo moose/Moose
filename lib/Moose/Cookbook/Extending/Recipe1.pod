@@ -110,7 +110,7 @@ this works. These both build on top of the L<MooseX::Types> extension.
 =head1 ROLES VS TRAITS VS SUBCLASSES
 
 It is important to understand that B<roles and traits are the same thing>. A
-trait is simply a role applied to a metaclass. The only thing that may
+trait is simply a role applied to a instance. The only thing that may
 distinguish the two is that a trait can be packaged in a way that lets Moose
 resolve a short name to a class name. In other words, with a trait, the caller
 can refer to it by a short name like "Big", and Moose will resolve it to a
