@@ -13,7 +13,6 @@ my $up;
 {
     package Stuff;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has '_options' => (
         traits   => ['Array'],

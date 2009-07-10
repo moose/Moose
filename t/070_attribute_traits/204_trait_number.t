@@ -9,7 +9,6 @@ use Test::Moose;
 {
     package Real;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has 'integer' => (
         traits  => ['Number'],

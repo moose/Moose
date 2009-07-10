@@ -1,18 +1,31 @@
 
-package Moose::AttributeHelpers;
+package Moose::Attribute::Native;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose ();
+my @trait_names = qw(Bool Counter Number String Array Hash);
 
-use Moose::Meta::Attribute::Trait::Native::Bool;
-use Moose::Meta::Attribute::Trait::Native::Counter;
-use Moose::Meta::Attribute::Trait::Native::Number;
-use Moose::Meta::Attribute::Trait::Native::String;
-use Moose::Meta::Attribute::Trait::Native::Array;
-use Moose::Meta::Attribute::Trait::Native::Hash;
+for my $trait_name (@trait_names) {
+    my $trait_class = "Moose::Meta::Attribute::Trait::Native::$trait_name";
+    my $meta = Class::MOP::Class->initialize(
+        "Moose::Meta::Attribute::Custom::Trait::$trait_name"
+    );
+    if ($meta->find_method_by_name('register_implementation')) {
+        my $class = $meta->name->register_implementation;
+        Moose->throw_error(
+            "An implementation for $trait_name already exists " .
+            "(found '$class' when trying to register '$trait_class')"
+        );
+    }
+    $meta->add_method(register_implementation => sub {
+        # resolve_metatrait_alias will load classes anyway, but throws away
+        # their error message; we WANT to die if there's a problem
+        Class::MOP::load_class($trait_class);
+        return $trait_class;
+    });
+}
 
 1;
 
@@ -22,13 +35,13 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers - Extend your attribute interfaces
+Moose::Attribute::Native - Extend your attribute interfaces
 
 =head1 SYNOPSIS
 
   package MyClass;
   use Moose;
-  use Moose::AttributeHelpers;
+  use Moose::Attribute::Native;
 
   has 'mapping' => (
       traits    => [ 'Hash' ],

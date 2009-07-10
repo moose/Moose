@@ -52,10 +52,6 @@ has 'method_constructors' => (
 
 no Moose::Role;
 
-package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Number;
-sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::Number' }
-
 1;
 
 =pod

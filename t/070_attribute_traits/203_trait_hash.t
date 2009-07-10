@@ -10,7 +10,6 @@ use Test::Moose 'does_ok';
 {
     package Stuff;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has 'options' => (
         traits  => ['Hash'],

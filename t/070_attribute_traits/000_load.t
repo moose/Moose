@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More tests => 1;
 
+use Moose ();
 BEGIN {
-    use_ok('Moose::AttributeHelpers');
+    use_ok('Moose::Attribute::Native');
 }

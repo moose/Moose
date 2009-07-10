@@ -34,6 +34,8 @@ use Moose::Meta::Role::Application::ToInstance;
 use Moose::Util::TypeConstraints;
 use Moose::Util ();
 
+use Moose::Attribute::Native;
+
 sub throw_error {
     # FIXME This
     shift;

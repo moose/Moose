@@ -23,10 +23,6 @@ has 'method_provider' => (
 
 no Moose::Role;
 
-package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Bool;
-sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::Bool' }
-
 1;
 
 =pod

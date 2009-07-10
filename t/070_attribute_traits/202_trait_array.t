@@ -13,7 +13,6 @@ my $sort;
 
     package Stuff;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has 'options' => (
         traits  => ['Array'],

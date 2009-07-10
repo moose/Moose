@@ -14,7 +14,6 @@ use Test::Exception;
 
     package Stuffed::Role;
     use Moose::Role;
-    use Moose::AttributeHelpers;
 
     has 'options' => (
         traits => ['Array'],
@@ -24,7 +23,6 @@ use Test::Exception;
 
     package Bulkie::Role;
     use Moose::Role;
-    use Moose::AttributeHelpers;
 
     has 'stuff' => (
         traits  => ['Array'],

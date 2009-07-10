@@ -9,7 +9,6 @@ use Test::More tests => 28;
     package Subject;
 
     use Moose::Role;
-    use Moose::AttributeHelpers;
 
     has observers => (
         traits     => ['Array'],
@@ -43,7 +42,6 @@ use Test::More tests => 28;
     package Counter;
 
     use Moose;
-    use Moose::AttributeHelpers;
 
     with 'Subject';
 

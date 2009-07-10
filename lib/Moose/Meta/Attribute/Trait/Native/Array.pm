@@ -8,7 +8,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Attribute::Trait::Native::MethodProvider::Array;
 
-with 'Moose::Meta::Attribute::Trait::Native::Collection';
+with 'Moose::Meta::Attribute::Trait::Native';
 
 has 'method_provider' => (
     is        => 'ro',
@@ -20,13 +20,6 @@ has 'method_provider' => (
 sub _helper_type { 'ArrayRef' }
 
 no Moose::Role;
-
-package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Array;
-sub register_implementation {
-    'Moose::Meta::Attribute::Trait::Native::Array'
-}
-
 
 1;
 

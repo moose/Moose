@@ -37,10 +37,6 @@ after '_check_handles_values' => sub {
 
 no Moose::Role;
 
-package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::String;
-sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::String' }
-
 1;
 
 __END__

@@ -10,7 +10,6 @@ my $uc;
 {
     package MyHomePage;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has 'string' => (
         traits  => ['String'],

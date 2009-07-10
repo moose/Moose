@@ -39,10 +39,6 @@ after '_check_handles_values' => sub {
 
 no Moose::Role;
 
-package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Counter;
-sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::Counter' }
-
 1;
 
 __END__

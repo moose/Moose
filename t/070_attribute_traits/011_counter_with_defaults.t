@@ -9,7 +9,6 @@ use Test::Moose;
 {
     package MyHomePage;
     use Moose;
-    use Moose::AttributeHelpers;
 
     has 'counter' => ( traits => ['Counter'] );
 }
