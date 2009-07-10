@@ -18,7 +18,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Collection - Base class for all collection type helpers
+Moose::Meta::Attribute::Trait::Native::Collection - Base role for all collection type helpers
 
 =head1 DESCRIPTION
 
