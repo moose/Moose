@@ -41,7 +41,6 @@ Moose::Attribute::Native - Extend your attribute interfaces
 
   package MyClass;
   use Moose;
-  use Moose::Attribute::Native;
 
   has 'mapping' => (
       traits    => [ 'Hash' ],
