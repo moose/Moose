@@ -1102,7 +1102,7 @@ Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
 
 Yuval (nothingmuch) Kogman
 
-Shawn (sartak) Moore
+Shawn (sartak) Moore E<lt>sartak@bestpractical.comE<gt>
 
 Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
