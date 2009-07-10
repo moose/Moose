@@ -16,7 +16,7 @@ my $up;
     use Moose::AttributeHelpers;
 
     has '_options' => (
-        traits   => ['List'],
+        traits   => ['Array'],
         is       => 'ro',
         isa      => 'ArrayRef[Int]',
         init_arg => 'options',
@@ -112,7 +112,7 @@ is_deeply( [ $stuff->descending ], [ reverse 1 .. 10 ] );
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('_options');
-does_ok( $options, 'Moose::Meta::Attribute::Trait::Native::List' );
+does_ok( $options, 'Moose::Meta::Attribute::Trait::Native::Array' );
 
 is_deeply(
     $options->handles,

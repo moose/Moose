@@ -11,10 +11,8 @@ use Moose::Meta::Attribute::Trait::Native::Bool;
 use Moose::Meta::Attribute::Trait::Native::Counter;
 use Moose::Meta::Attribute::Trait::Native::Number;
 use Moose::Meta::Attribute::Trait::Native::String;
-use Moose::Meta::Attribute::Trait::Native::List;
 use Moose::Meta::Attribute::Trait::Native::Array;
 use Moose::Meta::Attribute::Trait::Native::Hash;
-use Moose::Meta::Attribute::Trait::Native::ImmutableHash;
 
 1;
 

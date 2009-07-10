@@ -5,7 +5,65 @@ our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::Meta::Attribute::Trait::Native::MethodProvider::ImmutableHash';
+sub exists : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::exists $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+}
+
+sub defined : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::defined $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+}
+
+sub get : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        if ( @_ == 2 ) {
+            $reader->( $_[0] )->{ $_[1] };
+        }
+        else {
+            my ( $self, @keys ) = @_;
+            @{ $reader->($self) }{@keys};
+        }
+    };
+}
+
+sub keys : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::keys %{ $reader->( $_[0] ) } };
+}
+
+sub values : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { CORE::values %{ $reader->( $_[0] ) } };
+}
+
+sub kv : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my $h = $reader->( $_[0] );
+        map { [ $_, $h->{$_} ] } CORE::keys %{$h};
+    };
+}
+
+sub elements : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my $h = $reader->( $_[0] );
+        map { $_, $h->{$_} } CORE::keys %{$h};
+    };
+}
+
+sub count : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } };
+}
+
+sub empty : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } ? 1 : 0 };
+}
+
 
 sub set : method {
     my ( $attr, $reader, $writer ) = @_;
@@ -149,27 +207,19 @@ L<Moose::Meta::Attribute::Trait::Native::ImmutableHash> role.
 
 =item B<count>
 
-Returns the number of elements in the hash.
-
-=item B<delete>
-
-Removes the element with the given key
-
-=item B<defined>
-
-Returns true if the value of a given key is defined
+Returns the number of elements in the list.
 
 =item B<empty>
 
 If the list is populated, returns true. Otherwise, returns false.
 
-=item B<clear>
-
-Unsets the hash entirely.
-
 =item B<exists>
 
 Returns true if the given key is present in the hash
+
+=item B<defined>
+
+Returns true if the value of a given key is defined
 
 =item B<get>
 
@@ -179,17 +229,29 @@ Returns an element of the hash by its key.
 
 Returns the list of keys in the hash.
 
-=item B<set>
-
-Sets the element in the hash at the given key to the given value.
-
 =item B<values>
 
 Returns the list of values in the hash.
 
 =item B<kv>
 
-Returns the  key, value pairs in the hash
+Returns the key, value pairs in the hash as array references
+
+=item B<elements>
+
+Returns the key, value pairs in the hash as a flattened list
+
+=item B<delete>
+
+Removes the element with the given key
+
+=item B<clear>
+
+Unsets the hash entirely.
+
+=item B<set>
+
+Sets the element in the hash at the given key to the given value.
 
 =item B<accessor>
 
