@@ -8,7 +8,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Attribute::Trait::Native::MethodProvider::String;
 
-with 'Moose::Meta::Attribute::Trait::Native::Base';
+with 'Moose::Meta::Attribute::Trait::Native';
 
 has 'method_provider' => (
     is        => 'ro',

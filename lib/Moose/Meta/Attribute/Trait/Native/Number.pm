@@ -5,7 +5,7 @@ our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::Meta::Attribute::Trait::Native::Base';
+with 'Moose::Meta::Attribute::Trait::Native';
 
 sub _helper_type { 'Num' }
 
