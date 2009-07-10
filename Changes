@@ -5,7 +5,13 @@ for, noteworthy changes.
     * Moose::Meta::Method::Accessor
       - No longer uses inline_slot_access in accessors, to support
         non-lvalue-based meta instances.
-
+    * Moose::Manual::Contributing
+      - Re-write the Moose::Manual::Contributing document to reflect the new
+        layout and methods of work for the Git repository. All work now should
+        be done in topic branches and reviewed by a core committer before
+        being applied to master. All releases are done by a cabal member and
+        merged from master to stable. This plan was devised by Yuval, blame
+        him. (perigrin)
 0.87 Tue Jul 7, 2009
     * Moose::Meta::Method::Delegation
       - Once again allow class names as well as objects for
