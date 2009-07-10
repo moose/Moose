@@ -41,7 +41,7 @@ for, noteworthy changes.
       - Attribute accessors (reader, writer, accessor, predicate,
         clearer) now warn if they overwrite an existing method. (doy)
       - Attribute constructors now warn very noisily about unknown (or
-        mispelled) arguments
+        misspelled) arguments
 
     * Moose::Util::TypeConstraints
       - Deprecated the totally useless Role type name, which just
