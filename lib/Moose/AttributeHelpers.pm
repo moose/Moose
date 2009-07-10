@@ -5,7 +5,7 @@ our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose;
+use Moose ();
 
 use Moose::Meta::Attribute::Trait::Native::Bool;
 use Moose::Meta::Attribute::Trait::Native::Counter;
