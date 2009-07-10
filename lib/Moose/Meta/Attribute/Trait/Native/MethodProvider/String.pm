@@ -1,5 +1,5 @@
 
-package Moose::AttributeHelpers::MethodProvider::String;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::String;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -104,12 +104,12 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::String
+Moose::Meta::Attribute::Trait::Native::MethodProvider::String
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::String>.
+L<Moose::Meta::Attribute::Trait::Native::String>.
 
 =head1 METHODS
 

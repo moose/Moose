@@ -1,4 +1,4 @@
-package Moose::AttributeHelpers::MethodProvider::ImmutableHash;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::ImmutableHash;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -72,12 +72,12 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::ImmutableHash
+Moose::Meta::Attribute::Trait::Native::MethodProvider::ImmutableHash
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Collection::ImmutableHash>.
+L<Moose::Meta::Attribute::Trait::Native::ImmutableHash>.
 
 =head1 METHODS
 

@@ -7,14 +7,14 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose;
 
-use Moose::AttributeHelpers::Trait::Bool;
-use Moose::AttributeHelpers::Trait::Counter;
-use Moose::AttributeHelpers::Trait::Number;
-use Moose::AttributeHelpers::Trait::String;
-use Moose::AttributeHelpers::Trait::Collection::List;
-use Moose::AttributeHelpers::Trait::Collection::Array;
-use Moose::AttributeHelpers::Trait::Collection::Hash;
-use Moose::AttributeHelpers::Trait::Collection::ImmutableHash;
+use Moose::Meta::Attribute::Trait::Native::Bool;
+use Moose::Meta::Attribute::Trait::Native::Counter;
+use Moose::Meta::Attribute::Trait::Native::Number;
+use Moose::Meta::Attribute::Trait::Native::String;
+use Moose::Meta::Attribute::Trait::Native::List;
+use Moose::Meta::Attribute::Trait::Native::Array;
+use Moose::Meta::Attribute::Trait::Native::Hash;
+use Moose::Meta::Attribute::Trait::Native::ImmutableHash;
 
 1;
 
@@ -33,7 +33,7 @@ Moose::AttributeHelpers - Extend your attribute interfaces
   use Moose::AttributeHelpers;
 
   has 'mapping' => (
-      traits    => [ 'Collection::Hash' ],
+      traits    => [ 'Hash' ],
       is        => 'rw',
       isa       => 'HashRef[Str]',
       default   => sub { {} },
@@ -89,35 +89,35 @@ works normally for C<< handles >>.
 
 =over
 
-=item L<Number|Moose::AttributeHelpers::Trait::Number>
+=item L<Number|Moose::Meta::Attribute::Trait::Native::Number>
 
 Common numerical operations.
 
-=item L<String|Moose::AttributeHelpers::Trait::String>
+=item L<String|Moose::Meta::Attribute::Trait::Native::String>
 
 Common methods for string operations.
 
-=item L<Counter|Moose::AttributeHelpers::Trait::Counter>
+=item L<Counter|Moose::Meta::Attribute::Trait::Native::Counter>
 
 Methods for incrementing and decrementing a counter attribute.
 
-=item L<Bool|Moose::AttributeHelpers::Trait::Bool>
+=item L<Bool|Moose::Meta::Attribute::Trait::Native::Bool>
 
 Common methods for boolean values.
 
-=item L<Collection::Hash|Moose::AttributeHelpers::Trait::Collection::Hash>
+=item L<Hash|Moose::Meta::Attribute::Trait::Native::Hash>
 
 Common methods for hash references.
 
-=item L<Collection::ImmutableHash|Moose::AttributeHelpers::Trait::Collection::ImmutableHash>
+=item L<ImmutableHash|Moose::Meta::Attribute::Trait::Native::ImmutableHash>
 
 Common methods for inspecting hash references.
 
-=item L<Collection::Array|Moose::AttributeHelpers::Trait::Collection::Array>
+=item L<Array|Moose::Meta::Attribute::Trait::Native::Array>
 
 Common methods for array references.
 
-=item L<Collection::List|Moose::AttributeHelpers::Trait::Collection::List>
+=item L<List|Moose::Meta::Attribute::Trait::Native::List>
 
 Common list methods for array references.
 

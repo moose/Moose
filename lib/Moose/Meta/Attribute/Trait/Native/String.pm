@@ -1,20 +1,20 @@
 
-package Moose::AttributeHelpers::Trait::String;
+package Moose::Meta::Attribute::Trait::Native::String;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::AttributeHelpers::MethodProvider::String;
+use Moose::Meta::Attribute::Trait::Native::MethodProvider::String;
 
-with 'Moose::AttributeHelpers::Trait::Base';
+with 'Moose::Meta::Attribute::Trait::Native::Base';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::AttributeHelpers::MethodProvider::String',
+    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::String',
 );
 
 sub _default_default { q{} }
@@ -39,7 +39,7 @@ no Moose::Role;
 
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::String;
-sub register_implementation { 'Moose::AttributeHelpers::Trait::String' }
+sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::String' }
 
 1;
 
@@ -49,7 +49,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::String
+Moose::Meta::Attribute::Trait::Native::String
 
 =head1 SYNOPSIS
 

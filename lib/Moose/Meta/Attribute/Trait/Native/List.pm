@@ -1,20 +1,20 @@
 
-package Moose::AttributeHelpers::Trait::Collection::Array;
+package Moose::Meta::Attribute::Trait::Native::List;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::AttributeHelpers::MethodProvider::Array;
+use Moose::Meta::Attribute::Trait::Native::MethodProvider::List;
 
-with 'Moose::AttributeHelpers::Trait::Collection';
+with 'Moose::Meta::Attribute::Trait::Native::Collection';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::AttributeHelpers::MethodProvider::Array'
+    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::List'
 );
 
 sub _helper_type { 'ArrayRef' }
@@ -22,9 +22,9 @@ sub _helper_type { 'ArrayRef' }
 no Moose::Role;
 
 package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Collection::Array;
+    Moose::Meta::Attribute::Custom::Trait::List;
 sub register_implementation {
-    'Moose::AttributeHelpers::Trait::Collection::Array'
+    'Moose::Meta::Attribute::Trait::Native::List'
 }
 
 
@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::Collection::Array
+Moose::Meta::Attribute::Trait::Native::List
 
 =head1 SYNOPSIS
 
@@ -45,20 +45,20 @@ Moose::AttributeHelpers::Collection::Array
   use Moose::AttributeHelpers;
 
   has 'options' => (
-      metaclass => 'Collection::Array',
+      metaclass => 'List',
       is        => 'ro',
       isa       => 'ArrayRef[Int]',
       default   => sub { [] },
       handles   => {
-          add_options        => 'push',
-          remove_last_option => 'pop',
+          map_options    => 'map',
+          filter_options => 'grep',
       }
   );
 
 =head1 DESCRIPTION
 
-This module provides an Array attribute which provides a number of
-array operations. See L<Moose::AttributeHelpers::MethodProvider::Array>
+This module provides an List attribute which provides a number of
+list operations. See L<Moose::Meta::Attribute::Trait::Native::MethodProvider::List>
 for more details.
 
 =head1 METHODS

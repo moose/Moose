@@ -1,5 +1,5 @@
 
-package Moose::AttributeHelpers::MethodProvider::Counter;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -40,12 +40,12 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::Counter
+Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Counter>.
+L<Moose::Meta::Attribute::Trait::Native::Counter>.
 
 =head1 METHODS
 

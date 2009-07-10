@@ -12,7 +12,7 @@ use Test::More tests => 28;
     use Moose::AttributeHelpers;
 
     has observers => (
-        traits     => ['Collection::Array'],
+        traits     => ['Array'],
         is         => 'ro',
         isa        => 'ArrayRef[Observer]',
         auto_deref => 1,

@@ -1,30 +1,30 @@
 
-package Moose::AttributeHelpers::Trait::Collection::ImmutableHash;
+package Moose::Meta::Attribute::Trait::Native::Array;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::AttributeHelpers::MethodProvider::ImmutableHash;
+use Moose::Meta::Attribute::Trait::Native::MethodProvider::Array;
 
-with 'Moose::AttributeHelpers::Trait::Collection';
+with 'Moose::Meta::Attribute::Trait::Native::Collection';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::AttributeHelpers::MethodProvider::ImmutableHash'
+    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Array'
 );
 
-sub _helper_type { 'HashRef' }
+sub _helper_type { 'ArrayRef' }
 
 no Moose::Role;
 
 package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Collection::ImmutableHash;
+    Moose::Meta::Attribute::Custom::Trait::Array;
 sub register_implementation {
-    'Moose::AttributeHelpers::Trait::Collection::ImmutableHash'
+    'Moose::Meta::Attribute::Trait::Native::Array'
 }
 
 
@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::Collection::ImmutableHash
+Moose::Meta::Attribute::Trait::Native::Array
 
 =head1 SYNOPSIS
 
@@ -45,21 +45,20 @@ Moose::AttributeHelpers::Collection::ImmutableHash
   use Moose::AttributeHelpers;
 
   has 'options' => (
-      metaclass => 'Collection::ImmutableHash',
+      metaclass => 'Array',
       is        => 'ro',
-      isa       => 'HashRef[Str]',
-      default   => sub { {} },
-      handles  => {
-          get_option      => 'get',
-          has_options     => 'empty',
-          get_option_list => 'keys',
+      isa       => 'ArrayRef[Int]',
+      default   => sub { [] },
+      handles   => {
+          add_options        => 'push',
+          remove_last_option => 'pop',
       }
   );
 
 =head1 DESCRIPTION
 
-This module provides a immutable HashRef attribute which provides a number of
-hash-line operations. See L<Moose::AttributeHelpers::MethodProvider::ImmutableHash>
+This module provides an Array attribute which provides a number of
+array operations. See L<Moose::Meta::Attribute::Trait::Native::MethodProvider::Array>
 for more details.
 
 =head1 METHODS

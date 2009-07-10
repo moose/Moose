@@ -16,7 +16,7 @@ my $sort;
     use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits  => ['Collection::Array'],
+        traits  => ['Array'],
         is      => 'ro',
         isa     => 'ArrayRef[Str]',
         default => sub { [] },
@@ -244,7 +244,7 @@ dies_ok {
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok( $options, 'Moose::AttributeHelpers::Trait::Collection::Array' );
+does_ok( $options, 'Moose::Meta::Attribute::Trait::Native::Array' );
 
 is_deeply(
     $options->handles,

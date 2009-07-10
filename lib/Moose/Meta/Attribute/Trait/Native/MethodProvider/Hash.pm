@@ -1,11 +1,11 @@
-package Moose::AttributeHelpers::MethodProvider::Hash;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::AttributeHelpers::MethodProvider::ImmutableHash';
+with 'Moose::Meta::Attribute::Trait::Native::MethodProvider::ImmutableHash';
 
 sub set : method {
     my ( $attr, $reader, $writer ) = @_;
@@ -125,15 +125,15 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::Hash
+Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Collection::Hash>.
+L<Moose::Meta::Attribute::Trait::Native::Hash>.
 
 This role is composed from the
-L<Moose::AttributeHelpers::Collection::ImmutableHash> role.
+L<Moose::Meta::Attribute::Trait::Native::ImmutableHash> role.
 
 =head1 METHODS
 

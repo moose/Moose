@@ -91,7 +91,7 @@ is $real->integer, 12, 'dec 13';
 ## test the meta
 
 my $attr = $real->meta->get_attribute('integer');
-does_ok( $attr, 'Moose::AttributeHelpers::Trait::Number' );
+does_ok( $attr, 'Moose::Meta::Attribute::Trait::Native::Number' );
 
 is_deeply(
     $attr->handles,

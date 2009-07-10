@@ -1,12 +1,12 @@
-package Moose::AttributeHelpers::Trait::Bool;
+package Moose::Meta::Attribute::Trait::Native::Bool;
 use Moose::Role;
-use Moose::AttributeHelpers::MethodProvider::Bool;
+use Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::AttributeHelpers::Trait::Base';
+with 'Moose::Meta::Attribute::Trait::Native::Base';
 
 sub _default_is { 'rw' }
 sub _helper_type { 'Bool' }
@@ -18,14 +18,14 @@ has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::AttributeHelpers::MethodProvider::Bool'
+    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool'
 );
 
 no Moose::Role;
 
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::Bool;
-sub register_implementation { 'Moose::AttributeHelpers::Trait::Bool' }
+sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::Bool' }
 
 1;
 
@@ -33,7 +33,7 @@ sub register_implementation { 'Moose::AttributeHelpers::Trait::Bool' }
 
 =head1 NAME
 
-Moose::AttributeHelpers::Bool
+Moose::Meta::Attribute::Trait::Native::Bool
 
 =head1 SYNOPSIS
 

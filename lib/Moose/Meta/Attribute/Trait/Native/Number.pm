@@ -1,11 +1,11 @@
-package Moose::AttributeHelpers::Trait::Number;
+package Moose::Meta::Attribute::Trait::Native::Number;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::AttributeHelpers::Trait::Base';
+with 'Moose::Meta::Attribute::Trait::Native::Base';
 
 sub _helper_type { 'Num' }
 
@@ -54,7 +54,7 @@ no Moose::Role;
 
 package # hide me from search.cpan.org
     Moose::Meta::Attribute::Custom::Trait::Number;
-sub register_implementation { 'Moose::AttributeHelpers::Trait::Number' }
+sub register_implementation { 'Moose::Meta::Attribute::Trait::Native::Number' }
 
 1;
 
@@ -62,7 +62,7 @@ sub register_implementation { 'Moose::AttributeHelpers::Trait::Number' }
 
 =head1 NAME
 
-Moose::AttributeHelpers::Number
+Moose::Meta::Attribute::Trait::Native::Number
 
 =head1 SYNOPSIS
 

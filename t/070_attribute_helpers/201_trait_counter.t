@@ -61,7 +61,7 @@ is( $page->counter, 2, '... decrement by arg' );
 # check the meta ..
 
 my $counter = $page->meta->get_attribute('counter');
-does_ok( $counter, 'Moose::AttributeHelpers::Trait::Counter' );
+does_ok( $counter, 'Moose::Meta::Attribute::Trait::Native::Counter' );
 
 is( $counter->type_constraint->name, 'Int',
     '... got the expected type constraint' );

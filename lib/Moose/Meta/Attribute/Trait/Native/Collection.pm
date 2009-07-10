@@ -1,12 +1,12 @@
 
-package Moose::AttributeHelpers::Trait::Collection;
+package Moose::Meta::Attribute::Trait::Native::Collection;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::AttributeHelpers::Trait::Base';
+with 'Moose::Meta::Attribute::Trait::Native::Base';
 
 no Moose::Role;
 
@@ -18,7 +18,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::Collection - Base class for all collection type helpers
+Moose::Meta::Attribute::Trait::Native::Collection - Base class for all collection type helpers
 
 =head1 DESCRIPTION
 

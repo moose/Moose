@@ -1,11 +1,11 @@
-package Moose::AttributeHelpers::MethodProvider::Array;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::Array;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::AttributeHelpers::MethodProvider::List';
+with 'Moose::Meta::Attribute::Trait::Native::MethodProvider::List';
 
 sub push : method {
     my ( $attr, $reader, $writer ) = @_;
@@ -246,12 +246,12 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::Array
+Moose::Meta::Attribute::Trait::Native::MethodProvider::Array
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Collection::Array>.
+L<Moose::Meta::Attribute::Trait::Native::Array>.
 
 =head1 METHODS
 

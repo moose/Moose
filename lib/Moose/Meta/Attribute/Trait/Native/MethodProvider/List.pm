@@ -1,4 +1,4 @@
-package Moose::AttributeHelpers::MethodProvider::List;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::List;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -107,7 +107,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::List
+Moose::Meta::Attribute::Trait::Native::MethodProvider::List
 
 =head1 SYNOPSIS
 
@@ -116,7 +116,7 @@ Moose::AttributeHelpers::MethodProvider::List
    use Moose::AttributeHelpers;
 
    has 'options' => (
-       metaclass  => 'Collection::List',
+       metaclass  => 'List',
        is         => 'rw',
        isa        => 'ArrayRef[Str]',
        default    => sub { [] },
@@ -142,7 +142,7 @@ Moose::AttributeHelpers::MethodProvider::List
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Collection::List>.
+L<Moose::Meta::Attribute::Trait::Native::List>.
 
 =head1 METHODS
 

@@ -1,20 +1,20 @@
 
-package Moose::AttributeHelpers::Trait::Collection::Hash;
+package Moose::Meta::Attribute::Trait::Native::Hash;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::AttributeHelpers::MethodProvider::Hash;
+use Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash;
 
-with 'Moose::AttributeHelpers::Trait::Collection';
+with 'Moose::Meta::Attribute::Trait::Native::Collection';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::AttributeHelpers::MethodProvider::Hash'
+    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash'
 );
 
 sub _helper_type { 'HashRef' }
@@ -22,9 +22,9 @@ sub _helper_type { 'HashRef' }
 no Moose::Role;
 
 package # hide me from search.cpan.org
-    Moose::Meta::Attribute::Custom::Trait::Collection::Hash;
+    Moose::Meta::Attribute::Custom::Trait::Hash;
 sub register_implementation {
-    'Moose::AttributeHelpers::Trait::Collection::Hash'
+    'Moose::Meta::Attribute::Trait::Native::Hash'
 }
 
 
@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::Collection::Hash
+Moose::Meta::Attribute::Trait::Native::Hash
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ Moose::AttributeHelpers::Collection::Hash
   use Moose::AttributeHelpers;
 
   has 'options' => (
-      metaclass => 'Collection::Hash',
+      metaclass => 'Hash',
       is        => 'ro',
       isa       => 'HashRef[Str]',
       default   => sub { {} },
@@ -61,7 +61,7 @@ Moose::AttributeHelpers::Collection::Hash
 =head1 DESCRIPTION
 
 This module provides a Hash attribute which provides a number of
-hash-like operations. See L<Moose::AttributeHelpers::MethodProvider::Hash>
+hash-like operations. See L<Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash>
 for more details.
 
 =head1 METHODS

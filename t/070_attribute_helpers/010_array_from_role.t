@@ -17,7 +17,7 @@ use Test::Exception;
     use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits => ['Collection::Array'],
+        traits => ['Array'],
         is     => 'ro',
         isa    => 'ArrayRef[Foo]',
     );
@@ -27,7 +27,7 @@ use Test::Exception;
     use Moose::AttributeHelpers;
 
     has 'stuff' => (
-        traits  => ['Collection::Array'],
+        traits  => ['Array'],
         is      => 'ro',
         isa     => 'ArrayRef',
         handles => {

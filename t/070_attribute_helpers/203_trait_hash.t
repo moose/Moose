@@ -13,7 +13,7 @@ use Test::Moose 'does_ok';
     use Moose::AttributeHelpers;
 
     has 'options' => (
-        traits  => ['Collection::Hash'],
+        traits  => ['Hash'],
         is      => 'ro',
         isa     => 'HashRef[Str]',
         default => sub { {} },
@@ -142,7 +142,7 @@ dies_ok {
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('options');
-does_ok( $options, 'Moose::AttributeHelpers::Trait::Collection::Hash' );
+does_ok( $options, 'Moose::Meta::Attribute::Trait::Native::Hash' );
 
 is_deeply(
     $options->handles,

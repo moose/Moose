@@ -86,7 +86,7 @@ is( $page->string, '', "clear" );
 # check the meta ..
 
 my $string = $page->meta->get_attribute('string');
-does_ok( $string, 'Moose::AttributeHelpers::Trait::String' );
+does_ok( $string, 'Moose::Meta::Attribute::Trait::Native::String' );
 
 is(
     $string->type_constraint->name, 'Str',

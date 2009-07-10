@@ -1,5 +1,5 @@
 
-package Moose::AttributeHelpers::MethodProvider::Bool;
+package Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -34,12 +34,12 @@ __END__
 
 =head1 NAME
 
-Moose::AttributeHelpers::MethodProvider::Bool
+Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool
 
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::AttributeHelpers::Bool>.
+L<Moose::Meta::Attribute::Trait::Native::Bool>.
 
 =head1 METHODS
 
