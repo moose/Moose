@@ -143,8 +143,9 @@ predicate, and clearer method.
   my $person2 = Person->new( ssn => '111-22-3333');
   $person2->has_ssn; # true
 
-By default, Moose does not make a predicate or clearer for you. You
-must explicitly provide names for them.
+By default, Moose does not make a predicate or clearer for you. You must
+explicitly provide names for them, and then Moose will create the methods
+for you.
 
 =head2 Required or not?
 
