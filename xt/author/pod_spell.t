@@ -111,6 +111,9 @@ API
 APIs
 Baz
 Changelog
+codebase
+committer
+committers
 compat
 datetimes
 definedness
@@ -119,6 +122,7 @@ destructors
 dev
 DWIM
 DUCKTYPE
+GitHub
 hashrefs
 hotspots
 immutabilize
@@ -149,6 +153,9 @@ parameterizes
 pluggable
 prechecking
 prepends
+rebase
+rebased
+rebasing
 refactored
 refactoring
 runtime
