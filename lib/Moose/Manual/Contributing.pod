@@ -45,7 +45,7 @@ You.
 
 If you have commit access, you can create a topic on the main Moose.git,
 otherwise either give us your SSH key or create your own clone of the
-L<git://git.moose.perl.org/Moose.git> repo or fork of the GitHub mirror.
+L<git://git.moose.perl.org/Moose.git> repository or fork of the GitHub mirror.
 
 =item Core Committers - people reviewing and merging a branch
 
@@ -68,7 +68,7 @@ merge from Master to Stable.
 
 =head1 BRANCH LAYOUT
 
-The repository is divided into several branches to make maintaince easier for
+The repository is divided into several branches to make maintenance easier for
 everyone involved. The branches below are ordered by level of stability.
 
 =over
@@ -179,7 +179,7 @@ Then a cabal member merges into stable:
 
 For longer lasting branches, we use a subversion style branch layout, where
 master is routinely merged into the branch. Rebasing is allowed as long as all
-the branch contributers are using C<git pull --rebase> properly.
+the branch contributors are using C<git pull --rebase> properly.
 
 C<commit --amend>, C<rebase --interactive>, etc. are not allowed, and should
 only be done in topic branches. Committing to master is still done with the
