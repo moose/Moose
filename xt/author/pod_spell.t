@@ -153,6 +153,7 @@ parameterizes
 pluggable
 prechecking
 prepends
+pu
 rebase
 rebased
 rebasing
@@ -172,6 +173,7 @@ unsets
 unsettable
 whitelist
 Whitelist
+workflow
 
 ## other jargon
 bey
@@ -196,6 +198,8 @@ pre
 # vice versa
 versa
 lookup
+# co-maint
+maint
 
 ## slang
 C'mon

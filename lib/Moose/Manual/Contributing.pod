@@ -90,7 +90,7 @@ Large community branches for big development "projects".
 =item Topics (refs/heads/topics/*)
 
 Small personal branches that have been published for review, but can get
-freely rebased. Targetted features that may span a handful of commits.
+freely rebased. Targeted features that may span a handful of commits.
 
 Any change or bugfix should be created in a topic branch.
 
@@ -186,7 +186,7 @@ only be done in topic branches. Committing to master is still done with the
 same review process as a topic branch, and the branch must merge as a fast
 forward.
 
-This is pretty much the way we're doing branches for largeish things right
+This is pretty much the way we're doing branches for large-ish things right
 now.
 
 Obviously there is no technical limitation on the number of branches. You can
