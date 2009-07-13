@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Meta::Role
+      - Create metaclass attributes for the different role application classes.
+        (rafl)
+    * Moose::Util::MetaRole
+      - Allow applying roles to a meta role's role application classes. (rafl)
+
 0.88
     * Moose::Meta::Method::Accessor
       - No longer uses inline_slot_access in accessors, to support
@@ -12,6 +18,7 @@ for, noteworthy changes.
         being applied to master. All releases are done by a cabal member and
         merged from master to stable. This plan was devised by Yuval, blame
         him. (perigrin)
+
 0.87 Tue Jul 7, 2009
     * Moose::Meta::Method::Delegation
       - Once again allow class names as well as objects for
