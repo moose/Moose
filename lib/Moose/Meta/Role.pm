@@ -142,6 +142,24 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Method::Conflicting',
 );
 
+$META->add_attribute(
+    'application_to_class_class',
+    reader  => 'application_to_class_class',
+    default => 'Moose::Meta::Role::Application::ToClass',
+);
+
+$META->add_attribute(
+    'application_to_role_class',
+    reader  => 'application_to_role_class',
+    default => 'Moose::Meta::Role::Application::ToRole',
+);
+
+$META->add_attribute(
+    'application_to_instance_class',
+    reader  => 'application_to_instance_class',
+    default => 'Moose::Meta::Role::Application::ToInstance',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
@@ -478,18 +496,19 @@ sub apply {
     (blessed($other))
         || Moose->throw_error("You must pass in an blessed instance");
 
+    my $application_class;
     if ($other->isa('Moose::Meta::Role')) {
-        require Moose::Meta::Role::Application::ToRole;
-        return Moose::Meta::Role::Application::ToRole->new(@args)->apply($self, $other);
+        $application_class = $self->application_to_role_class;
     }
     elsif ($other->isa('Moose::Meta::Class')) {
-        require Moose::Meta::Role::Application::ToClass;
-        return Moose::Meta::Role::Application::ToClass->new(@args)->apply($self, $other);
+        $application_class = $self->application_to_class_class;
     }
     else {
-        require Moose::Meta::Role::Application::ToInstance;
-        return Moose::Meta::Role::Application::ToInstance->new(@args)->apply($self, $other);
+        $application_class = $self->application_to_instance_class;
     }
+
+    Class::MOP::load_class($application_class);
+    return $application_class->new(@args)->apply($self, $other);
 }
 
 sub combine {
