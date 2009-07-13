@@ -87,7 +87,7 @@ The branch for new development. This branch is merged into and branched from.
 
 Large community branches for big development "projects".
 
-=item Topics (refs/heads/topics/*)
+=item Topics (refs/heads/topic/*)
 
 Small personal branches that have been published for review, but can get
 freely rebased. Targeted features that may span a handful of commits.
