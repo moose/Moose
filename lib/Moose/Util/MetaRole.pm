@@ -51,6 +51,9 @@ sub _make_new_metaclass {
             method_metaclass
             wrapped_method_metaclass
             instance_metaclass
+            application_to_class_class
+            application_to_role_class
+            application_to_instance_class
     );
 
     my $old_meta = Class::MOP::class_of($for);
@@ -67,6 +70,9 @@ sub _make_new_metaclass {
         method_metaclass
         wrapped_method_metaclass
         instance_metaclass
+        application_to_class_class
+        application_to_role_class
+        application_to_instance_class
     );
 
     return $new_metaclass->reinitialize( $for, %classes );
@@ -202,6 +208,12 @@ This specifies the class for which to alter the meta classes.
 =item * constructor_class_roles => \@roles
 
 =item * destructor_class_roles => \@roles
+
+=item * application_to_class_class_roles => \@roles
+
+=item * application_to_role_class_roles => \@roles
+
+=item * application_to_instance_class_roles => \@roles
 
 These parameter all specify one or more roles to be applied to the
 specified metaclass. You can pass any or all of these parameters at

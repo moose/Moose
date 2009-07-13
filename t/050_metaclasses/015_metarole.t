@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 80;
+use Test::More tests => 89;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
@@ -27,6 +27,11 @@ use Moose::Util::MetaRole;
     package My::Class;
 
     use Moose;
+}
+
+{
+    package My::Role;
+    use Moose::Role;
 }
 
 {
@@ -158,6 +163,51 @@ use Moose::Util::MetaRole;
     # same problem as the constructor class
     ok( My::Class->meta()->destructor_class()->can('foo'),
         '... destructor class has a foo method' );
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                        => 'My::Role',
+        application_to_class_class_roles => ['Role::Foo'],
+    );
+
+    ok( My::Role->meta->application_to_class_class->meta->does_role('Role::Foo'),
+        q{apply Role::Foo to My::Role->meta's application_to_class class} );
+
+    is( My::Role->meta->application_to_class_class->new->foo, 10,
+        q{... call foo() on an application_to_class instance} );
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                        => 'My::Role',
+        application_to_role_class_roles => ['Role::Foo'],
+    );
+
+    ok( My::Role->meta->application_to_role_class->meta->does_role('Role::Foo'),
+        q{apply Role::Foo to My::Role->meta's application_to_role class} );
+    ok( My::Role->meta->application_to_class_class->meta->does_role('Role::Foo'),
+        q{... My::Role->meta's application_to_class class still does Role::Foo} );
+
+    is( My::Role->meta->application_to_role_class->new->foo, 10,
+        q{... call foo() on an application_to_role instance} );
+}
+
+{
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class                           => 'My::Role',
+        application_to_instance_class_roles => ['Role::Foo'],
+    );
+
+    ok( My::Role->meta->application_to_instance_class->meta->does_role('Role::Foo'),
+        q{apply Role::Foo to My::Role->meta's application_to_instance class} );
+    ok( My::Role->meta->application_to_role_class->meta->does_role('Role::Foo'),
+        q{... My::Role->meta's application_to_role class still does Role::Foo} );
+    ok( My::Role->meta->application_to_class_class->meta->does_role('Role::Foo'),
+        q{... My::Role->meta's application_to_class class still does Role::Foo} );
+
+    is( My::Role->meta->application_to_instance_class->new->foo, 10,
+        q{... call foo() on an application_to_instance instance} );
 }
 
 {
