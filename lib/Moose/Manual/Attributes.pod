@@ -143,8 +143,9 @@ predicate, and clearer method.
   my $person2 = Person->new( ssn => '111-22-3333');
   $person2->has_ssn; # true
 
-By default, Moose does not make a predicate or clearer for you. You
-must explicitly provide names for them.
+By default, Moose does not make a predicate or clearer for you. You must
+explicitly provide names for them, and then Moose will create the methods
+for you.
 
 =head2 Required or not?
 
@@ -457,7 +458,7 @@ set:
 The trigger is called as a method, and receives the new value as its argument.
 The trigger is called I<after> the value is set.
 
-This differs from an after method modifier in two ways. First, a
+This differs from an C<after> method modifier in two ways. First, a
 trigger is only called when the attribute is set, as opposed to
 whenever the accessor method is called (for reading or
 writing). Second, it is also called when an attribute's value is
@@ -490,7 +491,7 @@ discussion of Moose's type system.
 
 =head2 Delegation
 
-Attributes can define methods which simply delegate to their values:
+An attribute can define methods which simply delegate to its value:
 
   has 'hair_color' => (
       is      => 'ro',

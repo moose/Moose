@@ -36,7 +36,7 @@ The C<no Moose> bit is simply good code hygiene, as it removes all the
 Moose keywords from your class's namespace. Once the class has been
 built, these keywords are not needed needed. The C<make_immutable>
 call allows Moose to speed up a lot of things, most notably object
-construction. The tradeoff is that you can no longer change the class
+construction. The trade-off is that you can no longer change the class
 definition.
 
 A more generic way to unimport not only L<Moose>'s exports but also

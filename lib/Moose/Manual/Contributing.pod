@@ -6,30 +6,15 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 GETTING INVOLVED
 
-Moose is a pretty open project and we are always willing to accept bug
-fixes, more tests and documentation patches. Doing these things is as simple as
-cloning a copy of the Git repository and hacking.
-
-Commit bits are given out freely. All we ask is that for any
-non-trivial code patches, you check with one of the core developers
-before applying said patch.
-
-Alternatively, you can make a new branch with your change and push it
-back to the Moose Git server, then ask a core dev to review your
-branch.
-
-=head2 IRC and Email
-
-A B<lot> of Moose discussion happens on IRC. We have two channels on
-irc.perl.org, #moose and #moose-dev. The former is much more active,
-but the core developers pay attention to both channels.
-
-We also have a mailing list, moose@perl.org and all the core
-developers read and respond to messages on that list.
+Moose is an open project, and we are always willing to accept bug fixes,
+more tests, and documentation patches. Commit bits are given out freely, and
+the L</STANDARD WORKFLOW> is very simple. The general gist is: clone the Git
+repository, create a new topic branch, hack away, then find a committer to
+review your changes.
 
 =head1 NEW FEATURES
 
-Moose already has a fairly large feature set and we are currently
+Moose already has a fairly large feature set, and we are currently
 B<not> looking to add any major new features to it. If you have an
 idea for a new feature in Moose, you are invited instead to create a
 MooseX module first.
@@ -39,20 +24,226 @@ into the core without first being vetted as a MooseX module, unless
 it is absolutely 100% impossible to implement the feature outside the
 core.
 
-If you think it is 100% impossible, you're probably wrong. However,
-your feature may need a small hook in the core, or a refactoring of
-some core modules, and we are definitely open to that.
+If you think it is 100% impossible, please come discuss it with us on IRC or
+via e-mail. However, your feature may need a small hook in the core, or a
+refactoring of some core modules, and we are definitely open to that.
 
 Moose was built from the ground up with the idea of being highly
 extensible, and quite often the feature requests we see can be
 implemented through a couple of small and well placed extensions. Try
 it, it is much easier then you might think.
 
+=head1 PEOPLE
+
+As Moose has matured, some structure has emerged in the process.
+
+=over
+
+=item Contributors - people creating a topic or branch
+
+You.
+
+If you have commit access, you can create a topic on the main Moose.git,
+otherwise either give us your SSH key or create your own clone of the
+L<git://git.moose.perl.org/Moose.git> repository or fork of the GitHub mirror.
+
+=item Core Committers - people reviewing and merging a branch
+
+These people have worked with the Moose codebase for a while.
+
+They've been responsible for large features or branches and can help review
+your changes and apply them to the master branch.
+
+They are also fairly well versed in Git, in order to merge the branches with
+no mistakes (especially when the merge fails), and to provide advice to
+contributors.
+
+=item Cabal - people who can release moose
+
+These people are the ones who have co-maint on Moose itself and can create a
+release. They're listed under L<Moose/CABAL> in the Moose documentation. They
+merge from Master to Stable.
+
+=back
+
+=head1 BRANCH LAYOUT
+
+The repository is divided into several branches to make maintenance easier for
+everyone involved. The branches below are ordered by level of stability.
+
+=over
+
+=item Stable (refs/heads/stable)
+
+The branch from which releases are cut. When making a new release, the
+release manager merges from master to stable. The stable branch is only
+updated by someone from the Cabal during a release.
+
+=item Master (refs/heads/master)
+
+The branch for new development. This branch is merged into and branched from.
+
+=item Branches (refs/heads/*)
+
+Large community branches for big development "projects".
+
+=item Topics (refs/heads/topic/*)
+
+Small personal branches that have been published for review, but can get
+freely rebased. Targeted features that may span a handful of commits.
+
+Any change or bugfix should be created in a topic branch.
+
+=back
+
+=head1 STANDARD WORKFLOW
+
+    # update your copy of master
+    git checkout master
+    git pull --rebase
+
+    # create a new topic branch
+    git checkout -b topic/my-feature
+
+    # hack, commit, feel free to break fast forward
+    git commit --amend                       # allowed
+    git rebase --interactive                 # allowed
+    git push --force origin topic/my_feature # allowed
+
+Then go on IRC, ask for someone to review, and merge to master. If it merges
+cleanly and nobody has any objections, then it can be pushed to master.
+
+If it doesn't merge as a fast forward, the author of the branch needs to run
+
+    git remote update
+    git rebase origin/master # or merge
+
+and bring the branch up to date, so that it can be merged as a fast forward
+into master.
+
+No actual merging (as in a human resolving conflicts) should be done when
+merging into master, only from master into other branches.
+
+=head2 Preparing a topic branch
+
+Before a merge, a topic branch can be cleaned up by the author.
+
+This can be done using interactive rebase to combine commits, etc, or even
+C<git merge --squash> to make the whole topic into a single commit.
+
+Structuring changes like this makes it easier to apply git revert at a later
+date, and encourages a clean and descriptive history that documents what the
+author was trying to do, without the various hangups that happened while they
+were trying to do it (commits like "oops forgot that file" are not only
+unnecessary noise, they also make running things like git bisect or git revert
+harder).
+
+However, by far the biggest benefit is that the number of commits that go into
+master is eventually reduced, and they are simple and coherent, making it much
+easier for people maintaining branches to stay up to date.
+
+All large changes should be documented in L<Moose::Manual::Delta>.
+
+=head1 RELEASE WORKFLOW
+
+    git checkout master
+    # edit for final version bumping, changelogging, etc
+    # prepare release (test suite etc)
+    git commit
+    git checkout stable
+    git merge master # must be a fast forward
+    git push both
+    # ship & tag
+
+Development releases are made without merging into the stable branch.
+
+=head1 EMERGENCY BUG WORKFLOW (for immediate release)
+
+Anyone can create the necessary fix by branching off of the stable branch:
+
+    git remote update
+    git checkout -b topic/my-emergency-fix origin/master
+    # hack
+    git commit
+
+Then a cabal member merges into stable:
+
+    git checkout stable
+    git merge topic/my-emergency-fix
+    git push
+    # release
+    git checkout master
+    git merge stable
+
+=head1 PROJECT WORKFLOW
+
+For longer lasting branches, we use a subversion style branch layout, where
+master is routinely merged into the branch. Rebasing is allowed as long as all
+the branch contributors are using C<git pull --rebase> properly.
+
+C<commit --amend>, C<rebase --interactive>, etc. are not allowed, and should
+only be done in topic branches. Committing to master is still done with the
+same review process as a topic branch, and the branch must merge as a fast
+forward.
+
+This is pretty much the way we're doing branches for large-ish things right
+now.
+
+Obviously there is no technical limitation on the number of branches. You can
+freely create topic branches off of project branches, or sub projects inside
+larger projects freely. Such branches should incorporate the name of the branch
+they were made off so that people don't accidentally assume they should be
+merged into master:
+
+    git checkout -b my-project--topic/foo my-project
+
+(unfortunately Git will not allow C<my-project/foo> as a branch name if
+C<my-project> is a valid ref).
+
+=head1 THE "PU" BRANCH
+
+To make things easier for longer lived branches (whether topics or projects),
+the 'pu' branch is basically what happens if you merge all of the branches and
+topics together with master.
+
+We can update this as necessary (e.g. on a weekly basis if there is merit),
+notifying the authors of the respective branches if their branches did not merge
+(and why).
+
+To update 'pu':
+
+    git checkout pu
+    git remote update
+    git reset --hard origin/master
+    git merge @all_the_branches
+
+If the merge is clean, 'pu' is updated with C<push --force>.
+
+If the merge is not clean, the offending branch is removed from
+C<@all_the_branches>, with a small note of the conflict, and we try again.
+
+The authors of the failed branches should be told to try to merge their branch
+into 'pu', to see how their branch interacts with other branches.
+
+'pu' is probably broken most of the time, but lets us know how the different
+branches interact.
+
+=head1 BRANCH ARCHIVAL
+
+Merged branches should be deleted.
+
+Failed branches may be kept, but consider moving to refs/attic/ (e.g.
+http://danns.co.uk/node/295) to keep git branch -l current.
+
+Any branch that could still realistically be merged in the future, even if it
+hasn't had work recently, should not be archived.
+
 =head1 TESTS, TESTS, TESTS
 
 If you write I<any> code for Moose or Class::MOP, you B<must> add
 tests for that code. If you do not write tests then we cannot
-guarantee your change will not be removed or altered at a later date.
+guarantee your change will not be removed or altered at a later date,
+as there is nothing to confirm this is desired behavior.
 
 If your code change/addition is deep within the bowels of
 Moose/Class::MOP and your test exercises this feature in a non-obvious
@@ -64,29 +255,32 @@ an entry in the Changes file. Make sure to give yourself credit!
 
 =head1 BACKWARDS COMPATIBILITY
 
-Change is inevitable and Moose is not immune to this. We do our best
+Change is inevitable, and Moose is not immune to this. We do our best
 to maintain backwards compatibility, but we do not want the code base
 to become overburdened by this. This is not to say that we will be
 frivolous with our changes, quite the opposite, just that we are not
 afraid of change and will do our best to keep it as painless as
 possible for the end user.
 
-The rule is that if you do something that is not backwards compatible
-you B<must> do I<at least> one deprecation cycle (more if it is larger
-change). For really larger or radical changes dev releases may be
-needed as well (the core developers will decide on this on a
-case-per-case basis).
+The rule is that if you do something that is not backwards compatible, you
+B<must> do I<at least> one deprecation cycle (more if it is larger change).
+For really larger or radical changes dev releases may be needed as well (the
+Cabal will decide on this on a case-per-case basis).
 
-The preference with regard to deprecation is to warn loudly and often
-so that users will have time to fix their usages.
+The preference with regard to deprecation is to warn loudly and often so that
+users will have time to fix their usages.
 
 All backwards incompatible changes B<must> be documented in
-L<Moose::Manual::Delta>. Make sure to document any useful tips or
-workarounds for the change in that document.
+L<Moose::Manual::Delta>. Make sure to document any useful tips or workarounds
+for the change in that document.
 
 =head1 AUTHOR
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
+
+Chris (perigrin) Prather
+
+Yuval (nothingmuch) Kogman
 
 =head1 COPYRIGHT AND LICENSE
 

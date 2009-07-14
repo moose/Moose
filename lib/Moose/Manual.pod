@@ -112,7 +112,7 @@ Perl 5 OO.
 
 =item L<Moose::Manual::Unsweetened>
 
-Show two examples classes, each written first with Moose and then with
+Shows two example classes, each written first with Moose and then with
 "plain old Perl 5".
 
 =item L<Moose::Manual::Classes>

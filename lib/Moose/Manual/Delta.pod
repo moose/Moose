@@ -46,6 +46,25 @@ See L<Moose::AttributeHelpers> for the new documentation.
 
 =head1 Version 0.84
 
+When an attribute generates I<no> accessors, we now warn. This is to help
+users who forget the C<is> option. If you really do not want any accessors,
+you can use C<< is => 'bare' >>.
+
+When an accessor overwrites an existing method, we now warn. To work around
+this warning (if you really must have this behavior), you can explicitly
+remove the method before creating it as an accessor:
+
+    sub foo {}
+
+    __PACKAGE__->meta->remove_method('foo');
+
+    has foo => (
+        is => 'ro',
+    );
+
+When an unknown option is passed to C<has>, we now warn. You can silence
+the warning by fixing your code. :)
+
 The C<Role> type has been deprecated. On its own, it was useless,
 since it just checked C<< $object->can('does') >>. If you were using
 it as a parent type, just call C<role_type('Role::Name')> to create an
