@@ -30,6 +30,12 @@ __PACKAGE__->meta->add_attribute('methods' => (
     default => sub { {} }
 ));
 
+__PACKAGE__->meta->add_attribute(
+    'application_role_summation_class',
+    reader  => 'application_role_summation_class',
+    default => 'Moose::Meta::Role::Application::RoleSummation',
+);
+
 sub new {
     my ($class, %params) = @_;
     # the roles param is required ...
@@ -74,6 +80,17 @@ sub add_method {
     $self->get_method_map->{$method_name} = $method;
 }
 
+sub apply_params {
+    my ($self, $role_params) = @_;
+    Class::MOP::load_class($self->application_role_summation_class);
+
+    $self->application_role_summation_class->new(
+        role_params => $role_params,
+    )->apply($self);
+
+    return $self;
+}
+
 1;
 
 __END__
@@ -114,6 +131,13 @@ L<Moose::Meta::Role> object. This is a required option.
 =item * name
 
 If a name is not given, one is generated from the roles provided.
+
+=item * apply_params(\%role_params)
+
+Creates a new RoleSummation role application with C<%role_params> and applies
+the composite role to it. The RoleSummation role application class used is
+determined by the composite role's C<application_role_summation_class>
+attribute.
 
 =back
 

@@ -514,7 +514,6 @@ sub apply {
 sub combine {
     my ($class, @role_specs) = @_;
 
-    require Moose::Meta::Role::Application::RoleSummation;
     require Moose::Meta::Role::Composite;
 
     my (@roles, %role_params);
@@ -530,11 +529,7 @@ sub combine {
     }
 
     my $c = Moose::Meta::Role::Composite->new(roles => \@roles);
-    Moose::Meta::Role::Application::RoleSummation->new(
-        role_params => \%role_params
-    )->apply($c);
-
-    return $c;
+    return $c->apply_params(\%role_params);
 }
 
 sub _role_for_combination {
