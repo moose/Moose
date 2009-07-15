@@ -10,7 +10,7 @@ for, noteworthy changes.
 
     * Moose::Meta::Method::Accessor
       - No longer uses inline_slot_access in accessors, to support
-        non-lvalue-based meta instances.
+        non-lvalue-based meta instances. (sorear)
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect the new
         layout and methods of work for the Git repository. All work now should
