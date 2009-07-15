@@ -2,6 +2,12 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 0.88
+    Japan Perl Association has sponsored Goro Fuji to improve
+    startup performance of Class::MOP and Moose. These enhancements
+    may break backwards compatibility if you're doing (or using)
+    complex metaprogramming, so, as always, test your code!
+    http://blog.perlassociation.org/2009/07/jpa-sponsors-moose-class-mop-work.html
+
     * Moose::Meta::Method::Accessor
       - No longer uses inline_slot_access in accessors, to support
         non-lvalue-based meta instances.
