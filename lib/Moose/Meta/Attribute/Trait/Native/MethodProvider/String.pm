@@ -73,6 +73,14 @@ sub clear : method {
     return sub { $writer->( $_[0], '' ) }
 }
 
+sub length : method {
+    my ($attr, $reader, $writer) = @_;
+    return sub {
+        my $v = $reader->($_[0]);
+        return CORE::length($v);
+    };
+}
+
 sub substr : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
@@ -138,6 +146,8 @@ L<Moose::Meta::Attribute::Trait::Native::String>.
 =item B<inc>
 
 =item B<clear>
+
+=item B<length>
 
 =item B<substr>
 

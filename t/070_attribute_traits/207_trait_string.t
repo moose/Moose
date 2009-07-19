@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More tests => 22;
 use Test::Moose 'does_ok';
 
 my $uc;
@@ -25,6 +25,7 @@ my $uc;
             chop_string    => 'chop',
             chomp_string   => 'chomp',
             clear_string   => 'clear',
+            length_string  => 'length',
             exclaim        => [ append => ['!'] ],
             capitalize_last =>
                 [ replace => [ qr/(.)$/, $uc = sub { uc $1 } ] ],
@@ -37,8 +38,10 @@ my $page = MyHomePage->new();
 isa_ok( $page, 'MyHomePage' );
 
 is( $page->string, '', '... got the default value' );
+is( $page->length_string, 0,'... length is zero' );
 
 $page->string('a');
+is( $page->length_string, 1,'... new string has length of one' );
 
 $page->inc_string;
 is( $page->string, 'b', '... got the incremented value' );
@@ -65,6 +68,7 @@ is_deeply( [ $page->match_string(qr/([ao])/) ], ["a"], "match" );
 
 $page->replace_string( qr/([ao])/, sub { uc($1) } );
 is( $page->string, 'bArcfo', "substitution" );
+is( $page->length_string, 6, 'right length' );
 
 $page->exclaim;
 is( $page->string, 'bArcfo!', 'exclaim!' );
@@ -103,6 +107,7 @@ is_deeply(
         chop_string     => 'chop',
         chomp_string    => 'chomp',
         clear_string    => 'clear',
+        length_string   => 'length',
         exclaim         => [ append => ['!'] ],
         capitalize_last => [ replace => [ qr/(.)$/, $uc ] ],
         invalid_number => [ match => [qr/\D/] ],
