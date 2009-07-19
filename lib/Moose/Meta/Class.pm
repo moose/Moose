@@ -17,7 +17,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
-use Moose::Error::Default;
 use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
@@ -611,6 +610,7 @@ sub raise_error {
 sub create_error {
     my ( $self, @args ) = @_;
 
+    require Moose::Error::Default;
     require Carp::Heavy;
 
     local $error_level = ($error_level || 0 ) + 1;
