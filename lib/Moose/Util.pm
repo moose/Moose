@@ -105,7 +105,7 @@ sub _apply_all_roles {
         }
     }
 
-    if(defined $role_filter){
+    if ( defined $role_filter ) {
         @$roles = grep { local $_ = $_->[0]; $role_filter->() } @$roles;
     }
 
