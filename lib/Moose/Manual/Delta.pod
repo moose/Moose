@@ -48,7 +48,10 @@ See L<Moose::AttributeHelpers> for the new documentation.
 
 When an attribute generates I<no> accessors, we now warn. This is to help
 users who forget the C<is> option. If you really do not want any accessors,
-you can use C<< is => 'bare' >>.
+you can use C<< is => 'bare' >>. You can maintain back compat with older
+versions of Moose by using something like:
+
+    ($Moose::VERSION >= 0.84 ? is => 'bare' : ())
 
 When an accessor overwrites an existing method, we now warn. To work around
 this warning (if you really must have this behavior), you can explicitly

@@ -7,7 +7,7 @@ use Test::More tests => 18;
 use Test::Exception;
 
 BEGIN {
-	use_ok('Moose::Util::TypeConstraints');
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 foreach my $type_name (qw(
