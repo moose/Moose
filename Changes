@@ -23,6 +23,8 @@ for, noteworthy changes.
         (rafl)
     * Moose::Util::MetaRole
       - Allow applying roles to a meta role's role application classes. (rafl)
+    * Moose::Meta::Attribute
+      - add weak_ref to allowed options for "has '+foo'" (mst)
 
 0.87 Tue Jul 7, 2009
     * Moose::Meta::Method::Delegation

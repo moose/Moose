@@ -163,7 +163,7 @@ my @legal_options_for_inheritance = qw(
     documentation lazy handles
     builder type_constraint
     definition_context
-    lazy_build
+    lazy_build weak_ref
 );
 
 sub legal_options_for_inheritance { @legal_options_for_inheritance }
