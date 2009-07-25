@@ -162,7 +162,7 @@ Development releases are made without merging into the stable branch.
 Anyone can create the necessary fix by branching off of the stable branch:
 
     git remote update
-    git checkout -b topic/my-emergency-fix origin/master
+    git checkout -b topic/my-emergency-fix origin/stable
     # hack
     git commit
 
