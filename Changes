@@ -5,6 +5,12 @@ next version
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)
 
+    * Moose::Meta::Role::Method::Conflicting
+    * Moose::Meta::Role::Application::ToClass
+      - For the first set of roles involved in a conflict, report all
+        unresolved method conflicts, not just the first method. Fixes #47210
+        reported by Ovid. (Sartak)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect
