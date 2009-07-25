@@ -41,7 +41,9 @@ This says that all C<Person> objects have an optional read-write
 The options passed to C<has> define the properties of the
 attribute. There are many options, but in the simplest form you just
 need to set C<is>, which can be either C<rw> (read-write) or C<ro>
-(read-only).
+(read-only). C<rw> permits mutation of the attribute's value using the
+accessor. C<ro> does not; you may only read the current value of the
+attribute.
 
 (In fact, you could even omit C<is>, but that gives you an attribute
 that has no accessors, which is pointless unless you're doing some
