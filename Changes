@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+next version
+    * Moose::Manual::Attributes
+      - Clarify "is", include discussion of "bare". (Sartak)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect
