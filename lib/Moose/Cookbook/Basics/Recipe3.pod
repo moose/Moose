@@ -63,8 +63,7 @@ Let's take a look at the C<node> attribute:
   has 'node' => ( is => 'rw', isa => 'Any' );
 
 Moose generates a read-write accessor for this attribute. The type
-constraint is C<Any>, which means literally means it can contain
-anything.
+constraint is C<Any>, which literally means it can contain anything.
 
 We could have left out the C<isa> option, but in this case, we are
 including it for the benefit of other programmers, not the computer.
