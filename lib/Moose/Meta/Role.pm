@@ -160,6 +160,12 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Application::ToInstance',
 );
 
+$META->add_attribute(
+    'composition_class_roles',
+    reader    => 'composition_class_roles',
+    predicate => 'has_composition_class_roles',
+);
+
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {

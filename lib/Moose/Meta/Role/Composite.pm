@@ -38,6 +38,7 @@ __PACKAGE__->meta->add_attribute(
 
 sub new {
     my ($class, %params) = @_;
+
     # the roles param is required ...
     foreach ( @{$params{roles}} ) {
         unless ( $_->isa('Moose::Meta::Role') ) {
@@ -45,6 +46,23 @@ sub new {
             Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_");
         }
     }
+
+    my @composition_roles = map {
+        $_->has_composition_class_roles
+            ? @{ $_->composition_class_roles }
+            : ()
+    } @{ $params{roles} };
+
+    if (@composition_roles) {
+        my $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => [ $class ],
+            roles        => [ @composition_roles ],
+            cache        => 1,
+        );
+        $meta->add_method(meta => sub { $meta });
+        $class = $meta->name;
+    }
+
     # and the name is created from the
     # roles if one has not been provided
     $params{name} ||= (join "|" => map { $_->name } @{$params{roles}});
