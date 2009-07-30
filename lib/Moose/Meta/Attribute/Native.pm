@@ -4,7 +4,7 @@ our $VERSION   = '0.89_02';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-my @trait_names = qw(Bool Counter Number String Array Hash);
+my @trait_names = qw(Bool Counter Number String Array Hash Code);
 
 for my $trait_name (@trait_names) {
     my $trait_class = "Moose::Meta::Attribute::Native::Trait::$trait_name";
