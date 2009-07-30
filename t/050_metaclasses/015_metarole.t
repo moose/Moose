@@ -36,7 +36,7 @@ use Moose::Util::MetaRole;
 
 {
     Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class',
+        for_class       => My::Class->meta,
         metaclass_roles => ['Role::Foo'],
     );
 
