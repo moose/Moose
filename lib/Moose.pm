@@ -599,7 +599,7 @@ This tells Moose to take the list of C<@role_names> and apply them to the
 attribute meta-object. This is very similar to the I<metaclass> option, but
 allows you to use more than one extension at a time.
 
-See L<TRAIT NAME RESOLUTION> for details on how a trait name is
+See L<Trait Name Resolution> for details on how a trait name is
 resolved to a class name.
 
 Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
