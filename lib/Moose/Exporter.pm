@@ -369,6 +369,9 @@ sub _make_import_sub {
 
         my $metaclass;
         ( $metaclass, @_ ) = _strip_metaclass(@_);
+        $metaclass = Moose::Util::resolve_metaclass_alias(
+            'Class' => $metaclass
+        ) if defined $metaclass && length $metaclass;
 
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something

@@ -309,8 +309,8 @@ when specifying the C<metaclass> or C<traits> option for an attribute:
         metaclass => "Bar",
     );
 
-The name resolution mechanism is covered in L<Moose/Trait Name
-Resolution>.
+The name resolution mechanism is covered in
+L<Moose/Metaclass and Trait Name Resolution>.
 
 =item B<english_list(@items)>
 

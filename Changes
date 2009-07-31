@@ -14,6 +14,10 @@ next version
     * Moose::Meta::TypeConstraint
       - Add assert_valid method to use a TypeConstraint for assertion (rjbs)
 
+    * Moose::Exporter
+      - Make "use Moose -metaclass => 'Foo'" do alias resolution, like -traits
+        does. (doy)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect

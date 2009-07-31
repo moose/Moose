@@ -228,7 +228,8 @@ You can also specify traits which will be applied to your role metaclass:
 
 This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
-applied to it. See L<Moose/Trait Name Resolution> for more details.
+applied to it. See L<Moose/Metaclass and Trait Name Resolution> for more
+details.
 
 =head1 CAVEATS
 
