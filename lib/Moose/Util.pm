@@ -24,6 +24,8 @@ my @exports = qw[
     resolve_metaclass_alias
     add_method_modifier
     english_list
+    meta_attribute_alias
+    meta_class_alias
 ];
 
 Sub::Exporter::setup_exporter({
@@ -148,6 +150,15 @@ sub resolve_metatrait_alias {
     return resolve_metaclass_alias( @_, trait => 1 );
 }
 
+sub _build_alias_package_name {
+    my ($type, $name, $trait) = @_;
+    return 'Moose::Meta::'
+         . $type
+         . '::Custom::'
+         . ( $trait ? 'Trait::' : '' )
+         . $name;
+}
+
 {
     my %cache;
 
@@ -158,12 +169,9 @@ sub resolve_metatrait_alias {
         return $cache{$cache_key}{$metaclass_name}
             if $cache{$cache_key}{$metaclass_name};
 
-        my $possible_full_name
-            = 'Moose::Meta::'
-            . $type
-            . '::Custom::'
-            . ( $options{trait} ? "Trait::" : "" )
-            . $metaclass_name;
+        my $possible_full_name = _build_alias_package_name(
+            $type, $metaclass_name, $options{trait}
+        );
 
         my $loaded_class = Class::MOP::load_first_existing_class(
             $possible_full_name,
@@ -214,6 +222,30 @@ sub _caller_info {
     my %info;
     @info{qw(package file line)} = caller($level);
     return \%info;
+}
+
+sub _create_alias {
+    my ($type, $name, $trait, $for) = @_;
+    my $package = _build_alias_package_name($type, $name, $trait);
+    Class::MOP::Class->initialize($package)->add_method(
+        register_implementation => sub { $for }
+    );
+}
+
+sub meta_attribute_alias {
+    my ($to, $from) = @_;
+    $from ||= caller;
+    my $meta = Class::MOP::class_of($from);
+    my $trait = $meta->isa('Moose::Meta::Role');
+    _create_alias('Attribute', $to, $trait, $from);
+}
+
+sub meta_class_alias {
+    my ($to, $from) = @_;
+    $from ||= caller;
+    my $meta = Class::MOP::class_of($from);
+    my $trait = $meta->isa('Moose::Meta::Role');
+    _create_alias('Class', $to, $trait, $from);
 }
 
 1;
@@ -317,6 +349,14 @@ L<Moose/Metaclass and Trait Name Resolution>.
 Given a list of scalars, turns them into a proper list in English
 ("one and two", "one, two, three, and four"). This is used to help us
 make nicer error messages.
+
+=item B<meta_class_alias($to[, $from])>
+
+=item B<meta_attribute_alias($to[, $from])>
+
+Create an alias from the class C<$from> (or the current package, if
+C<$from> is unspecified), so that
+L<Moose/Metaclass and Trait Name Resolution> works properly.
 
 =back
 

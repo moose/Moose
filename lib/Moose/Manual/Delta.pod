@@ -21,6 +21,15 @@ send us a patch.
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
 C<-traits> (and the C<metaclass> and C<traits> options to C<has>).
 
+Added two functions C<meta_class_alias> and C<meta_attribute_alias> to
+L<Moose::Util>, to simplify aliasing metaclasses and metatraits. This is
+a wrapper around the old
+
+  package Moose::Meta::Class::Custom::Trait::FooTrait;
+  sub register_implementation { 'My::Meta::Trait' }
+
+way of doing this.
+
 =head1 Version 0.84
 
 When an attribute generates I<no> accessors, we now warn. This is to help
