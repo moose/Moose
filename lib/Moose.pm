@@ -831,7 +831,7 @@ You can also specify traits which will be applied to your metaclass:
 
 This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
-applied to it. See L<TRAIT NAME RESOLUTION> for more details.
+applied to it. See L<Trait Name Resolution> for more details.
 
 =head2 Trait Name Resolution
 
