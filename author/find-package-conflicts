@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use File::Next;
+use File::Slurp 'slurp';
+
+my %files_of;
+
+my $files = File::Next::files('tests/');
+while (defined(my $file = $files->())) {
+    next if $file !~ /\.t$/;
+
+    my $code = slurp $file;
+    while ($code =~ m{package\s+([\w:]+);}g) {
+        push @{ $files_of{$1} }, $file;
+    }
+}
+
+my @packages = sort { @{ $files_of{$a} } <=> @{ $files_of{$b} } }
+               grep { @{ $files_of{$_} } > 1 }
+               keys %files_of;
+
+for my $package (@packages) {
+    printf "%s (%d)\n", $package, scalar @{ $files_of{$package} };
+    print map { "    $_\n" } sort @{ $files_of{$package} };
+}
+
