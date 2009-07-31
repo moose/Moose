@@ -262,7 +262,7 @@ arguments to C<super>. Instead, Moose simply passes the same
 parameters that were passed to the method.
 
 A more detailed example of usage can be found in
-F<t/000_recipes/moose_cookbook_basics_recipe4.t>.
+F<tests/000_recipes/moose_cookbook_basics_recipe4.t>.
 
 =head1 CONCLUSION
 
