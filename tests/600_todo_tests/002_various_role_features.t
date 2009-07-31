@@ -241,7 +241,7 @@ ok( $robot->has_attribute("twist"), "has attr 'twist'" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method::Accessor" );
 }
 
-__END__
+=for thought
 
 I think Attribute needs to be refactored in some way to better support roles.
 
@@ -278,4 +278,5 @@ The benefits of doing this are:
   another for the actual impl with the problematic attrs (and stub methods to
   fix the accessors) and method modifiers (dunno if this can even work at all)
 
+=cut
 
