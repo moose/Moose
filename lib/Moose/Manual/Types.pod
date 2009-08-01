@@ -364,7 +364,7 @@ type, or as the value for an attribute's C<isa> option:
 
   has 'size' => (
       is => 'ro',
-      isa => subtype 'Int' => where { $_ > 0 },
+      isa => subtype('Int' => where { $_ > 0 }),
   );
 
 This is handy when you want to create a one-off type and don't want to
