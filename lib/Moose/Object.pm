@@ -23,7 +23,12 @@ sub new {
     # We want to support passing $self->new, but initialize
     # takes only an unblessed class name
     my $real_class = Scalar::Util::blessed($class) || $class;
-    my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
+
+	# this provides a hook to allow subclasses, roles, traits etc a chance to change 
+	# how the class will behave
+	my $built_class = $real_class->BUILDALLCLASS($params);
+
+    my $self = Class::MOP::Class->initialize($built_class)->new_object($params);
 
     $self->BUILDALL($params);
 
@@ -54,6 +59,19 @@ sub BUILDALL {
     foreach my $method (reverse Class::MOP::class_of($self)->find_all_methods_by_name('BUILD')) {
         $method->{code}->execute($self, $params);
     }
+}
+
+
+sub BUILDALLCLASS {
+    # NOTE: we ask Perl if we even
+    # need to do this first, to avoid
+    # extra meta level calls
+	return $_[0] unless $_[0]->can('BUILDCLASS');
+    my ($class, $params) = @_;
+    foreach my $method (reverse Class::MOP::class_of($class)->find_all_methods_by_name('BUILDCLASS')) {
+        $class = $method->{code}->execute($class, $params);
+    }
+	return $class;
 }
 
 sub DEMOLISHALL {
