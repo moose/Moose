@@ -50,18 +50,19 @@ Without a C<BUILDARGS> method, Moose will complain, because it expects
 a hash or hash reference. We can use the C<BUILDARGS> method to
 accommodate this calling style:
 
-  sub BUILDARGS {
+  around BUILDARGS => sub {
+      my $orig = shift;
       my $class = shift;
 
       if ( @_ == 1 && ! ref $_[0] ) {
-          return { ssn => $_[0] };
+          return $class->$orig(ssn => $_[0]);
       }
       else {
-          return $class->SUPER::BUILDARGS(@_);
+          return $class->$orig(@_);
       }
-  }
+  };
 
-Note the call to C<SUPER::BUILDARGS>. This will call the default
+Note the call to C<< $class->$orig >>. This will call the default
 C<BUILDARGS> in L<Moose::Object>. This method handles distinguishing
 between a hash reference and a plain hash for you.
 

@@ -4,9 +4,11 @@ package Moose::Meta::Role::Method::Conflicting;
 use strict;
 use warnings;
 
+use Moose::Util;
+
 use base qw(Moose::Meta::Role::Method::Required);
 
-our $VERSION   = '0.87';
+our $VERSION   = '0.88';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -14,6 +16,11 @@ __PACKAGE__->meta->add_attribute('roles' => (
     reader   => 'roles',
     required => 1,
 ));
+
+sub roles_as_english_list {
+    my $self = shift;
+    Moose::Util::english_list( map { q{'} . $_ . q{'} } @{ $self->roles } );
+}
 
 1;
 
@@ -60,6 +67,10 @@ Returns the conflicting method's name, as provided to the constructor.
 
 Returns the roles that generated this conflicting method, as provided to the
 constructor.
+
+=item B<< $method->roles_as_english_list >>
+
+Returns the roles that generated this conflicting method as an English list.
 
 =back
 

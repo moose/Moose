@@ -33,6 +33,7 @@ use Test::Exception;
 
     has 'gorch' => (is => 'ro');
     has 'gloum' => (is => 'ro', default => sub {[]});
+    has 'fleem' => (is => 'ro');
 
     has 'bling' => (is => 'ro', isa => 'Thing');
     has 'blang' => (is => 'ro', isa => 'Thing', handles => ['goodbye']);
@@ -88,6 +89,10 @@ use Test::Exception;
     } '... now can extend an attribute with a non-subtype';
 
     ::lives_ok {
+        has '+fleem' => (weak_ref => 1);
+    } '... now allowed to add the weak_ref option via inheritance';
+
+    ::lives_ok {
         has '+bling' => (handles => ['hello']);
     } '... we can add the handles attribute option';
 
@@ -100,9 +105,6 @@ use Test::Exception;
     } '... can now create an attribute with an improper subtype relation';
     ::dies_ok {
         has '+other_fail' => (trigger => sub {});
-    } '... cannot create an attribute with an illegal option';
-    ::dies_ok {
-        has '+other_fail' => (weak_ref => 1);
     } '... cannot create an attribute with an illegal option';
     ::throws_ok {
         has '+does_not_exist' => (isa => 'Str');

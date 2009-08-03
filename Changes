@@ -1,17 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.88
-    Japan Perl Association has sponsored Goro Fuji to improve
-    startup performance of Class::MOP and Moose. These enhancements
-    may break backwards compatibility if you're doing (or using)
-    complex metaprogramming, so, as always, test your code!
-    http://blog.perlassociation.org/2009/07/jpa-sponsors-moose-class-mop-work.html
-
-    * Moose::Meta::Method::Accessor
-      - No longer uses inline_slot_access in accessors, to support
-        non-lvalue-based meta instances. (sorear)
-
+next version
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers
         to the existing delegation API. (hdp)
@@ -20,19 +10,38 @@ for, noteworthy changes.
       - Moved in from MooseX with API tweaks. See Moose::Manual::Delta for
         details. (hdp, jhannah, rbuels)
 
+    * Moose::Manual::Attributes
+      - Clarify "is", include discussion of "bare". (Sartak)
+
+    * Moose::Meta::Role::Method::Conflicting
+    * Moose::Meta::Role::Application::ToClass
+      - For the first set of roles involved in a conflict, report all
+        unresolved method conflicts, not just the first method. Fixes #47210
+        reported by Ovid. (Sartak)
+
+0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
-      - Re-write the Moose::Manual::Contributing document to reflect the new
-        layout and methods of work for the Git repository. All work now should
-        be done in topic branches and reviewed by a core committer before
-        being applied to master. All releases are done by a cabal member and
-        merged from master to stable. This plan was devised by Yuval, blame
-        him. (perigrin)
+      - Re-write the Moose::Manual::Contributing document to reflect
+        the new layout and methods of work for the Git repository. All
+        work now should be done in topic branches and reviewed by a
+        core committer before being applied to master. All releases
+        are done by a cabal member and merged from master to
+        stable. This plan was devised by Yuval, blame him. (perigrin)
 
     * Moose::Meta::Role
-      - Create metaclass attributes for the different role application classes.
-        (rafl)
+      - Create metaclass attributes for the different role application
+        classes.  (rafl)
+
     * Moose::Util::MetaRole
-      - Allow applying roles to a meta role's role application classes. (rafl)
+      - Allow applying roles to a meta role's role application
+        classes. (rafl)
+
+    * Moose::Meta::Attribute
+      - Add weak_ref to allowed options for "has '+foo'" (mst)
+
+    * Moose::Meta::Method::Accessor
+      - No longer uses inline_slot_access in accessors, to support
+        non-lvalue-based meta instances. (sorear)
 
 0.87 Tue Jul 7, 2009
     * Moose::Meta::Method::Delegation

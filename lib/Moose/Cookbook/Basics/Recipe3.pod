@@ -63,8 +63,7 @@ Let's take a look at the C<node> attribute:
   has 'node' => ( is => 'rw', isa => 'Any' );
 
 Moose generates a read-write accessor for this attribute. The type
-constraint is C<Any>, which means literally means it can contain
-anything.
+constraint is C<Any>, which literally means it can contain anything.
 
 We could have left out the C<isa> option, but in this case, we are
 including it for the benefit of other programmers, not the computer.
@@ -211,7 +210,7 @@ You I<can> use the C<default> option without the C<lazy> option if you
 like, as we showed in the second recipe.
 
 Also, you can use C<builder> instead of C<default>. See
-L<Moose::Cookbook::Basics::Recipe9> for details.
+L<Moose::Cookbook::Basics::Recipe8> for details.
 
 =back
 

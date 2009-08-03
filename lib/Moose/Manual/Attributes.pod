@@ -41,11 +41,17 @@ This says that all C<Person> objects have an optional read-write
 The options passed to C<has> define the properties of the
 attribute. There are many options, but in the simplest form you just
 need to set C<is>, which can be either C<rw> (read-write) or C<ro>
-(read-only).
+(read-only). When an attribute is C<rw>, you can change it by passing
+a value to its accessor. When an attribute is C<ro>, you may only read
+the current value of the attribute.
 
-(In fact, you could even omit C<is>, but that gives you an attribute
-that has no accessors, which is pointless unless you're doing some
-deep, dark magic).
+In fact, you could even omit C<is>, but that gives you an attribute
+that has no accessor. This can be useful with other attribute options,
+such as C<handles>. However, if your attribute generates I<no>
+accessors, Moose will issue a warning, because that usually means the
+programmer forgot to say the attribute is read-only or read-write. If
+you really mean to have no accessors, you can silence this warning by
+setting C<is> to C<bare>.
 
 =head2 Accessor methods
 

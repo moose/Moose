@@ -52,7 +52,8 @@ L<git://git.moose.perl.org/Moose.git> repository or fork of the GitHub mirror.
 These people have worked with the Moose codebase for a while.
 
 They've been responsible for large features or branches and can help review
-your changes and apply them to the master branch.
+your changes and apply them to the master branch using the basic
+L</APPROVAL WORKFLOW>.
 
 They are also fairly well versed in Git, in order to merge the branches with
 no mistakes (especially when the merge fails), and to provide advice to
@@ -110,8 +111,9 @@ Any change or bugfix should be created in a topic branch.
     git rebase --interactive                 # allowed
     git push --force origin topic/my_feature # allowed
 
-Then go on IRC, ask for someone to review, and merge to master. If it merges
-cleanly and nobody has any objections, then it can be pushed to master.
+Then ask for a review/approval (see L</APPROVAL WORKFLOW>), and merge
+to master. If it merges cleanly and nobody has any objections, then it
+can be pushed to master.
 
 If it doesn't merge as a fast forward, the author of the branch needs to run
 
@@ -144,6 +146,73 @@ easier for people maintaining branches to stay up to date.
 
 All large changes should be documented in L<Moose::Manual::Delta>.
 
+=head1 APPROVAL WORKFLOW
+
+Moose is an open project but it is also an increasingly important one. Many
+modules depend on Moose being stable. Therefore, we have a basic set of
+criteria for reviewing and merging branches. What follows is a set of rough
+guidelines that ensures all new code is properly vetted before it is merged to
+the master branch.
+
+It should be noted that if you want your specific branch to be approved, it is
+B<your> responsibility to follow this process and advocate for your branch.
+The preferred way is to send a request to the mailing list for review/approval,
+this allows us to better keep track of the branches awaiting approval and those
+which have been approved.
+
+=over 4
+
+=item Small bug fixes, doc patches and additional passing tests.
+
+These items don't really require approval beyond one of the core contributors
+just doing a simple review.
+
+=item Larger bug fixes, doc additions and TODO or failing tests.
+
+Larger bug fixes should be reviewed by at least one cabal member and should be
+tested using the F<cpan-stable-smolder> script in the moose-dev-utils
+repository.
+
+New documentation is always welcome, but should also be reviewed by a cabal
+member for accuracy.
+
+TODO tests are basically feature requests, see our L</NEW FEATURES> section
+for more information on that. If your feature needs core support, create a
+topic/ branch using the L</STANDARD WORKFLOW> and start hacking away.
+
+Failing tests are basically bug reports. You should find a core contributor
+and/or cabal member to see if it is a real bug, then submit the bug and your
+test to the RT queue. Source control is not a bug reporting tool.
+
+=item New user-facing features.
+
+Anything that creates a new user-visible feature needs to be approved by
+B<more then one> cabal member.
+
+Make sure you have reviewed L</NEW FEATURES> to be sure that you are following
+the guidelines. Do not be surprised if a new feature is rejected for the core.
+
+=item New internals features.
+
+New features for Moose internals are less restrictive then user facing
+features, but still require approval by B<at least one> cabal member.
+
+Ideally you will have run the smolder script to be sure you are not breaking
+any MooseX module or causing any other unforeseen havoc. If you do this
+(rather then make us do it), it will only help to hasten your branch's
+approval.
+
+=item Backwards incompatible changes.
+
+Anything that breaks backwards compatibility must be discussed by the cabal
+and agreed to by a majority of the members.
+
+We have a policy for what we see as sane L</BACKWARDS COMPATIBILITY> for
+Moose. If your changes break back-compat, you must be ready to discuss and
+defend your change.
+
+=back
+
 =head1 RELEASE WORKFLOW
 
     git checkout master
@@ -162,7 +231,7 @@ Development releases are made without merging into the stable branch.
 Anyone can create the necessary fix by branching off of the stable branch:
 
     git remote update
-    git checkout -b topic/my-emergency-fix origin/master
+    git checkout -b topic/my-emergency-fix origin/stable
     # hack
     git commit
 

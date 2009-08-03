@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.87';
+our $VERSION   = '0.88';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -613,7 +613,7 @@ This tells Moose to take the list of C<@role_names> and apply them to the
 attribute meta-object. This is very similar to the I<metaclass> option, but
 allows you to use more than one extension at a time.
 
-See L<TRAIT NAME RESOLUTION> for details on how a trait name is
+See L<Trait Name Resolution> for details on how a trait name is
 resolved to a class name.
 
 Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
@@ -845,7 +845,7 @@ You can also specify traits which will be applied to your metaclass:
 
 This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
-applied to it. See L<TRAIT NAME RESOLUTION> for more details.
+applied to it. See L<Trait Name Resolution> for more details.
 
 =head2 Trait Name Resolution
 

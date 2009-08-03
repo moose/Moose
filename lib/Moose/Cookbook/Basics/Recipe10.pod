@@ -31,16 +31,17 @@ Moose::Cookbook::Basics::Recipe10 - Using BUILDARGS and BUILD to hook into objec
       isa => 'Str',
   );
 
-  sub BUILDARGS {
+  around BUILDARGS => sub {
+      my $orig = shift;
       my $class = shift;
 
       if ( @_ == 1 && ! ref $_[0] ) {
-          return { ssn => $_[0] };
+          return $class->$orig(ssn => $_[0]);
       }
       else {
-          return $class->SUPER::BUILDARGS(@_);
+          return $class->$orig(@_);
       }
-  }
+  };
 
   sub BUILD {
       my $self = shift;
@@ -73,14 +74,14 @@ social security number:
 The key part of our C<BUILDARGS> is this conditional:
 
       if ( @_ == 1 && ! ref $_[0] ) {
-          return { ssn => $_[0] };
+          return $class->$orig(ssn => $_[0]);
       }
 
 By default, Moose constructors accept a list of key-value pairs, or a
 hash reference. We need to make sure that C<$_[0]> is not a reference
 before assuming it is a social security number.
 
-We call C<< $class->SUPER::BUILDARGS(@_) >> to handle all the other
+We call the original C<BUILDARGS> method to handle all the other
 cases. You should always do this in your own C<BUILDARGS> methods,
 since L<Moose::Object> provides its own C<BUILDARGS> method that
 handles hash references and a list of key-value pairs.

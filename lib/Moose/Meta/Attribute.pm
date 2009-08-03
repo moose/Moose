@@ -7,7 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'weaken';
 use overload     ();
 
-our $VERSION   = '0.87';
+our $VERSION   = '0.88';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -164,7 +164,7 @@ my @legal_options_for_inheritance = qw(
     documentation lazy handles
     builder type_constraint
     definition_context
-    lazy_build
+    lazy_build weak_ref
 );
 
 sub legal_options_for_inheritance { @legal_options_for_inheritance }
