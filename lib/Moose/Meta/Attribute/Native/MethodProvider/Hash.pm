@@ -1,4 +1,4 @@
-package Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash;
+package Moose::Meta::Attribute::Native::MethodProvider::Hash;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -183,7 +183,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash
+Moose::Meta::Attribute::Native::MethodProvider::Hash
 
 =head1 DESCRIPTION
 

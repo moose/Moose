@@ -1,20 +1,20 @@
 
-package Moose::Meta::Attribute::Trait::Native::Counter;
+package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter;
+use Moose::Meta::Attribute::Native::MethodProvider::Counter;
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter',
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Counter',
 );
 
 sub _default_default { 0 }
@@ -47,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Counter
+Moose::Meta::Attribute::Native::Trait::Counter
 
 =head1 SYNOPSIS
 

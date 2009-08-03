@@ -1,11 +1,11 @@
-package Moose::Meta::Attribute::Trait::Native::Number;
+package Moose::Meta::Attribute::Native::Trait::Number;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'Num' }
 
@@ -58,7 +58,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Number
+Moose::Meta::Attribute::Native::Trait::Number
 
 =head1 SYNOPSIS
 

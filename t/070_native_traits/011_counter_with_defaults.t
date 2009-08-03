@@ -39,7 +39,7 @@ is( $page->counter, 0, '... got the original value' );
 # check the meta ..
 
 my $counter = $page->meta->get_attribute('counter');
-does_ok( $counter, 'Moose::Meta::Attribute::Trait::Native::Counter' );
+does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
 
 is( $counter->type_constraint->name, 'Num',
     '... got the expected default type constraint' );

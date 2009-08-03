@@ -111,7 +111,7 @@ is_deeply( [ $stuff->descending ], [ reverse 1 .. 10 ] );
 ## test the meta
 
 my $options = $stuff->meta->get_attribute('_options');
-does_ok( $options, 'Moose::Meta::Attribute::Trait::Native::Array' );
+does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
 
 is_deeply(
     $options->handles,

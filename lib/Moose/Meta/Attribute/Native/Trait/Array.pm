@@ -1,20 +1,20 @@
 
-package Moose::Meta::Attribute::Trait::Native::Array;
+package Moose::Meta::Attribute::Native::Trait::Array;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::Array;
+use Moose::Meta::Attribute::Native::MethodProvider::Array;
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Array'
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Array'
 );
 
 sub _helper_type { 'ArrayRef' }
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Array
+Moose::Meta::Attribute::Native::Trait::Array
 
 =head1 SYNOPSIS
 
@@ -51,7 +51,7 @@ Moose::Meta::Attribute::Trait::Native::Array
 =head1 DESCRIPTION
 
 This module provides an Array attribute which provides a number of
-array operations. See L<Moose::Meta::Attribute::Trait::Native::MethodProvider::Array>
+array operations. See L<Moose::Meta::Attribute::Native::MethodProvider::Array>
 for more details.
 
 =head1 METHODS

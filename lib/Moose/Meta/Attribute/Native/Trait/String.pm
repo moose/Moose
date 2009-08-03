@@ -1,20 +1,20 @@
 
-package Moose::Meta::Attribute::Trait::Native::String;
+package Moose::Meta::Attribute::Native::Trait::String;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::String;
+use Moose::Meta::Attribute::Native::MethodProvider::String;
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::String',
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::String',
 );
 
 sub _default_default { q{} }
@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::String
+Moose::Meta::Attribute::Native::Trait::String
 
 =head1 SYNOPSIS
 

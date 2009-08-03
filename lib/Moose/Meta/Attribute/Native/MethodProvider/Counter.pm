@@ -1,5 +1,5 @@
 
-package Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter;
+package Moose::Meta::Attribute::Native::MethodProvider::Counter;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -40,7 +40,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::MethodProvider::Counter
+Moose::Meta::Attribute::Native::MethodProvider::Counter
 
 =head1 DESCRIPTION
 

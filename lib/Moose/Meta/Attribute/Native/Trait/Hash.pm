@@ -1,20 +1,20 @@
 
-package Moose::Meta::Attribute::Trait::Native::Hash;
+package Moose::Meta::Attribute::Native::Trait::Hash;
 use Moose::Role;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash;
+use Moose::Meta::Attribute::Native::MethodProvider::Hash;
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash'
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Hash'
 );
 
 sub _helper_type { 'HashRef' }
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Hash
+Moose::Meta::Attribute::Native::Trait::Hash
 
 =head1 SYNOPSIS
 
@@ -54,7 +54,7 @@ Moose::Meta::Attribute::Trait::Native::Hash
 =head1 DESCRIPTION
 
 This module provides a Hash attribute which provides a number of
-hash-like operations. See L<Moose::Meta::Attribute::Trait::Native::MethodProvider::Hash>
+hash-like operations. See L<Moose::Meta::Attribute::Native::MethodProvider::Hash>
 for more details.
 
 =head1 METHODS

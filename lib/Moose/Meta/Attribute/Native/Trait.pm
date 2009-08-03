@@ -1,5 +1,5 @@
 
-package Moose::Meta::Attribute::Trait::Native;
+package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 
@@ -140,7 +140,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native - base role for helpers
+Moose::Meta::Attribute::Native::Trait - base role for helpers
 
 =head1 BUGS
 

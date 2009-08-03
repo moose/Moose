@@ -1,5 +1,5 @@
 
-package Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool;
+package Moose::Meta::Attribute::Native::MethodProvider::Bool;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -34,7 +34,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool
+Moose::Meta::Attribute::Native::MethodProvider::Bool
 
 =head1 DESCRIPTION
 

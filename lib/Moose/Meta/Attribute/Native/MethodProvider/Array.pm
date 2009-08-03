@@ -1,4 +1,4 @@
-package Moose::Meta::Attribute::Trait::Native::MethodProvider::Array;
+package Moose::Meta::Attribute::Native::MethodProvider::Array;
 use Moose::Role;
 
 our $VERSION   = '0.87';
@@ -331,7 +331,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::MethodProvider::Array
+Moose::Meta::Attribute::Native::MethodProvider::Array
 
 =head1 SYNOPSIS
 

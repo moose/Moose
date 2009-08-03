@@ -8,7 +8,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 my @trait_names = qw(Bool Counter Number String Array Hash);
 
 for my $trait_name (@trait_names) {
-    my $trait_class = "Moose::Meta::Attribute::Trait::Native::$trait_name";
+    my $trait_class = "Moose::Meta::Attribute::Native::Trait::$trait_name";
     my $meta = Class::MOP::Class->initialize(
         "Moose::Meta::Attribute::Custom::Trait::$trait_name"
     );
@@ -99,35 +99,35 @@ works normally for C<< handles >>.
 
 =over
 
-=item L<Number|Moose::Meta::Attribute::Trait::Native::Number>
+=item L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
 Common numerical operations.
 
-=item L<String|Moose::Meta::Attribute::Trait::Native::String>
+=item L<String|Moose::Meta::Attribute::Native::Trait::String>
 
 Common methods for string operations.
 
-=item L<Counter|Moose::Meta::Attribute::Trait::Native::Counter>
+=item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
 
 Methods for incrementing and decrementing a counter attribute.
 
-=item L<Bool|Moose::Meta::Attribute::Trait::Native::Bool>
+=item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
 
 Common methods for boolean values.
 
-=item L<Hash|Moose::Meta::Attribute::Trait::Native::Hash>
+=item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
 Common methods for hash references.
 
-=item L<ImmutableHash|Moose::Meta::Attribute::Trait::Native::ImmutableHash>
+=item L<ImmutableHash|Moose::Meta::Attribute::Native::Trait::ImmutableHash>
 
 Common methods for inspecting hash references.
 
-=item L<Array|Moose::Meta::Attribute::Trait::Native::Array>
+=item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
 Common methods for array references.
 
-=item L<List|Moose::Meta::Attribute::Trait::Native::List>
+=item L<List|Moose::Meta::Attribute::Native::Trait::List>
 
 Common list methods for array references.
 

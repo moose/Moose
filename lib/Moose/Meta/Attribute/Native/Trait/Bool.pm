@@ -1,12 +1,12 @@
-package Moose::Meta::Attribute::Trait::Native::Bool;
+package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool;
+use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_is { 'rw' }
 sub _helper_type { 'Bool' }
@@ -18,7 +18,7 @@ has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Bool'
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Bool'
 );
 
 no Moose::Role;
@@ -29,7 +29,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Trait::Native::Bool
+Moose::Meta::Attribute::Native::Trait::Bool
 
 =head1 SYNOPSIS
 
