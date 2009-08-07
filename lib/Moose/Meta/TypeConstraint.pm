@@ -104,6 +104,16 @@ sub validate {
     }
 }
 
+sub assert_valid {
+    my ($self, $value) = @_;
+
+    my $error = $self->validate($value);
+    return 1 if ! defined $error;
+
+    require Moose;
+    Moose->throw_error($error);
+}
+
 sub get_message {
     my ($self, $value) = @_;
     if (my $msg = $self->message) {
