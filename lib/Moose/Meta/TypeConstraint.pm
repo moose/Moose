@@ -395,6 +395,13 @@ method returns an explicit C<undef>. If the type is not valid, we call
 C<< $self->get_message($value) >> internally to generate an error
 message.
 
+=item B<< $constraint->assert_valid($value) >>
+
+Like C<check> and C<validate>, this method checks whether C<$value> is
+valid under the constraint.  If it is, it will return true.  If it is not,
+an exception will be thrown with the results of
+C<< $self->get_message($value) >>.
+
 =item B<< $constraint->name >>
 
 Returns the type's name, as provided to the constructor.
