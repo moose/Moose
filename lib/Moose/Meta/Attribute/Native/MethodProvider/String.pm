@@ -1,4 +1,3 @@
-
 package Moose::Meta::Attribute::Native::MethodProvider::String;
 use Moose::Role;
 
@@ -117,39 +116,14 @@ Moose::Meta::Attribute::Native::MethodProvider::String
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::String>.
+L<Moose::Meta::Attribute::Trait::Native::String>. Please check there for
+documentation on what methods are provided.
 
 =head1 METHODS
 
 =over 4
 
 =item B<meta>
-
-=back
-
-=head1 PROVIDED METHODS
-
-=over 4
-
-=item B<append>
-
-=item B<prepend>
-
-=item B<replace>
-
-=item B<match>
-
-=item B<chomp>
-
-=item B<chop>
-
-=item B<inc>
-
-=item B<clear>
-
-=item B<length>
-
-=item B<substr>
 
 =back
 

@@ -1,4 +1,3 @@
-
 package Moose::Meta::Attribute::Native::Trait::String;
 use Moose::Role;
 
@@ -82,22 +81,12 @@ above. This allows for a very basic counter definition:
   has 'foo' => (metaclass => 'String');
   $obj->append_foo;
 
-=head1 METHODS
-
-=over 4
-
-=item B<meta>
-
-=item B<method_provider>
-
-=item B<has_method_provider>
-
-=back
-
 =head1 PROVIDED METHODS
 
-It is important to note that all those methods do in place
-modification of the value stored in the attribute.
+These methods are implemented in
+L<Moose::Meta::Attribute::Native::MethodProvider::STring>. It is important to
+note that all those methods do in place modification of the value stored in
+the attribute.
 
 =over 4
 
@@ -137,6 +126,18 @@ L<perlfunc/chomp>
 =item C<clear>
 
 Sets the string to the empty string (not the value passed to C<default>).
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item B<meta>
+
+=item B<method_provider>
+
+=item B<has_method_provider>
 
 =back
 
