@@ -188,75 +188,14 @@ Moose::Meta::Attribute::Native::MethodProvider::Hash
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Hash>.
-
-This role is composed from the
-L<Moose::Meta::Attribute::Trait::Native::ImmutableHash> role.
+L<Moose::Meta::Attribute::Trait::Native::Hash>. Please check there for
+documentation on what methods are provided.
 
 =head1 METHODS
 
 =over 4
 
 =item B<meta>
-
-=back
-
-=head1 PROVIDED METHODS
-
-=over 4
-
-=item B<count>
-
-Returns the number of elements in the list.
-
-=item B<empty>
-
-If the list is populated, returns true. Otherwise, returns false.
-
-=item B<exists>
-
-Returns true if the given key is present in the hash
-
-=item B<defined>
-
-Returns true if the value of a given key is defined
-
-=item B<get>
-
-Returns an element of the hash by its key.
-
-=item B<keys>
-
-Returns the list of keys in the hash.
-
-=item B<values>
-
-Returns the list of values in the hash.
-
-=item B<kv>
-
-Returns the key, value pairs in the hash as array references
-
-=item B<elements>
-
-Returns the key, value pairs in the hash as a flattened list
-
-=item B<delete>
-
-Removes the element with the given key
-
-=item B<clear>
-
-Unsets the hash entirely.
-
-=item B<set>
-
-Sets the element in the hash at the given key to the given value.
-
-=item B<accessor>
-
-If passed one argument, returns the value of the requested key. If passed two
-arguments, sets the value of the requested key.
 
 =back
 

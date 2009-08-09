@@ -38,7 +38,7 @@ Moose::Meta::Attribute::Native::Trait::Hash
   use Moose::AttributeHelpers;
 
   has 'options' => (
-      metaclass => 'Hash',
+      traits    => ['Hash'],
       is        => 'ro',
       isa       => 'HashRef[Str]',
       default   => sub { {} },
@@ -54,8 +54,69 @@ Moose::Meta::Attribute::Native::Trait::Hash
 =head1 DESCRIPTION
 
 This module provides a Hash attribute which provides a number of
-hash-like operations. See L<Moose::Meta::Attribute::Native::MethodProvider::Hash>
-for more details.
+hash-like operations. 
+
+=head1 PROVIDED METHODS
+
+These methods are implemented in
+L<Moose::Meta::Attribute::Native::MethodProvider::Hash>.
+
+=over 4
+
+=item B<count>
+
+Returns the number of elements in the list.
+
+=item B<empty>
+
+If the list is populated, returns true. Otherwise, returns false.
+
+=item B<exists>
+
+Returns true if the given key is present in the hash
+
+=item B<defined>
+
+Returns true if the value of a given key is defined
+
+=item B<get>
+
+Returns an element of the hash by its key.
+
+=item B<keys>
+
+Returns the list of keys in the hash.
+
+=item B<values>
+
+Returns the list of values in the hash.
+
+=item B<kv>
+
+Returns the key, value pairs in the hash as array references
+
+=item B<elements>
+
+Returns the key, value pairs in the hash as a flattened list
+
+=item B<delete>
+
+Removes the element with the given key
+
+=item B<clear>
+
+Unsets the hash entirely.
+
+=item B<set>
+
+Sets the element in the hash at the given key to the given value.
+
+=item B<accessor>
+
+If passed one argument, returns the value of the requested key. If passed two
+arguments, sets the value of the requested key.
+
+=back
 
 =head1 METHODS
 
