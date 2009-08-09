@@ -1,4 +1,3 @@
-
 package Moose::Attribute::Native;
 
 our $VERSION   = '0.87';
@@ -103,33 +102,101 @@ works normally for C<< handles >>.
 
 Common numerical operations.
 
+    has 'integer' => (
+        metaclass => 'Number',
+        is        => 'ro',
+        isa       => 'Int',
+        default   => 5,
+        handles  => {
+            set => 'set',
+            add => 'add',
+            sub => 'sub',
+            mul => 'mul',
+            div => 'div',
+            mod => 'mod',
+            abs => 'abs',
+        }
+    );
+
 =item L<String|Moose::Meta::Attribute::Native::Trait::String>
 
 Common methods for string operations.
+
+    has 'text' => (
+        metaclass => 'String',
+        is        => 'rw',
+        isa       => 'Str',
+        default   => q{},
+        handles  => {
+            add_text     => 'append',
+            replace_text => 'replace',
+        }
+    );
 
 =item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
 
 Methods for incrementing and decrementing a counter attribute.
 
+    has 'counter' => (
+        traits => ['Counter'],
+        is        => 'ro',
+        isa       => 'Num',
+        default   => 0,
+        handles   => {
+            inc_counter   => 'inc',
+            dec_counter   => 'dec',
+            reset_counter => 'reset',
+        }
+    );
+
 =item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
 
 Common methods for boolean values.
+
+    has 'is_lit' => (
+        traits => ['Bool'],
+        is        => 'rw',
+        isa       => 'Bool',
+        default   => 0,
+        handles   => {
+            illuminate  => 'set',
+            darken      => 'unset',
+            flip_switch => 'toggle',
+            is_dark     => 'not',
+        }
+    );
+
 
 =item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
 Common methods for hash references.
 
-=item L<ImmutableHash|Moose::Meta::Attribute::Native::Trait::ImmutableHash>
-
-Common methods for inspecting hash references.
+    has 'options' => (
+        traits    => ['Hash'],
+        is        => 'ro',
+        isa       => 'HashRef[Str]',
+        default   => sub { {} },
+        handles   => {
+            set_option    => 'set',
+            get_option    => 'get',
+            has_option    => 'exists',
+        }
+    );
 
 =item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
 Common methods for array references.
 
-=item L<List|Moose::Meta::Attribute::Native::Trait::List>
-
-Common list methods for array references.
+    has 'queue' => (
+       traits     => ['Array'],
+       is         => 'ro',
+       isa        => 'ArrayRef[Str]',
+       default    => sub { [] },
+       handles   => {
+           add_item  => 'push'
+           next_item => 'shift',
+       }
+    );
 
 =back
 
