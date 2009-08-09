@@ -91,20 +91,11 @@ Moose::Meta::Attribute::Native::Trait::Number
 This provides a simple numeric attribute, which supports most of the
 basic math operations.
 
-=head1 METHODS
-
-=over 4
-
-=item B<meta>
-
-=item B<method_constructors>
-
-=back
-
 =head1 PROVIDED METHODS
 
-It is important to note that all those methods do in place
-modification of the value stored in the attribute.
+It is important to note that all those methods do in place modification of the
+value stored in the attribute. These methods are implemented within this
+package.
 
 =over 4
 
@@ -135,6 +126,16 @@ Modulus the current value of the attribute to C<$value>.
 =item I<abs>
 
 Sets the current value of the attribute to its absolute value.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item B<meta>
+
+=item B<method_constructors>
 
 =back
 
