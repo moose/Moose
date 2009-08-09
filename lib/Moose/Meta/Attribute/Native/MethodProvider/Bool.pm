@@ -39,27 +39,14 @@ Moose::Meta::Attribute::Native::MethodProvider::Bool
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Bool>.
+L<Moose::Meta::Attribute::Trait::Native::Bool>. Please check there for
+documentation on what methods are provided.
 
 =head1 METHODS
 
 =over 4
 
 =item B<meta>
-
-=back
-
-=head1 PROVIDED METHODS
-
-=over 4
-
-=item B<set>
-
-=item B<unset>
-
-=item B<toggle>
-
-=item B<not>
 
 =back
 

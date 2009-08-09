@@ -2,13 +2,13 @@ package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
-our $VERSION   = '0.87';
+our $VERSION = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 with 'Moose::Meta::Attribute::Native::Trait';
 
-sub _default_is { 'rw' }
+sub _default_is  { 'rw' }
 sub _helper_type { 'Bool' }
 
 # NOTE: we don't use the method provider for this module since many of
@@ -38,7 +38,7 @@ Moose::Meta::Attribute::Native::Trait::Bool
   use Moose::AttributeHelpers;
 
   has 'is_lit' => (
-      metaclass => 'Bool',
+      traits => ['Bool'],
       is        => 'rw',
       isa       => 'Bool',
       default   => 0,
@@ -61,24 +61,12 @@ Moose::Meta::Attribute::Native::Trait::Bool
 This provides a simple boolean attribute, which supports most of the
 basic math operations.
 
-=head1 METHODS
-
-=over 4
-
-=item B<meta>
-
-=item B<method_constructors>
-
-=item B<has_method_provider>
-
-=item B<method_provider>
-
-=back
-
 =head1 PROVIDED METHODS
 
-It is important to note that all those methods do in place
-modification of the value stored in the attribute.
+These methods are implemented in
+L<Moose::Meta::Attribute::Native::MethodProvider::Bool>. It is important to
+note that all those methods do in place modification of the value stored in
+the attribute.
 
 =over 4
 
@@ -97,6 +85,20 @@ Toggle the value. If it's true, set to false, and vice versa.
 =item I<not>
 
 Equivalent of 'not C<$value>'.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item B<meta>
+
+=item B<method_constructors>
+
+=item B<has_method_provider>
+
+=item B<method_provider>
 
 =back
 
