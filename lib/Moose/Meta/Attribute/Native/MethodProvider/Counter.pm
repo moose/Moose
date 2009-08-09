@@ -45,27 +45,14 @@ Moose::Meta::Attribute::Native::MethodProvider::Counter
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Counter>.
+L<Moose::Meta::Attribute::Trait::Native::Counter>.  Please check there for
+documentation on what methods are provided.
 
 =head1 METHODS
 
 =over 4
 
 =item B<meta>
-
-=back
-
-=head1 PROVIDED METHODS
-
-=over 4
-
-=item B<set>
-
-=item B<inc>
-
-=item B<dec>
-
-=item B<reset>
 
 =back
 

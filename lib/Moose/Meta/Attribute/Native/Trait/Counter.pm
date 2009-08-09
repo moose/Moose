@@ -56,7 +56,7 @@ Moose::Meta::Attribute::Native::Trait::Counter
   use Moose::AttributeHelpers;
 
   has 'counter' => (
-      metaclass => 'Counter',
+      traits => ['Counter'],
       is        => 'ro',
       isa       => 'Num',
       default   => 0,
@@ -77,29 +77,19 @@ This module provides a simple counter attribute, which can be
 incremented and decremented.
 
 If your attribute definition does not include any of I<is>, I<isa>,
-I<default> or I<handles> but does use the C<Counter> metaclass,
+I<default> or I<handles> but does use the C<Counter> trait,
 then this module applies defaults as in the L</SYNOPSIS>
 above. This allows for a very basic counter definition:
 
-  has 'foo' => (metaclass => 'Counter');
+  has 'foo' => (traits => ['Counter']);
   $obj->inc_foo;
-
-=head1 METHODS
-
-=over 4
-
-=item B<meta>
-
-=item B<method_provider>
-
-=item B<has_method_provider>
-
-=back
 
 =head1 PROVIDED METHODS
 
-It is important to note that all those methods do in place
-modification of the value stored in the attribute.
+These methods are implemented in
+L<Moose::Meta::Attribute::Native::MethodProvider::Counter>. It is important to
+note that all those methods do in place modification of the value stored in
+the attribute.
 
 =over 4
 
@@ -120,6 +110,18 @@ cause the counter to be increased by specified amount.
 =item I<reset>
 
 Resets the value stored in this slot to it's default value.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item B<meta>
+
+=item B<method_provider>
+
+=item B<has_method_provider>
 
 =back
 
