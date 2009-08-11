@@ -16,7 +16,7 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version 0.85
+=head1 Version 0.89
 
 L<Moose::AttributeHelpers> has been moved into the Moose core from
 L<MooseX::AttributeHelpers>.  Major changes include:
@@ -43,6 +43,18 @@ CODEREF is not supported).
 =back
 
 See L<Moose::AttributeHelpers> for the new documentation.
+
+C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
+C<-traits> (and the C<metaclass> and C<traits> options to C<has>).
+
+Added two functions C<meta_class_alias> and C<meta_attribute_alias> to
+L<Moose::Util>, to simplify aliasing metaclasses and metatraits. This is
+a wrapper around the old
+
+  package Moose::Meta::Class::Custom::Trait::FooTrait;
+  sub register_implementation { 'My::Meta::Trait' }
+
+way of doing this.
 
 =head1 Version 0.84
 

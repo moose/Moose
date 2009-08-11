@@ -104,6 +104,16 @@ sub validate {
     }
 }
 
+sub assert_valid {
+    my ($self, $value) = @_;
+
+    my $error = $self->validate($value);
+    return 1 if ! defined $error;
+
+    require Moose;
+    Moose->throw_error($error);
+}
+
 sub get_message {
     my ($self, $value) = @_;
     if (my $msg = $self->message) {
@@ -384,6 +394,13 @@ This is similar to C<check>. However, if the type I<is valid> then the
 method returns an explicit C<undef>. If the type is not valid, we call
 C<< $self->get_message($value) >> internally to generate an error
 message.
+
+=item B<< $constraint->assert_valid($value) >>
+
+Like C<check> and C<validate>, this method checks whether C<$value> is
+valid under the constraint.  If it is, it will return true.  If it is not,
+an exception will be thrown with the results of
+C<< $self->get_message($value) >>.
 
 =item B<< $constraint->name >>
 

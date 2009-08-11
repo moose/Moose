@@ -19,6 +19,17 @@ next version
         unresolved method conflicts, not just the first method. Fixes #47210
         reported by Ovid. (Sartak)
 
+    * Moose::Meta::TypeConstraint
+      - Add assert_valid method to use a TypeConstraint for assertion (rjbs)
+
+    * Moose::Exporter
+      - Make "use Moose -metaclass => 'Foo'" do alias resolution, like -traits
+        does. (doy)
+
+    * Moose::Util
+      - Add functions meta_class_alias and meta_attribute_alias for creating
+        aliases for class and attribute metaclasses and metatraits. (doy)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect
