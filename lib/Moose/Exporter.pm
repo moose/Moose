@@ -464,7 +464,9 @@ sub _apply_meta_traits {
         . ref $meta );
 
     my @resolved_traits
-        = map { Moose::Util::resolve_metatrait_alias( $type => $_ ) }
+        = map {
+            ref $_ ? $_ : Moose::Util::resolve_metatrait_alias( $type => $_ )
+        }
         @$traits;
 
     return unless @resolved_traits;

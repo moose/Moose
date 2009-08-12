@@ -673,7 +673,7 @@ These all default to the appropriate Moose class.
 
 This overrides the parent's method in order to accept a C<roles>
 option. This should be an array reference containing one more roles
-that the class does.
+that the class does, each optionally followed by a hashref of options.
 
   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
 

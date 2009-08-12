@@ -17,6 +17,8 @@ next version
     * Moose::Exporter
       - Make "use Moose -metaclass => 'Foo'" do alias resolution, like -traits
         does. (doy)
+      - Allow specifying role options (alias, excludes, MXRP stuff) in the
+        arrayref passed to "use Moose -traits" (doy)
 
     * Moose::Util
       - Add functions meta_class_alias and meta_attribute_alias for creating

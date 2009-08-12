@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 {
     package My::Attribute::Trait;
@@ -39,6 +39,7 @@ use Test::More tests => 4;
                 alias => {
                     reversed_name => 'reversed',
                 },
+                excludes => 'reversed_name',
             },
         ],
         is => 'bare',
@@ -52,4 +53,5 @@ ok(!$attr->can('reversed'), "the method was not installed under the other class'
 my $other_attr = My::Other::Class->meta->get_attribute('foo');
 is($other_attr->reversed, 'oof', 'the aliased method is in the attribute');
 ok(!$other_attr->can('enam'), "the method was not installed under the other class' alias");
+ok(!$other_attr->can('reversed_name'), "the method was not installed under the original name when that was excluded");
 
