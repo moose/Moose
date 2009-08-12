@@ -193,6 +193,9 @@ Moose::Role also offers two role-specific keyword exports:
 Roles can require that certain methods are implemented by any class which
 C<does> the role.
 
+Note that attribute accessors also count as methods for the purposes
+of satisfying the requirements of a role.
+
 =item B<excludes (@role_names)>
 
 Roles can C<exclude> other roles, in effect saying "I can never be combined

@@ -27,6 +27,9 @@ own. You could have a role that consisted only of a list of required
 methods, in which case the role would be very much like a Java
 interface.
 
+Note that attribute accessors also count as methods for the
+purposes of satisfying the requirements of a role.
+
 =head1 A SIMPLE ROLE
 
 Creating a role looks a lot like creating a Moose class:
