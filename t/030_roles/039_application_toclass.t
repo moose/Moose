@@ -18,12 +18,12 @@ do {
     package Consumer::Excludes;
     use Moose;
 
-    with 'Role::Foo' => { excludes => 'foo' };
+    with 'Role::Foo' => { -excludes => 'foo' };
 
     package Consumer::Aliases;
     use Moose;
 
-    with 'Role::Foo' => { alias => { 'foo' => 'role_foo' } };
+    with 'Role::Foo' => { -alias => { 'foo' => 'role_foo' } };
 
     package Consumer::Overrides;
     use Moose;

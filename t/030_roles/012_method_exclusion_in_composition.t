@@ -19,7 +19,7 @@ use Test::Exception;
     package My::Class;
     use Moose;
 
-    with 'My::Role' => { excludes => 'bar' };
+    with 'My::Role' => { -excludes => 'bar' };
 }
 
 ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz);
@@ -29,7 +29,7 @@ ok(!My::Class->meta->has_method('bar'), '... but we excluded bar');
     package My::OtherRole;
     use Moose::Role;
 
-    with 'My::Role' => { excludes => 'foo' };
+    with 'My::Role' => { -excludes => 'foo' };
 
     sub foo { 'My::OtherRole::foo' }
     sub bar { 'My::OtherRole::bar' }
@@ -60,8 +60,8 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
     use Moose;
 
     ::lives_ok {
-        with 'Foo::Role' => { excludes => 'foo' },
-             'Bar::Role' => { excludes => 'foo' },
+        with 'Foo::Role' => { -excludes => 'foo' },
+             'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
     } '... composed our roles correctly';
 
@@ -70,7 +70,7 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
 
     ::throws_ok {
         with 'Foo::Role',
-             'Bar::Role' => { excludes => 'foo' },
+             'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
     } qr/Due to a method name conflict in roles 'Baz::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'/,
       '... composed our roles correctly';
@@ -88,8 +88,8 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
     use Moose::Role;
 
     ::lives_ok {
-        with 'Foo::Role' => { excludes => 'foo' },
-             'Bar::Role' => { excludes => 'foo' },
+        with 'Foo::Role' => { -excludes => 'foo' },
+             'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
     } '... composed our roles correctly';
 }
@@ -103,7 +103,7 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
 
     ::lives_ok {
         with 'Foo::Role',
-             'Bar::Role' => { excludes => 'foo' },
+             'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
     } '... composed our roles correctly';
 }

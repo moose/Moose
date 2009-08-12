@@ -9,13 +9,13 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
-    init_arg => 'excludes',
+    init_arg => '-excludes',
     reader   => 'get_method_exclusions',
     default  => sub { [] }
 ));
 
 __PACKAGE__->meta->add_attribute('method_aliases' => (
-    init_arg => 'alias',
+    init_arg => '-alias',
     reader   => 'get_method_aliases',
     default  => sub { {} }
 ));
@@ -23,11 +23,18 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
 sub new {
     my ($class, %params) = @_;
 
-    if (exists $params{excludes}) {
+    if (exists $params{excludes} && !exists $params{'-excludes'}) {
+        $params{'-excludes'} = delete $params{excludes};
+    }
+    if (exists $params{alias} && !exists $params{'-alias'}) {
+        $params{'-alias'} = delete $params{alias};
+    }
+
+    if (exists $params{'-excludes'}) {
         # I wish we had coercion here :)
-        $params{excludes} = (ref $params{excludes} eq 'ARRAY'
-                                ? $params{excludes}
-                                : [ $params{excludes} ]);
+        $params{'-excludes'} = (ref $params{'-excludes'} eq 'ARRAY'
+                                ? $params{'-excludes'}
+                                : [ $params{'-excludes'} ]);
     }
 
     $class->_new(\%params);

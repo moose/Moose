@@ -35,6 +35,11 @@ for, noteworthy changes.
         - However, we will probably deprecate $obj->new, so please don't start
           using it for new code!
 
+    * Moose::Meta::Role::Application
+    * Moose::Meta::Role::Application::RoleSummation
+      - Rename alias and excludes to -alias and -excludes (but keep the old
+        names for now, for backcompat) (doy)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect

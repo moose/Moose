@@ -20,7 +20,7 @@ use Test::More tests => 5;
     has foo => (
         traits => [
             'My::Attribute::Trait' => {
-                alias => {
+                -alias => {
                     reversed_name => 'eman',
                 },
             },
@@ -36,10 +36,10 @@ use Test::More tests => 5;
     has foo => (
         traits => [
             'My::Attribute::Trait' => {
-                alias => {
+                -alias => {
                     reversed_name => 'reversed',
                 },
-                excludes => 'reversed_name',
+                -excludes => 'reversed_name',
             },
         ],
         is => 'bare',

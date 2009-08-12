@@ -22,11 +22,13 @@ __PACKAGE__->meta->add_attribute('role_params' => (
 sub get_exclusions_for_role {
     my ($self, $role) = @_;
     $role = $role->name if blessed $role;
-    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{excludes}) {
-        if (ref $self->role_params->{$role}->{excludes} eq 'ARRAY') {
-            return $self->role_params->{$role}->{excludes};
+    my $excludes_key = exists $self->role_params->{$role}->{'-excludes'} ?
+                           '-excludes' : 'excludes';
+    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{$excludes_key}) {
+        if (ref $self->role_params->{$role}->{$excludes_key} eq 'ARRAY') {
+            return $self->role_params->{$role}->{$excludes_key};
         }
-        return [ $self->role_params->{$role}->{excludes} ];
+        return [ $self->role_params->{$role}->{$excludes_key} ];
     }
     return [];
 }
@@ -34,8 +36,10 @@ sub get_exclusions_for_role {
 sub get_method_aliases_for_role {
     my ($self, $role) = @_;
     $role = $role->name if blessed $role;
-    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{alias}) {
-        return $self->role_params->{$role}->{alias};
+    my $alias_key = exists $self->role_params->{$role}->{'-alias'} ?
+                        '-alias' : 'alias';
+    if ($self->role_params->{$role} && defined $self->role_params->{$role}->{$alias_key}) {
+        return $self->role_params->{$role}->{$alias_key};
     }
     return {};
 }

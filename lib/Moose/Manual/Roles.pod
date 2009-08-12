@@ -227,19 +227,19 @@ from both its roles, we can alias the methods:
 
   use Moose;
 
-  with 'Breakable'   => { alias => { break => 'break_bone' } },
-       'Breakdancer' => { alias => { break => 'break_dance' } };
+  with 'Breakable'   => { -alias => { break => 'break_bone' } },
+       'Breakdancer' => { -alias => { break => 'break_dance' } };
 
 However, aliasing a method simply makes a I<copy> of the method with
 the new name. We also need to exclude the original name:
 
   with 'Breakable' => {
-      alias    => { break => 'break_bone' },
-      excludes => 'break',
+      -alias    => { break => 'break_bone' },
+      -excludes => 'break',
       },
       'Breakdancer' => {
-      alias    => { break => 'break_dance' },
-      excludes => 'break',
+      -alias    => { break => 'break_dance' },
+      -excludes => 'break',
       };
 
 The excludes parameter prevents the C<break> method from being composed
