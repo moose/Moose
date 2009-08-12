@@ -27,6 +27,10 @@ next version
       - A trigger now receives the old value as a second argument, if
         the attribute had one.
 
+    * Moose::Meta::Method::Constructor
+      - Fix a bug with $obj->new when $obj has stringify overloading.
+        Reported by Andrew Suffield [rt.cpan.org #47882] (Sartak)
+
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect
