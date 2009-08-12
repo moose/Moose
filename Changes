@@ -30,6 +30,8 @@ next version
     * Moose::Meta::Method::Constructor
       - Fix a bug with $obj->new when $obj has stringify overloading.
         Reported by Andrew Suffield [rt.cpan.org #47882] (Sartak)
+        - However, we will probably deprecate $obj->new, so please don't
+          start using it for new code!
 
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
