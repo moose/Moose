@@ -25,7 +25,7 @@ next version
     * Moose::Meta::Attribute
     * Moose::Meta::Method::Accessor
       - A trigger now receives the old value as a second argument, if
-        the attribute had one.
+        the attribute had one. (Dave Rolsky)
 
     * Moose::Meta::Method::Constructor
       - Fix a bug with $obj->new when $obj has stringify overloading.
