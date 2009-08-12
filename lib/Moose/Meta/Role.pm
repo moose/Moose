@@ -165,7 +165,7 @@ $META->add_attribute(
 sub add_attribute {
     my $self = shift;
     my $name = shift;
-    unless ( defined $name && $name ) {
+    unless ( defined $name ) {
         require Moose;
         Moose->throw_error("You must provide a name for the attribute");
     }
