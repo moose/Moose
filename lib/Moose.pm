@@ -774,8 +774,8 @@ B<are not> overridden, or removed.
 
 These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
-found in the L<Class::MOP::Class documentation|Class::MOP::Class/"Method
-Modifiers"> for now.
+found in L<Moose::Manual::MethodModifiers> and the
+L<Class::MOP::Class documentation|Class::MOP::Class/"Method Modifiers">.
 
 =item B<super>
 
