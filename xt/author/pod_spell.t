@@ -94,6 +94,7 @@ metadata
 MetaObject
 metaprogrammer
 metarole
+metatraits
 mixins
 MooseX
 Num
