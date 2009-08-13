@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-next version
+0.89
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)
 
@@ -26,14 +26,14 @@ next version
 
     * Moose::Meta::Attribute
     * Moose::Meta::Method::Accessor
-      - A trigger now receives the old value as a second argument, if
-        the attribute had one. (Dave Rolsky)
+      - A trigger now receives the old value as a second argument, if the
+        attribute had one. (Dave Rolsky)
 
     * Moose::Meta::Method::Constructor
       - Fix a bug with $obj->new when $obj has stringify overloading.
         Reported by Andrew Suffield [rt.cpan.org #47882] (Sartak)
-        - However, we will probably deprecate $obj->new, so please don't
-          start using it for new code!
+        - However, we will probably deprecate $obj->new, so please don't start
+          using it for new code!
 
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing
