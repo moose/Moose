@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.89
+0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)
 
