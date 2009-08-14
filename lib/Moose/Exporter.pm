@@ -373,6 +373,9 @@ sub _make_import_sub {
             'Class' => $metaclass
         ) if defined $metaclass && length $metaclass;
 
+        my $superclasses;
+        ( $superclasses, @_ ) = _strip_extends(@_);
+
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
         # else (like Squirrel).
@@ -404,6 +407,16 @@ sub _make_import_sub {
             local $CALLER = $CALLER;
             $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
             $did_init_meta = 1;
+        }
+
+        if(@{$superclasses}){
+            if($did_init_meta){
+                $CALLER->meta->superclasses(@{$superclasses});
+            }
+            else{
+                require Moose;
+                Moose->throw_error("Cannot provide -extends when $class does not have an init_meta() method");
+            }
         }
 
         if ( $did_init_meta && @{$traits} ) {
@@ -449,6 +462,20 @@ sub _strip_metaclass {
     splice @_, $idx, 2;
 
     return ( $metaclass, @_ );
+}
+
+sub _strip_extends {
+    my $idx = first_index { $_ eq '-extends' } @_;
+
+    return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+
+    my $superclasses = $_[ $idx + 1 ];
+
+    splice @_, $idx, 2;
+
+    $superclasses = [ $superclasses ] unless ref $superclasses;
+
+    return ( $superclasses, @_ );
 }
 
 sub _apply_meta_traits {
