@@ -433,7 +433,7 @@ sub _make_import_sub {
         }
 
         if ( @superclasses ) {
-            if ( $did_init_meta ) {
+            if ( $did_init_meta && !$CALLER->meta->isa('Moose::Meta::Role') ) {
                 # superclasses() can load classes using Moose or Moose::Role,
                 # which uses Moose::Exporter, which in turn sets $CALLER, so we need
                 # to protect against that.
@@ -443,7 +443,9 @@ sub _make_import_sub {
             else {
                 require Moose;
                 Moose->throw_error(
-                    "Cannot provide -extends when $class does not have an init_meta() method"
+                    $did_init_meta
+                        ? "Roles do not support '-extends'"
+                        : "Cannot provide -extends when $class does not have an init_meta() method"
                 );
             }
         }
