@@ -8,7 +8,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Class::MOP;
-use List::MoreUtils qw( first_index uniq );
+use List::MoreUtils qw( uniq );
 use Moose::Util::MetaRole;
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
@@ -347,6 +347,25 @@ sub _late_curry_wrapper {
     return $wrapper;
 }
 
+sub _strip_command {
+    my($args, %commands) = @_;
+
+    for (my $i = 0; $i < @{$args}; $i++) {
+        if ( my $slot_ref = $commands{$args->[$i]} ) {
+            my $arg = $args->[$i+1];
+            splice @{$args}, $i, 2;
+
+            if ( ref($slot_ref) eq 'ARRAY' ) {
+                @{$slot_ref} = ref($arg) eq 'ARRAY' ? @{$arg} : $arg;
+            }
+            else {
+                ${$slot_ref} = $arg;
+            }
+        }
+    }
+    return;
+}
+
 sub _make_import_sub {
     shift;
     my $exporting_package = shift;
@@ -364,22 +383,26 @@ sub _make_import_sub {
         # Also, this makes sure we preserve backwards compat for
         # _get_caller, so it always sees the arguments in the
         # expected order.
-        my $traits;
-        ( $traits, @_ ) = _strip_traits(@_);
 
         my $metaclass;
-        ( $metaclass, @_ ) = _strip_metaclass(@_);
+        my @traits;
+        my @superclasses;
+
+        _strip_command(\@_,
+            -metaclass => \$metaclass,
+            -traits    => \@traits,
+            -extends   => \@superclasses,
+        );
+
         $metaclass = Moose::Util::resolve_metaclass_alias(
             'Class' => $metaclass
         ) if defined $metaclass && length $metaclass;
-
-        my $superclasses;
-        ( $superclasses, @_ ) = _strip_extends(@_);
 
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
         # else (like Squirrel).
         my $class = $exporting_package;
+
 
         $CALLER = _get_caller(@_);
 
@@ -401,81 +424,48 @@ sub _make_import_sub {
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
-            # init_meta can apply a role, which when loaded uses
-            # Moose::Exporter, which in turn sets $CALLER, so we need
+            # init_meta() can load classes using Moose or Moose::Role,
+            # which uses Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
             $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
             $did_init_meta = 1;
         }
 
-        if(@{$superclasses}){
-            if($did_init_meta){
-                $CALLER->meta->superclasses(@{$superclasses});
+        if ( @superclasses ) {
+            if ( $did_init_meta ) {
+                # superclasses() can load classes using Moose or Moose::Role,
+                # which uses Moose::Exporter, which in turn sets $CALLER, so we need
+                # to protect against that.
+                local $CALLER = $CALLER;
+                $CALLER->meta->superclasses(@superclasses);
             }
-            else{
+            else {
                 require Moose;
-                Moose->throw_error("Cannot provide -extends when $class does not have an init_meta() method");
+                Moose->throw_error(
+                    "Cannot provide -extends when $class does not have an init_meta() method"
+                );
             }
         }
 
-        if ( $did_init_meta && @{$traits} ) {
-            # The traits will use Moose::Role, which in turn uses
-            # Moose::Exporter, which in turn sets $CALLER, so we need
-            # to protect against that.
-            local $CALLER = $CALLER;
-            _apply_meta_traits( $CALLER, $traits );
-        }
-        elsif ( @{$traits} ) {
-            require Moose;
-            Moose->throw_error(
-                "Cannot provide traits when $class does not have an init_meta() method"
-            );
+        if ( @traits ) {
+            if ( $did_init_meta ) {
+                # _apply_meta_traits() can load classes using Moose or Moose::Role,
+                # which uses Moose::Exporter, which in turn sets $CALLER, so we need
+                # to protect against that.
+                local $CALLER = $CALLER;
+                _apply_meta_traits( $CALLER, \@traits );
+            }
+            else {
+                require Moose;
+                Moose->throw_error(
+                    "Cannot provide traits when $class does not have an init_meta() method"
+                );
+            }
         }
 
         goto $exporter;
     };
-}
-
-
-sub _strip_traits {
-    my $idx = first_index { $_ eq '-traits' } @_;
-
-    return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $traits = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    $traits = [ $traits ] unless ref $traits;
-
-    return ( $traits, @_ );
-}
-
-sub _strip_metaclass {
-    my $idx = first_index { $_ eq '-metaclass' } @_;
-
-    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $metaclass = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    return ( $metaclass, @_ );
-}
-
-sub _strip_extends {
-    my $idx = first_index { $_ eq '-extends' } @_;
-
-    return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $superclasses = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    $superclasses = [ $superclasses ] unless ref $superclasses;
-
-    return ( $superclasses, @_ );
 }
 
 sub _apply_meta_traits {
