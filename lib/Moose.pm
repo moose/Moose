@@ -294,9 +294,7 @@ Moose - A postmodern object system for Perl 5
   }
 
   package Point3D;
-  use Moose;
-
-  extends 'Point';
+  use Moose -extends => 'Point';
 
   has 'z' => (is => 'rw', isa => 'Int');
 
@@ -381,6 +379,8 @@ This approach is recommended instead of C<use base>, because C<use base>
 actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
 replace it. This is important to ensure that classes which do not have
 superclasses still properly inherit from L<Moose::Object>.
+
+You can also do this at compile-time with C<use Moose -extends => [...]>.
 
 =item B<with (@roles)>
 
