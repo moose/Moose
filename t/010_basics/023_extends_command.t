@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 use Test::Exception;
 
 ok(T3->isa('T1'), 'extablish is-a relationship at compile-time');
@@ -23,6 +23,13 @@ ok(T3->isa('T1'), 'extablish is-a relationship at compile-time');
     use Moose -extends => 'T2';
 }
 
+{
+    package T4;
+    use Moose
+        -metaclass => 'Moose::Meta::Class',
+        -extends   => 'T3';
+}
+
 lives_and {
     isa_ok(T1->new, 'T1');
 };
@@ -36,4 +43,8 @@ lives_and {
     isa_ok(T3->new, 'T1');
     isa_ok(T3->new, 'T2');
     isa_ok(T3->new, 'T3');
+};
+
+lives_and {
+    isa_ok(T4->new, 'T3');
 };

@@ -361,6 +361,7 @@ sub _strip_command {
             else {
                 ${$slot_ref} = $arg;
             }
+            $i--;
         }
     }
     return;
