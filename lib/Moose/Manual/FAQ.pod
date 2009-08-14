@@ -375,11 +375,11 @@ will call them Roles.
 
 Currently when you subclass a module, this is done at runtime with the
 C<extends> keyword but attributes are checked at compile time by
-Perl. To make attributes work, you must place C<extends> in a C<BEGIN>
-block so that the attribute handlers will be available at compile time
+Perl. To make attributes work, you must C<use Moose -extends>
+so that the attribute handlers will be available at compile time
 like this:
 
-  BEGIN { extends qw/Foo/ }
+  use Moose -extends => qw/Foo/;
 
 Note that we're talking about Perl's subroutine attributes here, not
 Moose attributes:
