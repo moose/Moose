@@ -35,7 +35,6 @@ Moose::Meta::Attribute::Native::Trait::Hash
 
   package Stuff;
   use Moose;
-  use Moose::AttributeHelpers;
 
   has 'options' => (
       traits    => ['Hash'],

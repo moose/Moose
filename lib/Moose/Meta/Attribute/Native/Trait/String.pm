@@ -50,7 +50,6 @@ Moose::Meta::Attribute::Native::Trait::String
 
   package MyHomePage;
   use Moose;
-  use Moose::AttributeHelpers;
 
   has 'text' => (
       metaclass => 'String',

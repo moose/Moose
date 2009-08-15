@@ -53,7 +53,6 @@ Moose::Meta::Attribute::Native::Trait::Counter
 
   package MyHomePage;
   use Moose;
-  use Moose::AttributeHelpers;
 
   has 'counter' => (
       traits => ['Counter'],

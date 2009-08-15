@@ -64,7 +64,6 @@ Moose::Meta::Attribute::Native::Trait::Number
 
   package Real;
   use Moose;
-  use Moose::AttributeHelpers;
 
   has 'integer' => (
       metaclass => 'Number',

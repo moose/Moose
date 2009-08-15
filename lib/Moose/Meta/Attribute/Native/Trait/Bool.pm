@@ -35,7 +35,6 @@ Moose::Meta::Attribute::Native::Trait::Bool
 
   package Room;
   use Moose;
-  use Moose::AttributeHelpers;
 
   has 'is_lit' => (
       traits => ['Bool'],
