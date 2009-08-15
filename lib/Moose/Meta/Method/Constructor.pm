@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-our $VERSION   = '0.88';
+our $VERSION   = '0.89';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -60,7 +60,8 @@ sub _initialize_body {
     # requires some adaption on the part of
     # the author, after all, nothing is free)
     my $source = 'sub {';
-    $source .= "\n" . 'my $class = shift;';
+    $source .= "\n" . 'my $_instance = shift;';
+    $source .= "\n" . 'my $class = Scalar::Util::blessed($_instance) || $_instance;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
     $source .= "\n    if \$class ne '" . $self->associated_metaclass->name

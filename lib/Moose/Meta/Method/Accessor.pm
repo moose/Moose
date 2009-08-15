@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.88';
+our $VERSION   = '0.89';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -34,7 +34,7 @@ sub _eval_code {
                                    : undef),
     };
 
-    #warn "code for $attr_name =>\n" . $source . "\n";
+    #warn "code for " . $attr->name . " =>\n" . $source . "\n";
     my ( $code, $e ) = $self->_compile_code( environment => $environment, code => $source );
 
     $self->throw_error(
@@ -59,8 +59,9 @@ sub _generate_accessor_method_inline {
         . $self->_inline_check_required . "\n"
         . $self->_inline_check_coercion($value_name) . "\n"
         . $self->_inline_check_constraint($value_name) . "\n"
+        . $self->_inline_get_old_value_for_trigger($inv, $value_name) . "\n"
         . $self->_inline_store($inv, $value_name) . "\n"
-        . $self->_inline_trigger($inv, $value_name) . "\n"
+        . $self->_inline_trigger($inv, $value_name, '@old') . "\n"
     . ' }' . "\n"
     . $self->_inline_check_lazy($inv) . "\n"
     . $self->_inline_post_body(@_) . "\n"
@@ -82,9 +83,10 @@ sub _generate_writer_method_inline {
     . $self->_inline_check_required
     . $self->_inline_check_coercion($value_name)
     . $self->_inline_check_constraint($value_name)
+    . $self->_inline_get_old_value_for_trigger($inv, $value_name) . "\n"
     . $self->_inline_store($inv, $value_name)
     . $self->_inline_post_body(@_)
-    . $self->_inline_trigger($inv, $value_name)
+    . $self->_inline_trigger($inv, $value_name, '@old')
     . ' }');
 }
 
@@ -226,11 +228,26 @@ sub _inline_store {
     return $code;
 }
 
-sub _inline_trigger {
-    my ($self, $instance, $value) = @_;
+sub _inline_get_old_value_for_trigger {
+    my ( $self, $instance ) = @_;
+
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s);', $instance, $value);
+
+    my $mi = $attr->associated_class->get_meta_instance;
+    my $pred = $mi->inline_is_slot_initialized($instance, $attr->name);
+
+    return
+          'my @old = '
+        . $pred . q{ ? }
+        . $self->_inline_get($instance) . q{ : ()} . ";\n";
+}
+
+sub _inline_trigger {
+    my ($self, $instance, $value, $old_value) = @_;
+    my $attr = $self->associated_attribute;
+    return '' unless $attr->has_trigger;
+    return sprintf('$attr->trigger->(%s, %s, %s);', $instance, $value, $old_value);
 }
 
 sub _inline_get {

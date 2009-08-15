@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.88';
+our $VERSION   = '0.89';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -13,7 +13,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.89;
+use Class::MOP 0.92;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -459,8 +459,10 @@ This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
 
 The I<trigger> option is a CODE reference which will be called after
 the value of the attribute is set. The CODE ref will be passed the
-instance itself and the updated value. You B<can> have a trigger on
-a read-only attribute.
+instance itself and the updated value. If the attribute already had a
+value, this will be passed as the third value to the trigger.
+
+You B<can> have a trigger on a read-only attribute.
 
 B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will
@@ -786,8 +788,8 @@ B<are not> overridden, or removed.
 
 These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
-found in the L<Class::MOP::Class documentation|Class::MOP::Class/"Method
-Modifiers"> for now.
+found in L<Moose::Manual::MethodModifiers> and the
+L<Class::MOP::Class documentation|Class::MOP::Class/"Method Modifiers">.
 
 =item B<super>
 

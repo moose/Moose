@@ -6,10 +6,12 @@ next version
       - Added the currying syntax for delegation from AttributeHelpers
         to the existing delegation API. (hdp)
 
-    * Moose::AttributeHelpers
-      - Moved in from MooseX with API tweaks. See Moose::Manual::Delta for
-        details. (hdp, jhannah, rbuels)
+    * Moose::Meta::Attribute::Native
+      - Moved in from MooseX::AttributeHelpers with API tweaks. See
+        Moose::Manual::Delta for details. (hdp, jhannah, rbuels, Sartak,
+        perigrin, doy)
 
+0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)
 
@@ -25,10 +27,23 @@ next version
     * Moose::Exporter
       - Make "use Moose -metaclass => 'Foo'" do alias resolution, like -traits
         does. (doy)
+      - Allow specifying role options (alias, excludes, MXRP stuff) in the
+        arrayref passed to "use Moose -traits" (doy)
 
     * Moose::Util
       - Add functions meta_class_alias and meta_attribute_alias for creating
         aliases for class and attribute metaclasses and metatraits. (doy)
+
+    * Moose::Meta::Attribute
+    * Moose::Meta::Method::Accessor
+      - A trigger now receives the old value as a second argument, if the
+        attribute had one. (Dave Rolsky)
+
+    * Moose::Meta::Method::Constructor
+      - Fix a bug with $obj->new when $obj has stringify overloading.
+        Reported by Andrew Suffield [rt.cpan.org #47882] (Sartak)
+        - However, we will probably deprecate $obj->new, so please don't start
+          using it for new code!
 
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing

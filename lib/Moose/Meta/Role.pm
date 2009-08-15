@@ -10,7 +10,7 @@ use Carp         'confess';
 use Sub::Name    'subname';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION   = '0.88';
+our $VERSION   = '0.89';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -165,7 +165,7 @@ $META->add_attribute(
 sub add_attribute {
     my $self = shift;
     my $name = shift;
-    unless ( defined $name && $name ) {
+    unless ( defined $name ) {
         require Moose;
         Moose->throw_error("You must provide a name for the attribute");
     }

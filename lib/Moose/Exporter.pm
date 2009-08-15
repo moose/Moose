@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.88';
+our $VERSION   = '0.89';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -464,7 +464,9 @@ sub _apply_meta_traits {
         . ref $meta );
 
     my @resolved_traits
-        = map { Moose::Util::resolve_metatrait_alias( $type => $_ ) }
+        = map {
+            ref $_ ? $_ : Moose::Util::resolve_metatrait_alias( $type => $_ )
+        }
         @$traits;
 
     return unless @resolved_traits;
