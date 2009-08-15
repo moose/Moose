@@ -1,4 +1,4 @@
-package Moose::Attribute::Native;
+package Moose::Meta::Attribute::Native;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
@@ -34,7 +34,7 @@ __END__
 
 =head1 NAME
 
-Moose::Attribute::Native - Extend your attribute interfaces
+Moose::Meta::Attribute::Native - Extend your attribute interfaces
 
 =head1 SYNOPSIS
 
