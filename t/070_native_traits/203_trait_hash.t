@@ -19,7 +19,7 @@ use Test::Moose 'does_ok';
         handles => {
             'set_option'       => 'set',
             'get_option'       => 'get',
-            'has_options'      => 'empty',
+            'has_no_options'   => 'empty',
             'num_options'      => 'count',
             'clear_options'    => 'clear',
             'delete_option'    => 'delete',
@@ -39,7 +39,7 @@ isa_ok( $stuff, 'Stuff' );
 can_ok( $stuff, $_ ) for qw[
     set_option
     get_option
-    has_options
+    has_no_options
     num_options
     delete_option
     clear_options
@@ -49,7 +49,7 @@ can_ok( $stuff, $_ ) for qw[
     option_accessor
 ];
 
-ok( !$stuff->has_options, '... we have no options' );
+ok( $stuff->has_no_options, '... we have no options' );
 is( $stuff->num_options, 0, '... we have no options' );
 
 is_deeply( $stuff->options, {}, '... no options yet' );
@@ -62,7 +62,7 @@ lives_ok {
 
 ok( $stuff->is_defined('foo'), '... foo is defined' );
 
-ok( $stuff->has_options, '... we have options' );
+ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 1, '... we have 1 option(s)' );
 ok( $stuff->has_option('foo'), '... we have a foo option' );
 is_deeply( $stuff->options, { foo => 'bar' }, '... got options now' );
@@ -148,7 +148,7 @@ is_deeply(
     {
         'set_option'       => 'set',
         'get_option'       => 'get',
-        'has_options'      => 'empty',
+        'has_no_options'   => 'empty',
         'num_options'      => 'count',
         'clear_options'    => 'clear',
         'delete_option'    => 'delete',

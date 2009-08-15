@@ -42,11 +42,11 @@ Moose::Meta::Attribute::Native::Trait::Hash
       isa       => 'HashRef[Str]',
       default   => sub { {} },
       handles   => {
-          set_option    => 'set',
-          get_option    => 'get',
-          has_options   => 'empty',
-          num_options   => 'count',
-          delete_option => 'delete',
+          set_option     => 'set',
+          get_option     => 'get',
+          has_no_options => 'empty',
+          num_options    => 'count',
+          delete_option  => 'delete',
       }
   );
 
@@ -64,19 +64,19 @@ L<Moose::Meta::Attribute::Native::MethodProvider::Hash>.
 
 =item B<count>
 
-Returns the number of elements in the list.
+Returns the number of elements in the hash.
 
 =item B<empty>
 
-If the list is populated, returns true. Otherwise, returns false.
+If the hash is populated, returns false. Otherwise, returns true.
 
 =item B<exists>
 
-Returns true if the given key is present in the hash
+Returns true if the given key is present in the hash.
 
 =item B<defined>
 
-Returns true if the value of a given key is defined
+Returns true if the value of a given key is defined.
 
 =item B<get>
 
@@ -92,15 +92,15 @@ Returns the list of values in the hash.
 
 =item B<kv>
 
-Returns the key, value pairs in the hash as array references
+Returns the key, value pairs in the hash as array references.
 
 =item B<elements>
 
-Returns the key, value pairs in the hash as a flattened list
+Returns the key, value pairs in the hash as a flattened list..
 
 =item B<delete>
 
-Removes the element with the given key
+Removes the element with the given key.
 
 =item B<clear>
 

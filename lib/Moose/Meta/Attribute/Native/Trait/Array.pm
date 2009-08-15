@@ -51,7 +51,7 @@ Moose::Meta::Attribute::Native::Trait::Array
            get_option        => 'get',
            join_options      => 'join',
            count_options     => 'count',
-           do_i_have_options => 'empty',
+           has_no_options    => 'empty',
            sorted_options    => 'sort',
        }
     );
@@ -83,9 +83,9 @@ Returns the number of elements in the array.
 
 =item B<empty>
 
-If the array is populated, returns true. Otherwise, returns false.
+If the array is populated, returns false. Otherwise, returns true.
 
-   $stuff->do_i_have_options ? print "Good boy.\n" : die "No options!\n" ;
+   $stuff->has_no_options ? die "No options!\n" : print "Good boy.\n";
 
 =item B<find>
 

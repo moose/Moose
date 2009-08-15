@@ -18,7 +18,7 @@ send us a patch.
 
 =head1 Version 0.89
 
-L<Moose::AttributeHelpers> has been moved into the Moose core from
+L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
 L<MooseX::AttributeHelpers>.  Major changes include:
 
 =over
@@ -40,9 +40,15 @@ generalized to apply to all cases of C<< handles => HASHREF >>, though
 not every piece of functionality has been ported (currying with a
 CODEREF is not supported).
 
+=item C<empty> now means empty, not non-empty
+
+Previously, the C<empty> method provided by Arrays and Hashes returned true if
+the attribute was B<not> empty (no elements).  Now it returns true if the
+attribute B<is> empty.
+
 =back
 
-See L<Moose::AttributeHelpers> for the new documentation.
+See L<Moose::Meta::Attribute::Native> for the new documentation.
 
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
 C<-traits> (and the C<metaclass> and C<traits> options to C<has>).

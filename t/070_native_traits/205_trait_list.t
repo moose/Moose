@@ -22,7 +22,7 @@ my $up;
         default  => sub { [] },
         handles  => {
             'num_options'      => 'count',
-            'has_options'      => 'empty',
+            'has_no_options'   => 'empty',
             'map_options',     => 'map',
             'filter_options'   => 'grep',
             'find_option'      => 'find',
@@ -47,7 +47,7 @@ isa_ok( $stuff, 'Stuff' );
 can_ok( $stuff, $_ ) for qw[
     _options
     num_options
-    has_options
+    has_no_options
     map_options
     filter_options
     find_option
@@ -59,7 +59,7 @@ can_ok( $stuff, $_ ) for qw[
 
 is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
 
-ok( $stuff->has_options, '... we have options' );
+ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 10, '... got 2 options' );
 cmp_ok( $stuff->get_option_at(0), '==', 1,  '... get option 0' );
 cmp_ok( $stuff->get_first_option, '==', 1,  '... get first' );
@@ -117,7 +117,7 @@ is_deeply(
     $options->handles,
     {
         'num_options'      => 'count',
-        'has_options'      => 'empty',
+        'has_no_options'   => 'empty',
         'map_options',     => 'map',
         'filter_options'   => 'grep',
         'find_option'      => 'find',

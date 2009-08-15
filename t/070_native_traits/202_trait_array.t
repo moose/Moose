@@ -27,7 +27,7 @@ my $sort;
             'get_option_at'         => 'get',
             'set_option_at'         => 'set',
             'num_options'           => 'count',
-            'has_options'           => 'empty',
+            'has_no_options'        => 'empty',
             'clear_options'         => 'clear',
             'splice_options'        => 'splice',
             'sort_options_in_place' => 'sort_in_place',
@@ -54,14 +54,14 @@ can_ok( $stuff, $_ ) for qw[
     set_option_at
     num_options
     clear_options
-    has_options
+    has_no_options
     sort_options_in_place
     option_accessor
 ];
 
 is_deeply( $stuff->options, [ 10, 12 ], '... got options' );
 
-ok( $stuff->has_options, '... we have options' );
+ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 2, '... got 2 options' );
 
 is( $stuff->remove_last_option,  12, '... removed the last option' );
@@ -69,7 +69,7 @@ is( $stuff->remove_first_option, 10, '... removed the last option' );
 
 is_deeply( $stuff->options, [], '... no options anymore' );
 
-ok( !$stuff->has_options, '... no options' );
+ok( $stuff->has_no_options, '... no options' );
 is( $stuff->num_options, 0, '... got no options' );
 
 lives_ok {
@@ -79,7 +79,7 @@ lives_ok {
 
 is_deeply( $stuff->options, [ 1, 2, 3 ], '... got options now' );
 
-ok( $stuff->has_options, '... no options' );
+ok( !$stuff->has_no_options, '... has options' );
 is( $stuff->num_options, 3, '... got 3 options' );
 
 is( $stuff->get_option_at(0), 1, '... get option at index 0' );
@@ -255,7 +255,7 @@ is_deeply(
         'get_option_at'         => 'get',
         'set_option_at'         => 'set',
         'num_options'           => 'count',
-        'has_options'           => 'empty',
+        'has_no_options'        => 'empty',
         'clear_options'         => 'clear',
         'splice_options'        => 'splice',
         'sort_options_in_place' => 'sort_in_place',
