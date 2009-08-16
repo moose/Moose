@@ -89,40 +89,40 @@ the attribute.
 
 =over 4
 
-=item I<inc>
+=item B<inc>
 
 Increments the value stored in this slot using the magical string autoincrement
 operator. Note that Perl doesn't provide analogous behavior in C<-->, so
 C<dec> is not available.
 
-=item I<append> C<$string>
+=item B<append($string)>
 
 Append a string, like C<.=>.
 
-=item I<prepend> C<$string>
+=item B<prepend($string)>
 
 Prepend a string.
 
-=item I<replace> C<$pattern> C<$replacement>
+=item B<replace($pattern, $replacement)>
 
 Performs a regexp substitution (L<perlop/s>). There is no way to provide the
 C<g> flag, but code references will be accepted for the replacement, causing
 the regex to be modified with a single C<e>. C</smxi> can be applied using the
 C<qr> operator.
 
-=item I<match> C<$pattern>
+=item B<match($pattern)>
 
-Like I<replace> but without the replacement. Provided mostly for completeness.
+Like C<replace> but without the replacement. Provided mostly for completeness.
 
-=item C<chop>
+=item B<chop>
 
 L<perlfunc/chop>
 
-=item C<chomp>
+=item B<chomp>
 
 L<perlfunc/chomp>
 
-=item C<clear>
+=item B<clear>
 
 Sets the string to the empty string (not the value passed to C<default>).
 

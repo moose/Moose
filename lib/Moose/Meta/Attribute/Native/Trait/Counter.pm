@@ -92,7 +92,7 @@ the attribute.
 
 =over 4
 
-=item I<set>
+=item I<set($value)>
 
 Set the counter to the specified value.
 

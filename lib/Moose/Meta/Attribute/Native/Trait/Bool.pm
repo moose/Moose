@@ -79,7 +79,7 @@ Set the value to C<0>.
 
 =item I<toggle>
 
-Toggle the value. If it's true, set to false, and vice versa.
+Toggles the value. If it's true, set to false, and vice versa.
 
 =item I<not>
 

@@ -98,31 +98,31 @@ package.
 
 =over 4
 
-=item I<set ($value)>
+=item B<set($value)>
 
 Alternate way to set the value.
 
-=item I<add ($value)>
+=item B<add($value)>
 
 Adds the current value of the attribute to C<$value>.
 
-=item I<sub ($value)>
+=item B<sub($value)>
 
 Subtracts the current value of the attribute to C<$value>.
 
-=item I<mul ($value)>
+=item B<mul($value)>
 
 Multiplies the current value of the attribute to C<$value>.
 
-=item I<div ($value)>
+=item B<div($value)>
 
 Divides the current value of the attribute to C<$value>.
 
-=item I<mod ($value)>
+=item B<mod($value)>
 
 Modulus the current value of the attribute to C<$value>.
 
-=item I<abs>
+=item B<abs>
 
 Sets the current value of the attribute to its absolute value.
 
