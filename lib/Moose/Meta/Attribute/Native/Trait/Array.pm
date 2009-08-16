@@ -87,7 +87,34 @@ Returns a boolean value indicating whether or not the array has any elements.
 
    $stuff->has_no_options ? die "No options!\n" : print "Good boy.\n";
 
-=item B<find>
+=item B<elements>
+
+Returns all of the elements of the array.
+
+   my @option = $stuff->all_options;
+   print "@options\n"; # prints "foo bar baz boo"
+
+=item B<get($index)>
+
+Returns an element of the array by its index. You can also use negative index
+numbers, just as with Perl's core array handling.
+
+   my $option = $stuff->get_option(1);
+   print "$option\n"; # prints "bar"
+
+=item B<pop>
+
+=item B<push($value)>
+
+=item B<shift>
+
+=item B<unshift($value)>
+
+=item B<splice($offset, $length, @values)>
+
+These methods are all equivalent to the Perl core functions of the same name.
+
+=item B<find( sub { ... } )>
 
 This method returns the first item matching item in the array. The matching is
 done with a subroutine reference you pass to this method. The reference will
@@ -97,7 +124,7 @@ have been checked.
    my $found = $stuff->find_option( sub { $_[0] =~ /^b/ } );
    print "$found\n"; # prints "bar"
 
-=item B<grep>
+=item B<grep( sub { ... } )>
 
 This method returns every element matching a given criteria, just like Perl's
 core C<grep> function. This method requires a subroutine which implements the
@@ -106,7 +133,7 @@ matching logic.
    my @found = $stuff->filter_options( sub { $_[0] =~ /^b/ } );
    print "@found\n"; # prints "bar baz boo"
 
-=item B<map>
+=item B<map( sub { ... } )>
 
 This method transforms every element in the array and returns a new array,
 just like Perl's core C<map> function. This method requires a subroutine which
@@ -115,7 +142,7 @@ implements the transformation.
    my @mod_options = $stuff->map_options( sub { $_[0] . "-tag" } );
    print "@mod_options\n"; # prints "foo-tag bar-tag baz-tag boo-tag"
 
-=item B<sort>
+=item B<sort( sub { ... } )>
 
 Returns a the array in sorted order.
 
@@ -130,14 +157,15 @@ will need to use C<$_[0]> and C<$_[1]> instead.
    my @sorted_options = $stuff->sort_options( sub { lc $_[1] cmp lc $_[0] } );
    print "@sorted_options\n"; # prints "foo boo baz bar"
 
-=item B<elements>
+=item B<sort_in_place>
 
-Returns all of the elements of the array.
+Sorts the array I<in place>, modifying the value of the attribute.
 
-   my @option = $stuff->all_options;
-   print "@options\n"; # prints "foo bar baz boo"
+You can provide an optional subroutine reference to sort with (as you can with
+Perl's core C<sort> function). However, instead of using C<$a> and C<$b>, you
+will need to use C<$_[0]> and C<$_[1]> instead.
 
-=item B<join>
+=item B<join($str)>
 
 Joins every element of the array using the separator given as argument, just
 like Perl's core C<join> function.
@@ -145,13 +173,21 @@ like Perl's core C<join> function.
    my $joined = $stuff->join_options( ':' );
    print "$joined\n"; # prints "foo:bar:baz:boo"
 
-=item B<get>
+=item B<set($index, $value)>
 
-Returns an element of the array by its index. You can also use negative index
-numbers, just as with Perl's core array handling.
+Given an index and a value, sets the specified array element's value.
 
-   my $option = $stuff->get_option(1);
-   print "$option\n"; # prints "bar"
+=item B<delete($index)>
+
+Removes the element at the given index from the array.
+
+=item B<insert($index, $value)>
+
+Inserts a new element into the array at the given index.
+
+=item B<clear>
+
+Empties the entire array, like C<@array = ()>.
 
 =item B<first>
 
@@ -166,32 +202,6 @@ Returns the last element of the array.
 
    my $last = $stuff->last_option;
    print "$last\n"; # prints "boo"
-
-=item B<pop>
-
-=item B<push>
-
-=item B<set>
-
-=item B<shift>
-
-=item B<unshift>
-
-=item B<clear>
-
-=item B<delete>
-
-=item B<insert>
-
-=item B<splice>
-
-=item B<sort_in_place>
-
-Sorts the array I<in place>, modifying the value of the attribute.
-
-You can provide an optional subroutine reference to sort with (as you can with
-Perl's core C<sort> function). However, instead of using C<$a> and C<$b>, you
-will need to use C<$_[0]> and C<$_[1]> instead.
 
 =item B<accessor>
 
