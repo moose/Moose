@@ -47,13 +47,14 @@ Moose::Meta::Attribute::Native::Trait::Hash
           has_no_options => 'empty',
           num_options    => 'count',
           delete_option  => 'delete',
+          pairs          => 'kv',
       }
   );
 
 =head1 DESCRIPTION
 
 This module provides a Hash attribute which provides a number of
-hash-like operations. 
+hash-like operations.
 
 =head1 PROVIDED METHODS
 
@@ -61,6 +62,50 @@ These methods are implemented in
 L<Moose::Meta::Attribute::Native::MethodProvider::Hash>.
 
 =over 4
+
+=item B<get($key)>
+
+Returns an element of the hash by its key.
+
+=item B<set($key)>
+
+Sets the element in the hash at the given key to the given value.
+
+=item B<delete($key)>
+
+Removes the element with the given key.
+
+=item B<keys>
+
+Returns the list of keys in the hash.
+
+=item B<exists($key)>
+
+Returns true if the given key is present in the hash.
+
+=item B<defined($key)>
+
+Returns true if the value of a given key is defined.
+
+=item B<values>
+
+Returns the list of values in the hash.
+
+=item B<kv>
+
+Returns the key/value pairs in the hash as an array of array references.
+
+  for my $pair ( $object->options->pairs ) {
+      print "$pair->[0] = $pair->[1]\n";
+  }
+
+=item B<elements>
+
+Returns the key/value pairs in the hash as a flattened list..
+
+=item B<clear>
+
+Resets the hash to an empty value, like C<%hash = ()>.
 
 =item B<count>
 
@@ -70,50 +115,10 @@ Returns the number of elements in the hash.
 
 If the hash is populated, returns false. Otherwise, returns true.
 
-=item B<exists>
-
-Returns true if the given key is present in the hash.
-
-=item B<defined>
-
-Returns true if the value of a given key is defined.
-
-=item B<get>
-
-Returns an element of the hash by its key.
-
-=item B<keys>
-
-Returns the list of keys in the hash.
-
-=item B<values>
-
-Returns the list of values in the hash.
-
-=item B<kv>
-
-Returns the key, value pairs in the hash as array references.
-
-=item B<elements>
-
-Returns the key, value pairs in the hash as a flattened list..
-
-=item B<delete>
-
-Removes the element with the given key.
-
-=item B<clear>
-
-Unsets the hash entirely.
-
-=item B<set>
-
-Sets the element in the hash at the given key to the given value.
-
 =item B<accessor>
 
-If passed one argument, returns the value of the requested key. If passed two
-arguments, sets the value of the requested key.
+If passed one argument, returns the value of the specified key. If passed two
+arguments, sets the value of the specified key.
 
 =back
 
