@@ -21,10 +21,13 @@ Moose::Error::Confess - Prefer C<confess>
 
 =head1 SYNOPSIS
 
-	use metaclass => (
-        metaclass => "Moose::Meta::Class",
-        error_class => "Moose::Error::Confess",
+    # Metaclass definition must come before Moose is used.
+    use metaclass (
+        metaclass => 'Moose::Meta::Class',
+        error_class => 'Moose::Error::Confess',
     );
+    use Moose;
+    # ...
 
 =head1 DESCRIPTION
 
