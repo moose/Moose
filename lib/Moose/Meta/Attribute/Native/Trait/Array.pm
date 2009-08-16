@@ -58,11 +58,11 @@ Moose::Meta::Attribute::Native::Trait::Array
 
     no Moose;
     1;
-    
+
 =head1 DESCRIPTION
 
 This module provides an Array attribute which provides a number of
-array operations. 
+array operations.
 
 =head1 PROVIDED METHODS
 
@@ -83,45 +83,45 @@ Returns the number of elements in the array.
 
 =item B<empty>
 
-If the array is populated, returns false. Otherwise, returns true.
+Returns a boolean value indicating whether or not the array has any elements.
 
    $stuff->has_no_options ? die "No options!\n" : print "Good boy.\n";
 
 =item B<find>
 
-This method accepts a subroutine reference as its argument. That sub
-will receive each element of the array in turn. If it returns true for
-an element, that element will be returned by the C<find> method.
+This method returns the first item matching item in the array. The matching is
+done with a subroutine reference you pass to this method. The reference will
+be called against each element in the array until one matches or all elements
+have been checked.
 
    my $found = $stuff->find_option( sub { $_[0] =~ /^b/ } );
    print "$found\n"; # prints "bar"
 
 =item B<grep>
 
-This method accepts a subroutine reference as its argument. This
-method returns every element for which that subroutine reference
-returns a true value.
+This method returns every element matching a given criteria, just like Perl's
+core C<grep> function. This method requires a subroutine which implements the
+matching logic.
 
    my @found = $stuff->filter_options( sub { $_[0] =~ /^b/ } );
    print "@found\n"; # prints "bar baz boo"
 
 =item B<map>
 
-This method accepts a subroutine reference as its argument. The
-subroutine will be executed for each element of the array. It is
-expected to return a modified version of that element. The return
-value of the method is a list of the modified options.
+This method transforms every element in the array and returns a new array,
+just like Perl's core C<map> function. This method requires a subroutine which
+implements the transformation.
 
    my @mod_options = $stuff->map_options( sub { $_[0] . "-tag" } );
    print "@mod_options\n"; # prints "foo-tag bar-tag baz-tag boo-tag"
 
 =item B<sort>
 
-Sorts and returns the elements of the array.
+Returns a the array in sorted order.
 
-You can provide an optional subroutine reference to sort with (as you
-can with the core C<sort> function). However, instead of using C<$a>
-and C<$b>, you will need to use C<$_[0]> and C<$_[1]> instead.
+You can provide an optional subroutine reference to sort with (as you can with
+Perl's core C<sort> function). However, instead of using C<$a> and C<$b>, you
+will need to use C<$_[0]> and C<$_[1]> instead.
 
    # ascending ASCIIbetical
    my @sorted = $stuff->sort_options();
@@ -132,21 +132,23 @@ and C<$b>, you will need to use C<$_[0]> and C<$_[1]> instead.
 
 =item B<elements>
 
-Returns all of the elements of the array
+Returns all of the elements of the array.
 
    my @option = $stuff->all_options;
    print "@options\n"; # prints "foo bar baz boo"
 
 =item B<join>
 
-Joins every element of the array using the separator given as argument.
+Joins every element of the array using the separator given as argument, just
+like Perl's core C<join> function.
 
    my $joined = $stuff->join_options( ':' );
    print "$joined\n"; # prints "foo:bar:baz:boo"
 
 =item B<get>
 
-Returns an element of the array by its index.
+Returns an element of the array by its index. You can also use negative index
+numbers, just as with Perl's core array handling.
 
    my $option = $stuff->get_option(1);
    print "$option\n"; # prints "bar"
@@ -187,14 +189,15 @@ Returns the last element of the array.
 
 Sorts the array I<in place>, modifying the value of the attribute.
 
-You can provide an optional subroutine reference to sort with (as you
-can with the core C<sort> function). However, instead of using C<$a>
-and C<$b>, you will need to use C<$_[0]> and C<$_[1]> instead.
+You can provide an optional subroutine reference to sort with (as you can with
+Perl's core C<sort> function). However, instead of using C<$a> and C<$b>, you
+will need to use C<$_[0]> and C<$_[1]> instead.
 
 =item B<accessor>
 
-If passed one argument, returns the value of the requested element.
-If passed two arguments, sets the value of the requested element.
+This method provides a get/set accessor for the array, based on array indexes.
+If passed one argument, it returns the value at the specified index.  If
+passed two arguments, it sets the value of the specified index.
 
 =back
 
