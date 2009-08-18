@@ -111,10 +111,22 @@ sub _initialize_body {
 
 sub _get_delegate_accessor {
     my $self = shift;
+    my $attr = $self->associated_attribute;
 
-    my $accessor = $self->associated_attribute->get_read_method_ref;
+    # NOTE:
+    # always use a named method when
+    # possible, if you use the method
+    # ref and there are modifiers on
+    # the accessors then it will not
+    # pick up the modifiers too. Only
+    # the named method will assure that
+    # we also have any modifiers run.
+    # - SL
+    my $accessor = $attr->has_read_method
+        ? $attr->get_read_method
+        : $attr->get_read_method_ref;
 
-    $accessor = $accessor->body if blessed $accessor;
+    $accessor = $accessor->body if Scalar::Util::blessed $accessor;
 
     return $accessor;
 }
