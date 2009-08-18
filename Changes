@@ -22,6 +22,11 @@ for, noteworthy changes.
     * Moose
       - Correct POD for builder to point to Recipe8, not 9. (gphat)
 
+    * Moose::Exporter
+      - When a nonexistent sub name is passed to as_is, with_caller, or
+        with_meta, throw a warning and skip the exporting, rather than
+        installing a broken sub. (doy)
+
 0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)

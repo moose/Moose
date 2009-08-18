@@ -8,7 +8,7 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 47;
+    plan tests => 49;
 }
 
 
@@ -291,3 +291,25 @@ BEGIN {
     ok( ! WantsSugar->can('with'), 'WantsSugar::with() has been cleaned' );
 }
 
+{
+    package NonExistentExport;
+
+    use Moose ();
+
+    ::stderr_like {
+        Moose::Exporter->setup_import_methods(
+            also => ['Moose'],
+            with_caller => ['does_not_exist'],
+        );
+    } qr/^Trying to export undefined sub NonExistentExport::does_not_exist/,
+      "warns when a non-existent method is requested to be exported";
+}
+
+{
+    package WantsNonExistentExport;
+
+    NonExistentExport->import;
+
+    ::ok(!__PACKAGE__->can('does_not_exist'),
+         "undefined subs do not get exported");
+}

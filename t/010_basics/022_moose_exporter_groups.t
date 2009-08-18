@@ -85,6 +85,8 @@ use Test::Exception;
 
     sub exgroups2_as_is { 3 }
 
+    sub exgroups2_with_caller { 4 }
+
     sub generate_group {
         my ($caller, $group_name, $args, $context) = @_;
 

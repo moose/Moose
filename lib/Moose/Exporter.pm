@@ -130,6 +130,12 @@ sub _make_sub_exporter_params {
                 \&{ $package . '::' . $name };
             };
 
+            if ( !defined(&$sub) ) {
+                Carp::cluck
+                    "Trying to export undefined sub ${package}::${name}";
+                next;
+            }
+
             my $fq_name = $package . '::' . $name;
 
             $exports{$name} = $class->_make_wrapped_sub(
@@ -147,6 +153,12 @@ sub _make_sub_exporter_params {
                 \&{ $package . '::' . $name };
             };
 
+            if ( !defined(&$sub) ) {
+                Carp::cluck
+                    "Trying to export undefined sub ${package}::${name}";
+                next;
+            }
+
             my $fq_name = $package . '::' . $name;
 
             $exports{$name} = $class->_make_wrapped_sub_with_meta(
@@ -159,7 +171,7 @@ sub _make_sub_exporter_params {
         }
 
         for my $name ( @{ $args->{as_is} } ) {
-            my $sub;
+            my ($sub, $coderef_name);
 
             if ( ref $name ) {
                 $sub  = $name;
@@ -175,9 +187,10 @@ sub _make_sub_exporter_params {
                 # really want to keep these subs or not, we err on the
                 # safe side and leave them in.
                 my $coderef_pkg;
-                ( $coderef_pkg, $name ) = Class::MOP::get_code_info($name);
+                ( $coderef_pkg, $coderef_name )
+                    = Class::MOP::get_code_info($name);
 
-                $is_removable{$name} = $coderef_pkg eq $package ? 1 : 0;
+                $is_removable{$coderef_name} = $coderef_pkg eq $package ? 1 : 0;
             }
             else {
                 $sub = do {
@@ -185,12 +198,19 @@ sub _make_sub_exporter_params {
                     \&{ $package . '::' . $name };
                 };
 
+                if ( !defined(&$sub) ) {
+                    Carp::cluck
+                        "Trying to export undefined sub ${package}::${name}";
+                    next;
+                }
+
                 $is_removable{$name} = 1;
+                $coderef_name = $name;
             }
 
             $export_recorder->{$sub} = 1;
 
-            $exports{$name} = sub {$sub};
+            $exports{$coderef_name} = sub {$sub};
         }
 
         for my $name ( keys %{ $args->{groups} } ) {
