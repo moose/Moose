@@ -256,7 +256,12 @@ moose_apply_tc(pTHX_ AV* const meta, SV* value, U16 const flags){
 static void
 moose_push_values(pTHX_ AV* const meta, SV* const value, U16 const flags){
     dSP;
-    if(flags & MAf_ATTR_SHOULD_AUTO_DEREF && SvROK(value) && GIMME_V == G_ARRAY){
+
+    if(flags & MAf_ATTR_SHOULD_AUTO_DEREF && GIMME_V == G_ARRAY){
+        if(!(value && SvOK(value))){
+            return;
+        }
+
         if(flags & MAf_TC_IS_ARRAYREF){
             AV* const av = (AV*)SvRV(value);
             I32 len;
@@ -292,7 +297,7 @@ moose_push_values(pTHX_ AV* const meta, SV* const value, U16 const flags){
         }
     }
     else{
-        XPUSHs(value);
+        XPUSHs(value ? value : &PL_sv_undef);
     }
 
     PUTBACK;
@@ -358,9 +363,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
     /* get slot value */
     value = MOP_mg_vtbl(mg)->get_slot(aTHX_ self, key);
 
-    if(value){
-        moose_push_values(aTHX_ meta, value, flags);
-    }
+    moose_push_values(aTHX_ meta, value, flags);
 }
 
 static void
