@@ -46,6 +46,21 @@ Previously, the C<empty> method provided by Arrays and Hashes returned true if
 the attribute was B<not> empty (no elements).  Now it returns true if the
 attribute B<is> empty.
 
+=item C<find> was renamed to C<first>, and C<first> was renamed to C<head>
+
+L<List::Util> refers to the functionality that we used to provide under C<find>
+as L<first|List::Util/first>, so that will likely be more familiar (and will
+fit in better if we decide to add more List::Util functions). C<head> is an
+obvious choice to replace what used to be called C<first>.
+
+=item Helpers that take a coderef of one argument now use C<$_>
+
+Subroutines passed as the first argument to C<first>, C<map>, and C<grep> now
+receive their argument in C<$_> rather than as a parameter to the subroutine.
+Helpers that take a coderef of two or more arguments remain using the argument
+list (there are technical limitations to using C<$a> and C<$b> like C<sort>
+does).
+
 =back
 
 See L<Moose::Meta::Attribute::Native> for the new documentation.
