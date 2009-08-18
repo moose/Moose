@@ -812,8 +812,8 @@ This method creates a new role object with the provided name.
 
 This method accepts a list of array references. Each array reference
 should contain a role name as its first element. The second element is
-an optional hash reference. The hash reference can contain C<excludes>
-and C<alias> keys to control how methods are composed from the role.
+an optional hash reference. The hash reference can contain C<-excludes>
+and C<-alias> keys to control how methods are composed from the role.
 
 The return value is a new L<Moose::Meta::Role::Composite> that
 represents the combined roles.

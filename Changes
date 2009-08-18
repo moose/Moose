@@ -1,7 +1,6 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-next version
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers
         to the existing delegation API. (hdp)
@@ -10,6 +9,10 @@ next version
       - Moved in from MooseX::AttributeHelpers with API tweaks. See
         Moose::Manual::Delta for details. (hdp, jhannah, rbuels, Sartak,
         perigrin, doy)
+
+    * Moose::Error::Croak
+    * Moose::Error::Confess
+      - Clarify documentation on how to use. (Curtis Jewell)
 
 0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
@@ -44,6 +47,11 @@ next version
         Reported by Andrew Suffield [rt.cpan.org #47882] (Sartak)
         - However, we will probably deprecate $obj->new, so please don't start
           using it for new code!
+
+    * Moose::Meta::Role::Application
+    * Moose::Meta::Role::Application::RoleSummation
+      - Rename alias and excludes to -alias and -excludes (but keep the old
+        names for now, for backcompat) (doy)
 
 0.88 Fri Jul 24, 2009
     * Moose::Manual::Contributing

@@ -26,7 +26,7 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
   use Moose::Role;
 
   with 'Restartable' => {
-      alias => {
+      -alias => {
           stop  => '_stop',
           start => '_start'
       }
@@ -51,7 +51,7 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
   package Restartable::ButBroken;
   use Moose::Role;
 
-  with 'Restartable' => { excludes => [ 'stop', 'start' ] };
+  with 'Restartable' => { -excludes => [ 'stop', 'start' ] };
 
   sub stop {
       my $self = shift;
@@ -82,7 +82,7 @@ C<Restartable> to private methods, and provide wrappers around the
 originals (1).
 
   with 'Restartable' => {
-      alias => {
+      -alias => {
           stop  => '_stop',
           start => '_start'
       }
@@ -92,10 +92,10 @@ In the C<Restartable::ButBroken> role, we want to provide an entirely
 new behavior for C<stop> and C<start>. We exclude them entirely when
 composing the C<Restartable> role into C<Restartable::ButBroken>.
 
-It's worth noting that the C<excludes> parameter also accepts a single
+It's worth noting that the C<-excludes> parameter also accepts a single
 string as an argument if you just want to exclude one method.
 
-  with 'Restartable' => { excludes => [ 'stop', 'start' ] };
+  with 'Restartable' => { -excludes => [ 'stop', 'start' ] };
 
 =head1 CONCLUSION
 

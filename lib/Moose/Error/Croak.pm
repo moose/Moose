@@ -26,10 +26,13 @@ Moose::Error::Croak - Prefer C<croak>
 
 =head1 SYNOPSIS
 
-	use metaclass => (
-        metaclass => "Moose::Meta::Class",
-        error_class => "Moose::Error::Croak",
+    # Metaclass definition must come before Moose is used.
+    use metaclass (
+        metaclass => 'Moose::Meta::Class',
+        error_class => 'Moose::Error::Croak',
     );
+    use Moose;
+    # ...
 
 =head1 DESCRIPTION
 

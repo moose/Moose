@@ -17,7 +17,7 @@ use Test::More tests => 5;
     package My::Class;
     use Moose -traits => [
         'My::Trait' => {
-            alias => {
+            -alias => {
                 reversed_name => 'enam',
             },
         },
@@ -28,10 +28,10 @@ use Test::More tests => 5;
     package My::Other::Class;
     use Moose -traits => [
         'My::Trait' => {
-            alias => {
+            -alias => {
                 reversed_name => 'reversed',
             },
-            excludes => 'reversed_name',
+            -excludes => 'reversed_name',
         },
     ];
 }

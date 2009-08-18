@@ -88,7 +88,7 @@ We could also pass parameters to the role we're applying:
 
   MyApp::Role::Job::Manager->meta->apply(
       $lisa,
-      alias => { assign_work => 'get_off_your_lazy_behind' },
+      -alias => { assign_work => 'get_off_your_lazy_behind' },
   );
 
 We saw examples of how method exclusion and alias working in L<roles

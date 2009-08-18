@@ -62,6 +62,10 @@ a wrapper around the old
 
 way of doing this.
 
+The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
+and C<-excludes>. The old names still work, but new code should use the new
+names, and eventually the old ones will be deprecated and removed.
+
 =head1 Version 0.84
 
 When an attribute generates I<no> accessors, we now warn. This is to help

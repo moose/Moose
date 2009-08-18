@@ -19,8 +19,8 @@ use Test::Moose;
     use Moose;
 
     with 'My::Role' => {
-        alias    => { foo => 'baz', bar => 'gorch' },
-        excludes => ['foo', 'bar'],
+        -alias    => { foo => 'baz', bar => 'gorch' },
+        -excludes => ['foo', 'bar'],
     };
 }
 
@@ -42,8 +42,8 @@ use Test::Moose;
     use Moose::Role;
 
     with 'My::Role' => {
-        alias    => { foo => 'baz', bar => 'gorch' },
-        excludes => ['foo', 'bar'],
+        -alias    => { foo => 'baz', bar => 'gorch' },
+        -excludes => ['foo', 'bar'],
     };
 
     package My::Class::Again;
