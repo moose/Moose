@@ -62,6 +62,10 @@ Helpers that take a coderef of two or more arguments remain using the argument
 list (there are technical limitations to using C<$a> and C<$b> like C<sort>
 does).
 
+=item Several new helpers from L<List::Util> and L<List::MoreUtils> were added
+
+In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
+
 =back
 
 See L<Moose::Meta::Attribute::Native> for the new documentation.

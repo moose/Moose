@@ -3,13 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 31;
+use Test::More tests => 43;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
 my $sort;
 my $less;
 my $up;
+my $prod;
 {
     package Stuff;
     use Moose;
@@ -30,10 +31,14 @@ my $up;
             'join_options'         => 'join',
             'get_option_at'        => 'get',
             'sorted_options'       => 'sort',
+            'randomized_options'   => 'shuffle',
+            'unique_options'       => 'uniq',
             'less_than_five'       => [ grep => ($less = sub { $_ < 5 }) ],
             'up_by_one'            => [ map => ($up = sub { $_ + 1 }) ],
+            'pairwise_options'     => [ natatime => 2 ],
             'dashify'    => [ join => '-' ],
             'descending' => [ sort => ($sort = sub { $_[1] <=> $_[0] }) ],
+            'product'    => [ reduce => ($prod = sub { $_[0] * $_[1] }) ],
         },
     );
 
@@ -53,6 +58,14 @@ can_ok( $stuff, $_ ) for qw[
     join_options
     get_option_at
     sorted_options
+    randomized_options
+    unique_options
+    less_than_five
+    up_by_one
+    pairwise_options
+    dashify
+    descending
+    product
 ];
 
 is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
@@ -95,6 +108,12 @@ throws_ok { $stuff->sorted_options('foo') }
 qr/Argument must be a code reference/,
     'error when sort receives a non-coderef argument';
 
+is_deeply( [ sort { $a <=> $b } $stuff->randomized_options ], [ 1 .. 10 ] );
+
+my @pairs;
+$stuff->pairwise_options(sub { push @pairs, [@_] });
+is_deeply( \@pairs, [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ], [ 7, 8 ], [ 9, 10 ] ] );
+
 # test the currying
 is_deeply( [ $stuff->less_than_five() ], [ 1 .. 4 ] );
 
@@ -103,6 +122,11 @@ is_deeply( [ $stuff->up_by_one() ], [ 2 .. 11 ] );
 is( $stuff->dashify, '1-2-3-4-5-6-7-8-9-10' );
 
 is_deeply( [ $stuff->descending ], [ reverse 1 .. 10 ] );
+
+is( $stuff->product, 3628800 );
+
+my $other_stuff = Stuff->new( options => [ 1, 1, 2, 3, 5 ] );
+is_deeply( [ $other_stuff->unique_options ], [1, 2, 3, 5] );
 
 ## test the meta
 
@@ -121,10 +145,14 @@ is_deeply(
         'join_options'         => 'join',
         'get_option_at'        => 'get',
         'sorted_options'       => 'sort',
+        'randomized_options'   => 'shuffle',
+        'unique_options'       => 'uniq',
         'less_than_five'       => [ grep => $less ],
         'up_by_one'            => [ map => $up ],
+        'pairwise_options'     => [ natatime => 2 ],
         'dashify'              => [ join => '-' ],
         'descending'           => [ sort => $sort ],
+        'product'              => [ reduce => $prod ],
     },
     '... got the right handles mapping'
 );
