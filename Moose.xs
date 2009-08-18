@@ -144,7 +144,6 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_type_constraint"))){
         SV* tc;
-        SV* tc_code;
         flags |= MAf_ATTR_HAS_TC;
 
         ENTER;
@@ -152,9 +151,6 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
 
         tc = mop_call0_pvs(attr, "type_constraint");
         av_store(meta, MA_TC, newSVsv(tc));
-
-        tc_code = mop_call0_pvs(tc, "_compiled_type_constraint");
-        av_store(meta, MA_TC_CODE, newSVsv(tc_code));
 
         if(SvTRUEx(mop_call0_pvs(attr, "should_auto_deref"))){
             flags |= MAf_ATTR_SHOULD_AUTO_DEREF;
@@ -215,10 +211,18 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
 static SV*
 moose_apply_tc(pTHX_ AV* const meta, SV* value, U16 const flags){
     SV* const tc      = MA_tc(meta);
-    SV* const tc_code = MA_tc_code(meta);
+    SV* tc_code;
 
     if(flags & MAf_ATTR_SHOULD_COERCE){
           value = mop_call1_pvs(tc, "coerce", value);
+    }
+
+    if(!SvOK(MA_tc_code(meta))){
+        tc_code = mop_call0_pvs(tc, "_compiled_type_constraint");
+        av_store(meta, MA_TC_CODE, newSVsv(tc_code));
+    }
+    else{
+        tc_code = MA_tc_code(meta);
     }
 
     /* TODO: implement build-in type constrains in XS */
