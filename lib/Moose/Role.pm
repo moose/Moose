@@ -90,7 +90,7 @@ sub augment {
 
 Moose::Exporter->setup_import_methods(
     with_caller => [
-        qw( with requires excludes has before after around override make_immutable )
+        qw( with requires excludes has before after around override )
     ],
     as_is => [
         qw( extends super inner augment ),
