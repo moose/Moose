@@ -4,16 +4,22 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.89';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
+use Class::MOP 0.92;
+
+BEGIN{
+    our $VERSION   = '0.89';
+    $VERSION = eval $VERSION;
+    our $AUTHORITY = 'cpan:STEVAN';
+
+    require XSLoader;
+    XSLoader::load(__PACKAGE__, $VERSION);
+}
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.92;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;

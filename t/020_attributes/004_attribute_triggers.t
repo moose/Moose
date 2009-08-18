@@ -205,7 +205,8 @@ use Test::Exception;
         \@Foo::calls,
         [ [ $foo, 3, 2 ] ],
         'trigger called correctly on set (with old value)',
-    );
+    )
+        or do{ require Data::Dumper; diag(Data::Dumper::Dumper(\@Foo::calls)) };
     @Foo::calls = ();
     Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
 }

@@ -10,9 +10,12 @@ perl_version '5.008001';
 all_from 'lib/Moose.pm';
 license 'perl';
 
+use_ppport 3.19;
+
+requires_xs 'Class::MOP'    => '0.92'; # for mop.h
+
 requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
-requires 'Class::MOP'       => '0.92';
 requires 'List::MoreUtils'  => '0.12';
 requires 'Sub::Exporter'    => '0.980';
 requires 'Task::Weaken'     => '0';
