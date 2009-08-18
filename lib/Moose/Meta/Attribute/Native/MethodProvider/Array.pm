@@ -47,6 +47,13 @@ sub sort : method {
           if $predicate && ref $predicate ne 'CODE';
 
         if ($predicate) {
+            # Although it would be nice if we could support just using $a and
+            # $b like sort already does, using $a or $b once in a package
+            # triggers the 'Name "main::a" used only once' warning, and there
+            # is no good way to avoid that, since it happens when the file
+            # which defines the coderef is compiled, before we even get a
+            # chance to see it here. So, we have no real choice but to use
+            # normal parameters. --doy
             CORE::sort { $predicate->( $a, $b ) } @{ $reader->($instance) };
         }
         else {
