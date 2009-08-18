@@ -116,11 +116,11 @@ sub _value_needs_copy {
     return $attr->should_coerce;
 }
 
-sub _generate_reader_method { shift->_generate_reader_method_inline(@_) }
-sub _generate_writer_method { shift->_generate_writer_method_inline(@_) }
-sub _generate_accessor_method { shift->_generate_accessor_method_inline(@_) }
-sub _generate_predicate_method { shift->_generate_predicate_method_inline(@_) }
-sub _generate_clearer_method { shift->_generate_clearer_method_inline(@_) }
+#sub _generate_reader_method { shift->_generate_reader_method_inline(@_) }
+#sub _generate_writer_method { shift->_generate_writer_method_inline(@_) }
+#sub _generate_accessor_method { shift->_generate_accessor_method_inline(@_) }
+#sub _generate_predicate_method { shift->_generate_predicate_method_inline(@_) }
+#sub _generate_clearer_method { shift->_generate_clearer_method_inline(@_) }
 
 sub _inline_pre_body  { '' }
 sub _inline_post_body { '' }
