@@ -13,7 +13,7 @@ typedef struct {
 
 /* Moose Accessor meta information */
 enum meta_ix_t{
-    MA_KEY, /* this must be here (see mop.h) */
+    MA_KEY = 0, /* this must be here (see mop.h) */
 
     MA_ACCESSOR,
     MA_CLASS,
@@ -33,7 +33,7 @@ static SV**
 mop_debug_ma_of(pTHX_ AV* const meta, enum meta_ix_t const ix){
     assert(meta);
     assert(SvTYPE(meta) == SVt_PVAV);
-    assert(av_len(meta) >= (I32)ix);
+    assert(AvMAX(meta) >= (I32)ix);
     assert(AvARRAY(meta)[ix]);
     return &AvARRAY(meta)[ix];
 }
@@ -74,9 +74,11 @@ enum meta_flags{
     MAf_MASK                 = 0xFFFF /* not used */
 };
 
+#ifdef __attribute__format__
 static void
 moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...)
     __attribute__format__(__printf__, 3, 4);
+#endif
 
 static void
 moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...){
