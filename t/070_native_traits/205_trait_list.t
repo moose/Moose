@@ -68,18 +68,18 @@ is_deeply( [ $stuff->all_but_first_option ], [ 2 .. 10 ], '... get tail' );
 cmp_ok( $stuff->get_last_option,  '==', 10, '... get last' );
 
 is_deeply(
-    [ $stuff->filter_options( sub { $_[0] % 2 == 0 } ) ],
+    [ $stuff->filter_options( sub { $_ % 2 == 0 } ) ],
     [ 2, 4, 6, 8, 10 ],
     '... got the right filtered values'
 );
 
 is_deeply(
-    [ $stuff->map_options( sub { $_[0] * 2 } ) ],
+    [ $stuff->map_options( sub { $_ * 2 } ) ],
     [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ],
     '... got the right mapped values'
 );
 
-is( $stuff->find_option( sub { $_[0] % 2 == 0 } ), 2,
+is( $stuff->find_option( sub { $_ % 2 == 0 } ), 2,
     '.. found the right option' );
 
 is_deeply( [ $stuff->options ], [ 1 .. 10 ], '... got the list of options' );

@@ -24,7 +24,8 @@ sub first : method {
     return sub {
         my ( $instance, $predicate ) = @_;
         foreach my $val ( @{ $reader->($instance) } ) {
-            return $val if $predicate->($val);
+            local $_ = $val;
+            return $val if $predicate->();
         }
         return;
     };
@@ -34,7 +35,7 @@ sub map : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $f ) = @_;
-        CORE::map { $f->($_) } @{ $reader->($instance) };
+        CORE::map { $f->() } @{ $reader->($instance) };
     };
 }
 
@@ -58,7 +59,7 @@ sub grep : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $predicate ) = @_;
-        CORE::grep { $predicate->($_) } @{ $reader->($instance) };
+        CORE::grep { $predicate->() } @{ $reader->($instance) };
     };
 }
 

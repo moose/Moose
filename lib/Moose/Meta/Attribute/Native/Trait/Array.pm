@@ -122,7 +122,7 @@ done with a subroutine reference you pass to this method. The reference will
 be called against each element in the array until one matches or all elements
 have been checked.
 
-   my $found = $stuff->find_option( sub { $_[0] =~ /^b/ } );
+   my $found = $stuff->find_option( sub { /^b/ } );
    print "$found\n"; # prints "bar"
 
 =item B<grep( sub { ... } )>
@@ -131,7 +131,7 @@ This method returns every element matching a given criteria, just like Perl's
 core C<grep> function. This method requires a subroutine which implements the
 matching logic.
 
-   my @found = $stuff->filter_options( sub { $_[0] =~ /^b/ } );
+   my @found = $stuff->filter_options( sub { /^b/ } );
    print "@found\n"; # prints "bar baz boo"
 
 =item B<map( sub { ... } )>
@@ -140,7 +140,7 @@ This method transforms every element in the array and returns a new array,
 just like Perl's core C<map> function. This method requires a subroutine which
 implements the transformation.
 
-   my @mod_options = $stuff->map_options( sub { $_[0] . "-tag" } );
+   my @mod_options = $stuff->map_options( sub { $_ . "-tag" } );
    print "@mod_options\n"; # prints "foo-tag bar-tag baz-tag boo-tag"
 
 =item B<sort( sub { ... } )>
