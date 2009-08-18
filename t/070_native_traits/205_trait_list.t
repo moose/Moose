@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More tests => 34;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -21,19 +21,20 @@ my $up;
         init_arg => 'options',
         default  => sub { [] },
         handles  => {
-            'num_options'      => 'count',
-            'has_no_options'   => 'empty',
-            'map_options',     => 'map',
-            'filter_options'   => 'grep',
-            'find_option'      => 'find',
-            'options'          => 'elements',
-            'join_options'     => 'join',
-            'get_option_at'    => 'get',
-            'get_first_option' => 'first',
-            'get_last_option'  => 'last',
-            'sorted_options'   => 'sort',
-            'less_than_five'   => [ grep => [ $less = sub { $_ < 5 } ] ],
-            'up_by_one'        => [ map => [ $up = sub { $_ + 1 } ] ],
+            'num_options'          => 'count',
+            'has_no_options'       => 'empty',
+            'map_options',         => 'map',
+            'filter_options'       => 'grep',
+            'find_option'          => 'first',
+            'options'              => 'elements',
+            'join_options'         => 'join',
+            'get_option_at'        => 'get',
+            'get_first_option'     => 'head',
+            'all_but_first_option' => 'tail',
+            'get_last_option'      => 'last',
+            'sorted_options'       => 'sort',
+            'less_than_five'       => [ grep => [ $less = sub { $_ < 5 } ] ],
+            'up_by_one'            => [ map => [ $up = sub { $_ + 1 } ] ],
             'dashify'    => [ join => ['-'] ],
             'descending' => [ sort => [ $sort = sub { $_[1] <=> $_[0] } ] ],
         },
@@ -62,7 +63,8 @@ is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
 ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 10, '... got 2 options' );
 cmp_ok( $stuff->get_option_at(0), '==', 1,  '... get option 0' );
-cmp_ok( $stuff->get_first_option, '==', 1,  '... get first' );
+cmp_ok( $stuff->get_first_option, '==', 1,  '... get head' );
+is_deeply( [ $stuff->all_but_first_option ], [ 2 .. 10 ], '... get tail' );
 cmp_ok( $stuff->get_last_option,  '==', 10, '... get last' );
 
 is_deeply(
@@ -116,21 +118,22 @@ does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
 is_deeply(
     $options->handles,
     {
-        'num_options'      => 'count',
-        'has_no_options'   => 'empty',
-        'map_options',     => 'map',
-        'filter_options'   => 'grep',
-        'find_option'      => 'find',
-        'options'          => 'elements',
-        'join_options'     => 'join',
-        'get_option_at'    => 'get',
-        'get_first_option' => 'first',
-        'get_last_option'  => 'last',
-        'sorted_options'   => 'sort',
-        'less_than_five'   => [ grep => [$less] ],
-        'up_by_one'        => [ map => [$up] ],
-        'dashify'          => [ join => ['-'] ],
-        'descending'       => [ sort => [$sort] ],
+        'num_options'          => 'count',
+        'has_no_options'       => 'empty',
+        'map_options',         => 'map',
+        'filter_options'       => 'grep',
+        'find_option'          => 'first',
+        'options'              => 'elements',
+        'join_options'         => 'join',
+        'get_option_at'        => 'get',
+        'get_first_option'     => 'head',
+        'all_but_first_option' => 'tail',
+        'get_last_option'      => 'last',
+        'sorted_options'       => 'sort',
+        'less_than_five'       => [ grep => [$less] ],
+        'up_by_one'            => [ map => [$up] ],
+        'dashify'              => [ join => ['-'] ],
+        'descending'           => [ sort => [$sort] ],
     },
     '... got the right handles mapping'
 );

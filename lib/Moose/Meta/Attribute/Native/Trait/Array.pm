@@ -42,17 +42,18 @@ Moose::Meta::Attribute::Native::Trait::Array
        isa        => 'ArrayRef[Str]',
        default    => sub { [] },
        handles   => {
-           all_options       => 'elements',
-           map_options       => 'map',
-           filter_options    => 'grep',
-           find_option       => 'find',
-           first_option      => 'first',
-           last_option       => 'last',
-           get_option        => 'get',
-           join_options      => 'join',
-           count_options     => 'count',
-           has_no_options    => 'empty',
-           sorted_options    => 'sort',
+           all_options          => 'elements',
+           map_options          => 'map',
+           filter_options       => 'grep',
+           find_option          => 'first',
+           first_option         => 'head',
+           all_but_first_option => 'tail',
+           last_option          => 'last',
+           get_option           => 'get',
+           join_options         => 'join',
+           count_options        => 'count',
+           has_no_options       => 'empty',
+           sorted_options       => 'sort',
        }
     );
 
@@ -114,7 +115,7 @@ numbers, just as with Perl's core array handling.
 
 These methods are all equivalent to the Perl core functions of the same name.
 
-=item B<find( sub { ... } )>
+=item B<first( sub { ... } )>
 
 This method returns the first item matching item in the array. The matching is
 done with a subroutine reference you pass to this method. The reference will
@@ -189,12 +190,19 @@ Inserts a new element into the array at the given index.
 
 Empties the entire array, like C<@array = ()>.
 
-=item B<first>
+=item B<head>
 
 Returns the first element of the array.
 
    my $first = $stuff->first_option;
    print "$first\n"; # prints "foo"
+
+=item B<tail>
+
+Returns all elements of the array after the first.
+
+   my @tail = $stuff->all_but_first_option;
+   print join(', ', @tail), "\n"; # prints "bar, baz, boo"
 
 =item B<last>
 

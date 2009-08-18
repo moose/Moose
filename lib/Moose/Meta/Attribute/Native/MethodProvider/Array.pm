@@ -19,7 +19,7 @@ sub empty : method {
     };
 }
 
-sub find : method {
+sub first : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $predicate ) = @_;
@@ -78,10 +78,18 @@ sub join : method {
     };
 }
 
-sub first : method {
+sub head : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         $reader->( $_[0] )->[0];
+    };
+}
+
+sub tail : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my $arr = $reader->( $_[0] );
+        return @{ $arr }[1..$#{ $arr }];
     };
 }
 
