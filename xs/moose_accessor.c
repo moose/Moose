@@ -1,5 +1,6 @@
 #define PERL_NO_GET_CONTEXT
 #include "mop.h"
+#include "moose.h"
 
 
 typedef struct {
@@ -74,48 +75,8 @@ enum meta_flags{
     MAf_MASK                 = 0xFFFF /* not used */
 };
 
-#ifdef __attribute__format__
-static void
-moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...)
-    __attribute__format__(__printf__, 3, 4);
-#endif
 
-static void
-moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...){
-    dTHX;
-    va_list args;
-    SV* message;
-
-    assert(klass);
-    assert(fmt);
-
-    va_start(args, fmt);
-    message = vnewSVpvf(fmt, &args);
-    va_end(args);
-
-    {
-        dSP;
-        PUSHMARK(SP);
-        EXTEND(SP, 4);
-
-        PUSHs(klass);
-        mPUSHs(message);
-
-        mPUSHp("depth", sizeof("depth")-1);
-        mPUSHi(-1);
-
-        if(data){
-            EXTEND(SP, 2);
-            mPUSHp("data", sizeof("data")-1);
-            PUSHs(data);
-        }
-        PUTBACK;
-        call_method("throw_error", G_VOID);
-        croak("throw_error() did not throw the error (%"SVf")", message);
-    }
-}
-
-static CV*
+CV*
 moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), const mop_instance_vtbl* const instance_vtbl){
         /* $key = $accessor->associated_attribute->name */
     SV* const metaclass = mop_call0_pvs(accessor,  "associated_metaclass");
@@ -432,7 +393,6 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
     }
 }
 
-XS(moose_xs_accessor);
 XS(moose_xs_accessor)
 {
     dVAR; dXSARGS;
@@ -454,7 +414,6 @@ XS(moose_xs_accessor)
 }
 
 
-XS(moose_xs_reader);
 XS(moose_xs_reader)
 {
     dVAR; dXSARGS;
@@ -477,7 +436,6 @@ XS(moose_xs_reader)
     moose_attr_get(aTHX_ self, mg);
 }
 
-XS(moose_xs_writer);
 XS(moose_xs_writer)
 {
     dVAR; dXSARGS;
@@ -493,28 +451,3 @@ XS(moose_xs_writer)
 
     moose_attr_set(aTHX_ self, mg, ST(1));
 }
-
-MODULE = Moose   PACKAGE = Moose::Meta::Method::Accessor
-
-PROTOTYPES: DISABLE
-
-CV*
-_generate_accessor_method_xs(SV* self, void* instance_vtbl)
-CODE:
-    RETVAL = moose_instantiate_xs_accessor(aTHX_ self, moose_xs_accessor, instance_vtbl);
-OUTPUT:
-    RETVAL
-
-CV*
-_generate_reader_method_xs(SV* self, void* instance_vtbl)
-CODE:
-    RETVAL = moose_instantiate_xs_accessor(aTHX_ self, moose_xs_reader, instance_vtbl);
-OUTPUT:
-    RETVAL
-
-CV*
-_generate_writer_method_xs(SV* self, void* instance_vtbl)
-CODE:
-    RETVAL = moose_instantiate_xs_accessor(aTHX_ self, moose_xs_writer, instance_vtbl);
-OUTPUT:
-    RETVAL
