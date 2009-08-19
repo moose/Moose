@@ -275,10 +275,10 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
     AV* const meta  = MOP_mg_meta(mg);
     U16 const flags = mg->mg_private;
     SV* const key   = MA_key(meta);
-    SV* value = NULL;
 
     /* check_lazy */
     if( flags & MAf_ATTR_IS_LAZY && !(MOP_mg_vtbl(mg)->has_slot(aTHX_ self, key)) ){
+        SV* value = NULL;
         SV* const attr = MA_attribute(meta);
         /* get default value by $attr->default or $attr->builder */
         if(flags & MAf_ATTR_HAS_DEFAULT){
@@ -328,10 +328,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
         }
     }
 
-    /* get slot value */
-    value = MOP_mg_vtbl(mg)->get_slot(aTHX_ self, key);
-
-    moose_push_values(aTHX_ meta, value, flags);
+    moose_push_values(aTHX_ meta, MOP_mg_vtbl(mg)->get_slot(aTHX_ self, key), flags);
 }
 
 static void
