@@ -98,9 +98,6 @@ moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...){
         PUSHs(klass);
         mPUSHs(message);
 
-        mPUSHp("depth", sizeof("depth")-1);
-        mPUSHi(-1);
-
         if(data){
             EXTEND(SP, 2);
             mPUSHp("data", sizeof("data")-1);
