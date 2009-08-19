@@ -22,7 +22,7 @@ my $up;
         default  => sub { [] },
         handles  => {
             'num_options'          => 'count',
-            'has_no_options'       => 'empty',
+            'has_no_options'       => 'is_empty',
             'map_options',         => 'map',
             'filter_options'       => 'grep',
             'find_option'          => 'first',
@@ -119,7 +119,7 @@ is_deeply(
     $options->handles,
     {
         'num_options'          => 'count',
-        'has_no_options'       => 'empty',
+        'has_no_options'       => 'is_empty',
         'map_options',         => 'map',
         'filter_options'       => 'grep',
         'find_option'          => 'first',

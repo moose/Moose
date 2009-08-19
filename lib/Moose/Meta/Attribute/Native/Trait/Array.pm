@@ -52,7 +52,7 @@ Moose::Meta::Attribute::Native::Trait::Array
            get_option           => 'get',
            join_options         => 'join',
            count_options        => 'count',
-           has_no_options       => 'empty',
+           has_no_options       => 'is_empty',
            sorted_options       => 'sort',
        }
     );
@@ -82,7 +82,7 @@ Returns the number of elements in the array.
    my $count = $stuff->count_options;
    print "$count\n"; # prints 4
 
-=item B<empty>
+=item B<is_empty>
 
 Returns a boolean value indicating whether or not the array has any elements.
 

@@ -40,11 +40,11 @@ generalized to apply to all cases of C<< handles => HASHREF >>, though
 not every piece of functionality has been ported (currying with a
 CODEREF is not supported).
 
-=item C<empty> now means empty, not non-empty
+=item C<empty> is now C<is_empty>, and means empty, not non-empty
 
 Previously, the C<empty> method provided by Arrays and Hashes returned true if
 the attribute was B<not> empty (no elements).  Now it returns true if the
-attribute B<is> empty.
+attribute B<is> empty. It was also renamed to C<is_empty>, to reflect this.
 
 =item C<find> was renamed to C<first>, and C<first> was renamed to C<head>
 
