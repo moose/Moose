@@ -86,6 +86,9 @@ moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...){
     va_list args;
     SV* message;
 
+    assert(klass);
+    assert(fmt);
+
     va_start(args, fmt);
     message = vnewSVpvf(fmt, &args);
     va_end(args);
@@ -105,6 +108,7 @@ moose_throw_error(SV* const klass, SV* const data, const char* const fmt, ...){
         }
         PUTBACK;
         call_method("throw_error", G_VOID);
+        croak("throw_error() did not throw the error (%"SVf")", message);
     }
 }
 
