@@ -29,6 +29,8 @@ if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
 }
 
+cc_src_paths 'xs';
+
 extra_tests();
 tests_recursive();
 
