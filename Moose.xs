@@ -360,6 +360,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
             PUTBACK;
 
             call_method("set_initial_value", G_VOID | G_DISCARD);
+            /* need not SPAGAIN */
         }
     }
 
@@ -418,6 +419,7 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
 
         PUTBACK;
         call_sv(trigger, G_VOID | G_DISCARD);
+        /* need not SPAGAIN */
     }
 
     {
