@@ -28,7 +28,7 @@ use Test::Moose 'does_ok';
             'option_accessor'  => 'accessor',
             'key_value'        => 'kv',
             'options_elements' => 'elements',
-            'quantity'         => [ accessor => ['quantity'] ],
+            'quantity'         => [ accessor => 'quantity' ],
         },
     );
 }
@@ -157,7 +157,7 @@ is_deeply(
         'option_accessor'  => 'accessor',
         'key_value'        => 'kv',
         'options_elements' => 'elements',
-        'quantity'         => [ accessor => ['quantity'] ],
+        'quantity'         => [ accessor => 'quantity' ],
     },
     '... got the right handles mapping'
 );

@@ -736,9 +736,9 @@ sub _make_delegation_method {
     $method_body = $method_to_call
         if 'CODE' eq ref($method_to_call);
 
-    my $curried_arguments = [];
+    my @curried_arguments;
 
-    ($method_to_call, $curried_arguments) = @$method_to_call
+    ($method_to_call, @curried_arguments) = @$method_to_call
         if 'ARRAY' eq ref($method_to_call);
 
     return $self->delegation_metaclass->new(
@@ -746,7 +746,7 @@ sub _make_delegation_method {
         package_name       => $self->associated_class->name,
         attribute          => $self,
         delegate_to_method => $method_to_call,
-        curried_arguments  => $curried_arguments || [],
+        curried_arguments  => \@curried_arguments,
     );
 }
 

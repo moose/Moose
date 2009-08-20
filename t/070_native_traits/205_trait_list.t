@@ -30,10 +30,10 @@ my $up;
             'join_options'         => 'join',
             'get_option_at'        => 'get',
             'sorted_options'       => 'sort',
-            'less_than_five'       => [ grep => [ $less = sub { $_ < 5 } ] ],
-            'up_by_one'            => [ map => [ $up = sub { $_ + 1 } ] ],
-            'dashify'    => [ join => ['-'] ],
-            'descending' => [ sort => [ $sort = sub { $_[1] <=> $_[0] } ] ],
+            'less_than_five'       => [ grep => ($less = sub { $_ < 5 }) ],
+            'up_by_one'            => [ map => ($up = sub { $_ + 1 }) ],
+            'dashify'    => [ join => '-' ],
+            'descending' => [ sort => ($sort = sub { $_[1] <=> $_[0] }) ],
         },
     );
 
@@ -121,10 +121,10 @@ is_deeply(
         'join_options'         => 'join',
         'get_option_at'        => 'get',
         'sorted_options'       => 'sort',
-        'less_than_five'       => [ grep => [$less] ],
-        'up_by_one'            => [ map => [$up] ],
-        'dashify'              => [ join => ['-'] ],
-        'descending'           => [ sort => [$sort] ],
+        'less_than_five'       => [ grep => $less ],
+        'up_by_one'            => [ map => $up ],
+        'dashify'              => [ join => '-' ],
+        'descending'           => [ sort => $sort ],
     },
     '... got the right handles mapping'
 );

@@ -546,13 +546,13 @@ You may also use an array reference to curry arguments to the original method.
 
   has 'thing' => (
       ...
-      handles => { set_foo => [ set => [ 'foo' ] ] },
+      handles => { set_foo => [ set => 'foo' ] },
   );
 
   # $self->set_foo(...) calls $self->thing->set('foo', ...)
 
 The first element of the array reference is the original method name, and the
-second is an array reference of curried arguments.
+rest is a list of curried arguments.
 
 =item C<REGEXP>
 

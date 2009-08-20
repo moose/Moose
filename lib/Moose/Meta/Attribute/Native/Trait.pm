@@ -109,9 +109,7 @@ around '_make_delegation_method' => sub {
     my $next = shift;
     my ( $self, $handle_name, $method_to_call ) = @_;
 
-    my ( $name, $curried_args ) = @$method_to_call;
-
-    $curried_args ||= [];
+    my ( $name, @curried_args ) = @$method_to_call;
 
     my $method_constructors = $self->method_constructors;
 
@@ -126,7 +124,7 @@ around '_make_delegation_method' => sub {
         $handle_name,
         sub {
             my $instance = shift;
-            return $code->( $instance, @$curried_args, @_ );
+            return $code->( $instance, @curried_args, @_ );
         },
     );
 };

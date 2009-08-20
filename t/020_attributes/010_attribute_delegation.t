@@ -32,7 +32,7 @@ use Test::Exception;
         handles => {
             'foo_bar' => 'bar',
             foo_baz => 'baz',
-            'foo_bar_to_20' => [ bar => [ 20 ] ],
+            'foo_bar_to_20' => [ bar => 20 ],
         },
     );
 }

@@ -26,10 +26,9 @@ my $uc;
             chomp_string   => 'chomp',
             clear_string   => 'clear',
             length_string  => 'length',
-            exclaim        => [ append => ['!'] ],
-            capitalize_last =>
-                [ replace => [ qr/(.)$/, $uc = sub { uc $1 } ] ],
-            invalid_number => [ match => [qr/\D/] ],
+            exclaim        => [ append => '!' ],
+            capitalize_last => [ replace => qr/(.)$/, ($uc = sub { uc $1 }) ],
+            invalid_number => [ match => qr/\D/ ],
         },
     );
 }
@@ -108,9 +107,9 @@ is_deeply(
         chomp_string    => 'chomp',
         clear_string    => 'clear',
         length_string   => 'length',
-        exclaim         => [ append => ['!'] ],
-        capitalize_last => [ replace => [ qr/(.)$/, $uc ] ],
-        invalid_number => [ match => [qr/\D/] ],
+        exclaim         => [ append => '!' ],
+        capitalize_last => [ replace => qr/(.)$/, $uc ],
+        invalid_number => [ match => qr/\D/ ],
     },
     '... got the right handles methods'
 );

@@ -23,10 +23,10 @@ use Test::Moose;
             div         => 'div',
             mod         => 'mod',
             abs         => 'abs',
-            inc         => [ add => [1] ],
-            dec         => [ sub => [1] ],
-            odd         => [ mod => [2] ],
-            cut_in_half => [ div => [2] ],
+            inc         => [ add => 1 ],
+            dec         => [ sub => 1 ],
+            odd         => [ mod => 2 ],
+            cut_in_half => [ div => 2 ],
 
         },
     );
@@ -102,10 +102,10 @@ is_deeply(
         div         => 'div',
         mod         => 'mod',
         abs         => 'abs',
-        inc         => [ add => [1] ],
-        dec         => [ sub => [1] ],
-        odd         => [ mod => [2] ],
-        cut_in_half => [ div => [2] ],
+        inc         => [ add => 1 ],
+        dec         => [ sub => 1 ],
+        odd         => [ mod => 2 ],
+        cut_in_half => [ div => 2 ],
     },
     '... got the right handles mapping'
 );

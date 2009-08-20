@@ -33,11 +33,11 @@ my $sort;
             'sort_options_in_place' => 'sort_in_place',
             'option_accessor'       => 'accessor',
             'add_options_with_speed' =>
-                [ 'push' => [ 'funrolls', 'funbuns' ] ],
+                [ 'push' => 'funrolls', 'funbuns' ],
             'prepend_prerequisites_along_with' =>
-                [ 'unshift' => [ 'first', 'second' ] ],
+                [ 'unshift' => 'first', 'second' ],
             'descending_options' =>
-                [ 'sort_in_place' => [ $sort = sub { $_[1] <=> $_[0] } ] ],
+                [ 'sort_in_place' => ($sort = sub { $_[1] <=> $_[0] }) ],
         }
     );
 }
@@ -260,12 +260,10 @@ is_deeply(
         'splice_options'        => 'splice',
         'sort_options_in_place' => 'sort_in_place',
         'option_accessor'       => 'accessor',
-        'add_options_with_speed' =>
-            [ 'push' => [ 'funrolls', 'funbuns' ] ],
+        'add_options_with_speed' => [ 'push' => 'funrolls', 'funbuns' ],
         'prepend_prerequisites_along_with' =>
-            [ 'unshift' => [ 'first', 'second' ] ],
-        'descending_options' =>
-            [ 'sort_in_place' => [$sort] ],
+            [ 'unshift' => 'first', 'second' ],
+        'descending_options' => [ 'sort_in_place' => $sort ],
     },
     '... got the right handles mapping'
 );
