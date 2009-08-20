@@ -4,6 +4,8 @@ for, noteworthy changes.
     * Moose::Error::Croak
     * Moose::Error::Confess
       - Clarify documentation on how to use. (Curtis Jewell)
+    * Moose
+      - Correct POD for builder to point to Recipe8, not 9. (gphat)
 
 0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
