@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 34;
+use Test::More tests => 31;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -29,9 +29,6 @@ my $up;
             'options'              => 'elements',
             'join_options'         => 'join',
             'get_option_at'        => 'get',
-            'get_first_option'     => 'head',
-            'all_but_first_option' => 'tail',
-            'get_last_option'      => 'last',
             'sorted_options'       => 'sort',
             'less_than_five'       => [ grep => [ $less = sub { $_ < 5 } ] ],
             'up_by_one'            => [ map => [ $up = sub { $_ + 1 } ] ],
@@ -63,9 +60,6 @@ is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
 ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 10, '... got 2 options' );
 cmp_ok( $stuff->get_option_at(0), '==', 1,  '... get option 0' );
-cmp_ok( $stuff->get_first_option, '==', 1,  '... get head' );
-is_deeply( [ $stuff->all_but_first_option ], [ 2 .. 10 ], '... get tail' );
-cmp_ok( $stuff->get_last_option,  '==', 10, '... get last' );
 
 is_deeply(
     [ $stuff->filter_options( sub { $_ % 2 == 0 } ) ],
@@ -126,9 +120,6 @@ is_deeply(
         'options'              => 'elements',
         'join_options'         => 'join',
         'get_option_at'        => 'get',
-        'get_first_option'     => 'head',
-        'all_but_first_option' => 'tail',
-        'get_last_option'      => 'last',
         'sorted_options'       => 'sort',
         'less_than_five'       => [ grep => [$less] ],
         'up_by_one'            => [ map => [$up] ],

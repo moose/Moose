@@ -86,28 +86,6 @@ sub join : method {
     };
 }
 
-sub head : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        $reader->( $_[0] )->[0];
-    };
-}
-
-sub tail : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my $arr = $reader->( $_[0] );
-        return @{ $arr }[1..$#{ $arr }];
-    };
-}
-
-sub last : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        $reader->( $_[0] )->[-1];
-    };
-}
-
 sub push : method {
     my ( $attr, $reader, $writer ) = @_;
 

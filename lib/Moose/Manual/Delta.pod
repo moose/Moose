@@ -46,12 +46,13 @@ Previously, the C<empty> method provided by Arrays and Hashes returned true if
 the attribute was B<not> empty (no elements).  Now it returns true if the
 attribute B<is> empty. It was also renamed to C<is_empty>, to reflect this.
 
-=item C<find> was renamed to C<first>, and C<first> was renamed to C<head>
+=item C<find> was renamed to C<first>, and C<first> and C<last> were removed
 
 L<List::Util> refers to the functionality that we used to provide under C<find>
 as L<first|List::Util/first>, so that will likely be more familiar (and will
-fit in better if we decide to add more List::Util functions). C<head> is an
-obvious choice to replace what used to be called C<first>.
+fit in better if we decide to add more List::Util functions). C<first> and
+C<last> were removed, since their functionality is easily duplicated with
+curries of C<get>.
 
 =item Helpers that take a coderef of one argument now use C<$_>
 

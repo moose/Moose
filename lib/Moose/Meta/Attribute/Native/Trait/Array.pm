@@ -46,9 +46,6 @@ Moose::Meta::Attribute::Native::Trait::Array
            map_options          => 'map',
            filter_options       => 'grep',
            find_option          => 'first',
-           first_option         => 'head',
-           all_but_first_option => 'tail',
-           last_option          => 'last',
            get_option           => 'get',
            join_options         => 'join',
            count_options        => 'count',
@@ -189,27 +186,6 @@ Inserts a new element into the array at the given index.
 =item B<clear>
 
 Empties the entire array, like C<@array = ()>.
-
-=item B<head>
-
-Returns the first element of the array.
-
-   my $first = $stuff->first_option;
-   print "$first\n"; # prints "foo"
-
-=item B<tail>
-
-Returns all elements of the array after the first.
-
-   my @tail = $stuff->all_but_first_option;
-   print join(', ', @tail), "\n"; # prints "bar, baz, boo"
-
-=item B<last>
-
-Returns the last element of the array.
-
-   my $last = $stuff->last_option;
-   print "$last\n"; # prints "boo"
 
 =item B<accessor>
 
