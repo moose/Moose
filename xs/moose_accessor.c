@@ -2,77 +2,52 @@
 #include "mop.h"
 #include "moose.h"
 
+/* Moose Meta Instance object */
+enum moose_mi_ix_t{
+    MOOSE_MI_ACCESSOR = MOP_MI_last,
+    MOOSE_MI_CLASS,
+    MOOSE_MI_INSTANCE,
+    MOOSE_MI_ATTRIBUTE,
+    MOOSE_MI_TC,
+    MOOSE_MI_TC_CODE,
 
-typedef struct {
-    U16 flags;
-    mop_instance_vtbl* vtbl;
-
-    SV* metaclass;
-    SV* instance;
-    SV* attribute;
-} moose_accessor;
-
-/* Moose Accessor meta information */
-enum meta_ix_t{
-    MA_KEY = 0, /* this must be here (see mop.h) */
-
-    MA_ACCESSOR,
-    MA_CLASS,
-    MA_INSTANCE,
-    MA_ATTRIBUTE,
-    MA_TC,
-    MA_TC_CODE,
-
-    MA_size
+    MOOSE_MI_last
 };
 
-#ifndef DEBUGGING
-#define MA_of(m, s) (AvARRAY(m)[s])
-#else
-#define MA_of(m, s) *mop_debug_ma_of(aTHX_ m, s)
-static SV**
-mop_debug_ma_of(pTHX_ AV* const meta, enum meta_ix_t const ix){
-    assert(meta);
-    assert(SvTYPE(meta) == SVt_PVAV);
-    assert(AvMAX(meta) >= (I32)ix);
-    assert(AvARRAY(meta)[ix]);
-    return &AvARRAY(meta)[ix];
-}
-#endif
+#define MOOSE_mi_slot(m)      MOP_mi_slot(m)
+#define MOOSE_mi_accessor(m)  MOP_mi_access(m, MOOSE_MI_ACCESSOR)
+#define MOOSE_mi_class(m)     MOP_mi_access(m, MOOSE_MI_CLASS)
+#define MOOSE_mi_instance(m)  MOP_mi_access(m, MOOSE_MI_INSTANCE)
+#define MOOSE_mi_attribute(m) MOP_mi_access(m, MOOSE_MI_ATTRIBUTE)
+#define MOOSE_mi_tc(m)        MOP_mi_access(m, MOOSE_MI_TC)
+#define MOOSE_mi_tc_code(m)   MOP_mi_access(m, MOOSE_MI_TC_CODE)
 
-#define MA_key(m)       MA_of(m, MA_KEY)
-#define MA_accessor(m)  MA_of(m, MA_ACCESSOR)
-#define MA_class(m)     MA_of(m, MA_CLASS)
-#define MA_instance(m)  MA_of(m, MA_INSTANCE)
-#define MA_attribute(m) MA_of(m, MA_ATTRIBUTE)
-#define MA_tc(m)        MA_of(m, MA_TC)
-#define MA_tc_code(m)   MA_of(m, MA_TC_CODE)
+#define MOOSE_mg_accessor(mg) MOOSE_mi_accessor(MOP_mg_mi(mg))
 
+enum moose_mi_flags_t{
+    MOOSE_MIf_ATTR_HAS_TC          = 0x0001,
+    MOOSE_MIf_ATTR_HAS_DEFAULT     = 0x0002,
+    MOOSE_MIf_ATTR_HAS_BUILDER     = 0x0004,
+    MOOSE_MIf_ATTR_HAS_INITIALIZER = 0x0008,
+    MOOSE_MIf_ATTR_HAS_TRIGGER     = 0x0010,
 
-enum meta_flags{
-    MAf_ATTR_HAS_TC          = 0x0001,
-    MAf_ATTR_HAS_DEFAULT     = 0x0002,
-    MAf_ATTR_HAS_BUILDER     = 0x0004,
-    MAf_ATTR_HAS_INITIALIZER = 0x0008,
-    MAf_ATTR_HAS_TRIGGER     = 0x0010,
+    MOOSE_MIf_ATTR_IS_LAZY         = 0x0020,
+    MOOSE_MIf_ATTR_IS_WEAK_REF     = 0x0040,
+    MOOSE_MIf_ATTR_IS_REQUIRED     = 0x0080,
 
-    MAf_ATTR_IS_LAZY         = 0x0020,
-    MAf_ATTR_IS_WEAK_REF     = 0x0040,
-    MAf_ATTR_IS_REQUIRED     = 0x0080,
+    MOOSE_MIf_ATTR_SHOULD_COERCE   = 0x0100,
 
-    MAf_ATTR_SHOULD_COERCE   = 0x0100,
+    MOOSE_MIf_ATTR_SHOULD_AUTO_DEREF
+                                   = 0x0200,
+    MOOSE_MIf_TC_IS_ARRAYREF       = 0x0400,
+    MOOSE_MIf_TC_IS_HASHREF        = 0x0800,
 
-    MAf_ATTR_SHOULD_AUTO_DEREF
-                             = 0x0200,
-    MAf_TC_IS_ARRAYREF       = 0x0400,
-    MAf_TC_IS_HASHREF        = 0x0800,
+    MOOSE_MIf_OTHER1               = 0x1000,
+    MOOSE_MIf_OTHER2               = 0x2000,
+    MOOSE_MIf_OTHER3               = 0x4000,
+    MOOSE_MIf_OTHER4               = 0x8000,
 
-    MAf_OTHER1               = 0x1000,
-    MAf_OTHER2               = 0x2000,
-    MAf_OTHER3               = 0x4000,
-    MAf_OTHER4               = 0x8000,
-
-    MAf_MASK                 = 0xFFFF /* not used */
+    MOOSE_MIf_MOOSE_MISK           = 0xFFFF /* not used */
 };
 
 
@@ -87,45 +62,46 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
     STRLEN klen;
     const char* const kpv = SvPV_const(key, klen);
 
-    CV* const xsub  = mop_install_accessor(aTHX_ NULL /* anonymous */, kpv, klen, accessor_impl, instance_vtbl);
-    MAGIC* const mg = mop_accessor_get_mg(aTHX_ xsub);
-    AV* const meta  = MOP_mg_meta(mg);
-    U16 flags = 0;
+    CV* const xsub        = mop_install_accessor(aTHX_ NULL /* anonymous */, kpv, klen, accessor_impl, instance_vtbl);
+    dMOP_mg(xsub);
+
+    AV* const mi = MOP_mg_mi(mg);
+    U16 flags    = 0;
 
     assert(instance_vtbl);
     assert(sv_isobject(metaclass));
     assert(sv_isobject(instance));
     assert(sv_isobject(attr));
 
-    /* setup meta information */
+    /* setup mi information */
 
-    av_extend(meta, MA_size - 1);
+    av_extend(mi, MOOSE_MI_last - 1);
 
-    av_store(meta, MA_ACCESSOR,  sv_rvweaken(newSVsv(accessor)));
-    av_store(meta, MA_CLASS,     sv_rvweaken(newSVsv(metaclass)));
-    av_store(meta, MA_INSTANCE,  sv_rvweaken(newSVsv(instance)));
-    av_store(meta, MA_ATTRIBUTE, sv_rvweaken(newSVsv(attr)));
+    av_store(mi, MOOSE_MI_ACCESSOR,  sv_rvweaken(newSVsv(accessor)));
+    av_store(mi, MOOSE_MI_CLASS,     sv_rvweaken(newSVsv(metaclass)));
+    av_store(mi, MOOSE_MI_INSTANCE,  sv_rvweaken(newSVsv(instance)));
+    av_store(mi, MOOSE_MI_ATTRIBUTE, sv_rvweaken(newSVsv(attr)));
 
     /* prepare attribute status */
     /* XXX: making it lazy is a good way? */
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_type_constraint"))){
         SV* tc;
-        flags |= MAf_ATTR_HAS_TC;
+        flags |= MOOSE_MIf_ATTR_HAS_TC;
 
         ENTER;
         SAVETMPS;
 
         tc = mop_call0_pvs(attr, "type_constraint");
-        av_store(meta, MA_TC, newSVsv(tc));
+        av_store(mi, MOOSE_MI_TC, newSVsv(tc));
 
         if(SvTRUEx(mop_call0_pvs(attr, "should_auto_deref"))){
-            flags |= MAf_ATTR_SHOULD_AUTO_DEREF;
+            flags |= MOOSE_MIf_ATTR_SHOULD_AUTO_DEREF;
             if( SvTRUEx(mop_call1_pvs(tc, "is_a_type_of", newSVpvs_flags("ArrayRef", SVs_TEMP))) ){
-                flags |= MAf_TC_IS_ARRAYREF;
+                flags |= MOOSE_MIf_TC_IS_ARRAYREF;
             }
             else if( SvTRUEx(mop_call1_pvs(tc, "is_a_type_of", newSVpvs_flags("HashRef", SVs_TEMP))) ){
-                flags |= MAf_TC_IS_HASHREF;
+                flags |= MOOSE_MIf_TC_IS_HASHREF;
             }
             else{
                 moose_throw_error(accessor, tc,
@@ -135,7 +111,7 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
         }
 
         if(SvTRUEx(mop_call0_pvs(attr, "should_coerce"))){
-            flags |= MAf_ATTR_SHOULD_COERCE;
+            flags |= MOOSE_MIf_ATTR_SHOULD_COERCE;
         }
 
         FREETMPS;
@@ -143,53 +119,53 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_default"))){
-        flags |= MAf_ATTR_HAS_DEFAULT;
+        flags |= MOOSE_MIf_ATTR_HAS_DEFAULT;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_builder"))){
-        flags |= MAf_ATTR_HAS_BUILDER;
+        flags |= MOOSE_MIf_ATTR_HAS_BUILDER;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_initializer"))){
-        flags |= MAf_ATTR_HAS_INITIALIZER;
+        flags |= MOOSE_MIf_ATTR_HAS_INITIALIZER;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "has_trigger"))){
-        flags |= MAf_ATTR_HAS_TRIGGER;
+        flags |= MOOSE_MIf_ATTR_HAS_TRIGGER;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "is_lazy"))){
-        flags |= MAf_ATTR_IS_LAZY;
+        flags |= MOOSE_MIf_ATTR_IS_LAZY;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "is_weak_ref"))){
-        flags |= MAf_ATTR_IS_WEAK_REF;
+        flags |= MOOSE_MIf_ATTR_IS_WEAK_REF;
     }
 
     if(SvTRUEx(mop_call0_pvs(attr, "is_required"))){
-        flags |= MAf_ATTR_IS_REQUIRED;
+        flags |= MOOSE_MIf_ATTR_IS_REQUIRED;
     }
 
-    mg->mg_private = flags;
+    MOP_mg_flags(mg) = flags;
 
     return xsub;
 }
 
 static SV*
-moose_apply_tc(pTHX_ AV* const meta, SV* value, U16 const flags){
-    SV* const tc      = MA_tc(meta);
+moose_apply_tc(pTHX_ AV* const mi, SV* value, U16 const flags){
+    SV* const tc = MOOSE_mi_tc(mi);
     SV* tc_code;
 
-    if(flags & MAf_ATTR_SHOULD_COERCE){
+    if(flags & MOOSE_MIf_ATTR_SHOULD_COERCE){
           value = mop_call1_pvs(tc, "coerce", value);
     }
 
-    if(!SvOK(MA_tc_code(meta))){
+    if(!SvOK(MOOSE_mi_tc_code(mi))){
         tc_code = mop_call0_pvs(tc, "_compiled_type_constraint");
-        av_store(meta, MA_TC_CODE, newSVsv(tc_code));
+        av_store(mi, MOOSE_MI_TC_CODE, newSVsv(tc_code));
     }
     else{
-        tc_code = MA_tc_code(meta);
+        tc_code = MOOSE_mi_tc_code(mi);
     }
 
     /* TODO: implement build-in type constrains in XS */
@@ -208,9 +184,9 @@ moose_apply_tc(pTHX_ AV* const meta, SV* value, U16 const flags){
         PUTBACK;
 
         if(!ok){
-            moose_throw_error(MA_accessor(meta), value,
+            moose_throw_error(MOOSE_mi_accessor(mi), value,
                 "Attribute (%"SVf") does not pass the type constraint because: %"SVf,
-                    MA_key(meta),
+                    MOOSE_mi_slot(mi),
                     mop_call1_pvs(tc, "get_message", value));
         }
     }
@@ -221,22 +197,22 @@ moose_apply_tc(pTHX_ AV* const meta, SV* value, U16 const flags){
 
 /* pushes return values, does auto-deref if needed */
 static void
-moose_push_values(pTHX_ AV* const meta, SV* const value, U16 const flags){
+moose_push_values(pTHX_ AV* const mi, SV* const value, U16 const flags){
     dSP;
 
-    if(flags & MAf_ATTR_SHOULD_AUTO_DEREF && GIMME_V == G_ARRAY){
+    if(flags & MOOSE_MIf_ATTR_SHOULD_AUTO_DEREF && GIMME_V == G_ARRAY){
         if(!(value && SvOK(value))){
             return;
         }
 
-        if(flags & MAf_TC_IS_ARRAYREF){
+        if(flags & MOOSE_MIf_TC_IS_ARRAYREF){
             AV* const av = (AV*)SvRV(value);
             I32 len;
             I32 i;
 
             if(SvTYPE(av) != SVt_PVAV){
                 croak("Moose: panic: Not an ARRAY reference for %"SVf,
-                        MA_key(meta));
+                        MOOSE_mi_slot(mi));
             }
 
             len = av_len(av) + 1;
@@ -246,13 +222,13 @@ moose_push_values(pTHX_ AV* const meta, SV* const value, U16 const flags){
                 PUSHs(svp ? *svp : &PL_sv_undef);
             }
         }
-        else if(flags & MAf_TC_IS_HASHREF){
+        else if(flags & MOOSE_MIf_TC_IS_HASHREF){
             HV* const hv = (HV*)SvRV(value);
             HE* he;
 
             if(SvTYPE(hv) != SVt_PVHV){
                 croak("Moose: panic: Not a HASH reference for %"SVf,
-                        MA_key(meta));
+                        MOOSE_mi_slot(mi));
             }
 
             hv_iterinit(hv);
@@ -272,30 +248,29 @@ moose_push_values(pTHX_ AV* const meta, SV* const value, U16 const flags){
 
 static void
 moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
-    AV* const meta  = MOP_mg_meta(mg);
-    U16 const flags = mg->mg_private;
-    SV* const key   = MA_key(meta);
+    AV* const mi    = MOP_mg_mi(mg);
+    U16 const flags = MOP_mg_flags(mg);
 
     /* check_lazy */
-    if( flags & MAf_ATTR_IS_LAZY && !(MOP_mg_vtbl(mg)->has_slot(aTHX_ self, key)) ){
+    if( flags & MOOSE_MIf_ATTR_IS_LAZY && !MOP_mg_has_slot(mg, self) ){
         SV* value = NULL;
-        SV* const attr = MA_attribute(meta);
+        SV* const attr = MOOSE_mi_attribute(mi);
         /* get default value by $attr->default or $attr->builder */
-        if(flags & MAf_ATTR_HAS_DEFAULT){
+        if(flags & MOOSE_MIf_ATTR_HAS_DEFAULT){
             value = mop_call1_pvs(attr, "default", self);
         }
-        else if(flags & MAf_ATTR_HAS_BUILDER){
+        else if(flags & MOOSE_MIf_ATTR_HAS_BUILDER){
             SV* const builder = mop_call0_pvs(attr, "builder");
             SV* const method  = mop_call1_pvs(self, "can", builder);
             if(SvOK(method)){
                 value = mop_call0(aTHX_ self, method);
             }
             else{
-                moose_throw_error(MA_accessor(meta), NULL,
+                moose_throw_error(MOOSE_mi_accessor(mi), NULL,
                     "%s does not support builder method '%"SVf"' for attribute '%"SVf"'",
                         HvNAME_get(SvSTASH(SvRV(self))), /* ref($self) */
                         builder,
-                        key);
+                        MOOSE_mi_slot(mi));
             }
         }
 
@@ -304,13 +279,13 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
         }
 
         /* apply coerce and type constraint */
-        if(flags & MAf_ATTR_HAS_TC){
-            value = moose_apply_tc(aTHX_ meta, value, flags);
+        if(flags & MOOSE_MIf_ATTR_HAS_TC){
+            value = moose_apply_tc(aTHX_ mi, value, flags);
         }
 
         /* store value to slot, or invoke initializer */
-        if(!(flags & MAf_ATTR_HAS_INITIALIZER)){
-            (void)MOP_mg_vtbl(mg)->set_slot(aTHX_ self, key, value);
+        if(!(flags & MOOSE_MIf_ATTR_HAS_INITIALIZER)){
+            (void)MOP_mg_set_slot(mg, self, value);
         }
         else{
             /* $attr->set_initial_value($self, $value) */
@@ -318,7 +293,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
             PUSHMARK(SP);
             EXTEND(SP, 3);
-            PUSHs(MA_attribute(meta));
+            PUSHs(MOOSE_mi_attribute(mi));
             PUSHs(self);
             PUSHs(value);
             PUTBACK;
@@ -328,43 +303,42 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
         }
     }
 
-    moose_push_values(aTHX_ meta, MOP_mg_vtbl(mg)->get_slot(aTHX_ self, key), flags);
+    moose_push_values(aTHX_ mi, MOP_mg_get_slot(mg, self), flags);
 }
 
 static void
 moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
-    AV* const meta  = MOP_mg_meta(mg);
-    U16 const flags = mg->mg_private;
-    SV* const key   = MA_key(meta);
-    SV* old_value = NULL;
+    AV* const mi    = MOP_mg_mi(mg);
+    U16 const flags = MOP_mg_flags(mg);
+    SV* old_value   = NULL;
 
     /*
-    if(flags & MAf_ATTR_IS_REQUIRED){
+    if(flags & MOOSE_MIf_ATTR_IS_REQUIRED){
         // XXX: What I should do?
     }
     */
 
-    if(flags & MAf_ATTR_HAS_TC){
-        value = moose_apply_tc(aTHX_ meta, value, flags);
+    if(flags & MOOSE_MIf_ATTR_HAS_TC){
+        value = moose_apply_tc(aTHX_ mi, value, flags);
     }
 
     /* get old value for trigger */
-    if(flags & MAf_ATTR_HAS_TRIGGER){
-        old_value = MOP_mg_vtbl(mg)->get_slot(aTHX_ self, key);
+    if(flags & MOOSE_MIf_ATTR_HAS_TRIGGER){
+        old_value = MOP_mg_get_slot(mg, self);
         if(old_value){
             /* XXX: need deep copy for auto-deref? */
             old_value = newSVsv(old_value);
         }
     }
 
-    MOP_mg_vtbl(mg)->set_slot(aTHX_ self, key, value);
+    MOP_mg_set_slot(mg, self, value);
 
-    if(flags & MAf_ATTR_IS_WEAK_REF){
-        MOP_mg_vtbl(mg)->weaken_slot(aTHX_ self, key);
+    if(flags & MOOSE_MIf_ATTR_IS_WEAK_REF){
+        MOP_mg_weaken_slot(mg, self);
     }
 
-    if(flags & MAf_ATTR_HAS_TRIGGER){
-        SV* const trigger = mop_call0_pvs(MA_attribute(meta), "trigger");
+    if(flags & MOOSE_MIf_ATTR_HAS_TRIGGER){
+        SV* const trigger = mop_call0_pvs(MOOSE_mi_attribute(mi), "trigger");
         dSP;
 
         PUSHMARK(SP);
@@ -374,7 +348,7 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
 
         if(old_value){
             PUTBACK;
-            moose_push_values(aTHX_ meta, old_value, flags);
+            moose_push_values(aTHX_ mi, old_value, flags);
             SPAGAIN;
         }
 
@@ -405,7 +379,7 @@ XS(moose_xs_accessor)
         moose_attr_set(aTHX_ self, mg, ST(1));
     }
     else{
-        moose_throw_error(MA_accessor(MOP_mg_meta(mg)), NULL,
+        moose_throw_error(MOOSE_mg_accessor(mg), NULL,
             "expected exactly one or two argument");
     }
 }
@@ -423,7 +397,7 @@ XS(moose_xs_reader)
         for(i = 0; i < items; i++){
             av_push(args, newSVsv(ST(i)));
         }
-        moose_throw_error(MA_accessor(MOP_mg_meta(mg)), newRV_noinc((SV*)args),
+        moose_throw_error(MOOSE_mg_accessor(mg), newRV_noinc((SV*)args),
             "Cannot assign a value to a read-only accessor '%s'", GvNAME(CvGV(cv)));
     }
 
@@ -439,7 +413,7 @@ XS(moose_xs_writer)
     dMOP_METHOD_COMMON; /* self, mg */
 
     if (items != 2) {
-        moose_throw_error(MA_accessor(MOP_mg_meta(mg)), NULL,
+        moose_throw_error(MOOSE_mg_accessor(mg), NULL,
             "expected exactly two arguments");
     }
 
