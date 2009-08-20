@@ -22,6 +22,9 @@ for, noteworthy changes.
       - If you try to wrap/export a subroutine which doesn't actually exist,
         Moose::Exporter will warn you about this. (doy)
 
+    * Moose::Meta::Class
+      - Warn when calling make_immutable on a class with mutable ancestors.
+        (doy)
 
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
