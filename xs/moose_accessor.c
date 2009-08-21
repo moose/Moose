@@ -5,8 +5,6 @@
 /* Moose Meta Instance object */
 enum moose_mi_ix_t{
     MOOSE_MI_ACCESSOR = MOP_MI_last,
-    MOOSE_MI_CLASS,
-    MOOSE_MI_INSTANCE,
     MOOSE_MI_ATTRIBUTE,
     MOOSE_MI_TC,
     MOOSE_MI_TC_CODE,
@@ -53,11 +51,7 @@ enum moose_mi_flags_t{
 
 CV*
 moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), const mop_instance_vtbl* const instance_vtbl){
-        /* $key = $accessor->associated_attribute->name */
-    SV* const metaclass = mop_call0_pvs(accessor,  "associated_metaclass");
-    SV* const instance  = mop_call0_pvs(metaclass, "get_meta_instance");
     SV* const attr      = mop_call0_pvs(accessor,  "associated_attribute");
-
     SV* const key       = mop_call0_pvs(attr, "name");
     STRLEN klen;
     const char* const kpv = SvPV_const(key, klen);
@@ -69,17 +63,12 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
     U16 flags    = 0;
 
     assert(instance_vtbl);
-    assert(sv_isobject(metaclass));
-    assert(sv_isobject(instance));
-    assert(sv_isobject(attr));
 
     /* setup mi information */
 
     av_extend(mi, MOOSE_MI_last - 1);
 
     av_store(mi, MOOSE_MI_ACCESSOR,  sv_rvweaken(newSVsv(accessor)));
-    av_store(mi, MOOSE_MI_CLASS,     sv_rvweaken(newSVsv(metaclass)));
-    av_store(mi, MOOSE_MI_INSTANCE,  sv_rvweaken(newSVsv(instance)));
     av_store(mi, MOOSE_MI_ATTRIBUTE, sv_rvweaken(newSVsv(attr)));
 
     /* prepare attribute status */

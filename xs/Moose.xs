@@ -23,12 +23,12 @@ moose_throw_error(SV* const metaobject, SV* const data, const char* const fmt, .
         PUSHs(metaobject);
         mPUSHs(message);
 
-        mPUSHp("depth", sizeof("depth")-1);
+        mPUSHs(newSVpvs("depth"));
         mPUSHi(-1);
 
         if(data){
             EXTEND(SP, 2);
-            mPUSHp("data", sizeof("data")-1);
+            mPUSHp(newSVpvs("data"));
             PUSHs(data);
         }
         PUTBACK;
