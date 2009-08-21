@@ -9,3 +9,7 @@
 /t/000_recipes/*
 .*
 !.gitignore
+*.bs
+*.o
+Moose.c
+ppport.h
