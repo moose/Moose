@@ -141,7 +141,7 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
 }
 
 static SV*
-moose_apply_tc(pTHX_ AV* const mi, SV* value, U16 const flags){
+moose_apply_type_constraint(pTHX_ AV* const mi, SV* value, U16 const flags){
     SV* const tc = MOOSE_mi_tc(mi);
     SV* tc_code;
 
@@ -269,7 +269,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
         /* apply coerce and type constraint */
         if(flags & MOOSE_MIf_ATTR_HAS_TC){
-            value = moose_apply_tc(aTHX_ mi, value, flags);
+            value = moose_apply_type_constraint(aTHX_ mi, value, flags);
         }
 
         /* store value to slot, or invoke initializer */
@@ -301,14 +301,8 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
     U16 const flags = MOP_mg_flags(mg);
     SV* old_value   = NULL;
 
-    /*
-    if(flags & MOOSE_MIf_ATTR_IS_REQUIRED){
-        // XXX: What I should do?
-    }
-    */
-
     if(flags & MOOSE_MIf_ATTR_HAS_TC){
-        value = moose_apply_tc(aTHX_ mi, value, flags);
+        value = moose_apply_type_constraint(aTHX_ mi, value, flags);
     }
 
     /* get old value for trigger */
