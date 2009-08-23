@@ -69,19 +69,19 @@ the attribute.
 
 =over 4
 
-=item I<set>
+=item B<set>
 
 Sets the value to C<1>.
 
-=item I<unset>
+=item B<unset>
 
 Set the value to C<0>.
 
-=item I<toggle>
+=item B<toggle>
 
 Toggles the value. If it's true, set to false, and vice versa.
 
-=item I<not>
+=item B<not>
 
 Equivalent of 'not C<$value>'.
 
