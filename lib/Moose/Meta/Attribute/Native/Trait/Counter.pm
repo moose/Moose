@@ -55,7 +55,7 @@ Moose::Meta::Attribute::Native::Trait::Counter
   use Moose;
 
   has 'counter' => (
-      traits => ['Counter'],
+      traits    => ['Counter'],
       is        => 'ro',
       isa       => 'Num',
       default   => 0,
@@ -63,7 +63,7 @@ Moose::Meta::Attribute::Native::Trait::Counter
           inc_counter   => 'inc',
           dec_counter   => 'dec',
           reset_counter => 'reset',
-      }
+      },
   );
 
   my $page = MyHomePage->new();

@@ -37,7 +37,7 @@ Moose::Meta::Attribute::Native::Trait::Bool
   use Moose;
 
   has 'is_lit' => (
-      traits => ['Bool'],
+      traits    => ['Bool'],
       is        => 'rw',
       isa       => 'Bool',
       default   => 0,
@@ -46,7 +46,7 @@ Moose::Meta::Attribute::Native::Trait::Bool
           darken      => 'unset',
           flip_switch => 'toggle',
           is_dark     => 'not',
-      }
+      },
   );
 
   my $room = Room->new();

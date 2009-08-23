@@ -52,14 +52,14 @@ Moose::Meta::Attribute::Native::Trait::String
   use Moose;
 
   has 'text' => (
-      metaclass => 'String',
+      traits    => ['String'],
       is        => 'rw',
       isa       => 'Str',
       default   => q{},
-      handles  => {
+      handles   => {
           add_text     => 'append',
           replace_text => 'replace',
-      }
+      },
   );
 
   my $page = MyHomePage->new();

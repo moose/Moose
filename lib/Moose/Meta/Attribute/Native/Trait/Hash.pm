@@ -48,7 +48,7 @@ Moose::Meta::Attribute::Native::Trait::Hash
           num_options    => 'count',
           delete_option  => 'delete',
           pairs          => 'kv',
-      }
+      },
   );
 
 =head1 DESCRIPTION

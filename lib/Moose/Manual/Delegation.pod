@@ -108,7 +108,7 @@ similar.
       handles => {
           add_item  => 'push',
           next_item => 'shift',
-      }
+      },
   )
 
 By providing the C<Array> trait to the C<traits> parameter you signal to
@@ -144,7 +144,7 @@ curry methods when creating delegates.
         isa     => 'HTTP::Request',
         handles => {
             set_user_agent => [ header => 'UserAgent' ],
-        }
+        },
     )
 
 With this definition calling C<< $spider->set_user_agent('MyClient') >> will
