@@ -118,9 +118,11 @@ scenes C<add_item> is something like
 
   sub add_item {
       my ($self, @items) = @_;
+
       for my $item (@items) {
           $Item_TC->validate($item);
       }
+
       push @{ $self->queue }, @items;
   }
 
@@ -131,22 +133,23 @@ L<Moose::Meta::Attribute::Native|Moose::Meta::Attribute::Native>.
 =head1 CURRYING
 
 Currying is a way of creating a method or function from another method or
-function with one of the parameters pre-defined. Moose provides the ability to
+function with some of the parameters pre-defined. Moose provides the ability to
 curry methods when creating delegates.
 
     package Spider;
     use Moose;
 
     has request => (
-        is => 'ro'
-        isa => 'HTTP::Request',
+        is      => 'ro'
+        isa     => 'HTTP::Request',
         handles => {
-            set_user_agent => [ header => 'UserAgent'],
+            set_user_agent => [ header => 'UserAgent' ],
         }
     )
 
-With this definition calling C<$spider->set_user_agent('MyClient')> will
-behind the scenes call C<$spider->request->header('UserAgent', 'MyClient')>.
+With this definition calling C<< $spider->set_user_agent('MyClient') >> will
+behind the scenes call
+C<< $spider->request->header('UserAgent', 'MyClient') >>.
 
 =head1 MISSING ATTRIBUTES
 
