@@ -126,6 +126,15 @@ L<perlfunc/chomp>
 
 Sets the string to the empty string (not the value passed to C<default>).
 
+=item B<length>
+
+L<perlfunc/length>
+
+=item B<substr>
+
+L<perlfunc/substr>. We go to some lengths to match the different functionality
+based on C<substr>'s arity.
+
 =back
 
 =head1 METHODS
