@@ -99,25 +99,28 @@ L<Moose> docs for more details on exactly how this works.
 Handles also will allow you to delegate to "helper" methods that work on
 common Perl data structures. If you remember or have ever used
 L<MooseX::AttributeHelpers|MooseX::AttributeHelpers> the mechanism is very
-similar. 
- 
+similar.
+
   has 'queue' => (
-      isa => 'ArrayRef[Item]',
-      traits => ['Array'],
+      isa     => 'ArrayRef[Item]',
+      traits  => ['Array'],
       default => sub { [ ] },
       handles => {
-          add_item => 'push',
+          add_item  => 'push',
           next_item => 'shift',
       }
   )
 
-By providing using C<Array> trait to the C<traits> parameter you signal to
+By providing the C<Array> trait to the C<traits> parameter you signal to
 Moose that you would like to use the set of Array helpers. Moose will then
-create an C<add_item> and a C<next_item> method that "just works". Behind the
+create C<add_item> and C<next_item> methods that "just work". Behind the
 scenes C<add_item> is something like
 
-  sub add_item { 
+  sub add_item {
       my ($self, @items) = @_;
+      for my $item (@items) {
+          $Item_TC->validate($item);
+      }
       push @{ $self->queue }, @items;
   }
 
@@ -129,7 +132,7 @@ L<Moose::Meta::Attribute::Native|Moose::Meta::Attribute::Native>.
 
 Currying is a way of creating a method or function from another method or
 function with one of the parameters pre-defined. Moose provides the ability to
-curry methods when creating delegates. 
+curry methods when creating delegates.
 
     package Spider;
     use Moose;
