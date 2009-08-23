@@ -98,7 +98,7 @@ L<Moose> docs for more details on exactly how this works.
 
 Handles also will allow you to delegate to "helper" methods that work on
 common Perl data structures. If you remember or have ever used
-L<MooseX::AttributeHelpers|MooseX::AttributeHelpers> the mechanisim is very
+L<MooseX::AttributeHelpers|MooseX::AttributeHelpers> the mechanism is very
 similar. 
  
   has 'queue' => (
@@ -142,8 +142,8 @@ curry methods when creating delegates.
         }
     )
 
-With this definiton calling C<$spider->set_user_agent('MyClient')> will behind
-the scenes call C<$spider->request->header('UserAgent', 'MyClient')>. 
+With this definition calling C<$spider->set_user_agent('MyClient')> will
+behind the scenes call C<$spider->request->header('UserAgent', 'MyClient')>.
 
 =head1 MISSING ATTRIBUTES
 
