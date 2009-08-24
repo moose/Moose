@@ -113,7 +113,7 @@ similar.
 
 By providing the C<Array> trait to the C<traits> parameter you signal to
 Moose that you would like to use the set of Array helpers. Moose will then
-create C<add_item> and C<next_item> methods that "just work". Behind the
+create C<add_item> and C<next_item> method that "just works". Behind the
 scenes C<add_item> is something like
 
   sub add_item {
@@ -147,9 +147,8 @@ curry methods when creating delegates.
         },
     )
 
-With this definition calling C<< $spider->set_user_agent('MyClient') >> will
-behind the scenes call
-C<< $spider->request->header('UserAgent', 'MyClient') >>.
+With this definition, calling C<< $spider->set_user_agent('MyClient') >> will
+behind the scenes call C<< $spider->request->header('UserAgent', 'MyClient')>>.
 
 =head1 MISSING ATTRIBUTES
 
