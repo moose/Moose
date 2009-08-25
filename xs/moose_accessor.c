@@ -1,5 +1,3 @@
-#define PERL_NO_GET_CONTEXT
-#include "mop.h"
 #include "moose.h"
 
 /* Moose Meta Instance object */
@@ -20,7 +18,7 @@ enum moose_mi_ix_t{
 #define MOOSE_mi_tc(m)        MOP_mi_access(m, MOOSE_MI_TC)
 #define MOOSE_mi_tc_code(m)   MOP_mi_access(m, MOOSE_MI_TC_CODE)
 
-#define MOOSE_mg_accessor(mg) MOOSE_mi_accessor(MOP_mg_mi(mg))
+#define MOOSE_mg_accessor(mg) MOOSE_mi_accessor(MOP_mg_miav(mg))
 
 enum moose_mi_flags_t{
     MOOSE_MIf_ATTR_HAS_TC          = 0x0001,
@@ -59,7 +57,7 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), 
     CV* const xsub        = mop_install_accessor(aTHX_ NULL /* anonymous */, kpv, klen, accessor_impl, instance_vtbl);
     dMOP_mg(xsub);
 
-    AV* const mi = MOP_mg_mi(mg);
+    AV* const mi = MOP_mg_miav(mg);
     U16 flags    = 0;
 
     assert(instance_vtbl);
@@ -237,7 +235,7 @@ moose_push_values(pTHX_ AV* const mi, SV* const value, U16 const flags){
 
 static void
 moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
-    AV* const mi    = MOP_mg_mi(mg);
+    AV* const mi    = MOP_mg_miav(mg);
     U16 const flags = MOP_mg_flags(mg);
 
     /* check_lazy */
@@ -297,7 +295,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
 static void
 moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
-    AV* const mi    = MOP_mg_mi(mg);
+    AV* const mi    = MOP_mg_miav(mg);
     U16 const flags = MOP_mg_flags(mg);
     SV* old_value   = NULL;
 

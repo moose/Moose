@@ -1,6 +1,8 @@
 #ifndef PERL_MOOSE_H
 #define PERL_MOOSE_H
 
+#include "mop.h"
+
 #ifndef __attribute__format__
 #define __attribute__format__(name, ifmt, iargs)
 #endif

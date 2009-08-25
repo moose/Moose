@@ -1,5 +1,3 @@
-#define PERL_NO_GET_CONTEXT
-#include "mop.h"
 #include "moose.h"
 
 void
