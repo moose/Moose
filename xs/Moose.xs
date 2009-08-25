@@ -28,7 +28,7 @@ moose_throw_error(SV* const metaobject, SV* const data, const char* const fmt, .
 
         if(data){
             EXTEND(SP, 2);
-            mPUSHp(newSVpvs("data"));
+            mPUSHs(newSVpvs("data"));
             PUSHs(data);
         }
         PUTBACK;
