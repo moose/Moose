@@ -17,6 +17,12 @@ use Class::MOP;
     use Moose;
 }
 
+{
+    # prepare all the method cache
+    my $meta = Foo->meta;
+    $meta->add_attribute(foo => (is => 'rw'));
+    $meta->remove_attribute('foo');
+}
 
 my $expected = ($] == 5.010_000) ? 3 : 0; # for a bug on 5.10.0
 
