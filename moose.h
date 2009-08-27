@@ -19,4 +19,13 @@ XS(moose_xs_writer);
 CV* moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), const mop_instance_vtbl* const instance_vtbl);
 
 
+
+#ifdef DEBUGGING
+#define MOOSE_mi_access(mi, a)  *moose_debug_mi_access(aTHX_ (mi) , (a))
+SV** moose_debug_mi_access(pTHX_ AV* const mi, I32 const attr_ix);
+#else
+#define MOOSE_mi_access(mi, a)  AvARRAY((mi))[(a)]
+#endif
+
+
 #endif /* !PERL_MOOSE_H */
