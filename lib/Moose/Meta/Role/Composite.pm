@@ -25,8 +25,8 @@ __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 # package to store our methods in,
 # we use a HASH ref instead.
 # - SL
-__PACKAGE__->meta->add_attribute('methods' => (
-    reader  => 'get_method_map',
+__PACKAGE__->meta->add_attribute('_methods' => (
+    reader  => '_method_map',
     default => sub { {} }
 ));
 
@@ -95,7 +95,24 @@ sub add_method {
         $method = $self->wrap_method_body( body => $body, name => $method_name );
     }
 
-    $self->get_method_map->{$method_name} = $method;
+    $self->_method_map->{$method_name} = $method;
+}
+
+sub get_method_list {
+    my $self = shift;
+    return keys %{ $self->_method_map };
+}
+
+sub has_method {
+    my ($self, $method_name) = @_;
+
+    return exists $self->_method_map->{$method_name};
+}
+
+sub get_method {
+    my ($self, $method_name) = @_;
+
+    return $self->_method_map->{$method_name};
 }
 
 sub apply_params {

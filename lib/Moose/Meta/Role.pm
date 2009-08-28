@@ -361,128 +361,7 @@ sub does_role {
     return 0;
 }
 
-## ------------------------------------------------------------------
-## methods
-
-sub get_method_map {
-    my $self = shift;
-
-    my $current = Class::MOP::check_package_cache_flag($self->name);
-
-    if (defined $self->{'_package_cache_flag'} && $self->{'_package_cache_flag'} == $current) {
-        return $self->{'methods'} ||= {};
-    }
-
-    $self->{_package_cache_flag} = $current;
-
-    my $map  = $self->{'methods'} ||= {};
-
-    my $role_name        = $self->name;
-    my $method_metaclass = $self->method_metaclass;
-
-    my $all_code = $self->get_all_package_symbols('CODE');
-
-    foreach my $symbol (keys %{ $all_code }) {
-        my $code = $all_code->{$symbol};
-
-        next if exists  $map->{$symbol} &&
-                defined $map->{$symbol} &&
-                        $map->{$symbol}->body == $code;
-
-        my ($pkg, $name) = Class::MOP::get_code_info($code);
-        my $meta = Class::MOP::class_of($pkg);
-
-        if ($meta && $meta->isa('Moose::Meta::Role')) {
-            my $role = $meta->name;
-            next unless $self->does_role($role);
-        }
-        else {
-            # NOTE:
-            # in 5.10 constant.pm the constants show up
-            # as being in the right package, but in pre-5.10
-            # they show up as constant::__ANON__ so we
-            # make an exception here to be sure that things
-            # work as expected in both.
-            # - SL
-            unless ($pkg eq 'constant' && $name eq '__ANON__') {
-                next if ($pkg  || '') ne $role_name ||
-                        (($name || '') ne '__ANON__' && ($pkg  || '') ne $role_name);
-            }
-        }
-
-        $map->{$symbol} = $method_metaclass->wrap(
-            $code,
-            package_name => $role_name,
-            name         => $name
-        );
-    }
-
-    return $map;
-}
-
-sub get_method {
-    my ($self, $name) = @_;
-    $self->get_method_map->{$name};
-}
-
-sub has_method {
-    my ($self, $name) = @_;
-    exists $self->get_method_map->{$name} ? 1 : 0
-}
-
-# FIXME this is copy-pasted from Class::MOP::Class
-# refactor to inherit from some common base
-sub wrap_method_body {
-    my ( $self, %args ) = @_;
-
-    ('CODE' eq ref $args{body})
-        || Moose->throw_error("Your code block must be a CODE reference");
-
-    $self->method_metaclass->wrap(
-        package_name => $self->name,
-        %args,
-    );
-}
-
-sub add_method {
-    my ($self, $method_name, $method) = @_;
-    (defined $method_name && $method_name)
-    || Moose->throw_error("You must define a method name");
-
-    my $body;
-    if (blessed($method)) {
-        $body = $method->body;
-        if ($method->package_name ne $self->name) {
-            $method = $method->clone(
-                package_name => $self->name,
-                name         => $method_name
-            ) if $method->can('clone');
-        }
-    }
-    else {
-        $body = $method;
-        $method = $self->wrap_method_body( body => $body, name => $method_name );
-    }
-
-    $method->attach_to_class($self);
-
-    $self->get_method_map->{$method_name} = $method;
-
-    my $full_method_name = ($self->name . '::' . $method_name);
-    $self->add_package_symbol(
-        { sigil => '&', type => 'CODE', name => $method_name },
-        subname($full_method_name => $body)
-    );
-
-    $self->update_package_cache_flag; # still valid, since we just added the method to the map, and if it was invalid before that then get_method_map updated it
-}
-
 sub find_method_by_name { (shift)->get_method(@_) }
-
-sub get_method_list {
-    my $self = shift;
-    grep { !/^meta$/ } keys %{$self->get_method_map};
-}
 
 sub alias_method {
     Carp::cluck("The alias_method method is deprecated. Use add_method instead.\n");
@@ -913,8 +792,6 @@ L<Moose::Meta::Role::Method>.
 =item B<< $metarole->add_method( $name, $body ) >>
 
 =item B<< $metarole->get_method_list >>
-
-=item B<< $metarole->get_method_map >>
 
 =item B<< $metarole->find_method_by_name($name) >>
 

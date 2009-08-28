@@ -73,6 +73,7 @@ sub apply_attributes {
 sub apply_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $method_name ($role1->get_method_list) {
+        next if $method_name eq 'meta';
 
         unless ( $self->is_method_excluded($method_name) ) {
             if (   $role2->has_method($method_name)
