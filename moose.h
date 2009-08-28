@@ -16,7 +16,7 @@ XS(moose_xs_accessor);
 XS(moose_xs_reader);
 XS(moose_xs_writer);
 
-CV* moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), const mop_instance_vtbl* const instance_vtbl);
+CV* moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSUBADDR_t const accessor_impl, mop_instance_vtbl* const instance_vtbl);
 
 
 

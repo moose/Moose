@@ -70,12 +70,9 @@ moose_debug_mi_access(pTHX_ AV* const mi, I32 const attr_ix){
 #endif
 
 CV*
-moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSPROTO(accessor_impl), const mop_instance_vtbl* const instance_vtbl){
-    SV* const attr      = mop_call0_pvs(accessor,  "associated_attribute");
-    SV* const key       = mop_call0_pvs(attr, "name");
-    STRLEN klen;
-    const char* const kpv = SvPV_const(key, klen);
-    CV* const xsub        = mop_install_accessor(aTHX_ NULL /* anonymous */, kpv, klen, accessor_impl, instance_vtbl);
+moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSUBADDR_t const accessor_impl, mop_instance_vtbl* const instance_vtbl){
+    SV* const attr = mop_call0_pvs(accessor,  "associated_attribute");
+    CV* const xsub = mop_instantiate_xs_accessor(aTHX_ accessor, accessor_impl, instance_vtbl);
     dMOP_mg(xsub);
 
     SV* const slot = MOP_mg_slot(mg);
