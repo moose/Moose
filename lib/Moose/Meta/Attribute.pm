@@ -585,16 +585,26 @@ sub _check_associated_methods {
 sub _looks_like_overwriting_local_method {
 	my ($self, $accessor) = @_;
 	my $method = $self->associated_class->get_method($accessor);
+	
+	# if we don't have a locally defined method we're not overwriting one
 	return 0 unless $method;
 	
-	# get ourselves down to the original method
+	# need to unwrap the original method
 	while ($method->isa('Class::MOP::Method::Wrapped')) {
 		$method = $method->get_original_method;
 	}
+	
+	# if the original method is an accessor we're okay
 	return 0 if $method->isa('Class::MOP::Method::Accessor');
-	return 1 if !$self->definition_context;
-	return 0 if $method->package_name ne $self->definition_context->{package};
-	return 1;
+	
+	# if we don't have definiton_context assume that it's bad
+	return 1 unless $self->definition_context;
+	
+	# if the method is local to us (in the same package) ... it's bad
+	return 1 if $method->package_name eq $self->definition_context->{package};
+	
+	# otherwise assume it's okay
+	return 0;
 }
 
 sub _process_accessors {
