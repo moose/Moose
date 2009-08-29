@@ -591,10 +591,10 @@ sub _looks_like_overwriting_local_method {
 	while ($method->isa('Class::MOP::Method::Wrapped')) {
 		$method = $method->get_original_method;
 	}
-	return 1 if !$method->isa('Class::MOP::Method::Accessor');
-	return 0 if !$self->definition_context;
+	return 0 if $method->isa('Class::MOP::Method::Accessor');
+	return 1 if !$self->definition_context;
 	return 0 if $method->package_name ne $self->definition_context->{package};
-	return 0;
+	return 1;
 }
 
 sub _process_accessors {
@@ -604,7 +604,7 @@ sub _process_accessors {
 	if ($self->_looks_like_overwriting_local_method($accessor)) {
         Carp::cluck(
             "You are overwriting a locally defined method ($accessor) with "
-          . "an accessor at line " .$self->definition_context->{line}
+          . "an accessor"
         );
     }
     $self->SUPER::_process_accessors(@_);
