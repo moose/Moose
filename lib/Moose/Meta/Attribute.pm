@@ -582,17 +582,29 @@ sub _check_associated_methods {
     }
 }
 
+sub _looks_like_overwriting_local_method {
+	my ($self, $accessor) = @_;
+	my $method = $self->associated_class->get_method($accessor);
+	return 0 unless $method;
+	
+	# get ourselves down to the original method
+	while ($method->isa('Class::MOP::Method::Wrapped')) {
+		$method = $method->get_original_method;
+	}
+	return 1 if !$method->isa('Class::MOP::Method::Accessor');
+	return 0 if !$self->definition_context;
+	return 0 if $method->package_name ne $self->definition_context->{package};
+	return 0;
+}
+
 sub _process_accessors {
     my $self = shift;
     my ($type, $accessor, $generate_as_inline_methods) = @_;
     $accessor = (keys %$accessor)[0] if (ref($accessor)||'') eq 'HASH';
-    my $method = $self->associated_class->get_method($accessor);
-    if ($method && !$method->isa('Class::MOP::Method::Accessor')
-     && (!$self->definition_context
-      || $method->package_name eq $self->definition_context->{package})) {
+	if ($self->_looks_like_overwriting_local_method($accessor)) {
         Carp::cluck(
             "You are overwriting a locally defined method ($accessor) with "
-          . "an accessor"
+          . "an accessor at line " .$self->definition_context->{line}
         );
     }
     $self->SUPER::_process_accessors(@_);
