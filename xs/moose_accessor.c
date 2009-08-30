@@ -1,13 +1,5 @@
 #include "moose.h"
 
-#define MOOSE_mg_create_instance(mg, stash) MOP_mg_vtbl(mg)->create_instance (aTHX_ (stash))
-#define MOOSE_mg_has_slot(mg, o)            MOP_mg_vtbl(mg)->has_slot        (aTHX_ (o), MOOSE_mg_slot(mg))
-#define MOOSE_mg_get_slot(mg, o)            MOP_mg_vtbl(mg)->get_slot        (aTHX_ (o), MOOSE_mg_slot(mg))
-#define MOOSE_mg_set_slot(mg, o, v)         MOP_mg_vtbl(mg)->set_slot        (aTHX_ (o), MOOSE_mg_slot(mg), (v))
-#define MOOSE_mg_delete_slot(mg, o)         MOP_mg_vtbl(mg)->delete_slot     (aTHX_ (o), MOOSE_mg_slot(mg))
-#define MOOSE_mg_weaken_slot(mg, o)         MOP_mg_vtbl(mg)->weaken_slot     (aTHX_ (o), MOOSE_mg_slot(mg))
-
-
 /* Moose Meta Instance object */
 enum moose_mi_ix_t{
     MOOSE_MI_SLOT,
@@ -19,13 +11,11 @@ enum moose_mi_ix_t{
     MOOSE_MI_last
 };
 
-#define MOOSE_mi_slot(m)      MOOSE_mi_access(m, MOOSE_MI_SLOT)
-#define MOOSE_mi_accessor(m)  MOOSE_mi_access(m, MOOSE_MI_ACCESSOR)
-#define MOOSE_mi_class(m)     MOOSE_mi_access(m, MOOSE_MI_CLASS)
-#define MOOSE_mi_instance(m)  MOOSE_mi_access(m, MOOSE_MI_INSTANCE)
-#define MOOSE_mi_attribute(m) MOOSE_mi_access(m, MOOSE_MI_ATTRIBUTE)
-#define MOOSE_mi_tc(m)        MOOSE_mi_access(m, MOOSE_MI_TC)
-#define MOOSE_mi_tc_code(m)   MOOSE_mi_access(m, MOOSE_MI_TC_CODE)
+#define MOOSE_mi_slot(m)      MOP_av_at(m, MOOSE_MI_SLOT)
+#define MOOSE_mi_accessor(m)  MOP_av_at(m, MOOSE_MI_ACCESSOR)
+#define MOOSE_mi_attribute(m) MOP_av_at(m, MOOSE_MI_ATTRIBUTE)
+#define MOOSE_mi_tc(m)        MOP_av_at(m, MOOSE_MI_TC)
+#define MOOSE_mi_tc_code(m)   MOP_av_at(m, MOOSE_MI_TC_CODE)
 
 #define MOOSE_mg_mi(mg)       (AV*)MOP_mg_obj(mg)
 #define MOOSE_mg_flags(mg)    MOP_mg_flags(mg)
@@ -56,18 +46,8 @@ enum moose_mi_flags_t{
     MOOSE_MIf_OTHER3               = 0x4000,
     MOOSE_MIf_OTHER4               = 0x8000,
 
-    MOOSE_MIf_MOOSE_MISK           = 0xFFFF /* not used */
+    MOOSE_MIf_MOOSE_MASK           = 0xFFFF /* not used */
 };
-
-#ifdef DEBUGGING
-SV**
-moose_debug_mi_access(pTHX_ AV* const mi, I32 const attr_ix){
-    assert(mi);
-    assert(SvTYPE(mi) == SVt_PVAV);
-    assert(AvMAX(mi) >= attr_ix);
-    return &AvARRAY(mi)[attr_ix];
-}
-#endif
 
 CV*
 moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSUBADDR_t const accessor_impl, mop_instance_vtbl* const instance_vtbl){
@@ -75,7 +55,7 @@ moose_instantiate_xs_accessor(pTHX_ SV* const accessor, XSUBADDR_t const accesso
     CV* const xsub = mop_instantiate_xs_accessor(aTHX_ accessor, accessor_impl, instance_vtbl);
     dMOP_mg(xsub);
 
-    SV* const slot = MOP_mg_slot(mg);
+    SV* const slot = MOP_mg_obj(mg);
     AV* const meta = newAV();
     U16 flags    = 0;
 
@@ -257,9 +237,10 @@ static void
 moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
     AV* const mi    = MOOSE_mg_mi(mg);
     U16 const flags = MOOSE_mg_flags(mg);
+    SV* const slot  = MOOSE_mi_slot(mi);
 
     /* check_lazy */
-    if( flags & MOOSE_MIf_ATTR_IS_LAZY && !MOOSE_mg_has_slot(mg, self) ){
+    if( flags & MOOSE_MIf_ATTR_IS_LAZY && !MOP_mg_has_slot(mg, self, slot) ){
         SV* value = NULL;
         SV* const attr = MOOSE_mi_attribute(mi);
         /* get default value by $attr->default or $attr->builder */
@@ -277,7 +258,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
                     "%s does not support builder method '%"SVf"' for attribute '%"SVf"'",
                         HvNAME_get(SvSTASH(SvRV(self))), /* ref($self) */
                         builder,
-                        MOOSE_mi_slot(mi));
+                        slot);
             }
         }
 
@@ -292,7 +273,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
         /* store value to slot, or invoke initializer */
         if(!(flags & MOOSE_MIf_ATTR_HAS_INITIALIZER)){
-            (void)MOOSE_mg_set_slot(mg, self, value);
+            (void)MOP_mg_set_slot(mg, self, slot, value);
         }
         else{
             /* $attr->set_initial_value($self, $value) */
@@ -310,13 +291,14 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
         }
     }
 
-    moose_push_values(aTHX_ mi, MOOSE_mg_get_slot(mg, self), flags);
+    moose_push_values(aTHX_ mi, MOP_mg_get_slot(mg, self, slot), flags);
 }
 
 static void
 moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
     AV* const mi    = MOOSE_mg_mi(mg);
     U16 const flags = MOOSE_mg_flags(mg);
+    SV* const slot  = MOOSE_mi_slot(mi);
     SV* old_value   = NULL;
 
     if(flags & MOOSE_MIf_ATTR_HAS_TC){
@@ -325,17 +307,17 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
 
     /* get old value for trigger */
     if(flags & MOOSE_MIf_ATTR_HAS_TRIGGER){
-        old_value = MOOSE_mg_get_slot(mg, self);
+        old_value = MOP_mg_get_slot(mg, self, slot);
         if(old_value){
             /* XXX: need deep copy for auto-deref? */
             old_value = newSVsv(old_value);
         }
     }
 
-    MOOSE_mg_set_slot(mg, self, value);
+    MOP_mg_set_slot(mg, self, slot, value);
 
     if(flags & MOOSE_MIf_ATTR_IS_WEAK_REF){
-        MOOSE_mg_weaken_slot(mg, self);
+        MOP_mg_weaken_slot(mg, self, slot);
     }
 
     if(flags & MOOSE_MIf_ATTR_HAS_TRIGGER){
