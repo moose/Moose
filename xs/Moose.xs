@@ -35,6 +35,35 @@ moose_throw_error(SV* const metaobject, SV* const data, const char* const fmt, .
     }
 }
 
+MODULE = Moose   PACKAGE = Moose::Util::TypeConstraints::OptimizedConstraints
+
+void
+Item(SV* sv = &PL_sv_undef)
+ALIAS:
+    Any        = MOOSE_TC_ANY
+    Item       = MOOSE_TC_ITEM
+    Undef      = MOOSE_TC_UNDEF
+    Defined    = MOOSE_TC_DEFINED
+    Bool       = MOOSE_TC_BOOL
+    Value      = MOOSE_TC_VALUE
+    Ref        = MOOSE_TC_REF
+    Str        = MOOSE_TC_STR
+    Num        = MOOSE_TC_NUM
+    Int        = MOOSE_TC_INT
+    ScalarRef  = MOOSE_TC_SCALAR_REF
+    ArrayRef   = MOOSE_TC_ARRAY_REF
+    HashRef    = MOOSE_TC_HASH_REF
+    CodeRef    = MOOSE_TC_CODE_REF
+    GlobRef    = MOOSE_TC_GLOB_REF
+    FileHandle = MOOSE_TC_FILEHANDLE
+    RegexpRef  = MOOSE_TC_REGEXP_REF
+    Object     = MOOSE_TC_OBJECT
+    ClassName  = MOOSE_TC_CLASS_NAME
+    RoleName   = MOOSE_TC_ROLE_NAME
+CODE:
+    SvGETMAGIC(sv);
+    ST(0) = boolSV( moose_tc_check(aTHX_ ix, sv) );
+    XSRETURN(1);
 
 MODULE = Moose   PACKAGE = Moose::Meta::Method::Accessor
 
