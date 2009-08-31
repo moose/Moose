@@ -142,23 +142,38 @@ static SV*
 moose_apply_type_constraint(pTHX_ AV* const mi, SV* value, U16 const flags){
     SV* const tc = MOOSE_mi_tc(mi);
     SV* tc_code;
+    int ok;
 
     if(flags & MOOSE_MIf_ATTR_SHOULD_COERCE){
           value = mop_call1_pvs(tc, "coerce", value);
     }
 
     if(!SvOK(MOOSE_mi_tc_code(mi))){
+        XS(XS_Moose__Util__TypeConstraints__OptimizedConstraints_Item);
         tc_code = mop_call0_pvs(tc, "_compiled_type_constraint");
-        av_store(mi, MOOSE_MI_TC_CODE, newSVsv(tc_code));
+
+        if(SvROK(tc_code) && SvTYPE(SvRV(tc_code))
+            && CvXSUB((CV*)SvRV(tc_code)) == XS_Moose__Util__TypeConstraints__OptimizedConstraints_Item){
+            /* built-in type constraints */
+            moose_tc const id = CvXSUBANY((CV*)SvRV(tc_code)).any_i32);
+            av_store(mi, MOOSE_MI_TC_CODE, newSViv(id);
+        }
+        else{
+            av_store(mi, MOOSE_MI_TC_CODE, newSVsv(tc_code));
+        }
     }
     else{
         tc_code = MOOSE_mi_tc_code(mi);
     }
 
-    /* TODO: implement build-in type constrains in XS */
-    {
-        bool ok;
+    if(SvIOK(tc_code)){
+        ok = moose_tc_check(aTHX_ SvIVX(tc_code), value);
+    }
+    else {
         dSP;
+
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(value);
@@ -170,12 +185,15 @@ moose_apply_type_constraint(pTHX_ AV* const mi, SV* value, U16 const flags){
         ok = SvTRUEx(POPs);
         PUTBACK;
 
-        if(!ok){
-            moose_throw_error(MOOSE_mi_accessor(mi), value,
-                "Attribute (%"SVf") does not pass the type constraint because: %"SVf,
-                    MOOSE_mi_slot(mi),
-                    mop_call1_pvs(tc, "get_message", value));
-        }
+        FREETMPS;
+        LEAVE;
+    }
+
+    if(!ok){
+        moose_throw_error(MOOSE_mi_accessor(mi), value,
+            "Attribute (%"SVf") does not pass the type constraint because: %"SVf,
+                MOOSE_mi_slot(mi),
+                mop_call1_pvs(tc, "get_message", value));
     }
 
     return value;
