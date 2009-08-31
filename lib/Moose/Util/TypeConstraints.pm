@@ -36,7 +36,7 @@ use Moose::Meta::TypeConstraint::DuckType;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
-use Moose::Util::TypeConstraints::OptimizedConstraints;
+#use Moose::Util::TypeConstraints::OptimizedConstraints;
 
 Moose::Exporter->setup_import_methods(
     as_is => [
@@ -50,6 +50,8 @@ Moose::Exporter->setup_import_methods(
     ],
     _export_to_main => 1,
 );
+
+require Moose; # load XS
 
 ## --------------------------------------------------------
 ## type registry and some useful functions for it
@@ -607,14 +609,19 @@ $_->make_immutable(
     Moose::Meta::TypeConstraint::Registry
 );
 
-type 'Any'  => where {1};    # meta-type including all
+type 'Any'  => where {1},    # meta-type including all
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Any;
+
 subtype 'Item' => as 'Any';  # base-type
 
-subtype 'Undef'   => as 'Item' => where { !defined($_) };
-subtype 'Defined' => as 'Item' => where { defined($_) };
+subtype 'Undef'   => as 'Item' => where { !defined($_) },
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Undef;
+subtype 'Defined' => as 'Item' => where { defined($_) },
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Defined;
 
 subtype 'Bool' => as 'Item' =>
-    where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
+    where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
+    => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Bool;
 
 subtype 'Value' => as 'Defined' => where { !ref($_) } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Value;
