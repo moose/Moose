@@ -155,8 +155,8 @@ moose_apply_type_constraint(pTHX_ AV* const mi, SV* value, U16 const flags){
         if(SvROK(tc_code) && SvTYPE(SvRV(tc_code))
             && CvXSUB((CV*)SvRV(tc_code)) == XS_Moose__Util__TypeConstraints__OptimizedConstraints_Item){
             /* built-in type constraints */
-            moose_tc const id = CvXSUBANY((CV*)SvRV(tc_code)).any_i32);
-            av_store(mi, MOOSE_MI_TC_CODE, newSViv(id);
+            moose_tc const id = CvXSUBANY((CV*)SvRV(tc_code)).any_i32;
+            av_store(mi, MOOSE_MI_TC_CODE, newSViv(id));
         }
         else{
             av_store(mi, MOOSE_MI_TC_CODE, newSVsv(tc_code));
