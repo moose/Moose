@@ -150,6 +150,7 @@ sub apply_methods {
         my $role     = $_;
         my $aliases  = $self->get_method_aliases_for_role($role);
         my %excludes = map { $_ => undef } @{ $self->get_exclusions_for_role($role) };
+        $excludes{meta} = undef;
         (
             (map {
                 exists $excludes{$_} ? () :
