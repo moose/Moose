@@ -8,8 +8,11 @@ for, noteworthy changes.
 
     * Moose::Meta::Attribute::Native
       - We have merged the functionality of MooseX::AttributeHelpers into the
-        Moose core with some API tweaks. See Moose::Manual::Delta for
-        details. (hdp, jhannah, rbuels, Sartak, perigrin, doy)
+        Moose core with some API tweaks. You can continue to use
+        MooseX::AttributeHelpers, but it will not be maintained except
+        (perhaps) for critical bug fixes in the future. See
+        Moose::Manual::Delta for details. (hdp, jhannah, rbuels, Sartak,
+        perigrin, doy)
 
     * Moose::Error::Croak
     * Moose::Error::Confess
