@@ -1,18 +1,21 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
-      - Added the currying syntax for delegation from AttributeHelpers
-        to the existing delegation API. (hdp)
+      - Added the currying syntax for delegation from AttributeHelpers to the
+        existing delegation API. (hdp)
 
     * Moose::Meta::Attribute::Native
-      - Moved in from MooseX::AttributeHelpers with API tweaks. See
-        Moose::Manual::Delta for details. (hdp, jhannah, rbuels, Sartak,
-        perigrin, doy)
+      - We have merged the functionality of MooseX::AttributeHelpers into the
+        Moose core with some API tweaks. See Moose::Manual::Delta for
+        details. (hdp, jhannah, rbuels, Sartak, perigrin, doy)
 
     * Moose::Error::Croak
     * Moose::Error::Confess
-      - Clarify documentation on how to use. (Curtis Jewell)
+      - Clarify documentation on how to use different error-throwing
+        modules. (Curtis Jewell)
+
     * Moose
       - Correct POD for builder to point to Recipe8, not 9. (gphat)
 
