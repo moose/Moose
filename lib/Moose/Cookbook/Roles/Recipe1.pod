@@ -175,7 +175,7 @@ Then we have our C<to_string> method:
 
 =head1 CONCLUSION
 
-Roles can very powerful. They are a great way of encapsulating
+Roles can be very powerful. They are a great way of encapsulating
 reusable behavior, as well as communicating (semantic and interface)
 information about the methods our classes provide.
 

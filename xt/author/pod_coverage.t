@@ -14,7 +14,6 @@ my @modules = all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
-    'Moose'                  => ['make_immutable'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error
@@ -73,7 +72,6 @@ my %trustme = (
             extends
             has
             inner
-            make_immutable
             override
             super
             with )

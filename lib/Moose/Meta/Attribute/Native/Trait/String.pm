@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::Trait::String;
 use Moose::Role;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -52,14 +52,14 @@ Moose::Meta::Attribute::Native::Trait::String
   use Moose;
 
   has 'text' => (
-      metaclass => 'String',
+      traits    => ['String'],
       is        => 'rw',
       isa       => 'Str',
       default   => q{},
-      handles  => {
+      handles   => {
           add_text     => 'append',
           replace_text => 'replace',
-      }
+      },
   );
 
   my $page = MyHomePage->new();
@@ -125,6 +125,15 @@ L<perlfunc/chomp>
 =item B<clear>
 
 Sets the string to the empty string (not the value passed to C<default>).
+
+=item B<length>
+
+L<perlfunc/length>
+
+=item B<substr>
+
+L<perlfunc/substr>. We go to some lengths to match the different functionality
+based on C<substr>'s arity.
 
 =back
 

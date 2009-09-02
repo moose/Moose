@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -621,7 +621,7 @@ example.
 The value of this key is the name of the method that will be called to
 obtain the value used to initialize the attribute. See the L<builder
 option docs in Class::MOP::Attribute|Class::MOP::Attribute/builder>
- and/or L<Moose::Cookbook::Basics::Recipe9> for more information.
+ and/or L<Moose::Cookbook::Basics::Recipe8> for more information.
 
 =item I<default> => SCALAR | CODE
 

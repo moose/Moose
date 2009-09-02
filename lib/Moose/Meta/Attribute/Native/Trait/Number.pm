@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::Trait::Number;
 use Moose::Role;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -70,7 +70,7 @@ Moose::Meta::Attribute::Native::Trait::Number
       is        => 'ro',
       isa       => 'Int',
       default   => 5,
-      handles  => {
+      handles   => {
           set => 'set',
           add => 'add',
           sub => 'sub',
@@ -78,7 +78,7 @@ Moose::Meta::Attribute::Native::Trait::Number
           div => 'div',
           mod => 'mod',
           abs => 'abs',
-      }
+      },
   );
 
   my $real = Real->new();

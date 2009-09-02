@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
 use Moose::Role;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -41,17 +41,17 @@ Moose::Meta::Attribute::Native::Trait::Array
        is         => 'ro',
        isa        => 'ArrayRef[Str]',
        default    => sub { [] },
-       handles   => {
-           all_options          => 'elements',
-           map_options          => 'map',
-           filter_options       => 'grep',
-           find_option          => 'first',
-           get_option           => 'get',
-           join_options         => 'join',
-           count_options        => 'count',
-           has_no_options       => 'is_empty',
-           sorted_options       => 'sort',
-       }
+       handles    => {
+           all_options    => 'elements',
+           map_options    => 'map',
+           filter_options => 'grep',
+           find_option    => 'first',
+           get_option     => 'get',
+           join_options   => 'join',
+           count_options  => 'count',
+           has_no_options => 'is_empty',
+           sorted_options => 'sort',
+       },
     );
 
     no Moose;

@@ -16,7 +16,7 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version 0.89
+=head1 Version 0.89_01
 
 L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
 L<MooseX::AttributeHelpers>.  Major changes include:
@@ -69,6 +69,8 @@ In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
 =back
 
 See L<Moose::Meta::Attribute::Native> for the new documentation.
+
+=head1 Version 0.89
 
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
 C<-traits> (and the C<metaclass> and C<traits> options to C<has>).

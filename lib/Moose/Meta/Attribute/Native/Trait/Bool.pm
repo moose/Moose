@@ -2,7 +2,7 @@ package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
-our $VERSION = '0.89';
+our $VERSION = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -37,7 +37,7 @@ Moose::Meta::Attribute::Native::Trait::Bool
   use Moose;
 
   has 'is_lit' => (
-      traits => ['Bool'],
+      traits    => ['Bool'],
       is        => 'rw',
       isa       => 'Bool',
       default   => 0,
@@ -46,7 +46,7 @@ Moose::Meta::Attribute::Native::Trait::Bool
           darken      => 'unset',
           flip_switch => 'toggle',
           is_dark     => 'not',
-      }
+      },
   );
 
   my $room = Room->new();
@@ -69,19 +69,19 @@ the attribute.
 
 =over 4
 
-=item I<set>
+=item B<set>
 
 Sets the value to C<1>.
 
-=item I<unset>
+=item B<unset>
 
 Set the value to C<0>.
 
-=item I<toggle>
+=item B<toggle>
 
 Toggles the value. If it's true, set to false, and vice versa.
 
-=item I<not>
+=item B<not>
 
 Equivalent of 'not C<$value>'.
 

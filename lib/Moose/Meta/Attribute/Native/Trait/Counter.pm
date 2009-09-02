@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -55,7 +55,7 @@ Moose::Meta::Attribute::Native::Trait::Counter
   use Moose;
 
   has 'counter' => (
-      traits => ['Counter'],
+      traits    => ['Counter'],
       is        => 'ro',
       isa       => 'Num',
       default   => 0,
@@ -63,7 +63,7 @@ Moose::Meta::Attribute::Native::Trait::Counter
           inc_counter   => 'inc',
           dec_counter   => 'dec',
           reset_counter => 'reset',
-      }
+      },
   );
 
   my $page = MyHomePage->new();
@@ -92,21 +92,21 @@ the attribute.
 
 =over 4
 
-=item I<set($value)>
+=item B<set($value)>
 
 Set the counter to the specified value.
 
-=item I<inc>
+=item B<inc>
 
 Increments the value stored in this slot by 1. Providing an argument will
 cause the counter to be increased by specified amount.
 
-=item I<dec>
+=item B<dec>
 
 Decrements the value stored in this slot by 1. Providing an argument will
 cause the counter to be increased by specified amount.
 
-=item I<reset>
+=item B<reset>
 
 Resets the value stored in this slot to it's default value.
 

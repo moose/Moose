@@ -1,6 +1,6 @@
 package Moose::Meta::Attribute::Native;
 
-our $VERSION   = '0.89';
+our $VERSION   = '0.89_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -73,11 +73,11 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
 
 =head1 DESCRIPTION
 
-While L<Moose> attributes provide you with a way to name your accessors,
-readers, writers, clearers and predicates, this library provides commonly
+While L<Moose> attributes provide a way to name your accessors, readers,
+writers, clearers and predicates, this library provides commonly
 used attribute helper methods for more specific types of data.
 
-As seen in the L</SYNOPSIS>, you specify the extension via the
+As seen in the L</SYNOPSIS>, you specify the data structure via the
 C<trait> parameter. Available meta classes are below; see L</METHOD PROVIDERS>.
 
 This module used to exist as the L<MooseX::AttributeHelpers> extension. It was
@@ -103,11 +103,11 @@ works normally for C<< handles >>.
 Common numerical operations.
 
     has 'integer' => (
-        metaclass => 'Number',
+        traits    => ['Number'],
         is        => 'ro',
         isa       => 'Int',
         default   => 5,
-        handles  => {
+        handles   => {
             set => 'set',
             add => 'add',
             sub => 'sub',
@@ -123,11 +123,11 @@ Common numerical operations.
 Common methods for string operations.
 
     has 'text' => (
-        metaclass => 'String',
+        traits    => ['String'],
         is        => 'rw',
         isa       => 'Str',
         default   => q{},
-        handles  => {
+        handles   => {
             add_text     => 'append',
             replace_text => 'replace',
         }
@@ -138,7 +138,7 @@ Common methods for string operations.
 Methods for incrementing and decrementing a counter attribute.
 
     has 'counter' => (
-        traits => ['Counter'],
+        traits    => ['Counter'],
         is        => 'ro',
         isa       => 'Num',
         default   => 0,
@@ -154,7 +154,7 @@ Methods for incrementing and decrementing a counter attribute.
 Common methods for boolean values.
 
     has 'is_lit' => (
-        traits => ['Bool'],
+        traits    => ['Bool'],
         is        => 'rw',
         isa       => 'Bool',
         default   => 0,
@@ -166,7 +166,6 @@ Common methods for boolean values.
         }
     );
 
-
 =item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
 Common methods for hash references.
@@ -177,9 +176,9 @@ Common methods for hash references.
         isa       => 'HashRef[Str]',
         default   => sub { {} },
         handles   => {
-            set_option    => 'set',
-            get_option    => 'get',
-            has_option    => 'exists',
+            set_option => 'set',
+            get_option => 'get',
+            has_option => 'exists',
         }
     );
 
@@ -192,8 +191,8 @@ Common methods for array references.
        is         => 'ro',
        isa        => 'ArrayRef[Str]',
        default    => sub { [] },
-       handles   => {
-           add_item  => 'push'
+       handles    => {
+           add_item  => 'push',
            next_item => 'shift',
        }
     );
