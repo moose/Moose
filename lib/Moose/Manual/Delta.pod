@@ -20,6 +20,8 @@ send us a patch.
 
 =over 4
 
+=over
+
 =item New Native delegation methods from L<List::Util> and L<List::MoreUtils>
 
 In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
@@ -44,6 +46,10 @@ immutable. If you're sure you know what you're doing, you also can pass the
 C<allow_mutable_ancestors> option to make_immutable to silence the warning
 (but be aware that modifying those mutable ancestors can still lead to
 incorrect behavior in your subclass).
+
+=item Added Native delegation for Code refs
+
+See L<Moose::Meta::Attribute::Native::Trait::Code> for details.
 
 =back
 
