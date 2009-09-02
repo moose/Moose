@@ -188,7 +188,7 @@ I<before> the C<with> function that composes the role.
 
   has 'stress' => ( 
       is  => 'rw',
-	  isa => 'Int',
+      isa => 'Int',
   );
 
   with 'Breakable';
