@@ -16,6 +16,14 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 Version XX
+
+=item New Native delegation methods from L<List::Util> and L<List::MoreUtils>
+
+In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
+
+=back
+
 =head1 Version 0.89_01
 
 L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
@@ -61,12 +69,6 @@ receive their argument in C<$_> rather than as a parameter to the subroutine.
 Helpers that take a coderef of two or more arguments remain using the argument
 list (there are technical limitations to using C<$a> and C<$b> like C<sort>
 does).
-
-=item Several new helpers from L<List::Util> and L<List::MoreUtils> were added
-
-In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
-
-=back
 
 See L<Moose::Meta::Attribute::Native> for the new documentation.
 
