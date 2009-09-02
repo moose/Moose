@@ -24,7 +24,9 @@ chromatic's
 Debolaz
 Deltac
 dexter
+doy
 ewilhelm
+frodwith
 Goulah
 gphat
 groditi
@@ -34,7 +36,9 @@ Kinyon's
 Kogman
 kolibrie
 konobi
+Lanyon
 lbr
+Luehrs
 McWhirter
 merlyn
 mst
@@ -45,6 +49,7 @@ phaylon
 Prather
 Ragwitz
 Reis
+rafl
 rindolf
 rlb
 Rockway
@@ -72,6 +77,7 @@ ohloh
 SVN
 
 ## Moose
+AttributeHelpers
 BankAccount
 BankAccount's
 BinaryTree
@@ -117,6 +123,7 @@ committer
 committers
 compat
 datetimes
+dec
 definedness
 destructor
 destructors
@@ -135,7 +142,9 @@ invocant's
 irc
 IRC
 isa
+kv
 login
+mul
 namespace
 namespaced
 namespaces

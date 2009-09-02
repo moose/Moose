@@ -18,6 +18,54 @@ send us a patch.
 
 =head1 Version 0.89
 
+L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
+L<MooseX::AttributeHelpers>.  Major changes include:
+
+=over
+
+=item C<traits>, not C<metaclass>
+
+Method providers are only available via traits.
+
+=item C<handles>, not C<provides> or C<curries>
+
+The C<provides> syntax was like core Moose C<< handles => HASHREF >>
+syntax, but with the keys and values reversed.  This was confusing,
+and AttributeHelpers now uses C<< handles => HASHREF >> in a way that
+should be intuitive to anyone already familiar with how it is used for
+other attributes.
+
+The C<curries> functionality provided by AttributeHelpers has been
+generalized to apply to all cases of C<< handles => HASHREF >>, though
+not every piece of functionality has been ported (currying with a
+CODEREF is not supported).
+
+=item C<empty> is now C<is_empty>, and means empty, not non-empty
+
+Previously, the C<empty> method provided by Arrays and Hashes returned true if
+the attribute was B<not> empty (no elements).  Now it returns true if the
+attribute B<is> empty. It was also renamed to C<is_empty>, to reflect this.
+
+=item C<find> was renamed to C<first>, and C<first> and C<last> were removed
+
+L<List::Util> refers to the functionality that we used to provide under C<find>
+as L<first|List::Util/first>, so that will likely be more familiar (and will
+fit in better if we decide to add more List::Util functions). C<first> and
+C<last> were removed, since their functionality is easily duplicated with
+curries of C<get>.
+
+=item Helpers that take a coderef of one argument now use C<$_>
+
+Subroutines passed as the first argument to C<first>, C<map>, and C<grep> now
+receive their argument in C<$_> rather than as a parameter to the subroutine.
+Helpers that take a coderef of two or more arguments remain using the argument
+list (there are technical limitations to using C<$a> and C<$b> like C<sort>
+does).
+
+=back
+
+See L<Moose::Meta::Attribute::Native> for the new documentation.
+
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
 C<-traits> (and the C<metaclass> and C<traits> options to C<has>).
 

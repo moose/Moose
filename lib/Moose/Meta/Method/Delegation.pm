@@ -36,6 +36,13 @@ sub new {
         || confess
         'You must supply a delegate_to_method which is a method name or a CODE reference';
 
+    exists $options{curried_arguments}
+        || ( $options{curried_arguments} = [] );
+
+    ( $options{curried_arguments} &&
+        ( 'ARRAY' eq ref $options{curried_arguments} ) )
+        || confess 'You must supply a curried_arguments which is an ARRAY reference';
+
     my $self = $class->_new( \%options );
 
     weaken( $self->{'attribute'} );
@@ -51,6 +58,8 @@ sub _new {
 
     return bless $options, $class;
 }
+
+sub curried_arguments { (shift)->{'curried_arguments'} }
 
 sub associated_attribute { (shift)->{'attribute'} }
 
@@ -95,8 +104,8 @@ sub _initialize_body {
                 object      => $instance
             );
         }
-
-        $proxy->$method_to_call(@_);
+        my @args = (@{ $self->curried_arguments }, @_);
+        $proxy->$method_to_call(@args);
     };
 }
 
@@ -145,11 +154,20 @@ accessor is being generated for. This options is B<required>.
 The method in the associated attribute's value to which we
 delegate. This can be either a method name or a code reference.
 
+=item I<curried_arguments>
+
+An array reference of arguments that will be prepended to the argument list for
+any call to the delegating method.
+
 =back
 
 =item B<< $metamethod->associated_attribute >>
 
 Returns the attribute associated with this method.
+
+=item B<< $metamethod->curried_arguments >>
+
+Return any curried arguments that will be passed to the delegated method.
 
 =item B<< $metamethod->delegate_to_method >>
 

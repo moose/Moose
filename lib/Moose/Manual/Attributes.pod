@@ -530,16 +530,16 @@ of ways through the use of custom metaclasses and metaclass traits.
 When declaring an attribute, you can declare a metaclass or a set of
 traits for the attribute:
 
-  use MooseX::AttributeHelpers;
+  use Moose::AttributeHelpers;
 
   has 'mapping' => (
-      metaclass => 'Collection::Hash',
+      metaclass => 'Hash',
       is        => 'ro',
       default   => sub { {} },
   );
 
-In this case, the metaclass C<Collection::Hash> really refers to
-L<MooseX::AttributeHelpers::Collection::Hash>.
+In this case, the metaclass C<Hash> really refers to
+L<Moose::Meta::Attribute::Trait::Native::Hash>.
 
 You can also apply one or more traits to an attribute:
 

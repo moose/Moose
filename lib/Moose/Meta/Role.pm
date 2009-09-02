@@ -664,7 +664,7 @@ sub create {
 #####################################################################
 #
 # has 'roles' => (
-#     metaclass => 'Collection::Array',
+#     metaclass => 'Array',
 #     reader    => 'get_roles',
 #     isa       => 'ArrayRef[Moose::Meta::Role]',
 #     default   => sub { [] },
@@ -674,7 +674,7 @@ sub create {
 # );
 #
 # has 'excluded_roles_map' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    => 'get_excluded_roles_map',
 #     isa       => 'HashRef[Str]',
 #     provides  => {
@@ -686,7 +686,7 @@ sub create {
 # );
 #
 # has 'attribute_map' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    => 'get_attribute_map',
 #     isa       => 'HashRef[Str]',
 #     provides => {
@@ -700,7 +700,7 @@ sub create {
 # );
 #
 # has 'required_methods' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    => 'get_required_methods_map',
 #     isa       => 'HashRef[Moose::Meta::Role::Method::Required]',
 #     provides  => {
@@ -717,7 +717,7 @@ sub create {
 # # CODE refs to apply in that order
 #
 # has 'before_method_modifiers' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    => 'get_before_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
@@ -731,7 +731,7 @@ sub create {
 # );
 #
 # has 'after_method_modifiers' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    =>'get_after_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
@@ -745,7 +745,7 @@ sub create {
 # );
 #
 # has 'around_method_modifiers' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    =>'get_around_method_modifiers_map',
 #     isa       => 'HashRef[ArrayRef[CodeRef]]',
 #     provides  => {
@@ -763,7 +763,7 @@ sub create {
 # # but instead just a single name->code mapping
 #
 # has 'override_method_modifiers' => (
-#     metaclass => 'Collection::Hash',
+#     metaclass => 'Hash',
 #     reader    =>'get_override_method_modifiers_map',
 #     isa       => 'HashRef[CodeRef]',
 #     provides  => {

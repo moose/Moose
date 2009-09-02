@@ -40,6 +40,7 @@ __PACKAGE__->meta->add_attribute('trigger' => (
 ));
 __PACKAGE__->meta->add_attribute('handles' => (
     reader    => 'handles',
+    writer    => '_set_handles',
     predicate => 'has_handles',
 ));
 __PACKAGE__->meta->add_attribute('documentation' => (
@@ -735,11 +736,17 @@ sub _make_delegation_method {
     $method_body = $method_to_call
         if 'CODE' eq ref($method_to_call);
 
+    my @curried_arguments;
+
+    ($method_to_call, @curried_arguments) = @$method_to_call
+        if 'ARRAY' eq ref($method_to_call);
+
     return $self->delegation_metaclass->new(
         name               => $handle_name,
         package_name       => $self->associated_class->name,
         attribute          => $self,
         delegate_to_method => $method_to_call,
+        curried_arguments  => \@curried_arguments,
     );
 }
 

@@ -20,6 +20,11 @@ my %trustme = (
             attach_to_class
             )
     ],
+    'Moose::Meta::Attribute::Native::MethodProvider::Array'   => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::Bool'    => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::Counter' => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::Hash'    => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::String'  => ['.+'],
     'Moose::Meta::Class'     => [
         qw( check_metaclass_compatibility
             construct_instance
