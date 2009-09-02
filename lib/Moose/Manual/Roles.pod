@@ -28,7 +28,7 @@ methods, in which case the role would be very much like a Java
 interface.
 
 Note that attribute accessors also count as methods for the
-purposes of satisfying the requirements of a role.
+purposes of satisfying the requirements of a role. 
 
 =head1 A SIMPLE ROLE
 
@@ -168,6 +168,30 @@ Because the role defines the required methods directly, adding a base
 class to the mix would not achieve anything. We recommend that you
 simply consume the interface role in each class which implements that
 interface.
+
+=head2 Required Attributes
+
+As mentioned before, a role requirement may also be satisfied by an
+attribute accessor. But any C<has> functions, which will generate
+accessors that satisfy the role requirement, must be placed
+I<before> the C<with> function that composes the role.
+
+  package Breakable;
+
+  use Moose::Role;
+
+  requires 'stress';
+
+  package Car;
+
+  use Moose;
+
+  has 'stress' => ( 
+      is  => 'rw',
+	  isa => 'Int',
+  );
+
+  with 'Breakable';
 
 =head1 USING METHOD MODIFIERS
 
