@@ -148,7 +148,7 @@ curry methods when creating delegates.
     )
 
 With this definition, calling C<< $spider->set_user_agent('MyClient') >> will
-behind the scenes call C<< $spider->request->header('UserAgent', 'MyClient')>>.
+behind the scenes call C<< $spider->request->header('UserAgent', 'MyClient') >>.
 
 =head1 MISSING ATTRIBUTES
 

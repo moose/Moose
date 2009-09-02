@@ -116,6 +116,7 @@ TypeContraints
 ## computerese
 API
 APIs
+arity
 Baz
 Changelog
 codebase
