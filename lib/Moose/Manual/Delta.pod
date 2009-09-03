@@ -31,7 +31,7 @@ In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
 L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
 L<MooseX::AttributeHelpers>.  Major changes include:
 
-=over
+=over 4
 
 =item C<traits>, not C<metaclass>
 
@@ -73,6 +73,8 @@ list (there are technical limitations to using C<$a> and C<$b> like C<sort>
 does).
 
 See L<Moose::Meta::Attribute::Native> for the new documentation.
+
+=back
 
 =head1 Version 0.89
 
