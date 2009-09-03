@@ -1,4 +1,4 @@
-package Moose::Meta::Attribute::Trait::Native::MethodProvider::Code;
+package Moose::Meta::Attribute::Native::MethodProvider::Code;
 use Moose::Role;
 
 our $VERSION   = '0.87';

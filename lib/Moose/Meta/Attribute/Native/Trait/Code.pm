@@ -1,18 +1,18 @@
-package Moose::Meta::Attribute::Trait::Native::Code;
+package Moose::Meta::Attribute::Native::Trait::Code;
 use Moose::Role;
-use Moose::Meta::Attribute::Trait::Native::MethodProvider::Code;
+use Moose::Meta::Attribute::Native::MethodProvider::Code;
 
 our $VERSION   = '0.87';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-with 'Moose::Meta::Attribute::Trait::Native';
+with 'Moose::Meta::Attribute::Native::Trait';
 
 has method_provider => (
     is        => 'ro',
     isa       => 'ClassName',
     predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Trait::Native::MethodProvider::Code',
+    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Code',
 );
 
 sub _default_is { 'ro' }
