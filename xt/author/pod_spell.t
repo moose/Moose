@@ -224,6 +224,7 @@ declaratively
 everybody's
 everyone's
 human's
+indices
 initializers
 newfound
 reimplements
@@ -232,3 +233,5 @@ specializer
 
 ## misspelt on purpose
 emali
+uniq
+
