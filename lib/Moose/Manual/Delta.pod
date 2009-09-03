@@ -18,6 +18,8 @@ send us a patch.
 
 =head1 Version XX
 
+=over 4
+
 =item New Native delegation methods from L<List::Util> and L<List::MoreUtils>
 
 In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
