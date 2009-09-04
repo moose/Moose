@@ -166,12 +166,12 @@ is( $options->type_constraint->type_parameter, 'Str',
     '... got the right container type' );
 
 $stuff->set_option( oink => "blah", xxy => "flop" );
-my @key_value = $stuff->key_value;
+my @key_value = sort{ $a->[0] cmp $b->[0] } $stuff->key_value;
 is_deeply(
     \@key_value,
-    [ [ 'xxy', 'flop' ], [ 'quantity', 4 ], [ 'oink', 'blah' ] ],
+    [ sort{ $a->[0] cmp $b->[0] } [ 'xxy', 'flop' ], [ 'quantity', 4 ], [ 'oink', 'blah' ] ],
     '... got the right key value pairs'
-);
+) or do{ require Data::Dumper; diag(Data::Dumper::Dumper(\@key_value)) };
 
 my %options_elements = $stuff->options_elements;
 is_deeply(
