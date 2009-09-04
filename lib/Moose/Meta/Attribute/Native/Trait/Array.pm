@@ -81,7 +81,7 @@ Returns the number of elements in the array.
 
 =item B<is_empty>
 
-Returns a boolean value indicating whether or not the array has any elements.
+Returns a boolean value that is true when the array has no elements.
 
    $stuff->has_no_options ? die "No options!\n" : print "Good boy.\n";
 
