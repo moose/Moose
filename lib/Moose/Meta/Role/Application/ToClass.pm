@@ -73,6 +73,7 @@ sub check_required_methods {
 
     my $error = '';
 
+    @missing = sort { $a->name cmp $b->name } @missing;
     my @conflicts = grep { $_->isa('Moose::Meta::Role::Method::Conflicting') } @missing;
 
     if (@conflicts) {
