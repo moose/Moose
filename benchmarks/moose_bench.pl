@@ -19,6 +19,11 @@ my $cmop_dir;
 
 my $base = "http://backpan.cpan.org/";
 
+my %time;
+my %mem;
+
+open my $output, ">", "moose_bench.txt";
+
 for my $moose (@mooses) {
     my $moose_dir = build($moose);
 
@@ -52,16 +57,58 @@ for my $moose (@mooses) {
             push @times, time - $start;
         }
 
-        my $duration = sum(@times) / @times;
-        my $mem = qx[$^X -I$moose_dir/lib -I$cmop_dir/lib -MGTop -e 'my (\$gtop, \$before); BEGIN { \$gtop = GTop->new; \$before = \$gtop->proc_mem(\$\$)->size; } package Class; use Moose; print \$gtop->proc_mem(\$\$)->size - \$before'];
-        printf "%7s: %0.4f (%s), %d bytes\n",
+        $time{$moose->version} = sum(@times) / @times;
+        $mem{$moose->version} = qx[$^X -I$moose_dir/lib -I$cmop_dir/lib -MGTop -e 'my (\$gtop, \$before); BEGIN { \$gtop = GTop->new; \$before = \$gtop->proc_mem(\$\$)->size; } package Class; use Moose; print \$gtop->proc_mem(\$\$)->size - \$before'];
+        my $line = sprintf "%7s: %0.4f (%s), %d bytes\n",
             $moose->version,
-            $duration,
+            $time{$moose->version},
             join(', ', map { sprintf "%0.4f", $_ } @times),
-            $mem;
+            $mem{$moose->version};
+        print $output $line;
     };
     warn $@ if $@;
 }
+
+require Chart::Clicker;
+require Chart::Clicker::Data::Series;
+require Chart::Clicker::Data::DataSet;
+my @versions = sort keys %time;
+my @startups = map {     $time{$_}        } @versions;
+my @memories = map { int($mem{$_} / 1024) } @versions;
+my @keys     = (0..$#versions);
+my $cc = Chart::Clicker->new(width => 900, height => 400);
+my $sutime = Chart::Clicker::Data::Series->new(
+    values => \@startups,
+    keys   => \@keys,
+    name   => 'Startup Time',
+);
+my $def = $cc->get_context('default');
+$def->domain_axis->tick_values(\@keys);
+$def->domain_axis->tick_labels(\@versions);
+$def->domain_axis->tick_label_angle(1.57);
+$def->domain_axis->tick_font->size(8);
+$def->range_axis->fudge_amount('0.05');
+
+my $context = Chart::Clicker::Context->new(name => 'memory');
+$context->range_axis->tick_values([qw(1024 2048 3072 4096 5120)]);
+$context->range_axis->format('%d');
+$context->domain_axis->hidden(1);
+$context->range_axis->fudge_amount('0.05');
+$cc->add_to_contexts($context);
+
+my $musage = Chart::Clicker::Data::Series->new(
+    values => \@memories,
+    keys => \@keys,
+    name => 'Memory Usage (kb)'
+);
+
+my $ds1 = Chart::Clicker::Data::DataSet->new(series => [ $sutime ]);
+my $ds2 = Chart::Clicker::Data::DataSet->new(series => [ $musage ]);
+$ds2->context('memory');
+
+$cc->add_to_datasets($ds1);
+$cc->add_to_datasets($ds2);
+$cc->write_output('moose_bench.png');
 
 sub bump_cmop {
     my $expected = shift;
