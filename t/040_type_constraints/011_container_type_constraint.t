@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 use Test::Exception;
 
 BEGIN {
@@ -71,3 +71,20 @@ ok(!$array_of_array_of_ints->check(
     my $param_type = $anon_type->type_parameter;
     isa_ok( $param_type, 'Moose::Meta::TypeConstraint::Class' );
 }
+
+# Parameterizing subtypes
+
+{
+    use Moose::Util::TypeConstraints;
+    subtype 'MyArray',
+        as 'ArrayRef[Int]';
+
+    subtype 'MySubArray',
+        as 'MyArray';
+
+    throws_ok {  
+        subtype 'MySubSubArray',
+            as 'MySubArray[Str]';
+    } qr/Str is not a subtype of Int/;
+}
+
