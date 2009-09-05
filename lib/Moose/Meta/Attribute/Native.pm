@@ -51,7 +51,7 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
           ids_in_mapping    => 'keys',
           get_mapping       => 'get',
           set_mapping       => 'set',
-          set_quantity      => [ set => [ 'quantity' ] ],
+          set_quantity      => [ set => 'quantity' ],
       },
   );
 
