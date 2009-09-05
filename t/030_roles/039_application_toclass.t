@@ -1,7 +1,14 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 24;
+
+use lib 't/lib';
+
+use Test::More;
+
+use MetaTest;
+
+skip_all_meta 24;
 
 do {
     package Role::Foo;

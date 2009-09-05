@@ -3,10 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use lib 't/lib';
+
+use Test::More;
 
 use Scalar::Util qw(blessed);
 
+use MetaTest;
+
+skip_all_meta 27;
 
 
 =pod

@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 14;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -15,12 +18,13 @@ use Test::Exception;
 
     requires 'foo';
 }
-
-is_deeply(
-    [ sort Foo::Role->meta->get_required_method_list ],
-    ['foo'],
-    '... the Foo::Role has a required method (foo)'
-);
+skip_meta {
+   is_deeply(
+       [ sort Foo::Role->meta->get_required_method_list ],
+       ['foo'],
+       '... the Foo::Role has a required method (foo)'
+   );
+} 1;
 
 # classes which does not implement required method
 {
@@ -57,12 +61,13 @@ is_deeply(
 
     sub foo {'Bar::Role::foo'}
 }
-
-is_deeply(
-    [ sort Bar::Role->meta->get_required_method_list ],
-    [],
-    '... the Bar::Role has not inherited the required method from Foo::Role'
-);
+skip_meta {
+   is_deeply(
+       [ sort Bar::Role->meta->get_required_method_list ],
+       [],
+       '... the Bar::Role has not inherited the required method from Foo::Role'
+   );
+} 1;
 
 # role which does not implement required method
 {
@@ -73,12 +78,13 @@ is_deeply(
     ::lives_ok { with('Foo::Role') }
         '... no foo method implemented by Baz::Role';
 }
-
-is_deeply(
-    [ sort Baz::Role->meta->get_required_method_list ],
-    ['foo'],
-    '... the Baz::Role has inherited the required method from Foo::Role'
-);
+skip_meta {
+   is_deeply(
+       [ sort Baz::Role->meta->get_required_method_list ],
+       ['foo'],
+       '... the Baz::Role has inherited the required method from Foo::Role'
+   );
+} 1;
 
 # classes which does not implement required method
 {

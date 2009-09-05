@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 19;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -22,8 +25,10 @@ use Test::Exception;
     with 'My::Role' => { -excludes => 'bar' };
 }
 
-ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz);
-ok(!My::Class->meta->has_method('bar'), '... but we excluded bar');
+skip_meta {
+   ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz);
+   ok(!My::Class->meta->has_method('bar'), '... but we excluded bar');
+} 3;
 
 {
     package My::OtherRole;
@@ -35,10 +40,12 @@ ok(!My::Class->meta->has_method('bar'), '... but we excluded bar');
     sub bar { 'My::OtherRole::bar' }
 }
 
-ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo bar baz);
+skip_meta {
+   ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo bar baz);
 
-ok(!My::OtherRole->meta->requires_method('foo'), '... and the &foo method is not required');
-ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is required');
+   ok(!My::OtherRole->meta->requires_method('foo'), '... and the &foo method is not required');
+   ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is required');
+} 5;
 
 {
     package Foo::Role;
@@ -94,8 +101,10 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
     } '... composed our roles correctly';
 }
 
-ok(My::Foo::Role->meta->has_method('foo'), "we have a foo method");
-ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not required');
+skip_meta {
+   ok(My::Foo::Role->meta->has_method('foo'), "we have a foo method");
+   ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not required');
+} 2;
 
 {
     package My::Foo::Role::Other;
@@ -108,8 +117,10 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
     } '... composed our roles correctly';
 }
 
-ok(!My::Foo::Role::Other->meta->has_method('foo'), "we dont have a foo method");
-ok(My::Foo::Role::Other->meta->requires_method('foo'), '... and the &foo method is required');
+skip_meta {
+   ok(!My::Foo::Role::Other->meta->has_method('foo'), "we dont have a foo method");
+   ok(My::Foo::Role::Other->meta->requires_method('foo'), '... and the &foo method is required');
+} 2;
 
 
 

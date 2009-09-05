@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 15;
 use Test::Exception;
+
+use MetaTest;
 
 =pod
 
@@ -42,10 +46,12 @@ not remove the requirement)
     override 'foo' => sub { 'Role::ProvideFoo::foo' };
 }
 
-is_deeply(
-    [ Role::ProvideFoo->meta->get_required_method_list ],
-    [ 'foo' ],
-    '... foo method is still required for Role::ProvideFoo');
+skip_meta {
+   is_deeply(
+       [ Role::ProvideFoo->meta->get_required_method_list ],
+       [ 'foo' ],
+       '... foo method is still required for Role::ProvideFoo');
+} 1;
 
 =pod
 
@@ -132,13 +138,14 @@ method modifier.
     use Moose;
 
     extends 'Class::ProvideFoo::Base';
-
+    use MetaTest;
     sub foo { 'Class::ProvideFoo::foo' }
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };
-
-    ::isa_ok(__PACKAGE__->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
-    ::is(__PACKAGE__->meta->get_method('foo')->get_original_method->package_name, __PACKAGE__,
-    '... but the original method is from our package');
+    skip_meta {
+       ::isa_ok(__PACKAGE__->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
+       ::is(__PACKAGE__->meta->get_method('foo')->get_original_method->package_name, __PACKAGE__,
+       '... but the original method is from our package');
+    } 2;
 
     ::lives_ok {
         with 'Role::RequireFoo';

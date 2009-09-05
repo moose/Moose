@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 74;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -116,8 +119,9 @@ use Test::Exception;
 
     lives_ok { $i->foo } '... called foo successfully (again)';
     is( $i->counter, 2, "after hook called (again)" );
-
-    ok(SubBA->meta->has_method('foo'), '... this has the foo method');
+    skip_meta {
+       ok(SubBA->meta->has_method('foo'), '... this has the foo method');
+    } 1;
     #my $subba_foo_rv;
     #lives_ok {
     #    $subba_foo_rv = SubBA::foo();

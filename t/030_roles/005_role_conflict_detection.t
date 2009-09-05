@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 88;
 use Test::Exception;
+
+use MetaTest;
 
 =pod
 
@@ -69,13 +73,13 @@ is($test2->foo, 'Role::Bar::foo', '... $test2->foo worked');
 is($test2->bar, 'Role::Foo::bar', '... $test2->bar worked');
 
 # check some meta-stuff
+skip_meta {
+   ok(Role::Foo->meta->has_method('bar'), '... it still has the bar method');
+   ok(Role::Foo->meta->requires_method('foo'), '... it still has the required foo method');
 
-ok(Role::Foo->meta->has_method('bar'), '... it still has the bar method');
-ok(Role::Foo->meta->requires_method('foo'), '... it still has the required foo method');
-
-ok(Role::Bar->meta->has_method('foo'), '... it still has the foo method');
-ok(Role::Bar->meta->requires_method('bar'), '... it still has the required bar method');
-
+   ok(Role::Bar->meta->has_method('foo'), '... it still has the foo method');
+   ok(Role::Bar->meta->requires_method('bar'), '... it still has the required bar method');
+} 4;
 =pod
 
 Role method conflicts
@@ -128,10 +132,12 @@ Role method conflicts
     sub bling { 'My::Test6::bling' }
 }
 
-ok(!My::Test3->meta->has_method('bling'), '... we didnt get any methods in the conflict');
-ok(My::Test4->meta->has_method('bling'), '... we did get the method when manually dealt with');
-ok(My::Test5->meta->has_method('bling'), '... we did get the method when manually dealt with');
-ok(My::Test6->meta->has_method('bling'), '... we did get the method when manually dealt with');
+skip_meta {
+   ok(!My::Test3->meta->has_method('bling'), '... we didnt get any methods in the conflict');
+   ok(My::Test4->meta->has_method('bling'), '... we did get the method when manually dealt with');
+   ok(My::Test5->meta->has_method('bling'), '... we did get the method when manually dealt with');
+   ok(My::Test6->meta->has_method('bling'), '... we did get the method when manually dealt with');
+} 4;
 
 ok(!My::Test3->does('Role::Bling'), '... our class does() the correct roles');
 ok(!My::Test3->does('Role::Bling::Bling'), '... our class does() the correct roles');
@@ -156,13 +162,14 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
 
     sub bling { 'Role::Bling::Bling::Bling::bling' }
 }
-
-ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
-ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), '... our role correctly does() the other role');
-ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... dont have the bling method in Role::Bling::Bling::Bling');
-is(Role::Bling::Bling::Bling->meta->get_method('bling')->(),
-    'Role::Bling::Bling::Bling::bling',
-    '... still got the bling method in Role::Bling::Bling::Bling');
+skip_meta {
+   ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
+   ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), '... our role correctly does() the other role');
+   ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... dont have the bling method in Role::Bling::Bling::Bling');
+   is(Role::Bling::Bling::Bling->meta->get_method('bling')->(),
+       'Role::Bling::Bling::Bling::bling',
+       '... still got the bling method in Role::Bling::Bling::Bling');
+} 4;
 
 
 =pod
@@ -220,11 +227,12 @@ Role attribute conflicts
 
 }
 
-ok(!My::Test7->meta->has_attribute('ghost'), '... we didnt get any attributes in the conflict');
-ok(My::Test8->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
-ok(My::Test9->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
-ok(My::Test10->meta->has_attribute('ghost'), '... we did still have an attribute ghost (conflict does not mess with class)');
-
+skip_meta {
+   ok(!My::Test7->meta->has_attribute('ghost'), '... we didnt get any attributes in the conflict');
+   ok(My::Test8->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
+   ok(My::Test9->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
+   ok(My::Test10->meta->has_attribute('ghost'), '... we did still have an attribute ghost (conflict does not mess with class)');
+} 4;
 ok(!My::Test7->does('Role::Boo'), '... our class does() the correct roles');
 ok(!My::Test7->does('Role::Boo::Hoo'), '... our class does() the correct roles');
 ok(My::Test8->does('Role::Boo'), '... our class does() the correct roles');
@@ -305,11 +313,12 @@ Role override method conflicts
     } qr/Two \'override\' methods of the same name encountered/,
       '... cannot compose it because we have no superclass';
 }
-
-ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
-ok(My::Test12->meta->has_method('twist'), '... the twist method has been added');
-ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
-ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
+skip_meta {
+   ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
+   ok(My::Test12->meta->has_method('twist'), '... the twist method has been added');
+   ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
+   ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
+} 4;
 
 ok(!My::Test11->does('Role::Plot'), '... our class does() the correct roles');
 ok(My::Test11->does('Role::Truth'), '... our class does() the correct roles');
@@ -338,11 +347,13 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
     }
 }
 
-ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
-#ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
-is(Role::Reality->meta->get_method('twist')->(),
-    'Role::Reality::twist',
-    '... the twist method returns the right value');
+skip_meta {
+   ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
+   #ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
+   is(Role::Reality->meta->get_method('twist')->(),
+       'Role::Reality::twist',
+       '... the twist method returns the right value');
+} 2;
 
 # Ovid's test case from rt.cpan.org #44
 {

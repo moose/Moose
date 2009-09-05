@@ -2,7 +2,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use lib 't/lib';
+
+use Test::More;
+
+use MetaTest;
+
+skip_all_meta 6;
 
 # test role and class
 package SomeRole;

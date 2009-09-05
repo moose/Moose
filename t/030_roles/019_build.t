@@ -1,12 +1,18 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+
+use lib 't/lib';
+
 use Test::More;
+
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
     plan tests => 8;
 }
+
+use MetaTest;
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD
@@ -52,7 +58,8 @@ do {
     with 'TestRole';
 };
 
-{
+skip_meta {
+   {
     is_deeply([splice @CALLS], [], "no calls to BUILD yet");
 
     ClassWithBUILD->new;
@@ -76,5 +83,6 @@ do {
         ClassWithoutBUILD->meta->make_immutable;
         redo;
     }
-}
+ }
+} 3*2;
 

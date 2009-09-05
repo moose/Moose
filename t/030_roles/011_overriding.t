@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 39;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -76,7 +79,9 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
     sub bar { 'Class::A::Resolved::bar' }
 }
 
-ok(Role::A::Conflict->meta->requires_method('bar'), '... Role::A::Conflict created the bar requirement');
+skip_meta {
+   ok(Role::A::Conflict->meta->requires_method('bar'), '... Role::A::Conflict created the bar requirement');
+} 1;
 
 can_ok( Class::A::Resolved->new, qw(bar) );
 
@@ -125,7 +130,9 @@ is( Class::B->new->zot, "Class::B::zot", "... got the &zot method okay" );
 is( Class::B->new->bar, "Role::D::bar",  "... got the &bar method okay" );
 is( Class::B->new->xxy, "Role::E::xxy",  "... got the &xxy method okay" );
 
-ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requirement');
+skip_meta {
+   ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requirement');
+} 1;
 
 {
     # check that a conflict can be resolved
@@ -147,9 +154,11 @@ ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requir
 
 }
 
-ok(!Role::D::And::E::Conflict->meta->requires_method('foo'), '... Role::D::And::E::Conflict fufilled the &foo requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('xxy'), '... Role::D::And::E::Conflict adds the &xxy requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E::Conflict adds the &bar requirement');
+skip_meta {
+   ok(!Role::D::And::E::Conflict->meta->requires_method('foo'), '... Role::D::And::E::Conflict fufilled the &foo requirement');
+   ok(Role::D::And::E::Conflict->meta->requires_method('xxy'), '... Role::D::And::E::Conflict adds the &xxy requirement');
+   ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E::Conflict adds the &bar requirement');
+} 3;
 
 {
     # conflict propagation
@@ -203,7 +212,9 @@ is( Class::E->new->zot, "Class::E::zot", "... got the right &zot method" );
 is( Class::E->new->bar, "Role::H::bar",  "... got the right &bar method" );
 is( Class::E->new->xxy, "Role::J::xxy",  "... got the right &xxy method" );
 
-ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requirement');
+skip_meta {
+   ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requirement');
+} 1;
 
 {
     lives_ok {

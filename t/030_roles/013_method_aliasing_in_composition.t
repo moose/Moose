@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 35;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -35,7 +38,9 @@ use Test::Exception;
     sub role_bar { 'FAIL' }
 }
 
-ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar role_bar);
+skip_meta {
+   ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar role_bar);
+} 4;
 
 {
     package My::OtherRole;
@@ -57,9 +62,11 @@ ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar ro
     sub role_bar { 'FAIL' }
 }
 
-ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
-ok(!My::OtherRole->meta->requires_method('bar'), '... and the &bar method is not required');
-ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar method is not required');
+skip_meta {
+   ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
+   ok(!My::OtherRole->meta->requires_method('bar'), '... and the &bar method is not required');
+   ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar method is not required');
+} 5;
 
 {
     package My::AliasingRole;
@@ -70,8 +77,10 @@ ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar met
     } '... this succeeds';
 }
 
-ok(My::AliasingRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
-ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is required');
+skip_meta {
+   ok(My::AliasingRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
+   ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is required');
+} 4;
 
 {
     package Foo::Role;
@@ -129,8 +138,10 @@ ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is r
     } '... composed our roles correctly';
 }
 
-ok(My::Foo::Role->meta->has_method($_), "we have a $_ method") for qw/foo foo_foo bar_foo/;;
-ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not required');
+skip_meta {
+   ok(My::Foo::Role->meta->has_method($_), "we have a $_ method") for qw/foo foo_foo bar_foo/;;
+   ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not required');
+} 4;
 
 
 {
@@ -143,7 +154,8 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
              'Baz::Role';
     } '... composed our roles correctly';
 }
-
-ok(!My::Foo::Role::Other->meta->has_method('foo_foo'), "we dont have a foo_foo method");
-ok(My::Foo::Role::Other->meta->requires_method('foo_foo'), '... and the &foo method is required');
+skip_meta {
+   ok(!My::Foo::Role::Other->meta->has_method('foo_foo'), "we dont have a foo_foo method");
+   ok(My::Foo::Role::Other->meta->requires_method('foo_foo'), '... and the &foo method is required');
+} 2;
 

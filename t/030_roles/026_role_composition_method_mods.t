@@ -3,11 +3,17 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
+
+use MetaTest;
+
+skip_all_meta 7;
 
 {
     package Role::Foo;

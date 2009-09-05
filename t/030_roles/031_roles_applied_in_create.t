@@ -3,13 +3,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
 use Moose::Meta::Class;
 use Moose::Util;
 
 use lib 't/lib', 'lib';
 
+use MetaTest;
+
+skip_all_meta 1;
 
 # Note that this test passed (pre svn #5543) if we inlined the role
 # definitions in this file, as it was very timing sensitive.

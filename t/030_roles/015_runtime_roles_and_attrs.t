@@ -3,10 +3,13 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 11;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
+use MetaTest;
 
 
 
@@ -42,16 +45,18 @@ dies_ok {
     $obj->dog($obj)
 } '... and setting the accessor fails (not a Dog yet)';
 
-Dog->meta->apply($obj);
+skip_meta {
+   Dog->meta->apply($obj);
 
-ok($obj->does('Dog'), '... we now do the Bark role');
-ok($obj->can('talk'), "... the role is now composed at the object level");
-ok($obj->can('fur'), "it has fur");
+   ok($obj->does('Dog'), '... we now do the Bark role');
+   ok($obj->can('talk'), "... the role is now composed at the object level");
+   ok($obj->can('fur'), "it has fur");
 
-is($obj->talk, 'woof', '... got the right return value for the newly composed method');
+   is($obj->talk, 'woof', '... got the right return value for the newly composed method');
 
-lives_ok {
-    $obj->dog($obj)
-} '... and setting the accessor is okay';
+   lives_ok {
+       $obj->dog($obj)
+   } '... and setting the accessor is okay';
 
-is($obj->fur, "dirty", "role attr initialized");
+   is($obj->fur, "dirty", "role attr initialized");
+} 6;

@@ -3,10 +3,13 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 7;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
+use MetaTest;
 
 
 
@@ -45,13 +48,14 @@ dies_ok {
     $foo->dog($bar)
 } '... and setting the accessor fails (not a Dog yet)';
 
-Dog->meta->apply($bar);
+skip_meta {
+   Dog->meta->apply($bar);
 
-ok($bar->can('talk'), "... the role is now composed at the object level");
+   ok($bar->can('talk'), "... the role is now composed at the object level");
 
-is($bar->talk, 'woof', '... got the right return value for the newly composed method');
+   is($bar->talk, 'woof', '... got the right return value for the newly composed method');
 
-lives_ok {
-    $foo->dog($bar)
-} '... and setting the accessor is okay';
-
+   lives_ok {
+       $foo->dog($bar)
+   } '... and setting the accessor is okay';
+} 3;
