@@ -1,10 +1,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Class;
+
+use MetaTest;
+
+skip_all_meta 1;
 
 $SIG{__WARN__} = sub { die if shift =~ /recurs/ };
 

@@ -3,7 +3,11 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 3;
+
+use MetaTest;
 
 {
     package Foo;
@@ -13,11 +17,13 @@ use Test::More tests => 3;
 
 {
     my $foo = Foo->new(foo => 10);
-    my $reader = $foo->meta->get_attribute('foo')->reader;
-    is($reader, 'get_foo',
-       'reader => "get_foo" has correct presedence');
+    skip_meta {
+       my $reader = $foo->meta->get_attribute('foo')->reader;
+       is($reader, 'get_foo',
+          'reader => "get_foo" has correct presedence');
+       is($foo->$reader, 10, "Reader works as expected");
+    } 2;
     can_ok($foo, 'get_foo');
-    is($foo->$reader, 10, "Reader works as expected");
 }
 
 

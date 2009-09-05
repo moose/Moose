@@ -1,6 +1,13 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+
+use lib 't/lib';
+
+use Test::More;
+
+use MetaTest;
+
+skip_all_meta 10;
 
 {
     package Ball;
