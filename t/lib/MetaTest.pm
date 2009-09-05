@@ -2,7 +2,7 @@ package MetaTest;
 
 use Exporter 'import';
 use Test::More;
-our @EXPORT = qw{skip_meta meta_can_ok};
+our @EXPORT = qw{skip_meta meta_can_ok skip_all_meta};
 
 sub SKIP_META_MESSAGE() {
    'meta-tests disabled';
@@ -10,6 +10,12 @@ sub SKIP_META_MESSAGE() {
 
 sub skip_meta_condition {
    $ENV{SKIP_META_TESTS};
+}
+
+sub skip_all_meta {
+   my $plan = shift;
+    plan skip_all => SKIP_META_MESSAGE if skip_meta_condition;
+    plan tests => $plan;
 }
 
 sub skip_meta (&$) {
