@@ -88,5 +88,5 @@ skip_meta {
    throws_ok { $foo->type_constrained(10.5) }
    qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 10\.5/,
    '... this failed cause of type check';
-} 7;
+} 5;
 
