@@ -3,10 +3,14 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Scalar::Util 'isweak';
 
 use Test::More tests => 42;
 use Test::Exception;
+
+use MetaTest;
 
 
 
@@ -167,7 +171,7 @@ use Test::Exception;
     our @calls;
     has foo => (is => 'rw', trigger => sub { push @calls, [@_] });
 }
-
+skip_meta {
 {
     my $attr = Foo->meta->get_attribute('foo');
 
@@ -210,4 +214,5 @@ use Test::Exception;
     Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
 }
 
+} 6;
 

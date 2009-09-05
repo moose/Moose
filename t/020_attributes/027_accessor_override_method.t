@@ -1,12 +1,17 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+
+use lib 't/lib';
+
 use Test::More;
+
+use MetaTest;
 
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 5;
+    skip_all_meta 5;
 }
 
 {

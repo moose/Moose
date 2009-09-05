@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 39;
 use Test::Exception;
+
+use MetaTest;
 
 =pod
 
@@ -199,9 +203,10 @@ is( $p->child_a_method_2, "ChildA a2", "delegates are their own invocants" );
 can_ok( $p, "child_b_method_1" );
 ok( !$p->can("child_b_method_2"), "but not ChildB's unspecified siblings" );
 
-
+skip_meta {
 ok( !$p->can($_), "none of ChildD's methods ($_)" )
     for grep { /^child/ } map { $_->name } ChildD->meta->get_all_methods();
+ } 2;
 
 can_ok( $p, "child_c_method_3_la" );
 can_ok( $p, "child_c_method_4_la" );

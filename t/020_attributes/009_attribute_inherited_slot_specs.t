@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 84;
 use Test::Exception;
 
+use MetaTest;
 
 
 {
@@ -187,78 +190,78 @@ is($bar->baz, undef, '... got the right undef default value');
 }
 
 # check some meta-stuff
+skip_meta {
+   ok(Bar->meta->has_attribute('foo'), '... Bar has a foo attr');
+   ok(Bar->meta->has_attribute('bar'), '... Bar has a bar attr');
+   ok(Bar->meta->has_attribute('baz'), '... Bar has a baz attr');
+   ok(Bar->meta->has_attribute('gorch'), '... Bar has a gorch attr');
+   ok(Bar->meta->has_attribute('gloum'), '... Bar has a gloum attr');
+   ok(Bar->meta->has_attribute('bling'), '... Bar has a bling attr');
+   ok(Bar->meta->has_attribute('bunch_of_stuff'), '... Bar does have a bunch_of_stuff attr');
+   ok(!Bar->meta->has_attribute('blang'), '... Bar has a blang attr');
+   ok(Bar->meta->has_attribute('fail'), '... Bar has a fail attr');
+   ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have an other_fail attr');
 
-ok(Bar->meta->has_attribute('foo'), '... Bar has a foo attr');
-ok(Bar->meta->has_attribute('bar'), '... Bar has a bar attr');
-ok(Bar->meta->has_attribute('baz'), '... Bar has a baz attr');
-ok(Bar->meta->has_attribute('gorch'), '... Bar has a gorch attr');
-ok(Bar->meta->has_attribute('gloum'), '... Bar has a gloum attr');
-ok(Bar->meta->has_attribute('bling'), '... Bar has a bling attr');
-ok(Bar->meta->has_attribute('bunch_of_stuff'), '... Bar does have a bunch_of_stuff attr');
-ok(!Bar->meta->has_attribute('blang'), '... Bar has a blang attr');
-ok(Bar->meta->has_attribute('fail'), '... Bar has a fail attr');
-ok(!Bar->meta->has_attribute('other_fail'), '... Bar does not have an other_fail attr');
+   isnt(Foo->meta->get_attribute('foo'),
+        Bar->meta->get_attribute('foo'),
+        '... Foo and Bar have different copies of foo');
+   isnt(Foo->meta->get_attribute('bar'),
+        Bar->meta->get_attribute('bar'),
+        '... Foo and Bar have different copies of bar');
+   isnt(Foo->meta->get_attribute('baz'),
+        Bar->meta->get_attribute('baz'),
+        '... Foo and Bar have different copies of baz');
+   isnt(Foo->meta->get_attribute('gorch'),
+        Bar->meta->get_attribute('gorch'),
+        '... Foo and Bar have different copies of gorch');
+   isnt(Foo->meta->get_attribute('gloum'),
+        Bar->meta->get_attribute('gloum'),
+        '... Foo and Bar have different copies of gloum');
+   isnt(Foo->meta->get_attribute('bling'),
+        Bar->meta->get_attribute('bling'),
+        '... Foo and Bar have different copies of bling');
+   isnt(Foo->meta->get_attribute('bunch_of_stuff'),
+        Bar->meta->get_attribute('bunch_of_stuff'),
+        '... Foo and Bar have different copies of bunch_of_stuff');
 
-isnt(Foo->meta->get_attribute('foo'),
-     Bar->meta->get_attribute('foo'),
-     '... Foo and Bar have different copies of foo');
-isnt(Foo->meta->get_attribute('bar'),
-     Bar->meta->get_attribute('bar'),
-     '... Foo and Bar have different copies of bar');
-isnt(Foo->meta->get_attribute('baz'),
-     Bar->meta->get_attribute('baz'),
-     '... Foo and Bar have different copies of baz');
-isnt(Foo->meta->get_attribute('gorch'),
-     Bar->meta->get_attribute('gorch'),
-     '... Foo and Bar have different copies of gorch');
-isnt(Foo->meta->get_attribute('gloum'),
-     Bar->meta->get_attribute('gloum'),
-     '... Foo and Bar have different copies of gloum');
-isnt(Foo->meta->get_attribute('bling'),
-     Bar->meta->get_attribute('bling'),
-     '... Foo and Bar have different copies of bling');
-isnt(Foo->meta->get_attribute('bunch_of_stuff'),
-     Bar->meta->get_attribute('bunch_of_stuff'),
-     '... Foo and Bar have different copies of bunch_of_stuff');
+   ok(Bar->meta->get_attribute('bar')->has_type_constraint,
+      '... Bar::bar inherited the type constraint too');
+   ok(Bar->meta->get_attribute('baz')->has_type_constraint,
+     '... Bar::baz inherited the type constraint too');
 
-ok(Bar->meta->get_attribute('bar')->has_type_constraint,
-   '... Bar::bar inherited the type constraint too');
-ok(Bar->meta->get_attribute('baz')->has_type_constraint,
-  '... Bar::baz inherited the type constraint too');
+   is(Bar->meta->get_attribute('bar')->type_constraint->name,
+      'Str', '... Bar::bar inherited the right type constraint too');
 
-is(Bar->meta->get_attribute('bar')->type_constraint->name,
-   'Str', '... Bar::bar inherited the right type constraint too');
+   is(Foo->meta->get_attribute('baz')->type_constraint->name,
+     'Ref', '... Foo::baz inherited the right type constraint too');
+   is(Bar->meta->get_attribute('baz')->type_constraint->name,
+      'ArrayRef', '... Bar::baz inherited the right type constraint too');
 
-is(Foo->meta->get_attribute('baz')->type_constraint->name,
-  'Ref', '... Foo::baz inherited the right type constraint too');
-is(Bar->meta->get_attribute('baz')->type_constraint->name,
-   'ArrayRef', '... Bar::baz inherited the right type constraint too');
+   ok(!Foo->meta->get_attribute('gorch')->is_required,
+     '... Foo::gorch is not a required attr');
+   ok(Bar->meta->get_attribute('gorch')->is_required,
+      '... Bar::gorch is a required attr');
 
-ok(!Foo->meta->get_attribute('gorch')->is_required,
-  '... Foo::gorch is not a required attr');
-ok(Bar->meta->get_attribute('gorch')->is_required,
-   '... Bar::gorch is a required attr');
+   is(Foo->meta->get_attribute('bunch_of_stuff')->type_constraint->name,
+     'ArrayRef',
+     '... Foo::bunch_of_stuff is an ArrayRef');
+   is(Bar->meta->get_attribute('bunch_of_stuff')->type_constraint->name,
+     'ArrayRef[Int]',
+     '... Bar::bunch_of_stuff is an ArrayRef[Int]');
 
-is(Foo->meta->get_attribute('bunch_of_stuff')->type_constraint->name,
-  'ArrayRef',
-  '... Foo::bunch_of_stuff is an ArrayRef');
-is(Bar->meta->get_attribute('bunch_of_stuff')->type_constraint->name,
-  'ArrayRef[Int]',
-  '... Bar::bunch_of_stuff is an ArrayRef[Int]');
+   ok(!Foo->meta->get_attribute('gloum')->is_lazy,
+      '... Foo::gloum is not a required attr');
+   ok(Bar->meta->get_attribute('gloum')->is_lazy,
+      '... Bar::gloum is a required attr');
 
-ok(!Foo->meta->get_attribute('gloum')->is_lazy,
-   '... Foo::gloum is not a required attr');
-ok(Bar->meta->get_attribute('gloum')->is_lazy,
-   '... Bar::gloum is a required attr');
+   ok(!Foo->meta->get_attribute('foo')->should_coerce,
+     '... Foo::foo should not coerce');
+   ok(Bar->meta->get_attribute('foo')->should_coerce,
+      '... Bar::foo should coerce');
 
-ok(!Foo->meta->get_attribute('foo')->should_coerce,
-  '... Foo::foo should not coerce');
-ok(Bar->meta->get_attribute('foo')->should_coerce,
-   '... Bar::foo should coerce');
-
-ok(!Foo->meta->get_attribute('bling')->has_handles,
-   '... Foo::foo should not handles');
-ok(Bar->meta->get_attribute('bling')->has_handles,
-   '... Bar::foo should handles');
-
+   ok(!Foo->meta->get_attribute('bling')->has_handles,
+      '... Foo::foo should not handles');
+   ok(Bar->meta->get_attribute('bling')->has_handles,
+      '... Bar::foo should handles');
+} 32;
 

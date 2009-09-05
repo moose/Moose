@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 92;
 use Test::Exception;
 
+use MetaTest;
 
 
 # -------------------------------------------------------------------
@@ -43,11 +46,12 @@ isa_ok($bar, 'Bar');
 ok($bar->foo, '... we have something in bar->foo');
 isa_ok($bar->foo, 'Foo');
 
-my $meth = Bar->meta->get_method('foo_bar');
-isa_ok($meth, 'Moose::Meta::Method::Delegation');
-is($meth->associated_attribute->name, 'foo',
-   'associated_attribute->name for this method is foo');
-
+skip_meta {
+   my $meth = Bar->meta->get_method('foo_bar');
+   isa_ok($meth, 'Moose::Meta::Method::Delegation');
+   is($meth->associated_attribute->name, 'foo',
+      'associated_attribute->name for this method is foo');
+} 2;
 is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
 
 can_ok($bar, 'foo_bar');
@@ -415,9 +419,11 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
         );
     }
     my $i = Quux->new;
-    ok($i->meta->has_method('foo_bar'), 'handles method foo_bar is present');
-    $i->meta->remove_attribute('foo');
-    ok(!$i->meta->has_method('foo_bar'), 'handles method foo_bar is removed');
+    skip_meta {
+       ok($i->meta->has_method('foo_bar'), 'handles method foo_bar is present');
+       $i->meta->remove_attribute('foo');
+       ok(!$i->meta->has_method('foo_bar'), 'handles method foo_bar is removed');
+    } 2;
 }
 
 # Make sure that a useful error message is thrown when the delegation target is
