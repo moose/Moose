@@ -23,8 +23,8 @@ sub meta_can_ok {
    skip_meta {
       local $Test::Builder::Level = $Test::Builder::Level + 1;
       ok($class->meta->has_method($method), $message);
-      ok($class->can($method), $message);
    } 1;
+   ok($class->can($method), $message);
 }
 
 1;
