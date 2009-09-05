@@ -3,8 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
+skip_all_meta 7;
 
 {
     package Class;
@@ -23,6 +29,7 @@ use Test::Exception;
 }
 
 my $new_class;
+
 
 lives_ok {
     $new_class = Moose::Meta::Class->create(

@@ -3,9 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use lib 't/lib';
+
+use Test::More;
 
 use Moose::Meta::Class;
+
+use MetaTest;
+
+skip_all_meta 8;
 
 {
     package Class;
