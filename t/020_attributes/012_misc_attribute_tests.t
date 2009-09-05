@@ -29,10 +29,10 @@ use MetaTest;
 
        ok($foo_attr->has_documentation, '... the foo has docs');
        is($foo_attr->documentation,
-               q{
-                   The 'foo' attribute is my favorite
-                   attribute in the whole wide world.
-               },
+            q{
+                The 'foo' attribute is my favorite
+                attribute in the whole wide world.
+            },
        '... got the foo docs');
     } 2;
 }
