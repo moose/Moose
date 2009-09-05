@@ -3,8 +3,17 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 6;
 use Test::Exception;
+
+use MetaTest;
+
+# this is so that when we use base 'Foo' below we won't get the Foo.pm in t/lib
+BEGIN {
+   @INC = grep { $_ ne 't/lib' } @INC;
+};
 
 
 
@@ -37,10 +46,12 @@ this test also demonstrates.
     use base 'Foo';
 }
 
-my $bar = Bar->new;
-isa_ok($bar, 'Bar');
-isa_ok($bar, 'Foo');
-ok(!$bar->isa('Moose::Object'), '... Bar is not Moose::Object subclass');
+skip_meta {
+   my $bar = Bar->new;
+   isa_ok($bar, 'Bar');
+   isa_ok($bar, 'Foo');
+   ok(!$bar->isa('Moose::Object'), '... Bar is not Moose::Object subclass');
+} 3;
 
 my $baz = Baz->new;
 isa_ok($baz, 'Baz');

@@ -8,6 +8,8 @@ use lib 't/lib', 'lib';
 use Test::More;
 use Test::Exception;
 
+use MetaTest;
+
 BEGIN {
     eval "use Module::Refresh;";
     plan skip_all => "Module::Refresh is required for this test" if $@;
@@ -25,7 +27,9 @@ my @modules = qw[Foo Bar MyMooseA MyMooseB MyMooseObject];
 do {
     use_ok($_);
 
-    is($_->meta->name, $_, '... initialized the meta correctly');
+    skip_meta {
+       is($_->meta->name, $_, '... initialized the meta correctly');
+    } 1;
 
     lives_ok {
         Module::Refresh->new->refresh_module($_ . '.pm')
@@ -64,8 +68,10 @@ has 'foo' => (is => 'rw', isa => 'Int');
 }
 
 use_ok('TestBaz');
-is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
-ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+skip_meta {
+   is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
+   ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+} 2;
 ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
 
 {
@@ -79,8 +85,10 @@ lives_ok {
     Module::Refresh->new->refresh_module($test_module_file)
 } '... successfully refreshed ' . $test_module_file;
 
-is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
-ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+skip_meta {
+   is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
+   ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
+} 2;
 ok(TestBaz->isa('Foo'), '... TestBaz is a Foo');
 
 unlink $test_module_file;

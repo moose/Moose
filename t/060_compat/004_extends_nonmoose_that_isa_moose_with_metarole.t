@@ -1,6 +1,14 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+
+use lib 't/lib';
+
+use Test::More;
+
+use MetaTest;
+
+skip_all_meta 18;
+
 use Class::MOP ();
 
 {
