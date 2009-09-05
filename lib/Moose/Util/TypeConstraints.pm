@@ -1067,7 +1067,7 @@ B<NOTE:> You should only use this if you know what you are doing,
 all the built in types use this, so your subtypes (assuming they
 are shallow) will not likely need to use this.
 
-=item B<type 'Name' => where { } ... >
+=item B<< type 'Name' => where { } ... >>
 
 This creates a base type, which has no parent.
 
