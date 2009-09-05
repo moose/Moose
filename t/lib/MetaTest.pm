@@ -4,13 +4,21 @@ use Exporter 'import';
 use Test::More;
 our @EXPORT = qw{skip_meta meta_can_ok};
 
+sub SKIP_META_MESSAGE() {
+   'meta-tests disabled';
+}
+
+sub skip_meta_condition {
+   $ENV{SKIP_META_TESTS};
+}
+
 sub skip_meta (&$) {
    my $fn = shift;
    my $amount = shift;
    local $Test::Builder::Level = $Test::Builder::Level + 1;
    SKIP: {
       local $Test::Builder::Level = $Test::Builder::Level + 1;
-      skip 'meta-tests disabled', $amount if $ENV{SKIP_META_TESTS};
+      skip SKIP_META_MESSAGE, $amount if skip_meta_condition;
       $fn->();
    };
 }
