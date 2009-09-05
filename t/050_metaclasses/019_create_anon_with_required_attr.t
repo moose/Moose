@@ -6,8 +6,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
+skip_all_meta 15;
 
 {
     package HasFoo;

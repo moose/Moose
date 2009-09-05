@@ -3,8 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
+skip_all_meta 24;
 
 {
 

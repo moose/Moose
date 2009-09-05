@@ -1,9 +1,13 @@
-use lib "t/lib";
+use lib 't/lib';
 package MyExporter::User;
 use MyExporter;
 
-use Test::More (tests => 4);
+use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
+skip_all_meta 4;
 
 lives_and {
     with_prototype {

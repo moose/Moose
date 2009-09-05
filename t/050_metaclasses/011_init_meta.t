@@ -3,7 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use lib 't/lib';
+
+use Test::More;
+
+use MetaTest;
+
+skip_all_meta 4;
 
 use Moose ();
 

@@ -5,10 +5,14 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 89;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
+
+use MetaTest;
+
+skip_all_meta 89;
 
 
 {

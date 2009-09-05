@@ -3,12 +3,17 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 47;
+    skip_all_meta 47;
 }
 
 

@@ -3,10 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
 
-;
+use MetaTest;
+
+skip_all_meta 2;
 
 lives_ok {
     package MooseX::Attribute::Test;

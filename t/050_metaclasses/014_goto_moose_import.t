@@ -3,8 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use lib 't/lib';
+
+use Test::More;
 use Test::Exception;
+
+use MetaTest;
+
+skip_all_meta 8;
 
 # Some packages out in the wild cooperate with Moose by using goto
 # &Moose::import. we want to make sure it still works.
