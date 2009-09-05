@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 22;
 use Test::Moose 'does_ok';
+
+use MetaTest;
 
 my $uc;
 {
@@ -87,30 +91,32 @@ is( $page->string, '', "clear" );
 
 # check the meta ..
 
-my $string = $page->meta->get_attribute('string');
-does_ok( $string, 'Moose::Meta::Attribute::Native::Trait::String' );
+skip_meta {
+   my $string = $page->meta->get_attribute('string');
+   does_ok( $string, 'Moose::Meta::Attribute::Native::Trait::String' );
 
-is(
-    $string->type_constraint->name, 'Str',
-    '... got the expected type constraint'
-);
+   is(
+       $string->type_constraint->name, 'Str',
+       '... got the expected type constraint'
+   );
 
-is_deeply(
-    $string->handles,
-    {
-        inc_string      => 'inc',
-        append_string   => 'append',
-        prepend_string  => 'prepend',
-        match_string    => 'match',
-        replace_string  => 'replace',
-        chop_string     => 'chop',
-        chomp_string    => 'chomp',
-        clear_string    => 'clear',
-        length_string   => 'length',
-        exclaim         => [ append => '!' ],
-        capitalize_last => [ replace => qr/(.)$/, $uc ],
-        invalid_number => [ match => qr/\D/ ],
-    },
-    '... got the right handles methods'
-);
+   is_deeply(
+       $string->handles,
+       {
+           inc_string      => 'inc',
+           append_string   => 'append',
+           prepend_string  => 'prepend',
+           match_string    => 'match',
+           replace_string  => 'replace',
+           chop_string     => 'chop',
+           chomp_string    => 'chomp',
+           clear_string    => 'clear',
+           length_string   => 'length',
+           exclaim         => [ append => '!' ],
+           capitalize_last => [ replace => qr/(.)$/, $uc ],
+           invalid_number => [ match => qr/\D/ ],
+       },
+       '... got the right handles methods'
+   );
+} 3;
 

@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 12;
 use Test::Moose;
+
+use MetaTest;
 
 {
     package MyHomePage;
@@ -37,21 +41,22 @@ $page->reset_counter;
 is( $page->counter, 0, '... got the original value' );
 
 # check the meta ..
+skip_meta {
+   my $counter = $page->meta->get_attribute('counter');
+   does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
 
-my $counter = $page->meta->get_attribute('counter');
-does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
+   is( $counter->type_constraint->name, 'Num',
+       '... got the expected default type constraint' );
 
-is( $counter->type_constraint->name, 'Num',
-    '... got the expected default type constraint' );
-
-is_deeply(
-    $counter->handles,
-    {
-        'inc_counter'   => 'inc',
-        'dec_counter'   => 'dec',
-        'reset_counter' => 'reset',
-        'set_counter'   => 'set',
-    },
-    '... got the right default handles methods'
-);
+   is_deeply(
+       $counter->handles,
+       {
+           'inc_counter'   => 'inc',
+           'dec_counter'   => 'dec',
+           'reset_counter' => 'reset',
+           'set_counter'   => 'set',
+       },
+       '... got the right default handles methods'
+   );
+} 3;
 

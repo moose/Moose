@@ -3,9 +3,13 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 43;
 use Test::Exception;
 use Test::Moose 'does_ok';
+
+use MetaTest;
 
 my $sort;
 my $less;
@@ -129,36 +133,37 @@ my $other_stuff = Stuff->new( options => [ 1, 1, 2, 3, 5 ] );
 is_deeply( [ $other_stuff->unique_options ], [1, 2, 3, 5] );
 
 ## test the meta
+skip_meta {
+   my $options = $stuff->meta->get_attribute('_options');
+   does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
 
-my $options = $stuff->meta->get_attribute('_options');
-does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
+   is_deeply(
+       $options->handles,
+       {
+           'num_options'          => 'count',
+           'has_no_options'       => 'is_empty',
+           'map_options',         => 'map',
+           'filter_options'       => 'grep',
+           'find_option'          => 'first',
+           'options'              => 'elements',
+           'join_options'         => 'join',
+           'get_option_at'        => 'get',
+           'sorted_options'       => 'sort',
+           'randomized_options'   => 'shuffle',
+           'unique_options'       => 'uniq',
+           'less_than_five'       => [ grep => $less ],
+           'up_by_one'            => [ map => $up ],
+           'pairwise_options'     => [ natatime => 2 ],
+           'dashify'              => [ join => '-' ],
+           'descending'           => [ sort => $sort ],
+           'product'              => [ reduce => $prod ],
+       },
+       '... got the right handles mapping'
+   );
 
-is_deeply(
-    $options->handles,
-    {
-        'num_options'          => 'count',
-        'has_no_options'       => 'is_empty',
-        'map_options',         => 'map',
-        'filter_options'       => 'grep',
-        'find_option'          => 'first',
-        'options'              => 'elements',
-        'join_options'         => 'join',
-        'get_option_at'        => 'get',
-        'sorted_options'       => 'sort',
-        'randomized_options'   => 'shuffle',
-        'unique_options'       => 'uniq',
-        'less_than_five'       => [ grep => $less ],
-        'up_by_one'            => [ map => $up ],
-        'pairwise_options'     => [ natatime => 2 ],
-        'dashify'              => [ join => '-' ],
-        'descending'           => [ sort => $sort ],
-        'product'              => [ reduce => $prod ],
-    },
-    '... got the right handles mapping'
-);
-
-is( $options->type_constraint->type_parameter, 'Int',
-    '... got the right container type' );
+   is( $options->type_constraint->type_parameter, 'Int',
+       '... got the right container type' );
+} 3;
 
 dies_ok {
     $stuff->sort_in_place_options(undef);

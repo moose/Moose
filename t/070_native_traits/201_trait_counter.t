@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 16;
 use Test::Moose 'does_ok';
+
+use MetaTest;
 
 {
     package MyHomePage;
@@ -58,21 +62,22 @@ $page->dec_counter(5);
 is( $page->counter, 2, '... decrement by arg' );
 
 # check the meta ..
+skip_meta {
+   my $counter = $page->meta->get_attribute('counter');
+   does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
 
-my $counter = $page->meta->get_attribute('counter');
-does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
+   is( $counter->type_constraint->name, 'Int',
+       '... got the expected type constraint' );
 
-is( $counter->type_constraint->name, 'Int',
-    '... got the expected type constraint' );
+   is_deeply(
+       $counter->handles,
+       {
+           inc_counter   => 'inc',
+           dec_counter   => 'dec',
+           reset_counter => 'reset',
+           set_counter   => 'set'
+       },
+       '... got the right handles methods'
+   );
 
-is_deeply(
-    $counter->handles,
-    {
-        inc_counter   => 'inc',
-        dec_counter   => 'dec',
-        reset_counter => 'reset',
-        set_counter   => 'set'
-    },
-    '... got the right handles methods'
-);
-
+} 3;

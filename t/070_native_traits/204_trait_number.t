@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 25;
 use Test::Moose;
+
+use MetaTest;
 
 {
     package Real;
@@ -88,25 +92,26 @@ $real->dec;
 is $real->integer, 12, 'dec 13';
 
 ## test the meta
+skip_meta {
+   my $attr = $real->meta->get_attribute('integer');
+   does_ok( $attr, 'Moose::Meta::Attribute::Native::Trait::Number' );
 
-my $attr = $real->meta->get_attribute('integer');
-does_ok( $attr, 'Moose::Meta::Attribute::Native::Trait::Number' );
-
-is_deeply(
-    $attr->handles,
-    {
-        set         => 'set',
-        add         => 'add',
-        sub         => 'sub',
-        mul         => 'mul',
-        div         => 'div',
-        mod         => 'mod',
-        abs         => 'abs',
-        inc         => [ add => 1 ],
-        dec         => [ sub => 1 ],
-        odd         => [ mod => 2 ],
-        cut_in_half => [ div => 2 ],
-    },
-    '... got the right handles mapping'
-);
+   is_deeply(
+       $attr->handles,
+       {
+           set         => 'set',
+           add         => 'add',
+           sub         => 'sub',
+           mul         => 'mul',
+           div         => 'div',
+           mod         => 'mod',
+           abs         => 'abs',
+           inc         => [ add => 1 ],
+           dec         => [ sub => 1 ],
+           odd         => [ mod => 2 ],
+           cut_in_half => [ div => 2 ],
+       },
+       '... got the right handles mapping'
+   );
+} 2;
 

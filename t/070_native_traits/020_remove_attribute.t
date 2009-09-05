@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 11;
 use Test::Exception;
+
+use MetaTest;
 
 {
     package MyHomePage;
@@ -33,17 +37,20 @@ can_ok( $page, $_ ) for qw[
     reset_counter
 ];
 
-lives_ok {
-    $page->meta->remove_attribute('counter');
-}
-'... removed the counter attribute okay';
+skip_meta {
+   lives_ok {
+       $page->meta->remove_attribute('counter');
+   }
+   '... removed the counter attribute okay';
 
-ok( !$page->meta->has_attribute('counter'),
-    '... no longer has the attribute' );
+   ok( !$page->meta->has_attribute('counter'),
+       '... no longer has the attribute' );
 
-ok( !$page->can($_), "... our class no longer has the $_ method" ) for qw[
-    counter
-    dec_counter
-    inc_counter
-    reset_counter
-];
+   ok( !$page->can($_), "... our class no longer has the $_ method" ) for qw[
+       counter
+       dec_counter
+       inc_counter
+       reset_counter
+   ];
+} 6;
+

@@ -3,9 +3,13 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Test::More tests => 46;
 use Test::Exception;
 use Test::Moose 'does_ok';
+
+use MetaTest;
 
 {
     package Stuff;
@@ -139,31 +143,32 @@ dies_ok {
 '... bad constructor params';
 
 ## test the meta
+skip_meta {
+   my $options = $stuff->meta->get_attribute('options');
+   does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Hash' );
 
-my $options = $stuff->meta->get_attribute('options');
-does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Hash' );
+   is_deeply(
+       $options->handles,
+       {
+           'set_option'       => 'set',
+           'get_option'       => 'get',
+           'has_no_options'   => 'empty',
+           'num_options'      => 'count',
+           'clear_options'    => 'clear',
+           'delete_option'    => 'delete',
+           'has_option'       => 'exists',
+           'is_defined'       => 'defined',
+           'option_accessor'  => 'accessor',
+           'key_value'        => 'kv',
+           'options_elements' => 'elements',
+           'quantity'         => [ accessor => 'quantity' ],
+       },
+       '... got the right handles mapping'
+   );
 
-is_deeply(
-    $options->handles,
-    {
-        'set_option'       => 'set',
-        'get_option'       => 'get',
-        'has_no_options'   => 'empty',
-        'num_options'      => 'count',
-        'clear_options'    => 'clear',
-        'delete_option'    => 'delete',
-        'has_option'       => 'exists',
-        'is_defined'       => 'defined',
-        'option_accessor'  => 'accessor',
-        'key_value'        => 'kv',
-        'options_elements' => 'elements',
-        'quantity'         => [ accessor => 'quantity' ],
-    },
-    '... got the right handles mapping'
-);
-
-is( $options->type_constraint->type_parameter, 'Str',
-    '... got the right container type' );
+   is( $options->type_constraint->type_parameter, 'Str',
+       '... got the right container type' );
+} 3;
 
 $stuff->set_option( oink => "blah", xxy => "flop" );
 my @key_value = $stuff->key_value;
