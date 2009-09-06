@@ -59,7 +59,7 @@ sub count : method {
     return sub { scalar CORE::keys %{ $reader->( $_[0] ) } };
 }
 
-sub empty : method {
+sub is_empty : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub { scalar CORE::keys %{ $reader->( $_[0] ) } ? 0 : 1 };
 }

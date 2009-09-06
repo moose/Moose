@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.89_02
+    * Moose::Meta::Attribute::Native
+      - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
+
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers to the

@@ -44,7 +44,7 @@ Moose::Meta::Attribute::Native::Trait::Hash
       handles   => {
           set_option     => 'set',
           get_option     => 'get',
-          has_no_options => 'empty',
+          has_no_options => 'is_empty',
           num_options    => 'count',
           delete_option  => 'delete',
           pairs          => 'kv',
@@ -111,7 +111,7 @@ Resets the hash to an empty value, like C<%hash = ()>.
 
 Returns the number of elements in the hash.
 
-=item B<empty>
+=item B<is_empty>
 
 If the hash is populated, returns false. Otherwise, returns true.
 
