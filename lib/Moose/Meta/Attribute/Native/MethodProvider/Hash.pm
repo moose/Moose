@@ -188,7 +188,7 @@ Moose::Meta::Attribute::Native::MethodProvider::Hash
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Hash>. Please check there for
+L<Moose::Meta::Attribute::Native::Trait::Hash>. Please check there for
 documentation on what methods are provided.
 
 =head1 METHODS
