@@ -191,10 +191,10 @@ also lets you predeclare type names and use them as barewords.
   use MooseX::Types -declare => ['PositiveInt'];
   use MooseX::Types::Moose 'Int';
 
-  subtype PositiveInt
-      => as Int,
-      => where { $_ > 0 }
-      => message {"Int is not larger than 0"};
+  subtype PositiveInt,
+      as Int,
+      where { $_ > 0 },
+      message { "Int is not larger than 0" };
 
 One nice feature is that those bareword names are actually namespaced
 in Moose's type registry, so multiple applications can use the same
