@@ -70,7 +70,7 @@ Returns values from the hash.
 In list context return a list of values in the hash for the given keys.
 In scalar context returns the value for the last key specified.
 
-=item B<set($key => $value, $key2 => $value2 ...)>
+=item B<set($key =E<gt> $value, $key2 =E<gt> $value2 ...)>
 
 Sets the elements in the hash to the given values.
 
@@ -112,7 +112,8 @@ Resets the hash to an empty value, like C<%hash = ()>.
 
 =item B<count>
 
-Returns the number of elements in the hash.
+Returns the number of elements in the hash. Also useful for not empty: 
+C<< has_options => 'count' >>.
 
 =item B<is_empty>
 
