@@ -20,11 +20,10 @@ sub setup_import_methods {
 
     my $exporting_package = $args{exporting_package} ||= caller();
 
-    my ( $import, $unimport ) = $class->build_import_methods(%args);
-
-    no strict 'refs';
-    *{ $exporting_package . '::import' }   = $import;
-    *{ $exporting_package . '::unimport' } = $unimport;
+    $class->build_import_methods(
+        %args,
+        install => [qw(import unimport init_meta)]
+    );
 }
 
 sub build_import_methods {
@@ -49,16 +48,29 @@ sub build_import_methods {
         }
     );
 
+    my %methods;
     # $args{_export_to_main} exists for backwards compat, because
     # Moose::Util::TypeConstraints did export to main (unlike Moose &
     # Moose::Role).
-    my $import = $class->_make_import_sub( $exporting_package, $exporter,
-        \@exports_from, $args{_export_to_main} );
+    $methods{import} = $class->_make_import_sub( $exporting_package,
+        $exporter, \@exports_from, $args{_export_to_main} );
 
-    my $unimport = $class->_make_unimport_sub( $exporting_package, $exports,
-        $is_removable, $export_recorder );
+    $methods{unimport} = $class->_make_unimport_sub( $exporting_package,
+        $exports, $is_removable, $export_recorder );
 
-    return ( $import, $unimport )
+    $methods{init_meta} = $class->_make_init_meta( $exporting_package,
+        \%args );
+
+    my $package = Class::MOP::Package->initialize($exporting_package);
+    for my $to_install ( @{ $args{install} || [] } ) {
+        my $symbol = '&' . $to_install;
+        next
+            unless $methods{$to_install}
+                && !$package->has_package_symbol($symbol);
+        $package->add_package_symbol( $symbol, $methods{$to_install} );
+    }
+
+    return ( $methods{import}, $methods{unimport}, $methods{init_meta} )
 }
 
 {
@@ -551,6 +563,57 @@ sub _remove_keywords {
     }
 }
 
+sub _make_init_meta {
+    shift;
+    my $class = shift;
+    my $args  = shift;
+
+    my %metaclass_roles;
+    for my $role (
+        map {"${_}_roles"}
+        qw(metaclass
+        attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class
+        application_to_class_class
+        application_to_role_class
+        application_to_instance_class)
+        ) {
+        $metaclass_roles{$role} = $args->{$role} if exists $args->{$role};
+    }
+
+    my %base_class_roles;
+    %base_class_roles = ( roles => $args->{base_class_roles} )
+        if exists $args->{base_class_roles};
+
+    return unless %metaclass_roles || %base_class_roles;
+
+    return sub {
+        shift;
+        my %options = @_;
+
+        return unless Class::MOP::class_of( $options{for_class} );
+
+        Moose::Util::MetaRole::apply_metaclass_roles(
+            for_class => $options{for_class},
+            %metaclass_roles,
+        );
+
+        Moose::Util::MetaRole::apply_base_class_roles(
+            for_class => $options{for_class},
+            %base_class_roles,
+            )
+            if Class::MOP::class_of( $options{for_class} )
+                ->isa('Moose::Meta::Class');
+
+        return Class::MOP::class_of( $options{for_class} );
+    };
+}
+
 sub import {
     strict->import;
     warnings->import;
@@ -599,12 +662,15 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 =head1 DESCRIPTION
 
 This module encapsulates the exporting of sugar functions in a
-C<Moose.pm>-like manner. It does this by building custom C<import> and
-C<unimport> methods for your module, based on a spec you provide.
+C<Moose.pm>-like manner. It does this by building custom C<import>,
+C<unimport>, and C<init_meta> methods for your module, based on a spec you
+provide.
 
-It also lets you "stack" Moose-alike modules so you can export
-Moose's sugar as well as your own, along with sugar from any random
-C<MooseX> module, as long as they all use C<Moose::Exporter>.
+It also lets you "stack" Moose-alike modules so you can export Moose's sugar
+as well as your own, along with sugar from any random C<MooseX> module, as
+long as they all use C<Moose::Exporter>. This feature exists to let you bundle
+a set of MooseX modules into a policy module that developers can use directly
+instead of using Moose itself.
 
 To simplify writing exporter modules, C<Moose::Exporter> also imports
 C<strict> and C<warnings> into your exporter module, as well as into
@@ -618,13 +684,22 @@ This module provides two public methods:
 
 =item  B<< Moose::Exporter->setup_import_methods(...) >>
 
-When you call this method, C<Moose::Exporter> build custom C<import>
-and C<unimport> methods for your module. The import method will export
-the functions you specify, and you can also tell it to export
-functions exported by some other module (like C<Moose.pm>).
+When you call this method, C<Moose::Exporter> builds custom C<import>,
+C<unimport>, and C<init_meta> methods for your module. The C<import> method
+will export the functions you specify, and can also re-export functions
+exported by some other module (like C<Moose.pm>).
 
-The C<unimport> method cleans the callers namespace of all the
-exported functions.
+The C<unimport> method cleans the caller's namespace of all the exported
+functions.
+
+If you pass any parameters for L<Moose::Util::MetaRole>, this method will
+generate an C<init_meta> for you as well (see below for details). This
+C<init_meta> will call C<Moose::Util::MetaRole::apply_metaclass_roles> and
+C<Moose::Util::MetaRole::apply_base_class_roles> as needed.
+
+Note that if any of these methods already exist, they will not be
+overridden, you will have to use C<build_import_methods> to get the
+coderef that would be installed.
 
 This method accepts the following parameters:
 
@@ -632,22 +707,21 @@ This method accepts the following parameters:
 
 =item * with_caller => [ ... ]
 
-This a list of function I<names only> to be exported wrapped and then
-exported. The wrapper will pass the name of the calling package as the
-first argument to the function. Many sugar functions need to know
-their caller so they can get the calling package's metaclass object.
+This list of function I<names only> will be wrapped and then exported. The
+wrapper will pass the name of the calling package as the first argument to the
+function. Many sugar functions need to know their caller so they can get the
+calling package's metaclass object.
 
 =item * as_is => [ ... ]
 
-This a list of function names or sub references to be exported
-as-is. You can identify a subroutine by reference, which is handy to
-re-export some other module's functions directly by reference
-(C<\&Some::Package::function>).
+This list of function names or sub references will be exported as-is. You can
+identify a subroutine by reference, which is handy to re-export some other
+module's functions directly by reference (C<\&Some::Package::function>).
 
-If you do export some other packages function, this function will
-never be removed by the C<unimport> method. The reason for this is we
-cannot know if the caller I<also> explicitly imported the sub
-themselves, and therefore wants to keep it.
+If you do export some other package's function, this function will never be
+removed by the C<unimport> method. The reason for this is we cannot know if
+the caller I<also> explicitly imported the sub themselves, and therefore wants
+to keep it.
 
 =item * also => $name or \@names
 
@@ -663,9 +737,21 @@ when C<unimport> is called.
 
 =back
 
+Any of the C<*_roles> options for
+C<Moose::Util::MetaRole::apply_metaclass_roles> and
+C<Moose::Util::MetaRole::base_class_roles> are also acceptable.
+
 =item B<< Moose::Exporter->build_import_methods(...) >>
 
-Returns two code refs, one for import and one for unimport.
+Returns two or three code refs, one for C<import>, one for
+C<unimport>, and optionally one for C<init_meta>, if the appropriate
+options are passed in.
+
+Accepts the additional C<install> option, which accepts an arrayref of method
+names to install into your exporting package. The valid options are C<import>,
+C<unimport>, and C<init_meta>. Calling C<setup_import_methods> is equivalent
+to calling C<build_import_methods> with C<< install => [qw(import unimport
+init_meta)] >> except that it doesn't also return the methods.
 
 Used by C<setup_import_methods>.
 
@@ -673,11 +759,14 @@ Used by C<setup_import_methods>.
 
 =head1 IMPORTING AND init_meta
 
-If you want to set an alternative base object class or metaclass
-class, simply define an C<init_meta> method in your class. The
-C<import> method that C<Moose::Exporter> generates for you will call
-this method (if it exists). It will always pass the caller to this
-method via the C<for_class> parameter.
+If you want to set an alternative base object class or metaclass class, see
+above for details on how this module can call L<Moose::Util::MetaRole> for
+you.
+
+If you want to do something that is not supported by this module, simply
+define an C<init_meta> method in your class. The C<import> method that
+C<Moose::Exporter> generates for you will call this method (if it exists). It
+will always pass the caller to this method via the C<for_class> parameter.
 
 Most of the time, your C<init_meta> method will probably just call C<<
 Moose->init_meta >> to do the real work:
@@ -685,6 +774,35 @@ Moose->init_meta >> to do the real work:
   sub init_meta {
       shift; # our class name
       return Moose->init_meta( @_, metaclass => 'My::Metaclass' );
+  }
+
+Keep in mind that C<build_import_methods> will return an C<init_meta>
+method for you, which you can also call from within your custom
+C<init_meta>:
+
+  my ( $import, $unimport, $init_meta ) =
+      Moose::Exporter->build_import_methods( ... );
+
+  sub import {
+     my $class = shift;
+
+     ...
+
+     $class->$import(...);
+
+     ...
+  }
+
+  sub unimport { goto &$unimport }
+
+  sub init_meta {
+     my $class = shift;
+
+     ...
+
+     $class->$init_meta(...);
+
+     ...
   }
 
 =head1 METACLASS TRAITS

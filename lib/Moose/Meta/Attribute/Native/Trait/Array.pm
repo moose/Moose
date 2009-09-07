@@ -43,12 +43,14 @@ Moose::Meta::Attribute::Native::Trait::Array
        default    => sub { [] },
        handles    => {
            all_options    => 'elements',
+           add_option     => 'push',
            map_options    => 'map',
            filter_options => 'grep',
            find_option    => 'first',
            get_option     => 'get',
            join_options   => 'join',
            count_options  => 'count',
+           has_options    => 'count',
            has_no_options => 'is_empty',
            sorted_options => 'sort',
        },
@@ -102,11 +104,11 @@ numbers, just as with Perl's core array handling.
 
 =item B<pop>
 
-=item B<push($value)>
+=item B<push($value1, $value2, value3 ...)>
 
 =item B<shift>
 
-=item B<unshift($value)>
+=item B<unshift($value1, $value2, value3 ...)>
 
 =item B<splice($offset, $length, @values)>
 
