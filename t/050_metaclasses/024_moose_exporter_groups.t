@@ -14,7 +14,7 @@ use Test::Exception;
 
     Moose::Exporter->setup_import_methods(
         also        => ['Moose'],
-        with_meta   => ['with_meta1'],
+        with_meta   => [ 'with_meta1', 'with_meta2' ],
         with_caller => ['default_export1'],
         as_is       => ['default_export2'],
         groups      => {
@@ -26,9 +26,12 @@ use Test::Exception;
     sub default_export1 {1}
     sub default_export2 {2}
 
-    sub with_meta1 (&) {
-        my ( $meta, $code ) = @_;
-        return $meta;
+    sub with_meta1 {
+        return @_;
+    }
+
+    sub with_meta2 (&) {
+        return @_;
     }
 }
 
@@ -43,13 +46,13 @@ use Test::Exception;
     ::can_ok( __PACKAGE__, 'default_export2' );
     ::can_ok( __PACKAGE__, 'has' );
 
-    my $meta;
-    eval q/$meta = with_meta1 { return 'coderef'; }/;
-    ::is( $@, '', 'calling with_meta1 with prototype is not an error' );
+    my ( $meta, $arg1 ) = with_meta1(42);
     ::isa_ok( $meta, 'Moose::Meta::Class', 'with_meta first argument' );
+    ::is( $arg1, 42, 'with_meta1 returns argument it was passed' );
+
     ::is(
-        prototype( __PACKAGE__->can('with_meta1') ),
-        prototype( ExGroups1->can('with_meta1') ),
+        prototype( __PACKAGE__->can('with_meta2') ),
+        prototype( ExGroups1->can('with_meta2') ),
         'using correct prototype on with_meta function'
     );
 
