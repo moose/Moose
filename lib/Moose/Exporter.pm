@@ -127,16 +127,8 @@ sub _make_sub_exporter_params {
             or die "The $package package does not use Moose::Exporter\n";
 
         for my $name ( @{ $args->{with_meta} } ) {
-            my $sub = do {
-                no strict 'refs';
-                \&{ $package . '::' . $name };
-            };
-
-            if ( !defined(&$sub) ) {
-                Carp::cluck
-                    "Trying to export undefined sub ${package}::${name}";
-                next;
-            }
+            my $sub = $class->_sub_from_package( $package, $name )
+                or next;
 
             my $fq_name = $package . '::' . $name;
 
@@ -150,16 +142,8 @@ sub _make_sub_exporter_params {
         }
 
         for my $name ( @{ $args->{with_caller} } ) {
-            my $sub = do {
-                no strict 'refs';
-                \&{ $package . '::' . $name };
-            };
-
-            if ( !defined(&$sub) ) {
-                Carp::cluck
-                    "Trying to export undefined sub ${package}::${name}";
-                next;
-            }
+            my $sub = $class->_sub_from_package( $package, $name )
+                or next;
 
             my $fq_name = $package . '::' . $name;
 
@@ -195,16 +179,8 @@ sub _make_sub_exporter_params {
                 $is_removable{$coderef_name} = $coderef_pkg eq $package ? 1 : 0;
             }
             else {
-                $sub = do {
-                    no strict 'refs';
-                    \&{ $package . '::' . $name };
-                };
-
-                if ( !defined(&$sub) ) {
-                    Carp::cluck
-                        "Trying to export undefined sub ${package}::${name}";
-                    next;
-                }
+                $sub = $class->_sub_from_package( $package, $name )
+                    or next;
 
                 $is_removable{$name} = 1;
                 $coderef_name = $name;
@@ -217,6 +193,24 @@ sub _make_sub_exporter_params {
     }
 
     return ( \%exports, \%is_removable );
+}
+
+sub _sub_from_package {
+    my $sclass = shift;
+    my $package = shift;
+    my $name = shift;
+
+    my $sub = do {
+        no strict 'refs';
+        \&{ $package . '::' . $name };
+    };
+
+    return $sub if defined &$sub;
+
+    Carp::cluck
+            "Trying to export undefined sub ${package}::${name}";
+
+    return;
 }
 
 our $CALLER;
