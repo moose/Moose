@@ -45,13 +45,13 @@ There are a few pieces of code worth looking at more closely.
       base_class_roles => ['MooseX::Debugging::Role::Object'],
   );
 
-This creates an C<import> method in the C<MooseX::Debugging>
-package. Since we are not actually exporting anything, we do not pass
-C<setup_import_methods> any parameters related to exports, but we need
-to have an C<import> method to ensure that our C<init_meta> method is
-called. This call also automatically generates the appropriate
-C<init_meta>, which will pass the C<base_class_roles> option through
-to L<Moose::Util::MetaRole>.
+This creates an C<import> method in the C<MooseX::Debugging> package. Since we
+are not actually exporting anything, we do not pass C<setup_import_methods>
+any parameters related to exports, but we need to have an C<import> method to
+ensure that our C<init_meta> method is called. The C<init_meta> is created by
+C<setup_import_methods> for us, since we passed the C<base_class_roles>
+parameter. The generated C<init_meta> will in turn call
+L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>.
 
 =head1 AUTHOR
 
