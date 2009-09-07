@@ -8,7 +8,7 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 62;
+    plan tests => 63;
 }
 
 
@@ -343,6 +343,12 @@ BEGIN {
         isa_ok( $meta, 'Moose::Meta::Class', 'with_meta first argument' );
         is( $arg1, 42, 'with_meta1 returns argument it was passed' );
     }
+
+    is(
+        prototype( UseAllOptions->can('with_caller2') ),
+        prototype( AllOptions->can('with_caller2') ),
+        'using correct prototype on with_meta function'
+    );
 
     is(
         prototype( UseAllOptions->can('with_meta2') ),
