@@ -19,6 +19,8 @@ for, noteworthy changes.
         with_caller. This feature was added by josh a while ago.
       - The with_caller feature is now deprecated, but will not issue a
         warning yet. (Dave Rolsky)
+      - If you try to wrap/export a subroutine which doesn't actually exist,
+        Moose::Exporter will warn you about this. (doy)
 
 
 0.89_01 Wed Sep 2, 2009
