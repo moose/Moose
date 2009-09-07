@@ -16,13 +16,18 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version XX
+=head1 Version 0.89_02
 
 =over 4
 
 =item New Native delegation methods from L<List::Util> and L<List::MoreUtils>
 
 In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
+
+=item The Moose::Exporter with_caller feature is now deprecated
+
+Use C<with_meta> instead. The C<with_caller> option will start warning in a
+future release.
 
 =back
 

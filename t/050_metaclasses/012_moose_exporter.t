@@ -8,7 +8,7 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 49;
+    plan tests => 65;
 }
 
 
@@ -72,13 +72,13 @@ BEGIN {
     use Moose ();
 
     sub wrapped1 {
-        my $caller = shift;
-        return $caller . ' called wrapped1';
+        my $meta = shift;
+        return $meta->name . ' called wrapped1';
     }
 
     Moose::Exporter->setup_import_methods(
-        with_caller => ['wrapped1'],
-        also        => 'Moose',
+        with_meta => ['wrapped1'],
+        also      => 'Moose',
     );
 }
 
@@ -312,4 +312,76 @@ BEGIN {
 
     ::ok(!__PACKAGE__->can('does_not_exist'),
          "undefined subs do not get exported");
+
+    package AllOptions;
+    use Moose ();
+    use Moose::Exporter;
+
+    Moose::Exporter->setup_import_methods(
+        also        => ['Moose'],
+        with_meta   => [ 'with_meta1', 'with_meta2' ],
+        with_caller => [ 'with_caller1', 'with_caller2' ],
+        as_is       => ['as_is1'],
+    );
+
+    sub with_caller1 {
+        return @_;
+    }
+
+    sub with_caller2 (&) {
+        return @_;
+    }
+
+    sub as_is1 {2}
+
+    sub with_meta1 {
+        return @_;
+    }
+
+    sub with_meta2 (&) {
+        return @_;
+    }
+}
+
+{
+    package UseAllOptions;
+
+    AllOptions->import();
+}
+
+{
+    can_ok( 'UseAllOptions', $_ )
+        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
+
+    {
+        my ( $caller, $arg1 ) = UseAllOptions::with_caller1(42);
+        is( $caller, 'UseAllOptions', 'with_caller wrapped sub gets the right caller' );
+        is( $arg1, 42, 'with_caller wrapped sub returns argument it was passed' );
+    }
+
+    {
+        my ( $meta, $arg1 ) = UseAllOptions::with_meta1(42);
+        isa_ok( $meta, 'Moose::Meta::Class', 'with_meta first argument' );
+        is( $arg1, 42, 'with_meta1 returns argument it was passed' );
+    }
+
+    is(
+        prototype( UseAllOptions->can('with_caller2') ),
+        prototype( AllOptions->can('with_caller2') ),
+        'using correct prototype on with_meta function'
+    );
+
+    is(
+        prototype( UseAllOptions->can('with_meta2') ),
+        prototype( AllOptions->can('with_meta2') ),
+        'using correct prototype on with_meta function'
+    );
+
+    {
+        package UseAllOptions;
+        AllOptions->unimport();
+    }
+
+    ok( ! UseAllOptions->can($_), "UseAllOptions::$_ has been unimported" )
+        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
 }

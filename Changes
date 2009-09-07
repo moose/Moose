@@ -5,12 +5,21 @@ for, noteworthy changes.
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
 
+    * Moose::Meta::Attribute::Native::Trait::Array
+      - Added a number of functions from List::Util and List::MoreUtils,
+        including reduce, shuffle, uniq, and natatime. (doy)
+
     * Moose::Exporter
       - This module will now generate an init_meta method for your exporting
         class if you pass it options for
         Moose::Util::MetaRole::apply_metaclass_roles or
         apply_base_class_roles. This eliminates a lot of repetitive
         boilerplate for typical MooseX modules. (doy).
+      - Documented the with_meta feature, which is a replacement for
+        with_caller. This feature was added by josh a while ago.
+      - The with_caller feature is now deprecated, but will not issue a
+        warning yet. (Dave Rolsky)
+
 
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
