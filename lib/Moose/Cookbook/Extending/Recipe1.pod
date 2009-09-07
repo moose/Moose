@@ -258,13 +258,13 @@ as well as those from other modules:
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => ['embiggen'],
-      also        => 'Moose',
+      with_meta => ['embiggen'],
+      also      => 'Moose',
   );
 
   sub embiggen {
-      my $caller = shift;
-      $caller->meta()->embiggen(@_);
+      my $meta = shift;
+      $meta->embiggen(@_);
   }
 
 And then the consumer of your extension can use your C<embiggen> sub:

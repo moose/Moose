@@ -23,23 +23,23 @@ sub extends {
 }
 
 sub with {
-    Moose::Util::apply_all_roles( Moose::Meta::Role->initialize(shift), @_ );
+    Moose::Util::apply_all_roles( shift, @_ );
 }
 
 sub requires {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     croak "Must specify at least one method" unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     croak "Must specify at least one role" unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
@@ -49,7 +49,7 @@ sub has {
 
 sub _add_method_modifier {
     my $type = shift;
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my $code = pop @_;
 
     for (@_) {
@@ -75,7 +75,7 @@ sub super {
 }
 
 sub override {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my ( $name, $code ) = @_;
     $meta->add_override_method_modifier( $name, $code );
 }
@@ -89,7 +89,7 @@ sub augment {
 }
 
 Moose::Exporter->setup_import_methods(
-    with_caller => [
+    with_meta => [
         qw( with requires excludes has before after around override )
     ],
     as_is => [

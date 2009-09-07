@@ -43,46 +43,42 @@ sub throw_error {
 }
 
 sub extends {
-    my $class = shift;
+    my $meta = shift;
 
     Moose->throw_error("Must derive at least one class") unless @_;
 
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
-    Moose::Meta::Class->initialize($class)->superclasses(@_);
+    $meta->superclasses(@_);
 }
 
 sub with {
-    my $class = shift;
-    Moose::Util::apply_all_roles(Class::MOP::Class->initialize($class), @_);
+    Moose::Util::apply_all_roles(shift, @_);
 }
 
 sub has {
-    my $class = shift;
-    my $name  = shift;
+    my $meta = shift;
+    my $name = shift;
 
     Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
         if @_ % 2 == 1;
 
     my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-    Class::MOP::Class->initialize($class)->add_attribute( $_, %options ) for @$attrs;
+    $meta->add_attribute( $_, %options ) for @$attrs;
 }
 
 sub before {
-    my $class = shift;
-    Moose::Util::add_method_modifier($class, 'before', \@_);
+    Moose::Util::add_method_modifier(shift, 'before', \@_);
 }
 
 sub after {
-    my $class = shift;
-    Moose::Util::add_method_modifier($class, 'after', \@_);
+    Moose::Util::add_method_modifier(shift, 'after', \@_);
 }
 
 sub around {
-    my $class = shift;
-    Moose::Util::add_method_modifier($class, 'around', \@_);
+    Moose::Util::add_method_modifier(shift, 'around', \@_);
 }
 
 our $SUPER_PACKAGE;
@@ -97,9 +93,9 @@ sub super {
 }
 
 sub override {
-    my $class = shift;
+    my $meta = shift;
     my ( $name, $method ) = @_;
-    Class::MOP::Class->initialize($class)->add_override_method_modifier( $name => $method );
+    $meta->add_override_method_modifier( $name => $method );
 }
 
 sub inner {
@@ -117,13 +113,13 @@ sub inner {
 }
 
 sub augment {
-    my $class = shift;
+    my $meta = shift;
     my ( $name, $method ) = @_;
-    Class::MOP::Class->initialize($class)->add_augment_method_modifier( $name => $method );
+    $meta->add_augment_method_modifier( $name => $method );
 }
 
 Moose::Exporter->setup_import_methods(
-    with_caller => [
+    with_meta => [
         qw( extends with has before after around override augment)
     ],
     as_is => [
