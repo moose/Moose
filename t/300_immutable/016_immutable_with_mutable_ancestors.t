@@ -10,7 +10,7 @@ use lib 't/lib';
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 4;
+    plan tests => 5;
 }
 
 {
@@ -68,3 +68,23 @@ stderr_like {
     require Recursive::Parent
 } qr/^Calling make_immutable on Recursive::Child, which has a mutable ancestor \(Recursive::Parent\)/,
   "circular dependencies via use are caught properly";
+
+{
+    package Base::Role;
+    use Moose::Role;
+
+    sub foo { 42 }
+
+    package Bar;
+    use Moose;
+    use Moose::Util::MetaRole;
+
+    Moose::Util::MetaRole::apply_base_class_roles(
+        for_class => __PACKAGE__,
+        roles     => ['Base::Role'],
+    );
+
+    ::stderr_is {
+        __PACKAGE__->meta->make_immutable
+    } '', "no warning when ancestor is a base-class role subclass of Moose::Object";
+}

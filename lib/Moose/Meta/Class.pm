@@ -153,6 +153,10 @@ sub make_immutable {
 
             next unless $meta && $meta->isa('Moose::Meta::Class');
             next unless $meta->is_mutable;
+            # This can happen when a base class role is applied via
+            # Moose::Util::MetaRole::apply_base_class_roles. The parent is an
+            # anon class and is still mutable, but that's okay.
+            next if $meta->is_anon_class;
 
             Carp::cluck( "Calling make_immutable on "
                     . $self->name
