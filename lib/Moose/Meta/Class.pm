@@ -147,16 +147,20 @@ sub make_immutable {
     if ( !$self->name->isa('Class::MOP::Object') ) {
         my @superclasses = grep { $_ ne 'Moose::Object' && $_ ne $self->name }
             $self->linearized_isa;
+
         for my $superclass (@superclasses) {
             my $meta = Class::MOP::class_of($superclass);
+
             next unless $meta && $meta->isa('Moose::Meta::Class');
             next unless $meta->is_mutable;
+
             Carp::cluck( "Calling make_immutable on "
                     . $self->name
                     . ", which has a mutable ancestor ($superclass)" );
             last;
         }
     }
+
     $self->SUPER::make_immutable(@_);
 }
 
