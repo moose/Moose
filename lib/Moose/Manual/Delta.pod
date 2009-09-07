@@ -32,12 +32,12 @@ future release.
 =item Moose now warns if you call C<make_immutable> for a class with mutable ancestors
 
 This is dangerous because modifying a class after a subclass has been
-immutablized will lead to incorrect results in the subclass, due to inlining,
+immutabilized will lead to incorrect results in the subclass, due to inlining,
 caching, etc. This occasionally happens accidentally, when a class loads one
 of its subclasses in the middle of its class definition, so pointing out that
 this may cause issues should be helpful. Metaclasses (classes that inherit
 from L<Class::MOP::Object>) are currently exempt from this check, since at the
-moment we aren't very consistent about which metaclasses we immutablize.
+moment we aren't very consistent about which metaclasses we immutabilize.
 
 =back
 
