@@ -37,14 +37,14 @@ sub build_import_methods {
 
     my $export_recorder = {};
 
-    my ( $exports, $is_removable, $groups )
+    my ( $exports, $is_removable )
         = $class->_make_sub_exporter_params(
         [ @exports_from, $exporting_package ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
             exports => $exports,
-            groups  => { default => [':all'], %$groups }
+            groups  => { default => [':all'] }
         }
     );
 
@@ -119,24 +119,12 @@ sub _make_sub_exporter_params {
     my $packages          = shift;
     my $export_recorder   = shift;
 
-    my %groups;
     my %exports;
     my %is_removable;
 
     for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
             or die "The $package package does not use Moose::Exporter\n";
-
-        # one group for each 'also' package
-        $groups{$package} = [
-            @{ $args->{with_meta}   || [] },
-            @{ $args->{with_caller} || [] },
-            @{ $args->{as_is}       || [] },
-            (
-                map {":$_"}
-                    keys %{ $args->{groups} || {} }
-            )
-        ];
 
         for my $name ( @{ $args->{with_meta} } ) {
             my $sub = do {
@@ -206,26 +194,9 @@ sub _make_sub_exporter_params {
 
             $exports{$name} = sub {$sub};
         }
-
-        for my $name ( keys %{ $args->{groups} } ) {
-            my $group = $args->{groups}{$name};
-
-            if (ref $group eq 'CODE') {
-                $groups{$name} = $class->_make_wrapped_group(
-                    $package,
-                    $group,
-                    $export_recorder,
-                    \%exports,
-                    \%is_removable
-                );
-            }
-            elsif (ref $group eq 'ARRAY') {
-                $groups{$name} = $group;
-            }
-        }
     }
 
-    return ( \%exports, \%is_removable, \%groups );
+    return ( \%exports, \%is_removable );
 }
 
 our $CALLER;
