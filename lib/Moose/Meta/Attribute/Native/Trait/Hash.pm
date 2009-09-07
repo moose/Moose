@@ -63,13 +63,16 @@ L<Moose::Meta::Attribute::Native::MethodProvider::Hash>.
 
 =over 4
 
-=item B<get($key)>
+=item B<get($key, $key2, $key3...)>
 
-Returns an element of the hash by its key.
+Returns values from the hash.
 
-=item B<set($key)>
+In list context return a list of values in the hash for the given keys.
+In scalar context returns the value for the last key specified.
 
-Sets the element in the hash at the given key to the given value.
+=item B<set($key => $value, $key2 => $value2 ...)>
+
+Sets the elements in the hash to the given values.
 
 =item B<delete($key)>
 

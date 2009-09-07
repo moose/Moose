@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More tests => 47;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -80,6 +80,9 @@ is( $stuff->get_option('foo'), 'bar', '... got the right option' );
 
 is_deeply( [ $stuff->get_option(qw(foo bar)) ], [qw(bar baz)],
     "get multiple options at once" );
+
+is( scalar($stuff->get_option(qw( foo bar) )), "baz",
+       '... got last option in scalar context');
 
 lives_ok {
     $stuff->set_option( oink => "blah", xxy => "flop" );
