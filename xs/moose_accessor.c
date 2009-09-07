@@ -256,10 +256,12 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
     AV* const mi    = MOOSE_mg_mi(mg);
     U16 const flags = MOOSE_mg_flags(mg);
     SV* const slot  = MOOSE_mi_slot(mi);
+    SV* value;
+
+    value = MOP_mg_get_slot(mg, self, slot);
 
     /* check_lazy */
-    if( flags & MOOSE_MIf_ATTR_IS_LAZY && !MOP_mg_has_slot(mg, self, slot) ){
-        SV* value = NULL;
+    if( !value && flags & MOOSE_MIf_ATTR_IS_LAZY ){
         SV* const attr = MOOSE_mi_attribute(mi);
         /* get default value by $attr->default or $attr->builder */
         if(flags & MOOSE_MIf_ATTR_HAS_DEFAULT){
@@ -291,7 +293,7 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
         /* store value to slot, or invoke initializer */
         if(!(flags & MOOSE_MIf_ATTR_HAS_INITIALIZER)){
-            (void)MOP_mg_set_slot(mg, self, slot, value);
+            value = MOP_mg_set_slot(mg, self, slot, value);
         }
         else{
             /* $attr->set_initial_value($self, $value) */
@@ -306,10 +308,12 @@ moose_attr_get(pTHX_ SV* const self, MAGIC* const mg){
 
             call_method("set_initial_value", G_VOID | G_DISCARD);
             /* need not SPAGAIN */
+
+            value = MOP_mg_get_slot(mg, self, slot);
         }
     }
 
-    moose_push_values(aTHX_ mi, MOP_mg_get_slot(mg, self, slot), flags);
+    moose_push_values(aTHX_ mi, value, flags);
 }
 
 static void
@@ -328,7 +332,7 @@ moose_attr_set(pTHX_ SV* const self, MAGIC* const mg, SV* value){
         old_value = MOP_mg_get_slot(mg, self, slot);
         if(old_value){
             /* XXX: need deep copy for auto-deref? */
-            old_value = newSVsv(old_value);
+            old_value = sv_mortalcopy(old_value);
         }
     }
 
