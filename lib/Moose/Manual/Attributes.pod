@@ -539,7 +539,12 @@ traits for the attribute:
   );
 
 In this case, the metaclass C<Hash> really refers to
-L<Moose::Meta::Attribute::Trait::Native::Hash>.
+L<Moose::Meta::Attribute::Native::Trait::Hash>. Moose also provides
+native traits for L<Number|Moose::Meta::Attribute::Native::Trait::Number>, 
+L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>, 
+L<String|Moose::Meta::Attribute::Native::Trait::String>, 
+L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>, and 
+L<Array|Moose::Meta::Attribute::Native::Trait::Array>.
 
 You can also apply one or more traits to an attribute:
 
