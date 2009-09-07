@@ -129,29 +129,14 @@ sub _make_sub_exporter_params {
 
         # one group for each 'also' package
         $groups{$package} = [
-            @{ $args->{with_caller} || [] },
             @{ $args->{with_meta}   || [] },
+            @{ $args->{with_caller} || [] },
             @{ $args->{as_is}       || [] },
-            map ":$_",
-            keys %{ $args->{groups} || {} }
+            (
+                map {":$_"}
+                    keys %{ $args->{groups} || {} }
+            )
         ];
-
-        for my $name ( @{ $args->{with_caller} } ) {
-            my $sub = do {
-                no strict 'refs';
-                \&{ $package . '::' . $name };
-            };
-
-            my $fq_name = $package . '::' . $name;
-
-            $exports{$name} = $class->_make_wrapped_sub(
-                $fq_name,
-                $sub,
-                $export_recorder,
-            );
-
-            $is_removable{$name} = 1;
-        }
 
         for my $name ( @{ $args->{with_meta} } ) {
             my $sub = do {
@@ -162,6 +147,23 @@ sub _make_sub_exporter_params {
             my $fq_name = $package . '::' . $name;
 
             $exports{$name} = $class->_make_wrapped_sub_with_meta(
+                $fq_name,
+                $sub,
+                $export_recorder,
+            );
+
+            $is_removable{$name} = 1;
+        }
+
+        for my $name ( @{ $args->{with_caller} } ) {
+            my $sub = do {
+                no strict 'refs';
+                \&{ $package . '::' . $name };
+            };
+
+            my $fq_name = $package . '::' . $name;
+
+            $exports{$name} = $class->_make_wrapped_sub(
                 $fq_name,
                 $sub,
                 $export_recorder,
@@ -615,14 +617,15 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => [ 'has_rw', 'sugar2' ],
-      as_is       => [ 'sugar3', \&Some::Random::thing ],
-      also        => 'Moose',
+      with_meta => [ 'has_rw', 'sugar2' ],
+      as_is     => [ 'sugar3', \&Some::Random::thing ],
+      also      => 'Moose',
   );
 
   sub has_rw {
-      my ($caller, $name, %options) = @_;
-      Class::MOP::class_of($caller)->add_attribute($name,
+      my ( $meta, $name, %options ) = @_;
+      $meta->add_attribute(
+          $name,
           is => 'rw',
           %options,
       );
@@ -685,12 +688,13 @@ This method accepts the following parameters:
 
 =over 8
 
-=item * with_caller => [ ... ]
+=item * with_meta => [ ... ]
 
 This list of function I<names only> will be wrapped and then exported. The
-wrapper will pass the name of the calling package as the first argument to the
-function. Many sugar functions need to know their caller so they can get the
-calling package's metaclass object.
+wrapper will pass the metaclass object for the caller as its first argument.
+
+Many sugar functions will need to use this metaclass object to do something to
+the calling package.
 
 =item * as_is => [ ... ]
 
@@ -708,7 +712,7 @@ to keep it.
 This is a list of modules which contain functions that the caller
 wants to export. These modules must also use C<Moose::Exporter>. The
 most common use case will be to export the functions from C<Moose.pm>.
-Functions specified by C<with_caller> or C<as_is> take precedence over
+Functions specified by C<with_meta> or C<as_is> take precedence over
 functions exported by modules specified by C<also>, so that a module
 can selectively override functions exported by another module.
 
