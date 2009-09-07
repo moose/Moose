@@ -5,6 +5,13 @@ for, noteworthy changes.
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
 
+    * Moose::Exporter
+      - This module will now generate an init_meta method for your exporting
+        class if you pass it options for
+        Moose::Util::MetaRole::apply_metaclass_roles or
+        apply_base_class_roles. This eliminates a lot of repetitive
+        boilerplate for typical MooseX modules. (doy).
+
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers to the
