@@ -312,7 +312,9 @@ BEGIN {
 
     ::ok(!__PACKAGE__->can('does_not_exist'),
          "undefined subs do not get exported");
+}
 
+{
     package AllOptions;
     use Moose ();
     use Moose::Exporter;
@@ -376,12 +378,14 @@ BEGIN {
         prototype( AllOptions->can('with_meta2') ),
         'using correct prototype on with_meta function'
     );
+}
 
-    {
-        package UseAllOptions;
-        AllOptions->unimport();
-    }
+{
+    package UseAllOptions;
+    AllOptions->unimport();
+}
 
+{
     ok( ! UseAllOptions->can($_), "UseAllOptions::$_ has been unimported" )
         for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
 }
