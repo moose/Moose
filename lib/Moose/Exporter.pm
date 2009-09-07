@@ -62,11 +62,12 @@ sub build_import_methods {
         \%args );
 
     my $package = Class::MOP::Package->initialize($exporting_package);
-    for my $to_install (@{ $args{install} || [] }) {
+    for my $to_install ( @{ $args{install} || [] } ) {
         my $symbol = '&' . $to_install;
-        next unless $methods{$to_install}
-                 && !$package->has_package_symbol($symbol);
-        $package->add_package_symbol($symbol, $methods{$to_install});
+        next
+            unless $methods{$to_install}
+                && !$package->has_package_symbol($symbol);
+        $package->add_package_symbol( $symbol, $methods{$to_install} );
     }
 
     return ( $methods{import}, $methods{unimport}, $methods{init_meta} )
@@ -544,27 +545,29 @@ sub _remove_keywords {
 
 sub _make_init_meta {
     shift;
-    my $class      = shift;
-    my $args       = shift;
+    my $class = shift;
+    my $args  = shift;
 
     my %metaclass_roles;
-    for my $role (map { "${_}_roles" }
-                      qw(metaclass
-                         attribute_metaclass
-                         method_metaclass
-                         wrapped_method_metaclass
-                         instance_metaclass
-                         constructor_class
-                         destructor_class
-                         error_class
-                         application_to_class_class
-                         application_to_role_class
-                         application_to_instance_class)) {
+    for my $role (
+        map {"${_}_roles"}
+        qw(metaclass
+        attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class
+        application_to_class_class
+        application_to_role_class
+        application_to_instance_class)
+        ) {
         $metaclass_roles{$role} = $args->{$role} if exists $args->{$role};
     }
 
     my %base_class_roles;
-    %base_class_roles = (roles => $args->{base_class_roles})
+    %base_class_roles = ( roles => $args->{base_class_roles} )
         if exists $args->{base_class_roles};
 
     return unless %metaclass_roles || %base_class_roles;
@@ -572,16 +575,22 @@ sub _make_init_meta {
     return sub {
         shift;
         my %options = @_;
-        return unless Class::MOP::class_of($options{for_class});
+
+        return unless Class::MOP::class_of( $options{for_class} );
+
         Moose::Util::MetaRole::apply_metaclass_roles(
             for_class => $options{for_class},
             %metaclass_roles,
         );
+
         Moose::Util::MetaRole::apply_base_class_roles(
             for_class => $options{for_class},
             %base_class_roles,
-        ) if Class::MOP::class_of($options{for_class})->isa('Moose::Meta::Class');
-        return Class::MOP::class_of($options{for_class});
+            )
+            if Class::MOP::class_of( $options{for_class} )
+                ->isa('Moose::Meta::Class');
+
+        return Class::MOP::class_of( $options{for_class} );
     };
 }
 
