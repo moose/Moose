@@ -1161,6 +1161,8 @@ Cory (gphat) Watson
 
 Dylan Hardison (doc fixes)
 
+Jesse (doy) Luehrs
+
 ... and many other #moose folks
 
 =head1 COPYRIGHT AND LICENSE
