@@ -1117,6 +1117,8 @@ Shawn (sartak) Moore E<lt>sartak@bestpractical.comE<gt>
 
 Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
+Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
+
 =head2 OTHER CONTRIBUTORS
 
 Aankhen
@@ -1160,8 +1162,6 @@ Sam (mugwump) Vilain
 Cory (gphat) Watson
 
 Dylan Hardison (doc fixes)
-
-Jesse (doy) Luehrs
 
 ... and many other #moose folks
 
