@@ -1119,6 +1119,8 @@ Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
 Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
 
+Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
+
 =head2 OTHER CONTRIBUTORS
 
 Aankhen
@@ -1130,8 +1132,6 @@ Anders (Debolaz) Nor Berle
 Nathan (kolibrie) Gray
 
 Christian (chansen) Hansen
-
-Hans Dieter (confound) Pearcey
 
 Eric (ewilhelm) Wilhelm
 
