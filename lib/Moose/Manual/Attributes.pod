@@ -530,8 +530,6 @@ of ways through the use of custom metaclasses and metaclass traits.
 When declaring an attribute, you can declare a metaclass or a set of
 traits for the attribute:
 
-  use Moose::AttributeHelpers;
-
   has 'mapping' => (
       metaclass => 'Hash',
       is        => 'ro',
@@ -655,8 +653,8 @@ returned from the reader method:
 This option only works if your attribute is explicitly typed as an
 C<ArrayRef> or C<HashRef>.
 
-However, we recommend that you use L<MooseX::AttributeHelpers> for
-these types of attributes, which gives you much more control over how
+However, we recommend that you use L<Moose::Meta::Attribute::Native> traits
+for these types of attributes, which gives you much more control over how
 they are accessed and manipulated.
 
 =head2 Initializer

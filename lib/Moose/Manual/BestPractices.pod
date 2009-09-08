@@ -133,13 +133,12 @@ of object in the parent class.
 
 Don't know what we're talking about? That's fine.
 
-=head2 Use L<MooseX::AttributeHelpers> instead of C<auto_deref>
+=head2 Use L<Moose::Meta::Attribute::Native> traits instead of C<auto_deref>
 
 The C<auto_deref> feature is a bit troublesome. Directly exposing a
 complex attribute is ugly. Instead, consider using
-L<MooseX::AttributeHelpers> to define an API that exposes those pieces
-of functionality that need exposing. Then you can expose just the
-functionality that you want.
+L<Moose::Meta::Attribute::Native> traits to define an API that exposes only
+necessary pieces of functionality.
 
 =head2 Always call C<inner> in the most specific subclass
 
