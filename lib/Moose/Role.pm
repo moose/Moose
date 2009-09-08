@@ -234,6 +234,23 @@ this, your class's C<meta> object will have the specified traits
 applied to it. See L<Moose/Metaclass and Trait Name Resolution> for more
 details.
 
+=head1 APPLYING ROLES
+
+In addition to being applied to a class using the 'with' syntax (see
+L<Moose::Manual::Roles>) and using the L<Moose::Util> 'apply_all_roles'
+method, roles may also be applied to an instance of a class using
+L<Moose::Util> 'apply_all_roles' or the role's metaclass:
+
+   MyApp::Test::SomeRole->meta->apply( $instance );
+
+Doing this creates a new, mutable, anonymous subclass, applies the role to that,
+and reblesses. In a debugger, for example, you will see class names of the
+form C< Class::MOP::Class::__ANON__::SERIAL::6 >, which means that doing a 'ref'
+on your instance may not return what you expect. See L<Moose::Object> for 'DOES'.
+
+Additional params may be added to the new instance by providing 'rebless_params'.
+See L<Moose::Meta::Role::Application::ToInstance>.
+
 =head1 CAVEATS
 
 Role support has only a few caveats:
