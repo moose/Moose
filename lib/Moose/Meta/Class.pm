@@ -72,6 +72,7 @@ sub _immutable_options {
     my ( $self, @args ) = @_;
 
     $self->SUPER::_immutable_options(
+        allow_mutable_ancestors => 0,
         inline_destructor => 1,
 
         # Moose always does this when an attribute is created
@@ -142,9 +143,11 @@ sub add_role {
 
 sub make_immutable {
     my $self = shift;
+    my %args = @_;
 
     # we do this for metaclasses way too often to do this check for them
-    if ( !$self->name->isa('Class::MOP::Object') ) {
+    if ( !$args{allow_mutable_ancestors}
+      && !$self->name->isa('Class::MOP::Object') ) {
         my @superclasses = grep { $_ ne 'Moose::Object' && $_ ne $self->name }
             $self->linearized_isa;
 
@@ -730,6 +733,10 @@ enables inlining the destructor.
 
 Also, since Moose always inlines attributes, it sets the
 C<inline_accessors> option to false.
+
+It also accepts the additional C<allow_mutable_ancestors> option, to
+silence the warning you get when trying to make a class with mutable
+ancestors immutable.
 
 =item B<< $metaclass->new_object(%params) >>
 

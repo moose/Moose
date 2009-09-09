@@ -10,7 +10,7 @@ use lib 't/lib';
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 5;
+    plan tests => 6;
 }
 
 {
@@ -87,4 +87,15 @@ stderr_like {
     ::stderr_is {
         __PACKAGE__->meta->make_immutable
     } '', "no warning when ancestor is a base-class role subclass of Moose::Object";
+}
+
+{
+    package Foo::Sub4;
+    use Moose;
+    extends 'Foo';
+
+    ::stderr_is {
+        __PACKAGE__->meta->make_immutable(allow_mutable_ancestors => 1)
+    } '',
+      "no warning when allow_mutable_ancestors => 1 is passed";
 }
