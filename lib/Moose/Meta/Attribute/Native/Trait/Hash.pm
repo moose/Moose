@@ -70,13 +70,13 @@ Returns values from the hash.
 In list context return a list of values in the hash for the given keys.
 In scalar context returns the value for the last key specified.
 
-=item B<set($key =E<gt> $value, $key2 =E<gt> $value2 ...)>
+=item B<set($key =E<gt> $value, $key2 =E<gt> $value2...)>
 
 Sets the elements in the hash to the given values.
 
-=item B<delete($key)>
+=item B<delete($key, $key2, $key3...)>
 
-Removes the element with the given key.
+Removes the elements with the given keys.
 
 =item B<keys>
 

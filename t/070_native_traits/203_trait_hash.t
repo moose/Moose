@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More tests => 46;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -99,14 +99,9 @@ lives_ok {
 '... deleted the option okay';
 
 lives_ok {
-    $stuff->delete_option('oink');
+    $stuff->delete_option('oink','xxy');
 }
-'... deleted the option okay';
-
-lives_ok {
-    $stuff->delete_option('xxy');
-}
-'... deleted the option okay';
+'... deleted multiple option okay';
 
 is( $stuff->num_options, 1, '... we have 1 option(s)' );
 is_deeply( $stuff->options, { foo => 'bar' }, '... got more options now' );
