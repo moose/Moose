@@ -700,8 +700,9 @@ These all default to the appropriate Moose class.
 =item B<< Moose::Meta::Class->create($package_name, %options) >>
 
 This overrides the parent's method in order to accept a C<roles>
-option. This should be an array reference containing one more roles
-that the class does, each optionally followed by a hashref of options.
+option. This should be an array reference containing roles
+that the class does, each optionally followed by a hashref of options
+(C<-excludes> and C<-alias>).
 
   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
 

@@ -94,13 +94,17 @@ C<no Moose> at the end of your module file.
 This deletes Moose's sugar functions from your class's namespace, so
 that C<< Person->can('has') >> will no longer return true.
 
+A more generic way to unimport not only L<Moose>'s exports but also
+those from type libraries and other modules is to use
+L<namespace::clean> or L<namespace::autoclean>.
+
 =head1 MAKING IT FASTER
 
 Moose has a feature called "immutabilization" that you can use to
 greatly speed up your classes at runtime. However, using it does incur
 a cost when your class is first being loaded. When you make your class
 immutable you tell Moose that you will not be changing it in the
-future. You will not adding any more attributes, methods, roles, etc.
+future. You will not be adding any more attributes, methods, roles, etc.
 
 This allows Moose to generate code specific to your class. In
 particular, it creates an "inline" constructor, making object
