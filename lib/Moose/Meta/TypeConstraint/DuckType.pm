@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use Scalar::Util 'blessed';
 use List::MoreUtils qw(all);
 use Moose::Util 'english_list';
 
