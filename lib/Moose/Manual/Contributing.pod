@@ -31,7 +31,7 @@ refactoring of some core modules, and we are definitely open to that.
 Moose was built from the ground up with the idea of being highly
 extensible, and quite often the feature requests we see can be
 implemented through a couple of small and well placed extensions. Try
-it, it is much easier then you might think.
+it, it is much easier than you might think.
 
 =head1 PEOPLE
 
@@ -187,19 +187,19 @@ test to the RT queue. Source control is not a bug reporting tool.
 =item New user-facing features.
 
 Anything that creates a new user-visible feature needs to be approved by
-B<more then one> cabal member.
+B<more than one> cabal member.
 
 Make sure you have reviewed L</NEW FEATURES> to be sure that you are following
 the guidelines. Do not be surprised if a new feature is rejected for the core.
 
 =item New internals features.
 
-New features for Moose internals are less restrictive then user facing
+New features for Moose internals are less restrictive than user facing
 features, but still require approval by B<at least one> cabal member.
 
 Ideally you will have run the smolder script to be sure you are not breaking
 any MooseX module or causing any other unforeseen havoc. If you do this
-(rather then make us do it), it will only help to hasten your branch's
+(rather than make us do it), it will only help to hasten your branch's
 approval.
 
 =item Backwards incompatible changes.
