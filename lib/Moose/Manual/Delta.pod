@@ -98,6 +98,10 @@ See L<Moose::Meta::Attribute::Native> for the new documentation.
 
 =back
 
+The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
+and C<-excludes>. The old names still work, but new code should use the new
+names, and eventually the old ones will be deprecated and removed.
+
 =head1 Version 0.89
 
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
@@ -111,10 +115,6 @@ a wrapper around the old
   sub register_implementation { 'My::Meta::Trait' }
 
 way of doing this.
-
-The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
-and C<-excludes>. The old names still work, but new code should use the new
-names, and eventually the old ones will be deprecated and removed.
 
 =head1 Version 0.84
 
