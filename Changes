@@ -10,6 +10,10 @@ for, noteworthy changes.
     * Moose::Meta::Method::Delegation
       - preserve aliasing for delegated methods (doy)
 
+    * Moose::Util::TypeConstraints
+      - allow arrayrefs for all forms of enum and duck_type, not just anonymous
+        (the non-arrayref forms may be removed in the future). (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)

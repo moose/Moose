@@ -366,6 +366,9 @@ sub duck_type {
         @methods   = @$type_name;
         $type_name = undef;
     }
+    if ( @methods == 1 && ref $methods[0] eq 'ARRAY' ) {
+        @methods = @{ $methods[0] };
+    }
 
     register_type_constraint(
         create_duck_type_constraint(
@@ -411,6 +414,9 @@ sub enum {
     if ( ref $type_name eq 'ARRAY' && !@values ) {
         @values    = @$type_name;
         $type_name = undef;
+    }
+    if ( @values == 1 && ref $values[0] eq 'ARRAY' ) {
+        @values = @{ $values[0] };
     }
     ( scalar @values >= 2 )
         || __PACKAGE__->_throw_error(
@@ -1026,10 +1032,10 @@ metaclass L<Moose::Meta::TypeConstraint::Role>.
 Creates a type constraint for either C<undef> or something of the
 given type.
 
-=item B<duck_type ($name, @methods)>
+=item B<duck_type ($name, \@methods)>
 
 This will create a subtype of Object and test to make sure the value
-C<can()> do the methods in C<@methods>.
+C<can()> do the methods in C<\@methods>.
 
 This is intended as an easy way to accept non-Moose objects that
 provide a certain interface. If you're using Moose classes, we
@@ -1037,20 +1043,20 @@ recommend that you use a C<requires>-only Role instead.
 
 =item B<duck_type (\@methods)>
 
-If passed an ARRAY reference instead of the C<$name>, C<@methods>
-pair, this will create an unnamed duck type. This can be used in an
-attribute definition like so:
+If passed an ARRAY reference as the only parameter instead of the
+C<$name>, C<\@methods> pair, this will create an unnamed duck type.
+This can be used in an attribute definition like so:
 
   has 'cache' => (
       is  => 'ro',
       isa => duck_type( [qw( get_set )] ),
   );
 
-=item B<enum ($name, @values)>
+=item B<enum ($name, \@values)>
 
 This will create a basic subtype for a given set of strings.
 The resulting constraint will be a subtype of C<Str> and
-will match any of the items in C<@values>. It is case sensitive.
+will match any of the items in C<\@values>. It is case sensitive.
 See the L<SYNOPSIS> for a simple example.
 
 B<NOTE:> This is not a true proper enum type, it is simply
@@ -1058,9 +1064,9 @@ a convenient constraint builder.
 
 =item B<enum (\@values)>
 
-If passed an ARRAY reference instead of the C<$name>, C<@values> pair,
-this will create an unnamed enum. This can then be used in an attribute
-definition like so:
+If passed an ARRAY reference as the only parameter instead of the
+C<$name>, C<\@values> pair, this will create an unnamed enum. This
+can then be used in an attribute definition like so:
 
   has 'sort_order' => (
       is  => 'ro',

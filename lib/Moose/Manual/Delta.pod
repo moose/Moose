@@ -64,6 +64,19 @@ this may cause issues should be helpful. Metaclasses (classes that inherit
 from L<Class::MOP::Object>) are currently exempt from this check, since at the
 moment we aren't very consistent about which metaclasses we immutabilize.
 
+=item C<enum> and C<duck_type> now take arrayrefs for all forms
+
+Previously, calling these functions with a list would take the first element of
+the list as the type constraint name, and use the remainder as the enum values
+or method names. This makes the interface inconsistent with the anon-type forms
+of these functions (which must take an arrayref), and a free-form list where
+the first value is sometimes special is hard to validate (and harder to give
+reasonable error messages for). These functions have been changed to take
+arrayrefs in all their forms - so, C<< enum 'My::Type' => [qw(foo bar)] >> is
+now the preferred way to create an enum type constraint. The old syntax still
+works for now, but it will hopefully be deprecated and removed in a future
+release.
+
 =back
 
 =head1 Version 0.89_01

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Exception;
 
 {
@@ -39,6 +39,7 @@ use Test::Exception;
     use Moose::Util::TypeConstraints;
 
     duck_type 'DuckType' => qw(quack);
+    duck_type 'SwanType' => [qw(honk)];
 
     has duck => (
         isa        => 'DuckType',
@@ -50,6 +51,11 @@ use Test::Exception;
 
     has swan => (
         isa => duck_type( [qw(honk)] ),
+        is => 'ro',
+    );
+
+    has other_swan => (
+        isa => 'SwanType',
         is => 'ro',
     );
 
@@ -70,3 +76,5 @@ lives_ok { DucktypeTest->new( swan => Swan->new ) } 'but a Swan can honk';
 lives_ok { DucktypeTest->new( duck => RubberDuck->new ) }
 'the RubberDuck lives okay';
 
+# try with the other constraint form
+lives_ok { DucktypeTest->new( other_swan => Swan->new ) } 'but a Swan can honk';
