@@ -68,16 +68,15 @@ sub initialize {
             );
 }
 
-sub _immutable_options {
-    my ( $self, @args ) = @_;
+sub _default_immutable_options {
+    my ( $self ) = @_;
 
-    $self->SUPER::_immutable_options(
+    return (
+        $self->SUPER::_default_immutable_options,
         inline_destructor => 1,
 
         # Moose always does this when an attribute is created
         inline_accessors => 0,
-
-        @args,
     );
 }
 
