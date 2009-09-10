@@ -374,7 +374,7 @@ sub _superclass_meta_is_compatible {
 
     my $super_meta_name
         = $super_meta->is_immutable
-        ? $super_meta->get_mutable_metaclass_name
+        ? $super_meta->_get_mutable_metaclass_name
         : ref($super_meta);
 
     return 1
@@ -398,7 +398,7 @@ sub _reconcile_with_superclass_meta {
 
     my $super_meta_name
         = $super_meta->is_immutable
-        ? $super_meta->get_mutable_metaclass_name
+        ? $super_meta->_get_mutable_metaclass_name
         : ref($super_meta);
 
     my $self_metaclass = ref $self;

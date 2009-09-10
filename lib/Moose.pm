@@ -171,7 +171,7 @@ sub init_meta {
             my $ancestor_meta = Class::MOP::get_metaclass_by_name($ancestor) || next;
 
             my $ancestor_meta_class = ($ancestor_meta->is_immutable
-                ? $ancestor_meta->get_mutable_metaclass_name
+                ? $ancestor_meta->_get_mutable_metaclass_name
                 : ref($ancestor_meta));
 
             # if we have an ancestor metaclass that inherits $metaclass, we use
