@@ -7,7 +7,6 @@ use Test::More tests => 4;
 use Test::Exception;
 
 
-
 {
     package Foo;
     use Moose;
@@ -27,8 +26,8 @@ use Test::Exception;
 
 {
     my $obj = eval { Foo->new; };
-    ::like( $@, qr/is required/, "... Foo plain" );
-    ::is( $obj, undef, "... the object is undef" );
+    like( $@, qr/is required/, "... Foo plain" );
+    is( $obj, undef, "... the object is undef" );
 }
 
 {
@@ -43,9 +42,6 @@ use Test::Exception;
 
 {
     my $obj = eval { Bar->new; };
-    ::like( $@, qr/Bar died/, "... Bar plain" );
-    ::is( $obj, undef, "... the object is undef" );
+    like( $@, qr/Bar died/, "... Bar plain" );
+    is( $obj, undef, "... the object is undef" );
 }
-
-1;
-
