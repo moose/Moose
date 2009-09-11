@@ -37,7 +37,7 @@ WriteAll();
 sub check_conflicts {
     my %conflicts = (
         'MooseX::ClassAttribute'    => '0.09',
-        'MooseX::Singleton'         => '0.17',
+        'MooseX::Singleton'         => '0.19',
         'MooseX::StrictConstructor' => '0.07',
         'MooseX::Params::Validate'  => '0.05',
         'Fey::ORM'                  => '0.23',
