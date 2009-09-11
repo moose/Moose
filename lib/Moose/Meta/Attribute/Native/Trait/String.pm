@@ -20,20 +20,6 @@ sub _default_default { q{} }
 sub _default_is { 'rw' }
 sub _helper_type { 'Str' }
 
-after '_check_handles_values' => sub {
-    my $self    = shift;
-    my $handles = $self->handles;
-
-    unless ( scalar keys %$handles ) {
-        my $method_constructors = $self->method_constructors;
-        my $attr_name           = $self->name;
-
-        foreach my $method ( keys %$method_constructors ) {
-            $handles->{$method} = ( $method . '_' . $attr_name );
-        }
-    }
-};
-
 no Moose::Role;
 
 1;

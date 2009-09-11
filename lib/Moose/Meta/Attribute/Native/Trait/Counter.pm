@@ -21,22 +21,6 @@ sub _default_default { 0 }
 sub _default_is { 'ro' }
 sub _helper_type { 'Num' }
 
-after '_check_handles_values' => sub {
-    my $self    = shift;
-    my $handles = $self->handles;
-
-    unless ( scalar keys %$handles ) {
-        my $method_constructors = $self->method_constructors;
-        my $attr_name           = $self->name;
-
-        foreach my $method ( keys %$method_constructors ) {
-            $handles->{ $method . '_' . $attr_name } = $method;
-        }
-
-        $self->_set_handles($handles);
-    }
-};
-
 no Moose::Role;
 
 1;

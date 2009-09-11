@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+Next
+    * Moose::Meta::Attribute::Native::Trait::Counter
+    * Moose::Meta::Attribute::Native::Trait::String
+      - For these two traits, an attribute which did not explicitly provide
+        methods to handles magically ended up delegating *all* the helper
+        methods. This has been removed. You must be explicit in your handles
+        declaration for all Native Traits. (Dave Rolsky)
+
 0.89_02 Thu, Sep 10, 2009
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
