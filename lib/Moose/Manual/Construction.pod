@@ -123,8 +123,28 @@ $self->SUPER::DEMOLISH >>. Moose will arrange for all of the
 C<DEMOLISH> methods in your hierarchy to be called, from most to least
 specific.
 
+Each C<DEMOLISH> method is called with a single argument.
+
 In most cases, Perl's built-in garbage collection is sufficient, and
 you won't need to provide a C<DEMOLISH> method.
+
+=head2 Error Handling During Destruction
+
+The interaction of object destruction and Perl's global C<$@> and C<$?>
+variables can be very confusing.
+
+Moose always localizes C<$?> when an object is being destroyed. This means
+that if you explicitly call C<exit>, that exit code will be preserved even if
+an object's destructor makes a system call.
+
+Moose also preserves C<$@> against any C<eval> calls that may happen during
+object destruction. However, if an object's C<DEMOLISH> method actually dies,
+Moose explicitly rethrows that error.
+
+If you do not like this behavior, you will have to provide your own C<DESTROY>
+method and use that instead of the one provided by L<Moose::Object>. You can
+do this to preserve C<$@> I<and> capture any errors from object destruction by
+creating an error stack.
 
 =head1 AUTHOR
 

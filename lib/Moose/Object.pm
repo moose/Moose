@@ -7,6 +7,7 @@ use warnings;
 use Devel::GlobalDestruction qw(in_global_destruction);
 use MRO::Compat;
 use Scalar::Util;
+use Try::Tiny;
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
@@ -86,8 +87,20 @@ sub DEMOLISHALL {
 }
 
 sub DESTROY {
-    local ( $., $@, $!, $^E, $? );
-    $_[0]->DEMOLISHALL(in_global_destruction);
+    my $self = shift;
+
+    local $?;
+
+    try {
+        $self->DEMOLISHALL(in_global_destruction);
+    }
+    catch {
+        # Without this, Perl will warn "\t(in cleanup)$@" because of some
+        # bizarre fucked-up logic deep in the internals.
+        no warnings 'misc';
+        die $_;
+    };
+
     return;
 }
 

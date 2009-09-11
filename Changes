@@ -10,9 +10,17 @@ Next
         declaration for all Native Traits. (Dave Rolsky)
 
     * Moose::Object
-      - DEMOLISH now localizes all of Perl's global status variables (worst
-        Perl feature evah?). Based on a patch from zefream. RT #48271. (doy
-        and Dave Rolsky)
+      - DEMOLISHALL behavior has changed. If any DEMOLISH method dies, we make
+        sure to rethrow its error message. However, we also localize $@ before
+        this so that if all the DEMOLISH methods success, the value of $@ will
+        be preserved. (nothingmuch and Dave Rolsky)
+      - We now also localize $? during object destruction. (nothingmuch and
+        Dave Rolsky)
+      - The handling of DEMOLISH methods was broken for immutablized classes,
+        which were not receiving the value of
+        Devel::GlobalDestruction::in_global_destruction.
+      - These two fixes address some of RT #48271, reported by Zefram.
+      - This is all now documented in Moose::Manual::Construction.
 
 0.89_02 Thu, Sep 10, 2009
     * Moose::Meta::Attribute::Native
