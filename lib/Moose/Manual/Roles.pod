@@ -338,6 +338,27 @@ The mutable/immutable state is not relevant to roles applied to instances.
 See L<Moose::Role> and L<Moose::Util> for more details and 
 L<Moose::Cookbook::Roles::Recipe3> for a more developed example.
 
+=head1 ADDING A ROLE TO AN OBJECT INSTANCE
+
+Sometimes you may want to add a role to an object instance, rather than to a
+class. For example, you may want to add debug tracing to one instance of an
+object while debugging a particular bug. Another use case might be to
+dynamically change objects based on a user's configuration, as a plugin
+system.
+
+The best way to do this is to use the C<apply_all_roles> function from
+L<Moose::Util>:
+
+  use Moose::Util qw( apply_all_roles );
+
+  my $car = Car->new;
+  apply_all_roles( $car, 'Breakable' );
+
+This function can apply more than one role at a time, and will do so using the
+normal Moose role combination system. We recommend using this function to
+apply roles to an object. This is what Moose uses internally when you call
+C<with>.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
