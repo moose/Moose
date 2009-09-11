@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 use Test::Exception;
 
 
@@ -69,5 +69,8 @@ use Test::Exception;
     is( $@, 0, '$@ is still 0 after object is demolished' );
     is( $?, 42, '$? is still 42 after object is demolished' );
     is( $! + 0, 84, '$! is still 84 after object is demolished' );
+
+    Baz->meta->make_immutable, redo
+        if Baz->meta->is_mutable
 }
 

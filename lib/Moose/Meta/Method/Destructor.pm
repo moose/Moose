@@ -81,6 +81,7 @@ sub _initialize_body {
     my $source;
     if ( @DEMOLISH_methods ) {
         $source = 'sub {';
+        $source .= 'local ( $., $@, $!, $^E, $? );' . "\n";
 
         my @DEMOLISH_calls;
         foreach my $method (@DEMOLISH_methods) {
