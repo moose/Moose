@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::Trait::Number;
 use Moose::Role;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.89_02';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
