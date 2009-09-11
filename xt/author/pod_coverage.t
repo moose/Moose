@@ -22,6 +22,7 @@ my %trustme = (
     ],
     'Moose::Meta::Attribute::Native::MethodProvider::Array'   => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Bool'    => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::Code'    => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Counter' => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Hash'    => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::String'  => ['.+'],
