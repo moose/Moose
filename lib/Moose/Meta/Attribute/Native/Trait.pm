@@ -138,7 +138,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait - base role for helpers
+Moose::Meta::Attribute::Native::Trait - Base role for helpers
 
 =head1 BUGS
 

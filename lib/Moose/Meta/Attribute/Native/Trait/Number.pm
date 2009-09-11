@@ -58,7 +58,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Number
+Moose::Meta::Attribute::Native::Trait::Number - Helper trait for Num attributes
 
 =head1 SYNOPSIS
 
@@ -66,9 +66,9 @@ Moose::Meta::Attribute::Native::Trait::Number
   use Moose;
 
   has 'integer' => (
-      metaclass => 'Number',
+      traits    => ['Number'],
       is        => 'ro',
-      isa       => 'Int',
+      isa       => 'Num',
       default   => 5,
       handles   => {
           set => 'set',
@@ -108,19 +108,19 @@ Adds the current value of the attribute to C<$value>.
 
 =item B<sub($value)>
 
-Subtracts the current value of the attribute to C<$value>.
+Subtracts C<$value> from the current value of the attribute.
 
 =item B<mul($value)>
 
-Multiplies the current value of the attribute to C<$value>.
+Multiplies the current value of the attribute by C<$value>.
 
 =item B<div($value)>
 
-Divides the current value of the attribute to C<$value>.
+Divides the current value of the attribute by C<$value>.
 
 =item B<mod($value)>
 
-Modulus the current value of the attribute to C<$value>.
+Returns the current value of the attribute modulo C<$value>.
 
 =item B<abs>
 

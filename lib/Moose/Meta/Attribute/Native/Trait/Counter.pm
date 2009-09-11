@@ -47,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Counter
+Moose::Meta::Attribute::Native::Trait::Counter - Helper trait for counters
 
 =head1 SYNOPSIS
 

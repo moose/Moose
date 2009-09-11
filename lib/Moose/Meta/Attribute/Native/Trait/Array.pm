@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Array
+Moose::Meta::Attribute::Native::Trait::Array - Helper trait for ArrayRef attributes
 
 =head1 SYNOPSIS
 

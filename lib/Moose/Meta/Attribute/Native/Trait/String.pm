@@ -44,7 +44,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::String
+Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
 
 =head1 SYNOPSIS
 
@@ -75,15 +75,15 @@ completion.
 If your attribute definition does not include any of I<is>, I<isa>,
 I<default> or I<handles> but does use the C<String> metaclass,
 then this module applies defaults as in the L</SYNOPSIS>
-above. This allows for a very basic counter definition:
+above. This allows for a very basic string definition:
 
-  has 'foo' => (metaclass => 'String');
+  has 'foo' => (traits => ['String']);
   $obj->append_foo;
 
 =head1 PROVIDED METHODS
 
 These methods are implemented in
-L<Moose::Meta::Attribute::Native::MethodProvider::STring>. It is important to
+L<Moose::Meta::Attribute::Native::MethodProvider::String>. It is important to
 note that all those methods do in place modification of the value stored in
 the attribute.
 
