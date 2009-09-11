@@ -52,7 +52,7 @@ ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar ro
 
     ::throws_ok {
         with 'My::Role' => { -alias => { bar => 'role_bar' } };
-    } qr/Cannot create a method alias if a local method of the same name exists/, '... this succeeds';
+    } qr/Cannot create a method alias if a local method of the same name exists/, '... cannot alias to a name that exists';
 
     sub role_bar { 'FAIL' }
 }
