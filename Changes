@@ -9,6 +9,11 @@ Next
         methods. This has been removed. You must be explicit in your handles
         declaration for all Native Traits. (Dave Rolsky)
 
+    * Moose::Object
+      - DEMOLISH now localizes all of Perl's global status variables (worst
+        Perl feature evah?). Based on a patch from zefream. RT #48271. (doy
+        and Dave Rolsky)
+
 0.89_02 Thu, Sep 10, 2009
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)

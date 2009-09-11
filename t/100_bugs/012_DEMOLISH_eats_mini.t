@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 7;
 use Test::Exception;
 
 
@@ -45,3 +45,29 @@ use Test::Exception;
     like( $@, qr/Bar died/, "... Bar plain" );
     is( $obj, undef, "... the object is undef" );
 }
+
+{
+    package Baz;
+    use Moose;
+
+    sub DEMOLISH {
+        $@ = 1;
+        $? = 0;
+        $! = 0;
+    }
+}
+
+{
+    local $@ = 0;
+    local $? = 42;
+    local $! = 84;
+
+    {
+        Baz->new;
+    }
+
+    is( $@, 0, '$@ is still 0 after object is demolished' );
+    is( $?, 42, '$? is still 42 after object is demolished' );
+    is( $! + 0, 84, '$! is still 84 after object is demolished' );
+}
+

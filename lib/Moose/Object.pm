@@ -86,17 +86,9 @@ sub DEMOLISHALL {
 }
 
 sub DESTROY {
-    # if we have an exception here ...
-    if ($@) {
-        # localize the $@ ...
-        local $@;
-        # run DEMOLISHALL ourselves, ...
-        $_[0]->DEMOLISHALL(in_global_destruction);
-        # and return ...
-        return;
-    }
-    # otherwise it is normal destruction
+    local ( $., $@, $!, $^E, $? );
     $_[0]->DEMOLISHALL(in_global_destruction);
+    return;
 }
 
 # support for UNIVERSAL::DOES ...
