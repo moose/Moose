@@ -83,12 +83,10 @@ sub _initialize_body {
         $source = 'sub {';
         $source .= 'local ( $., $@, $!, $^E, $? );' . "\n";
 
-        my @DEMOLISH_calls;
-        foreach my $method (@DEMOLISH_methods) {
-            push @DEMOLISH_calls => '$_[0]->' . $method->{class} . '::DEMOLISH()';
-        }
-
-        $source .= join ";\n" => @DEMOLISH_calls;
+        $source
+            .= join ";\n" =>
+            map { '$_[0]->' . $_->{class} . '::DEMOLISH()' }
+            @DEMOLISH_methods;
 
         $source .= ";\n" . '}';
     } else {
