@@ -18,6 +18,7 @@ requires 'Scalar::Util'     => '1.19';
 requires 'Sub::Exporter'    => '0.980';
 requires 'Sub::Name'        => '0';
 requires 'Task::Weaken'     => '0';
+requires 'Try::Tiny'        => '0.02';
 
 test_requires 'Test::More'      => '0.77';
 test_requires 'Test::Exception' => '0.27';
