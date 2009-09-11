@@ -198,6 +198,20 @@ Common methods for array references.
        }
     );
 
+=item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
+
+Common methods for code references.
+
+    has 'callback' => (
+       traits     => ['Code'],
+       is         => 'ro',
+       isa        => 'CodeRef',
+       default    => sub { sub { 'called' } },
+       handles    => {
+           call => 'execute',
+       }
+    );
+
 =back
 
 =head1 BUGS

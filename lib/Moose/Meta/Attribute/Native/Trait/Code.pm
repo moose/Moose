@@ -61,6 +61,18 @@ Calls the coderef with the given args.
 
 =back
 
+=head1 METHODS
+
+=over 4
+
+=item B<meta>
+
+=item B<method_provider>
+
+=item B<has_method_provider>
+
+=back
+
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no
