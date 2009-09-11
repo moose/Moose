@@ -13,7 +13,7 @@ use Carp         'confess';
 
 use Moose::Exporter;
 
-use Class::MOP 0.92;
+use Class::MOP 0.92_01;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
