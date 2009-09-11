@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 38;
 use Test::Exception;
 
 
@@ -147,3 +147,14 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
 ok(!My::Foo::Role::Other->meta->has_method('foo_foo'), "we dont have a foo_foo method");
 ok(My::Foo::Role::Other->meta->requires_method('foo_foo'), '... and the &foo method is required');
 
+{
+    package My::Foo::AliasOnly;
+    use Moose;
+
+    ::lives_ok {
+        with 'Foo::Role' => { -alias => { 'foo' => 'foo_foo' } },
+    } '... composed our roles correctly';
+}
+
+ok(My::Foo::AliasOnly->meta->has_method('foo'), 'we have a foo method');
+ok(My::Foo::AliasOnly->meta->has_method('foo_foo'), '.. and the aliased foo_foo method');
