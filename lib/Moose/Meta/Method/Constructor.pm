@@ -43,11 +43,6 @@ sub new {
     return $self;
 }
 
-# This is here so can_be_inlined can be inherited by MooseX modules.
-sub _expected_constructor_class {
-    return 'Moose::Object';
-}
-
 ## method
 
 sub _initialize_body {
