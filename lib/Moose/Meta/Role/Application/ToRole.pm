@@ -74,6 +74,26 @@ sub apply_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $method_name ($role1->get_method_list) {
 
+        unless ( $self->is_method_excluded($method_name) ) {
+            if (   $role2->has_method($method_name)
+                && $role2->get_method($method_name)->body
+                != $role1->get_method($method_name)->body ) {
+
+                # method conflicts between roles result in the method becoming
+                # a requirement
+                $role2->add_conflicting_method(
+                    name  => $method_name,
+                    roles => [ $role1->name, $role2->name ],
+                );
+            }
+            else {
+                $role2->add_method(
+                    $method_name,
+                    $role1->get_method($method_name)
+                );
+            }
+        }
+
         if ($self->is_method_aliased($method_name)) {
             my $aliased_method_name = $self->get_method_aliases->{$method_name};
 
@@ -93,29 +113,7 @@ sub apply_methods {
                 $role2->add_required_methods($method_name)
                     unless $self->is_method_excluded($method_name);
             }
-
-            next;
         }
-
-        next if $self->is_method_excluded($method_name);
-
-        if ($role2->has_method($method_name) &&
-            $role2->get_method($method_name)->body != $role1->get_method($method_name)->body) {
-            # method conflicts between roles result
-            # in the method becoming a requirement
-            $role2->add_conflicting_method(
-                name  => $method_name,
-                roles => [$role1->name, $role2->name],
-            );
-        }
-        else {
-            $role2->add_method(
-                $method_name,
-                $role1->get_method($method_name)
-            );
-
-        }
-
     }
 }
 

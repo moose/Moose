@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 38;
+use Test::More tests => 46;
 use Test::Exception;
 
 
@@ -58,7 +58,7 @@ ok(My::Class->meta->has_method($_), "we have a $_ method") for qw(foo baz bar ro
 }
 
 ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
-ok(!My::OtherRole->meta->requires_method('bar'), '... and the &bar method is not required');
+ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is required');
 ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar method is not required');
 
 {
@@ -71,7 +71,7 @@ ok(!My::OtherRole->meta->requires_method('role_bar'), '... and the &role_bar met
 }
 
 ok(My::AliasingRole->meta->has_method($_), "we have a $_ method") for qw(foo baz role_bar);
-ok(My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is required');
+ok(!My::AliasingRole->meta->requires_method('bar'), '... and the &bar method is not required');
 
 {
     package Foo::Role;
@@ -158,3 +158,57 @@ ok(My::Foo::Role::Other->meta->requires_method('foo_foo'), '... and the &foo met
 
 ok(My::Foo::AliasOnly->meta->has_method('foo'), 'we have a foo method');
 ok(My::Foo::AliasOnly->meta->has_method('foo_foo'), '.. and the aliased foo_foo method');
+
+{
+    package Role::Foo;
+    use Moose::Role;
+
+    sub x1 {}
+    sub y1 {}
+}
+
+{
+    package Role::Bar;
+    use Moose::Role;
+
+    use Test::Exception;
+
+    lives_ok {
+        with 'Role::Foo' => {
+            -alias    => { x1 => 'foo_x1' },
+            -excludes => ['y1'],
+        };
+    }
+    'Compose Role::Foo into Role::Bar with alias and exclude';
+
+    sub x1 {}
+    sub y1 {}
+}
+
+{
+    my $bar = Role::Bar->meta;
+    ok( $bar->has_method($_), "has $_ method" )
+        for qw( x1 y1 foo_x1 );
+}
+
+{
+    package Role::Baz;
+    use Moose::Role;
+
+    use Test::Exception;
+
+    lives_ok {
+        with 'Role::Foo' => {
+            -alias    => { x1 => 'foo_x1' },
+            -excludes => ['y1'],
+        };
+    }
+    'Compose Role::Foo into Role::Baz with alias and exclude';
+}
+
+{
+    my $baz = Role::Baz->meta;
+    ok( $baz->has_method($_), "has $_ method" )
+        for qw( x1 foo_x1 );
+    ok( ! $baz->has_method('y1'), 'Role::Baz has no y1 method' );
+}
