@@ -10,14 +10,14 @@ perl_version '5.008001';
 all_from 'lib/Moose.pm';
 license 'perl';
 
-requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
 requires 'Class::MOP'       => '0.92_01';
-requires 'List::MoreUtils'  => '0.12';
-requires 'Sub::Exporter'    => '0.980';
-requires 'Task::Weaken'     => '0';
 requires 'Data::OptList'    => '0';
+requires 'List::MoreUtils'  => '0.12';
+requires 'Scalar::Util'     => '1.19';
+requires 'Sub::Exporter'    => '0.980';
 requires 'Sub::Name'        => '0';
+requires 'Task::Weaken'     => '0';
 
 test_requires 'Test::More'      => '0.77';
 test_requires 'Test::Exception' => '0.27';
