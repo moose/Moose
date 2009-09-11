@@ -26,6 +26,13 @@ for, noteworthy changes.
       - Warn when calling make_immutable on a class with mutable ancestors.
         (doy)
 
+    * Moose::Meta::Role::Application::ToRole
+      - When a role aliased a method from another role, it was only getting
+        the new (aliased) name, not the original name. This differed from what
+        happens when a class aliases a role's methods. If you _only_ want the
+        aliased name, make sure to also exclue the original name. (Dave
+        Rolsky)
+
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers to the
