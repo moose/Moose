@@ -796,7 +796,7 @@ L<Moose::Meta::Role::Method>.
 =item B<< $metarole->find_method_by_name($name) >>
 
 These methods are all identical to the methods of the same name in
-L<Class::MOP::Class>
+L<Class::MOP::Package>
 
 =back
 
