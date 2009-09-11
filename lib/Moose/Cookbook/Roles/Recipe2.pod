@@ -29,7 +29,8 @@ Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion a
       -alias => {
           stop  => '_stop',
           start => '_start'
-      }
+      },
+      -excludes => [ 'stop', 'start' ],
   };
 
   sub stop {
@@ -81,11 +82,15 @@ original implementation. To do this, we alias the methods from
 C<Restartable> to private methods, and provide wrappers around the
 originals (1).
 
+Note that aliasing simply I<adds> a name, so we also need to exclude the
+methods with their original names.
+
   with 'Restartable' => {
       -alias => {
           stop  => '_stop',
           start => '_start'
-      }
+      },
+      -excludes => [ 'stop', 'start' ],
   };
 
 In the C<Restartable::ButBroken> role, we want to provide an entirely
