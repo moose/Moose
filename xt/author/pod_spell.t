@@ -173,6 +173,7 @@ rebasing
 reblesses
 refactored
 refactoring
+rethrows
 runtime
 stacktrace
 subclassable
