@@ -210,7 +210,7 @@ BEGIN {
 
     ::like(
         $@,
-        qr/\QCircular reference in also parameter to Moose::Exporter between MooseX::CircularAlso and MooseX::CircularAlso/,
+        qr/\QCircular reference in 'also' parameter to Moose::Exporter between MooseX::CircularAlso and MooseX::CircularAlso/,
         'got the expected error from circular reference in also'
     );
 }

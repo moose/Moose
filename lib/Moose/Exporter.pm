@@ -104,7 +104,7 @@ sub build_import_methods {
 
         for my $package (@also)
         {
-            die "Circular reference in also parameter to Moose::Exporter between $exporting_package and $package"
+            die "Circular reference in 'also' parameter to Moose::Exporter between $exporting_package and $package"
                 if $seen->{$package};
 
             $seen->{$package} = 1;
