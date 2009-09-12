@@ -42,7 +42,7 @@ sub check_conflicts {
         'MooseX::StrictConstructor' => '0.07',
         'MooseX::Params::Validate'  => '0.05',
         'Fey::ORM'                  => '0.23',
-        'MooseX::Types'             => '0.20',
+        'MooseX::Types'             => '0.19',
     );
 
     my $found = 0;
