@@ -22,6 +22,9 @@ Next
       - These two fixes address some of RT #48271, reported by Zefram.
       - This is all now documented in Moose::Manual::Construction.
 
+    * Moose::Meta::Role
+      - Add more hooks to customize how roles are applied.
+
 0.89_02 Thu, Sep 10, 2009
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
