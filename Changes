@@ -21,6 +21,8 @@ Next
         Devel::GlobalDestruction::in_global_destruction.
       - These two fixes address some of RT #48271, reported by Zefram.
       - This is all now documented in Moose::Manual::Construction.
+      - Calling $object->new() is now deprecated. A warning will be
+        issued. (perigrin)
 
     * Moose::Meta::Role
       - Add more hooks to customize how roles are applied.

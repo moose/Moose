@@ -24,6 +24,16 @@ send us a patch.
 
 See L<Moose::Meta::Attribute::Native::Trait::Code> for details.
 
+=item Calling $object->new() is deprecated
+
+Moose has long supported this, but it's never really been documented, and we
+don't think this is a good practice. If you want to construct an object from
+an existing object, you should provide some sort of alternate constructor like
+C<< $object->clone >>.
+
+Calling C<< $object->new >> now issues a warning, and will be an error in a
+future release.
+
 =back
 
 =head1 Version 0.89_02
