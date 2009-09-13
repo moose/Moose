@@ -18,14 +18,12 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-    
+
     Carp::cluck 'Calling new() on an instance is deprecated,'
       . ' please use (blessed $obj)->new' if blessed $class;
-    
+
     my $params = $class->BUILDARGS(@_);
 
-    # We want to support passing $self->new, but initialize
-    # takes only an unblessed class name
     my $real_class = Scalar::Util::blessed($class) || $class;
     my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
 

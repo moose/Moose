@@ -56,6 +56,10 @@ sub _initialize_body {
     # the author, after all, nothing is free)
     my $source = 'sub {';
     $source .= "\n" . 'my $_instance = shift;';
+
+    $source .= "\n" . q{Carp::cluck 'Calling new() on an instance is deprecated,'
+                        . ' please use (blessed $obj)->new' if blessed $_instance;};
+
     $source .= "\n" . 'my $class = Scalar::Util::blessed($_instance) || $_instance;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';
