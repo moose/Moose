@@ -27,6 +27,12 @@ Next
     * Moose::Meta::Role
       - Add more hooks to customize how roles are applied.
 
+    * Moose::Meta::Method::Delegation
+      - fixed delegated methods to make sure that any modifiers
+        attached to the accessor being delegated on will be
+        called (Stevan)
+        - added tests for this (Stevan)
+
 0.89_02 Thu, Sep 10, 2009
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
@@ -84,12 +90,6 @@ Next
       - When a nonexistent sub name is passed to as_is, with_caller, or
         with_meta, throw a warning and skip the exporting, rather than
         installing a broken sub. (doy)
-
-    * Moose::Meta::Method::Delegation
-      - fixed delegated methods to make sure that any modifiers
-        attached to the accessor being delegated on will be
-        called (Stevan)
-        - added tests for this (Stevan)
 
 0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
