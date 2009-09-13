@@ -25,7 +25,9 @@ Next
         issued. (perigrin)
 
     * Moose::Meta::Role
-      - Add more hooks to customize how roles are applied.
+      - Added more hooks to customize how roles are applied. The role
+        summation class, used to create composite roles, can now be changed
+        and/or have meta-roles applied to it. (rafl)
 
     * Moose::Meta::Method::Delegation
       - fixed delegated methods to make sure that any modifiers attached to
