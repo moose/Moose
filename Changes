@@ -28,9 +28,8 @@ Next
       - Add more hooks to customize how roles are applied.
 
     * Moose::Meta::Method::Delegation
-      - fixed delegated methods to make sure that any modifiers
-        attached to the accessor being delegated on will be
-        called (Stevan)
+      - fixed delegated methods to make sure that any modifiers attached to
+        the accessor being delegated on will be called (Stevan)
         - added tests for this (Stevan)
 
 0.89_02 Thu, Sep 10, 2009
