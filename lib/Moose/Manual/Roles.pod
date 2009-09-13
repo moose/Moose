@@ -75,9 +75,9 @@ method. The C<Car> class also C<does('Breakable')>:
 
   my $car = Car->new( engine => Engine->new );
 
-  print $car->is_broken ? 'Still working' : 'Busted';
+  print $car->is_broken ? 'Busted' : 'Still working';
   $car->break;
-  print $car->is_broken ? 'Still working' : 'Busted';
+  print $car->is_broken ? 'Busted' : 'Still working';
 
   $car->does('Breakable'); # true
 
