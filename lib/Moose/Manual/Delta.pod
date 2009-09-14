@@ -58,12 +58,6 @@ of its subclasses in the middle of its class definition, so pointing out that
 this may cause issues should be helpful. Metaclasses (classes that inherit
 from L<Class::MOP::Object>) are currently exempt from this check, since at the
 moment we aren't very consistent about which metaclasses we immutabilize.
-Anonymous classes are also exempt, since they are often created automatically,
-and the user is never given a choice about whether or not to make them
-immutable. If you're sure you know what you're doing, you also can pass the
-C<allow_mutable_ancestors> option to make_immutable to silence the warning
-(but be aware that modifying those mutable ancestors can still lead to
-incorrect behavior in your subclass).
 
 =back
 
