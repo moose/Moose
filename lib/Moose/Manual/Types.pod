@@ -53,7 +53,6 @@ The basic Moose type hierarchy looks like this
               GlobRef
                 FileHandle
               Object
-                Role
 
 In practice, the only difference between C<Any> and C<Item> is
 conceptual. C<Item> is used as the top-level type in the hierarchy.
