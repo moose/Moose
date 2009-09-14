@@ -148,6 +148,7 @@ sub apply_attributes {
 sub apply_methods {
     my ($self, $role, $class) = @_;
     foreach my $method_name ($role->get_method_list) {
+        next if $method_name eq 'meta';
 
         unless ($self->is_method_excluded($method_name)) {
             # it if it has one already
