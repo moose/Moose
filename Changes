@@ -55,9 +55,6 @@ Next
       - If you try to wrap/export a subroutine which doesn't actually exist,
         Moose::Exporter will warn you about this. (doy)
 
-    * Moose::Meta::Class
-      - Warn when calling make_immutable on a class with mutable ancestors.
-        (doy)
 
     * Moose::Meta::Role::Application::ToRole
       - When a role aliased a method from another role, it was only getting

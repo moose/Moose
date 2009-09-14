@@ -42,8 +42,6 @@ use Test::Exception;
     __PACKAGE__->meta->add_attribute(
         'squeegee' => ( accessor => 'squeegee' ) );
 
-    __PACKAGE__->meta->make_immutable(inline_constructor => 0);
-
     package Old::Bucket::Nose;
 
     # see http://www.moosefoundation.org/moose_facts.htm
