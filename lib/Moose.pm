@@ -120,7 +120,7 @@ sub augment {
 
 Moose::Exporter->setup_import_methods(
     with_meta => [
-        qw( extends with has before after around override augment)
+        qw( extends with has before after around override augment )
     ],
     as_is => [
         qw( super inner ),
