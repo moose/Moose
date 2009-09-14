@@ -34,6 +34,11 @@ C<< $object->clone >>.
 Calling C<< $object->new >> now issues a warning, and will be an error in a
 future release.
 
+=item Moose no longer warns if you call C<make_immutable> for a class with mutable ancestors
+
+While in theory this is a good thing to warn about, we found so many
+exceptions to this that doing this properly became quite problematic.
+
 =back
 
 =head1 Version 0.89_02
