@@ -6,7 +6,7 @@ use warnings;
 use Class::MOP;
 use Scalar::Util 'blessed', 'looks_like_number';
 
-our $VERSION   = '0.89_02';
+our $VERSION   = '0.90';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

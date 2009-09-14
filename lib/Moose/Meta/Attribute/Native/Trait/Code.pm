@@ -2,7 +2,7 @@ package Moose::Meta::Attribute::Native::Trait::Code;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Code;
 
-our $VERSION   = '0.89_02';
+our $VERSION   = '0.90';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
