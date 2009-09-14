@@ -617,6 +617,24 @@ to C<'Bill'>.
 We recommend that you exercise caution when changing the type (C<isa>)
 of an inherited attribute.
 
+=head1 MULTIPLE ATTRIBUTE SHORTCUTS
+
+If you have a number of attributes that differ only be name, you can declare
+them all at once:
+
+  package Point;
+
+  use Moose;
+
+  has [ 'x', 'y' ] => ( is => 'ro', isa => 'Int' );
+
+Also, because C<has> is just a function call, you can call it in a loop:
+
+  for my $name ( qw( x y ) ) {
+      my $builder = '_build_' . $name;
+      has $name => ( is => 'ro', isa => 'Int', builder => $builder );
+  }
+
 =head1 MORE ON ATTRIBUTES
 
 Moose attributes are a big topic, and this document glosses over a few
