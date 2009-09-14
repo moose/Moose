@@ -37,6 +37,7 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
+        'MooseX::AttributeHelpers'  => '0.21',
         'MooseX::ClassAttribute'    => '0.09',
         'MooseX::Singleton'         => '0.19',
         'MooseX::StrictConstructor' => '0.07',
