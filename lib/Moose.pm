@@ -335,6 +335,16 @@ is to search for them (L<http://search.cpan.org/search?query=MooseX::>),
 or to examine L<Task::Moose> which aims to keep an up-to-date, easily
 installable list of Moose extensions.
 
+=head1 TRANSLATIONS
+
+Much of the Moose documentation has been translated into other languages.
+
+=over 4
+
+=item L<http://github.com/jpa/Moose-Doc-JA>
+
+=back
+
 =head1 BUILDING CLASSES WITH MOOSE
 
 Moose makes every attempt to provide as much convenience as possible during
