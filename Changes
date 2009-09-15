@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.90
+0.90 Tue, Sep 15, 2009
     * Moose::Meta::Attribute::Native::Trait::Counter
     * Moose::Meta::Attribute::Native::Trait::String
       - For these two traits, an attribute which did not explicitly provide
