@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More skip_all => "not implemented yet";
-#use Test::More tests => 2;
+#use Test::More tests => 4;
 
 my @init_meta_args;
 
@@ -14,7 +14,7 @@ BEGIN {
     Moose::Exporter->setup_import_methods(
         with_caller => ['has_rw'],
         also => 'Moose',
-        extra_parameters => ['-attribute'],
+        extra_parameters => ['attribute'],
     );
 
     sub has_rw {
@@ -29,7 +29,7 @@ BEGIN {
 
         push @init_meta_args, \%args;
 
-        my $attribute = $args{'-attribute'};
+        my $attribute = $args{'attribute'};
         my $meta = Moose->init_meta(
             %args,
         );
@@ -51,15 +51,31 @@ BEGIN {
     );
 }
 
+is_deeply(\@init_meta_args, [
+    {
+        for_class => 'My::Moose::User',
+        metaclass => 'Moose::Meta::Class'
+    }
+], "attribute wasn't passed in yet");
+
 ok(My::Moose::User->meta->get_attribute('counter')->has_accessor, 'our exported sugar works');
 
 {
     package My::Other::Moose::User;
     BEGIN {
         My::Moose->import(
-            -attribute => 'counter',
+            attribute => 'counter',
         );
     };
 }
+
+is_deeply(\@init_meta_args, [
+    {
+        for_class => 'My::Other::Moose::User',
+        metaclass => 'Moose::Meta::Class'
+        attribute => 'counter',
+    }
+], "got attribute in our init_meta params");
+
 
 ok(My::Moose::User->meta->get_attribute('counter')->has_accessor, 'our extra exporter option worked');
