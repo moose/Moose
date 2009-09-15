@@ -260,56 +260,6 @@ sub _make_wrapped_sub_with_meta {
     };
 }
 
-sub _make_wrapped_group {
-    my $class           = shift;
-    my $package         = shift; # package calling use Moose::Exporter
-    my $sub             = shift;
-    my $export_recorder = shift;
-    my $keywords        = shift;
-    my $is_removable    = shift;
-
-    return sub {
-        my $caller = $CALLER; # package calling use PackageUsingMooseExporter -group => {args}
-
-        # there are plenty of ways to deal with telling the code which
-        # package it lives in. the last arg (collector hashref) is
-        # otherwise unused, so we'll stick the original package in
-        # there and act like 'with_caller' by putting the calling
-        # package name as the first arg
-        $_[0] = $caller;
-        $_[3]{from} = $package;
-
-        my $named_code = $sub->(@_);
-        $named_code ||= { };
-
-        # send invalid return value error up to Sub::Exporter
-        unless (ref $named_code eq 'HASH') {
-            return $named_code;
-        }
-
-        for my $name (keys %$named_code) {
-            my $code = $named_code->{$name};
-
-            my $fq_name = $package . '::' . $name;
-            my $wrapper = $class->_curry_wrapper(
-                $code,
-                $fq_name,
-                $caller
-            );
-
-            my $sub = subname( $fq_name => $wrapper );
-            $named_code->{$name} = $sub;
-
-            # mark each coderef as ours
-            $keywords->{$name} = 1;
-            $is_removable->{$name} = 1;
-            $export_recorder->{$sub} = 1;
-        }
-
-        return $named_code;
-    };
-}
-
 sub _curry_wrapper {
     my $class   = shift;
     my $sub     = shift;
