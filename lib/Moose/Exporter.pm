@@ -703,6 +703,12 @@ can selectively override functions exported by another module.
 C<Moose::Exporter> also makes sure all these functions get removed
 when C<unimport> is called.
 
+=item * init_meta_params => [ ... ]
+
+This is a list of keys to search for in the import argument list. Any
+keys which are found will be passed with their corresponding values
+into C<init_meta> when it is called.
+
 =back
 
 You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>

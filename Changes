@@ -335,6 +335,11 @@ for, noteworthy changes.
     * Moose::Meta::Attribute::Native::Trait::Code
       - Fix passing arguments to code execute helpers. (doy)
 
+    * Moose::Exporter
+      - add an additional 'init_meta_params' option to setup_import_methods,
+        which takes a list of keys to look for in the import argument list,
+        and passes those key/value pairs into init_meta. (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)
