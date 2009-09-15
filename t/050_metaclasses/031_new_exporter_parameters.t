@@ -14,7 +14,7 @@ BEGIN {
     Moose::Exporter->setup_import_methods(
         with_caller => ['has_rw'],
         also => 'Moose',
-        extra_parameters => ['attribute'],
+        init_meta_params => ['attribute'],
     );
 
     sub has_rw {
