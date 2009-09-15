@@ -349,10 +349,14 @@ sub _make_import_sub {
         my %extra_args;
         # don't want to just force @_ into a hash, since it really actually is
         # an array
-        for my $i (1..($#_ - 1)) {
+        my $i = 1;
+        while ($i < $#_) {
             if (grep { $_ eq $_[$i] } @$init_meta_params) {
                 $extra_args{$_[$i]} = $_[$i + 1];
                 splice @_, $i, 2;
+            }
+            else {
+                $i++;
             }
         }
 
