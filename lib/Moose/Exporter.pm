@@ -61,7 +61,8 @@ sub build_import_methods {
         $exporting_package,
         $exporter,
         \@exports_from,
-        $is_reexport
+        $is_reexport,
+        ($args{init_meta_params} || []),
     );
 
     $methods{unimport} = $class->_make_unimport_sub(
@@ -308,6 +309,7 @@ sub _make_import_sub {
     my $exporter          = shift;
     my $exports_from      = shift;
     my $is_reexport    = shift;
+    my $init_meta_params    = shift;
 
     return sub {
 
@@ -344,6 +346,16 @@ sub _make_import_sub {
         strict->import;
         warnings->import;
 
+        my %extra_args;
+        # don't want to just force @_ into a hash, since it really actually is
+        # an array
+        for my $i (1..$#_) {
+            if (grep { $_ eq $_[$i] } @$init_meta_params) {
+                $extra_args{$_[$i]} = $_[$i + 1];
+                splice @_, $i, 2;
+            }
+        }
+
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
 
@@ -351,7 +363,11 @@ sub _make_import_sub {
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
-            $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
+            $c->init_meta(
+                %extra_args,
+                for_class => $CALLER,
+                metaclass => $metaclass,
+            );
             $did_init_meta = 1;
         }
 

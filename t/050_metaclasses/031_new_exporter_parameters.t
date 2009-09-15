@@ -1,8 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More skip_all => "not implemented yet";
-#use Test::More tests => 4;
+use Test::More tests => 4;
 
 my @init_meta_args;
 
@@ -51,13 +50,6 @@ BEGIN {
     );
 }
 
-is_deeply(\@init_meta_args, [
-    {
-        for_class => 'My::Moose::User',
-        metaclass => 'Moose::Meta::Class'
-    }
-], "attribute wasn't passed in yet");
-
 ok(My::Moose::User->meta->get_attribute('counter')->has_accessor, 'our exported sugar works');
 
 {
@@ -69,13 +61,11 @@ ok(My::Moose::User->meta->get_attribute('counter')->has_accessor, 'our exported 
     };
 }
 
-is_deeply(\@init_meta_args, [
-    {
-        for_class => 'My::Other::Moose::User',
-        metaclass => 'Moose::Meta::Class'
-        attribute => 'counter',
-    }
-], "got attribute in our init_meta params");
-
-
 ok(My::Moose::User->meta->get_attribute('counter')->has_accessor, 'our extra exporter option worked');
+
+ok(!exists $init_meta_args[0]->{attribute},
+   "attribute wasn't passed in yet");
+
+is($init_meta_args[1]->{attribute}, 'counter',
+   "got attribute in our init_meta params");
+
