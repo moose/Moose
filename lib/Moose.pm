@@ -1131,6 +1131,9 @@ Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
 
 Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
 
+Chris (perigrin) Prather
+
+
 =head2 OTHER CONTRIBUTORS
 
 Aankhen
@@ -1158,8 +1161,6 @@ Robert (rlb3) Boone
 Scott (konobi) McWhirter
 
 Shlomi (rindolf) Fish
-
-Chris (perigrin) Prather
 
 Wallace (wreis) Reis
 
