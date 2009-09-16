@@ -1133,6 +1133,7 @@ Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
 
 Chris (perigrin) Prather
 
+Florian Ragwitz E<lt>rafl@debian.orgE<gt>
 
 =head2 OTHER CONTRIBUTORS
 
