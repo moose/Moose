@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Code;
 use Moose::Role;
 
-our $VERSION   = '0.90';
+our $VERSION   = '0.91';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
