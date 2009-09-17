@@ -1,6 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.91 Tue, Sep 17, 2009
+    * Moose::Meta::Method::Constructor
+      - The generated code needs to called Scalar::Util::blessed by its
+        fully-qualified name or else Perl can interpret the call to blessed as
+        an indirect method call. This broke Search::GIN, which in turn broke
+        KiokuDB. (nothingmuch)
+
 0.90 Tue, Sep 15, 2009
     * Moose::Meta::Attribute::Native::Trait::Counter
     * Moose::Meta::Attribute::Native::Trait::String
