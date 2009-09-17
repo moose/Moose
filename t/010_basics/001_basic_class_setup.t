@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 30;
 use Test::Exception;
 
 
@@ -42,3 +42,14 @@ foreach my $function (qw(
     ok(!Foo->meta->has_method($function), '... the meta does not treat "' . $function . '" as a method');
 }
 
+foreach my $import (qw(
+    blessed
+    try
+    catch
+    in_global_destruction
+)) {
+    ok(!Moose::Object->can($import), "no namespace pollution in Moose::Object ($import)" );
+
+    local $TODO = $import eq 'blessed' ? "no automatic namespace cleaning yet" : undef;
+    ok(!Foo->can($import), "no namespace pollution in Moose::Object ($import)" );
+}
