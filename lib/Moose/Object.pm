@@ -4,10 +4,10 @@ package Moose::Object;
 use strict;
 use warnings;
 
-use Devel::GlobalDestruction qw(in_global_destruction);
-use MRO::Compat;
-use Scalar::Util qw( blessed );
-use Try::Tiny;
+use Devel::GlobalDestruction ();
+use MRO::Compat ();
+use Scalar::Util ();
+use Try::Tiny ();
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
@@ -20,11 +20,11 @@ sub new {
     my $class = shift;
 
     Carp::cluck 'Calling new() on an instance is deprecated,'
-      . ' please use (blessed $obj)->new' if blessed($class);
+      . ' please use (blessed $obj)->new' if Scalar::Util::blessed($class);
 
     my $params = $class->BUILDARGS(@_);
 
-    my $real_class = blessed($class) || $class;
+    my $real_class = Scalar::Util::blessed($class) || $class;
     my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
 
     $self->BUILDALL($params);
@@ -92,10 +92,10 @@ sub DESTROY {
 
     local $?;
 
-    try {
-        $self->DEMOLISHALL(in_global_destruction);
+    Try::Tiny::try {
+        $self->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
     }
-    catch {
+    Try::Tiny::catch {
         # Without this, Perl will warn "\t(in cleanup)$@" because of some
         # bizarre fucked-up logic deep in the internals.
         no warnings 'misc';
