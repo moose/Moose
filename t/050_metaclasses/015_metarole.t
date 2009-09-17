@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 89;
+use Test::More tests => 91;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
@@ -627,4 +627,41 @@ lives_ok {
         $method->meta->does_role( 'Foo::Meta::Role' ),
         'method_metaclass_role applied'
     );
+}
+
+{
+    package Parent;
+    use Moose;
+
+    Moose::Util::MetaRole::apply_metaclass_roles(
+        for_class               => __PACKAGE__,
+        constructor_class_roles => ['Role::Foo'],
+    );
+}
+
+{
+    package Child;
+
+    use Moose;
+    extends 'Parent';
+}
+
+{
+    ok(
+        Parent->meta->constructor_class->meta->can('does_role')
+            && Parent->meta->constructor_class->meta->does_role('Role::Foo'),
+        'Parent constructor class has metarole from Parent'
+    );
+
+TODO:
+    {
+        local $TODO
+            = 'Moose does not see that the child differs from the parent because it only checks the class and instance metaclasses do determine compatibility';
+        ok(
+            Child->meta->constructor_class->meta->can('does_role')
+                && Child->meta->constructor_class->meta->does_role(
+                'Role::Foo'),
+            'Child constructor class has metarole from Parent'
+        );
+    }
 }
