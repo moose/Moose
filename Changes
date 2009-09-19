@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Meta::Class
+      - Metaclass compat fixing should already happen recursively, there's no
+        need to explicitly walk up the inheritance tree. (doy)
+
 0.91 Thu, Sep 17, 2009
     * Moose::Object
       - Don't import any functions, in order to avoid polluting our namespace

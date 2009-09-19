@@ -296,29 +296,8 @@ sub _find_next_method_by_name_which_is_not_overridden {
 sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
-    foreach my $super (@superclasses) {
-        my $meta = Class::MOP::Class->initialize($super);
-
-        my @all_supers = $meta->linearized_isa;
-        shift @all_supers;
-
-        my @super_metas_to_fix = ($meta);
-
-        # We need to check & fix the immediate superclass. If its @ISA
-        # contains a class without a metaclass instance, followed by a
-        # class _with_ a metaclass instance, init a metaclass instance
-        # for classes without one and fix compat up to and including
-        # the class which was already initialized.
-        my $idx = first_index { Class::MOP::class_of($_) } @all_supers;
-
-        push @super_metas_to_fix,
-            map { Class::MOP::Class->initialize($_) } @all_supers[ 0 .. $idx ]
-            if $idx >= 0;
-
-        foreach my $super_meta (@super_metas_to_fix) {
-            $self->_fix_one_incompatible_metaclass($super_meta);
-        }
-    }
+    $self->_fix_one_incompatible_metaclass($_)
+        for map { Moose::Meta::Class->initialize($_) } @superclasses;
 }
 
 sub _fix_one_incompatible_metaclass {
