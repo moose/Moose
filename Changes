@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.91 Tue, Sep 17, 2009
+0.91 Thu, Sep 17, 2009
     * Moose::Object
       - Don't import any functions, in order to avoid polluting our namespace
         with things that can look like methods (blessed, try, etc)
