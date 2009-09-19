@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.92
+    * Moose::Util::TypeConstraints
+      - added the match_on_type operator (Stevan)
+        - added tests and docs for this (Stevan)
+
     * Moose::Meta::Class
       - Metaclass compat fixing should already happen recursively, there's no
         need to explicitly walk up the inheritance tree. (doy)
