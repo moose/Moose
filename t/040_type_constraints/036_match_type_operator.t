@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -174,6 +174,18 @@ is(
     '... got the right pretty printed values'
 );
 
+# some error cases
+
+sub not_enough_matches {
+    my $x = shift;
+    match_on_type $x =>
+        Undef => sub { 'hello undef world'          },
+      CodeRef => sub { $_->('Hello code ref world') };
+}
+
+throws_ok {
+    not_enough_matches( [] )
+} qr/No cases matched for /, '... not enough matches';
 
 
 

@@ -467,9 +467,11 @@ sub match_on_type {
             return $action->($to_match);
         }
     }
+    (defined $default)
+        || __PACKAGE__->_throw_error("No cases matched for $to_match");
     {
         local $_ = $to_match;
-        return $default->($to_match) if $default;
+        return $default->($to_match);
     }
 }
 
