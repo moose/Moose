@@ -1150,11 +1150,30 @@ Perl pretty printer dispatching over the core Moose types.
                     => sub { die "I don't know what $_ is"             };
   }
 
+Or a simple JSON serializer:
+
+  sub to_json {
+      my $x = shift;
+      match_on_type $x =>
+          HashRef   => sub {
+              my $hash = shift;
+              '{ ' . (join ", " => map {
+                          '"' . $_ . '" : ' . to_json( $hash->{ $_ } )
+                      } sort keys %$hash ) . ' }'                         },
+          ArrayRef  => sub {
+              my $array = shift;
+              '[ ' . (join ", " => map { to_json( $_ ) } @$array ) . ' ]' },
+          Num       => sub { $_                                           },
+          Str       => sub { '"'. $_ . '"'                                },
+          Undef     => sub { 'null'                                       },
+                    => sub { die "$_ is not acceptable json type"         };
+  }
+
 Based on a mapping of C<$type> to C<\&action>, where C<$type> can be
 either a string type or a L<Moose::Meta::TypeConstraint> object, and
 C<\&action> is a CODE ref, this function will dispatch on the first
 match for C<$value>. It is possible to have a catch-all at the end
-in the form of a C<\&default> CODE ref
+in the form of a C<\&default> CODE ref.
 
 =back
 

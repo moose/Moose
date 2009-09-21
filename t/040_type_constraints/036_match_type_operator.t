@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 25;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -173,6 +173,42 @@ is(
     '{ five => *ppprint, four => qr/(?-xism:.*?)/, one => [ 1, 2, "three", 4, "five", \"six" ], six => Foo(), three => sub { ... }, two => undef }',
     '... got the right pretty printed values'
 );
+
+# simple JSON serializer
+
+sub to_json {
+    my $x = shift;
+    match_on_type $x =>
+        HashRef   => sub {
+            my $hash = shift;
+            '{ ' . (join ", " => map {
+                        '"' . $_ . '" : ' . to_json( $hash->{ $_ } )
+                    } sort keys %$hash ) . ' }'                         },
+        ArrayRef  => sub {
+            my $array = shift;
+            '[ ' . (join ", " => map { to_json( $_ ) } @$array ) . ' ]' },
+        Num       => sub { $_                                           },
+        Str       => sub { '"'. $_ . '"'                                },
+        Undef     => sub { 'null'                                       },
+                  => sub { die "$_ is not acceptable json type"         };
+}
+
+is(
+    to_json( { one => 1, two => 2 } ),
+    '{ "one" : 1, "two" : 2 }',
+    '... got our valid JSON'
+);
+
+is(
+    to_json( {
+        one   => [ 1, 2, 3, 4 ],
+        two   => undef,
+        three => "Hello World"
+    } ),
+    '{ "one" : [ 1, 2, 3, 4 ], "three" : "Hello World", "two" : null }',
+    '... got our valid JSON'
+);
+
 
 # some error cases
 
