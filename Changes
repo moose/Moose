@@ -11,7 +11,7 @@ for, noteworthy changes.
         need to explicitly walk up the inheritance tree. (doy)
 
     * Moose::Meta::Attribute
-      - Add tests for set_raw_value and get_raw_value
+      - Add tests for set_raw_value and get_raw_value. (nothingmuch)
 
 0.91 Thu, Sep 17, 2009
     * Moose::Object
