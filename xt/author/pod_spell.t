@@ -130,6 +130,7 @@ dec
 definedness
 destructor
 destructors
+destructuring
 dev
 DWIM
 DUCKTYPE
@@ -145,6 +146,7 @@ invocant's
 irc
 IRC
 isa
+JSON
 kv
 login
 mul
@@ -154,6 +156,7 @@ namespaces
 namespacing
 # as in required-ness
 ness
+O'Caml
 OO
 OOP
 ORM
@@ -176,6 +179,7 @@ refactored
 refactoring
 rethrows
 runtime
+serializer
 stacktrace
 subclassable
 subname
@@ -199,6 +203,7 @@ gey
 ## neologisms
 breakability
 delegatee
+featureful
 hackery
 hacktern
 wrappee
