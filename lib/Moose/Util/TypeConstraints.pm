@@ -1121,59 +1121,69 @@ The valid hashref keys are C<where>, C<message>, and C<optimize_as>.
 
 =item B<< match_on_type $value => ( $type => \&action, ... ?\&default ) >>
 
-This is a utility function for doing simple type based dispatching
-similar to match/case in O'Caml and case/of in Haskell. It does not
-claim to be as featureful as either of those and does not support any
-kind of automatic destructuring bind. However it is suitable for a fair
-amount of your dispatching needs, for instance, here is a simple
-Perl pretty printer dispatching over the core Moose types.
+This is a utility function for doing simple type based dispatching similar to
+match/case in O'Caml and case/of in Haskell. It is not as featureful as those
+languages, nor does not it support any kind of automatic destructuring
+bind. Here is a simple Perl pretty printer dispatching over the core Moose
+types.
 
   sub ppprint {
       my $x = shift;
-      match_on_type $x =>
-          HashRef   => sub {
+      match_on_type $x => (
+          HashRef => sub {
               my $hash = shift;
-              '{ ' . (join ", " => map {
-                          $_ . ' => ' . ppprint( $hash->{ $_ } )
-                      } sort keys %$hash ) . ' }'                      },
-          ArrayRef  => sub {
+              '{ '
+                  . (
+                  join ", " => map { $_ . ' => ' . ppprint( $hash->{$_} ) }
+                      sort keys %$hash
+                  ) . ' }';
+          },
+          ArrayRef => sub {
               my $array = shift;
-              '[ '.(join ", " => map { ppprint( $_ ) } @$array ).' ]'  },
-          CodeRef   => sub { 'sub { ... }'                             },
-          RegexpRef => sub { 'qr/' . $_ . '/'                          },
-          GlobRef   => sub { '*' . B::svref_2object($_)->NAME          },
+              '[ ' . ( join ", " => map { ppprint($_) } @$array ) . ' ]';
+          },
+          CodeRef   => sub {'sub { ... }'},
+          RegexpRef => sub { 'qr/' . $_ . '/' },
+          GlobRef   => sub { '*' . B::svref_2object($_)->NAME },
           Object    => sub { $_->can('to_string') ? $_->to_string : $_ },
-          ScalarRef => sub { '\\' . ppprint( ${$_} )                   },
-          Num       => sub { $_                                        },
-          Str       => sub { '"'. $_ . '"'                             },
-          Undef     => sub { 'undef'                                   },
-                    => sub { die "I don't know what $_ is"             };
+          ScalarRef => sub { '\\' . ppprint( ${$_} ) },
+          Num       => sub {$_},
+          Str       => sub { '"' . $_ . '"' },
+          Undef     => sub {'undef'},
+          => sub { die "I don't know what $_ is" }
+      );
   }
 
 Or a simple JSON serializer:
 
   sub to_json {
       my $x = shift;
-      match_on_type $x =>
-          HashRef   => sub {
+      match_on_type $x => (
+          HashRef => sub {
               my $hash = shift;
-              '{ ' . (join ", " => map {
-                          '"' . $_ . '" : ' . to_json( $hash->{ $_ } )
-                      } sort keys %$hash ) . ' }'                         },
-          ArrayRef  => sub {
+              '{ '
+                  . (
+                  join ", " =>
+                      map { '"' . $_ . '" : ' . to_json( $hash->{$_} ) }
+                      sort keys %$hash
+                  ) . ' }';
+          },
+          ArrayRef => sub {
               my $array = shift;
-              '[ ' . (join ", " => map { to_json( $_ ) } @$array ) . ' ]' },
-          Num       => sub { $_                                           },
-          Str       => sub { '"'. $_ . '"'                                },
-          Undef     => sub { 'null'                                       },
-                    => sub { die "$_ is not acceptable json type"         };
+              '[ ' . ( join ", " => map { to_json($_) } @$array ) . ' ]';
+          },
+          Num   => sub {$_},
+          Str   => sub { '"' . $_ . '"' },
+          Undef => sub {'null'},
+          => sub { die "$_ is not acceptable json type" }
+      );
   }
 
-Based on a mapping of C<$type> to C<\&action>, where C<$type> can be
-either a string type or a L<Moose::Meta::TypeConstraint> object, and
-C<\&action> is a CODE ref, this function will dispatch on the first
-match for C<$value>. It is possible to have a catch-all at the end
-in the form of a C<\&default> CODE ref.
+The matcher is done by mapping a C<$type> to an C<\&action>. The C<$type> can
+be either a string type or a L<Moose::Meta::TypeConstraint> object, and
+C<\&action> is a subroutine reference. This function will dispatch on the
+first match for C<$value>. It is possible to have a catch-all by providing an
+additional subroutine reference as the final argument to C<match_on_type>.
 
 =back
 
