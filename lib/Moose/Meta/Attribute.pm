@@ -426,8 +426,10 @@ sub initialize_instance_slot {
     $val = $self->_coerce_and_verify( $val, $instance );
 
     $self->set_initial_value($instance, $val);
-    $meta_instance->weaken_slot_value($instance, $self->name)
-        if ref $val && $self->is_weak_ref;
+
+    if ( ref $val && $self->is_weak_ref ) {
+        $self->weaken_value($instance);
+    }
 }
 
 sub _call_builder {
@@ -493,23 +495,29 @@ sub set_value {
 
     $value = $self->_coerce_and_verify( $value, $instance );
 
-    my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
-                                         ->get_meta_instance;
-
     my @old;
     if ( $self->has_trigger && $self->has_value($instance) ) {
         @old = $self->get_value($instance, 'for trigger');
     }
 
-    $meta_instance->set_slot_value($instance, $attr_name, $value);
+    $self->SUPER::set_value($instance, $value);
 
-    if (ref $value && $self->is_weak_ref) {
-        $meta_instance->weaken_slot_value($instance, $attr_name);
+    if ( ref $value && $self->is_weak_ref ) {
+        $self->weaken_value($instance);
     }
 
     if ($self->has_trigger) {
         $self->trigger->($instance, $value, @old);
     }
+}
+
+sub weaken_value {
+    my ( $self, $instance ) = @_;
+
+    my $meta_instance =
+      Class::MOP::Class->initialize( blessed($instance) )->get_meta_instance;
+
+    $meta_instance->weaken_slot_value( $instance, $self->name );
 }
 
 sub get_value {

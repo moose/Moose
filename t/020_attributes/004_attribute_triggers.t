@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 42;
+use Test::More tests => 43;
 use Test::Exception;
 
 
@@ -187,6 +187,15 @@ use Test::Exception;
         \@Foo::calls,
         [ [ $foo, 3, 2 ] ],
         'trigger called correctly on second set via meta-API',
+    );
+    @Foo::calls = ();
+
+    $attr->set_raw_value( $foo, 4 );
+
+    is_deeply(
+        \@Foo::calls,
+        [ ],
+        'trigger not called using set_raw_value method',
     );
     @Foo::calls = ();
 }
