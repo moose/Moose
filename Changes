@@ -10,6 +10,9 @@ for, noteworthy changes.
       - Metaclass compat fixing should already happen recursively, there's no
         need to explicitly walk up the inheritance tree. (doy)
 
+    * Moose::Meta::Attribute
+      - Add tests for set_raw_value and get_raw_value
+
 0.91 Thu, Sep 17, 2009
     * Moose::Object
       - Don't import any functions, in order to avoid polluting our namespace
