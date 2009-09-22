@@ -4,7 +4,7 @@ use Moose::Role;
 use List::Util;
 use List::MoreUtils;
 
-our $VERSION = '0.91';
+our $VERSION = '0.92';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
