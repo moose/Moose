@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * replace two more eval { } calls with try { } (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)

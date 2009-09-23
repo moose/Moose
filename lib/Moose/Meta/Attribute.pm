@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
+use Try::Tiny;
 use overload     ();
 
 our $VERSION   = '0.92';
@@ -58,7 +59,7 @@ __PACKAGE__->meta->add_attribute('traits' => (
 # for metatrait aliases.
 sub does {
     my ($self, $role_name) = @_;
-    my $name = eval {
+    my $name = try {
         Moose::Util::resolve_metatrait_alias(Attribute => $role_name)
     };
     return 0 if !defined($name); # failed to load class
@@ -318,7 +319,7 @@ sub _process_options {
 
     if (exists $options->{isa}) {
         if (exists $options->{does}) {
-            if (eval { $options->{isa}->can('does') }) {
+            if (try { $options->{isa}->can('does') }) {
                 ($options->{isa}->does($options->{does}))
                     || $class->throw_error("Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)", data => $options);
             }
