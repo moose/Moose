@@ -62,17 +62,17 @@ my $array_of_hashes = [
 my $foo;
 lives_ok {
     $foo = Foo->new('bar' => $array_of_hashes);
-} '... construction succeeded';
+} 'construction succeeded';
 isa_ok($foo, 'Foo');
 
-is_deeply($foo->bar, $array_of_hashes, '... got our value correctly');
+is_deeply($foo->bar, $array_of_hashes, 'got our value correctly');
 
 dies_ok {
     $foo->bar({});
-} '... validation failed correctly';
+} 'validation failed correctly';
 
 dies_ok {
     $foo->bar([{ foo => 3 }]);
-} '... validation failed correctly';
+} 'validation failed correctly';
 
 

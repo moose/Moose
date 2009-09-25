@@ -51,20 +51,20 @@ use Test::Exception;
              'Bar'   => { -excludes => [qw/foo baz gorch/] },
              'Baz'   => { -excludes => [qw/foo bar gorch/], -alias => { foo => 'baz_foo', bar => 'baz_bar' } },
              'Gorch' => { -excludes => [qw/foo bar baz/] };
-    } '... everything works out all right';
+    } 'everything works out all right';
 }
 
 my $c = My::Class->new;
 isa_ok($c, 'My::Class');
 
-is($c->foo, 'Foo::foo', '... got the right method');
-is($c->bar, 'Bar::bar', '... got the right method');
-is($c->baz, 'Baz::baz', '... got the right method');
-is($c->gorch, 'Gorch::gorch', '... got the right method');
+is($c->foo, 'Foo::foo', 'got the right method');
+is($c->bar, 'Bar::bar', 'got the right method');
+is($c->baz, 'Baz::baz', 'got the right method');
+is($c->gorch, 'Gorch::gorch', 'got the right method');
 
-is($c->foo_gorch, 'Foo::gorch', '... got the right method');
-is($c->baz_foo, 'Baz::foo', '... got the right method');
-is($c->baz_bar, 'Baz::bar', '... got the right method');
+is($c->foo_gorch, 'Foo::gorch', 'got the right method');
+is($c->baz_foo, 'Baz::foo', 'got the right method');
+is($c->baz_bar, 'Baz::bar', 'got the right method');
 
 
 

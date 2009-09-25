@@ -218,7 +218,7 @@ BEGIN {
 
     is(Moose::POOP::Object->meta->instance_metaclass,
       'Moose::POOP::Meta::Instance',
-      '... got the right instance metaclass name');
+      'got the right instance metaclass name');
 
     isa_ok(Moose::POOP::Object->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
 
@@ -232,7 +232,7 @@ BEGIN {
 
     is($base->meta->instance_metaclass,
       'Moose::POOP::Meta::Instance',
-      '... got the right instance metaclass name');
+      'got the right instance metaclass name');
 
     isa_ok($base->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
 }
@@ -254,14 +254,14 @@ my $article_ref;
 
             status => 'pending'
         );
-    } '... created my article successfully';
+    } 'created my article successfully';
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'Moose::POOP::Object');
 
     lives_ok {
         $article->start_date(DateTime->new(year => 2006, month => 6, day => 10));
         $article->end_date(DateTime->new(year => 2006, month => 6, day => 17));
-    } '... add the article date-time stuff';
+    } 'add the article date-time stuff';
 
     ## check some meta stuff
 
@@ -271,31 +271,31 @@ my $article_ref;
 
     is($article->meta->instance_metaclass,
       'Moose::POOP::Meta::Instance',
-      '... got the right instance metaclass name');
+      'got the right instance metaclass name');
 
     isa_ok($article->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
 
-    ok($article->oid, '... got a oid for the article');
+    ok($article->oid, 'got a oid for the article');
 
     $article_oid = $article->oid;
     $article_ref = "$article";
 
     is($article->headline,
        'Home Office Redecorated',
-       '... got the right headline');
+       'got the right headline');
     is($article->summary,
        'The home office was recently redecorated to match the new company colors',
-       '... got the right summary');
-    is($article->article, '...', '... got the right article');
+       'got the right summary');
+    is($article->article, '...', 'got the right article');
 
     isa_ok($article->start_date, 'DateTime');
     isa_ok($article->end_date,   'DateTime');
 
     isa_ok($article->author, 'Newswriter::Author');
-    is($article->author->first_name, 'Truman', '... got the right author first name');
-    is($article->author->last_name, 'Capote', '... got the right author last name');
+    is($article->author->first_name, 'Truman', 'got the right author first name');
+    is($article->author->last_name, 'Capote', 'got the right author last name');
 
-    is($article->status, 'pending', '... got the right status');
+    is($article->status, 'pending', 'got the right status');
 }
 
 Moose::POOP::Meta::Instance->_reload_db();
@@ -317,7 +317,7 @@ my $article2_ref;
 
             status => 'posted'
         );
-    } '... created my article successfully';
+    } 'created my article successfully';
     isa_ok($article2, 'Newswriter::Article');
     isa_ok($article2, 'Moose::POOP::Object');
 
@@ -326,57 +326,57 @@ my $article2_ref;
 
     is($article2->headline,
        'Company wins Lottery',
-       '... got the right headline');
+       'got the right headline');
     is($article2->summary,
        'An email was received today that informed the company we have won the lottery',
-       '... got the right summary');
-    is($article2->article, 'WoW', '... got the right article');
+       'got the right summary');
+    is($article2->article, 'WoW', 'got the right article');
 
-    ok(!$article2->start_date, '... these two dates are unassigned');
-    ok(!$article2->end_date,   '... these two dates are unassigned');
+    ok(!$article2->start_date, 'these two dates are unassigned');
+    ok(!$article2->end_date,   'these two dates are unassigned');
 
     isa_ok($article2->author, 'Newswriter::Author');
-    is($article2->author->first_name, 'Katie', '... got the right author first name');
-    is($article2->author->last_name, 'Couric', '... got the right author last name');
+    is($article2->author->first_name, 'Katie', 'got the right author first name');
+    is($article2->author->last_name, 'Couric', 'got the right author last name');
 
-    is($article2->status, 'posted', '... got the right status');
+    is($article2->status, 'posted', 'got the right status');
 
     ## orig-article
 
     my $article;
     lives_ok {
         $article = Newswriter::Article->new(oid => $article_oid);
-    } '... (re)-created my article successfully';
+    } '(re)-created my article successfully';
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'Moose::POOP::Object');
 
-    is($article->oid, $article_oid, '... got a oid for the article');
-    isnt($article_ref, "$article", '... got a new article instance');
+    is($article->oid, $article_oid, 'got a oid for the article');
+    isnt($article_ref, "$article", 'got a new article instance');
 
     is($article->headline,
        'Home Office Redecorated',
-       '... got the right headline');
+       'got the right headline');
     is($article->summary,
        'The home office was recently redecorated to match the new company colors',
-       '... got the right summary');
-    is($article->article, '...', '... got the right article');
+       'got the right summary');
+    is($article->article, '...', 'got the right article');
 
     isa_ok($article->start_date, 'DateTime');
     isa_ok($article->end_date,   'DateTime');
 
     isa_ok($article->author, 'Newswriter::Author');
-    is($article->author->first_name, 'Truman', '... got the right author first name');
-    is($article->author->last_name, 'Capote', '... got the right author last name');
+    is($article->author->first_name, 'Truman', 'got the right author first name');
+    is($article->author->last_name, 'Capote', 'got the right author last name');
 
     lives_ok {
         $article->author->first_name('Dan');
         $article->author->last_name('Rather');
-    } '... changed the value ok';
+    } 'changed the value ok';
 
-    is($article->author->first_name, 'Dan', '... got the changed author first name');
-    is($article->author->last_name, 'Rather', '... got the changed author last name');
+    is($article->author->first_name, 'Dan', 'got the changed author first name');
+    is($article->author->last_name, 'Rather', 'got the changed author last name');
 
-    is($article->status, 'pending', '... got the right status');
+    is($article->status, 'pending', 'got the right status');
 }
 
 Moose::POOP::Meta::Instance->_reload_db();
@@ -385,56 +385,56 @@ Moose::POOP::Meta::Instance->_reload_db();
     my $article;
     lives_ok {
         $article = Newswriter::Article->new(oid => $article_oid);
-    } '... (re)-created my article successfully';
+    } '(re)-created my article successfully';
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'Moose::POOP::Object');
 
-    is($article->oid, $article_oid, '... got a oid for the article');
-    isnt($article_ref, "$article", '... got a new article instance');
+    is($article->oid, $article_oid, 'got a oid for the article');
+    isnt($article_ref, "$article", 'got a new article instance');
 
     is($article->headline,
        'Home Office Redecorated',
-       '... got the right headline');
+       'got the right headline');
     is($article->summary,
        'The home office was recently redecorated to match the new company colors',
-       '... got the right summary');
-    is($article->article, '...', '... got the right article');
+       'got the right summary');
+    is($article->article, '...', 'got the right article');
 
     isa_ok($article->start_date, 'DateTime');
     isa_ok($article->end_date,   'DateTime');
 
     isa_ok($article->author, 'Newswriter::Author');
-    is($article->author->first_name, 'Dan', '... got the changed author first name');
-    is($article->author->last_name, 'Rather', '... got the changed author last name');
+    is($article->author->first_name, 'Dan', 'got the changed author first name');
+    is($article->author->last_name, 'Rather', 'got the changed author last name');
 
-    is($article->status, 'pending', '... got the right status');
+    is($article->status, 'pending', 'got the right status');
 
     my $article2;
     lives_ok {
         $article2 = Newswriter::Article->new(oid => $article2_oid);
-    } '... (re)-created my article successfully';
+    } '(re)-created my article successfully';
     isa_ok($article2, 'Newswriter::Article');
     isa_ok($article2, 'Moose::POOP::Object');
 
-    is($article2->oid, $article2_oid, '... got a oid for the article');
-    isnt($article2_ref, "$article2", '... got a new article instance');
+    is($article2->oid, $article2_oid, 'got a oid for the article');
+    isnt($article2_ref, "$article2", 'got a new article instance');
 
     is($article2->headline,
        'Company wins Lottery',
-       '... got the right headline');
+       'got the right headline');
     is($article2->summary,
        'An email was received today that informed the company we have won the lottery',
-       '... got the right summary');
-    is($article2->article, 'WoW', '... got the right article');
+       'got the right summary');
+    is($article2->article, 'WoW', 'got the right article');
 
-    ok(!$article2->start_date, '... these two dates are unassigned');
-    ok(!$article2->end_date,   '... these two dates are unassigned');
+    ok(!$article2->start_date, 'these two dates are unassigned');
+    ok(!$article2->end_date,   'these two dates are unassigned');
 
     isa_ok($article2->author, 'Newswriter::Author');
-    is($article2->author->first_name, 'Katie', '... got the right author first name');
-    is($article2->author->last_name, 'Couric', '... got the right author last name');
+    is($article2->author->first_name, 'Katie', 'got the right author first name');
+    is($article2->author->last_name, 'Couric', 'got the right author last name');
 
-    is($article2->status, 'posted', '... got the right status');
+    is($article2->status, 'posted', 'got the right status');
 
 }
 

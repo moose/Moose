@@ -141,7 +141,7 @@ isa_ok( $tps_report, 'TPSReport' );
 is(
     $tps_report->create,
     q{<page><header/><report type="tps"/><footer/></page>},
-    '... got the right TPS report'
+    'got the right TPS report'
 );
 
 =end testing

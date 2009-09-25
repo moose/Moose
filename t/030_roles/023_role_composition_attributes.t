@@ -41,16 +41,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_attribute_list ],
         [ 'bar', 'foo' ],
-        '... got the right list of attributes'
+        'got the right list of attributes'
     );
 }
 
@@ -64,7 +64,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 # test complex conflict
 dies_ok {
@@ -78,7 +78,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 # test simple conflict
 dies_ok {
@@ -90,5 +90,5 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 

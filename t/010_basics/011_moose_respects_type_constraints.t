@@ -35,10 +35,10 @@ BEGIN {
 my $foo_constraint = find_type_constraint('Foo');
 isa_ok($foo_constraint, 'Moose::Meta::TypeConstraint');
 
-is($foo_constraint->parent->name, 'Value', '... got the Value subtype for Foo');
+is($foo_constraint->parent->name, 'Value', 'got the Value subtype for Foo');
 
-ok($foo_constraint->check('Foo'), '... my constraint passed correctly');
-ok(!$foo_constraint->check('Bar'), '... my constraint failed correctly');
+ok($foo_constraint->check('Foo'), 'my constraint passed correctly');
+ok(!$foo_constraint->check('Bar'), 'my constraint failed correctly');
 
 {
     package Bar;
@@ -52,11 +52,11 @@ isa_ok($bar, 'Bar');
 
 lives_ok {
     $bar->foo('Foo');
-} '... checked the type constraint correctly';
+} 'checked the type constraint correctly';
 
 dies_ok {
     $bar->foo(Foo->new);
-} '... checked the type constraint correctly';
+} 'checked the type constraint correctly';
 
 
 

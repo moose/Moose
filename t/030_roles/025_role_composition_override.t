@@ -46,16 +46,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives ok';
+    } 'this lives ok';
 
     is_deeply(
         [ sort $c->get_method_modifier_list('override') ],
         [ 'bar', 'foo' ],
-        '... got the right list of methods'
+        'got the right list of methods'
     );
 }
 
@@ -69,7 +69,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 # test simple overrides w/ conflicts
 dies_ok {
@@ -81,7 +81,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 
 # test simple overrides w/ conflicts
@@ -95,7 +95,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 
 # test simple overrides w/ conflicts
@@ -109,4 +109,4 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';

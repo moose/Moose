@@ -30,12 +30,12 @@ use Test::Exception;
 my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
-is($foo->baz, 'Foo::baz', '... got the right value');
+is($foo->baz, 'Foo::baz', 'got the right value');
 
 lives_ok {
     My::Role->meta->apply($foo)
-} '... successfully applied the role to immutable instance';
+} 'successfully applied the role to immutable instance';
 
-is($foo->baz, 'My::Role::baz(Foo::baz)', '... got the right value');
+is($foo->baz, 'My::Role::baz(Foo::baz)', 'got the right value');
 
 

@@ -71,68 +71,68 @@ BEGIN {
 
     isa_ok($email->raw_body, 'IO::String');
 
-    is($email->as_string, undef, '... got correct empty string');
+    is($email->as_string, undef, 'got correct empty string');
 }
 
 {
-    my $email = Email::Moose->new(raw_body => '... this is my body ...');
+    my $email = Email::Moose->new(raw_body => 'this is my body ...');
     isa_ok($email, 'Email::Moose');
 
     isa_ok($email->raw_body, 'IO::String');
 
-    is($email->as_string, '... this is my body ...', '... got correct string');
+    is($email->as_string, 'this is my body ...', 'got correct string');
 
     lives_ok {
-        $email->raw_body('... this is the next body ...');
-    } '... this will coerce correctly';
+        $email->raw_body('this is the next body ...');
+    } 'this will coerce correctly';
 
     isa_ok($email->raw_body, 'IO::String');
 
-    is($email->as_string, '... this is the next body ...', '... got correct string');
+    is($email->as_string, 'this is the next body ...', 'got correct string');
 }
 
 {
-    my $str = '... this is my body (ref) ...';
+    my $str = 'this is my body (ref) ...';
 
     my $email = Email::Moose->new(raw_body => \$str);
     isa_ok($email, 'Email::Moose');
 
     isa_ok($email->raw_body, 'IO::String');
 
-    is($email->as_string, $str, '... got correct string');
+    is($email->as_string, $str, 'got correct string');
 
-    my $str2 = '... this is the next body (ref) ...';
+    my $str2 = 'this is the next body (ref) ...';
 
     lives_ok {
         $email->raw_body(\$str2);
-    } '... this will coerce correctly';
+    } 'this will coerce correctly';
 
     isa_ok($email->raw_body, 'IO::String');
 
-    is($email->as_string, $str2, '... got correct string');
+    is($email->as_string, $str2, 'got correct string');
 }
 
 {
-    my $io_str = IO::String->new('... this is my body (IO::String) ...');
+    my $io_str = IO::String->new('this is my body (IO::String) ...');
 
     my $email = Email::Moose->new(raw_body => $io_str);
     isa_ok($email, 'Email::Moose');
 
     isa_ok($email->raw_body, 'IO::String');
-    is($email->raw_body, $io_str, '... and it is the one we expected');
+    is($email->raw_body, $io_str, 'and it is the one we expected');
 
-    is($email->as_string, '... this is my body (IO::String) ...', '... got correct string');
+    is($email->as_string, 'this is my body (IO::String) ...', 'got correct string');
 
-    my $io_str2 = IO::String->new('... this is the next body (IO::String) ...');
+    my $io_str2 = IO::String->new('this is the next body (IO::String) ...');
 
     lives_ok {
         $email->raw_body($io_str2);
-    } '... this will coerce correctly';
+    } 'this will coerce correctly';
 
     isa_ok($email->raw_body, 'IO::String');
-    is($email->raw_body, $io_str2, '... and it is the one we expected');
+    is($email->raw_body, $io_str2, 'and it is the one we expected');
 
-    is($email->as_string, '... this is the next body (IO::String) ...', '... got correct string');
+    is($email->as_string, 'this is the next body (IO::String) ...', 'got correct string');
 }
 
 {
@@ -155,7 +155,7 @@ BEGIN {
     isa_ok($email, 'Email::Moose');
 
     isa_ok($email->raw_body, 'IO::File');
-    is($email->raw_body, $fh, '... and it is the one we expected');
+    is($email->raw_body, $fh, 'and it is the one we expected');
 }
 
 

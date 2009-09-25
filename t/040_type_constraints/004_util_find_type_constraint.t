@@ -31,7 +31,7 @@ foreach my $type_name (qw(
     )) {
     is(find_type_constraint($type_name)->name,
        $type_name,
-       '... got the right name for ' . $type_name);
+       'got the right name for ' . $type_name);
 }
 
 # TODO:

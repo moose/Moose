@@ -45,7 +45,7 @@ isa_ok($r, 'Request');
 
 lives_ok {
     $r->headers;
-} '... this coerces and passes the type constraint even with lazy';
+} 'this coerces and passes the type constraint even with lazy';
 
 
 

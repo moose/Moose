@@ -201,15 +201,15 @@ Well cause merlyn asked if it could :)
 foreach my $class (qw/ProtoMoose::Object Foo Bar/) {
     isa_ok($class->meta,
     'ProtoMoose::Meta::Class',
-    '... got the right metaclass for ' . $class . ' ->');
+    'got the right metaclass for ' . $class . ' ->');
 
     is($class->meta->instance_metaclass,
     'ProtoMoose::Meta::Instance',
-    '... got the right instance meta for ' . $class);
+    'got the right instance meta for ' . $class);
 
     is($class->meta->attribute_metaclass,
     'ProtoMoose::Meta::Attribute',
-    '... got the right attribute meta for ' . $class);
+    'got the right attribute meta for ' . $class);
 }
 
 ## ------------------------------------------------------------------
@@ -220,12 +220,12 @@ isa_ok($foo_prototype, 'Foo');
 
 # set a value in the prototype
 $foo_prototype->bar(100);
-is($foo_prototype->bar, 100, '... got the value stored in the prototype');
+is($foo_prototype->bar, 100, 'got the value stored in the prototype');
 
 # the "class" defers to the
 # the prototype when asked
 # about attributes
-is(Foo->bar, 100, '... got the value stored in the prototype (through the Foo class)');
+is(Foo->bar, 100, 'got the value stored in the prototype (through the Foo class)');
 
 # now make an instance, which
 # is basically a clone of the
@@ -234,30 +234,30 @@ my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
 # the instance is *not* the prototype
-isnt($foo, $foo_prototype, '... got a new instance of Foo');
+isnt($foo, $foo_prototype, 'got a new instance of Foo');
 
 # but it has the same values ...
-is($foo->bar, 100, '... got the value stored in the instance (inherited from the prototype)');
+is($foo->bar, 100, 'got the value stored in the instance (inherited from the prototype)');
 
 # we can even change the values
 # in the instance
 $foo->bar(300);
-is($foo->bar, 300, '... got the value stored in the instance (overwriting the one inherited from the prototype)');
+is($foo->bar, 300, 'got the value stored in the instance (overwriting the one inherited from the prototype)');
 
 # and not change the one in the prototype
-is($foo_prototype->bar, 100, '... got the value stored in the prototype');
-is(Foo->bar, 100, '... got the value stored in the prototype (through the Foo class)');
+is($foo_prototype->bar, 100, 'got the value stored in the prototype');
+is(Foo->bar, 100, 'got the value stored in the prototype (through the Foo class)');
 
 ## subclasses
 
 # now we can check that the subclass
 # will seek out the correct prototypical
 # value from it's "parent"
-is(Bar->bar, 100, '... got the value stored in the Foo prototype (through the Bar class)');
+is(Bar->bar, 100, 'got the value stored in the Foo prototype (through the Bar class)');
 
 # we can then also set it's local attrs
 Bar->baz(50);
-is(Bar->baz, 50, '... got the value stored in the prototype (through the Bar class)');
+is(Bar->baz, 50, 'got the value stored in the prototype (through the Bar class)');
 
 # now we clone the Bar prototype
 my $bar = Bar->new;
@@ -266,18 +266,18 @@ isa_ok($bar, 'Foo');
 
 # and we see that we got the right values
 # in the instance/clone
-is($bar->bar, 100, '... got the value stored in the instance (inherited from the Foo prototype)');
-is($bar->baz, 50, '... got the value stored in the instance (inherited from the Bar prototype)');
+is($bar->bar, 100, 'got the value stored in the instance (inherited from the Foo prototype)');
+is($bar->baz, 50, 'got the value stored in the instance (inherited from the Bar prototype)');
 
 # nowe we can change the value
 $bar->bar(200);
-is($bar->bar, 200, '... got the value stored in the instance (overriding the one inherited from the Foo prototype)');
+is($bar->bar, 200, 'got the value stored in the instance (overriding the one inherited from the Foo prototype)');
 
 # and all our original and
 # prototypical values are still
 # the same
-is($foo->bar, 300, '... still got the original value stored in the instance (inherited from the prototype)');
-is(Foo->bar, 100, '... still got the original value stored in the prototype (through the Foo class)');
-is(Bar->bar, 100, '... still got the original value stored in the prototype (through the Bar class)');
+is($foo->bar, 300, 'still got the original value stored in the instance (inherited from the prototype)');
+is(Foo->bar, 100, 'still got the original value stored in the prototype (through the Foo class)');
+is(Bar->bar, 100, 'still got the original value stored in the prototype (through the Bar class)');
 
 

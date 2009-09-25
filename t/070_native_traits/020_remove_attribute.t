@@ -36,10 +36,10 @@ can_ok( $page, $_ ) for qw[
 lives_ok {
     $page->meta->remove_attribute('counter');
 }
-'... removed the counter attribute okay';
+'removed the counter attribute okay';
 
 ok( !$page->meta->has_attribute('counter'),
-    '... no longer has the attribute' );
+    'no longer has the attribute' );
 
 ok( !$page->can($_), "... our class no longer has the $_ method" ) for qw[
     counter

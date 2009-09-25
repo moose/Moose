@@ -44,6 +44,6 @@ my $foo = Foo->new(bar => { baz => { hello => 'World' } });
 isa_ok($foo, 'Foo');
 isa_ok($foo->bar, 'Bar');
 isa_ok($foo->bar->baz, 'Baz');
-is($foo->bar->baz->hello, 'World', '... this all worked fine');
+is($foo->bar->baz->hello, 'World', 'this all worked fine');
 
 

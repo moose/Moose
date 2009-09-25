@@ -68,40 +68,40 @@ can_ok( $stuff, $_ ) for qw[
     product
 ];
 
-is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
+is_deeply( $stuff->_options, [ 1 .. 10 ], 'got options' );
 
-ok( !$stuff->has_no_options, '... we have options' );
-is( $stuff->num_options, 10, '... got 2 options' );
-cmp_ok( $stuff->get_option_at(0), '==', 1,  '... get option 0' );
+ok( !$stuff->has_no_options, 'we have options' );
+is( $stuff->num_options, 10, 'got 2 options' );
+cmp_ok( $stuff->get_option_at(0), '==', 1,  'get option 0' );
 
 is_deeply(
     [ $stuff->filter_options( sub { $_ % 2 == 0 } ) ],
     [ 2, 4, 6, 8, 10 ],
-    '... got the right filtered values'
+    'got the right filtered values'
 );
 
 is_deeply(
     [ $stuff->map_options( sub { $_ * 2 } ) ],
     [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ],
-    '... got the right mapped values'
+    'got the right mapped values'
 );
 
 is( $stuff->find_option( sub { $_ % 2 == 0 } ), 2,
     '.. found the right option' );
 
-is_deeply( [ $stuff->options ], [ 1 .. 10 ], '... got the list of options' );
+is_deeply( [ $stuff->options ], [ 1 .. 10 ], 'got the list of options' );
 
 is( $stuff->join_options(':'), '1:2:3:4:5:6:7:8:9:10',
-    '... joined the list of options by :' );
+    'joined the list of options by :' );
 
 is_deeply(
     [ $stuff->sorted_options ], [ sort ( 1 .. 10 ) ],
-    '... got sorted options (default sort order)'
+    'got sorted options (default sort order)'
 );
 is_deeply(
     [ $stuff->sorted_options( sub { $_[1] <=> $_[0] } ) ],
     [ sort { $b <=> $a } ( 1 .. 10 ) ],
-    '... got sorted options (descending sort order) '
+    'got sorted options (descending sort order) '
 );
 
 throws_ok { $stuff->sorted_options('foo') }
@@ -154,14 +154,14 @@ is_deeply(
         'descending'           => [ sort => $sort ],
         'product'              => [ reduce => $prod ],
     },
-    '... got the right handles mapping'
+    'got the right handles mapping'
 );
 
 is( $options->type_constraint->type_parameter, 'Int',
-    '... got the right container type' );
+    'got the right container type' );
 
 dies_ok {
     $stuff->sort_in_place_options(undef);
 }
-'... sort rejects arg of invalid type';
+'sort rejects arg of invalid type';
 

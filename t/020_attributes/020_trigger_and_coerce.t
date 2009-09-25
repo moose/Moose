@@ -28,7 +28,7 @@ use Test::Exception;
         coerce  => 1,
         trigger => sub {
             my ( $self, $val ) = @_;
-            ::pass('... trigger is being called');
+            ::pass('trigger is being called');
             ::isa_ok( $self->closing_date, 'Fake::DateTime' );
             ::isa_ok( $val,                'Fake::DateTime' );
         }
@@ -44,7 +44,7 @@ use Test::Exception;
 }
 
 Mortgage->meta->make_immutable;
-ok( Mortgage->meta->is_immutable, '... Mortgage is now immutable' );
+ok( Mortgage->meta->is_immutable, 'Mortgage is now immutable' );
 
 {
     my $mtg = Mortgage->new( closing_date => 'yesterday' );

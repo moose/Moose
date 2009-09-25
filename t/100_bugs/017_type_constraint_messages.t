@@ -57,17 +57,17 @@ throws_ok {
     $foo->ar( [] );
 }
 qr/Attribute \(ar\) does not pass the type constraint because: ref: ARRAY/,
-    '... got the right error message';
+    'got the right error message';
 
 throws_ok {
     $foo->obj($foo);    # Doh!
 }
 qr/Attribute \(obj\) does not pass the type constraint because: Well it is an object/,
-    '... got the right error message';
+    'got the right error message';
 
 throws_ok {
     $foo->nt($foo);     # scalar
 }
 qr/Attribute \(nt\) does not pass the type constraint because: blessed/,
-    '... got the right error message';
+    'got the right error message';
 

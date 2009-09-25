@@ -14,7 +14,7 @@ BEGIN {
 
 lives_ok {
     subtype 'Numb3rs' => as 'Num';
-} '... create bare subtype fine';
+} 'create bare subtype fine';
 
 my $numb3rs = find_type_constraint('Numb3rs');
 isa_ok($numb3rs, 'Moose::Meta::TypeConstraint');

@@ -34,28 +34,28 @@ can_ok( $page, $_ ) for qw[
     set_counter
 ];
 
-is( $page->counter, 0, '... got the default value' );
+is( $page->counter, 0, 'got the default value' );
 
 $page->inc_counter;
-is( $page->counter, 1, '... got the incremented value' );
+is( $page->counter, 1, 'got the incremented value' );
 
 $page->inc_counter;
-is( $page->counter, 2, '... got the incremented value (again)' );
+is( $page->counter, 2, 'got the incremented value (again)' );
 
 $page->dec_counter;
-is( $page->counter, 1, '... got the decremented value' );
+is( $page->counter, 1, 'got the decremented value' );
 
 $page->reset_counter;
-is( $page->counter, 0, '... got the original value' );
+is( $page->counter, 0, 'got the original value' );
 
 $page->set_counter(5);
-is( $page->counter, 5, '... set the value' );
+is( $page->counter, 5, 'set the value' );
 
 $page->inc_counter(2);
-is( $page->counter, 7, '... increment by arg' );
+is( $page->counter, 7, 'increment by arg' );
 
 $page->dec_counter(5);
-is( $page->counter, 2, '... decrement by arg' );
+is( $page->counter, 2, 'decrement by arg' );
 
 # check the meta ..
 
@@ -63,7 +63,7 @@ my $counter = $page->meta->get_attribute('counter');
 does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
 
 is( $counter->type_constraint->name, 'Int',
-    '... got the expected type constraint' );
+    'got the expected type constraint' );
 
 is_deeply(
     $counter->handles,
@@ -73,6 +73,6 @@ is_deeply(
         reset_counter => 'reset',
         set_counter   => 'set'
     },
-    '... got the right handles methods'
+    'got the right handles methods'
 );
 

@@ -36,11 +36,11 @@ trait InorganicMolecule extends Molecule end
     with 'Molecule';
 }
 
-ok(Molecule::Organic->meta->excludes_role('Molecule::Inorganic'), '... Molecule::Organic exludes Molecule::Inorganic');
+ok(Molecule::Organic->meta->excludes_role('Molecule::Inorganic'), 'Molecule::Organic exludes Molecule::Inorganic');
 is_deeply(
    [ Molecule::Organic->meta->get_excluded_roles_list() ],
    [ 'Molecule::Inorganic' ],
-   '... Molecule::Organic exludes Molecule::Inorganic');
+   'Molecule::Organic exludes Molecule::Inorganic');
 
 =pod
 
@@ -55,7 +55,7 @@ the roles into the same class
 
     ::lives_ok {
         with 'Molecule::Organic';
-    } '... adding the role (w/ excluded roles) okay';
+    } 'adding the role (w/ excluded roles) okay';
 
     package My::Test2;
     use Moose;
@@ -63,32 +63,32 @@ the roles into the same class
     ::throws_ok {
         with 'Molecule::Organic', 'Molecule::Inorganic';
     } qr/Conflict detected: Role Molecule::Organic excludes role 'Molecule::Inorganic'/,
-    '... adding the role w/ excluded role conflict dies okay';
+    'adding the role w/ excluded role conflict dies okay';
 
     package My::Test3;
     use Moose;
 
     ::lives_ok {
         with 'Molecule::Organic';
-    } '... adding the role (w/ excluded roles) okay';
+    } 'adding the role (w/ excluded roles) okay';
 
     ::throws_ok {
         with 'Molecule::Inorganic';
     } qr/Conflict detected: My::Test3 excludes role 'Molecule::Inorganic'/,
-    '... adding the role w/ excluded role conflict dies okay';
+    'adding the role w/ excluded role conflict dies okay';
 }
 
-ok(My::Test1->does('Molecule::Organic'), '... My::Test1 does Molecule::Organic');
-ok(My::Test1->does('Molecule'), '... My::Test1 does Molecule');
-ok(My::Test1->meta->excludes_role('Molecule::Inorganic'), '... My::Test1 excludes Molecule::Organic');
+ok(My::Test1->does('Molecule::Organic'), 'My::Test1 does Molecule::Organic');
+ok(My::Test1->does('Molecule'), 'My::Test1 does Molecule');
+ok(My::Test1->meta->excludes_role('Molecule::Inorganic'), 'My::Test1 excludes Molecule::Organic');
 
-ok(!My::Test2->does('Molecule::Organic'), '... ! My::Test2 does Molecule::Organic');
-ok(!My::Test2->does('Molecule::Inorganic'), '... ! My::Test2 does Molecule::Inorganic');
+ok(!My::Test2->does('Molecule::Organic'), '! My::Test2 does Molecule::Organic');
+ok(!My::Test2->does('Molecule::Inorganic'), '! My::Test2 does Molecule::Inorganic');
 
-ok(My::Test3->does('Molecule::Organic'), '... My::Test3 does Molecule::Organic');
-ok(My::Test3->does('Molecule'), '... My::Test1 does Molecule');
-ok(My::Test3->meta->excludes_role('Molecule::Inorganic'), '... My::Test3 excludes Molecule::Organic');
-ok(!My::Test3->does('Molecule::Inorganic'), '... ! My::Test3 does Molecule::Inorganic');
+ok(My::Test3->does('Molecule::Organic'), 'My::Test3 does Molecule::Organic');
+ok(My::Test3->does('Molecule'), 'My::Test1 does Molecule');
+ok(My::Test3->meta->excludes_role('Molecule::Inorganic'), 'My::Test3 excludes Molecule::Organic');
+ok(!My::Test3->does('Molecule::Inorganic'), '! My::Test3 does Molecule::Inorganic');
 
 =pod
 
@@ -111,13 +111,13 @@ the roles into the a superclass
     ::throws_ok {
         with 'Molecule::Inorganic';
     } qr/Conflict detected: My::Test4 excludes role \'Molecule::Inorganic\'/,
-    '... cannot add exculded role into class which extends Methane';
+    'cannot add exculded role into class which extends Methane';
 }
 
-ok(Methane->does('Molecule::Organic'), '... Methane does Molecule::Organic');
-ok(My::Test4->isa('Methane'), '... My::Test4 isa Methane');
-ok(My::Test4->does('Molecule::Organic'), '... My::Test4 does Molecule::Organic');
-ok(My::Test4->meta->does_role('Molecule::Organic'), '... My::Test4 meat does_role Molecule::Organic');
-ok(My::Test4->meta->excludes_role('Molecule::Inorganic'), '... My::Test4 meta excludes Molecule::Organic');
-ok(!My::Test4->does('Molecule::Inorganic'), '... My::Test4 does Molecule::Inorganic');
+ok(Methane->does('Molecule::Organic'), 'Methane does Molecule::Organic');
+ok(My::Test4->isa('Methane'), 'My::Test4 isa Methane');
+ok(My::Test4->does('Molecule::Organic'), 'My::Test4 does Molecule::Organic');
+ok(My::Test4->meta->does_role('Molecule::Organic'), 'My::Test4 meat does_role Molecule::Organic');
+ok(My::Test4->meta->excludes_role('Molecule::Inorganic'), 'My::Test4 meta excludes Molecule::Organic');
+ok(!My::Test4->does('Molecule::Inorganic'), 'My::Test4 does Molecule::Inorganic');
 

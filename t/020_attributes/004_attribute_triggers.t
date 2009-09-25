@@ -53,30 +53,30 @@ use Test::Exception;
 
     lives_ok {
         $foo->bar($bar);
-    } '... did not die setting bar';
+    } 'did not die setting bar';
 
-    is($foo->bar, $bar, '... set the value foo.bar correctly');
-    is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
+    is($foo->bar, $bar, 'set the value foo.bar correctly');
+    is($bar->foo, $foo, 'which in turn set the value bar.foo correctly');
 
-    ok(isweak($bar->{foo}), '... bar.foo is a weak reference');
+    ok(isweak($bar->{foo}), 'bar.foo is a weak reference');
 
     lives_ok {
         $foo->bar(undef);
-    } '... did not die un-setting bar';
+    } 'did not die un-setting bar';
 
-    is($foo->bar, undef, '... set the value foo.bar correctly');
-    is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
+    is($foo->bar, undef, 'set the value foo.bar correctly');
+    is($bar->foo, $foo, 'which in turn set the value bar.foo correctly');
 
     # test the writer
 
     lives_ok {
         $foo->set_baz($baz);
-    } '... did not die setting baz';
+    } 'did not die setting baz';
 
-    is($foo->get_baz, $baz, '... set the value foo.baz correctly');
-    is($baz->foo, $foo, '... which in turn set the value baz.foo correctly');
+    is($foo->get_baz, $baz, 'set the value foo.baz correctly');
+    is($baz->foo, $foo, 'which in turn set the value baz.foo correctly');
 
-    ok(isweak($baz->{foo}), '... baz.foo is a weak reference');
+    ok(isweak($baz->{foo}), 'baz.foo is a weak reference');
 }
 
 {
@@ -89,15 +89,15 @@ use Test::Exception;
     my $foo = Foo->new(bar => $bar, baz => $baz);
     isa_ok($foo, 'Foo');
 
-    is($foo->bar, $bar, '... set the value foo.bar correctly');
-    is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
+    is($foo->bar, $bar, 'set the value foo.bar correctly');
+    is($bar->foo, $foo, 'which in turn set the value bar.foo correctly');
 
-    ok(isweak($bar->{foo}), '... bar.foo is a weak reference');
+    ok(isweak($bar->{foo}), 'bar.foo is a weak reference');
 
-    is($foo->get_baz, $baz, '... set the value foo.baz correctly');
-    is($baz->foo, $foo, '... which in turn set the value baz.foo correctly');
+    is($foo->get_baz, $baz, 'set the value foo.baz correctly');
+    is($baz->foo, $foo, 'which in turn set the value baz.foo correctly');
 
-    ok(isweak($baz->{foo}), '... baz.foo is a weak reference');
+    ok(isweak($baz->{foo}), 'baz.foo is a weak reference');
 }
 
 # some errors
@@ -108,11 +108,11 @@ use Test::Exception;
 
     ::dies_ok {
         has('bling' => (is => 'rw', trigger => 'Fail'));
-    } '... a trigger must be a CODE ref';
+    } 'a trigger must be a CODE ref';
 
     ::dies_ok {
         has('bling' => (is => 'rw', trigger => []));
-    } '... a trigger must be a CODE ref';
+    } 'a trigger must be a CODE ref';
 }
 
 # Triggers do not fire on built values

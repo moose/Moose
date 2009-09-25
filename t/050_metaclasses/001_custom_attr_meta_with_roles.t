@@ -36,7 +36,7 @@ use Test::Exception;
 my $c = My::Class->new;
 isa_ok($c, 'My::Class');
 
-ok($c->meta->has_attribute('bling_bling'), '... got the attribute');
+ok($c->meta->has_attribute('bling_bling'), 'got the attribute');
 
 isa_ok($c->meta->get_attribute('bling_bling'), 'My::Custom::Meta::Attr');
 

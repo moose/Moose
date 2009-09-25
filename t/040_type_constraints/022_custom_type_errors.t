@@ -26,9 +26,9 @@ use Test::Exception;
 }
 
 lives_ok { my $goat = Animal->new( leg_count => 4 ) }
-'... no errors thrown, value is good';
+'no errors thrown, value is good';
 lives_ok { my $spider = Animal->new( leg_count => 8 ) }
-'... no errors thrown, value is good';
+'no errors thrown, value is good';
 
 throws_ok { my $fern = Animal->new( leg_count => 0 ) }
 qr/This number \(0\) is not less than ten!/,
@@ -40,7 +40,7 @@ qr/This number \(30\) is not less than ten!/,
 
 my $chimera;
 lives_ok { $chimera = Animal->new( leg_count => 4 ) }
-'... no errors thrown, value is good';
+'no errors thrown, value is good';
 
 throws_ok { $chimera->leg_count(0) }
 qr/This number \(0\) is not less than ten!/,
@@ -51,7 +51,7 @@ qr/This number \(16\) is not less than ten!/,
     'gave custom subtype error message on set to 16';
 
 my $gimp = eval { Animal->new() };
-is( $@, '', '... no errors thrown, value is good' );
+is( $@, '', 'no errors thrown, value is good' );
 
 throws_ok { $gimp->leg_count }
 qr/This number \(0\) is not less than ten!/,

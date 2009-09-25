@@ -24,13 +24,13 @@ use Test::Exception;
 
     my $foo_attr = Test::Attribute::Inline::Documentation->meta->get_attribute('foo');
 
-    ok($foo_attr->has_documentation, '... the foo has docs');
+    ok($foo_attr->has_documentation, 'the foo has docs');
     is($foo_attr->documentation,
             q{
                 The 'foo' attribute is my favorite
                 attribute in the whole wide world.
             },
-    '... got the foo docs');
+    'got the foo docs');
 }
 
 {
@@ -60,11 +60,11 @@ use Test::Exception;
 
     dies_ok {
         $test->bad_lazy_attr;
-    } '... this does not work';
+    } 'this does not work';
 
     lives_ok {
         $test->good_lazy_attr;
-    } '... this does not work';
+    } 'this does not work';
 }
 
 {
@@ -121,7 +121,7 @@ use Test::Exception;
 
     dies_ok {
         Test::UndefDefault::Attributes->new;
-    } '... default must return a value which passes the type constraint';
+    } 'default must return a value which passes the type constraint';
 
 }
 
@@ -142,7 +142,7 @@ use Test::Exception;
     throws_ok {
         $moose_obj->a_str( $moose_obj )
     } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' failed with value OverloadedStr=HASH\(0x.+?\)/,
-    '... dies without overloading the string';
+    'dies without overloading the string';
 
 }
 
@@ -157,11 +157,11 @@ use Test::Exception;
     throws_ok {
         OverloadBreaker->new;
     } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 7\.5/,
-    '... this doesnt trip overload to break anymore ';
+    'this doesnt trip overload to break anymore ';
 
     lives_ok {
         OverloadBreaker->new(a_num => 5);
-    } '... this works fine though';
+    } 'this works fine though';
 
 }
 
@@ -195,7 +195,7 @@ use Test::Exception;
 
     dies_ok {
         Test::Builder::Attribute::Broken->new;
-    } '... no builder, wtf';
+    } 'no builder, wtf';
 }
 
 

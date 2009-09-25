@@ -33,7 +33,7 @@ use Test::Exception;
 
         ::lives_ok {
             with "SubAA", "RootA";
-        } '... role was composed as expected';
+        } 'role was composed as expected';
     }
 
     ok( SubAB->does("SubAA"), "does SubAA");
@@ -48,7 +48,7 @@ use Test::Exception;
     my $foo_rv;
     lives_ok {
         $foo_rv = $i->foo;
-    } '... called foo successfully';
+    } 'called foo successfully';
     is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
 
@@ -97,7 +97,7 @@ use Test::Exception;
 
         ::lives_ok {
             with "SubBA";
-        } '... composed the role successfully';
+        } 'composed the role successfully';
     }
 
     ok( SubBB->does("SubBA"), "BB does SubBA" );
@@ -110,19 +110,19 @@ use Test::Exception;
     my $foo_rv;
     lives_ok {
         $foo_rv = $i->foo
-    } '... called foo successfully';
+    } 'called foo successfully';
     is( $foo_rv, "RootB::foo", "foo rv" );
     is( $i->counter, 1, "after hook called" );
 
-    lives_ok { $i->foo } '... called foo successfully (again)';
+    lives_ok { $i->foo } 'called foo successfully (again)';
     is( $i->counter, 2, "after hook called (again)" );
 
-    ok(SubBA->meta->has_method('foo'), '... this has the foo method');
+    ok(SubBA->meta->has_method('foo'), 'this has the foo method');
     #my $subba_foo_rv;
     #lives_ok {
     #    $subba_foo_rv = SubBA::foo();
-    #} '... called the sub as a function correctly';
-    #is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
+    #} 'called the sub as a function correctly';
+    #is($subba_foo_rv, 'RootB::foo', 'the SubBA->foo is still the RootB version');
 }
 
 {
@@ -146,7 +146,7 @@ use Test::Exception;
 
         ::dies_ok {
             override foo => sub { "overridden" };
-        } '... cannot compose an override over a local method';
+        } 'cannot compose an override over a local method';
     }
 }
 

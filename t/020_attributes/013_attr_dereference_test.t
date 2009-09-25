@@ -23,7 +23,7 @@ use Test::Exception;
                             (blessed($_) && $_->isa('Customer') || return) for @$_; 1 }),
             auto_deref => 1,
         );
-    } '... successfully created attr';
+    } 'successfully created attr';
 }
 
 {
@@ -38,7 +38,7 @@ use Test::Exception;
     is_deeply(
         [ $firm->customers ],
         [ $customer ],
-        '... got the right dereferenced value'
+        'got the right dereferenced value'
     );
 }
 
@@ -51,7 +51,7 @@ use Test::Exception;
     is_deeply(
         [ $firm->customers ],
         [],
-        '... got the right dereferenced value'
+        'got the right dereferenced value'
     );
 }
 
@@ -71,11 +71,11 @@ use Test::Exception;
 
     dies_ok {
         $autoderef->bar(1, 2, 3);
-    } '... its auto-de-ref-ing, not auto-en-ref-ing';
+    } 'its auto-de-ref-ing, not auto-en-ref-ing';
 
     lives_ok  {
         $autoderef->bar([ 1, 2, 3 ])
-    } '... set the results of bar correctly';
+    } 'set the results of bar correctly';
 
-    is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], '... auto-dereffed correctly';
+    is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], 'auto-dereffed correctly';
 }

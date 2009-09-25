@@ -37,16 +37,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_required_method_list ],
         [ 'bar', 'foo' ],
-        '... got the right list of required methods'
+        'got the right list of required methods'
     );
 }
 
@@ -60,16 +60,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::ProvidesFoo', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::ProvidesFoo', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_required_method_list ],
         [],
-        '... got the right list of required methods'
+        'got the right list of required methods'
     );
 }
 
@@ -84,16 +84,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::ProvidesFoo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::ProvidesFoo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_required_method_list ],
         [ 'bar' ],
-        '... got the right list of required methods'
+        'got the right list of required methods'
     );
 }
 
@@ -109,16 +109,16 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::ProvidesFoo|Role::ProvidesBar|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::ProvidesFoo|Role::ProvidesBar|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_required_method_list ],
         [ ],
-        '... got the right list of required methods'
+        'got the right list of required methods'
     );
 }
 

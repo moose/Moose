@@ -283,7 +283,7 @@ my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
 is(
     $app->dump, q{name: Google
 The site's URL: http://google.com
-}, '... got the expected dump value'
+}, 'got the expected dump value'
 );
 
 =end testing

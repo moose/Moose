@@ -23,5 +23,5 @@ use Test::Exception;
 
 lives_ok {
     My::Meta->meta()->make_immutable(debug => 0)
-} '... can make a meta class immutable';
+} 'can make a meta class immutable';
 

@@ -180,7 +180,7 @@ isa_ok( $p->child_d, "ChildD" );
 isa_ok( $p->child_e, "ChildE" );
 isa_ok( $p->child_f, "ChildF" );
 
-ok(!$p->can('child_g'), '... no child_g accessor defined');
+ok(!$p->can('child_g'), 'no child_g accessor defined');
 
 
 is( $p->parent_method, "p", "parent method" );

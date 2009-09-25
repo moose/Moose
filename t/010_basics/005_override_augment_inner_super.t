@@ -48,7 +48,7 @@ then calls Bar::foo. Confusing I know,.. but this is
 
 is($baz->foo,
   'Baz::foo -> Foo::foo(Bar::foo)',
-  '... got the right value from mixed augment/override foo');
+  'got the right value from mixed augment/override foo');
 
 =pod
 
@@ -67,4 +67,4 @@ Confusing I know, but it is correct :)
 
 is($baz->bar,
     'Bar::bar -> Foo::bar(Baz::bar)',
-    '... got the right value from mixed augment/override bar');
+    'got the right value from mixed augment/override bar');

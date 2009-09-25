@@ -31,7 +31,7 @@ can_ok('Foo', $_) for @moose_exports;
     die $@ if $@;
 }
 
-ok(!Foo->can($_), '... Foo can no longer do ' . $_) for @moose_exports;
+ok(!Foo->can($_), 'Foo can no longer do ' . $_) for @moose_exports;
 
 # and check the type constraints as well
 
@@ -58,7 +58,7 @@ can_ok('Bar', $_) for @moose_type_constraint_exports;
     die $@ if $@;
 }
 
-ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_exports;
+ok(!Bar->can($_), 'Bar can no longer do ' . $_) for @moose_type_constraint_exports;
 
 
 {

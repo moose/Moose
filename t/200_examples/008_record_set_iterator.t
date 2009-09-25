@@ -102,18 +102,18 @@ isa_ok($rs, 'RecordSet');
 my $rsi = RecordSetIterator->new(record_set => $rs);
 isa_ok($rsi, 'RecordSetIterator');
 
-is($rsi->first_name, 'Bill', '... got the right first name');
-is($rsi->last_name, 'Smith', '... got the right last name');
+is($rsi->first_name, 'Bill', 'got the right first name');
+is($rsi->last_name, 'Smith', 'got the right last name');
 
 $rsi->get_next_record;
 
-is($rsi->first_name, 'Bob', '... got the right first name');
-is($rsi->last_name, 'Jones', '... got the right last name');
+is($rsi->first_name, 'Bob', 'got the right first name');
+is($rsi->last_name, 'Jones', 'got the right last name');
 
 $rsi->get_next_record;
 
-is($rsi->first_name, 'Jim', '... got the right first name');
-is($rsi->last_name, 'Johnson', '... got the right last name');
+is($rsi->first_name, 'Jim', 'got the right first name');
+is($rsi->last_name, 'Johnson', 'got the right last name');
 
 
 

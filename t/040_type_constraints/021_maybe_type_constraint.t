@@ -20,10 +20,10 @@ ok( $type->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "__A
 ok( !$type->equals( Moose::Meta::TypeConstraint::Parameterized->new( name => "__ANON__", parent => find_type_constraint("Maybe"), type_parameter => find_type_constraint("Str") ) ), "not equal to clone with diff param" );
 ok( !$type->equals( Moose::Util::TypeConstraints::find_or_parse_type_constraint('Maybe[Str]') ), "not equal to declarative version of diff param" );
 
-ok($type->check(10), '... checked type correctly (pass)');
-ok($type->check(undef), '... checked type correctly (pass)');
-ok(!$type->check('Hello World'), '... checked type correctly (fail)');
-ok(!$type->check([]), '... checked type correctly (fail)');
+ok($type->check(10), 'checked type correctly (pass)');
+ok($type->check(undef), 'checked type correctly (pass)');
+ok(!$type->check('Hello World'), 'checked type correctly (fail)');
+ok(!$type->check([]), 'checked type correctly (fail)');
 
 {
     package Bar;
@@ -40,39 +40,39 @@ ok(!$type->check([]), '... checked type correctly (fail)');
 
 lives_ok {
     Foo->new(arr => [], bar => Bar->new);
-} '... Bar->new isa Bar';
+} 'Bar->new isa Bar';
 
 dies_ok {
     Foo->new(arr => [], bar => undef);
-} '... undef isnta Bar';
+} 'undef isnta Bar';
 
 lives_ok {
     Foo->new(arr => [], maybe_bar => Bar->new);
-} '... Bar->new isa maybe(Bar)';
+} 'Bar->new isa maybe(Bar)';
 
 lives_ok {
     Foo->new(arr => [], maybe_bar => undef);
-} '... undef isa maybe(Bar)';
+} 'undef isa maybe(Bar)';
 
 dies_ok {
     Foo->new(arr => [], maybe_bar => 1);
-} '... 1 isnta maybe(Bar)';
+} '1 isnta maybe(Bar)';
 
 lives_ok {
     Foo->new(arr => []);
-} '... it worked!';
+} 'it worked!';
 
 lives_ok {
     Foo->new(arr => undef);
-} '... it worked!';
+} 'it worked!';
 
 dies_ok {
     Foo->new(arr => 100);
-} '... failed the type check';
+} 'failed the type check';
 
 dies_ok {
     Foo->new(arr => 'hello world');
-} '... failed the type check';
+} 'failed the type check';
 
 
 {

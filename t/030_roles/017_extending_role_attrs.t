@@ -32,13 +32,13 @@ on role attributes works right.
 
     ::lives_ok {
         has '+bar' => (default => sub { 100 });
-    } '... extended the attribute successfully';
+    } 'extended the attribute successfully';
 }
 
 my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
-is($foo->bar, 100, '... got the extended attribute');
+is($foo->bar, 100, 'got the extended attribute');
 
 
 {
@@ -64,7 +64,7 @@ is($foo->bar, 100, '... got the extended attribute');
 
 my $bar = Bar->new(foo => 42);
 isa_ok($bar, 'Bar');
-is($bar->foo, 42, '... got the extended attribute');
+is($bar->foo, 42, 'got the extended attribute');
 $bar->foo(100);
 is($bar->foo, 100, "... can change the attribute's value to an Int");
 
@@ -95,7 +95,7 @@ is($bar->foo, 100, "... still has the old Int value");
 
 my $baz = Baz->new(baz => 99);
 isa_ok($baz, 'Baz');
-is($baz->baz, 99, '... got the extended attribute');
+is($baz->baz, 99, 'got the extended attribute');
 $baz->baz('Foo');
 is($baz->baz, 'Foo', "... can change the attribute's value to a ClassName");
 
@@ -131,7 +131,7 @@ is_deeply($baz->baz, 'Foo', "... still has the old ClassName value");
 
 my $quux = Quux->new(quux => 99);
 isa_ok($quux, 'Quux');
-is($quux->quux, 99, '... got the extended attribute');
+is($quux->quux, 99, 'got the extended attribute');
 $quux->quux(100);
 is($quux->quux, 100, "... can change the attribute's value to an Int");
 $quux->quux(["hi"]);

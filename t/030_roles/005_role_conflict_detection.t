@@ -34,47 +34,47 @@ Mutually recursive roles.
 
     ::lives_ok {
         with 'Role::Foo', 'Role::Bar';
-    } '... our mutually recursive roles combine okay';
+    } 'our mutually recursive roles combine okay';
 
     package My::Test2;
     use Moose;
 
     ::lives_ok {
         with 'Role::Bar', 'Role::Foo';
-    } '... our mutually recursive roles combine okay (no matter what order)';
+    } 'our mutually recursive roles combine okay (no matter what order)';
 }
 
 my $test1 = My::Test1->new;
 isa_ok($test1, 'My::Test1');
 
-ok($test1->does('Role::Foo'), '... $test1 does Role::Foo');
-ok($test1->does('Role::Bar'), '... $test1 does Role::Bar');
+ok($test1->does('Role::Foo'), '$test1 does Role::Foo');
+ok($test1->does('Role::Bar'), '$test1 does Role::Bar');
 
 can_ok($test1, 'foo');
 can_ok($test1, 'bar');
 
-is($test1->foo, 'Role::Bar::foo', '... $test1->foo worked');
-is($test1->bar, 'Role::Foo::bar', '... $test1->bar worked');
+is($test1->foo, 'Role::Bar::foo', '$test1->foo worked');
+is($test1->bar, 'Role::Foo::bar', '$test1->bar worked');
 
 my $test2 = My::Test2->new;
 isa_ok($test2, 'My::Test2');
 
-ok($test2->does('Role::Foo'), '... $test2 does Role::Foo');
-ok($test2->does('Role::Bar'), '... $test2 does Role::Bar');
+ok($test2->does('Role::Foo'), '$test2 does Role::Foo');
+ok($test2->does('Role::Bar'), '$test2 does Role::Bar');
 
 can_ok($test2, 'foo');
 can_ok($test2, 'bar');
 
-is($test2->foo, 'Role::Bar::foo', '... $test2->foo worked');
-is($test2->bar, 'Role::Foo::bar', '... $test2->bar worked');
+is($test2->foo, 'Role::Bar::foo', '$test2->foo worked');
+is($test2->bar, 'Role::Foo::bar', '$test2->bar worked');
 
 # check some meta-stuff
 
-ok(Role::Foo->meta->has_method('bar'), '... it still has the bar method');
-ok(Role::Foo->meta->requires_method('foo'), '... it still has the required foo method');
+ok(Role::Foo->meta->has_method('bar'), 'it still has the bar method');
+ok(Role::Foo->meta->requires_method('foo'), 'it still has the required foo method');
 
-ok(Role::Bar->meta->has_method('foo'), '... it still has the foo method');
-ok(Role::Bar->meta->requires_method('bar'), '... it still has the required bar method');
+ok(Role::Bar->meta->has_method('foo'), 'it still has the foo method');
+ok(Role::Bar->meta->requires_method('bar'), 'it still has the required bar method');
 
 =pod
 
@@ -100,7 +100,7 @@ Role method conflicts
 
     ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, 'role methods conflict and method was required';
 
     package My::Test4;
     use Moose;
@@ -108,7 +108,7 @@ Role method conflicts
     ::lives_ok {
         with 'Role::Bling';
         with 'Role::Bling::Bling';
-    } '... role methods didnt conflict when manually combined';
+    } 'role methods didnt conflict when manually combined';
 
     package My::Test5;
     use Moose;
@@ -116,35 +116,35 @@ Role method conflicts
     ::lives_ok {
         with 'Role::Bling::Bling';
         with 'Role::Bling';
-    } '... role methods didnt conflict when manually combined (in opposite order)';
+    } 'role methods didnt conflict when manually combined (in opposite order)';
 
     package My::Test6;
     use Moose;
 
     ::lives_ok {
         with 'Role::Bling::Bling', 'Role::Bling';
-    } '... role methods didnt conflict when manually resolved';
+    } 'role methods didnt conflict when manually resolved';
 
     sub bling { 'My::Test6::bling' }
 }
 
-ok(!My::Test3->meta->has_method('bling'), '... we didnt get any methods in the conflict');
-ok(My::Test4->meta->has_method('bling'), '... we did get the method when manually dealt with');
-ok(My::Test5->meta->has_method('bling'), '... we did get the method when manually dealt with');
-ok(My::Test6->meta->has_method('bling'), '... we did get the method when manually dealt with');
+ok(!My::Test3->meta->has_method('bling'), 'we didnt get any methods in the conflict');
+ok(My::Test4->meta->has_method('bling'), 'we did get the method when manually dealt with');
+ok(My::Test5->meta->has_method('bling'), 'we did get the method when manually dealt with');
+ok(My::Test6->meta->has_method('bling'), 'we did get the method when manually dealt with');
 
-ok(!My::Test3->does('Role::Bling'), '... our class does() the correct roles');
-ok(!My::Test3->does('Role::Bling::Bling'), '... our class does() the correct roles');
-ok(My::Test4->does('Role::Bling'), '... our class does() the correct roles');
-ok(My::Test4->does('Role::Bling::Bling'), '... our class does() the correct roles');
-ok(My::Test5->does('Role::Bling'), '... our class does() the correct roles');
-ok(My::Test5->does('Role::Bling::Bling'), '... our class does() the correct roles');
-ok(My::Test6->does('Role::Bling'), '... our class does() the correct roles');
-ok(My::Test6->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(!My::Test3->does('Role::Bling'), 'our class does() the correct roles');
+ok(!My::Test3->does('Role::Bling::Bling'), 'our class does() the correct roles');
+ok(My::Test4->does('Role::Bling'), 'our class does() the correct roles');
+ok(My::Test4->does('Role::Bling::Bling'), 'our class does() the correct roles');
+ok(My::Test5->does('Role::Bling'), 'our class does() the correct roles');
+ok(My::Test5->does('Role::Bling::Bling'), 'our class does() the correct roles');
+ok(My::Test6->does('Role::Bling'), 'our class does() the correct roles');
+ok(My::Test6->does('Role::Bling::Bling'), 'our class does() the correct roles');
 
-is(My::Test4->bling, 'Role::Bling::bling', '... and we got the first method that was added');
-is(My::Test5->bling, 'Role::Bling::Bling::bling', '... and we got the first method that was added');
-is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
+is(My::Test4->bling, 'Role::Bling::bling', 'and we got the first method that was added');
+is(My::Test5->bling, 'Role::Bling::Bling::bling', 'and we got the first method that was added');
+is(My::Test6->bling, 'My::Test6::bling', 'and we got the local method');
 
 # check how this affects role compostion
 
@@ -157,12 +157,12 @@ is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
     sub bling { 'Role::Bling::Bling::Bling::bling' }
 }
 
-ok(Role::Bling::Bling->meta->has_method('bling'), '... still got the bling method in Role::Bling::Bling');
-ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), '... our role correctly does() the other role');
-ok(Role::Bling::Bling::Bling->meta->has_method('bling'), '... dont have the bling method in Role::Bling::Bling::Bling');
+ok(Role::Bling::Bling->meta->has_method('bling'), 'still got the bling method in Role::Bling::Bling');
+ok(Role::Bling::Bling->meta->does_role('Role::Bling::Bling'), 'our role correctly does() the other role');
+ok(Role::Bling::Bling::Bling->meta->has_method('bling'), 'dont have the bling method in Role::Bling::Bling::Bling');
 is(Role::Bling::Bling::Bling->meta->get_method('bling')->(),
     'Role::Bling::Bling::Bling::bling',
-    '... still got the bling method in Role::Bling::Bling::Bling');
+    'still got the bling method in Role::Bling::Bling::Bling');
 
 
 =pod
@@ -190,7 +190,7 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflict and method was required';
+      'role attrs conflict and method was required';
 
     package My::Test8;
     use Moose;
@@ -198,7 +198,7 @@ Role attribute conflicts
     ::lives_ok {
         with 'Role::Boo';
         with 'Role::Boo::Hoo';
-    } '... role attrs didnt conflict when manually combined';
+    } 'role attrs didnt conflict when manually combined';
 
     package My::Test9;
     use Moose;
@@ -206,7 +206,7 @@ Role attribute conflicts
     ::lives_ok {
         with 'Role::Boo::Hoo';
         with 'Role::Boo';
-    } '... role attrs didnt conflict when manually combined';
+    } 'role attrs didnt conflict when manually combined';
 
     package My::Test10;
     use Moose;
@@ -216,31 +216,31 @@ Role attribute conflicts
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     } qr/We have encountered an attribute conflict/,
-      '... role attrs conflict and cannot be manually disambiguted';
+      'role attrs conflict and cannot be manually disambiguted';
 
 }
 
-ok(!My::Test7->meta->has_attribute('ghost'), '... we didnt get any attributes in the conflict');
-ok(My::Test8->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
-ok(My::Test9->meta->has_attribute('ghost'), '... we did get an attributes when manually composed');
-ok(My::Test10->meta->has_attribute('ghost'), '... we did still have an attribute ghost (conflict does not mess with class)');
+ok(!My::Test7->meta->has_attribute('ghost'), 'we didnt get any attributes in the conflict');
+ok(My::Test8->meta->has_attribute('ghost'), 'we did get an attributes when manually composed');
+ok(My::Test9->meta->has_attribute('ghost'), 'we did get an attributes when manually composed');
+ok(My::Test10->meta->has_attribute('ghost'), 'we did still have an attribute ghost (conflict does not mess with class)');
 
-ok(!My::Test7->does('Role::Boo'), '... our class does() the correct roles');
-ok(!My::Test7->does('Role::Boo::Hoo'), '... our class does() the correct roles');
-ok(My::Test8->does('Role::Boo'), '... our class does() the correct roles');
-ok(My::Test8->does('Role::Boo::Hoo'), '... our class does() the correct roles');
-ok(My::Test9->does('Role::Boo'), '... our class does() the correct roles');
-ok(My::Test9->does('Role::Boo::Hoo'), '... our class does() the correct roles');
-ok(!My::Test10->does('Role::Boo'), '... our class does() the correct roles');
-ok(!My::Test10->does('Role::Boo::Hoo'), '... our class does() the correct roles');
+ok(!My::Test7->does('Role::Boo'), 'our class does() the correct roles');
+ok(!My::Test7->does('Role::Boo::Hoo'), 'our class does() the correct roles');
+ok(My::Test8->does('Role::Boo'), 'our class does() the correct roles');
+ok(My::Test8->does('Role::Boo::Hoo'), 'our class does() the correct roles');
+ok(My::Test9->does('Role::Boo'), 'our class does() the correct roles');
+ok(My::Test9->does('Role::Boo::Hoo'), 'our class does() the correct roles');
+ok(!My::Test10->does('Role::Boo'), 'our class does() the correct roles');
+ok(!My::Test10->does('Role::Boo::Hoo'), 'our class does() the correct roles');
 
 can_ok('My::Test8', 'ghost');
 can_ok('My::Test9', 'ghost');
 can_ok('My::Test10', 'ghost');
 
-is(My::Test8->new->ghost, 'Role::Boo::ghost', '... got the expected default attr value');
-is(My::Test9->new->ghost, 'Role::Boo::Hoo::ghost', '... got the expected default attr value');
-is(My::Test10->new->ghost, 'My::Test10::ghost', '... got the expected default attr value');
+is(My::Test8->new->ghost, 'Role::Boo::ghost', 'got the expected default attr value');
+is(My::Test9->new->ghost, 'Role::Boo::Hoo::ghost', 'got the expected default attr value');
+is(My::Test10->new->ghost, 'My::Test10::ghost', 'got the expected default attr value');
 
 =pod
 
@@ -277,7 +277,7 @@ Role override method conflicts
 
     ::lives_ok {
         with 'Role::Truth';
-    } '... composed the role with override okay';
+    } 'composed the role with override okay';
 
     package My::Test12;
     use Moose;
@@ -286,14 +286,14 @@ Role override method conflicts
 
     ::lives_ok {
        with 'Role::Plot';
-    } '... composed the role with override okay';
+    } 'composed the role with override okay';
 
     package My::Test13;
     use Moose;
 
     ::dies_ok {
         with 'Role::Plot';
-    } '... cannot compose it because we have no superclass';
+    } 'cannot compose it because we have no superclass';
 
     package My::Test14;
     use Moose;
@@ -303,26 +303,26 @@ Role override method conflicts
     ::throws_ok {
         with 'Role::Plot', 'Role::Truth';
     } qr/Two \'override\' methods of the same name encountered/,
-      '... cannot compose it because we have no superclass';
+      'cannot compose it because we have no superclass';
 }
 
-ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
-ok(My::Test12->meta->has_method('twist'), '... the twist method has been added');
-ok(!My::Test13->meta->has_method('twist'), '... the twist method has not been added');
-ok(!My::Test14->meta->has_method('twist'), '... the twist method has not been added');
+ok(My::Test11->meta->has_method('twist'), 'the twist method has been added');
+ok(My::Test12->meta->has_method('twist'), 'the twist method has been added');
+ok(!My::Test13->meta->has_method('twist'), 'the twist method has not been added');
+ok(!My::Test14->meta->has_method('twist'), 'the twist method has not been added');
 
-ok(!My::Test11->does('Role::Plot'), '... our class does() the correct roles');
-ok(My::Test11->does('Role::Truth'), '... our class does() the correct roles');
-ok(!My::Test12->does('Role::Truth'), '... our class does() the correct roles');
-ok(My::Test12->does('Role::Plot'), '... our class does() the correct roles');
-ok(!My::Test13->does('Role::Plot'), '... our class does() the correct roles');
-ok(!My::Test14->does('Role::Truth'), '... our class does() the correct roles');
-ok(!My::Test14->does('Role::Plot'), '... our class does() the correct roles');
+ok(!My::Test11->does('Role::Plot'), 'our class does() the correct roles');
+ok(My::Test11->does('Role::Truth'), 'our class does() the correct roles');
+ok(!My::Test12->does('Role::Truth'), 'our class does() the correct roles');
+ok(My::Test12->does('Role::Plot'), 'our class does() the correct roles');
+ok(!My::Test13->does('Role::Plot'), 'our class does() the correct roles');
+ok(!My::Test14->does('Role::Truth'), 'our class does() the correct roles');
+ok(!My::Test14->does('Role::Plot'), 'our class does() the correct roles');
 
-is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Truth::twist', '... got the right method return');
-is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Plot::twist', '... got the right method return');
-ok(!My::Test13->can('twist'), '... no twist method here at all');
-is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method return (from superclass)');
+is(My::Test11->twist(), 'My::Test::Base::twist -> Role::Truth::twist', 'got the right method return');
+is(My::Test12->twist(), 'My::Test::Base::twist -> Role::Plot::twist', 'got the right method return');
+ok(!My::Test13->can('twist'), 'no twist method here at all');
+is(My::Test14->twist(), 'My::Test::Base::twist', 'got the right method return (from superclass)');
 
 {
     package Role::Reality;
@@ -331,18 +331,18 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
     ::throws_ok {
         with 'Role::Plot';
     } qr/A local method of the same name as been found/,
-    '... could not compose roles here, it dies';
+    'could not compose roles here, it dies';
 
     sub twist {
         'Role::Reality::twist';
     }
 }
 
-ok(Role::Reality->meta->has_method('twist'), '... the twist method has not been added');
-#ok(!Role::Reality->meta->does_role('Role::Plot'), '... our role does() the correct roles');
+ok(Role::Reality->meta->has_method('twist'), 'the twist method has not been added');
+#ok(!Role::Reality->meta->does_role('Role::Plot'), 'our role does() the correct roles');
 is(Role::Reality->meta->get_method('twist')->(),
     'Role::Reality::twist',
-    '... the twist method returns the right value');
+    'the twist method returns the right value');
 
 # Ovid's test case from rt.cpan.org #44
 {
@@ -420,7 +420,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Method';
-    } '... composed the method role into the method class';
+    } 'composed the method role into the method class';
 
     sub ghost { 'My::Test15::ghost' }
 
@@ -429,7 +429,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Method';
-    } '... composed the method role into the attribute class';
+    } 'composed the method role into the attribute class';
 
     has 'ghost' => (is => 'ro', default => 'My::Test16::ghost');
 
@@ -438,7 +438,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Attribute';
-    } '... composed the attribute role into the method class';
+    } 'composed the attribute role into the method class';
 
     sub ghost { 'My::Test17::ghost' }
 
@@ -447,7 +447,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Attribute';
-    } '... composed the attribute role into the attribute class';
+    } 'composed the attribute role into the attribute class';
 
     has 'ghost' => (is => 'ro', default => 'My::Test18::ghost');
 
@@ -456,7 +456,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Method', 'Role::Method2';
-    } '... composed method roles into class with method tiebreaker';
+    } 'composed method roles into class with method tiebreaker';
 
     sub ghost { 'My::Test19::ghost' }
 
@@ -465,7 +465,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Method', 'Role::Method2';
-    } '... composed method roles into class with attribute tiebreaker';
+    } 'composed method roles into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test20::ghost');
 
@@ -474,7 +474,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Attribute', 'Role::Attribute2';
-    } '... composed attribute roles into class with method tiebreaker';
+    } 'composed attribute roles into class with method tiebreaker';
 
     sub ghost { 'My::Test21::ghost' }
 
@@ -483,7 +483,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
        with 'Role::Attribute', 'Role::Attribute2';
-    } '... composed attribute roles into class with attribute tiebreaker';
+    } 'composed attribute roles into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test22::ghost');
 
@@ -492,7 +492,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
         with 'Role::Method', 'Role::Attribute';
-    } '... composed method and attribute role into class with method tiebreaker';
+    } 'composed method and attribute role into class with method tiebreaker';
 
     sub ghost { 'My::Test23::ghost' }
 
@@ -501,7 +501,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
         with 'Role::Method', 'Role::Attribute';
-    } '... composed method and attribute role into class with attribute tiebreaker';
+    } 'composed method and attribute role into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test24::ghost');
 
@@ -510,7 +510,7 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
         with 'Role::Attribute', 'Role::Method';
-    } '... composed attribute and method role into class with method tiebreaker';
+    } 'composed attribute and method role into class with method tiebreaker';
 
     sub ghost { 'My::Test25::ghost' }
 
@@ -519,57 +519,57 @@ Now I have to decide actually what happens, and how to fix it.
 
     ::lives_ok {
         with 'Role::Attribute', 'Role::Method';
-    } '... composed attribute and method role into class with attribute tiebreaker';
+    } 'composed attribute and method role into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test26::ghost');
 }
 
 my $test15 = My::Test15->new;
 isa_ok($test15, 'My::Test15');
-is($test15->ghost, 'My::Test15::ghost', '... we access the method from the class and ignore the role method');
+is($test15->ghost, 'My::Test15::ghost', 'we access the method from the class and ignore the role method');
 
 my $test16 = My::Test16->new;
 isa_ok($test16, 'My::Test16');
-is($test16->ghost, 'My::Test16::ghost', '... we access the attribute from the class and ignore the role method');
+is($test16->ghost, 'My::Test16::ghost', 'we access the attribute from the class and ignore the role method');
 
 my $test17 = My::Test17->new;
 isa_ok($test17, 'My::Test17');
-is($test17->ghost, 'My::Test17::ghost', '... we access the method from the class and ignore the role attribute');
+is($test17->ghost, 'My::Test17::ghost', 'we access the method from the class and ignore the role attribute');
 
 my $test18 = My::Test18->new;
 isa_ok($test18, 'My::Test18');
-is($test18->ghost, 'My::Test18::ghost', '... we access the attribute from the class and ignore the role attribute');
+is($test18->ghost, 'My::Test18::ghost', 'we access the attribute from the class and ignore the role attribute');
 
 my $test19 = My::Test19->new;
 isa_ok($test19, 'My::Test19');
-is($test19->ghost, 'My::Test19::ghost', '... we access the method from the class and ignore the role methods');
+is($test19->ghost, 'My::Test19::ghost', 'we access the method from the class and ignore the role methods');
 
 my $test20 = My::Test20->new;
 isa_ok($test20, 'My::Test20');
-is($test20->ghost, 'My::Test20::ghost', '... we access the attribute from the class and ignore the role methods');
+is($test20->ghost, 'My::Test20::ghost', 'we access the attribute from the class and ignore the role methods');
 
 my $test21 = My::Test21->new;
 isa_ok($test21, 'My::Test21');
-is($test21->ghost, 'My::Test21::ghost', '... we access the method from the class and ignore the role attributes');
+is($test21->ghost, 'My::Test21::ghost', 'we access the method from the class and ignore the role attributes');
 
 my $test22 = My::Test22->new;
 isa_ok($test22, 'My::Test22');
-is($test22->ghost, 'My::Test22::ghost', '... we access the attribute from the class and ignore the role attributes');
+is($test22->ghost, 'My::Test22::ghost', 'we access the attribute from the class and ignore the role attributes');
 
 my $test23 = My::Test23->new;
 isa_ok($test23, 'My::Test23');
-is($test23->ghost, 'My::Test23::ghost', '... we access the method from the class and ignore the role method and attribute');
+is($test23->ghost, 'My::Test23::ghost', 'we access the method from the class and ignore the role method and attribute');
 
 my $test24 = My::Test24->new;
 isa_ok($test24, 'My::Test24');
-is($test24->ghost, 'My::Test24::ghost', '... we access the attribute from the class and ignore the role method and attribute');
+is($test24->ghost, 'My::Test24::ghost', 'we access the attribute from the class and ignore the role method and attribute');
 
 my $test25 = My::Test25->new;
 isa_ok($test25, 'My::Test25');
-is($test25->ghost, 'My::Test25::ghost', '... we access the method from the class and ignore the role attribute and method');
+is($test25->ghost, 'My::Test25::ghost', 'we access the method from the class and ignore the role attribute and method');
 
 my $test26 = My::Test26->new;
 isa_ok($test26, 'My::Test26');
-is($test26->ghost, 'My::Test26::ghost', '... we access the attribute from the class and ignore the role attribute and method');
+is($test26->ghost, 'My::Test26::ghost', 'we access the attribute from the class and ignore the role attribute and method');
 
 =cut

@@ -84,15 +84,15 @@ BEGIN
     ok( My::Class2->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s attribute metaclass} );
     has_superclass( My::Class2->meta()->attribute_metaclass(), 'My::Meta::Attribute',
-                    '... and this does not interfere with attribute metaclass set via metaclass.pm' );
+                    'and this does not interfere with attribute metaclass set via metaclass.pm' );
     ok( My::Class2->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s method metaclass} );
     has_superclass( My::Class2->meta()->method_metaclass(), 'My::Meta::Method',
-                    '... and this does not interfere with method metaclass set via metaclass.pm' );
+                    'and this does not interfere with method metaclass set via metaclass.pm' );
     ok( My::Class2->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s instance metaclass} );
     has_superclass( My::Class2->meta()->instance_metaclass(), 'My::Meta::Instance',
-                    '... and this does not interfere with instance metaclass set via metaclass.pm' );
+                    'and this does not interfere with instance metaclass set via metaclass.pm' );
 }
 
 # like isa_ok but works with a class name, not just refs

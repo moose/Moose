@@ -170,7 +170,7 @@ is( Role::Foo->meta()->simple(), 5,
     dies_ok( sub { Moose::Util::TypeConstraints->import( -traits => 'My::SimpleTrait' ) },
              'cannot provide -traits to an exporting module that does not init_meta' );
     like( $@, qr/does not have an init_meta/,
-          '... and error provides a useful explanation' );
+          'and error provides a useful explanation' );
 }
 
 {

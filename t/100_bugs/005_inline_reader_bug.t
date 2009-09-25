@@ -26,6 +26,6 @@ test makes sure it does not creep back in.
             lazy    => 1,
             default => 10,
         );
-    } '... this didnt die';
+    } 'this didnt die';
 }
 

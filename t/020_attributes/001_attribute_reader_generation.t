@@ -17,7 +17,7 @@ use Test::Exception;
             reader => 'get_foo'
         );
     };
-    ::ok(!$@, '... created the reader method okay');
+    ::ok(!$@, 'created the reader method okay');
 
     eval {
         has 'lazy_foo' => (
@@ -26,7 +26,7 @@ use Test::Exception;
             default => sub { 10 }
         );
     };
-    ::ok(!$@, '... created the lazy reader method okay') or warn $@;
+    ::ok(!$@, 'created the lazy reader method okay') or warn $@;
 
     my $warn;
 
@@ -36,7 +36,7 @@ use Test::Exception;
             reder => 'get_mftnpy'
         );
     };
-    ::ok($warn, '... got a warning for mispelled attribute argument');
+    ::ok($warn, 'got a warning for mispelled attribute argument');
 }
 
 {
@@ -44,18 +44,18 @@ use Test::Exception;
     isa_ok($foo, 'Foo');
 
     can_ok($foo, 'get_foo');
-    is($foo->get_foo(), undef, '... got an undefined value');
+    is($foo->get_foo(), undef, 'got an undefined value');
     dies_ok {
         $foo->get_foo(100);
-    } '... get_foo is a read-only';
+    } 'get_foo is a read-only';
 
-    ok(!exists($foo->{lazy_foo}), '... no value in get_lazy_foo slot');
+    ok(!exists($foo->{lazy_foo}), 'no value in get_lazy_foo slot');
 
     can_ok($foo, 'get_lazy_foo');
-    is($foo->get_lazy_foo(), 10, '... got an deferred value');
+    is($foo->get_lazy_foo(), 10, 'got an deferred value');
     dies_ok {
         $foo->get_lazy_foo(100);
-    } '... get_lazy_foo is a read-only';
+    } 'get_lazy_foo is a read-only';
 }
 
 {
@@ -79,8 +79,8 @@ use Test::Exception;
     my $foo = Foo->new(foo => 10, lazy_foo => 100);
     isa_ok($foo, 'Foo');
 
-    is($foo->get_foo(), 10, '... got the correct value');
-    is($foo->get_lazy_foo(), 100, '... got the correct value');
+    is($foo->get_foo(), 10, 'got the correct value');
+    is($foo->get_lazy_foo(), 100, 'got the correct value');
 }
 
 

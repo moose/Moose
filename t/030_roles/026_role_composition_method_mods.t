@@ -60,27 +60,27 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    } 'this succeeds as expected';
 
     is_deeply(
         [ sort $c->get_method_modifier_list('before') ],
         [ 'bar', 'foo' ],
-        '... got the right list of methods'
+        'got the right list of methods'
     );
 
     is_deeply(
         [ sort $c->get_method_modifier_list('after') ],
         [ 'bar', 'foo' ],
-        '... got the right list of methods'
+        'got the right list of methods'
     );
 
     is_deeply(
         [ sort $c->get_method_modifier_list('around') ],
         [ 'bar', 'baz', 'foo' ],
-        '... got the right list of methods'
+        'got the right list of methods'
     );
 }

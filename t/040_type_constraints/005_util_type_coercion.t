@@ -34,9 +34,9 @@ Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 my $header = HTTPHeader->new();
 isa_ok($header, 'HTTPHeader');
 
-ok(Header($header), '... this passed the type test');
-ok(!Header([]), '... this did not pass the type test');
-ok(!Header({}), '... this did not pass the type test');
+ok(Header($header), 'this passed the type test');
+ok(!Header([]), 'this did not pass the type test');
+ok(!Header({}), 'this did not pass the type test');
 
 my $anon_type = subtype Object => where { $_->isa('HTTPHeader') };
 
@@ -62,8 +62,8 @@ foreach my $coercion (
         is_deeply(
             $coerced->array(),
             [ 1, 2, 3 ],
-            '... got the right array');
-        is($coerced->hash(), undef, '... nothing assigned to the hash');
+            'got the right array');
+        is($coerced->hash(), undef, 'nothing assigned to the hash');
     }
 
     {
@@ -73,19 +73,19 @@ foreach my $coercion (
         is_deeply(
             $coerced->hash(),
             { one => 1, two => 2, three => 3 },
-            '... got the right hash');
-        is($coerced->array(), undef, '... nothing assigned to the array');
+            'got the right hash');
+        is($coerced->array(), undef, 'nothing assigned to the array');
     }
 
     {
         my $scalar_ref = \(my $var);
         my $coerced = $coercion->coerce($scalar_ref);
-        is($coerced, $scalar_ref, '... got back what we put in');
+        is($coerced, $scalar_ref, 'got back what we put in');
     }
 
     {
         my $coerced = $coercion->coerce("Foo");
-        is($coerced, "Foo", '... got back what we put in');
+        is($coerced, "Foo", 'got back what we put in');
     }
 }
 

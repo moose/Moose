@@ -30,13 +30,13 @@ foreach my $class qw(Foo Bar) {
     is( $class->new( 37 )->bar, 37, "single arg" );
     {
         my $o = $class->new(bar => 42, baz => 47);
-        is($o->bar, 42, '... got the right bar');
-        is($o->baz, 47, '... got the right bar');
+        is($o->bar, 42, 'got the right bar');
+        is($o->baz, 47, 'got the right bar');
     }
     {
         my $o = $class->new(42, baz => 47);
-        is($o->bar, 42, '... got the right bar');
-        is($o->baz, 47, '... got the right bar');
+        is($o->bar, 42, 'got the right bar');
+        is($o->baz, 47, 'got the right bar');
     }
 }
 

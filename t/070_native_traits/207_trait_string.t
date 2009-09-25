@@ -36,17 +36,17 @@ my $uc;
 my $page = MyHomePage->new();
 isa_ok( $page, 'MyHomePage' );
 
-is( $page->string, '', '... got the default value' );
-is( $page->length_string, 0,'... length is zero' );
+is( $page->string, '', 'got the default value' );
+is( $page->length_string, 0,'length is zero' );
 
 $page->string('a');
-is( $page->length_string, 1,'... new string has length of one' );
+is( $page->length_string, 1,'new string has length of one' );
 
 $page->inc_string;
-is( $page->string, 'b', '... got the incremented value' );
+is( $page->string, 'b', 'got the incremented value' );
 
 $page->inc_string;
-is( $page->string, 'c', '... got the incremented value (again)' );
+is( $page->string, 'c', 'got the incremented value (again)' );
 
 $page->append_string("foo$/");
 is( $page->string, "cfoo$/", 'appended to string' );
@@ -92,7 +92,7 @@ does_ok( $string, 'Moose::Meta::Attribute::Native::Trait::String' );
 
 is(
     $string->type_constraint->name, 'Str',
-    '... got the expected type constraint'
+    'got the expected type constraint'
 );
 
 is_deeply(
@@ -111,6 +111,6 @@ is_deeply(
         capitalize_last => [ replace => qr/(.)$/, $uc ],
         invalid_number => [ match => qr/\D/ ],
     },
-    '... got the right handles methods'
+    'got the right handles methods'
 );
 

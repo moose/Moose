@@ -29,8 +29,8 @@ use Moose::Meta::Role::Composite;
     with 'Role::Foo';
 }
 
-ok(Role::ExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
-ok(Role::DoesExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
+ok(Role::ExcludesFoo->meta->excludes_role('Role::Foo'), 'got the right exclusions');
+ok(Role::DoesExcludesFoo->meta->excludes_role('Role::Foo'), 'got the right exclusions');
 
 # test simple exclusion
 dies_ok {
@@ -42,7 +42,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 # test no conflicts
 {
@@ -54,11 +54,11 @@ dies_ok {
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';
+    } 'this lives as expected';
 }
 
 # test no conflicts w/exclusion
@@ -71,13 +71,13 @@ dies_ok {
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Bar|Role::ExcludesFoo', '... got the composite role name');
+    is($c->name, 'Role::Bar|Role::ExcludesFoo', 'got the composite role name');
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';
+    } 'this lives as expected';
 
-    is_deeply([$c->get_excluded_roles_list], ['Role::Foo'], '... has excluded roles');
+    is_deeply([$c->get_excluded_roles_list], ['Role::Foo'], 'has excluded roles');
 }
 
 
@@ -92,7 +92,7 @@ dies_ok {
         )
     );
 
-} '... this fails as expected';
+} 'this fails as expected';
 
 # test conflict with an "inherited" exclusion of an "inherited" role
 dies_ok {
@@ -104,6 +104,6 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+} 'this fails as expected';
 
 

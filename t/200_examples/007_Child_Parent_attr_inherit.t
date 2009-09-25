@@ -65,23 +65,23 @@ my $parent = Parent->new( last_name => 'Smith' );
 isa_ok( $parent, 'Parent' );
 
 is( $parent->last_name, 'Smith',
-    '... the parent has the last name we expected' );
+    'the parent has the last name we expected' );
 
 $parent->children( [ map { Child->new( parent => $parent ) } ( 0 .. 3 ) ] );
 
 foreach my $child ( @{ $parent->children } ) {
     is( $child->last_name, $parent->last_name,
-              '... parent and child have the same last name ('
+              'parent and child have the same last name ('
             . $parent->last_name
             . ')' );
 }
 
 $parent->last_name('Jones');
-is( $parent->last_name, 'Jones', '... the parent has the new last name' );
+is( $parent->last_name, 'Jones', 'the parent has the new last name' );
 
 foreach my $child ( @{ $parent->children } ) {
     is( $child->last_name, $parent->last_name,
-              '... parent and child have the same last name ('
+              'parent and child have the same last name ('
             . $parent->last_name
             . ')' );
 }
@@ -101,17 +101,17 @@ $orphan->parent($parent2);
 
 foreach my $child ( @{ $parent->children } ) {
     is( $child->last_name, $parent->last_name,
-              '... parent and child have the same last name ('
+              'parent and child have the same last name ('
             . $parent->last_name
             . ')' );
 }
 
 isnt( $orphan->last_name, $parent->last_name,
-          '... the orphan child does not have the same last name anymore ('
+          'the orphan child does not have the same last name anymore ('
         . $parent2->last_name
         . ')' );
 is( $orphan->last_name, $parent2->last_name,
-          '... parent2 and orphan child have the same last name ('
+          'parent2 and orphan child have the same last name ('
         . $parent2->last_name
         . ')' );
 
@@ -119,18 +119,18 @@ is( $orphan->last_name, $parent2->last_name,
 
 $parent->last_name('Miller');
 is( $parent->last_name, 'Miller',
-    '... the parent has the new last name (again)' );
+    'the parent has the new last name (again)' );
 
 foreach my $child ( @{ $parent->children } ) {
     is( $child->last_name, $parent->last_name,
-              '... parent and child have the same last name ('
+              'parent and child have the same last name ('
             . $parent->last_name
             . ')' );
 }
 
 isnt( $orphan->last_name, $parent->last_name,
-    '... the orphan child is not affected by changes in the parent anymore' );
+    'the orphan child is not affected by changes in the parent anymore' );
 is( $orphan->last_name, $parent2->last_name,
-          '... parent2 and orphan child have the same last name ('
+          'parent2 and orphan child have the same last name ('
         . $parent2->last_name
         . ')' );

@@ -31,10 +31,10 @@ use Test::Moose;
 
     can_ok($x, $_) for qw[baz gorch];
 
-    ok(!$x->can($_), '... cant call method ' . $_) for qw[foo bar];
+    ok(!$x->can($_), 'cant call method ' . $_) for qw[foo bar];
 
-    is($x->baz, 'FOO', '... got the right value');
-    is($x->gorch, 'BAR', '... got the right value');
+    is($x->baz, 'FOO', 'got the right value');
+    is($x->gorch, 'BAR', 'got the right value');
 }
 
 {
@@ -60,10 +60,10 @@ use Test::Moose;
 
     can_ok($x, $_) for qw[baz gorch];
 
-    ok(!$x->can($_), '... cant call method ' . $_) for qw[foo bar];
+    ok(!$x->can($_), 'cant call method ' . $_) for qw[foo bar];
 
-    is($x->baz, 'FOO', '... got the right value');
-    is($x->gorch, 'BAR', '... got the right value');
+    is($x->baz, 'FOO', 'got the right value');
+    is($x->gorch, 'BAR', 'got the right value');
 }
 
 

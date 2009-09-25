@@ -19,7 +19,7 @@ Volunteers welcome :)
 ## check the containers
 
 ok(Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_),
-   '... this correctly detected a container (' . $_ . ')')
+   'this correctly detected a container (' . $_ . ')')
     for (
     'ArrayRef[Foo]',
     'ArrayRef[Foo | Int]',
@@ -29,7 +29,7 @@ ok(Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_),
 );
 
 ok(!Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_),
-   '... this correctly detected a non-container (' . $_ . ')')
+   'this correctly detected a non-container (' . $_ . ')')
     for (
     'ArrayRef[]',
     'ArrayRef[Foo]Bar',
@@ -50,14 +50,14 @@ ok(!Moose::Util::TypeConstraints::_detect_parameterized_type_constraint($_),
     is_deeply(
         [ Moose::Util::TypeConstraints::_parse_parameterized_type_constraint($_) ],
         $split_tests{$_},
-        '... this correctly split the container (' . $_ . ')'
+        'this correctly split the container (' . $_ . ')'
     ) for keys %split_tests;
 }
 
 ## now for the unions
 
 ok(Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
-   '... this correctly detected union (' . $_ . ')')
+   'this correctly detected union (' . $_ . ')')
     for (
     'Int | Str',
     'Int|Str',
@@ -74,7 +74,7 @@ ok(Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
 );
 
 ok(!Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
-   '... this correctly detected a non-union (' . $_ . ')')
+   'this correctly detected a non-union (' . $_ . ')')
     for (
     'Int',
     'ArrayRef[Foo | Int]',
@@ -100,6 +100,6 @@ ok(!Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
     is_deeply(
         [ Moose::Util::TypeConstraints::_parse_type_constraint_union($_) ],
         $split_tests{$_},
-        '... this correctly split the union (' . $_ . ')'
+        'this correctly split the union (' . $_ . ')'
     ) for keys %split_tests;
 }

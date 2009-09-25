@@ -33,15 +33,15 @@ use Moose::Meta::Role::Composite;
     );
     isa_ok($c, 'Moose::Meta::Role::Composite');
 
-    is($c->name, 'Role::Foo|Role::Bar|Role::Baz', '... got the composite role name');
+    is($c->name, 'Role::Foo|Role::Bar|Role::Baz', 'got the composite role name');
 
     is_deeply($c->get_roles, [
         Role::Foo->meta,
         Role::Bar->meta,
         Role::Baz->meta,
-    ], '... got the right roles');
+    ], 'got the right roles');
 
-    ok($c->does_role($_), '... our composite does the role ' . $_)
+    ok($c->does_role($_), 'our composite does the role ' . $_)
         for qw(
             Role::Foo
             Role::Bar
@@ -50,7 +50,7 @@ use Moose::Meta::Role::Composite;
 
     lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this composed okay';
+    } 'this composed okay';
 
     ##... now nest 'em
     {
@@ -62,14 +62,14 @@ use Moose::Meta::Role::Composite;
         );
         isa_ok($c2, 'Moose::Meta::Role::Composite');
 
-        is($c2->name, 'Role::Foo|Role::Bar|Role::Baz|Role::Gorch', '... got the composite role name');
+        is($c2->name, 'Role::Foo|Role::Bar|Role::Baz|Role::Gorch', 'got the composite role name');
 
         is_deeply($c2->get_roles, [
             $c,
             Role::Gorch->meta,
-        ], '... got the right roles');
+        ], 'got the right roles');
 
-        ok($c2->does_role($_), '... our composite does the role ' . $_)
+        ok($c2->does_role($_), 'our composite does the role ' . $_)
             for qw(
                 Role::Foo
                 Role::Bar

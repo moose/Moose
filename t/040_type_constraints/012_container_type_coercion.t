@@ -25,7 +25,7 @@ isa_ok($array_of_ints, 'Moose::Meta::TypeConstraint');
 
 $r->add_type_constraint($array_of_ints);
 
-is(find_type_constraint('ArrayRef[Int]'), $array_of_ints, '... found the type we just added');
+is(find_type_constraint('ArrayRef[Int]'), $array_of_ints, 'found the type we just added');
 
 # Hash of Ints
 
@@ -39,7 +39,7 @@ isa_ok($hash_of_ints, 'Moose::Meta::TypeConstraint');
 
 $r->add_type_constraint($hash_of_ints);
 
-is(find_type_constraint('HashRef[Int]'), $hash_of_ints, '... found the type we just added');
+is(find_type_constraint('HashRef[Int]'), $hash_of_ints, 'found the type we just added');
 
 ## now attempt a coercion
 
@@ -63,6 +63,6 @@ is(find_type_constraint('HashRef[Int]'), $hash_of_ints, '... found the type we j
 my $foo = Foo->new(bar => { one => 1, two => 2, three => 3 });
 isa_ok($foo, 'Foo');
 
-is_deeply([ sort @{$foo->bar} ], [ 1, 2, 3 ], '... our coercion worked!');
+is_deeply([ sort @{$foo->bar} ], [ 1, 2, 3 ], 'our coercion worked!');
 
 

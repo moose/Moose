@@ -107,6 +107,6 @@ is_deeply(
         odd         => [ mod => 2 ],
         cut_in_half => [ div => 2 ],
     },
-    '... got the right handles mapping'
+    'got the right handles mapping'
 );
 

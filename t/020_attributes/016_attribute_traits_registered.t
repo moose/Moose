@@ -77,10 +77,10 @@ use Test::Moose;
 my $c = My::Class->new(bar => 100);
 isa_ok($c, 'My::Class');
 
-is($c->bar, 100, '... got the right value for bar');
+is($c->bar, 100, 'got the right value for bar');
 
 can_ok($c, 'baz') and
-is($c->baz, 100, '... got the right value for baz');
+is($c->baz, 100, 'got the right value for baz');
 
 my $bar_attr = $c->meta->get_attribute('bar');
 does_ok($bar_attr, 'My::Attribute::Trait');
@@ -93,10 +93,10 @@ ok(!$bar_attr->does('Fictional'), "attr->does returns false for nonexistent role
 
 my $quux = My::Derived::Class->new(bar => 1000);
 
-is($quux->bar, 1000, '... got the right value for bar');
+is($quux->bar, 1000, 'got the right value for bar');
 
 can_ok($quux, 'baz');
-is($quux->baz, 1000, '... got the right value for baz');
+is($quux->baz, 1000, 'got the right value for baz');
 
 my $derived_bar_attr = $quux->meta->get_attribute("bar");
 does_ok($derived_bar_attr, 'My::Attribute::Trait' );
@@ -113,5 +113,5 @@ ok(!$derived_bar_attr->meta->does_role('Fictional'), "does_role returns false fo
 ok(!$derived_bar_attr->does('Fictional'), "attr->does returns false for nonexistent roles");
 
 can_ok($quux, 'additional_method');
-is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
+is(eval { $quux->additional_method }, 42, 'got the right value for additional_method');
 

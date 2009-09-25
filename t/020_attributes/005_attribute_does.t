@@ -50,23 +50,23 @@ isa_ok($bar, 'Bar::Class');
 
 lives_ok {
     $foo->bar($bar);
-} '... bar passed the type constraint okay';
+} 'bar passed the type constraint okay';
 
 dies_ok {
     $foo->bar($foo);
-} '... foo did not pass the type constraint okay';
+} 'foo did not pass the type constraint okay';
 
 lives_ok {
     $foo->baz($bar);
-} '... baz passed the type constraint okay';
+} 'baz passed the type constraint okay';
 
 dies_ok {
     $foo->baz($foo);
-} '... foo did not pass the type constraint okay';
+} 'foo did not pass the type constraint okay';
 
 lives_ok {
     $bar->foo($foo);
-} '... foo passed the type constraint okay';
+} 'foo passed the type constraint okay';
 
 
 
@@ -80,7 +80,7 @@ lives_ok {
     # if it does not,.. we have a conflict... so we die loudly
     ::dies_ok {
         has 'foo' => (isa => 'Foo::Class', does => 'Bar::Class');
-    } '... cannot have a does() which is not done by the isa()';
+    } 'cannot have a does() which is not done by the isa()';
 }
 
 {
@@ -97,7 +97,7 @@ lives_ok {
     # if it does not,.. we have a conflict... so we die loudly
     ::dies_ok {
         has 'foo' => (isa => 'Bling', does => 'Bar::Class');
-    } '... cannot have a isa() which is cannot does()';
+    } 'cannot have a isa() which is cannot does()';
 }
 
 

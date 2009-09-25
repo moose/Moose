@@ -18,7 +18,7 @@ use Test::Exception;
             init_arg => undef,
         );
     };
-    ::ok(!$@, '... created the attr okay');
+    ::ok(!$@, 'created the attr okay');
 }
 
 {

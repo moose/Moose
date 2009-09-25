@@ -205,7 +205,7 @@ my $app2
 is(
     $app2->dump, q{name: Google
 The site's URL: http://google.com
-}, '... got the expected dump value'
+}, 'got the expected dump value'
 );
 
 

@@ -40,7 +40,7 @@ use Test::Exception;
 my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 
-ok($bar->foo, '... we have something in bar->foo');
+ok($bar->foo, 'we have something in bar->foo');
 isa_ok($bar->foo, 'Foo');
 
 my $meth = Bar->meta->get_method('foo_bar');
@@ -48,10 +48,10 @@ isa_ok($meth, 'Moose::Meta::Method::Delegation');
 is($meth->associated_attribute->name, 'foo',
    'associated_attribute->name for this method is foo');
 
-is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
+is($bar->foo->bar, 10, 'bar->foo->bar returned the right default');
 
 can_ok($bar, 'foo_bar');
-is($bar->foo_bar, 10, '... bar->foo_bar delegated correctly');
+is($bar->foo_bar, 10, 'bar->foo_bar delegated correctly');
 
 # change the value ...
 
@@ -59,8 +59,8 @@ $bar->foo->bar(30);
 
 # and make sure the delegation picks it up
 
-is($bar->foo->bar, 30, '... bar->foo->bar returned the right (changed) value');
-is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
+is($bar->foo->bar, 30, 'bar->foo->bar returned the right (changed) value');
+is($bar->foo_bar, 30, 'bar->foo_bar delegated correctly');
 
 # change the value through the delegation ...
 
@@ -68,28 +68,28 @@ $bar->foo_bar(50);
 
 # and make sure everyone sees it
 
-is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
-is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
+is($bar->foo->bar, 50, 'bar->foo->bar returned the right (changed) value');
+is($bar->foo_bar, 50, 'bar->foo_bar delegated correctly');
 
 # change the object we are delegating too
 
 my $foo = Foo->new(bar => 25);
 isa_ok($foo, 'Foo');
 
-is($foo->bar, 25, '... got the right foo->bar');
+is($foo->bar, 25, 'got the right foo->bar');
 
 lives_ok {
     $bar->foo($foo);
-} '... assigned the new Foo to Bar->foo';
+} 'assigned the new Foo to Bar->foo';
 
-is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
+is($bar->foo, $foo, 'assigned bar->foo with the new Foo');
 
-is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
-is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
+is($bar->foo->bar, 25, 'bar->foo->bar returned the right result');
+is($bar->foo_bar, 25, 'and bar->foo_bar delegated correctly again');
 
 # curried handles
 $bar->foo_bar_to_20;
-is($bar->foo_bar, 20, '... correctly curried a single argument');
+is($bar->foo_bar, 20, 'correctly curried a single argument');
 
 # -------------------------------------------------------------------
 # ARRAY handles
@@ -122,14 +122,14 @@ isa_ok($car->engine, 'Engine');
 can_ok($car->engine, 'go');
 can_ok($car->engine, 'stop');
 
-is($car->engine->go, 'Engine::go', '... got the right value from ->engine->go');
-is($car->engine->stop, 'Engine::stop', '... got the right value from ->engine->stop');
+is($car->engine->go, 'Engine::go', 'got the right value from ->engine->go');
+is($car->engine->stop, 'Engine::stop', 'got the right value from ->engine->stop');
 
 can_ok($car, 'go');
 can_ok($car, 'stop');
 
-is($car->go, 'Engine::go', '... got the right value from ->go');
-is($car->stop, 'Engine::stop', '... got the right value from ->stop');
+is($car->go, 'Engine::go', 'got the right value from ->go');
+is($car->stop, 'Engine::stop', 'got the right value from ->stop');
 
 # -------------------------------------------------------------------
 # REGEXP handles
@@ -186,9 +186,9 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     can_ok($baz_proxy, 'bar');
     can_ok($baz_proxy, 'boo');
 
-    is($baz_proxy->foo, 'Baz::foo', '... got the right proxied return value');
-    is($baz_proxy->bar, 'Baz::bar', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
+    is($baz_proxy->foo, 'Baz::foo', 'got the right proxied return value');
+    is($baz_proxy->bar, 'Baz::bar', 'got the right proxied return value');
+    is($baz_proxy->boo, 'Baz::boo', 'got the right proxied return value');
 }
 {
     my $baz_proxy = Baz::Proxy2->new;
@@ -200,8 +200,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     can_ok($baz_proxy, 'foo');
     can_ok($baz_proxy, 'boo');
 
-    is($baz_proxy->foo, 'Baz::foo', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
+    is($baz_proxy->foo, 'Baz::foo', 'got the right proxied return value');
+    is($baz_proxy->boo, 'Baz::boo', 'got the right proxied return value');
 }
 {
     my $baz_proxy = Baz::Proxy3->new;
@@ -213,8 +213,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     can_ok($baz_proxy, 'bar');
     can_ok($baz_proxy, 'boo');
 
-    is($baz_proxy->bar, 'Baz::bar', '... got the right proxied return value');
-    is($baz_proxy->boo, 'Baz::boo', '... got the right proxied return value');
+    is($baz_proxy->bar, 'Baz::bar', 'got the right proxied return value');
+    is($baz_proxy->boo, 'Baz::boo', 'got the right proxied return value');
 }
 
 # -------------------------------------------------------------------
@@ -251,13 +251,13 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     isa_ok($foo, 'Foo::Thing');
     isa_ok($foo->thing, 'Foo::Baz');
 
-    ok($foo->meta->has_method('foo'), '... we have the method we expect');
-    ok($foo->meta->has_method('bar'), '... we have the method we expect');
-    ok(!$foo->meta->has_method('baz'), '... we dont have the method we expect');
+    ok($foo->meta->has_method('foo'), 'we have the method we expect');
+    ok($foo->meta->has_method('bar'), 'we have the method we expect');
+    ok(!$foo->meta->has_method('baz'), 'we dont have the method we expect');
 
-    is($foo->foo, 'Foo::Baz::FOO', '... got the right value');
-    is($foo->bar, 'Foo::Baz::BAR', '... got the right value');
-    is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');
+    is($foo->foo, 'Foo::Baz::FOO', 'got the right value');
+    is($foo->bar, 'Foo::Baz::BAR', 'got the right value');
+    is($foo->thing->baz, 'Foo::Baz::BAZ', 'got the right value');
 }
 
 # -------------------------------------------------------------------
@@ -308,7 +308,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
             default => sub { Foo::Autoloaded->new },
             handles => qr/bar/
         );
-    } '... you cannot delegate to AUTOLOADED class with regexp';
+    } 'you cannot delegate to AUTOLOADED class with regexp';
 }
 
 # check HASH based delegation w/ AUTOLOAD
@@ -317,7 +317,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $bar = Bar::Autoloaded->new;
     isa_ok($bar, 'Bar::Autoloaded');
 
-    ok($bar->foo, '... we have something in bar->foo');
+    ok($bar->foo, 'we have something in bar->foo');
     isa_ok($bar->foo, 'Foo::Autoloaded');
 
     # change the value ...
@@ -326,8 +326,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     # and make sure the delegation picks it up
 
-    is($bar->foo->bar, 30, '... bar->foo->bar returned the right (changed) value');
-    is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
+    is($bar->foo->bar, 30, 'bar->foo->bar returned the right (changed) value');
+    is($bar->foo_bar, 30, 'bar->foo_bar delegated correctly');
 
     # change the value through the delegation ...
 
@@ -335,8 +335,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     # and make sure everyone sees it
 
-    is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
-    is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
+    is($bar->foo->bar, 50, 'bar->foo->bar returned the right (changed) value');
+    is($bar->foo_bar, 50, 'bar->foo_bar delegated correctly');
 
     # change the object we are delegating too
 
@@ -345,16 +345,16 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     $foo->bar(25);
 
-    is($foo->bar, 25, '... got the right foo->bar');
+    is($foo->bar, 25, 'got the right foo->bar');
 
     lives_ok {
         $bar->foo($foo);
-    } '... assigned the new Foo to Bar->foo';
+    } 'assigned the new Foo to Bar->foo';
 
-    is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
+    is($bar->foo, $foo, 'assigned bar->foo with the new Foo');
 
-    is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
-    is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
+    is($bar->foo->bar, 25, 'bar->foo->bar returned the right result');
+    is($bar->foo_bar, 25, 'and bar->foo_bar delegated correctly again');
 }
 
 # check ARRAY based delegation w/ AUTOLOAD
@@ -363,7 +363,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $baz = Baz::Autoloaded->new;
     isa_ok($baz, 'Baz::Autoloaded');
 
-    ok($baz->foo, '... we have something in baz->foo');
+    ok($baz->foo, 'we have something in baz->foo');
     isa_ok($baz->foo, 'Foo::Autoloaded');
 
     # change the value ...
@@ -372,8 +372,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     # and make sure the delegation picks it up
 
-    is($baz->foo->bar, 30, '... baz->foo->bar returned the right (changed) value');
-    is($baz->bar, 30, '... baz->foo_bar delegated correctly');
+    is($baz->foo->bar, 30, 'baz->foo->bar returned the right (changed) value');
+    is($baz->bar, 30, 'baz->foo_bar delegated correctly');
 
     # change the value through the delegation ...
 
@@ -381,8 +381,8 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     # and make sure everyone sees it
 
-    is($baz->foo->bar, 50, '... baz->foo->bar returned the right (changed) value');
-    is($baz->bar, 50, '... baz->foo_bar delegated correctly');
+    is($baz->foo->bar, 50, 'baz->foo->bar returned the right (changed) value');
+    is($baz->bar, 50, 'baz->foo_bar delegated correctly');
 
     # change the object we are delegating too
 
@@ -391,16 +391,16 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     $foo->bar(25);
 
-    is($foo->bar, 25, '... got the right foo->bar');
+    is($foo->bar, 25, 'got the right foo->bar');
 
     lives_ok {
         $baz->foo($foo);
-    } '... assigned the new Foo to Baz->foo';
+    } 'assigned the new Foo to Baz->foo';
 
-    is($baz->foo, $foo, '... assigned baz->foo with the new Foo');
+    is($baz->foo, $foo, 'assigned baz->foo with the new Foo');
 
-    is($baz->foo->bar, 25, '... baz->foo->bar returned the right result');
-    is($baz->bar, 25, '... and baz->foo_bar delegated correctly again');
+    is($baz->foo->bar, 25, 'baz->foo->bar returned the right result');
+    is($baz->bar, 25, 'and baz->foo_bar delegated correctly again');
 }
 
 # Check that removing attributes removes their handles methods also.

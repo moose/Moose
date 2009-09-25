@@ -39,24 +39,24 @@ isa_ok($baz, 'Baz');
 isa_ok($baz, 'Bar');
 isa_ok($baz, 'Foo');
 
-is($baz->foo(), 'Foo::foo', '... got the right value from &foo');
-is($baz->bar(), 'Baz::bar -> Bar::bar -> Foo::bar', '... got the right value from &bar');
-is($baz->baz(), 'Baz::baz -> Foo::baz', '... got the right value from &baz');
+is($baz->foo(), 'Foo::foo', 'got the right value from &foo');
+is($baz->bar(), 'Baz::bar -> Bar::bar -> Foo::bar', 'got the right value from &bar');
+is($baz->baz(), 'Baz::baz -> Foo::baz', 'got the right value from &baz');
 
 my $bar = Bar->new();
 isa_ok($bar, 'Bar');
 isa_ok($bar, 'Foo');
 
-is($bar->foo(), 'Foo::foo', '... got the right value from &foo');
-is($bar->bar(), 'Bar::bar -> Foo::bar', '... got the right value from &bar');
-is($bar->baz(), 'Foo::baz', '... got the right value from &baz');
+is($bar->foo(), 'Foo::foo', 'got the right value from &foo');
+is($bar->bar(), 'Bar::bar -> Foo::bar', 'got the right value from &bar');
+is($bar->baz(), 'Foo::baz', 'got the right value from &baz');
 
 my $foo = Foo->new();
 isa_ok($foo, 'Foo');
 
-is($foo->foo(), 'Foo::foo', '... got the right value from &foo');
-is($foo->bar(), 'Foo::bar', '... got the right value from &bar');
-is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
+is($foo->foo(), 'Foo::foo', 'got the right value from &foo');
+is($foo->bar(), 'Foo::bar', 'got the right value from &bar');
+is($foo->baz(), 'Foo::baz', 'got the right value from &baz');
 
 # some error cases
 
@@ -75,7 +75,7 @@ is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
 
     ::dies_ok {
         override 'bling' => sub {};
-    } '... cannot override a method which has a local equivalent';
+    } 'cannot override a method which has a local equivalent';
 
 }
 

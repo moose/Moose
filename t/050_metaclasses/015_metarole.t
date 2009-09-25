@@ -43,7 +43,7 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class->meta()' );
     is( My::Class->meta()->foo(), 10,
-        '... and call foo() on that meta object' );
+        'and call foo() on that meta object' );
 }
 
 {
@@ -55,11 +55,11 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s attribute metaclass} );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
 
     My::Class->meta()->add_attribute( 'size', is => 'ro' );
     is( My::Class->meta()->get_attribute('size')->foo(), 10,
-        '... call foo() on an attribute metaclass object' );
+        'call foo() on an attribute metaclass object' );
 }
 
 {
@@ -71,13 +71,13 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s method metaclass} );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
 
     My::Class->meta()->add_method( 'bar' => sub { 'bar' } );
     is( My::Class->meta()->get_method('bar')->foo(), 10,
-        '... call foo() on a method metaclass object' );
+        'call foo() on a method metaclass object' );
 }
 
 {
@@ -89,15 +89,15 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->wrapped_method_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s wrapped method metaclass} );
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
 
     My::Class->meta()->add_after_method_modifier( 'bar' => sub { 'bar' } );
     is( My::Class->meta()->get_method('bar')->foo(), 10,
-        '... call foo() on a wrapped method metaclass object' );
+        'call foo() on a wrapped method metaclass object' );
 }
 
 {
@@ -109,14 +109,14 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s instance metaclass} );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s method metaclass still does Role::Foo} );
 
     is( My::Class->meta()->get_meta_instance()->foo(), 10,
-        '... call foo() on an instance metaclass object' );
+        'call foo() on an instance metaclass object' );
 }
 
 {
@@ -128,7 +128,7 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->constructor_class()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s constructor class} );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
@@ -138,7 +138,7 @@ use Moose::Util::MetaRole;
 
     # Actually instantiating the constructor class is too freaking hard!
     ok( My::Class->meta()->constructor_class()->can('foo'),
-        '... constructor class has a foo method' );
+        'constructor class has a foo method' );
 }
 
 {
@@ -150,7 +150,7 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->destructor_class()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class->meta()'s destructor class} );
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
-        '... My::Class->meta() still does Role::Foo' );
+        'My::Class->meta() still does Role::Foo' );
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{... My::Class->meta()'s attribute metaclass still does Role::Foo} );
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
@@ -162,7 +162,7 @@ use Moose::Util::MetaRole;
 
     # same problem as the constructor class
     ok( My::Class->meta()->destructor_class()->can('foo'),
-        '... destructor class has a foo method' );
+        'destructor class has a foo method' );
 }
 
 {
@@ -219,7 +219,7 @@ use Moose::Util::MetaRole;
     ok( My::Class->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class base class' );
     is( My::Class->new()->foo(), 10,
-        '... call foo() on a My::Class object' );
+        'call foo() on a My::Class object' );
 }
 
 {
@@ -242,35 +242,35 @@ use Moose::Util::MetaRole;
     ok( My::Class2->meta()->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class2->meta()' );
     is( My::Class2->meta()->foo(), 10,
-        '... and call foo() on that meta object' );
+        'and call foo() on that meta object' );
     ok( My::Class2->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s attribute metaclass} );
     My::Class2->meta()->add_attribute( 'size', is => 'ro' );
 
     is( My::Class2->meta()->get_attribute('size')->foo(), 10,
-        '... call foo() on an attribute metaclass object' );
+        'call foo() on an attribute metaclass object' );
 
     ok( My::Class2->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s method metaclass} );
 
     My::Class2->meta()->add_method( 'bar' => sub { 'bar' } );
     is( My::Class2->meta()->get_method('bar')->foo(), 10,
-        '... call foo() on a method metaclass object' );
+        'call foo() on a method metaclass object' );
 
     ok( My::Class2->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s instance metaclass} );
     is( My::Class2->meta()->get_meta_instance()->foo(), 10,
-        '... call foo() on an instance metaclass object' );
+        'call foo() on an instance metaclass object' );
 
     ok( My::Class2->meta()->constructor_class()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s constructor class} );
     ok( My::Class2->meta()->constructor_class()->can('foo'),
-        '... constructor class has a foo method' );
+        'constructor class has a foo method' );
 
     ok( My::Class2->meta()->destructor_class()->meta()->does_role('Role::Foo'),
         q{apply Role::Foo to My::Class2->meta()'s destructor class} );
     ok( My::Class2->meta()->destructor_class()->can('foo'),
-        '... destructor class has a foo method' );
+        'destructor class has a foo method' );
 }
 
 
@@ -304,7 +304,7 @@ use Moose::Util::MetaRole;
     ok( My::Class3->meta()->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class3->meta()' );
     is( My::Class3->meta()->foo(), 10,
-        '... and call foo() on that meta object' );
+        'and call foo() on that meta object' );
     ok( ( grep { $_ eq 'My::Meta::Class' } My::Class3->meta()->meta()->superclasses() ),
         'apply_metaclass_roles() does not interfere with metaclass set via Moose->init_meta()' );
 }
@@ -337,7 +337,7 @@ use Moose::Util::MetaRole;
     ok( My::Class4->meta()->meta()->does_role('Role::Bar'),
         'apply Role::Bar to My::Class4->meta()' );
     ok( My::Class4->meta()->meta()->does_role('Role::Foo'),
-        '... and My::Class4->meta() still does Role::Foo' );
+        'and My::Class4->meta() still does Role::Foo' );
 }
 
 {

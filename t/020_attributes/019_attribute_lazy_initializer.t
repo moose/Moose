@@ -19,7 +19,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'foo', '... got the right name');
+            ::is($attr->name, 'foo', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -33,7 +33,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'lazy_foo', '... got the right name');
+            ::is($attr->name, 'lazy_foo', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -48,7 +48,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'lazy_foo_w_type', '... got the right name');
+            ::is($attr->name, 'lazy_foo_w_type', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -61,7 +61,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'lazy_foo_builder', '... got the right name');
+            ::is($attr->name, 'lazy_foo_builder', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -75,7 +75,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'lazy_foo_builder_w_type', '... got the right name');
+            ::is($attr->name, 'lazy_foo_builder_w_type', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -107,7 +107,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'foo', '... got the right name');
+            ::is($attr->name, 'foo', 'got the right name');
 
             $callback->($value * 2);
         },
@@ -135,7 +135,7 @@ use Test::Exception;
             my ($self, $value, $callback, $attr) = @_;
 
             ::isa_ok($attr, 'Moose::Meta::Attribute');
-            ::is($attr->name, 'foo', '... got the right name');
+            ::is($attr->name, 'foo', 'got the right name');
 
             $callback->("Hello $value World");
         },
@@ -146,5 +146,5 @@ use Test::Exception;
 
 dies_ok {
     Fail::Bar->new(foo => 10)
-} '... this fails, because initializer returns a bad type';
+} 'this fails, because initializer returns a bad type';
 

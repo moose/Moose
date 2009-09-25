@@ -34,7 +34,7 @@ like ($@, qr/^Pulling the Foo trigger/, "trigger from immutable constructor");
 eval { AClass->new(baz => 'bar') };
 like ($@, qr/^Pulling the Baz trigger/, "trigger from immutable constructor");
 
-lives_ok { AClass->new(bar => 'bar') } '... no triggers called';
+lives_ok { AClass->new(bar => 'bar') } 'no triggers called';
 
 
 

@@ -40,7 +40,7 @@ this test also demonstrates.
 my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 isa_ok($bar, 'Foo');
-ok(!$bar->isa('Moose::Object'), '... Bar is not Moose::Object subclass');
+ok(!$bar->isa('Moose::Object'), 'Bar is not Moose::Object subclass');
 
 my $baz = Baz->new;
 isa_ok($baz, 'Baz');

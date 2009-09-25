@@ -14,15 +14,15 @@ use Test::Exception;
     eval {
         type MyRef => where { ref($_) };
     };
-    ::ok( !$@, '... successfully exported &type to Foo package' );
+    ::ok( !$@, 'successfully exported &type to Foo package' );
 
     eval {
         subtype MyArrayRef => as MyRef => where { ref($_) eq 'ARRAY' };
     };
-    ::ok( !$@, '... successfully exported &subtype to Foo package' );
+    ::ok( !$@, 'successfully exported &subtype to Foo package' );
 
     Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
-    ::ok( MyRef( {} ), '... Ref worked correctly' );
-    ::ok( MyArrayRef( [] ), '... ArrayRef worked correctly' );
+    ::ok( MyRef( {} ), 'Ref worked correctly' );
+    ::ok( MyArrayRef( [] ), 'ArrayRef worked correctly' );
 }

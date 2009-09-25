@@ -38,15 +38,15 @@ sub rev {
     ArrayRef => sub { [ @{ rev( tail( $_ ) ) }, head( $_ ) ] };
 }
 
-is( len( [] ), 0, '... got the right length');
-is( len( [ 1 ] ), 1, '... got the right length');
-is( len( [ 1 .. 5 ] ), 5, '... got the right length');
-is( len( [ 1 .. 50 ] ), 50, '... got the right length');
+is( len( [] ), 0, 'got the right length');
+is( len( [ 1 ] ), 1, 'got the right length');
+is( len( [ 1 .. 5 ] ), 5, 'got the right length');
+is( len( [ 1 .. 50 ] ), 50, 'got the right length');
 
 is_deeply(
     rev( [ 1 .. 5 ] ),
     [ reverse 1 .. 5 ],
-    '... got the right reversed value'
+    'got the right reversed value'
 );
 
 # break down a Maybe Type ...
@@ -62,10 +62,10 @@ sub break_it_down {
 }
 
 
-is( break_it_down( 'FOO' ), 'FOO', '... got the right value');
-is( break_it_down( [] ), 'default', '... got the right value');
-is( break_it_down( undef ), 'undef', '... got the right value');
-is( break_it_down(), 'undef', '... got the right value');
+is( break_it_down( 'FOO' ), 'FOO', 'got the right value');
+is( break_it_down( [] ), 'default', 'got the right value');
+is( break_it_down( undef ), 'undef', 'got the right value');
+is( break_it_down(), 'undef', 'got the right value');
 
 # checking against enum types
 
@@ -79,17 +79,17 @@ sub is_acceptable_color {
                   sub { die "bad color $_" };
 }
 
-is( is_acceptable_color( 'blue' ), 'RGB', '... got the right value');
-is( is_acceptable_color( 'green' ), 'RGB', '... got the right value');
-is( is_acceptable_color( 'red' ), 'RGB', '... got the right value');
-is( is_acceptable_color( 'cyan' ), 'CMYK', '... got the right value');
-is( is_acceptable_color( 'magenta' ), 'CMYK', '... got the right value');
-is( is_acceptable_color( 'yellow' ), 'CMYK', '... got the right value');
-is( is_acceptable_color( 'black' ), 'CMYK', '... got the right value');
+is( is_acceptable_color( 'blue' ), 'RGB', 'got the right value');
+is( is_acceptable_color( 'green' ), 'RGB', 'got the right value');
+is( is_acceptable_color( 'red' ), 'RGB', 'got the right value');
+is( is_acceptable_color( 'cyan' ), 'CMYK', 'got the right value');
+is( is_acceptable_color( 'magenta' ), 'CMYK', 'got the right value');
+is( is_acceptable_color( 'yellow' ), 'CMYK', 'got the right value');
+is( is_acceptable_color( 'black' ), 'CMYK', 'got the right value');
 
 dies_ok {
     is_acceptable_color( 'orange' )
-} '... got the exception';
+} 'got the exception';
 
 ## using it in an OO context
 
@@ -118,13 +118,13 @@ dies_ok {
 }
 
 my $l = LinkedList->new;
-is($l->pprint, '[]', '... got the right pprint');
+is($l->pprint, '[]', 'got the right pprint');
 $l->next;
-is($l->pprint, '[[]]', '... got the right pprint');
+is($l->pprint, '[[]]', 'got the right pprint');
 $l->next->next;
-is($l->pprint, '[[[]]]', '... got the right pprint');
+is($l->pprint, '[[[]]]', 'got the right pprint');
 $l->next->next->next;
-is($l->pprint, '[[[[]]]]', '... got the right pprint');
+is($l->pprint, '[[[[]]]]', 'got the right pprint');
 
 # basic data dumper
 
@@ -171,7 +171,7 @@ is(
         }
     ),
     '{ five => *ppprint, four => qr/(?-xism:.*?)/, one => [ 1, 2, "three", 4, "five", \"six" ], six => Foo(), three => sub { ... }, two => undef }',
-    '... got the right pretty printed values'
+    'got the right pretty printed values'
 );
 
 # simple JSON serializer
@@ -196,7 +196,7 @@ sub to_json {
 is(
     to_json( { one => 1, two => 2 } ),
     '{ "one" : 1, "two" : 2 }',
-    '... got our valid JSON'
+    'got our valid JSON'
 );
 
 is(
@@ -206,7 +206,7 @@ is(
         three => "Hello World"
     } ),
     '{ "one" : [ 1, 2, 3, 4 ], "three" : "Hello World", "two" : null }',
-    '... got our valid JSON'
+    'got our valid JSON'
 );
 
 
@@ -221,7 +221,7 @@ sub not_enough_matches {
 
 throws_ok {
     not_enough_matches( [] )
-} qr/No cases matched for /, '... not enough matches';
+} qr/No cases matched for /, 'not enough matches';
 
 
 

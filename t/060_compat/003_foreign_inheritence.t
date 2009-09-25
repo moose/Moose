@@ -76,9 +76,9 @@ isa_ok( $foo_moose, 'Foo::Moose' );
 isa_ok( $foo_moose, 'Elk' );
 
 is( $foo_moose->no_moose, 'Elk',
-    '... got the right value from the Elk method' );
+    'got the right value from the Elk method' );
 is( $foo_moose->moose, 'Foo',
-    '... got the right value from the Foo::Moose method' );
+    'got the right value from the Foo::Moose method' );
 
 lives_ok {
     Old::Bucket::Nose->meta->make_immutable( debug => 0 );

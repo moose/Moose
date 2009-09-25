@@ -25,11 +25,11 @@ my @modules = qw[Foo Bar MyMooseA MyMooseB MyMooseObject];
 do {
     use_ok($_);
 
-    is($_->meta->name, $_, '... initialized the meta correctly');
+    is($_->meta->name, $_, 'initialized the meta correctly');
 
     lives_ok {
         Module::Refresh->new->refresh_module($_ . '.pm')
-    } '... successfully refreshed ' . $_;
+    } 'successfully refreshed ' . $_;
 } foreach @modules;
 
 =pod
@@ -64,9 +64,9 @@ has 'foo' => (is => 'rw', isa => 'Int');
 }
 
 use_ok('TestBaz');
-is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
-ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
-ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
+is(TestBaz->meta->name, 'TestBaz', 'initialized the meta correctly');
+ok(TestBaz->meta->has_attribute('foo'), 'it has the foo attribute as well');
+ok(!TestBaz->isa('Foo'), 'TestBaz is not a Foo');
 
 {
     open FILE, ">", $test_module_file
@@ -77,11 +77,11 @@ ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
 
 lives_ok {
     Module::Refresh->new->refresh_module($test_module_file)
-} '... successfully refreshed ' . $test_module_file;
+} 'successfully refreshed ' . $test_module_file;
 
-is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
-ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');
-ok(TestBaz->isa('Foo'), '... TestBaz is a Foo');
+is(TestBaz->meta->name, 'TestBaz', 'initialized the meta correctly');
+ok(TestBaz->meta->has_attribute('foo'), 'it has the foo attribute as well');
+ok(TestBaz->isa('Foo'), 'TestBaz is a Foo');
 
 unlink $test_module_file;
 

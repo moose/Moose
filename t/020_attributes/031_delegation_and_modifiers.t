@@ -48,11 +48,11 @@ my $foo = Foo::Extended->new;
 isa_ok($foo, 'Foo::Extended');
 isa_ok($foo, 'Foo');
 
-ok(!$foo->test, '... the test value has not been changed');
+ok(!$foo->test, 'the test value has not been changed');
 
-is($foo->baz, 'Bar::baz', '... got the right delegated method');
+is($foo->baz, 'Bar::baz', 'got the right delegated method');
 
-ok($foo->test, '... the test value has now been changed');
+ok($foo->test, 'the test value has now been changed');
 
 
 

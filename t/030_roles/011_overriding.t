@@ -64,19 +64,19 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
 
     ::throws_ok {
         with 'Role::A::Conflict';
-    }  qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented or excluded by 'Class::A::Conflict'/, '... did not fufill the requirement of &bar method';
+    }  qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented or excluded by 'Class::A::Conflict'/, 'did not fufill the requirement of &bar method';
 
     package Class::A::Resolved;
     use Moose;
 
     ::lives_ok {
         with 'Role::A::Conflict';
-    } '... did fufill the requirement of &bar method';
+    } 'did fufill the requirement of &bar method';
 
     sub bar { 'Class::A::Resolved::bar' }
 }
 
-ok(Role::A::Conflict->meta->requires_method('bar'), '... Role::A::Conflict created the bar requirement');
+ok(Role::A::Conflict->meta->requires_method('bar'), 'Role::A::Conflict created the bar requirement');
 
 can_ok( Class::A::Resolved->new, qw(bar) );
 
@@ -125,7 +125,7 @@ is( Class::B->new->zot, "Class::B::zot", "... got the &zot method okay" );
 is( Class::B->new->bar, "Role::D::bar",  "... got the &bar method okay" );
 is( Class::B->new->xxy, "Role::E::xxy",  "... got the &xxy method okay" );
 
-ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requirement');
+ok(!Role::F->meta->requires_method('foo'), 'Role::F fufilled the &foo requirement');
 
 {
     # check that a conflict can be resolved
@@ -147,9 +147,9 @@ ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requir
 
 }
 
-ok(!Role::D::And::E::Conflict->meta->requires_method('foo'), '... Role::D::And::E::Conflict fufilled the &foo requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('xxy'), '... Role::D::And::E::Conflict adds the &xxy requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E::Conflict adds the &bar requirement');
+ok(!Role::D::And::E::Conflict->meta->requires_method('foo'), 'Role::D::And::E::Conflict fufilled the &foo requirement');
+ok(Role::D::And::E::Conflict->meta->requires_method('xxy'), 'Role::D::And::E::Conflict adds the &xxy requirement');
+ok(Role::D::And::E::Conflict->meta->requires_method('bar'), 'Role::D::And::E::Conflict adds the &bar requirement');
 
 {
     # conflict propagation
@@ -203,7 +203,7 @@ is( Class::E->new->zot, "Class::E::zot", "... got the right &zot method" );
 is( Class::E->new->bar, "Role::H::bar",  "... got the right &bar method" );
 is( Class::E->new->xxy, "Role::J::xxy",  "... got the right &xxy method" );
 
-ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requirement');
+ok(Role::I->meta->requires_method('foo'), 'Role::I still have the &foo requirement');
 
 {
     lives_ok {

@@ -54,14 +54,14 @@ use Test::Moose;
 my $c = My::Class->new(bar => 100);
 isa_ok($c, 'My::Class');
 
-is($c->bar, 100, '... got the right value for bar');
+is($c->bar, 100, 'got the right value for bar');
 
 can_ok($c, 'baz');
-is($c->baz, 100, '... got the right value for baz');
+is($c->baz, 100, 'got the right value for baz');
 
 isa_ok($c->meta->get_attribute('bar'), 'My::Meta::Attribute::DefaultReadOnly');
 does_ok($c->meta->get_attribute('bar'), 'My::Attribute::Trait');
-is($c->meta->get_attribute('bar')->_is_metadata, 'ro', '... got the right metaclass customization');
+is($c->meta->get_attribute('bar')->_is_metadata, 'ro', 'got the right metaclass customization');
 
 
 

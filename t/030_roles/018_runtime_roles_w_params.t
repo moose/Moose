@@ -24,16 +24,16 @@ use Test::Exception;
     my $foo = Foo->new(bar => 'BAR');
     isa_ok($foo, 'Foo');
 
-    is($foo->bar, 'BAR', '... got the expect value');
-    ok(!$foo->can('baz'), '... no baz method though');
+    is($foo->bar, 'BAR', 'got the expect value');
+    ok(!$foo->can('baz'), 'no baz method though');
 
     lives_ok {
         Bar->meta->apply($foo)
-    } '... this works';
+    } 'this works';
 
-    is($foo->bar, 'BAR', '... got the expect value');
-    ok($foo->can('baz'), '... we have baz method now');
-    is($foo->baz, 'BAZ', '... got the expect value');
+    is($foo->bar, 'BAR', 'got the expect value');
+    ok($foo->can('baz'), 'we have baz method now');
+    is($foo->baz, 'BAZ', 'got the expect value');
 }
 
 # with extra params ...
@@ -41,16 +41,16 @@ use Test::Exception;
     my $foo = Foo->new(bar => 'BAR');
     isa_ok($foo, 'Foo');
 
-    is($foo->bar, 'BAR', '... got the expect value');
-    ok(!$foo->can('baz'), '... no baz method though');
+    is($foo->bar, 'BAR', 'got the expect value');
+    ok(!$foo->can('baz'), 'no baz method though');
 
     lives_ok {
         Bar->meta->apply($foo, (rebless_params => { baz => 'FOO-BAZ' }))
-    } '... this works';
+    } 'this works';
 
-    is($foo->bar, 'BAR', '... got the expect value');
-    ok($foo->can('baz'), '... we have baz method now');
-    is($foo->baz, 'FOO-BAZ', '... got the expect value');
+    is($foo->bar, 'BAR', 'got the expect value');
+    ok($foo->can('baz'), 'we have baz method now');
+    is($foo->baz, 'FOO-BAZ', 'got the expect value');
 }
 
 # with extra params ...
@@ -58,16 +58,16 @@ use Test::Exception;
     my $foo = Foo->new(bar => 'BAR');
     isa_ok($foo, 'Foo');
 
-    is($foo->bar, 'BAR', '... got the expect value');
-    ok(!$foo->can('baz'), '... no baz method though');
+    is($foo->bar, 'BAR', 'got the expect value');
+    ok(!$foo->can('baz'), 'no baz method though');
 
     lives_ok {
         Bar->meta->apply($foo, (rebless_params => { bar => 'FOO-BAR', baz => 'FOO-BAZ' }))
-    } '... this works';
+    } 'this works';
 
-    is($foo->bar, 'FOO-BAR', '... got the expect value');
-    ok($foo->can('baz'), '... we have baz method now');
-    is($foo->baz, 'FOO-BAZ', '... got the expect value');
+    is($foo->bar, 'FOO-BAR', 'got the expect value');
+    ok($foo->can('baz'), 'we have baz method now');
+    is($foo->baz, 'FOO-BAZ', 'got the expect value');
 }
 
 

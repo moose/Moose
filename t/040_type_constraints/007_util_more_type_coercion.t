@@ -40,35 +40,35 @@ use Test::Exception;
 
     lives_ok {
         $engine->header([ 1, 2, 3 ]);
-    } '... type was coerced without incident';
+    } 'type was coerced without incident';
     isa_ok($engine->header, 'HTTPHeader');
 
     is_deeply(
         $engine->header->array,
         [ 1, 2, 3 ],
-        '... got the right array value of the header');
-    ok(!defined($engine->header->hash), '... no hash value set');
+        'got the right array value of the header');
+    ok(!defined($engine->header->hash), 'no hash value set');
 
     # try with hash
 
     lives_ok {
         $engine->header({ one => 1, two => 2, three => 3 });
-    } '... type was coerced without incident';
+    } 'type was coerced without incident';
     isa_ok($engine->header, 'HTTPHeader');
 
     is_deeply(
         $engine->header->hash,
         { one => 1, two => 2, three => 3 },
-        '... got the right hash value of the header');
-    ok(!defined($engine->header->array), '... no array value set');
+        'got the right hash value of the header');
+    ok(!defined($engine->header->array), 'no array value set');
 
     dies_ok {
        $engine->header("Foo");
-    } '... dies with the wrong type, even after coercion';
+    } 'dies with the wrong type, even after coercion';
 
     lives_ok {
        $engine->header(HTTPHeader->new);
-    } '... lives with the right type, even after coercion';
+    } 'lives with the right type, even after coercion';
 }
 
 {
@@ -80,8 +80,8 @@ use Test::Exception;
     is_deeply(
         $engine->header->array,
         [ 1, 2, 3 ],
-        '... got the right array value of the header');
-    ok(!defined($engine->header->hash), '... no hash value set');
+        'got the right array value of the header');
+    ok(!defined($engine->header->hash), 'no hash value set');
 }
 
 {
@@ -93,8 +93,8 @@ use Test::Exception;
     is_deeply(
         $engine->header->hash,
         { one => 1, two => 2, three => 3 },
-        '... got the right hash value of the header');
-    ok(!defined($engine->header->array), '... no array value set');
+        'got the right hash value of the header');
+    ok(!defined($engine->header->array), 'no array value set');
 }
 
 {
@@ -103,15 +103,15 @@ use Test::Exception;
 
     isa_ok($engine->header, 'HTTPHeader');
 
-    ok(!defined($engine->header->hash), '... no hash value set');
-    ok(!defined($engine->header->array), '... no array value set');
+    ok(!defined($engine->header->hash), 'no hash value set');
+    ok(!defined($engine->header->array), 'no array value set');
 }
 
 dies_ok {
     Engine->new(header => 'Foo');
-} '... dies correctly with bad params';
+} 'dies correctly with bad params';
 
 dies_ok {
     Engine->new(header => \(my $var));
-} '... dies correctly with bad params';
+} 'dies correctly with bad params';
 

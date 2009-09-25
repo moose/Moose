@@ -45,5 +45,5 @@ then we may have an infinite loop.
 
 is($baz->foo,
   'Foo::foo(Baz::foo and Foo::foo())',
-  '... got the right value for 1 augmented subclass calling non-augmented subclass');
+  'got the right value for 1 augmented subclass calling non-augmented subclass');
 

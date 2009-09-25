@@ -37,7 +37,7 @@ not remove the requirement)
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (but we will live)';
+    } 'the required "foo" method will not exist yet (but we will live)';
 
     override 'foo' => sub { 'Role::ProvideFoo::foo' };
 }
@@ -45,7 +45,7 @@ not remove the requirement)
 is_deeply(
     [ Role::ProvideFoo->meta->get_required_method_list ],
     [ 'foo' ],
-    '... foo method is still required for Role::ProvideFoo');
+    'foo method is still required for Role::ProvideFoo');
 
 =pod
 
@@ -69,7 +69,7 @@ second class citizens.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass';
+    } 'the required "foo" method will be found in the superclass';
 
     override 'foo' => sub { 'Class::ProvideFoo::foo' };
 
@@ -82,7 +82,7 @@ second class citizens.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, although it is overriden locally';
+    } 'the required "foo" method exists, although it is overriden locally';
 
 }
 
@@ -101,7 +101,7 @@ method modifier.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass';
+    } 'the required "foo" method will be found in the superclass';
 
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };
 
@@ -114,7 +114,7 @@ method modifier.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, although it is a before modifier locally';
+    } 'the required "foo" method exists, although it is a before modifier locally';
 
     package Class::ProvideFoo::Before3;
     use Moose;
@@ -126,7 +126,7 @@ method modifier.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists locally, and it is modified locally';
+    } 'the required "foo" method exists locally, and it is modified locally';
 
     package Class::ProvideFoo::Before4;
     use Moose;
@@ -138,11 +138,11 @@ method modifier.
 
     ::isa_ok(__PACKAGE__->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
     ::is(__PACKAGE__->meta->get_method('foo')->get_original_method->package_name, __PACKAGE__,
-    '... but the original method is from our package');
+    'but the original method is from our package');
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists in the symbol table (and we will live)';
+    } 'the required "foo" method exists in the symbol table (and we will live)';
 
 }
 
@@ -162,7 +162,7 @@ method modifier.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass (but then overriden)';
+    } 'the required "foo" method will be found in the superclass (but then overriden)';
 
     has 'foo' => (is => 'ro');
 
@@ -175,7 +175,7 @@ method modifier.
 
     ::lives_ok {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, and is an accessor';
+    } 'the required "foo" method exists, and is an accessor';
 }
 
 # ...
@@ -213,7 +213,7 @@ method modifier.
 
     ::lives_ok {
         with 'Foo::Role';
-    } '... our role combined successfully';
+    } 'our role combined successfully';
 }
 
 # a method required in a role and implemented in a superclass, with a method

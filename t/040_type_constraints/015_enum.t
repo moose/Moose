@@ -50,8 +50,8 @@ ok(!Metacharacter($_), "'$_' is not a metacharacter")
 my $anon_enum = enum \@valid_languages;
 isa_ok($anon_enum, 'Moose::Meta::TypeConstraint');
 
-is($anon_enum->name, '__ANON__', '... got the right name');
-is($anon_enum->parent->name, 'Str', '... got the right parent name');
+is($anon_enum->name, '__ANON__', 'got the right name');
+is($anon_enum->parent->name, 'Str', 'got the right parent name');
 
 ok($anon_enum->check($_), "'$_' is a language") for @valid_languages;
 

@@ -37,8 +37,8 @@ use Test::Exception;
     use Moose;
 
     ::lives_ok{ with 'Stuffed::Role';
-        } '... this should work correctly';
+        } 'this should work correctly';
 
     ::lives_ok{ with 'Bulkie::Role';
-        } '... this should work correctly';
+        } 'this should work correctly';
 }

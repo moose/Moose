@@ -168,11 +168,11 @@ it under the same terms as Perl itself.
 
     $broken->start();
 
-    is( $cnt, 1, '... start called explode' );
+    is( $cnt, 1, 'start called explode' );
 
     $broken->stop();
 
-    is( $cnt, 2, '... stop also called explode' );
+    is( $cnt, 2, 'stop also called explode' );
 }
 
 =end testing

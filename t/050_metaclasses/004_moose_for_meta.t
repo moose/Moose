@@ -38,7 +38,7 @@ isa_ok($anon, 'Class::MOP::Class');
 is_deeply(
     [ $anon->superclasses ],
     [ 'Moose::Object' ],
-    '... got the default superclasses');
+    'got the default superclasses');
 
 {
     package My::Meta::Attribute::DefaultReadOnly;
@@ -61,9 +61,9 @@ is_deeply(
     isa_ok($attr, 'Moose::Meta::Attribute');
     isa_ok($attr, 'Class::MOP::Attribute');
 
-    ok($attr->has_reader, '... the attribute has a reader (as expected)');
-    ok(!$attr->has_writer, '... the attribute does not have a writer (as expected)');
-    ok(!$attr->has_accessor, '... the attribute does not have an accessor (as expected)');
+    ok($attr->has_reader, 'the attribute has a reader (as expected)');
+    ok(!$attr->has_writer, 'the attribute does not have a writer (as expected)');
+    ok(!$attr->has_accessor, 'the attribute does not have an accessor (as expected)');
 }
 
 {
@@ -72,8 +72,8 @@ is_deeply(
     isa_ok($attr, 'Moose::Meta::Attribute');
     isa_ok($attr, 'Class::MOP::Attribute');
 
-    ok(!$attr->has_reader, '... the attribute does not have a reader (as expected)');
-    ok(!$attr->has_writer, '... the attribute does not have a writer (as expected)');
-    ok($attr->has_accessor, '... the attribute does have an accessor (as expected)');
+    ok(!$attr->has_reader, 'the attribute does not have a reader (as expected)');
+    ok(!$attr->has_writer, 'the attribute does not have a writer (as expected)');
+    ok($attr->has_accessor, 'the attribute does have an accessor (as expected)');
 }
 

@@ -34,16 +34,16 @@ use Test::Exception;
     isa_ok($foo_attr, 'Foo::Meta::Attribute');
     isa_ok($foo_attr, 'Moose::Meta::Attribute');
 
-    is($foo_attr->name, 'foo', '... got the right name for our meta-attribute');
-    ok($foo_attr->has_accessor, '... our meta-attrubute created the accessor for us');
+    is($foo_attr->name, 'foo', 'got the right name for our meta-attribute');
+    ok($foo_attr->has_accessor, 'our meta-attrubute created the accessor for us');
 
-    ok($foo_attr->has_type_constraint, '... our meta-attrubute created the type_constraint for us');
+    ok($foo_attr->has_type_constraint, 'our meta-attrubute created the type_constraint for us');
 
     my $foo_attr_type_constraint = $foo_attr->type_constraint;
     isa_ok($foo_attr_type_constraint, 'Moose::Meta::TypeConstraint');
 
-    is($foo_attr_type_constraint->name, 'Foo', '... got the right type constraint name');
-    is($foo_attr_type_constraint->parent->name, 'Object', '... got the right type constraint parent name');
+    is($foo_attr_type_constraint->name, 'Foo', 'got the right type constraint name');
+    is($foo_attr_type_constraint->parent->name, 'Object', 'got the right type constraint parent name');
 }
 {
     package Bar::Meta::Attribute;
@@ -56,7 +56,7 @@ use Test::Exception;
 
     ::lives_ok {
         has 'bar' => (metaclass => 'Bar::Meta::Attribute');
-    } '... the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
+    } 'the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
 }
 
 {
@@ -73,11 +73,11 @@ use Test::Exception;
 
     ::lives_ok {
         has 'foo' => (metaclass => 'Foo');
-    } '... the attribute metaclass alias worked correctly';
+    } 'the attribute metaclass alias worked correctly';
 
     ::lives_ok {
         has 'bar' => (metaclass => 'Bar', is => 'bare');
-    } '... the attribute metaclass alias worked correctly';
+    } 'the attribute metaclass alias worked correctly';
 }
 
 {

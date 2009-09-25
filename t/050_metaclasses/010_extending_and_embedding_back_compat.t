@@ -51,7 +51,7 @@ isa_ok($obj, 'MyClass');
 isa_ok($obj, 'MyFramework::Base');
 isa_ok($obj, 'Moose::Object');
 
-is($obj->foo, 10, '... got the right value');
+is($obj->foo, 10, 'got the right value');
 
 
 
