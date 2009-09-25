@@ -38,7 +38,8 @@ use Test::More tests => 5;
     use Moose;
 
     eval { extends 'No::Class'; };
-    ::ok($@, '... could not find the superclass (as expected)');
-    ::like($@, qr/^Could not load class \(No\:\:Class\) because \:/, '... and got the error we expected');
+    my $e = $@;
+    ::ok($e, '... could not find the superclass (as expected)');
+    ::like($e, qr{Can't locate No/Class\.pm in \@INC}, '... and got the error we expected');
 }
 
