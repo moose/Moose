@@ -31,7 +31,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::Code
+Moose::Meta::Attribute::Native::MethodProvider::Code - role providing method generators for Code trait
 
 =head1 DESCRIPTION
 

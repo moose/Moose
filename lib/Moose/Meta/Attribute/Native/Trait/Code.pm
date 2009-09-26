@@ -26,7 +26,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Code
+Moose::Meta::Attribute::Native::Trait::Code - Helper trait for Code attributes
 
 =head1 SYNOPSIS
 

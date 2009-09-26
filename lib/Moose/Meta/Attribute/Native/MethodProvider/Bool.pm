@@ -34,7 +34,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::Bool
+Moose::Meta::Attribute::Native::MethodProvider::Bool - role providing method generators for Bool trait
 
 =head1 DESCRIPTION
 

@@ -111,7 +111,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::String
+Moose::Meta::Attribute::Native::MethodProvider::String - role providing method generators for String trait
 
 =head1 DESCRIPTION
 
