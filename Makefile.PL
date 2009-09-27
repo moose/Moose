@@ -41,6 +41,7 @@ sub check_conflicts {
         'MooseX::AttributeHelpers'  => '0.21',
         'MooseX::ClassAttribute'    => '0.09',
         'MooseX::MethodAttributes'  => '0.15',
+        'MooseX::NonMoose'          => '0.05',
         'MooseX::Params::Validate'  => '0.05',
         'MooseX::Singleton'         => '0.19',
         'MooseX::StrictConstructor' => '0.07',
