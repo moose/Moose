@@ -3,17 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More;
-BEGIN {
-    eval "use Test::Output;";
-    plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 2;
-}
+use Test::More tests => 4;
+use Test::Exception;
 
-stderr_like( sub { package main; eval 'use Moose' },
-             qr/\QMoose does not export its sugar to the 'main' package/,
-             'Moose warns when loaded from the main package' );
+lives_ok {
+    eval 'use Moose';
+} "export to main";
 
-stderr_like( sub { package main; eval 'use Moose::Role' },
-             qr/\QMoose::Role does not export its sugar to the 'main' package/,
-             'Moose::Role warns when loaded from the main package' );
+isa_ok( main->meta, "Moose::Meta::Class" );
+
+isa_ok( main->new, "main");
+isa_ok( main->new, "Moose::Object" );
+

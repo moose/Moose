@@ -301,7 +301,6 @@ sub _make_import_sub {
     my $exporting_package = shift;
     my $exporter          = shift;
     my $exports_from      = shift;
-    my $export_to_main    = shift;
 
     return sub {
 
@@ -337,13 +336,6 @@ sub _make_import_sub {
 
         strict->import;
         warnings->import;
-
-        # we should never export to main
-        if ( $CALLER eq 'main' && !$export_to_main ) {
-            warn
-                qq{$class does not export its sugar to the 'main' package.\n};
-            return;
-        }
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
