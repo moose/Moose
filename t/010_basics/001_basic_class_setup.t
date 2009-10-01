@@ -24,10 +24,6 @@ dies_ok {
    Foo->meta->has_method()
 } '... has_method requires an arg';
 
-dies_ok {
-   Foo->meta->has_method('')
-} '... has_method requires an arg';
-
 can_ok('Foo', 'does');
 
 foreach my $function (qw(
