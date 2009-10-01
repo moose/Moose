@@ -38,18 +38,19 @@ Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
   sub dump {
       my $self = shift;
 
+      my $meta = $self->meta;
+
       my $dump = '';
 
-      my %attributes = %{ $self->meta->get_attribute_map };
-      for my $name ( sort keys %attributes ) {
-          my $attribute = $attributes{$name};
+      for my $attribute ( map { $meta->get_attribute($_) }
+          sort $meta->get_attribute_list ) {
 
           if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
               && $attribute->has_label ) {
               $dump .= $attribute->label;
           }
           else {
-              $dump .= $name;
+              $dump .= $attribute->name;
           }
 
           my $reader = $attribute->get_read_method;
@@ -87,20 +88,12 @@ a concrete example.
 Internally, the metaclass for C<Point> has two
 L<Moose::Meta::Attribute>. There are several methods for getting
 meta-attributes out of a metaclass, one of which is
-C<get_attribute_map>. This method is called on the metaclass object.
+C<get_attribute_list>. This method is called on the metaclass object.
 
-The C<get_attribute_map> method returns a hash reference that maps
-attribute names to their objects. In our case, C<get_attribute_map>
-might return something that looks like the following:
+The C<get_attribute_list> method returns a list of attribute names. You can
+then use C<get_attribute> to get the L<Moose::Meta::Attribute> object itself.
 
-  {
-      x => $attr_object_for_x,
-      y => $attr_object_for_y,
-  }
-
-You can also get a single L<Moose::Meta::Attribute> with
-C<get_attribute('name')>. Once you have this meta-attribute object,
-you can call methods on it like this:
+Once you this meta-attribute object, you can call methods on it like this:
 
   print $point->meta->get_attribute('x')->type_constraint;
      => Int
@@ -200,11 +193,12 @@ attribute's label if it has one.
   sub dump {
       my $self = shift;
 
+      my $meta = $self->meta;
+
       my $dump = '';
 
-      my %attributes = %{ $self->meta->get_attribute_map };
-      for my $name ( sort keys %attributes ) {
-          my $attribute = $attributes{$name};
+      for my $attribute ( map { $meta->get_attribute($_) }
+          sort $meta->get_attribute_list ) {
 
           if (   $attribute->isa('MyApp::Meta::Attribute::Labeled')
               && $attribute->has_label ) {
@@ -221,7 +215,7 @@ defined. We could instead make the label C<required>. If we have a
 label, we use it, otherwise we use the attribute name:
 
           else {
-              $dump .= $name;
+              $dump .= $attribute->name;
           }
 
           my $reader = $attribute->get_read_method;

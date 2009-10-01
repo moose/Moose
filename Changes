@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+
+    * Moose::Meta::Role
+      - get_attribute_map is now deprecated (Dave Rolsky)
+
     * replace two more eval { } calls with try { } (doy)
 
 0.92 Tue, Sep 22, 2009

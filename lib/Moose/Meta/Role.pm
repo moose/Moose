@@ -71,8 +71,8 @@ foreach my $action (
         }
     },
     {
-        name        => 'attribute_map',
-        attr_reader => 'get_attribute_map',
+        name        => '_attribute_map',
+        attr_reader => '_attribute_map',
         methods     => {
             get       => 'get_attribute',
             get_keys  => 'get_attribute_list',
@@ -181,7 +181,7 @@ sub add_attribute {
     else {
         $attr_desc = { @_ };
     }
-    $self->get_attribute_map->{$name} = $attr_desc;
+    $self->_attribute_map->{$name} = $attr_desc;
 }
 
 sub add_required_methods {
@@ -566,7 +566,7 @@ sub create {
 #
 # has 'attribute_map' => (
 #     metaclass => 'Hash',
-#     reader    => 'get_attribute_map',
+#     reader    => '_attribute_map',
 #     isa       => 'HashRef[Str]',
 #     provides => {
 #         # 'set'  => 'add_attribute' # has some special crap in it
@@ -817,8 +817,6 @@ This is quite likely to change in the future.
 =item B<< $metarole->get_attribute($attribute_name) >>
 
 =item B<< $metarole->has_attribute($attribute_name) >>
-
-=item B<< $metarole->get_attribute_map >>
 
 =item B<< $metarole->get_attribute_list >>
 
