@@ -121,7 +121,7 @@ sub does {
     my ($self, $role_name) = @_;
     my $meta = Class::MOP::class_of($self);
     (defined $role_name)
-        || $meta->throw_error("You much supply a role name to does()");
+        || $meta->throw_error("You must supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
         return 1
