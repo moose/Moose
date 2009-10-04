@@ -7,7 +7,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub execute : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { $reader->(@_)->(@_) };
+    return sub { my ($self, @args) = @_; $reader->($self)->(@args) };
 }
 
 no Moose::Role;
