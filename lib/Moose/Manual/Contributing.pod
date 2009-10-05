@@ -12,6 +12,8 @@ the L</STANDARD WORKFLOW> is very simple. The general gist is: clone the Git
 repository, create a new topic branch, hack away, then find a committer to
 review your changes.
 
+Note that this document applies to both Moose and L<Class::MOP> development.
+
 =head1 NEW FEATURES
 
 Moose already has a fairly large feature set, and we are currently
@@ -225,6 +227,38 @@ defend your change.
     # ship & tag
 
 Development releases are made without merging into the stable branch.
+
+=head2 Release How-To
+
+Moose (and L<Class::MOP>) releases fall into two categories, each with their
+own level of release preparation. A minor release is one which does not
+include any API changes, deprecations, and so on. In that case, it is
+sufficient to simply test the release candidate against a few different
+different Perls. Testing should be done against at least two recent major
+version of Perl (5.8.8 and 5.10.1, for example). If you have more versions
+available, you are encouraged to test them all. However, we do not put a lot
+of effort into supporting older 5.8.x releases.
+
+For major releases which include an API change or deprecation, you should run
+the F<cpan-stable-smolder> script from the L<moose-dev-utils
+repository|gitmo@jules.scsys.co.uk:moose-dev-utils.git>. This script tests a
+long list of MooseX and other Moose-using modules from CPAN. In order to run
+this script, you must arrange to have the new version of Moose and/or
+Class::MOP in Perl's include path. You can install the module, or fiddle with
+the C<PERL5LIB> env var, whatever makes you happy.
+
+The smolder script downloads each module from CPAN, runs its tests, and logs
+failures and warnings to a F<cpan-stable-smolder.log> file. If there are
+failures or warnings, please work with the authors of the modules in question
+to fix them. If the module author simply isn't available or does not want to
+fix the bug, it is okay to make a release.
+
+Regardless of whether or not a new module is available, any breakages should
+be noted in the conflicts list in the distribution's F<Makefile.PL>.
+
+Both Class::MOP and Moose have a F<.shipit> file you can use to make sure the
+release goes smoothly. You are strongly encouraged to use this instead of
+doing the final release steps by hand.
 
 =head1 EMERGENCY BUG WORKFLOW (for immediate release)
 
