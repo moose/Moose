@@ -7,7 +7,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
-use Sub::Name    'subname';
 use Devel::GlobalDestruction 'in_global_destruction';
 
 our $VERSION   = '0.92';
