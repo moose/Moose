@@ -245,7 +245,7 @@ repository|gitmo@jules.scsys.co.uk:moose-dev-utils.git>. This script tests a
 long list of MooseX and other Moose-using modules from CPAN. In order to run
 this script, you must arrange to have the new version of Moose and/or
 Class::MOP in Perl's include path. You can install the module, or fiddle with
-the C<PERL5LIB> env var, whatever makes you happy.
+the C<PERL5LIB> environment variable, whatever makes you happy.
 
 The smolder script downloads each module from CPAN, runs its tests, and logs
 failures and warnings to a F<cpan-stable-smolder.log> file. If there are
