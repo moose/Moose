@@ -19,9 +19,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 sub new {
     my $class = shift;
 
-    Carp::cluck 'Calling new() on an instance is deprecated,'
-      . ' please use (blessed $obj)->new' if Scalar::Util::blessed($class);
-
     my $params = $class->BUILDARGS(@_);
 
     my $real_class = Scalar::Util::blessed($class) || $class;
