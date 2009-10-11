@@ -882,9 +882,9 @@ that hierarchy represented visually.
       Undef
       Defined
           Value
-              Num
-                  Int
               Str
+                  Num
+                      Int
                   ClassName
                   RoleName
           Ref

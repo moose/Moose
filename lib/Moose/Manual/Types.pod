@@ -39,9 +39,9 @@ The basic Moose type hierarchy looks like this
       Undef
       Defined
           Value
-              Num
-                Int
               Str
+                Num
+                    Int
                 ClassName
                 RoleName
           Ref
