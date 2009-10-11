@@ -104,8 +104,8 @@ sub _initialize_body {
                 object      => $instance
             );
         }
-        my @args = (@{ $self->curried_arguments }, @_);
-        $proxy->$method_to_call(@args);
+        unshift @_, @{ $self->curried_arguments };
+        $proxy->$method_to_call(@_);
     };
 }
 

@@ -741,11 +741,6 @@ sub delegation_metaclass { 'Moose::Meta::Method::Delegation' }
 sub _make_delegation_method {
     my ( $self, $handle_name, $method_to_call ) = @_;
 
-    my $method_body;
-
-    $method_body = $method_to_call
-        if 'CODE' eq ref($method_to_call);
-
     my @curried_arguments;
 
     ($method_to_call, @curried_arguments) = @$method_to_call

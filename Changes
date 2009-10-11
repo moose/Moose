@@ -7,6 +7,9 @@ for, noteworthy changes.
 
     * replace two more eval { } calls with try { } (doy)
 
+    * Moose::Meta::Method::Delegation
+      - preserve aliasing for delegated methods (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)
