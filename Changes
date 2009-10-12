@@ -6,7 +6,8 @@ for, noteworthy changes.
       - The get_attribute_map method is now deprecated. (Dave Rolsky)
 
     * Moose::Meta::Method::Delegation
-      - Preserve aliasing for delegated methods (doy)
+      - Preserve variable aliasing in @_ for delegated methods, so that
+        altering @_ affects the passed value. (doy)
 
     * Moose::Util::TypeConstraints
       - Allow array refs for non-anonymous form of enum and duck_type, not
