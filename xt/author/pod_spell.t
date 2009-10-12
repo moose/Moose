@@ -118,6 +118,7 @@ TypeContraints
 ## computerese
 API
 APIs
+arrayrefs
 arity
 Baz
 Changelog
