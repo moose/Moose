@@ -43,7 +43,8 @@ The simplest form is to simply specify a list of methods:
 
 With this definition, we can call C<< $website->host >> and it "just
 works". Under the hood, Moose will call C<< $website->uri->host >> for
-you.
+you. Note that C<$website> is not automatically passed to the C<host>
+method; the invocant is C<< $website->uri >>.
 
 We can also define a mapping as a hash reference. This allows you to
 rename methods as part of the mapping:
