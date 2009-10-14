@@ -17,6 +17,11 @@ for, noteworthy changes.
         just anonymous. The non-arrayref forms may be removed in the
         future. (doy)
 
+    * Moose::Exporter
+      - Moose::Exporter using modules can now export their functions to the
+        main package. This applied to Moose and Moose::Role, among
+        others. (nothingmuch)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)
