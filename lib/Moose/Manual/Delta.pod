@@ -16,6 +16,16 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 0.93
+
+=over 4
+
+=item Calling $object->new() is no longer deprecated
+
+We decided to un-deprecate this. Now it just works.
+
+=back
+
 =head1 0.90
 
 =over 4

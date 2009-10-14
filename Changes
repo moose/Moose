@@ -1,6 +1,9 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Object
+      - Calling $object->new() is no longer deprecated, and no longer
+        warns. (doy)
 
     * Moose::Meta::Role
       - The get_attribute_map method is now deprecated. (Dave Rolsky)
