@@ -7,12 +7,18 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub exists : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::exists $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+    return sub {
+        $attr->associated_class->throw_error('One argument expected') if @_ == 1;
+        CORE::exists $reader->( $_[0] )->{ $_[1] } ? 1 : 0
+    };
 }
 
 sub defined : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::defined $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+    return sub {
+        $attr->associated_class->throw_error('One argument expected') if @_ == 1;
+        CORE::defined $reader->( $_[0] )->{ $_[1] } ? 1 : 0
+    };
 }
 
 sub get : method {
@@ -23,6 +29,7 @@ sub get : method {
         }
         else {
             my ( $self, @keys ) = @_;
+            $attr->associated_class->throw_error('One or more arguments expected') unless @keys;
             @{ $reader->($self) }{@keys};
         }
     };
@@ -171,6 +178,7 @@ sub delete : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my $hashref = $reader->(shift);
+        $attr->associated_class->throw_error('One or more arguments expected') unless @_;
         CORE::delete @{$hashref}{@_};
     };
 }

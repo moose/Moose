@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More tests => 50;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -54,6 +54,10 @@ is( $stuff->num_options, 0, '... we have no options' );
 
 is_deeply( $stuff->options, {}, '... no options yet' );
 ok( !$stuff->has_option('foo'), '... we have no foo option' );
+dies_ok {
+    $stuff->has_option;
+}
+'... could not determinne exists without a key';
 
 lives_ok {
     $stuff->set_option( foo => 'bar' );
@@ -61,6 +65,10 @@ lives_ok {
 '... set the option okay';
 
 ok( $stuff->is_defined('foo'), '... foo is defined' );
+dies_ok {
+    $stuff->is_defined
+}
+'... could not determine defined without a key';
 
 ok( !$stuff->has_no_options, '... we have options' );
 is( $stuff->num_options, 1, '... we have 1 option(s)' );
@@ -103,6 +111,11 @@ lives_ok {
 }
 '... deleted multiple option okay';
 
+dies_ok {
+    $stuff->delete_option;
+}
+'... deleted with no option fails ok';
+
 is( $stuff->num_options, 1, '... we have 1 option(s)' );
 is_deeply( $stuff->options, { foo => 'bar' }, '... got more options now' );
 
@@ -135,6 +148,11 @@ dies_ok {
     Stuff->new( options => { foo => [] } );
 }
 '... bad constructor params';
+
+dies_ok {
+    $stuff->get_option;
+}
+'... could not get an element without a key';
 
 ## test the meta
 
