@@ -207,6 +207,7 @@ delegatee
 featureful
 hackery
 hacktern
+undeprecate
 wrappee
 
 ## compound

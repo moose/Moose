@@ -22,7 +22,7 @@ send us a patch.
 
 =item Calling $object->new() is no longer deprecated
 
-We decided to un-deprecate this. Now it just works.
+We decided to undeprecate this. Now it just works.
 
 =back
 
