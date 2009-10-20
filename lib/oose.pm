@@ -42,7 +42,7 @@ oose - syntactic sugar to make Moose one-liners easier
   perl -Moose=+My::Class -e 'print join ", " => __PACKAGE__->meta->get_method_list'
 
   # also loads Moose::Util::TypeConstraints to allow subtypes etc
-  perl -Moose=Person -e'subtype q[Age] => as q[Int] => where { $_ > 0 && $_ < 78 }; has => age ( isa => q[ValidAge], is => q[ro]); Person->new(age => 90)'
+  perl -Moose=Person -e'subtype q[ValidAge] => as q[Int] => where { $_ > 0 && $_ < 78 }; has => age ( isa => q[ValidAge], is => q[ro]); Person->new(age => 90)'
 
 =head1 DESCRIPTION
 
