@@ -106,6 +106,7 @@ sub join : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $separator ) = @_;
+        $attr->associated_class->throw_error('A separator is required') unless $separator;
         join $separator, @{ $reader->($instance) };
     };
 }
@@ -182,6 +183,7 @@ sub shift : method {
 sub get : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
+        $attr->associated_class->throw_error('One argument is expected') if @_ == 1;
         $reader->( $_[0] )->[ $_[1] ];
     };
 }
@@ -265,6 +267,7 @@ sub clear : method {
 sub delete : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
+        $attr->associated_class->throw_error('One argument expected') if @_ == 1;
         CORE::splice @{ $reader->( $_[0] ) }, $_[1], 1;
       }
 }
@@ -309,13 +312,21 @@ sub splice : method {
               . ( defined($_) ? $_ : 'undef' )
               . " did not pass container type constraint '$container_type_constraint'"
               for @elems;
-            CORE::splice @{ $reader->($self) }, $i, $j, @elems;
+            defined $i
+                ? defined $j
+                    ? CORE::splice @{ $reader->($self) }, $i, $j, @elems
+                    : CORE::splice @{ $reader->($self) }, $i
+                : CORE::splice @{ $reader->($self) };
         };
     }
     else {
         return sub {
             my ( $self, $i, $j, @elems ) = @_;
-            CORE::splice @{ $reader->($self) }, $i, $j, @elems;
+            defined $i
+                ? defined $j
+                    ? CORE::splice @{ $reader->($self) }, $i, $j, @elems
+                    : CORE::splice @{ $reader->($self) }, $i
+                : CORE::splice @{ $reader->($self) };
         };
     }
 }
