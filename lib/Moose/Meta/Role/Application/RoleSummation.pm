@@ -113,6 +113,10 @@ sub check_required_attributes {
 
 }
 
+sub check_required_classes {
+
+}
+
 sub apply_attributes {
     my ($self, $c) = @_;
 

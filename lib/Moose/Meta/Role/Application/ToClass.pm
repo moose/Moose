@@ -127,6 +127,10 @@ sub check_required_attributes {
 
 }
 
+sub check_required_classes {
+
+}
+
 sub apply_attributes {
     my ($self, $role, $class) = @_;
     foreach my $attribute_name ($role->get_attribute_list) {

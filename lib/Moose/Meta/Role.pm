@@ -218,10 +218,18 @@ sub add_required_methods {
 
 sub add_required_attributes {
     my $self = shift;
+    for (@_) {
+        my $attr_name = $_;
+        $self->get_required_attributes_map->{$attr_name} = $attr_name;
+    }
 }
 
 sub add_required_class {
     my $self = shift;
+    for (@_) {
+        my $class_name = $_;
+        $self->get_required_classes_map->{$class_name} = $class_name;
+    }
 }
 
 sub add_conflicting_method {

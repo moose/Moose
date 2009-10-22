@@ -68,6 +68,7 @@ sub apply {
     $self->check_role_exclusions(@_);
     $self->check_required_methods(@_);
     $self->check_required_attributes(@_);
+    $self->check_required_classes(@_);
 
     $self->apply_attributes(@_);
     $self->apply_methods(@_);
@@ -82,6 +83,7 @@ sub apply {
 sub check_role_exclusions           { Carp::croak "Abstract Method" }
 sub check_required_methods          { Carp::croak "Abstract Method" }
 sub check_required_attributes       { Carp::croak "Abstract Method" }
+sub check_required_classes          { Carp::croak "Abstract Method" }
 
 sub apply_attributes                { Carp::croak "Abstract Method" }
 sub apply_methods                   { Carp::croak "Abstract Method" }
