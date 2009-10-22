@@ -71,6 +71,24 @@ foreach my $action (
         }
     },
     {
+        name        => 'required_attributes',
+        attr_reader => 'get_required_attributes_map',
+        methods     => {
+            remove     => 'remove_required_attributes',
+            get_values => 'get_required_attribute_list',
+            existence  => 'requires_attribute',
+        }
+    },
+    {
+        name        => 'required_classes',
+        attr_reader => 'get_required_classes_map',
+        methods     => {
+            remove     => 'remove_required_classes',
+            get_values => 'get_required_class_list',
+            existence  => 'requires_class',
+        }
+    },
+    {
         name        => '_attribute_map',
         attr_reader => '_attribute_map',
         methods     => {
@@ -196,6 +214,14 @@ sub add_required_methods {
         }
         $self->get_required_methods_map->{$method->name} = $method;
     }
+}
+
+sub add_required_attributes {
+    my $self = shift;
+}
+
+sub add_required_class {
+    my $self = shift;
 }
 
 sub add_conflicting_method {

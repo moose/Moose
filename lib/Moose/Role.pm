@@ -32,6 +32,18 @@ sub requires {
     $meta->add_required_methods(@_);
 }
 
+sub requires_attr {
+    my $meta = shift;
+    croak "Must specify at least one attribute" unless @_;
+    $meta->add_required_attributes(@_);
+}
+
+sub requires_class {
+    my $meta = shift;
+    croak "Must specify at least one class" unless @_;
+    $meta->add_required_class(@_);
+}
+
 sub excludes {
     my $meta = shift;
     croak "Must specify at least one role" unless @_;
@@ -90,7 +102,7 @@ sub augment {
 
 Moose::Exporter->setup_import_methods(
     with_meta => [
-        qw( with requires excludes has before after around override )
+        qw( with requires requires_attr requires_class excludes has before after around override )
     ],
     as_is => [
         qw( extends super inner augment ),
