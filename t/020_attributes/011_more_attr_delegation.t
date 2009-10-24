@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 43;
+use Test::More tests => 48;
 use Test::Exception;
 
 =pod
@@ -92,6 +92,7 @@ do not fail at compile time.
     use Moose;
 
     sub parent_method_1 { "parent_1" }
+    ::can_ok('Parent', 'parent_method_1');
 
     ::dies_ok {
         has child_a => (
@@ -181,6 +182,7 @@ do not fail at compile time.
         );
     } "can delegate to object even without explicit reader";
 
+    ::can_ok('Parent', 'parent_method_1');
     ::dies_ok {
         has child_h => (
             isa     => "ChildH",
@@ -189,6 +191,9 @@ do not fail at compile time.
             handles => sub { map { $_, $_ } $_[1]->get_all_method_names },
         );
     } "Can't override exisiting class method in delegate";
+    { our $TODO; local $TODO = 'if add_attribute dies because a delegate would have overridden a local method, the rollback code removes the original method';
+    ::can_ok('Parent', 'parent_method_1');
+    }
 
     ::lives_ok {
         has child_i => (
@@ -253,3 +258,8 @@ is( $p->child_e_method_2, "e2", "delegate to non moose class (child_e_method_2)"
 
 can_ok( $p, "child_g_method_1" );
 is( $p->child_g_method_1, "g1", "delegate to moose class without reader (child_g_method_1)" );
+
+can_ok( $p, "child_i_method_1" );
+{ local $TODO = 'if add_attribute dies because a delegate would have overridden a local method, the rollback code removes the original method';
+lives_and { is( $p->parent_method_1, "parent_1", "delegate doesn't override existing method" ) };
+}
