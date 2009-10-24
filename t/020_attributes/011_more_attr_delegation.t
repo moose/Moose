@@ -91,7 +91,7 @@ do not fail at compile time.
     package Parent;
     use Moose;
 
-    sub parent_method_1 { "parrent_1" }
+    sub parent_method_1 { "parent_1" }
 
     ::dies_ok {
         has child_a => (
@@ -195,7 +195,10 @@ do not fail at compile time.
             isa     => "ChildI",
             is      => "ro",
             default => sub { ChildI->new },
-            handles => sub { map { $_, $_ } grep { !/^parent_method_1$/ }$_[1]->get_all_method_names },
+            handles => sub {
+                map { $_, $_ } grep { !/^parent_method_1$/ }
+                    $_[1]->get_all_method_names;
+            },
         );
     } "Test handles code ref for skipping predefined methods";
 
