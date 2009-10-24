@@ -23,6 +23,10 @@ for, noteworthy changes.
         main package. This applied to Moose and Moose::Role, among
         others. (nothingmuch)
 
+    * Moose::Meta::Attribute
+      - Don't remove attribute accessors we never installed, during
+        remove_accessors. (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)

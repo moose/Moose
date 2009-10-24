@@ -191,9 +191,7 @@ do not fail at compile time.
             handles => sub { map { $_, $_ } $_[1]->get_all_method_names },
         );
     } "Can't override exisiting class method in delegate";
-    { our $TODO; local $TODO = 'if add_attribute dies because a delegate would have overridden a local method, the rollback code removes the original method';
     ::can_ok('Parent', 'parent_method_1');
-    }
 
     ::lives_ok {
         has child_i => (
@@ -201,7 +199,7 @@ do not fail at compile time.
             is      => "ro",
             default => sub { ChildI->new },
             handles => sub {
-                map { $_, $_ } grep { !/^parent_method_1$/ }
+                map { $_, $_ } grep { !/^parent_method_1|meta$/ }
                     $_[1]->get_all_method_names;
             },
         );
@@ -260,6 +258,4 @@ can_ok( $p, "child_g_method_1" );
 is( $p->child_g_method_1, "g1", "delegate to moose class without reader (child_g_method_1)" );
 
 can_ok( $p, "child_i_method_1" );
-{ local $TODO = 'if add_attribute dies because a delegate would have overridden a local method, the rollback code removes the original method';
-lives_and { is( $p->parent_method_1, "parent_1", "delegate doesn't override existing method" ) };
-}
+is( $p->parent_method_1, "parent_1", "delegate doesn't override existing method" );
