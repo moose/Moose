@@ -34,6 +34,29 @@ This change was made in 1.05, and has now been reverted. We don't know if the
 user has explicitly loaded strict or warnings outside on their own, and
 unimporting them is just broken in that case.
 
+=item Inversed logic when defining which options can be changed
+
+L<Moose::Meta::Attribute> now uses inversed logic when defining which
+options can be changed. By default all options are allowed to be
+changed. The previous behaviour required each option to be whitelisted
+for changing using C<legal_options_for_inheritance> method. This
+method has been removed. New method C<illegal_options_for_inheritance>
+can now be used to prevent certain options from being changeable.
+
+  package Bar::Meta::Attribute;
+  use Moose;
+
+  extends 'Moose::Meta::Attribute';
+
+  has 'my_illegal_option' => (
+    isa => 'CodeRef',
+    is => 'rw',
+  );
+
+  around illegal_options_for_inheritance => sub {
+    return (shift->(@_), qw/my_illegal_option/);
+  };
+
 =back
 
 =head1 1.05
