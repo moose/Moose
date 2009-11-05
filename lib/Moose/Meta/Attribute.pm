@@ -658,7 +658,9 @@ sub remove_delegation {
     my %handles = $self->_canonicalize_handles;
     my $associated_class = $self->associated_class;
     foreach my $handle (keys %handles) {
-        next unless any { $handle eq $_ } $self->associated_methods;
+        next unless any { $handle eq $_ }
+                    map { $_->name }
+                    @{ $self->associated_methods };
         $self->associated_class->remove_method($handle);
     }
 }
