@@ -27,6 +27,10 @@ for, noteworthy changes.
       - Don't remove attribute accessors we never installed, during
         remove_accessors. (doy)
 
+    * Moose::Meta::Attribute::Native::Trait::Array
+      - Don't bypass prototype checking when calling List::Util::first, to
+        avoid a segfault when it is called with a non-code argument. (doy)
+
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)
