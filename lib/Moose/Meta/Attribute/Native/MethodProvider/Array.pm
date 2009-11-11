@@ -26,7 +26,7 @@ sub first : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $predicate ) = @_;
-        &List::Util::first($predicate, @{ $reader->($instance) });
+        List::Util::first { $predicate->() } @{ $reader->($instance) };
     };
 }
 
