@@ -13,35 +13,34 @@ and using them consistently makes everyone's life easier.
 Of course, as with any list of "best practices", these are really just
 opinions. Feel free to ignore us.
 
-=head2 C<no Moose> and immutabilize
+=head2 C<namespace::autoclean> and immutabilize
 
-We recommend that you end your Moose class definitions by removing the
-Moose sugar and making your class immutable.
+We recommend that you remove the Moose sugar and end your Moose class 
+definitions by making your class immutable.
 
   package Person;
 
   use Moose;
+  use namespace::autoclean;
 
   # extends, roles, attributes, etc.
 
   # methods
 
-  no Moose;
-
   __PACKAGE__->meta->make_immutable;
 
   1;
 
-The C<no Moose> bit is simply good code hygiene, as it removes all the
-Moose keywords from your class's namespace. Once the class has been
+The C<use namespace::autoclean> bit is simply good code hygiene, as it removes
+imported symbols from  you class's namespace at the end of your package's
+compile cycle, including Moose keywords.  Once the class has been
 built, these keywords are not needed needed. The C<make_immutable>
 call allows Moose to speed up a lot of things, most notably object
 construction. The trade-off is that you can no longer change the class
 definition.
 
-A more generic way to unimport not only L<Moose>'s exports but also
-those from type libraries and other modules is to use
-L<namespace::clean> or L<namespace::autoclean>.
+C<no Moose;> may be used to unimport only Moose's imported symbols.
+L<namespace::clean> provides finer-grained control than L<namespace::autoclean>. 
 
 =head2 Never override C<new>
 
