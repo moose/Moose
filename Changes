@@ -17,6 +17,7 @@ for, noteworthy changes.
         just anonymous. The non-arrayref forms may be removed in the
         future. (doy)
       - Changed Str constraint to not accept globs (*STDIN or *FOO). (chansen)
+      - Properly document Int being a subtype of Str. (doy)
 
     * Moose::Exporter
       - Moose::Exporter using modules can now export their functions to the
@@ -30,6 +31,9 @@ for, noteworthy changes.
     * Moose::Meta::Attribute::Native::Trait::Array
       - Don't bypass prototype checking when calling List::Util::first, to
         avoid a segfault when it is called with a non-code argument. (doy)
+
+    * Moose::Meta::Attribute::Native::Trait::Code
+      - Fix passing arguments to code execute helpers. (doy)
 
 0.92 Tue, Sep 22, 2009
     * Moose::Util::TypeConstraints
