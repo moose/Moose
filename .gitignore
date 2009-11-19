@@ -9,3 +9,4 @@
 /t/000_recipes/*
 .*
 !.gitignore
+Moose-*
