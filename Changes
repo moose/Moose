@@ -1,6 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.93 Thu, Nov 19, 2009
     * Moose::Object
       - Calling $object->new() is no longer deprecated, and no longer
         warns. (doy)

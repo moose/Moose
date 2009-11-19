@@ -6,7 +6,7 @@ use metaclass;
 
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.92';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
