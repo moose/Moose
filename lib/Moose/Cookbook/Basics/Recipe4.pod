@@ -119,7 +119,7 @@ CPAN tools for data validation.
 
 Finally, we introduce the C<required> attribute option.
 
-The the C<Address> class we define two subtypes. The first uses the
+In the C<Address> class we define two subtypes. The first uses the
 L<Locale::US> module to check the validity of a state. It accepts
 either a state abbreviation of full name.
 
