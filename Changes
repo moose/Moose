@@ -4,6 +4,9 @@ for, noteworthy changes.
 0.94
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
+    * Moose::Util::TypeConstraints
+      - Changed Str constraint to accept magic lvalue strings like one gets
+        from substr et al, again. (sorear)
 
 0.93 Thu, Nov 19, 2009
     * Moose::Object

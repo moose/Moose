@@ -14,7 +14,12 @@ sub Value { defined($_[0]) && !ref($_[0]) }
 
 sub Ref { ref($_[0]) }
 
-sub Str { defined($_[0]) && ref(\$_[0]) eq 'SCALAR' }
+# We need to use a temporary here to flatten LVALUEs, for instance as in
+# Str(substr($_,0,255)).
+sub Str {
+    my $value = $_[0];
+    defined($value) && ref(\$value) eq 'SCALAR'
+}
 
 sub Num { !ref($_[0]) && looks_like_number($_[0]) }
 

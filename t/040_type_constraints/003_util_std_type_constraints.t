@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 297;
+use Test::More tests => 298;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -11,6 +11,8 @@ use Scalar::Util ();
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
 }
+
+my $STRING     = "foo";
 
 my $SCALAR_REF = \(my $var);
 
@@ -169,6 +171,7 @@ ok(defined Str(0),                 '... Str accepts anything which is a Str');
 ok(defined Str(100),               '... Str accepts anything which is a Str');
 ok(defined Str(''),                '... Str accepts anything which is a Str');
 ok(defined Str('Foo'),             '... Str accepts anything which is a Str');
+ok(defined Str(substr($STRING,0,1)),'... Str accepts anything which is a Str');
 ok(!defined Str([]),               '... Str rejects anything which is not a Str');
 ok(!defined Str({}),               '... Str rejects anything which is not a Str');
 ok(!defined Str(sub {}),           '... Str rejects anything which is not a Str');
