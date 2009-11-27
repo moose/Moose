@@ -8,7 +8,7 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 65;
+    plan tests => 68;
 }
 
 
@@ -388,4 +388,34 @@ BEGIN {
 {
     ok( ! UseAllOptions->can($_), "UseAllOptions::$_ has been unimported" )
         for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
+}
+
+{
+  package MyTraitWithAttr;
+  use Moose::Role;
+  
+  has 'registry' => ( is => 'ro' );
+}
+
+{
+  package MyMooseExporterForAttr;
+  use Moose ();
+  use Moose::Exporter;
+  
+  Moose::Exporter->setup_import_methods(
+    metaclass_roles => ['MyTraitWithAttr'],
+    also => 'Moose',
+  );
+}
+
+{
+  package MyAttrTraitUser;
+  MyMooseExporterForAttr->import();
+}
+
+{
+  ok(MyMooseExporterForAttr->can('meta'), 'MyAttrTraitUser has meta()');
+  my $meta;
+  lives_ok sub { MyMooseExporterForAttr->meta}, '... and we can call it';
+  ok($meta->can('registry'), '... and our MyTraitWithAttr was applied');
 }
