@@ -7,6 +7,10 @@ for, noteworthy changes.
     * Moose::Util::TypeConstraints
       - Changed Str constraint to accept magic lvalue strings like one gets
         from substr et al, again. (sorear)
+    * Moose::Meta::Attribute
+      - The elements in the arrayref form of 'handles' are made unique. (norbi)
+      - The arrayref form of 'handles' accepts regular expression elements to
+	extend the method name list with their matches. (norbi)
 
 0.93 Thu, Nov 19, 2009
     * Moose::Object

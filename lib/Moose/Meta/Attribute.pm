@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
-use List::MoreUtils 'any';
+use List::MoreUtils 'any', 'uniq', 'part';
 use Try::Tiny;
 use overload     ();
 
@@ -675,7 +675,19 @@ sub _canonicalize_handles {
             return %{$handles};
         }
         elsif ($handle_type eq 'ARRAY') {
-            return map { $_ => $_ } @{$handles};
+            my ($strings, $regexes) = part { ref $_ eq 'Regexp' } @{$handles};
+
+            my @method_names = @{ $strings || [] };
+            if ($regexes) {
+                ($self->has_type_constraint)
+                    || $self->throw_error("Cannot delegate methods based on a Regexp without a type constraint (isa)", data => $handles);
+                foreach my $regex (@{$regexes}) {
+                    push @method_names,
+                        grep { /$regex/ } $self->_get_delegate_method_list;
+                }
+            }
+
+            return map { $_ => $_ } uniq @method_names;
         }
         elsif ($handle_type eq 'Regexp') {
             ($self->has_type_constraint)

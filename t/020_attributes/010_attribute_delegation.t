@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 92;
+use Test::More tests => 119;
 use Test::Exception;
 
 
@@ -130,6 +130,105 @@ can_ok($car, 'stop');
 
 is($car->go, 'Engine::go', '... got the right value from ->go');
 is($car->stop, 'Engine::stop', '... got the right value from ->stop');
+
+# -------------------------------------------------------------------
+# ARRAY+REGEXP handles
+# -------------------------------------------------------------------
+# the array based format can also contain regexes
+
+{
+    package Thud;
+    use Moose;
+
+    sub foo  { 'Thud::foo'  }
+    sub bar  { 'Thud::bar'  }
+    sub baz  { 'Thud::baz'  }
+    sub quux { 'Thud::quux' }
+
+    package Thud::Proxy1;
+    use Moose;
+
+    has 'thud' => (
+        is      => 'ro',
+        isa     => 'Thud',
+        default => sub { Thud->new },
+        handles => [
+          qr/^b.*/,
+        ],
+    );
+
+    package Thud::Proxy2;
+    use Moose;
+
+    has 'thud' => (
+        is      => 'ro',
+        isa     => 'Thud',
+        default => sub { Thud->new },
+        handles => [
+          'quux',
+          qr/^b.*/,
+        ],
+    );
+
+    package Thud::Proxy3;
+    use Moose;
+
+    has 'thud' => (
+        is      => 'ro',
+        isa     => 'Thud',
+        default => sub { Thud->new },
+        handles => [
+          qr/.*/,
+          'quux',
+        ],
+    );
+}
+
+{
+    my $thud_proxy = Thud::Proxy1->new;
+    isa_ok($thud_proxy, 'Thud::Proxy1');
+
+    can_ok($thud_proxy, 'thud');
+    isa_ok($thud_proxy->thud, 'Thud');
+
+    can_ok($thud_proxy, 'bar');
+    can_ok($thud_proxy, 'baz');
+
+    is($thud_proxy->bar, 'Thud::bar', '... got the right proxied return value');
+    is($thud_proxy->baz, 'Thud::baz', '... got the right proxied return value');
+}
+{
+    my $thud_proxy = Thud::Proxy2->new;
+    isa_ok($thud_proxy, 'Thud::Proxy2');
+
+    can_ok($thud_proxy, 'thud');
+    isa_ok($thud_proxy->thud, 'Thud');
+
+    can_ok($thud_proxy, 'bar');
+    can_ok($thud_proxy, 'baz');
+    can_ok($thud_proxy, 'quux');
+
+    is($thud_proxy->bar, 'Thud::bar', '... got the right proxied return value');
+    is($thud_proxy->baz, 'Thud::baz', '... got the right proxied return value');
+    is($thud_proxy->quux, 'Thud::quux', '... got the right proxied return value');
+}
+{
+    my $thud_proxy = Thud::Proxy3->new;
+    isa_ok($thud_proxy, 'Thud::Proxy3');
+
+    can_ok($thud_proxy, 'thud');
+    isa_ok($thud_proxy->thud, 'Thud');
+
+    can_ok($thud_proxy, 'foo');
+    can_ok($thud_proxy, 'bar');
+    can_ok($thud_proxy, 'baz');
+    can_ok($thud_proxy, 'quux');
+
+    is($thud_proxy->foo, 'Thud::foo', '... got the right proxied return value');
+    is($thud_proxy->bar, 'Thud::bar', '... got the right proxied return value');
+    is($thud_proxy->baz, 'Thud::baz', '... got the right proxied return value');
+    is($thud_proxy->quux, 'Thud::quux', '... got the right proxied return value');
+}
 
 # -------------------------------------------------------------------
 # REGEXP handles

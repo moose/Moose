@@ -515,6 +515,13 @@ This is the most common usage for I<handles>. You basically pass a list of
 method names to be delegated, and Moose will install a delegation method
 for each one.
 
+You can also include regular expressions in the arrayref to extend the list
+with the methods (of the class being delegated to) whose names are matched by
+the regular expressions. A method name is included if it is present in the
+arrayref as a string, or if at least one regular expression matches it. See the
+C<REGEX> format below for more details about how the regular expressions are
+interpreted and the limitations they impose.
+
 =item C<HASH>
 
 This is the second most common usage for I<handles>. Instead of a list of
@@ -1176,6 +1183,8 @@ Sam (mugwump) Vilain
 Cory (gphat) Watson
 
 Dylan Hardison (doc fixes)
+
+Norbert (norbi) Buchmuller
 
 ... and many other #moose folks
 
