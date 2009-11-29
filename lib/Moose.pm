@@ -1152,9 +1152,11 @@ Adam (Alias) Kennedy
 
 Anders (Debolaz) Nor Berle
 
-Nathan (kolibrie) Gray
-
 Christian (chansen) Hansen
+
+Cory (gphat) Watson
+
+Dylan Hardison (doc fixes)
 
 Eric (ewilhelm) Wilhelm
 
@@ -1162,29 +1164,27 @@ Guillermo (groditi) Roditi
 
 Jess (castaway) Robinson
 
+Jonathan (jrockway) Rockway
+
 Matt (mst) Trout
+
+Nathan (kolibrie) Gray
+
+Norbert (norbi) Buchmuller
+
+Piotr (dexter) Roszatycki
 
 Robert (phaylon) Sedlacek
 
 Robert (rlb3) Boone
+
+Sam (mugwump) Vilain
 
 Scott (konobi) McWhirter
 
 Shlomi (rindolf) Fish
 
 Wallace (wreis) Reis
-
-Jonathan (jrockway) Rockway
-
-Piotr (dexter) Roszatycki
-
-Sam (mugwump) Vilain
-
-Cory (gphat) Watson
-
-Dylan Hardison (doc fixes)
-
-Norbert (norbi) Buchmuller
 
 ... and many other #moose folks
 
