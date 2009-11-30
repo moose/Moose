@@ -393,10 +393,11 @@ BEGIN {
     package AlreadyHasImport;
 
     sub as_is1 { 42 }
+    sub with_caller1 { 23 }
 
     ::stderr_like(
-        sub { AllOptions->import('as_is1') },
-        qr/AllOptions is overwriting symbol as_is1 at ${\__FILE__}/,
+        sub { AllOptions->import('as_is1', 'with_caller1') },
+        qr/AllOptions is overwriting symbols AlreadyHasImport::as_is1 and AlreadyHasImport::with_caller1 at ${\__FILE__}/,
         'warning when overwriting existign symbols',
     );
 

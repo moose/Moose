@@ -9,7 +9,9 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Class::MOP;
+use Carp qw(carp);
 use List::MoreUtils qw( first_index uniq );
+use Moose::Util;
 use Moose::Util::MetaRole;
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
@@ -51,8 +53,30 @@ sub build_import_methods {
 
     my $exporter = Sub::Exporter::build_exporter(
         {
-            exports => $exports,
-            groups  => { default => [':all'] }
+            exports   => $exports,
+            groups    => { default => [':all'] },
+            installer => sub {
+                my ($arg, $to_export) = @_;
+                my $meta = Class::MOP::Package->initialize($arg->{into});
+
+                my @overwritten;
+
+                for (my $i = 0; $i < @{ $to_export }; $i += 2) {
+                    my $as = $to_export->[$i];
+                    push @overwritten, $as
+                        if $meta->has_package_symbol('&' . $as);
+                }
+
+                if (@overwritten) {
+                    local $Carp::CarpLevel = 2;
+                    carp $arg->{class}
+                        . " is overwriting symbol"
+                        . (@overwritten > 1 ? 's' : '') . " "
+                        . Moose::Util::english_list(map { join '::' => $arg->{into}, $_ } @overwritten);
+                }
+
+                goto &Sub::Exporter::default_installer;
+            },
         }
     );
 
