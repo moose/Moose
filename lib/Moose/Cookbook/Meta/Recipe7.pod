@@ -12,6 +12,9 @@
     # My::Meta::Instance would be in a separate file from MyApp::User,
     # and this would be a non-issue.
     BEGIN { extends 'Moose::Meta::Instance' }
+
+    # unimport again to prevent the subsequent "use Moose" from warning.
+    no Moose;
 }
 
 =end testing-SETUP

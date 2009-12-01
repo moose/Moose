@@ -54,17 +54,17 @@ is( Bar->meta()->simple(), 5,
 }
 
 {
-    package Bar;
+    package FooBar;
 
     use Moose -traits => [ 'My::SimpleTrait2' ];
 }
 
-can_ok( Bar->meta(), 'simple' );
-is( Bar->meta()->simple(), 5,
-    'Bar->meta()->simple() returns expected value' );
-can_ok( Bar->meta(), 'attr' );
-is( Bar->meta()->attr(), 'something',
-    'Bar->meta()->attr() returns expected value' );
+can_ok( FooBar->meta(), 'simple' );
+is( FooBar->meta()->simple(), 5,
+    'FooBar->meta()->simple() returns expected value' );
+can_ok( FooBar->meta(), 'attr' );
+is( FooBar->meta()->attr(), 'something',
+    'FooBar->meta()->attr() returns expected value' );
 
 {
     package My::SimpleTrait3;

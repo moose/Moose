@@ -161,61 +161,61 @@ use Test::Exception;
 # receive the old value
 
 {
-    package Foo;
+    package FooBar;
     use Moose;
     our @calls;
     has foo => (is => 'rw', trigger => sub { push @calls, [@_] });
 }
 
 {
-    my $attr = Foo->meta->get_attribute('foo');
+    my $attr = FooBar->meta->get_attribute('foo');
 
-    my $foo = Foo->new;
+    my $foo = FooBar->new;
     $attr->set_value( $foo, 2 );
 
     is_deeply(
-        \@Foo::calls,
+        \@FooBar::calls,
         [ [ $foo, 2 ] ],
         'trigger called correctly on initial set via meta-API',
     );
-    @Foo::calls = ();
+    @FooBar::calls = ();
 
     $attr->set_value( $foo, 3 );
 
     is_deeply(
-        \@Foo::calls,
+        \@FooBar::calls,
         [ [ $foo, 3, 2 ] ],
         'trigger called correctly on second set via meta-API',
     );
-    @Foo::calls = ();
+    @FooBar::calls = ();
 
     $attr->set_raw_value( $foo, 4 );
 
     is_deeply(
-        \@Foo::calls,
+        \@FooBar::calls,
         [ ],
         'trigger not called using set_raw_value method',
     );
-    @Foo::calls = ();
+    @FooBar::calls = ();
 }
 
 {
-    my $foo = Foo->new(foo => 2);
+    my $foo = FooBar->new(foo => 2);
     is_deeply(
-        \@Foo::calls,
+        \@FooBar::calls,
         [ [ $foo, 2 ] ],
         'trigger called correctly on construction',
     );
-    @Foo::calls = ();
+    @FooBar::calls = ();
 
     $foo->foo(3);
     is_deeply(
-        \@Foo::calls,
+        \@FooBar::calls,
         [ [ $foo, 3, 2 ] ],
         'trigger called correctly on set (with old value)',
     );
-    @Foo::calls = ();
-    Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
+    @FooBar::calls = ();
+    FooBar->meta->make_immutable, redo if FooBar->meta->is_mutable;
 }
 
 done_testing;
