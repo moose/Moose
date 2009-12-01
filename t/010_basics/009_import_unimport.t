@@ -13,6 +13,7 @@ my @moose_exports = qw(
     override
     augment
     super inner
+    blessed confess
 );
 
 {
@@ -64,8 +65,8 @@ ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_e
 {
     package Baz;
 
-    use Scalar::Util qw( blessed );
     use Moose;
+    use Scalar::Util qw( blessed );
 
     no Moose;
 }

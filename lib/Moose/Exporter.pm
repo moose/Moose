@@ -37,9 +37,9 @@ sub build_import_methods {
 
     my $export_recorder = {};
 
-    my ( $exports, $is_removable )
-        = $class->_make_sub_exporter_params(
-        [ @exports_from, $exporting_package ], $export_recorder );
+    my $exports = $class->_make_sub_exporter_params(
+        [ @exports_from, $exporting_package ], $export_recorder,
+    );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
@@ -53,7 +53,7 @@ sub build_import_methods {
         $exporter, \@exports_from );
 
     $methods{unimport} = $class->_make_unimport_sub( $exporting_package,
-        $exports, $is_removable, $export_recorder );
+        $exports, $export_recorder );
 
     $methods{init_meta} = $class->_make_init_meta( $exporting_package,
         \%args );
@@ -117,7 +117,6 @@ sub _make_sub_exporter_params {
     my $export_recorder   = shift;
 
     my %exports;
-    my %is_removable;
 
     for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
@@ -134,8 +133,6 @@ sub _make_sub_exporter_params {
                 $sub,
                 $export_recorder,
             );
-
-            $is_removable{$name} = 1;
         }
 
         for my $name ( @{ $args->{with_caller} } ) {
@@ -149,47 +146,51 @@ sub _make_sub_exporter_params {
                 $sub,
                 $export_recorder,
             );
-
-            $is_removable{$name} = 1;
         }
 
         for my $name ( @{ $args->{as_is} } ) {
             my ($sub, $coderef_name);
 
             if ( ref $name ) {
-                $sub  = $name;
+                $sub = $name;
 
-                # Even though Moose re-exports things from Carp &
-                # Scalar::Util, we don't want to remove those at
-                # unimport time, because the importing package may
-                # have imported them explicitly ala
-                #
-                # use Carp qw( confess );
-                #
-                # This is a hack. Since we can't know whether they
-                # really want to keep these subs or not, we err on the
-                # safe side and leave them in.
                 my $coderef_pkg;
                 ( $coderef_pkg, $coderef_name )
                     = Class::MOP::get_code_info($name);
 
-                $is_removable{$coderef_name} = $coderef_pkg eq $package ? 1 : 0;
+                # Moose re-exports things from Carp and Scalar::Util. Usually,
+                # we want to remove those again at unimport time. However, the
+                # importing package might have imported those symbols
+                # explicitly after using Moose ala
+                #
+                # use Moose;
+                # use Carp qw( confess );
+                #
+                # In this case, we don't want to remove 'confess' when
+                # unimporting. To do that, we wrap the exports from other
+                # packages in anonymous coderef. Then, at unimport time, we
+                # can figure out if the package symbol still contains the
+                # coderef we exported, or if the user overwrote it with
+                # something else we don't want to remove.
+                if ( $coderef_pkg ne $package ) {
+                    $sub = sub { goto &$name };
+                    &Scalar::Util::set_prototype( $sub, prototype $name );
+                }
             }
             else {
                 $sub = $class->_sub_from_package( $package, $name )
                     or next;
 
-                $is_removable{$name} = 1;
                 $coderef_name = $name;
             }
 
             $export_recorder->{$sub} = 1;
 
-            $exports{$coderef_name} = sub {$sub};
+            $exports{$coderef_name} = sub { $sub };
         }
     }
 
-    return ( \%exports, \%is_removable );
+    return \%exports;
 }
 
 sub _sub_from_package {
@@ -431,7 +432,6 @@ sub _make_unimport_sub {
     shift;
     my $exporting_package = shift;
     my $exports           = shift;
-    my $is_removable      = shift;
     my $export_recorder   = shift;
 
     return sub {
@@ -439,7 +439,6 @@ sub _make_unimport_sub {
         Moose::Exporter->_remove_keywords(
             $caller,
             [ keys %{$exports} ],
-            $is_removable,
             $export_recorder,
         );
     };
@@ -449,14 +448,11 @@ sub _remove_keywords {
     shift;
     my $package          = shift;
     my $keywords         = shift;
-    my $is_removable     = shift;
     my $recorded_exports = shift;
 
     no strict 'refs';
 
     foreach my $name ( @{ $keywords } ) {
-        next unless $is_removable->{$name};
-
         if ( defined &{ $package . '::' . $name } ) {
             my $sub = \&{ $package . '::' . $name };
 
