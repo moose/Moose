@@ -93,13 +93,20 @@ sub _initialize_body {
         defined $_ ? $_->_compiled_type_constraint : undef;
     } @type_constraints;
 
+    my @defaults = map { $_->default } @$attrs;
+    my @triggers = map { $_->can('trigger') ? $_->trigger : undef } @$attrs;
+
+    my $have_initializer = grep { $_->has_initializer } @$attrs;
+
     my ( $code, $e ) = $self->_compile_code(
         code => $source,
         environment => {
             '$meta'  => \$self,
-            '$attrs' => \$attrs,
+            ($have_initializer ? ('$attrs' => \$attrs) : ()),
             '@type_constraints' => \@type_constraints,
             '@type_constraint_bodies' => \@type_constraint_bodies,
+            '@defaults' => \@defaults,
+            '@triggers' => \@triggers,
         },
     );
 
@@ -172,9 +179,9 @@ sub _generate_triggers {
             . $init_arg
             . '\'}) && do {'
             . "\n    "
-            . '$attrs->['
+            . '$triggers['
             . $i
-            . ']->trigger->('
+            . ']->('
             . '$instance, '
             . $self->_meta_instance->inline_get_slot_value(
                   '$instance',
@@ -342,7 +349,7 @@ sub _generate_default_value {
     # in which case we can just deal with them
     # in the code we eval.
     if ($attr->is_default_a_coderef) {
-        return '$attrs->[' . $index . ']->default($instance)';
+        return '$defaults[' . $index . ']->($instance)';
     }
     else {
         return q{"} . quotemeta( $attr->default ) . q{"};

@@ -3,6 +3,7 @@ package Moose::Meta::Method::Accessor;
 
 use strict;
 use warnings;
+use B ();
 
 our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
@@ -24,8 +25,10 @@ sub _eval_code {
     my $attr = $self->associated_attribute;
     my $type_constraint_obj = $attr->type_constraint;
     my $environment = {
-        '$attr' => \$attr,
+        ($attr->has_initializer ? ('$attr' => \$attr) : ()),
         '$attr_name' => \$attr->name,
+        '$attr_default' => \$attr->default,
+        '$attr_trigger' => \$attr->trigger,
         '$meta' => \$self,
         '$type_constraint_obj' => \$type_constraint_obj,
         '$type_constraint_name' => \($type_constraint_obj && $type_constraint_obj->name),
@@ -144,7 +147,7 @@ sub _inline_check_coercion {
     my $attr = $self->associated_attribute;
 
     return '' unless $attr->should_coerce;
-    return "$value = \$attr->type_constraint->coerce($value);";
+    return "$value = \$type_constraint_obj->coerce($value);";
 }
 
 sub _inline_check_required {
@@ -170,13 +173,22 @@ sub _inline_check_lazy {
     if ($attr->has_type_constraint) {
         if ($attr->has_default || $attr->has_builder) {
             if ($attr->has_default) {
-                $code .= '    my $default = $attr->default(' . $instance . ');'."\n";
+                if (ref $attr->default eq 'CODE') {
+                    $code .= '    my $default = $attr_default->(' . $instance . ');'."\n";
+                } else {
+                    my $default_string =
+                        Scalar::Util::looks_like_number($attr->default)
+                            ? $attr->default
+                            : B::perlstring($attr->default);
+                    $code.= '    my $default = '.$default_string.';'."\n";
+                }
             }
             elsif ($attr->has_builder) {
+                my $builder_name = B::perlstring($attr->builder);
                 $code .= '    my $default;'."\n".
-                         '    if(my $builder = '.$instance.'->can($attr->builder)){ '."\n".
+                         '    if(my $builder = '.$instance.'->can('.$builder_name.')){ '."\n".
                          '        $default = '.$instance.'->$builder; '. "\n    } else {\n" .
-                         '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name') .
+                         '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', '.$builder_name.', '.B::perlstring($attr->name)).
                          ';'. "\n    }";
             }
             $code .= $self->_inline_check_coercion('$default') . "\n";
@@ -189,13 +201,23 @@ sub _inline_check_lazy {
 
     } else {
         if ($attr->has_default) {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, ('$attr->default(' . $instance . ')')) . "\n";
+            my $default_string;
+            if (ref($attr->default) eq 'CODE') {
+                $default_string = '$attr_default->(' . $instance . ')';
+            } else {
+                $default_string =
+                    Scalar::Util::looks_like_number($attr->default)
+                        ? $attr->default
+                        : B::perlstring($attr->default);
+            }
+            $code .= '    ' . $self->_inline_init_slot($attr, $instance, $default_string) . "\n";
         }
         elsif ($attr->has_builder) {
-            $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n"
+            my $builder_name = B::perlstring($attr->builder);
+            $code .= '    if (my $builder = '.$instance.'->can('.$builder_name.')) { ' . "\n"
                   .  '       ' . $self->_inline_init_slot($attr, $instance, ($instance . '->$builder'))
                   .  "\n    } else {\n"
-                  .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name')
+                  .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', '.$builder_name.', '.B::perlstring($attr->name))
                   .  ';'. "\n    }";
         }
         else {
@@ -247,7 +269,7 @@ sub _inline_trigger {
     my ($self, $instance, $value, $old_value) = @_;
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s, %s);', $instance, $value, $old_value);
+    return sprintf('$attr_trigger->(%s, %s, %s);', $instance, $value, $old_value);
 }
 
 sub _inline_get {

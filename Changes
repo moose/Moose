@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+    * Moose::Meta::Method::Accessor
+    * Moose::Meta::Method::Constructor
+      - Refactor accessor generation so (bar initializer) we don't need
+        to close over the meta-attribute object (mst)
+
 0.94
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
