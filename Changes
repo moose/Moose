@@ -8,6 +8,10 @@ for, noteworthy changes.
        general failures if you don't have the author side dependencies
        installed
 
+    * Test::Moose
+      - Added a with_immutable test function, to run a block of tests with
+        and without certain classes being immutable. (doy)
+
 0.94
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)

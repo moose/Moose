@@ -16,6 +16,7 @@ my @exports = qw[
     meta_ok
     does_ok
     has_attribute_ok
+    with_immutable
 ];
 
 Sub::Exporter::setup_exporter({
@@ -68,6 +69,13 @@ sub has_attribute_ok ($$;$) {
     else {
         return $Test->ok(0, $message);
     }
+}
+
+sub with_immutable (&@) {
+    my $block = shift;
+    $block->();
+    $_->meta->make_immutable for @_;
+    $block->();
 }
 
 1;
