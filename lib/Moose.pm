@@ -465,8 +465,10 @@ If an attribute is marked as lazy it B<must> have a default supplied.
 
 =item I<auto_deref =E<gt> (1|0)>
 
-This tells the accessor whether to automatically dereference the value returned.
-This is only legal if your C<isa> option is either C<ArrayRef> or C<HashRef>.
+This tells the accessor to automatically dereference the value of this
+attribute when called in list context.  The accessor will still return a
+reference when called in scalar context.  This is only legal if your C<isa>
+option is either C<ArrayRef> or C<HashRef>.
 
 =item I<trigger =E<gt> $code>
 
