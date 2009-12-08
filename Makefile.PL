@@ -29,7 +29,7 @@ author_requires 'Test::Inline';
 author_requires 'File::Find::Rule';
 author_requires 'Module::Info';
 
-if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
+if ( $Module::Install::AUTHOR || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
 }
 
