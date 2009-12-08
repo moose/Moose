@@ -1,6 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+   * Makefile.PL
+     - Use Module::Install extensions explicitly to avoid confusing errors
+       if they're not installed
+     - Use Module::Install::AuthorRequires to stop test extraction and
+       general failures if you don't have the author side dependencies
+       installed
+
 0.94
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)

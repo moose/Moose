@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 use inc::Module::Install;
+use Module::Install::ExtraTests;
+use Module::Install::AuthorRequires;
 use 5.008001;
 
 check_conflicts();
@@ -22,6 +24,10 @@ requires 'Try::Tiny'        => '0.02';
 
 test_requires 'Test::More'      => '0.88';
 test_requires 'Test::Exception' => '0.27';
+
+author_requires 'Test::Inline';
+author_requires 'File::Find::Rule';
+author_requires 'Module::Info';
 
 if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
