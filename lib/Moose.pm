@@ -1024,7 +1024,7 @@ The mailing list is L<moose@perl.org>. You must be subscribed to send
 a message. To subscribe, send an empty message to
 L<moose-subscribe@perl.org>
 
-You can also visit us at C<#moose> on C<< irc://irc.perl.org/#moose >>
+You can also visit us at C<#moose> on L<irc://irc.perl.org/#moose>
 This channel is quite active, and questions at all levels (on Moose-related
 topics ;) are welcome.
 
