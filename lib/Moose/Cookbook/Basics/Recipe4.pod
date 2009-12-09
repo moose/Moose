@@ -244,7 +244,7 @@ Again, as with the C<BUILD> method, we know that the type constraint
 check has already happened, so we can just check for definedness on the
 C<$employees> argument.
 
-The B<Person> class does have demonstrate anything new. It has several
+The B<Person> class does not really demonstrate anything new. It has several
 C<required> attributes. It also has a C<predicate> method, which we
 first used in L<recipe 3|Moose::Cookbook::Basics::Recipe3>.
 
