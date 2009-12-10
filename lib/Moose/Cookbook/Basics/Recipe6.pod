@@ -116,7 +116,7 @@ easily subclass C<TPSReport> in the future.
 
 The C<augment> modifier is a powerful tool for creating a set of
 nested wrappers. It's not something you will need often, but when you
-do it is very handy.
+do, it is very handy.
 
 =head1 AUTHOR
 
