@@ -6,6 +6,7 @@ use warnings;
 use Sub::Exporter;
 use Test::Builder;
 
+use List::MoreUtils 'all';
 use Moose::Util 'does_role', 'find_meta';
 
 our $VERSION   = '0.93';
@@ -73,9 +74,12 @@ sub has_attribute_ok ($$;$) {
 
 sub with_immutable (&@) {
     my $block = shift;
+    my $before = $Test->current_test;
     $block->();
     $_->meta->make_immutable for @_;
     $block->();
+    my $num_tests = $Test->current_test - $before;
+    return all { $_ } ($Test->summary)[-$num_tests..-1];
 }
 
 1;

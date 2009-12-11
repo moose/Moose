@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Builder::Tester tests => 2;
+use Test::Builder::Tester tests => 5;
 use Test::More;
 
 BEGIN {
@@ -15,12 +15,24 @@ BEGIN {
     use Moose;
 }
 
+{
+    package Bar;
+    use Moose;
+}
+
 package main;
 
 test_out("ok 1", "not ok 2");
 test_fail(+2);
-with_immutable {
+my $ret = with_immutable {
     ok(Foo->meta->is_mutable);
 } qw(Foo);
+test_test('with_immutable failure');
+ok(!$ret, "one of our tests failed");
 
-test_test('with_immutable');
+test_out("ok 1", "ok 2");
+$ret = with_immutable {
+    ok(Bar->meta->find_method_by_name('new'));
+} qw(Bar);
+test_test('with_immutable success');
+ok($ret, "all tests succeeded");
