@@ -23,31 +23,8 @@ This document covers a few of the ones we like best.
 
 =head1 L<MooseX::AttributeHelpers>
 
-If you only look at one extension, it should be this one. It provides
-the equivalent of delegation for all of Perl's native data types, such
-as array reference, hash references, numbers, strings, etc.
-
-This lets you create I<much> cleaner and fluent APIs.
-
-  package User;
-
-  use Moose;
-  use MooseX::AttributeHelpers;
-
-  has '_orders' => (
-      metaclass => 'Collection::Array',
-      is        => 'ro',
-      isa       => 'ArrayRef',
-      default   => sub { [] },
-      provides  => {
-          push     => 'add_order',
-          shift    => 'next_order',
-          elements => 'orders',
-      },
-  );
-
-Instead of directly exposing an array reference, we have three
-well-named, easy to use methods.
+The functionality of this MooseX module has been moved into Moose core.
+See L<Moose::Meta::Attribute::Native>.
 
 =head1 L<Moose::Autobox>
 
@@ -191,10 +168,10 @@ also lets you predeclare type names and use them as barewords.
   use MooseX::Types -declare => ['PositiveInt'];
   use MooseX::Types::Moose 'Int';
 
-  subtype PositiveInt
-      => as Int,
-      => where { $_ > 0 }
-      => message {"Int is not larger than 0"};
+  subtype PositiveInt,
+      as Int,
+      where { $_ > 0 },
+      message { "Int is not larger than 0" };
 
 One nice feature is that those bareword names are actually namespaced
 in Moose's type registry, so multiple applications can use the same

@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -296,29 +296,8 @@ sub _find_next_method_by_name_which_is_not_overridden {
 sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
-    foreach my $super (@superclasses) {
-        my $meta = Class::MOP::Class->initialize($super);
-
-        my @all_supers = $meta->linearized_isa;
-        shift @all_supers;
-
-        my @super_metas_to_fix = ($meta);
-
-        # We need to check & fix the immediate superclass. If its @ISA
-        # contains a class without a metaclass instance, followed by a
-        # class _with_ a metaclass instance, init a metaclass instance
-        # for classes without one and fix compat up to and including
-        # the class which was already initialized.
-        my $idx = first_index { Class::MOP::class_of($_) } @all_supers;
-
-        push @super_metas_to_fix,
-            map { Class::MOP::Class->initialize($_) } @all_supers[ 0 .. $idx ]
-            if $idx >= 0;
-
-        foreach my $super_meta (@super_metas_to_fix) {
-            $self->_fix_one_incompatible_metaclass($super_meta);
-        }
-    }
+    $self->_fix_one_incompatible_metaclass($_)
+        for map { Moose::Meta::Class->initialize($_) } @superclasses;
 }
 
 sub _fix_one_incompatible_metaclass {
@@ -343,7 +322,7 @@ sub _superclass_meta_is_compatible {
 
     my $super_meta_name
         = $super_meta->is_immutable
-        ? $super_meta->get_mutable_metaclass_name
+        ? $super_meta->_get_mutable_metaclass_name
         : ref($super_meta);
 
     return 1
@@ -367,7 +346,7 @@ sub _reconcile_with_superclass_meta {
 
     my $super_meta_name
         = $super_meta->is_immutable
-        ? $super_meta->get_mutable_metaclass_name
+        ? $super_meta->_get_mutable_metaclass_name
         : ref($super_meta);
 
     my $self_metaclass = ref $self;
@@ -672,8 +651,9 @@ These all default to the appropriate Moose class.
 =item B<< Moose::Meta::Class->create($package_name, %options) >>
 
 This overrides the parent's method in order to accept a C<roles>
-option. This should be an array reference containing one more roles
-that the class does, each optionally followed by a hashref of options.
+option. This should be an array reference containing roles
+that the class does, each optionally followed by a hashref of options
+(C<-excludes> and C<-alias>).
 
   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
 

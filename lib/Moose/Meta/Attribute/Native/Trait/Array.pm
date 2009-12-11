@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
 use Moose::Role;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -29,7 +29,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Array
+Moose::Meta::Attribute::Native::Trait::Array - Helper trait for ArrayRef attributes
 
 =head1 SYNOPSIS
 
@@ -43,12 +43,14 @@ Moose::Meta::Attribute::Native::Trait::Array
        default    => sub { [] },
        handles    => {
            all_options    => 'elements',
+           add_option     => 'push',
            map_options    => 'map',
            filter_options => 'grep',
            find_option    => 'first',
            get_option     => 'get',
            join_options   => 'join',
            count_options  => 'count',
+           has_options    => 'count',
            has_no_options => 'is_empty',
            sorted_options => 'sort',
        },
@@ -81,7 +83,7 @@ Returns the number of elements in the array.
 
 =item B<is_empty>
 
-Returns a boolean value indicating whether or not the array has any elements.
+Returns a boolean value that is true when the array has no elements.
 
    $stuff->has_no_options ? die "No options!\n" : print "Good boy.\n";
 
@@ -102,11 +104,11 @@ numbers, just as with Perl's core array handling.
 
 =item B<pop>
 
-=item B<push($value)>
+=item B<push($value1, $value2, value3 ...)>
 
 =item B<shift>
 
-=item B<unshift($value)>
+=item B<unshift($value1, $value2, value3 ...)>
 
 =item B<splice($offset, $length, @values)>
 

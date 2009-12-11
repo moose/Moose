@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,11 +20,10 @@ sub setup_import_methods {
 
     my $exporting_package = $args{exporting_package} ||= caller();
 
-    my ( $import, $unimport ) = $class->build_import_methods(%args);
-
-    no strict 'refs';
-    *{ $exporting_package . '::import' }   = $import;
-    *{ $exporting_package . '::unimport' } = $unimport;
+    $class->build_import_methods(
+        %args,
+        install => [qw(import unimport init_meta)]
+    );
 }
 
 sub build_import_methods {
@@ -38,27 +37,40 @@ sub build_import_methods {
 
     my $export_recorder = {};
 
-    my ( $exports, $is_removable, $groups )
+    my ( $exports, $is_removable )
         = $class->_make_sub_exporter_params(
         [ @exports_from, $exporting_package ], $export_recorder );
 
     my $exporter = Sub::Exporter::build_exporter(
         {
             exports => $exports,
-            groups  => { default => [':all'], %$groups }
+            groups  => { default => [':all'] }
         }
     );
 
+    my %methods;
     # $args{_export_to_main} exists for backwards compat, because
     # Moose::Util::TypeConstraints did export to main (unlike Moose &
     # Moose::Role).
-    my $import = $class->_make_import_sub( $exporting_package, $exporter,
-        \@exports_from, $args{_export_to_main} );
+    $methods{import} = $class->_make_import_sub( $exporting_package,
+        $exporter, \@exports_from, $args{_export_to_main} );
 
-    my $unimport = $class->_make_unimport_sub( $exporting_package, $exports,
-        $is_removable, $export_recorder );
+    $methods{unimport} = $class->_make_unimport_sub( $exporting_package,
+        $exports, $is_removable, $export_recorder );
 
-    return ( $import, $unimport )
+    $methods{init_meta} = $class->_make_init_meta( $exporting_package,
+        \%args );
+
+    my $package = Class::MOP::Package->initialize($exporting_package);
+    for my $to_install ( @{ $args{install} || [] } ) {
+        my $symbol = '&' . $to_install;
+        next
+            unless $methods{$to_install}
+                && !$package->has_package_symbol($symbol);
+        $package->add_package_symbol( $symbol, $methods{$to_install} );
+    }
+
+    return ( $methods{import}, $methods{unimport}, $methods{init_meta} )
 }
 
 {
@@ -92,7 +104,7 @@ sub build_import_methods {
 
         for my $package (@also)
         {
-            die "Circular reference in also parameter to Moose::Exporter between $exporting_package and $package"
+            die "Circular reference in 'also' parameter to Moose::Exporter between $exporting_package and $package"
                 if $seen->{$package};
 
             $seen->{$package} = 1;
@@ -107,7 +119,6 @@ sub _make_sub_exporter_params {
     my $packages          = shift;
     my $export_recorder   = shift;
 
-    my %groups;
     my %exports;
     my %is_removable;
 
@@ -115,37 +126,9 @@ sub _make_sub_exporter_params {
         my $args = $EXPORT_SPEC{$package}
             or die "The $package package does not use Moose::Exporter\n";
 
-        # one group for each 'also' package
-        $groups{$package} = [
-            @{ $args->{with_caller} || [] },
-            @{ $args->{with_meta}   || [] },
-            @{ $args->{as_is}       || [] },
-            map ":$_",
-            keys %{ $args->{groups} || {} }
-        ];
-
-        for my $name ( @{ $args->{with_caller} } ) {
-            my $sub = do {
-                no strict 'refs';
-                \&{ $package . '::' . $name };
-            };
-
-            my $fq_name = $package . '::' . $name;
-
-            $exports{$name} = $class->_make_wrapped_sub(
-                $fq_name,
-                $sub,
-                $export_recorder,
-            );
-
-            $is_removable{$name} = 1;
-        }
-
         for my $name ( @{ $args->{with_meta} } ) {
-            my $sub = do {
-                no strict 'refs';
-                \&{ $package . '::' . $name };
-            };
+            my $sub = $class->_sub_from_package( $package, $name )
+                or next;
 
             my $fq_name = $package . '::' . $name;
 
@@ -158,8 +141,23 @@ sub _make_sub_exporter_params {
             $is_removable{$name} = 1;
         }
 
+        for my $name ( @{ $args->{with_caller} } ) {
+            my $sub = $class->_sub_from_package( $package, $name )
+                or next;
+
+            my $fq_name = $package . '::' . $name;
+
+            $exports{$name} = $class->_make_wrapped_sub(
+                $fq_name,
+                $sub,
+                $export_recorder,
+            );
+
+            $is_removable{$name} = 1;
+        }
+
         for my $name ( @{ $args->{as_is} } ) {
-            my $sub;
+            my ($sub, $coderef_name);
 
             if ( ref $name ) {
                 $sub  = $name;
@@ -175,43 +173,44 @@ sub _make_sub_exporter_params {
                 # really want to keep these subs or not, we err on the
                 # safe side and leave them in.
                 my $coderef_pkg;
-                ( $coderef_pkg, $name ) = Class::MOP::get_code_info($name);
+                ( $coderef_pkg, $coderef_name )
+                    = Class::MOP::get_code_info($name);
 
-                $is_removable{$name} = $coderef_pkg eq $package ? 1 : 0;
+                $is_removable{$coderef_name} = $coderef_pkg eq $package ? 1 : 0;
             }
             else {
-                $sub = do {
-                    no strict 'refs';
-                    \&{ $package . '::' . $name };
-                };
+                $sub = $class->_sub_from_package( $package, $name )
+                    or next;
 
                 $is_removable{$name} = 1;
+                $coderef_name = $name;
             }
 
             $export_recorder->{$sub} = 1;
 
-            $exports{$name} = sub {$sub};
-        }
-
-        for my $name ( keys %{ $args->{groups} } ) {
-            my $group = $args->{groups}{$name};
-
-            if (ref $group eq 'CODE') {
-                $groups{$name} = $class->_make_wrapped_group(
-                    $package,
-                    $group,
-                    $export_recorder,
-                    \%exports,
-                    \%is_removable
-                );
-            }
-            elsif (ref $group eq 'ARRAY') {
-                $groups{$name} = $group;
-            }
+            $exports{$coderef_name} = sub {$sub};
         }
     }
 
-    return ( \%exports, \%is_removable, \%groups );
+    return ( \%exports, \%is_removable );
+}
+
+sub _sub_from_package {
+    my $sclass = shift;
+    my $package = shift;
+    my $name = shift;
+
+    my $sub = do {
+        no strict 'refs';
+        \&{ $package . '::' . $name };
+    };
+
+    return $sub if defined &$sub;
+
+    Carp::cluck
+            "Trying to export undefined sub ${package}::${name}";
+
+    return;
 }
 
 our $CALLER;
@@ -261,56 +260,6 @@ sub _make_wrapped_sub_with_meta {
     };
 }
 
-sub _make_wrapped_group {
-    my $class           = shift;
-    my $package         = shift; # package calling use Moose::Exporter
-    my $sub             = shift;
-    my $export_recorder = shift;
-    my $keywords        = shift;
-    my $is_removable    = shift;
-
-    return sub {
-        my $caller = $CALLER; # package calling use PackageUsingMooseExporter -group => {args}
-
-        # there are plenty of ways to deal with telling the code which
-        # package it lives in. the last arg (collector hashref) is
-        # otherwise unused, so we'll stick the original package in
-        # there and act like 'with_caller' by putting the calling
-        # package name as the first arg
-        $_[0] = $caller;
-        $_[3]{from} = $package;
-
-        my $named_code = $sub->(@_);
-        $named_code ||= { };
-
-        # send invalid return value error up to Sub::Exporter
-        unless (ref $named_code eq 'HASH') {
-            return $named_code;
-        }
-
-        for my $name (keys %$named_code) {
-            my $code = $named_code->{$name};
-
-            my $fq_name = $package . '::' . $name;
-            my $wrapper = $class->_curry_wrapper(
-                $code,
-                $fq_name,
-                $caller
-            );
-
-            my $sub = subname( $fq_name => $wrapper );
-            $named_code->{$name} = $sub;
-
-            # mark each coderef as ours
-            $keywords->{$name} = 1;
-            $is_removable->{$name} = 1;
-            $export_recorder->{$sub} = 1;
-        }
-
-        return $named_code;
-    };
-}
-
 sub _curry_wrapper {
     my $class   = shift;
     my $sub     = shift;
@@ -352,7 +301,6 @@ sub _make_import_sub {
     my $exporting_package = shift;
     my $exporter          = shift;
     my $exports_from      = shift;
-    my $export_to_main    = shift;
 
     return sub {
 
@@ -388,13 +336,6 @@ sub _make_import_sub {
 
         strict->import;
         warnings->import;
-
-        # we should never export to main
-        if ( $CALLER eq 'main' && !$export_to_main ) {
-            warn
-                qq{$class does not export its sugar to the 'main' package.\n};
-            return;
-        }
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
@@ -531,6 +472,57 @@ sub _remove_keywords {
     }
 }
 
+sub _make_init_meta {
+    shift;
+    my $class = shift;
+    my $args  = shift;
+
+    my %metaclass_roles;
+    for my $role (
+        map {"${_}_roles"}
+        qw(metaclass
+        attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class
+        application_to_class_class
+        application_to_role_class
+        application_to_instance_class)
+        ) {
+        $metaclass_roles{$role} = $args->{$role} if exists $args->{$role};
+    }
+
+    my %base_class_roles;
+    %base_class_roles = ( roles => $args->{base_class_roles} )
+        if exists $args->{base_class_roles};
+
+    return unless %metaclass_roles || %base_class_roles;
+
+    return sub {
+        shift;
+        my %options = @_;
+
+        return unless Class::MOP::class_of( $options{for_class} );
+
+        Moose::Util::MetaRole::apply_metaclass_roles(
+            for_class => $options{for_class},
+            %metaclass_roles,
+        );
+
+        Moose::Util::MetaRole::apply_base_class_roles(
+            for_class => $options{for_class},
+            %base_class_roles,
+            )
+            if Class::MOP::class_of( $options{for_class} )
+                ->isa('Moose::Meta::Class');
+
+        return Class::MOP::class_of( $options{for_class} );
+    };
+}
+
 sub import {
     strict->import;
     warnings->import;
@@ -552,14 +544,15 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => [ 'has_rw', 'sugar2' ],
-      as_is       => [ 'sugar3', \&Some::Random::thing ],
-      also        => 'Moose',
+      with_meta => [ 'has_rw', 'sugar2' ],
+      as_is     => [ 'sugar3', \&Some::Random::thing ],
+      also      => 'Moose',
   );
 
   sub has_rw {
-      my ($caller, $name, %options) = @_;
-      Class::MOP::class_of($caller)->add_attribute($name,
+      my ( $meta, $name, %options ) = @_;
+      $meta->add_attribute(
+          $name,
           is => 'rw',
           %options,
       );
@@ -579,12 +572,15 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 =head1 DESCRIPTION
 
 This module encapsulates the exporting of sugar functions in a
-C<Moose.pm>-like manner. It does this by building custom C<import> and
-C<unimport> methods for your module, based on a spec you provide.
+C<Moose.pm>-like manner. It does this by building custom C<import>,
+C<unimport>, and C<init_meta> methods for your module, based on a spec you
+provide.
 
-It also lets you "stack" Moose-alike modules so you can export
-Moose's sugar as well as your own, along with sugar from any random
-C<MooseX> module, as long as they all use C<Moose::Exporter>.
+It also lets you "stack" Moose-alike modules so you can export Moose's sugar
+as well as your own, along with sugar from any random C<MooseX> module, as
+long as they all use C<Moose::Exporter>. This feature exists to let you bundle
+a set of MooseX modules into a policy module that developers can use directly
+instead of using Moose itself.
 
 To simplify writing exporter modules, C<Moose::Exporter> also imports
 C<strict> and C<warnings> into your exporter module, as well as into
@@ -598,43 +594,52 @@ This module provides two public methods:
 
 =item  B<< Moose::Exporter->setup_import_methods(...) >>
 
-When you call this method, C<Moose::Exporter> build custom C<import>
-and C<unimport> methods for your module. The import method will export
-the functions you specify, and you can also tell it to export
-functions exported by some other module (like C<Moose.pm>).
+When you call this method, C<Moose::Exporter> builds custom C<import>,
+C<unimport>, and C<init_meta> methods for your module. The C<import> method
+will export the functions you specify, and can also re-export functions
+exported by some other module (like C<Moose.pm>).
 
-The C<unimport> method cleans the callers namespace of all the
-exported functions.
+The C<unimport> method cleans the caller's namespace of all the exported
+functions.
+
+If you pass any parameters for L<Moose::Util::MetaRole>, this method will
+generate an C<init_meta> for you as well (see below for details). This
+C<init_meta> will call C<Moose::Util::MetaRole::apply_metaclass_roles> and
+C<Moose::Util::MetaRole::apply_base_class_roles> as needed.
+
+Note that if any of these methods already exist, they will not be
+overridden, you will have to use C<build_import_methods> to get the
+coderef that would be installed.
 
 This method accepts the following parameters:
 
 =over 8
 
-=item * with_caller => [ ... ]
+=item * with_meta => [ ... ]
 
-This a list of function I<names only> to be exported wrapped and then
-exported. The wrapper will pass the name of the calling package as the
-first argument to the function. Many sugar functions need to know
-their caller so they can get the calling package's metaclass object.
+This list of function I<names only> will be wrapped and then exported. The
+wrapper will pass the metaclass object for the caller as its first argument.
+
+Many sugar functions will need to use this metaclass object to do something to
+the calling package.
 
 =item * as_is => [ ... ]
 
-This a list of function names or sub references to be exported
-as-is. You can identify a subroutine by reference, which is handy to
-re-export some other module's functions directly by reference
-(C<\&Some::Package::function>).
+This list of function names or sub references will be exported as-is. You can
+identify a subroutine by reference, which is handy to re-export some other
+module's functions directly by reference (C<\&Some::Package::function>).
 
-If you do export some other packages function, this function will
-never be removed by the C<unimport> method. The reason for this is we
-cannot know if the caller I<also> explicitly imported the sub
-themselves, and therefore wants to keep it.
+If you do export some other package's function, this function will never be
+removed by the C<unimport> method. The reason for this is we cannot know if
+the caller I<also> explicitly imported the sub themselves, and therefore wants
+to keep it.
 
 =item * also => $name or \@names
 
 This is a list of modules which contain functions that the caller
 wants to export. These modules must also use C<Moose::Exporter>. The
 most common use case will be to export the functions from C<Moose.pm>.
-Functions specified by C<with_caller> or C<as_is> take precedence over
+Functions specified by C<with_meta> or C<as_is> take precedence over
 functions exported by modules specified by C<also>, so that a module
 can selectively override functions exported by another module.
 
@@ -643,9 +648,21 @@ when C<unimport> is called.
 
 =back
 
+Any of the C<*_roles> options for
+C<Moose::Util::MetaRole::apply_metaclass_roles> and
+C<Moose::Util::MetaRole::base_class_roles> are also acceptable.
+
 =item B<< Moose::Exporter->build_import_methods(...) >>
 
-Returns two code refs, one for import and one for unimport.
+Returns two or three code refs, one for C<import>, one for
+C<unimport>, and optionally one for C<init_meta>, if the appropriate
+options are passed in.
+
+Accepts the additional C<install> option, which accepts an arrayref of method
+names to install into your exporting package. The valid options are C<import>,
+C<unimport>, and C<init_meta>. Calling C<setup_import_methods> is equivalent
+to calling C<build_import_methods> with C<< install => [qw(import unimport
+init_meta)] >> except that it doesn't also return the methods.
 
 Used by C<setup_import_methods>.
 
@@ -653,11 +670,14 @@ Used by C<setup_import_methods>.
 
 =head1 IMPORTING AND init_meta
 
-If you want to set an alternative base object class or metaclass
-class, simply define an C<init_meta> method in your class. The
-C<import> method that C<Moose::Exporter> generates for you will call
-this method (if it exists). It will always pass the caller to this
-method via the C<for_class> parameter.
+If you want to set an alternative base object class or metaclass class, see
+above for details on how this module can call L<Moose::Util::MetaRole> for
+you.
+
+If you want to do something that is not supported by this module, simply
+define an C<init_meta> method in your class. The C<import> method that
+C<Moose::Exporter> generates for you will call this method (if it exists). It
+will always pass the caller to this method via the C<for_class> parameter.
 
 Most of the time, your C<init_meta> method will probably just call C<<
 Moose->init_meta >> to do the real work:
@@ -665,6 +685,35 @@ Moose->init_meta >> to do the real work:
   sub init_meta {
       shift; # our class name
       return Moose->init_meta( @_, metaclass => 'My::Metaclass' );
+  }
+
+Keep in mind that C<build_import_methods> will return an C<init_meta>
+method for you, which you can also call from within your custom
+C<init_meta>:
+
+  my ( $import, $unimport, $init_meta ) =
+      Moose::Exporter->build_import_methods( ... );
+
+  sub import {
+     my $class = shift;
+
+     ...
+
+     $class->$import(...);
+
+     ...
+  }
+
+  sub unimport { goto &$unimport }
+
+  sub init_meta {
+     my $class = shift;
+
+     ...
+
+     $class->$init_meta(...);
+
+     ...
   }
 
 =head1 METACLASS TRAITS

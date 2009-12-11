@@ -16,13 +16,76 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 Version XX
+=head1 0.93
+
+=over 4
+
+=item Calling $object->new() is no longer deprecated
+
+We decided to undeprecate this. Now it just works.
+
+=back
+
+=head1 0.90
+
+=over 4
+
+=item Added Native delegation for Code refs
+
+See L<Moose::Meta::Attribute::Native::Trait::Code> for details.
+
+=item Calling $object->new() is deprecated
+
+Moose has long supported this, but it's never really been documented, and we
+don't think this is a good practice. If you want to construct an object from
+an existing object, you should provide some sort of alternate constructor like
+C<< $object->clone >>.
+
+Calling C<< $object->new >> now issues a warning, and will be an error in a
+future release.
+
+=item Moose no longer warns if you call C<make_immutable> for a class with mutable ancestors
+
+While in theory this is a good thing to warn about, we found so many
+exceptions to this that doing this properly became quite problematic.
+
+=back
+
+=head1 Version 0.89_02
 
 =over 4
 
 =item New Native delegation methods from L<List::Util> and L<List::MoreUtils>
 
 In particular, we now have C<reduce>, C<shuffle>, C<uniq>, and C<natatime>.
+
+=item The Moose::Exporter with_caller feature is now deprecated
+
+Use C<with_meta> instead. The C<with_caller> option will start warning in a
+future release.
+
+=item Moose now warns if you call C<make_immutable> for a class with mutable ancestors
+
+This is dangerous because modifying a class after a subclass has been
+immutabilized will lead to incorrect results in the subclass, due to inlining,
+caching, etc. This occasionally happens accidentally, when a class loads one
+of its subclasses in the middle of its class definition, so pointing out that
+this may cause issues should be helpful. Metaclasses (classes that inherit
+from L<Class::MOP::Object>) are currently exempt from this check, since at the
+moment we aren't very consistent about which metaclasses we immutabilize.
+
+=item C<enum> and C<duck_type> now take arrayrefs for all forms
+
+Previously, calling these functions with a list would take the first element of
+the list as the type constraint name, and use the remainder as the enum values
+or method names. This makes the interface inconsistent with the anon-type forms
+of these functions (which must take an arrayref), and a free-form list where
+the first value is sometimes special is hard to validate (and harder to give
+reasonable error messages for). These functions have been changed to take
+arrayrefs in all their forms - so, C<< enum 'My::Type' => [qw(foo bar)] >> is
+now the preferred way to create an enum type constraint. The old syntax still
+works for now, but it will hopefully be deprecated and removed in a future
+release.
 
 =back
 
@@ -76,6 +139,10 @@ See L<Moose::Meta::Attribute::Native> for the new documentation.
 
 =back
 
+The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
+and C<-excludes>. The old names still work, but new code should use the new
+names, and eventually the old ones will be deprecated and removed.
+
 =head1 Version 0.89
 
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
@@ -89,10 +156,6 @@ a wrapper around the old
   sub register_implementation { 'My::Meta::Trait' }
 
 way of doing this.
-
-The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
-and C<-excludes>. The old names still work, but new code should use the new
-names, and eventually the old ones will be deprecated and removed.
 
 =head1 Version 0.84
 

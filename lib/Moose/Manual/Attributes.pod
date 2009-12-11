@@ -211,7 +211,7 @@ reference will be called as a method on the object.
       predicate => 'has_size',
   );
 
-This is dumb example, but it illustrates the point that the subroutine
+This is a dumb example, but it illustrates the point that the subroutine
 will be called for every new object created.
 
 When you provide a C<default> subroutine reference, it is called as a
@@ -530,8 +530,6 @@ of ways through the use of custom metaclasses and metaclass traits.
 When declaring an attribute, you can declare a metaclass or a set of
 traits for the attribute:
 
-  use Moose::AttributeHelpers;
-
   has 'mapping' => (
       metaclass => 'Hash',
       is        => 'ro',
@@ -539,7 +537,12 @@ traits for the attribute:
   );
 
 In this case, the metaclass C<Hash> really refers to
-L<Moose::Meta::Attribute::Trait::Native::Hash>.
+L<Moose::Meta::Attribute::Native::Trait::Hash>. Moose also provides
+native traits for L<Number|Moose::Meta::Attribute::Native::Trait::Number>, 
+L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>, 
+L<String|Moose::Meta::Attribute::Native::Trait::String>, 
+L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>, and 
+L<Array|Moose::Meta::Attribute::Native::Trait::Array>.
 
 You can also apply one or more traits to an attribute:
 
@@ -614,6 +617,24 @@ to C<'Bill'>.
 We recommend that you exercise caution when changing the type (C<isa>)
 of an inherited attribute.
 
+=head1 MULTIPLE ATTRIBUTE SHORTCUTS
+
+If you have a number of attributes that differ only be name, you can declare
+them all at once:
+
+  package Point;
+
+  use Moose;
+
+  has [ 'x', 'y' ] => ( is => 'ro', isa => 'Int' );
+
+Also, because C<has> is just a function call, you can call it in a loop:
+
+  for my $name ( qw( x y ) ) {
+      my $builder = '_build_' . $name;
+      has $name => ( is => 'ro', isa => 'Int', builder => $builder );
+  }
+
 =head1 MORE ON ATTRIBUTES
 
 Moose attributes are a big topic, and this document glosses over a few
@@ -650,8 +671,8 @@ returned from the reader method:
 This option only works if your attribute is explicitly typed as an
 C<ArrayRef> or C<HashRef>.
 
-However, we recommend that you use L<MooseX::AttributeHelpers> for
-these types of attributes, which gives you much more control over how
+However, we recommend that you use L<Moose::Meta::Attribute::Native> traits
+for these types of attributes, which gives you much more control over how
 they are accessed and manipulated.
 
 =head2 Initializer

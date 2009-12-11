@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::Trait::String;
 use Moose::Role;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,20 +20,6 @@ sub _default_default { q{} }
 sub _default_is { 'rw' }
 sub _helper_type { 'Str' }
 
-after '_check_handles_values' => sub {
-    my $self    = shift;
-    my $handles = $self->handles;
-
-    unless ( scalar keys %$handles ) {
-        my $method_constructors = $self->method_constructors;
-        my $attr_name           = $self->name;
-
-        foreach my $method ( keys %$method_constructors ) {
-            $handles->{$method} = ( $method . '_' . $attr_name );
-        }
-    }
-};
-
 no Moose::Role;
 
 1;
@@ -44,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::String
+Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
 
 =head1 SYNOPSIS
 
@@ -75,15 +61,15 @@ completion.
 If your attribute definition does not include any of I<is>, I<isa>,
 I<default> or I<handles> but does use the C<String> metaclass,
 then this module applies defaults as in the L</SYNOPSIS>
-above. This allows for a very basic counter definition:
+above. This allows for a very basic string definition:
 
-  has 'foo' => (metaclass => 'String');
+  has 'foo' => (traits => ['String']);
   $obj->append_foo;
 
 =head1 PROVIDED METHODS
 
 These methods are implemented in
-L<Moose::Meta::Attribute::Native::MethodProvider::STring>. It is important to
+L<Moose::Meta::Attribute::Native::MethodProvider::String>. It is important to
 note that all those methods do in place modification of the value stored in
 the attribute.
 

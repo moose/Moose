@@ -4,7 +4,7 @@ use Moose::Role;
 use List::Util;
 use List::MoreUtils;
 
-our $VERSION = '0.89_01';
+our $VERSION = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -26,7 +26,7 @@ sub first : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         my ( $instance, $predicate ) = @_;
-        &List::Util::first($predicate, @{ $reader->($instance) });
+        List::Util::first { $predicate->() } @{ $reader->($instance) };
     };
 }
 
@@ -368,7 +368,7 @@ Moose::Meta::Attribute::Native::MethodProvider::Array
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Array>. Please check there for
+L<Moose::Meta::Attribute::Native::Trait::Array>. Please check there for
 documentation on what methods are provided.
 
 =head1 METHODS

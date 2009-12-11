@@ -6,7 +6,7 @@ use metaclass;
 
 use Scalar::Util    'blessed';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -73,12 +73,32 @@ sub apply_attributes {
 sub apply_methods {
     my ($self, $role1, $role2) = @_;
     foreach my $method_name ($role1->get_method_list) {
+        next if $method_name eq 'meta';
+
+        unless ( $self->is_method_excluded($method_name) ) {
+            if (   $role2->has_method($method_name)
+                && $role2->get_method($method_name)->body
+                != $role1->get_method($method_name)->body ) {
+
+                # method conflicts between roles result in the method becoming
+                # a requirement
+                $role2->add_conflicting_method(
+                    name  => $method_name,
+                    roles => [ $role1->name, $role2->name ],
+                );
+            }
+            else {
+                $role2->add_method(
+                    $method_name,
+                    $role1->get_method($method_name)
+                );
+            }
+        }
 
         if ($self->is_method_aliased($method_name)) {
             my $aliased_method_name = $self->get_method_aliases->{$method_name};
-            # it if it has one already
+
             if ($role2->has_method($aliased_method_name) &&
-                # and if they are not the same thing ...
                 $role2->get_method($aliased_method_name)->body != $role1->get_method($method_name)->body) {
 
                 require Moose;
@@ -94,32 +114,7 @@ sub apply_methods {
                 $role2->add_required_methods($method_name)
                     unless $self->is_method_excluded($method_name);
             }
-
-            next;
         }
-
-        next if $self->is_method_excluded($method_name);
-
-        # it if it has one already
-        if ($role2->has_method($method_name) &&
-            # and if they are not the same thing ...
-            $role2->get_method($method_name)->body != $role1->get_method($method_name)->body) {
-            # method conflicts between roles result
-            # in the method becoming a requirement
-            $role2->add_conflicting_method(
-                name  => $method_name,
-                roles => [$role1->name, $role2->name],
-            );
-        }
-        else {
-            # add it, although it could be overridden
-            $role2->add_method(
-                $method_name,
-                $role1->get_method($method_name)
-            );
-
-        }
-
     }
 }
 

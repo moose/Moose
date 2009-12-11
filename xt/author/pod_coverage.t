@@ -22,10 +22,11 @@ my %trustme = (
     ],
     'Moose::Meta::Attribute::Native::MethodProvider::Array'   => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Bool'    => ['.+'],
+    'Moose::Meta::Attribute::Native::MethodProvider::Code'    => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Counter' => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::Hash'    => ['.+'],
     'Moose::Meta::Attribute::Native::MethodProvider::String'  => ['.+'],
-    'Moose::Meta::Class'     => [
+    'Moose::Meta::Class'                                      => [
         qw( check_metaclass_compatibility
             construct_instance
             create_error
@@ -63,8 +64,9 @@ my %trustme = (
             wrap_method_body
             )
     ],
-    'Moose::Meta::Role::Composite' => ['add_method'],
-    'Moose::Role'                  => [
+    'Moose::Meta::Role::Composite' =>
+        [ 'get_method', 'get_method_list', 'has_method', 'add_method' ],
+    'Moose::Role' => [
         qw( after
             around
             augment
@@ -82,7 +84,8 @@ my %trustme = (
     'Moose::Meta::TypeConstraint::Class' =>
         [qw( equals is_a_type_of is_a_subtype_of )],
     'Moose::Meta::TypeConstraint::Enum' => [qw( constraint equals )],
-    'Moose::Meta::TypeConstraint::DuckType' => [qw( constraint equals get_message )],
+    'Moose::Meta::TypeConstraint::DuckType' =>
+        [qw( constraint equals get_message )],
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
     'Moose::Meta::TypeConstraint::Role'  => [qw( equals is_a_type_of )],

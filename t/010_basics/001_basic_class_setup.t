@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 use lib 'lib', 't/lib';
-use Test::More tests => 23;
+use Test::More;
+
 use Test::Exception;
 use MetaTest;
 
@@ -31,6 +32,7 @@ skip_meta {
       Foo->meta->has_method('')
    } '... has_method requires an arg';
 } 2;
+
 can_ok('Foo', 'does');
 
 skip_meta {
@@ -47,3 +49,16 @@ skip_meta {
    }
 } 15;
 
+foreach my $import (qw(
+    blessed
+    try
+    catch
+    in_global_destruction
+)) {
+    ok(!Moose::Object->can($import), "no namespace pollution in Moose::Object ($import)" );
+
+    local $TODO = $import eq 'blessed' ? "no automatic namespace cleaning yet" : undef;
+    ok(!Foo->can($import), "no namespace pollution in Moose::Object ($import)" );
+}
+
+done_testing;

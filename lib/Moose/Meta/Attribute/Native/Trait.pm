@@ -3,7 +3,7 @@ package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -138,13 +138,17 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait - base role for helpers
+Moose::Meta::Attribute::Native::Trait - Base role for helpers
 
 =head1 BUGS
 
 All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
+
+=head1 SEE ALSO
+
+Documentation for Moose native traits starts at L<Moose::Meta::Attribute Native>
 
 =head1 AUTHORS
 

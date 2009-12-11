@@ -4,9 +4,11 @@ package Moose::Meta::Method::Destructor;
 use strict;
 use warnings;
 
+use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
+use Try::Tiny ();
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -81,15 +83,22 @@ sub _initialize_body {
     my $source;
     if ( @DEMOLISH_methods ) {
         $source = 'sub {';
+        $source .= 'my $self = shift;' . "\n";
 
-        my @DEMOLISH_calls;
-        foreach my $method (@DEMOLISH_methods) {
-            push @DEMOLISH_calls => '$_[0]->' . $method->{class} . '::DEMOLISH()';
-        }
+        $source .= 'local $?;' . "\n";
 
-        $source .= join ";\n" => @DEMOLISH_calls;
+        $source .= 'my $in_global_destruction = Devel::GlobalDestruction::in_global_destruction;' . "\n";
 
-        $source .= ";\n" . '}';
+        $source .= 'Try::Tiny::try {' . "\n";
+
+        $source .= '$self->' . $_->{class} . '::DEMOLISH($in_global_destruction);' . "\n"
+            for @DEMOLISH_methods;
+
+        $source .= '}';
+        $source .= q[ Try::Tiny::catch { no warnings 'misc'; die $_ };] . "\n";
+        $source .= 'return;' . "\n";
+
+        $source .= '}';
     } else {
         $source = 'sub { }';
     }

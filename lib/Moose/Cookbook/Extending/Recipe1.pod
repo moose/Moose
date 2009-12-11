@@ -211,42 +211,35 @@ L<Moose::Util::MetaRole> to apply all of your roles. The advantage of
 using this module is that I<it preserves any subclassing or roles
 already applied to the user's metaclasses>. This means that your
 extension is cooperative I<by default>, and consumers of your
-extension can easily use it with other role-based extensions.
+extension can easily use it with other role-based extensions. Most
+uses of L<Moose::Util::MetaRole> can be handled by L<Moose::Exporter>
+directly; see the L<Moose::Exporter> docs.
 
   package MooseX::Embiggen;
 
   use Moose ();
   use Moose::Exporter;
-  use Moose::Util::MetaRole;
 
   use MooseX::Embiggen::Role::Meta::Class;
   use MooseX::Embiggen::Role::Meta::Attribute;
   use MooseX::Embiggen::Role::Meta::Method::Constructor;
   use MooseX::Embiggen::Role::Object;
 
-  Moose::Exporter->setup_import_methods( also => 'Moose' );
+  my ( $import, $unimport, $init_meta ) = Moose::Exporter->build_import_methods(
+      also => ['Moose'] metaclass_roles =>
+          ['MooseX::Embiggen::Role::Meta::Class'],
+      attribute_metaclass_roles => ['MooseX::Embiggen::Role::Meta::Attribute'],
+      constructor_class_roles =>
+          ['MooseX::Embiggen::Role::Meta::Method::Constructor'],
+      base_class_roles => ['MooseX::Embiggen::Role::Object'],
+      install          => [qw(import unimport)],
+  );
 
   sub init_meta {
-      shift;    # just your package name
+      my $package = shift;
       my %options = @_;
-
       Moose->init_meta(%options);
-
-      my $meta = Moose::Util::MetaRole::apply_metaclass_roles(
-          for_class       => $options{for_class},
-          metaclass_roles => ['MooseX::Embiggen::Role::Meta::Class'],
-          attribute_metaclass_roles =>
-              ['MooseX::Embiggen::Role::Meta::Attribute'],
-          constructor_class_roles =>
-              ['MooseX::Embiggen::Role::Meta::Method::Constructor'],
-      );
-
-      Moose::Util::MetaRole::apply_base_class_roles(
-          for_class => $options{for_class},
-          roles     => ['MooseX::Embiggen::Role::Object'],
-      );
-
-      return $meta;
+      return $package->$init_meta(%options);
   }
 
 As you can see from this example, you can use L<Moose::Util::MetaRole>
@@ -265,15 +258,13 @@ as well as those from other modules:
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => ['embiggen'],
-      also        => 'Moose',
+      with_meta => ['embiggen'],
+      also      => 'Moose',
   );
 
-  sub init_meta { ... }
-
   sub embiggen {
-      my $caller = shift;
-      $caller->meta()->embiggen(@_);
+      my $meta = shift;
+      $meta->embiggen(@_);
   }
 
 And then the consumer of your extension can use your C<embiggen> sub:

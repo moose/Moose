@@ -6,7 +6,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -25,13 +25,20 @@ __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 # package to store our methods in,
 # we use a HASH ref instead.
 # - SL
-__PACKAGE__->meta->add_attribute('methods' => (
-    reader  => 'get_method_map',
+__PACKAGE__->meta->add_attribute('_methods' => (
+    reader  => '_method_map',
     default => sub { {} }
 ));
 
+__PACKAGE__->meta->add_attribute(
+    'application_role_summation_class',
+    reader  => 'application_role_summation_class',
+    default => 'Moose::Meta::Role::Application::RoleSummation',
+);
+
 sub new {
     my ($class, %params) = @_;
+
     # the roles param is required ...
     foreach ( @{$params{roles}} ) {
         unless ( $_->isa('Moose::Meta::Role') ) {
@@ -39,6 +46,23 @@ sub new {
             Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_");
         }
     }
+
+    my @composition_roles = map {
+        $_->has_composition_class_roles
+            ? @{ $_->composition_class_roles }
+            : ()
+    } @{ $params{roles} };
+
+    if (@composition_roles) {
+        my $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => [ $class ],
+            roles        => [ @composition_roles ],
+            cache        => 1,
+        );
+        $meta->add_method(meta => sub { $meta });
+        $class = $meta->name;
+    }
+
     # and the name is created from the
     # roles if one has not been provided
     $params{name} ||= (join "|" => map { $_->name } @{$params{roles}});
@@ -71,7 +95,42 @@ sub add_method {
         $method = $self->wrap_method_body( body => $body, name => $method_name );
     }
 
-    $self->get_method_map->{$method_name} = $method;
+    $self->_method_map->{$method_name} = $method;
+}
+
+sub get_method_list {
+    my $self = shift;
+    return keys %{ $self->_method_map };
+}
+
+sub has_method {
+    my ($self, $method_name) = @_;
+
+    return exists $self->_method_map->{$method_name};
+}
+
+sub get_method {
+    my ($self, $method_name) = @_;
+
+    return $self->_method_map->{$method_name};
+}
+
+sub apply_params {
+    my ($self, $role_params) = @_;
+    Class::MOP::load_class($self->application_role_summation_class);
+
+    $self->application_role_summation_class->new(
+        role_params => $role_params,
+    )->apply($self);
+
+    return $self;
+}
+
+sub reinitialize {
+    my ($class, $old_meta, @args) = @_;
+    Moose->throw_error('Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance')
+        if !blessed $old_meta || !$old_meta->isa('Moose::Meta::Role::Composite');
+    return $old_meta->meta->clone_object($old_meta, @args);
 }
 
 1;
@@ -114,6 +173,18 @@ L<Moose::Meta::Role> object. This is a required option.
 =item * name
 
 If a name is not given, one is generated from the roles provided.
+
+=item * apply_params(\%role_params)
+
+Creates a new RoleSummation role application with C<%role_params> and applies
+the composite role to it. The RoleSummation role application class used is
+determined by the composite role's C<application_role_summation_class>
+attribute.
+
+=item * reinitialize($metaclass)
+
+Like C<< Class::MOP::Package->reinitialize >>, but doesn't allow passing a
+string with the package name, as there is no real package for composite roles.
 
 =back
 

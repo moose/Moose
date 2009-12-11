@@ -2,7 +2,7 @@ package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
-our $VERSION = '0.89_01';
+our $VERSION = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -29,7 +29,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Bool
+Moose::Meta::Attribute::Native::Trait::Bool - Helper trait for Bool attributes
 
 =head1 SYNOPSIS
 
@@ -92,8 +92,6 @@ Equivalent of 'not C<$value>'.
 =over 4
 
 =item B<meta>
-
-=item B<method_constructors>
 
 =item B<has_method_provider>
 

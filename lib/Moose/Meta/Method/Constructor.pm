@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -43,11 +43,6 @@ sub new {
     return $self;
 }
 
-# This is here so can_be_inlined can be inherited by MooseX modules.
-sub _expected_constructor_class {
-    return 'Moose::Object';
-}
-
 ## method
 
 sub _initialize_body {
@@ -61,6 +56,7 @@ sub _initialize_body {
     # the author, after all, nothing is free)
     my $source = 'sub {';
     $source .= "\n" . 'my $_instance = shift;';
+
     $source .= "\n" . 'my $class = Scalar::Util::blessed($_instance) || $_instance;';
 
     $source .= "\n" . 'return $class->Moose::Object::new(@_)';

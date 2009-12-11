@@ -23,7 +23,7 @@ use MetaTest;
         handles => {
             'set_option'       => 'set',
             'get_option'       => 'get',
-            'has_no_options'   => 'empty',
+            'has_no_options'   => 'is_empty',
             'num_options'      => 'count',
             'clear_options'    => 'clear',
             'delete_option'    => 'delete',
@@ -85,6 +85,9 @@ is( $stuff->get_option('foo'), 'bar', '... got the right option' );
 is_deeply( [ $stuff->get_option(qw(foo bar)) ], [qw(bar baz)],
     "get multiple options at once" );
 
+is( scalar($stuff->get_option(qw( foo bar) )), "baz",
+       '... got last option in scalar context');
+
 lives_ok {
     $stuff->set_option( oink => "blah", xxy => "flop" );
 }
@@ -100,14 +103,9 @@ lives_ok {
 '... deleted the option okay';
 
 lives_ok {
-    $stuff->delete_option('oink');
+    $stuff->delete_option('oink','xxy');
 }
-'... deleted the option okay';
-
-lives_ok {
-    $stuff->delete_option('xxy');
-}
-'... deleted the option okay';
+'... deleted multiple option okay';
 
 is( $stuff->num_options, 1, '... we have 1 option(s)' );
 is_deeply( $stuff->options, { foo => 'bar' }, '... got more options now' );
@@ -152,7 +150,7 @@ skip_meta {
        {
            'set_option'       => 'set',
            'get_option'       => 'get',
-           'has_no_options'   => 'empty',
+           'has_no_options'   => 'is_empty',
            'num_options'      => 'count',
            'clear_options'    => 'clear',
            'delete_option'    => 'delete',
@@ -171,12 +169,12 @@ skip_meta {
 } 3;
 
 $stuff->set_option( oink => "blah", xxy => "flop" );
-my @key_value = $stuff->key_value;
+my @key_value = sort{ $a->[0] cmp $b->[0] } $stuff->key_value;
 is_deeply(
     \@key_value,
-    [ [ 'xxy', 'flop' ], [ 'quantity', 4 ], [ 'oink', 'blah' ] ],
+    [ sort{ $a->[0] cmp $b->[0] } [ 'xxy', 'flop' ], [ 'quantity', 4 ], [ 'oink', 'blah' ] ],
     '... got the right key value pairs'
-);
+) or do{ require Data::Dumper; diag(Data::Dumper::Dumper(\@key_value)) };
 
 my %options_elements = $stuff->options_elements;
 is_deeply(

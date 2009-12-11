@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 39;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
@@ -80,8 +80,23 @@ do not fail at compile time.
 
     sub child_g_method_1 { "g1" }
 
+    package ChildH;
+    use Moose;
+
+    sub child_h_method_1 { "h1" }
+    sub parent_method_1 { "child_parent_1" }
+
+    package ChildI;
+    use Moose;
+
+    sub child_i_method_1 { "i1" }
+    sub parent_method_1 { "child_parent_1" }
+
     package Parent;
     use Moose;
+
+    sub parent_method_1 { "parent_1" }
+    ::can_ok('Parent', 'parent_method_1');
 
     ::dies_ok {
         has child_a => (
@@ -171,6 +186,30 @@ do not fail at compile time.
         );
     } "can delegate to object even without explicit reader";
 
+    ::can_ok('Parent', 'parent_method_1');
+    ::dies_ok {
+        has child_h => (
+            isa     => "ChildH",
+            is      => "ro",
+            default => sub { ChildH->new },
+            handles => sub { map { $_, $_ } $_[1]->get_all_method_names },
+        );
+    } "Can't override exisiting class method in delegate";
+    ::can_ok('Parent', 'parent_method_1');
+
+    ::lives_ok {
+        has child_i => (
+            isa     => "ChildI",
+            is      => "ro",
+            default => sub { ChildI->new },
+            handles => sub {
+                map { $_, $_ } grep { !/^parent_method_1|meta$/ }
+                    $_[1]->get_all_method_names;
+            },
+        );
+    } "Test handles code ref for skipping predefined methods";
+
+
     sub parent_method { "p" }
 }
 
@@ -183,8 +222,10 @@ isa_ok( $p->child_c, "ChildC" );
 isa_ok( $p->child_d, "ChildD" );
 isa_ok( $p->child_e, "ChildE" );
 isa_ok( $p->child_f, "ChildF" );
+isa_ok( $p->child_i, "ChildI" );
 
 ok(!$p->can('child_g'), '... no child_g accessor defined');
+ok(!$p->can('child_h'), '... no child_h accessor defined');
 
 
 is( $p->parent_method, "p", "parent method" );
@@ -220,3 +261,7 @@ is( $p->child_e_method_2, "e2", "delegate to non moose class (child_e_method_2)"
 
 can_ok( $p, "child_g_method_1" );
 is( $p->child_g_method_1, "g1", "delegate to moose class without reader (child_g_method_1)" );
+
+can_ok( $p, "child_i_method_1" );
+is( $p->parent_method_1, "parent_1", "delegate doesn't override existing method" );
+done_testing;

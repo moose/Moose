@@ -75,9 +75,9 @@ method. The C<Car> class also C<does('Breakable')>:
 
   my $car = Car->new( engine => Engine->new );
 
-  print $car->is_broken ? 'Still working' : 'Busted';
+  print $car->is_broken ? 'Busted' : 'Still working';
   $car->break;
-  print $car->is_broken ? 'Still working' : 'Busted';
+  print $car->is_broken ? 'Busted' : 'Still working';
 
   $car->does('Breakable'); # true
 
@@ -99,6 +99,8 @@ We could use this same role in a C<Bone> class:
       is  => 'ro',
       isa => 'Marrow',
   );
+
+See also L<Moose::Cookbook::Roles::Recipe1> for an example.
 
 =head1 REQUIRED METHODS
 
@@ -242,6 +244,14 @@ provide our own C<break> method:
 
   sub break { ... }
 
+A role can be a collection of other roles:
+
+  package Break::Bundle;
+
+  use Moose::Role;
+
+  with ('Breakable', 'Breakdancer');
+
 =head1 METHOD EXCLUSION AND ALIASING
 
 If we want our C<FragileDancer> class to be able to call the methods
@@ -280,6 +290,8 @@ probably expects it to implement that method.
 In some use cases we might alias and exclude methods from roles, but
 then provide a method of the same name in the class itself.
 
+Also see L<Moose::Cookbook::Roles::Recipe2> for an example.
+
 =head1 ROLE EXCLUSION
 
 A role can say that it cannot be combined with some other role. This
@@ -291,6 +303,61 @@ the role.
   use Moose::Role;
 
   excludes 'BreakDancer';
+
+=head1 APPLYING ROLES
+
+A role can be applied to a class or an instance in other ways besides
+using the 'with' syntax.
+
+To apply a role to a class, use L<Moose::Util> and the 'apply_all_roles'
+function. If you apply the role to a class, it will affect all objects of that
+class. You can't apply a role to a class if it has been made immutable. In
+some circumstances it may make sense to make the class mutable, apply the role,
+then make the class immutable again.
+
+   use Moose::Util;
+   ...
+   my $class = 'MyApp::Test';
+   $class->meta->make_mutable;
+   Moose::Util::apply_all_roles($class->meta, ('MyApp::SomeRole'));
+   $class->meta->make_immutable;
+
+Do not apply roles to classes that have immutable subclasses, since that
+will invalidate the metadata of the subclasses.
+
+If you want the role to be applied only to a particular instance and not to the
+class, you can apply the roles to the instance instead of the class's meta:
+
+   Moose::Util::apply_all_roles($instance, ('MyApp::SomeRole'));
+
+Or you can use the role's meta object:
+
+   MyApp::SomeRole->meta->apply($instance);
+
+The mutable/immutable state is not relevant to roles applied to instances. 
+See L<Moose::Role> and L<Moose::Util> for more details and 
+L<Moose::Cookbook::Roles::Recipe3> for a more developed example.
+
+=head1 ADDING A ROLE TO AN OBJECT INSTANCE
+
+Sometimes you may want to add a role to an object instance, rather than to a
+class. For example, you may want to add debug tracing to one instance of an
+object while debugging a particular bug. Another use case might be to
+dynamically change objects based on a user's configuration, as a plugin
+system.
+
+The best way to do this is to use the C<apply_all_roles> function from
+L<Moose::Util>:
+
+  use Moose::Util qw( apply_all_roles );
+
+  my $car = Car->new;
+  apply_all_roles( $car, 'Breakable' );
+
+This function can apply more than one role at a time, and will do so using the
+normal Moose role combination system. We recommend using this function to
+apply roles to an object. This is what Moose uses internally when you call
+C<with>.
 
 =head1 AUTHOR
 

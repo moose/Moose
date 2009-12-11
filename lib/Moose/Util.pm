@@ -8,7 +8,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -187,7 +187,10 @@ sub _build_alias_package_name {
 
 sub add_method_modifier {
     my ( $class_or_obj, $modifier_name, $args ) = @_;
-    my $meta                = find_meta($class_or_obj);
+    my $meta
+        = $class_or_obj->can('add_before_method_modifier')
+        ? $class_or_obj
+        : find_meta($class_or_obj);
     my $code                = pop @{$args};
     my $add_modifier_method = 'add_' . $modifier_name . '_method_modifier';
     if ( my $method_modifier_type = ref( @{$args}[0] ) ) {

@@ -13,8 +13,8 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_caller => ['has_table'],
-      also        => 'Moose',
+      with_meta => ['has_table'],
+      also      => 'Moose',
   );
 
   sub init_meta {
@@ -23,8 +23,8 @@ Moose::Cookbook::Extending::Recipe4 - Acting like Moose.pm and providing sugar M
   }
 
   sub has_table {
-      my $caller = shift;
-      $caller->meta->table(shift);
+      my $meta = shift;
+      $meta->table(shift);
   }
 
   package MyApp::Meta::Class;
@@ -45,7 +45,7 @@ Given the above code, you can now replace all instances of C<use
 Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
 replaced with C<no MyApp::Mooseish>.
 
-The C<with_caller> parameter specifies a list of functions that should
+The C<with_meta> parameter specifies a list of functions that should
 be wrapped before exporting. The wrapper simply ensures that the
 importing package name is the first argument to the function, so we
 can do C<S<my $caller = shift;>>.

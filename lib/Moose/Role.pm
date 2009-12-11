@@ -7,7 +7,7 @@ use Carp         'croak';
 
 use Sub::Exporter;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -23,23 +23,23 @@ sub extends {
 }
 
 sub with {
-    Moose::Util::apply_all_roles( Moose::Meta::Role->initialize(shift), @_ );
+    Moose::Util::apply_all_roles( shift, @_ );
 }
 
 sub requires {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     croak "Must specify at least one method" unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     croak "Must specify at least one role" unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
     my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
@@ -49,7 +49,7 @@ sub has {
 
 sub _add_method_modifier {
     my $type = shift;
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my $code = pop @_;
 
     for (@_) {
@@ -75,7 +75,7 @@ sub super {
 }
 
 sub override {
-    my $meta = Moose::Meta::Role->initialize(shift);
+    my $meta = shift;
     my ( $name, $code ) = @_;
     $meta->add_override_method_modifier( $name, $code );
 }
@@ -89,7 +89,7 @@ sub augment {
 }
 
 Moose::Exporter->setup_import_methods(
-    with_caller => [
+    with_meta => [
         qw( with requires excludes has before after around override )
     ],
     as_is => [
@@ -233,6 +233,23 @@ This is very similar to the attribute traits feature. When you do
 this, your class's C<meta> object will have the specified traits
 applied to it. See L<Moose/Metaclass and Trait Name Resolution> for more
 details.
+
+=head1 APPLYING ROLES
+
+In addition to being applied to a class using the 'with' syntax (see
+L<Moose::Manual::Roles>) and using the L<Moose::Util> 'apply_all_roles'
+method, roles may also be applied to an instance of a class using
+L<Moose::Util> 'apply_all_roles' or the role's metaclass:
+
+   MyApp::Test::SomeRole->meta->apply( $instance );
+
+Doing this creates a new, mutable, anonymous subclass, applies the role to that,
+and reblesses. In a debugger, for example, you will see class names of the
+form C< Class::MOP::Class::__ANON__::SERIAL::6 >, which means that doing a 'ref'
+on your instance may not return what you expect. See L<Moose::Object> for 'DOES'.
+
+Additional params may be added to the new instance by providing 'rebless_params'.
+See L<Moose::Meta::Role::Application::ToInstance>.
 
 =head1 CAVEATS
 

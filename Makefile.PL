@@ -1,6 +1,8 @@
 use strict;
 use warnings;
-use inc::Module::Install;
+use inc::Module::Install 0.91;
+use Module::Install::ExtraTests;
+use Module::Install::AuthorRequires;
 use 5.008001;
 
 check_conflicts();
@@ -10,19 +12,24 @@ perl_version '5.008001';
 all_from 'lib/Moose.pm';
 license 'perl';
 
-requires 'Scalar::Util'     => '1.19';
 requires 'Carp';
-requires 'Class::MOP'       => '0.92';
-requires 'List::MoreUtils'  => '0.12';
-requires 'Sub::Exporter'    => '0.980';
-requires 'Task::Weaken'     => '0';
+requires 'Class::MOP'       => '0.94';
 requires 'Data::OptList'    => '0';
+requires 'List::MoreUtils'  => '0.12';
+requires 'Scalar::Util'     => '1.19';
+requires 'Sub::Exporter'    => '0.980';
 requires 'Sub::Name'        => '0';
+requires 'Task::Weaken'     => '0';
+requires 'Try::Tiny'        => '0.02';
 
-test_requires 'Test::More'      => '0.77';
+test_requires 'Test::More'      => '0.88';
 test_requires 'Test::Exception' => '0.27';
 
-if ( -d '.svn' || -d '.git' || $ENV{IS_MAINTAINER} ) {
+author_requires 'Test::Inline';
+author_requires 'File::Find::Rule';
+author_requires 'Module::Info';
+
+if ( $Module::Install::AUTHOR || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
 }
 
@@ -36,11 +43,16 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
-        'MooseX::ClassAttribute'    => '0.09',
-        'MooseX::Singleton'         => '0.17',
-        'MooseX::StrictConstructor' => '0.07',
-        'MooseX::Params::Validate'  => '0.05',
         'Fey::ORM'                  => '0.23',
+        'MooseX::AttributeHelpers'  => '0.21',
+        'MooseX::ClassAttribute'    => '0.09',
+        'MooseX::MethodAttributes'  => '0.15',
+        'MooseX::NonMoose'          => '0.05',
+        'MooseX::Params::Validate'  => '0.05',
+        'MooseX::Singleton'         => '0.19',
+        'MooseX::StrictConstructor' => '0.07',
+        'MooseX::Types'             => '0.19',
+        'namespace::autoclean'      => '0.08',
     );
 
     my $found = 0;

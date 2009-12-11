@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Counter;
 use Moose::Role;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -45,7 +45,7 @@ Moose::Meta::Attribute::Native::MethodProvider::Counter
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Counter>.  Please check there for
+L<Moose::Meta::Attribute::Native::Trait::Counter>.  Please check there for
 documentation on what methods are provided.
 
 =head1 METHODS

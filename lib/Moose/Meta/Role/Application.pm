@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -23,18 +23,21 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
 sub new {
     my ($class, %params) = @_;
 
-    if (exists $params{excludes} && !exists $params{'-excludes'}) {
+    if ( exists $params{excludes} && !exists $params{'-excludes'} ) {
         $params{'-excludes'} = delete $params{excludes};
     }
-    if (exists $params{alias} && !exists $params{'-alias'}) {
+    if ( exists $params{alias} && !exists $params{'-alias'} ) {
         $params{'-alias'} = delete $params{alias};
     }
 
-    if (exists $params{'-excludes'}) {
+    if ( exists $params{'-excludes'} ) {
+
         # I wish we had coercion here :)
-        $params{'-excludes'} = (ref $params{'-excludes'} eq 'ARRAY'
-                                ? $params{'-excludes'}
-                                : [ $params{'-excludes'} ]);
+        $params{'-excludes'} = (
+            ref $params{'-excludes'} eq 'ARRAY'
+            ? $params{'-excludes'}
+            : [ $params{'-excludes'} ]
+        );
     }
 
     $class->_new(\%params);

@@ -6,7 +6,7 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $VERSION = '0.89_01';
+our $VERSION = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -46,7 +46,8 @@ Moose::Exporter->setup_import_methods(
             coerce from via
             enum
             find_type_constraint
-            register_type_constraint )
+            register_type_constraint
+            match_on_type )
     ],
     _export_to_main => 1,
 );
@@ -365,6 +366,9 @@ sub duck_type {
         @methods   = @$type_name;
         $type_name = undef;
     }
+    if ( @methods == 1 && ref $methods[0] eq 'ARRAY' ) {
+        @methods = @{ $methods[0] };
+    }
 
     register_type_constraint(
         create_duck_type_constraint(
@@ -411,6 +415,9 @@ sub enum {
         @values    = @$type_name;
         $type_name = undef;
     }
+    if ( @values == 1 && ref $values[0] eq 'ARRAY' ) {
+        @values = @{ $values[0] };
+    }
     ( scalar @values >= 2 )
         || __PACKAGE__->_throw_error(
         "You must have at least two values to enumerate through");
@@ -441,6 +448,39 @@ sub create_duck_type_constraint {
         methods => $methods,
     );
 }
+
+sub match_on_type {
+    my ($to_match, @cases) = @_;
+    my $default;
+    if (@cases % 2 != 0) {
+        $default = pop @cases;
+        (ref $default eq 'CODE')
+            || __PACKAGE__->_throw_error("Default case must be a CODE ref, not $default");
+    }
+    while (@cases) {
+        my ($type, $action) = splice @cases, 0, 2;
+
+        unless (blessed $type && $type->isa('Moose::Meta::TypeConstraint')) {
+            $type = find_or_parse_type_constraint($type)
+                 || __PACKAGE__->_throw_error("Cannot find or parse the type '$type'")
+        }
+
+        (ref $action eq 'CODE')
+            || __PACKAGE__->_throw_error("Match action must be a CODE ref, not $action");
+
+        if ($type->check($to_match)) {
+            local $_ = $to_match;
+            return $action->($to_match);
+        }
+    }
+    (defined $default)
+        || __PACKAGE__->_throw_error("No cases matched for $to_match");
+    {
+        local $_ = $to_match;
+        return $default->($to_match);
+    }
+}
+
 
 ## --------------------------------------------------------
 ## desugaring functions ...
@@ -622,7 +662,7 @@ subtype 'Value' => as 'Defined' => where { !ref($_) } =>
 subtype 'Ref' => as 'Defined' => where { ref($_) } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Ref;
 
-subtype 'Str' => as 'Value' => where {1} =>
+subtype 'Str' => as 'Value' => where { ref(\$_) eq 'SCALAR' } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
 
 subtype 'Num' => as 'Str' =>
@@ -848,9 +888,9 @@ that hierarchy represented visually.
       Undef
       Defined
           Value
-              Num
-                  Int
               Str
+                  Num
+                      Int
                   ClassName
                   RoleName
           Ref
@@ -992,10 +1032,10 @@ metaclass L<Moose::Meta::TypeConstraint::Role>.
 Creates a type constraint for either C<undef> or something of the
 given type.
 
-=item B<duck_type ($name, @methods)>
+=item B<duck_type ($name, \@methods)>
 
 This will create a subtype of Object and test to make sure the value
-C<can()> do the methods in C<@methods>.
+C<can()> do the methods in C<\@methods>.
 
 This is intended as an easy way to accept non-Moose objects that
 provide a certain interface. If you're using Moose classes, we
@@ -1003,20 +1043,20 @@ recommend that you use a C<requires>-only Role instead.
 
 =item B<duck_type (\@methods)>
 
-If passed an ARRAY reference instead of the C<$name>, C<@methods>
-pair, this will create an unnamed duck type. This can be used in an
-attribute definition like so:
+If passed an ARRAY reference as the only parameter instead of the
+C<$name>, C<\@methods> pair, this will create an unnamed duck type.
+This can be used in an attribute definition like so:
 
   has 'cache' => (
       is  => 'ro',
       isa => duck_type( [qw( get_set )] ),
   );
 
-=item B<enum ($name, @values)>
+=item B<enum ($name, \@values)>
 
 This will create a basic subtype for a given set of strings.
 The resulting constraint will be a subtype of C<Str> and
-will match any of the items in C<@values>. It is case sensitive.
+will match any of the items in C<\@values>. It is case sensitive.
 See the L<SYNOPSIS> for a simple example.
 
 B<NOTE:> This is not a true proper enum type, it is simply
@@ -1024,9 +1064,9 @@ a convenient constraint builder.
 
 =item B<enum (\@values)>
 
-If passed an ARRAY reference instead of the C<$name>, C<@values> pair,
-this will create an unnamed enum. This can then be used in an attribute
-definition like so:
+If passed an ARRAY reference as the only parameter instead of the
+C<$name>, C<\@values> pair, this will create an unnamed enum. This
+can then be used in an attribute definition like so:
 
   has 'sort_order' => (
       is  => 'ro',
@@ -1067,7 +1107,7 @@ B<NOTE:> You should only use this if you know what you are doing,
 all the built in types use this, so your subtypes (assuming they
 are shallow) will not likely need to use this.
 
-=item B<type 'Name' => where { } ... >
+=item B<< type 'Name' => where { } ... >>
 
 This creates a base type, which has no parent.
 
@@ -1078,6 +1118,78 @@ parameters:
   type( 'Foo', { where => ..., message => ... } );
 
 The valid hashref keys are C<where>, C<message>, and C<optimize_as>.
+
+=back
+
+=head2 Type Constraint Utilities
+
+=over 4
+
+=item B<< match_on_type $value => ( $type => \&action, ... ?\&default ) >>
+
+This is a utility function for doing simple type based dispatching similar to
+match/case in O'Caml and case/of in Haskell. It is not as featureful as those
+languages, nor does not it support any kind of automatic destructuring
+bind. Here is a simple Perl pretty printer dispatching over the core Moose
+types.
+
+  sub ppprint {
+      my $x = shift;
+      match_on_type $x => (
+          HashRef => sub {
+              my $hash = shift;
+              '{ '
+                  . (
+                  join ", " => map { $_ . ' => ' . ppprint( $hash->{$_} ) }
+                      sort keys %$hash
+                  ) . ' }';
+          },
+          ArrayRef => sub {
+              my $array = shift;
+              '[ ' . ( join ", " => map { ppprint($_) } @$array ) . ' ]';
+          },
+          CodeRef   => sub {'sub { ... }'},
+          RegexpRef => sub { 'qr/' . $_ . '/' },
+          GlobRef   => sub { '*' . B::svref_2object($_)->NAME },
+          Object    => sub { $_->can('to_string') ? $_->to_string : $_ },
+          ScalarRef => sub { '\\' . ppprint( ${$_} ) },
+          Num       => sub {$_},
+          Str       => sub { '"' . $_ . '"' },
+          Undef     => sub {'undef'},
+          => sub { die "I don't know what $_ is" }
+      );
+  }
+
+Or a simple JSON serializer:
+
+  sub to_json {
+      my $x = shift;
+      match_on_type $x => (
+          HashRef => sub {
+              my $hash = shift;
+              '{ '
+                  . (
+                  join ", " =>
+                      map { '"' . $_ . '" : ' . to_json( $hash->{$_} ) }
+                      sort keys %$hash
+                  ) . ' }';
+          },
+          ArrayRef => sub {
+              my $array = shift;
+              '[ ' . ( join ", " => map { to_json($_) } @$array ) . ' ]';
+          },
+          Num   => sub {$_},
+          Str   => sub { '"' . $_ . '"' },
+          Undef => sub {'null'},
+          => sub { die "$_ is not acceptable json type" }
+      );
+  }
+
+The matcher is done by mapping a C<$type> to an C<\&action>. The C<$type> can
+be either a string type or a L<Moose::Meta::TypeConstraint> object, and
+C<\&action> is a subroutine reference. This function will dispatch on the
+first match for C<$value>. It is possible to have a catch-all by providing an
+additional subroutine reference as the final argument to C<match_on_type>.
 
 =back
 

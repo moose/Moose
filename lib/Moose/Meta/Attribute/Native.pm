@@ -1,10 +1,10 @@
 package Moose::Meta::Attribute::Native;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-my @trait_names = qw(Bool Counter Number String Array Hash);
+my @trait_names = qw(Bool Counter Number String Array Hash Code);
 
 for my $trait_name (@trait_names) {
     my $trait_class = "Moose::Meta::Attribute::Native::Trait::$trait_name";
@@ -51,7 +51,7 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
           ids_in_mapping    => 'keys',
           get_mapping       => 'get',
           set_mapping       => 'set',
-          set_quantity      => [ set => [ 'quantity' ] ],
+          set_quantity      => [ set => 'quantity' ],
       },
   );
 
@@ -60,30 +60,31 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
 
   my $obj = MyClass->new;
   $obj->set_quantity(10);      # quantity => 10
-  $obj->set_mapping(4, 'foo'); # 4 => 'foo'
-  $obj->set_mapping(5, 'bar'); # 5 => 'bar'
-  $obj->set_mapping(6, 'baz'); # 6 => 'baz'
+  $obj->set_mapping('foo', 4); # foo => 4
+  $obj->set_mapping('bar', 5); # bar => 5
+  $obj->set_mapping('baz', 6); # baz => 6
 
 
-  # prints 'bar'
-  print $obj->get_mapping(5) if $obj->exists_in_mapping(5);
+  # prints 5
+  print $obj->get_mapping('bar') if $obj->exists_in_mapping('bar');
 
-  # prints '4, 5, 6'
+  # prints 'quantity, foo, bar, baz'
   print join ', ', $obj->ids_in_mapping;
 
 =head1 DESCRIPTION
 
 While L<Moose> attributes provide a way to name your accessors, readers,
-writers, clearers and predicates, this library provides commonly
+writers, clearers and predicates, this set of traits provides commonly
 used attribute helper methods for more specific types of data.
 
 As seen in the L</SYNOPSIS>, you specify the data structure via the
-C<trait> parameter. Available meta classes are below; see L</METHOD PROVIDERS>.
+C<trait> parameter. Available traits are below; see L</METHOD PROVIDERS>.
 
 This module used to exist as the L<MooseX::AttributeHelpers> extension. It was
 very commonly used, so we moved it into core Moose. Since this gave us a chance
 to change the interface, you will have to change your code or continue using
-the L<MooseX::AttributeHelpers> extension.
+the L<MooseX::AttributeHelpers> extension. L<MooseX::AttributeHelpers> should
+continue to work.
 
 =head1 PARAMETERS
 
@@ -197,6 +198,20 @@ Common methods for array references.
        }
     );
 
+=item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
+
+Common methods for code references.
+
+    has 'callback' => (
+       traits     => ['Code'],
+       is         => 'ro',
+       isa        => 'CodeRef',
+       default    => sub { sub { 'called' } },
+       handles    => {
+           call => 'execute',
+       }
+    );
+
 =back
 
 =head1 BUGS
@@ -234,6 +249,10 @@ Florian (rafl) Ragwitz
 Evan Carroll
 
 Jesse (doy) Luehrs
+
+Jay Hannah
+
+Robert Buels
 
 =head1 COPYRIGHT AND LICENSE
 

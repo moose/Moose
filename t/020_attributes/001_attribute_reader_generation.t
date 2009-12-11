@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 20;
 use Test::Exception;
 
 
@@ -56,6 +56,23 @@ use Test::Exception;
     dies_ok {
         $foo->get_lazy_foo(100);
     } '... get_lazy_foo is a read-only';
+}
+
+{
+    my $foo = Foo->new;
+    isa_ok($foo, 'Foo');
+
+    my $attr = $foo->meta->find_attribute_by_name("lazy_foo");
+
+    isa_ok( $attr, "Moose::Meta::Attribute" );
+
+    ok( $attr->is_lazy, "it's lazy" );
+
+    is( $attr->get_raw_value($foo), undef, "raw value" );
+
+    is( $attr->get_value($foo), 10, "lazy value" );
+
+    is( $attr->get_raw_value($foo), 10, "raw value" );
 }
 
 {

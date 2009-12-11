@@ -6,9 +6,10 @@ use warnings;
 use Sub::Exporter;
 use Test::Builder;
 
+use List::MoreUtils 'all';
 use Moose::Util 'does_role', 'find_meta';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -16,6 +17,7 @@ my @exports = qw[
     meta_ok
     does_ok
     has_attribute_ok
+    with_immutable
 ];
 
 Sub::Exporter::setup_exporter({
@@ -70,6 +72,16 @@ sub has_attribute_ok ($$;$) {
     }
 }
 
+sub with_immutable (&@) {
+    my $block = shift;
+    my $before = $Test->current_test;
+    $block->();
+    $_->meta->make_immutable for @_;
+    $block->();
+    my $num_tests = $Test->current_test - $before;
+    return all { $_ } ($Test->summary)[-$num_tests..-1];
+}
+
 1;
 
 __END__
@@ -111,6 +123,11 @@ does for the C<isa> method.
 
 Tests if a class or object has a certain attribute, similar to what C<can_ok>
 does for the methods.
+
+=item B<with_immutable { CODE } @class_names>
+
+Runs B<CODE> (which should contain normal tests) twice, and immutablizes each
+class in C<@class_names> in between the two runs.
 
 =back
 

@@ -30,7 +30,7 @@ sub Y {
     sub head { (shift)->_list->[0] }
     sub tail {
         my $self = shift;
-        $self->new(
+        (ref $self)->new(
             '::' => [
                 @{$self->_list}[1 .. $#{$self->_list}]
             ]
@@ -67,7 +67,7 @@ sub Y {
             my $redo = shift;
             sub {
                 my ($list, $func, $acc) = @_;
-                return $list->new('::' => $acc)
+                return (ref $list)->new('::' => $acc)
                     if $list->is_empty;
                 $redo->(
                     $list->tail,

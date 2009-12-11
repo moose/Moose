@@ -1,7 +1,7 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Hash;
 use Moose::Role;
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -59,7 +59,7 @@ sub count : method {
     return sub { scalar CORE::keys %{ $reader->( $_[0] ) } };
 }
 
-sub empty : method {
+sub is_empty : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub { scalar CORE::keys %{ $reader->( $_[0] ) } ? 0 : 1 };
 }
@@ -188,7 +188,7 @@ Moose::Meta::Attribute::Native::MethodProvider::Hash
 =head1 DESCRIPTION
 
 This is a role which provides the method generators for
-L<Moose::Meta::Attribute::Trait::Native::Hash>. Please check there for
+L<Moose::Meta::Attribute::Native::Trait::Hash>. Please check there for
 documentation on what methods are provided.
 
 =head1 METHODS

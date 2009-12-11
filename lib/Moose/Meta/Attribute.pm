@@ -5,9 +5,11 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
+use List::MoreUtils 'any';
+use Try::Tiny;
 use overload     ();
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;
@@ -58,7 +60,7 @@ __PACKAGE__->meta->add_attribute('traits' => (
 # for metatrait aliases.
 sub does {
     my ($self, $role_name) = @_;
-    my $name = eval {
+    my $name = try {
         Moose::Util::resolve_metatrait_alias(Attribute => $role_name)
     };
     return 0 if !defined($name); # failed to load class
@@ -318,7 +320,7 @@ sub _process_options {
 
     if (exists $options->{isa}) {
         if (exists $options->{does}) {
-            if (eval { $options->{isa}->can('does') }) {
+            if (try { $options->{isa}->can('does') }) {
                 ($options->{isa}->does($options->{does}))
                     || $class->throw_error("Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)", data => $options);
             }
@@ -426,8 +428,10 @@ sub initialize_instance_slot {
     $val = $self->_coerce_and_verify( $val, $instance );
 
     $self->set_initial_value($instance, $val);
-    $meta_instance->weaken_slot_value($instance, $self->name)
-        if ref $val && $self->is_weak_ref;
+
+    if ( ref $val && $self->is_weak_ref ) {
+        $self->_weaken_value($instance);
+    }
 }
 
 sub _call_builder {
@@ -493,23 +497,29 @@ sub set_value {
 
     $value = $self->_coerce_and_verify( $value, $instance );
 
-    my $meta_instance = Class::MOP::Class->initialize(blessed($instance))
-                                         ->get_meta_instance;
-
     my @old;
     if ( $self->has_trigger && $self->has_value($instance) ) {
         @old = $self->get_value($instance, 'for trigger');
     }
 
-    $meta_instance->set_slot_value($instance, $attr_name, $value);
+    $self->SUPER::set_value($instance, $value);
 
-    if (ref $value && $self->is_weak_ref) {
-        $meta_instance->weaken_slot_value($instance, $attr_name);
+    if ( ref $value && $self->is_weak_ref ) {
+        $self->_weaken_value($instance);
     }
 
     if ($self->has_trigger) {
         $self->trigger->($instance, $value, @old);
     }
+}
+
+sub _weaken_value {
+    my ( $self, $instance ) = @_;
+
+    my $meta_instance = Class::MOP::Class->initialize( blessed($instance) )
+        ->get_meta_instance;
+
+    $meta_instance->weaken_slot_value( $instance, $self->name );
 }
 
 sub get_value {
@@ -648,6 +658,9 @@ sub remove_delegation {
     my %handles = $self->_canonicalize_handles;
     my $associated_class = $self->associated_class;
     foreach my $handle (keys %handles) {
+        next unless any { $handle eq $_ }
+                    map { $_->name }
+                    @{ $self->associated_methods };
         $self->associated_class->remove_method($handle);
     }
 }
@@ -687,10 +700,11 @@ sub _canonicalize_handles {
         (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
             || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
 
-        return map { $_ => $_ } (
+        return map { $_ => $_ }
+            grep { $_ ne 'meta' } (
             $role_meta->get_method_list,
             map { $_->name } $role_meta->get_required_method_list,
-        );
+            );
     }
 }
 
@@ -730,11 +744,6 @@ sub delegation_metaclass { 'Moose::Meta::Method::Delegation' }
 
 sub _make_delegation_method {
     my ( $self, $handle_name, $method_to_call ) = @_;
-
-    my $method_body;
-
-    $method_body = $method_to_call
-        if 'CODE' eq ref($method_to_call);
 
     my @curried_arguments;
 

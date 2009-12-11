@@ -1,6 +1,153 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+   * Makefile.PL
+     - Use Module::Install extensions explicitly to avoid confusing errors
+       if they're not installed
+     - Use Module::Install::AuthorRequires to stop test extraction and
+       general failures if you don't have the author side dependencies
+       installed
+
+    * Test::Moose
+      - Added a with_immutable test function, to run a block of tests with
+        and without certain classes being immutable. (doy)
+
+0.94
+    * Moose::Cookbook::Basics::Recipe4
+      - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
+    * Moose::Util::TypeConstraints
+      - Changed Str constraint to accept magic lvalue strings like one gets
+        from substr et al, again. (sorear)
+
+0.93 Thu, Nov 19, 2009
+    * Moose::Object
+      - Calling $object->new() is no longer deprecated, and no longer
+        warns. (doy)
+
+    * Moose::Meta::Role
+      - The get_attribute_map method is now deprecated. (Dave Rolsky)
+
+    * Moose::Meta::Method::Delegation
+      - Preserve variable aliasing in @_ for delegated methods, so that
+        altering @_ affects the passed value. (doy)
+
+    * Moose::Util::TypeConstraints
+      - Allow array refs for non-anonymous form of enum and duck_type, not
+        just anonymous. The non-arrayref forms may be removed in the
+        future. (doy)
+      - Changed Str constraint to not accept globs (*STDIN or *FOO). (chansen)
+      - Properly document Int being a subtype of Str. (doy)
+
+    * Moose::Exporter
+      - Moose::Exporter using modules can now export their functions to the
+        main package. This applied to Moose and Moose::Role, among
+        others. (nothingmuch)
+
+    * Moose::Meta::Attribute
+      - Don't remove attribute accessors we never installed, during
+        remove_accessors. (doy)
+
+    * Moose::Meta::Attribute::Native::Trait::Array
+      - Don't bypass prototype checking when calling List::Util::first, to
+        avoid a segfault when it is called with a non-code argument. (doy)
+
+    * Moose::Meta::Attribute::Native::Trait::Code
+      - Fix passing arguments to code execute helpers. (doy)
+
+0.92 Tue, Sep 22, 2009
+    * Moose::Util::TypeConstraints
+      - added the match_on_type operator (Stevan)
+        - added tests and docs for this (Stevan)
+
+    * Moose::Meta::Class
+      - Metaclass compat fixing should already happen recursively, there's no
+        need to explicitly walk up the inheritance tree. (doy)
+
+    * Moose::Meta::Attribute
+      - Add tests for set_raw_value and get_raw_value. (nothingmuch)
+
+0.91 Thu, Sep 17, 2009
+    * Moose::Object
+      - Don't import any functions, in order to avoid polluting our namespace
+        with things that can look like methods (blessed, try, etc)
+        (nothingmuch)
+
+    * Moose::Meta::Method::Constructor
+      - The generated code needs to called Scalar::Util::blessed by its
+        fully-qualified name or else Perl can interpret the call to blessed as
+        an indirect method call. This broke Search::GIN, which in turn broke
+        KiokuDB. (nothingmuch)
+
+0.90 Tue, Sep 15, 2009
+    * Moose::Meta::Attribute::Native::Trait::Counter
+    * Moose::Meta::Attribute::Native::Trait::String
+      - For these two traits, an attribute which did not explicitly provide
+        methods to handles magically ended up delegating *all* the helper
+        methods. This has been removed. You must be explicit in your handles
+        declaration for all Native Traits. (Dave Rolsky)
+
+    * Moose::Object
+      - DEMOLISHALL behavior has changed. If any DEMOLISH method dies, we make
+        sure to rethrow its error message. However, we also localize $@ before
+        this so that if all the DEMOLISH methods success, the value of $@ will
+        be preserved. (nothingmuch and Dave Rolsky)
+      - We now also localize $? during object destruction. (nothingmuch and
+        Dave Rolsky)
+      - The handling of DEMOLISH methods was broken for immutablized classes,
+        which were not receiving the value of
+        Devel::GlobalDestruction::in_global_destruction.
+      - These two fixes address some of RT #48271, reported by Zefram.
+      - This is all now documented in Moose::Manual::Construction.
+      - Calling $object->new() is now deprecated. A warning will be
+        issued. (perigrin)
+
+    * Moose::Meta::Role
+      - Added more hooks to customize how roles are applied. The role
+        summation class, used to create composite roles, can now be changed
+        and/or have meta-roles applied to it. (rafl)
+      - The get_method_list method no longer explicitly excludes the "meta"
+        method. This was a hack that has been replaced by better hacks. (Dave
+        Rolsky)
+
+    * Moose::Meta::Method::Delegation
+      - fixed delegated methods to make sure that any modifiers attached to
+        the accessor being delegated on will be called (Stevan)
+        - added tests for this (Stevan)
+
+    * Moose::Meta::Class
+      - Moose no longer warns when a class that is being made immutable has
+        mutable ancestors. While in theory this is a good thing to warn about,
+        we found so many exceptions to this that doing this properly became
+        quite problematic.
+
+0.89_02 Thu, Sep 10, 2009
+    * Moose::Meta::Attribute::Native
+      - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
+
+    * Moose::Meta::Attribute::Native::Trait::Array
+      - Added a number of functions from List::Util and List::MoreUtils,
+        including reduce, shuffle, uniq, and natatime. (doy)
+
+    * Moose::Exporter
+      - This module will now generate an init_meta method for your exporting
+        class if you pass it options for
+        Moose::Util::MetaRole::apply_metaclass_roles or
+        apply_base_class_roles. This eliminates a lot of repetitive
+        boilerplate for typical MooseX modules. (doy).
+      - Documented the with_meta feature, which is a replacement for
+        with_caller. This feature was added by josh a while ago.
+      - The with_caller feature is now deprecated, but will not issue a
+        warning yet. (Dave Rolsky)
+      - If you try to wrap/export a subroutine which doesn't actually exist,
+        Moose::Exporter will warn you about this. (doy)
+
+    * Moose::Meta::Role::Application::ToRole
+      - When a role aliased a method from another role, it was only getting
+        the new (aliased) name, not the original name. This differed from what
+        happens when a class aliases a role's methods. If you _only_ want the
+        aliased name, make sure to also exclue the original name. (Dave
+        Rolsky)
+
 0.89_01 Wed Sep 2, 2009
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers to the
@@ -21,6 +168,15 @@ for, noteworthy changes.
 
     * Moose
       - Correct POD for builder to point to Recipe8, not 9. (gphat)
+
+    * Moose::Exporter
+      - When a nonexistent sub name is passed to as_is, with_caller, or
+        with_meta, throw a warning and skip the exporting, rather than
+        installing a broken sub. (doy)
+
+    * Moose::Meta::Class
+      - Moose now warns if you call C<make_immutable> for a class with mutable
+        ancestors. (doy)
 
 0.89 Thu Aug 13, 2009
     * Moose::Manual::Attributes
@@ -161,7 +317,7 @@ for, noteworthy changes.
       that's what we need.
 
 0.80 Sat, Jun 6, 2009
-    * Moose::Manual::FAQ 
+    * Moose::Manual::FAQ
       - Add FAQ about the coercion change from 0.76 because it came up
         three times today (perigrin)
         - Win doy $10 dollars because Sartak didn't think anybody

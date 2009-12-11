@@ -19,6 +19,7 @@ __DATA__
 Aankhen
 Aran
 autarch
+Buels
 chansen
 chromatic's
 Debolaz
@@ -63,6 +64,7 @@ Shlomi
 SL
 stevan
 Stevan
+tozt
 Vilain
 wreis
 Yuval
@@ -110,12 +112,14 @@ PosInt
 PositiveInt
 ro
 rw
+RoleSummation
 Str
 TypeContraints
 
 ## computerese
 API
 APIs
+arrayrefs
 arity
 Baz
 Changelog
@@ -128,6 +132,7 @@ dec
 definedness
 destructor
 destructors
+destructuring
 dev
 DWIM
 DUCKTYPE
@@ -143,6 +148,7 @@ invocant's
 irc
 IRC
 isa
+JSON
 kv
 login
 mul
@@ -152,6 +158,7 @@ namespaces
 namespacing
 # as in required-ness
 ness
+O'Caml
 OO
 OOP
 ORM
@@ -161,6 +168,7 @@ parameterization
 parameterize
 parameterized
 parameterizes
+params
 pluggable
 prechecking
 prepends
@@ -168,9 +176,12 @@ pu
 rebase
 rebased
 rebasing
+reblesses
 refactored
 refactoring
+rethrows
 runtime
+serializer
 stacktrace
 subclassable
 subname
@@ -194,8 +205,10 @@ gey
 ## neologisms
 breakability
 delegatee
+featureful
 hackery
 hacktern
+undeprecate
 wrappee
 
 ## compound

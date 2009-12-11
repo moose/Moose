@@ -9,25 +9,11 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
   package MooseX::Debugging;
 
-  use Moose ();
   use Moose::Exporter;
-  use Moose::Util::MetaRole;
 
-  Moose::Exporter->setup_import_methods;
-
-  sub init_meta {
-      shift;
-      my %options = @_;
-
-      my $meta = Moose->init_meta(%options);
-
-      Moose::Util::MetaRole::apply_base_class_roles(
-          for_class => $options{for_class},
-          roles     => ['MooseX::Debugging::Role::Object'],
-      );
-
-      return $meta;
-  }
+  Moose::Exporter->setup_import_methods(
+      base_class_roles => ['MooseX::Debugging::Role::Object'],
+  );
 
   package MooseX::Debugging::Role::Object;
 
@@ -55,26 +41,17 @@ to its base object class.
 
 There are a few pieces of code worth looking at more closely.
 
-  Moose::Exporter->setup_import_methods;
+  Moose::Exporter->setup_import_methods(
+      base_class_roles => ['MooseX::Debugging::Role::Object'],
+  );
 
-This creates an C<import> method in the C<MooseX::Debugging>
-package. Since we are not actually exporting anything, we do not pass
-C<setup_import_methods> any parameters. However, we need to have an
-C<import> method to ensure that our C<init_meta> method is called.
-
-Then in our C<init_meta> method we have this line:
-
-      Moose->init_meta(%options);
-
-This is a bit of boilerplate that almost every extension will
-use. This ensures that the caller has a normal Moose metaclass
-I<before> we go and add traits to it.
-
-The C<< Moose->init_meta >> method does ensures that the caller has a
-sane metaclass, and we don't want to replicate that logic in our
-extension. If the C<< Moose->init_meta >> was already called (because
-the caller did C<S<use Moose>> before using our extension), then
-calling C<< Moose->init_meta >> again is effectively a no-op.
+This creates an C<import> method in the C<MooseX::Debugging> package. Since we
+are not actually exporting anything, we do not pass C<setup_import_methods>
+any parameters related to exports, but we need to have an C<import> method to
+ensure that our C<init_meta> method is called. The C<init_meta> is created by
+C<setup_import_methods> for us, since we passed the C<base_class_roles>
+parameter. The generated C<init_meta> will in turn call
+L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>.
 
 =head1 AUTHOR
 

@@ -2,8 +2,9 @@ package Moose::Util::MetaRole;
 
 use strict;
 use warnings;
+use Scalar::Util 'blessed';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -14,10 +15,12 @@ my @Classes = qw( constructor_class destructor_class error_class );
 sub apply_metaclass_roles {
     my %options = @_;
 
-    my $for = $options{for_class};
+    my $for = blessed $options{for_class}
+        ? $options{for_class}
+        : Class::MOP::class_of($options{for_class});
 
-    my %old_classes = map { $_ => Class::MOP::class_of($for)->$_ }
-                      grep { Class::MOP::class_of($for)->can($_) }
+    my %old_classes = map { $_ => $for->$_ }
+                      grep { $for->can($_) }
                       @Classes;
 
     my $meta = _make_new_metaclass( $for, \%options );
@@ -43,7 +46,7 @@ sub _make_new_metaclass {
     my $for     = shift;
     my $options = shift;
 
-    return Class::MOP::class_of($for)
+    return $for
         unless grep { exists $options->{ $_ . '_roles' } }
             qw(
             metaclass
@@ -54,17 +57,17 @@ sub _make_new_metaclass {
             application_to_class_class
             application_to_role_class
             application_to_instance_class
+            application_role_summation_class
     );
 
-    my $old_meta = Class::MOP::class_of($for);
     my $new_metaclass
-        = _make_new_class( ref $old_meta, $options->{metaclass_roles} );
+        = _make_new_class( ref $for, $options->{metaclass_roles} );
 
     # This could get called for a Moose::Meta::Role as well as a Moose::Meta::Class
     my %classes = map {
-        $_ => _make_new_class( $old_meta->$_(), $options->{ $_ . '_roles' } )
+        $_ => _make_new_class( $for->$_(), $options->{ $_ . '_roles' } )
         }
-        grep { $old_meta->can($_) }
+        grep { $for->can($_) }
         qw(
         attribute_metaclass
         method_metaclass
@@ -73,6 +76,7 @@ sub _make_new_metaclass {
         application_to_class_class
         application_to_role_class
         application_to_instance_class
+        application_role_summation_class
     );
 
     return $new_metaclass->reinitialize( $for, %classes );
@@ -178,8 +182,8 @@ this when your module is imported, the caller should not have any
 attributes defined yet.
 
 The easiest way to ensure that this happens is to use
-L<Moose::Exporter> and provide an C<init_meta> method that will be
-called when imported.
+L<Moose::Exporter>, which can generate the appropriate C<init_meta>
+method for you, and make sure it is called when imported.
 
 =head1 FUNCTIONS
 

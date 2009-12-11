@@ -4,14 +4,15 @@ package Moose::Object;
 use strict;
 use warnings;
 
-use Devel::GlobalDestruction qw(in_global_destruction);
-use MRO::Compat;
-use Scalar::Util;
+use Devel::GlobalDestruction ();
+use MRO::Compat ();
+use Scalar::Util ();
+use Try::Tiny ();
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $VERSION   = '0.89_01';
+our $VERSION   = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -20,8 +21,6 @@ sub new {
 
     my $params = $class->BUILDARGS(@_);
 
-    # We want to support passing $self->new, but initialize
-    # takes only an unblessed class name
     my $real_class = Scalar::Util::blessed($class) || $class;
     my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
 
@@ -86,17 +85,21 @@ sub DEMOLISHALL {
 }
 
 sub DESTROY {
-    # if we have an exception here ...
-    if ($@) {
-        # localize the $@ ...
-        local $@;
-        # run DEMOLISHALL ourselves, ...
-        $_[0]->DEMOLISHALL(in_global_destruction);
-        # and return ...
-        return;
+    my $self = shift;
+
+    local $?;
+
+    Try::Tiny::try {
+        $self->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
     }
-    # otherwise it is normal destruction
-    $_[0]->DEMOLISHALL(in_global_destruction);
+    Try::Tiny::catch {
+        # Without this, Perl will warn "\t(in cleanup)$@" because of some
+        # bizarre fucked-up logic deep in the internals.
+        no warnings 'misc';
+        die $_;
+    };
+
+    return;
 }
 
 # support for UNIVERSAL::DOES ...
@@ -115,7 +118,7 @@ sub does {
     my ($self, $role_name) = @_;
     my $meta = Class::MOP::class_of($self);
     (defined $role_name)
-        || $meta->throw_error("You much supply a role name to does()");
+        || $meta->throw_error("You must supply a role name to does()");
     foreach my $class ($meta->class_precedence_list) {
         my $m = $meta->initialize($class);
         return 1
