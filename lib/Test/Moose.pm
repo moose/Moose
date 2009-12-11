@@ -124,6 +124,11 @@ does for the C<isa> method.
 Tests if a class or object has a certain attribute, similar to what C<can_ok>
 does for the methods.
 
+=item B<with_immutable { CODE } @class_names>
+
+Runs B<CODE> (which should contain normal tests) twice, and immutablizes each
+class in C<@class_names> in between the two runs.
+
 =back
 
 =head1 TODO
