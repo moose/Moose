@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -84,3 +83,4 @@ is( $Cat::AFTER_BARK_COUNTER,  2, 'after modifier is called twice' );
 
 }
 
+done_testing;

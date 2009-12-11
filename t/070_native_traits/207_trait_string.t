@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More;
 use Test::Moose 'does_ok';
 
 my $uc;
@@ -114,3 +114,4 @@ is_deeply(
     '... got the right handles methods'
 );
 
+done_testing;

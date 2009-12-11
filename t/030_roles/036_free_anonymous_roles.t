@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More;
 use Moose ();
 use Scalar::Util 'weaken';
 
@@ -32,3 +32,5 @@ do {
 ok(!$weak, "the role metaclass is freed after its last reference (from a consuming anonymous class) is freed");
 
 ok(!$name->can('improperly_freed'), "we blew away the role's symbol table entries");
+
+done_testing;

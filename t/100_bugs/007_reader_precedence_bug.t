@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 {
     package Foo;
@@ -20,6 +20,4 @@ use Test::More tests => 3;
     is($foo->$reader, 10, "Reader works as expected");
 }
 
-
-
-
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -54,3 +53,4 @@ ok( Mortgage->meta->is_immutable, '... Mortgage is now immutable' );
     isa_ok( $mtg->closing_date, 'Fake::DateTime' );
 }
 
+done_testing;

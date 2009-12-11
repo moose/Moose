@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -153,3 +153,4 @@ is_deeply(
     [ 'bling', 'fling' ],
     '... got the right list of override method modifiers');
 
+done_testing;

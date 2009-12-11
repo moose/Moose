@@ -60,7 +60,7 @@ use warnings;
     use Moose;
     use Moose::Util::MetaRole;
 
-    use Test::More tests => 3;
+    use Test::More;
     use Test::Exception;
 
     Moose::Util::MetaRole::apply_metaclass_roles(
@@ -87,4 +87,6 @@ use warnings;
 
     lives_ok { __PACKAGE__->meta->make_immutable; }
     "Inling constructor does not use inline_slot_access";
+
+    done_testing;
 }

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 68;
+use Test::More;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -270,3 +270,5 @@ is_deeply(
 
 is( $options->type_constraint->type_parameter, 'Str',
     '... got the right container type' );
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More;
 
 
 my @moose_exports = qw(
@@ -71,3 +71,5 @@ ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_e
 }
 
 can_ok( 'Baz', 'blessed' );
+
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 19;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -111,5 +110,4 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
 ok(!My::Foo::Role::Other->meta->has_method('foo'), "we dont have a foo method");
 ok(My::Foo::Role::Other->meta->requires_method('foo'), '... and the &foo method is required');
 
-
-
+done_testing;

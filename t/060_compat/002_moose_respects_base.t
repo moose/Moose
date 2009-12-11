@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use Test::Exception;
-
 
 
 =pod
@@ -47,3 +46,4 @@ isa_ok($baz, 'Baz');
 isa_ok($baz, 'Foo');
 isa_ok($baz, 'Moose::Object');
 
+done_testing;

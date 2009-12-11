@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 {
@@ -26,3 +26,5 @@ use Test::Exception;
     ::ok( MyRef( {} ), '... Ref worked correctly' );
     ::ok( MyArrayRef( [] ), '... ArrayRef worked correctly' );
 }
+
+done_testing;

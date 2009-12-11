@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More;
 use Test::Exception;
 
 {
@@ -54,10 +54,4 @@ is($foo->baz, 'Bar::baz', '... got the right delegated method');
 
 ok($foo->test, '... the test value has now been changed');
 
-
-
-
-
-
-
-
+done_testing;

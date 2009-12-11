@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -56,3 +56,4 @@ ok($evenlist->check(MyList->new(10, 20, 30, 40)), '... validated it correctly (p
 ok(!$evenlist->check(MyList->new(10, "two")), '... validated it correctly (fail)');
 ok(!$evenlist->check([10, 20]), '... validated it correctly (fail)');
 
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -36,5 +35,4 @@ like ($@, qr/^Pulling the Baz trigger/, "trigger from immutable constructor");
 
 lives_ok { AClass->new(bar => 'bar') } '... no triggers called';
 
-
-
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 use Test::Moose qw(does_ok);
 
 BEGIN {
@@ -100,3 +100,5 @@ isa_ok($bwmc_meta, 'Bar::Meta::Class');
 isa_ok($bwmc_meta->get_attribute('bar'), 'Bar::Meta::Attribute');
 does_ok($bwmt_meta, 'Bar::Meta::Role');
 does_ok($bwmt_meta->get_attribute('bar'), 'Bar::Meta::Role::Attribute');
+
+done_testing;

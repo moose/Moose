@@ -2,7 +2,7 @@ use lib "t/lib";
 package MyExporter::User;
 use MyExporter;
 
-use Test::More (tests => 4);
+use Test::More;
 use Test::Exception;
 
 lives_and {
@@ -18,3 +18,5 @@ lives_and {
         is($caller, 'MyExporter', "As-is prototype code gets called from MyMooseX");
     };
 } "check function with prototype";
+
+done_testing;

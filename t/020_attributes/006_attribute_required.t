@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -66,3 +65,4 @@ throws_ok {
     Foo->new;
 } qr/^Attribute \(bar\) is required/, '... must supply all the required attribute';
 
+done_testing;

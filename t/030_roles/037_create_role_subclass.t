@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 use Moose ();
 
 do {
@@ -24,3 +24,4 @@ is($role->test_serial, 1, "default value for the serial attribute");
 my $nine_role = My::Meta::Role->create_anon_role(test_serial => 9);
 is($nine_role->test_serial, 9, "parameter value for the serial attribute");
 
+done_testing;

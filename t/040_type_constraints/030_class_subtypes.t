@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -139,3 +139,5 @@ throws_ok {
 lives_ok {
     Quux::Ier->new(age => (bless {}, 'Negative'))
 };
+
+done_testing;

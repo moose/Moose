@@ -14,9 +14,11 @@ use warnings;
     use Moose;
 }
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
 
 lives_ok {
     Moose->init_meta(for_class => 'SomeClass');
 } 'Moose class => use base => Moose Class, then Moose->init_meta on middle class ok';
+
+done_testing;

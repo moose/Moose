@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More;
 
 use Moose::Util qw( resolve_metaclass_alias resolve_metatrait_alias );
 
@@ -75,3 +75,5 @@ is( resolve_metatrait_alias( 'Attribute', 'Bar' ),
 is( resolve_metatrait_alias( 'Attribute', 'Bar' ),
     'My::Trait::Bar',
     'resolve_metatrait_alias finds Moose::Meta::Attribute::Custom::Trait::Bar as My::Trait::Bar via alias (Bar) a second time' );
+
+done_testing;

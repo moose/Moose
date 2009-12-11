@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Builder::Tester tests => 2;
+use Test::Builder::Tester;
 use Test::More;
 
 BEGIN {
@@ -46,3 +46,4 @@ has_attribute_ok('Bar', 'bar', '... has_attribute_ok(Bar, bar) passes');
 
 test_test ('has_attribute_ok');
 
+done_testing;

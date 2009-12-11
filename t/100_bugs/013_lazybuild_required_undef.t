@@ -17,7 +17,7 @@ has 'bar' => ( isa => 'Int | Undef', is => 'rw', coerce => 1 );
 sub _build_foo { undef }
 
 package main;
-use Test::More tests => 4;
+use Test::More;
 
 ok ( !defined(Foo->new->bar), 'NonLazyBuild: Undef default' );
 ok ( !defined(Foo->new->bar(undef)), 'NonLazyBuild: Undef explicit' );
@@ -27,5 +27,4 @@ ok ( !defined(Foo->new->foo), 'LazyBuild: Undef default/lazy_build' );
 ## This test fails at the time of creation.
 ok ( !defined(Foo->new->foo(undef)), 'LazyBuild: Undef explicit' );
 
-
-1;
+done_testing;

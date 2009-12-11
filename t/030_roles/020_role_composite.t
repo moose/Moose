@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role::Application::RoleSummation;
@@ -78,3 +78,5 @@ use Moose::Meta::Role::Composite;
             );
     }
 }
+
+done_testing;

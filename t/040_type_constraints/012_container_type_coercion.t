@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -65,4 +65,4 @@ isa_ok($foo, 'Foo');
 
 is_deeply([ sort @{$foo->bar} ], [ 1, 2, 3 ], '... our coercion worked!');
 
-
+done_testing;

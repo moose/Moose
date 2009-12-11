@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -100,3 +100,5 @@ coerce 'StrWithTrailingX'
 my $tc = find_type_constraint('StrWithTrailingX');
 is($tc->coerce("foo"), "fooX", "coerce when needed");
 is($tc->coerce("fooX"), "fooX", "do not coerce when unneeded");
+
+done_testing;

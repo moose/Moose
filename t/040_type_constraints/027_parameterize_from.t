@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -77,3 +77,5 @@ throws_ok sub {
     },
     qr/Attribute \(from_parameterizable\) does not pass the type constraint/
     => 'from_parameterizable throws expected error';
+
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -66,7 +65,4 @@ is($c->foo_gorch, 'Foo::gorch', '... got the right method');
 is($c->baz_foo, 'Baz::foo', '... got the right method');
 is($c->baz_bar, 'Baz::bar', '... got the right method');
 
-
-
-
-
+done_testing;

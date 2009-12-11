@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -38,4 +37,4 @@ lives_ok {
 
 is($foo->baz, 'My::Role::baz(Foo::baz)', '... got the right value');
 
-
+done_testing;

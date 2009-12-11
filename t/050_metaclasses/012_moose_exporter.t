@@ -8,7 +8,6 @@ use Test::Exception;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 65;
 }
 
 
@@ -389,3 +388,5 @@ BEGIN {
     ok( ! UseAllOptions->can($_), "UseAllOptions::$_ has been unimported" )
         for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
 }
+
+done_testing;

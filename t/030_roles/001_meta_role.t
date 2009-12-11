@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role;
@@ -104,3 +104,5 @@ is_deeply(
     [ $foo_role->get_method_modifier_list('before') ],
     [ 'boo' ],
     '... got the right list of before method modifiers');
+
+done_testing;

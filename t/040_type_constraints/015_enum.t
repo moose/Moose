@@ -28,11 +28,6 @@ my @invalid_metacharacters = qw/< > & % $ @ ! ~ `/;
 push @invalid_metacharacters, qw/.* fish(sticks)? atreides/;
 push @invalid_metacharacters, '^1?$|^(11+?)\1+$';
 
-plan tests => @valid_letters        + @invalid_letters
-            + @valid_languages      + @invalid_languages
-            + @valid_metacharacters + @invalid_metacharacters
-            + @valid_languages      + 10;
-
 Moose::Util::TypeConstraints->export_type_constraints_as_functions();
 
 ok(Letter($_), "'$_' is a letter") for @valid_letters;
@@ -66,3 +61,4 @@ ok( !$anon_enum->is_a_type_of('Object'), 'enum not type of Object');
 ok( !$anon_enum->is_subtype_of('ThisTypeDoesNotExist'), 'enum not a subtype of nonexistant type');
 ok( !$anon_enum->is_a_type_of('ThisTypeDoesNotExist'), 'enum not type of nonexistant type');
 
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -186,3 +186,5 @@ ok(Role::Derived8->meta->has_attribute('foo'), '... have the attribute foo as ex
 ok(My::Test::Class4->meta->has_attribute('foo'), '... have the attribute foo as expected');
 
 is(My::Test::Class4->new->foo, 'Role::Base::foo', '... got the right value from method');
+
+done_testing;

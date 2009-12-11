@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More;
 
 {
     package FooTrait;
@@ -33,3 +33,5 @@ is(Class::MOP::class_of($meta), $meta->meta,
     "class_of and ->meta are the same on Foo's metaclass (immutable)");
 isa_ok(Class::MOP::class_of($meta), 'Moose::Meta::Class');
 ok($meta->meta->does_role('FooTrait'), "still does the trait after immutable");
+
+done_testing;

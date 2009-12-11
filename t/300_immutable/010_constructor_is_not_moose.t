@@ -7,7 +7,6 @@ use Test::More;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 6;
 }
 
 {
@@ -102,3 +101,5 @@ is(
         'no warning when inheriting from a class that has already made itself immutable'
     );
 }
+
+done_testing;

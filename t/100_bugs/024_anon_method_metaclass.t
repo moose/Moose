@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More;
 
 {
     package Ball;
@@ -46,3 +46,5 @@ for ( 1, 2 ) {
 
     undef $method_meta;
 }
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More;
 use Test::Exception;
 
 sub req_or_has ($$) {
@@ -240,6 +240,8 @@ ok( $robot->has_attribute("twist"), "has attr 'twist'" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method::Accessor" );
 }
+
+done_testing;
 
 __END__
 

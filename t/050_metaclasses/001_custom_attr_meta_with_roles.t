@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -40,4 +39,4 @@ ok($c->meta->has_attribute('bling_bling'), '... got the attribute');
 
 isa_ok($c->meta->get_attribute('bling_bling'), 'My::Custom::Meta::Attr');
 
-
+done_testing;

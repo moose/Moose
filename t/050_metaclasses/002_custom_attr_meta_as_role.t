@@ -3,10 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
-
-;
 
 lives_ok {
     package MooseX::Attribute::Test;
@@ -20,3 +18,5 @@ lives_ok {
     extends 'Moose::Meta::Attribute';
     with 'MooseX::Attribute::Test';
 } 'custom attribute metaclass extending role is okay';
+
+done_testing;

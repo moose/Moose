@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
 
 {
@@ -42,3 +42,5 @@ use Test::Exception;
     ::lives_ok{ with 'Bulkie::Role';
         } '... this should work correctly';
 }
+
+done_testing;

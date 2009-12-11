@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -148,3 +147,4 @@ dies_ok {
     Fail::Bar->new(foo => 10)
 } '... this fails, because initializer returns a bad type';
 
+done_testing;

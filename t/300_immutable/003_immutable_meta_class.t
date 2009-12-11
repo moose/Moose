@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -25,3 +24,4 @@ lives_ok {
     My::Meta->meta()->make_immutable(debug => 0)
 } '... can make a meta class immutable';
 
+done_testing;

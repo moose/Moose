@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 {
     package Thingy;
@@ -34,3 +34,5 @@ is($i, 0);
 $thingy->invoke_callback;
 is($i, 1);
 is($thingy->multiply(3), 6);
+
+done_testing;

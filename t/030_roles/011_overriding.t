@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -227,3 +226,4 @@ ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requi
 
 }
 
+done_testing;

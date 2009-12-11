@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role;
@@ -84,3 +84,5 @@ lives_ok { Baz->meta->make_immutable }
 Nothing here yet, but soon :)
 
 =cut
+
+done_testing;

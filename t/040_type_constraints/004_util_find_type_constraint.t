@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -36,3 +36,5 @@ foreach my $type_name (qw(
 
 # TODO:
 # add tests for is_subtype_of which confirm the hierarchy
+
+done_testing;

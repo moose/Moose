@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 91;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::MetaRole;
@@ -665,3 +665,5 @@ TODO:
         );
     }
 }
+
+done_testing;

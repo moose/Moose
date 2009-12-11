@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 
 {
     package SomeClass;
@@ -31,3 +31,4 @@ my $attr = SomeClass->meta->get_attribute('foo');
 is($attr->get_value(SomeClass->new()), 'Six');
 is(SomeClass->new()->foo, 'Six');
 
+done_testing;

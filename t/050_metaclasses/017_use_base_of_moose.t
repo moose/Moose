@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 {
@@ -35,3 +35,5 @@ is($child->attr, "ibute", "getter inherited properly");
 
 $child->attr("ition");
 is($child->attr, "ition", "setter inherited properly");
+
+done_testing;

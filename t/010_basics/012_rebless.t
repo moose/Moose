@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
@@ -83,3 +83,5 @@ is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
 throws_ok { $foo->type_constrained(10.5) }
 qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 10\.5/,
 '... this failed cause of type check';
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More;
 
 # if make_immutable is removed from the following code the tests pass
 
@@ -52,3 +52,5 @@ tests: {
         redo tests;
     }
 }
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More;
 use Test::Exception;
 
 {
@@ -154,3 +154,5 @@ ok( Foo::Sub::Sub->meta->error_class->meta->does_role('Role::Foo'),
     q{Foo::Sub::Sub's error_class does Role::Foo} );
 ok( Foo::Sub::Sub->meta->error_class->isa('Moose::Error::Croak'),
     q{Foo::Sub::Sub's error_class now subclasses Moose::Error::Croak} );
+
+done_testing;

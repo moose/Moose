@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 {
     package A;
@@ -65,3 +65,5 @@ use Test::More tests => 3;
 is( C->new->foo, 'c' );
 is( C->new->bar, 'cb' );
 is( C->new->baz, 'cba' );
+
+done_testing;

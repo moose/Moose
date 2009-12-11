@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 use Test::Exception;
-
 
 
 # RT #37569
@@ -71,3 +70,4 @@ throws_ok {
 qr/Attribute \(nt\) does not pass the type constraint because: blessed/,
     '... got the right error message';
 
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 
 {
     package Foo;
@@ -48,3 +48,4 @@ ok(
     'in_global_destruction state is passed to DEMOLISH properly (true)'
 ) for split //, `$^X t/010_basics/020-global-destruction-helper.pl`;
 
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 54;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -108,6 +107,4 @@ dies_ok { $foo->v_lazy_Number() } '... undef is NOT a Foo->Number';
 dies_ok { $foo->v_lazy_Str() } '... undef is NOT a Foo->Str';
 dies_ok { $foo->v_lazy_String() } '... undef is NOT a Foo->String';
 
-
-
-
+done_testing;

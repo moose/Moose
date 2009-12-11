@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -44,3 +43,5 @@ lives_ok {
 
 is( Foo->meta->get_method('DESTROY')->package_name, 'Foo',
     'Foo has a DESTROY method in the Bar class (not inherited)' );
+
+done_testing;

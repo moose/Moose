@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -65,3 +65,5 @@ ok $subtype2 => 'made a subtype of our subtype';
         "correct error thrown"
     );
 }
+
+done_testing;

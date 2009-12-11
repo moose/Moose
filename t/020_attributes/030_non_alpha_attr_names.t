@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More;
 
 {
     package Foo;
@@ -39,3 +39,5 @@ use Test::More tests => 12;
 
     Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
 }
+
+done_testing;

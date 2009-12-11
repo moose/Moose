@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 use Test::Exception;
 
 # This tests the error handling in Moose::Object only
@@ -20,3 +20,5 @@ throws_ok { Foo->new(undef) } qr/^\QSingle parameters to new() must be a HASH re
 
 throws_ok { Foo->does() } qr/^\QYou must supply a role name to does()/,
           'Cannot call does() without a role name';
+
+done_testing;

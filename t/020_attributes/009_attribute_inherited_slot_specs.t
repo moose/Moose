@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 84;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -261,4 +260,4 @@ ok(!Foo->meta->get_attribute('bling')->has_handles,
 ok(Bar->meta->get_attribute('bling')->has_handles,
    '... Bar::foo should handles');
 
-
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -181,3 +181,5 @@ is_deeply(
     },
     '... got the right hash elements'
 );
+
+done_testing;

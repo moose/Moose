@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -223,6 +223,4 @@ throws_ok {
     not_enough_matches( [] )
 } qr/No cases matched for /, '... not enough matches';
 
-
-
-
+done_testing;

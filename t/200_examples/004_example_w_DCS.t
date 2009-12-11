@@ -17,7 +17,6 @@ Pretty well if I do say so myself :)
 BEGIN {
     eval "use Declare::Constraints::Simple;";
     plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;
-    plan tests => 9;
 }
 
 use Test::Exception;
@@ -91,9 +90,4 @@ dies_ok {
     $foo->baz({});
 } '... validation failed correctly';
 
-
-
-
-
-
-
+done_testing;

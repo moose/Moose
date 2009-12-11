@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More;
 
 my $OPTS;
 do {
@@ -43,3 +43,4 @@ is(My::Class->foo, 'My::Singleton::Role', 'role_for_combination applied');
 is(My::Class->bar, 'My::Usual::Role', 'collateral role');
 is_deeply($OPTS, { number => 1 });
 
+done_testing;

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 2;
+use Test::More;
 
 {
 
@@ -27,3 +27,5 @@ use Test::More tests => 2;
     my $foo = Foo->new;
     ::isa_ok $foo, 'Bar';
 }
+
+done_testing;

@@ -3,11 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
-
-
 
 
 {
@@ -55,3 +53,5 @@ lives_ok {
 } '... and setting the accessor is okay';
 
 is($obj->fur, "dirty", "role attr initialized");
+
+done_testing;

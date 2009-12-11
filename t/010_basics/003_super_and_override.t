@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -79,3 +78,4 @@ is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
 
 }
 
+done_testing;

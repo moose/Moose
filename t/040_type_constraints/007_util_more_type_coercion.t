@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 25;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -115,3 +114,4 @@ dies_ok {
     Engine->new(header => \(my $var));
 } '... dies correctly with bad params';
 
+done_testing;

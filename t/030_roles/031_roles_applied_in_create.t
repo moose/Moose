@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
 use Moose::Meta::Class;
 use Moose::Util;
@@ -25,3 +25,4 @@ lives_ok(
     'Create a new class with several roles'
 );
 
+done_testing;

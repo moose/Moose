@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 88;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -573,3 +573,5 @@ isa_ok($test26, 'My::Test26');
 is($test26->ghost, 'My::Test26::ghost', '... we access the attribute from the class and ignore the role attribute and method');
 
 =cut
+
+done_testing;

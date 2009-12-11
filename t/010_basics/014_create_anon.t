@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 
 use Moose::Meta::Class;
 
@@ -70,3 +70,5 @@ use Moose::Meta::Class;
 
     ok $class_and_bar->name->bar_role_applied;
 }
+
+done_testing;

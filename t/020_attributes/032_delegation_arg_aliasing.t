@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More;
 
 {
     package Foo;
@@ -37,3 +37,5 @@ is($x, 'foo', "delegated aliasing works");
 undef $x;
 $hasfoo->foo_aliased_curried($x);
 is($x, 'bar', "delegated aliasing with currying works");
+
+done_testing;

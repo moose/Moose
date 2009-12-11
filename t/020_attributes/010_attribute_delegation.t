@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 92;
+use Test::More;
 use Test::Exception;
-
 
 
 # -------------------------------------------------------------------
@@ -434,3 +433,5 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $k = Bar->new(foo => "Foo");
     lives_ok { $k->foo_baz } "but not for class name";
 }
+
+done_testing;

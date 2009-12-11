@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -275,3 +275,5 @@ method modifier.
         with 'Bar2::Role';
     } 'required method exists in superclass as non-modifier, so we live';
 }
+
+done_testing;

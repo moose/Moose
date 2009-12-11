@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -100,5 +99,4 @@ lives_ok {
     } '... cannot have a isa() which is cannot does()';
 }
 
-
-
+done_testing;

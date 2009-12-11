@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
-
+use Test::More;
 
 
 {
@@ -38,3 +37,5 @@ is($Foo::foo_default_called, 1, "foo default was only called once during constru
 $foo->bar();
 
 is($Foo::bar_default_called, 1, "bar default was only called once when lazy attribute is accessed");
+
+done_testing;

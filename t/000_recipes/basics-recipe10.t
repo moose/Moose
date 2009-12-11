@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More;
 
 
 {
@@ -218,3 +218,4 @@ foreach my $set (@$parent_sets) {
 
 # AUTHOR: Aran Clary Deltac <bluefeet@cpan.org>
 
+done_testing;

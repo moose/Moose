@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More;
 use Test::Exception;
-
 
 
 =pod
@@ -77,3 +76,4 @@ is_deeply(
     ok($attr->has_accessor, '... the attribute does have an accessor (as expected)');
 }
 
+done_testing;

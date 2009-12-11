@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 298;
+use Test::More;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -359,3 +359,5 @@ ok(!defined RoleName('Moose::Meta::TypeConstraint'),  '... RoleName accepts anyt
 ok(defined RoleName('Quux::Wibble::Role'),      '... RoleName accepts anything which is a RoleName');
 
 close($fh) || die "Could not close the filehandle $0 for test";
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 
 BEGIN {
     use_ok('Moose::Util', ':all');
@@ -62,3 +62,5 @@ is_deeply(
     [ Foo->meta, Foo->meta, Bar->meta ],
     "unchanged, since all roles are already applied",
 );
+
+done_testing;

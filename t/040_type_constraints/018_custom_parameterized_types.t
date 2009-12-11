@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -84,3 +84,4 @@ dies_ok {
     );
 } 'non-containers cannot be parameterized';
 
+done_testing;

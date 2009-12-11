@@ -3,11 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
-
-
 
 
 {
@@ -55,3 +53,4 @@ lives_ok {
     $foo->dog($bar)
 } '... and setting the accessor is okay';
 
+done_testing;

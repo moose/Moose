@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 46;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -212,3 +211,5 @@ ok(My::Foo::AliasOnly->meta->has_method('foo_foo'), '.. and the aliased foo_foo 
         for qw( x1 foo_x1 );
     ok( ! $baz->has_method('y1'), 'Role::Baz has no y1 method' );
 }
+
+done_testing;

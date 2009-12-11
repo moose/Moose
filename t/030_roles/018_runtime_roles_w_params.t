@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -70,4 +69,4 @@ use Test::Exception;
     is($foo->baz, 'FOO-BAZ', '... got the expect value');
 }
 
-
+done_testing;

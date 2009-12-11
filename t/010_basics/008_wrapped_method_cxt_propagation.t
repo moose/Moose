@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
-
+use Test::More;
 
 
 {
@@ -56,3 +55,4 @@ foreach my $obj ( $base, $after ) {
     }
 }
 
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 47;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -274,3 +273,5 @@ ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
     }
 
 }
+
+done_testing;

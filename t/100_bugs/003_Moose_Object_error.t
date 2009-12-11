@@ -5,6 +5,8 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 1;
+use Test::More;
 
 use_ok('MyMooseObject');
+
+done_testing;

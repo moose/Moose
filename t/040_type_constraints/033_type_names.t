@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::TypeConstraint;
@@ -34,3 +34,5 @@ is( Moose::Util::TypeConstraints::find_or_parse_type_constraint('ArrayRef[In-val
 is( Moose::Util::TypeConstraints::find_or_parse_type_constraint('ArrayRef[Va.lid]'),
     'ArrayRef[Va.lid]',
     'find_or_parse_type_constraint returns name for valid name' );
+
+done_testing;

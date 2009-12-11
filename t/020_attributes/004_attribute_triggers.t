@@ -5,9 +5,8 @@ use warnings;
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 43;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -219,4 +218,4 @@ use Test::Exception;
     Foo->meta->make_immutable, redo if Foo->meta->is_mutable;
 }
 
-
+done_testing;

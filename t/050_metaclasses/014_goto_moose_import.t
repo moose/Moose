@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 use Test::Exception;
 
 # Some packages out in the wild cooperate with Moose by using goto
@@ -80,3 +80,5 @@ ok( ! Bar->can('has'),
 ok( Bar->can('meta'),
     'Bar has a meta method' );
 isa_ok( Bar->meta(), 'Moose::Meta::Class' );
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 
 use Moose::Util::TypeConstraints;
 
@@ -29,3 +29,5 @@ ok( $type->parent, 'type has a parent type' );
 is( $type->parent->name, 'Foo', 'parent type is Foo' );
 isa_ok( $type->parent, 'Moose::Meta::TypeConstraint::Class',
         'parent type constraint is a class type' );
+
+done_testing;

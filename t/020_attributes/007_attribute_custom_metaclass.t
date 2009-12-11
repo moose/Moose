@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -90,4 +89,4 @@ use Test::Exception;
     isa_ok($bar_attr, 'Moose::Meta::Attribute');
 }
 
-
+done_testing;

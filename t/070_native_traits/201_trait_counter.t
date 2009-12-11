@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More;
 use Test::Moose 'does_ok';
 
 {
@@ -76,3 +76,4 @@ is_deeply(
     '... got the right handles methods'
 );
 
+done_testing;

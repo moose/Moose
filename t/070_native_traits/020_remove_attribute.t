@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 {
@@ -47,3 +47,5 @@ ok( !$page->can($_), "... our class no longer has the $_ method" ) for qw[
     inc_counter
     reset_counter
 ];
+
+done_testing;

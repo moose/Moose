@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More;
 use Class::MOP ();
 
 {
@@ -210,3 +210,4 @@ Class::MOP::remove_metaclass_by_name($_)
 Class::MOP::remove_metaclass_by_name($_)
     for qw( SubClassUseBase OtherSubClassUseBase );
 
+done_testing;

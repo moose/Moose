@@ -5,9 +5,8 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
-
 
 
 $SIG{__WARN__} = sub { 0 };
@@ -27,3 +26,5 @@ delete $INC{'Bar.pm'};
 
 eval { require Bar; };
 ok(!$@, '... re-loaded Bar successfully') || diag $@;
+
+done_testing;

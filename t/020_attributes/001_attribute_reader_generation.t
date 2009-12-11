@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -83,5 +82,4 @@ use Test::Exception;
     is($foo->get_lazy_foo(), 100, '... got the correct value');
 }
 
-
-
+done_testing;

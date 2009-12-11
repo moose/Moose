@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More;
 use Test::Exception;
 
 {
@@ -57,3 +57,4 @@ throws_ok { $gimp->leg_count }
 qr/This number \(0\) is not less than ten!/,
     'gave custom supertype error message on lazy set to 0';
 
+done_testing;

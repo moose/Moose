@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 
 use Moose ();
 use Moose::Meta::Class;
@@ -20,3 +20,5 @@ like $warn, qr/Attribute \(foo\) of class Banana has no associated methods/,
 $warn = '';
 $meta->add_attribute('bar', is => 'bare');
 is $warn, '', 'add attribute with no methods and is => "bare"';
+
+done_testing;

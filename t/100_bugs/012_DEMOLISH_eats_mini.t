@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More;
 use Test::Exception;
 
 
@@ -98,3 +98,4 @@ use Test::Exception;
         if Quux->meta->is_mutable
 }
 
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -49,3 +48,5 @@ foreach my $import (qw(
     local $TODO = $import eq 'blessed' ? "no automatic namespace cleaning yet" : undef;
     ok(!Foo->can($import), "no namespace pollution in Moose::Object ($import)" );
 }
+
+done_testing;

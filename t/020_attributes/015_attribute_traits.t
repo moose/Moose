@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More;
 use Test::Exception;
 use Test::Moose;
-
 
 
 {
@@ -64,5 +63,4 @@ ok(!$gorch_attr->does('My::Attribute::Trait'), '... gorch doesnt do the trait');
 ok(!$gorch_attr->has_applied_traits, '... no traits applied');
 is($gorch_attr->applied_traits, undef, '... no traits applied');
 
-
-
+done_testing;

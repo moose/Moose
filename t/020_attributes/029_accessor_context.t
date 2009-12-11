@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More;
 use Test::Exception;
 
 lives_ok {
@@ -66,3 +66,5 @@ lives_ok {
     is_deeply [$o->h_ro],        [],      'uninitialized HashRef attribute/ro in list context';
 
 } 'testing';
+
+done_testing;

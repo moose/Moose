@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More;
 
 use Scalar::Util qw(blessed);
-
 
 
 =pod
@@ -101,6 +100,4 @@ isa_ok($obj2, 'My::Class');
     is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing again');
 }
 
-
-
-
+done_testing;

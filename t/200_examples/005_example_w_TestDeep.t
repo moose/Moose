@@ -18,7 +18,6 @@ but it is not completely horrid either.
 BEGIN {
     eval "use Test::Deep;";
     plan skip_all => "Test::Deep is required for this test" if $@;
-    plan tests => 5;
 }
 
 use Test::Exception;
@@ -75,4 +74,4 @@ dies_ok {
     $foo->bar([{ foo => 3 }]);
 } '... validation failed correctly';
 
-
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -90,3 +89,4 @@ lives_ok {
 }
 'Can subclass the same non-Moose class twice with different metaclasses';
 
+done_testing;

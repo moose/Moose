@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
-
 
 
 =pod
@@ -54,3 +53,5 @@ isa_ok(Foo->meta, 'Foo::Meta');
         qr/^Bar already has a metaclass, but it does not inherit Moose::Meta::Class/,
         '... got the right error too');
 }
+
+done_testing;

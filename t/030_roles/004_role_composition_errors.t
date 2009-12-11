@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -155,3 +154,5 @@ is_deeply(
         qr/'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class4'/,
         'exception mentions all the require methods that are accessors at once, as well as missing methods, but not the one that exists';
 }
+
+done_testing;

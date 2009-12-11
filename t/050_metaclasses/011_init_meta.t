@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 
 use Moose ();
 
@@ -17,3 +17,5 @@ isa_ok( $meta, 'Moose::Meta::Class' );
 isa_ok( Foo->meta, 'Moose::Meta::Class' );
 
 is($meta, Foo->meta, '... our metas are the same');
+
+done_testing;

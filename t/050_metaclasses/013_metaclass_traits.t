@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 32;
+use Test::More;
 use Test::Exception;
 
 {
@@ -220,3 +220,5 @@ lives_ok {
     is( $instance->an_attr, 'value', 'Can get value' );
 }
 'Can create instance and access attributes';
+
+done_testing;

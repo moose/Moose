@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 
 use Moose::Util::MetaRole;
 
@@ -107,3 +107,5 @@ sub has_superclass {
 
     ok( $supers{$parent}, $desc );
 }
+
+done_testing;

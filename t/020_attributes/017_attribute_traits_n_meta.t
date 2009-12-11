@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
 use Test::Moose;
 
@@ -63,6 +63,4 @@ isa_ok($c->meta->get_attribute('bar'), 'My::Meta::Attribute::DefaultReadOnly');
 does_ok($c->meta->get_attribute('bar'), 'My::Attribute::Trait');
 is($c->meta->get_attribute('bar')->_is_metadata, 'ro', '... got the right metaclass customization');
 
-
-
-
+done_testing;

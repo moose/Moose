@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use Test::More tests => 15;
+use Test::More;
 
 # for classes ...
 {
@@ -67,3 +67,5 @@ use Test::More tests => 15;
         ::like($warn, qr/Argument \"hello\" isn\'t numeric in addition \(\+\)/, '.. and it is the right warning');
     }
 }
+
+done_testing;

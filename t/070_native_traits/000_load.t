@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
-
+use Test::More;
 use Moose ();
+
 BEGIN {
     use_ok('Moose::Meta::Attribute::Native');
     use_ok('Moose::Meta::Attribute::Native::Trait::Bool');
@@ -15,3 +15,5 @@ BEGIN {
     use_ok('Moose::Meta::Attribute::Native::Trait::Number');
     use_ok('Moose::Meta::Attribute::Native::Trait::String');
 }
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More;
 use Test::Moose qw(does_ok);
 
 {
@@ -118,3 +118,5 @@ use Test::Moose qw(does_ok);
     ::isa_ok(Foo2::Role->meta, 'Moose::Meta::Role');
     ::does_ok(Foo2::Role->meta, 'Foo::Trait::Class');
 }
+
+done_testing;

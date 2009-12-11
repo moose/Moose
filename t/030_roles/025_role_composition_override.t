@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role::Application::RoleSummation;
@@ -110,3 +110,5 @@ dies_ok {
         )
     );
 } '... this fails as expected';
+
+done_testing;

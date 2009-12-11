@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 
@@ -31,3 +31,5 @@ use Test::Exception;
 
     is( $foo->foo, "blah", "field is set via setter" );
 }
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More;
 
 BEGIN {
     use_ok('Moose::Util', ':all');
@@ -38,3 +38,4 @@ is search_class_by_role('SCBR::C', 'SCBR::Role'), 'SCBR::B', '... nearest class 
 }
 is search_class_by_role('SCBR::D', 'SCBR::Role'), 'SCBR::D', '... nearest class being direct class returned';
 
+done_testing;

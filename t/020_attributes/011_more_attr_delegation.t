@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 48;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -259,3 +259,5 @@ is( $p->child_g_method_1, "g1", "delegate to moose class without reader (child_g
 
 can_ok( $p, "child_i_method_1" );
 is( $p->parent_method_1, "parent_1", "delegate doesn't override existing method" );
+
+done_testing;

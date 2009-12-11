@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 
 do {
     package My::Meta::Class;
@@ -25,3 +25,4 @@ do {
 is(My::Class->meta->meta->name, 'My::Meta::Class');
 is(My::Class::Aliased->meta->meta->name, 'My::Meta::Class');
 
+done_testing;

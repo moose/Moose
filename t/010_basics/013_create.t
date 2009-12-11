@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
 
 {
@@ -58,3 +58,4 @@ dies_ok {
 
 # XXX: Continuing::To::Fail gets created anyway
 
+done_testing;

@@ -3,10 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More;
 use Test::Exception;
 use Test::Moose;
-
 
 
 {
@@ -115,3 +114,4 @@ ok(!$derived_bar_attr->does('Fictional'), "attr->does returns false for nonexist
 can_ok($quux, 'additional_method');
 is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
 
+done_testing;

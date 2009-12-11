@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More;
 
 
 {
@@ -79,3 +79,5 @@ isnt( ClassA->foo, "ClassB::foo", "ClassA::foo is not confused with ClassB::foo"
     is( ClassB->foo, 'ClassB::foo', 'ClassB::foo knows its name' );
     is( ClassA->foo, 'ClassA::foo', 'ClassA::foo knows its name' );
 }
+
+done_testing;

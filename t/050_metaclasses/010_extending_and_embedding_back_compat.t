@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
-
 
 
 BEGIN {
@@ -53,6 +52,4 @@ isa_ok($obj, 'Moose::Object');
 
 is($obj->foo, 10, '... got the right value');
 
-
-
-
+done_testing;
