@@ -20,7 +20,7 @@ Moose::Cookbook::Basics::Recipe7 - Making Moose fast with immutable
 The Moose metaclass API provides a C<make_immutable()> method. Calling
 this method does two things to your class. First, it makes it
 faster. In particular, object construction and destruction are
-effectively "inlined" in your class, and no longer invokes the meta
+effectively "inlined" in your class, and no longer invoke the meta
 API.
 
 Second, you can no longer make changes via the metaclass API, such as
