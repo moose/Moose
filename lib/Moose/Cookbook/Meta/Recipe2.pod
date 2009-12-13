@@ -76,6 +76,10 @@ attached to it. Such labels would be used when showing data to an end
 user. In this recipe we label the C<url> attribute with "The site's
 URL" and create a simple method showing how to use that label.
 
+The proper, modern way to extend attributes (using a role instead of a
+subclass) is described in L<Moose::Cookbook::Meta::Recipe3>, but that recipe
+assumes you've read and at least tried to understand this one.
+
 =head1 META-ATTRIBUTE OBJECTS
 
 All the attributes of a Moose-based object are actually objects

@@ -140,6 +140,7 @@ GitHub
 hashrefs
 hotspots
 immutabilize
+immutabilizes
 immutabilized
 inline
 inlines
