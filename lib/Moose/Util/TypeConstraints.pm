@@ -49,7 +49,6 @@ Moose::Exporter->setup_import_methods(
             register_type_constraint
             match_on_type )
     ],
-    _export_to_main => 1,
 );
 
 ## --------------------------------------------------------

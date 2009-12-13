@@ -49,11 +49,8 @@ sub build_import_methods {
     );
 
     my %methods;
-    # $args{_export_to_main} exists for backwards compat, because
-    # Moose::Util::TypeConstraints did export to main (unlike Moose &
-    # Moose::Role).
     $methods{import} = $class->_make_import_sub( $exporting_package,
-        $exporter, \@exports_from, $args{_export_to_main} );
+        $exporter, \@exports_from );
 
     $methods{unimport} = $class->_make_unimport_sub( $exporting_package,
         $exports, $is_removable, $export_recorder );
