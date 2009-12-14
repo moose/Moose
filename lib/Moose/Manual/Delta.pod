@@ -26,7 +26,7 @@ We decided to undeprecate this. Now it just works.
 
 =item C<get_attribute_map> is deprecated
 
-The metaclass method C<get_attribute_map> was never meant to be public.
+The metaclass method C<get_attribute_map> was never meant to be public. All
 C<get_*_methods> were deprecated, and the work around if you still need the
 functionality they provided is to iterate over the list of names manually.
 
