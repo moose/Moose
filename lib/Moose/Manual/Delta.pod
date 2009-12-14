@@ -24,6 +24,15 @@ send us a patch.
 
 We decided to undeprecate this. Now it just works.
 
+=item C<get_attribute_map> is deprecated
+
+The metaclass method C<get_attribute_map> was never meant to be public.
+These were deprecated, and the work around if you still need the
+functionality they provided is to iterate over the list of attribute
+names manually.
+
+    my %fields = map { $_ => $meta->get_attribute($_) } $meta->get_attribute_list;
+
 =back
 
 =head1 0.90
