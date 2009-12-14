@@ -24,13 +24,16 @@ send us a patch.
 
 We decided to undeprecate this. Now it just works.
 
-=item C<get_attribute_map> is deprecated
+=item Both C<get_method_map> and C<get_attribute_map> is deprecated
 
-The metaclass method C<get_attribute_map> was never meant to be public. All
-C<get_*_methods> were deprecated, and the work around if you still need the
-functionality they provided is to iterate over the list of names manually.
+These metaclass methods were never meant to be public, and they are both now
+deprecated. The work around if you still need the functionality they provided
+is to iterate over the list of names manually.
 
     my %fields = map { $_ => $meta->get_attribute($_) } $meta->get_attribute_list;
+
+This was actually a change in L<Class::MOP>, but this version of Moose
+requires a version of L<Class::MOP> that includes said change.
 
 =back
 
