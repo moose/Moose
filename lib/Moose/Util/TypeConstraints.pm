@@ -572,18 +572,19 @@ sub _install_type_coercions ($$) {
     use re "eval";
 
     my $valid_chars = qr{[\w:\.]};
-    my $type_atom   = qr{ $valid_chars+ };
+    my $type_atom   = qr{ (?>$valid_chars+) }x;
+    my $ws   = qr{ (?>\s*) }x;
 
     my $any;
 
-    my $type = qr{  $valid_chars+  (?: \[ \s* (??{$any})   \s* \] )? }x;
+    my $type = qr{  $type_atom  (?: \[ $ws (??{$any})   $ws \] )? }x;
     my $type_capture_parts
-        = qr{ ($valid_chars+) (?: \[ \s* ((??{$any})) \s* \] )? }x;
+        = qr{ ($type_atom) (?: \[ $ws ((??{$any})) $ws \] )? }x;
     my $type_with_parameter
-        = qr{  $valid_chars+      \[ \s* (??{$any})   \s* \]    }x;
+        = qr{  $type_atom      \[ $ws (??{$any})   $ws \]    }x;
 
-    my $op_union = qr{ \s* \| \s* }x;
-    my $union    = qr{ $type (?: $op_union $type )+ }x;
+    my $op_union = qr{ $ws \| $ws }x;
+    my $union    = qr{ $type (?> (?: $op_union $type )+ ) }x;
 
     $any = qr{ $type | $union }x;
 
