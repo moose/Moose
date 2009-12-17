@@ -11,9 +11,6 @@ with 'Moose::Meta::Attribute::Native::Trait';
 sub _default_is  { 'rw' }
 sub _helper_type { 'Bool' }
 
-# NOTE: we don't use the method provider for this module since many of
-# the names of the provided methods would conflict with keywords - SL
-
 has 'method_provider' => (
     is        => 'ro',
     isa       => 'ClassName',
