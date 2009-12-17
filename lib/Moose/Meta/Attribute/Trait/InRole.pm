@@ -8,6 +8,8 @@ use Scalar::Util 'blessed', 'weaken';
 our $VERSION   = '0.93';
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Moose::Meta::Method::Stub;
+
 around attach_to_class => sub {
     shift;
     my ( $self, $class ) = @_;
@@ -19,10 +21,13 @@ around attach_to_class => sub {
     weaken( $self->{'associated_class'} = $class );
 };
 
-# XXX - This is a no-op, since trying to add accessors to a role just blows
-# up. Ideally, we _would_ add accessors, or somehow make the role aware that
-# they exist for the purposes of method conflict checking, etc.
-around install_accessors => sub { };
+around 'accessor_metaclass' => sub {
+    return 'Moose::Meta::Method::Stub';
+};
+
+around 'delegation_metaclass' => sub {
+    return 'Moose::Meta::Method::Stub';
+};
 
 around _check_associated_methods => sub { };
 
