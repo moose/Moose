@@ -36,6 +36,9 @@ sub apply {
 
 sub check_role_exclusions {
     my ($self, $role, $class) = @_;
+    if (ref $class eq 'Class::MOP::Class' ){
+        Carp::cluck('wtf');
+    }
     if ($class->excludes_role($role->name)) {
         $class->throw_error("Conflict detected: " . $class->name . " excludes role '" . $role->name . "'");
     }
@@ -138,8 +141,7 @@ sub apply_attributes {
         }
         else {
             $class->add_attribute(
-                $attribute_name,
-                $role->get_attribute($attribute_name)
+                $role->get_attribute($attribute_name)->clone
             );
         }
     }

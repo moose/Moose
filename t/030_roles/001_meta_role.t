@@ -55,10 +55,14 @@ is_deeply(
 
 ok($foo_role->has_attribute('bar'), '... FooRole does have the bar attribute');
 
-is_deeply(
-    $foo_role->get_attribute('bar'),
-    { is => 'rw', isa => 'Foo' },
-    '... got the correct description of the bar attribute');
+my $bar = $foo_role->get_attribute('bar');
+is( $bar->get_read_method, 'bar', 'bar has a reader named bar' );
+is( $bar->get_write_method, 'bar', 'bar has a writer named bar' );
+is(
+    $bar->type_constraint,
+    Moose::Util::TypeConstraints::class_type('Foo'),
+    'bar has a Foo class type'
+);
 
 lives_ok {
     $foo_role->add_attribute('baz' => (is => 'ro'));
@@ -71,10 +75,9 @@ is_deeply(
 
 ok($foo_role->has_attribute('baz'), '... FooRole does have the baz attribute');
 
-is_deeply(
-    $foo_role->get_attribute('baz'),
-    { is => 'ro' },
-    '... got the correct description of the baz attribute');
+my $baz = $foo_role->get_attribute('baz');
+is( $baz->get_read_method, 'baz', 'baz has a reader named baz' );
+is( $baz->get_write_method, undef, 'baz does not have a writer' );
 
 lives_ok {
     $foo_role->remove_attribute('bar');

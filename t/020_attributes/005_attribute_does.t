@@ -21,6 +21,11 @@ use Test::Exception;
         does => role_type('Bar::Role')
     );
 
+    package Foo::Class;
+    use Moose;
+
+    with 'Foo::Role';
+
     package Bar::Role;
     use Moose::Role;
 
@@ -29,16 +34,10 @@ use Test::Exception;
     # since the isa() check will imply the does() check
     has 'foo' => (is => 'rw', isa => 'Foo::Class', does => 'Foo::Role');
 
-    package Foo::Class;
-    use Moose;
-
-    with 'Foo::Role';
-
     package Bar::Class;
     use Moose;
 
     with 'Bar::Role';
-
 }
 
 my $foo = Foo::Class->new;

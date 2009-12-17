@@ -63,7 +63,6 @@ sub apply_attributes {
         }
         else {
             $role2->add_attribute(
-                $attribute_name,
                 $role1->get_attribute($attribute_name)
             );
         }

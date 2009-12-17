@@ -17,8 +17,9 @@ use Moose::Meta::Class;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
+use Moose::Util qw( ensure_all_roles );
 
-use base 'Class::MOP::Module';
+use base 'Class::MOP::Module', 'Class::MOP::HasAttributes';
 
 ## ------------------------------------------------------------------
 ## NOTE:
@@ -70,16 +71,6 @@ foreach my $action (
             existence  => 'requires_method',
         }
     },
-    {
-        name        => '_attribute_map',
-        attr_reader => '_attribute_map',
-        methods     => {
-            get       => 'get_attribute',
-            get_keys  => 'get_attribute_list',
-            existence => 'has_attribute',
-            remove    => 'remove_attribute',
-        }
-    }
 ) {
 
     my $attr_reader = $action->{attr_reader};
@@ -165,23 +156,64 @@ $META->add_attribute(
     predicate => 'has_composition_class_roles',
 );
 
-## some things don't always fit, so they go here ...
+# More or less copied from Moose::Meta::Class
+sub initialize {
+    my $class = shift;
+    my $pkg   = shift;
+    return Class::MOP::get_metaclass_by_name($pkg)
+        || $class->SUPER::initialize(
+        $pkg,
+        'attribute_metaclass' => 'Moose::Meta::Attribute',
+        @_
+        );
+}
 
+my $Role_Loaded;
+# XXX - copied from Moose::Meta::Class
 sub add_attribute {
     my $self = shift;
-    my $name = shift;
-    unless ( defined $name ) {
-        require Moose;
-        Moose->throw_error("You must provide a name for the attribute");
+
+    # Since this _is_ a role, it needs to be loaded after Moose::Meta::Role is
+    # done setting itself up.
+    unless ($Role_Loaded) {
+        require Moose::Meta::Attribute::Trait::InRole;
+        $Role_Loaded = 1;
     }
-    my $attr_desc;
-    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
-        $attr_desc = $_[0];
+
+    my $attr = (
+        blessed $_[0] && $_[0]->isa('Class::MOP::Attribute')
+        ? $self->_ensure_attribute_trait($_[0] )
+        : $self->_process_attribute(@_)
+    );
+
+    $self->SUPER::add_attribute($attr);
+
+    return $attr;
+}
+
+sub _ensure_attribute_trait {
+    my $self = shift;
+    my $attr = shift;
+
+    ensure_all_roles( $attr, 'Moose::Meta::Attribute::Trait::InRole' );
+
+    return $attr;
+}
+
+sub _process_attribute {
+    my ( $self, $name, @args ) = @_;
+
+    my %args = scalar @args == 1
+        && ref( $args[0] ) eq 'HASH' ? %{ $args[0] } : @args;
+
+    if ( $args{traits} ) {
+        push @{ $args{traits} }, 'Moose::Meta::Attribute::Trait::InRole';
     }
     else {
-        $attr_desc = { @_ };
+        $args{traits} = ['Moose::Meta::Attribute::Trait::InRole'];
     }
-    $self->_attribute_map->{$name} = $attr_desc;
+
+    $self->attribute_metaclass->interpolate_class_and_new( $name, %args );
 }
 
 sub add_required_methods {
@@ -561,20 +593,6 @@ sub create {
 #         'set'    => 'add_excluded_roles',
 #         'keys'   => 'get_excluded_roles_list',
 #         'exists' => 'excludes_role',
-#     }
-# );
-#
-# has 'attribute_map' => (
-#     metaclass => 'Hash',
-#     reader    => '_attribute_map',
-#     isa       => 'HashRef[Str]',
-#     provides => {
-#         # 'set'  => 'add_attribute' # has some special crap in it
-#         'get'    => 'get_attribute',
-#         'keys'   => 'get_attribute_list',
-#         'exists' => 'has_attribute',
-#         # Not exactly delete, cause it sets multiple
-#         'delete' => 'remove_attribute',
 #     }
 # );
 #

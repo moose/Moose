@@ -97,8 +97,9 @@ our @applications;
     package Role::WithCustomApplication;
     use Moose::Role;
 
-    has '+composition_class_roles' => (
-        default => ['Role::Composite'],
+    has 'composition_class_roles' => (
+        is      => 'bare',
+        default => sub { ['Role::Composite'] },
     );
 }
 
