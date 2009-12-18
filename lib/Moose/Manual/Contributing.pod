@@ -224,7 +224,8 @@ defend your change.
     git checkout stable
     git merge master # must be a fast forward
     git push both
-    # ship & tag
+    shipit # does not ship the tarball, but does everything else
+    cpan-upload ~/shipit-dist/Moose-X.YZ.tar.gz
 
 Development releases are made without merging into the stable branch.
 
