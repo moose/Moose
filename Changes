@@ -15,6 +15,9 @@ for, noteworthy changes.
   * strict and warnings are now unimported when Moose, Moose::Role, or
     Moose::Exporter are unimported. (doy, Adam Kennedy)
 
+  * Added a 'consumers' method to Moose::Meta::Role for finding all
+    classes/roles which consume the given role. (doy)
+
   [BUG FIXES]
 
   * Fix has '+attr' in Roles to explode immediately, rather than when the role

@@ -506,6 +506,19 @@ sub create {
     return $meta;
 }
 
+sub consumers {
+    my $self = shift;
+    my @consumers;
+    for my $meta (Class::MOP::get_all_metaclass_instances) {
+        next if $meta->name eq $self->name;
+        next unless $meta->isa('Moose::Meta::Class')
+                 || $meta->isa('Moose::Meta::Role');
+        push @consumers, $meta->name
+            if $meta->does_role($self->name);
+    }
+    return @consumers;
+}
+
 # anonymous roles. most of it is copied straight out of Class::MOP::Class.
 # an intrepid hacker might find great riches if he unifies this code with that
 # code in Class::MOP::Module or Class::MOP::Package
@@ -739,6 +752,10 @@ C<create_anon_class> method.
 =item B<< $metarole->is_anon_role >>
 
 Returns true if the role is an anonymous role.
+
+=item B<< $metarole->consumers >>
+
+Returns a list of names of classes and roles which consume this role.
 
 =back
 
