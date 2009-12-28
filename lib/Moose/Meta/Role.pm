@@ -159,12 +159,6 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Application::ToInstance',
 );
 
-$META->add_attribute(
-    'composition_class_roles',
-    reader    => 'composition_class_roles',
-    predicate => 'has_composition_class_roles',
-);
-
 ## some things don't always fit, so they go here ...
 
 sub add_attribute {
@@ -394,6 +388,8 @@ sub apply {
     Class::MOP::load_class($application_class);
     return $application_class->new(@args)->apply($self, $other);
 }
+
+sub composition_class_roles { }
 
 sub combine {
     my ($class, @role_specs) = @_;
@@ -696,6 +692,14 @@ and C<-alias> keys to control how methods are composed from the role.
 
 The return value is a new L<Moose::Meta::Role::Composite> that
 represents the combined roles.
+
+=item B<< $metarole->composition_class_roles >>
+
+When combining multiple roles using C<combine>, this method is used to obtain a
+list of role names to be applied to the L<Moose::Meta::Role::Composite>
+instance returned by C<combine>. The default implementation returns an empty
+list. Extensions that need to hook into role combination may wrap this method
+to return additional role names.
 
 =item B<< Moose::Meta::Role->create($name, %options) >>
 

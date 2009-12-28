@@ -48,9 +48,7 @@ sub new {
     }
 
     my @composition_roles = map {
-        $_->has_composition_class_roles
-            ? @{ $_->composition_class_roles }
-            : ()
+        $_->composition_class_roles
     } @{ $params{roles} };
 
     if (@composition_roles) {

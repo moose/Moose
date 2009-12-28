@@ -97,9 +97,10 @@ our @applications;
     package Role::WithCustomApplication;
     use Moose::Role;
 
-    has '+composition_class_roles' => (
-        default => ['Role::Composite'],
-    );
+    around composition_class_roles => sub {
+        my ($orig, $self) = @_;
+        return $self->$orig, 'Role::Composite';
+    };
 }
 
 {
@@ -138,7 +139,7 @@ ok( My::Role::Special->meta->isa('Moose::Meta::Role'),
 );
 ok( My::Role::Special->meta->meta->does_role('Role::WithCustomApplication'),
     "the role's metaobject has custom applications" );
-is_deeply( My::Role::Special->meta->composition_class_roles,
+is_deeply( [My::Role::Special->meta->composition_class_roles],
     ['Role::Composite'],
     "the role knows about the specified composition class" );
 
