@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION   = '0.93';
+our $VERSION = '0.93';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -12,6 +12,10 @@ use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
+
+use XSLoader;
+
+XSLoader::load( 'Moose', $VERSION );
 
 my %EXPORT_SPEC;
 
@@ -33,12 +37,15 @@ sub build_import_methods {
 
     $EXPORT_SPEC{$exporting_package} = \%args;
 
-    my @exports_from = $class->_follow_also( $exporting_package );
+    my @exports_from = $class->_follow_also($exporting_package);
 
     my $export_recorder = {};
+    my $is_reexport     = {};
 
     my $exports = $class->_make_sub_exporter_params(
-        [ @exports_from, $exporting_package ], $export_recorder,
+        [ @exports_from, $exporting_package ],
+        $export_recorder,
+        $is_reexport,
     );
 
     my $exporter = Sub::Exporter::build_exporter(
@@ -49,14 +56,24 @@ sub build_import_methods {
     );
 
     my %methods;
-    $methods{import} = $class->_make_import_sub( $exporting_package,
-        $exporter, \@exports_from );
+    $methods{import} = $class->_make_import_sub(
+        $exporting_package,
+        $exporter,
+        \@exports_from,
+        $is_reexport
+    );
 
-    $methods{unimport} = $class->_make_unimport_sub( $exporting_package,
-        $exports, $export_recorder );
+    $methods{unimport} = $class->_make_unimport_sub(
+        $exporting_package,
+        $exports,
+        $export_recorder,
+        $is_reexport
+    );
 
-    $methods{init_meta} = $class->_make_init_meta( $exporting_package,
-        \%args );
+    $methods{init_meta} = $class->_make_init_meta(
+        $exporting_package,
+        \%args
+    );
 
     my $package = Class::MOP::Package->initialize($exporting_package);
     for my $to_install ( @{ $args{install} || [] } ) {
@@ -67,7 +84,7 @@ sub build_import_methods {
         $package->add_package_symbol( $symbol, $methods{$to_install} );
     }
 
-    return ( $methods{import}, $methods{unimport}, $methods{init_meta} )
+    return ( $methods{import}, $methods{unimport}, $methods{init_meta} );
 }
 
 {
@@ -85,12 +102,12 @@ sub build_import_methods {
     sub _follow_also_real {
         my $exporting_package = shift;
 
-        if (!exists $EXPORT_SPEC{$exporting_package}) {
+        if ( !exists $EXPORT_SPEC{$exporting_package} ) {
             my $loaded = Class::MOP::is_class_loaded($exporting_package);
 
             die "Package in also ($exporting_package) does not seem to "
-              . "use Moose::Exporter"
-              . ($loaded ? "" : " (is it loaded?)");
+                . "use Moose::Exporter"
+                . ( $loaded ? "" : " (is it loaded?)" );
         }
 
         my $also = $EXPORT_SPEC{$exporting_package}{also};
@@ -99,9 +116,9 @@ sub build_import_methods {
 
         my @also = ref $also ? @{$also} : $also;
 
-        for my $package (@also)
-        {
-            die "Circular reference in 'also' parameter to Moose::Exporter between $exporting_package and $package"
+        for my $package (@also) {
+            die
+                "Circular reference in 'also' parameter to Moose::Exporter between $exporting_package and $package"
                 if $seen->{$package};
 
             $seen->{$package} = 1;
@@ -112,9 +129,10 @@ sub build_import_methods {
 }
 
 sub _make_sub_exporter_params {
-    my $class             = shift;
-    my $packages          = shift;
-    my $export_recorder   = shift;
+    my $class           = shift;
+    my $packages        = shift;
+    my $export_recorder = shift;
+    my $is_reexport  = shift;
 
     my %exports;
 
@@ -149,7 +167,7 @@ sub _make_sub_exporter_params {
         }
 
         for my $name ( @{ $args->{as_is} } ) {
-            my ($sub, $coderef_name);
+            my ( $sub, $coderef_name );
 
             if ( ref $name ) {
                 $sub = $name;
@@ -158,23 +176,8 @@ sub _make_sub_exporter_params {
                 ( $coderef_pkg, $coderef_name )
                     = Class::MOP::get_code_info($name);
 
-                # Moose re-exports things from Carp and Scalar::Util. Usually,
-                # we want to remove those again at unimport time. However, the
-                # importing package might have imported those symbols
-                # explicitly after using Moose ala
-                #
-                # use Moose;
-                # use Carp qw( confess );
-                #
-                # In this case, we don't want to remove 'confess' when
-                # unimporting. To do that, we wrap the exports from other
-                # packages in anonymous coderef. Then, at unimport time, we
-                # can figure out if the package symbol still contains the
-                # coderef we exported, or if the user overwrote it with
-                # something else we don't want to remove.
                 if ( $coderef_pkg ne $package ) {
-                    $sub = sub { goto &$name };
-                    &Scalar::Util::set_prototype( $sub, prototype $name );
+                    $is_reexport->{$coderef_name} = 1;
                 }
             }
             else {
@@ -186,7 +189,7 @@ sub _make_sub_exporter_params {
 
             $export_recorder->{$sub} = 1;
 
-            $exports{$coderef_name} = sub { $sub };
+            $exports{$coderef_name} = sub {$sub};
         }
     }
 
@@ -194,9 +197,9 @@ sub _make_sub_exporter_params {
 }
 
 sub _sub_from_package {
-    my $sclass = shift;
+    my $sclass  = shift;
     my $package = shift;
-    my $name = shift;
+    my $name    = shift;
 
     my $sub = do {
         no strict 'refs';
@@ -205,8 +208,7 @@ sub _sub_from_package {
 
     return $sub if defined &$sub;
 
-    Carp::cluck
-            "Trying to export undefined sub ${package}::${name}";
+    Carp::cluck "Trying to export undefined sub ${package}::${name}";
 
     return;
 }
@@ -228,9 +230,9 @@ sub _make_wrapped_sub {
     return sub {
         my $caller = $CALLER;
 
-        my $wrapper = $self->_curry_wrapper($sub, $fq_name, $caller);
+        my $wrapper = $self->_curry_wrapper( $sub, $fq_name, $caller );
 
-        my $sub = subname($fq_name => $wrapper);
+        my $sub = subname( $fq_name => $wrapper );
 
         $export_recorder->{$sub} = 1;
 
@@ -247,10 +249,12 @@ sub _make_wrapped_sub_with_meta {
     return sub {
         my $caller = $CALLER;
 
-        my $wrapper = $self->_late_curry_wrapper($sub, $fq_name,
-            sub { Class::MOP::class_of(shift) } => $caller);
+        my $wrapper = $self->_late_curry_wrapper(
+            $sub, $fq_name,
+            sub { Class::MOP::class_of(shift) } => $caller
+        );
 
-        my $sub = subname($fq_name => $wrapper);
+        my $sub = subname( $fq_name => $wrapper );
 
         $export_recorder->{$sub} = 1;
 
@@ -264,11 +268,12 @@ sub _curry_wrapper {
     my $fq_name = shift;
     my @extra   = @_;
 
-    my $wrapper = sub { $sub->(@extra, @_) };
-    if (my $proto = prototype $sub) {
+    my $wrapper = sub { $sub->( @extra, @_ ) };
+    if ( my $proto = prototype $sub ) {
+
         # XXX - Perl's prototype sucks. Use & to make set_prototype
         # ignore the fact that we're passing "private variables"
-        &Scalar::Util::set_prototype($wrapper, $proto);
+        &Scalar::Util::set_prototype( $wrapper, $proto );
     }
     return $wrapper;
 }
@@ -281,15 +286,17 @@ sub _late_curry_wrapper {
     my @ex_args = @_;
 
     my $wrapper = sub {
+
         # resolve curried arguments at runtime via this closure
-        my @curry = ( $extra->( @ex_args ) );
-        return $sub->(@curry, @_);
+        my @curry = ( $extra->(@ex_args) );
+        return $sub->( @curry, @_ );
     };
 
-    if (my $proto = prototype $sub) {
+    if ( my $proto = prototype $sub ) {
+
         # XXX - Perl's prototype sucks. Use & to make set_prototype
         # ignore the fact that we're passing "private variables"
-        &Scalar::Util::set_prototype($wrapper, $proto);
+        &Scalar::Util::set_prototype( $wrapper, $proto );
     }
     return $wrapper;
 }
@@ -299,6 +306,7 @@ sub _make_import_sub {
     my $exporting_package = shift;
     my $exporter          = shift;
     my $exports_from      = shift;
+    my $is_reexport    = shift;
 
     return sub {
 
@@ -315,9 +323,9 @@ sub _make_import_sub {
 
         my $metaclass;
         ( $metaclass, @_ ) = _strip_metaclass(@_);
-        $metaclass = Moose::Util::resolve_metaclass_alias(
-            'Class' => $metaclass
-        ) if defined $metaclass && length $metaclass;
+        $metaclass
+            = Moose::Util::resolve_metaclass_alias( 'Class' => $metaclass )
+            if defined $metaclass && length $metaclass;
 
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
@@ -337,6 +345,7 @@ sub _make_import_sub {
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
+
             # init_meta can apply a role, which when loaded uses
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
@@ -346,6 +355,7 @@ sub _make_import_sub {
         }
 
         if ( $did_init_meta && @{$traits} ) {
+
             # The traits will use Moose::Role, which in turn uses
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
@@ -359,10 +369,24 @@ sub _make_import_sub {
             );
         }
 
-        goto $exporter;
+        my ( undef, @args ) = @_;
+        my $extra = shift @args if ref $args[0] eq 'HASH';
+
+        $extra ||= {};
+        if ( !$extra->{into} ) {
+            $extra->{into_level} ||= 0;
+            $extra->{into_level}++;
+        }
+
+        $class->$exporter( $extra, @args );
+
+        for my $name ( keys %{$is_reexport} ) {
+            no strict 'refs';
+            no warnings 'once';
+            _flag_as_reexport( \*{ join q{::}, $CALLER, $name } );
+        }
     };
 }
-
 
 sub _strip_traits {
     my $idx = first_index { $_ eq '-traits' } @_;
@@ -373,7 +397,7 @@ sub _strip_traits {
 
     splice @_, $idx, 2;
 
-    $traits = [ $traits ] unless ref $traits;
+    $traits = [$traits] unless ref $traits;
 
     return ( $traits, @_ );
 }
@@ -400,13 +424,13 @@ sub _apply_meta_traits {
     my $type = ( split /::/, ref $meta )[-1]
         or Moose->throw_error(
         'Cannot determine metaclass type for trait application . Meta isa '
-        . ref $meta );
+            . ref $meta );
 
-    my @resolved_traits
-        = map {
-            ref $_ ? $_ : Moose::Util::resolve_metatrait_alias( $type => $_ )
-        }
-        @$traits;
+    my @resolved_traits = map {
+        ref $_
+            ? $_
+            : Moose::Util::resolve_metatrait_alias( $type => $_ )
+    } @$traits;
 
     return unless @resolved_traits;
 
@@ -417,6 +441,7 @@ sub _apply_meta_traits {
 }
 
 sub _get_caller {
+
     # 1 extra level because it's called by import so there's a layer
     # of indirection
     my $offset = 1;
@@ -433,6 +458,7 @@ sub _make_unimport_sub {
     my $exporting_package = shift;
     my $exports           = shift;
     my $export_recorder   = shift;
+    my $is_reexport    = shift;
 
     return sub {
         my $caller = scalar caller();
@@ -440,6 +466,7 @@ sub _make_unimport_sub {
             $caller,
             [ keys %{$exports} ],
             $export_recorder,
+            $is_reexport,
         );
     };
 }
@@ -449,15 +476,23 @@ sub _remove_keywords {
     my $package          = shift;
     my $keywords         = shift;
     my $recorded_exports = shift;
+    my $is_reexport   = shift;
 
     no strict 'refs';
 
-    foreach my $name ( @{ $keywords } ) {
+    foreach my $name ( @{$keywords} ) {
         if ( defined &{ $package . '::' . $name } ) {
             my $sub = \&{ $package . '::' . $name };
 
             # make sure it is from us
             next unless $recorded_exports->{$sub};
+
+            if ( $is_reexport->{$name} ) {
+                no strict 'refs';
+                next
+                    unless _export_is_flagged(
+                            \*{ join q{::} => $package, $name } );
+            }
 
             # and if it is from us, then undef the slot
             delete ${ $package . '::' }{$name};

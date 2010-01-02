@@ -10,3 +10,6 @@
 .*
 !.gitignore
 Moose-*
+*.bs
+*.c
+*.o

@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+   * Moose::Exporter
+     - The unimport subs it generates now clean up re-exported functions like
+       blessed and confess, unless the caller imported them from somewhere
+       else too. (rafl)
+
    * Moose::Util::TypeConstraints
      - Sped up the type constraint parsing regex. (Sam Vilain)
 
