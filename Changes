@@ -2,33 +2,31 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
    * Moose::Exporter
-     - The unimport subs it generates now clean up re-exported functions like
-       blessed and confess, unless the caller imported them from somewhere
-       else too. (rafl)
+      - The unimport subs it generates now clean up re-exported functions like
+        blessed and confess, unless the caller imported them from somewhere
+        else too. (rafl)
 
    * Moose::Util::TypeConstraints
-     - Sped up the type constraint parsing regex. (Sam Vilain)
+      - Changed Str constraint to accept magic lvalue strings like one gets
+        from substr et al, again. (sorear)
+      - Sped up the type constraint parsing regex. (Sam Vilain)
 
    * Makefile.PL
-     - Use Module::Install extensions explicitly to avoid confusing errors if
-       they're not installed
-     - Use Module::Install::AuthorRequires to stop test extraction and general
-       failures if you don't have the author side dependencies installed
+      - Use Module::Install extensions explicitly to avoid confusing errors if
+        they're not installed
+      - Use Module::Install::AuthorRequires to stop test extraction and general
+        failures if you don't have the author side dependencies installed
 
    * Test::Moose
-     - Added a with_immutable test function, to run a block of tests with and
-       without certain classes being immutable. (doy)
+      - Added a with_immutable test function, to run a block of tests with and
+        without certain classes being immutable. (doy)
 
     * oose.pm
       - Add Moose::Util::TypeConstraints exports to allow easier testing
         of TypeConsraints from the command line. (perigrin)
 
-0.94
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
-    * Moose::Util::TypeConstraints
-      - Changed Str constraint to accept magic lvalue strings like one gets
-        from substr et al, again. (sorear)
 
 0.93 Thu, Nov 19, 2009
     * Moose::Object
