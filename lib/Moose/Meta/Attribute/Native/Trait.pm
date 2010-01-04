@@ -34,9 +34,6 @@ has 'method_constructors' => (
     },
 );
 
-has '+default'         => ( required => 1 );
-has '+type_constraint' => ( required => 1 );
-
 # methods called prior to instantiation
 
 before '_process_options' => sub {

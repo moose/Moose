@@ -7,6 +7,7 @@ use Test::More;
 use Test::Exception;
 
 use Moose::Meta::Role;
+use Moose::Util::TypeConstraints ();
 
 {
     package FooRole;
@@ -55,10 +56,15 @@ is_deeply(
 
 ok($foo_role->has_attribute('bar'), '... FooRole does have the bar attribute');
 
-is_deeply(
-    $foo_role->get_attribute('bar'),
-    { is => 'rw', isa => 'Foo' },
-    '... got the correct description of the bar attribute');
+my $bar = $foo_role->get_attribute('bar');
+is_deeply( $bar->original_options, { is => 'rw', isa => 'Foo' },
+    'original options for bar attribute' );
+my $bar_for_class = $bar->attribute_for_class('Moose::Meta::Attribute');
+is(
+    $bar_for_class->type_constraint,
+    Moose::Util::TypeConstraints::class_type('Foo'),
+    'bar has a Foo class type'
+);
 
 lives_ok {
     $foo_role->add_attribute('baz' => (is => 'ro'));
@@ -71,10 +77,9 @@ is_deeply(
 
 ok($foo_role->has_attribute('baz'), '... FooRole does have the baz attribute');
 
-is_deeply(
-    $foo_role->get_attribute('baz'),
-    { is => 'ro' },
-    '... got the correct description of the baz attribute');
+my $baz = $foo_role->get_attribute('baz');
+is_deeply( $baz->original_options, { is => 'ro' },
+    'original options for baz attribute' );
 
 lives_ok {
     $foo_role->remove_attribute('bar');

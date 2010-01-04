@@ -31,6 +31,7 @@ my %trustme = (
             construct_instance
             create_error
             raise_error
+            reinitialize
             superclasses
             )
     ],
@@ -59,11 +60,13 @@ my %trustme = (
     'Moose::Meta::Role'               => [
         qw( alias_method
             get_method_modifier_list
+            reinitialize
             reset_package_cache_flag
             update_package_cache_flag
             wrap_method_body
             )
     ],
+    'Moose::Meta::Mixin::AttributeCore' => ['.+'],
     'Moose::Meta::Role::Composite' =>
         [ 'get_method', 'get_method_list', 'has_method', 'add_method' ],
     'Moose::Role' => [
@@ -91,6 +94,7 @@ my %trustme = (
     'Moose::Meta::TypeConstraint::Role'  => [qw( equals is_a_type_of )],
     'Moose::Meta::TypeConstraint::Union' => ['compile_type_constraint'],
     'Moose::Util'                        => ['add_method_modifier'],
+    'Moose::Util::MetaRole'              => ['apply_metaclass_roles'],
     'Moose::Util::TypeConstraints' => ['find_or_create_type_constraint'],
 );
 

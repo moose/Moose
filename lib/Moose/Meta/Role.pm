@@ -14,11 +14,13 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
+use Moose::Meta::Role::Attribute;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
+use Moose::Util qw( ensure_all_roles );
 
-use base 'Class::MOP::Module';
+use base 'Class::MOP::Module', 'Class::MOP::Mixin::HasAttributes';
 
 ## ------------------------------------------------------------------
 ## NOTE:
@@ -70,16 +72,6 @@ foreach my $action (
             existence  => 'requires_method',
         }
     },
-    {
-        name        => '_attribute_map',
-        attr_reader => '_attribute_map',
-        methods     => {
-            get       => 'get_attribute',
-            get_keys  => 'get_attribute_list',
-            existence => 'has_attribute',
-            remove    => 'remove_attribute',
-        }
-    }
 ) {
 
     my $attr_reader = $action->{attr_reader};
@@ -159,23 +151,60 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Application::ToInstance',
 );
 
-## some things don't always fit, so they go here ...
+# More or less copied from Moose::Meta::Class
+sub initialize {
+    my $class = shift;
+    my $pkg   = shift;
+    return Class::MOP::get_metaclass_by_name($pkg)
+        || $class->SUPER::initialize(
+        $pkg,
+        'attribute_metaclass' => 'Moose::Meta::Role::Attribute',
+        @_
+        );
+}
+
+sub reinitialize {
+    my $self = shift;
+    my $pkg  = shift;
+
+    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
+
+    my %existing_classes;
+    if ($meta) {
+        %existing_classes = map { $_ => $meta->$_() } qw(
+            attribute_metaclass
+            method_metaclass
+            wrapped_method_metaclass
+            required_method_metaclass
+            conflicting_method_metaclass
+            application_to_class_class
+            application_to_role_class
+            application_to_instance_class
+        );
+    }
+
+    return $self->SUPER::reinitialize(
+        $pkg,
+        %existing_classes,
+        @_,
+    );
+}
 
 sub add_attribute {
     my $self = shift;
-    my $name = shift;
-    unless ( defined $name ) {
-        require Moose;
-        Moose->throw_error("You must provide a name for the attribute");
+
+    if (blessed $_[0] && ! $_[0]->isa('Moose::Meta::Role::Attribute') ) {
+        my $class = ref $_[0];
+        Moose->throw_error( "Cannot add a $class as an attribute to a role" );
     }
-    my $attr_desc;
-    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
-        $attr_desc = $_[0];
-    }
-    else {
-        $attr_desc = { @_ };
-    }
-    $self->_attribute_map->{$name} = $attr_desc;
+
+    return $self->SUPER::add_attribute(@_);
+}
+
+sub _attach_attribute {
+    my ( $self, $attribute ) = @_;
+
+    $attribute->attach_to_role($self);
 }
 
 sub add_required_methods {
@@ -451,7 +480,8 @@ sub create {
     if (exists $options{attributes}) {
         foreach my $attribute_name (keys %{$options{attributes}}) {
             my $attr = $options{attributes}->{$attribute_name};
-            $meta->add_attribute($attribute_name => $attr);
+            $meta->add_attribute(
+                $attribute_name => blessed $attr ? $attr : %{$attr} );
         }
     }
 
@@ -557,20 +587,6 @@ sub create {
 #         'set'    => 'add_excluded_roles',
 #         'keys'   => 'get_excluded_roles_list',
 #         'exists' => 'excludes_role',
-#     }
-# );
-#
-# has 'attribute_map' => (
-#     metaclass => 'Hash',
-#     reader    => '_attribute_map',
-#     isa       => 'HashRef[Str]',
-#     provides => {
-#         # 'set'  => 'add_attribute' # has some special crap in it
-#         'get'    => 'get_attribute',
-#         'keys'   => 'get_attribute_list',
-#         'exists' => 'has_attribute',
-#         # Not exactly delete, cause it sets multiple
-#         'delete' => 'remove_attribute',
 #     }
 # );
 #

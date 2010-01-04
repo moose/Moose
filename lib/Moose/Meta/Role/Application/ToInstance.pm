@@ -30,6 +30,14 @@ sub apply {
     }
     else {
         my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
+
+        # This is a special case to handle the case where the object's
+        # metaclass is a Class::MOP::Class, but _not_ a Moose::Meta::Class
+        # (for example, when applying a role to a Moose::Meta::Attribute
+        # object).
+        $obj_meta = 'Moose::Meta::Class'
+            unless $obj_meta->isa('Moose::Meta::Class');
+
         $class = $obj_meta->create_anon_class(
             superclasses => [ blessed($object) ]
         );

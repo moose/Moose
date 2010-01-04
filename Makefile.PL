@@ -44,9 +44,10 @@ WriteAll();
 sub check_conflicts {
     my %conflicts = (
         'Fey::ORM'                  => '0.23',
-        'MooseX::AttributeHelpers'  => '0.21',
+        'MooseX::Aliases'           => '0.07',
+        'MooseX::AttributeHelpers'  => '0.22',
         'MooseX::ClassAttribute'    => '0.09',
-        'MooseX::MethodAttributes'  => '0.15',
+        'MooseX::MethodAttributes'  => '0.18',
         'MooseX::NonMoose'          => '0.05',
         'MooseX::Params::Validate'  => '0.05',
         'MooseX::Singleton'         => '0.19',

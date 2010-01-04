@@ -1,6 +1,15 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+   * Moose::Meta::Role
+     - Role attributes are now objects of the Moose::Meta::Role::Attribute
+       class. (Dave Rolsky).
+
+   * Moose::Util::MetaRole
+     - Major changes to how metaroles are applied. We now distinguish between
+       metaroles for classes vs those for roles. See the Moose::Util::MetaRole
+       docs for details. (Dave Rolsky)
+
    * Moose::Exporter
       - The unimport subs it generates now clean up re-exported functions like
         blessed and confess, unless the caller imported them from somewhere

@@ -434,10 +434,16 @@ sub _apply_meta_traits {
 
     return unless @resolved_traits;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => $class,
-        metaclass_roles => \@resolved_traits,
-    );
+    my %args = ( for => $class );
+
+    if ( $meta->isa('Moose::Meta::Role') ) {
+        $args{role_metaroles} = { role => \@resolved_traits };
+    }
+    else {
+        $args{class_metaroles} = { class => \@resolved_traits };
+    }
+
+    Moose::Util::MetaRole::apply_metaroles(%args);
 }
 
 sub _get_caller {
@@ -505,10 +511,11 @@ sub _make_init_meta {
     my $class = shift;
     my $args  = shift;
 
-    my %metaclass_roles;
+    my %old_style_roles;
     for my $role (
         map {"${_}_roles"}
-        qw(metaclass
+        qw(
+        metaclass
         attribute_metaclass
         method_metaclass
         wrapped_method_metaclass
@@ -516,18 +523,20 @@ sub _make_init_meta {
         constructor_class
         destructor_class
         error_class
-        application_to_class_class
-        application_to_role_class
-        application_to_instance_class)
+        )
         ) {
-        $metaclass_roles{$role} = $args->{$role} if exists $args->{$role};
+        $old_style_roles{$role} = $args->{$role}
+            if exists $args->{$role};
     }
 
     my %base_class_roles;
     %base_class_roles = ( roles => $args->{base_class_roles} )
         if exists $args->{base_class_roles};
 
-    return unless %metaclass_roles || %base_class_roles;
+    my %new_style_roles = map { $_ => $args->{$_} }
+        grep { exists $args->{$_} } qw( class_metaroles role_metaroles );
+
+    return unless %new_style_roles || %old_style_roles || %base_class_roles;
 
     return sub {
         shift;
@@ -535,9 +544,10 @@ sub _make_init_meta {
 
         return unless Class::MOP::class_of( $options{for_class} );
 
-        Moose::Util::MetaRole::apply_metaclass_roles(
-            for_class => $options{for_class},
-            %metaclass_roles,
+        Moose::Util::MetaRole::apply_metaroles(
+            for => $options{for_class},
+            %new_style_roles,
+            %old_style_roles,
         );
 
         Moose::Util::MetaRole::apply_base_class_roles(
@@ -678,9 +688,9 @@ when C<unimport> is called.
 
 =back
 
-Any of the C<*_roles> options for
-C<Moose::Util::MetaRole::apply_metaclass_roles> and
-C<Moose::Util::MetaRole::base_class_roles> are also acceptable.
+You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>
+and C<Moose::Util::MetaRole::base_class_roles>. Specifically, valid parameters
+are "class_metaroles", "role_metaroles", and "base_object_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
 

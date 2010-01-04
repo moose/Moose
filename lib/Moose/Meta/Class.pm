@@ -68,6 +68,32 @@ sub initialize {
             );
 }
 
+sub reinitialize {
+    my $self = shift;
+    my $pkg  = shift;
+
+    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
+
+    my %existing_classes;
+    if ($meta) {
+        %existing_classes = map { $_ => $meta->$_() } qw(
+            attribute_metaclass
+            method_metaclass
+            wrapped_method_metaclass
+            instance_metaclass
+            constructor_class
+            destructor_class
+            error_class
+        );
+    }
+
+    return $self->SUPER::reinitialize(
+        $pkg,
+        %existing_classes,
+        @_,
+    );
+}
+
 sub _immutable_options {
     my ( $self, @args ) = @_;
 

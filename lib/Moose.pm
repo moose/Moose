@@ -259,6 +259,7 @@ $_->make_immutable(
     Moose::Meta::Method::Augmented
 
     Moose::Meta::Role
+    Moose::Meta::Role::Attribute
     Moose::Meta::Role::Method
     Moose::Meta::Role::Method::Required
     Moose::Meta::Role::Method::Conflicting
@@ -270,6 +271,11 @@ $_->make_immutable(
     Moose::Meta::Role::Application::ToClass
     Moose::Meta::Role::Application::ToRole
     Moose::Meta::Role::Application::ToInstance
+);
+
+Moose::Meta::Mixin::AttributeCore->meta->make_immutable(
+    inline_constructor => 0,
+    constructor_name   => undef,
 );
 
 1;

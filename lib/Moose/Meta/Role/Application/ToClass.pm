@@ -129,6 +129,8 @@ sub check_required_attributes {
 
 sub apply_attributes {
     my ($self, $role, $class) = @_;
+    my $attr_metaclass = $class->attribute_metaclass;
+
     foreach my $attribute_name ($role->get_attribute_list) {
         # it if it has one already
         if ($class->has_attribute($attribute_name) &&
@@ -138,8 +140,7 @@ sub apply_attributes {
         }
         else {
             $class->add_attribute(
-                $attribute_name,
-                $role->get_attribute($attribute_name)
+                $role->get_attribute($attribute_name)->attribute_for_class($attr_metaclass)
             );
         }
     }

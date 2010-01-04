@@ -62,23 +62,25 @@ BEGIN
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class',
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { class => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class->meta()' );
     has_superclass( My::Class->meta(), 'My::Meta::Class',
-                    'apply_metaclass_roles works with metaclass.pm' );
+                    'apply_metaroles works with metaclass.pm' );
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class2',
-        attribute_metaclass_roles => ['Role::Foo'],
-        method_metaclass_roles    => ['Role::Foo'],
-        instance_metaclass_roles  => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class2',
+        class_metaroles => {
+            attribute => ['Role::Foo'],
+            method    => ['Role::Foo'],
+            instance  => ['Role::Foo'],
+        },
     );
 
     ok( My::Class2->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),

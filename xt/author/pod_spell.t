@@ -103,6 +103,7 @@ metadata
 MetaObject
 metaprogrammer
 metarole
+metaroles
 metatraits
 mixins
 MooseX

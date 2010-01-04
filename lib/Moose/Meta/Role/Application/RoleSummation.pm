@@ -116,30 +116,36 @@ sub check_required_attributes {
 sub apply_attributes {
     my ($self, $c) = @_;
 
-    my @all_attributes = map {
-        my $role = $_;
-        map {
-            +{
-                name => $_,
-                attr => $role->get_attribute($_),
-            }
-        } $role->get_attribute_list
-    } @{$c->get_roles};
+    my @all_attributes;
+
+    for my $role ( @{ $c->get_roles } ) {
+        push @all_attributes,
+            map { $role->get_attribute($_) } $role->get_attribute_list;
+    }
 
     my %seen;
     foreach my $attr (@all_attributes) {
-        if (exists $seen{$attr->{name}}) {
-            if ( $seen{$attr->{name}} != $attr->{attr} ) {
-                require Moose;
-                Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' "
-                                   . "during composition. This is fatal error and cannot be disambiguated.")
-            }
+        my $name = $attr->name;
+
+        if ( exists $seen{$name} ) {
+            next if $seen{$name}->is_same_as($attr);
+
+            my $role1 = $seen{$name}->associated_role->name;
+            my $role2 = $attr->associated_role->name;
+
+            require Moose;
+            Moose->throw_error(
+                "We have encountered an attribute conflict with '$name' "
+                    . "during role composition. "
+                    . " This attribute is defined in both $role1 and $role2."
+                    . " This is fatal error and cannot be disambiguated." );
         }
-        $seen{$attr->{name}} = $attr->{attr};
+
+        $seen{$name} = $attr;
     }
 
     foreach my $attr (@all_attributes) {
-        $c->add_attribute($attr->{name}, $attr->{attr});
+        $c->add_attribute( $attr->clone );
     }
 }
 

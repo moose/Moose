@@ -20,6 +20,22 @@ send us a patch.
 
 =over 4
 
+=item Moose::Util::MetaRole API has changed
+
+The C<apply_metaclass_roles> function is now called C<apply_metaroles>. The
+way arguments are supplied has been changed to force you to distinguish
+between metaroles applied to L<Moose::Meta::Class> (and helpers) versus
+L<Moose::Meta::Role>.
+
+The old API still works, but will warn in a future release, and eventually be
+removed.
+
+=item Moose::Meta::Role has real attributes
+
+The attributes returned by L<Moose::Meta::Role> are now instances of the
+L<Moose::Meta::Role::Attribute> class, instead of bare hash references.
+
+<<<<<<< HEAD:lib/Moose/Manual/Delta.pod
 =item "no Moose" now removes C<blessed> and C<confess>
 
 Moose is now smart enough to know exactly what it exported, even when it

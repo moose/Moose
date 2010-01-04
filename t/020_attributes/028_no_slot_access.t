@@ -63,9 +63,9 @@ use warnings;
     use Test::More;
     use Test::Exception;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                => __PACKAGE__,
-        instance_metaclass_roles => ['MooseX::SomeAwesomeDBFields']
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => __PACKAGE__,
+        class_metaroles => { instance => ['MooseX::SomeAwesomeDBFields'] },
     );
 
     lives_ok {

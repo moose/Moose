@@ -125,10 +125,19 @@ sub apply_params {
 }
 
 sub reinitialize {
-    my ($class, $old_meta, @args) = @_;
-    Moose->throw_error('Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance')
-        if !blessed $old_meta || !$old_meta->isa('Moose::Meta::Role::Composite');
-    return $old_meta->meta->clone_object($old_meta, @args);
+    my ( $class, $old_meta, @args ) = @_;
+
+    Moose->throw_error(
+        'Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance'
+        )
+        if !blessed $old_meta
+            || !$old_meta->isa('Moose::Meta::Role::Composite');
+
+    my %existing_classes = map { $_ => $old_meta->$_() } qw(
+        application_role_summation_class
+    );
+
+    return $old_meta->meta->clone_object( $old_meta, %existing_classes, @args );
 }
 
 1;
