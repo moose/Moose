@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 our $VERSION = '0.93_01';
+our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -15,7 +16,7 @@ use Sub::Name qw(subname);
 
 use XSLoader;
 
-XSLoader::load( 'Moose', $VERSION );
+XSLoader::load( 'Moose', $XS_VERSION );
 
 my %EXPORT_SPEC;
 
