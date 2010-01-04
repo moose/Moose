@@ -16,6 +16,30 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 0.93_01 and 0.94
+
+=over 4
+
+=item "no Moose" now removes C<blessed> and C<confess>
+
+Moose is now smart enough to know exactly what it exported, even when it
+re-exports functions from other packages. When you unimport Moose, it will
+remove these functions from your namespace unless you I<also> imported them
+directly from their respective packages.
+
+If you have a C<no Moose> in your code I<before> you call C<blessed> or
+C<confess>, your code will break. You can either move the C<no Moose> call
+later in your code, or explicitly import the relevant functions from the
+packages that provide them.
+
+=item L<Moose::Exporter> is smarter about unimporting re-exports
+
+The change above comes from a general improvement to L<Moose::Exporter>. It
+will now unimport any function it exports, even if that function is a
+re-export from another package.
+
+=back
+
 =head1 0.93
 
 =over 4
