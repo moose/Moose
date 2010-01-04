@@ -11,22 +11,22 @@ for, noteworthy changes.
         from substr et al, again. (sorear)
       - Sped up the type constraint parsing regex. (Sam Vilain)
 
-   * Makefile.PL
-      - Use Module::Install extensions explicitly to avoid confusing errors if
-        they're not installed
-      - Use Module::Install::AuthorRequires to stop test extraction and general
-        failures if you don't have the author side dependencies installed
-
-   * Test::Moose
-      - Added a with_immutable test function, to run a block of tests with and
-        without certain classes being immutable. (doy)
+    * Moose::Cookbook::Extending::Recipe2
+      - This recipe was broken. Fix suggested by jrey.
 
     * oose.pm
       - Add Moose::Util::TypeConstraints exports to allow easier testing
         of TypeConsraints from the command line. (perigrin)
 
-    * Moose::Cookbook::Extending::Recipe2
-      - This recipe was broken. Fix suggested by jrey.
+   * Test::Moose
+      - Added a with_immutable test function, to run a block of tests with and
+        without certain classes being immutable. (doy)
+
+   * Makefile.PL
+      - Use Module::Install extensions explicitly to avoid confusing errors if
+        they're not installed
+      - Use Module::Install::AuthorRequires to stop test extraction and general
+        failures if you don't have the author side dependencies installed
 
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
