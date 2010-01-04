@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.93_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

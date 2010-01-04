@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Bool;
 use Moose::Role;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.93_01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
