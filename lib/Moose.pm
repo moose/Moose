@@ -1110,6 +1110,9 @@ exception.
 Please report any bugs to C<bug-moose@rt.cpan.org>, or through the web
 interface at L<http://rt.cpan.org>.
 
+You can also discuss feature requests or possible bugs on the Moose mailing
+list (moose@perl.org) or on IRC at L<irc://irc.perl.org/#moose>.
+
 =head1 FEATURE REQUESTS
 
 We are very strict about what features we add to the Moose core, especially
