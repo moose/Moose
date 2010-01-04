@@ -25,6 +25,9 @@ for, noteworthy changes.
       - Add Moose::Util::TypeConstraints exports to allow easier testing
         of TypeConsraints from the command line. (perigrin)
 
+    * Moose::Cookbook::Extending::Recipe2
+      - This recipe was broken. Fix suggested by jrey.
+
     * Moose::Cookbook::Basics::Recipe4
       - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
 
