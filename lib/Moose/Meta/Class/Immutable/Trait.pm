@@ -34,6 +34,10 @@ Moose::Meta::Class::Immutable::Trait - Implements immutability for metaclass obj
 This class makes some Moose-specific metaclass methods immutable. This
 is deep guts.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHOR
 
 Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>

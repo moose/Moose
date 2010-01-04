@@ -303,6 +303,10 @@ It accepts the following keys:
 
 This function will apply the specified roles to the object's base class.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>

@@ -177,6 +177,10 @@ of its parents defines a C<DEMOLISH> method, it needs a destructor.
 
 =back
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHORS
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>

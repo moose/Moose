@@ -372,6 +372,10 @@ L<Class::MOP::Class::Constructor> documentation as well.
 C<Moose::Meta::Method::Constructor> is a subclass of
 L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHORS
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>

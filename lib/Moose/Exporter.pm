@@ -770,6 +770,10 @@ These traits will be applied to the caller's metaclass
 instance. Providing traits for an exporting class that does not create
 a metaclass for the caller is an error.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>

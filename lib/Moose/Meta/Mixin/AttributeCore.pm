@@ -61,6 +61,10 @@ Moose::Meta::Mixin::AttributeCore - Core attributes shared by attribute metaclas
 This class implements the core attributes (aka properties) shared by all Moose
 attributes. See the L<Moose::Meta::Attribute> documentation for API details.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHORS
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
