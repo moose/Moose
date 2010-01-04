@@ -628,7 +628,9 @@ will export the functions you specify, and can also re-export functions
 exported by some other module (like C<Moose.pm>).
 
 The C<unimport> method cleans the caller's namespace of all the exported
-functions.
+functions. This includes any functions you re-export from other
+packages. However, if the consumer of your package also imports those
+functions from the original package, they will I<not> be cleaned.
 
 If you pass any parameters for L<Moose::Util::MetaRole>, this method will
 generate an C<init_meta> for you as well (see below for details). This
