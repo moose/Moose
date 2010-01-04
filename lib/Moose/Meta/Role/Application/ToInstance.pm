@@ -76,9 +76,7 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
