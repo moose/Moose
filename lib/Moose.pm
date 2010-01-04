@@ -1142,19 +1142,19 @@ but the community as well.
 
 Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
 
+Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
+
 Yuval (nothingmuch) Kogman
 
 Shawn (sartak) Moore E<lt>sartak@bestpractical.comE<gt>
-
-Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
-
-Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
 
 Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
 
 Chris (perigrin) Prather
 
 Florian Ragwitz E<lt>rafl@debian.orgE<gt>
+
+Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head2 OTHER CONTRIBUTORS
 
