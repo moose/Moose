@@ -50,6 +50,7 @@ sub check_conflicts {
         'MooseX::MethodAttributes'  => '0.18',
         'MooseX::NonMoose'          => '0.05',
         'MooseX::Params::Validate'  => '0.05',
+        'MooseX::Role::Cmd'         => '0.06',
         'MooseX::Singleton'         => '0.19',
         'MooseX::StrictConstructor' => '0.07',
         'MooseX::Types'             => '0.19',
