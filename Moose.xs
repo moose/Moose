@@ -3,6 +3,18 @@
 #include "XSUB.h"
 #include "ppport.h"
 
+#ifndef MGf_COPY
+# define MGf_COPY 0
+#endif
+
+#ifndef MGf_DUP
+# define MGf_DUP 0
+#endif
+
+#ifndef MGf_LOCAL
+# define MGf_LOCAL 0
+#endif
+
 STATIC int unset_export_flag (pTHX_ SV *sv, MAGIC *mg);
 
 STATIC MGVTBL export_flag_vtbl = {
@@ -11,9 +23,15 @@ STATIC MGVTBL export_flag_vtbl = {
     NULL, /* len */
     NULL, /* clear */
     NULL, /* free */
+#if MGf_COPY
     NULL, /* copy */
+#endif
+#if MGf_DUP
     NULL, /* dup */
+#endif
+#if MGf_LOCAL
     NULL, /* local */
+#endif
 };
 
 STATIC bool
