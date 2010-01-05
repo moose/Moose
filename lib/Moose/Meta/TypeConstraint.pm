@@ -13,7 +13,7 @@ use Sub::Name qw(subname);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.93_02';
+our $VERSION   = '0.93_03';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
