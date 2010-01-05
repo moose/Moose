@@ -8,7 +8,7 @@ use Moose::Util;
 
 use base qw(Moose::Meta::Role::Method::Required);
 
-our $VERSION   = '0.93_01';
+our $VERSION   = '0.93_02';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

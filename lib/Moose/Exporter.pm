@@ -3,7 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION = '0.93_01';
+our $VERSION = '0.93_02';
 our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
