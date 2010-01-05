@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.93_02 Tue, Jan 5, 2009
+   * Makefile.PL
+     - Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
+       testers. (Dave Rolsky)
+
 0.93_01 Mon, Jan 4, 2009
    * Moose::Meta::Role
      - Role attributes are now objects of the Moose::Meta::Role::Attribute
