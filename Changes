@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.93_03 Tue, Jan 5, 2009
+   * XS
+     - Portability fixes to compile with 5.8.8 with Visual C++. Fixes RT
+       #53391. Reported by Taro Nishin. (rafl)
+
 0.93_02 Tue, Jan 5, 2009
    * Makefile.PL
      - Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
