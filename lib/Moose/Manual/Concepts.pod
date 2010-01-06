@@ -135,14 +135,14 @@ Role are somewhat like mixins or interfaces in other OO languages.
 
   use Moose::Role;
 
-  has is_broken => (
+  requires 'break';
+
+  has 'is_broken' => (
       is  => 'rw',
       isa => 'Bool',
   );
 
-  requires 'break';
-
-  before 'break' => {
+  after 'break' => sub {
       my $self = shift;
 
       $self->is_broken(1);

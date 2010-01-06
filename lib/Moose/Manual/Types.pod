@@ -68,7 +68,7 @@ In particular:
 
 =item C<Num> accepts anything that perl thinks looks like a number (see L<Scalar::Util/looks_like_number>).
 
-=item C<ClassName> and C<RoleName> accept strings that are either a the name of a class or the name of a role. The class/role must be loaded beforehand for this to succeed.
+=item C<ClassName> and C<RoleName> accept strings that are either the name of a class or the name of a role. The class/role must be loaded beforehand for this to succeed.
 
 =item C<FileHandle> accepts either an object of type L<IO::Handle> or a builtin perl filehandle (see L<Scalar::Util/openhandle>).
 

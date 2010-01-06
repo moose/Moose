@@ -49,6 +49,20 @@ If you have commit access, you can create a topic on the main Moose.git,
 otherwise either give us your SSH key or create your own clone of the
 L<git://git.moose.perl.org/Moose.git> repository or fork of the GitHub mirror.
 
+The relevant repository URIs are:
+
+=over
+
+=item Read-Only
+
+L<git://git.moose.perl.org/Moose.git>
+
+=item Read+Write
+
+L<gitmo@git.moose.perl.org:Moose.git>
+
+=back
+
 =item Core Committers - people reviewing and merging a branch
 
 These people have worked with the Moose codebase for a while.

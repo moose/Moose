@@ -619,7 +619,7 @@ of an inherited attribute.
 
 =head1 MULTIPLE ATTRIBUTE SHORTCUTS
 
-If you have a number of attributes that differ only be name, you can declare
+If you have a number of attributes that differ only by name, you can declare
 them all at once:
 
   package Point;
