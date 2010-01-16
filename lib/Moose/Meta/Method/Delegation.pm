@@ -12,7 +12,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Generated';
+         'Class::MOP::Method::Inlined';
 
 
 sub new {
@@ -65,12 +65,91 @@ sub associated_attribute { (shift)->{'attribute'} }
 
 sub delegate_to_method { (shift)->{'delegate_to_method'} }
 
+sub is_inline {
+    (shift)->{is_inline}
+}
+
+sub definition_context {
+    exists $_[0]->{definition_context} ? $_[0]->{definition_context}
+        : ($_[0]->{definition_context} = $_[0]->_generate_definition_context);
+}
+
+sub _generate_definition_context {
+    my $self = shift;
+    my $attr = $self->associated_attribute;
+    my $ctx = $attr->definition_context;
+    return unless $ctx;
+
+    my $desc = "delegation of "
+        . $self->name
+        . ' to '
+        . $attr->name
+        . '->'
+        . $self->delegate_to_method;
+
+    return { %$ctx, description => $desc };
+}
+
 sub _initialize_body {
     my $self = shift;
 
     my $method_to_call = $self->delegate_to_method;
     return $self->{body} = $method_to_call
         if ref $method_to_call;
+
+    return $self->{body} = $self->is_inline
+        ? $self->_generate_body_inline
+        : $self->_generate_body;
+}
+
+sub _generate_body_inline {
+    my $self = shift;
+    my $method_to_call = $self->delegate_to_method;
+    my $attr = $self->associated_attribute;
+    my $attr_name = $attr->name;
+    my $meta_instance = $attr->associated_class->instance_metaclass;
+    my $handle_name = $self->name;
+
+    my ( $code, $e ) = $self->_compile_code(
+        environment => {
+            '@curried_arguments' => $self->curried_arguments,
+            '$method' => \$self,
+        },
+        code => (
+            'sub {'."\n"
+            . 'my $instance = shift; '."\n"
+            . 'my $proxy = '
+            . $meta_instance->inline_get_slot_value('$instance',$attr_name)
+            . ';'."\n"
+            . 'my $error '."\n"
+            . '  = !defined $proxy                  ?  q{ is not defined} '."\n"
+            . q{  : ref($proxy) && !Scalar::Util::blessed($proxy) ? qq{ is not an object (got '$proxy')} }."\n"
+            . '  : undef;'."\n"
+            . 'if ($error) {'."\n"
+            . '  $method->throw_error('."\n"
+            . '    "Cannot delegate '. $handle_name.' to '.$method_to_call
+            . ' because the value of '
+            . $attr_name
+            . '" . $error, '."\n"
+            . '  method_name => q{'.$method_to_call.'}, '."\n"
+            . '  object      => $instance, '."\n"
+            . ');}'."\n"
+            . ($self->curried_arguments
+                   ? 'unshift @_, @{curried_arguments};'."\n"
+                   : '')
+            . '$proxy->'.$method_to_call.'(@_);'."\n"
+            . '};'
+        ),
+    );
+    confess "Could not generate inline accessor because : $e" if $e;
+
+    return $code;
+}
+
+sub _generate_body {
+    my $self = shift;
+
+    my $method_to_call = $self->delegate_to_method;
 
     my $accessor = $self->_get_delegate_accessor;
 
@@ -85,7 +164,7 @@ sub _initialize_body {
     # all... the only thing that would end up different would be
     # interpolating in $method_to_call, and a bunch of things in the
     # error handling that mostly never gets called - doy
-    $self->{body} = sub {
+    return sub {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
 

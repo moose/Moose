@@ -56,6 +56,7 @@ my %trustme = (
             options
             )
     ],
+    'Moose::Meta::Method::Delegation' => [ 'definition_context', 'is_inline' ],
     'Moose::Meta::Method::Destructor' => [ 'initialize_body', 'options' ],
     'Moose::Meta::Role'               => [
         qw( alias_method

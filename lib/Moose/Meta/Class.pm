@@ -102,9 +102,25 @@ sub _immutable_options {
 
         # Moose always does this when an attribute is created
         inline_accessors => 0,
+        inline_delegations => 1,
 
         @args,
     );
+}
+
+sub _install_inlined_code {
+    my ( $self, %args ) = @_;
+
+    $self->SUPER::_install_inlined_code(%args);
+    $self->_inline_delegations(%args) if $args{inline_delegations};
+}
+
+sub _inline_delegations {
+    my $self = shift;
+    foreach my $attr_name ( $self->get_attribute_list ) {
+        my $attr = $self->get_attribute($attr_name);
+        $attr->install_delegation(1) if $attr->can('install_delegation');
+    }
 }
 
 sub create {

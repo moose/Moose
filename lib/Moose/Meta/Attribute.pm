@@ -542,7 +542,7 @@ sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
 sub install_accessors {
     my $self = shift;
     $self->SUPER::install_accessors(@_);
-    $self->install_delegation if $self->has_handles;
+    $self->install_delegation(@_);
     return;
 }
 
@@ -587,6 +587,9 @@ sub remove_accessors {
 
 sub install_delegation {
     my $self = shift;
+    my $inline = shift;
+
+    return unless $self->has_handles;
 
     # NOTE:
     # Here we canonicalize the 'handles' option
@@ -603,8 +606,12 @@ sub install_delegation {
         my $class_name = $associated_class->name;
         my $name = "${class_name}::${handle}";
 
-            (!$associated_class->has_method($handle))
-                || $self->throw_error("You cannot overwrite a locally defined method ($handle) with a delegation", method_name => $handle);
+        if ($associated_class->has_method($handle)) {
+            $self->throw_error(
+                "You cannot overwrite a locally defined method ($handle) with a delegation",
+                method_name => $handle
+            ) unless $inline;
+        }
 
         # NOTE:
         # handles is not allowed to delegate
@@ -616,7 +623,7 @@ sub install_delegation {
         #cluck("Not delegating method '$handle' because it is a core method") and
         next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
-        my $method = $self->_make_delegation_method($handle, $method_to_call);
+        my $method = $self->_make_delegation_method($handle, $method_to_call, $inline);
 
         $self->associated_class->add_method($method->name, $method);
         $self->associate_method($method);
@@ -713,7 +720,7 @@ sub _get_delegate_method_list {
 sub delegation_metaclass { 'Moose::Meta::Method::Delegation' }
 
 sub _make_delegation_method {
-    my ( $self, $handle_name, $method_to_call ) = @_;
+    my ( $self, $handle_name, $method_to_call, $is_inline ) = @_;
 
     my @curried_arguments;
 
@@ -726,6 +733,7 @@ sub _make_delegation_method {
         attribute          => $self,
         delegate_to_method => $method_to_call,
         curried_arguments  => \@curried_arguments,
+        is_inline          => $is_inline,
     );
 }
 

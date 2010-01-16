@@ -22,6 +22,8 @@ use Test::Exception;
 
     sub baz { 42 }
 
+    sub quux { confess }
+
     package Bar;
     use Moose;
 
@@ -31,64 +33,86 @@ use Test::Exception;
         handles => {
             'foo_bar' => 'bar',
             foo_baz => 'baz',
+            foo_quux => 'quux',
             'foo_bar_to_20' => [ bar => 20 ],
         },
     );
 }
 
-my $bar = Bar->new;
-isa_ok($bar, 'Bar');
+sub test_hash_handles {
+    my $bar = shift;
+    isa_ok($bar, 'Bar');
 
-ok($bar->foo, '... we have something in bar->foo');
-isa_ok($bar->foo, 'Foo');
+    ok($bar->foo, '... we have something in bar->foo');
+    isa_ok($bar->foo, 'Foo');
 
-my $meth = Bar->meta->get_method('foo_bar');
-isa_ok($meth, 'Moose::Meta::Method::Delegation');
-is($meth->associated_attribute->name, 'foo',
-   'associated_attribute->name for this method is foo');
+    my $meth = Bar->meta->get_method('foo_bar');
+    isa_ok($meth, 'Moose::Meta::Method::Delegation');
+    is($meth->associated_attribute->name, 'foo',
+       'associated_attribute->name for this method is foo');
 
-is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
+    is($bar->foo->bar, 10, '... bar->foo->bar returned the right default');
 
-can_ok($bar, 'foo_bar');
-is($bar->foo_bar, 10, '... bar->foo_bar delegated correctly');
+    can_ok($bar, 'foo_bar');
+    is($bar->foo_bar, 10, '... bar->foo_bar delegated correctly');
 
-# change the value ...
+    # change the value ...
 
-$bar->foo->bar(30);
+    $bar->foo->bar(30);
 
-# and make sure the delegation picks it up
+    # and make sure the delegation picks it up
 
-is($bar->foo->bar, 30, '... bar->foo->bar returned the right (changed) value');
-is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
+    is($bar->foo->bar, 30, '... bar->foo->bar returned the right (changed) value');
+    is($bar->foo_bar, 30, '... bar->foo_bar delegated correctly');
 
-# change the value through the delegation ...
+    # change the value through the delegation ...
 
-$bar->foo_bar(50);
+    $bar->foo_bar(50);
 
-# and make sure everyone sees it
+    # and make sure everyone sees it
 
-is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
-is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
+    is($bar->foo->bar, 50, '... bar->foo->bar returned the right (changed) value');
+    is($bar->foo_bar, 50, '... bar->foo_bar delegated correctly');
 
-# change the object we are delegating too
+    # change the object we are delegating too
 
-my $foo = Foo->new(bar => 25);
-isa_ok($foo, 'Foo');
+    my $foo = Foo->new(bar => 25);
+    isa_ok($foo, 'Foo');
 
-is($foo->bar, 25, '... got the right foo->bar');
+    is($foo->bar, 25, '... got the right foo->bar');
 
-lives_ok {
-    $bar->foo($foo);
-} '... assigned the new Foo to Bar->foo';
+    lives_ok {
+        $bar->foo($foo);
+    } '... assigned the new Foo to Bar->foo';
 
-is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
+    is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
 
-is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
-is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
+    is($bar->foo->bar, 25, '... bar->foo->bar returned the right result');
+    is($bar->foo_bar, 25, '... and bar->foo_bar delegated correctly again');
 
-# curried handles
-$bar->foo_bar_to_20;
-is($bar->foo_bar, 20, '... correctly curried a single argument');
+    # curried handles
+    $bar->foo_bar_to_20;
+    is($bar->foo_bar, 20, '... correctly curried a single argument');
+}
+
+# Works with a mutable class
+
+{
+    test_hash_handles(Bar->new);
+}
+
+# Works with an immutable class and provides a meaningful backtrace
+
+{
+    Bar->meta->make_immutable;
+    my $filename = __FILE__;
+    my $bar = Bar->new;
+    test_hash_handles($bar);
+    throws_ok { $bar->foo_quux } qr/delegation of foo_quux to foo->quux/,
+        'error location describes the delegation';
+    throws_ok { $bar->foo_quux } qr/defined at $filename line \d+/,
+        '... and points at where the handler is defined';
+}
 
 # -------------------------------------------------------------------
 # ARRAY handles
