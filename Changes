@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 0.94
 
+[API CHANGES]
+
+* Please see the changes listed for 0.93_01!
+
 [ENHANCEMENTS]
 
 * Improved support for anonymous roles by changing various APIs to take
