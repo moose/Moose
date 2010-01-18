@@ -199,7 +199,7 @@ sub _generate_slot_initializer {
 
     if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
         push @source => ('(exists $params->{\'' . $attr->init_arg . '\'}) ' .
-                        '|| ' . $self->_inline_throw_error('"Attribute (' . $attr->name . ') is required"') .';');
+                        '|| ' . $self->_inline_throw_error('"Attribute (' . quotemeta($attr->name) . ') is required"') .';');
     }
 
     if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
@@ -326,7 +326,7 @@ sub _generate_type_constraint_check {
     my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
     return (
         $self->_inline_throw_error('"Attribute (' # FIXME add 'dad'
-        . $attr->name
+        . quotemeta( $attr->name )
         . ') does not pass the type constraint because: " . '
         . $type_constraint_obj . '->get_message(' . $value_name . ')')
         . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'

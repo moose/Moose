@@ -17,6 +17,12 @@ next
 
   Requested by Shawn Moore. Addresses RT #51143 (and then some). (Dave Rolsky)
 
+[BUG FIXES]
+
+* Fix handling of non-alphanumeric attributes names like '@foo'. This should
+  work as long as the accessor method names are explicitly set to valid Perl
+  method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
+
 
 0.93_03 Tue, Jan 5, 2009
 
