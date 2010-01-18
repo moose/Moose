@@ -371,9 +371,10 @@ sub calculate_all_roles {
 }
 
 sub does_role {
-    my ($self, $role_name) = @_;
-    (defined $role_name)
+    my ($self, $role) = @_;
+    (defined $role)
         || Moose->throw_error("You must supply a role name to look for");
+    my $role_name = blessed $role ? $role->name : $role;
     # if we are it,.. then return true
     return 1 if $role_name eq $self->name;
     # otherwise.. check our children
@@ -427,8 +428,11 @@ sub combine {
 
     my (@roles, %role_params);
     while (@role_specs) {
-        my ($role_name, $params) = @{ splice @role_specs, 0, 1 };
-        my $requested_role = Class::MOP::class_of($role_name);
+        my ($role, $params) = @{ splice @role_specs, 0, 1 };
+        my $requested_role
+            = blessed $role
+            ? $role
+            : Class::MOP::class_of($role);
 
         my $actual_role = $requested_role->_role_for_combination($params);
         push @roles => $actual_role;
@@ -702,7 +706,7 @@ This method creates a new role object with the provided name.
 =item B<< Moose::Meta::Role->combine( [ $role => { ... } ], [ $role ], ... ) >>
 
 This method accepts a list of array references. Each array reference
-should contain a role name as its first element. The second element is
+should contain a role name or L<Moose::Meta::Role> object as its first element. The second element is
 an optional hash reference. The hash reference can contain C<-excludes>
 and C<-alias> keys to control how methods are composed from the role.
 
@@ -766,10 +770,10 @@ list may include duplicates.
 This returns a I<unique> list of all roles that this role does, and
 all the roles that its roles do.
 
-=item B<< $metarole->does_role($role_name) >>
+=item B<< $metarole->does_role($role) >>
 
-Given a role I<name>, returns true if this role does the given
-role.
+Given a role I<name> or L<Moose::Meta::Role> object, returns true if this role
+does the given role.
 
 =item B<< $metarole->add_role($role) >>
 

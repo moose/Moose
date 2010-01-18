@@ -1,6 +1,23 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+next
+
+[ENHANCEMENTS]
+
+* Improved support for anonymous roles by changing various APIs to take
+  Moose::Meta::Role objects as well as role names. This included
+
+  - Moose::Meta::Class->does_role
+  - Moose::Meta::Role->does_role
+  - Moose::Util::does_role
+  - Moose::Util::apply_all_roles
+  - Moose::Util::ensure_all_roles
+  - Moose::Util::search_class_by_role
+
+  Requested by Shawn Moore. Addresses RT #51143 (and then some). (Dave Rolsky)
+
+
 0.93_03 Tue, Jan 5, 2009
 
 [BUG FIXES]
