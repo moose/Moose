@@ -193,15 +193,15 @@ Common methods for hash references.
 Common methods for array references.
 
     has 'queue' => (
-       traits     => ['Array'],
-       is         => 'ro',
-       isa        => 'ArrayRef[Str]',
-       default    => sub { [] },
-       handles    => {
-           add_item  => 'push',
-           next_item => 'shift',
-           # ...
-       }
+        traits    => ['Array'],
+        is        => 'ro',
+        isa       => 'ArrayRef[Str]',
+        default   => sub { [] },
+        handles   => {
+            add_item  => 'push',
+            next_item => 'shift',
+            # ...
+        }
     );
 
 =item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
@@ -209,14 +209,14 @@ Common methods for array references.
 Common methods for code references.
 
     has 'callback' => (
-       traits     => ['Code'],
-       is         => 'ro',
-       isa        => 'CodeRef',
-       default    => sub { sub { 'called' } },
-       handles    => {
-           call => 'execute',
-           # ...
-       }
+        traits    => ['Code'],
+        is        => 'ro',
+        isa       => 'CodeRef',
+        default   => sub { sub { 'called' } },
+        handles   => {
+            call => 'execute',
+            # ...
+        }
     );
 
 =back
