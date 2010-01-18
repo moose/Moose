@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-0.94
+0.94 Mon, Jan 18, 2010
 
 [API CHANGES]
 
@@ -28,7 +28,7 @@ for, noteworthy changes.
   method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
 
 
-0.93_03 Tue, Jan 5, 2009
+0.93_03 Tue, Jan 5, 2010
 
 [BUG FIXES]
 
@@ -36,7 +36,7 @@ for, noteworthy changes.
   C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
 
 
-0.93_02 Tue, Jan 5, 2009
+0.93_02 Tue, Jan 5, 2010
 
 [BUG FIXES]
 
@@ -44,7 +44,7 @@ for, noteworthy changes.
   testers. (Dave Rolsky)
 
 
-0.93_01 Mon, Jan 4, 2009
+0.93_01 Mon, Jan 4, 2010
 
 [API CHANGES]
 
