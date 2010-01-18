@@ -116,6 +116,7 @@ Common numerical operations.
             div => 'div',
             mod => 'mod',
             abs => 'abs',
+            # ...
         }
     );
 
@@ -131,6 +132,7 @@ Common methods for string operations.
         handles   => {
             add_text     => 'append',
             replace_text => 'replace',
+            # ...
         }
     );
 
@@ -147,6 +149,7 @@ Methods for incrementing and decrementing a counter attribute.
             inc_counter   => 'inc',
             dec_counter   => 'dec',
             reset_counter => 'reset',
+            # ...
         }
     );
 
@@ -164,6 +167,7 @@ Common methods for boolean values.
             darken      => 'unset',
             flip_switch => 'toggle',
             is_dark     => 'not',
+            # ...
         }
     );
 
@@ -180,6 +184,7 @@ Common methods for hash references.
             set_option => 'set',
             get_option => 'get',
             has_option => 'exists',
+            # ...
         }
     );
 
@@ -195,6 +200,7 @@ Common methods for array references.
        handles    => {
            add_item  => 'push',
            next_item => 'shift',
+           # ...
        }
     );
 
@@ -209,6 +215,7 @@ Common methods for code references.
        default    => sub { sub { 'called' } },
        handles    => {
            call => 'execute',
+           # ...
        }
     );
 
