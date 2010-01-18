@@ -31,12 +31,14 @@ for, noteworthy changes.
 * Portability fixes to our XS code so we compile with 5.8.8 with Visual
   C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
 
+
 0.93_02 Tue, Jan 5, 2009
 
 [BUG FIXES]
 
 * Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
   testers. (Dave Rolsky)
+
 
 0.93_01 Mon, Jan 4, 2009
 
@@ -86,6 +88,7 @@ See Moose::Manual::Delta for more details on backwards compatiblity issues.
 
 * Fixed a grammar error in Moose::Cookbook::Basics::Recipe4. rt.cpan.org
   #51791. (Amir E. Aharoni)
+
 
 0.93 Thu, Nov 19, 2009
     * Moose::Object
