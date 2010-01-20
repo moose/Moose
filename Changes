@@ -3,14 +3,14 @@ for, noteworthy changes.
 
 0.94 Mon, Jan 18, 2010
 
-[API CHANGES]
+  [API CHANGES]
 
-* Please see the changes listed for 0.93_01 and Moose::Manual::Delta.
+  * Please see the changes listed for 0.93_01 and Moose::Manual::Delta.
 
-[ENHANCEMENTS]
+  [ENHANCEMENTS]
 
-* Improved support for anonymous roles by changing various APIs to take
-  Moose::Meta::Role objects as well as role names. This included
+  * Improved support for anonymous roles by changing various APIs to take
+    Moose::Meta::Role objects as well as role names. This included
 
   - Moose::Meta::Class->does_role
   - Moose::Meta::Role->does_role
@@ -21,77 +21,77 @@ for, noteworthy changes.
 
   Requested by Shawn Moore. Addresses RT #51143 (and then some). (Dave Rolsky)
 
-[BUG FIXES]
+  [BUG FIXES]
 
-* Fix handling of non-alphanumeric attributes names like '@foo'. This should
-  work as long as the accessor method names are explicitly set to valid Perl
-  method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
+  * Fix handling of non-alphanumeric attributes names like '@foo'. This should
+    work as long as the accessor method names are explicitly set to valid Perl
+    method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
 
 
 0.93_03 Tue, Jan 5, 2010
 
-[BUG FIXES]
+  [BUG FIXES]
 
-* Portability fixes to our XS code so we compile with 5.8.8 with Visual
-  C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
+  * Portability fixes to our XS code so we compile with 5.8.8 with Visual
+    C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
 
 
 0.93_02 Tue, Jan 5, 2010
 
-[BUG FIXES]
+ [BUG FIXES]
 
-* Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
-  testers. (Dave Rolsky)
+  * Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
+    testers. (Dave Rolsky)
 
 
 0.93_01 Mon, Jan 4, 2010
 
-[API CHANGES]
+  [API CHANGES]
 
-See Moose::Manual::Delta for more details on backwards compatiblity issues.
+  See Moose::Manual::Delta for more details on backwards compatiblity issues.
 
-* Role attributes are now objects of the Moose::Meta::Role::Attribute
-  class. (Dave Rolsky).
+  * Role attributes are now objects of the Moose::Meta::Role::Attribute
+    class. (Dave Rolsky).
 
-* There were major changes to how metaroles are applied. We now distinguish
-  between metaroles for classes vs those for roles. See the
-  Moose::Util::MetaRole docs for details. (Dave Rolsky)
+  * There were major changes to how metaroles are applied. We now distinguish
+    between metaroles for classes vs those for roles. See the
+    Moose::Util::MetaRole docs for details. (Dave Rolsky)
 
-* The old MetaRole API has been deprecated, but will continue to
-  work. However, if you are applying an attribute metaclass role, this may
-  break because of the fact that roles now have an attribute metaclass
-  too. (Dave Rolsky)
+  * The old MetaRole API has been deprecated, but will continue to
+    work. However, if you are applying an attribute metaclass role, this may
+    break because of the fact that roles now have an attribute metaclass
+    too. (Dave Rolsky)
 
-* Moose::Util::MetaRole::apply_metaclass_roles is now called
-  apply_metaroles. The old name is deprecated. Dave Rolsky>
+  * Moose::Util::MetaRole::apply_metaclass_roles is now called
+    apply_metaroles. The old name is deprecated. Dave Rolsky>
 
-* The unimport subs created by Moose::Exporter now clean up re-exported
-  functions like blessed and confess, unless the caller imported them from
-  somewhere else too. See Moose::Manua::Delta for backcompat details. (rafl)
+  * The unimport subs created by Moose::Exporter now clean up re-exported
+    functions like blessed and confess, unless the caller imported them from
+    somewhere else too. See Moose::Manua::Delta for backcompat details. (rafl)
 
-[ENHANCEMENTS AND BUG FIXES]
+  [ENHANCEMENTS AND BUG FIXES]
 
-* Changed the Str constraint to accept magic lvalue strings like one gets from
-  substr et al, again. (sorear)
+  * Changed the Str constraint to accept magic lvalue strings like one gets from
+    substr et al, again. (sorear)
 
-* Sped up the type constraint parsing regex. (Sam Vilain)
+  * Sped up the type constraint parsing regex. (Sam Vilain)
 
-* The Moose::Cookbook::Extending::Recipe2 recipe was broken. Fix suggested by
-  jrey.
+  * The Moose::Cookbook::Extending::Recipe2 recipe was broken. Fix suggested by
+    jrey.
 
-* Added Moose::Util::TypeConstraints exports when using oose.pm to allow
-  easier testing of TypeConstraints from the command line. (perigrin)
+  * Added Moose::Util::TypeConstraints exports when using oose.pm to allow
+    easier testing of TypeConstraints from the command line. (perigrin)
 
-* Added a with_immutable test function to Test::Moose, to run a block of tests
-  with and without certain classes being immutable. (doy)
+  * Added a with_immutable test function to Test::Moose, to run a block of tests
+    with and without certain classes being immutable. (doy)
 
-* We now use Module::Install extensions explicitly to avoid confusing errors
-  if they're not installed. We use Module::Install::AuthorRequires to stop
-  test extraction and general failures if you don't have the author side
-  dependencies installed.
+  * We now use Module::Install extensions explicitly to avoid confusing errors
+    if they're not installed. We use Module::Install::AuthorRequires to stop
+    test extraction and general failures if you don't have the author side
+    dependencies installed.
 
-* Fixed a grammar error in Moose::Cookbook::Basics::Recipe4. rt.cpan.org
-  #51791. (Amir E. Aharoni)
+  * Fixed a grammar error in Moose::Cookbook::Basics::Recipe4. rt.cpan.org
+    #51791. (Amir E. Aharoni)
 
 
 0.93 Thu, Nov 19, 2009
