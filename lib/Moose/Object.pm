@@ -48,12 +48,15 @@ sub BUILDALL {
     # NOTE: we ask Perl if we even
     # need to do this first, to avoid
     # extra meta level calls
-    return unless $_[0]->can('BUILD');
+    return if $_[0]->can('BUILD') == \&BUILD;
     my ($self, $params) = @_;
     foreach my $method (reverse Class::MOP::class_of($self)->find_all_methods_by_name('BUILD')) {
+        next if $method->{class} eq __PACKAGE__;
         $method->{code}->execute($self, $params);
     }
 }
+
+sub BUILD { }
 
 sub DEMOLISHALL {
     my $self = shift;
@@ -62,7 +65,7 @@ sub DEMOLISHALL {
     # NOTE: we ask Perl if we even
     # need to do this first, to avoid
     # extra meta level calls
-    return unless $self->can('DEMOLISH');
+    return if $self->can('DEMOLISH') == \&DEMOLISH;
 
     my @isa;
     if ( my $meta = Class::MOP::class_of($self ) ) {
@@ -78,11 +81,14 @@ sub DEMOLISHALL {
 
     foreach my $class (@isa) {
         no strict 'refs';
+        next if $class eq __PACKAGE__;
         my $demolish = *{"${class}::DEMOLISH"}{CODE};
         $self->$demolish($in_global_destruction)
             if defined $demolish;
     }
 }
+
+sub DEMOLISH { }
 
 sub DESTROY {
     my $self = shift;

@@ -5,6 +5,8 @@ for, noteworthy changes.
 
   * Moose::Object::does no longer checks the entire inheritance tree, since
     Moose::Meta::Class::does_role already does this. (doy)
+  * Moose::Object now has stubs for BUILD and DEMOLISH, so they can be safely
+    wrapped in roles without needing to provide your own stubs. (doy)
 
 0.94 Mon, Jan 18, 2010
 
