@@ -119,11 +119,7 @@ sub does {
     my $meta = Class::MOP::class_of($self);
     (defined $role_name)
         || $meta->throw_error("You must supply a role name to does()");
-    foreach my $class ($meta->class_precedence_list) {
-        my $m = $meta->initialize($class);
-        return 1
-            if $m->can('does_role') && $m->does_role($role_name);
-    }
+    return 1 if $meta->can('does_role') && $meta->does_role($role_name);
     return 0;
 }
 
