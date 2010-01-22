@@ -44,6 +44,7 @@ WriteAll();
 sub check_conflicts {
     my %conflicts = (
         'Fey::ORM'                      => '0.23',
+        'Catalyst'                      => '5.80017'.
         'MooseX::Aliases'               => '0.07',
         'MooseX::AttributeHelpers'      => '0.22',
         'MooseX::Attribute::Prototype'  => '0.10',
