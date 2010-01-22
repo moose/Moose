@@ -35,7 +35,6 @@ removed.
 The attributes returned by L<Moose::Meta::Role> are now instances of the
 L<Moose::Meta::Role::Attribute> class, instead of bare hash references.
 
-<<<<<<< HEAD:lib/Moose/Manual/Delta.pod
 =item "no Moose" now removes C<blessed> and C<confess>
 
 Moose is now smart enough to know exactly what it exported, even when it
