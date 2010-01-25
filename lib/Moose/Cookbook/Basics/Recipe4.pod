@@ -56,7 +56,7 @@ Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> cl
 
   sub BUILD {
       my ( $self, $params ) = @_;
-      if ( @{ $self->employees || [] } ) {
+      if ( $self->employees ) {
           foreach my $employee ( @{ $self->employees } ) {
               $employee->employer($self);
           }
