@@ -31,7 +31,7 @@ need to do this after first loading the class.
 
 We strongly recommend you make your classes immutable. It makes your
 code much faster, with a small compile-time cost. This will be
-especially noticeable when creating many object.
+especially noticeable when creating many objects.
 
 =head1 AUTHOR
 
