@@ -16,6 +16,18 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 0.95
+
+=over 4
+
+=item Moose::Util add_method_modifier behavior
+
+add_method_modifier (and subsequently the sugar functions Moose::before,
+Moose::after, and Moose::around) can now accept arrayrefs, with the same
+behavior as lists. Types other than arrayref and regexp result in an error.
+
+=back
+
 =head1 0.93_01 and 0.94
 
 =over 4
