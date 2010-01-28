@@ -10,6 +10,7 @@ for, noteworthy changes.
   * Moose::Util::add_method_modifier (and subsequently the sugar functions Moose::before,
     Moose::after, and Moose::around) can now accept arrayrefs, with the same
     behavior as lists. Types other than arrayref and regexp result in an error.
+    (Dylan Hardison)
 
 0.94 Mon, Jan 18, 2010
 
