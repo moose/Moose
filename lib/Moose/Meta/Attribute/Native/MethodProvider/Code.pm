@@ -6,8 +6,19 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub execute : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub { my ($self, @args) = @_; $reader->($self)->(@args) };
+    my ($attr, $reader, $writer) = @_;
+    return sub {
+        my ($self, @args) = @_;
+        $reader->($self)->(@args);
+    };
+}
+
+sub execute_method : method {
+    my ($attr, $reader, $writer) = @_;
+    return sub {
+        my ($self, @args) = @_;
+        $reader->($self)->($self, @args);
+    };
 }
 
 no Moose::Role;

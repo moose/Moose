@@ -59,6 +59,10 @@ This provides operations on coderef attributes.
 
 Calls the coderef with the given args.
 
+=item B<execute_method(@args)>
+
+Calls the coderef with the the instance as invocant and given args.
+
 =back
 
 =head1 METHODS

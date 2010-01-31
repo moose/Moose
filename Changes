@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [NEW FEATURES]
+
+  * Moose::Meta::Attribute::Native::Trait::Code now provides execute_method, in
+    addition to execute, to be able to call a code attribute as a method.
+    (Florian Ragwitz)
+
   [ENHANCEMENTS]
 
   * Moose::Object::does no longer checks the entire inheritance tree, since
