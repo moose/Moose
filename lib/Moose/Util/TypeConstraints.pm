@@ -1128,7 +1128,7 @@ The valid hashref keys are C<where>, C<message>, and C<optimize_as>.
 =item B<< match_on_type $value => ( $type => \&action, ... ?\&default ) >>
 
 This is a utility function for doing simple type based dispatching similar to
-match/case in O'Caml and case/of in Haskell. It is not as featureful as those
+match/case in OCaml and case/of in Haskell. It is not as featureful as those
 languages, nor does not it support any kind of automatic destructuring
 bind. Here is a simple Perl pretty printer dispatching over the core Moose
 types.
