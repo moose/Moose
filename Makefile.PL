@@ -28,6 +28,9 @@ test_requires 'Test::Exception' => '0.27';
 author_requires 'Test::Inline';
 author_requires 'File::Find::Rule';
 author_requires 'Module::Info';
+author_requires 'Test::Spelling';
+author_requires 'Test::Pod::Coverage';
+author_requires 'Test::NoTabs';
 
 if ( $Module::Install::AUTHOR || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
