@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Moose;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
@@ -12,8 +11,6 @@ BEGIN {
 # role: sub BUILD, after BUILD
 # continues to work to run code after object initialization, whether the class
 # has a BUILD method or not
-# note: as of moose 0.95, this idiom is no longer necessary ('after BUILD' on
-# its own is sufficient)  -doy
 
 my @CALLS;
 
@@ -54,35 +51,7 @@ do {
     with 'TestRole';
 };
 
-do {
-    package TestRoleWithoutBUILD;
-    use Moose::Role;
-
-    before BUILD => sub { push @CALLS, 'TestRoleWithoutBUILD::BUILD:before' };
-    after  BUILD => sub { push @CALLS, 'TestRoleWithoutBUILD::BUILD:after' };
-};
-
-do {
-    package AnotherClassWithBUILD;
-    use Moose;
-
-    ::stderr_is {
-        with 'TestRoleWithoutBUILD';
-    } '';
-
-    sub BUILD { push @CALLS, 'AnotherClassWithBUILD::BUILD' }
-};
-
-do {
-    package AnotherClassWithoutBUILD;
-    use Moose;
-
-    ::stderr_is {
-        with 'TestRoleWithoutBUILD';
-    } '';
-};
-
-with_immutable {
+{
     is_deeply([splice @CALLS], [], "no calls to BUILD yet");
 
     ClassWithBUILD->new;
@@ -101,21 +70,11 @@ with_immutable {
         'TestRole::BUILD:after',
     ]);
 
-    AnotherClassWithBUILD->new;
-
-    is_deeply([splice @CALLS], [
-        'TestRoleWithoutBUILD::BUILD:before',
-        'AnotherClassWithBUILD::BUILD',
-        'TestRoleWithoutBUILD::BUILD:after',
-    ]);
-
-    AnotherClassWithoutBUILD->new;
-
-    is_deeply([splice @CALLS], [
-        'TestRoleWithoutBUILD::BUILD:before',
-        'TestRoleWithoutBUILD::BUILD:after',
-    ]);
-} qw(ClassWithBUILD        ClassWithoutBUILD
-     AnotherClassWithBUILD AnotherClassWithoutBUILD);
+    if (ClassWithBUILD->meta->is_mutable) {
+        ClassWithBUILD->meta->make_immutable;
+        ClassWithoutBUILD->meta->make_immutable;
+        redo;
+    }
+}
 
 done_testing;
