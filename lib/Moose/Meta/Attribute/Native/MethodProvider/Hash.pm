@@ -183,7 +183,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::Hash - role prividing method generators for Hash trait
+Moose::Meta::Attribute::Native::MethodProvider::Hash - role providing method generators for Hash trait
 
 =head1 DESCRIPTION
 
