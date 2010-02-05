@@ -672,9 +672,6 @@ subtype 'Num' => as 'Str' =>
 subtype 'Int' => as 'Num' => where { "$_" =~ /^-?[0-9]+$/ } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
 
-subtype 'ScalarRef' => as 'Ref' => where { ref($_) eq 'SCALAR' } =>
-    optimize_as
-    \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef;
 subtype 'CodeRef' => as 'Ref' => where { ref($_) eq 'CODE' } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::CodeRef;
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } =>
@@ -714,6 +711,24 @@ subtype 'RoleName' => as 'ClassName' => where {
 
 ## --------------------------------------------------------
 # parameterizable types ...
+
+$REGISTRY->add_type_constraint(
+    Moose::Meta::TypeConstraint::Parameterizable->new(
+        name               => 'ScalarRef',
+        package_defined_in => __PACKAGE__,
+        parent             => find_type_constraint('Ref'),
+        constraint         => sub { ref($_) eq 'SCALAR' },
+        optimized =>
+            \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef,
+        constraint_generator => sub {
+            my $type_parameter = shift;
+            my $check          = $type_parameter->_compiled_type_constraint;
+            return sub {
+                return $check->(${ $_ });
+            };
+        }
+    )
+);
 
 $REGISTRY->add_type_constraint(
     Moose::Meta::TypeConstraint::Parameterizable->new(
@@ -775,7 +790,7 @@ $REGISTRY->add_type_constraint(
 );
 
 my @PARAMETERIZABLE_TYPES
-    = map { $REGISTRY->get_type_constraint($_) } qw[ArrayRef HashRef Maybe];
+    = map { $REGISTRY->get_type_constraint($_) } qw[ScalarRef ArrayRef HashRef Maybe];
 
 sub get_all_parameterizable_types {@PARAMETERIZABLE_TYPES}
 
@@ -894,7 +909,7 @@ that hierarchy represented visually.
                   ClassName
                   RoleName
           Ref
-              ScalarRef
+              ScalarRef[`a]
               ArrayRef[`a]
               HashRef[`a]
               CodeRef
@@ -908,6 +923,7 @@ parameterized, this means you can say:
 
   ArrayRef[Int]    # an array of integers
   HashRef[CodeRef] # a hash of str to CODE ref mappings
+  ScalarRef[Int]   # a reference to an integer
   Maybe[Str]       # value may be a string, may be undefined
 
 If Moose finds a name in brackets that it does not recognize as an

@@ -120,4 +120,12 @@ lives_ok {
     }, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
 }
 
+{
+    my $RefToInt = subtype as 'ScalarRef[Int]';
+
+    ok $RefToInt->check(\1), '\1 is okay';
+    ok !$RefToInt->check(1), '1 is not';
+    ok !$RefToInt->check(\"foo"), '\"foo" is not';
+}
+
 done_testing;
