@@ -6,6 +6,10 @@ for, noteworthy changes.
     constraint for whatever the reference points to. (Closes RT#50857)
     (Michael G. Schwern, Florian Ragwitz)
 
+  [BUG FIXES]
+  * ScalarRef now accepts references to other references. (Closes RT#50934)
+    (Michael G. Schwern)
+
 0.95 Thu, Feb 4, 2010
 
   [NEW FEATURES]

@@ -191,6 +191,7 @@ ok(!defined ScalarRef([]),               '... ScalarRef rejects anything which i
 ok(!defined ScalarRef({}),               '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef(sub {}),           '... ScalarRef rejects anything which is not a ScalarRef');
 ok(defined ScalarRef($SCALAR_REF),       '... ScalarRef accepts anything which is a ScalarRef');
+ok(defined ScalarRef(\$SCALAR_REF),      '... ScalarRef accepts references to references');
 ok(!defined ScalarRef($GLOB),            '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef($GLOB_REF),        '... ScalarRef rejects anything which is not a ScalarRef');
 ok(!defined ScalarRef($fh),              '... ScalarRef rejects anything which is not a ScalarRef');

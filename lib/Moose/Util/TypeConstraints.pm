@@ -717,7 +717,7 @@ $REGISTRY->add_type_constraint(
         name               => 'ScalarRef',
         package_defined_in => __PACKAGE__,
         parent             => find_type_constraint('Ref'),
-        constraint         => sub { ref($_) eq 'SCALAR' },
+        constraint         => sub { ref($_) eq 'SCALAR' || ref($_) eq 'REF' },
         optimized =>
             \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef,
         constraint_generator => sub {
