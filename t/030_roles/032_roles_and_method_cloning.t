@@ -73,11 +73,7 @@ use Test::More;
 
 isnt( ClassA->foo, "ClassB::foo", "ClassA::foo is not confused with ClassB::foo");
 
-{
-    local $TODO =
-      "multiply-consumed roles' subs take on their most recently used name";
-    is( ClassB->foo, 'ClassB::foo', 'ClassB::foo knows its name' );
-    is( ClassA->foo, 'ClassA::foo', 'ClassA::foo knows its name' );
-}
+is( ClassB->foo, 'Role::Foo::foo', 'ClassB::foo knows its name' );
+is( ClassA->foo, 'Role::Foo::foo', 'ClassA::foo knows its name' );
 
 done_testing;
