@@ -322,8 +322,29 @@ sub _find_next_method_by_name_which_is_not_overridden {
 sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
+    # We need to initialize the superclasses as Moose::Meta::Class, to give
+    # them a shot at fixing their own metaclass incompatibility from their
+    # parents (which initializing them as Class::MOP::Class wouldn't allow).
+    # However, if they weren't Moose classes to begin with, we shouldn't
+    # leave them with a Moose::Meta::Class metaclass, since that should be
+    # reserved specifically for Moose classes. Therefore, we remove the
+    # metaclasses we create here (that didn't exist before) if metaclass
+    # compat fixing didn't change them at all. -doy
+
+    my %existing_superclass_metas =
+        map  { $_, 1 }
+        grep { Class::MOP::does_metaclass_exist($_) }
+        @superclasses;
+
     $self->_fix_one_incompatible_metaclass($_)
         for map { Moose::Meta::Class->initialize($_) } @superclasses;
+
+    for my $class (@superclasses) {
+        if (!exists($existing_superclass_metas{$class})
+         && blessed(Class::MOP::get_metaclass_by_name($class)) eq 'Moose::Meta::Class') {
+            Class::MOP::remove_metaclass_by_name($class);
+        }
+    }
 }
 
 sub _fix_one_incompatible_metaclass {
