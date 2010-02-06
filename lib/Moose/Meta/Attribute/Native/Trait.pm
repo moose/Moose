@@ -3,7 +3,7 @@ package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 
-our $VERSION   = '0.95';
+our $VERSION   = '0.96';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
