@@ -322,29 +322,9 @@ sub _find_next_method_by_name_which_is_not_overridden {
 sub _fix_metaclass_incompatibility {
     my ($self, @superclasses) = @_;
 
-    # We need to initialize the superclasses as Moose::Meta::Class, to give
-    # them a shot at fixing their own metaclass incompatibility from their
-    # parents (which initializing them as Class::MOP::Class wouldn't allow).
-    # However, if they weren't Moose classes to begin with, we shouldn't
-    # leave them with a Moose::Meta::Class metaclass, since that should be
-    # reserved specifically for Moose classes. Therefore, we remove the
-    # metaclasses we create here (that didn't exist before) if metaclass
-    # compat fixing didn't change them at all. -doy
-
-    my %existing_superclass_metas =
-        map  { $_, 1 }
-        grep { Class::MOP::does_metaclass_exist($_) }
-        @superclasses;
-
     $self->_fix_one_incompatible_metaclass($_)
-        for map { Moose::Meta::Class->initialize($_) } @superclasses;
-
-    for my $class (@superclasses) {
-        if (!exists($existing_superclass_metas{$class})
-         && blessed(Class::MOP::get_metaclass_by_name($class)) eq 'Moose::Meta::Class') {
-            Class::MOP::remove_metaclass_by_name($class);
-        }
-    }
+        for map { Moose::Meta::Class->initialize($_, no_cache => 1) }
+                @superclasses;
 }
 
 sub _fix_one_incompatible_metaclass {
@@ -448,8 +428,8 @@ sub _all_metaclasses_differ_by_roles_only {
 
         next if $pair->[0] eq $pair->[1];
 
-        my $self_meta_meta  = Class::MOP::Class->initialize( $pair->[0] );
-        my $super_meta_meta = Class::MOP::Class->initialize( $pair->[1] );
+        my $self_meta_meta  = Class::MOP::Class->initialize( $pair->[0], no_cache => 1 );
+        my $super_meta_meta = Class::MOP::Class->initialize( $pair->[1], no_cache => 1 );
 
         my $common_ancestor
             = _find_common_ancestor( $self_meta_meta, $super_meta_meta );
@@ -499,7 +479,7 @@ sub _is_role_only_subclass_of {
 
     my %role_packages = map { $_->name => 1 } @roles;
 
-    my $ancestor_meta = Class::MOP::Class->initialize($ancestor);
+    my $ancestor_meta = Class::MOP::Class->initialize($ancestor, no_cache => 1);
 
     my %shared_ancestors = map { $_ => 1 } $ancestor_meta->linearized_isa;
 
@@ -544,7 +524,7 @@ sub _all_roles_until {
     for my $class ( $meta->linearized_isa ) {
         last if $stop_at_class && $stop_at_class eq $class;
 
-        my $meta = Class::MOP::Class->initialize($class);
+        my $meta = Class::MOP::Class->initialize($class, no_cache => 1);
         last unless $meta->can('calculate_all_roles');
 
         push @roles, $meta->calculate_all_roles;
@@ -567,7 +547,7 @@ sub _reconcile_role_differences {
     for my $thing (@MetaClassTypes) {
         my $name = $self->$thing();
 
-        my $thing_meta = Class::MOP::Class->initialize($name);
+        my $thing_meta = Class::MOP::Class->initialize($name, no_cache => 1);
 
         my @roles = map { $_->name } _all_roles($thing_meta)
             or next;

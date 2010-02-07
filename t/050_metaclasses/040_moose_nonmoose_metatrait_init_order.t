@@ -23,7 +23,7 @@ use Moose::Util qw/find_meta does_role/;
 my $subsubclass_meta = Moose->init_meta( for_class => 'SubSubClassUseBase' );
 ok does_role($subsubclass_meta, 'My::Role'),
     'SubSubClass metaclass does role from grandparent metaclass';
-my $subclass_meta = find_meta('SubClassUseBase');
+my $subclass_meta = Moose::Meta::Class->initialize('SubClassUseBase');
 ok does_role($subclass_meta, 'My::Role'),
     'SubClass metaclass does role from parent metaclass';
 
