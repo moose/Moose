@@ -228,8 +228,11 @@ This module provides two functions.
 
 =head2 apply_metaroles( ... )
 
-This function will apply roles to one or more metaclasses for the
-specified class. It accepts the following parameters:
+This function will apply roles to one or more metaclasses for the specified
+class. It will return a new metaclass object for the class or role passed in
+the "for" parameter.
+
+It accepts the following parameters:
 
 =over 4
 
