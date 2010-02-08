@@ -45,7 +45,7 @@ The basic Moose type hierarchy looks like this
                 ClassName
                 RoleName
           Ref
-              ScalarRef
+              ScalarRef[`a]
               ArrayRef[`a]
               HashRef[`a]
               CodeRef
