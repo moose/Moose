@@ -17,35 +17,24 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
     default => sub { {} }
 ));
 
-my %ANON_CLASSES;
-
 sub apply {
-    my ($self, $role, $object) = @_;
+    my ( $self, $role, $object ) = @_;
 
-    my $anon_role_key = (blessed($object) . $role->name);
+    my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
 
-    my $class;
-    if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
-        $class = $ANON_CLASSES{$anon_role_key};
-    }
-    else {
-        my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
+    # This is a special case to handle the case where the object's metaclass
+    # is a Class::MOP::Class, but _not_ a Moose::Meta::Class (for example,
+    # when applying a role to a Moose::Meta::Attribute object).
+    $obj_meta = 'Moose::Meta::Class'
+        unless $obj_meta->isa('Moose::Meta::Class');
 
-        # This is a special case to handle the case where the object's
-        # metaclass is a Class::MOP::Class, but _not_ a Moose::Meta::Class
-        # (for example, when applying a role to a Moose::Meta::Attribute
-        # object).
-        $obj_meta = 'Moose::Meta::Class'
-            unless $obj_meta->isa('Moose::Meta::Class');
+    my $class = $obj_meta->create_anon_class(
+        superclasses => [ blessed($object) ], cache => 1,
+    );
 
-        $class = $obj_meta->create_anon_class(
-            superclasses => [ blessed($object) ]
-        );
-        $ANON_CLASSES{$anon_role_key} = $class;
-        $self->SUPER::apply($role, $class);
-    }
+    $self->SUPER::apply( $role, $class );
 
-    $class->rebless_instance($object, %{$self->rebless_params});
+    $class->rebless_instance( $object, %{ $self->rebless_params } );
 }
 
 1;
