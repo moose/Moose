@@ -186,8 +186,7 @@ just doing a simple review.
 =item Larger bug fixes, doc additions and TODO or failing tests.
 
 Larger bug fixes should be reviewed by at least one cabal member and should be
-tested using the F<cpan-stable-smolder> script in the moose-dev-utils
-repository.
+tested using the F<xt/author/test-my-dependents.t> test.
 
 New documentation is always welcome, but should also be reviewed by a cabal
 member for accuracy.
@@ -213,10 +212,10 @@ the guidelines. Do not be surprised if a new feature is rejected for the core.
 New features for Moose internals are less restrictive than user facing
 features, but still require approval by B<at least one> cabal member.
 
-Ideally you will have run the smolder script to be sure you are not breaking
-any MooseX module or causing any other unforeseen havoc. If you do this
-(rather than make us do it), it will only help to hasten your branch's
-approval.
+Ideally you will have run the F<test-my-dependents.t> script to be sure you
+are not breaking any MooseX module or causing any other unforeseen havoc. If
+you do this (rather than make us do it), it will only help to hasten your
+branch's approval.
 
 =item Backwards incompatible changes.
 
@@ -255,15 +254,14 @@ available, you are encouraged to test them all. However, we do not put a lot
 of effort into supporting older 5.8.x releases.
 
 For major releases which include an API change or deprecation, you should run
-the F<cpan-stable-smolder> script from the L<moose-dev-utils
-repository|gitmo@git.moose.perl.org:moose-dev-utils.git>. This script tests a
-long list of MooseX and other Moose-using modules from CPAN. In order to run
-this script, you must arrange to have the new version of Moose and/or
-Class::MOP in Perl's include path. You can install the module, or fiddle with
-the C<PERL5LIB> environment variable, whatever makes you happy.
+the F<xt/author/test-my-dependents.t> test. This tests a long list of MooseX
+and other Moose-using modules from CPAN. In order to run this script, you must
+arrange to have the new version of Moose and/or Class::MOP in Perl's include
+path. You can use C<prove -b> and C<prove -I>, install the module, or fiddle
+with the C<PERL5LIB> environment variable, whatever makes you happy.
 
-The smolder script downloads each module from CPAN, runs its tests, and logs
-failures and warnings to a F<cpan-stable-smolder.log> file. If there are
+This test downloads each module from CPAN, runs its tests, and logs failures
+and warnings to a set of files named F<test-mydeps-$$-*.log>. If there are
 failures or warnings, please work with the authors of the modules in question
 to fix them. If the module author simply isn't available or does not want to
 fix the bug, it is okay to make a release.
