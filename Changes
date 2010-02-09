@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.97 Tue, Feb 9, 2010
+
+  [BUG FIXES]
+
   * Calling ->reinitialize on a cached anonymous class destroyed the cache,
     causing the class to go out of scope unexpectedly. This could easily
     happen at a distance by applying a metarole to an anonymous class. (Dave
