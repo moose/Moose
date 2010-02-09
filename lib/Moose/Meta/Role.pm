@@ -879,7 +879,7 @@ object, then add it to the required method list.
 
 =head2 Method modifiers
 
-These methods act like their counterparts in L<Class::Mop::Class> and
+These methods act like their counterparts in L<Class::MOP::Class> and
 L<Moose::Meta::Class>.
 
 However, method modifiers are simply stored internally, and are not
