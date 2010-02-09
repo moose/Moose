@@ -68,32 +68,6 @@ sub initialize {
             );
 }
 
-sub reinitialize {
-    my $self = shift;
-    my $pkg  = shift;
-
-    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
-
-    my %existing_classes;
-    if ($meta) {
-        %existing_classes = map { $_ => $meta->$_() } qw(
-            attribute_metaclass
-            method_metaclass
-            wrapped_method_metaclass
-            instance_metaclass
-            constructor_class
-            destructor_class
-            error_class
-        );
-    }
-
-    return $self->SUPER::reinitialize(
-        $pkg,
-        %existing_classes,
-        @_,
-    );
-}
-
 sub _immutable_options {
     my ( $self, @args ) = @_;
 
@@ -141,11 +115,8 @@ sub create_anon_class {
 
     my $cache_ok = delete $options{cache};
 
-    # something like Super::Class|Super::Class::2=Role|Role::1
-    my $cache_key = join '=' => (
-        join('|', @{$options{superclasses} || []}),
-        join('|', sort @{$options{roles}   || []}),
-    );
+    my $cache_key
+        = _anon_cache_key( $options{superclasses}, $options{roles} );
 
     if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
         return $ANON_CLASSES{$cache_key};
@@ -157,6 +128,59 @@ sub create_anon_class {
         if $cache_ok;
 
     return $new_class;
+}
+
+sub _anon_cache_key {
+    # Makes something like Super::Class|Super::Class::2=Role|Role::1
+    return join '=' => (
+        join( '|', @{ $_[0]      || [] } ),
+        join( '|', sort @{ $_[1] || [] } ),
+    );
+}
+
+sub reinitialize {
+    my $self = shift;
+    my $pkg  = shift;
+
+    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
+
+    my $cache_key;
+
+    my %existing_classes;
+    if ($meta) {
+        %existing_classes = map { $_ => $meta->$_() } qw(
+            attribute_metaclass
+            method_metaclass
+            wrapped_method_metaclass
+            instance_metaclass
+            constructor_class
+            destructor_class
+            error_class
+        );
+
+        $cache_key = _anon_cache_key(
+            [ $meta->superclasses ],
+            [ map { $_->name } @{ $meta->roles } ],
+        ) if $meta->is_anon_class;
+    }
+
+    my $new_meta = $self->SUPER::reinitialize(
+        $pkg,
+        %existing_classes,
+        @_,
+    );
+
+    return $new_meta unless defined $cache_key;
+
+    my $new_cache_key = _anon_cache_key(
+        [ $meta->superclasses ],
+        [ map { $_->name } @{ $meta->roles } ],
+    );
+
+    delete $ANON_CLASSES{$cache_key};
+    $ANON_CLASSES{$new_cache_key} = $new_meta;
+
+    return $new_meta;
 }
 
 sub add_role {

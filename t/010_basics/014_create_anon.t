@@ -71,4 +71,17 @@ use Moose::Meta::Class;
     ok $class_and_bar->name->bar_role_applied;
 }
 
+# This tests that a cached metaclass can be reinitialized and still retain its
+# metaclass object.
+{
+    my $name = Moose::Meta::Class->create_anon_class(
+        superclasses => ['Class'],
+        cache        => 1,
+    )->name;
+
+    $name->meta->reinitialize( $name );
+
+    can_ok( $name, 'meta' );
+}
+
 done_testing;
