@@ -44,6 +44,13 @@ __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     predicate => 'has_hand_optimized_type_constraint',
 ));
 
+
+__PACKAGE__->meta->add_attribute('hand_optimized_inline_type_constraint' => (
+    init_arg  => 'inline_optimized',
+    accessor  => 'hand_optimized_inline_type_constraint',
+    predicate => 'has_hand_optimized_inline_type_constraint',
+));
+
 sub parents {
     my $self;
     $self->parent;
@@ -189,6 +196,9 @@ sub _actually_compile_type_constraint {
     return $self->_compile_hand_optimized_type_constraint
         if $self->has_hand_optimized_type_constraint;
 
+    return $self->_compile_hand_optimized_inline_type_constraint
+        if $self->has_hand_optimized_inline_type_constraint;
+
     my $check = $self->constraint;
     unless ( defined $check ) {
         require Moose;
@@ -215,6 +225,32 @@ sub _compile_hand_optimized_type_constraint {
     }
 
     return $type_constraint;
+}
+
+sub _compile_hand_optimized_inline_type_constraint {
+    my $self = shift;
+
+    my $inline_type_constraint = $self->hand_optimized_inline_type_constraint;
+    local $@;
+    my $type_constraint = $self->_eval_in_emptyish_lexical_scope("sub { $inline_type_constraint }");
+
+    if ($@) {
+        require Moose;
+        Carp::confess ("Hand optimized inline type constraint for", $self->name, "does not compile: $@");
+        Moose->throw_error("Hand optimized inline type constrant does not compile");
+    }
+
+    unless ( ref $type_constraint ) {
+        require Moose;
+        Carp::confess ("Hand optimized type constraint for " . $self->name . " is not a code reference");
+        Moose->throw_error("Hand optimized type constraint is not a code reference");
+    }
+
+    return $type_constraint;
+}
+
+sub _eval_in_emptyish_lexical_scope {
+    eval $_[1];
 }
 
 sub _compile_subtype {
@@ -298,6 +334,27 @@ sub create_child_type {
     return $class->new(%opts, parent => $self);
 }
 
+sub is_null {
+    my ($self) = @_;
+    $self->_compiled_type_constraint == $null_constraint;
+}
+
+
+sub inline_check_of {
+    my ($self, $value_var, $constraint_var) = @_;
+    $constraint_var ||= '$constraint';
+    $value_var      ||= '$_';
+    if ($self->has_hand_optimized_type_constraint) {
+        return 'do { local @_ = ('
+            . $value_var
+            . ');'
+            . $self->hand_optimized_inline_type_constraint
+            . '}';
+    }
+    else {
+        return "$constraint_var->check($value_var)";
+    }
+}
 1;
 
 __END__
@@ -461,6 +518,17 @@ provided C<%options>. The C<parent> option will be the current type.
 
 This method exists so that subclasses of this class can override this
 behavior and change how child types are created.
+
+=item B<< $constraint->inline_check_of($value_var?, $constraint_var?) >>
+
+This returns a string which, if evalled, would check the value in
+C<$value_var> via a constraint in C<$constraint_var>. For convenience,
+C<$value_var> defaults to C<'$_'> and C<$constraint_var> defaults to
+C<'$constraint'>.
+
+=item B<< $constraint->is_null >>
+
+Returns true if the constraint's check is the null check.
 
 =back
 

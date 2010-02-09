@@ -399,6 +399,7 @@ sub as { { as => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
 sub message (&)     { { message     => $_[0] } }
 sub optimize_as (&) { { optimize_as => $_[0] } }
+sub inline_as       { { optimize_as => $_[0] } }
 
 sub from    {@_}
 sub via (&) { $_[0] }
@@ -516,7 +517,11 @@ sub _create_type_constraint ($$$;$$) {
 
         ( $check     ? ( constraint => $check )     : () ),
         ( $message   ? ( message    => $message )   : () ),
-        ( $optimized ? ( optimized  => $optimized ) : () ),
+        ( $optimized
+              ? ref($optimized)
+                  ? ( optimized  => $optimized )
+                  : ( inline_optimized => $optimized )
+              : () ),
     );
 
     my $constraint;
@@ -657,17 +662,17 @@ subtype 'Bool' => as 'Item' =>
     where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
 subtype 'Value' => as 'Defined' => where { !ref($_) } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Value;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineValue();
 
 subtype 'Ref' => as 'Defined' => where { ref($_) } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Ref;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineRef;
 
 subtype 'Str' => as 'Value' => where { ref(\$_) eq 'SCALAR' } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineStr;
 
 subtype 'Num' => as 'Str' =>
     where { Scalar::Util::looks_like_number($_) } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Num;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineNum;
 
 subtype 'Int' => as 'Num' => where { "$_" =~ /^-?[0-9]+$/ } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
@@ -1122,6 +1127,16 @@ constraint hierarchy.
 B<NOTE:> You should only use this if you know what you are doing,
 all the built in types use this, so your subtypes (assuming they
 are shallow) will not likely need to use this.
+
+=item B<inline_as { ... }>
+
+This can also be used to define a hand optimized version of the
+type constraint which can be inlined by modules like
+L<MooseX::Method::Signatures>. Don't attempt to use this as well
+as C<optimize_as> or you may die.
+
+B<NOTE:> As with C<optimize_as>, only use this if you know what
+you're doing.
 
 =item B<< type 'Name' => where { } ... >>
 

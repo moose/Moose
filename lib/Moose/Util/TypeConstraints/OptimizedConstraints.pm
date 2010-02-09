@@ -10,18 +10,22 @@ our $VERSION   = '1.01';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub Value { defined($_[0]) && !ref($_[0]) }
 
-sub Ref { ref($_[0]) }
+sub InlineValue {
+    'defined($_[0]) && !ref($_[0])';
+}
+sub InlineRef { 'ref($_[0])' }
 
 # We need to use a temporary here to flatten LVALUEs, for instance as in
 # Str(substr($_,0,255)).
-sub Str {
-    my $value = $_[0];
-    defined($value) && ref(\$value) eq 'SCALAR'
+sub InlineStr {
+    q{my $value = $_[0];}
+        . q{defined($value) && ref(\$value) eq 'SCALAR'}
 }
 
-sub Num { !ref($_[0]) && looks_like_number($_[0]) }
+sub InlineNum {
+    q{!ref($_[0]) && Scalar::Util::looks_like_number($_[0])}
+}
 
 sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
 
@@ -72,13 +76,13 @@ no user serviceable parts inside.
 
 =over 4
 
-=item C<Value>
+=item C<InlineValue>
 
-=item C<Ref>
+=item C<InlineRef>
 
-=item C<Str>
+=item C<InlineStr>
 
-=item C<Num>
+=item C<InlineNum>
 
 =item C<Int>
 
