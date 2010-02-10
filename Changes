@@ -5,8 +5,9 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * An internals change in 0.97 broke applying a role to an instance (sadly,
-    this wasn't tested by the test suite). (Rafael Kitover)
+  * An internals change in 0.97 broke role application to an instance in some
+    cases. The bug occurred when two different roles were applied to different
+    instances of the same class. (Rafael Kitover)
 
 
 0.97 Tue, Feb 9, 2010
