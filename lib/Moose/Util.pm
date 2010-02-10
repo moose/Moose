@@ -8,7 +8,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.97';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

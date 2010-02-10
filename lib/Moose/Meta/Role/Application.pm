@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '0.97';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
