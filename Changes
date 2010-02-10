@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  * Calling ->reinitialize on a cached anonymous class destroyed the cache,
+    causing the class to go out of scope unexpectedly. This could easily
+    happen at a distance by applying a metarole to an anonymous class. (Dave
+    Rolsky).
+
 0.96 Sat, Feb 6, 2010
 
   [NEW FEATURES]
@@ -13,11 +18,6 @@ for, noteworthy changes.
 
   * ScalarRef now accepts references to other references. (Closes RT#50934)
     (Michael G. Schwern)
-
-  * Calling ->reinitialize on a cached anonymous class destroyed the cache,
-    causing the class to go out of scope unexpectedly. This could easily
-    happen at a distance by applying a metarole to an anonymous class. (Dave
-    Rolsky).
 
 0.95 Thu, Feb 4, 2010
 
