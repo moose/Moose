@@ -29,10 +29,10 @@ sub apply {
         unless $obj_meta->isa('Moose::Meta::Class');
 
     my $class = $obj_meta->create_anon_class(
-        superclasses => [ blessed($object) ], cache => 1,
+        superclasses => [ blessed($object) ],
+        roles => [ $role ],
+        cache => 1,
     );
-
-    $self->SUPER::apply( $role, $class );
 
     $class->rebless_instance( $object, %{ $self->rebless_params } );
 }
