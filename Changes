@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.98 Wed, Feb 10, 2010
+
+  [BUG FIXES]
+
+  * An internals change in 0.97 broke applying a role to an instance (sadly,
+    this wasn't tested by the test suite). (Rafael Kitover)
+
+
 0.97 Tue, Feb 9, 2010
 
   [BUG FIXES]
