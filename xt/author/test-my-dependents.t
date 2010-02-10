@@ -121,3 +121,4 @@ App::Nopaste
 CHI
 Data::Visitor
 namespace::autoclean
+DBIx::Class
