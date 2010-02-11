@@ -100,4 +100,14 @@ isa_ok($obj2, 'My::Class');
     isnt(blessed($obj), blessed($obj2), '... they still don\'t share the same anon-class/role thing');
 }
 
+# test that anon classes are equivalent after role composition in the same order
+{
+    foreach ($obj, $obj2) {
+        $_ = My::Class->new;
+        Bark->meta->apply($_);
+        Sleeper->meta->apply($_);
+    }
+    is(blessed($obj), blessed($obj2), '... they now share the same anon-class/role thing');
+}
+
 done_testing;
