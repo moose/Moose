@@ -114,6 +114,7 @@ Chart::Clicker
 TryCatch
 Bread::Board
 Devel::REPL
+Carp::REPL
 IM::Engine
 NetHack::Item
 Forest
