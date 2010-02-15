@@ -36,18 +36,19 @@ for, noteworthy changes.
 
   [NEW FEATURES]
 
-  * Moose::Meta::Attribute::Native::Trait::Code now provides execute_method, in
-    addition to execute, to be able to call a code attribute as a method.
-    (Florian Ragwitz)
+  * Moose::Meta::Attribute::Native::Trait::Code now provides execute_method as
+    a delegation option. This allows the code reference to be called as a
+    method on the object. (Florian Ragwitz)
 
   [ENHANCEMENTS]
 
   * Moose::Object::does no longer checks the entire inheritance tree, since
     Moose::Meta::Class::does_role already does this. (doy)
-  * Moose::Util::add_method_modifier (and subsequently the sugar functions Moose::before,
-    Moose::after, and Moose::around) can now accept arrayrefs, with the same
-    behavior as lists. Types other than arrayref and regexp result in an error.
-    (Dylan Hardison)
+
+  * Moose::Util::add_method_modifier (and subsequently the sugar functions
+    Moose::before, Moose::after, and Moose::around) can now accept arrayrefs,
+    with the same behavior as lists. Types other than arrayref and regexp
+    result in an error.  (Dylan Hardison)
 
 0.94 Mon, Jan 18, 2010
 
