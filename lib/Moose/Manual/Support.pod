@@ -1,0 +1,58 @@
+=pod
+
+=head1 NAME
+
+Moose::Manual::Support - Policies regarding support, releases, and
+compatibility.
+
+=head1 RELEASE SCHEDULE
+
+Moose uses the release early, release often philosophy. Moose is not
+released on a schedule. Releases happen as new features and bug fixes
+are required.
+
+There have been to date, 98 releases of Moose over just under four
+years. This is an average of a release every two weeks.
+
+=head1 DEPRECATION POLICY
+
+Moose has always prioritized correctness over performance and backwards
+compatibility. 
+
+Major deprecations or API changes are documented in the Changes file as
+well as in L<Moose::Manual::Delta|Moose::Manual::Delta>
+
+Moose attempts to warn for deprecated features and API changes for a
+reasonable number of releases before breaking any tested API.
+
+Moose will also warn during installation if the version being installed
+will break a known installed dependency. Unfortunately due to the nature
+of the Perl install process these warnings may be easy to miss.
+
+=head1 BACKWARDS COMPATIBILITY
+
+We try to ensure compatibility by having a extensive test suite (last
+count just over around 5123 tests), as well as testing a number of
+packages (currently just under 100 packages) that depend Moose before
+any release.
+
+The current list of downstream dependencies that are tested is in
+C<xt/author/test-my-dependents.t>.
+
+=head1 VERSION NUMBERS
+
+Moose's version numbers are monotonically incrementing two decimal
+values. The version numbers in Moose are I<not> semantic. This means
+that version 1.00 will be the hundredth release, nothing more.
+
+Moose was declared production ready at version 0.18 (via L<<
+http://www.perlmonks.org/?node_id=608144 >>).
+
+=head1 CONTRIBUTING
+
+Moose has an open contribution policy. Anybody is welcome to submit a
+patch. Please see
+L<Moose::Manual::Contributing|Moose::Manual::Contributing> for more
+details.
+
+=cut
