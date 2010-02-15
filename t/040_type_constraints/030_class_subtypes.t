@@ -26,8 +26,8 @@ my $Int = find_type_constraint('Int');
 ok $Int, 'Got a good type contstraint';
 
 my $parent  = Test::Moose::Meta::TypeConstraint::AnySubType->new({
-		name => "Test::Moose::Meta::TypeConstraint::AnySubType" ,
-		parent => $Int,
+        name => "Test::Moose::Meta::TypeConstraint::AnySubType" ,
+        parent => $Int,
 });
 
 ok $parent, 'Created type constraint';
