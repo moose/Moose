@@ -19,11 +19,11 @@ years. This is an average of a release every two weeks.
 Moose has always prioritized correctness over performance and backwards
 compatibility.
 
-Major deprecations or API changes are documented in the Changes file as
-well as in L<Moose::Manual::Delta|Moose::Manual::Delta>
+Major deprecations or API changes are first documented in the Changes
+file as well as in L<Moose::Manual::Delta|Moose::Manual::Delta>
 
-Moose attempts to warn for deprecated features and API changes for a
-reasonable number of releases before breaking any tested API.
+Moose then attempts to warn for deprecated features and API changes for
+a reasonable number of releases before breaking any tested API.
 
 Moose will also warn during installation if the version being installed
 will break a known installed dependency. Unfortunately due to the nature
@@ -33,7 +33,7 @@ of the Perl install process these warnings may be easy to miss.
 
 We try to ensure compatibility by having a extensive test suite (last
 count just over around 5123 tests), as well as testing a number of
-packages (currently just under 100 packages) that depend Moose before
+packages (currently just under 100 packages) that depend on Moose before
 any release.
 
 The current list of downstream dependencies that are tested is in
