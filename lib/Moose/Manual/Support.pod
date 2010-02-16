@@ -45,6 +45,12 @@ Moose's version numbers are monotonically incrementing two decimal
 values. The version numbers in Moose are I<not> semantic. This means
 that version 1.00 will be the hundredth release, nothing more.
 
+Occasionally, we will release a test release with a version like
+0.90_03. These versions may be less stable than non-test releases, and exist
+so that developers can test potentially code-breaking changes. By default, the
+CPAN client will not install a distribution which has an underscore in its
+version.
+
 Moose was declared production ready at version 0.18 (via L<<
 http://www.perlmonks.org/?node_id=608144 >>).
 
