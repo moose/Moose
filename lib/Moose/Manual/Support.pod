@@ -17,7 +17,7 @@ years. This is an average of a release every two weeks.
 =head1 DEPRECATION POLICY
 
 Moose has always prioritized correctness over performance and backwards
-compatibility. 
+compatibility.
 
 Major deprecations or API changes are documented in the Changes file as
 well as in L<Moose::Manual::Delta|Moose::Manual::Delta>
