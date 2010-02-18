@@ -11,7 +11,7 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -115,11 +115,8 @@ sub create_anon_class {
 
     my $cache_ok = delete $options{cache};
 
-    # something like Super::Class|Super::Class::2=Role|Role::1
-    my $cache_key = join '=' => (
-        join('|', @{$options{superclasses} || []}),
-        join('|', sort @{$options{roles}   || []}),
-    );
+    my $cache_key
+        = _anon_cache_key( $options{superclasses}, $options{roles} );
 
     if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
         return $ANON_CLASSES{$cache_key};
@@ -131,6 +128,59 @@ sub create_anon_class {
         if $cache_ok;
 
     return $new_class;
+}
+
+sub _anon_cache_key {
+    # Makes something like Super::Class|Super::Class::2=Role|Role::1
+    return join '=' => (
+        join( '|', @{ $_[0]      || [] } ),
+        join( '|', sort @{ $_[1] || [] } ),
+    );
+}
+
+sub reinitialize {
+    my $self = shift;
+    my $pkg  = shift;
+
+    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
+
+    my $cache_key;
+
+    my %existing_classes;
+    if ($meta) {
+        %existing_classes = map { $_ => $meta->$_() } qw(
+            attribute_metaclass
+            method_metaclass
+            wrapped_method_metaclass
+            instance_metaclass
+            constructor_class
+            destructor_class
+            error_class
+        );
+
+        $cache_key = _anon_cache_key(
+            [ $meta->superclasses ],
+            [ map { $_->name } @{ $meta->roles } ],
+        ) if $meta->is_anon_class;
+    }
+
+    my $new_meta = $self->SUPER::reinitialize(
+        $pkg,
+        %existing_classes,
+        @_,
+    );
+
+    return $new_meta unless defined $cache_key;
+
+    my $new_cache_key = _anon_cache_key(
+        [ $meta->superclasses ],
+        [ map { $_->name } @{ $meta->roles } ],
+    );
+
+    delete $ANON_CLASSES{$cache_key};
+    $ANON_CLASSES{$new_cache_key} = $new_meta;
+
+    return $new_meta;
 }
 
 sub add_role {
@@ -717,10 +767,11 @@ adds it to the class's list of role applications. This I<does not>
 actually apply any role to the class; it is only for tracking role
 applications.
 
-=item B<< $metaclass->does_role($role_name) >>
+=item B<< $metaclass->does_role($role) >>
 
-This returns a boolean indicating whether or not the class does the
-specified role. This tests both the class and its parents.
+This returns a boolean indicating whether or not the class does the specified
+role. The role provided can be either a role name or a L<Moose::Meta::Role>
+object. This tests both the class and its parents.
 
 =item B<< $metaclass->excludes_role($role_name) >>
 
@@ -755,9 +806,7 @@ Throws the error created by C<create_error> using C<raise_error>
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -765,7 +814,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

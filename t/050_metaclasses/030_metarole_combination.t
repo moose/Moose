@@ -81,14 +81,16 @@ our @applications;
 
     around apply_params => sub {
         my ( $next, $self, @args ) = @_;
-        return Moose::Util::MetaRole::apply_metaclass_roles(
-            for_class => $self->$next(@args),
-            application_to_class_class_roles =>
-                ['CustomApplication::Composite::ToClass'],
-            application_to_role_class_roles =>
-                ['CustomApplication::Composite::ToRole'],
-            application_to_instance_class_roles =>
-                ['CustomApplication::Composite::ToInstance'],
+        return Moose::Util::MetaRole::apply_metaroles(
+            for            => $self->$next(@args),
+            role_metaroles => {
+                application_to_class =>
+                    ['CustomApplication::Composite::ToClass'],
+                application_to_role =>
+                    ['CustomApplication::Composite::ToRole'],
+                application_to_instance =>
+                    ['CustomApplication::Composite::ToInstance'],
+            },
         );
     };
 }
@@ -97,9 +99,10 @@ our @applications;
     package Role::WithCustomApplication;
     use Moose::Role;
 
-    has '+composition_class_roles' => (
-        default => ['Role::Composite'],
-    );
+    around composition_class_roles => sub {
+        my ($orig, $self) = @_;
+        return $self->$orig, 'Role::Composite';
+    };
 }
 
 {
@@ -110,14 +113,16 @@ our @applications;
 
     sub init_meta {
         my ( $self, %options ) = @_;
-        return Moose::Util::MetaRole::apply_metaclass_roles(
-            for_class       => Moose::Role->init_meta(%options),
-            metaclass_roles => ['Role::WithCustomApplication'],
-            application_to_class_class_roles =>
-                ['CustomApplication::ToClass'],
-            application_to_role_class_roles => ['CustomApplication::ToRole'],
-            application_to_instance_class_roles =>
-                ['CustomApplication::ToInstance'],
+        return Moose::Util::MetaRole::apply_metaroles(
+            for_class      => Moose::Role->init_meta(%options),
+            role_metaroles => {
+                role => ['Role::WithCustomApplication'],
+                application_to_class =>
+                    ['CustomApplication::ToClass'],
+                application_to_role => ['CustomApplication::ToRole'],
+                application_to_instance =>
+                    ['CustomApplication::ToInstance'],
+            },
         );
     }
 }
@@ -138,7 +143,7 @@ ok( My::Role::Special->meta->isa('Moose::Meta::Role'),
 );
 ok( My::Role::Special->meta->meta->does_role('Role::WithCustomApplication'),
     "the role's metaobject has custom applications" );
-is_deeply( My::Role::Special->meta->composition_class_roles,
+is_deeply( [My::Role::Special->meta->composition_class_roles],
     ['Role::Composite'],
     "the role knows about the specified composition class" );
 

@@ -41,3 +41,5 @@ is($child->attr, "ibute", "getter inherited properly");
 
 $child->attr("ition");
 is($child->attr, "ition", "setter inherited properly");
+
+done_testing;

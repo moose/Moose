@@ -6,38 +6,35 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Role::Application::ToClass';
+use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('rebless_params' => (
     reader  => 'rebless_params',
     default => sub { {} }
 ));
 
-my %ANON_CLASSES;
-
 sub apply {
-    my ($self, $role, $object) = @_;
+    my ( $self, $role, $object ) = @_;
 
-    my $anon_role_key = (blessed($object) . $role->name);
+    my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
 
-    my $class;
-    if (exists $ANON_CLASSES{$anon_role_key} && defined $ANON_CLASSES{$anon_role_key}) {
-        $class = $ANON_CLASSES{$anon_role_key};
-    }
-    else {
-        my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
-        $class = $obj_meta->create_anon_class(
-            superclasses => [ blessed($object) ]
-        );
-        $ANON_CLASSES{$anon_role_key} = $class;
-        $self->SUPER::apply($role, $class);
-    }
+    # This is a special case to handle the case where the object's metaclass
+    # is a Class::MOP::Class, but _not_ a Moose::Meta::Class (for example,
+    # when applying a role to a Moose::Meta::Attribute object).
+    $obj_meta = 'Moose::Meta::Class'
+        unless $obj_meta->isa('Moose::Meta::Class');
 
-    $class->rebless_instance($object, %{$self->rebless_params});
+    my $class = $obj_meta->create_anon_class(
+        superclasses => [ blessed($object) ],
+        roles => [ $role ],
+        cache => 1,
+    );
+
+    $class->rebless_instance( $object, %{ $self->rebless_params } );
 }
 
 1;
@@ -68,9 +65,7 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -78,7 +73,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

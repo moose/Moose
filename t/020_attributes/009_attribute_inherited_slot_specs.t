@@ -5,11 +5,10 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 84;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
-
 
 {
     package Thing;
@@ -265,3 +264,5 @@ skip_meta {
       '... Bar::foo should handles');
 } 32;
 
+
+done_testing;

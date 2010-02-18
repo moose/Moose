@@ -13,7 +13,6 @@ use MetaTest;
 skip_all_meta 6;
 
 
-
 {
 
     package Elk;
@@ -96,3 +95,4 @@ lives_ok {
 }
 'Can subclass the same non-Moose class twice with different metaclasses';
 
+done_testing;

@@ -5,12 +5,11 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 12;
+use Test::More;
 use Test::Exception;
 use Test::Moose;
 
 use MetaTest;
-
 
 {
     package My::Attribute::Trait;
@@ -69,4 +68,4 @@ skip_meta {
    is($gorch_attr->applied_traits, undef, '... no traits applied');
 } 7;
 
-
+done_testing;

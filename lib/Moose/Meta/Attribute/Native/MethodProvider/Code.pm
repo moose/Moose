@@ -1,13 +1,24 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Code;
 use Moose::Role;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub execute : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub { my ($self, @args) = @_; $reader->($self)->(@args) };
+    my ($attr, $reader, $writer) = @_;
+    return sub {
+        my ($self, @args) = @_;
+        $reader->($self)->(@args);
+    };
+}
+
+sub execute_method : method {
+    my ($attr, $reader, $writer) = @_;
+    return sub {
+        my ($self, @args) = @_;
+        $reader->($self)->($self, @args);
+    };
 }
 
 no Moose::Role;
@@ -20,7 +31,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::Code
+Moose::Meta::Attribute::Native::MethodProvider::Code - role providing method generators for Code trait
 
 =head1 DESCRIPTION
 
@@ -38,9 +49,7 @@ documentation on what methods are provided.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-use Test::More tests => 10;
+use Test::More;
 
 {
     my $package = qq{
@@ -115,3 +115,5 @@ __PACKAGE__->meta->make_immutable;
     my $obj = Test::Moose::Go::Boom5->new;
     ::is( $obj->id, '0 but true', 'value is still the same' );
 }
+
+done_testing;

@@ -5,11 +5,10 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 74;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
-
 
 {
     # NOTE:
@@ -258,3 +257,5 @@ use MetaTest;
         is( eval { $class->method }, "concrete b", "provided by concrete b" );
     }
 }
+
+done_testing;

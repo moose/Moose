@@ -11,7 +11,7 @@ package MyClass2; use Moose; with 'MyRole'; no Moose;
 
 package main;
 
-use Test::More tests => 4;
+use Test::More;
 
 {
   local $TODO = 'Role composition does not clone methods yet';
@@ -23,3 +23,5 @@ use Test::More tests => 4;
 
 isnt(MyClass1->foo, "MyClass2::foo", "role method is not confused with other class" );
 isnt(MyClass2->foo, "MyClass1::foo", "role method is not confused with other class" );
+
+done_testing;

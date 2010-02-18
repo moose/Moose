@@ -13,7 +13,6 @@ use MetaTest;
 skip_all_meta 7;
 
 
-
 BEGIN {
     package MyFramework::Base;
     use Moose;
@@ -59,6 +58,4 @@ isa_ok($obj, 'Moose::Object');
 
 is($obj->foo, 10, '... got the right value');
 
-
-
-
+done_testing;

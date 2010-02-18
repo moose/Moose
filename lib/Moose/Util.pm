@@ -8,7 +8,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -51,11 +51,13 @@ sub does_role {
 }
 
 sub search_class_by_role {
-    my ($class_or_obj, $role_name) = @_;
+    my ($class_or_obj, $role) = @_;
 
     my $meta = find_meta($class_or_obj);
 
     return unless defined $meta;
+
+    my $role_name = blessed $role ? $role->name : $role;
 
     foreach my $class ($meta->class_precedence_list) {
 
@@ -95,9 +97,17 @@ sub _apply_all_roles {
 
     my $roles = Data::OptList::mkopt( [@_] );
 
+    my @role_metas;
     foreach my $role (@$roles) {
-        Class::MOP::load_class( $role->[0] );
-        my $meta = Class::MOP::class_of( $role->[0] );
+        my $meta;
+
+        if ( blessed $role->[0] ) {
+            $meta = $role->[0];
+        }
+        else {
+            Class::MOP::load_class( $role->[0] );
+            $meta = Class::MOP::class_of( $role->[0] );
+        }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
             require Moose;
@@ -105,23 +115,24 @@ sub _apply_all_roles {
                     . $role->[0]
                     . " is not a Moose role" );
         }
+
+        push @role_metas, [ $meta, $role->[1] ];
     }
 
     if ( defined $role_filter ) {
-        @$roles = grep { local $_ = $_->[0]; $role_filter->() } @$roles;
+        @role_metas = grep { local $_ = $_->[0]; $role_filter->() } @role_metas;
     }
 
-    return unless @$roles;
+    return unless @role_metas;
 
     my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
 
-    if ( scalar @$roles == 1 ) {
-        my ( $role, $params ) = @{ $roles->[0] };
-        my $role_meta = Class::MOP::class_of($role);
-        $role_meta->apply( $meta, ( defined $params ? %$params : () ) );
+    if ( scalar @role_metas == 1 ) {
+        my ( $role, $params ) = @{ $role_metas[0] };
+        $role->apply( $meta, ( defined $params ? %$params : () ) );
     }
     else {
-        Moose::Meta::Role->combine( @$roles )->apply($meta);
+        Moose::Meta::Role->combine(@role_metas)->apply($meta);
     }
 }
 
@@ -200,6 +211,18 @@ sub add_method_modifier {
                 = grep { $_->name =~ @{$args}[0] } @all_methods;
             $meta->$add_modifier_method( $_->name, $code )
                 for @matched_methods;
+        }
+        elsif ($method_modifier_type eq 'ARRAY') {
+            $meta->$add_modifier_method( $_, $code ) for @{$args->[0]};
+        }
+        else {
+            $meta->throw_error(
+                sprintf(
+                    "Methods passed to %s must be provided as a list, arrayref or regex, not %s",
+                    $modifier_name,
+                    $method_modifier_type,
+                )
+            );
         }
     }
     else {
@@ -290,16 +313,19 @@ This method takes a class name or object and attempts to find a
 metaclass for the class, if one exists. It will B<not> create one if it
 does not yet exist.
 
-=item B<does_role($class_or_obj, $role_name)>
+=item B<does_role($class_or_obj, $role_or_obj)>
 
-Returns true if C<$class_or_obj> does the given C<$role_name>.
+Returns true if C<$class_or_obj> does the given C<$role_or_obj>. The role can
+be provided as a name or a L<Moose::Meta::Role> object.
 
-The class must already have a metaclass for this to work.
+The class must already have a metaclass for this to work. If it doesn't, this
+function simply returns false.
 
-=item B<search_class_by_role($class_or_obj, $role_name)>
+=item B<search_class_by_role($class_or_obj, $role_or_obj)>
 
 Returns the first class in the class's precedence list that does
-C<$role_name>, if any.
+C<$role_or_obj>, if any. The role can be either a name or a
+L<Moose::Meta::Role> object.
 
 The class must already have a metaclass for this to work.
 
@@ -310,9 +336,9 @@ applicant can be a role name, class name, or object.
 
 The C<$applicant> must already have a metaclass object.
 
-The list of C<@roles> should be a list of names, each of which can be
-followed by an optional hash reference of options (C<-excludes> and
-C<-alias>).
+The list of C<@roles> should a list of names or L<Moose::Meta::Role> objects,
+each of which can be followed by an optional hash reference of options
+(C<-excludes> and C<-alias>).
 
 =item B<ensure_all_roles($applicant, @roles)>
 
@@ -377,9 +403,7 @@ Here is a list of possible functions to write
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

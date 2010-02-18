@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More;
 use Test::Exception;
 
 {
@@ -78,3 +78,5 @@ lives_ok { DucktypeTest->new( duck => RubberDuck->new ) }
 
 # try with the other constraint form
 lives_ok { DucktypeTest->new( other_swan => Swan->new ) } 'but a Swan can honk';
+
+done_testing;

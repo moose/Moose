@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 15;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
@@ -282,3 +282,5 @@ method modifier.
         with 'Bar2::Role';
     } 'required method exists in superclass as non-modifier, so we live';
 }
+
+done_testing;

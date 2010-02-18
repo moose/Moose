@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -24,3 +24,4 @@ throws_ok {
     subtype 'MySubType' => as 'Int' => where { 1 };
 } qr/cannot be created again/, 'Trying to create same type twice throws';
 
+done_testing;

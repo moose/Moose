@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More;
 use Test::Moose;
 
 {
@@ -66,4 +66,4 @@ use Test::Moose;
     is($x->gorch, 'BAR', '... got the right value');
 }
 
-
+done_testing;

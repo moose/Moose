@@ -9,16 +9,18 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
+use Moose::Meta::Role::Attribute;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
+use Moose::Util qw( ensure_all_roles );
 
-use base 'Class::MOP::Module';
+use base 'Class::MOP::Module', 'Class::MOP::Mixin::HasAttributes';
 
 ## ------------------------------------------------------------------
 ## NOTE:
@@ -70,16 +72,6 @@ foreach my $action (
             existence  => 'requires_method',
         }
     },
-    {
-        name        => '_attribute_map',
-        attr_reader => '_attribute_map',
-        methods     => {
-            get       => 'get_attribute',
-            get_keys  => 'get_attribute_list',
-            existence => 'has_attribute',
-            remove    => 'remove_attribute',
-        }
-    }
 ) {
 
     my $attr_reader = $action->{attr_reader};
@@ -159,29 +151,60 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Application::ToInstance',
 );
 
-$META->add_attribute(
-    'composition_class_roles',
-    reader    => 'composition_class_roles',
-    predicate => 'has_composition_class_roles',
-);
+# More or less copied from Moose::Meta::Class
+sub initialize {
+    my $class = shift;
+    my $pkg   = shift;
+    return Class::MOP::get_metaclass_by_name($pkg)
+        || $class->SUPER::initialize(
+        $pkg,
+        'attribute_metaclass' => 'Moose::Meta::Role::Attribute',
+        @_
+        );
+}
 
-## some things don't always fit, so they go here ...
+sub reinitialize {
+    my $self = shift;
+    my $pkg  = shift;
+
+    my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
+
+    my %existing_classes;
+    if ($meta) {
+        %existing_classes = map { $_ => $meta->$_() } qw(
+            attribute_metaclass
+            method_metaclass
+            wrapped_method_metaclass
+            required_method_metaclass
+            conflicting_method_metaclass
+            application_to_class_class
+            application_to_role_class
+            application_to_instance_class
+        );
+    }
+
+    return $self->SUPER::reinitialize(
+        $pkg,
+        %existing_classes,
+        @_,
+    );
+}
 
 sub add_attribute {
     my $self = shift;
-    my $name = shift;
-    unless ( defined $name ) {
-        require Moose;
-        Moose->throw_error("You must provide a name for the attribute");
+
+    if (blessed $_[0] && ! $_[0]->isa('Moose::Meta::Role::Attribute') ) {
+        my $class = ref $_[0];
+        Moose->throw_error( "Cannot add a $class as an attribute to a role" );
     }
-    my $attr_desc;
-    if (scalar @_ == 1 && ref($_[0]) eq 'HASH') {
-        $attr_desc = $_[0];
-    }
-    else {
-        $attr_desc = { @_ };
-    }
-    $self->_attribute_map->{$name} = $attr_desc;
+
+    return $self->SUPER::add_attribute(@_);
+}
+
+sub _attach_attribute {
+    my ( $self, $attribute ) = @_;
+
+    $attribute->attach_to_role($self);
 }
 
 sub add_required_methods {
@@ -348,9 +371,10 @@ sub calculate_all_roles {
 }
 
 sub does_role {
-    my ($self, $role_name) = @_;
-    (defined $role_name)
+    my ($self, $role) = @_;
+    (defined $role)
         || Moose->throw_error("You must supply a role name to look for");
+    my $role_name = blessed $role ? $role->name : $role;
     # if we are it,.. then return true
     return 1 if $role_name eq $self->name;
     # otherwise.. check our children
@@ -395,6 +419,8 @@ sub apply {
     return $application_class->new(@args)->apply($self, $other);
 }
 
+sub composition_class_roles { }
+
 sub combine {
     my ($class, @role_specs) = @_;
 
@@ -402,8 +428,11 @@ sub combine {
 
     my (@roles, %role_params);
     while (@role_specs) {
-        my ($role_name, $params) = @{ splice @role_specs, 0, 1 };
-        my $requested_role = Class::MOP::class_of($role_name);
+        my ($role, $params) = @{ splice @role_specs, 0, 1 };
+        my $requested_role
+            = blessed $role
+            ? $role
+            : Class::MOP::class_of($role);
 
         my $actual_role = $requested_role->_role_for_combination($params);
         push @roles => $actual_role;
@@ -455,7 +484,8 @@ sub create {
     if (exists $options{attributes}) {
         foreach my $attribute_name (keys %{$options{attributes}}) {
             my $attr = $options{attributes}->{$attribute_name};
-            $meta->add_attribute($attribute_name => $attr);
+            $meta->add_attribute(
+                $attribute_name => blessed $attr ? $attr : %{$attr} );
         }
     }
 
@@ -561,20 +591,6 @@ sub create {
 #         'set'    => 'add_excluded_roles',
 #         'keys'   => 'get_excluded_roles_list',
 #         'exists' => 'excludes_role',
-#     }
-# );
-#
-# has 'attribute_map' => (
-#     metaclass => 'Hash',
-#     reader    => '_attribute_map',
-#     isa       => 'HashRef[Str]',
-#     provides => {
-#         # 'set'  => 'add_attribute' # has some special crap in it
-#         'get'    => 'get_attribute',
-#         'keys'   => 'get_attribute_list',
-#         'exists' => 'has_attribute',
-#         # Not exactly delete, cause it sets multiple
-#         'delete' => 'remove_attribute',
 #     }
 # );
 #
@@ -690,12 +706,20 @@ This method creates a new role object with the provided name.
 =item B<< Moose::Meta::Role->combine( [ $role => { ... } ], [ $role ], ... ) >>
 
 This method accepts a list of array references. Each array reference
-should contain a role name as its first element. The second element is
+should contain a role name or L<Moose::Meta::Role> object as its first element. The second element is
 an optional hash reference. The hash reference can contain C<-excludes>
 and C<-alias> keys to control how methods are composed from the role.
 
 The return value is a new L<Moose::Meta::Role::Composite> that
 represents the combined roles.
+
+=item B<< $metarole->composition_class_roles >>
+
+When combining multiple roles using C<combine>, this method is used to obtain a
+list of role names to be applied to the L<Moose::Meta::Role::Composite>
+instance returned by C<combine>. The default implementation returns an empty
+list. Extensions that need to hook into role combination may wrap this method
+to return additional role names.
 
 =item B<< Moose::Meta::Role->create($name, %options) >>
 
@@ -746,10 +770,10 @@ list may include duplicates.
 This returns a I<unique> list of all roles that this role does, and
 all the roles that its roles do.
 
-=item B<< $metarole->does_role($role_name) >>
+=item B<< $metarole->does_role($role) >>
 
-Given a role I<name>, returns true if this role does the given
-role.
+Given a role I<name> or L<Moose::Meta::Role> object, returns true if this role
+does the given role.
 
 =item B<< $metarole->add_role($role) >>
 
@@ -855,7 +879,7 @@ object, then add it to the required method list.
 
 =head2 Method modifiers
 
-These methods act like their counterparts in L<Class::Mop::Class> and
+These methods act like their counterparts in L<Class::MOP::Class> and
 L<Moose::Meta::Class>.
 
 However, method modifiers are simply stored internally, and are not
@@ -912,9 +936,7 @@ This will return a L<Class::MOP::Class> instance for this class.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -922,7 +944,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

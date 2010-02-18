@@ -1,6 +1,19 @@
 
 =pod
 
+=begin testing-SETUP
+
+BEGIN {
+    eval 'use Test::Output;';
+    if ($@) {
+        diag 'Test::Output is required for this test';
+        ok(1);
+        exit 0;
+    }
+}
+
+=end testing-SETUP
+
 =head1 NAME
 
 Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
@@ -19,10 +32,10 @@ Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
   use Moose::Role;
 
-  after 'BUILD' => sub {
+  after 'BUILDALL' => sub {
       my $self = shift;
 
-      warn "Made a new " . ref $self . " object\n";
+      warn "Made a new " . ( ref $self ) . " object\n";
   };
 
 =head1 DESCRIPTION
@@ -66,5 +79,21 @@ L<http://www.iinteractive.com>
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-=cut
+=begin testing
 
+{
+    package Debugged;
+
+    use Moose;
+    MooseX::Debugging->import;
+}
+
+stderr_is(
+    sub { Debugged->new },
+    "Made a new Debugged object\n",
+    'got expected output from debugging role'
+);
+
+=end testing
+
+=cut

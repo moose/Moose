@@ -68,7 +68,7 @@ default value:
   has 'balance' => ( isa => 'Int', is => 'rw', default => 0 );
 
 This says that a B<BankAccount> has a C<balance> attribute, which has
-a C<Int> type constraint, a read/write accessor, and a default value
+an C<Int> type constraint, a read/write accessor, and a default value
 of C<0>. This means that every instance of B<BankAccount> that is
 created will have its C<balance> slot initialized to C<0>, unless some
 other value is provided to the constructor.
@@ -220,7 +220,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Builder::Tester tests => 2;
+use Test::Builder::Tester;
 use Test::More;
 
 BEGIN {
@@ -30,3 +30,4 @@ meta_ok('Bar', '... meta_ok(Bar) fails');
 
 test_test ('meta_ok');
 
+done_testing;

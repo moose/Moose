@@ -32,3 +32,4 @@ do {
 is(My::Class->meta->meta->name, 'My::Meta::Class');
 is(My::Class::Aliased->meta->meta->name, 'My::Meta::Class');
 
+done_testing;

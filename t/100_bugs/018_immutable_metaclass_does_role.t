@@ -94,3 +94,4 @@ is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
+done_testing;

@@ -65,3 +65,4 @@ dies_ok {
 
 # XXX: Continuing::To::Fail gets created anyway
 
+done_testing;

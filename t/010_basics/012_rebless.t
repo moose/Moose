@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
@@ -90,3 +90,4 @@ skip_meta {
    '... this failed cause of type check';
 } 5;
 
+done_testing;

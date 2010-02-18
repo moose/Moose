@@ -7,11 +7,10 @@ use lib 't/lib';
 
 use Scalar::Util 'isweak';
 
-use Test::More tests => 43;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
-
 
 
 {
@@ -225,3 +224,4 @@ skip_meta {
 
 } 6;
 
+done_testing;

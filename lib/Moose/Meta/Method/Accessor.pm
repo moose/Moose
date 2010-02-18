@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -25,10 +25,8 @@ sub _eval_code {
     my $type_constraint_obj = $attr->type_constraint;
     my $environment = {
         '$attr' => \$attr,
-        '$attr_name' => \$attr->name,
         '$meta' => \$self,
         '$type_constraint_obj' => \$type_constraint_obj,
-        '$type_constraint_name' => \($type_constraint_obj && $type_constraint_obj->name),
         '$type_constraint' => \($type_constraint_obj
                                    ? $type_constraint_obj->_compiled_type_constraint
                                    : undef),
@@ -48,7 +46,6 @@ sub _eval_code {
 sub _generate_accessor_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
-    my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
@@ -72,9 +69,8 @@ sub _generate_accessor_method_inline {
 sub _generate_writer_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
-    my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv, $attr_name);
+    my $slot_access = $self->_inline_get($inv);
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
     $self->_eval_code('sub { '
@@ -93,9 +89,8 @@ sub _generate_writer_method_inline {
 sub _generate_reader_method_inline {
     my $self        = $_[0];
     my $attr        = $self->associated_attribute;
-    my $attr_name   = $attr->name;
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv, $attr_name);
+    my $slot_access = $self->_inline_get($inv);
 
     $self->_eval_code('sub {'
     . $self->_inline_pre_body(@_)
@@ -129,11 +124,10 @@ sub _inline_check_constraint {
     my ($self, $value) = @_;
 
     my $attr = $self->associated_attribute;
-    my $attr_name = $attr->name;
 
     return '' unless $attr->has_type_constraint;
 
-    my $type_constraint_name = $attr->type_constraint->name;
+    my $attr_name = quotemeta( $attr->name );
 
     qq{\$type_constraint->($value) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
 }
@@ -151,9 +145,10 @@ sub _inline_check_required {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    my $attr_name = $attr->name;
-
     return '' unless $attr->is_required;
+
+    my $attr_name = quotemeta( $attr->name );
+
     return qq{(\@_ >= 2) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) is required, so cannot be set to undef"}) . ';' # defined $_[1] is not good enough
 }
 
@@ -164,7 +159,7 @@ sub _inline_check_lazy {
 
     return '' unless $attr->is_lazy;
 
-    my $slot_exists = $self->_inline_has($instance, $attr->name);
+    my $slot_exists = $self->_inline_has($instance);
 
     my $code = 'unless (' . $slot_exists . ') {' . "\n";
     if ($attr->has_type_constraint) {
@@ -293,7 +288,9 @@ sub _inline_auto_deref {
         $sigil = '%';
     }
     else {
-        $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", type_constraint => $type_constraint );
+        $self->throw_error( "Can not auto de-reference the type constraint '"
+                . quotemeta( $type_constraint->name )
+                . "'", type_constraint => $type_constraint );
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
@@ -320,9 +317,7 @@ L<Class::MOP::Method::Accessor> documentation.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -332,7 +327,7 @@ Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

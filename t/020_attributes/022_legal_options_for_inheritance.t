@@ -52,3 +52,5 @@ my ($legal_option) = grep {
 is($legal_option, 'my_legal_option',
   '... added my_legal_option as legal option for inheritance' );
 is($bar_attr->my_legal_option->(), 'Bar::B', '... overloaded my_legal_option');
+
+done_testing;

@@ -5,7 +5,7 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -18,7 +18,7 @@ BEGIN {
             Class::MOP::load_class($package);
         }
     }
-    use Filter::Simple sub { s/^/package $package;\nuse Moose;\n/; }
+    use Filter::Simple sub { s/^/package $package;\nuse Moose;use Moose::Util::TypeConstraints;\n/; }
 }
 
 1;
@@ -40,6 +40,9 @@ oose - syntactic sugar to make Moose one-liners easier
   # and re-"opens" the package definition to make
   # debugging/introspection easier
   perl -Moose=+My::Class -e 'print join ", " => __PACKAGE__->meta->get_method_list'
+
+  # also loads Moose::Util::TypeConstraints to allow subtypes etc
+  perl -Moose=Person -e'subtype q[ValidAge] => as q[Int] => where { $_ > 0 && $_ < 78 }; has => age ( isa => q[ValidAge], is => q[ro]); Person->new(age => 90)'
 
 =head1 DESCRIPTION
 
@@ -69,13 +72,11 @@ None reported. But it is a source filter and might have issues there.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
-Chris Prather  C<< <perigrin@cpan.org> >>
+Chris Prather  C<< <chris@prather.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 

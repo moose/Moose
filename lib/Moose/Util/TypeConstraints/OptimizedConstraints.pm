@@ -6,7 +6,7 @@ use warnings;
 use Class::MOP;
 use Scalar::Util 'blessed', 'looks_like_number';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -25,7 +25,7 @@ sub Num { !ref($_[0]) && looks_like_number($_[0]) }
 
 sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
 
-sub ScalarRef { ref($_[0]) eq 'SCALAR' }
+sub ScalarRef { ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF' }
 sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
 sub HashRef   { ref($_[0]) eq 'HASH'   }
 sub CodeRef   { ref($_[0]) eq 'CODE'   }
@@ -108,9 +108,7 @@ no user serviceable parts inside.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

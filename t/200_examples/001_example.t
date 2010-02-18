@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More;
 use Test::Exception;
-
 
 
 ## Roles
@@ -126,3 +125,4 @@ ok($at_least_10_chars->does('Constraint::OnLength'), '... Constraint::LengthAtLe
 ok(!defined($at_least_10_chars->validate('barrrrrrrrr')), '... validated correctly');
 is($at_least_10_chars->validate('bar'), 'must be at least 10 chars', '... validation failed correctly');
 
+done_testing;

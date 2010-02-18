@@ -4,7 +4,7 @@ use Moose::Role;
 use List::Util;
 use List::MoreUtils;
 
-our $VERSION = '0.93';
+our $VERSION = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -363,7 +363,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::MethodProvider::Array
+Moose::Meta::Attribute::Native::MethodProvider::Array - role providing method generators for Array trait
 
 =head1 DESCRIPTION
 
@@ -381,9 +381,7 @@ documentation on what methods are provided.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

@@ -3,7 +3,7 @@ package Moose::Meta::Method;
 use strict;
 use warnings;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -41,10 +41,10 @@ Moose::Meta::Method - A Moose Method metaclass
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Class> that provides
+This class is a subclass of L<Class::MOP::Method> that provides
 additional Moose-specific functionality, all of which is private.
 
-To understand this class, you should read the the L<Class::MOP::Class>
+To understand this class, you should read the the L<Class::MOP::Method>
 documentation.
 
 =head1 INHERITANCE
@@ -53,9 +53,7 @@ C<Moose::Meta::Method> is a subclass of L<Class::MOP::Method>.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -63,7 +61,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

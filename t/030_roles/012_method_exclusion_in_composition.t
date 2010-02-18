@@ -5,11 +5,10 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 19;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
-
 
 {
     package My::Role;
@@ -122,5 +121,4 @@ skip_meta {
    ok(My::Foo::Role::Other->meta->requires_method('foo'), '... and the &foo method is required');
 } 2;
 
-
-
+done_testing;

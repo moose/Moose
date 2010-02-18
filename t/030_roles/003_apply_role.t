@@ -189,3 +189,5 @@ foreach my $foo ( $foo, $foobar ) {
 
     is( $foo->bar, $foo2, '... got the right value for bar now' );
 }
+
+done_testing;

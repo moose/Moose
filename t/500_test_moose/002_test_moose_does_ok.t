@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Builder::Tester tests => 2;
+use Test::Builder::Tester;
 use Test::More;
 
 BEGIN {
@@ -59,3 +59,4 @@ does_ok ($baz,'Foo','does_ok object fail');
 
 test_test ('does_ok');
 
+done_testing;

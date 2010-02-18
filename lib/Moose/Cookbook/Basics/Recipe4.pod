@@ -56,19 +56,15 @@ Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> cl
 
   sub BUILD {
       my ( $self, $params ) = @_;
-      if ( @{ $self->employees || [] } ) {
-          foreach my $employee ( @{ $self->employees } ) {
-              $employee->employer($self);
-          }
+      foreach my $employee ( @{ $self->employees || [] } ) {
+          $employee->employer($self);
       }
   }
 
   after 'employees' => sub {
       my ( $self, $employees ) = @_;
-      if ($employees) {
-          foreach my $employee ( @{$employees} ) {
-              $employee->employer($self);
-          }
+      foreach my $employee ( @{ $employees || [] } ) {
+          $employee->employer($self);
       }
   };
 
@@ -213,17 +209,15 @@ C<employer> attribute:
 
   sub BUILD {
       my ( $self, $params ) = @_;
-      if ( $self->employees ) {
-          foreach my $employee ( @{ $self->employees } ) {
-              $employee->employer($self);
-          }
+      foreach my $employee ( @{ $self->employees || [] } ) {
+          $employee->employer($self);
       }
   }
 
-The C<BUILD> method is executed after type constraints are checked, so
-it is safe to assume that C<< $self->employees >> will return an array
-reference, and that the elements of that array will be C<Employee>
-objects.
+The C<BUILD> method is executed after type constraints are checked, so it is
+safe to assume that if C<< $self->employees >> has a value, it will be an
+array reference, and that the elements of that array reference will be
+C<Employee> objects.
 
 We also want to make sure that whenever the C<employees> attribute for
 a C<Company> is changed, we also update the C<employer> for each
@@ -233,18 +227,16 @@ To do this we can use an C<after> modifier:
 
   after 'employees' => sub {
       my ( $self, $employees ) = @_;
-      if ($employees) {
-          foreach my $employee ( @{$employees} ) {
-              $employee->employer($self);
-          }
+      foreach my $employee ( @{ $employees || [] } ) {
+          $employee->employer($self);
       }
   };
 
-Again, as with the C<BUILD> method, we know that the type constraint
-check has already happened, so we can just check for definedness on the
-C<$employees> argument.
+Again, as with the C<BUILD> method, we know that the type constraint check has
+already happened, so we know that if C<$employees> is defined it will contain
+an array reference of C<Employee> objects..
 
-The B<Person> class does have demonstrate anything new. It has several
+The B<Person> class does not really demonstrate anything new. It has several
 C<required> attributes. It also has a C<predicate> method, which we
 first used in L<recipe 3|Moose::Cookbook::Basics::Recipe3>.
 
@@ -309,7 +301,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

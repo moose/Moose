@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 25;
+use Test::More;
 use Test::Moose;
 
 use MetaTest;
@@ -115,3 +115,4 @@ skip_meta {
    );
 } 2;
 
+done_testing;

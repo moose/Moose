@@ -13,7 +13,6 @@ use MetaTest;
 BEGIN {
     eval "use Module::Refresh;";
     plan skip_all => "Module::Refresh is required for this test" if $@;
-    plan tests => 23;
 }
 
 =pod
@@ -93,7 +92,4 @@ ok(TestBaz->isa('Foo'), '... TestBaz is a Foo');
 
 unlink $test_module_file;
 
-
-
-
-
+done_testing;

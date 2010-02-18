@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More;
 use Test::Exception;
 
 =pod
@@ -59,5 +59,4 @@ for (1..2) {
     Foo->meta->make_immutable(debug => 0) unless $is_immutable;
 }
 
-
-
+done_testing;

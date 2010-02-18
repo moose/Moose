@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
@@ -54,3 +54,4 @@ skip_meta {
    ];
 } 6;
 
+done_testing;

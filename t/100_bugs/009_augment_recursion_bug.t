@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
-
+use Test::More;
 
 
 {
@@ -47,3 +46,4 @@ is($baz->foo,
   'Foo::foo(Baz::foo and Foo::foo())',
   '... got the right value for 1 augmented subclass calling non-augmented subclass');
 
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 {
@@ -46,4 +46,4 @@ isa_ok($foo->bar, 'Bar');
 isa_ok($foo->bar->baz, 'Baz');
 is($foo->bar->baz->hello, 'World', '... this all worked fine');
 
-
+done_testing;

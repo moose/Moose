@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More;
 use Test::Exception;
-
 
 
 =pod
@@ -61,3 +60,4 @@ is($obj->_foo(), 1, "$class->foo is reader");
 
 dies_ok { make_class('ro', 'accessor', "Test::Class::AccessorRO"); } "Cant define attr with ro + accessor";
 
+done_testing;

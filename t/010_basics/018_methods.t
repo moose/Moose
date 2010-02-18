@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-
 use Test::More;
 
 use MetaTest;
@@ -47,3 +46,5 @@ isa_ok(
 
 is( $t2_am->name(), 'Test2',
     'associated_metaclass->name is Test2' );
+
+done_testing;

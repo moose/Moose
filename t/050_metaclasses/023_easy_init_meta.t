@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More;
 use Test::Moose qw(does_ok);
 
 {
@@ -27,6 +27,7 @@ use Test::Moose qw(does_ok);
 
     Moose::Exporter->setup_import_methods(
         metaclass_roles           => ['Foo::Trait::Class'],
+        role_metaclass_roles      => ['Foo::Trait::Class'],
         attribute_metaclass_roles => ['Foo::Trait::Attribute'],
         base_class_roles          => ['Foo::Role::Base'],
     );
@@ -93,13 +94,14 @@ use Test::Moose qw(does_ok);
     use Moose::Role ();
     use Moose::Exporter;
 
-    my ($import, $unimport, $init_meta) =
-        Moose::Exporter->build_import_methods(
-            also                      => 'Moose::Role',
-            metaclass_roles           => ['Foo::Trait::Class'],
-            attribute_metaclass_roles => ['Foo::Trait::Attribute'],
-            base_class_roles          => ['Foo::Role::Base'],
-            install                   => [qw(import unimport)],
+    my ( $import, $unimport, $init_meta )
+        = Moose::Exporter->build_import_methods(
+        also           => 'Moose::Role',
+        role_metaroles => {
+            role      => ['Foo::Trait::Class'],
+            attribute => ['Foo::Trait::Attribute'],
+        },
+        install => [qw(import unimport)],
         );
 
     sub init_meta {
@@ -118,3 +120,5 @@ use Test::Moose qw(does_ok);
     ::isa_ok(Foo2::Role->meta, 'Moose::Meta::Role');
     ::does_ok(Foo2::Role->meta, 'Foo::Trait::Class');
 }
+
+done_testing;

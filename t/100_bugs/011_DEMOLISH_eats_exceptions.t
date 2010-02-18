@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use FindBin;
 
-use Test::More tests => 144;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -149,5 +149,4 @@ sub check_em {
      }
 }
 
-1;
-
+done_testing;

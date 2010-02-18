@@ -5,12 +5,11 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 23;
+use Test::More;
 use Test::Exception;
 use Test::Moose;
 
 use MetaTest;
-
 
 {
     package My::Attribute::Trait;
@@ -120,3 +119,4 @@ skip_meta {
 can_ok($quux, 'additional_method');
 is(eval { $quux->additional_method }, 42, '... got the right value for additional_method');
 
+done_testing;

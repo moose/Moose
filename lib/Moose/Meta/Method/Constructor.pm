@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -199,7 +199,7 @@ sub _generate_slot_initializer {
 
     if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
         push @source => ('(exists $params->{\'' . $attr->init_arg . '\'}) ' .
-                        '|| ' . $self->_inline_throw_error('"Attribute (' . $attr->name . ') is required"') .';');
+                        '|| ' . $self->_inline_throw_error('"Attribute (' . quotemeta($attr->name) . ') is required"') .';');
     }
 
     if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
@@ -326,7 +326,7 @@ sub _generate_type_constraint_check {
     my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
     return (
         $self->_inline_throw_error('"Attribute (' # FIXME add 'dad'
-        . $attr->name
+        . quotemeta( $attr->name )
         . ') does not pass the type constraint because: " . '
         . $type_constraint_obj . '->get_message(' . $value_name . ')')
         . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'
@@ -372,13 +372,17 @@ L<Class::MOP::Class::Constructor> documentation as well.
 C<Moose::Meta::Method::Constructor> is a subclass of
 L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHORS
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

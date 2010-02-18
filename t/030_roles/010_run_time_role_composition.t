@@ -11,8 +11,7 @@ use Scalar::Util qw(blessed);
 
 use MetaTest;
 
-skip_all_meta 27;
-
+skip_all_meta 28;
 
 =pod
 
@@ -67,12 +66,12 @@ isa_ok($obj2, 'My::Class');
 }
 
 {
-    ok(!$obj2->does('Bark'), '... we do not do any roles yet');
+    ok(!$obj2->does('Sleeper'), '... we do not do any roles yet');
 
-    Bark->meta->apply($obj2);
+    Sleeper->meta->apply($obj2);
 
-    ok($obj2->does('Bark'), '... we now do the Bark role');
-    is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing');
+    ok($obj2->does('Sleeper'), '... we now do the Sleeper role');
+    isnt(blessed($obj), blessed($obj2), '... they DO NOT share the same anon-class/role thing');
 }
 
 {
@@ -87,7 +86,7 @@ isa_ok($obj2, 'My::Class');
 
     ok(!My::Class->does('Sleeper'), '... the class does not do the Sleeper role');
 
-    isnt(blessed($obj), blessed($obj2), '... they no longer share the same anon-class/role thing');
+    isnt(blessed($obj), blessed($obj2), '... they still don\'t share the same anon-class/role thing');
 
     isa_ok($obj, 'My::Class');
 
@@ -98,14 +97,22 @@ isa_ok($obj2, 'My::Class');
 }
 
 {
-    ok(!$obj2->does('Sleeper'), '... we do not do any roles yet');
+    ok(!$obj2->does('Bark'), '... we do not do Bark yet');
 
-    Sleeper->meta->apply($obj2);
+    Bark->meta->apply($obj2);
 
-    ok($obj2->does('Sleeper'), '... we now do the Bark role');
-    is(blessed($obj), blessed($obj2), '... they share the same anon-class/role thing again');
+    ok($obj2->does('Bark'), '... we now do the Bark role');
+    isnt(blessed($obj), blessed($obj2), '... they still don\'t share the same anon-class/role thing');
 }
 
+# test that anon classes are equivalent after role composition in the same order
+{
+    foreach ($obj, $obj2) {
+        $_ = My::Class->new;
+        Bark->meta->apply($_);
+        Sleeper->meta->apply($_);
+    }
+    is(blessed($obj), blessed($obj2), '... they now share the same anon-class/role thing');
+}
 
-
-
+done_testing;

@@ -11,8 +11,8 @@
   <license rdf:resource="http://usefulinc.com/doap/licenses/artistic"/>
   <repository>
     <GITRepository>
-      <location rdf:resource="gitmo@jules.scsys.co.uk:Moose.git"/>
-      <location rdf:resource="git://jules.scsys.co.uk/gitmo/moose.git"/>
+      <location rdf:resource="gitmo@git.moose.perl.org:Moose.git"/>
+      <location rdf:resource="git://git.moose.perl.org/Moose.git"/>
     </GITRepository>
   </repository>
   <maintainer>

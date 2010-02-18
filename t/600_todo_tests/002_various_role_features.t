@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More;
 use Test::Exception;
 
 sub req_or_has ($$) {
@@ -192,11 +192,7 @@ my $gorch = Gorch->meta;
 isa_ok( $gorch, "Moose::Meta::Role" );
 
 ok( $gorch->has_attribute("attr"), "has attribute 'attr'" );
-
-{
-    local $TODO = "role attribute isn't a meta attribute yet";
-    isa_ok( $gorch->get_attribute("attr"), "Moose::Meta::Attribute" );
-}
+isa_ok( $gorch->get_attribute("attr"), "Moose::Meta::Role::Attribute" );
 
 req_or_has($gorch, "gorch_method");
 ok( $gorch->has_method("gorch_method"), "has_method gorch_method" );
@@ -226,11 +222,7 @@ my $robot = Dancer::Robot->meta;
 isa_ok( $robot, "Moose::Meta::Role" );
 
 ok( $robot->has_attribute("twist"), "has attr 'twist'" );
-
-{
-    local $TODO = "role attribute isn't a meta attribute yet";
-    isa_ok( $robot->get_attribute("twist"), "Moose::Meta::Attribute" );
-}
+isa_ok( $robot->get_attribute("twist"), "Moose::Meta::Role::Attribute" );
 
 {
     req_or_has($robot, "twist");
@@ -240,6 +232,8 @@ ok( $robot->has_attribute("twist"), "has attr 'twist'" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method" );
     isa_ok( $robot->get_method("twist"), "Moose::Meta::Method::Accessor" );
 }
+
+done_testing;
 
 __END__
 

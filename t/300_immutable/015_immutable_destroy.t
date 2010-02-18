@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More;
 
 {
     package FooBar;
@@ -17,3 +17,5 @@ use Test::More tests => 1;
 my $f = FooBar->new( name => 'SUSAN' );
 
 is( $f->DESTROY, 'SUSAN', 'Did moose overload DESTROY?' );
+
+done_testing;

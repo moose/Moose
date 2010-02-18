@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -66,4 +66,4 @@ lives_ok {
     ok(!$t->check(1), '... validated it correctly');
 }
 
-
+done_testing;

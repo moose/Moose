@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More;
 
 my @called;
 
@@ -52,3 +52,4 @@ do {
 
 is_deeply([splice @called], ['Child::DEMOLISHALL', 'Class::DEMOLISHALL', 'Child::DEMOLISH', 'Class::DEMOLISH']);
 
+done_testing;

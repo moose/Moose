@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -71,3 +71,5 @@ ok(!$array_of_array_of_ints->check(
     my $param_type = $anon_type->type_parameter;
     isa_ok( $param_type, 'Moose::Meta::TypeConstraint::Class' );
 }
+
+done_testing;

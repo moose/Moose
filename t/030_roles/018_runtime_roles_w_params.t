@@ -5,11 +5,10 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 21;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
-
 
 {
     package Foo;
@@ -79,4 +78,4 @@ use MetaTest;
     } 4;
 }
 
-
+done_testing;

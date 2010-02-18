@@ -90,3 +90,5 @@ skip_all_meta 7;
         '... got the right list of methods'
     );
 }
+
+done_testing;

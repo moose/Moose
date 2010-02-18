@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 3;
+use Test::More;
 
 use MetaTest;
 
@@ -26,6 +26,4 @@ use MetaTest;
     can_ok($foo, 'get_foo');
 }
 
-
-
-
+done_testing;

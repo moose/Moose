@@ -1,6 +1,6 @@
 package Moose::Meta::Attribute::Native;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -116,6 +116,7 @@ Common numerical operations.
             div => 'div',
             mod => 'mod',
             abs => 'abs',
+            # ...
         }
     );
 
@@ -131,6 +132,7 @@ Common methods for string operations.
         handles   => {
             add_text     => 'append',
             replace_text => 'replace',
+            # ...
         }
     );
 
@@ -147,6 +149,7 @@ Methods for incrementing and decrementing a counter attribute.
             inc_counter   => 'inc',
             dec_counter   => 'dec',
             reset_counter => 'reset',
+            # ...
         }
     );
 
@@ -164,6 +167,7 @@ Common methods for boolean values.
             darken      => 'unset',
             flip_switch => 'toggle',
             is_dark     => 'not',
+            # ...
         }
     );
 
@@ -180,6 +184,7 @@ Common methods for hash references.
             set_option => 'set',
             get_option => 'get',
             has_option => 'exists',
+            # ...
         }
     );
 
@@ -188,14 +193,15 @@ Common methods for hash references.
 Common methods for array references.
 
     has 'queue' => (
-       traits     => ['Array'],
-       is         => 'ro',
-       isa        => 'ArrayRef[Str]',
-       default    => sub { [] },
-       handles    => {
-           add_item  => 'push',
-           next_item => 'shift',
-       }
+        traits    => ['Array'],
+        is        => 'ro',
+        isa       => 'ArrayRef[Str]',
+        default   => sub { [] },
+        handles   => {
+            add_item  => 'push',
+            next_item => 'shift',
+            # ...
+        }
     );
 
 =item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
@@ -203,22 +209,21 @@ Common methods for array references.
 Common methods for code references.
 
     has 'callback' => (
-       traits     => ['Code'],
-       is         => 'ro',
-       isa        => 'CodeRef',
-       default    => sub { sub { 'called' } },
-       handles    => {
-           call => 'execute',
-       }
+        traits    => ['Code'],
+        is        => 'ro',
+        isa       => 'CodeRef',
+        default   => sub { sub { 'called' } },
+        handles   => {
+            call => 'execute',
+            # ...
+        }
     );
 
 =back
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

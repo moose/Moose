@@ -28,3 +28,4 @@ lives_ok(
     'Create a new class with several roles'
 );
 
+done_testing;

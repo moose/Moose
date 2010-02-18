@@ -9,9 +9,7 @@ use Test::Exception;
 BEGIN {
     eval "use IO::String; use IO::File;";
     plan skip_all => "IO::String and IO::File are required for this test" if $@;
-    plan tests => 28;
 }
-
 
 
 {
@@ -158,5 +156,4 @@ BEGIN {
     is($email->raw_body, $fh, '... and it is the one we expected');
 }
 
-
-
+done_testing;

@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 54;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -42,28 +41,28 @@ Moose::Util::TypeConstraints->export_type_constraints_as_functions;
 
 ok( Undef(undef),   '... undef is a Undef');
 ok(!Defined(undef), '... undef is NOT a Defined');
-ok(!Int(undef),     '... undef is NOT a Int');
+ok(!Int(undef),     '... undef is NOT an Int');
 ok(!Number(undef),  '... undef is NOT a Number');
 ok(!Str(undef),     '... undef is NOT a Str');
 ok(!String(undef),  '... undef is NOT a String');
 
 ok(!Undef(5),  '... 5 is a NOT a Undef');
 ok(Defined(5), '... 5 is a Defined');
-ok(Int(5),     '... 5 is a Int');
+ok(Int(5),     '... 5 is an Int');
 ok(Number(5),  '... 5 is a Number');
 ok(Str(5),     '... 5 is a Str');
 ok(!String(5), '... 5 is NOT a String');
 
 ok(!Undef(0.5),  '... 0.5 is a NOT a Undef');
 ok(Defined(0.5), '... 0.5 is a Defined');
-ok(!Int(0.5),    '... 0.5 is NOT a Int');
+ok(!Int(0.5),    '... 0.5 is NOT an Int');
 ok(Number(0.5),  '... 0.5 is a Number');
 ok(Str(0.5),     '... 0.5 is a Str');
 ok(!String(0.5), '... 0.5 is NOT a String');
 
 ok(!Undef('Foo'),  '... "Foo" is NOT a Undef');
 ok(Defined('Foo'), '... "Foo" is a Defined');
-ok(!Int('Foo'),    '... "Foo" is NOT a Int');
+ok(!Int('Foo'),    '... "Foo" is NOT an Int');
 ok(!Number('Foo'), '... "Foo" is NOT a Number');
 ok(Str('Foo'),     '... "Foo" is a Str');
 ok(String('Foo'),  '... "Foo" is a String');
@@ -108,6 +107,4 @@ dies_ok { $foo->v_lazy_Number() } '... undef is NOT a Foo->Number';
 dies_ok { $foo->v_lazy_Str() } '... undef is NOT a Foo->Str';
 dies_ok { $foo->v_lazy_String() } '... undef is NOT a Foo->String';
 
-
-
-
+done_testing;

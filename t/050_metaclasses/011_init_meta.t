@@ -23,3 +23,5 @@ isa_ok( $meta, 'Moose::Meta::Class' );
 isa_ok( Foo->meta, 'Moose::Meta::Class' );
 
 is($meta, Foo->meta, '... our metas are the same');
+
+done_testing;

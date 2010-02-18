@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -31,3 +31,5 @@ lives_ok {
         ok($errmsg !~ /Validation failed for 'ChildConstraint'/, 'exception references failing parent constraint');
     };
 }
+
+done_testing;

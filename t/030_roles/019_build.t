@@ -9,7 +9,6 @@ use Test::More;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 8;
 }
 
 use MetaTest;
@@ -86,3 +85,4 @@ skip_meta {
  }
 } 3*2;
 
+done_testing;

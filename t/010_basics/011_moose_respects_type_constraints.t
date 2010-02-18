@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -58,5 +58,4 @@ dies_ok {
     $bar->foo(Foo->new);
 } '... checked the type constraint correctly';
 
-
-
+done_testing;

@@ -38,3 +38,5 @@ Class::MOP::remove_metaclass_by_name('MyClass');
 # help us prevent it happening in the future.
 lives_ok { $object->DESTROY }
 'can call DESTROY on an object without a metaclass object in the CMOP cache (immutable version)';
+
+done_testing;

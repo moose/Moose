@@ -91,3 +91,4 @@ dies_ok {
     die $@ if $@;
 } 'failed to use trait without required attr';
 
+done_testing;

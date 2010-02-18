@@ -158,3 +158,4 @@ is_deeply(
     [ 'bling', 'fling' ],
     '... got the right list of override method modifiers');
 
+done_testing;

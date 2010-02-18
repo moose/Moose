@@ -13,7 +13,7 @@ all_from 'lib/Moose.pm';
 license 'perl';
 
 requires 'Carp';
-requires 'Class::MOP'       => '0.94';
+requires 'Class::MOP'       => '0.98';
 requires 'Data::OptList'    => '0';
 requires 'List::MoreUtils'  => '0.12';
 requires 'Scalar::Util'     => '1.19';
@@ -28,6 +28,9 @@ test_requires 'Test::Exception' => '0.27';
 author_requires 'Test::Inline';
 author_requires 'File::Find::Rule';
 author_requires 'Module::Info';
+author_requires 'Test::Spelling';
+author_requires 'Test::Pod::Coverage';
+author_requires 'Test::NoTabs';
 
 if ( $Module::Install::AUTHOR || $ENV{IS_MAINTAINER} ) {
     system( $^X, 'author/extract-inline-tests' );
@@ -43,16 +46,21 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
-        'Fey::ORM'                  => '0.23',
-        'MooseX::AttributeHelpers'  => '0.21',
-        'MooseX::ClassAttribute'    => '0.09',
-        'MooseX::MethodAttributes'  => '0.15',
-        'MooseX::NonMoose'          => '0.05',
-        'MooseX::Params::Validate'  => '0.05',
-        'MooseX::Singleton'         => '0.19',
-        'MooseX::StrictConstructor' => '0.07',
-        'MooseX::Types'             => '0.19',
-        'namespace::autoclean'      => '0.08',
+        'Fey::ORM'                      => '0.23',
+        'Catalyst'                      => '5.80017',
+        'MooseX::Aliases'               => '0.07',
+        'MooseX::AttributeHelpers'      => '0.22',
+        'MooseX::Attribute::Prototype'  => '0.10',
+        'MooseX::ClassAttribute'        => '0.09',
+        'MooseX::MethodAttributes'      => '0.18',
+        'MooseX::NonMoose'              => '0.05',
+        'MooseX::Params::Validate'      => '0.05',
+        'MooseX::Role::Cmd'             => '0.06',
+        'MooseX::Role::WithOverloading' => '0.04',
+        'MooseX::Singleton'             => '0.19',
+        'MooseX::StrictConstructor'     => '0.07',
+        'MooseX::Types'                 => '0.19',
+        'namespace::autoclean'          => '0.08',
     );
 
     my $found = 0;

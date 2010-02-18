@@ -4,94 +4,129 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use List::MoreUtils qw( all );
-
-my @Classes = qw( constructor_class destructor_class error_class );
+use List::Util qw( first );
 
 sub apply_metaclass_roles {
-    my %options = @_;
+    goto &apply_metaroles;
+}
 
-    my $for = blessed $options{for_class}
-        ? $options{for_class}
-        : Class::MOP::class_of($options{for_class});
+sub apply_metaroles {
+    my %args = @_;
 
-    my %old_classes = map { $_ => $for->$_ }
-                      grep { $for->can($_) }
-                      @Classes;
+    _fixup_old_style_args(\%args);
+    Carp::cluck('applying') if $::D;
+    my $for
+        = blessed $args{for}
+        ? $args{for}
+        : Class::MOP::class_of( $args{for} );
 
-    my $meta = _make_new_metaclass( $for, \%options );
+    if ( $for->isa('Moose::Meta::Role') ) {
+        return _make_new_metaclass( $for, $args{role_metaroles}, 'role' );
+    }
+    else {
+        return _make_new_metaclass( $for, $args{class_metaroles}, 'class' );
+    }
+}
 
-    for my $c ( grep { $meta->can($_) } @Classes ) {
-        if ( $options{ $c . '_roles' } ) {
-            my $class = _make_new_class(
-                $meta->$c(),
-                $options{ $c . '_roles' }
-            );
+sub _fixup_old_style_args {
+    my $args = shift;
 
-            $meta->$c($class);
-        }
-        else {
-            $meta->$c( $old_classes{$c} );
-        }
+    return if $args->{class_metaroles} || $args->{roles_metaroles};
+
+    $args->{for} = delete $args->{for_class}
+        if exists $args->{for_class};
+
+    my @old_keys = qw(
+        attribute_metaclass_roles
+        method_metaclass_roles
+        wrapped_method_metaclass_roles
+        instance_metaclass_roles
+        constructor_class_roles
+        destructor_class_roles
+        error_class_roles
+
+        application_to_class_class_roles
+        application_to_role_class_roles
+        application_to_instance_class_roles
+        application_role_summation_class_roles
+    );
+
+    my $for
+        = blessed $args->{for}
+        ? $args->{for}
+        : Class::MOP::class_of( $args->{for} );
+
+    my $top_key;
+    if ( $for->isa('Moose::Meta::Class') ) {
+        $top_key = 'class_metaroles';
+
+        $args->{class_metaroles}{class} = delete $args->{metaclass_roles}
+            if exists $args->{metaclass_roles};
+    }
+    else {
+        $top_key = 'role_metaroles';
+
+        $args->{role_metaroles}{role} = delete $args->{metaclass_roles}
+            if exists $args->{metaclass_roles};
     }
 
-    return $meta;
+    for my $old_key (@old_keys) {
+        my ($new_key) = $old_key =~ /^(.+)_(?:class|metaclass)_roles$/;
+
+        $args->{$top_key}{$new_key} = delete $args->{$old_key}
+            if exists $args->{$old_key};
+    }
+
+    return;
 }
 
 sub _make_new_metaclass {
     my $for     = shift;
-    my $options = shift;
+    my $roles   = shift;
+    my $primary = shift;
 
-    return $for
-        unless grep { exists $options->{ $_ . '_roles' } }
-            qw(
-            metaclass
-            attribute_metaclass
-            method_metaclass
-            wrapped_method_metaclass
-            instance_metaclass
-            application_to_class_class
-            application_to_role_class
-            application_to_instance_class
-            application_role_summation_class
-    );
+    return $for unless keys %{$roles};
 
     my $new_metaclass
-        = _make_new_class( ref $for, $options->{metaclass_roles} );
+        = exists $roles->{$primary}
+        ? _make_new_class( ref $for, $roles->{$primary} )
+        : blessed $for;
 
-    # This could get called for a Moose::Meta::Role as well as a Moose::Meta::Class
-    my %classes = map {
-        $_ => _make_new_class( $for->$_(), $options->{ $_ . '_roles' } )
-        }
-        grep { $for->can($_) }
-        qw(
-        attribute_metaclass
-        method_metaclass
-        wrapped_method_metaclass
-        instance_metaclass
-        application_to_class_class
-        application_to_role_class
-        application_to_instance_class
-        application_role_summation_class
-    );
+    my %classes;
 
-    return $new_metaclass->reinitialize( $for, %classes );
+    for my $key ( grep { $_ ne $primary } keys %{$roles} ) {
+        my $attr = first {$_}
+            map { $for->meta->find_attribute_by_name($_) } (
+            $key . '_metaclass',
+            $key . '_class'
+        );
+
+        my $reader = $attr->get_read_method;
+
+        $classes{ $attr->init_arg }
+            = _make_new_class( $for->$reader(), $roles->{$key} );
+    }
+
+    my $new_meta = $new_metaclass->reinitialize( $for, %classes );
+
+    return $new_meta;
 }
 
 sub apply_base_class_roles {
-    my %options = @_;
+    my %args = @_;
 
-    my $for = $options{for_class};
+    my $for = $args{for} || $args{for_class};
 
     my $meta = Class::MOP::class_of($for);
 
     my $new_base = _make_new_class(
         $for,
-        $options{roles},
+        $args{roles},
         [ $meta->superclasses() ],
     );
 
@@ -143,22 +178,24 @@ Moose::Util::MetaRole - Apply roles to any metaclass, as well as the object base
 
   sub init_meta {
       shift;
-      my %options = @_;
+      my %args = @_;
 
-      Moose->init_meta(%options);
+      Moose->init_meta(%args);
 
-      Moose::Util::MetaRole::apply_metaclass_roles(
-          for_class               => $options{for_class},
-          metaclass_roles         => ['MyApp::Role::Meta::Class'],
-          constructor_class_roles => ['MyApp::Role::Meta::Method::Constructor'],
+      Moose::Util::MetaRole::apply_metaroles(
+          for             => $args{for_class},
+          class_metaroles => {
+              class => => ['MyApp::Role::Meta::Class'],
+              constructor => ['MyApp::Role::Meta::Method::Constructor'],
+          },
       );
 
       Moose::Util::MetaRole::apply_base_class_roles(
-          for_class => $options{for_class},
-          roles     => ['MyApp::Role::Object'],
+          for   => $args{for_class},
+          roles => ['MyApp::Role::Object'],
       );
 
-      return $options{for_class}->meta();
+      return $args{for_class}->meta();
   }
 
 =head1 DESCRIPTION
@@ -189,46 +226,89 @@ method for you, and make sure it is called when imported.
 
 This module provides two functions.
 
-=head2 apply_metaclass_roles( ... )
+=head2 apply_metaroles( ... )
 
-This function will apply roles to one or more metaclasses for the
-specified class. It accepts the following parameters:
+This function will apply roles to one or more metaclasses for the specified
+class. It will return a new metaclass object for the class or role passed in
+the "for" parameter.
+
+It accepts the following parameters:
 
 =over 4
 
-=item * for_class => $name
+=item * for => $name
 
-This specifies the class for which to alter the meta classes.
+This specifies the class or for which to alter the meta classes. This can be a
+package name, or an appropriate meta-object (a L<Moose::Meta::Class> or
+L<Moose::Meta::Role>).
 
-=item * metaclass_roles => \@roles
+=item * class_metaroles => \%roles
 
-=item * attribute_metaclass_roles => \@roles
+This is a hash reference specifying which metaroles will be applied to the
+class metaclass and its contained metaclasses and helper classes.
 
-=item * method_metaclass_roles => \@roles
+Each key should in turn point to an array reference of role names.
 
-=item * wrapped_method_metaclass_roles => \@roles
+It accepts the following keys:
 
-=item * instance_metaclass_roles => \@roles
+=over 8
 
-=item * constructor_class_roles => \@roles
+=item class
 
-=item * destructor_class_roles => \@roles
+=item attribute
 
-=item * application_to_class_class_roles => \@roles
+=item method
 
-=item * application_to_role_class_roles => \@roles
+=item wrapped_method
 
-=item * application_to_instance_class_roles => \@roles
+=item instance
 
-These parameter all specify one or more roles to be applied to the
-specified metaclass. You can pass any or all of these parameters at
-once.
+=item constructor
+
+=item destructor
+
+=item error
 
 =back
 
-=head2 apply_base_class_roles( for_class => $class, roles => \@roles )
+=item * role_metaroles => \%roles
+
+This is a hash reference specifying which metaroles will be applied to the
+role metaclass and its contained metaclasses and helper classes.
+
+It accepts the following keys:
+
+=over 8
+
+=item role
+
+=item attribute
+
+=item method
+
+=item required_method
+
+=item conflicting_method
+
+=item application_to_class
+
+=item application_to_role
+
+=item application_to_instance
+
+=item application_role_summation
+
+=back
+
+=back
+
+=head2 apply_base_class_roles( for => $class, roles => \@roles )
 
 This function will apply the specified roles to the object's base class.
+
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

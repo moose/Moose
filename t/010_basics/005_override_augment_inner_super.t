@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
-
+use Test::More;
 
 
 {
@@ -68,3 +67,5 @@ Confusing I know, but it is correct :)
 is($baz->bar,
     'Bar::bar -> Foo::bar(Baz::bar)',
     '... got the right value from mixed augment/override bar');
+
+done_testing;

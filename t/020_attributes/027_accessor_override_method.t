@@ -36,3 +36,5 @@ stderr_like(sub { $foo_meta->add_attribute(d => (clearer => 'clear_d')) },
             qr/^You are overwriting a locally defined method \(clear_d\) with an accessor/, 'clearer overriding gives proper warning');
 stderr_like(sub { $foo_meta->add_attribute(e => (is => 'rw')) },
             qr/^You are overwriting a locally defined method \(e\) with an accessor/, 'accessor overriding gives proper warning');
+
+done_testing;

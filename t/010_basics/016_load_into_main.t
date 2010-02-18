@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
 
 lives_ok {
@@ -15,3 +15,4 @@ isa_ok( main->meta, "Moose::Meta::Class" );
 isa_ok( main->new, "main");
 isa_ok( main->new, "Moose::Object" );
 
+done_testing;

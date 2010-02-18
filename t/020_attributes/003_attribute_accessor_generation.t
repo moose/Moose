@@ -3,11 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 57;
+use Test::More;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
-
 
 
 {
@@ -204,5 +203,4 @@ use Scalar::Util 'isweak';
     is_deeply( \%hash, { foo => 1, bar => 2 }, "list context");
 }
 
-
-
+done_testing;

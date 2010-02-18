@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Builder::Tester tests => 5;
+use Test::Builder::Tester;
 use Test::More;
 
 BEGIN {
@@ -36,3 +36,5 @@ $ret = with_immutable {
 } qw(Bar);
 test_test('with_immutable success');
 ok($ret, "all tests succeeded");
+
+done_testing;

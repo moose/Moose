@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
 
 my @phonograph;
@@ -44,3 +44,4 @@ is_deeply([splice @phonograph], ['quack']);
 $t->walk;
 is_deeply([splice @phonograph], ['footsteps']);
 
+done_testing;

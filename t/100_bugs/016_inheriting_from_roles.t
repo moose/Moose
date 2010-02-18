@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -21,3 +20,5 @@ use Test::Exception;
     } qr/You cannot inherit from a Moose Role \(My\:\:Role\)/,
     '... this croaks correctly';
 }
+
+done_testing;

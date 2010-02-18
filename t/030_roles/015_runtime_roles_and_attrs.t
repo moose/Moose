@@ -5,13 +5,11 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
 use MetaTest;
-
-
 
 {
     package Dog;
@@ -60,3 +58,5 @@ skip_meta {
 
    is($obj->fur, "dirty", "role attr initialized");
 } 6;
+
+done_testing;

@@ -127,3 +127,4 @@ ok(My::Test4->meta->does_role('Molecule::Organic'), '... My::Test4 meat does_rol
 ok(My::Test4->meta->excludes_role('Molecule::Inorganic'), '... My::Test4 meta excludes Molecule::Organic');
 ok(!My::Test4->does('Molecule::Inorganic'), '... My::Test4 does Molecule::Inorganic');
 
+done_testing;

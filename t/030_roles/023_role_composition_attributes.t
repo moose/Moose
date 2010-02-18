@@ -98,3 +98,4 @@ dies_ok {
     );
 } '... this fails as expected';
 
+done_testing;

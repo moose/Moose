@@ -7,7 +7,6 @@ use Test::More;
 BEGIN {
     eval "use Test::Output;";
     plan skip_all => "Test::Output is required for this test" if $@;
-    plan tests => 1;
 }
 
 {
@@ -36,3 +35,4 @@ BEGIN {
     );
 }
 
+done_testing;

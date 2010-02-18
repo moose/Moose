@@ -134,9 +134,9 @@ which ultimately rely on C<compare>.
       $self->less_than($other) || $self->equal_to($other);
   }
 
-Finally, we the C<Printable> role. This role exists solely to provide
-an interface. It has no methods, just a list of required methods. In
-this case, it just requires a C<to_string> method.
+Finally, we define the C<Printable> role. This role exists solely to
+provide an interface. It has no methods, just a list of required methods.
+In this case, it just requires a C<to_string> method.
 
 An interface role is useful because it defines both a method and a
 I<name>. We know that any class which does this role has a
@@ -201,7 +201,7 @@ Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

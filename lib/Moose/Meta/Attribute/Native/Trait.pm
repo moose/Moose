@@ -3,7 +3,7 @@ package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -33,9 +33,6 @@ has 'method_constructors' => (
         };
     },
 );
-
-has '+default'         => ( required => 1 );
-has '+type_constraint' => ( required => 1 );
 
 # methods called prior to instantiation
 
@@ -142,9 +139,7 @@ Moose::Meta::Attribute::Native::Trait - Base role for helpers
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 SEE ALSO
 

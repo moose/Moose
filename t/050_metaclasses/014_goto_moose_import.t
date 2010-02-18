@@ -86,3 +86,5 @@ ok( ! Bar->can('has'),
 ok( Bar->can('meta'),
     'Bar has a meta method' );
 isa_ok( Bar->meta(), 'Moose::Meta::Class' );
+
+done_testing;

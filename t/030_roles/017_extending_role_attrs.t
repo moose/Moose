@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More;
 use Test::Exception;
-
 
 
 =pod
@@ -173,3 +172,4 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
     } "or add new types to the union";
 }
 
+done_testing;

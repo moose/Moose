@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 
 {
     package Room;
@@ -40,3 +40,4 @@ $room->flip_switch;
 ok( !$room->is_lit, 'toggle is_lit back to 0 again using ->flip_switch' );
 ok( $room->is_dark, 'check if is_dark does the right thing' );
 
+done_testing;

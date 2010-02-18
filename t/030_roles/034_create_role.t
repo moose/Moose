@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More;
 use Moose ();
 
 my $role = Moose::Meta::Role->create(
@@ -30,3 +30,4 @@ ok(!$visored->is_worn, "method was consumed");
 
 ok(!$role->is_anon_role, "the role is not anonymous");
 
+done_testing;

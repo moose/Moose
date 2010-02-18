@@ -16,6 +16,73 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 0.95
+
+=over 4
+
+=item Moose::Util add_method_modifier behavior
+
+add_method_modifier (and subsequently the sugar functions Moose::before,
+Moose::after, and Moose::around) can now accept arrayrefs, with the same
+behavior as lists. Types other than arrayref and regexp result in an error.
+
+=back
+
+=head1 0.93_01 and 0.94
+
+=over 4
+
+=item Moose::Util::MetaRole API has changed
+
+The C<apply_metaclass_roles> function is now called C<apply_metaroles>. The
+way arguments are supplied has been changed to force you to distinguish
+between metaroles applied to L<Moose::Meta::Class> (and helpers) versus
+L<Moose::Meta::Role>.
+
+The old API still works, but will warn in a future release, and eventually be
+removed.
+
+=item Moose::Meta::Role has real attributes
+
+The attributes returned by L<Moose::Meta::Role> are now instances of the
+L<Moose::Meta::Role::Attribute> class, instead of bare hash references.
+
+=item "no Moose" now removes C<blessed> and C<confess>
+
+Moose is now smart enough to know exactly what it exported, even when it
+re-exports functions from other packages. When you unimport Moose, it will
+remove these functions from your namespace unless you I<also> imported them
+directly from their respective packages.
+
+If you have a C<no Moose> in your code I<before> you call C<blessed> or
+C<confess>, your code will break. You can either move the C<no Moose> call
+later in your code, or explicitly import the relevant functions from the
+packages that provide them.
+
+=item L<Moose::Exporter> is smarter about unimporting re-exports
+
+The change above comes from a general improvement to L<Moose::Exporter>. It
+will now unimport any function it exports, even if that function is a
+re-export from another package.
+
+=item Attributes in roles can no longer override class attributes with "+foo"
+
+Previously, this worked more or less accidentally, because role attributes
+weren't objects. This was never documented, but a few MooseX modules took
+advantage of this.
+
+=item The composition_class_roles attribute in L<Moose::Meta::Role> is now a method
+
+This was done to make it possible for roles to alter the the list of
+composition class roles by applying a method modifiers. Previously, this was
+an attribute and MooseX modules override it. Since that no longer works, this
+was made a method.
+
+This I<should> be an attribute, so this may switch back to being an attribute
+in the future if we can figure out how to make this work.
+
+=back
+
 =head1 0.93
 
 =over 4
@@ -23,6 +90,17 @@ send us a patch.
 =item Calling $object->new() is no longer deprecated
 
 We decided to undeprecate this. Now it just works.
+
+=item Both C<get_method_map> and C<get_attribute_map> is deprecated
+
+These metaclass methods were never meant to be public, and they are both now
+deprecated. The work around if you still need the functionality they provided
+is to iterate over the list of names manually.
+
+    my %fields = map { $_ => $meta->get_attribute($_) } $meta->get_attribute_list;
+
+This was actually a change in L<Class::MOP>, but this version of Moose
+requires a version of L<Class::MOP> that includes said change.
 
 =back
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 30;
+use Test::More;
 use Test::Exception;
 
 sub U {
@@ -154,10 +154,4 @@ sub Y {
     is($coll2->print, '1, 4, 9, 16, 25, 36, 49, 64, 81, 100', '... new collection is changed');
 }
 
-
-
-
-
-
-
-
+done_testing;

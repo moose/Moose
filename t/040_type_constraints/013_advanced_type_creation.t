@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -97,5 +97,4 @@ ok(!$array_of_array_of_array_of_ints->check(
     [[[ 1, 2, 3 ]], [[ qw/foo bar/ ]]]
 ), '... [[[ 1, 2, 3 ]], [[ qw/foo bar/ ]]] failed successfully');
 
-
-
+done_testing;

@@ -108,9 +108,9 @@ sub create_error {
     use Moose;
     extends 'Baz';
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => __PACKAGE__,
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => __PACKAGE__,
+        class_metaroles => { class => ['Role::Foo'] },
     );
 }
 
@@ -135,9 +135,9 @@ sub create_error {
 
     use Moose;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class         => __PACKAGE__,
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => __PACKAGE__,
+        class_metaroles => { class => ['Role::Foo'] },
     );
 }
 
@@ -150,9 +150,9 @@ ok( Foo::Sub->meta->error_class->isa('Moose::Error::Croak'),
 
     ::lives_ok { extends 'Foo::Sub' } 'error_class differs by role so incompat is handled';
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class         => __PACKAGE__,
-        error_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => __PACKAGE__,
+        class_metaroles => { error => ['Role::Foo'] },
     );
 }
 
@@ -160,3 +160,5 @@ ok( Foo::Sub::Sub->meta->error_class->meta->does_role('Role::Foo'),
     q{Foo::Sub::Sub's error_class does Role::Foo} );
 ok( Foo::Sub::Sub->meta->error_class->isa('Moose::Error::Croak'),
     q{Foo::Sub::Sub's error_class now subclasses Moose::Error::Croak} );
+
+done_testing;

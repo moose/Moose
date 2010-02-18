@@ -12,7 +12,6 @@ use MetaTest;
 
 skip_all_meta 16;
 
-
 {
     package Foo::Meta::Attribute;
     use Moose;
@@ -95,4 +94,4 @@ skip_all_meta 16;
     isa_ok($bar_attr, 'Moose::Meta::Attribute');
 }
 
-
+done_testing;

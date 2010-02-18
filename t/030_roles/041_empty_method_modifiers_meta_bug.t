@@ -32,3 +32,5 @@ for my $modifier_type (qw[ before around after ]) {
     is($@, '', "$get_func for no method mods does not die");
     is(scalar(@mms),0,'is an empty list');
 }
+
+done_testing;

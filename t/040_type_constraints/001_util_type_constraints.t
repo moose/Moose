@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 85;
+use Test::More;
 use Test::Exception;
 
 use Scalar::Util ();
@@ -225,3 +225,4 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
     ok( ! $subtype->check('Foo'), '... this is not a Natural');
 }
 
+done_testing;

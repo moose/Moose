@@ -12,7 +12,6 @@ use MetaTest;
 
 skip_all_meta 3;
 
-
 {
     package My::Custom::Meta::Attr;
     use Moose;
@@ -45,4 +44,4 @@ ok($c->meta->has_attribute('bling_bling'), '... got the attribute');
 
 isa_ok($c->meta->get_attribute('bling_bling'), 'My::Custom::Meta::Attr');
 
-
+done_testing;

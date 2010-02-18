@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More;
 use Test::Exception;
 
 {
@@ -62,3 +62,5 @@ is( $bar->buz, q{"'\\},
     'default value for buz attr' );
 is( $bar->faz, qq{\0},
     'default value for faz attr' );
+
+done_testing;

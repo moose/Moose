@@ -13,7 +13,6 @@ use MetaTest;
 skip_all_meta 4;
 
 
-
 =pod
 
 This test demonstrates that Moose will respect
@@ -60,3 +59,5 @@ isa_ok(Foo->meta, 'Foo::Meta');
         qr/^Bar already has a metaclass, but it does not inherit Moose::Meta::Class/,
         '... got the right error too');
 }
+
+done_testing;

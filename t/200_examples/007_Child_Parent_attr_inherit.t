@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More;
 
 =pod
 
@@ -134,3 +134,5 @@ is( $orphan->last_name, $parent2->last_name,
           '... parent2 and orphan child have the same last name ('
         . $parent2->last_name
         . ')' );
+
+done_testing;

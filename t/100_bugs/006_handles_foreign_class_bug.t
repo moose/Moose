@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More;
 use Test::Exception;
 
 {
@@ -108,4 +108,4 @@ isa_ok($blart, 'Blart');
 
 is($blart->a, 'Foo::a', '... got the right delgated value');
 
-
+done_testing;

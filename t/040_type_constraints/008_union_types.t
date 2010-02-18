@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -78,3 +78,4 @@ is($HashOrArray->validate(50),
 'Validation failed for \'ArrayRef\' failed with value 50 and Validation failed for \'HashRef\' failed with value 50 in (ArrayRef|HashRef)',
 '... (ArrayRef | HashRef) cannot accept Numbers');
 
+done_testing;

@@ -218,3 +218,4 @@ Class::MOP::remove_metaclass_by_name($_)
 Class::MOP::remove_metaclass_by_name($_)
     for qw( SubClassUseBase OtherSubClassUseBase );
 
+done_testing;

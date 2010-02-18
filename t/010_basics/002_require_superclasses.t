@@ -5,9 +5,8 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
-use Test::More tests => 4;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -45,3 +44,4 @@ use Test::Exception;
     'correct error when superclass could not be found';
 }
 
+done_testing;

@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -116,30 +116,36 @@ sub check_required_attributes {
 sub apply_attributes {
     my ($self, $c) = @_;
 
-    my @all_attributes = map {
-        my $role = $_;
-        map {
-            +{
-                name => $_,
-                attr => $role->get_attribute($_),
-            }
-        } $role->get_attribute_list
-    } @{$c->get_roles};
+    my @all_attributes;
+
+    for my $role ( @{ $c->get_roles } ) {
+        push @all_attributes,
+            map { $role->get_attribute($_) } $role->get_attribute_list;
+    }
 
     my %seen;
     foreach my $attr (@all_attributes) {
-        if (exists $seen{$attr->{name}}) {
-            if ( $seen{$attr->{name}} != $attr->{attr} ) {
-                require Moose;
-                Moose->throw_error("We have encountered an attribute conflict with '" . $attr->{name} . "' "
-                                   . "during composition. This is fatal error and cannot be disambiguated.")
-            }
+        my $name = $attr->name;
+
+        if ( exists $seen{$name} ) {
+            next if $seen{$name}->is_same_as($attr);
+
+            my $role1 = $seen{$name}->associated_role->name;
+            my $role2 = $attr->associated_role->name;
+
+            require Moose;
+            Moose->throw_error(
+                "We have encountered an attribute conflict with '$name' "
+                    . "during role composition. "
+                    . " This attribute is defined in both $role1 and $role2."
+                    . " This is fatal error and cannot be disambiguated." );
         }
-        $seen{$attr->{name}} = $attr->{attr};
+
+        $seen{$name} = $attr;
     }
 
     foreach my $attr (@all_attributes) {
-        $c->add_attribute($attr->{name}, $attr->{attr});
+        $c->add_attribute( $attr->clone );
     }
 }
 
@@ -300,9 +306,7 @@ bindings and 'disabling' the conflicting bindings
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -310,7 +314,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

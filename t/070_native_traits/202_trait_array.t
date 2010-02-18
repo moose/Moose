@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 68;
+use Test::More;
 use Test::Exception;
 use Test::Moose 'does_ok';
 
@@ -276,3 +276,4 @@ skip_meta {
        '... got the right container type' );
 } 3;
 
+done_testing;

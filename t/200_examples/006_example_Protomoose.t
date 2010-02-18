@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More;
 
 =pod
 
@@ -280,4 +280,4 @@ is($foo->bar, 300, '... still got the original value stored in the instance (inh
 is(Foo->bar, 100, '... still got the original value stored in the prototype (through the Foo class)');
 is(Bar->bar, 100, '... still got the original value stored in the prototype (through the Bar class)');
 
-
+done_testing;

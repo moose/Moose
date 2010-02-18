@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
 
 
@@ -47,5 +47,4 @@ lives_ok {
     $r->headers;
 } '... this coerces and passes the type constraint even with lazy';
 
-
-
+done_testing;

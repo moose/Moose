@@ -1,23 +1,147 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-   * Makefile.PL
-     - Use Module::Install extensions explicitly to avoid confusing errors
-       if they're not installed
-     - Use Module::Install::AuthorRequires to stop test extraction and
-       general failures if you don't have the author side dependencies
-       installed
+0.98 Wed, Feb 10, 2010
 
-    * Test::Moose
-      - Added a with_immutable test function, to run a block of tests with
-        and without certain classes being immutable. (doy)
+  [BUG FIXES]
 
-0.94
-    * Moose::Cookbook::Basics::Recipe4
-      - Grammar error [rt.cpan.org #51791] (Amir E. Aharoni)
-    * Moose::Util::TypeConstraints
-      - Changed Str constraint to accept magic lvalue strings like one gets
-        from substr et al, again. (sorear)
+  * An internals change in 0.97 broke role application to an instance in some
+    cases. The bug occurred when two different roles were applied to different
+    instances of the same class. (Rafael Kitover)
+
+
+0.97 Tue, Feb 9, 2010
+
+  [BUG FIXES]
+
+  * Calling ->reinitialize on a cached anonymous class destroyed the cache,
+    causing the class to go out of scope unexpectedly. This could easily
+    happen at a distance by applying a metarole to an anonymous class. (Dave
+    Rolsky).
+
+0.96 Sat, Feb 6, 2010
+
+  [NEW FEATURES]
+
+  * ScalarRef is now a parameterized type. You can now specify a type
+    constraint for whatever the reference points to. (Closes RT#50857)
+    (Michael G. Schwern, Florian Ragwitz)
+
+  [BUG FIXES]
+
+  * ScalarRef now accepts references to other references. (Closes RT#50934)
+    (Michael G. Schwern)
+
+0.95 Thu, Feb 4, 2010
+
+  [NEW FEATURES]
+
+  * Moose::Meta::Attribute::Native::Trait::Code now provides execute_method as
+    a delegation option. This allows the code reference to be called as a
+    method on the object. (Florian Ragwitz)
+
+  [ENHANCEMENTS]
+
+  * Moose::Object::does no longer checks the entire inheritance tree, since
+    Moose::Meta::Class::does_role already does this. (doy)
+
+  * Moose::Util::add_method_modifier (and subsequently the sugar functions
+    Moose::before, Moose::after, and Moose::around) can now accept arrayrefs,
+    with the same behavior as lists. Types other than arrayref and regexp
+    result in an error.  (Dylan Hardison)
+
+0.94 Mon, Jan 18, 2010
+
+  [API CHANGES]
+
+  * Please see the changes listed for 0.93_01 and Moose::Manual::Delta.
+
+  [ENHANCEMENTS]
+
+  * Improved support for anonymous roles by changing various APIs to take
+    Moose::Meta::Role objects as well as role names. This included
+
+  - Moose::Meta::Class->does_role
+  - Moose::Meta::Role->does_role
+  - Moose::Util::does_role
+  - Moose::Util::apply_all_roles
+  - Moose::Util::ensure_all_roles
+  - Moose::Util::search_class_by_role
+
+  Requested by Shawn Moore. Addresses RT #51143 (and then some). (Dave Rolsky)
+
+  [BUG FIXES]
+
+  * Fix handling of non-alphanumeric attributes names like '@foo'. This should
+    work as long as the accessor method names are explicitly set to valid Perl
+    method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
+
+
+0.93_03 Tue, Jan 5, 2010
+
+  [BUG FIXES]
+
+  * Portability fixes to our XS code so we compile with 5.8.8 and Visual
+    C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
+
+
+0.93_02 Tue, Jan 5, 2010
+
+ [BUG FIXES]
+
+  * Depend on Class::MOP 0.97_01 so we can get useful results from CPAN
+    testers. (Dave Rolsky)
+
+
+0.93_01 Mon, Jan 4, 2010
+
+  [API CHANGES]
+
+  See Moose::Manual::Delta for more details on backwards compatiblity issues.
+
+  * Role attributes are now objects of the Moose::Meta::Role::Attribute
+    class. (Dave Rolsky).
+
+  * There were major changes to how metaroles are applied. We now distinguish
+    between metaroles for classes vs those for roles. See the
+    Moose::Util::MetaRole docs for details. (Dave Rolsky)
+
+  * The old MetaRole API has been deprecated, but will continue to
+    work. However, if you are applying an attribute metaclass role, this may
+    break because of the fact that roles now have an attribute metaclass
+    too. (Dave Rolsky)
+
+  * Moose::Util::MetaRole::apply_metaclass_roles is now called
+    apply_metaroles. The old name is deprecated. Dave Rolsky>
+
+  * The unimport subs created by Moose::Exporter now clean up re-exported
+    functions like blessed and confess, unless the caller imported them from
+    somewhere else too. See Moose::Manua::Delta for backcompat details. (rafl)
+
+  [ENHANCEMENTS AND BUG FIXES]
+
+  * Changed the Str constraint to accept magic lvalue strings like one gets from
+    substr et al, again. (sorear)
+
+  * Sped up the type constraint parsing regex. (Sam Vilain)
+
+  * The Moose::Cookbook::Extending::Recipe2 recipe was broken. Fix suggested by
+    jrey.
+
+  * Added Moose::Util::TypeConstraints exports when using oose.pm to allow
+    easier testing of TypeConstraints from the command line. (perigrin)
+
+  * Added a with_immutable test function to Test::Moose, to run a block of tests
+    with and without certain classes being immutable. (doy)
+
+  * We now use Module::Install extensions explicitly to avoid confusing errors
+    if they're not installed. We use Module::Install::AuthorRequires to stop
+    test extraction and general failures if you don't have the author side
+    dependencies installed.
+
+  * Fixed a grammar error in Moose::Cookbook::Basics::Recipe4. rt.cpan.org
+    #51791. (Amir E. Aharoni)
+
 
 0.93 Thu, Nov 19, 2009
     * Moose::Object

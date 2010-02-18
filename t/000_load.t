@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 
-package Foo;
+{
+    package Foo;
 
-# Moose will issue a warning if we try to load it from the main
-# package.
-::use_ok('Moose');
+    # Moose will issue a warning if we try to load it from the main
+    # package.
+    ::use_ok('Moose');
+}
 
-
+done_testing;

@@ -11,6 +11,7 @@ for (<DATA>) {
 }
 
 add_stopwords(@stopwords);
+local $ENV{LC_ALL} = 'C';
 set_spell_cmd('aspell list -l en');
 all_pod_files_spelling_ok;
 
@@ -102,6 +103,7 @@ metadata
 MetaObject
 metaprogrammer
 metarole
+metaroles
 metatraits
 mixins
 MooseX
@@ -140,6 +142,7 @@ GitHub
 hashrefs
 hotspots
 immutabilize
+immutabilizes
 immutabilized
 inline
 inlines
@@ -190,6 +193,7 @@ TODO
 unblessed
 unexport
 UNIMPORTING
+unimporting
 Unported
 unsets
 unsettable

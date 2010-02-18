@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 6;
+use Test::More;
 use Test::Exception;
 
 use MetaTest;
@@ -14,7 +14,6 @@ use MetaTest;
 BEGIN {
    @INC = grep { $_ ne 't/lib' } @INC;
 };
-
 
 
 =pod
@@ -58,3 +57,4 @@ isa_ok($baz, 'Baz');
 isa_ok($baz, 'Foo');
 isa_ok($baz, 'Moose::Object');
 
+done_testing;

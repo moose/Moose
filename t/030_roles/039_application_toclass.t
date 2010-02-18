@@ -80,3 +80,4 @@ is_deeply($excludes->get_method_exclusions,  ['foo']);
 is_deeply($aliases->get_method_exclusions,   []);
 is_deeply($overrides->get_method_exclusions, []);
 
+done_testing;

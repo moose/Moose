@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -96,4 +95,4 @@ dies_ok {
     Bar->new(baz => {})
 } '... didnt create a new Bar with baz as a HASH ref';
 
-
+done_testing;

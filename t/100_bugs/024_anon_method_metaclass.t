@@ -53,3 +53,5 @@ for ( 1, 2 ) {
 
     undef $method_meta;
 }
+
+done_testing;

@@ -2,7 +2,7 @@ package Moose::Meta::Attribute::Native::Trait::Code;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Code;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -26,7 +26,7 @@ no Moose::Role;
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait::Code
+Moose::Meta::Attribute::Native::Trait::Code - Helper trait for Code attributes
 
 =head1 SYNOPSIS
 
@@ -59,6 +59,10 @@ This provides operations on coderef attributes.
 
 Calls the coderef with the given args.
 
+=item B<execute_method(@args)>
+
+Calls the coderef with the the instance as invocant and given args.
+
 =back
 
 =head1 METHODS
@@ -75,9 +79,7 @@ Calls the coderef with the given args.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

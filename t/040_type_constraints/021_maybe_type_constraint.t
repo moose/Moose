@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More;
 use Test::Exception;
 
 use Moose::Util::TypeConstraints;
@@ -131,3 +131,5 @@ ok !$Maybe_Int->check("a")
 throws_ok sub { $obj->Maybe_Int("a") },
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("a")';
+
+done_testing;

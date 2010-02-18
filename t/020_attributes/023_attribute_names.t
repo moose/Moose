@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More;
 use Test::Exception;
 
 my $exception_regex = qr/You must provide a name for the attribute/;
@@ -56,3 +56,4 @@ my $exception_regex = qr/You must provide a name for the attribute/;
     } 'has 0; works now';
 }
 
+done_testing;

@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
-
-
+use Test::More;
 
 =pod
 
@@ -28,3 +26,5 @@ a metaclass initialized for it correctly.
 my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 isa_ok($bar, 'Foo');
+
+done_testing;

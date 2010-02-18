@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 28;
+use Test::More;
 
 {
     package Subject;
@@ -120,3 +120,5 @@ is( $count->count, -1, 'Negative numbers' );
 $count->inc_counter;
 
 is( $count->count, 0, 'Back to zero' );
+
+done_testing;

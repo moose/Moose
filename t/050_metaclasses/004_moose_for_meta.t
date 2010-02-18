@@ -13,7 +13,6 @@ use MetaTest;
 skip_all_meta 16;
 
 
-
 =pod
 
 This test demonstrates the ability to extend
@@ -83,3 +82,4 @@ is_deeply(
     ok($attr->has_accessor, '... the attribute does have an accessor (as expected)');
 }
 
+done_testing;

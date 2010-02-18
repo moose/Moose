@@ -10,7 +10,6 @@ use Test::Exception;
 
 use MetaTest;
 
-
 {
     package My::Role;
     use Moose::Role;

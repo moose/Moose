@@ -17,7 +17,7 @@ use warnings;
     use base qw/SubClassUseBase/;
 }
 
-use Test::More tests => 2;
+use Test::More;
 use Moose::Util qw/find_meta does_role/;
 
 my $subsubclass_meta = Moose->init_meta( for_class => 'SubSubClassUseBase' );
@@ -26,3 +26,5 @@ ok does_role($subsubclass_meta, 'My::Role'),
 my $subclass_meta = find_meta('SubClassUseBase');
 ok does_role($subclass_meta, 'My::Role'),
     'SubClass metaclass does role from parent metaclass';
+
+done_testing;

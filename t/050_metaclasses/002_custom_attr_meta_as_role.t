@@ -24,3 +24,5 @@ lives_ok {
     extends 'Moose::Meta::Attribute';
     with 'MooseX::Attribute::Test';
 } 'custom attribute metaclass extending role is okay';
+
+done_testing;

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 
 =pod
 
@@ -28,5 +28,9 @@ be well from now on.
 
 { package Object::Test; }
 
-package Foo;
-::use_ok('Moose');
+{
+    package Foo;
+    ::use_ok('Moose');
+}
+
+done_testing;

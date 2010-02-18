@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 our @demolished;
 package Foo;
@@ -49,3 +49,5 @@ is_deeply(\@demolished, ['Foo::Sub', 'Foo'], "Foo::Sub demolished properly");
 is_deeply(\@demolished, ['Foo::Sub::Sub', 'Foo::Sub', 'Foo'],
           "Foo::Sub::Sub demolished properly");
 @demolished = ();
+
+done_testing;

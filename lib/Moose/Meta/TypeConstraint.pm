@@ -13,7 +13,7 @@ use Sub::Name qw(subname);
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -311,7 +311,7 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 =head1 DESCRIPTION
 
 This class represents a single type constraint. Moose's built-in type
-constraints, as well as constraints you define, are all store in a
+constraints, as well as constraints you define, are all stored in a
 L<Moose::Meta::TypeConstraint::Registry> object as objects of this
 class.
 
@@ -466,9 +466,7 @@ behavior and change how child types are created.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -476,7 +474,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

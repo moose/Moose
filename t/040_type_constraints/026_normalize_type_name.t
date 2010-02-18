@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 37;
+use Test::More;
 use Test::Exception;
 
 BEGIN {
@@ -149,3 +149,5 @@ is $union1->name, $union2->name, 'names match';
 is $union1->name, $union3->name, 'names match';
 
 is $union2->name, $union3->name, 'names match';
+
+done_testing;

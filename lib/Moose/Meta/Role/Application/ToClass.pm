@@ -7,7 +7,7 @@ use metaclass;
 use Moose::Util  'english_list';
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -129,6 +129,8 @@ sub check_required_attributes {
 
 sub apply_attributes {
     my ($self, $role, $class) = @_;
+    my $attr_metaclass = $class->attribute_metaclass;
+
     foreach my $attribute_name ($role->get_attribute_list) {
         # it if it has one already
         if ($class->has_attribute($attribute_name) &&
@@ -138,8 +140,7 @@ sub apply_attributes {
         }
         else {
             $class->add_attribute(
-                $attribute_name,
-                $role->get_attribute($attribute_name)
+                $role->get_attribute($attribute_name)->attribute_for_class($attr_metaclass)
             );
         }
     }
@@ -258,9 +259,7 @@ Moose::Meta::Role::Application::ToClass - Compose a role into a class
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 
@@ -268,7 +267,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

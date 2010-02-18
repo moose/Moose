@@ -237,7 +237,7 @@ F<t/000_recipes/basics/010_genes.t>.
 
 =head1 NEXT STEPS
 
-Has this been a real project we'd probably want to:
+Had this been a real project we'd probably want:
 
 =over 4
 

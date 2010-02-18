@@ -224,3 +224,5 @@ lives_ok {
     is( $instance->an_attr, 'value', 'Can get value' );
 }
 'Can create instance and access attributes';
+
+done_testing;

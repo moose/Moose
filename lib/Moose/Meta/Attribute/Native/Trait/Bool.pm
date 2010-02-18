@@ -2,7 +2,7 @@ package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
 use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
-our $VERSION = '0.93';
+our $VERSION = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -10,9 +10,6 @@ with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_is  { 'rw' }
 sub _helper_type { 'Bool' }
-
-# NOTE: we don't use the method provider for this module since many of
-# the names of the provided methods would conflict with keywords - SL
 
 has 'method_provider' => (
     is        => 'ro',
@@ -101,9 +98,7 @@ Equivalent of 'not C<$value>'.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

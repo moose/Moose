@@ -5,7 +5,7 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -33,6 +33,10 @@ Moose::Meta::Class::Immutable::Trait - Implements immutability for metaclass obj
 
 This class makes some Moose-specific metaclass methods immutable. This
 is deep guts.
+
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHOR
 

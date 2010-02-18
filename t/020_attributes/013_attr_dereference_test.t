@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -79,3 +78,5 @@ use Test::Exception;
 
     is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], '... auto-dereffed correctly';
 }
+
+done_testing;

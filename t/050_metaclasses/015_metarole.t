@@ -39,9 +39,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => My::Class->meta,
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => My::Class->meta,
+        class_metaroles => { class => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->meta()->does_role('Role::Foo'),
@@ -51,9 +51,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class',
-        attribute_metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { attribute => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
@@ -67,9 +67,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class              => 'My::Class',
-        method_metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { method => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
@@ -85,9 +85,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                      => 'My::Class',
-        wrapped_method_metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { wrapped_method => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->wrapped_method_metaclass()->meta()->does_role('Role::Foo'),
@@ -105,9 +105,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class              => 'My::Class',
-        instance_metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { instance => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
@@ -124,9 +124,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class               => 'My::Class',
-        constructor_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { constructor => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->constructor_class()->meta()->does_role('Role::Foo'),
@@ -146,9 +146,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class              => 'My::Class',
-        destructor_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class',
+        class_metaroles => { destructor => ['Role::Foo'] },
     );
 
     ok( My::Class->meta()->destructor_class()->meta()->does_role('Role::Foo'),
@@ -170,9 +170,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                        => 'My::Role',
-        application_to_class_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for            => 'My::Role',
+        role_metaroles => { application_to_class => ['Role::Foo'] },
     );
 
     ok( My::Role->meta->application_to_class_class->meta->does_role('Role::Foo'),
@@ -183,9 +183,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                        => 'My::Role',
-        application_to_role_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for            => 'My::Role',
+        role_metaroles => { application_to_role => ['Role::Foo'] },
     );
 
     ok( My::Role->meta->application_to_role_class->meta->does_role('Role::Foo'),
@@ -198,9 +198,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                           => 'My::Role',
-        application_to_instance_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for            => 'My::Role',
+        role_metaroles => { application_to_instance => ['Role::Foo'] },
     );
 
     ok( My::Role->meta->application_to_instance_class->meta->does_role('Role::Foo'),
@@ -216,8 +216,8 @@ skip_all_meta 91;
 
 {
     Moose::Util::MetaRole::apply_base_class_roles(
-        for_class => 'My::Class',
-        roles     => ['Role::Foo'],
+        for   => 'My::Class',
+        roles => ['Role::Foo'],
     );
 
     ok( My::Class->meta()->does_role('Role::Foo'),
@@ -233,14 +233,16 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class2',
-        metaclass_roles           => ['Role::Foo'],
-        attribute_metaclass_roles => ['Role::Foo'],
-        method_metaclass_roles    => ['Role::Foo'],
-        instance_metaclass_roles  => ['Role::Foo'],
-        constructor_class_roles   => ['Role::Foo'],
-        destructor_class_roles    => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class2',
+        class_metaroles => {
+            class       => ['Role::Foo'],
+            attribute   => ['Role::Foo'],
+            method      => ['Role::Foo'],
+            instance    => ['Role::Foo'],
+            constructor => ['Role::Foo'],
+            destructor  => ['Role::Foo'],
+        },
     );
 
     ok( My::Class2->meta()->meta()->does_role('Role::Foo'),
@@ -300,9 +302,9 @@ skip_all_meta 91;
 
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class3',
-        metaclass_roles           => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class3',
+        class_metaroles => { class => ['Role::Foo'] },
     );
 
     ok( My::Class3->meta()->meta()->does_role('Role::Foo'),
@@ -310,7 +312,7 @@ skip_all_meta 91;
     is( My::Class3->meta()->foo(), 10,
         '... and call foo() on that meta object' );
     ok( ( grep { $_ eq 'My::Meta::Class' } My::Class3->meta()->meta()->superclasses() ),
-        'apply_metaclass_roles() does not interfere with metaclass set via Moose->init_meta()' );
+        'apply_metaroles() does not interfere with metaclass set via Moose->init_meta()' );
 }
 
 {
@@ -325,17 +327,17 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class4',
-        metaclass_roles           => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class4',
+        class_metaroles => { class => ['Role::Foo'] },
     );
 
     ok( My::Class4->meta()->meta()->does_role('Role::Foo'),
         'apply Role::Foo to My::Class4->meta()' );
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class4',
-        metaclass_roles           => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class4',
+        class_metaroles => { class => ['Role::Bar'] },
     );
 
     ok( My::Class4->meta()->meta()->does_role('Role::Bar'),
@@ -367,9 +369,9 @@ skip_all_meta 91;
 }
 
 {
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class5',
-        metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class5',
+        class_metaroles => { class => ['Role::Bar'] },
     );
 
     ok( My::Class5->meta()->meta()->does_role('Role::Bar'),
@@ -382,9 +384,9 @@ skip_all_meta 91;
     package My::Class6;
     use Moose;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class6',
-        metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class6',
+        class_metaroles => { class => ['Role::Bar'] },
     );
 
     extends 'My::Class';
@@ -407,12 +409,12 @@ skip_all_meta 91;
     use Moose;
 
     # In real usage this would go in a BEGIN block so it happened
-    # before apply_metaclass_roles was called by an extension.
+    # before apply_metaroles was called by an extension.
     extends 'My::Class';
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class7',
-        metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class7',
+        class_metaroles => { class => ['Role::Bar'] },
     );
 }
 
@@ -427,10 +429,12 @@ skip_all_meta 91;
     package My::Class8;
     use Moose;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class8',
-        metaclass_roles           => ['Role::Bar'],
-        attribute_metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class8',
+        class_metaroles => {
+            class     => ['Role::Bar'],
+            attribute => ['Role::Bar'],
+        },
     );
 
     extends 'My::Class';
@@ -452,9 +456,9 @@ skip_all_meta 91;
     package My::Class9;
     use Moose;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class                 => 'My::Class9',
-        attribute_metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class9',
+        class_metaroles => { attribute => ['Role::Bar'] },
     );
 
     extends 'My::Class';
@@ -483,9 +487,9 @@ skip_all_meta 91;
     use Moose;
     extends 'Moose::Meta::Class';
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Meta::Class2',
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Meta::Class2',
+        class_metaroles => { class => ['Role::Foo'] },
     );
 }
 
@@ -517,9 +521,9 @@ skip_all_meta 91;
     package My::Class10;
     My::Meta2->import;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class10',
-        metaclass_roles => ['Role::Bar'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class10',
+        class_metaroles => { class => ['Role::Bar'] },
     );
 }
 
@@ -547,9 +551,9 @@ skip_all_meta 91;
 
     __PACKAGE__->meta->constructor_class('My::Constructor');
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class       => 'My::Class11',
-        metaclass_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'My::Class11',
+        class_metaroles => { class => ['Role::Foo'] },
     );
 }
 
@@ -564,14 +568,14 @@ skip_all_meta 91;
     package ExportsMoose;
 
     Moose::Exporter->setup_import_methods(
-        also        => 'Moose',
+        also => 'Moose',
     );
 
     sub init_meta {
         shift;
         my %p = @_;
         Moose->init_meta(%p);
-        return Moose::Util::MetaRole::apply_metaclass_roles(
+        return Moose::Util::MetaRole::apply_metaroles(
             for_class       => $p{for_class},
             # Causes us to recurse through init_meta, as we have to
             # load MyMetaclassRole from disk.
@@ -590,23 +594,27 @@ lives_ok {
 
     use Moose::Role;
 }
+
 {
     package Foo::Role;
 
     Moose::Exporter->setup_import_methods(
-        also        => 'Moose::Role',
+        also => 'Moose::Role',
     );
 
     sub init_meta {
         shift;
         my %p = @_;
+
         Moose::Role->init_meta(%p);
-        return Moose::Util::MetaRole::apply_metaclass_roles(
-            for_class              => $p{for_class},
-            method_metaclass_roles => [ 'Foo::Meta::Role', ],
+
+        return Moose::Util::MetaRole::apply_metaroles(
+            for            => $p{for_class},
+            role_metaroles => { method => ['Foo::Meta::Role'] },
         );
     }
 }
+
 {
     package Role::Baz;
 
@@ -614,6 +622,7 @@ lives_ok {
 
     sub bla {}
 }
+
 {
     package My::Class12;
 
@@ -621,11 +630,13 @@ lives_ok {
 
     with( 'Role::Baz' );
 }
+
 {
     ok(
         My::Class12->meta->does_role( 'Role::Baz' ),
         'role applied'
     );
+
     my $method = My::Class12->meta->get_method( 'bla' );
     ok(
         $method->meta->does_role( 'Foo::Meta::Role' ),
@@ -637,9 +648,9 @@ lives_ok {
     package Parent;
     use Moose;
 
-    Moose::Util::MetaRole::apply_metaclass_roles(
-        for_class               => __PACKAGE__,
-        constructor_class_roles => ['Role::Foo'],
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => __PACKAGE__,
+        class_metaroles => { constructor => ['Role::Foo'] },
     );
 }
 
@@ -669,3 +680,5 @@ TODO:
         );
     }
 }
+
+done_testing;

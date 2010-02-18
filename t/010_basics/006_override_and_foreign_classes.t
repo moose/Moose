@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
-
+use Test::More;
 
 
 =pod
@@ -71,3 +70,5 @@ isa_ok($foo, 'Foo');
 is($foo->foo(), 'Foo::foo', '... got the right value from &foo');
 is($foo->bar(), 'Foo::bar', '... got the right value from &bar');
 is($foo->baz(), 'Foo::baz', '... got the right value from &baz');
+
+done_testing;

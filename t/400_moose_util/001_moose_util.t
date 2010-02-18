@@ -3,8 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More;
 
 BEGIN {
     use_ok('Moose::Util');
 }
+
+done_testing;

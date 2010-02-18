@@ -3,9 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More;
 use Test::Exception;
-
 
 
 {
@@ -115,13 +114,4 @@ $rsi->get_next_record;
 is($rsi->first_name, 'Jim', '... got the right first name');
 is($rsi->last_name, 'Johnson', '... got the right last name');
 
-
-
-
-
-
-
-
-
-
-
+done_testing;

@@ -27,3 +27,5 @@ TODO:
     }
     'Class is created successfully';
 }
+
+done_testing;

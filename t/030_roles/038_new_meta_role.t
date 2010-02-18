@@ -23,3 +23,4 @@ do {
 
 is(My::Role->meta->meta->name, 'My::Meta::Role');
 
+done_testing;

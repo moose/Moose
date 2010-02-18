@@ -3,11 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More;
 use Test::Exception;
 
 use Scalar::Util 'isweak';
-
 
 
 {
@@ -117,5 +116,4 @@ use Scalar::Util 'isweak';
     ok(isweak($foo->{foo_weak}), '... it is a weak reference');
 }
 
-
-
+done_testing;

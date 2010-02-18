@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -259,6 +259,7 @@ $_->make_immutable(
     Moose::Meta::Method::Augmented
 
     Moose::Meta::Role
+    Moose::Meta::Role::Attribute
     Moose::Meta::Role::Method
     Moose::Meta::Role::Method::Required
     Moose::Meta::Role::Method::Conflicting
@@ -270,6 +271,11 @@ $_->make_immutable(
     Moose::Meta::Role::Application::ToClass
     Moose::Meta::Role::Application::ToRole
     Moose::Meta::Role::Application::ToInstance
+);
+
+Moose::Meta::Mixin::AttributeCore->meta->make_immutable(
+    inline_constructor => 0,
+    constructor_name   => undef,
 );
 
 1;
@@ -1104,6 +1110,9 @@ exception.
 Please report any bugs to C<bug-moose@rt.cpan.org>, or through the web
 interface at L<http://rt.cpan.org>.
 
+You can also discuss feature requests or possible bugs on the Moose mailing
+list (moose@perl.org) or on IRC at L<irc://irc.perl.org/#moose>.
+
 =head1 FEATURE REQUESTS
 
 We are very strict about what features we add to the Moose core, especially
@@ -1133,19 +1142,19 @@ but the community as well.
 
 Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
 
+Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
+
 Yuval (nothingmuch) Kogman
 
 Shawn (sartak) Moore E<lt>sartak@bestpractical.comE<gt>
-
-Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
-
-Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
 
 Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
 
 Chris (perigrin) Prather
 
 Florian Ragwitz E<lt>rafl@debian.orgE<gt>
+
+Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head2 OTHER CONTRIBUTORS
 
@@ -1191,7 +1200,7 @@ Dylan Hardison (doc fixes)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 

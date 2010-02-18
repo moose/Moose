@@ -19,7 +19,7 @@ sub DEMOLISH {};
 
 
 package main;
-use Test::More tests => 2;
+use Test::More;
 
 my $m = DemolishAll::WithDemolish->new;
 undef $m;
@@ -29,4 +29,4 @@ $m = DemolishAll::WithoutDemolish->new;
 undef $m;
 is ( $Role::DemolishAll::ok, 1, 'DemolishAll wo/ explicit DEMOLISH sub' );
 
-1;
+done_testing;

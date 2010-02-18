@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 41;
+use Test::More;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
@@ -103,3 +103,5 @@ ok(!Moose::Util::TypeConstraints::_detect_type_constraint_union($_),
         '... this correctly split the union (' . $_ . ')'
     ) for keys %split_tests;
 }
+
+done_testing;

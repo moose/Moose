@@ -5,13 +5,11 @@ use warnings;
 
 use lib 't/lib';
 
-use Test::More tests => 7;
+use Test::More;
 use Test::Exception;
 use Scalar::Util 'blessed';
 
 use MetaTest;
-
-
 
 {
     package Dog;
@@ -59,3 +57,5 @@ skip_meta {
        $foo->dog($bar)
    } '... and setting the accessor is okay';
 } 3;
+
+done_testing;

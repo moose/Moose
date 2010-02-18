@@ -8,7 +8,7 @@ use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny ();
 
-our $VERSION   = '0.93';
+our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
@@ -177,13 +177,17 @@ of its parents defines a C<DEMOLISH> method, it needs a destructor.
 
 =back
 
+=head1 BUGS
+
+See L<Moose/BUGS> for details on reporting bugs.
+
 =head1 AUTHORS
 
 Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2009 by Infinity Interactive, Inc.
+Copyright 2006-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
