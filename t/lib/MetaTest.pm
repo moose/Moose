@@ -1,8 +1,30 @@
 package MetaTest;
 
+use strict;
+use warnings;
+
 use Exporter 'import';
+use Class::MOP;
 use Test::More;
+use Carp 'confess';
 our @EXPORT = qw{skip_meta meta_can_ok skip_all_meta};
+
+if (skip_meta_condition()) {
+   my $die_method = sub { confess 'meta should never be called!' };
+   for (Class::MOP::get_all_metaclass_instances) {
+      if ($_->is_immutable) {
+         my %o = $_->immutable_options;
+         # the following break since they apparently use ->meta
+         # How does that even make sense?
+
+         #$_->make_mutable;
+         #$_->add_method(meta => $die_method);
+         #$_->make_immutable(%o);
+      } else {
+         $_->add_method(meta => $die_method);
+      }
+   }
+}
 
 sub SKIP_META_MESSAGE() {
    'meta-tests disabled';
