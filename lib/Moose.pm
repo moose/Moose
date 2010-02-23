@@ -482,9 +482,9 @@ either C<ArrayRef> or C<HashRef>.
 =item I<trigger =E<gt> $code>
 
 The I<trigger> option is a CODE reference which will be called after
-the value of the attribute is set. The CODE ref will be passed the
-instance itself and the updated value. If the attribute already had a
-value, this will be passed as the third value to the trigger.
+the value of the attribute is set. The CODE ref is passed the
+instance itself, the updated value, and the original value if the 
+attribute was already set.
 
 You B<can> have a trigger on a read-only attribute.
 
