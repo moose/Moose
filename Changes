@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 0.99 ???
 
+  [NEW FEATURES]
+
+  * New method find_type_for in Moose::Meta::TypeConstraint::Union, for finding
+    which member of the union a given value validates for. (Cory Watson)
+
   [NEW DOCUMENTATION]
 
   * Added Moose::Manual::Support that defines the support, compatiblity, and

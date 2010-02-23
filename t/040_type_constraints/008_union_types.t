@@ -30,6 +30,10 @@ ok($Str_or_Undef->check('String'), '... (Str | Undef) can accept a String value'
 ok($Str_or_Undef->is_a_type_of($Str), "subtype of Str");
 ok($Str_or_Undef->is_a_type_of($Undef), "subtype of Undef");
 
+cmp_ok($Str_or_Undef->find_type_for('String'), 'eq', 'Str', 'find_type_for Str');
+cmp_ok($Str_or_Undef->find_type_for(undef), 'eq', 'Undef', 'find_type_for Undef');
+ok(!defined($Str_or_Undef->find_type_for(sub { })), 'no find_type_for CodeRef');
+
 ok( !$Str_or_Undef->equals($Str), "not equal to Str" );
 ok( $Str_or_Undef->equals($Str_or_Undef), "equal to self" );
 ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Str, $Undef ])), "equal to clone" );

@@ -7,6 +7,8 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
+use List::Util qw(first);
+
 our $VERSION   = '0.98';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -91,6 +93,12 @@ sub validate {
             if defined $err;
     }
     return ($message . ' in (' . $self->name . ')') ;
+}
+
+sub find_type_for {
+    my ($self, $value) = @_;
+
+    return first { $_->check($value) } @{ $self->type_constraints };
 }
 
 sub is_a_type_of {
@@ -196,6 +204,12 @@ messages returned by the member type constraints.
 
 A type is considered equal if it is also a union type, and the two
 unions have the same member types.
+
+=item B<< $constraint->find_type_for($value) >>
+
+This returns the first member type constraint for which C<check($value)> is
+true, allowing you to determine which of the Union's member type constraints
+a given value matches.
 
 =item B<< $constraint->is_a_type_of($type_name_or_object) >>
 
