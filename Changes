@@ -4,8 +4,9 @@ for, noteworthy changes.
 0.99 ???
 
   [NEW DOCUMENTATION]
+
   * Added Moose::Manual::Support that defines the support, compatiblity, and
-    release policies for Moose.
+    release policies for Moose. (Chris Prather)
 
 0.98 Wed, Feb 10, 2010
 
