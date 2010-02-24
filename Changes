@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+0.99 ???
+
+  [NEW DOCUMENTATION]
+  * Added Moose::Manual::Support that defines the support, compatiblity, and
+    release policies for Moose.
+
 0.98 Wed, Feb 10, 2010
 
   [BUG FIXES]
