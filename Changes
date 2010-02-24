@@ -21,10 +21,10 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * Calling ->reinitialize on a cached anonymous class destroyed the cache,
-    causing the class to go out of scope unexpectedly. This could easily
-    happen at a distance by applying a metarole to an anonymous class. (Dave
-    Rolsky).
+  * Calling ->reinitialize on a cached anonymous class effectively uncached
+    the metaclass object, causing the metaclass to go out of scope
+    unexpectedly. This could easily happen at a distance by applying a
+    metarole to an anonymous class. (Dave Rolsky).
 
 0.96 Sat, Feb 6, 2010
 
