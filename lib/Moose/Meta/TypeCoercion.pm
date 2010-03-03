@@ -36,6 +36,11 @@ sub new {
     return $self;
 }
 
+sub compiled_type_coercion {
+    my ($self) = @_;
+    return $self->_compiled_type_coercion;
+}
+
 sub compile_type_coercion {
     my $self = shift;
     my @coercion_map = @{$self->type_coercion_map};
@@ -165,6 +170,11 @@ finds.
 
 This means that if the value could belong to more than type in the
 coercion object, the first coercion added is used.
+
+=item B<< $coercion->compiled_type_coercion >>
+
+This returns a code reference that will, when being called with a value, will
+attempt to coerce the value. This code reference is also what C<coerce> uses.
 
 =item B<< Moose::Meta::TypeCoercion->meta >>
 
