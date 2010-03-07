@@ -81,10 +81,14 @@ sub _initialize_body {
     my @DEMOLISH_methods = $self->associated_metaclass->find_all_methods_by_name('DEMOLISH');
 
     my $source;
-    if ( @DEMOLISH_methods ) {
-        $source = 'sub {';
-        $source .= 'my $self = shift;' . "\n";
+    $source  = 'sub {' . "\n";
+    $source .= 'my $self = shift;' . "\n";
+    $source .= 'return $self->Moose::Object::DESTROY(@_)' . "\n";
+    $source .= '    if Scalar::Util::blessed($self) ne ';
+    $source .= "'" . $self->associated_metaclass->name . "'";
+    $source .= ';' . "\n";
 
+    if ( @DEMOLISH_methods ) {
         $source .= 'local $?;' . "\n";
 
         $source .= 'my $in_global_destruction = Devel::GlobalDestruction::in_global_destruction;' . "\n";
@@ -98,10 +102,9 @@ sub _initialize_body {
         $source .= q[ Try::Tiny::catch { no warnings 'misc'; die $_ };] . "\n";
         $source .= 'return;' . "\n";
 
-        $source .= '}';
-    } else {
-        $source = 'sub { }';
     }
+
+    $source .= '}';
 
     warn $source if $self->options->{debug};
 
