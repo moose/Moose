@@ -123,3 +123,4 @@ CHI
 Data::Visitor
 namespace::autoclean
 DBIx::Class
+Hailo
