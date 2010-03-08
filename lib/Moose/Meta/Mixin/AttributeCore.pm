@@ -3,7 +3,7 @@ package Moose::Meta::Mixin::AttributeCore;
 use strict;
 use warnings;
 
-our $VERSION   = '0.98';
+our $VERSION   = '0.99';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Mixin::AttributeCore';

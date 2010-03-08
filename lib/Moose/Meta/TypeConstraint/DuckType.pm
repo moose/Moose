@@ -10,7 +10,7 @@ use Moose::Util 'english_list';
 
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '0.98';
+our $VERSION   = '0.99';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

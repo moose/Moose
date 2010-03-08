@@ -9,7 +9,7 @@ use List::MoreUtils 'any';
 use Try::Tiny;
 use overload     ();
 
-our $VERSION   = '0.98';
+our $VERSION   = '0.99';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Method::Accessor;

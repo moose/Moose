@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Hash;
 use Moose::Role;
 
-our $VERSION   = '0.98';
+our $VERSION   = '0.99';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
