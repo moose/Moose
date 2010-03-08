@@ -46,6 +46,7 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
+        'Devel::REPL'                   => '1.003008',
         'Fey::ORM'                      => '0.23',
         'Catalyst'                      => '5.80017',
         'MooseX::Aliases'               => '0.07',
