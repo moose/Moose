@@ -469,7 +469,7 @@ set:
   }
 
 The trigger is called I<after> an attribute's value is set. It is
-called as a method on the object, and receives the new and values as
+called as a method on the object, and receives the new and old values as
 its arguments. If the attribute had not previously been set at all,
 then only the new value is passed. This lets you distinguish between
 the case where the attribute had no value versus when it was C<undef>.
