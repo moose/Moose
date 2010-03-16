@@ -53,19 +53,15 @@ Moose::Meta::Attribute::Native::Trait::Counter - Helper trait for counters
   my $page = MyHomePage->new();
   $page->inc_counter; # same as $page->counter( $page->counter + 1 );
   $page->dec_counter; # same as $page->counter( $page->counter - 1 );
+  
+  my $count_by_twos = 2;
+  $page->inc_counter($count_by_twos);
 
 =head1 DESCRIPTION
 
 This module provides a simple counter attribute, which can be
-incremented and decremented.
-
-If your attribute definition does not include any of I<is>, I<isa>,
-I<default> or I<handles> but does use the C<Counter> trait,
-then this module applies defaults as in the L</SYNOPSIS>
-above. This allows for a very basic counter definition:
-
-  has 'foo' => (traits => ['Counter']);
-  $obj->inc_foo;
+incremented and decremented by arbitrary amounts.  The default
+amount of change is one.
 
 =head1 PROVIDED METHODS
 
@@ -80,15 +76,15 @@ the attribute.
 
 Set the counter to the specified value.
 
-=item B<inc>
+=item B<inc($arg)>
 
-Increments the value stored in this slot by 1. Providing an argument will
-cause the counter to be increased by specified amount.
+Increase the attribute value by the amount of the argument.  
+No argument increments the value by 1. 
 
-=item B<dec>
+=item B<dec($arg)>
 
-Decrements the value stored in this slot by 1. Providing an argument will
-cause the counter to be increased by specified amount.
+Decrease the attribute value by the amount of the argument.  
+No argument decrements the value by 1.
 
 =item B<reset>
 
