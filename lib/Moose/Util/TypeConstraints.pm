@@ -1001,7 +1001,7 @@ The following functions are used to create type constraints.  They
 will also register the type constraints your create in a global
 registry that is used to look types up by name.
 
-See the L<SYNOPSIS> for an example of how to use these.
+See the L</SYNOPSIS> for an example of how to use these.
 
 =over 4
 
@@ -1073,7 +1073,7 @@ This can be used in an attribute definition like so:
 This will create a basic subtype for a given set of strings.
 The resulting constraint will be a subtype of C<Str> and
 will match any of the items in C<\@values>. It is case sensitive.
-See the L<SYNOPSIS> for a simple example.
+See the L</SYNOPSIS> for a simple example.
 
 B<NOTE:> This is not a true proper enum type, it is simply
 a convenient constraint builder.
@@ -1218,7 +1218,7 @@ the type-coercion code first, followed by the type constraint
 check. This feature should be used carefully as it is very powerful
 and could easily take off a limb if you are not careful.
 
-See the L<SYNOPSIS> for an example of how to use these.
+See the L</SYNOPSIS> for an example of how to use these.
 
 =over 4
 

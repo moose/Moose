@@ -181,7 +181,7 @@ serves as API documentation.
 =head1 EXPORTED FUNCTIONS
 
 Moose::Role currently supports all of the functions that L<Moose> exports, but
-differs slightly in how some items are handled (see L<CAVEATS> below for
+differs slightly in how some items are handled (see L</CAVEATS> below for
 details).
 
 Moose::Role also offers two role-specific keyword exports:

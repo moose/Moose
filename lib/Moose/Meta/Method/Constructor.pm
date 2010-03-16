@@ -361,11 +361,11 @@ Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Class::Constructor> that
+This class is a subclass of L<Class::MOP::Method::Constructor> that
 provides additional Moose-specific functionality
 
 To understand this class, you should read the the
-L<Class::MOP::Class::Constructor> documentation as well.
+L<Class::MOP::Method::Constructor> documentation as well.
 
 =head1 INHERITANCE
 
