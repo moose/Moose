@@ -25,7 +25,8 @@ you're ready to start creating objects!
 =head1 OBJECT CONSTRUCTION HOOKS
 
 Moose lets you hook into object construction. You can validate an
-object's state, do logging, or maybe allow non-hash(ref) constructor
+object's state, do logging, customize construction from parameters which
+do not match your attributes, or maybe allow non-hash(ref) constructor
 arguments. You can do this by creating C<BUILD> and/or C<BUILDARGS>
 methods.
 
@@ -92,12 +93,24 @@ object creation.
       debug( 'Made a new person - SSN = ', $self->ssn, );
   }
 
-Note that while it is not shown here, the C<BUILD> method receives  
-not only the created object, but also a hashref of the original 
-arguments passed to new (or the results of your C<BUILDARGS>, 
-if you have overridden the default C<BUILDARGS>.)  This can be 
-useful if you need to venture beyond what the default 
-initialization behavior and coercions can accomplish.
+
+As C<BUILD> is called with the original hashref passed to new (or the 
+results of your C<BUILDARGS>, if you have overridden the default 
+C<BUILDARGS>.) it can also use be used to create a custom constructor
+using parameters that weren't consumed by attributes. This can be 
+useful if you need to venture beyond what the default initialization 
+behavior and coercions can accomplish.
+
+	sub BUILD {
+		my $self = shift;
+		my $params_hashref = shift;
+
+		$self->addFriend( My::User->new ($params_hashref->{friendId}, 
+							$params_hashref->{activationCode}) );
+
+	}
+
+
 
 =head3 BUILD and parent classes
 
