@@ -94,21 +94,20 @@ object creation.
   }
 
 
-As C<BUILD> is called with the original hashref passed to new (or the 
-results of your C<BUILDARGS>, if you have overridden the default 
+As C<BUILD> is called with the original hashref passed to new (or the
+results of your C<BUILDARGS>, if you have overridden the default
 C<BUILDARGS>.) it can also use be used to create a custom constructor
-using parameters that weren't consumed by attributes. This can be 
-useful if you need to venture beyond what the default initialization 
+using parameters that weren't consumed by attributes. This can be
+useful if you need to venture beyond what the default initialization
 behavior and coercions can accomplish.
 
-	sub BUILD {
-		my $self = shift;
-		my $params_hashref = shift;
+  sub BUILD {
+    my $self = shift;
+    my $params_hashref = shift;
 
-		$self->addFriend( My::User->new ($params_hashref->{friendId}, 
-							$params_hashref->{activationCode}) );
-
-	}
+    $self->addFriend( My::User->new ($params_hashref->{friendId}, 
+      $params_hashref->{activationCode}) );
+  }
 
 
 
