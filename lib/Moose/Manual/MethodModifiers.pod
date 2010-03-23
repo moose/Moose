@@ -129,6 +129,47 @@ I<then> the object, and finally any arguments passed to the method.
       return $self->$orig($size);
   };
 
+C<before>, C<after>, and C<around> can also modify multiple methods
+at once. The simplest example of this is passing them as a list:
+
+  before qw(foo bar baz) => sub {
+      warn "something is being called!";
+  };
+
+This will add a C<before> modifier to each of the C<foo>, C<bar>,
+and C<baz> methods in the current class, just as though a separate
+call to C<before> was made for each of them. The list can be passed
+either as a bare list, or as an arrayref. Note that the name of the
+function being modified isn't passed in in any way; this syntax is
+only intended for cases where the function being modified doesn't
+actually matter. If the function name does matter, something like:
+
+  for my $func (qw(foo bar baz)) {
+      before $func => sub {
+          warn "$func was called!";
+      };
+  }
+
+would be more appropriate.
+
+In addition, you can specify a regular expression to indicate the
+methods to wrap, like so:
+
+  after qr/^command_/ => sub {
+      warn "got a command";
+  };
+
+This will match the regular expression against each method name
+returned by L<Class::MOP::Class/get_method_list>, and add a modifier
+to each one that matches. The same caveats apply as above, regarding
+not being given the name of the method being modified. Using regular
+expressions to determine methods to wrap is quite a bit more powerful
+than the previous alternatives, but it's also quite a bit more
+dangerous. In particular, you should make sure to avoid wrapping
+methods with a special meaning to Moose or Perl, such as C<meta>,
+C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc., as this could cause
+unintended (and hard to debug) problems.
+
 =head1 INNER AND AUGMENT
 
 Augment and inner are two halves of the same feature. The augment

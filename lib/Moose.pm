@@ -804,11 +804,11 @@ B<are not> overridden, or removed.
 
 =back
 
-=item B<before $name|@names =E<gt> sub { ... }>
+=item B<before $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
 
-=item B<after $name|@names =E<gt> sub { ... }>
+=item B<after $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
 
-=item B<around $name|@names =E<gt> sub { ... }>
+=item B<around $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
 
 These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
