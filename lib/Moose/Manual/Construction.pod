@@ -102,11 +102,11 @@ useful if you need to venture beyond what the default initialization
 behavior and coercions can accomplish.
 
   sub BUILD {
-    my $self = shift;
-    my $params_hashref = shift;
+      my $self = shift;
+      my $params_hashref = shift;
 
-    $self->addFriend( My::User->new ($params_hashref->{friendId}, 
-      $params_hashref->{activationCode}) );
+      $self->addFriend( My::User->new($params_hashref->{friendId},
+          $params_hashref->{activationCode}) );
   }
 
 
