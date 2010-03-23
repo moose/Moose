@@ -94,22 +94,20 @@ object creation.
   }
 
 
-As C<BUILD> is called with the original hashref passed to new (or the
-results of your C<BUILDARGS>, if you have overridden the default
-C<BUILDARGS>.) it can also use be used to create a custom constructor
-using parameters that weren't consumed by attributes. This can be
-useful if you need to venture beyond what the default initialization
-behavior and coercions can accomplish.
+The C<BUILD> method is called with the hash reference of the parameters passed
+to the constructor (after munging by C<BUILDARGS>). This gives you a chance to
+do something with parameters that do not represent object attributes.
 
   sub BUILD {
       my $self = shift;
-      my $params_hashref = shift;
+      my $args = shift;
 
-      $self->addFriend( My::User->new($params_hashref->{friendId},
-          $params_hashref->{activationCode}) );
+      $self->add_friend(
+          My::User->new(
+              user_id => $args->{user_id},
+          )
+      );
   }
-
-
 
 =head3 BUILD and parent classes
 
