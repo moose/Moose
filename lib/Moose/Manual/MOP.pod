@@ -112,11 +112,7 @@ As an example, we can add a method to a class:
 
 Or an attribute:
 
-  $meta->add_attribute(
-      name => 'size',
-      is   => 'rw',
-      isa  => 'Int',
-  );
+  $meta->add_attribute( 'size' => { is => 'rw', isa  => 'Int' } );
 
 Obviously, this is much more cumbersome than using Perl syntax or
 Moose sugar for defining methods and attributes, but this API allows
