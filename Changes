@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.00 Tue, Mar 25, 2010
+
   [BUG FIXES]
   * Moose::Meta::Attribute::Native::Trait::Code no longer creates reader
     methods by default. (Florian Ragwitz)

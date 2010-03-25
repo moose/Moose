@@ -6,7 +6,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '0.99';
+our $VERSION   = '1.00';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
