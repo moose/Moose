@@ -15,7 +15,6 @@ has method_provider => (
     default   => 'Moose::Meta::Attribute::Native::MethodProvider::Code',
 );
 
-sub _default_is { 'ro' }
 sub _helper_type { 'CodeRef' }
 
 no Moose::Role;

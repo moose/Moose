@@ -16,6 +16,18 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 1.00
+
+=over 4
+
+=item Moose::Meta::Attribute::Native::Trait::Code no longer creates reader methods by default
+
+Earlier versions of L<Moose::Meta::Attribute::Native::Trait::Code> created
+read-only accessors for the attributes it's been applied to, even if you didn't
+ask for it with C<< is => 'ro' >>. This incorrect behaviour has now been fixed.
+
+=back
+
 =head1 0.95
 
 =over 4

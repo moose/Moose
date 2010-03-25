@@ -9,7 +9,6 @@ use Test::More;
 
     has callback => (
         traits   => ['Code'],
-        is       => 'ro',
         isa      => 'CodeRef',
         required => 1,
         handles  => { 'invoke_callback' => 'execute' },
@@ -17,7 +16,6 @@ use Test::More;
 
     has callback_method => (
         traits   => ['Code'],
-        is       => 'ro',
         isa      => 'CodeRef',
         required => 1,
         handles  => { 'invoke_method_callback' => 'execute_method' },
@@ -25,7 +23,6 @@ use Test::More;
 
     has multiplier => (
         traits   => ['Code'],
-        is       => 'ro',
         isa      => 'CodeRef',
         required => 1,
         handles  => { 'multiply' => 'execute' },
@@ -44,5 +41,8 @@ $thingy->invoke_callback;
 is($i, 1);
 is($thingy->multiply(3), 6);
 is($thingy->invoke_method_callback(3), 6);
+
+ok(!$thingy->can($_), "Code trait didn't create reader method for $_")
+    for qw(callback callback_method multiplier);
 
 done_testing;
