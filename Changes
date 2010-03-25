@@ -5,6 +5,10 @@ for, noteworthy changes.
   * Moose::Meta::Attribute::Native::Trait::Code no longer creates reader
     methods by default. (Florian Ragwitz)
 
+  [DOCUMENTATION]
+  * Improve various parts of the documentation and fix many typos.
+    (Dave Rolsky, Mateu Hunter, Graham Knop, Robin V, Jay Hannah, Jesse Luehrs)
+
 0.99 Mon, Mar 8, 2010
 
   [NEW FEATURES]
