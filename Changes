@@ -1,22 +1,31 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-1.01 
+1.01
+
+  [NEW FEATURES]
+
+  * The handles option now also accepts a role type constraint in addition to a
+    plain role name. (Florian Ragwitz)
 
   [OTHER]
+
   * Record the Sartak/doy debt properly in Changes (perigrin)
 
 1.00 Tue, Mar 25, 2010
 
   [BUG FIXES]
+
   * Moose::Meta::Attribute::Native::Trait::Code no longer creates reader
     methods by default. (Florian Ragwitz)
 
   [DOCUMENTATION]
+
   * Improve various parts of the documentation and fix many typos.
     (Dave Rolsky, Mateu Hunter, Graham Knop, Robin V, Jay Hannah, Jesse Luehrs)
 
   [OTHER]
+
   * Paid the $10 debt to doy from 0.80 Sat, Jun 6, 2009 (Sartak)
 
 0.99 Mon, Mar 8, 2010

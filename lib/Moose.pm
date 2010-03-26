@@ -492,7 +492,7 @@ B<NOTE:> Triggers will only fire when you B<assign> to the attribute,
 either in the constructor, or using the writer. Default and built values will
 B<not> cause the trigger to be fired.
 
-=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | DUCKTYPE | CODE>
+=item I<handles =E<gt> ARRAY | HASH | REGEXP | ROLE | ROLETYPE | DUCKTYPE | CODE>
 
 The I<handles> option provides Moose classes with automated delegation features.
 This is a pretty complex and powerful option. It accepts many different option
@@ -588,13 +588,14 @@ B<NOTE:> An I<isa> option is required when using the regexp option format. This
 is so that we can determine (at compile time) the method list from the class.
 Without an I<isa> this is just not possible.
 
-=item C<ROLE>
+=item C<ROLE> or C<ROLETYPE>
 
-With the role option, you specify the name of a role whose "interface" then
-becomes the list of methods to handle. The "interface" can be defined as; the
-methods of the role and any required methods of the role. It should be noted
-that this does B<not> include any method modifiers or generated attribute
-methods (which is consistent with role composition).
+With the role option, you specify the name of a role or a
+L<role type|Moose::Meta::TypeConstraint::Role> whose "interface" then becomes
+the list of methods to handle. The "interface" can be defined as; the methods
+of the role and any required methods of the role. It should be noted that this
+does B<not> include any method modifiers or generated attribute methods (which
+is consistent with role composition).
 
 =item C<DUCKTYPE>
 

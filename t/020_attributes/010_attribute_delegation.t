@@ -243,6 +243,15 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
         handles => 'Foo::Bar',
     );
 
+    package Foo::OtherThing;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    has 'other_thing' => (
+        is      => 'rw',
+        isa     => 'Foo::Baz',
+        handles => Moose::Util::TypeConstraints::find_type_constraint('Foo::Bar'),
+    );
 }
 
 {
@@ -259,6 +268,19 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     is($foo->thing->baz, 'Foo::Baz::BAZ', '... got the right value');
 }
 
+{
+    my $foo = Foo::OtherThing->new(other_thing => Foo::Baz->new);
+    isa_ok($foo, 'Foo::OtherThing');
+    isa_ok($foo->other_thing, 'Foo::Baz');
+
+    ok($foo->meta->has_method('foo'), '... we have the method we expect');
+    ok($foo->meta->has_method('bar'), '... we have the method we expect');
+    ok(!$foo->meta->has_method('baz'), '... we dont have the method we expect');
+
+    is($foo->foo, 'Foo::Baz::FOO', '... got the right value');
+    is($foo->bar, 'Foo::Baz::BAR', '... got the right value');
+    is($foo->other_thing->baz, 'Foo::Baz::BAZ', '... got the right value');
+}
 # -------------------------------------------------------------------
 # AUTOLOAD & handles
 # -------------------------------------------------------------------

@@ -659,23 +659,25 @@ sub _canonicalize_handles {
         elsif (blessed($handles) && $handles->isa('Moose::Meta::TypeConstraint::DuckType')) {
             return map { $_ => $_ } @{ $handles->methods };
         }
+        elsif (blessed($handles) && $handles->isa('Moose::Meta::TypeConstraint::Role')) {
+            $handles = $handles->role;
+        }
         else {
             $self->throw_error("Unable to canonicalize the 'handles' option with $handles", data => $handles);
         }
     }
-    else {
-        Class::MOP::load_class($handles);
-        my $role_meta = Class::MOP::class_of($handles);
 
-        (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
-            || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
+    Class::MOP::load_class($handles);
+    my $role_meta = Class::MOP::class_of($handles);
 
-        return map { $_ => $_ }
-            grep { $_ ne 'meta' } (
-            $role_meta->get_method_list,
-            map { $_->name } $role_meta->get_required_method_list,
-            );
-    }
+    (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
+        || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
+
+    return map { $_ => $_ }
+        grep { $_ ne 'meta' } (
+        $role_meta->get_method_list,
+        map { $_->name } $role_meta->get_required_method_list,
+        );
 }
 
 sub _find_delegate_metaclass {
