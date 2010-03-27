@@ -126,7 +126,7 @@ more information about the method.
 
 A custom method metaclass lets us add both behavior and
 meta-information to methods. Unfortunately, because the Perl
-interpreter does not private easy hooks into method declaration, the
+interpreter does not provide easy hooks into method declaration, the
 API we have for adding these methods is not very pretty.
 
 That can be improved with custom Moose-like sugar, or even by using a

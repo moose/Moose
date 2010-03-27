@@ -97,7 +97,7 @@ C<get_attribute_list>. This method is called on the metaclass object.
 The C<get_attribute_list> method returns a list of attribute names. You can
 then use C<get_attribute> to get the L<Moose::Meta::Attribute> object itself.
 
-Once you this meta-attribute object, you can call methods on it like this:
+Once you have this meta-attribute object, you can call methods on it like this:
 
   print $point->meta->get_attribute('x')->type_constraint;
      => Int
@@ -109,7 +109,7 @@ attribute metaclass.
 
 =head1 RECIPE REVIEW
 
-We start by  creating a new attribute metaclass.
+We start by creating a new attribute metaclass.
 
   package MyApp::Meta::Attribute::Labeled;
   use Moose;

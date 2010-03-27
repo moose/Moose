@@ -33,7 +33,7 @@ create your own Moose variant.
 
 =head2 Examples
 
-Let's say that you want to additional properties to
+Let's say that you want to add additional properties to
 attributes. Specifically, we want to add a "label" property to each
 attribute, so we can write C<<
 My::Class->meta()->get_attribute('size')->label() >>. The first two
