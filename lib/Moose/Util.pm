@@ -22,7 +22,6 @@ my @exports = qw[
     get_all_attribute_values
     resolve_metatrait_alias
     resolve_metaclass_alias
-    add_method_modifier
     english_list
     meta_attribute_alias
     meta_class_alias
@@ -193,40 +192,6 @@ sub _build_alias_package_name {
             = $loaded_class->can('register_implementation')
             ? $loaded_class->register_implementation
             : $loaded_class;
-    }
-}
-
-sub add_method_modifier {
-    my ( $class_or_obj, $modifier_name, $args ) = @_;
-    my $meta
-        = $class_or_obj->can('add_before_method_modifier')
-        ? $class_or_obj
-        : find_meta($class_or_obj);
-    my $code                = pop @{$args};
-    my $add_modifier_method = 'add_' . $modifier_name . '_method_modifier';
-    if ( my $method_modifier_type = ref( @{$args}[0] ) ) {
-        if ( $method_modifier_type eq 'Regexp' ) {
-            my @all_methods = $meta->get_all_methods;
-            my @matched_methods
-                = grep { $_->name =~ @{$args}[0] } @all_methods;
-            $meta->$add_modifier_method( $_->name, $code )
-                for @matched_methods;
-        }
-        elsif ($method_modifier_type eq 'ARRAY') {
-            $meta->$add_modifier_method( $_, $code ) for @{$args->[0]};
-        }
-        else {
-            $meta->throw_error(
-                sprintf(
-                    "Methods passed to %s must be provided as a list, arrayref or regex, not %s",
-                    $modifier_name,
-                    $method_modifier_type,
-                )
-            );
-        }
-    }
-    else {
-        $meta->$add_modifier_method( $_, $code ) for @{$args};
     }
 }
 

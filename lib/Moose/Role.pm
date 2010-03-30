@@ -57,8 +57,7 @@ sub _add_method_modifier {
             . ref($_)
             . " references for $type method modifiers"
             if ref $_;
-        my $add_method = "add_${type}_method_modifier";
-        $meta->$add_method( $_, $code );
+        $meta->add_method_modifier( $type, $_, $code );
     }
 }
 

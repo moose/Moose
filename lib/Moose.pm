@@ -70,15 +70,15 @@ sub has {
 }
 
 sub before {
-    Moose::Util::add_method_modifier(shift, 'before', \@_);
+    shift->add_method_modifier('before', \@_);
 }
 
 sub after {
-    Moose::Util::add_method_modifier(shift, 'after', \@_);
+    shift->add_method_modifier('after', \@_);
 }
 
 sub around {
-    Moose::Util::add_method_modifier(shift, 'around', \@_);
+    shift->add_method_modifier('around', \@_);
 }
 
 our $SUPER_PACKAGE;

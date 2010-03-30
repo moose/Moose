@@ -22,7 +22,7 @@ use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 
-use base 'Class::MOP::Class';
+use base 'Class::MOP::Class', 'Moose::Meta::Mixin::HasMethods';
 
 __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
