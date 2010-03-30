@@ -373,12 +373,6 @@ when specifying the C<metaclass> or C<traits> option for an attribute:
 The name resolution mechanism is covered in
 L<Moose/Metaclass and Trait Name Resolution>.
 
-=item B<english_list(@items)>
-
-Given a list of scalars, turns them into a proper list in English
-("one and two", "one, two, three, and four"). This is used to help us
-make nicer error messages.
-
 =item B<meta_class_alias($to[, $from])>
 
 =item B<meta_attribute_alias($to[, $from])>
@@ -386,6 +380,12 @@ make nicer error messages.
 Create an alias from the class C<$from> (or the current package, if
 C<$from> is unspecified), so that
 L<Moose/Metaclass and Trait Name Resolution> works properly.
+
+=item B<english_list(@items)>
+
+Given a list of scalars, turns them into a proper list in English
+("one and two", "one, two, three, and four"). This is used to help us
+make nicer error messages.
 
 =back
 
