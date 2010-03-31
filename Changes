@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [BUG FIXES]
+
+  * Make Moose::Meta::TypeConstraint::Class correctly reject RegexpRefs.
+    (Florian Ragwitz)
+
 1.01 Fri, Mar 26, 2010
 
   [NEW FEATURES]
