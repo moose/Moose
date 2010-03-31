@@ -275,6 +275,8 @@ sub new_object {
         );
     }
 
+    $self->BUILDALL($params) if $self->can('BUILDALL');
+
     return $self;
 }
 

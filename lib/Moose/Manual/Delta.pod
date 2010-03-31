@@ -16,6 +16,18 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=over 4
+
+=item L<Moose::Object/BUILD> methods are now called when calling C<new_object>
+
+Previously, C<BUILD> methods would only be called from C<Moose::Object::new>,
+but now they are also called when constructing an object via
+C<Moose::Meta::Class::new_object>. C<BUILD> methods are an inherent part of the
+object construction process, and this should make C<< $meta->new_object >>
+actually usable without forcing people to use C<< $meta->name->new >>.
+
+=back
+
 =head1 1.02
 
 =over 4

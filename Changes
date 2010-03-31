@@ -7,6 +7,9 @@ for, noteworthy changes.
     moved back up into Moose::Meta::Class and Moose::Meta::Role individually
     (through the Class::MOP::Mixin::HasMethods mixin) (doy).
 
+  * BUILDALL is now called by Moose::Meta::Class::new_object, rather than by
+    Moose::Object::new. (doy)
+
   [BUG FIXES]
 
   * Fix has '+attr' in Roles to explode immediately, rather than when the role

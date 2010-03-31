@@ -18,15 +18,11 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 sub new {
     my $class = shift;
-
-    my $params = $class->BUILDARGS(@_);
-
     my $real_class = Scalar::Util::blessed($class) || $class;
-    my $self = Class::MOP::Class->initialize($real_class)->new_object($params);
 
-    $self->BUILDALL($params);
+    my $params = $real_class->BUILDARGS(@_);
 
-    return $self;
+    return Class::MOP::Class->initialize($real_class)->new_object($params);
 }
 
 sub BUILDARGS {

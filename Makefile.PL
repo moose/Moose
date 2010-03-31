@@ -55,7 +55,7 @@ sub check_conflicts {
         'MooseX::Attribute::Prototype'  => '0.10',
         'MooseX::ClassAttribute'        => '0.09',
         'MooseX::MethodAttributes'      => '0.18',
-        'MooseX::NonMoose'              => '0.05',
+        'MooseX::NonMoose'              => '0.07',
         'MooseX::Params::Validate'      => '0.05',
         'MooseX::Role::Cmd'             => '0.06',
         'MooseX::Role::WithOverloading' => '0.04',
