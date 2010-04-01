@@ -346,12 +346,13 @@ sub natatime : method {
     return sub {
         my ( $instance, $n, $f ) = @_;
         my $it = List::MoreUtils::natatime($n, @{ $reader->($instance) });
-        if ($f) {
-            while (my @vals = $it->()) {
-                $f->(@vals);
-            }
+        return $it unless $f;
+
+        while (my @vals = $it->()) {
+            $f->(@vals);
         }
-        $it;
+
+        return;
     };
 }
 

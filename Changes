@@ -3,6 +3,9 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
+  * Stop the natatime method provided by the native Array trait from returning
+    an exhausted iterator when being called with a callback. (Florian Ragwitz)
+
   * Make Moose::Meta::TypeConstraint::Class correctly reject RegexpRefs.
     (Florian Ragwitz)
 
