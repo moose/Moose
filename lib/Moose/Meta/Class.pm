@@ -531,7 +531,16 @@ sub _fix_class_metaclass_incompatibility {
         # XXX: this doesn't work! we're reblessing $self into a subclass of
         # $super_meta, not of itself... probably do need to just go ahead and
         # reinitialize things here
-        $class_meta_subclass_meta->rebless_instance($self);
+        my $new_self = $class_meta_subclass_meta->name->reinitialize(
+            $self->name,
+        );
+        %$self = %$new_self;
+        bless $self, $class_meta_subclass_meta->name;
+        # We need to replace the cached metaclass instance or else when it
+        # goes out of scope Class::MOP::Class destroy's the namespace for
+        # the metaclass's class, causing much havoc.
+        Class::MOP::store_metaclass_by_name( $self->name, $self );
+        Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
     }
 }
 
@@ -544,7 +553,17 @@ sub _fix_single_metaclass_incompatibility {
     if ($self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta)) {
         my %metaclasses = $self->_base_metaclasses;
         my $class_specific_meta_subclass_meta = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
-        $self->$metaclass_type($class_specific_meta_subclass_meta->name);
+        my $new_self = $super_meta->reinitialize(
+            $self->name,
+            $metaclass_type => $class_specific_meta_subclass_meta->name,
+        );
+        %$self = %$new_self;
+        bless $self, blessed($super_meta);
+        # We need to replace the cached metaclass instance or else when it
+        # goes out of scope Class::MOP::Class destroy's the namespace for
+        # the metaclass's class, causing much havoc.
+        Class::MOP::store_metaclass_by_name( $self->name, $self );
+        Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
     }
 }
 
