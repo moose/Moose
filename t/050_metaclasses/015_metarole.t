@@ -664,17 +664,12 @@ lives_ok {
         'Parent constructor class has metarole from Parent'
     );
 
-TODO:
-    {
-        local $TODO
-            = 'Moose does not see that the child differs from the parent because it only checks the class and instance metaclasses do determine compatibility';
-        ok(
-            Child->meta->constructor_class->meta->can('does_role')
-                && Child->meta->constructor_class->meta->does_role(
-                'Role::Foo'),
-            'Child constructor class has metarole from Parent'
-        );
-    }
+    ok(
+        Child->meta->constructor_class->meta->can('does_role')
+            && Child->meta->constructor_class->meta->does_role(
+            'Role::Foo'),
+        'Child constructor class has metarole from Parent'
+    );
 }
 
 done_testing;

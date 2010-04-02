@@ -43,13 +43,18 @@ ok(Foo->meta->constructor_class->meta->does_role('Foo::Trait::Constructor'),
     extends 'Foo';
 }
 
-{ local $TODO = "metaclass compatibility fixing doesn't notice things unless the class or instance metaclass change";
+$called = 0;
+
 Foo::Sub->new;
-is($called, 2, "subclass inherits constructor traits");
+is($called, 0, "no calls before inlining");
+
+Foo::Sub->meta->make_immutable;
+
+Foo::Sub->new;
+is($called, 1, "inherits constructor trait properly");
 
 ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
 && Foo::Sub->meta->constructor_class->meta->does_role('Foo::Trait::Constructor'),
    "subclass inherits constructor traits");
-}
 
 done_testing;
