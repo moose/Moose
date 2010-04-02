@@ -369,38 +369,38 @@ sub _find_common_base {
 
 sub _get_ancestors_until {
     my $self = shift;
-    my ($start, $until) = @_;
+    my ($start_name, $until_name) = @_;
 
-    my @ancestors;
-    for my $ancestor (Class::MOP::class_of($start)->linearized_isa) {
-        last if $ancestor eq $until;
-        push @ancestors, $ancestor;
+    my @ancestor_names;
+    for my $ancestor_name (Class::MOP::class_of($start_name)->linearized_isa) {
+        last if $ancestor_name eq $until_name;
+        push @ancestor_names, $ancestor_name;
     }
-    return @ancestors;
+    return @ancestor_names;
 }
 
 sub _is_role_only_subclass {
     my $self = shift;
-    my ($class) = @_;
-    my $meta = Class::MOP::Class->initialize($class);
-    my @parents = $meta->superclasses;
+    my ($meta_name) = @_;
+    my $meta = Class::MOP::Class->initialize($meta_name);
+    my @parent_names = $meta->superclasses;
 
     # XXX: don't feel like messing with multiple inheritance here... what would
     # that even do?
-    return unless @parents == 1;
-    my ($parent) = @parents;
-    my $parent_meta = Class::MOP::Class->initialize($parent);
+    return unless @parent_names == 1;
+    my ($parent_name) = @parent_names;
+    my $parent_meta = Class::MOP::Class->initialize($parent_name);
 
     # loop over all methods that are a part of the current class
     # (not inherited)
-    for my $method (map { $meta->meta->get_method($_) } $meta->meta->get_method_list) {
+    for my $method (map { $meta->get_method($_) } $meta->get_method_list) {
         # always ignore meta
         next if $method->name eq 'meta';
         # we'll deal with attributes below
         next if $method->isa('Class::MOP::Method::Accessor');
         # if the method comes from a role we consumed, ignore it
-        next if $meta->meta->can('does_role')
-             && $meta->meta->does_role($method->original_package_name);
+        next if $meta->can('does_role')
+             && $meta->does_role($method->original_package_name);
 
         return 0;
     }
@@ -410,7 +410,7 @@ sub _is_role_only_subclass {
     # FIXME - this really isn't right. Just because an attribute is
     # defined in a role doesn't mean it isn't _also_ defined in the
     # subclass.
-    for my $attr (map { $meta->meta->get_attribute($_) } $meta->meta->get_attribute_list) {
+    for my $attr (map { $meta->get_attribute($_) } $meta->get_attribute_list) {
         next if any { $_->has_attribute($attr->name) }
                 map { $_->meta->can('calculate_all_roles')
                     ? $_->meta->calculate_all_roles
@@ -427,64 +427,73 @@ sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
     my $self = shift;
     my ($super_meta) = @_;
 
-    my $common_base = $self->_find_common_base($self, $super_meta);
+    my $common_base_name = $self->_find_common_base(blessed($self), blessed($super_meta));
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
-    return unless defined($common_base);
-    return unless $common_base->isa('Moose::Meta::Class');
+    return unless defined($common_base_name);
+    return unless $common_base_name->isa('Moose::Meta::Class');
 
-    my @superclass_ancestors = $self->_get_ancestors_until($super_meta, $common_base);
-    my @ancestors = $self->_get_ancestors_until($self, $common_base);
+    my @super_meta_name_ancestor_names = $self->_get_ancestors_until(blessed($super_meta), $common_base_name);
+    my @class_meta_name_ancestor_names = $self->_get_ancestors_until(blessed($self), $common_base_name);
     # we're only dealing with roles here
     return unless all { $self->_is_role_only_subclass($_) }
-                      (@superclass_ancestors, @ancestors);
+                      (@super_meta_name_ancestor_names,
+                       @class_meta_name_ancestor_names);
 
     return 1;
 }
 
 sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
     my $self = shift;
-    my ($metaclass_type, $super_metaclass) = @_;
+    my ($metaclass_type, $super_meta) = @_;
 
-    my $meta = $self->$metaclass_type;
-    return unless $super_metaclass->can($metaclass_type);
-    my $super_meta = $super_metaclass->$metaclass_type;
+    my $class_specific_meta_name = $self->$metaclass_type;
+    return unless $super_meta->can($metaclass_type);
+    my $super_specific_meta_name = $super_meta->$metaclass_type;
     my %metaclasses = $self->_base_metaclasses;
 
-    my $common_base = $self->_find_common_base($meta, $super_meta);
+    my $common_base_name = $self->_find_common_base($class_specific_meta_name, $super_specific_meta_name);
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
-    return unless defined($common_base);
-    return unless $common_base->isa($metaclasses{$metaclass_type});
+    return unless defined($common_base_name);
+    return unless $common_base_name->isa($metaclasses{$metaclass_type});
 
-    my @superclass_ancestors = $self->_get_ancestors_until($super_meta, $common_base);
-    my @ancestors = $self->_get_ancestors_until($meta, $common_base);
+    my @super_specific_meta_name_ancestor_names = $self->_get_ancestors_until($super_specific_meta_name, $common_base_name);
+    my @class_specific_meta_name_ancestor_names = $self->_get_ancestors_until($class_specific_meta_name, $common_base_name);
     # we're only dealing with roles here
     return unless all { $self->_is_role_only_subclass($_) }
-                      (@superclass_ancestors, @ancestors);
+                      (@super_specific_meta_name_ancestor_names,
+                       @class_specific_meta_name_ancestor_names);
 
     return 1;
 }
 
 sub _role_differences {
     my $self = shift;
-    my ($meta, $super_meta) = @_;
-    my @super_roles = $super_meta->meta->calculate_all_roles;
-    my @roles = $meta->meta->calculate_all_roles;
+    my ($class_meta_name, $super_meta_name) = @_;
+    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles')
+                         ? $super_meta_name->meta->calculate_all_roles
+                         : ();
+    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles')
+                         ? $class_meta_name->meta->calculate_all_roles
+                         : ();
     my @differences;
-    for my $role (@super_roles) {
-        push @differences, $role unless any { $_->name eq $role->name } @roles;
+    for my $role_meta (@role_metas) {
+        push @differences, $role_meta
+            unless any { $_->name eq $role_meta->name } @super_role_metas;
     }
     return @differences;
 }
 
 sub _reconcile_roles_for_metaclass {
     my $self = shift;
-    my ($meta, $super_meta, $base_class) = @_;
+    my ($class_meta_name, $super_meta_name) = @_;
 
-    my @role_differences = $self->_role_differences($meta, $super_meta);
-    return $self->meta->create_anon_class(
-        superclasses => [$super_meta],
+    my @role_differences = $self->_role_differences(
+        $class_meta_name, $super_meta_name,
+    );
+    return $self->create_anon_class(
+        superclasses => [$super_meta_name],
         roles        => \@role_differences,
         cache        => 1,
     );
@@ -518,8 +527,11 @@ sub _fix_class_metaclass_incompatibility {
     $self->SUPER::_fix_class_metaclass_incompatibility(@_);
 
     if ($self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta)) {
-        my $subclass = $self->_reconcile_roles_for_metaclass($self, $super_meta, 'Moose::Meta::Class');
-        $subclass->meta->rebless_instace($self);
+        my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), blessed($super_meta));
+        # XXX: this doesn't work! we're reblessing $self into a subclass of
+        # $super_meta, not of itself... probably do need to just go ahead and
+        # reinitialize things here
+        $class_meta_subclass_meta->rebless_instance($self);
     }
 }
 
@@ -531,8 +543,8 @@ sub _fix_single_metaclass_incompatibility {
 
     if ($self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta)) {
         my %metaclasses = $self->_base_metaclasses;
-        my $subclass = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type, $metaclasses{$metaclass_type});
-        $self->$metaclass_type($subclass->name);
+        my $class_specific_meta_subclass_meta = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
+        $self->$metaclass_type($class_specific_meta_subclass_meta->name);
     }
 }
 
