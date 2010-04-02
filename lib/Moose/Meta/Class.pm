@@ -528,9 +528,6 @@ sub _fix_class_metaclass_incompatibility {
 
     if ($self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta)) {
         my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), blessed($super_meta));
-        # XXX: this doesn't work! we're reblessing $self into a subclass of
-        # $super_meta, not of itself... probably do need to just go ahead and
-        # reinitialize things here
         my $new_self = $class_meta_subclass_meta->name->reinitialize(
             $self->name,
         );
