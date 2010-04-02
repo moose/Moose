@@ -686,7 +686,7 @@ sub _find_delegate_metaclass {
         # we might be dealing with a non-Moose class,
         # and need to make our own metaclass. if there's
         # already a metaclass, it will be returned
-        return Moose::Meta::Class->initialize($class);
+        return Class::MOP::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
         return Class::MOP::class_of($role);
