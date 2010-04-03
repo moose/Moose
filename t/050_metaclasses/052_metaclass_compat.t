@@ -57,4 +57,27 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
 && Foo::Sub->meta->constructor_class->meta->does_role('Foo::Trait::Constructor'),
    "subclass inherits constructor traits");
 
+{
+    package Foo2::Role;
+    use Moose::Role;
+}
+{
+    package Foo2;
+    use Moose -traits => ['Foo2::Role'];
+    __PACKAGE__->meta->make_immutable;
+}
+{
+    package Bar2;
+    use Moose;
+}
+{
+    package Baz2;
+    use Moose;
+    my $meta = __PACKAGE__->meta;
+    $meta->superclasses('Foo2');
+    { our $TODO; local $TODO = "need to handle immutability better";
+    ::lives_ok { $meta->superclasses('Bar2') };
+    }
+}
+
 done_testing;
