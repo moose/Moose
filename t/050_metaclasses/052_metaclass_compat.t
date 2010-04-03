@@ -77,6 +77,7 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
     $meta->superclasses('Foo2');
     { our $TODO; local $TODO = "need to handle immutability better";
     ::lives_ok { $meta->superclasses('Bar2') };
+    ::lives_ok { $meta->make_mutable if $meta->is_immutable };
     }
 }
 
