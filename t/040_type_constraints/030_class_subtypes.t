@@ -23,7 +23,7 @@ use Moose::Meta::TypeConstraint;
 }
 
 my $Int = find_type_constraint('Int');
-ok $Int, 'Got a good type contstraint';
+ok $Int, 'Got a good type constraint';
 
 my $parent  = Test::Moose::Meta::TypeConstraint::AnySubType->new({
         name => "Test::Moose::Meta::TypeConstraint::AnySubType" ,
