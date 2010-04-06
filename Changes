@@ -9,6 +9,14 @@ for, noteworthy changes.
   * Make Moose::Meta::TypeConstraint::Class correctly reject RegexpRefs.
     (Florian Ragwitz)
 
+  * Don't write temporary files in t/, rather use File::Temp to create
+    a temporary directory. This caused an issue for anyone running the
+    Moose tests with user that didn't have permission to write to the
+    t/ directory.
+
+    Implemented by the Fedora perl-Moose package maintainer Chris
+    Weyl, integrated by Ævar Arnfjörð Bjarmason.
+
 1.01 Fri, Mar 26, 2010
 
   [NEW FEATURES]
