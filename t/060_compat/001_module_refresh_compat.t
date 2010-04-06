@@ -41,7 +41,7 @@ and actually change the module itself.
 
 =cut
 
-my $dir = tempdir CLEANUP => 1;
+my $dir = tempdir( "MooseTest-XXXXX", CLEANUP => 1, TMPDIR => 1 );
 push @INC, $dir;
 
 my $test_module_file = File::Spec->catdir($dir, 'TestBaz.pm');
