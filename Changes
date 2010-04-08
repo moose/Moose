@@ -14,6 +14,8 @@ for, noteworthy changes.
     Moose tests with user that didn't have permission to write to the
     t/ directory. (Chris Weyl, Ævar Arnfjörð Bjarmason)
 
+  * Pass role arguments along when applying roles to instances. (doy, lsm)
+
 1.01 Fri, Mar 26, 2010
 
   [NEW FEATURES]

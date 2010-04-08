@@ -18,7 +18,7 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
 ));
 
 sub apply {
-    my ( $self, $role, $object ) = @_;
+    my ( $self, $role, $object, $args ) = @_;
 
     my $obj_meta = Class::MOP::class_of($object) || 'Moose::Meta::Class';
 
@@ -30,7 +30,7 @@ sub apply {
 
     my $class = $obj_meta->create_anon_class(
         superclasses => [ blessed($object) ],
-        roles => [ $role ],
+        roles => [ $role, keys(%$args) ? ($args) : () ],
         cache => 1,
     );
 
