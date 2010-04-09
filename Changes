@@ -10,6 +10,11 @@ for, noteworthy changes.
   * BUILDALL is now called by Moose::Meta::Class::new_object, rather than by
     Moose::Object::new. (doy)
 
+  [NEW FEATURES]
+
+  * strict and warnings are now unimported when Moose, Moose::Role, or
+    Moose::Exporter are unimported. (doy, Adam Kennedy)
+
   [BUG FIXES]
 
   * Fix has '+attr' in Roles to explode immediately, rather than when the role

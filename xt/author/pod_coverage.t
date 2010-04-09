@@ -14,6 +14,7 @@ my @modules = all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
+    'Moose::Exporter' => ['unimport'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error

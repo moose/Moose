@@ -26,6 +26,12 @@ C<Moose::Meta::Class::new_object>. C<BUILD> methods are an inherent part of the
 object construction process, and this should make C<< $meta->new_object >>
 actually usable without forcing people to use C<< $meta->name->new >>.
 
+=item C<no Moose>, C<no Moose::Role>, and C<no Moose::Exporter> now unimport strict and warnings
+
+In the interest of having C<no Moose> clean up everything that C<use Moose>
+does in the calling scope, C<no Moose> (as well as all other
+L<Moose::Exporter>-using modules) now unimports strict and warnings.
+
 =back
 
 =head1 1.02
