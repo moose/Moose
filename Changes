@@ -9,10 +9,10 @@ for, noteworthy changes.
   * Make Moose::Meta::TypeConstraint::Class correctly reject RegexpRefs.
     (Florian Ragwitz)
 
-  * Don't write temporary files in t/, rather use File::Temp to create
-    a temporary directory. This caused an issue for anyone running the
-    Moose tests with user that didn't have permission to write to the
-    t/ directory. (Chris Weyl, Ævar Arnfjörð Bjarmason)
+  * Use File::Temp for temp files created during tests. Previously, files were
+    written to the t/ dir, which could cause problems of the user running the
+    tests did not have write access to that directory.. (Chris Weyl, Ævar
+    Arnfjörð Bjarmason)
 
   * Pass role arguments along when applying roles to instances. (doy, lsm)
 
