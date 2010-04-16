@@ -64,7 +64,6 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
 {
     package Foo2;
     use Moose -traits => ['Foo2::Role'];
-    __PACKAGE__->meta->make_immutable;
 }
 {
     package Bar2;
@@ -74,11 +73,141 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
     package Baz2;
     use Moose;
     my $meta = __PACKAGE__->meta;
-    $meta->superclasses('Foo2');
-    { our $TODO; local $TODO = "need to handle immutability better";
-    ::lives_ok { $meta->superclasses('Bar2') };
-    ::lives_ok { $meta->make_mutable if $meta->is_immutable };
-    }
+    ::lives_ok { $meta->superclasses('Foo2') } "can set superclasses once";
+    ::isa_ok($meta, Foo2->meta->meta->name);
+    ::lives_ok { $meta->superclasses('Bar2') } "can still set superclasses";
+    ::isa_ok($meta, Bar2->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo2::Role'],
+                "still have the role attached");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
+}
+{
+    package Foo3::Role;
+    use Moose::Role;
+}
+{
+    package Bar3;
+    use Moose -traits => ['Foo3::Role'];
+}
+{
+    package Baz3;
+    use Moose -traits => ['Foo3::Role'];
+    my $meta = __PACKAGE__->meta;
+    ::lives_ok { $meta->superclasses('Foo2') } "can set superclasses once";
+    ::isa_ok($meta, Foo2->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo2::Role', 'Foo3::Role'],
+                "reconciled roles correctly");
+    ::lives_ok { $meta->superclasses('Bar3') } "can still set superclasses";
+    ::isa_ok($meta, Bar3->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo2::Role', 'Foo3::Role'],
+                "roles still the same");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
+}
+{
+    package Quux3;
+    use Moose;
+}
+{
+    package Quuux3;
+    use Moose -traits => ['Foo3::Role'];
+    my $meta = __PACKAGE__->meta;
+    ::lives_ok { $meta->superclasses('Foo2') } "can set superclasses once";
+    ::isa_ok($meta, Foo2->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo2::Role', 'Foo3::Role'],
+                "reconciled roles correctly");
+    ::lives_ok { $meta->superclasses('Quux3') } "can still set superclasses";
+    ::isa_ok($meta, Quux3->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo2::Role', 'Foo3::Role'],
+                "roles still the same");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
+}
+
+{
+    package Foo4::Role;
+    use Moose::Role;
+}
+{
+    package Foo4;
+    use Moose -traits => ['Foo4::Role'];
+    __PACKAGE__->meta->make_immutable;
+}
+{
+    package Bar4;
+    use Moose;
+}
+{
+    package Baz4;
+    use Moose;
+    my $meta = __PACKAGE__->meta;
+    ::lives_ok { $meta->superclasses('Foo4') } "can set superclasses once";
+    ::isa_ok($meta, Foo4->meta->_get_mutable_metaclass_name);
+    ::lives_ok { $meta->superclasses('Bar4') } "can still set superclasses";
+    ::isa_ok($meta, Bar4->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo4::Role'],
+                "still have the role attached");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
+}
+{
+    package Foo5::Role;
+    use Moose::Role;
+}
+{
+    package Bar5;
+    use Moose -traits => ['Foo5::Role'];
+}
+{
+    package Baz5;
+    use Moose -traits => ['Foo5::Role'];
+    my $meta = __PACKAGE__->meta;
+    ::lives_ok { $meta->superclasses('Foo4') } "can set superclasses once";
+    ::isa_ok($meta, Foo4->meta->_get_mutable_metaclass_name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo4::Role', 'Foo5::Role'],
+                "reconciled roles correctly");
+    ::lives_ok { $meta->superclasses('Bar5') } "can still set superclasses";
+    ::isa_ok($meta, Bar5->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo4::Role', 'Foo5::Role'],
+                "roles still the same");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
+}
+{
+    package Quux5;
+    use Moose;
+}
+{
+    package Quuux5;
+    use Moose -traits => ['Foo5::Role'];
+    my $meta = __PACKAGE__->meta;
+    ::lives_ok { $meta->superclasses('Foo4') } "can set superclasses once";
+    ::isa_ok($meta, Foo4->meta->_get_mutable_metaclass_name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo4::Role', 'Foo5::Role'],
+                "reconciled roles correctly");
+    ::lives_ok { $meta->superclasses('Quux5') } "can still set superclasses";
+    ::isa_ok($meta, Quux5->meta->meta->name);
+    ::is_deeply([sort map { $_->name } $meta->meta->calculate_all_roles_with_inheritance],
+                ['Foo4::Role', 'Foo5::Role'],
+                "roles still the same");
+    ::ok(!$meta->is_immutable,
+       "immutable superclass doesn't make this class immutable");
+    ::lives_ok { $meta->make_immutable } "can still make immutable";
 }
 
 done_testing;

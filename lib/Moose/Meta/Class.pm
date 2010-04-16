@@ -200,6 +200,16 @@ sub calculate_all_roles {
     grep { !$seen{$_->name}++ } map { $_->calculate_all_roles } @{ $self->roles };
 }
 
+sub calculate_all_roles_with_inheritance {
+    my $self = shift;
+    my %seen;
+    grep { !$seen{$_->name}++ }
+         map { Class::MOP::class_of($_)->can('calculate_all_roles')
+                   ? Class::MOP::class_of($_)->calculate_all_roles
+                   : () }
+             $self->linearized_isa;
+}
+
 sub does_role {
     my ($self, $role_name) = @_;
 
@@ -412,10 +422,7 @@ sub _is_role_only_subclass {
     # subclass.
     for my $attr (map { $meta->get_attribute($_) } $meta->get_attribute_list) {
         next if any { $_->has_attribute($attr->name) }
-                map { $_->meta->can('calculate_all_roles')
-                    ? $_->meta->calculate_all_roles
-                    : () }
-                $meta->linearized_isa;
+                    $meta->calculate_all_roles_with_inheritance;
 
         return 0;
     }
@@ -427,13 +434,16 @@ sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
     my $self = shift;
     my ($super_meta) = @_;
 
-    my $common_base_name = $self->_find_common_base(blessed($self), blessed($super_meta));
+    my $super_meta_name = $super_meta->is_immutable
+                              ? $super_meta->_get_mutable_metaclass_name
+                              : blessed($super_meta);
+    my $common_base_name = $self->_find_common_base(blessed($self), $super_meta_name);
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
     return unless defined($common_base_name);
     return unless $common_base_name->isa('Moose::Meta::Class');
 
-    my @super_meta_name_ancestor_names = $self->_get_ancestors_until(blessed($super_meta), $common_base_name);
+    my @super_meta_name_ancestor_names = $self->_get_ancestors_until($super_meta_name, $common_base_name);
     my @class_meta_name_ancestor_names = $self->_get_ancestors_until(blessed($self), $common_base_name);
     # we're only dealing with roles here
     return unless all { $self->_is_role_only_subclass($_) }
@@ -471,11 +481,11 @@ sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
 sub _role_differences {
     my $self = shift;
     my ($class_meta_name, $super_meta_name) = @_;
-    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles')
-                         ? $super_meta_name->meta->calculate_all_roles
+    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
                          : ();
-    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles')
-                         ? $class_meta_name->meta->calculate_all_roles
+    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
                          : ();
     my @differences;
     for my $role_meta (@role_metas) {
@@ -492,7 +502,7 @@ sub _reconcile_roles_for_metaclass {
     my @role_differences = $self->_role_differences(
         $class_meta_name, $super_meta_name,
     );
-    return $self->create_anon_class(
+    return Moose::Meta::Class->create_anon_class(
         superclasses => [$super_meta_name],
         roles        => \@role_differences,
         cache        => 1,
@@ -527,7 +537,10 @@ sub _fix_class_metaclass_incompatibility {
     $self->SUPER::_fix_class_metaclass_incompatibility(@_);
 
     if ($self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta)) {
-        my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), blessed($super_meta));
+        my $super_meta_name = $super_meta->is_immutable
+                                  ? $super_meta->_get_mutable_metaclass_name
+                                  : blessed($super_meta);
+        my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
         my $new_self = $class_meta_subclass_meta->name->reinitialize(
             $self->name,
         );
@@ -742,6 +755,11 @@ This adds an C<augment> method modifier to the package.
 
 This will return a unique array of C<Moose::Meta::Role> instances
 which are attached to this class.
+
+=item B<< $metaclass->calculate_all_roles_with_inheritance >>
+
+This will return a unique array of C<Moose::Meta::Role> instances
+which are attached to this class, and each of this class's ancestors.
 
 =item B<< $metaclass->add_role($role) >>
 
