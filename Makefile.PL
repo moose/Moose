@@ -62,6 +62,7 @@ sub check_conflicts {
         'MooseX::StrictConstructor'     => '0.07',
         'MooseX::Types'                 => '0.19',
         'namespace::autoclean'          => '0.08',
+        'KiokuDB'                       => '0.41',
     );
 
     my $found = 0;
