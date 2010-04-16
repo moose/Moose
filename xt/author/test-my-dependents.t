@@ -34,7 +34,6 @@ MooseX::Async
 MooseX::Attribute::ENV
 MooseX::AttributeHelpers
 MooseX::AttributeInflate
-MooseX::Attribute::Prototype
 MooseX::Attributes::Curried
 MooseX::Blessed::Reconstruct
 MooseX::ClassAttribute
@@ -44,14 +43,12 @@ MooseX::Constructor::AllErrors
 MooseX::Contract
 MooseX::Control
 MooseX::CurriedHandles
-MooseX::Daemonize
 MooseX::Declare
 MooseX::DeepAccessors
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::FollowPBP
 MooseX::Getopt
 MooseX::GlobRef
-MooseX::GlobRef::Object
 MooseX::HasDefaults
 MooseX::Has::Sugar
 MooseX::InsideOut
@@ -76,7 +73,6 @@ MooseX::Params::Validate
 MooseX::Plaggerize
 MooseX::POE
 MooseX::Policy::SemiAffordanceAccessor
-MooseX::Q4MLog
 MooseX::Role::Cmd
 MooseX::Role::Matcher
 MooseX::Role::Parameterized
