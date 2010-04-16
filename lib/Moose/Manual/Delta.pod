@@ -32,6 +32,14 @@ In the interest of having C<no Moose> clean up everything that C<use Moose>
 does in the calling scope, C<no Moose> (as well as all other
 L<Moose::Exporter>-using modules) now unimports strict and warnings.
 
+=item Metaclass compatibility checking and fixing should be much more robust
+
+The L<metaclass compatibility|Moose/METACLASS COMPATIBILITY AND MOOSE> checking
+and fixing algorithms have been completely rewritten, in both Class::MOP and
+Moose. This should resolve many confusing errors when dealing with non-Moose
+inheritance and with custom metaclasses for things like attributes,
+constructors, etc.
+
 =back
 
 =head1 1.02

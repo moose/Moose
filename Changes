@@ -62,6 +62,9 @@ for, noteworthy changes.
 
   * Pass role arguments along when applying roles to instances. (doy, lsm)
 
+  * Metaclass compatibility fixing has been completely rewritten, and should
+    be much more robust. (doy)
+
 1.01 Fri, Mar 26, 2010
 
   [NEW FEATURES]
