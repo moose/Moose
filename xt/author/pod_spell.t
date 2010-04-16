@@ -183,6 +183,7 @@ reblesses
 refactored
 refactoring
 rethrows
+ROLETYPE
 runtime
 serializer
 stacktrace
