@@ -42,7 +42,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
             type subtype class_type role_type maybe_type duck_type
-            as where message optimize_as
+            as where message optimize_as inline_as
             coerce from via
             enum
             find_type_constraint
@@ -284,7 +284,7 @@ sub type {
 
     return _create_type_constraint(
         $name, undef, $p{where}, $p{message},
-        $p{optimize_as}
+        $p{optimize_as}, $p{inline_as},
     );
 }
 
@@ -329,7 +329,7 @@ sub subtype {
 
     return _create_type_constraint(
         $name, $p{as}, $p{where}, $p{message},
-        $p{optimize_as}
+        $p{optimize_as}, $p{inline_as},
     );
 }
 
@@ -399,7 +399,7 @@ sub as { { as => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
 sub message (&)     { { message     => $_[0] } }
 sub optimize_as (&) { { optimize_as => $_[0] } }
-sub inline_as       { { optimize_as => $_[0] } }
+sub inline_as (&)   { { inline_as => $_[0] } }
 
 sub from    {@_}
 sub via (&) { $_[0] }
@@ -486,12 +486,13 @@ sub match_on_type {
 ## desugaring functions ...
 ## --------------------------------------------------------
 
-sub _create_type_constraint ($$$;$$) {
+sub _create_type_constraint ($$$;$$$) {
     my $name      = shift;
     my $parent    = shift;
     my $check     = shift;
     my $message   = shift;
     my $optimized = shift;
+    my $inlined   = shift;
 
     my $pkg_defined_in = scalar( caller(1) );
 
@@ -515,13 +516,10 @@ sub _create_type_constraint ($$$;$$) {
         name               => $name,
         package_defined_in => $pkg_defined_in,
 
-        ( $check     ? ( constraint => $check )     : () ),
-        ( $message   ? ( message    => $message )   : () ),
-        ( $optimized
-              ? ref($optimized)
-                  ? ( optimized  => $optimized )
-                  : ( inline_optimized => $optimized )
-              : () ),
+        ( $check     ? ( constraint => $check )         : () ),
+        ( $message   ? ( message    => $message )       : () ),
+        ( $optimized ? ( optimized  => $optimized )     : () ),
+        ( $inlined   ? ( inline_optimized => $inlined ) : () ),
     );
 
     my $constraint;
@@ -662,28 +660,30 @@ subtype 'Bool' => as 'Item' =>
     where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
 subtype 'Value' => as 'Defined' => where { !ref($_) } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineValue;
+    inline_as \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineValue;
 
 subtype 'Ref' => as 'Defined' => where { ref($_) } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineRef;
+    inline_as \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineRef;
 
 subtype 'Str' => as 'Value' => where { ref(\$_) eq 'SCALAR' } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineStr;
+    inline_as \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineStr;
 
 subtype 'Num' => as 'Str' =>
     where { Scalar::Util::looks_like_number($_) } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineNum;
+    inline_as \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineNum;
 
 subtype 'Int' => as 'Num' => where { "$_" =~ /^-?[0-9]+$/ } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineInt;
+    inline_as \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineInt;
 
 subtype 'CodeRef' => as 'Ref' => where { ref($_) eq 'CODE' } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineCodeRef;
+    inline_as
+        \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineCodeRef;
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } =>
     inline_as
-        Moose::Util::TypeConstraints::OptimizedConstraints::InlineRegexpRef;
+        \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineRegexpRef;
 subtype 'GlobRef' => as 'Ref' => where { ref($_) eq 'GLOB' } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineGlobRef;
+    inline_as
+        \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineGlobRef;
 
 # NOTE:
 # scalar filehandles are GLOB refs,
@@ -691,13 +691,14 @@ subtype 'GlobRef' => as 'Ref' => where { ref($_) eq 'GLOB' } =>
 subtype 'FileHandle' => as 'GlobRef' => where {
     Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
 } => inline_as
-    Moose::Util::TypeConstraints::OptimizedConstraints::InlineFileHandle;
+    \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineFileHandle;
 
 # NOTE:
 # blessed(qr/.../) returns true,.. how odd
 subtype 'Object' => as 'Ref' =>
     where { blessed($_) && blessed($_) ne 'Regexp' } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineObject;
+    inline_as
+        \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineObject;
 
 # This type is deprecated.
 subtype 'Role' => as 'Object' => where { $_->can('does') } =>
@@ -705,12 +706,12 @@ subtype 'Role' => as 'Object' => where { $_->can('does') } =>
 
 subtype 'ClassName' => as 'Str' =>
     where { Class::MOP::is_class_loaded($_) } => inline_as
-    Moose::Util::TypeConstraints::OptimizedConstraints::InlineClassName;
+    \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineClassName;
 
 subtype 'RoleName' => as 'ClassName' => where {
     (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
 } => inline_as
-    Moose::Util::TypeConstraints::OptimizedConstraints::InlineRoleName;
+    \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineRoleName;
 
 ## --------------------------------------------------------
 # parameterizable types ...
@@ -722,7 +723,7 @@ $REGISTRY->add_type_constraint(
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'SCALAR' || ref($_) eq 'REF' },
         inline_optimized   =>
-            Moose::Util::TypeConstraints::OptimizedConstraints::InlineScalarRef,
+            \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineScalarRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -740,7 +741,7 @@ $REGISTRY->add_type_constraint(
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'ARRAY' },
         inline_optimized   =>
-            Moose::Util::TypeConstraints::OptimizedConstraints::InlineArrayRef,
+            \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineArrayRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -761,7 +762,7 @@ $REGISTRY->add_type_constraint(
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'HASH' },
         inline_optimized   =>
-            Moose::Util::TypeConstraints::OptimizedConstraints::InlineHashRef,
+            \&Moose::Util::TypeConstraints::OptimizedConstraints::InlineHashRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -781,7 +782,7 @@ $REGISTRY->add_type_constraint(
         package_defined_in   => __PACKAGE__,
         parent               => find_type_constraint('Item'),
         constraint           => sub {1},
-        inline_optimized     => '1',
+        inline_optimized     => sub {1},
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;

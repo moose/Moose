@@ -11,48 +11,48 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 
 sub InlineValue {
-    'defined($_[0]) && !ref($_[0])';
+    qq{defined($_[0]) && !ref($_[0])};
 }
-sub InlineRef { 'ref($_[0])' }
+sub InlineRef { qq{ref($_[0])} }
 
 # We need to use a temporary here to flatten LVALUEs, for instance as in
 # Str(substr($_,0,255)).
 sub InlineStr {
-    q{my $value = $_[0];}
-        . q{defined($value) && ref(\$value) eq 'SCALAR'}
+    qq{my \$value = $_[0];}
+        . qq{defined(\$value) && ref(\\\$value) eq 'SCALAR'}
 }
 
 sub InlineNum {
-    q{!ref($_[0]) && Scalar::Util::looks_like_number($_[0])}
+    qq{!ref($_[0]) && Scalar::Util::looks_like_number($_[0])}
 }
 
 sub InlineInt {
-    q{defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/}
+    qq{defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+\$/}
 }
 
-sub InlineScalarRef { q{ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF'} }
-sub InlineArrayRef  { q{ref($_[0]) eq 'ARRAY'}                         }
-sub InlineHashRef   { q{ref($_[0]) eq 'HASH'}                          }
-sub InlineCodeRef   { q{ref($_[0]) eq 'CODE'}                          }
-sub InlineRegexpRef { q{ref($_[0]) eq 'Regexp'}                        }
-sub InlineGlobRef   { q{ref($_[0]) eq 'GLOB'}                          }
+sub InlineScalarRef { qq{ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF'} }
+sub InlineArrayRef  { qq{ref($_[0]) eq 'ARRAY'}                         }
+sub InlineHashRef   { qq{ref($_[0]) eq 'HASH'}                          }
+sub InlineCodeRef   { qq{ref($_[0]) eq 'CODE'}                          }
+sub InlineRegexpRef { qq{ref($_[0]) eq 'Regexp'}                        }
+sub InlineGlobRef   { qq{ref($_[0]) eq 'GLOB'}                          }
 
 sub InlineFileHandle {
-        q{(ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]))}
-  . q{ or (Scalar::Util::blessed($_[0]) && $_[0]->isa('IO::Handle'))}
+        qq{(ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]))}
+  . qq{ or (Scalar::Util::blessed($_[0]) && $_[0]->isa('IO::Handle'))}
 }
 
 sub InlineObject {
-    q{Scalar::Util::blessed($_[0]) && Scalar::Util::blessed($_[0]) ne 'Regexp'}
+    qq{Scalar::Util::blessed($_[0]) && Scalar::Util::blessed($_[0]) ne 'Regexp'}
 }
 
 sub Role { Carp::cluck('The Role type is deprecated.'); Scalar::Util::blessed($_[0]) && $_[0]->can('does') }
 
-sub InlineClassName { q{Class::MOP::is_class_loaded($_[0])} }
+sub InlineClassName { qq{Class::MOP::is_class_loaded($_[0])} }
 
 sub InlineRoleName {
-    InlineClassName()
-  . q{ && (Class::MOP::class_of($_[0]) || return)->isa('Moose::Meta::Role')}
+    InlineClassName(@_)
+  . qq{ && (Class::MOP::class_of($_[0]) || return)->isa('Moose::Meta::Role')}
 }
 
 # NOTE:
