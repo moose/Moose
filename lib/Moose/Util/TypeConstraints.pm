@@ -662,7 +662,7 @@ subtype 'Bool' => as 'Item' =>
     where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
 
 subtype 'Value' => as 'Defined' => where { !ref($_) } =>
-    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineValue();
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineValue;
 
 subtype 'Ref' => as 'Defined' => where { ref($_) } =>
     inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineRef;
@@ -675,29 +675,29 @@ subtype 'Num' => as 'Str' =>
     inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineNum;
 
 subtype 'Int' => as 'Num' => where { "$_" =~ /^-?[0-9]+$/ } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineInt;
 
 subtype 'CodeRef' => as 'Ref' => where { ref($_) eq 'CODE' } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::CodeRef;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineCodeRef;
 subtype 'RegexpRef' => as 'Ref' => where { ref($_) eq 'Regexp' } =>
-    optimize_as
-    \&Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef;
+    inline_as
+        Moose::Util::TypeConstraints::OptimizedConstraints::InlineRegexpRef;
 subtype 'GlobRef' => as 'Ref' => where { ref($_) eq 'GLOB' } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::GlobRef;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineGlobRef;
 
 # NOTE:
 # scalar filehandles are GLOB refs,
 # but a GLOB ref is not always a filehandle
 subtype 'FileHandle' => as 'GlobRef' => where {
     Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
-} => optimize_as
-    \&Moose::Util::TypeConstraints::OptimizedConstraints::FileHandle;
+} => inline_as
+    Moose::Util::TypeConstraints::OptimizedConstraints::InlineFileHandle;
 
 # NOTE:
 # blessed(qr/.../) returns true,.. how odd
 subtype 'Object' => as 'Ref' =>
     where { blessed($_) && blessed($_) ne 'Regexp' } =>
-    optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Object;
+    inline_as Moose::Util::TypeConstraints::OptimizedConstraints::InlineObject;
 
 # This type is deprecated.
 subtype 'Role' => as 'Object' => where { $_->can('does') } =>
@@ -706,13 +706,13 @@ subtype 'Role' => as 'Object' => where { $_->can('does') } =>
 my $_class_name_checker = sub { };
 
 subtype 'ClassName' => as 'Str' =>
-    where { Class::MOP::is_class_loaded($_) } => optimize_as
-    \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
+    where { Class::MOP::is_class_loaded($_) } => inline_as
+    Moose::Util::TypeConstraints::OptimizedConstraints::InlineClassName;
 
 subtype 'RoleName' => as 'ClassName' => where {
     (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
-} => optimize_as
-    \&Moose::Util::TypeConstraints::OptimizedConstraints::RoleName;
+} => inline_as
+    Moose::Util::TypeConstraints::OptimizedConstraints::InlineRoleName;
 
 ## --------------------------------------------------------
 # parameterizable types ...

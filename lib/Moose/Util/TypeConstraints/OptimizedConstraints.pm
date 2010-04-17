@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Class::MOP;
-use Scalar::Util 'blessed', 'looks_like_number';
 
 our $VERSION   = '1.01';
 $VERSION = eval $VERSION;
@@ -27,7 +26,17 @@ sub InlineNum {
     q{!ref($_[0]) && Scalar::Util::looks_like_number($_[0])}
 }
 
-sub Int { defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/ }
+sub InlineInt {
+    q{defined($_[0]) && !ref($_[0]) && $_[0] =~ /^-?[0-9]+$/}
+}
+
+# XXX: not used yet
+sub InlineScalarRef { q{ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF'} }
+sub InlineArrayRef  { q{ref($_[0]) eq 'ARRAY'}                         }
+sub InlineHashRef   { q{ref($_[0]) eq 'HASH'}                          }
+sub InlineCodeRef   { q{ref($_[0]) eq 'CODE'}                          }
+sub InlineRegexpRef { q{ref($_[0]) eq 'Regexp'}                        }
+sub InlineGlobRef   { q{ref($_[0]) eq 'GLOB'}                          }
 
 sub ScalarRef { ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF' }
 sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
@@ -36,19 +45,22 @@ sub CodeRef   { ref($_[0]) eq 'CODE'   }
 sub RegexpRef { ref($_[0]) eq 'Regexp' }
 sub GlobRef   { ref($_[0]) eq 'GLOB'   }
 
-sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
-
-sub Object { blessed($_[0]) && blessed($_[0]) ne 'Regexp' }
-
-sub Role { Carp::cluck('The Role type is deprecated.'); blessed($_[0]) && $_[0]->can('does') }
-
-sub ClassName {
-    return Class::MOP::is_class_loaded( $_[0] );
+sub InlineFileHandle {
+        q{(ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]))}
+  . q{ or (Scalar::Util::blessed($_[0]) && $_[0]->isa('IO::Handle'))}
 }
 
-sub RoleName {
-    ClassName($_[0])
-    && (Class::MOP::class_of($_[0]) || return)->isa('Moose::Meta::Role')
+sub InlineObject {
+    q{Scalar::Util::blessed($_[0]) && Scalar::Util::blessed($_[0]) ne 'Regexp'}
+}
+
+sub Role { Carp::cluck('The Role type is deprecated.'); Scalar::Util::blessed($_[0]) && $_[0]->can('does') }
+
+sub InlineClassName { q{Class::MOP::is_class_loaded($_[0])} }
+
+sub InlineRoleName {
+    InlineClassName()
+  . q{ && (Class::MOP::class_of($_[0]) || return)->isa('Moose::Meta::Role')}
 }
 
 # NOTE:
