@@ -721,8 +721,8 @@ $REGISTRY->add_type_constraint(
         package_defined_in => __PACKAGE__,
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'SCALAR' || ref($_) eq 'REF' },
-        optimized =>
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef,
+        inline_optimized   =>
+            Moose::Util::TypeConstraints::OptimizedConstraints::InlineScalarRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -739,8 +739,8 @@ $REGISTRY->add_type_constraint(
         package_defined_in => __PACKAGE__,
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'ARRAY' },
-        optimized =>
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef,
+        inline_optimized   =>
+            Moose::Util::TypeConstraints::OptimizedConstraints::InlineArrayRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -760,8 +760,8 @@ $REGISTRY->add_type_constraint(
         package_defined_in => __PACKAGE__,
         parent             => find_type_constraint('Ref'),
         constraint         => sub { ref($_) eq 'HASH' },
-        optimized =>
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef,
+        inline_optimized   =>
+            Moose::Util::TypeConstraints::OptimizedConstraints::InlineHashRef,
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
@@ -781,6 +781,7 @@ $REGISTRY->add_type_constraint(
         package_defined_in   => __PACKAGE__,
         parent               => find_type_constraint('Item'),
         constraint           => sub {1},
+        inline_optimized     => '1',
         constraint_generator => sub {
             my $type_parameter = shift;
             my $check          = $type_parameter->_compiled_type_constraint;
