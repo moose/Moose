@@ -129,7 +129,12 @@ sub _inline_check_constraint {
 
     my $attr_name = quotemeta( $attr->name );
 
-    qq{\$type_constraint->($value) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
+    my $tc = $attr->type_constraint;
+    my $check = $tc->has_hand_optimized_inline_type_constraint
+                    ? $tc->inline_check_of($value, '$type_constraint')
+                    : qq{\$type_constraint->($value)};
+
+    qq{$check || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
 }
 
 sub _inline_check_coercion {

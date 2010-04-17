@@ -344,7 +344,7 @@ sub inline_check_of {
     my ($self, $value_var, $constraint_var) = @_;
     $constraint_var ||= '$constraint';
     $value_var      ||= '$_';
-    if ($self->has_hand_optimized_type_constraint) {
+    if ($self->has_hand_optimized_inline_type_constraint) {
         return 'do { local @_ = ('
             . $value_var
             . ');'
