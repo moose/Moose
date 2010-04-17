@@ -43,6 +43,7 @@ MooseX::Constructor::AllErrors
 MooseX::Contract
 MooseX::Control
 MooseX::CurriedHandles
+MooseX::Daemonize
 MooseX::Declare
 MooseX::DeepAccessors
 MooseX::Emulate::Class::Accessor::Fast
