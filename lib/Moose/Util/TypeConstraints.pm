@@ -703,8 +703,6 @@ subtype 'Object' => as 'Ref' =>
 subtype 'Role' => as 'Object' => where { $_->can('does') } =>
     optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
 
-my $_class_name_checker = sub { };
-
 subtype 'ClassName' => as 'Str' =>
     where { Class::MOP::is_class_loaded($_) } => inline_as
     Moose::Util::TypeConstraints::OptimizedConstraints::InlineClassName;
