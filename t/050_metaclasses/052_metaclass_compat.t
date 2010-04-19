@@ -210,4 +210,35 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
     ::lives_ok { $meta->make_immutable } "can still make immutable";
 }
 
+{
+    package Foo5::Meta::Role;
+    use Moose::Role;
+}
+{
+    package Foo5::SuperClass::WithMetaRole;
+    use Moose -traits =>'Foo5::Meta::Role';
+}
+{
+    package Foo5::SuperClass::After::Attribute;
+    use Moose;
+}
+{
+    package Foo5;
+    use Moose;
+    my @superclasses = ('Foo5::SuperClass::WithMetaRole');
+    extends @superclasses;
+
+    has an_attribute_generating_methods => ( is => 'ro' );
+
+    push(@superclasses, 'Foo5::SuperClass::After::Attribute');
+
+    ::lives_ok {
+        extends @superclasses;
+    } 'MI extends after_generated_methods with metaclass roles';
+    ::lives_ok {
+        extends reverse @superclasses;
+    }
+    'MI extends after_generated_methods with metaclass roles (reverse)';
+}
+
 done_testing;
