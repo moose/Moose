@@ -241,4 +241,40 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
     'MI extends after_generated_methods with metaclass roles (reverse)';
 }
 
+{
+    package Foo6::Meta::Role;
+    use Moose::Role;
+}
+{
+    package Foo6::SuperClass::WithMetaRole;
+    use Moose -traits =>'Foo6::Meta::Role';
+}
+{
+    package Foo6::Meta::OtherRole;
+    use Moose::Role;
+}
+{
+    package Foo6::SuperClass::After::Attribute;
+    use Moose -traits =>'Foo6::Meta::OtherRole';
+}
+{
+    package Foo6;
+    use Moose;
+    my @superclasses = ('Foo6::SuperClass::WithMetaRole');
+    extends @superclasses;
+
+    has an_attribute_generating_methods => ( is => 'ro' );
+
+    push(@superclasses, 'Foo6::SuperClass::After::Attribute');
+
+    ::throws_ok {
+        extends @superclasses;
+    } qr/compat.*pristine/,
+    'unsafe MI extends after_generated_methods with metaclass roles';
+    ::throws_ok {
+        extends reverse @superclasses;
+    } qr/compat.*pristine/,
+    'unsafe MI extends after_generated_methods with metaclass roles (reverse)';
+}
+
 done_testing;

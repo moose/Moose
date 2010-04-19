@@ -6,7 +6,7 @@ use warnings;
 
 use Class::MOP;
 
-use Carp ();
+use Carp qw( confess );
 use Data::OptList;
 use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
@@ -537,6 +537,10 @@ sub _fix_class_metaclass_incompatibility {
     $self->SUPER::_fix_class_metaclass_incompatibility(@_);
 
     if ($self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta)) {
+        ($self->is_pristine)
+            || confess "Can't fix metaclass incompatibility for "
+                     . $self->name
+                     . " because it is not pristine.";
         my $super_meta_name = $super_meta->is_immutable
                                   ? $super_meta->_get_mutable_metaclass_name
                                   : blessed($super_meta);
@@ -561,6 +565,10 @@ sub _fix_single_metaclass_incompatibility {
     $self->SUPER::_fix_single_metaclass_incompatibility(@_);
 
     if ($self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta)) {
+        ($self->is_pristine)
+            || confess "Can't fix metaclass incompatibility for "
+                     . $self->name
+                     . " because it is not pristine.";
         my %metaclasses = $self->_base_metaclasses;
         my $class_specific_meta_subclass_meta = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
