@@ -1,10 +1,10 @@
 use strict;
 use warnings;
-use inc::Module::Install 0.91;
-use Module::Install::ExtraTests;
+use inc::Module::Install 0.95;
 use Module::Install::AuthorRequires;
 use 5.008001;
 
+check_broken_extratests();
 check_conflicts();
 
 name 'Moose';
@@ -32,11 +32,10 @@ author_requires 'Test::Spelling';
 author_requires 'Test::Pod::Coverage';
 author_requires 'Test::NoTabs';
 
-if ( $Module::Install::AUTHOR || $ENV{IS_MAINTAINER} ) {
+if ( is_maintainer() ) {
     system( $^X, 'author/extract-inline-tests' );
 }
 
-extra_tests();
 tests_recursive();
 
 WriteAll();
@@ -96,4 +95,20 @@ EOF
     return unless -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
 
     sleep 4;
+}
+
+sub is_maintainer {
+    return $Module::Install::AUTHOR || $ENV{IS_MAINTAINER};
+}
+
+sub check_broken_extratests {
+    return unless is_maintainer();
+
+    if ( exists $Module::Install::ExtraTests::{VERSION} && Module::Install::ExtraTests->VERSION < 0.007 ) {
+        print STDERR <<'EOR';
+You have a broken version of Module::Install::ExtraTests installed.
+Please upgrade to version 0.007 or newer and re-run Makefile.PL
+EOR
+        exit 0;
+    }
 }
