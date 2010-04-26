@@ -434,9 +434,7 @@ sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
     my $self = shift;
     my ($super_meta) = @_;
 
-    my $super_meta_name = $super_meta->is_immutable
-                              ? $super_meta->_get_mutable_metaclass_name
-                              : blessed($super_meta);
+    my $super_meta_name = $super_meta->_real_ref_name;
     my $common_base_name = $self->_find_common_base(blessed($self), $super_meta_name);
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
@@ -541,9 +539,7 @@ sub _fix_class_metaclass_incompatibility {
             || confess "Can't fix metaclass incompatibility for "
                      . $self->name
                      . " because it is not pristine.";
-        my $super_meta_name = $super_meta->is_immutable
-                                  ? $super_meta->_get_mutable_metaclass_name
-                                  : blessed($super_meta);
+        my $super_meta_name = $super_meta->_real_ref_name;
         my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
         my $new_self = $class_meta_subclass_meta->name->reinitialize(
             $self->name,
