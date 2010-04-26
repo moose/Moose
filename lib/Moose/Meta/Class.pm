@@ -364,7 +364,7 @@ sub _base_metaclasses {
 sub _find_common_base {
     my $self = shift;
     my ($meta1, $meta2) = map { Class::MOP::class_of($_) } @_;
-    return unless defined($meta1) && defined($meta2);
+    return unless defined $meta1 && defined $meta2;
 
     # FIXME? This doesn't account for multiple inheritance (not sure
     # if it needs to though). For example, if somewhere in $meta1's
@@ -438,7 +438,7 @@ sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
     my $common_base_name = $self->_find_common_base(blessed($self), $super_meta_name);
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
-    return unless defined($common_base_name);
+    return unless defined $common_base_name;
     return unless $common_base_name->isa('Moose::Meta::Class');
 
     my @super_meta_name_ancestor_names = $self->_get_ancestors_until($super_meta_name, $common_base_name);
@@ -463,7 +463,7 @@ sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
     my $common_base_name = $self->_find_common_base($class_specific_meta_name, $super_specific_meta_name);
     # if they're not both moose metaclasses, and the cmop fixing couldn't
     # do anything, there's nothing more we can do
-    return unless defined($common_base_name);
+    return unless defined $common_base_name;
     return unless $common_base_name->isa($metaclasses{$metaclass_type});
 
     my @super_specific_meta_name_ancestor_names = $self->_get_ancestors_until($super_specific_meta_name, $common_base_name);
