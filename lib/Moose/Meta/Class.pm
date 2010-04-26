@@ -435,20 +435,12 @@ sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
     my ($super_meta) = @_;
 
     my $super_meta_name = $super_meta->_real_ref_name;
-    my $common_base_name = $self->_find_common_base(blessed($self), $super_meta_name);
-    # if they're not both moose metaclasses, and the cmop fixing couldn't
-    # do anything, there's nothing more we can do
-    return unless defined $common_base_name;
-    return unless $common_base_name->isa('Moose::Meta::Class');
 
-    my @super_meta_name_ancestor_names = $self->_get_ancestors_until($super_meta_name, $common_base_name);
-    my @class_meta_name_ancestor_names = $self->_get_ancestors_until(blessed($self), $common_base_name);
-    # we're only dealing with roles here
-    return unless all { $self->_is_role_only_subclass($_) }
-                      (@super_meta_name_ancestor_names,
-                       @class_meta_name_ancestor_names);
-
-    return 1;
+    return $self->_classes_differ_by_roles_only(
+        blessed($self),
+        $super_meta_name,
+        'Moose::Meta::Class',
+    );
 }
 
 sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
@@ -460,18 +452,36 @@ sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
     my $super_specific_meta_name = $super_meta->$metaclass_type;
     my %metaclasses = $self->_base_metaclasses;
 
-    my $common_base_name = $self->_find_common_base($class_specific_meta_name, $super_specific_meta_name);
-    # if they're not both moose metaclasses, and the cmop fixing couldn't
-    # do anything, there's nothing more we can do
-    return unless defined $common_base_name;
-    return unless $common_base_name->isa($metaclasses{$metaclass_type});
+    return $self->_classes_differ_by_roles_only(
+        $class_specific_meta_name,
+        $super_specific_meta_name,
+        $metaclasses{$metaclass_type},
+    );
+}
 
-    my @super_specific_meta_name_ancestor_names = $self->_get_ancestors_until($super_specific_meta_name, $common_base_name);
-    my @class_specific_meta_name_ancestor_names = $self->_get_ancestors_until($class_specific_meta_name, $common_base_name);
-    # we're only dealing with roles here
-    return unless all { $self->_is_role_only_subclass($_) }
-                      (@super_specific_meta_name_ancestor_names,
-                       @class_specific_meta_name_ancestor_names);
+sub _classes_differ_by_roles_only {
+    my $self = shift;
+    my ( $self_meta_name, $super_meta_name, $expected_ancestor ) = @_;
+
+    my $common_base_name
+        = $self->_find_common_base( $self_meta_name, $super_meta_name );
+
+    # If they're not both moose metaclasses, and the cmop fixing couldn't do
+    # anything, there's nothing more we can do. The $expected_ancestor should
+    # always be a Moose metaclass name like Moose::Meta::Class or
+    # Moose::Meta::Attribute.
+    return unless defined $common_base_name;
+    return unless $common_base_name->isa($expected_ancestor);
+
+    my @super_meta_name_ancestor_names
+        = $self->_get_ancestors_until( $super_meta_name, $common_base_name );
+    my @class_meta_name_ancestor_names
+        = $self->_get_ancestors_until( $self_meta_name, $common_base_name );
+
+    return
+        unless all { $self->_is_role_only_subclass($_) }
+        @super_meta_name_ancestor_names,
+        @class_meta_name_ancestor_names;
 
     return 1;
 }
