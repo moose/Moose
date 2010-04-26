@@ -544,13 +544,8 @@ sub _fix_class_metaclass_incompatibility {
         my $new_self = $class_meta_subclass_meta->name->reinitialize(
             $self->name,
         );
-        %$self = %$new_self;
-        bless $self, $class_meta_subclass_meta->name;
-        # We need to replace the cached metaclass instance or else when it
-        # goes out of scope Class::MOP::Class destroy's the namespace for
-        # the metaclass's class, causing much havoc.
-        Class::MOP::store_metaclass_by_name( $self->name, $self );
-        Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
+
+        $self->_replace_self( $new_self, $class_meta_subclass_meta->name );
     }
 }
 
@@ -570,14 +565,24 @@ sub _fix_single_metaclass_incompatibility {
             $self->name,
             $metaclass_type => $class_specific_meta_subclass_meta->name,
         );
-        %$self = %$new_self;
-        bless $self, blessed($super_meta);
-        # We need to replace the cached metaclass instance or else when it
-        # goes out of scope Class::MOP::Class destroy's the namespace for
-        # the metaclass's class, causing much havoc.
-        Class::MOP::store_metaclass_by_name( $self->name, $self );
-        Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
+
+        $self->_replace_self( $new_self, blessed($super_meta) );
     }
+}
+
+
+sub _replace_self {
+    my $self      = shift;
+    my ( $new_self, $new_class)   = @_;
+
+    %$self = %$new_self;
+    bless $self, $new_class;
+
+    # We need to replace the cached metaclass instance or else when it goes
+    # out of scope Class::MOP::Class destroy's the namespace for the
+    # metaclass's class, causing much havoc.
+    Class::MOP::store_metaclass_by_name( $self->name, $self );
+    Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
 }
 
 sub _process_attribute {
