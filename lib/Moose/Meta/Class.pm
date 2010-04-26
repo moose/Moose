@@ -367,7 +367,7 @@ sub _find_common_base {
     return unless defined($meta1) && defined($meta2);
 
     # FIXME? This doesn't account for multiple inheritance (not sure
-    # if it needs to though). For example, is somewhere in $meta1's
+    # if it needs to though). For example, if somewhere in $meta1's
     # history it inherits from both ClassA and ClassB, and $meta2
     # inherits from ClassB & ClassA, does it matter? And what crazy
     # fool would do that anyway?
