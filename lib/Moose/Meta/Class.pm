@@ -565,7 +565,6 @@ sub _fix_single_metaclass_incompatibility {
             || confess "Can't fix metaclass incompatibility for "
                      . $self->name
                      . " because it is not pristine.";
-        my %metaclasses = $self->_base_metaclasses;
         my $class_specific_meta_subclass_meta = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
             $self->name,
