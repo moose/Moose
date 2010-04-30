@@ -78,16 +78,17 @@ sub is_a_type_of {
 sub is_subtype_of {
     my ($self, $type_or_name_or_class ) = @_;
 
-    if ( not ref $type_or_name_or_class ) {
-        # it might be a class
-        return 1 if $self->class->isa( $type_or_name_or_class );
-    }
-
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_class);
 
-    return unless defined $type;
+    if ( not defined $type ) {
+        if ( not ref $type_or_name_or_class ) {
+            # it might be a class
+            return 1 if $self->class->isa( $type_or_name_or_class );
+        }
+        return;
+    }
 
-    if ( $type->isa(__PACKAGE__) ) {
+    if ( $type->isa(__PACKAGE__) && $type->class ne $self->class) {
         # if $type_or_name_or_class isn't a class, it might be the TC name of another ::Class type
         # or it could also just be a type object in this branch
         return $self->class->isa( $type->class );

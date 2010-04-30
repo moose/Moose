@@ -9,6 +9,10 @@ for, noteworthy changes.
   * Make Moose::Meta::TypeConstraint::Class correctly reject RegexpRefs.
     (Florian Ragwitz)
 
+  * Calling is_subtype_of on a Moose::Meta::TypeConstraint::Class with itself or
+    the class the TC represents as an argument incorrectly returned true. This
+    behavior is correct for is_type_of, not is_subtype_of. (Guillermo Roditi)
+
   * Use File::Temp for temp files created during tests. Previously, files were
     written to the t/ dir, which could cause problems of the user running the
     tests did not have write access to that directory.. (Chris Weyl, Ævar

@@ -32,6 +32,9 @@ my $type = find_type_constraint("Foo");
 
 is( $type->class, "Foo", "class attribute" );
 
+ok( !$type->is_subtype_of('Foo'), "Foo is not subtype of Foo" );
+ok( !$type->is_subtype_of($type), '$foo_type is not subtype of $foo_type' );
+
 ok( $type->is_subtype_of("Gorch"), "subtype of gorch" );
 
 ok( $type->is_subtype_of("Bar"), "subtype of bar" );

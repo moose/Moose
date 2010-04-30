@@ -16,6 +16,20 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 1.02
+
+=over 4
+
+=item Moose::Meta::TypeConstraint::Class is_subtype_of behavior
+
+Earlier versions of L<is_subtype_of|Moose::Meta::TypeConstraint::Class/is_subtype_of>
+would incorrectly return true when called with itself, its own TC name or
+its class name as an argument. (i.e. $foo_tc->is_subtype_of('Foo') == 1) This
+behavior was a caused by C<isa> being checked before the class name. The old
+behavior can be accessed with L<is_type_of|Moose::Meta::TypeConstraint::Class/is_type_of>
+
+=back
+
 =head1 1.00
 
 =over 4
