@@ -17,11 +17,12 @@ my $exclude = qr/^Acme-/x;
 
 if ( $ENV{MOOSE_TEST_MD_ALL} ) {
     test_all_dependents( 'Moose', { exclude => $exclude } );
+    done_testing;
 }
 else {
     my @modules = map { chomp; $_ } <DATA>;
+    plan tests => scalar @modules;
     test_module($_) for @modules;
-    done_testing;
 }
 
 __DATA__
