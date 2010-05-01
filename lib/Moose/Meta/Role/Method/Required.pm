@@ -10,7 +10,7 @@ use overload '""'     => sub { shift->name },   # stringify to method name
 
 use base qw(Class::MOP::Object);
 
-our $VERSION   = '1.01';
+our $VERSION   = '1.02';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

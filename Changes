@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.02 Sat, May 01, 2010
+
   [BUG FIXES]
 
   * Stop the natatime method provided by the native Array trait from returning
