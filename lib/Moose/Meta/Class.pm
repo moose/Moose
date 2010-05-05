@@ -7,6 +7,7 @@ use warnings;
 use Class::MOP;
 
 use Carp ();
+use Data::OptList;
 use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
@@ -279,14 +280,15 @@ sub new_object {
 
 sub superclasses {
     my $self = shift;
-    my @supers = @_;
-    foreach my $super (@supers) {
-        Class::MOP::load_class($super);
-        my $meta = Class::MOP::class_of($super);
-        $self->throw_error("You cannot inherit from a Moose Role ($super)")
+    my $supers = Data::OptList::mkopt(\@_);
+    foreach my $super (@{ $supers }) {
+        my ($name, $opts) = @{ $super };
+        Class::MOP::load_class($name, $opts);
+        my $meta = Class::MOP::class_of($name);
+        $self->throw_error("You cannot inherit from a Moose Role ($name)")
             if $meta && $meta->isa('Moose::Meta::Role')
     }
-    return $self->SUPER::superclasses(@supers);
+    return $self->SUPER::superclasses(map { $_->[0] } @{ $supers });
 }
 
 ### ---------------------------------------------
@@ -723,6 +725,14 @@ roles, it will be reused.
       cache        => 1,
   );
 
+Each entry in both the C<superclasses> and the C<roles> option can be
+followed by a hash reference with arguments. The C<supperclasses>
+option can be supplied with a L<-version|Class::MOP/Class Loading
+Options> option that ensures the loaded superclass satisfies the
+required version. The C<role> option also takes the C<-version> as an
+argument, but the option hash reference can also contain any other
+role relevant values like exclusions or parameterized role arguments.
+
 =item B<< $metaclass->make_immutable(%options) >>
 
 This overrides the parent's method to add a few options. Specifically,
@@ -736,6 +746,15 @@ C<inline_accessors> option to false.
 
 This overrides the parent's method in order to add support for
 attribute triggers.
+
+=item B<< $metaclass->superclasses(@superclasses) >>
+
+This is the accesssor allowing you to read or change the parents of
+the class.
+
+Each superclass can be followed by a hash reference containing a
+L<-version|Class::MOP/Class Loading Options> value. If the version
+requirement is not satisfied an error will be thrown.
 
 =item B<< $metaclass->add_override_method_modifier($name, $sub) >>
 

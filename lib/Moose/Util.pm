@@ -105,7 +105,7 @@ sub _apply_all_roles {
             $meta = $role->[0];
         }
         else {
-            Class::MOP::load_class( $role->[0] );
+            Class::MOP::load_class( $role->[0] , $role->[1] );
             $meta = Class::MOP::class_of( $role->[0] );
         }
 

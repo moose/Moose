@@ -403,9 +403,30 @@ actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
 replace it. This is important to ensure that classes which do not have
 superclasses still properly inherit from L<Moose::Object>.
 
+Each superclass can be followed by a hash reference with options. Currently,
+only L<-version|Class::MOP/Class Loading Options> is recognized:
+
+    extends 'My::Parent'      => { -version => 0.01 },
+            'My::OtherParent' => { -version => 0.03 };
+
+An exception will be thrown if the version requirements are not
+satisfied.
+
 =item B<with (@roles)>
 
 This will apply a given set of C<@roles> to the local class.
+
+Like with C<extends>, each specified role can be followed by a hash
+reference with a L<-version|Class::MOP/Class Loading Options> option:
+
+    with 'My::Role'      => { -version => 0.32 },
+         'My::Otherrole' => { -version => 0.23 };
+
+The specified version requirements must be satisfied, otherwise an
+exception will be thrown.
+
+If your role takes options or arguments, they can be passed along in the
+hash reference as well.
 
 =item B<has $name|@$names =E<gt> %options>
 

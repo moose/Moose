@@ -44,4 +44,26 @@ use Test::Exception;
     'correct error when superclass could not be found';
 }
 
+{
+    package Affe;
+    our $VERSION = 23;
+}
+
+{
+    package Tiger;
+    use Moose;
+
+    ::lives_ok { extends 'Foo', Affe => { -version => 13 } }
+    'extends with version requirement';
+}
+
+{
+    package Birne;
+    use Moose;
+
+    ::throws_ok { extends 'Foo', Affe => { -version => 42 } }
+    qr/Affe version 42 required--this is only version 23/,
+    'extends with unsatisfied version requirement';
+}
+
 done_testing;

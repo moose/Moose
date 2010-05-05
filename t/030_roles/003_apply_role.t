@@ -10,6 +10,8 @@ use Test::Exception;
     package FooRole;
     use Moose::Role;
 
+    our $VERSION = 23;
+
     has 'bar' => ( is => 'rw', isa => 'FooClass' );
     has 'baz' => ( is => 'ro' );
 
@@ -43,7 +45,13 @@ use Test::Exception;
     use Moose;
 
     extends 'BarClass';
-    with 'FooRole';
+
+    ::throws_ok { with 'FooRole' => { -version => 42 } }
+        qr/FooRole version 42 required--this is only version 23/,
+        'applying role with unsatisfied version requirement';
+
+    ::lives_ok { with 'FooRole' => { -version => 13 } }
+        'applying role with satisfied version requirement';
 
     sub blau {'FooClass::blau'}    # << the role wraps this ...
 
