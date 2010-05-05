@@ -121,7 +121,6 @@ TypeContraints
 ## computerese
 API
 APIs
-accesssor
 arrayrefs
 arity
 Baz
