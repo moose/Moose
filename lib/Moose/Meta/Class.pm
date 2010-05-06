@@ -749,7 +749,7 @@ attribute triggers.
 
 =item B<< $metaclass->superclasses(@superclasses) >>
 
-This is the accesssor allowing you to read or change the parents of
+This is the accessor allowing you to read or change the parents of
 the class.
 
 Each superclass can be followed by a hash reference containing a
