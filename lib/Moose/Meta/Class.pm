@@ -726,7 +726,7 @@ roles, it will be reused.
   );
 
 Each entry in both the C<superclasses> and the C<roles> option can be
-followed by a hash reference with arguments. The C<supperclasses>
+followed by a hash reference with arguments. The C<superclasses>
 option can be supplied with a L<-version|Class::MOP/Class Loading
 Options> option that ensures the loaded superclass satisfies the
 required version. The C<role> option also takes the C<-version> as an
