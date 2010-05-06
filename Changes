@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.03 Thu, May 06, 2010
+
   [NEW FEATURES]
 
   * Allow specifying required versions when setting superclasses or applying
