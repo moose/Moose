@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use inc::Module::Install 0.95;
+use inc::Module::Install 0.97;
 use Module::Install::AuthorRequires;
 use 5.008001;
 
