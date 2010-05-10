@@ -401,16 +401,32 @@ sub _is_role_only_subclass {
     my ($parent_name) = @parent_names;
     my $parent_meta = Class::MOP::Class->initialize($parent_name);
 
+    my @roles = $meta->can('calculate_all_roles_with_inheritance')
+                    ? $meta->calculate_all_roles_with_inheritance
+                    : ();
+
     # loop over all methods that are a part of the current class
     # (not inherited)
     for my $method (map { $meta->get_method($_) } $meta->get_method_list) {
         # always ignore meta
         next if $method->name eq 'meta';
         # we'll deal with attributes below
-        next if $method->isa('Class::MOP::Method::Accessor');
+        next if $method->can('associated_attribute');
         # if the method comes from a role we consumed, ignore it
         next if $meta->can('does_role')
              && $meta->does_role($method->original_package_name);
+        # FIXME - this really isn't right. Just because a modifier is
+        # defined in a role doesn't mean it isn't _also_ defined in the
+        # subclass.
+        next if $method->isa('Class::MOP::Method::Wrapped')
+             && (
+                 (!scalar($method->around_modifiers)
+               || any { $_->has_around_method_modifiers($method->name) } @roles)
+              && (!scalar($method->before_modifiers)
+               || any { $_->has_before_method_modifiers($method->name) } @roles)
+              && (!scalar($method->after_modifiers)
+               || any { $_->has_after_method_modifiers($method->name) } @roles)
+                );
 
         return 0;
     }
@@ -421,8 +437,7 @@ sub _is_role_only_subclass {
     # defined in a role doesn't mean it isn't _also_ defined in the
     # subclass.
     for my $attr (map { $meta->get_attribute($_) } $meta->get_attribute_list) {
-        next if any { $_->has_attribute($attr->name) }
-                    $meta->calculate_all_roles_with_inheritance;
+        next if any { $_->has_attribute($attr->name) } @roles;
 
         return 0;
     }
