@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use lib 't/lib';
 use Test::More;
 use Test::Exception;
 
@@ -275,6 +276,30 @@ ok(Foo::Sub->meta->constructor_class->meta->can('does_role')
         extends reverse @superclasses;
     } qr/compat.*pristine/,
     'unsafe MI extends after_generated_methods with metaclass roles (reverse)';
+}
+
+{
+    package Foo7::Meta::Trait;
+    use Moose::Role;
+}
+
+{
+    package Foo7;
+    use Moose -traits => ['Foo7::Meta::Trait'];
+}
+
+{
+    package Bar7;
+    # in an external file
+    use Moose -traits => ['Bar7::Meta::Trait'];
+    ::lives_ok { extends 'Foo7' } "role reconciliation works";
+}
+
+{
+    package Bar72;
+    # in an external file
+    use Moose -traits => ['Bar7::Meta::Trait2'];
+    ::lives_ok { extends 'Foo7' } "role reconciliation works";
 }
 
 done_testing;
