@@ -172,4 +172,16 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
     } "or add new types to the union";
 }
 
+{
+    package Role::With::PlusAttr;
+    use Moose::Role;
+
+    with 'Foo::Role';
+
+    ::throws_ok {
+        has '+bar' => ( is => 'ro' );
+    } qr/has '\+attr' is not supported in roles/,
+        "Test has '+attr' in roles explodes";
+}
+
 done_testing;
