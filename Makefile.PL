@@ -38,6 +38,8 @@ if ( is_maintainer() ) {
 
 tests_recursive();
 
+repository 'git://git.moose.perl.org/Moose.git';
+
 WriteAll();
 
 # Use the cpan-smolder-stable script in the Moose svn root to figure
