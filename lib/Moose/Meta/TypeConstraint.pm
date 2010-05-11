@@ -122,7 +122,7 @@ sub get_message {
     }
     else {
         $value = (defined $value ? overload::StrVal($value) : 'undef');
-        return "Validation failed for '" . $self->name . "' failed with value $value";
+        return "Validation failed for '" . $self->name . "' with value $value";
     }
 }
 
