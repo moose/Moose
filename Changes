@@ -4,7 +4,10 @@ for, noteworthy changes.
   [BUG FIXES]
 
   * Fix has '+attr' in Roles to explode immediately, rather than when the role
-    is applied to a class.
+    is applied to a class (t0m).
+
+  * Fix type constraint validation messages to not include the string 'failed'
+    twice in the same sentance (Florian Ragwitz).
 
 1.03 Thu, May 06, 2010
 
