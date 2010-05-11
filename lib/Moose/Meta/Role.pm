@@ -20,7 +20,9 @@ use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
 use Moose::Util qw( ensure_all_roles );
 
-use base 'Class::MOP::Module', 'Class::MOP::Mixin::HasAttributes';
+use base 'Class::MOP::Module',
+         'Class::MOP::Mixin::HasAttributes',
+         'Class::MOP::Mixin::HasMethods';
 
 ## ------------------------------------------------------------------
 ## NOTE:

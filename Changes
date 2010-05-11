@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [API CHANGES]
+
+  * Packages and modules no longer have methods - this functionality was
+    moved back up into Moose::Meta::Class and Moose::Meta::Role individually
+    (through the Class::MOP::Mixin::HasMethods mixin) (doy).
+
   [BUG FIXES]
 
   * Fix has '+attr' in Roles to explode immediately, rather than when the role
