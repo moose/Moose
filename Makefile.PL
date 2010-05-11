@@ -42,7 +42,7 @@ repository 'git://git.moose.perl.org/Moose.git';
 
 WriteAll();
 
-# Use the cpan-smolder-stable script in the Moose svn root to figure
+# Use the xt/author/test-my-dependents.t test to figure
 # out what on CPAN will break with the latest Moose, then update this
 # before a release.
 sub check_conflicts {
