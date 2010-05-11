@@ -62,6 +62,7 @@ sub check_conflicts {
         'MooseX::Singleton'             => '0.19',
         'MooseX::StrictConstructor'     => '0.07',
         'MooseX::Types'                 => '0.19',
+        'Pod::Elemental'                => '0.093280',
         'namespace::autoclean'          => '0.08',
         'KiokuDB'                       => '0.41',
     );
