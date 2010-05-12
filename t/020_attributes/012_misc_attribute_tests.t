@@ -140,7 +140,7 @@ use Test::Exception;
 
     throws_ok {
         $moose_obj->a_str( $moose_obj )
-    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' failed with value OverloadedStr=HASH\(0x.+?\)/,
+    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/,
     '... dies without overloading the string';
 
 }
@@ -155,7 +155,7 @@ use Test::Exception;
 
     throws_ok {
         OverloadBreaker->new;
-    } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' failed with value 7\.5/,
+    } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' with value 7\.5/,
     '... this doesnt trip overload to break anymore ';
 
     lives_ok {

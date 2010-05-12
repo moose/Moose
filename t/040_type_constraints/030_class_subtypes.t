@@ -80,10 +80,10 @@ ok $isa_foo, 'Created subtype of Foo type';
 ok $isa_foo->check( Foo->new ), 'Foo passes check';
 ok $isa_foo->check( Bar->new ), 'Bar passes check';
 ok ! $isa_foo->check( Baz->new ), 'Baz does not pass check';
-like $foo->get_message( Baz->new ), qr/^Validation failed for 'Foo' failed with value Baz=HASH\(0x\w+\) \(not isa Foo\)/, 'Better validation message';
+like $foo->get_message( Baz->new ), qr/^Validation failed for 'Foo' with value Baz=HASH\(0x\w+\) \(not isa Foo\)/, 'Better validation message';
 
 # Maybe in the future this *should* inherit?
-like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' failed with value Baz=HASH\(0x\w+\)$/, "Subtypes do not automatically inherit parent type's message";
+like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' with value Baz=HASH\(0x\w+\)$/, "Subtypes do not automatically inherit parent type's message";
 
 
 # Implicit types
@@ -100,7 +100,7 @@ like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' faile
 
 throws_ok {
     Quux->new(age => 3)
-} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' failed with value 3 \(not isa Positive\)/;
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
 
 lives_ok {
     Quux->new(age => (bless {}, 'Positive'));
@@ -113,7 +113,7 @@ eval "
 
 throws_ok {
     Quux->new(age => 3)
-} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' failed with value 3 \(not isa Positive\)/;
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
 
 lives_ok {
     Quux->new(age => Positive->new)

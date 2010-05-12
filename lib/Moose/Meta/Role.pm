@@ -199,7 +199,7 @@ sub add_attribute {
         my $class = ref $_[0];
         Moose->throw_error( "Cannot add a $class as an attribute to a role" );
     }
-    elsif (!blessed($_[0]) && $_[0] =~ /^\+(.*)/) {
+    elsif (!blessed($_[0]) && defined($_[0]) && $_[0] =~ /^\+(.*)/) {
         Moose->throw_error( "has '+attr' is not supported in roles" );
     }
 
