@@ -804,9 +804,9 @@ excludes the named role. This tests both the class and its parents.
 This overrides the parent's method in order to allow the parameters to
 be provided as a hash reference.
 
-=item B<< $metaclass->constructor_class ($class_name) >>
+=item B<< $metaclass->constructor_class($class_name) >>
 
-=item B<< $metaclass->destructor_class ($class_name) >>
+=item B<< $metaclass->destructor_class($class_name) >>
 
 These are the names of classes used when making a class
 immutable. These default to L<Moose::Meta::Method::Constructor> and
