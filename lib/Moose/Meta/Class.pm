@@ -83,20 +83,20 @@ sub _immutable_options {
 }
 
 sub create {
-    my ($self, $package_name, %options) = @_;
+    my ($class, $package_name, %options) = @_;
 
     (ref $options{roles} eq 'ARRAY')
-        || $self->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
+        || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
     my $roles = delete $options{roles};
 
-    my $class = $self->SUPER::create($package_name, %options);
+    my $new_meta = $class->SUPER::create($package_name, %options);
 
     if ($roles) {
-        Moose::Util::apply_all_roles( $class, @$roles );
+        Moose::Util::apply_all_roles( $new_meta, @$roles );
     }
 
-    return $class;
+    return $new_meta;
 }
 
 sub _check_metaclass_compatibility {
@@ -251,11 +251,11 @@ sub excludes_role {
 }
 
 sub new_object {
-    my $class  = shift;
+    my $self   = shift;
     my $params = @_ == 1 ? $_[0] : {@_};
-    my $self   = $class->SUPER::new_object($params);
+    my $object = $self->SUPER::new_object($params);
 
-    foreach my $attr ( $class->get_all_attributes() ) {
+    foreach my $attr ( $self->get_all_attributes() ) {
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
@@ -266,18 +266,18 @@ sub new_object {
         next unless exists $params->{$init_arg};
 
         $attr->trigger->(
-            $self,
+            $object,
             (
                   $attr->should_coerce
-                ? $attr->get_read_method_ref->($self)
+                ? $attr->get_read_method_ref->($object)
                 : $params->{$init_arg}
             ),
         );
     }
 
-    $self->BUILDALL($params) if $self->can('BUILDALL');
+    $object->BUILDALL($params) if $object->can('BUILDALL');
 
-    return $self;
+    return $object;
 }
 
 sub superclasses {
