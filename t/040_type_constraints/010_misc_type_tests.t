@@ -66,4 +66,19 @@ ok $subtype2 => 'made a subtype of our subtype';
     );
 }
 
+{
+    for my $t (qw(Bar Foo)) {
+        my $tc = Moose::Meta::TypeConstraint->new({
+            name => $t,
+        });
+
+        Moose::Util::TypeConstraints::register_type_constraint($tc);
+    }
+
+    my $foo = Moose::Util::TypeConstraints::find_type_constraint('Foo');
+    my $bar = Moose::Util::TypeConstraints::find_type_constraint('Bar');
+
+    ok(! $foo->equals($bar), "Foo type is not equal to Bar type");
+}
+
 done_testing;
