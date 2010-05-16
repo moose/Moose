@@ -148,7 +148,7 @@ sub equals {
         return if $other->has_parent;
     }
 
-    return 1;
+    return;
 }
 
 sub is_a_type_of {
