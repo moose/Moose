@@ -26,6 +26,9 @@ for, noteworthy changes.
   * Fix type constraint validation messages to not include the string 'failed'
     twice in the same sentance (Florian Ragwitz).
 
+  * New type constraints will default to being unequal, rather than equal
+    (rjbs).
+
 1.03 Thu, May 06, 2010
 
   [NEW FEATURES]
