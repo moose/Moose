@@ -1083,7 +1083,7 @@ early ideas/feature-requests/encouragement/bug-finding.
 
 =item L<http://www.iinteractive.com/moose>
 
-This is the official web home of Moose, it contains links to our public SVN repository
+This is the official web home of Moose, it contains links to our public git repository
 as well as links to a number of talks and articles on Moose and Moose related
 technologies.
 
