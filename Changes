@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.05 Thu, May 20, 2010
+
   [API CHANGES]
 
   * Packages and modules no longer have methods - this functionality was

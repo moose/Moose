@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
-our $VERSION   = '1.04';
+our $VERSION   = '1.05';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

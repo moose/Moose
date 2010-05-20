@@ -16,6 +16,8 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 1.05
+
 =over 4
 
 =item L<Moose::Object/BUILD> methods are now called when calling C<new_object>
