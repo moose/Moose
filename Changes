@@ -1,8 +1,6 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-1.04 Thu, May 20, 2010
-
   [API CHANGES]
 
   * Packages and modules no longer have methods - this functionality was
@@ -33,6 +31,11 @@ for, noteworthy changes.
 
   * The tests no longer check for perl's behavior of clobbering $@, which has
     been fixed in perl-5.13.1 (Florian Ragwitz).
+
+1.04 Thu, May 20, 2010
+
+  * This release was broken and has been deleted from CPAN shortly after its
+    upload.
 
 1.03 Thu, May 06, 2010
 
