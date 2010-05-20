@@ -26,7 +26,7 @@ for, noteworthy changes.
     is applied to a class (t0m).
 
   * Fix type constraint validation messages to not include the string 'failed'
-    twice in the same sentance (Florian Ragwitz).
+    twice in the same sentence (Florian Ragwitz).
 
   * New type constraints will default to being unequal, rather than equal
     (rjbs).
