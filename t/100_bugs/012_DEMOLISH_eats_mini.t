@@ -78,24 +78,4 @@ use Test::Exception;
         if Baz->meta->is_mutable
 }
 
-{
-    package Quux;
-    use Moose;
-
-    sub DEMOLISH {
-        die "foo\n";
-    }
-}
-
-{
-    local $@ = 42;
-
-    eval { my $obj = Quux->new };
-
-    like( $@, qr/foo/, '$@ contains error from demolish when demolish dies' );
-
-    Quux->meta->make_immutable, redo
-        if Quux->meta->is_mutable
-}
-
 done_testing;

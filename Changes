@@ -29,6 +29,9 @@ for, noteworthy changes.
   * New type constraints will default to being unequal, rather than equal
     (rjbs).
 
+  * The tests no longer check for perl's behavior of clobbering $@, which has
+    been fixed in perl-5.13.1 (Florian Ragwitz).
+
 1.03 Thu, May 06, 2010
 
   [NEW FEATURES]
