@@ -32,6 +32,9 @@ for, noteworthy changes.
   * The tests no longer check for perl's behavior of clobbering $@, which has
     been fixed in perl-5.13.1 (Florian Ragwitz).
 
+  * Metaclass compatibility fixing has been completely rewritten, and should
+    be much more robust. (doy)
+
 1.04 Thu, May 20, 2010
 
   * This release was broken and has been deleted from CPAN shortly after its
@@ -64,9 +67,6 @@ for, noteworthy changes.
     Arnfjörð Bjarmason)
 
   * Pass role arguments along when applying roles to instances. (doy, lsm)
-
-  * Metaclass compatibility fixing has been completely rewritten, and should
-    be much more robust. (doy)
 
 1.01 Fri, Mar 26, 2010
 
