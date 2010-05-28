@@ -1,6 +1,11 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.06 TBD
+  * Added '0+' overloading in Moose::Meta::TypeConstraint so that we can
+    more uniformly compare type constaints between 'classic' Moose type
+    containts and MooseX::Types based type constraints.
+
 1.05 Thu, May 20, 2010
 
   [API CHANGES]
