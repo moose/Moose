@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use metaclass;
 
-use overload '""'     => sub { shift->name },   # stringify to tc name
+use overload '0+'     => sub { refaddr(shift) }, # id an object
+             '""'     => sub { shift->name },   # stringify to tc name
              fallback => 1;
 
 use Scalar::Util qw(blessed refaddr);
@@ -133,7 +134,7 @@ sub equals {
 
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
 
-    return 1 if refaddr($self) == refaddr($other);
+    return 1 if 0+$self == 0+$other;
 
     if ( $self->has_hand_optimized_type_constraint and $other->has_hand_optimized_type_constraint ) {
         return 1 if $self->hand_optimized_type_constraint == $other->hand_optimized_type_constraint;

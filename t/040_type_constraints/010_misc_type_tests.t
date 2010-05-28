@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use Test::Exception;
+use Scalar::Util qw(refaddr);
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -78,7 +79,9 @@ ok $subtype2 => 'made a subtype of our subtype';
     my $foo = Moose::Util::TypeConstraints::find_type_constraint('Foo');
     my $bar = Moose::Util::TypeConstraints::find_type_constraint('Bar');
 
-    ok(! $foo->equals($bar), "Foo type is not equal to Bar type");
+    ok(!$foo->equals($bar), "Foo type is not equal to Bar type");
+    ok( $foo->equals($foo), "Foo equals Foo");
+    ok( 0+$foo == refaddr($foo), "overloading works");
 }
 
 done_testing;
