@@ -7,6 +7,7 @@ use metaclass;
 
 use overload '0+'     => sub { refaddr(shift) }, # id an object
              '""'     => sub { shift->name },   # stringify to tc name
+             bool     => sub { 1 },
              fallback => 1;
 
 use Scalar::Util qw(blessed refaddr);

@@ -84,4 +84,6 @@ ok $subtype2 => 'made a subtype of our subtype';
     ok( 0+$foo == refaddr($foo), "overloading works");
 }
 
+ok $subtype1, "type constraint boolean overload works";
+
 done_testing;
