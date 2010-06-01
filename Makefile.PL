@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use inc::Module::Install 0.97;
+use inc::Module::Install 0.98;
 use Module::Install::AuthorRequires;
 use 5.008001;
 
@@ -39,6 +39,7 @@ if ( is_maintainer() ) {
 tests_recursive();
 
 repository 'git://git.moose.perl.org/Moose.git';
+add_metadata(x_authority => 'cpan:STEVAN');
 
 WriteAll();
 
