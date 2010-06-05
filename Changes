@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.07 Sat, Jun 05, 2010
+
   [BUG FIXES]
 
   * Fixed a minor metaclass compatibility fixing bug dealing with immutable
