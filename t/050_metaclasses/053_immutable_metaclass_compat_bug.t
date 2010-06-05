@@ -32,9 +32,7 @@ use Test::More;
     );
     ::ok(!Foo->meta->is_immutable);
     extends 'Foo::Base';
-    { our $TODO; local $TODO = "inheriting makes this immutable";
     ::ok(!Foo->meta->is_immutable);
-    }
 }
 
 done_testing;
