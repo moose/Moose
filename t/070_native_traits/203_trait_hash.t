@@ -30,6 +30,7 @@ use Test::Moose 'does_ok';
             'options_elements' => 'elements',
             'quantity'         => [ accessor => 'quantity' ],
         },
+        clearer => '_clear_options',
     );
 }
 
@@ -181,5 +182,24 @@ is_deeply(
     },
     '... got the right hash elements'
 );
+
+$stuff->_clear_options;
+
+for my $test (
+    qw( has_no_options num_options clear_options key_value options_elements quantity ),
+    [ 'set_option',      'foo', 'bar' ],
+    [ 'get_option',      'foo' ],
+    [ 'delete_option',   'foo' ],
+    [ 'has_option',      'foo' ],
+    [ 'is_defined',      'foo' ],
+    [ 'option_accessor', 'foo' ],
+    ) {
+
+    my ( $meth, @args ) = ref $test ? @{$test} : $test;
+
+    throws_ok { $stuff->$meth(@args) }
+    qr{^\QThe options attribute does not contain a hash reference at t/070_native_traits/203_trait_hash.t line \E\d+},
+        "$meth dies with useful error";
+}
 
 done_testing;

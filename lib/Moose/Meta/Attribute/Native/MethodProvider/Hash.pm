@@ -1,72 +1,95 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Hash;
 use Moose::Role;
 
+use Params::Util qw( _HASH0 );
+
 our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+my $get_hashref = sub {
+    my $val = $_[1]->( $_[0] );
+
+    unless ( _HASH0($val) ) {
+        local $Carp::CarpLevel += 3;
+        confess 'The ' . $_[2] . ' attribute does not contain a hash reference';
+    }
+
+    return $val;
+};
+
 sub exists : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::exists $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+    my $name = $attr->name;
+    return sub { CORE::exists $get_hashref->( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
 }
 
 sub defined : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::defined $reader->( $_[0] )->{ $_[1] } ? 1 : 0 };
+    my $name = $attr->name;
+    return sub { CORE::defined $get_hashref->( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
 }
 
 sub get : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
         if ( @_ == 2 ) {
-            $reader->( $_[0] )->{ $_[1] };
+            $get_hashref->( $_[0], $reader, $name )->{ $_[1] };
         }
         else {
             my ( $self, @keys ) = @_;
-            @{ $reader->($self) }{@keys};
+            @{ $get_hashref->( $self, $reader, $name ) }{@keys};
         }
     };
 }
 
 sub keys : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::keys %{ $reader->( $_[0] ) } };
+    my $name = $attr->name;
+    return sub { CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } };
 }
 
 sub values : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { CORE::values %{ $reader->( $_[0] ) } };
+    my $name = $attr->name;
+    return sub { CORE::values %{ $get_hashref->( $_[0], $reader, $name ) } };
 }
 
 sub kv : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $h = $reader->( $_[0] );
+        my $h = $get_hashref->( $_[0], $reader, $name );
         map { [ $_, $h->{$_} ] } CORE::keys %{$h};
     };
 }
 
 sub elements : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $h = $reader->( $_[0] );
+        my $h = $get_hashref->( $_[0], $reader, $name );
         map { $_, $h->{$_} } CORE::keys %{$h};
     };
 }
 
 sub count : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } };
+    my $name = $attr->name;
+    return sub { scalar CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } };
 }
 
 sub is_empty : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { scalar CORE::keys %{ $reader->( $_[0] ) } ? 0 : 1 };
+    my $name = $attr->name;
+    return sub { scalar CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } ? 0 : 1 };
 }
 
 
 sub set : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     if (
         $attr->has_type_constraint
         && $attr->type_constraint->isa(
@@ -90,17 +113,17 @@ sub set : method {
             }
 
             if ( @values > 1 ) {
-                @{ $reader->($self) }{@keys} = @values;
+                @{ $get_hashref->( $self, $reader, $name ) }{@keys} = @values;
             }
             else {
-                $reader->($self)->{ $keys[0] } = $values[0];
+                $get_hashref->( $self, $reader, $name )->{ $keys[0] } = $values[0];
             }
         };
     }
     else {
         return sub {
             if ( @_ == 3 ) {
-                $reader->( $_[0] )->{ $_[1] } = $_[2];
+                $get_hashref->( $_[0], $reader, $name )->{ $_[1] } = $_[2];
             }
             else {
                 my ( $self, @kvp ) = @_;
@@ -111,7 +134,7 @@ sub set : method {
                     push @values, shift @kvp;
                 }
 
-                @{ $reader->( $_[0] ) }{@keys} = @values;
+                @{ $get_hashref->( $self, $reader, $name ) }{@keys} = @values;
             }
         };
     }
@@ -119,6 +142,7 @@ sub set : method {
 
 sub accessor : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
 
     if (
         $attr->has_type_constraint
@@ -131,14 +155,14 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $reader->($self)->{ $_[0] };
+                return $get_hashref->( $self, $reader, $name )->{ $_[0] };
             }
             elsif ( @_ == 2 ) {    # writer
                 ( $container_type_constraint->check( $_[1] ) )
                     || confess "Value "
                     . ( $_[1] || 'undef' )
                     . " did not pass container type constraint '$container_type_constraint'";
-                $reader->($self)->{ $_[0] } = $_[1];
+                $get_hashref->( $self, $reader, $name )->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -150,10 +174,10 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $reader->($self)->{ $_[0] };
+                return $get_hashref->( $self, $reader, $name )->{ $_[0] };
             }
             elsif ( @_ == 2 ) {    # writer
-                $reader->($self)->{ $_[0] } = $_[1];
+                $get_hashref->( $self, $reader, $name )->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -164,14 +188,16 @@ sub accessor : method {
 
 sub clear : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { %{ $reader->( $_[0] ) } = () };
+    my $name = $attr->name;
+    return sub { %{ $get_hashref->( $_[0], $reader, $name ) } = () };
 }
 
 sub delete : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $hashref = $reader->(shift);
-        CORE::delete @{$hashref}{@_};
+        my $self = shift;
+        CORE::delete @{ $get_hashref->( $self, $reader, $name ) }{@_};
     };
 }
 
