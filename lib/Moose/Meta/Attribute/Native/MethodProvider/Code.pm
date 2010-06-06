@@ -1,23 +1,38 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Code;
 use Moose::Role;
 
+use Params::Util qw( _CODE );
+
 our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+sub _get_hashref {
+    my $val = $_[1]->( $_[0] );
+
+    unless ( _CODE($val) ) {
+        local $Carp::CarpLevel += 3;
+        confess 'The ' . $_[2] . ' attribute does not contain a subroutine reference';
+    }
+
+    return $val;
+}
+
 sub execute : method {
     my ($attr, $reader, $writer) = @_;
+    my $name = $attr->name;
     return sub {
         my ($self, @args) = @_;
-        $reader->($self)->(@args);
+        _get_hashref( $self, $reader, $name )->(@args);
     };
 }
 
 sub execute_method : method {
     my ($attr, $reader, $writer) = @_;
+    my $name = $attr->name;
     return sub {
         my ($self, @args) = @_;
-        $reader->($self)->($self, @args);
+        _get_hashref( $self, $reader, $name )->($self, @args);
     };
 }
 

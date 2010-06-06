@@ -9,7 +9,7 @@ our $VERSION = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-my $get_arrayref = sub {
+sub _get_arrayref {
     my $val = $_[1]->( $_[0] );
 
     unless ( _ARRAY0($val) ) {
@@ -18,13 +18,13 @@ my $get_arrayref = sub {
     }
 
     return $val;
-};
+}
 
 sub count : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        scalar @{ $get_arrayref->( $_[0], $reader, $name ) };
+        scalar @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -32,7 +32,7 @@ sub is_empty : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        scalar @{ $get_arrayref->( $_[0], $reader, $name ) } ? 0 : 1;
+        scalar @{ _get_arrayref( $_[0], $reader, $name ) } ? 0 : 1;
     };
 }
 
@@ -41,7 +41,7 @@ sub first : method {
     my $name = $attr->name;
     return sub {
         my ( $instance, $predicate ) = @_;
-        List::Util::first { $predicate->() } @{ $get_arrayref->( $instance, $reader, $name ) };
+        List::Util::first { $predicate->() } @{ _get_arrayref( $instance, $reader, $name ) };
     };
 }
 
@@ -50,7 +50,7 @@ sub map : method {
     my $name = $attr->name;
     return sub {
         my ( $instance, $f ) = @_;
-        CORE::map { $f->() } @{ $get_arrayref->( $instance, $reader, $name ) };
+        CORE::map { $f->() } @{ _get_arrayref( $instance, $reader, $name ) };
     };
 }
 
@@ -60,7 +60,7 @@ sub reduce : method {
     return sub {
         my ( $instance, $f ) = @_;
         our ($a, $b);
-        List::Util::reduce { $f->($a, $b) } @{ $get_arrayref->( $instance, $reader, $name ) };
+        List::Util::reduce { $f->($a, $b) } @{ _get_arrayref( $instance, $reader, $name ) };
     };
 }
 
@@ -80,10 +80,10 @@ sub sort : method {
             # which defines the coderef is compiled, before we even get a
             # chance to see it here. So, we have no real choice but to use
             # normal parameters. --doy
-            CORE::sort { $predicate->( $a, $b ) } @{ $get_arrayref->( $instance, $reader, $name ) };
+            CORE::sort { $predicate->( $a, $b ) } @{ _get_arrayref( $instance, $reader, $name ) };
         }
         else {
-            CORE::sort @{ $get_arrayref->( $instance, $reader, $name ) };
+            CORE::sort @{ _get_arrayref( $instance, $reader, $name ) };
         }
     };
 }
@@ -92,7 +92,7 @@ sub shuffle : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        List::Util::shuffle @{ $get_arrayref->( $_[0], $reader, $name ) };
+        List::Util::shuffle @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -101,7 +101,7 @@ sub grep : method {
     my $name = $attr->name;
     return sub {
         my ( $instance, $predicate ) = @_;
-        CORE::grep { $predicate->() } @{ $get_arrayref->( $instance, $reader, $name ) };
+        CORE::grep { $predicate->() } @{ _get_arrayref( $instance, $reader, $name ) };
     };
 }
 
@@ -109,7 +109,7 @@ sub uniq : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        List::MoreUtils::uniq @{ $get_arrayref->( $_[0], $reader, $name ) };
+        List::MoreUtils::uniq @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -117,7 +117,7 @@ sub elements : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        @{ $get_arrayref->( $_[0], $reader, $name ) };
+        @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -126,7 +126,7 @@ sub join : method {
     my $name = $attr->name;
     return sub {
         my ( $instance, $separator ) = @_;
-        join $separator, @{ $get_arrayref->( $instance, $reader, $name ) };
+        join $separator, @{ _get_arrayref( $instance, $reader, $name ) };
     };
 }
 
@@ -149,13 +149,13 @@ sub push : method {
               . " did not pass container type constraint '$container_type_constraint'"
               foreach @_;
 
-            CORE::push @{ $get_arrayref->( $instance, $reader, $name ) } => @_;
+            CORE::push @{ _get_arrayref( $instance, $reader, $name ) } => @_;
         };
     }
     else {
         return sub {
             my $instance = CORE::shift;
-            CORE::push @{ $get_arrayref->( $instance, $reader, $name ) } => @_;
+            CORE::push @{ _get_arrayref( $instance, $reader, $name ) } => @_;
         };
     }
 }
@@ -164,7 +164,7 @@ sub pop : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        CORE::pop @{ $get_arrayref->( $_[0], $reader, $name ) };
+        CORE::pop @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -185,13 +185,13 @@ sub unshift : method {
               . ( $_ || 'undef' )
               . " did not pass container type constraint '$container_type_constraint'"
               foreach @_;
-            CORE::unshift @{ $get_arrayref->( $instance, $reader, $name ) } => @_;
+            CORE::unshift @{ _get_arrayref( $instance, $reader, $name ) } => @_;
         };
     }
     else {
         return sub {
             my $instance = CORE::shift;
-            CORE::unshift @{ $get_arrayref->( $instance, $reader, $name ) } => @_;
+            CORE::unshift @{ _get_arrayref( $instance, $reader, $name ) } => @_;
         };
     }
 }
@@ -200,7 +200,7 @@ sub shift : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        CORE::shift @{ $get_arrayref->( $_[0], $reader, $name ) };
+        CORE::shift @{ _get_arrayref( $_[0], $reader, $name ) };
     };
 }
 
@@ -208,7 +208,7 @@ sub get : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        $get_arrayref->( $_[0], $reader, $name )->[ $_[1] ];
+        _get_arrayref( $_[0], $reader, $name )->[ $_[1] ];
     };
 }
 
@@ -227,12 +227,12 @@ sub set : method {
               || confess "Value "
               . ( $_[2] || 'undef' )
               . " did not pass container type constraint '$container_type_constraint'";
-            $get_arrayref->( $_[0], $reader, $name )->[ $_[1] ] = $_[2];
+            _get_arrayref( $_[0], $reader, $name )->[ $_[1] ] = $_[2];
         };
     }
     else {
         return sub {
-            $get_arrayref->( $_[0], $reader, $name )->[ $_[1] ] = $_[2];
+            _get_arrayref( $_[0], $reader, $name )->[ $_[1] ] = $_[2];
         };
     }
 }
@@ -251,14 +251,14 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $get_arrayref->( $self, $reader, $name )->[ $_[0] ];
+                return _get_arrayref( $self, $reader, $name )->[ $_[0] ];
             }
             elsif ( @_ == 2 ) {    # writer
                 ( $container_type_constraint->check( $_[1] ) )
                   || confess "Value "
                   . ( $_[1] || 'undef' )
                   . " did not pass container type constraint '$container_type_constraint'";
-                $get_arrayref->( $self, $reader, $name )[ $_[0] ] = $_[1];
+                _get_arrayref( $self, $reader, $name )->[ $_[0] ] = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -270,10 +270,10 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $get_arrayref->( $self, $reader, $name )->[ $_[0] ];
+                return _get_arrayref( $self, $reader, $name )->[ $_[0] ];
             }
             elsif ( @_ == 2 ) {    # writer
-                $get_arrayref->( $self, $reader, $name )->[ $_[0] ] = $_[1];
+                _get_arrayref( $self, $reader, $name )->[ $_[0] ] = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -286,7 +286,7 @@ sub clear : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        @{ $get_arrayref->( $_[0], $reader, $name ) } = ();
+        @{ _get_arrayref( $_[0], $reader, $name ) } = ();
     };
 }
 
@@ -294,7 +294,7 @@ sub delete : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        CORE::splice @{ $get_arrayref->( $_[0], $reader, $name ) }, $_[1], 1;
+        CORE::splice @{ _get_arrayref( $_[0], $reader, $name ) }, $_[1], 1;
     };
 }
 
@@ -313,12 +313,12 @@ sub insert : method {
               || confess "Value "
               . ( $_[2] || 'undef' )
               . " did not pass container type constraint '$container_type_constraint'";
-            CORE::splice @{ $get_arrayref->( $_[0], $reader, $name ) }, $_[1], 0, $_[2];
+            CORE::splice @{ _get_arrayref( $_[0], $reader, $name ) }, $_[1], 0, $_[2];
         };
     }
     else {
         return sub {
-            CORE::splice @{ $get_arrayref->( $_[0], $reader, $name ) }, $_[1], 0, $_[2];
+            CORE::splice @{ _get_arrayref( $_[0], $reader, $name ) }, $_[1], 0, $_[2];
         };
     }
 }
@@ -340,13 +340,13 @@ sub splice : method {
               . ( defined($_) ? $_ : 'undef' )
               . " did not pass container type constraint '$container_type_constraint'"
               for @elems;
-            CORE::splice @{ $get_arrayref->( $self, $reader, $name ) }, $i, $j, @elems;
+            CORE::splice @{ _get_arrayref( $self, $reader, $name ) }, $i, $j, @elems;
         };
     }
     else {
         return sub {
             my ( $self, $i, $j, @elems ) = @_;
-            CORE::splice @{ $get_arrayref->( $self, $reader, $name ) }, $i, $j, @elems;
+            CORE::splice @{ _get_arrayref( $self, $reader, $name ) }, $i, $j, @elems;
         };
     }
 }
@@ -363,10 +363,10 @@ sub sort_in_place : method {
         my @sorted;
         if ($predicate) {
             @sorted =
-              CORE::sort { $predicate->( $a, $b ) } @{ $get_arrayref->( $instance, $reader, $name ) };
+              CORE::sort { $predicate->( $a, $b ) } @{ _get_arrayref( $instance, $reader, $name ) };
         }
         else {
-            @sorted = CORE::sort @{ $get_arrayref->( $instance, $reader, $name ) };
+            @sorted = CORE::sort @{ _get_arrayref( $instance, $reader, $name ) };
         }
 
         $writer->( $instance, \@sorted );
@@ -378,7 +378,7 @@ sub natatime : method {
     my $name = $attr->name;
     return sub {
         my ( $instance, $n, $f ) = @_;
-        my $it = List::MoreUtils::natatime($n, @{ $get_arrayref->( $instance, $reader, $name ) });
+        my $it = List::MoreUtils::natatime($n, @{ _get_arrayref( $instance, $reader, $name ) });
         return $it unless $f;
 
         while (my @vals = $it->()) {
