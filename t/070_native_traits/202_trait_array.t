@@ -190,16 +190,6 @@ is_deeply(
 is( $stuff->option_accessor( 1 => 'foo++' ), 'foo++' );
 is( $stuff->option_accessor(1), 'foo++' );
 
-## check some errors
-
-#dies_ok {
-#    $stuff->insert_options(undef);
-#} '... could not add an undef where a string is expected';
-#
-#dies_ok {
-#    $stuff->set_option(5, {});
-#} '... could not add a hash ref where a string is expected';
-
 dies_ok {
     Stuff->new( options => [ undef, 10, undef, 20 ] );
 }
