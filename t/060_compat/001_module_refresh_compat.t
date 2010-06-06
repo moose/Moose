@@ -81,7 +81,7 @@ ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
 }
 
 lives_ok {
-    Module::Refresh->new->refresh_module($test_module_file)
+    Module::Refresh->new->refresh_module('TestBaz.pm')
 } '... successfully refreshed ' . $test_module_file;
 
 is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
