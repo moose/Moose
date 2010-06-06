@@ -38,7 +38,8 @@ my $sort;
                 [ 'unshift' => 'first', 'second' ],
             'descending_options' =>
                 [ 'sort_in_place' => ($sort = sub { $_[1] <=> $_[0] }) ],
-        }
+        },
+        clearer => '_clear_options',
     );
 }
 
@@ -270,5 +271,27 @@ is_deeply(
 
 is( $options->type_constraint->type_parameter, 'Str',
     '... got the right container type' );
+
+$stuff->_clear_options;
+
+for my $test (
+    qw( has_no_options remove_last_option remove_first_option
+    num_options clear_options descending_options ),
+    [ 'get_option_at', 0 ],
+    [ 'set_option_at',                    1,  100 ],
+    [ 'add_options',                      2,  3 ],
+    [ 'insert_options',                   10, 20 ],
+    [ 'add_options_with_speed',           2,  3 ],
+    [ 'prepend_prerequisites_along_with', 2,  3 ],
+    [ 'splice_options',  1, 0, 'foo' ],
+    [ 'option_accessor', 1 ],
+    ) {
+
+    my ( $meth, @args ) = ref $test ? @{$test} : $test;
+
+    throws_ok { $stuff->$meth(@args) }
+    qr{^\QThe options attribute does not contain an array reference at t/070_native_traits/202_trait_array.t line \E\d+},
+        "$meth dies with useful error";
+}
 
 done_testing;
