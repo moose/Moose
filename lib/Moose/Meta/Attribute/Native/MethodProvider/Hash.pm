@@ -7,7 +7,7 @@ our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-my $get_hashref = sub {
+sub _get_hashref {
     my $val = $_[1]->( $_[0] );
 
     unless ( _HASH0($val) ) {
@@ -16,18 +16,18 @@ my $get_hashref = sub {
     }
 
     return $val;
-};
+}
 
 sub exists : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { CORE::exists $get_hashref->( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
+    return sub { CORE::exists _get_hashref( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
 }
 
 sub defined : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { CORE::defined $get_hashref->( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
+    return sub { CORE::defined _get_hashref( $_[0], $reader, $name )->{ $_[1] } ? 1 : 0 };
 }
 
 sub get : method {
@@ -35,11 +35,11 @@ sub get : method {
     my $name = $attr->name;
     return sub {
         if ( @_ == 2 ) {
-            $get_hashref->( $_[0], $reader, $name )->{ $_[1] };
+            _get_hashref( $_[0], $reader, $name )->{ $_[1] };
         }
         else {
             my ( $self, @keys ) = @_;
-            @{ $get_hashref->( $self, $reader, $name ) }{@keys};
+            @{ _get_hashref( $self, $reader, $name ) }{@keys};
         }
     };
 }
@@ -47,20 +47,20 @@ sub get : method {
 sub keys : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } };
+    return sub { CORE::keys %{ _get_hashref( $_[0], $reader, $name ) } };
 }
 
 sub values : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { CORE::values %{ $get_hashref->( $_[0], $reader, $name ) } };
+    return sub { CORE::values %{ _get_hashref( $_[0], $reader, $name ) } };
 }
 
 sub kv : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        my $h = $get_hashref->( $_[0], $reader, $name );
+        my $h = _get_hashref( $_[0], $reader, $name );
         map { [ $_, $h->{$_} ] } CORE::keys %{$h};
     };
 }
@@ -69,7 +69,7 @@ sub elements : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
     return sub {
-        my $h = $get_hashref->( $_[0], $reader, $name );
+        my $h = _get_hashref( $_[0], $reader, $name );
         map { $_, $h->{$_} } CORE::keys %{$h};
     };
 }
@@ -77,13 +77,13 @@ sub elements : method {
 sub count : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { scalar CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } };
+    return sub { scalar CORE::keys %{ _get_hashref( $_[0], $reader, $name ) } };
 }
 
 sub is_empty : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { scalar CORE::keys %{ $get_hashref->( $_[0], $reader, $name ) } ? 0 : 1 };
+    return sub { scalar CORE::keys %{ _get_hashref( $_[0], $reader, $name ) } ? 0 : 1 };
 }
 
 
@@ -113,17 +113,17 @@ sub set : method {
             }
 
             if ( @values > 1 ) {
-                @{ $get_hashref->( $self, $reader, $name ) }{@keys} = @values;
+                @{ _get_hashref( $self, $reader, $name ) }{@keys} = @values;
             }
             else {
-                $get_hashref->( $self, $reader, $name )->{ $keys[0] } = $values[0];
+                _get_hashref( $self, $reader, $name )->{ $keys[0] } = $values[0];
             }
         };
     }
     else {
         return sub {
             if ( @_ == 3 ) {
-                $get_hashref->( $_[0], $reader, $name )->{ $_[1] } = $_[2];
+                _get_hashref( $_[0], $reader, $name )->{ $_[1] } = $_[2];
             }
             else {
                 my ( $self, @kvp ) = @_;
@@ -134,7 +134,7 @@ sub set : method {
                     push @values, shift @kvp;
                 }
 
-                @{ $get_hashref->( $self, $reader, $name ) }{@keys} = @values;
+                @{ _get_hashref( $self, $reader, $name ) }{@keys} = @values;
             }
         };
     }
@@ -155,14 +155,14 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $get_hashref->( $self, $reader, $name )->{ $_[0] };
+                return _get_hashref( $self, $reader, $name )->{ $_[0] };
             }
             elsif ( @_ == 2 ) {    # writer
                 ( $container_type_constraint->check( $_[1] ) )
                     || confess "Value "
                     . ( $_[1] || 'undef' )
                     . " did not pass container type constraint '$container_type_constraint'";
-                $get_hashref->( $self, $reader, $name )->{ $_[0] } = $_[1];
+                _get_hashref( $self, $reader, $name )->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -174,10 +174,10 @@ sub accessor : method {
             my $self = shift;
 
             if ( @_ == 1 ) {    # reader
-                return $get_hashref->( $self, $reader, $name )->{ $_[0] };
+                return _get_hashref( $self, $reader, $name )->{ $_[0] };
             }
             elsif ( @_ == 2 ) {    # writer
-                $get_hashref->( $self, $reader, $name )->{ $_[0] } = $_[1];
+                _get_hashref( $self, $reader, $name )->{ $_[0] } = $_[1];
             }
             else {
                 confess "One or two arguments expected, not " . @_;
@@ -189,7 +189,7 @@ sub accessor : method {
 sub clear : method {
     my ( $attr, $reader, $writer ) = @_;
     my $name = $attr->name;
-    return sub { %{ $get_hashref->( $_[0], $reader, $name ) } = () };
+    return sub { %{ _get_hashref( $_[0], $reader, $name ) } = () };
 }
 
 sub delete : method {
@@ -197,7 +197,7 @@ sub delete : method {
     my $name = $attr->name;
     return sub {
         my $self = shift;
-        CORE::delete @{ $get_hashref->( $self, $reader, $name ) }{@_};
+        CORE::delete @{ _get_hashref( $self, $reader, $name ) }{@_};
     };
 }
 
