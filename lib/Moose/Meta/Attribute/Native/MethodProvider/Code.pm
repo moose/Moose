@@ -7,7 +7,7 @@ our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub _get_hashref {
+sub _get_coderef {
     my $val = $_[1]->( $_[0] );
 
     unless ( _CODE($val) ) {
@@ -23,7 +23,7 @@ sub execute : method {
     my $name = $attr->name;
     return sub {
         my ($self, @args) = @_;
-        _get_hashref( $self, $reader, $name )->(@args);
+        _get_coderef( $self, $reader, $name )->(@args);
     };
 }
 
@@ -32,7 +32,7 @@ sub execute_method : method {
     my $name = $attr->name;
     return sub {
         my ($self, @args) = @_;
-        _get_hashref( $self, $reader, $name )->($self, @args);
+        _get_coderef( $self, $reader, $name )->($self, @args);
     };
 }
 
