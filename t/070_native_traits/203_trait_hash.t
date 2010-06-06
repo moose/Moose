@@ -198,7 +198,7 @@ for my $test (
     my ( $meth, @args ) = ref $test ? @{$test} : $test;
 
     throws_ok { $stuff->$meth(@args) }
-    qr{^\QThe options attribute does not contain a hash reference at t/070_native_traits/203_trait_hash.t line \E\d+},
+    qr{^\QThe options attribute does not contain a hash reference at \E.+\Q203_trait_hash.t line \E\d+},
         "$meth dies with useful error";
 }
 

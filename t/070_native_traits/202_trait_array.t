@@ -280,7 +280,7 @@ for my $test (
     my ( $meth, @args ) = ref $test ? @{$test} : $test;
 
     throws_ok { $stuff->$meth(@args) }
-    qr{^\QThe options attribute does not contain an array reference at t/070_native_traits/202_trait_array.t line \E\d+},
+    qr{^\QThe options attribute does not contain an array reference at \E.+\Q202_trait_array.t line \E\d+},
         "$meth dies with useful error";
 }
 
