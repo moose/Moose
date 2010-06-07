@@ -1,28 +1,44 @@
 package Moose::Meta::Attribute::Native::MethodProvider::String;
 use Moose::Role;
 
+use Params::Util qw( _HASH0 );
+
 our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+sub _get_string {
+    my $val = $_[1]->( $_[0] );
+
+    unless ( defined $val && ! ref $val ) {
+        local $Carp::CarpLevel += 3;
+        confess 'The ' . $_[2] . ' attribute does not contain a string';
+    }
+
+    return $val;
+}
+
 sub append : method {
     my ( $attr, $reader, $writer ) = @_;
 
-    return sub { $writer->( $_[0], $reader->( $_[0] ) . $_[1] ) };
+    my $name = $attr->name;
+    return sub { $writer->( $_[0], _get_string( $_[0], $reader, $name ) . $_[1] ) };
 }
 
 sub prepend : method {
     my ( $attr, $reader, $writer ) = @_;
 
-    return sub { $writer->( $_[0], $_[1] . $reader->( $_[0] ) ) };
+    my $name = $attr->name;
+    return sub { $writer->( $_[0], $_[1] . _get_string( $_[0], $reader, $name ) ) };
 }
 
 sub replace : method {
     my ( $attr, $reader, $writer ) = @_;
 
+    my $name = $attr->name;
     return sub {
         my ( $self, $regex, $replacement ) = @_;
-        my $v = $reader->( $_[0] );
+        my $v = _get_string( $self, $reader, $name );
 
         if ( ( ref($replacement) || '' ) eq 'CODE' ) {
             $v =~ s/$regex/$replacement->()/e;
@@ -37,13 +53,15 @@ sub replace : method {
 
 sub match : method {
     my ( $attr, $reader, $writer ) = @_;
-    return sub { $reader->( $_[0] ) =~ $_[1] };
+    my $name = $attr->name;
+    return sub { _get_string( $_[0], $reader, $name ) =~ $_[1] };
 }
 
 sub chop : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $v = $reader->( $_[0] );
+        my $v = _get_string( $_[0], $reader, $name );
         CORE::chop($v);
         $writer->( $_[0], $v );
     };
@@ -51,8 +69,9 @@ sub chop : method {
 
 sub chomp : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $v = $reader->( $_[0] );
+        my $v = _get_string( $_[0], $reader, $name );
         chomp($v);
         $writer->( $_[0], $v );
     };
@@ -60,8 +79,9 @@ sub chomp : method {
 
 sub inc : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
-        my $v = $reader->( $_[0] );
+        my $v = _get_string( $_[0], $reader, $name );
         $v++;
         $writer->( $_[0], $v );
     };
@@ -74,17 +94,19 @@ sub clear : method {
 
 sub length : method {
     my ($attr, $reader, $writer) = @_;
+    my $name = $attr->name;
     return sub {
-        my $v = $reader->($_[0]);
+        my $v = _get_string( $_[0], $reader, $name );
         return CORE::length($v);
     };
 }
 
 sub substr : method {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
         my $self = shift;
-        my $v    = $reader->($self);
+        my $v    = _get_string( $self, $reader, $name );
 
         my $offset      = defined $_[0] ? shift : 0;
         my $length      = defined $_[0] ? shift : CORE::length($v);

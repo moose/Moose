@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More;
 use Test::Moose 'does_ok';
 
@@ -30,6 +31,7 @@ my $uc;
             capitalize_last => [ replace => qr/(.)$/, ($uc = sub { uc $1 }) ],
             invalid_number => [ match => qr/\D/ ],
         },
+        clearer => '_clear_string',
     );
 }
 
@@ -113,5 +115,22 @@ is_deeply(
     },
     '... got the right handles methods'
 );
+
+$page->_clear_string;
+
+for my $test (
+    qw( inc_string chop_string chomp_string length_string exclaim ),
+    [ 'append_string',  'x' ],
+    [ 'prepend_string', 'x' ],
+    [ 'match_string',   qr/([ao])/ ],
+    [ 'replace_string', qr/([ao])/, sub { uc($1) } ],
+    ) {
+
+    my ( $meth, @args ) = ref $test ? @{$test} : $test;
+
+    throws_ok { $page->$meth(@args) }
+    qr{^\QThe string attribute does not contain a string at \E.+\Q207_trait_string.t line \E\d+},
+        "$meth dies with useful error";
+}
 
 done_testing;
