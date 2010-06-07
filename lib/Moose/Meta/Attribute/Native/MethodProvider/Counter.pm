@@ -2,9 +2,22 @@
 package Moose::Meta::Attribute::Native::MethodProvider::Counter;
 use Moose::Role;
 
+use Scalar::Util qw( looks_like_number );
+
 our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
+
+sub _get_number {
+    my $val = $_[1]->( $_[0] );
+
+    unless ( defined $val && looks_like_number($val) && $val == int($val) ) {
+        local $Carp::CarpLevel += 3;
+        confess 'The ' . $_[2] . ' attribute does not contain an integer';
+    }
+
+    return $val;
+}
 
 sub reset : method {
     my ( $attr, $reader, $writer ) = @_;
@@ -18,17 +31,19 @@ sub set : method {
 
 sub inc {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
         $writer->( $_[0],
-            $reader->( $_[0] ) + ( defined( $_[1] ) ? $_[1] : 1 ) );
+            _get_number( $_[0], $reader, $name ) + ( defined( $_[1] ) ? $_[1] : 1 ) );
     };
 }
 
 sub dec {
     my ( $attr, $reader, $writer ) = @_;
+    my $name = $attr->name;
     return sub {
         $writer->( $_[0],
-            $reader->( $_[0] ) - ( defined( $_[1] ) ? $_[1] : 1 ) );
+            _get_number( $_[0], $reader, $name ) - ( defined( $_[1] ) ? $_[1] : 1 ) );
     };
 }
 

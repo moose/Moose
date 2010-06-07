@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More;
 use Test::Moose 'does_ok';
 
@@ -20,7 +21,8 @@ use Test::Moose 'does_ok';
             dec_counter   => 'dec',
             reset_counter => 'reset',
             set_counter   => 'set'
-        }
+        },
+        clearer => '_clear_counter',
     );
 }
 
@@ -75,5 +77,13 @@ is_deeply(
     },
     '... got the right handles methods'
 );
+
+$page->_clear_counter;
+
+for my $meth (qw( inc_counter dec_counter )) {
+    throws_ok { $page->$meth() }
+    qr{^\QThe counter attribute does not contain an integer at \E.+\Q201_trait_counter.t line \E\d+},
+        "$meth dies with useful error";
+}
 
 done_testing;
