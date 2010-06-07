@@ -1,8 +1,6 @@
 package Moose::Meta::Attribute::Native::MethodProvider::String;
 use Moose::Role;
 
-use Params::Util qw( _HASH0 );
-
 our $VERSION   = '1.07';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
