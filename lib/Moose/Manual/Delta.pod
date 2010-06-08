@@ -40,7 +40,9 @@ The L<metaclass compatibility|Moose/METACLASS COMPATIBILITY AND MOOSE> checking
 and fixing algorithms have been completely rewritten, in both Class::MOP and
 Moose. This should resolve many confusing errors when dealing with non-Moose
 inheritance and with custom metaclasses for things like attributes,
-constructors, etc.
+constructors, etc. For correct code, the only thing that should require a
+change is that custom error metaclasses must now inherit from
+L<Moose::Error::Default>.
 
 =back
 
