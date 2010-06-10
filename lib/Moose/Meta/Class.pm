@@ -525,6 +525,14 @@ sub _reconcile_roles_for_metaclass {
     my @role_differences = $self->_role_differences(
         $class_meta_name, $super_meta_name,
     );
+
+    # handle the case where we need to fix compatibility between a class and
+    # its parent, but all roles in the class are already also done by the
+    # parent
+    # see t/050/054.t
+    return Class::MOP::class_of($super_meta_name)
+        unless @role_differences;
+
     return Moose::Meta::Class->create_anon_class(
         superclasses => [$super_meta_name],
         roles        => \@role_differences,
