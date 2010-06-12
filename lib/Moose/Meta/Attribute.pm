@@ -131,7 +131,10 @@ sub interpolate_class {
 
 # ...
 
-sub illegal_options_for_inheritance { }
+# method-generating options shouldn't be overridden
+sub illegal_options_for_inheritance {
+    qw(is reader writer accessor clearer predicate)
+}
 
 # NOTE/TODO
 # This method *must* be able to handle
@@ -150,8 +153,6 @@ sub illegal_options_for_inheritance { }
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
 
-    my %copy = %options;
-
     # NOTE:
     # we may want to extends a Class::MOP::Attribute
     # in which case we need to be able to use the
@@ -163,7 +164,7 @@ sub clone_and_inherit_options {
         ? $self->illegal_options_for_inheritance
         : ();
 
-    my @found_illegal_options = grep { exists $options{$_} ? $_ : undef } @illegal_options;
+    my @found_illegal_options = grep { exists $options{$_} && exists $self->{$_} ? $_ : undef } @illegal_options;
     (scalar @found_illegal_options == 0)
         || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
 
