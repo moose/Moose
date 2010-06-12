@@ -352,16 +352,17 @@ use Moose::Util::MetaRole;
 {
     ok( My::Class5->meta()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s does Role::Foo because it extends My::Class} );
-    ok( My::Class5->meta()->attribute_metaclass()->meta()->does_role('Role::Foo'),
-        q{My::Class5->meta()'s attribute metaclass also does Role::Foo} );
-    ok( My::Class5->meta()->method_metaclass()->meta()->does_role('Role::Foo'),
-        q{My::Class5->meta()'s method metaclass also does Role::Foo} );
     ok( My::Class5->meta()->instance_metaclass()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s instance metaclass also does Role::Foo} );
     ok( My::Class5->meta()->constructor_class()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s constructor class also does Role::Foo} );
     ok( My::Class5->meta()->destructor_class()->meta()->does_role('Role::Foo'),
         q{My::Class5->meta()'s destructor class also does Role::Foo} );
+    # attribute and method metaclasses aren't inherited
+    ok( !My::Class5->meta()->attribute_metaclass()->meta()->can('does_role'),
+        q{My::Class5->meta()'s attribute metaclass also does Role::Foo} );
+    ok( !My::Class5->meta()->method_metaclass()->meta()->can('does_role'),
+        q{My::Class5->meta()'s method metaclass also does Role::Foo} );
 }
 
 {
@@ -443,8 +444,8 @@ use Moose::Util::MetaRole;
         q{... and My::Class8->meta() does Role::Foo because My::Class8 extends My::Class} );
     ok( My::Class8->meta()->attribute_metaclass->meta()->does_role('Role::Bar'),
         q{apply Role::Bar to My::Class8->meta()->attribute_metaclass before extends} );
-    ok( My::Class8->meta()->attribute_metaclass->meta()->does_role('Role::Foo'),
-        q{... and My::Class8->meta()->attribute_metaclass does Role::Foo because My::Class8 extends My::Class} );
+    ok( !My::Class8->meta()->attribute_metaclass->meta()->does_role('Role::Foo'),
+        q{... and My::Class8->meta()->attribute_metaclass doesn't do Role::Foo because attribute metaclasses aren't inherited} );
 }
 
 
@@ -465,8 +466,8 @@ use Moose::Util::MetaRole;
         q{... and My::Class9->meta() does Role::Foo because My::Class9 extends My::Class} );
     ok( My::Class9->meta()->attribute_metaclass->meta()->does_role('Role::Bar'),
         q{apply Role::Bar to My::Class9->meta()->attribute_metaclass before extends} );
-    ok( My::Class9->meta()->attribute_metaclass->meta()->does_role('Role::Foo'),
-        q{... and My::Class9->meta()->attribute_metaclass does Role::Foo because My::Class9 extends My::Class} );
+    ok( !My::Class9->meta()->attribute_metaclass->meta()->does_role('Role::Foo'),
+        q{... and My::Class9->meta()->attribute_metaclass doesn't do Role::Foo because attribute metaclasses aren't inherited} );
 }
 
 # This tests applying meta roles to a metaclass's metaclass. This is

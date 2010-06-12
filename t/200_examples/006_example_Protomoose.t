@@ -154,6 +154,16 @@ Well cause merlyn asked if it could :)
         return $self->prototype_instance;
     };
 
+    # XXX: not ideal, but it sort of works
+    around '_base_metaclasses' => sub {
+        my $next = shift;
+        my $self = shift;
+        return (
+            $self->$next(@_),
+            'attribute_metaclass' => 'Moose::Meta::Attribute'
+        );
+    };
+
 }
 
 {
