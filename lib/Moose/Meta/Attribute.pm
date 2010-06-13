@@ -365,42 +365,45 @@ sub _process_options {
 
 sub initialize_instance_slot {
     my ($self, $meta_instance, $instance, $params) = @_;
+
+    $self->initialize_from_params($meta_instance, $instance, $params)
+        or
+    $self->initialize_from_defaults($meta_instance, $instance, $params);
+}
+
+sub initialize_from_params {
+    my ($self, $meta_instance, $instance, $params) = @_;
+
     my $init_arg = $self->init_arg();
+
+    return unless defined $init_arg;
     # try to fetch the init arg from the %params ...
 
-    my $val;
-    my $value_is_set;
     if ( defined($init_arg) and exists $params->{$init_arg}) {
-        $val = $params->{$init_arg};
-        $value_is_set = 1;
+        $self->_set_initial_slot_value($meta_instance, $instance, $params->{$init_arg});
+        return 1;
     }
     else {
-        # skip it if it's lazy
-        return if $self->is_lazy;
-        # and die if it's required and doesn't have a default value
-        $self->throw_error("Attribute (" . $self->name . ") is required", object => $instance, data => $params)
-            if $self->is_required && !$self->has_default && !$self->has_builder;
-
-        # if nothing was in the %params, we can use the
-        # attribute's default value (if it has one)
-        if ($self->has_default) {
-            $val = $self->default($instance);
-            $value_is_set = 1;
-        }
-        elsif ($self->has_builder) {
-            $val = $self->_call_builder($instance);
-            $value_is_set = 1;
-        }
+        return;
     }
+}
 
-    return unless $value_is_set;
+sub initialize_from_defaults {
+    my ($self, $meta_instance, $instance, $params) = @_;
 
-    $val = $self->_coerce_and_verify( $val, $instance );
+    # skip it if it's lazy
+    return if $self->is_lazy;
 
-    $self->set_initial_value($instance, $val);
-
-    if ( ref $val && $self->is_weak_ref ) {
-        $self->_weaken_value($instance);
+    # attribute's default value (if it has one)
+    if ($self->has_default) {
+        $self->_set_initial_slot_value($meta_instance, $instance, scalar($self->default($instance)) );
+    }
+    elsif ($self->has_builder) {
+        $self->_set_initial_slot_value($meta_instance, $instance, scalar($self->_call_builder($instance)) );
+    }
+    elsif ( $self->is_required ) {
+        # die if it's required and doesn't have a default value
+        $self->throw_error("Attribute (" . $self->name . ") is required", object => $instance, data => $params)
     }
 }
 
@@ -429,30 +432,35 @@ sub _call_builder {
 # Class::MOP::Attribute, we need to
 # refactor these bits eventually.
 # - SL
+# the problem is the initializer should get the uncoerced value, and the
+# callback should coerce. Otherwise this'd just be
+# $self->SUPER::_set_initial_slot_value(..., $self->_coerce_and_verify($value, $instance))
+# - YK
 sub _set_initial_slot_value {
     my ($self, $meta_instance, $instance, $value) = @_;
 
     my $slot_name = $self->name;
 
-    return $meta_instance->set_slot_value($instance, $slot_name, $value)
-        unless $self->has_initializer;
+    if ( $self->has_initializer ) {
+        my $callback = sub {
+            my $val = $self->_coerce_and_verify( shift, $instance );;
 
-    my ($type_constraint, $can_coerce);
-    if ($self->has_type_constraint) {
-        $type_constraint = $self->type_constraint;
-        $can_coerce      = ($self->should_coerce && $type_constraint->has_coercion);
+            $meta_instance->set_slot_value($instance, $slot_name, $val);
+        };
+
+        my $initializer = $self->initializer;
+
+        # most things will just want to set a value, so make it first arg
+        $instance->$initializer($value, $callback, $self);
+    }
+    else {
+        my $coerced = $self->_coerce_and_verify( $value, $instance);
+        $meta_instance->set_slot_value($instance, $slot_name, $coerced);
     }
 
-    my $callback = sub {
-        my $val = $self->_coerce_and_verify( shift, $instance );;
-
-        $meta_instance->set_slot_value($instance, $slot_name, $val);
-    };
-
-    my $initializer = $self->initializer;
-
-    # most things will just want to set a value, so make it first arg
-    $instance->$initializer($value, $callback, $self);
+    if ( ref $value && $self->is_weak_ref ) {
+        $self->_weaken_value($instance);
+    }
 }
 
 sub set_value {
