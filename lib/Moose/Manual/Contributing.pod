@@ -233,6 +233,8 @@ defend your change.
     git checkout master
     # edit for final version bumping, changelogging, etc
     # prepare release (test suite etc)
+    perl-reversion -bump
+    make manifest
     git commit
     git checkout stable
     git merge master # must be a fast forward
