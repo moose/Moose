@@ -1,6 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.08 Tue, Jun 15, 2010
+
+  [ENHANCEMENTS]
+
+  * Refactored a small amount of Moose::Meta::Method::Constructor to allow it
+    to be overridden more easily (doy).
+
 1.07 Sat, Jun 05, 2010
 
   [BUG FIXES]
