@@ -59,9 +59,11 @@ sub _initialize_body {
 
     $source .= "\n" . 'my $class = Scalar::Util::blessed($_instance) || $_instance;';
 
-    $source .= "\n" . 'return $class->Moose::Object::new(@_)';
-    $source .= "\n    if \$class ne '" . $self->associated_metaclass->name
-            .  "';\n";
+    $source .= "\n" . "if (\$class ne '" . $self->associated_metaclass->name
+            .  "') {";
+    $source .= "\n    return "
+            .  $self->_generate_fallback_constructor('$class') . ";";
+    $source .= "\n}\n";
 
     $source .= $self->_generate_params('$params', '$class');
     $source .= $self->_generate_instance('$instance', '$class');
@@ -109,6 +111,11 @@ sub _initialize_body {
         if $e;
 
     $self->{'body'} = $code;
+}
+
+sub _generate_fallback_constructor {
+    my ( $self, $class_var ) = @_;
+    "${class_var}->Moose::Object::new(\@_)";
 }
 
 sub _generate_params {
