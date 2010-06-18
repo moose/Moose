@@ -13,3 +13,5 @@ Moose-*
 *.bs
 *.c
 *.o
+cover_db
+*.gc??
