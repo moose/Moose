@@ -157,6 +157,12 @@ $META->add_attribute(
     default => 'Moose::Meta::Role::Application::ToInstance',
 );
 
+$META->add_attribute(
+    'applied_attribute_metaclass',
+    reader  => 'applied_attribute_metaclass',
+    default => 'Moose::Meta::Attribute',
+);
+
 # More or less copied from Moose::Meta::Class
 sub initialize {
     my $class = shift;
@@ -196,6 +202,7 @@ sub reinitialize {
             application_to_class_class
             application_to_role_class
             application_to_instance_class
+            applied_attribute_metaclass
         );
     }
 

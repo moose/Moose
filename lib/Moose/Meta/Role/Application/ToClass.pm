@@ -129,7 +129,7 @@ sub check_required_attributes {
 
 sub apply_attributes {
     my ($self, $role, $class) = @_;
-    my $attr_metaclass = $class->attribute_metaclass;
+    my $attr_metaclass = $role->applied_attribute_metaclass;
 
     foreach my $attribute_name ($role->get_attribute_list) {
         # it if it has one already
