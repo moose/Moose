@@ -443,7 +443,7 @@ sub _set_initial_slot_value {
 
     if ( $self->has_initializer ) {
         my $callback = sub {
-            my $val = $self->_coerce_and_verify( shift, $instance );;
+            my $val = $self->_coerce_and_verify( shift, $instance );
 
             $meta_instance->set_slot_value($instance, $slot_name, $val);
         };
