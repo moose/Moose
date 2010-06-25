@@ -379,7 +379,7 @@ sub initialize_from_params {
     return unless defined $init_arg;
     # try to fetch the init arg from the %params ...
 
-    if ( defined($init_arg) and exists $params->{$init_arg}) {
+    if (exists $params->{$init_arg}) {
         $self->_set_initial_slot_value($meta_instance, $instance, $params->{$init_arg});
         return 1;
     }
