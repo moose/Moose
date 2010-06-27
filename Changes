@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 NEXT
 
+  [API CHANGES]
+
+  * Roles now have their own default attribute metaclass to use during
+    application to a class, rather than just using the class's
+    attribute_metaclass. This is also overridable via ::MetaRole, with the
+    applied_attribute key in the role_metaroles hashref (doy).
+
   [ENHANCEMENTS]
 
   * We now load the roles needed for native delegations only as needed. This
