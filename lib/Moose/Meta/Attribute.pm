@@ -437,12 +437,6 @@ sub _set_initial_slot_value {
     return $meta_instance->set_slot_value($instance, $slot_name, $value)
         unless $self->has_initializer;
 
-    my ($type_constraint, $can_coerce);
-    if ($self->has_type_constraint) {
-        $type_constraint = $self->type_constraint;
-        $can_coerce      = ($self->should_coerce && $type_constraint->has_coercion);
-    }
-
     my $callback = sub {
         my $val = $self->_coerce_and_verify( shift, $instance );;
 
