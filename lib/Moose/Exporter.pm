@@ -475,8 +475,6 @@ sub _make_unimport_sub {
             $export_recorder,
             $is_reexport,
         );
-        strict->unimport;
-        warnings->unimport;
     };
 }
 
@@ -567,11 +565,6 @@ sub _make_init_meta {
 sub import {
     strict->import;
     warnings->import;
-}
-
-sub unimport {
-    strict->unimport;
-    warnings->unimport;
 }
 
 1;

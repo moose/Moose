@@ -1,6 +1,15 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [NEW FEATURES]
+
+  * We no longer unimport strict and warnings when Moose, Moose::Role, or
+    Moose::Exporter are unimported. Doing this was broken if the user
+    explicitly loaded strict and warnings themself, and the results could be
+    generally surprising. We decided that it was best to err on the side of
+    safety and leave these on. Reported by David Wheeler. RT #58310. (Dave
+    Rolsky)
+
   [BUG FIXES]
 
   * Accessors will now not be inlined if the instance metaclass isn't

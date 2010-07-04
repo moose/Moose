@@ -16,6 +16,14 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 1.09
+
+=item C<no Moose>, C<no Moose::Role>, and C<no Moose::Exporter> no longer unimport strict and warnings
+
+This change was made in 1.05, and has now been reverted. We don't know if the
+user has explicitly loaded strict or warnings outside on their own, and
+unimporting them is just broken in that case.
+
 =head1 1.05
 
 =over 4
