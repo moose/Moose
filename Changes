@@ -1,6 +1,12 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [API CHANGES]
+
+  * You cannot pass "coerce => 1" for an attribute unless its type constraint
+    has a coercion defined. If it doesn't, an error will be thrown when the
+    attribute is defined. (Dave Rolsky)
+
   [NEW FEATURES]
 
   * We no longer unimport strict and warnings when Moose, Moose::Role, or

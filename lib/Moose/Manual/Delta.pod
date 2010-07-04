@@ -20,6 +20,14 @@ send us a patch.
 
 =over 4
 
+=item You cannot pass C<< coerce => 1 >> unless the attribute's type constraint has a coercion
+
+Previously, this was accepted, and it sort of worked, except that if you
+attempted to set the attribute after the object was created, you would get a
+runtime error.
+
+Now you will get an error when you attempt to define the attribute.
+
 =item C<no Moose>, C<no Moose::Role>, and C<no Moose::Exporter> no longer unimport strict and warnings
 
 This change was made in 1.05, and has now been reverted. We don't know if the

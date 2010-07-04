@@ -322,6 +322,9 @@ sub _process_options {
             || $class->throw_error("You cannot have coercion without specifying a type constraint on attribute ($name)", data => $options);
         $class->throw_error("You cannot have a weak reference to a coerced value on attribute ($name)", data => $options)
             if $options->{weak_ref};
+
+        $options->{type_constraint}->has_coercion
+            || $class->throw_error("You cannot coerce an attribute ($name) unless its type has a coercion", data => $options);
     }
 
     if (exists $options->{trigger}) {
@@ -732,10 +735,8 @@ sub _coerce_and_verify {
 
     return $val unless $self->has_type_constraint;
 
-    my $type_constraint = $self->type_constraint;
-    if ($self->should_coerce && $type_constraint->has_coercion) {
-        $val = $type_constraint->coerce($val);
-    }
+    $val = $self->type_constraint->coerce($val)
+        if $self->should_coerce;
 
     $self->verify_against_type_constraint($val, instance => $instance);
 

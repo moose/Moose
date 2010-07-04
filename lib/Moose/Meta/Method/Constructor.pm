@@ -242,7 +242,7 @@ sub _generate_slot_initializer {
 
             push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
             if ($is_moose && $attr->has_type_constraint) {
-                if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
+                if ($attr->should_coerce) {
                     push @source => $self->_generate_type_coercion(
                         $attr,
                         '$type_constraints[' . $index . ']',
@@ -307,7 +307,7 @@ sub _generate_type_constraint_and_coercion {
     return unless $attr->has_type_constraint;
 
     my @source;
-    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
+    if ($attr->should_coerce) {
         push @source => $self->_generate_type_coercion(
             $attr,
             '$type_constraints[' . $index . ']',
