@@ -32,9 +32,13 @@ sub new {
     );
 
     $self->_set_constraint(sub { $self->check($_[0]) });
-    $self->coercion(Moose::Meta::TypeCoercion::Union->new(
-        type_constraint => $self
-    ));
+
+    if ( grep { $_->has_coercion } @{ $self->type_constraints } ) {
+        $self->coercion(
+            Moose::Meta::TypeCoercion::Union->new( type_constraint => $self )
+        );
+    }
+
     return $self;
 }
 

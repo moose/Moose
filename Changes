@@ -65,6 +65,17 @@ for, noteworthy changes.
   * Accessors will no longer be inlined if the instance metaclass isn't
     inlinable. (doy)
 
+  * Union types always created a type constraint, even if their constituent
+    constraints did not have any coercions. This bogus coercion always
+    returned undef, which meant that a union which included Undef as a member
+    always coerced bad values to undef. Reported by Eric Brine. RT
+    #58411. (Dave Rolsky)
+
+  * Union types with coercions would always fall back to coercing the value to
+    undef (unintentionally). Now if all the coercions for a union type fail,
+    the value returned by the coercion is the original value that we attempted
+    to coerce. (Dave Rolsky).
+
   * Use Perl 5.10's new recursive regex features, if possible, for the type
     constraint parser. (doy, nothingmuch)
 

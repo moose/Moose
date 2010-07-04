@@ -36,7 +36,7 @@ sub compile_type_coercion {
                 return $temp if $type_constraint->check($temp);
             }
         }
-        return undef;
+        return $value;
     });
 }
 
