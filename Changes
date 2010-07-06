@@ -15,6 +15,9 @@ for, noteworthy changes.
   * Accessors will now not be inlined if the instance metaclass isn't
     inlinable (doy).
 
+  * Use Perl 5.10's new recursive regex features, if possible, for the type
+    constraint parser (doy, nothingmuch).
+
 1.08 Tue, Jun 15, 2010
 
   [ENHANCEMENTS]

@@ -573,20 +573,53 @@ sub _install_type_coercions ($$) {
 
     my $valid_chars = qr{[\w:\.]};
     my $type_atom   = qr{ (?>$valid_chars+) }x;
-    my $ws   = qr{ (?>\s*) }x;
+    my $ws          = qr{ (?>\s*) }x;
+    my $op_union    = qr{ $ws \| $ws }x;
 
-    my $any;
+    my ($type, $type_capture_parts, $type_with_parameter, $union, $any);
+    if (Class::MOP::IS_RUNNING_ON_5_10) {
+        my $type_pattern
+            = q{  (?&type_atom)  (?: \[ (?&ws)  (?&any)  (?&ws) \] )? };
+        my $type_capture_parts_pattern
+            = q{ ((?&type_atom)) (?: \[ (?&ws) ((?&any)) (?&ws) \] )? };
+        my $type_with_parameter_pattern
+            = q{  (?&type_atom)      \[ (?&ws)  (?&any)  (?&ws) \]    };
+        my $union_pattern
+            = q{ (?&type) (?> (?: (?&op_union) (?&type) )+ ) };
+        my $any_pattern
+            = q{ (?&type) | (?&union) };
 
-    my $type = qr{  $type_atom  (?: \[ $ws (??{$any})   $ws \] )? }x;
-    my $type_capture_parts
-        = qr{ ($type_atom) (?: \[ $ws ((??{$any})) $ws \] )? }x;
-    my $type_with_parameter
-        = qr{  $type_atom      \[ $ws (??{$any})   $ws \]    }x;
+        my $defines = qr{(?(DEFINE)
+            (?<valid_chars>         $valid_chars)
+            (?<type_atom>           $type_atom)
+            (?<ws>                  $ws)
+            (?<op_union>            $op_union)
+            (?<type>                $type_pattern)
+            (?<type_capture_parts>  $type_capture_parts_pattern)
+            (?<type_with_parameter> $type_with_parameter_pattern)
+            (?<union>               $union_pattern)
+            (?<any>                 $any_pattern)
+        )}x;
 
-    my $op_union = qr{ $ws \| $ws }x;
-    my $union    = qr{ $type (?> (?: $op_union $type )+ ) }x;
+        $type                = qr{ $type_pattern                $defines }x;
+        $type_capture_parts  = qr{ $type_capture_parts_pattern  $defines }x;
+        $type_with_parameter = qr{ $type_with_parameter_pattern $defines }x;
+        $union               = qr{ $union_pattern               $defines }x;
+        $any                 = qr{ $any_pattern                 $defines }x;
+    }
+    else {
+        $type
+            = qr{  $type_atom  (?: \[ $ws  (??{$any})  $ws \] )? }x;
+        $type_capture_parts
+            = qr{ ($type_atom) (?: \[ $ws ((??{$any})) $ws \] )? }x;
+        $type_with_parameter
+            = qr{  $type_atom      \[ $ws  (??{$any})  $ws \]    }x;
+        $union
+            = qr{ $type (?> (?: $op_union $type )+ ) }x;
+        $any
+            = qr{ $type | $union }x;
+    }
 
-    $any = qr{ $type | $union }x;
 
     sub _parse_parameterized_type_constraint {
         { no warnings 'void'; $any; }  # force capture of interpolated lexical
