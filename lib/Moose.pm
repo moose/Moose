@@ -181,9 +181,7 @@ sub init_meta {
         foreach my $ancestor ( @isa ) {
             my $ancestor_meta = Class::MOP::get_metaclass_by_name($ancestor) || next;
 
-            my $ancestor_meta_class = ($ancestor_meta->is_immutable
-                ? $ancestor_meta->_get_mutable_metaclass_name
-                : ref($ancestor_meta));
+            my $ancestor_meta_class = $ancestor_meta->_real_ref_name;
 
             # if we have an ancestor metaclass that inherits $metaclass, we use
             # that. This is like _fix_metaclass_incompatibility, but we can do it now.
