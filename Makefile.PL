@@ -2,13 +2,13 @@ use strict;
 use warnings;
 use inc::Module::Install 0.98;
 use Module::Install::AuthorRequires;
-use 5.008001;
+use 5.008003;
 
 check_broken_extratests();
 check_conflicts();
 
 name 'Moose';
-perl_version '5.008001';
+perl_version '5.008003';
 all_from 'lib/Moose.pm';
 license 'perl';
 

@@ -18,6 +18,11 @@ for, noteworthy changes.
   * Use Perl 5.10's new recursive regex features, if possible, for the type
     constraint parser (doy, nothingmuch).
 
+  [OTHER]
+
+  * Bump our required perl version to 5.8.3, since earlier versions fail tests
+    and aren't easily installable/testable.
+
 1.08 Tue, Jun 15, 2010
 
   [ENHANCEMENTS]
