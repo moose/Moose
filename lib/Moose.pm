@@ -173,7 +173,7 @@ sub init_meta {
             }
         }
     } else {
-        # no metaclass, no 'meta' method
+        # no metaclass
 
         # now we check whether our ancestors have metaclass, and if so borrow that
         my ( undef, @isa ) = @{ mro::get_linear_isa($class) };
@@ -196,23 +196,6 @@ sub init_meta {
         }
 
         $meta = $metaclass->initialize($class);
-    }
-
-    if ( $class->can('meta') ) {
-        # check 'meta' method
-
-        # it may be inherited
-
-        # NOTE:
-        # this is the case where the metaclass pragma
-        # was used before the 'use Moose' statement to
-        # override a specific class
-        my $method_meta = $class->meta;
-
-        ( blessed($method_meta) && $method_meta->isa('Moose::Meta::Class') )
-            || Moose->throw_error("$class already has a &meta function, but it does not return a Moose::Meta::Class ($method_meta)");
-
-        $meta = $method_meta;
     }
 
     unless ( $meta->has_method("meta") ) { # don't overwrite

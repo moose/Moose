@@ -76,7 +76,7 @@ sub with_immutable (&@) {
     my $block = shift;
     my $before = $Test->current_test;
     $block->();
-    $_->meta->make_immutable for @_;
+    Class::MOP::class_of($_)->make_immutable for @_;
     $block->();
     my $num_tests = $Test->current_test - $before;
     return all { $_ } ($Test->summary)[-$num_tests..-1];

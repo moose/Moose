@@ -112,22 +112,30 @@ sub init_meta {
 
     my $metaclass = $args{metaclass} || "Moose::Meta::Role";
 
-    # make a subtype for each Moose class
+    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Role.")
+        unless $metaclass->isa('Moose::Meta::Role');
+
+    # make a subtype for each Moose role
     role_type $role unless find_type_constraint($role);
 
-    # FIXME copy from Moose.pm
     my $meta;
-    if ($role->can('meta')) {
-        $meta = $role->meta();
-
-        unless ( blessed($meta) && $meta->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error("You already have a &meta function, but it does not return a Moose::Meta::Role");
+    if ( $meta = Class::MOP::get_metaclass_by_name($role) ) {
+        unless ( $meta->isa("Moose::Meta::Role") ) {
+            my $error_message = "$role already has a metaclass, but it does not inherit $metaclass ($meta).";
+            if ( $meta->isa('Moose::Meta::Class') ) {
+                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+            } else {
+                Moose->throw_error($error_message);
+            }
         }
     }
     else {
         $meta = $metaclass->initialize($role);
+    }
 
+    unless ( $meta->has_method("meta") ) { # don't overwrite
+        # also check for inherited non moose 'meta' method?
+        # FIXME also skip this if the user requested by passing an option
         $meta->add_method(
             'meta' => sub {
                 # re-initialize so it inherits properly
