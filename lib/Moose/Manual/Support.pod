@@ -11,8 +11,8 @@ Moose uses the release early, release often philosophy. Moose is not
 released on a schedule. Releases happen as new features and bug fixes
 are required.
 
-There have been to date, 98 releases of Moose over just under four
-years. This is an average of a release every two weeks.
+Moose has historically been released fairly often, and most releases include
+just a few features or bug fixes.
 
 =head1 DEPRECATION POLICY
 
