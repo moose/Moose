@@ -15,7 +15,7 @@ opinions. Feel free to ignore us.
 
 =head2 C<namespace::autoclean> and immutabilize
 
-We recommend that you remove the Moose sugar and end your Moose class 
+We recommend that you remove the Moose sugar and end your Moose class
 definitions by making your class immutable.
 
   package Person;
@@ -39,8 +39,9 @@ call allows Moose to speed up a lot of things, most notably object
 construction. The trade-off is that you can no longer change the class
 definition.
 
-C<no Moose;> may be used to unimport only Moose's imported symbols.
-L<namespace::clean> provides finer-grained control than L<namespace::autoclean>. 
+You can also write C<no Moose> to unimport only Moose's imported symbols. The
+L<namespace::clean> module is another alternative, providing finer-grained
+control than L<namespace::autoclean>.
 
 =head2 Never override C<new>
 
