@@ -16,7 +16,7 @@ use Test::Exception;
             isa    => 'Str',
             coerce => 1,
         );
-        } qr/\QYou cannot coerce an attribute (foo) unless its type has a coercion/,
+        } qr/\QYou cannot coerce an attribute (foo) unless its type (Str) has a coercion/,
         'Cannot coerce unless the type has a coercion';
 }
 

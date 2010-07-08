@@ -323,8 +323,10 @@ sub _process_options {
         $class->throw_error("You cannot have a weak reference to a coerced value on attribute ($name)", data => $options)
             if $options->{weak_ref};
 
-        $options->{type_constraint}->has_coercion
-            || $class->throw_error("You cannot coerce an attribute ($name) unless its type has a coercion", data => $options);
+        unless ( $options->{type_constraint}->has_coercion ) {
+            my $type = $options->{type_constraint}->name;
+            $class->throw_error("You cannot coerce an attribute ($name) unless its type ($type) has a coercion", data => $options);
+        }
     }
 
     if (exists $options->{trigger}) {
