@@ -20,7 +20,7 @@ Moose has always prioritized correctness over performance and backwards
 compatibility.
 
 Major deprecations or API changes are first documented in the Changes
-file as well as in L<Moose::Manual::Delta|Moose::Manual::Delta>
+file as well as in L<Moose::Manual::Delta>.
 
 Moose then attempts to warn for deprecated features and API changes for
 a reasonable number of releases before breaking any tested API.
@@ -57,8 +57,6 @@ http://www.perlmonks.org/?node_id=608144 >>).
 =head1 CONTRIBUTING
 
 Moose has an open contribution policy. Anybody is welcome to submit a
-patch. Please see
-L<Moose::Manual::Contributing|Moose::Manual::Contributing> for more
-details.
+patch. Please see L<Moose::Manual::Contributing> for more details.
 
 =cut
