@@ -426,16 +426,6 @@ define I<all> of your custom types in one module,
 C<MyApp::Types>. Second, load this module in all of your other
 modules.
 
-If you are still having load order problems, you can make use of the
-C<find_type_constraint> function exported by
-L<Moose::Util::TypeConstraints>:
-
-  class_type('MyApp::User')
-      unless find_type_constraint('MyApp::User');
-
-This sort of "find or create" logic is simple to write, and will let
-you work around load order issues.
-
 =head1 AUTHOR
 
 Dave Rolsky E<lt>autarch@urth.orgE<gt>
