@@ -161,17 +161,6 @@ use Test::Requires {
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    has nothing => (
-        is  => 'ro',
-        isa => 'Undef | Undef',
-    );
-
-    has nothing2 => (
-        is     => 'ro',
-        isa    => 'Undef | Undef',
-        coerce => 1,
-    );
-
     subtype 'Coerced' => as 'ArrayRef';
     coerce 'Coerced'
         => from 'Value'
@@ -185,25 +174,16 @@ use Test::Requires {
 }
 
 {
-    throws_ok { Foo->new( nothing => 1 ) }
-    qr/\QValidation failed for 'Undef|Undef' with value 1/,
-        'Cannot pass defined value for nothing attribute';
+    my $foo;
+    lives_ok { $foo = Foo->new( carray => 1 ) }
+    'Can pass non-ref value for carray';
+    is_deeply(
+        $foo->carray, [1],
+        'carray was coerced to an array ref'
+    );
 
-    throws_ok { Foo->new( nothing2 => 1 ) }
-    qr/\QValidation failed for 'Undef|Undef' with value 1/,
-        'Cannot pass defined value for nothing2 attribute';
-
-    {
-        my $foo;
-        lives_ok { $foo = Foo->new( carray => 1 ) }
-            'Can pass non-ref value for carray';
-        is_deeply(
-            $foo->carray, [1],
-            'carray was coerced to an array ref'
-        );
-    }
-
-    throws_ok { Foo->new( carray => {} ) } qr/\QValidation failed for 'Coerced|Coerced' with value \E(?!undef)/,
+    throws_ok { Foo->new( carray => {} ) }
+    qr/\QValidation failed for 'Coerced|Coerced' with value \E(?!undef)/,
         'Cannot pass a hash ref for carray attribute, and hash ref is not coerced to an undef';
 }
 
