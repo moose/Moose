@@ -39,11 +39,9 @@ MooseX::Attribute::ENV
 MooseX::AttributeCloner
 MooseX::AttributeDefaults
 MooseX::AttributeHelpers
-MooseX::AttributeIndexes
 MooseX::AttributeInflate
 MooseX::Attributes::Curried
 MooseX::Blessed::Reconstruct
-MooseX::CascadeClearing
 MooseX::ClassAttribute
 MooseX::Clone
 MooseX::ConfigFromFile
@@ -56,9 +54,7 @@ MooseX::Declare
 MooseX::DeepAccessors
 MooseX::Dumper
 MooseX::Emulate::Class::Accessor::Fast
-MooseX::Error::Exception::Class
 MooseX::Error::Trap
-MooseX::FSM
 MooseX::FileAttribute
 MooseX::File_or_DB::Storage
 MooseX::FollowPBP
@@ -81,8 +77,6 @@ MooseX::Log::Log4perl
 MooseX::MakeImmutable
 MooseX::Mangle
 MooseX::MarkAsMethods
-MooseX::Meta::Attribute::Index
-MooseX::Meta::Attribute::Lvalue
 MooseX::Meta::TypeConstraint::ForceCoercion
 MooseX::Meta::TypeConstraint::Intersection
 MooseX::MetaDescription
