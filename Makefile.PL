@@ -48,9 +48,10 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
+        'Catalyst'                      => '5.80017',
         'Devel::REPL'                   => '1.003008',
         'Fey::ORM'                      => '0.23',
-        'Catalyst'                      => '5.80017',
+        'KiokuDB'                       => '0.41',
         'MooseX::Aliases'               => '0.07',
         'MooseX::AttributeHelpers'      => '0.22',
         'MooseX::Attribute::Prototype'  => '0.10',
@@ -63,9 +64,8 @@ sub check_conflicts {
         'MooseX::Singleton'             => '0.19',
         'MooseX::StrictConstructor'     => '0.07',
         'MooseX::Types'                 => '0.19',
-        'Pod::Elemental'                => '0.093280',
         'namespace::autoclean'          => '0.08',
-        'KiokuDB'                       => '0.41',
+        'Pod::Elemental'                => '0.093280',
     );
 
     my $found = 0;
