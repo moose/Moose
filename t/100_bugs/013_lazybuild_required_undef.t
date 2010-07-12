@@ -11,8 +11,8 @@ use Moose;
 #### or, make required accept undef and use a predicate test
 
 
-has 'foo' => ( isa => 'Int | Undef', is => 'rw', coerce => 1, lazy_build => 1 );
-has 'bar' => ( isa => 'Int | Undef', is => 'rw', coerce => 1 );
+has 'foo' => ( isa => 'Int | Undef', is => 'rw', lazy_build => 1 );
+has 'bar' => ( isa => 'Int | Undef', is => 'rw' );
 
 sub _build_foo { undef }
 
