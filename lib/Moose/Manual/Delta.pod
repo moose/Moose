@@ -20,6 +20,14 @@ send us a patch.
 
 =over 4
 
+=item All deprecated features now warn
+
+Previously, deprecation mostly consisted of simply saying "X is deprecated" in
+the Changes file. We were not very consistent about actually warning. Now, all
+deprecated features still present in Moose actually give a warning. The
+warning is issued once per calling package. See L<Moose::Deprecated> for more
+details.
+
 =item You cannot pass C<< coerce => 1 >> unless the attribute's type constraint has a coercion
 
 Previously, this was accepted, and it sort of worked, except that if you

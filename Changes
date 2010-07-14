@@ -13,6 +13,13 @@ for, noteworthy changes.
   * Removed the long-deprecated Moose::Meta::Role->alias_method metohd. (Dave
     Rolsky).
 
+  * All features which have been declared deprecated now issue a warning using
+    Moose::Deprecated. Warnings are issued once per calling package, not
+    repeatedly. See Moose::Deprecated for information on how you can shut
+    these warnings up entirely. Note that deprecated features will eventually
+    be removed, so shutting up the warnings may not be the best idea. (Dave
+    Rolsky)
+
   [NEW FEATURES]
 
   * We no longer unimport strict and warnings when Moose, Moose::Role, or
