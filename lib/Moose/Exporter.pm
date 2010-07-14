@@ -37,14 +37,6 @@ sub build_import_methods {
 
     my $exporting_package = $args{exporting_package} ||= caller();
 
-    if ( $args{with_caller} ) {
-        Moose::Deprecated::deprecated(
-            feature => 'Moose::Exporter with_caller',
-            message =>
-                'The with_caller argument for Moose::Exporter has been deprecated'
-        );
-    }
-
     $EXPORT_SPEC{$exporting_package} = \%args;
 
     my @exports_from = $class->_follow_also($exporting_package);
