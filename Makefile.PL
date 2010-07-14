@@ -16,7 +16,7 @@ requires 'Carp';
 requires 'Class::MOP'                  => '1.02';
 requires 'Data::OptList'               => '0';
 requires 'List::MoreUtils'             => '0.12';
-requires 'Package::DeprecationManager' => '0.03';
+requires 'Package::DeprecationManager' => '0.04';
 requires 'Scalar::Util'                => '1.19';
 requires 'Sub::Exporter'               => '0.980';
 requires 'Sub::Name'                   => '0';
