@@ -10,6 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Package::DeprecationManager -deprecations => {
     'pre-0.94 MetaRole API'       => '0.93',
     'Moose::Exporter with_caller' => '0.89',
+    'Role type'                   => '0.84',
     },
     -ignore => [qw( Moose Moose::Exporter Moose::Util::MetaRole )],
     ;

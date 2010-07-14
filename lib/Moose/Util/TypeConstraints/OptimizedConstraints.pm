@@ -36,7 +36,14 @@ sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or bles
 
 sub Object { blessed($_[0]) && blessed($_[0]) ne 'Regexp' }
 
-sub Role { Carp::cluck('The Role type is deprecated.'); blessed($_[0]) && $_[0]->can('does') }
+sub Role {
+    Moose::Deprecated::deprecated(
+        feature => 'Role type',
+        message =>
+            'The Role type has been deprecated. Maybe you meant to create a RoleName type?'
+    );
+    blessed( $_[0] ) && $_[0]->can('does');
+}
 
 sub ClassName {
     return Class::MOP::is_class_loaded( $_[0] );
