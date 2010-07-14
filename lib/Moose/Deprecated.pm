@@ -19,3 +19,39 @@ use Package::DeprecationManager -deprecations => {
     ;
 
 1;
+
+__END__
+
+=pod
+
+=head1 NAME 
+
+Moose::Deprecated - Manages deprecation warnings for Moose
+
+=head1 DESCRIPTION
+
+    use Moose::Deprecated -api_version => $version;
+
+=head1 FUNCTIONS
+
+This module manages deprecation warnings for features that have been
+deprecated in Moose.
+
+If you specify C<< -api_version => $version >>, you can use deprecated features
+without warnings. Note that this special treatment is limited to the package
+that loads C<Class::MOP::Deprecated>.
+
+=head1 AUTHORS
+
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006-2010 by Infinity Interactive, Inc.
+
+L<http://www.iinteractive.com>
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
