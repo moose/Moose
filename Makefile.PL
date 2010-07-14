@@ -58,7 +58,7 @@ sub check_conflicts {
         'MooseX::Aliases'                => '0.07',
         'MooseX::AttributeHelpers'       => '0.22',
         'MooseX::Attribute::Prototype'   => '0.10',
-        'MooseX::ClassAttribute'         => '0.09',
+        'MooseX::ClassAttribute'         => '0.13',
         'MooseX::MethodAttributes'       => '0.18',
         'MooseX::NonMoose'               => '0.07',
         'MooseX::Params::Validate'       => '0.05',
