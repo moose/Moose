@@ -13,14 +13,15 @@ all_from 'lib/Moose.pm';
 license 'perl';
 
 requires 'Carp';
-requires 'Class::MOP'       => '1.02';
-requires 'Data::OptList'    => '0';
-requires 'List::MoreUtils'  => '0.12';
-requires 'Scalar::Util'     => '1.19';
-requires 'Sub::Exporter'    => '0.980';
-requires 'Sub::Name'        => '0';
-requires 'Task::Weaken'     => '0';
-requires 'Try::Tiny'        => '0.02';
+requires 'Class::MOP'                  => '1.02';
+requires 'Data::OptList'               => '0';
+requires 'List::MoreUtils'             => '0.12';
+requires 'Package::DeprecationManager' => '0.03';
+requires 'Scalar::Util'                => '1.19';
+requires 'Sub::Exporter'               => '0.980';
+requires 'Sub::Name'                   => '0';
+requires 'Task::Weaken'                => '0';
+requires 'Try::Tiny'                   => '0.02';
 
 test_requires 'Test::More'      => '0.88';
 test_requires 'Test::Exception' => '0.27';
