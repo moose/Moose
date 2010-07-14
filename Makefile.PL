@@ -65,7 +65,7 @@ sub check_conflicts {
         'MooseX::Role::Cmd'             => '0.06',
         'MooseX::Role::WithOverloading' => '0.04',
         'MooseX::Singleton'             => '0.19',
-        'MooseX::StrictConstructor'     => '0.07',
+        'MooseX::StrictConstructor'     => '0.08',
         'MooseX::Types'                 => '0.19',
         'namespace::autoclean'          => '0.08',
         'Pod::Elemental'                => '0.093280',
