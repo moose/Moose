@@ -133,6 +133,11 @@ sub init_meta {
     # This used to be called as a function. This hack preserves
     # backwards compatibility.
     if ( $_[0] ne __PACKAGE__ ) {
+        Moose::Deprecated::deprecated(
+            feature => 'Moose::init_meta',
+            message => 'Calling Moose::init_meta as a function is deprecated',
+        );
+
         return __PACKAGE__->init_meta(
             for_class  => $_[0],
             base_class => $_[1],

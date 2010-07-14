@@ -13,6 +13,7 @@ use Package::DeprecationManager -deprecations => {
     'Role type'                   => '0.84',
     'subtype without sugar'       => '0.72',
     'type without sugar'          => '0.72',
+    'Moose::init_meta'            => '0.56',
     },
     -ignore => [qw( Moose Moose::Exporter Moose::Util::MetaRole )],
     ;
