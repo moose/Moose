@@ -12,6 +12,7 @@ use overload     ();
 our $VERSION   = '1.08';
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Moose::Deprecated;
 use Moose::Meta::Method::Accessor;
 use Moose::Meta::Method::Delegation;
 use Moose::Util ();
@@ -305,7 +306,12 @@ sub _process_options {
 
         unless ( $options->{type_constraint}->has_coercion ) {
             my $type = $options->{type_constraint}->name;
-            $class->throw_error("You cannot coerce an attribute ($name) unless its type ($type) has a coercion", data => $options);
+
+            Moose::Deprecated::deprecated(
+                feature => 'coerce without coercion',
+                message =>
+                    "You cannot coerce an attribute ($name) unless its type ($type) has a coercion"
+            );
         }
     }
 

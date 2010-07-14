@@ -1,22 +1,24 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+BEGIN {
+    eval "use Test::Output;";
+    plan skip_all => "Test::Output is required for this test" if $@;
+}
 
 {
     package Foo;
 
     use Moose;
 
-    ::throws_ok{ has foo => (
+    ::stderr_like{ has foo => (
             is     => 'ro',
             isa    => 'Str',
             coerce => 1,
         );
-        } qr/\QYou cannot coerce an attribute (foo) unless its type (Str) has a coercion/,
+        }
+        qr/\QYou cannot coerce an attribute (foo) unless its type (Str) has a coercion/,
         'Cannot coerce unless the type has a coercion';
 }
 
