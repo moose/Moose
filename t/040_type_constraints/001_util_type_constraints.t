@@ -194,6 +194,11 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
 # sugar was indistinguishable from calling directly.
 
 {
+    no warnings 'redefine';
+    *Moose::Deprecated::deprecated = sub { return };
+}
+
+{
     my $type = type( 'Number2', sub { Scalar::Util::looks_like_number($_) } );
 
     ok( $type->check(5), '... this is a Num' );

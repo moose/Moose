@@ -275,6 +275,12 @@ sub type {
 
     # back-compat version, called without sugar
     if ( !any { ( reftype($_) || '' ) eq 'HASH' } @_ ) {
+        Moose::Deprecated::deprecated(
+            feature => 'type without sugar',
+            message =>
+                'Calling type() with a simple list of parameters is deprecated'
+        );
+
         return _create_type_constraint( $_[0], undef, $_[1] );
     }
 
@@ -294,6 +300,12 @@ sub subtype {
     #
     # subtype 'Parent', sub { where };
     if ( scalar @_ == 2 && ( reftype( $_[1] ) || '' ) eq 'CODE' ) {
+        Moose::Deprecated::deprecated(
+            feature => 'subtype without sugar',
+            message =>
+                'Calling subtype() with a simple list of parameters is deprecated'
+        );
+
         return _create_type_constraint( undef, @_ );
     }
 
@@ -301,11 +313,23 @@ sub subtype {
     # subtype 'Parent', sub { where }, sub { message }, sub { optimized };
     if ( scalar @_ >= 3 && all { ( reftype($_) || '' ) eq 'CODE' }
         @_[ 1 .. $#_ ] ) {
+        Moose::Deprecated::deprecated(
+            feature => 'subtype without sugar',
+            message =>
+                'Calling subtype() with a simple list of parameters is deprecated'
+        );
+
         return _create_type_constraint( undef, @_ );
     }
 
     # subtype 'Name', 'Parent', ...
     if ( scalar @_ >= 2 && all { !ref } @_[ 0, 1 ] ) {
+        Moose::Deprecated::deprecated(
+            feature => 'subtype without sugar',
+            message =>
+                'Calling subtype() with a simple list of parameters is deprecated'
+        );
+
         return _create_type_constraint(@_);
     }
 
