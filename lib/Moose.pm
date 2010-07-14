@@ -11,6 +11,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
+use Moose::Deprecated;
 use Moose::Exporter;
 
 use Class::MOP 0.94;

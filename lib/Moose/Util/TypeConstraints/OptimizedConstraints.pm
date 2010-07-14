@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Class::MOP;
+use Moose::Deprecated;
 use Scalar::Util 'blessed', 'looks_like_number';
 
 our $VERSION   = '1.08';
