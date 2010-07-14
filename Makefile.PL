@@ -61,7 +61,7 @@ sub check_conflicts {
         'MooseX::ClassAttribute'         => '0.13',
         'MooseX::FollowPBP'              => '0.02',
         'MooseX::LazyRequire'            => '0.05',
-        'MooseX::MethodAttributes'       => '0.18',
+        'MooseX::MethodAttributes'       => '0.22',
         'MooseX::NonMoose'               => '0.07',
         'MooseX::Params::Validate'       => '0.05',
         'MooseX::Role::Cmd'              => '0.06',
