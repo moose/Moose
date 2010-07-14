@@ -10,6 +10,9 @@ for, noteworthy changes.
   * has '+foo' now has a blacklist rather than a whitelist for options which
     can be legally inherited (doy, Tuomas Jormola).
 
+  * Removed the long-deprecated Moose::Meta::Role->alias_method metohd. (Dave
+    Rolsky).
+
   [NEW FEATURES]
 
   * We no longer unimport strict and warnings when Moose, Moose::Role, or
