@@ -26,12 +26,13 @@ requires 'Try::Tiny'                   => '0.02';
 test_requires 'Test::More'      => '0.88';
 test_requires 'Test::Exception' => '0.27';
 
-author_requires 'Test::Inline';
 author_requires 'File::Find::Rule';
 author_requires 'Module::Info';
-author_requires 'Test::Spelling';
-author_requires 'Test::Pod::Coverage';
+author_requires 'Test::Inline';
 author_requires 'Test::NoTabs';
+author_requires 'Test::Output';
+author_requires 'Test::Pod::Coverage';
+author_requires 'Test::Spelling';
 
 if ( is_maintainer() ) {
     system( $^X, 'author/extract-inline-tests' );
