@@ -13,6 +13,10 @@ use Test::Exception;
 
 use Moose::Util::MetaRole;
 
+{
+    no warnings 'redefine';
+    *Moose::Deprecated::deprecated = sub { return };
+}
 
 {
     package My::Meta::Class;

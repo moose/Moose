@@ -572,10 +572,10 @@ use Moose::Util::MetaRole;
         my %p = @_;
         Moose->init_meta(%p);
         return Moose::Util::MetaRole::apply_metaroles(
-            for_class       => $p{for_class},
+            for => $p{for_class},
             # Causes us to recurse through init_meta, as we have to
             # load MyMetaclassRole from disk.
-           metaclass_roles => [qw/MyMetaclassRole/],
+            class_metaroles => { class => [qw/MyMetaclassRole/] },
         );
     }
 }

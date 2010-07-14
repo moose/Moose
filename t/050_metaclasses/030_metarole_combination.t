@@ -114,7 +114,7 @@ our @applications;
     sub init_meta {
         my ( $self, %options ) = @_;
         return Moose::Util::MetaRole::apply_metaroles(
-            for_class      => Moose::Role->init_meta(%options),
+            for            => Moose::Role->init_meta(%options),
             role_metaroles => {
                 role => ['Role::WithCustomApplication'],
                 application_to_class =>

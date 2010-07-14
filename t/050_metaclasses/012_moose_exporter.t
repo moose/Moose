@@ -111,7 +111,7 @@ BEGIN {
     use Moose ();
 
     sub wrapped2 {
-        my $caller = shift;
+        my $caller = shift->name;
         return $caller . ' called wrapped2';
     }
 
@@ -120,9 +120,9 @@ BEGIN {
     }
 
     Moose::Exporter->setup_import_methods(
-        with_caller => ['wrapped2'],
-        as_is       => ['as_is1'],
-        also        => 'MooseX::Sugar',
+        with_meta => ['wrapped2'],
+        as_is     => ['as_is1'],
+        also      => 'MooseX::Sugar',
     );
 }
 
@@ -262,13 +262,13 @@ BEGIN {
     use Moose ();
 
     sub has {
-        my $caller = shift;
+        my $caller = shift->name;
         return $caller . ' called has';
     }
 
     Moose::Exporter->setup_import_methods(
-        with_caller => ['has'],
-        also        => 'Moose',
+        with_meta => ['has'],
+        also      => 'Moose',
     );
 }
 
@@ -298,7 +298,7 @@ BEGIN {
     ::stderr_like {
         Moose::Exporter->setup_import_methods(
             also => ['Moose'],
-            with_caller => ['does_not_exist'],
+            with_meta => ['does_not_exist'],
         );
     } qr/^Trying to export undefined sub NonExistentExport::does_not_exist/,
       "warns when a non-existent method is requested to be exported";
@@ -316,6 +316,7 @@ BEGIN {
 {
     package AllOptions;
     use Moose ();
+    use Moose::Deprecated -api_version => '0.88';
     use Moose::Exporter;
 
     Moose::Exporter->setup_import_methods(

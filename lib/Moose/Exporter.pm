@@ -10,6 +10,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
+use Moose::Deprecated;
 use Moose::Util::MetaRole;
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
@@ -35,6 +36,14 @@ sub build_import_methods {
     my ( $class, %args ) = @_;
 
     my $exporting_package = $args{exporting_package} ||= caller();
+
+    if ( $args{with_caller} ) {
+        Moose::Deprecated::deprecated(
+            feature => 'Moose::Exporter with_caller',
+            message =>
+                'The with_caller argument for Moose::Exporter has been deprecated'
+        );
+    }
 
     $EXPORT_SPEC{$exporting_package} = \%args;
 
@@ -545,11 +554,13 @@ sub _make_init_meta {
 
         return unless Class::MOP::class_of( $options{for_class} );
 
-        Moose::Util::MetaRole::apply_metaroles(
-            for => $options{for_class},
-            %new_style_roles,
-            %old_style_roles,
-        );
+        if ( %new_style_roles || %old_style_roles ) {
+            Moose::Util::MetaRole::apply_metaroles(
+                for => $options{for_class},
+                %new_style_roles,
+                %old_style_roles,
+            );
+        }
 
         Moose::Util::MetaRole::apply_base_class_roles(
             for_class => $options{for_class},

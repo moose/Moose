@@ -10,8 +10,15 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use List::MoreUtils qw( all );
 use List::Util qw( first );
+use Moose::Deprecated;
 
 sub apply_metaclass_roles {
+    Moose::Deprecated::deprecated(
+        feature => 'pre-0.94 MetaRole API',
+        message =>
+            'The old Moose::Util::MetaRole API (before version 0.94) has been deprecated'
+    );
+
     goto &apply_metaroles;
 }
 
@@ -36,7 +43,13 @@ sub apply_metaroles {
 sub _fixup_old_style_args {
     my $args = shift;
 
-    return if $args->{class_metaroles} || $args->{roles_metaroles};
+    return if $args->{class_metaroles} || $args->{role_metaroles};
+
+    Moose::Deprecated::deprecated(
+        feature => 'pre-0.94 MetaRole API',
+        message =>
+            'The old Moose::Util::MetaRole API (before version 0.94) has been deprecated'
+    );
 
     $args->{for} = delete $args->{for_class}
         if exists $args->{for_class};
