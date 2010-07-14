@@ -18,6 +18,7 @@ BEGIN {
 
     package MyFramework;
     use Moose;
+    use Moose::Deprecated -api_version => '0.55';
 
     sub import {
         my $CALLER = caller();
