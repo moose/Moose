@@ -391,14 +391,6 @@ sub does_role {
 
 sub find_method_by_name { (shift)->get_method(@_) }
 
-sub alias_method {
-    Carp::cluck("The alias_method method is deprecated. Use add_method instead.\n");
-
-    my $self = shift;
-
-    $self->add_method(@_);
-}
-
 ## ------------------------------------------------------------------
 ## role construction
 ## ------------------------------------------------------------------
