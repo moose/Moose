@@ -65,7 +65,7 @@ sub check_conflicts {
         'MooseX::NonMoose'               => '0.07',
         'MooseX::Params::Validate'       => '0.05',
         'MooseX::Role::Cmd'              => '0.06',
-        'MooseX::Role::WithOverloading'  => '0.04',
+        'MooseX::Role::WithOverloading'  => '0.06',
         'MooseX::SemiAffordanceAccessor' => '0.05',
         'MooseX::Singleton'              => '0.19',
         'MooseX::StrictConstructor'      => '0.08',
