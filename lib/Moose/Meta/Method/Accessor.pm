@@ -166,7 +166,7 @@ sub _inline_check_coercion {
 
     my $attr = $self->associated_attribute;
 
-    return '' unless $attr->should_coerce;
+    return '' unless $attr->should_coerce && $attr->type_constraint->has_coercion;
     return "$value = \$attr->type_constraint->coerce($value);";
 }
 
