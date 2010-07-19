@@ -691,7 +691,7 @@ when C<unimport> is called.
 
 You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>
 and C<Moose::Util::MetaRole::base_class_roles>. Specifically, valid parameters
-are "class_metaroles", "role_metaroles", and "base_object_roles".
+are "class_metaroles", "role_metaroles", and "base_class_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
 
