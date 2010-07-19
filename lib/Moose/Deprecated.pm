@@ -8,6 +8,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Package::DeprecationManager -deprecations => {
+    'coerce without coercion'     => '1.08',
     'pre-0.94 MetaRole API'       => '0.93',
     'Role type'                   => '0.84',
     'subtype without sugar'       => '0.72',
