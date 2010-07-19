@@ -86,7 +86,6 @@ MooseX::Method::Signatures
 MooseX::MultiInitArg
 MooseX::MultiMethods
 MooseX::MutatorAttributes
-MooseX::Net::API
 MooseX::NonMoose
 MooseX::Object::Pluggable
 MooseX::Param
@@ -184,6 +183,7 @@ Locale::POFileManager
 Markdent
 namespace::autoclean
 NetHack::Item
+Net::HTTP::API
 Net::Twitter
 Path::Router
 Pod::Elemental
