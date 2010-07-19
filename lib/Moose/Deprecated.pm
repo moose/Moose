@@ -8,14 +8,21 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Package::DeprecationManager -deprecations => {
-    'coerce without coercion'     => '1.08',
-    'pre-0.94 MetaRole API'       => '0.93',
-    'Role type'                   => '0.84',
-    'subtype without sugar'       => '0.72',
-    'type without sugar'          => '0.72',
-    'Moose::init_meta'            => '0.56',
+    'coerce without coercion' => '1.08',
+    'pre-0.94 MetaRole API'   => '0.93',
+    'Role type'               => '0.84',
+    'subtype without sugar'   => '0.72',
+    'type without sugar'      => '0.72',
+    'Moose::init_meta'        => '0.56',
     },
-    -ignore => [qw( Moose Moose::Exporter Moose::Util::MetaRole )],
+    -ignore => [
+    qw( Moose
+        Moose::Exporter
+        Moose::Meta::Attribute
+        Moose::Meta::Class
+        Moose::Util::MetaRole
+        )
+    ],
     ;
 
 1;
