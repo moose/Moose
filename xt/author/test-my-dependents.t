@@ -41,6 +41,7 @@ MooseX::AttributeDefaults
 MooseX::AttributeHelpers
 MooseX::AttributeInflate
 MooseX::Attributes::Curried
+MooseX::AutoDestruct
 MooseX::Blessed::Reconstruct
 MooseX::ClassAttribute
 MooseX::Clone
