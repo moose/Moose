@@ -731,7 +731,7 @@ sub _coerce_and_verify {
     return $val unless $self->has_type_constraint;
 
     $val = $self->type_constraint->coerce($val)
-        if $self->should_coerce;
+        if $self->should_coerce && $self->type_constraint->has_coercion;
 
     $self->verify_against_type_constraint($val, instance => $instance);
 
