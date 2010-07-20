@@ -16,6 +16,8 @@ for, noteworthy changes.
     safety and leave these on. Reported by David Wheeler. RT #58310. (Dave
     Rolsky)
 
+  * New with_traits helper function in Moose::Util. (doy)
+
   [BUG FIXES]
 
   * Accessors will now not be inlined if the instance metaclass isn't

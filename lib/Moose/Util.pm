@@ -18,6 +18,7 @@ my @exports = qw[
     search_class_by_role
     ensure_all_roles
     apply_all_roles
+    with_traits
     get_all_init_args
     get_all_attribute_values
     resolve_metatrait_alias
@@ -134,6 +135,16 @@ sub _apply_all_roles {
     else {
         Moose::Meta::Role->combine(@role_metas)->apply($meta);
     }
+}
+
+sub with_traits {
+    my ($class, @roles) = @_;
+    return $class unless @roles;
+    return Moose::Meta::Class->create_anon_class(
+        superclasses => [$class],
+        roles        => \@roles,
+        cache        => 1,
+    )->name;
 }
 
 # instance deconstruction ...
@@ -344,6 +355,11 @@ each of which can be followed by an optional hash reference of options
 
 This function is similar to L</apply_all_roles>, but only applies roles that
 C<$applicant> does not already consume.
+
+=item B<with_traits($class_name, @role_names)>
+
+This function creates a new class from C<$class_name> with each of
+C<@role_names> applied. It returns the name of the new class.
 
 =item B<get_all_attribute_values($meta, $instance)>
 
