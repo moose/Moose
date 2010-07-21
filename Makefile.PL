@@ -70,6 +70,7 @@ sub check_conflicts {
         'MooseX::Singleton'              => '0.22',
         'MooseX::StrictConstructor'      => '0.08',
         'MooseX::Types'                  => '0.19',
+        'MooseX::UndefTolerant'          => '0.04',
         'namespace::autoclean'           => '0.08',
         'Pod::Elemental'                 => '0.093280',
     );
