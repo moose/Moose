@@ -648,7 +648,7 @@ functions from the original package, they will I<not> be cleaned.
 
 If you pass any parameters for L<Moose::Util::MetaRole>, this method will
 generate an C<init_meta> for you as well (see below for details). This
-C<init_meta> will call C<Moose::Util::MetaRole::apply_metaclass_roles> and
+C<init_meta> will call C<Moose::Util::MetaRole::apply_metaroles> and
 C<Moose::Util::MetaRole::apply_base_class_roles> as needed.
 
 Note that if any of these methods already exist, they will not be
