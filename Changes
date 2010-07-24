@@ -35,16 +35,16 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * Accessors will now not be inlined if the instance metaclass isn't
-    inlinable (doy).
+  * Accessors will no longer be inlined if the instance metaclass isn't
+    inlinable. (doy)
 
   * Use Perl 5.10's new recursive regex features, if possible, for the type
-    constraint parser (doy, nothingmuch).
+    constraint parser. (doy, nothingmuch)
 
   [ENHANCEMENTS]
 
-  * Attributes now warn if their accessors overwrite a locally defined function
-    (not just method) (doy).
+  * Attributes now warn if their accessors overwrite a locally defined
+    function (not just method). (doy)
 
   [OTHER]
 
