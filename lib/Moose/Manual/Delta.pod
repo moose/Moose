@@ -34,9 +34,9 @@ This change was made in 1.05, and has now been reverted. We don't know if the
 user has explicitly loaded strict or warnings outside on their own, and
 unimporting them is just broken in that case.
 
-=item Inversed logic when defining which options can be changed
+=item Reversed logic when defining which options can be changed
 
-L<Moose::Meta::Attribute> now uses inversed logic when defining which
+L<Moose::Meta::Attribute> now uses reversed logic when defining which
 options can be changed. By default all options are allowed to be
 changed. The previous behaviour required each option to be whitelisted
 for changing using C<legal_options_for_inheritance> method. This

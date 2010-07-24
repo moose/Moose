@@ -201,6 +201,7 @@ unsettable
 utils
 whitelist
 Whitelist
+whitelisted
 workflow
 
 ## other jargon
