@@ -51,7 +51,7 @@ use Test::Exception;
 
     # this one will work here ....
     has 'fail' => (isa => 'CodeRef', is => 'bare');
-    has 'other_fail' => (metaclass => 'Thing::Meta::Attribute', is => 'bare');
+    has 'other_fail' => (metaclass => 'Thing::Meta::Attribute', is => 'bare', trigger => sub { });
 
     package Bar;
     use Moose;

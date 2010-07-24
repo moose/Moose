@@ -43,10 +43,14 @@ for changing using C<legal_options_for_inheritance> method. This
 method has been removed. New method C<illegal_options_for_inheritance>
 can now be used to prevent certain options from being changeable.
 
-  package Bar::Meta::Attribute;
-  use Moose;
+This also now only throws an error if the illegal option was actually
+changed. If the superclass version of an attribute didn't specify this
+option at all, the subclass version can still add it as an option.
 
-  extends 'Moose::Meta::Attribute';
+Example of overriding this in an attribute trait:
+
+  package Bar::Meta::Attribute;
+  use Moose::Role;
 
   has 'my_illegal_option' => (
     isa => 'CodeRef',
