@@ -60,6 +60,8 @@ sub check_conflicts {
         'MooseX::Attribute::Prototype'   => '0.10',
         'MooseX::ClassAttribute'         => '0.13',
         'MooseX::FollowPBP'              => '0.02',
+        'MooseX::HasDefaults'            => '0.02',
+        'MooseX::InstanceTracking'       => '0.04',
         'MooseX::LazyRequire'            => '0.05',
         'MooseX::MethodAttributes'       => '0.22',
         'MooseX::NonMoose'               => '0.13',
