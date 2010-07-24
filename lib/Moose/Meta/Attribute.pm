@@ -574,6 +574,13 @@ sub _process_accessors {
           . "an accessor"
         );
     }
+    if (!$self->associated_class->has_method($accessor)
+     && $self->associated_class->has_package_symbol('&' . $accessor)) {
+        Carp::cluck(
+            "You are overwriting a locally defined function ($accessor) with "
+          . "an accessor"
+        );
+    }
     $self->SUPER::_process_accessors(@_);
 }
 
