@@ -7,6 +7,9 @@ for, noteworthy changes.
     constraint has a coercion defined. If it doesn't, an error will be thrown
     when the attribute is defined. (Dave Rolsky)
 
+  * has '+foo' now has a blacklist rather than a whitelist for options which
+    can be legally inherited (doy, Tuomas Jormola).
+
   [NEW FEATURES]
 
   * We no longer unimport strict and warnings when Moose, Moose::Role, or

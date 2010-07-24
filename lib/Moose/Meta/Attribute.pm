@@ -131,15 +131,10 @@ sub interpolate_class {
 
 # ...
 
-my @legal_options_for_inheritance = qw(
-    default coerce required
-    documentation lazy handles
-    builder type_constraint
-    definition_context
-    lazy_build weak_ref
-);
-
-sub legal_options_for_inheritance { @legal_options_for_inheritance }
+# method-generating options shouldn't be overridden
+sub illegal_options_for_inheritance {
+    qw(is reader writer accessor clearer predicate)
+}
 
 # NOTE/TODO
 # This method *must* be able to handle
@@ -158,10 +153,6 @@ sub legal_options_for_inheritance { @legal_options_for_inheritance }
 sub clone_and_inherit_options {
     my ($self, %options) = @_;
 
-    my %copy = %options;
-
-    my %actual_options;
-
     # NOTE:
     # we may want to extends a Class::MOP::Attribute
     # in which case we need to be able to use the
@@ -169,16 +160,13 @@ sub clone_and_inherit_options {
     # been here. But we allows Moose::Meta::Attribute
     # instances to changes them.
     # - SL
-    my @legal_options = $self->can('legal_options_for_inheritance')
-        ? $self->legal_options_for_inheritance
-        : @legal_options_for_inheritance;
+    my @illegal_options = $self->can('illegal_options_for_inheritance')
+        ? $self->illegal_options_for_inheritance
+        : ();
 
-    foreach my $legal_option (@legal_options) {
-        if (exists $options{$legal_option}) {
-            $actual_options{$legal_option} = $options{$legal_option};
-            delete $options{$legal_option};
-        }
-    }
+    my @found_illegal_options = grep { exists $options{$_} && exists $self->{$_} ? $_ : undef } @illegal_options;
+    (scalar @found_illegal_options == 0)
+        || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
 
     if ($options{isa}) {
         my $type_constraint;
@@ -191,8 +179,7 @@ sub clone_and_inherit_options {
                 || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
         }
 
-        $actual_options{type_constraint} = $type_constraint;
-        delete $options{isa};
+        $options{type_constraint} = $type_constraint;
     }
 
     if ($options{does}) {
@@ -206,8 +193,7 @@ sub clone_and_inherit_options {
                 || $self->throw_error("Could not find the type constraint '" . $options{does} . "'", data => $options{does});
         }
 
-        $actual_options{type_constraint} = $type_constraint;
-        delete $options{does};
+        $options{type_constraint} = $type_constraint;
     }
 
     # NOTE:
@@ -215,20 +201,14 @@ sub clone_and_inherit_options {
     # so we can ignore it for them.
     # - SL
     if ($self->can('interpolate_class')) {
-        ( $actual_options{metaclass}, my @traits ) = $self->interpolate_class(\%options);
+        ( $options{metaclass}, my @traits ) = $self->interpolate_class(\%options);
 
         my %seen;
         my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
-        $actual_options{traits} = \@all_traits if @all_traits;
-
-        delete @options{qw(metaclass traits)};
+        $options{traits} = \@all_traits if @all_traits;
     }
 
-    (scalar keys %options == 0)
-        || $self->throw_error("Illegal inherited options => (" . (join ', ' => keys %options) . ")", data => \%options);
-
-
-    $self->clone(%actual_options);
+    $self->clone(%options);
 }
 
 sub clone {
@@ -1034,16 +1014,16 @@ of processing on the supplied C<%options> before ultimately calling
 the C<clone> method.
 
 One of its main tasks is to make sure that the C<%options> provided
-only includes the options returned by the
-C<legal_options_for_inheritance> method.
+does not include the options returned by the
+C<illegal_options_for_inheritance> method.
 
-=item B<< $attr->legal_options_for_inheritance >>
+=item B<< $attr->illegal_options_for_inheritance >>
 
-This returns a whitelist of options that can be overridden in a
+This returns a blacklist of options that can not be overridden in a
 subclass's attribute definition.
 
 This exists to allow a custom metaclass to change or add to the list
-of options which can be changed.
+of options which can not be changed.
 
 =item B<< $attr->type_constraint >>
 
