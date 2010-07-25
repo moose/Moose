@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.09 Tue, Jul 25, 2010
+
   [API CHANGES]
 
   * You can no longer pass "coerce => 1" for an attribute unless its type
