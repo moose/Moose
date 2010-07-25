@@ -8,7 +8,7 @@ use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny ();
 
-our $VERSION   = '1.08';
+our $VERSION   = '1.09';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
