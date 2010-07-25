@@ -46,7 +46,7 @@ deprecated in Moose.
 
 If you specify C<< -api_version => $version >>, you can use deprecated features
 without warnings. Note that this special treatment is limited to the package
-that loads C<Class::MOP::Deprecated>.
+that loads C<Moose::Deprecated>.
 
 =head1 AUTHORS
 
