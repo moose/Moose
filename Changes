@@ -6,16 +6,13 @@ for, noteworthy changes.
   [API CHANGES]
 
   * You can no longer pass "coerce => 1" for an attribute unless its type
-    constraint has a coercion defined. If it doesn't, an error will be thrown
-    when the attribute is defined. (Dave Rolsky)
+    constraint has a coercion defined. Doing so will issue a deprecation
+    warning. (Dave Rolsky)
 
   * Previously, '+foo' only allowed a specific set of options to be
     overridden, which made it impossible to change attribute options related
     to extensions. Now we blacklist some options, and anything else is
     allowed. (doy, Tuomas Jormola)
-
-  * Removed the long-deprecated Moose::Meta::Role->alias_method metohd. (Dave
-    Rolsky).
 
   * Most features which have been declared deprecated now issue a warning using
     Moose::Deprecated. Warnings are issued once per calling package, not
@@ -23,6 +20,9 @@ for, noteworthy changes.
     these warnings up entirely. Note that deprecated features will eventually
     be removed, so shutting up the warnings may not be the best idea. (Dave
     Rolsky)
+
+  * Removed the long-deprecated Moose::Meta::Role->alias_method method. (Dave
+    Rolsky).
 
   [NEW FEATURES]
 
