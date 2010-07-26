@@ -13,7 +13,7 @@ all_from 'lib/Moose.pm';
 license 'perl';
 
 requires 'Carp';
-requires 'Class::MOP'                  => '1.04';
+requires 'Class::MOP'                  => '1.05';
 requires 'Data::OptList'               => '0';
 requires 'List::MoreUtils'             => '0.12';
 requires 'Package::DeprecationManager' => '0.04';
