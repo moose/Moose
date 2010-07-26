@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [BUG FIXES]
+
+  * Inlined code no longer stringifies numeric attribute defaults. (vg, doy)
+
+  * default => undef now works properly. (doy)
+
 1.09 Tue, Jul 25, 2010
 
   [API CHANGES]
@@ -47,10 +55,6 @@ for, noteworthy changes.
 
   * Attributes now warn if their accessors overwrite a locally defined
     function (not just method). (doy)
-
-  * Inlined code no longer stringifies numeric attribute defaults (vg, doy).
-
-  * default => undef now works properly (doy).
 
   [OTHER]
 
