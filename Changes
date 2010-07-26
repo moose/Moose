@@ -9,6 +9,9 @@ NEXT
 
   * default => undef now works properly. (doy)
 
+  * Enum type constraints now throw errors if their values are nonsensical.
+    (Sartak)
+
 1.09 Tue, Jul 25, 2010
 
   [API CHANGES]

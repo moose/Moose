@@ -21,6 +21,22 @@ sub new {
 
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Str');
 
+    if ( scalar @{ $args{values} } < 2 ) {
+        require Moose;
+        Moose->throw_error("You must have at least two values to enumerate through");
+    }
+
+    for (@{ $args{values} }) {
+        if (!defined($_)) {
+            require Moose;
+            Moose->throw_error("Enum values must be strings, not undef");
+        }
+        elsif (ref($_)) {
+            require Moose;
+            Moose->throw_error("Enum values must be strings, not '$_'");
+        }
+    }
+
     my $self = $class->_new(\%args);
 
     $self->compile_type_constraint()
