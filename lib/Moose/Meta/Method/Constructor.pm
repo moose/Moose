@@ -95,11 +95,14 @@ sub _initialize_body {
         defined $_ ? $_->_compiled_type_constraint : undef;
     } @type_constraints;
 
+    my $defaults = [map { $_->default } @$attrs];
+
     my ( $code, $e ) = $self->_compile_code(
         code => $source,
         environment => {
             '$meta'  => \$self,
             '$attrs' => \$attrs,
+            '$defaults' => \$defaults,
             '@type_constraints' => \@type_constraints,
             '@type_constraint_bodies' => \@type_constraint_bodies,
         },
@@ -338,22 +341,6 @@ sub _generate_type_constraint_check {
         . $type_constraint_obj . '->get_message(' . $value_name . ')')
         . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'
     );
-}
-
-sub _generate_default_value {
-    my ($self, $attr, $index) = @_;
-    # NOTE:
-    # default values can either be CODE refs
-    # in which case we need to call them. Or
-    # they can be scalars (strings/numbers)
-    # in which case we can just deal with them
-    # in the code we eval.
-    if ($attr->is_default_a_coderef) {
-        return '$attrs->[' . $index . ']->default($instance)';
-    }
-    else {
-        return q{"} . quotemeta( $attr->default ) . q{"};
-    }
 }
 
 1;
