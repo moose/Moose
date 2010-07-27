@@ -9,7 +9,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Package::DeprecationManager -deprecations => {
     'coerce without coercion' => '1.08',
-    'pre-0.94 MetaRole API'   => '0.93',
+    'pre-0.94 MetaRole API'   => '0.94',
     'Role type'               => '0.84',
     'subtype without sugar'   => '0.72',
     'type without sugar'      => '0.72',
