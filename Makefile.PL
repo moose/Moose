@@ -56,6 +56,7 @@ sub check_conflicts {
         'File::ChangeNotify'             => '0.15',
         'KiokuDB'                        => '0.41',
         'MooseX::Aliases'                => '0.07',
+        'MooseX::AlwaysCoerce'           => '0.05',
         'MooseX::AttributeHelpers'       => '0.22',
         'MooseX::AttributeInflate'       => '0.02',
         'MooseX::Attribute::Prototype'   => '0.10',
