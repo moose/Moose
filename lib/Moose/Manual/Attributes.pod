@@ -211,7 +211,7 @@ reference will be called as a method on the object.
       predicate => 'has_size',
   );
 
-This is a dumb example, but it illustrates the point that the subroutine
+This is a trivial example, but it illustrates the point that the subroutine
 will be called for every new object created.
 
 When you provide a C<default> subroutine reference, it is called as a
