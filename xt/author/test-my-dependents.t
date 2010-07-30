@@ -87,6 +87,7 @@ MooseX::Method::Signatures
 MooseX::MultiInitArg
 MooseX::MultiMethods
 MooseX::MutatorAttributes
+MooseX::NaturalKey
 MooseX::NonMoose
 MooseX::Object::Pluggable
 MooseX::Param
