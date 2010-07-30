@@ -120,7 +120,7 @@ Any change or bugfix should be created in a topic branch.
     git pull --rebase
 
     # create a new topic branch
-    git checkout -b topic/my-feature
+    git checkout -b topic/my-feature origin/master
 
     # hack, commit, feel free to break fast forward
     git commit --amend                       # allowed
