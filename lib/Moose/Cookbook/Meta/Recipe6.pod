@@ -91,7 +91,7 @@ C<_add_policy_wrapper> method.
 You'll note that we have to explicitly set the C<policy> attribute in
 our constructor:
 
-      $self->{policy} = $options{policy};
+      $self->{_policy} = $options{policy};
 
 That is necessary because Moose metaclasses do not use the meta API to
 create objects. Most Moose classes have a custom "inlined" constructor
