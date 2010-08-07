@@ -157,6 +157,9 @@ sub init_meta {
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
     my $meta_name  = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
+    Moose->throw_error("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
+        unless Class::MOP::is_class_loaded($metaclass);
+
     Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
         unless $metaclass->isa('Moose::Meta::Class');
 
