@@ -55,10 +55,12 @@ is( $stuff->num_options, 0, '... we have no options' );
 is_deeply( $stuff->options, {}, '... no options yet' );
 ok( !$stuff->has_option('foo'), '... we have no foo option' );
 
+my $set_result;
 lives_ok {
-    $stuff->set_option( foo => 'bar' );
+    $set_result = $stuff->set_option( foo => 'bar' );
 }
 '... set the option okay';
+is($set_result, 'bar', '... returns value set');
 
 ok( $stuff->is_defined('foo'), '... foo is defined' );
 
@@ -68,9 +70,10 @@ ok( $stuff->has_option('foo'), '... we have a foo option' );
 is_deeply( $stuff->options, { foo => 'bar' }, '... got options now' );
 
 lives_ok {
-    $stuff->set_option( bar => 'baz' );
+    $set_result = $stuff->set_option( bar => 'baz' );
 }
 '... set the option okay';
+is($set_result, 'baz', '... returns value set');
 
 is( $stuff->num_options, 2, '... we have 2 option(s)' );
 is_deeply( $stuff->options, { foo => 'bar', bar => 'baz' },
@@ -84,10 +87,12 @@ is_deeply( [ $stuff->get_option(qw(foo bar)) ], [qw(bar baz)],
 is( scalar($stuff->get_option(qw( foo bar) )), "baz",
        '... got last option in scalar context');
 
+my @set_return;
 lives_ok {
-    $stuff->set_option( oink => "blah", xxy => "flop" );
+    @set_return = $stuff->set_option( oink => "blah", xxy => "flop" );
 }
 '... set the option okay';
+is_deeply(\@set_return, [ qw(blah flop) ], '... and returns values set');
 
 is( $stuff->num_options, 4, "4 options" );
 is_deeply( [ $stuff->get_option(qw(foo bar oink xxy)) ],
