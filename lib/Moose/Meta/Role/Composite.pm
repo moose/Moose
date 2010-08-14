@@ -101,6 +101,11 @@ sub get_method_list {
     return keys %{ $self->_method_map };
 }
 
+sub _get_local_methods {
+    my $self = shift;
+    return values %{ $self->_method_map };
+}
+
 sub has_method {
     my ($self, $method_name) = @_;
 
