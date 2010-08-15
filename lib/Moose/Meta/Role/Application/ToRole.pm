@@ -70,14 +70,18 @@ sub apply_attributes {
 }
 
 sub apply_methods {
-    my ($self, $role1, $role2) = @_;
-    foreach my $method_name ($role1->get_method_list) {
+    my ( $self, $role1, $role2 ) = @_;
+    foreach my $method ( $role1->_get_local_methods ) {
+
+        my $method_name = $method->name;
+
         next if $method_name eq 'meta';
 
         unless ( $self->is_method_excluded($method_name) ) {
-            if (   $role2->has_method($method_name)
-                && $role2->get_method($method_name)->body
-                != $role1->get_method($method_name)->body ) {
+
+            my $role2_method = $role2->get_method($method_name);
+            if (   $role2_method
+                && $role2_method->body != $method->body ) {
 
                 # method conflicts between roles result in the method becoming
                 # a requirement
@@ -89,30 +93,34 @@ sub apply_methods {
             else {
                 $role2->add_method(
                     $method_name,
-                    $role1->get_method($method_name)
+                    $method,
                 );
             }
         }
 
-        if ($self->is_method_aliased($method_name)) {
-            my $aliased_method_name = $self->get_method_aliases->{$method_name};
+        next unless $self->is_method_aliased($method_name);
 
-            if ($role2->has_method($aliased_method_name) &&
-                $role2->get_method($aliased_method_name)->body != $role1->get_method($method_name)->body) {
+        my $aliased_method_name = $self->get_method_aliases->{$method_name};
 
-                require Moose;
-                Moose->throw_error("Cannot create a method alias if a local method of the same name exists");
-            }
+        my $role2_method = $role2->get_method($aliased_method_name);
 
-            $role2->add_method(
-                $aliased_method_name,
-                $role1->get_method($method_name)
+        if (   $role2_method
+            && $role2_method->body != $method->body ) {
+
+            require Moose;
+            Moose->throw_error(
+                "Cannot create a method alias if a local method of the same name exists"
             );
+        }
 
-            if (!$role2->has_method($method_name)) {
-                $role2->add_required_methods($method_name)
-                    unless $self->is_method_excluded($method_name);
-            }
+        $role2->add_method(
+            $aliased_method_name,
+            $role1->get_method($method_name)
+        );
+
+        if ( !$role2->has_method($method_name) ) {
+            $role2->add_required_methods($method_name)
+                unless $self->is_method_excluded($method_name);
         }
     }
 }

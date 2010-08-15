@@ -147,40 +147,43 @@ sub apply_attributes {
 }
 
 sub apply_methods {
-    my ($self, $role, $class) = @_;
-    foreach my $method_name ($role->get_method_list) {
+    my ( $self, $role, $class ) = @_;
+
+    foreach my $method ( $role->_get_local_methods ) {
+        my $method_name = $method->name;
+
         next if $method_name eq 'meta';
 
-        unless ($self->is_method_excluded($method_name)) {
-            # it if it has one already
-            if ($class->has_method($method_name) &&
-                # and if they are not the same thing ...
-                $class->get_method($method_name)->body != $role->get_method($method_name)->body) {
-                next;
-            }
-            else {
-                # add it, although it could be overridden
-                $class->add_method(
-                    $method_name,
-                    $role->get_method($method_name)
-                );
-            }
-        }
+        unless ( $self->is_method_excluded($method_name) ) {
 
-        if ($self->is_method_aliased($method_name)) {
-            my $aliased_method_name = $self->get_method_aliases->{$method_name};
-            # it if it has one already
-            if ($class->has_method($aliased_method_name) &&
-                # and if they are not the same thing ...
-                $class->get_method($aliased_method_name)->body != $role->get_method($method_name)->body) {
-                $class->throw_error("Cannot create a method alias if a local method of the same name exists");
-            }
+            my $class_method = $class->get_method($method_name);
+
+            next if $class_method && $class_method->body != $method->body;
+
             $class->add_method(
-                $aliased_method_name,
-                $role->get_method($method_name)
+                $method_name,
+                $method,
             );
         }
+
+        next unless $self->is_method_aliased($method_name);
+
+        my $aliased_method_name = $self->get_method_aliases->{$method_name};
+
+        my $class_method = $class->get_method($aliased_method_name);
+
+        if ( $class_method && $class_method->body != $method->body ) {
+            $class->throw_error(
+                "Cannot create a method alias if a local method of the same name exists"
+            );
+        }
+
+        $class->add_method(
+            $aliased_method_name,
+            $method,
+        );
     }
+
     # we must reset the cache here since
     # we are just aliasing methods, otherwise
     # the modifiers go wonky.
