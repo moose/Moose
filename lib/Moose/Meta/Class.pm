@@ -389,11 +389,9 @@ sub _get_ancestors_until {
     return @ancestor_names;
 }
 
-sub _is_role_only_subclass {
+sub is_role_only_subclass {
     my $self = shift;
-    my ($meta_name) = @_;
-    my $meta = Class::MOP::Class->initialize($meta_name);
-    my @parent_names = $meta->superclasses;
+    my @parent_names = $self->superclasses;
 
     # XXX: don't feel like messing with multiple inheritance here... what would
     # that even do?
@@ -401,20 +399,20 @@ sub _is_role_only_subclass {
     my ($parent_name) = @parent_names;
     my $parent_meta = Class::MOP::Class->initialize($parent_name);
 
-    my @roles = $meta->can('calculate_all_roles_with_inheritance')
-                    ? $meta->calculate_all_roles_with_inheritance
+    my @roles = $self->can('calculate_all_roles_with_inheritance')
+                    ? $self->calculate_all_roles_with_inheritance
                     : ();
 
     # loop over all methods that are a part of the current class
     # (not inherited)
-    for my $method (map { $meta->get_method($_) } $meta->get_method_list) {
+    for my $method (map { $self->get_method($_) } $self->get_method_list) {
         # always ignore meta
         next if $method->name eq 'meta';
         # we'll deal with attributes below
         next if $method->can('associated_attribute');
         # if the method comes from a role we consumed, ignore it
-        next if $meta->can('does_role')
-             && $meta->does_role($method->original_package_name);
+        next if $self->can('does_role')
+             && $self->does_role($method->original_package_name);
         # FIXME - this really isn't right. Just because a modifier is
         # defined in a role doesn't mean it isn't _also_ defined in the
         # subclass.
@@ -436,7 +434,7 @@ sub _is_role_only_subclass {
     # FIXME - this really isn't right. Just because an attribute is
     # defined in a role doesn't mean it isn't _also_ defined in the
     # subclass.
-    for my $attr (map { $meta->get_attribute($_) } $meta->get_attribute_list) {
+    for my $attr (map { $self->get_attribute($_) } $self->get_attribute_list) {
         next if any { $_->has_attribute($attr->name) } @roles;
 
         return 0;
@@ -493,10 +491,11 @@ sub _classes_differ_by_roles_only {
     my @class_meta_name_ancestor_names
         = $self->_get_ancestors_until( $self_meta_name, $common_base_name );
 
-    return
-        unless all { $self->_is_role_only_subclass($_) }
-        @super_meta_name_ancestor_names,
-        @class_meta_name_ancestor_names;
+    return unless all {    $_->can('is_role_only_subclass')
+                        && $_->is_role_only_subclass }
+                  map { Class::MOP::Class->initialize($_) }
+                      @super_meta_name_ancestor_names,
+                      @class_meta_name_ancestor_names;
 
     return 1;
 }
@@ -792,6 +791,11 @@ This adds an C<override> method modifier to the package.
 =item B<< $metaclass->add_augment_method_modifier($name, $sub) >>
 
 This adds an C<augment> method modifier to the package.
+
+=item B<< $metaclass->is_role_only_subclass >>
+
+Returns true if the class consists only of subclassing from a single parent
+class and applying some number of roles.
 
 =item B<< $metaclass->calculate_all_roles >>
 

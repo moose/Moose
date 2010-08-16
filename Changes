@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 NEXT
 
+  [API CHANGES]
+
+  * is_role_only_subclass is now public. (doy)
+
   [BUG FIXES]
 
   * Inlined code no longer stringifies numeric attribute defaults. (vg, doy)
