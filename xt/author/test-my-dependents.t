@@ -94,7 +94,6 @@ MooseX::Param
 MooseX::Params::Validate
 MooseX::Plaggerize
 MooseX::POE
-MooseX::Policy::SemiAffordanceAccessor
 MooseX::RelatedClassRoles
 MooseX::Role::BuildInstanceOf
 MooseX::Role::Cmd
