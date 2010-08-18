@@ -24,7 +24,7 @@ use Test::Exception;
 
     extends 'Foo';
 
-    ::throws_ok { has '+foo' => (is => 'rw') } qr/illegal/, "can't override is";
+    ::lives_ok { has '+foo' => (is => 'rw') } "can override is";
     ::throws_ok { has '+foo' => (reader => 'bar') } qr/illegal/, "can't override reader";
     ::lives_ok { has '+foo' => (clearer => 'baz') }  "can override unspecified things";
 
