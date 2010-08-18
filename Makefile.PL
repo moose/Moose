@@ -72,7 +72,7 @@ sub check_conflicts {
         'MooseX::Role::Cmd'              => '0.06',
         'MooseX::Role::WithOverloading'  => '0.07',
         'MooseX::SemiAffordanceAccessor' => '0.05',
-        'MooseX::Singleton'              => '0.22',
+        'MooseX::Singleton'              => '0.24',
         'MooseX::StrictConstructor'      => '0.08',
         'MooseX::Types'                  => '0.19',
         'MooseX::UndefTolerant'          => '0.04',
