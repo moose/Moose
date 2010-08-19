@@ -18,7 +18,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More;
 use Test::Exception;
 use Test::NoWarnings;
 
@@ -44,3 +44,4 @@ use Test::NoWarnings;
     lives_ok { with 'Test::Role::ProvidesThing' } 'can compose role that imposes a requirement that a composed role satisfies';
 }
 
+done_testing;
