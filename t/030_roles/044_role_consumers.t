@@ -1,7 +1,7 @@
-#!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 3;
+
+use Test::More;
 
 {
     package Foo::Role;
@@ -50,3 +50,5 @@ is_deeply([sort Bar::Role->meta->consumers],
           ['Bar', 'FooBar']);
 is_deeply([sort Foo::Role::User->meta->consumers],
           ['Foo::User']);
+
+done_testing;
