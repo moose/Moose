@@ -28,8 +28,8 @@ has 'method_constructors' => (
         my $method_provider = $self->method_provider->meta;
         return +{
             map {
-                $_ => $method_provider->get_method($_)
-            } $method_provider->get_method_list
+                $_->name => $_
+            } $method_provider->_get_local_methods
         };
     },
 );
