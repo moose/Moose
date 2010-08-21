@@ -118,7 +118,7 @@ sub _apply_all_roles {
         }
         else {
             Class::MOP::load_class( $role->[0] , $role->[1] );
-            $meta = Class::MOP::class_of( $role->[0] );
+            $meta = find_meta( $role->[0] );
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
@@ -137,7 +137,7 @@ sub _apply_all_roles {
 
     return unless @role_metas;
 
-    my $meta = ( blessed $applicant ? $applicant : find_meta($applicant) );
+    my $meta = ( blessed $applicant ? $applicant : Moose::Meta::Class->initialize($applicant) );
 
     if ( scalar @role_metas == 1 ) {
         my ( $role, $params ) = @{ $role_metas[0] };
