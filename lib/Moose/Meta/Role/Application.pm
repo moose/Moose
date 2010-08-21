@@ -23,6 +23,14 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
 sub new {
     my ($class, %params) = @_;
 
+    if ( exists $params{excludes} || exists $params{alias} ) {
+            Moose::Deprecated::deprecated(
+                feature => 'alias or excludes',
+                message =>
+                    "The alias and excludes options for role application have been renamed -alias and -excludes"
+            );
+    }
+
     if ( exists $params{excludes} && !exists $params{'-excludes'} ) {
         $params{'-excludes'} = delete $params{excludes};
     }

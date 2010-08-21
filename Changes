@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 NEXT
 
+  [API CHANGES]
+
+  * The long-deprecated alias and excludes options for role applications now
+    issue a deprecation warning. Use -alias and -excludes instead. (Dave
+    Rolsky)
+
   [BUG FIXES]
 
   * Inlined code no longer stringifies numeric attribute defaults. (vg, doy)

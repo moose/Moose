@@ -39,7 +39,7 @@ do {
     use Moose;
 
     ::stderr_is {
-        with 'TestRole' => { excludes => 'BUILD' };
+        with 'TestRole' => { -excludes => 'BUILD' };
     } '';
 
     sub BUILD { push @CALLS, 'ExplicitClassWithBUILD::BUILD' }

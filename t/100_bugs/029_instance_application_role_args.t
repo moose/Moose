@@ -44,7 +44,7 @@ use Test::Exception;
 
 my $p = Point->new( x => 4, y => 3 );
 
-DoesTranspose->meta->apply( $p, alias => { transpose => 'negated' } );
+DoesTranspose->meta->apply( $p, -alias => { transpose => 'negated' } );
 
 is_deeply($p->negated->inspect, [3, 4]);
 is_deeply($p->transpose->inspect, [3, 4]);
