@@ -63,6 +63,11 @@ use Test::Fatal;
     with 'FooRole', 'BarRole';
 }
 
+{
+    package PlainJane;
+    sub new { return bless {}, __PACKAGE__; }
+}
+
 my $foo_class_meta = FooClass->meta;
 isa_ok( $foo_class_meta, 'Moose::Meta::Class' );
 
@@ -210,6 +215,15 @@ foreach my $foo ( $foo, $foobar ) {
         ok(Class->can('meth'), "can meth");
         ok(Class->can('meth2'), "can meth2");
     }
+}
+
+{
+    ok(!Moose::Util::find_meta('PlainJane'), 'not initialized');
+    Moose::Util::apply_all_roles('PlainJane', 'BarRole');
+    ok(Moose::Util::find_meta('PlainJane'), 'initialized');
+    ok(Moose::Util::find_meta('PlainJane')->does_role('BarRole'), 'does BarRole');
+    my $pj = PlainJane->new();
+    ok($pj->can('woot'), 'can woot');
 }
 
 done_testing;
