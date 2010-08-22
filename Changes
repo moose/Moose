@@ -1,7 +1,7 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-NEXT
+1.10 Sun, Aug 22, 2010
 
   [API CHANGES]
 
@@ -17,6 +17,10 @@ NEXT
 
   * Enum type constraints now throw errors if their values are nonsensical.
     (Sartak)
+
+  [ENHANCEMENTS]
+
+  * Optimizations that should help speed up compilation time (Dave Rolsky).
 
 1.09 Tue, Jul 25, 2010
 
