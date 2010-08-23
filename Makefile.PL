@@ -5,47 +5,12 @@ use Module::Install::AuthorRequires;
 use 5.008003;
 
 check_broken_extratests();
+check_conflicts();
 
 name 'Moose';
 perl_version '5.008003';
 all_from 'lib/Moose.pm';
 license 'perl';
-
-# Use the xt/author/test-my-dependents.t test to figure
-# out what on CPAN will break with the latest Moose, then update this
-# before a release.
-my %conflicts = (
-    'Catalyst'                       => '5.80017',
-    'Devel::REPL'                    => '1.003008',
-    'Fey::ORM'                       => '0.23',
-    'File::ChangeNotify'             => '0.15',
-    'KiokuDB'                        => '0.41',
-    'MooseX::Aliases'                => '0.07',
-    'MooseX::AlwaysCoerce'           => '0.05',
-    'MooseX::AttributeHelpers'       => '0.22',
-    'MooseX::AttributeInflate'       => '0.02',
-    'MooseX::Attribute::Prototype'   => '0.10',
-    'MooseX::ClassAttribute'         => '0.13',
-    'MooseX::FollowPBP'              => '0.02',
-    'MooseX::HasDefaults'            => '0.02',
-    'MooseX::InstanceTracking'       => '0.04',
-    'MooseX::LazyRequire'            => '0.05',
-    'MooseX::MethodAttributes'       => '0.22',
-    'MooseX::NonMoose'               => '0.13',
-    'MooseX::Params::Validate'       => '0.05',
-    'MooseX::POE'                    => '0.205',
-    'MooseX::Role::Cmd'              => '0.06',
-    'MooseX::Role::WithOverloading'  => '0.07',
-    'MooseX::SemiAffordanceAccessor' => '0.05',
-    'MooseX::Singleton'              => '0.24',
-    'MooseX::StrictConstructor'      => '0.08',
-    'MooseX::Types'                  => '0.19',
-    'MooseX::UndefTolerant'          => '0.04',
-    'namespace::autoclean'           => '0.08',
-    'Pod::Elemental'                 => '0.093280',
-);
-
-check_conflicts(%conflicts);
 
 requires 'Carp';
 requires 'Class::MOP'                  => '1.05';
@@ -79,6 +44,74 @@ repository 'git://git.moose.perl.org/Moose.git';
 add_metadata(x_authority => 'cpan:STEVAN');
 
 WriteAll();
+
+# Use the xt/author/test-my-dependents.t test to figure
+# out what on CPAN will break with the latest Moose, then update this
+# before a release.
+sub check_conflicts {
+    my %conflicts = (
+        'Catalyst'                       => '5.80017',
+        'Devel::REPL'                    => '1.003008',
+        'Fey::ORM'                       => '0.23',
+        'File::ChangeNotify'             => '0.15',
+        'KiokuDB'                        => '0.41',
+        'MooseX::Aliases'                => '0.07',
+        'MooseX::AlwaysCoerce'           => '0.05',
+        'MooseX::AttributeHelpers'       => '0.22',
+        'MooseX::AttributeInflate'       => '0.02',
+        'MooseX::Attribute::Prototype'   => '0.10',
+        'MooseX::ClassAttribute'         => '0.13',
+        'MooseX::FollowPBP'              => '0.02',
+        'MooseX::HasDefaults'            => '0.02',
+        'MooseX::InstanceTracking'       => '0.04',
+        'MooseX::LazyRequire'            => '0.05',
+        'MooseX::MethodAttributes'       => '0.22',
+        'MooseX::NonMoose'               => '0.13',
+        'MooseX::Params::Validate'       => '0.05',
+        'MooseX::POE'                    => '0.205',
+        'MooseX::Role::Cmd'              => '0.06',
+        'MooseX::Role::WithOverloading'  => '0.07',
+        'MooseX::SemiAffordanceAccessor' => '0.05',
+        'MooseX::Singleton'              => '0.24',
+        'MooseX::StrictConstructor'      => '0.08',
+        'MooseX::Types'                  => '0.19',
+        'MooseX::UndefTolerant'          => '0.04',
+        'namespace::autoclean'           => '0.08',
+        'Pod::Elemental'                 => '0.093280',
+    );
+
+    my $found = 0;
+    for my $mod ( sort keys %conflicts ) {
+        eval "require $mod";
+        next if $@;
+
+        my $installed = $mod->VERSION();
+        if ( $installed le $conflicts{$mod} ) {
+
+            print <<"EOF";
+
+***
+    This version of Moose conflicts with the version of
+    $mod ($installed) you have installed.
+
+    You will need to upgrade $mod after installing
+    this version of Moose.
+***
+
+EOF
+
+            $found = 1;
+        }
+    }
+
+    return unless $found;
+
+    # More or less copied from Module::Build
+    return if  $ENV{PERL_MM_USE_DEFAULT};
+    return unless -t STDIN && (-t STDOUT || !(-f STDOUT || -c STDOUT));
+
+    sleep 4;
+}
 
 sub is_maintainer {
     return $Module::Install::AUTHOR || $ENV{IS_MAINTAINER};
