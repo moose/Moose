@@ -34,7 +34,7 @@ Previously, this was accepted, and it sort of worked, except that if you
 attempted to set the attribute after the object was created, you would get a
 runtime error.
 
-Now you will get an error when you attempt to define the attribute.
+Now you will get a warning when you attempt to define the attribute.
 
 =item C<no Moose>, C<no Moose::Role>, and C<no Moose::Exporter> no longer unimport strict and warnings
 
