@@ -239,7 +239,7 @@ exceptions to this that doing this properly became quite problematic.
 
 =back
 
-=head1 Version 0.89_02
+=head1 0.89_02
 
 =over 4
 
@@ -277,7 +277,7 @@ release.
 
 =back
 
-=head1 Version 0.89_01
+=head1 0.89_01
 
 L<Moose::Meta::Attribute::Native> has been moved into the Moose core from
 L<MooseX::AttributeHelpers>.  Major changes include:
@@ -331,7 +331,7 @@ The C<alias> and C<excludes> role parameters have been renamed to C<-alias>
 and C<-excludes>. The old names still work, but new code should use the new
 names, and eventually the old ones will be deprecated and removed.
 
-=head1 Version 0.89
+=head1 0.89
 
 C<< use Moose -metaclass => 'Foo' >> now does alias resolution, just like
 C<-traits> (and the C<metaclass> and C<traits> options to C<has>).
@@ -345,7 +345,7 @@ a wrapper around the old
 
 way of doing this.
 
-=head1 Version 0.84
+=head1 0.84
 
 When an attribute generates I<no> accessors, we now warn. This is to help
 users who forget the C<is> option. If you really do not want any accessors,
@@ -374,29 +374,29 @@ since it just checked C<< $object->can('does') >>. If you were using
 it as a parent type, just call C<role_type('Role::Name')> to create an
 appropriate type instead.
 
-=head1 Version 0.78
+=head1 0.78
 
 C<use Moose::Exporter;> now imports C<strict> and C<warnings> into packages
 that use it.
 
-=head1 Version 0.77
+=head1 0.77
 
 C<DEMOLISHALL> and C<DEMOLISH> now receive an argument indicating whether or
 not we are in global destruction.
 
-=head1 Version 0.76
+=head1 0.76
 
 Type constraints no longer run coercions for a value that already matches the
 constraint.  This may affect some (arguably buggy) edge case coercions that
 rely on side effects in the C<via> clause.
 
-=head1 Version 0.75
+=head1 0.75
 
 L<Moose::Exporter> now accepts the C<-metaclass> option for easily
 overriding the metaclass (without L<metaclass>). This works for classes
 and roles.
 
-=head1 Version 0.74
+=head1 0.74
 
 Added a C<duck_type> sugar function to L<Moose::Util::TypeConstraints>
 to make integration with non-Moose classes easier. It simply checks if
@@ -409,7 +409,7 @@ method has been renamed. In a few cases, the method will be removed
 entirely in the future. This may affect MooseX authors who were using
 these methods.
 
-=head1 Version 0.73
+=head1 0.73
 
 Calling C<subtype> with a name as the only argument now throws an
 exception. If you want an anonymous subtype do:
@@ -428,7 +428,7 @@ The internals of making a class immutable changed a lot in Class::MOP
 external C<< $metaclass->make_immutable >> method still works the same
 way.
 
-=head1 Version 0.72
+=head1 0.72
 
 A mutable class accepted C<< Foo->new(undef) >> without complaint,
 while an immutable class would blow up with an unhelpful error. Now,
@@ -447,7 +447,7 @@ This "feature" was originally added to allow for cases such as this:
 But we decided this is a bad idea and a little too magical, because it
 can easily mask real errors.
 
-=head1 Version 0.71_01
+=head1 0.71_01
 
 Calling C<type> or C<subtype> without the sugar helpers (C<as>,
 C<where>, C<message>) is now deprecated.
@@ -488,7 +488,7 @@ you must explicitly test Moose's C<VERSION>:
       );
   }
 
-=head1 Version 0.70
+=head1 0.70
 
 We no longer pass the meta-attribute object as a final argument to
 triggers. This actually changed for inlined code a while back, but the
@@ -509,7 +509,7 @@ that is passed as the first argument to trigger, like so:
       }
   );
 
-=head1 Version 0.66
+=head1 0.66
 
 If you created a subtype and passed a parent that Moose didn't know
 about, it simply ignored the parent. Now it automatically creates the
@@ -522,7 +522,7 @@ as "ArrayRef[Foo!Bar]" it wouldn't work. We now do some vetting on
 names created via the sugar functions, so that they can only contain
 alphanumerics, ":", and ".".
 
-=head1 Version 0.65
+=head1 0.65
 
 Methods created via an attribute can now fulfill a C<requires>
 declaration for a role. Honestly we don't know why Stevan didn't make
@@ -531,7 +531,7 @@ this work originally, he was just insane or something.
 Stack traces from inlined code will now report the line and file as
 being in your class, as opposed to in Moose guts.
 
-=head1 Version 0.62_02
+=head1 0.62_02
 
 When a class does not provide all of a role's required methods, the
 error thrown now mentions all of the missing methods, as opposed to
@@ -545,7 +545,7 @@ C<< replace_constructor => 1 >> to C<make_immutable>.
 If you want to get rid of the warning, pass C<< inline_constructor =>
 0 >>.
 
-=head1 Version 0.62
+=head1 0.62
 
 Removed the (deprecated) C<make_immutable> keyword.
 
@@ -553,7 +553,7 @@ Removing an attribute from a class now also removes delegation
 (C<handles>) methods installed for that attribute. This is correct
 behavior, but if you were wrongly relying on it you might get bit.
 
-=head1 Version 0.58
+=head1 0.58
 
 Roles now add methods by calling C<add_method>, not
 C<alias_method>. They make sure to always provide a method object,
@@ -573,14 +573,14 @@ function, among others. The reasoning is that we cannot know whether
 you have also explicitly imported those functions for your own use, so
 we err on the safe side and always keep them.
 
-=head1 Version 0.56
+=head1 0.56
 
 C<Moose::init_meta> should now be called as a method.
 
 New modules for extension writers, L<Moose::Exporter> and
 L<Moose::Util::MetaRole>.
 
-=head1 Version 0.55_01
+=head1 0.55_01
 
 Implemented metaclass traits (and wrote a recipe for it):
 
@@ -589,18 +589,18 @@ Implemented metaclass traits (and wrote a recipe for it):
 This should make writing small Moose extensions a little
 easier.
 
-=head1 Version 0.55
+=head1 0.55
 
 Fixed C<coerce> to accept anon types just like C<subtype> can.
 So that you can do:
 
   coerce $some_anon_type => from 'Str' => via { ... };
 
-=head1 Version 0.51
+=head1 0.51
 
 Added C<BUILDARGS>, a new step in C<< Moose::Object->new() >>.
 
-=head1 Version 0.49
+=head1 0.49
 
 Fixed how the C<< is => (ro|rw) >> works with custom defined
 C<reader>, C<writer> and C<accessor> options. See the below table for
@@ -611,7 +611,7 @@ details:
   is => rw, accessor => _foo  # turns into (accessor => _foo)
   is => ro, accessor => _foo  # error, accesor is rw
 
-=head1 Version 0.45
+=head1 0.45
 
 The C<before/around/after> method modifiers now support regexp
 matching of method names. NOTE: this only works for classes, it is
@@ -626,13 +626,13 @@ useful to trigger off of the constructor.
 Subtypes of parameterizable types now are parameterizable types
 themselves.
 
-=head1 Version 0.44
+=head1 0.44
 
 Fixed issue where C<DEMOLISHALL> was eating the value in C<$@>, and so
 not working correctly. It still kind of eats them, but so does vanilla
 perl.
 
-=head1 Version 0.41
+=head1 0.41
 
 Inherited attributes may now be extended without restriction on the
 type ('isa', 'does').
@@ -641,7 +641,7 @@ The entire set of Moose::Meta::TypeConstraint::* classes were
 refactored in this release. If you were relying on their internals you
 should test your code carefully.
 
-=head1 Version 0.40
+=head1 0.40
 
 Documenting the use of '+name' with attributes that come from recently
 composed roles. It makes sense, people are using it, and so why not
@@ -652,7 +652,7 @@ The C<< Moose::Meta::Class->create >> method now supports roles.
 It is now possible to make anonymous enum types by passing C<enum> an
 array reference instead of the C<< enum $name => @values >>.
 
-=head1 Version 0.37
+=head1 0.37
 
 Added the C<make_immutable> keyword as a shortcut to calling
 C<make_immutable> on the meta object. This eventually got removed!
@@ -663,7 +663,7 @@ a constructor parameter for this attribute".
 Type errors now use the provided message. Prior to this release they
 didn't.
 
-=head1 Version 0.34
+=head1 0.34
 
 Moose is now a postmodern object system :)
 
@@ -679,7 +679,7 @@ module.
 Passing a list of values to an accessor (which is only expecting one
 value) used to be silently ignored, now it throws an error.
 
-=head1 Version 0.26
+=head1 0.26
 
 Added parameterized types and did a pretty heavy refactoring of the
 type constraint system.
@@ -687,7 +687,7 @@ type constraint system.
 Better framework extendability and better support for "making your own
 Moose".
 
-=head1 Version 0.25 or before
+=head1 0.25 or before
 
 Honestly, you shouldn't be using versions of Moose that are this old,
 so many bug fixes and speed improvements have been made you would be
