@@ -14,10 +14,9 @@ Pretty well if I do say so myself :)
 
 =cut
 
-BEGIN {
-    eval "use Declare::Constraints::Simple;";
-    plan skip_all => "Declare::Constraints::Simple is required for this test" if $@;
-}
+use Test::Requires {
+    'Declare::Constraints::Simple' => '0.01', # skip all if not installed
+};
 
 use Test::Exception;
 

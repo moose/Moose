@@ -3,10 +3,9 @@ use strict;
 use warnings;
 use Test::More;
 
-BEGIN {
-    eval "use Test::Output;";
-    plan skip_all => "Test::Output is required for this test" if $@;
-}
+use Test::Requires {
+    'Test::Output' => '0.01', # skip all if not installed
+};
 
 {
     package Foo;

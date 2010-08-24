@@ -15,10 +15,9 @@ but it is not completely horrid either.
 
 =cut
 
-BEGIN {
-    eval "use Test::Deep;";
-    plan skip_all => "Test::Deep is required for this test" if $@;
-}
+use Test::Requires {
+    'Test::Deep' => '0.01', # skip all if not installed
+};
 
 use Test::Exception;
 

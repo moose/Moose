@@ -11,10 +11,9 @@ use Test::Exception;
 use File::Spec;
 use File::Temp 'tempdir';
 
-BEGIN {
-    eval "use Module::Refresh;";
-    plan skip_all => "Module::Refresh is required for this test" if $@;
-}
+use Test::Requires {
+    'Module::Refresh' => '0.01', # skip all if not installed
+};
 
 =pod
 

@@ -6,11 +6,10 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-BEGIN {
-    eval "use IO::String; use IO::File;";
-    plan skip_all => "IO::String and IO::File are required for this test" if $@;
-}
-
+use Test::Requires {
+    'IO::String' => '0.01', # skip all if not installed
+    'IO::File' => '0.01',
+};
 
 {
     package Email::Moose;
