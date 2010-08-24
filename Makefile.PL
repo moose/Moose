@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use inc::Module::Install 0.98;
 use Module::Install::AuthorRequires;
+use Module::Install::ExtraTests;
 use 5.008003;
 
 check_broken_extratests();
