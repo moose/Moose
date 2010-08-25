@@ -176,7 +176,7 @@ sub init_meta {
         # no metaclass, no 'meta' method
 
         # now we check whether our ancestors have metaclass, and if so borrow that
-        my ( undef, @isa ) = @{ $class->mro::get_linear_isa };
+        my ( undef, @isa ) = @{ mro::get_linear_isa($class) };
 
         foreach my $ancestor ( @isa ) {
             my $ancestor_meta = Class::MOP::get_metaclass_by_name($ancestor) || next;

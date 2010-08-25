@@ -1,6 +1,10 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+  [BUG FIXES]
+
+  * mro::get_linear_isa is called as a function rather than a method
+
 1.10 Sun, Aug 22, 2010
 
   [API CHANGES]
