@@ -7,6 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
+use List::MoreUtils qw(any);
 use List::Util qw(first);
 
 our $VERSION   = '1.10';
@@ -33,13 +34,29 @@ sub new {
 
     $self->_set_constraint(sub { $self->check($_[0]) });
 
-    if ( grep { $_->has_coercion } @{ $self->type_constraints } ) {
-        $self->coercion(
-            Moose::Meta::TypeCoercion::Union->new( type_constraint => $self )
-        );
-    }
-
     return $self;
+}
+
+# XXX - this is a rather gross implementation of laziness for the benefit of
+# MX::Types. If we try to call ->has_coercion on the objects during object
+# construction, this does not work when defining a recursive constraint with
+# MX::Types.
+sub coercion {
+    my $self = shift;
+
+    return $self->{coercion} if exists $self->{coercion};
+
+    if ( any { $_->has_coercion } @{ $self->type_constraints } ) {
+        return $self->{coercion} = Moose::Meta::TypeCoercion::Union->new(
+            type_constraint => $self );
+    }
+    else {
+        return $self->{coercion} = undef;
+    }
+}
+
+sub has_coercion {
+    return defined $_[0]->coercion;
 }
 
 sub _actually_compile_type_constraint {
