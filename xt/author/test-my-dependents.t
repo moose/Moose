@@ -62,7 +62,6 @@ MooseX::File_or_DB::Storage
 MooseX::FollowPBP
 MooseX::Getopt
 MooseX::Getopt::Defanged
-MooseX::GlobRef
 MooseX::HasDefaults
 MooseX::Has::Sugar
 MooseX::InsideOut
