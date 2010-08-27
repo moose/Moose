@@ -4,7 +4,9 @@ for, noteworthy changes.
 NEXT
 
   [BUG FIXES]
-  * mro::get_linear_isa is called as a function rather than a method
+
+  * mro::get_linear_isa was being called as a function rather than a method,
+    which caused problems with Perl 5.8.x. (t0m)
 
   * Union types always created a type constraint, even if their constituent
     constraints did not have any coercions. This bogus coercion always
