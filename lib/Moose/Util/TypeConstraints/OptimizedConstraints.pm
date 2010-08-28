@@ -7,7 +7,7 @@ use Class::MOP;
 use Moose::Deprecated;
 use Scalar::Util 'blessed', 'looks_like_number';
 
-our $VERSION   = '1.10';
+our $VERSION   = '1.11';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
