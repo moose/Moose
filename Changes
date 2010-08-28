@@ -1,6 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.12
+
+  [API CHANGES]
+
+  * The deprecation warnings for alias and excludes are back, use -alias and
+    -excludes instead. (Dave Rolsky)
+
 1.11 Fri, Aug 27, 2010
 
   [API CHANGES]
