@@ -7,6 +7,10 @@ for, noteworthy changes.
 
   * An attribute in a subclass can now override the value of "is". (doy)
 
+  * The deprecation warnings for alias and excludes have been turned back off
+    for this release, to give other module authors a chance to tweak their
+    code. (Dave Rolsky)
+
   [BUG FIXES]
 
   * mro::get_linear_isa was being called as a function rather than a method,
