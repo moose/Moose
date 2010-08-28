@@ -45,8 +45,6 @@ tests_recursive();
 repository 'git://git.moose.perl.org/Moose.git';
 add_metadata(x_authority => 'cpan:STEVAN');
 
-extra_tests();
-
 WriteAll();
 
 # Use the xt/author/test-my-dependents.t test to figure
