@@ -158,6 +158,7 @@ Bread::Board
 Cantella::Worker
 Carp::REPL
 Catalyst
+Catalyst::Devel
 Chart::Clicker
 CHI
 Config::MVP
