@@ -8,6 +8,12 @@ NEXT
   * The deprecation warnings for alias and excludes are back, use -alias and
     -excludes instead. (Dave Rolsky)
 
+  [ENHANCEMENTS]
+
+  * When composing one role into another and there is an attribute conflict,
+    the error message now includes the attribute name. Reported by Sam
+    Graham. RT #59985.
+
 1.12 Sat, Aug 28, 2010
 
   [BUG FIXES]
