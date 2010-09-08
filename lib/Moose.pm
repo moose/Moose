@@ -373,8 +373,10 @@ Moose makes every attempt to provide as much convenience as possible during
 class construction/definition, but still stay out of your way if you want it
 to. Here are a few items to note when building classes with Moose.
 
-Unless specified with C<extends>, any class which uses Moose will
-inherit from L<Moose::Object>.
+When you C<use Moose>, Moose will set the class's parent class to
+L<Moose::Object>, I<unless> the class using Moose already has a parent
+class. In addition, specifying a parent with C<extends> will change the parent
+class.
 
 Moose will also manage all attributes (including inherited ones) that are
 defined with C<has>. And (assuming you call C<new>, which is inherited from
