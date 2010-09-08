@@ -1,6 +1,8 @@
 # See https://rt.cpan.org/Ticket/Display.html?id=46347
 
 use strict;
+use warnings;
+
 use Test::More;
 use Test::Exception;
 
