@@ -57,9 +57,15 @@ sub apply_attributes {
             # make sure we haven't seen this one already too
             $role2->get_attribute($attribute_name) != $role1->get_attribute($attribute_name)) {
 
+            my $role2_name = $role2->name;
+
             require Moose;
-            Moose->throw_error("Role '" . $role1->name . "' has encountered an attribute conflict " .
-                    "during composition. This is fatal error and cannot be disambiguated.");
+            Moose->throw_error( "Role '"
+                    . $role1->name
+                    . "' has encountered an attribute conflict"
+                    . " while being composed into '$role2_name'."
+                    . " This is a fatal error and cannot be disambiguated."
+                    . " The conflicting attribute is named '$attribute_name'." );
         }
         else {
             $role2->add_attribute(
