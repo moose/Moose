@@ -83,20 +83,42 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Method::Constructor - Method Meta Object for constructors
+Moose::Meta::Method::Does - Method Meta Object for does
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Method::Constructor> that
-provides additional Moose-specific functionality
+This class is a subclass of L<Class::MOP::Class::Generated> that provides
+Moose-specific functionality for inlining does.
 
-To understand this class, you should read the the
-L<Class::MOP::Method::Constructor> documentation as well.
+To understand this class, you should read the L<Class::MOP::Class::Generated>
+documentation as well.
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Method::Constructor> is a subclass of
-L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
+C<Moose::Meta::Method::Does> is a subclass of
+L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Generated>.
+
+=head1 METHODS
+
+=over 4
+
+=item B<< Moose::Meta::Method::Does->new(%options) >>
+
+This constructs a new object. It accepts the following options:
+
+=over 8
+
+=item * package_name
+
+The package for the class in which the does is being inlined. This option is
+required.
+
+=item * metaclass
+
+The metaclass for the class this does belongs to. This is optional, as it can
+be set later by calling C<< $metamethod->attach_to_class >>.
+
+=back
 
 =head1 BUGS
 
@@ -108,7 +130,7 @@ Stevan Little E<lt>stevan@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2010 by Infinity Interactive, Inc.
+Copyright 2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
