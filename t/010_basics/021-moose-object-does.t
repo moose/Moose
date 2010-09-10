@@ -153,6 +153,6 @@ with_immutable {
     }
 
 }
-qw( Foo Bar Baz );
+qw( Foo Bar Baz Foo::Child Bar::Child Baz::Child );
 
 done_testing;
