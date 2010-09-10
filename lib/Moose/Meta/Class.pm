@@ -688,10 +688,10 @@ sub _inline_does {
         package_name => $self->name,
     );
 
-    return unless $does->can_be_inlined;
-
-    $self->add_method( 'does' => $does );
-    $self->_add_inlined_method($does);
+    if ( $args{replace_does} or $does->can_be_inlined ) {
+        $self->add_method( 'does' => $does );
+        $self->_add_inlined_method($does);
+    }
 }
 
 ## -------------------------------------------------
@@ -809,8 +809,12 @@ This overrides the parent's method to add a few options. Specifically,
 it uses the Moose-specific constructor and destructor classes, and
 enables inlining the destructor.
 
-Also, since Moose always inlines attributes, it sets the
-C<inline_accessors> option to false.
+Since Moose always inlines attributes, it sets the C<inline_accessors> option
+to false.
+
+Because Moose attempts to inline C<does> when possible, this method accepts
+C<inline_does> and C<replace_does> options. The default is to inline the does
+method, but an existing does method in a parent will not be replaced.
 
 =item B<< $metaclass->new_object(%params) >>
 
