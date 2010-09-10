@@ -28,13 +28,27 @@ test_requires 'Test::More'      => '0.88';
 test_requires 'Test::Exception' => '0.27';
 test_requires 'Test::Requires'  => '0.05';
 
+author_requires 'DateTime';
+author_requires 'DateTime::Calendar::Mayan';
+author_requires 'DateTime::Format::MySQL';
+author_requires 'Declare::Constraints::Simple';
+author_requires 'DBM::Deep';
 author_requires 'File::Find::Rule';
+author_requires 'HTTP::Headers';
+author_requires 'IO::File';
+author_requires 'IO::String';
+author_requires 'Locale::US';
 author_requires 'Module::Info';
+author_requires 'Module::Refresh';
+author_requires 'Params::Coerce';
+author_requires 'Regexp::Common';
+author_requires 'Test::Deep';
 author_requires 'Test::Inline';
 author_requires 'Test::NoTabs';
 author_requires 'Test::Output';
 author_requires 'Test::Pod::Coverage';
 author_requires 'Test::Spelling';
+author_requires 'URI';
 
 if ( is_maintainer() ) {
     system( $^X, 'author/extract-inline-tests' );
