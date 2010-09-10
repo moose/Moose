@@ -57,7 +57,7 @@ use Test::Moose;
 with_immutable {
 
     for my $thing ( 'Foo', Foo->new, 'Foo::Child', Foo::Child->new ) {
-        my $name = ref $thing ? 'Foo object' : 'Foo class';
+        my $name = ref $thing ? (ref $thing) . ' object' : "$thing class";
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
         ok(
@@ -89,7 +89,7 @@ with_immutable {
     }
 
     for my $thing ( 'Bar', Bar->new, 'Bar::Child', Bar::Child->new ) {
-        my $name = ref $thing ? 'Bar object' : 'Bar class';
+        my $name = ref $thing ? (ref $thing) . ' object' : "$thing class";
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
         ok(
@@ -121,7 +121,7 @@ with_immutable {
     }
 
     for my $thing ( 'Baz', Baz->new, 'Baz::Child', Baz::Child->new ) {
-        my $name = ref $thing ? 'Baz object' : 'Baz class';
+        my $name = ref $thing ? (ref $thing) . ' object' : "$thing class";
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
         ok(
