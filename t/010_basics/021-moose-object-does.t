@@ -34,6 +34,13 @@ use Test::Moose;
 }
 
 {
+    package Foo::Child;
+    use Moose;
+
+    extends 'Foo';
+}
+
+{
     package Bar::Child;
     use Moose;
 
@@ -49,7 +56,7 @@ use Test::Moose;
 
 with_immutable {
 
-    for my $thing ( 'Foo', Foo->new ) {
+    for my $thing ( 'Foo', Foo->new, 'Foo::Child', Foo::Child->new ) {
         my $name = ref $thing ? 'Foo object' : 'Foo class';
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
