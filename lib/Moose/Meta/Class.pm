@@ -22,7 +22,6 @@ use Moose::Error::Default;
 use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
-use Moose::Meta::Method::Does;
 
 use base 'Class::MOP::Class';
 
@@ -51,11 +50,6 @@ __PACKAGE__->meta->add_attribute('constructor_class' => (
 __PACKAGE__->meta->add_attribute('destructor_class' => (
     accessor => 'destructor_class',
     default  => 'Moose::Meta::Method::Destructor',
-));
-
-__PACKAGE__->meta->add_attribute('does_class' => (
-    accessor => 'does_class',
-    default  => 'Moose::Meta::Method::Does',
 ));
 
 __PACKAGE__->meta->add_attribute('error_class' => (
@@ -139,7 +133,6 @@ sub reinitialize {
             instance_metaclass
             constructor_class
             destructor_class
-            does_class
             error_class
         );
 
@@ -654,44 +647,12 @@ sub _immutable_options {
 
     $self->SUPER::_immutable_options(
         inline_destructor => 1,
-        inline_does       => 1,
 
         # Moose always does this when an attribute is created
         inline_accessors => 0,
 
         @args,
     );
-}
-
-sub _install_inlined_code {
-    my ( $self, %args ) = @_;
-
-    $self->SUPER::_install_inlined_code(%args);
-
-    $self->_inline_does(%args) if $args{inline_does};
-}
-
-sub _inline_does {
-    my ( $self, %args ) = @_;
-
-    if ( $self->has_method('does') ) {
-        my $class = $self->name;
-        warn "Not inlining a does method for $class since it defines"
-            . " its own does().\n";
-        return;
-    }
-
-    my $does = $self->does_class->new(
-        options      => \%args,
-        metaclass    => $self,
-        is_inline    => 1,
-        package_name => $self->name,
-    );
-
-    if ( $args{replace_does} or $does->can_be_inlined ) {
-        $self->add_method( 'does' => $does );
-        $self->_add_inlined_method($does);
-    }
 }
 
 ## -------------------------------------------------
@@ -812,10 +773,6 @@ enables inlining the destructor.
 Since Moose always inlines attributes, it sets the C<inline_accessors> option
 to false.
 
-Because Moose attempts to inline C<does> when possible, this method accepts
-C<inline_does> and C<replace_does> options. The default is to inline the does
-method, but an existing does method in a parent will not be replaced.
-
 =item B<< $metaclass->new_object(%params) >>
 
 This overrides the parent's method in order to add support for
@@ -885,13 +842,10 @@ be provided as a hash reference.
 
 =item B<< $metaclass->destructor_class($class_name) >>
 
-=item B<< $metaclass->does_class($class_name) >>
-
 These are the names of classes used when making a class immutable. These
-default to L<Moose::Meta::Method::Constructor>,
-L<Moose::Meta::Method::Destructor>, and L<Moose::Meta::Method::Does>
-respectively. These accessors are read-write, so you can use them to change
-the class name.
+default to L<Moose::Meta::Method::Constructor> and
+L<Moose::Meta::Method::Destructor> respectively. These accessors are
+read-write, so you can use them to change the class name.
 
 =item B<< $metaclass->error_class($class_name) >>
 
