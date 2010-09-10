@@ -55,8 +55,8 @@ sub _initialize_body {
     $source .= ";\n" . 'return $does{$name} || 0';
     $source .= ";\n" . '}';
 
-    my %does
-        = map { $_->name => 1 } $self->associated_metaclass->calculate_all_roles;
+    my %does = map { $_->name => 1 }
+        $self->associated_metaclass->calculate_all_roles_with_inheritance;
 
     my ( $code, $e ) = $self->_compile_code(
         code        => $source,
