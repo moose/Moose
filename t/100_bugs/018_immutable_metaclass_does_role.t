@@ -67,7 +67,7 @@ is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyMetaclass->meta->make_immutable;
-} '... make MyClass immutable okay';
+} '... make MyMetaclass immutable okay';
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
@@ -79,7 +79,7 @@ is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
 lives_ok {
     MyClass->meta->make_immutable;
-} '... make MyClass immutable okay';
+} '... make MyClass immutable (again) okay';
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
