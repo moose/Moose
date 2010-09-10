@@ -14,6 +14,10 @@ NEXT
     the error message now includes the attribute name. Reported by Sam
     Graham. RT #59985. (Dave Rolsky)
 
+  * When a class is made immutable, the does_role method is overridden with a
+    much faster version that simply looks role names up in a hash. Code which
+    uses lots of role-based type constraints should be faster. (Dave Rolsky)
+
 1.12 Sat, Aug 28, 2010
 
   [BUG FIXES]
