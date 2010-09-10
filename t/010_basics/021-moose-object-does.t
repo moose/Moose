@@ -6,25 +6,21 @@ use Test::Moose;
 
 {
     package Role::A;
-
     use Moose::Role
 }
 
 {
     package Role::B;
-
     use Moose::Role
 }
 
 {
     package Foo;
-
     use Moose;
 }
 
 {
     package Bar;
-
     use Moose;
 
     with 'Role::A';
@@ -32,10 +28,23 @@ use Test::Moose;
 
 {
     package Baz;
-
     use Moose;
 
     with qw( Role::A Role::B );
+}
+
+{
+    package Bar::Child;
+    use Moose;
+
+    extends 'Bar';
+}
+
+{
+    package Baz::Child;
+    use Moose;
+
+    extends 'Baz';
 }
 
 with_immutable {
@@ -72,7 +81,7 @@ with_immutable {
         );
     }
 
-    for my $thing ( 'Bar', Bar->new ) {
+    for my $thing ( 'Bar', Bar->new, 'Bar::Child', Bar::Child->new ) {
         my $name = ref $thing ? 'Bar object' : 'Bar class';
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
@@ -104,7 +113,7 @@ with_immutable {
         );
     }
 
-    for my $thing ( 'Baz', Baz->new ) {
+    for my $thing ( 'Baz', Baz->new, 'Baz::Child', Baz::Child->new ) {
         my $name = ref $thing ? 'Baz object' : 'Baz class';
         $name .= ' (immutable)' if $thing->meta->is_immutable;
 
