@@ -15,3 +15,4 @@ Moose-*
 *.o
 cover_db
 *.gc??
+test-mydeps-*
