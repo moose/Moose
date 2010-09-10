@@ -19,6 +19,12 @@ sub calculate_all_roles {
     @{ $self->{__immutable}{calculate_all_roles} ||= [ $self->$orig ] };
 }
 
+sub calculate_all_roles_with_inheritance {
+    my $orig = shift;
+    my $self = shift;
+    @{ $self->{__immutable}{calculate_all_roles_with_inheritance} ||= [ $self->$orig ] };
+}
+
 1;
 
 __END__
