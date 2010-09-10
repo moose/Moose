@@ -149,7 +149,7 @@ L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Generated>.
 
 =over 4
 
-=item B<< Moose::Meta;:Method::Destructor->new(%options) >>
+=item B<< Moose::Meta::Method::Destructor->new(%options) >>
 
 This constructs a new object. It accepts the following options:
 
