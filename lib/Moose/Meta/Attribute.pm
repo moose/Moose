@@ -836,7 +836,7 @@ object which does the named role.
 =item * coerce => $bool
 
 This option is only valid for objects with a type constraint
-(C<isa>). If this is true, then coercions will be applied whenever
+(C<isa>) that defined a coercion. If this is true, then coercions will be applied whenever
 this attribute is set.
 
 You can make both this and the C<weak_ref> option true.
