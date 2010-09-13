@@ -6,7 +6,7 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
