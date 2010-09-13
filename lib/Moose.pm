@@ -475,7 +475,7 @@ for information on how to define a new type, and how to retrieve type meta-data)
 
 This will attempt to use coercion with the supplied type constraint to change
 the value passed into any accessors or constructors. You B<must> supply a type
-constraint, and that type constraint B<must> defined a coercion. See
+constraint, and that type constraint B<must> define a coercion. See
 L<Moose::Cookbook::Basics::Recipe5> for an example.
 
 =item I<does =E<gt> $role_name>
