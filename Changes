@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [BUG FIXES]
+
+  * Work around what looks like a bug in List::MoreUtils::any. This bug caused
+    a weird error when defining the same union type twice, but only when using
+    MooseX::Types. Reported by Curtis Jewell. RT #61001. (Dave Rolsky)
+
 1.13 Mon, Sep 13, 2010
 
   [API CHANGES]
