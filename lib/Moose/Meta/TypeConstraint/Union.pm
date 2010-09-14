@@ -7,7 +7,6 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-use List::MoreUtils qw(any);
 use List::Util qw(first);
 
 our $VERSION   = '1.13';
@@ -46,7 +45,9 @@ sub coercion {
 
     return $self->{coercion} if exists $self->{coercion};
 
-    if ( any { $_->has_coercion } @{ $self->type_constraints } ) {
+    # Using any instead of grep here causes a weird error with some corner
+    # cases when MX::Types is in use. See RT #61001.
+    if ( grep { $_->has_coercion } @{ $self->type_constraints } ) {
         return $self->{coercion} = Moose::Meta::TypeCoercion::Union->new(
             type_constraint => $self );
     }
