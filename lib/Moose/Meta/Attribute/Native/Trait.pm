@@ -24,17 +24,13 @@ has 'method_constructors' => (
     default => sub {
         my $self = shift;
         return +{} unless $self->has_method_provider;
+
         # or grab them from the role/class
         my $method_provider = $self->method_provider->meta;
-        return +{
-            map {
-                $_->name => $_
-            } $method_provider->_get_local_methods
-        };
+        return +{ map { $_->name => $_ }
+                $method_provider->_get_local_methods };
     },
 );
-
-# methods called prior to instantiation
 
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
@@ -42,10 +38,10 @@ before '_process_options' => sub {
     $self->_check_helper_type( $options, $name );
 
     $options->{is} = $self->_default_is
-        if ! exists $options->{is} && $self->can('_default_is');
+        if !exists $options->{is} && $self->can('_default_is');
 
     $options->{default} = $self->_default_default
-        if ! exists $options->{default} && $self->can('_default_default');
+        if !exists $options->{default} && $self->can('_default_default');
 };
 
 sub _check_helper_type {
@@ -64,27 +60,6 @@ sub _check_helper_type {
         "The type constraint for $name must be a subtype of $type but it's a $isa";
 }
 
-around '_canonicalize_handles' => sub {
-    my $next    = shift;
-    my $self    = shift;
-    my $handles = $self->handles;
-
-    return unless $handles;
-
-    unless ( 'HASH' eq ref $handles ) {
-        $self->throw_error(
-            "The 'handles' option must be a HASH reference, not $handles" );
-    }
-
-    return map {
-        my $to = $handles->{$_};
-        $to = [$to] unless ref $to;
-        $_ => $to
-    } keys %$handles;
-};
-
-# methods called after instantiation
-
 before 'install_accessors' => sub { (shift)->_check_handles_values };
 
 sub _check_handles_values {
@@ -101,6 +76,25 @@ sub _check_handles_values {
     }
 
 }
+
+around '_canonicalize_handles' => sub {
+    shift;
+    my $self    = shift;
+    my $handles = $self->handles;
+
+    return unless $handles;
+
+    unless ( 'HASH' eq ref $handles ) {
+        $self->throw_error(
+            "The 'handles' option must be a HASH reference, not $handles");
+    }
+
+    return map {
+        my $to = $handles->{$_};
+        $to = [$to] unless ref $to;
+        $_ => $to
+    } keys %$handles;
+};
 
 around '_make_delegation_method' => sub {
     my $next = shift;
