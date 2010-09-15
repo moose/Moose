@@ -47,7 +47,7 @@ Moose::Meta::Attribute::Native::Trait::Hash - Helper trait for HashRef attribute
           has_no_options => 'is_empty',
           num_options    => 'count',
           delete_option  => 'delete',
-          pairs          => 'kv',
+          option_pairs   => 'kv',
       },
   );
 
