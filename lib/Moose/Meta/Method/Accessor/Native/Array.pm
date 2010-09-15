@@ -12,22 +12,12 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method::Accessor::Native';
 
-sub _value_needs_copy {
+sub _inline_curried_arguments {
     my $self = shift;
 
-    return @{ $self->curried_arguments };
-}
+    return q{} unless @{ $self->curried_arguments };
 
-sub _inline_copy_value {
-    my $self = shift;
-
-    return q{} unless $self->_value_needs_copy;
-
-    my $curry = join ', ',
-        map { looks_like_number($_) ? $_ : B::perlstring($_) }
-        @{ $self->curried_arguments };
-
-    return "my \@val = ( $curry, \@_ );";
+    return "\@_ = ( \@curried, \@_ );";
 }
 
 sub _inline_check_constraint {

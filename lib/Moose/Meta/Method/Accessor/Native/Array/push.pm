@@ -16,11 +16,6 @@ sub _generate_method {
 
     my $slot_access = $self->_inline_get($inv);
 
-    my $value_name
-        = $self->_value_needs_copy
-        ? '@val'
-        : '@_';
-
     my $code = 'sub {';
     $code .= "\n" . $self->_inline_pre_body(@_);
 
@@ -28,33 +23,33 @@ sub _generate_method {
 
     $code .= "\n" . $self->_inline_check_lazy($inv);
 
-    $code .= "\n" . $self->_inline_copy_value;
+    $code .= "\n" . $self->_inline_curried_arguments;
 
     $code
         .= "\n"
         . $self->_inline_throw_error(
         q{"Cannot call push without any arguments"})
-        . " unless $value_name;";
+        . " unless \@_;";
 
     my $potential_new_val;
     if ( $self->_constraint_must_be_checked ) {
-        $code .= "\n" . "my \@new_val = ( \@{ $slot_access }, $value_name );";
+        $code .= "\n" . "my \@new_val = ( \@{ $slot_access }, \@_ );";
         $potential_new_val = '\\@new_val';
     }
     else {
-        $potential_new_val = "[ \@{ $slot_access }, $value_name ];";
+        $potential_new_val = "[ \@{ $slot_access }, \@_ ];";
     }
 
     $code .= "\n" . $self->_inline_check_coercion($potential_new_val);
     $code .= "\n" . $self->_inline_check_constraint($potential_new_val);
 
     $code .= "\n"
-        . $self->_inline_get_old_value_for_trigger( $inv, $value_name );
+        . $self->_inline_get_old_value_for_trigger( $inv, '@_' );
 
     $code .= "\n" . $self->_inline_store( $inv, $potential_new_val );
 
     $code .= "\n" . $self->_inline_post_body(@_);
-    $code .= "\n" . $self->_inline_trigger( $inv, $value_name, '@old' );
+    $code .= "\n" . $self->_inline_trigger( $inv, '@_', '@old' );
 
     $code .= "\n}";
 

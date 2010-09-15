@@ -40,6 +40,8 @@ sub new {
 
     $options{delegate_to_method} = lc( ( split /::/, $class)[-1] );
 
+    $options{definition_context} = $options{attribute}->definition_context;
+
     my $self = $class->_new( \%options );
 
     weaken( $self->{'attribute'} );
@@ -62,6 +64,16 @@ sub _initialize_body {
     $self->{'body'} = $self->_eval_code( $self->_generate_method );
 
     return;
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my $env = $self->SUPER::_eval_environment;
+
+    $env->{'@curried'} = $self->curried_arguments;
+
+    return $env;
 }
 
 1;

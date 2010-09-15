@@ -19,20 +19,8 @@ sub _error_thrower {
 sub _eval_code {
     my ( $self, $source ) = @_;
 
-    # NOTE:
-    # set up the environment
-    my $attr = $self->associated_attribute;
-    my $type_constraint_obj = $attr->type_constraint;
-    my $environment = {
-        '$attr' => \$attr,
-        '$meta' => \$self,
-        '$type_constraint_obj' => \$type_constraint_obj,
-        '$type_constraint' => \($type_constraint_obj
-                                   ? $type_constraint_obj->_compiled_type_constraint
-                                   : undef),
-    };
+    my $environment = $self->_eval_environment;
 
-    #warn "code for " . $attr->name . " =>\n" . $source . "\n";
     my ( $code, $e ) = $self->_compile_code( environment => $environment, code => $source );
 
     $self->throw_error(
@@ -41,6 +29,24 @@ sub _eval_code {
         if $e;
 
     return $code;
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my $attr                = $self->associated_attribute;
+    my $type_constraint_obj = $attr->type_constraint;
+
+    return {
+        '$attr'                => \$attr,
+        '$meta'                => \$self,
+        '$type_constraint_obj' => \$type_constraint_obj,
+        '$type_constraint'     => \(
+              $type_constraint_obj
+            ? $type_constraint_obj->_compiled_type_constraint
+            : undef
+        ),
+    };
 }
 
 sub _generate_accessor_method_inline {
