@@ -17,7 +17,7 @@ sub _inline_curried_arguments {
 
     return q{} unless @{ $self->curried_arguments };
 
-    return "\@_ = ( \@curried, \@_ );";
+    return 'unshift @_, @curried;'
 }
 
 sub _inline_check_constraint {
