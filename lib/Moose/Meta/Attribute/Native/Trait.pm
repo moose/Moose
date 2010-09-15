@@ -9,29 +9,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 requires '_helper_type';
 
-# these next two are the possible methods you can use in the 'handles'
-# map.
-
-# provide a Class or Role which we can collect the method providers
-# from
-
-# or you can provide a HASH ref of anon subs yourself. This will also
-# collect and store the methods from a method_provider as well
-has 'method_constructors' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    lazy    => 1,
-    default => sub {
-        my $self = shift;
-        return +{} unless $self->has_method_provider;
-
-        # or grab them from the role/class
-        my $method_provider = $self->method_provider->meta;
-        return +{ map { $_->name => $_ }
-                $method_provider->_get_local_methods };
-    },
-);
-
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
 
@@ -71,10 +48,13 @@ sub _check_handles_values {
 
     for my $original_method ( values %handles ) {
         my $name = $original_method->[0];
-        ( exists $method_constructors->{$name} )
+
+        my $accessor_class
+            = $self->_native_accessor_class_root . '::' . $name;
+
+        ( $accessor_class->can('new') || exists $method_constructors->{$name} )
             || confess "$name is an unsupported method type";
     }
-
 }
 
 around '_canonicalize_handles' => sub {
@@ -102,23 +82,57 @@ around '_make_delegation_method' => sub {
 
     my ( $name, @curried_args ) = @$method_to_call;
 
-    my $method_constructors = $self->method_constructors;
+    my $accessor_class
+        = $self->_native_accessor_class_root . '::' . $name;
 
-    my $code = $method_constructors->{$name}->(
-        $self,
-        $self->get_read_method_ref,
-        $self->get_write_method_ref,
-    );
+    if ( $accessor_class->can('new') ) {
+        return $accessor_class->new(
+            name              => $handle_name,
+            package_name      => $self->associated_class->name,
+            attribute         => $self,
+            curried_arguments => \@curried_args,
+        );
+    }
+    else {
+        my $method_constructors = $self->method_constructors;
 
-    return $next->(
-        $self,
-        $handle_name,
-        sub {
-            my $instance = shift;
-            return $code->( $instance, @curried_args, @_ );
-        },
-    );
+        my $code = $method_constructors->{$name}->(
+            $self,
+            $self->get_read_method_ref,
+            $self->get_write_method_ref,
+        );
+
+        return $next->(
+            $self,
+            $handle_name,
+            sub {
+                my $instance = shift;
+                return $code->( $instance, @curried_args, @_ );
+            }
+        );
+    }
 };
+
+sub _native_accessor_class_root {
+    my $self = shift;
+
+    return 'Moose::Meta::Method::Accessor::Native::' . $self->_native_type;
+}
+
+has 'method_constructors' => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    lazy    => 1,
+    default => sub {
+        my $self = shift;
+        return +{} unless $self->has_method_provider;
+
+        # or grab them from the role/class
+        my $method_provider = $self->method_provider->meta;
+        return +{ map { $_->name => $_ }
+                $method_provider->_get_local_methods };
+    },
+);
 
 no Moose::Role;
 no Moose::Util::TypeConstraints;

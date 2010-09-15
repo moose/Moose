@@ -8,6 +8,13 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Attribute::Native::MethodProvider::Array;
 
+use Moose::Meta::Method::Accessor::Native::Array::count;
+use Moose::Meta::Method::Accessor::Native::Array::elements;
+use Moose::Meta::Method::Accessor::Native::Array::first;
+use Moose::Meta::Method::Accessor::Native::Array::is_empty;
+use Moose::Meta::Method::Accessor::Native::Array::map;
+use Moose::Meta::Method::Accessor::Native::Array::push;
+
 with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (
@@ -18,6 +25,8 @@ has 'method_provider' => (
 );
 
 sub _helper_type { 'ArrayRef' }
+
+sub _native_type { 'Array' }
 
 no Moose::Role;
 

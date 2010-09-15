@@ -32,6 +32,9 @@ my $sort;
             'splice_options'        => 'splice',
             'sort_options_in_place' => 'sort_in_place',
             'option_accessor'       => 'accessor',
+            'all_options'           => 'elements',
+            'first_option'          => 'first',
+            'mapped_options'        => 'map',
             'add_options_with_speed' =>
                 [ 'push' => 'funrolls', 'funbuns' ],
             'prepend_prerequisites_along_with' =>
@@ -78,6 +81,10 @@ lives_ok {
 '... set the option okay';
 
 is_deeply( $stuff->options, [ 1, 2, 3 ], '... got options now' );
+is_deeply( [ $stuff->all_options ], [ 1, 2, 3 ], '... got options now (with elements method)' );
+is( $stuff->first_option, 1, '... got first option' );
+is_deeply( [ $stuff->mapped_options( sub { $_ * 10 } ) ], [ 10, 20, 30 ],
+           '... got mapped options' );
 
 ok( !$stuff->has_no_options, '... has options' );
 is( $stuff->num_options, 3, '... got 3 options' );
@@ -246,20 +253,22 @@ my $options = $stuff->meta->get_attribute('options');
 does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
 
 is_deeply(
-    $options->handles,
-    {
-        'add_options'           => 'push',
-        'remove_last_option'    => 'pop',
-        'remove_first_option'   => 'shift',
-        'insert_options'        => 'unshift',
-        'get_option_at'         => 'get',
-        'set_option_at'         => 'set',
-        'num_options'           => 'count',
-        'has_no_options'        => 'is_empty',
-        'clear_options'         => 'clear',
-        'splice_options'        => 'splice',
-        'sort_options_in_place' => 'sort_in_place',
-        'option_accessor'       => 'accessor',
+    $options->handles, {
+        'add_options'            => 'push',
+        'remove_last_option'     => 'pop',
+        'remove_first_option'    => 'shift',
+        'insert_options'         => 'unshift',
+        'get_option_at'          => 'get',
+        'set_option_at'          => 'set',
+        'num_options'            => 'count',
+        'has_no_options'         => 'is_empty',
+        'clear_options'          => 'clear',
+        'splice_options'         => 'splice',
+        'sort_options_in_place'  => 'sort_in_place',
+        'option_accessor'        => 'accessor',
+        'all_options'            => 'elements',
+        'first_option'           => 'first',
+        'mapped_options'         => 'map',
         'add_options_with_speed' => [ 'push' => 'funrolls', 'funbuns' ],
         'prepend_prerequisites_along_with' =>
             [ 'unshift' => 'first', 'second' ],

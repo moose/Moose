@@ -8,36 +8,6 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub count : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        scalar @{ $reader->( $_[0] ) };
-    };
-}
-
-sub is_empty : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        scalar @{ $reader->( $_[0] ) } ? 0 : 1;
-    };
-}
-
-sub first : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $predicate ) = @_;
-        List::Util::first { $predicate->() } @{ $reader->($instance) };
-    };
-}
-
-sub map : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $f ) = @_;
-        CORE::map { $f->() } @{ $reader->($instance) };
-    };
-}
-
 sub reduce : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
@@ -91,14 +61,6 @@ sub uniq : method {
     return sub {
         my ( $instance ) = @_;
         List::MoreUtils::uniq @{ $reader->($instance) };
-    };
-}
-
-sub elements : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ($instance) = @_;
-        @{ $reader->($instance) };
     };
 }
 
