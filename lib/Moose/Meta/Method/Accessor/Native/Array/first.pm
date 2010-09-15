@@ -15,6 +15,11 @@ sub _inline_process_arguments {
     return 'my $func = shift;';
 }
 
+sub _inline_check_arguments {
+    return
+        q{die 'Must provide a code reference as an argument' unless ( ref $func || q{} ) eq 'CODE';};
+}
+
 sub _return_value {
     my $self        = shift;
     my $slot_access = shift;

@@ -1,7 +1,9 @@
-package Moose::Meta::Method::Accessor::Native::Array::elements;
+package Moose::Meta::Method::Accessor::Native::Array::shuffle;
 
 use strict;
 use warnings;
+
+use List::Util ();
 
 our $VERSION = '1.13';
 $VERSION = eval $VERSION;
@@ -13,7 +15,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "\@{ $slot_access }";
+    return "List::Util::shuffle \@{ $slot_access }";
 }
 
 1;

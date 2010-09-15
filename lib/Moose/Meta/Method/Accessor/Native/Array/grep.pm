@@ -1,4 +1,4 @@
-package Moose::Meta::Method::Accessor::Native::Array::map;
+package Moose::Meta::Method::Accessor::Native::Array::grep;
 
 use strict;
 use warnings;
@@ -22,7 +22,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "map { \$func->() } \@{ $slot_access }";
+    return "grep { \$func->() } \@{ $slot_access }";
 }
 
 1;

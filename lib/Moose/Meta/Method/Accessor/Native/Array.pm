@@ -38,4 +38,8 @@ sub _constraint_must_be_checked {
         || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
 }
 
+sub _inline_process_arguments { q{} }
+
+sub _inline_check_arguments { q{} }
+
 1;

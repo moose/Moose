@@ -43,8 +43,7 @@ sub _generate_method {
     $code .= "\n" . $self->_inline_check_coercion($potential_new_val);
     $code .= "\n" . $self->_inline_check_constraint($potential_new_val);
 
-    $code .= "\n"
-        . $self->_inline_get_old_value_for_trigger( $inv, '@_' );
+    $code .= "\n" . $self->_inline_get_old_value_for_trigger( $inv, '@_' );
 
     $code .= "\n" . $self->_inline_store( $inv, $potential_new_val );
 

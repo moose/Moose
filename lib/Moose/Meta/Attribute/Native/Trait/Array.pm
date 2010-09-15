@@ -11,9 +11,16 @@ use Moose::Meta::Attribute::Native::MethodProvider::Array;
 use Moose::Meta::Method::Accessor::Native::Array::count;
 use Moose::Meta::Method::Accessor::Native::Array::elements;
 use Moose::Meta::Method::Accessor::Native::Array::first;
+use Moose::Meta::Method::Accessor::Native::Array::get;
+use Moose::Meta::Method::Accessor::Native::Array::grep;
 use Moose::Meta::Method::Accessor::Native::Array::is_empty;
+use Moose::Meta::Method::Accessor::Native::Array::join;
 use Moose::Meta::Method::Accessor::Native::Array::map;
 use Moose::Meta::Method::Accessor::Native::Array::push;
+use Moose::Meta::Method::Accessor::Native::Array::reduce;
+use Moose::Meta::Method::Accessor::Native::Array::shuffle;
+use Moose::Meta::Method::Accessor::Native::Array::sort;
+use Moose::Meta::Method::Accessor::Native::Array::uniq;
 
 with 'Moose::Meta::Attribute::Native::Trait';
 

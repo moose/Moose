@@ -20,6 +20,7 @@ sub _generate_method {
     $code .= "\n" . 'my $self = shift;';
     $code .= "\n" . $self->_inline_curried_arguments;
     $code .= "\n" . $self->_inline_process_arguments;
+    $code .= "\n" . $self->_inline_check_arguments;
 
     $code
         .= "\n"
@@ -37,7 +38,5 @@ sub _generate_method {
 
     return $code;
 }
-
-sub _inline_process_arguments { q{} }
 
 1;

@@ -98,6 +98,22 @@ my %handles = (
     is( $stuff->get_option_at(1), 2, '... get option at index 1' );
     is( $stuff->get_option_at(2), 3, '... get option at index 2' );
 
+    throws_ok { $stuff->get_option_at() }
+    qr/Must provide a valid index number as an argument/,
+        'throws an error when get_option_at is called without any arguments';
+
+    throws_ok { $stuff->get_option_at( {} ) }
+    qr/Must provide a valid index number as an argument/,
+        'throws an error when get_option_at is called with an invalid argument';
+
+    throws_ok { $stuff->get_option_at(2.2) }
+    qr/Must provide a valid index number as an argument/,
+        'throws an error when get_option_at is called with an invalid argument';
+
+    throws_ok { $stuff->get_option_at('foo') }
+    qr/Must provide a valid index number as an argument/,
+        'throws an error when get_option_at is called with an invalid argument';
+
     lives_ok {
         $stuff->set_option_at( 1, 100 );
     }
@@ -282,16 +298,40 @@ my %handles = (
         '... got the right filtered values'
     );
 
+    throws_ok { $stuff->filter_options() }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when filter_options is called without any arguments';
+
+    throws_ok { $stuff->filter_options( {} ) }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when filter_options is called with an invalid argument';
+
     is_deeply(
         [ $stuff->map_options( sub { $_ * 2 } ) ],
         [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ],
         '... got the right mapped values'
     );
 
+    throws_ok { $stuff->map_options() }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when map_options is called without any arguments';
+
+    throws_ok { $stuff->map_options( {} ) }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when map_options is called with an invalid argument';
+
     is(
         $stuff->find_option( sub { $_ % 2 == 0 } ), 2,
         '.. found the right option'
     );
+
+    throws_ok { $stuff->find_option() }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when find_option is called without any arguments';
+
+    throws_ok { $stuff->find_option( {} ) }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when find_option is called with an invalid argument';
 
     is_deeply(
         [ $stuff->options ], [ 1 .. 10 ],
@@ -302,6 +342,14 @@ my %handles = (
         $stuff->join_options(':'), '1:2:3:4:5:6:7:8:9:10',
         '... joined the list of options by :'
     );
+
+    throws_ok { $stuff->join_options() }
+    qr/Must provide a string as an argument/,
+        'throws an error when join_options is called without any arguments';
+
+    throws_ok { $stuff->join_options( {} ) }
+    qr/Must provide a string as an argument/,
+        'throws an error when join_options is called with an invalid argument';
 
     is_deeply(
         [ $stuff->sorted_options ], [ sort ( 1 .. 10 ) ],
@@ -345,6 +393,20 @@ my %handles = (
         $stuff->dashify, '1-2-3-4-5-6-7-8-9-10',
         'dashify returns options joined by dashes'
     );
+
+    is(
+        $stuff->reduce( sub { $_[0] * $_[1] } ),
+        3628800,
+        'call reducing to generate a product returns expected value'
+    );
+
+    throws_ok { $stuff->reduce() }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when reduce is called without any arguments';
+
+    throws_ok { $stuff->reduce( {} ) }
+    qr/Must provide a code reference as an argument/,
+        'throws an error when reduce is called with an invalid argument';
 
     is(
         $stuff->product, 3628800,

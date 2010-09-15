@@ -8,98 +8,6 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub reduce : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $f ) = @_;
-        our ($a, $b);
-        List::Util::reduce { $f->($a, $b) } @{ $reader->($instance) };
-    };
-}
-
-sub sort : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $predicate ) = @_;
-        die "Argument must be a code reference"
-          if $predicate && ref $predicate ne 'CODE';
-
-        if ($predicate) {
-            # Although it would be nice if we could support just using $a and
-            # $b like sort already does, using $a or $b once in a package
-            # triggers the 'Name "main::a" used only once' warning, and there
-            # is no good way to avoid that, since it happens when the file
-            # which defines the coderef is compiled, before we even get a
-            # chance to see it here. So, we have no real choice but to use
-            # normal parameters. --doy
-            CORE::sort { $predicate->( $a, $b ) } @{ $reader->($instance) };
-        }
-        else {
-            CORE::sort @{ $reader->($instance) };
-        }
-    };
-}
-
-sub shuffle : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance ) = @_;
-        List::Util::shuffle @{ $reader->($instance) };
-    };
-}
-
-sub grep : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $predicate ) = @_;
-        CORE::grep { $predicate->() } @{ $reader->($instance) };
-    };
-}
-
-sub uniq : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance ) = @_;
-        List::MoreUtils::uniq @{ $reader->($instance) };
-    };
-}
-
-sub join : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        my ( $instance, $separator ) = @_;
-        join $separator, @{ $reader->($instance) };
-    };
-}
-
-sub push : method {
-    my ( $attr, $reader, $writer ) = @_;
-
-    if (
-        $attr->has_type_constraint
-        && $attr->type_constraint->isa(
-            'Moose::Meta::TypeConstraint::Parameterized')
-      )
-    {
-        my $container_type_constraint = $attr->type_constraint->type_parameter;
-        return sub {
-            my $instance = CORE::shift;
-            $container_type_constraint->check($_)
-              || confess "Value "
-              . ( $_ || 'undef' )
-              . " did not pass container type constraint '$container_type_constraint'"
-              foreach @_;
-            CORE::push @{ $reader->($instance) } => @_;
-        };
-    }
-    else {
-        return sub {
-            my $instance = CORE::shift;
-            CORE::push @{ $reader->($instance) } => @_;
-        };
-    }
-}
-
 sub pop : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
@@ -138,13 +46,6 @@ sub shift : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
         CORE::shift @{ $reader->( $_[0] ) };
-    };
-}
-
-sub get : method {
-    my ( $attr, $reader, $writer ) = @_;
-    return sub {
-        $reader->( $_[0] )->[ $_[1] ];
     };
 }
 
