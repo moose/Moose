@@ -606,8 +606,8 @@ sub run_tests {
         qr/The second argument must be a code reference/,
             'throws an error with when passing a non code ref to natatime';
 
-        my $it = $obj->natatime_curried();
-        my @nat;
+        $it = $obj->natatime_curried();
+        @nat = ();
         while ( my @v = $it->() ) {
             push @nat, \@v;
         }
