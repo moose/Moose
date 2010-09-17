@@ -49,10 +49,11 @@ sub _check_handles_values {
     for my $original_method ( values %handles ) {
         my $name = $original_method->[0];
 
-        my $accessor_class
-            = $self->_native_accessor_class_root . '::' . $name;
+        my $accessor_class = $self->_native_accessor_class_for($name);
 
-        ( $accessor_class->can('new') || exists $method_constructors->{$name} )
+        # XXX - bridge code
+        ( ( $accessor_class && $accessor_class->can('new') )
+                || exists $method_constructors->{$name} )
             || confess "$name is an unsupported method type";
     }
 }
@@ -82,10 +83,10 @@ around '_make_delegation_method' => sub {
 
     my ( $name, @curried_args ) = @$method_to_call;
 
-    my $accessor_class
-        = $self->_native_accessor_class_root . '::' . $name;
+    my $accessor_class = $self->_native_accessor_class_for($name);
 
-    if ( $accessor_class->can('new') ) {
+    # XXX - bridge code
+    if ( $accessor_class && $accessor_class->can('new') ) {
         return $accessor_class->new(
             name              => $handle_name,
             package_name      => $self->associated_class->name,
@@ -93,6 +94,7 @@ around '_make_delegation_method' => sub {
             curried_arguments => \@curried_args,
         );
     }
+    # XXX - bridge code
     else {
         my $method_constructors = $self->method_constructors;
 
@@ -113,10 +115,13 @@ around '_make_delegation_method' => sub {
     }
 };
 
-sub _native_accessor_class_root {
-    my $self = shift;
+sub _native_accessor_class_for {
+    my ( $self, $suffix ) = @_;
 
-    return 'Moose::Meta::Method::Accessor::Native::' . $self->_native_type;
+    # XXX - bridge code
+    return unless $self->can('_native_type');
+
+    return 'Moose::Meta::Method::Accessor::Native::' . $self->_native_type . '::' . $suffix;
 }
 
 has 'method_constructors' => (
