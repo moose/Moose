@@ -20,8 +20,10 @@ sub _inline_process_arguments {
 sub _inline_check_arguments {
     my $self = shift;
 
-    return $self->_inline_check_var_is_valid_index('$idx') . "\n"
-        . q{die 'Length must an integer' if defined $len && $len !~ /^-?\\d+$/;};
+    return
+          $self->_inline_check_var_is_valid_index('$idx') . "\n"
+        . $self->_inline_throw_error(q{'The length argument passed to splice must be an integer'})
+        . ' if defined $len && $len !~ /^-?\\d+$/;';
 }
 
 sub _potential_value {

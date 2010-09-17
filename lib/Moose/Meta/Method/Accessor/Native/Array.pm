@@ -64,8 +64,10 @@ sub _inline_check_arguments { q{} }
 sub _inline_check_var_is_valid_index {
     my ( $self, $var ) = @_;
 
-    return
-        qq{die 'Must provide a valid index number as an argument' unless defined $var && $var =~ /^-?\\d+\$/;};
+    return $self->_inline_throw_error( q{'The index passed to }
+            . $self->delegate_to_method
+            . q{ must be an integer'} )
+        . qq{ unless defined $var && $var =~ /^-?\\d+\$/;};
 }
 
 1;

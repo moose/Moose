@@ -108,7 +108,7 @@ sub run_tests {
 
         throws_ok { $obj->count(22) }
         qr/Cannot call count with any arguments/,
-            'throws an error with when passing an argument to count';
+            'throws an error when passing an argument passed to count';
 
         lives_ok { $obj->push( 1, 2, 3 ) }
         'pushed three new values and lived';
@@ -150,7 +150,7 @@ sub run_tests {
 
         throws_ok { $obj->elements(22) }
         qr/Cannot call elements with any arguments/,
-            'throws an error with when passing an argument to elements';
+            'throws an error when passing an argument passed to elements';
 
         $obj->_values( [ 1, 2, 3 ] );
 
@@ -164,15 +164,15 @@ sub run_tests {
             'throws an error when get is called without any arguments';
 
         throws_ok { $obj->get( {} ) }
-        qr/Must provide a valid index number as an argument/,
+        qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
         throws_ok { $obj->get(2.2) }
-        qr/Must provide a valid index number as an argument/,
+        qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
         throws_ok { $obj->get('foo') }
-        qr/Must provide a valid index number as an argument/,
+        qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
         throws_ok { $obj->get_curried(2) }
@@ -317,6 +317,10 @@ sub run_tests {
         qr/Cannot call splice without at least 1 argument/,
             'throws an error when splice is called with no arguments';
 
+        throws_ok { $obj->splice( 1, 'foo', ) }
+        qr/The length argument passed to splice must be an integer/,
+            'throws an error when splice is called with an invalid length';
+
         lives_ok { $obj->splice_curried_1( 2, 101 ) }
         'splice_curried_1 lives';
 
@@ -352,14 +356,14 @@ sub run_tests {
         );
 
         throws_ok { $obj->sort(1) }
-        qr/Argument must be a code reference/,
-            'throws an error with when passing a non-function to sort';
+        qr/The argument passed to sort must be a code reference/,
+            'throws an error when passing a non coderef to sort';
 
         throws_ok {
             $obj->sort( sub { }, 27 );
         }
         qr/Cannot call sort with more than 1 argument/,
-            'throws an error with when passing two arguments to sort';
+            'throws an error when passing two arguments to sort';
 
         $obj->_values( [ 3, 9, 5, 22, 11 ] );
 
@@ -378,10 +382,16 @@ sub run_tests {
         );
 
         throws_ok {
+            $obj->sort_in_place( 27 );
+        }
+        qr/The argument passed to sort_in_place must be a code reference/,
+            'throws an error when passing a non coderef to sort_in_place';
+
+        throws_ok {
             $obj->sort_in_place( sub { }, 27 );
         }
         qr/Cannot call sort_in_place with more than 1 argument/,
-            'throws an error with when passing two arguments to sort_in_place';
+            'throws an error when passing two arguments to sort_in_place';
 
         $obj->_values( [ 3, 9, 5, 22, 11 ] );
 
@@ -394,7 +404,7 @@ sub run_tests {
 
         throws_ok { $obj->sort_in_place_curried(27) }
         qr/Cannot call sort_in_place with more than 1 argument/,
-            'throws an error with when passing one argument to sort_in_place_curried';
+            'throws an error when passing one argument passed to sort_in_place_curried';
 
         $obj->_values( [ 1 .. 5 ] );
 
@@ -406,17 +416,17 @@ sub run_tests {
 
         throws_ok { $obj->map }
         qr/Cannot call map without at least 1 argument/,
-            'throws an error with when passing no arguments to map';
+            'throws an error when passing no arguments to map';
 
         throws_ok {
             $obj->map( sub { }, 2 );
         }
         qr/Cannot call map with more than 1 argument/,
-            'throws an error with when passing two arguments to map';
+            'throws an error when passing two arguments to map';
 
         throws_ok { $obj->map( {} ) }
-        qr/Must provide a code reference as an argument/,
-            'throws an error with when passing a non coderef to map';
+        qr/The argument passed to map must be a code reference/,
+            'throws an error when passing a non coderef to map';
 
         $obj->_values( [ 1 .. 5 ] );
 
@@ -430,7 +440,7 @@ sub run_tests {
             $obj->map_curried( sub { } );
         }
         qr/Cannot call map with more than 1 argument/,
-            'throws an error with when passing one argument to map_curried';
+            'throws an error when passing one argument passed to map_curried';
 
         $obj->_values( [ 2 .. 9 ] );
 
@@ -442,17 +452,17 @@ sub run_tests {
 
         throws_ok { $obj->grep }
         qr/Cannot call grep without at least 1 argument/,
-            'throws an error with when passing no arguments to grep';
+            'throws an error when passing no arguments to grep';
 
         throws_ok {
             $obj->grep( sub { }, 2 );
         }
         qr/Cannot call grep with more than 1 argument/,
-            'throws an error with when passing two arguments to grep';
+            'throws an error when passing two arguments to grep';
 
         throws_ok { $obj->grep( {} ) }
-        qr/Must provide a code reference as an argument/,
-            'throws an error with when passing a non coderef to grep';
+        qr/The argument passed to grep must be a code reference/,
+            'throws an error when passing a non coderef to grep';
 
         is_deeply(
             [ $obj->grep_curried ],
@@ -464,7 +474,7 @@ sub run_tests {
             $obj->grep_curried( sub { } );
         }
         qr/Cannot call grep with more than 1 argument/,
-            'throws an error with when passing one argument to grep_curried';
+            'throws an error when passing one argument passed to grep_curried';
 
         $obj->_values( [ 2, 4, 22, 99, 101, 6 ] );
 
@@ -476,17 +486,17 @@ sub run_tests {
 
         throws_ok { $obj->first }
         qr/Cannot call first without at least 1 argument/,
-            'throws an error with when passing no arguments to first';
+            'throws an error when passing no arguments to first';
 
         throws_ok {
             $obj->first( sub { }, 2 );
         }
         qr/Cannot call first with more than 1 argument/,
-            'throws an error with when passing two arguments to first';
+            'throws an error when passing two arguments to first';
 
         throws_ok { $obj->first( {} ) }
-        qr/Must provide a code reference as an argument/,
-            'throws an error with when passing a non coderef to first';
+        qr/The argument passed to first must be a code reference/,
+            'throws an error when passing a non coderef to first';
 
         is(
             $obj->first_curried,
@@ -498,7 +508,7 @@ sub run_tests {
             $obj->first_curried( sub { } );
         }
         qr/Cannot call first with more than 1 argument/,
-            'throws an error with when passing one argument to first_curried';
+            'throws an error when passing one argument passed to first_curried';
 
         $obj->_values( [ 1 .. 4 ] );
 
@@ -509,15 +519,15 @@ sub run_tests {
 
         throws_ok { $obj->join }
         qr/Cannot call join without at least 1 argument/,
-            'throws an error with when passing no arguments to join';
+            'throws an error when passing no arguments to join';
 
         throws_ok { $obj->join( '-', 2 ) }
         qr/Cannot call join with more than 1 argument/,
-            'throws an error with when passing two arguments to join';
+            'throws an error when passing two arguments to join';
 
         throws_ok { $obj->join( {} ) }
-        qr/Must provide a string as an argument/,
-            'throws an error with when passing a non string to join';
+        qr/The argument passed to join must be a string/,
+            'throws an error when passing a non string to join';
 
         is_deeply(
             [ sort $obj->shuffle ],
@@ -527,7 +537,7 @@ sub run_tests {
 
         throws_ok { $obj->shuffle(2) }
         qr/Cannot call shuffle with any arguments/,
-            'throws an error with when passing an argument to shuffle';
+            'throws an error when passing an argument passed to shuffle';
 
         $obj->_values( [ 1 .. 4, 2, 5, 3, 7, 3, 3, 1 ] );
 
@@ -539,7 +549,7 @@ sub run_tests {
 
         throws_ok { $obj->uniq(2) }
         qr/Cannot call uniq with any arguments/,
-            'throws an error with when passing an argument to uniq';
+            'throws an error when passing an argument passed to uniq';
 
         $obj->_values( [ 1 .. 5 ] );
 
@@ -551,17 +561,17 @@ sub run_tests {
 
         throws_ok { $obj->reduce }
         qr/Cannot call reduce without at least 1 argument/,
-            'throws an error with when passing no arguments to reduce';
+            'throws an error when passing no arguments to reduce';
 
         throws_ok {
             $obj->reduce( sub { }, 2 );
         }
         qr/Cannot call reduce with more than 1 argument/,
-            'throws an error with when passing two arguments to reduce';
+            'throws an error when passing two arguments to reduce';
 
         throws_ok { $obj->reduce( {} ) }
-        qr/Must provide a code reference as an argument/,
-            'throws an error with when passing a non coderef to reduce';
+        qr/The argument passed to reduce must be a code reference/,
+            'throws an error when passing a non coderef to reduce';
 
         is(
             $obj->reduce_curried,
@@ -573,7 +583,7 @@ sub run_tests {
             $obj->reduce_curried( sub { } );
         }
         qr/Cannot call reduce with more than 1 argument/,
-            'throws an error with when passing one argument to reduce_curried';
+            'throws an error when passing one argument passed to reduce_curried';
 
         $obj->_values( [ 1 .. 6 ] );
 
@@ -599,12 +609,12 @@ sub run_tests {
         );
 
         throws_ok { $obj->natatime( {} ) }
-        qr/Must provide an integer as an argument/,
-            'throws an error with when passing a non integer to natatime';
+        qr/The n value passed to natatime must be an integer/,
+            'throws an error when passing a non integer to natatime';
 
         throws_ok { $obj->natatime( 2, {} ) }
-        qr/The second argument must be a code reference/,
-            'throws an error with when passing a non code ref to natatime';
+        qr/The second argument passed to natatime must be a code reference/,
+            'throws an error when passing a non code ref to natatime';
 
         $it = $obj->natatime_curried();
         @nat = ();
@@ -628,8 +638,8 @@ sub run_tests {
         );
 
         throws_ok { $obj->natatime_curried( {} ) }
-        qr/The second argument must be a code reference/,
-            'throws an error with when passing a non code ref to natatime_curried';
+        qr/The second argument passed to natatime must be a code reference/,
+            'throws an error when passing a non code ref to natatime_curried';
 
         if ( $class->meta->get_attribute('_values')->is_lazy ) {
             my $obj = $class->new;

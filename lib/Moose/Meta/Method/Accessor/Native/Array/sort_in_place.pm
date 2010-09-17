@@ -12,8 +12,11 @@ use base 'Moose::Meta::Method::Accessor::Native::Array::Writer';
 sub _maximum_arguments { 1 }
 
 sub _inline_check_arguments {
-    return
-        q{die 'Argument must be a code reference' if $_[0] && ( ref $_[0] || q{} ) ne 'CODE';};
+    my $self = shift;
+
+    return $self->_inline_throw_error(
+        q{'The argument passed to sort_in_place must be a code reference'})
+        . q{if $_[0] && ( ref $_[0] || q{} ) ne 'CODE';};
 }
 
 sub _adds_members { 0 }

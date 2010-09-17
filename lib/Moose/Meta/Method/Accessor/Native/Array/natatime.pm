@@ -19,10 +19,10 @@ sub _inline_check_arguments {
     my $self = shift;
 
     return $self->_inline_throw_error(
-        q{'Must provide an integer as an argument'})
+        q{'The n value passed to natatime must be an integer'})
         . ' unless defined $_[0] && $_[0] =~ /^\\d+$/;' . "\n"
         . $self->_inline_throw_error(
-        q{'The second argument must be a code reference'})
+        q{'The second argument passed to natatime must be a code reference'})
         . q{ if defined $_[1] && ( ref $_[1] || q{} ) ne 'CODE';};
 }
 
