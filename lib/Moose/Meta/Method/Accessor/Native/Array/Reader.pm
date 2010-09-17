@@ -19,24 +19,24 @@ sub _generate_method {
 
     $code .= "\n" . 'my $self = shift;';
     $code .= "\n" . $self->_inline_curried_arguments;
-    $code .= "\n" . $self->_inline_process_arguments;
+    $code .= "\n" . $self->_inline_check_argument_count;
     $code .= "\n" . $self->_inline_check_arguments;
-
-    $code
-        .= "\n"
-        . $self->_inline_throw_error(
-        q{"Cannot assign a value to a read-only accessor"}, 'data => \@_' )
-        . ' if @_ > 1;';
 
     $code .= "\n" . $self->_inline_check_lazy($inv);
     $code .= "\n" . $self->_inline_post_body(@_);
 
     my $slot_access = $self->_inline_get($inv);
 
-    $code .= "\n" . 'return ' . $self->_return_value($slot_access) . ';';
+    $code .= "\n" . $self->_inline_return_value($slot_access);
     $code .= "\n}";
 
     return $code;
+}
+
+sub _inline_return_value {
+    my ( $self, $slot_access ) = @_;
+
+    'return ' . $self->_return_value($slot_access) . ';';
 }
 
 1;

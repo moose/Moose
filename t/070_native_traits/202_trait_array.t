@@ -3,436 +3,639 @@
 use strict;
 use warnings;
 
+use Moose ();
 use Test::More;
 use Test::Exception;
-use Test::Moose 'does_ok';
-
-my $sort;
-my $less;
-my $up;
-my $prod;
-
-my %handles = (
-    add_options => 'push',
-    add_options_with_speed =>
-        [ push => 'funrolls', 'funbuns' ],
-    remove_last_option  => 'pop',
-    remove_first_option => 'shift',
-    insert_options      => 'unshift',
-    prepend_prerequisites_along_with =>
-        [ unshift => 'first', 'second' ],
-    get_option_at         => 'get',
-    set_option_at         => 'set',
-    num_options           => 'count',
-    options               => 'elements',
-    has_no_options        => 'is_empty',
-    clear_options         => 'clear',
-    splice_options        => 'splice',
-    sort_options_in_place => 'sort_in_place',
-    option_accessor       => 'accessor',
-    descending_options =>
-        [ sort_in_place => ( $sort = sub { $_[1] <=> $_[0] } ) ],
-    map_options    => 'map',
-    up_by_one      => [ map => ( $up = sub { $_ + 1 } ) ],
-    filter_options => 'grep',
-    less_than_five => [ grep => ( $less = sub { $_ < 5 } ) ],
-    find_option    => 'first',
-    join_options   => 'join',
-    dashify            => [ join     => '-' ],
-    sorted_options     => 'sort',
-    randomized_options => 'shuffle',
-    unique_options     => 'uniq',
-    pairwise_options   => [ natatime => 2 ],
-    reduce             => 'reduce',
-    product => [ reduce => ( $prod = sub { $_[0] * $_[1] } ) ],
-);
+use Test::Moose qw( does_ok with_immutable );
 
 {
-
-    package Stuff;
-    use Moose;
-
-    has '_options' => (
-        traits  => ['Array'],
-        is      => 'ro',
-        isa     => 'ArrayRef[Str]',
-        default => sub { [] },
-        handles => \%handles,
+    my %handles = (
+        count    => 'count',
+        elements => 'elements',
+        is_empty => 'is_empty',
+        push     => 'push',
+        push_curried =>
+            [ push => 42, 84 ],
+        unshift => 'unshift',
+        unshift_curried =>
+            [ unshift => 42, 84 ],
+        pop           => 'pop',
+        shift         => 'shift',
+        get           => 'get',
+        get_curried   => [ get => 1 ],
+        set           => 'set',
+        set_curried_1 => [ set => 1 ],
+        set_curried_2 => [ set => ( 1, 98 ) ],
+        accessor      => 'accessor',
+        accessor_curried_1 => [ accessor => 1 ],
+        accessor_curried_2 => [ accessor => ( 1, 90 ) ],
+        clear          => 'clear',
+        delete         => 'delete',
+        delete_curried => [ delete => 1 ],
+        insert         => 'insert',
+        insert_curried => [ insert => ( 1, 101 ) ],
+        splice         => 'splice',
+        splice_curried_1   => [ splice => 1 ],
+        splice_curried_2   => [ splice => 1, 2 ],
+        splice_curried_all => [ splice => 1, 2, ( 3, 4, 5 ) ],
+        sort          => 'sort',
+        sort_curried  => [ sort => ( sub { $_[1] <=> $_[0] } ) ],
+        sort_in_place => 'sort_in_place',
+        sort_in_place_curried =>
+            [ sort_in_place => ( sub { $_[1] <=> $_[0] } ) ],
+        map           => 'map',
+        map_curried   => [ map => ( sub { $_ + 1 } ) ],
+        grep          => 'grep',
+        grep_curried  => [ grep => ( sub { $_ < 5 } ) ],
+        first         => 'first',
+        first_curried => [ first => ( sub { $_ % 2 } ) ],
+        join          => 'join',
+        join_curried => [ join => '-' ],
+        shuffle      => 'shuffle',
+        uniq         => 'uniq',
+        reduce       => 'reduce',
+        reduce_curried => [ reduce => ( sub { $_[0] * $_[1] } ) ],
+        natatime       => 'natatime',
+        natatime_curried => [ natatime => 2 ],
     );
+
+    my $name = 'Foo1';
+
+    sub build_class {
+        my %attr = @_;
+
+        my $class = Moose::Meta::Class->create(
+            $name++,
+            superclasses => ['Moose::Object'],
+        );
+
+        $class->add_attribute(
+            _values => (
+                traits  => ['Array'],
+                is      => 'rw',
+                isa     => 'ArrayRef[Int]',
+                default => sub { [] },
+                handles => \%handles,
+                clearer => '_clear_values',
+                %attr,
+            ),
+        );
+
+        return ( $class->name, \%handles );
+    }
 }
 
 {
-    my $stuff = Stuff->new( _options => [ 10, 12 ] );
-    isa_ok( $stuff, 'Stuff' );
-
-    can_ok( $stuff, $_ ) for sort keys %handles;
-
-    is_deeply( $stuff->_options, [ 10, 12 ], '... got options' );
-
-    ok( !$stuff->has_no_options, '... we have options' );
-    is( $stuff->num_options, 2, '... got 2 options' );
-
-    is( $stuff->remove_last_option,  12, '... removed the last option' );
-    is( $stuff->remove_first_option, 10, '... removed the last option' );
-
-    is_deeply( $stuff->_options, [], '... no options anymore' );
-
-    ok( $stuff->has_no_options, '... no options' );
-    is( $stuff->num_options, 0, '... got no options' );
-
-    lives_ok {
-        $stuff->add_options( 1, 2, 3 );
-    }
-    '... set the option okay';
-
-    is_deeply( $stuff->_options, [ 1, 2, 3 ], '... got options now' );
-    is_deeply(
-        [ $stuff->options ], [ 1, 2, 3 ],
-        '... got options now (with elements method)'
-    );
-
-    ok( !$stuff->has_no_options, '... has options' );
-    is( $stuff->num_options, 3, '... got 3 options' );
-
-    is( $stuff->get_option_at(0), 1, '... get option at index 0' );
-    is( $stuff->get_option_at(1), 2, '... get option at index 1' );
-    is( $stuff->get_option_at(2), 3, '... get option at index 2' );
-
-    throws_ok { $stuff->get_option_at() }
-    qr/Must provide a valid index number as an argument/,
-        'throws an error when get_option_at is called without any arguments';
-
-    throws_ok { $stuff->get_option_at( {} ) }
-    qr/Must provide a valid index number as an argument/,
-        'throws an error when get_option_at is called with an invalid argument';
-
-    throws_ok { $stuff->get_option_at(2.2) }
-    qr/Must provide a valid index number as an argument/,
-        'throws an error when get_option_at is called with an invalid argument';
-
-    throws_ok { $stuff->get_option_at('foo') }
-    qr/Must provide a valid index number as an argument/,
-        'throws an error when get_option_at is called with an invalid argument';
-
-    lives_ok {
-        $stuff->set_option_at( 1, 100 );
-    }
-    '... set the option okay';
-
-    is( $stuff->get_option_at(1), 100, '... get option at index 1' );
-
-    lives_ok {
-        $stuff->add_options( 10, 15 );
-    }
-    '... set the option okay';
-
-    is_deeply(
-        $stuff->_options, [ 1, 100, 3, 10, 15 ],
-        '... got more options now'
-    );
-
-    is( $stuff->num_options, 5, '... got 5 options' );
-
-    is( $stuff->remove_last_option, 15, '... removed the last option' );
-
-    is( $stuff->num_options, 4, '... got 4 options' );
-    is_deeply(
-        $stuff->_options, [ 1, 100, 3, 10 ],
-        '... got diff options now'
-    );
-
-    lives_ok {
-        $stuff->insert_options( 10, 20 );
-    }
-    '... set the option okay';
-
-    is( $stuff->num_options, 6, '... got 6 options' );
-    is_deeply(
-        $stuff->_options, [ 10, 20, 1, 100, 3, 10 ],
-        '... got diff options now'
-    );
-
-    is( $stuff->get_option_at(0), 10,  '... get option at index 0' );
-    is( $stuff->get_option_at(1), 20,  '... get option at index 1' );
-    is( $stuff->get_option_at(3), 100, '... get option at index 3' );
-
-    is( $stuff->remove_first_option, 10, '... getting the first option' );
-
-    is( $stuff->num_options,      5,  '... got 5 options' );
-    is( $stuff->get_option_at(0), 20, '... get option at index 0' );
-
-    $stuff->clear_options;
-    is_deeply( $stuff->_options, [], "... clear options" );
-
-    $stuff->add_options( 5, 1, 2, 3 );
-    $stuff->sort_options_in_place;
-    is_deeply(
-        $stuff->_options, [ 1, 2, 3, 5 ],
-        "... sort options in place (default sort order)"
-    );
-
-    $stuff->sort_options_in_place( sub { $_[1] <=> $_[0] } );
-    is_deeply(
-        $stuff->_options, [ 5, 3, 2, 1 ],
-        "... sort options in place (descending order)"
-    );
-
-    $stuff->clear_options();
-    $stuff->add_options( 5, 1, 2, 3 );
-    lives_ok {
-        $stuff->descending_options();
-    }
-    '... curried sort in place lives ok';
-
-    is_deeply( $stuff->_options, [ 5, 3, 2, 1 ], "... sort currying" );
-
-    throws_ok { $stuff->sort_options_in_place('foo') }
-    qr/Argument must be a code reference/,
-        'error when sort_in_place receives a non-coderef argument';
-
-    $stuff->clear_options;
-
-    lives_ok {
-        $stuff->add_options('tree');
-    }
-    '... set the options okay';
-
-    lives_ok {
-        $stuff->add_options_with_speed( 'compatible', 'safe' );
-    }
-    '... add options with speed okay';
-
-    is_deeply(
-        $stuff->_options, [qw/tree funrolls funbuns compatible safe/],
-        'check options after add_options_with_speed'
-    );
-
-    lives_ok {
-        $stuff->prepend_prerequisites_along_with();
-    }
-    '... add prerequisite options okay';
-
-    $stuff->clear_options;
-    $stuff->add_options( 1, 2 );
-
-    lives_ok {
-        $stuff->splice_options( 1, 0, 'foo' );
-    }
-    '... splice_options works';
-
-    is_deeply(
-        $stuff->_options, [ 1, 'foo', 2 ],
-        'splice added expected option'
-    );
-
-    is(
-        $stuff->option_accessor( 1 => 'foo++' ), 'foo++',
-        'set using accessor method'
-    );
-    is( $stuff->option_accessor(1), 'foo++', 'get using accessor method' );
-
-    dies_ok {
-        $stuff->insert_options(undef);
-    }
-    '... could not add an undef where a string is expected';
-
-    dies_ok {
-        $stuff->set_option( 5, {} );
-    }
-    '... could not add a hash ref where a string is expected';
-
-    dies_ok {
-        Stuff->new( _options => [ undef, 10, undef, 20 ] );
-    }
-    '... bad constructor params';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->add_options(undef);
-    }
-    '... rejects push of an invalid type';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->insert_options(undef);
-    }
-    '... rejects unshift of an invalid type';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->set_option_at( 0, undef );
-    }
-    '... rejects set of an invalid type';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->sort_in_place_options(undef);
-    }
-    '... sort rejects arg of invalid type';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->option_accessor();
-    }
-    '... accessor rejects 0 args';
-
-    dies_ok {
-        my $stuff = Stuff->new();
-        $stuff->option_accessor( 1, 2, 3 );
-    }
-    '... accessor rejects 3 args';
+    run_tests(build_class);
+    run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
 }
 
-{
-    my $stuff = Stuff->new( _options => [ 1 .. 10 ] );
+sub run_tests {
+    my ( $class, $handles ) = @_;
 
-    is_deeply( $stuff->_options, [ 1 .. 10 ], '... got options' );
+    can_ok( $class, $_ ) for sort keys %{$handles};
 
-    ok( !$stuff->has_no_options, '... we have options' );
-    is( $stuff->num_options, 10, '... got 2 options' );
-    cmp_ok( $stuff->get_option_at(0), '==', 1, '... get option 0' );
+    with_immutable {
+        my $obj = $class->new( _values => [ 10, 12, 42 ] );
 
-    is_deeply(
-        [ $stuff->filter_options( sub { $_ % 2 == 0 } ) ],
-        [ 2, 4, 6, 8, 10 ],
-        '... got the right filtered values'
-    );
+        is_deeply(
+            $obj->_values, [ 10, 12, 42 ],
+            'values can be set in constructor'
+        );
 
-    throws_ok { $stuff->filter_options() }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when filter_options is called without any arguments';
+        ok( !$obj->is_empty, 'values is not empty' );
+        is( $obj->count, 3, 'count returns 3' );
 
-    throws_ok { $stuff->filter_options( {} ) }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when filter_options is called with an invalid argument';
+        throws_ok { $obj->count(22) }
+        qr/Cannot call count with any arguments/,
+            'throws an error with when passing an argument to count';
 
-    is_deeply(
-        [ $stuff->map_options( sub { $_ * 2 } ) ],
-        [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 ],
-        '... got the right mapped values'
-    );
+        lives_ok { $obj->push( 1, 2, 3 ) }
+        'pushed three new values and lived';
 
-    throws_ok { $stuff->map_options() }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when map_options is called without any arguments';
+        lives_ok { $obj->push() } 'call to push without arguments lives';
 
-    throws_ok { $stuff->map_options( {} ) }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when map_options is called with an invalid argument';
+        lives_ok { $obj->unshift( 101, 22 ) }
+        'unshifted two values and lived';
 
-    is(
-        $stuff->find_option( sub { $_ % 2 == 0 } ), 2,
-        '.. found the right option'
-    );
+        lives_ok { $obj->unshift() }
+        'call to unshift without arguments lives';
 
-    throws_ok { $stuff->find_option() }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when find_option is called without any arguments';
+        is( $obj->pop, 3, 'pop returns the last value in the array' );
 
-    throws_ok { $stuff->find_option( {} ) }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when find_option is called with an invalid argument';
+        is_deeply(
+            $obj->_values, [ 101, 22, 10, 12, 42, 1, 2 ],
+            'pop changed the value of the array in the object'
+        );
 
-    is_deeply(
-        [ $stuff->options ], [ 1 .. 10 ],
-        '... got the list of options'
-    );
+        throws_ok { $obj->pop(42) }
+        qr/Cannot call pop with any arguments/,
+            'call to pop with arguments dies';
 
-    is(
-        $stuff->join_options(':'), '1:2:3:4:5:6:7:8:9:10',
-        '... joined the list of options by :'
-    );
+        is( $obj->shift, 101, 'shift returns the first value' );
 
-    throws_ok { $stuff->join_options() }
-    qr/Must provide a string as an argument/,
-        'throws an error when join_options is called without any arguments';
+        throws_ok { $obj->shift(42) }
+        qr/Cannot call shift with any arguments/,
+            'call to shift with arguments dies';
 
-    throws_ok { $stuff->join_options( {} ) }
-    qr/Must provide a string as an argument/,
-        'throws an error when join_options is called with an invalid argument';
+        is_deeply(
+            $obj->_values, [ 22, 10, 12, 42, 1, 2 ],
+            'shift changed the value of the array in the object'
+        );
 
-    is_deeply(
-        [ $stuff->sorted_options ], [ sort ( 1 .. 10 ) ],
-        '... got sorted options (default sort order)'
-    );
-    is_deeply(
-        [ $stuff->sorted_options( sub { $_[1] <=> $_[0] } ) ],
-        [ sort { $b <=> $a } ( 1 .. 10 ) ],
-        '... got sorted options (descending sort order) '
-    );
+        is_deeply(
+            [ $obj->elements ], [ 22, 10, 12, 42, 1, 2 ],
+            'call to elements returns values as a list'
+        );
 
-    throws_ok { $stuff->sorted_options('foo') }
-    qr/Argument must be a code reference/,
-        'error when sort receives a non-coderef argument';
+        throws_ok { $obj->elements(22) }
+        qr/Cannot call elements with any arguments/,
+            'throws an error with when passing an argument to elements';
 
-    is_deeply(
-        [ sort { $a <=> $b } $stuff->randomized_options ],
-        [ 1 .. 10 ],
-        'randomized_options returns all options'
-    );
+        $obj->_values( [ 1, 2, 3 ] );
 
-    my @pairs;
-    $stuff->pairwise_options( sub { push @pairs, [@_] } );
-    is_deeply(
-        \@pairs,
-        [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ], [ 7, 8 ], [ 9, 10 ] ],
-        'pairwise returns pairs as expected'
-    );
+        is( $obj->get(0),      1, 'get values at index 0' );
+        is( $obj->get(1),      2, 'get values at index 1' );
+        is( $obj->get(2),      3, 'get values at index 2' );
+        is( $obj->get_curried, 2, 'get_curried returns value at index 1' );
 
-    is_deeply(
-        [ $stuff->less_than_five() ], [ 1 .. 4 ],
-        'less_than_five returns 1..4'
-    );
+        throws_ok { $obj->get() }
+        qr/Cannot call get without at least 1 argument/,
+            'throws an error when get is called without any arguments';
 
-    is_deeply(
-        [ $stuff->up_by_one() ], [ 2 .. 11 ],
-        'up_by_one returns 2..11'
-    );
+        throws_ok { $obj->get( {} ) }
+        qr/Must provide a valid index number as an argument/,
+            'throws an error when get is called with an invalid argument';
 
-    is(
-        $stuff->dashify, '1-2-3-4-5-6-7-8-9-10',
-        'dashify returns options joined by dashes'
-    );
+        throws_ok { $obj->get(2.2) }
+        qr/Must provide a valid index number as an argument/,
+            'throws an error when get is called with an invalid argument';
 
-    is(
-        $stuff->reduce( sub { $_[0] * $_[1] } ),
-        3628800,
-        'call reducing to generate a product returns expected value'
-    );
+        throws_ok { $obj->get('foo') }
+        qr/Must provide a valid index number as an argument/,
+            'throws an error when get is called with an invalid argument';
 
-    throws_ok { $stuff->reduce() }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when reduce is called without any arguments';
+        throws_ok { $obj->get_curried(2) }
+        qr/Cannot call get with more than 1 argument/,
+            'throws an error when get_curried is called with an argument';
 
-    throws_ok { $stuff->reduce( {} ) }
-    qr/Must provide a code reference as an argument/,
-        'throws an error when reduce is called with an invalid argument';
+        lives_ok { $obj->set( 1, 100 ) } 'set value at index 1 lives';
 
-    is(
-        $stuff->product, 3628800,
-        'product returns expected value'
-    );
+        is( $obj->get(1), 100, 'get value at index 1 returns new value' );
 
-    my $other_stuff = Stuff->new( _options => [ 1, 1, 2, 3, 5 ] );
-    is_deeply(
-        [ $other_stuff->unique_options ], [ 1, 2, 3, 5 ],
-        'unique_options returns unique options'
-    );
-}
+        throws_ok { $obj->set( 1, 99, 42 ) }
+        qr/Cannot call set with more than 2 arguments/,
+            'throws an error when set is called with three arguments';
 
-{
-    my $options = Stuff->meta->get_attribute('_options');
-    does_ok( $options, 'Moose::Meta::Attribute::Native::Trait::Array' );
+        lives_ok { $obj->set_curried_1(99) } 'set_curried_1 lives';
 
-    is_deeply(
-        $options->handles, \%handles,
-        '... got the right handles mapping'
-    );
+        is( $obj->get(1), 99, 'get value at index 1 returns new value' );
 
-    is(
-        $options->type_constraint->type_parameter, 'Str',
-        '... got the right container type'
-    );
+        throws_ok { $obj->set_curried_1( 99, 42 ) }
+        qr/Cannot call set with more than 2 arguments/,
+            'throws an error when set_curried_1 is called with two arguments';
+
+        lives_ok { $obj->set_curried_2 } 'set_curried_2 lives';
+
+        is( $obj->get(1), 98, 'get value at index 1 returns new value' );
+
+        throws_ok { $obj->set_curried_2(42) }
+        qr/Cannot call set with more than 2 arguments/,
+            'throws an error when set_curried_2 is called with one argument';
+
+        is(
+            $obj->accessor(1), 98,
+            'accessor with one argument returns value at index 1'
+        );
+
+        lives_ok { $obj->accessor( 1 => 97 ) } 'accessor as writer lives';
+
+        is(
+            $obj->get(1), 97,
+            'accessor set value at index 1'
+        );
+
+        throws_ok { $obj->accessor( 1, 96, 42 ) }
+        qr/Cannot call accessor with more than 2 arguments/,
+            'throws an error when accessor is called with three arguments';
+
+        is(
+            $obj->accessor_curried_1, 97,
+            'accessor_curried_1 returns expected value when called with no arguments'
+        );
+
+        lives_ok { $obj->accessor_curried_1(95) }
+        'accessor_curried_1 as writer lives';
+
+        is(
+            $obj->get(1), 95,
+            'accessor_curried_1 set value at index 1'
+        );
+
+        throws_ok { $obj->accessor_curried_1( 96, 42 ) }
+        qr/Cannot call accessor with more than 2 arguments/,
+            'throws an error when accessor_curried_1 is called with two arguments';
+
+        lives_ok { $obj->accessor_curried_2 }
+        'accessor_curried_2 as writer lives';
+
+        is(
+            $obj->get(1), 90,
+            'accessor_curried_2 set value at index 1'
+        );
+
+        throws_ok { $obj->accessor_curried_2(42) }
+        qr/Cannot call accessor with more than 2 arguments/,
+            'throws an error when accessor_curried_2 is called with one argument';
+
+        lives_ok { $obj->clear } 'clear lives';
+
+        ok( $obj->is_empty, 'values is empty after call to clear' );
+
+        $obj->set( 0 => 42 );
+
+        throws_ok { $obj->clear(50) }
+        qr/Cannot call clear with any arguments/,
+            'throws an error when clear is called with an argument';
+
+        ok(
+            !$obj->is_empty,
+            'values is not empty after failed call to clear'
+        );
+
+        $obj->clear;
+        $obj->push( 1, 5, 10, 42 );
+
+        lives_ok { $obj->delete(2) } 'delete lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 5, 42 ],
+            'delete removed the specified element'
+        );
+
+        throws_ok { $obj->delete( 2, 3 ) }
+        qr/Cannot call delete with more than 1 argument/,
+            'throws an error when delete is called with two arguments';
+
+        lives_ok { $obj->delete_curried } 'delete_curried lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 42 ],
+            'delete removed the specified element'
+        );
+
+        throws_ok { $obj->delete_curried(2) }
+        qr/Cannot call delete with more than 1 argument/,
+            'throws an error when delete_curried is called with one argument';
+
+        lives_ok { $obj->insert( 1, 21 ) } 'insert lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 21, 42 ],
+            'insert added the specified element'
+        );
+
+        throws_ok { $obj->insert( 1, 22, 44 ) }
+        qr/Cannot call insert with more than 2 arguments/,
+            'throws an error when insert is called with three arguments';
+
+        lives_ok { $obj->splice( 1, 0, 2, 3 ) } 'splice lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 2, 3, 21, 42 ],
+            'splice added the specified elements'
+        );
+
+        lives_ok { $obj->splice( 1, 1, 99 ) } 'splice lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 99, 3, 21, 42 ],
+            'splice added the specified elements'
+        );
+
+        throws_ok { $obj->splice() }
+        qr/Cannot call splice without at least 1 argument/,
+            'throws an error when splice is called with no arguments';
+
+        lives_ok { $obj->splice_curried_1( 2, 101 ) }
+        'splice_curried_1 lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 101, 21, 42 ],
+            'splice added the specified elements'
+        );
+
+        lives_ok { $obj->splice_curried_2(102) } 'splice_curried_2 lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 102, 42 ],
+            'splice added the specified elements'
+        );
+
+        lives_ok { $obj->splice_curried_all } 'splice_curried_all lives';
+
+        is_deeply(
+            $obj->_values, [ 1, 3, 4, 5 ],
+            'splice added the specified elements'
+        );
+
+        $obj->_values( [ 3, 9, 5, 22, 11 ] );
+
+        is_deeply(
+            [ $obj->sort ], [ 11, 22, 3, 5, 9 ],
+            'sort returns sorted values'
+        );
+
+        is_deeply(
+            [ $obj->sort( sub { $_[0] <=> $_[1] } ) ], [ 3, 5, 9, 11, 22 ],
+            'sort returns values sorted by provided function'
+        );
+
+        throws_ok { $obj->sort(1) }
+        qr/Argument must be a code reference/,
+            'throws an error with when passing a non-function to sort';
+
+        throws_ok {
+            $obj->sort( sub { }, 27 );
+        }
+        qr/Cannot call sort with more than 1 argument/,
+            'throws an error with when passing two arguments to sort';
+
+        $obj->_values( [ 3, 9, 5, 22, 11 ] );
+
+        $obj->sort_in_place;
+
+        is_deeply(
+            $obj->_values, [ 11, 22, 3, 5, 9 ],
+            'sort_in_place sorts values'
+        );
+
+        $obj->sort_in_place( sub { $_[0] <=> $_[1] } );
+
+        is_deeply(
+            $obj->_values, [ 3, 5, 9, 11, 22 ],
+            'sort_in_place with function sorts values'
+        );
+
+        throws_ok {
+            $obj->sort_in_place( sub { }, 27 );
+        }
+        qr/Cannot call sort_in_place with more than 1 argument/,
+            'throws an error with when passing two arguments to sort_in_place';
+
+        $obj->_values( [ 3, 9, 5, 22, 11 ] );
+
+        $obj->sort_in_place_curried;
+
+        is_deeply(
+            $obj->_values, [ 22, 11, 9, 5, 3 ],
+            'sort_in_place_curried sorts values'
+        );
+
+        throws_ok { $obj->sort_in_place_curried(27) }
+        qr/Cannot call sort_in_place with more than 1 argument/,
+            'throws an error with when passing one argument to sort_in_place_curried';
+
+        $obj->_values( [ 1 .. 5 ] );
+
+        is_deeply(
+            [ $obj->map( sub { $_ + 1 } ) ],
+            [ 2 .. 6 ],
+            'map returns the expected values'
+        );
+
+        throws_ok { $obj->map }
+        qr/Cannot call map without at least 1 argument/,
+            'throws an error with when passing no arguments to map';
+
+        throws_ok {
+            $obj->map( sub { }, 2 );
+        }
+        qr/Cannot call map with more than 1 argument/,
+            'throws an error with when passing two arguments to map';
+
+        throws_ok { $obj->map( {} ) }
+        qr/Must provide a code reference as an argument/,
+            'throws an error with when passing a non coderef to map';
+
+        $obj->_values( [ 1 .. 5 ] );
+
+        is_deeply(
+            [ $obj->map_curried ],
+            [ 2 .. 6 ],
+            'map_curried returns the expected values'
+        );
+
+        throws_ok {
+            $obj->map_curried( sub { } );
+        }
+        qr/Cannot call map with more than 1 argument/,
+            'throws an error with when passing one argument to map_curried';
+
+        $obj->_values( [ 2 .. 9 ] );
+
+        is_deeply(
+            [ $obj->grep( sub { $_ < 5 } ) ],
+            [ 2 .. 4 ],
+            'grep returns the expected values'
+        );
+
+        throws_ok { $obj->grep }
+        qr/Cannot call grep without at least 1 argument/,
+            'throws an error with when passing no arguments to grep';
+
+        throws_ok {
+            $obj->grep( sub { }, 2 );
+        }
+        qr/Cannot call grep with more than 1 argument/,
+            'throws an error with when passing two arguments to grep';
+
+        throws_ok { $obj->grep( {} ) }
+        qr/Must provide a code reference as an argument/,
+            'throws an error with when passing a non coderef to grep';
+
+        is_deeply(
+            [ $obj->grep_curried ],
+            [ 2 .. 4 ],
+            'grep_curried returns the expected values'
+        );
+
+        throws_ok {
+            $obj->grep_curried( sub { } );
+        }
+        qr/Cannot call grep with more than 1 argument/,
+            'throws an error with when passing one argument to grep_curried';
+
+        $obj->_values( [ 2, 4, 22, 99, 101, 6 ] );
+
+        is(
+            $obj->first( sub { $_ % 2 } ),
+            99,
+            'first returns expected value'
+        );
+
+        throws_ok { $obj->first }
+        qr/Cannot call first without at least 1 argument/,
+            'throws an error with when passing no arguments to first';
+
+        throws_ok {
+            $obj->first( sub { }, 2 );
+        }
+        qr/Cannot call first with more than 1 argument/,
+            'throws an error with when passing two arguments to first';
+
+        throws_ok { $obj->first( {} ) }
+        qr/Must provide a code reference as an argument/,
+            'throws an error with when passing a non coderef to first';
+
+        is(
+            $obj->first_curried,
+            99,
+            'first_curried returns expected value'
+        );
+
+        throws_ok {
+            $obj->first_curried( sub { } );
+        }
+        qr/Cannot call first with more than 1 argument/,
+            'throws an error with when passing one argument to first_curried';
+
+        $obj->_values( [ 1 .. 4 ] );
+
+        is(
+            $obj->join('-'), '1-2-3-4',
+            'join returns expected result'
+        );
+
+        throws_ok { $obj->join }
+        qr/Cannot call join without at least 1 argument/,
+            'throws an error with when passing no arguments to join';
+
+        throws_ok { $obj->join( '-', 2 ) }
+        qr/Cannot call join with more than 1 argument/,
+            'throws an error with when passing two arguments to join';
+
+        throws_ok { $obj->join( {} ) }
+        qr/Must provide a string as an argument/,
+            'throws an error with when passing a non string to join';
+
+        is_deeply(
+            [ sort $obj->shuffle ],
+            [ 1 .. 4 ],
+            'shuffle returns all values (cannot check for a random order)'
+        );
+
+        throws_ok { $obj->shuffle(2) }
+        qr/Cannot call shuffle with any arguments/,
+            'throws an error with when passing an argument to shuffle';
+
+        $obj->_values( [ 1 .. 4, 2, 5, 3, 7, 3, 3, 1 ] );
+
+        is_deeply(
+            [ $obj->uniq ],
+            [ 1 .. 4, 5, 7 ],
+            'uniq returns expected values (in original order)'
+        );
+
+        throws_ok { $obj->uniq(2) }
+        qr/Cannot call uniq with any arguments/,
+            'throws an error with when passing an argument to uniq';
+
+        $obj->_values( [ 1 .. 5 ] );
+
+        is(
+            $obj->reduce( sub { $_[0] * $_[1] } ),
+            120,
+            'reduce returns expected value'
+        );
+
+        throws_ok { $obj->reduce }
+        qr/Cannot call reduce without at least 1 argument/,
+            'throws an error with when passing no arguments to reduce';
+
+        throws_ok {
+            $obj->reduce( sub { }, 2 );
+        }
+        qr/Cannot call reduce with more than 1 argument/,
+            'throws an error with when passing two arguments to reduce';
+
+        throws_ok { $obj->reduce( {} ) }
+        qr/Must provide a code reference as an argument/,
+            'throws an error with when passing a non coderef to reduce';
+
+        is(
+            $obj->reduce_curried,
+            120,
+            'reduce_curried returns expected value'
+        );
+
+        throws_ok {
+            $obj->reduce_curried( sub { } );
+        }
+        qr/Cannot call reduce with more than 1 argument/,
+            'throws an error with when passing one argument to reduce_curried';
+
+        $obj->_values( [ 1 .. 6 ] );
+
+        my $it = $obj->natatime(2);
+        my @nat;
+        while ( my @v = $it->() ) {
+            push @nat, \@v;
+        }
+
+        is_deeply(
+            [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
+            \@nat,
+            'natatime returns expected iterator'
+        );
+
+        @nat = ();
+        $obj->natatime( 2, sub { push @nat, [@_] } );
+
+        is_deeply(
+            [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
+            \@nat,
+            'natatime with function returns expected value'
+        );
+
+        throws_ok { $obj->natatime( {} ) }
+        qr/Must provide an integer as an argument/,
+            'throws an error with when passing a non integer to natatime';
+
+        throws_ok { $obj->natatime( 2, {} ) }
+        qr/The second argument must be a code reference/,
+            'throws an error with when passing a non code ref to natatime';
+
+        if ( $class->meta->get_attribute('_values')->is_lazy ) {
+            my $obj = $class->new;
+
+            is( $obj->count, 2, 'count is 2 (lazy init)' );
+
+            $obj->_clear_values;
+
+            is_deeply( [ $obj->elements ], [ 42, 84],
+                'elements contains default with lazy init' );
+
+            $obj->_clear_values;
+
+            $obj->push(2);
+
+            is_deeply(
+                $obj->_values, [ 42, 84, 2 ],
+                'push works with lazy init'
+            );
+
+            $obj->_clear_values;
+
+            $obj->unshift( 3, 4 );
+
+            is_deeply(
+                $obj->_values, [ 3, 4, 42, 84 ],
+                'unshift works with lazy init'
+            );
+        }
+    }
+    $class;
 }
 
 done_testing;

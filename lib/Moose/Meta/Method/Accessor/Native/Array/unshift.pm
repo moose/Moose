@@ -1,4 +1,4 @@
-package Moose::Meta::Method::Accessor::Native::Array::push;
+package Moose::Meta::Method::Accessor::Native::Array::unshift;
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ sub _adds_members { 1 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "( \@{ $slot_access }, \@_ )";
+    return "( \@_, \@{ $slot_access } )";
 }
 
 1;

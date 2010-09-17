@@ -6,30 +6,32 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Native::MethodProvider::Array;
-
+use Moose::Meta::Method::Accessor::Native::Array::accessor;
+use Moose::Meta::Method::Accessor::Native::Array::clear;
 use Moose::Meta::Method::Accessor::Native::Array::count;
+use Moose::Meta::Method::Accessor::Native::Array::delete;
 use Moose::Meta::Method::Accessor::Native::Array::elements;
 use Moose::Meta::Method::Accessor::Native::Array::first;
 use Moose::Meta::Method::Accessor::Native::Array::get;
 use Moose::Meta::Method::Accessor::Native::Array::grep;
+use Moose::Meta::Method::Accessor::Native::Array::insert;
 use Moose::Meta::Method::Accessor::Native::Array::is_empty;
 use Moose::Meta::Method::Accessor::Native::Array::join;
 use Moose::Meta::Method::Accessor::Native::Array::map;
+use Moose::Meta::Method::Accessor::Native::Array::natatime;
+use Moose::Meta::Method::Accessor::Native::Array::pop;
 use Moose::Meta::Method::Accessor::Native::Array::push;
 use Moose::Meta::Method::Accessor::Native::Array::reduce;
+use Moose::Meta::Method::Accessor::Native::Array::set;
+use Moose::Meta::Method::Accessor::Native::Array::shift;
 use Moose::Meta::Method::Accessor::Native::Array::shuffle;
+use Moose::Meta::Method::Accessor::Native::Array::splice;
 use Moose::Meta::Method::Accessor::Native::Array::sort;
+use Moose::Meta::Method::Accessor::Native::Array::sort_in_place;
 use Moose::Meta::Method::Accessor::Native::Array::uniq;
+use Moose::Meta::Method::Accessor::Native::Array::unshift;
 
 with 'Moose::Meta::Attribute::Native::Trait';
-
-has 'method_provider' => (
-    is        => 'ro',
-    isa       => 'ClassName',
-    predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Array'
-);
 
 sub _helper_type { 'ArrayRef' }
 

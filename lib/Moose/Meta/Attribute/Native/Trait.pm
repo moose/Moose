@@ -125,7 +125,9 @@ has 'method_constructors' => (
     lazy    => 1,
     default => sub {
         my $self = shift;
-        return +{} unless $self->has_method_provider;
+        return +{}
+            unless $self->can('has_method_provider')
+                && $self->has_method_provider;
 
         # or grab them from the role/class
         my $method_provider = $self->method_provider->meta;

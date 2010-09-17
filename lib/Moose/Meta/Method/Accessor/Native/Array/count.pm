@@ -9,6 +9,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method::Accessor::Native::Array::Reader';
 
+sub _maximum_arguments { 0 }
+
 sub _return_value {
     my $self        = shift;
     my $slot_access = shift;

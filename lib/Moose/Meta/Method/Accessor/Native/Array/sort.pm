@@ -9,13 +9,11 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method::Accessor::Native::Array::Reader';
 
-sub _inline_process_arguments {
-    return 'my $func = shift if @_;';
-}
+sub _maximum_arguments { 1 }
 
 sub _inline_check_arguments {
     return
-        q{die 'Argument must be a code reference' if $func && ( ref $func || q{} ) ne 'CODE';};
+        q{die 'Argument must be a code reference' if $_[0] && ( ref $_[0] || q{} ) ne 'CODE';};
 }
 
 sub _return_value {
@@ -23,7 +21,7 @@ sub _return_value {
     my $slot_access = shift;
 
     return
-        "\$func ? sort { \$func->( \$a, \$b ) } \@{ ${slot_access} } : sort \@{ $slot_access }";
+        "\$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ ${slot_access} } : sort \@{ $slot_access }";
 }
 
 1;

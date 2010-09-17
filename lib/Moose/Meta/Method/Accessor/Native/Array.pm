@@ -20,26 +20,52 @@ sub _inline_curried_arguments {
     return 'unshift @_, @curried;'
 }
 
-sub _inline_check_constraint {
+sub _inline_check_argument_count {
     my $self = shift;
 
-    return q{} unless $self->_constraint_must_be_checked;
+    my $code = q{};
 
-    return $self->SUPER::_inline_check_constraint(@_);
+    if ( my $min = $self->_minimum_arguments ) {
+        my $err_msg = sprintf(
+            q{"Cannot call %s without at least %s argument%s"},
+            $self->delegate_to_method,
+            $min,
+            ( $min == 1 ? q{} : 's' )
+        );
+
+        $code
+            .= "\n"
+            . $self->_inline_throw_error($err_msg)
+            . " unless \@_ >= $min;";
+    }
+
+    if ( defined( my $max = $self->_maximum_arguments ) ) {
+        my $err_msg = sprintf(
+            q{"Cannot call %s with %s argument%s"},
+            $self->delegate_to_method,
+            ( $max ? "more than $max" : 'any' ),
+            ( $max == 1 ? q{} : 's' )
+        );
+
+        $code
+            .= "\n"
+            . $self->_inline_throw_error($err_msg)
+            . " if \@_ > $max;";
+    }
+
+    return $code;
 }
 
-sub _constraint_must_be_checked {
-    my $self = shift;
-
-    my $attr = $self->associated_attribute;
-
-    return $attr->has_type_constraint
-        && ( $attr->type_constraint->name ne 'ArrayRef'
-        || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
-}
-
-sub _inline_process_arguments { q{} }
+sub _minimum_arguments { 0 }
+sub _maximum_arguments { undef }
 
 sub _inline_check_arguments { q{} }
+
+sub _inline_check_var_is_valid_index {
+    my ( $self, $var ) = @_;
+
+    return
+        qq{die 'Must provide a valid index number as an argument' unless defined $var && $var =~ /^-?\\d+\$/;};
+}
 
 1;
