@@ -606,6 +606,31 @@ sub run_tests {
         qr/The second argument must be a code reference/,
             'throws an error with when passing a non code ref to natatime';
 
+        my $it = $obj->natatime_curried();
+        my @nat;
+        while ( my @v = $it->() ) {
+            push @nat, \@v;
+        }
+
+        is_deeply(
+            [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
+            \@nat,
+            'natatime_curried returns expected iterator'
+        );
+
+        @nat = ();
+        $obj->natatime_curried( sub { push @nat, [@_] } );
+
+        is_deeply(
+            [ [ 1, 2 ], [ 3, 4 ], [ 5, 6 ] ],
+            \@nat,
+            'natatime_curried with function returns expected value'
+        );
+
+        throws_ok { $obj->natatime_curried( {} ) }
+        qr/The second argument must be a code reference/,
+            'throws an error with when passing a non code ref to natatime_curried';
+
         if ( $class->meta->get_attribute('_values')->is_lazy ) {
             my $obj = $class->new;
 
@@ -613,8 +638,10 @@ sub run_tests {
 
             $obj->_clear_values;
 
-            is_deeply( [ $obj->elements ], [ 42, 84],
-                'elements contains default with lazy init' );
+            is_deeply(
+                [ $obj->elements ], [ 42, 84 ],
+                'elements contains default with lazy init'
+            );
 
             $obj->_clear_values;
 
