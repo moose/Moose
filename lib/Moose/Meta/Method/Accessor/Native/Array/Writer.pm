@@ -101,7 +101,9 @@ sub _check_new_members_only {
     # If the parent is ArrayRef, that means we can just check the new members
     # of the collection, because we know that we will always be generating an
     # ArrayRef.
-    return 1 if $tc->parent->name eq 'ArrayRef';
+    return 1
+        if $tc->parent->name eq 'ArrayRef'
+            && $tc->isa('Moose::Meta::TypeConstraint::Parameterized');
 
     # If our parent is something else ( subtype 'Foo' as 'ArrayRef[Str]' )
     # then there may be additional constraints on the whole value, as opposed
