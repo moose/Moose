@@ -9,7 +9,7 @@ our $VERSION = '1.13';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native';
+# This package is really more of a role, so it doesn't inherit from anything.
 
 sub _inline_check_var_is_valid_index {
     my ( $self, $var ) = @_;

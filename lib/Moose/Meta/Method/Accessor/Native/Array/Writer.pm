@@ -7,70 +7,28 @@ our $VERSION = '1.13';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Array';
-
-sub _generate_method {
-    my $self = shift;
-
-    my $inv = '$self';
-
-    my $slot_access = $self->_inline_get($inv);
-
-    my $code = 'sub {';
-    $code .= "\n" . $self->_inline_pre_body(@_);
-
-    $code .= "\n" . 'my $self = shift;';
-
-    $code .= "\n" . $self->_inline_check_lazy($inv);
-
-    $code .= "\n" . $self->_inline_curried_arguments;
-
-    $code .= "\n" . $self->_inline_check_argument_count;
-
-    $code .= "\n" . $self->_inline_process_arguments;
-
-    $code .= "\n" . $self->_inline_check_arguments;
-
-    my $new_values      = $self->_new_values($slot_access);
-    my $potential_value = $self->_potential_value($slot_access);
-
-    if ( $self->_value_needs_copy ) {
-        $code .= "\n" . "my \@potential = $potential_value;";
-        $potential_value = '@potential';
-    }
-
-    $code .= "\n"
-        . $self->_inline_tc_code(
-        $new_values,
-        $potential_value
-        );
-
-    $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
-    $code .= "\n" . $self->_capture_old_value($slot_access);
-
-    $code .= "\n"
-        . $self->_inline_store(
-        $inv,
-        $self->_value_needs_copy
-        ? '\\' . $potential_value
-        : '[' . $potential_value . ']'
-        );
-
-    $code .= "\n" . $self->_inline_post_body(@_);
-    $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
-
-    $code .= "\n" . $self->_return_value( $inv, '@old' );
-
-    $code .= "\n}";
-
-    return $code;
-}
+use base qw(
+    Moose::Meta::Method::Accessor::Native::Array
+    Moose::Meta::Method::Accessor::Native::Writer
+);
 
 sub _inline_process_arguments {q{}}
 
 sub _inline_check_arguments {q{}}
 
-sub _new_values {'@_'}
+sub _new_value {'@_'}
+
+sub _inline_copy_value {
+    my ( $self, $potential_ref ) = @_;
+
+    return q{} unless $self->_value_needs_copy;
+
+    my $code = "my \@potential = ${$potential_ref};";
+
+    ${$potential_ref} = '@potential';
+
+    return $code;
+}
 
 sub _value_needs_copy {
     my $self = shift;
@@ -164,6 +122,16 @@ sub _inline_check_constraint {
 }
 
 sub _capture_old_value { return q{} }
+
+sub _inline_set_new_value {
+    my ( $self, $inv, $new ) = @_;
+
+    return $self->SUPER::_inline_store(
+        $inv,
+        $self->_value_needs_copy ? '\\' . $new : '[' . $new . ']'
+    );
+}
+
 sub _return_value      { return q{} }
 
 sub _eval_environment {
