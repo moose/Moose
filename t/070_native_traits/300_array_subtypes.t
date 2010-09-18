@@ -9,8 +9,8 @@ use Test::Exception;
     use List::Util qw(sum);
 
     subtype 'A1', as 'ArrayRef[Int]';
-    subtype 'A2', as 'ArrayRef',      where { @$_ < 2 };
-    subtype 'A3', as 'ArrayRef[Int]', where { sum @$_ < 5 };
+    subtype 'A2', as 'ArrayRef', where { @$_ < 2 };
+    subtype 'A3', as 'ArrayRef[Int]', where { sum(@$_) < 5 };
 
     no Moose::Util::TypeConstraints;
 }
@@ -64,115 +64,80 @@ use Test::Exception;
 my $foo = Foo->new;
 
 {
-    my $array = [];
-    dies_ok { $foo->push_array('foo') } "can't push onto undef";
+    dies_ok { $foo->push_array('foo') } "array - can't push onto undef";
 
-    $foo->array($array);
-    is($foo->array, $array, "same ref");
-    is_deeply($foo->array, [], "correct contents");
+    $foo->array( [] );
+    is_deeply( $foo->array, [], "array - correct contents" );
 
     $foo->push_array('foo');
-    is($foo->array, $array, "same ref");
-    is_deeply($foo->array, ['foo'], "correct contents");
+    is_deeply( $foo->array, ['foo'], "array - correct contents" );
 }
 
 {
-    my $array = [];
-    dies_ok { $foo->push_array_int(1) } "can't push onto undef";
+    dies_ok { $foo->push_array_int(1) } "array_int - can't push onto undef";
 
-    $foo->array_int($array);
-    is($foo->array_int, $array, "same ref");
-    is_deeply($foo->array_int, [], "correct contents");
+    $foo->array_int( [] );
+    is_deeply( $foo->array_int, [], "array_int - correct contents" );
 
-    dies_ok { $foo->push_array_int('foo') } "can't push wrong type";
-    is($foo->array_int, $array, "same ref");
-    is_deeply($foo->array_int, [], "correct contents");
-    @$array = ();
+    dies_ok { $foo->push_array_int('foo') }
+    "array_int - can't push wrong type";
+    is_deeply( $foo->array_int, [], "array_int - correct contents" );
 
     $foo->push_array_int(1);
-    is($foo->array_int, $array, "same ref");
-    is_deeply($foo->array_int, [1], "correct contents");
+    is_deeply( $foo->array_int, [1], "array_int - correct contents" );
 }
 
 {
-    my $array = [];
-    dies_ok { $foo->push_a1('foo') } "can't push onto undef";
+    dies_ok { $foo->push_a1('foo') } "a1 - can't push onto undef";
 
-    $foo->a1($array);
-    is($foo->a1, $array, "same ref");
-    is_deeply($foo->a1, [], "correct contents");
+    $foo->a1( [] );
+    is_deeply( $foo->a1, [], "a1 - correct contents" );
 
-    { local $TODO = "type parameters aren't checked on subtypes";
-    dies_ok { $foo->push_a1('foo') } "can't push wrong type";
-    }
-    is($foo->a1, $array, "same ref");
-    { local $TODO = "type parameters aren't checked on subtypes";
-    is_deeply($foo->a1, [], "correct contents");
-    }
-    @$array = ();
+    dies_ok { $foo->push_a1('foo') } "a1 - can't push wrong type";
+
+    is_deeply( $foo->a1, [], "a1 - correct contents" );
 
     $foo->push_a1(1);
-    is($foo->a1, $array, "same ref");
-    is_deeply($foo->a1, [1], "correct contents");
+    is_deeply( $foo->a1, [1], "a1 - correct contents" );
 }
 
 {
-    my $array = [];
-    dies_ok { $foo->push_a2('foo') } "can't push onto undef";
+    dies_ok { $foo->push_a2('foo') } "a2 - can't push onto undef";
 
-    $foo->a2($array);
-    is($foo->a2, $array, "same ref");
-    is_deeply($foo->a2, [], "correct contents");
+    $foo->a2( [] );
+    is_deeply( $foo->a2, [], "a2 - correct contents" );
 
     $foo->push_a2('foo');
-    is($foo->a2, $array, "same ref");
-    is_deeply($foo->a2, ['foo'], "correct contents");
+    is_deeply( $foo->a2, ['foo'], "a2 - correct contents" );
 
-    { local $TODO = "overall tcs aren't checked";
-    dies_ok { $foo->push_a2('bar') } "can't push more than one element";
-    }
-    is($foo->a2, $array, "same ref");
-    { local $TODO = "overall tcs aren't checked";
-    is_deeply($foo->a2, ['foo'], "correct contents");
-    }
+    dies_ok { $foo->push_a2('bar') } "a2 - can't push more than one element";
+
+    is_deeply( $foo->a2, ['foo'], "a2 - correct contents" );
 }
 
 {
-    my $array = [];
-    dies_ok { $foo->push_a3(1) } "can't push onto undef";
+    dies_ok { $foo->push_a3(1) } "a3 - can't push onto undef";
 
-    $foo->a3($array);
-    is($foo->a3, $array, "same ref");
-    is_deeply($foo->a3, [], "correct contents");
+    $foo->a3( [] );
+    is_deeply( $foo->a3, [], "a3 - correct contents" );
 
-    { local $TODO = "tc parameters aren't checked on subtypes";
-    dies_ok { $foo->push_a3('foo') } "can't push non-int";
-    }
-    { local $TODO = "overall tcs aren't checked";
-    dies_ok { $foo->push_a3(100) } "can't violate overall type constraint";
-    }
-    is($foo->a3, $array, "same ref");
-    { local $TODO = "tc checks are broken";
-    is_deeply($foo->a3, [], "correct contents");
-    }
-    @$array = ();
+    dies_ok { $foo->push_a3('foo') } "a3 - can't push non-int";
+
+    dies_ok { $foo->push_a3(100) }
+    "a3 - can't violate overall type constraint";
+
+    is_deeply( $foo->a3, [], "a3 - correct contents" );
 
     $foo->push_a3(1);
-    is($foo->a3, $array, "same ref");
-    is_deeply($foo->a3, [1], "correct contents");
+    is_deeply( $foo->a3, [1], "a3 - correct contents" );
 
-    { local $TODO = "overall tcs aren't checked";
-    dies_ok { $foo->push_a3(100) } "can't violate overall type constraint";
-    }
-    is($foo->a3, $array, "same ref");
-    { local $TODO = "overall tcs aren't checked";
-    is_deeply($foo->a3, [1], "correct contents");
-    }
-    @$array = (1);
+    dies_ok { $foo->push_a3(100) }
+    "a3 - can't violate overall type constraint";
+
+    is_deeply( $foo->a3, [1], "a3 - correct contents" );
 
     $foo->push_a3(3);
-    is($foo->a3, $array, "same ref");
-    is_deeply($foo->a3, [1, 3], "correct contents");
+    is_deeply( $foo->a3, [ 1, 3 ], "a3 - correct contents" );
 }
 
 done_testing;
