@@ -34,6 +34,11 @@ sub _generate_method {
     my $new_values      = $self->_new_values($slot_access);
     my $potential_value = $self->_potential_value($slot_access);
 
+    if ( $self->_value_needs_copy ) {
+        $code .= "\n" . "my \@potential = $potential_value;";
+        $potential_value = '@potential';
+    }
+
     $code .= "\n"
         . $self->_inline_tc_code(
         $new_values,
@@ -43,7 +48,13 @@ sub _generate_method {
     $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
     $code .= "\n" . $self->_capture_old_value($slot_access);
 
-    $code .= "\n" . $self->_inline_store( $inv, '[' . $potential_value . ']' );
+    $code .= "\n"
+        . $self->_inline_store(
+        $inv,
+        $self->_value_needs_copy
+        ? '\\' . $potential_value
+        : '[' . $potential_value . ']'
+        );
 
     $code .= "\n" . $self->_inline_post_body(@_);
     $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
@@ -60,6 +71,13 @@ sub _inline_process_arguments { q{} }
 sub _inline_check_arguments { q{} }
 
 sub _new_values { '@_' }
+
+sub _value_needs_copy {
+    my $self = shift;
+
+    return $self->_constraint_must_be_checked
+        && !$self->_check_new_members_only;
+}
 
 sub _inline_tc_code {
     my ( $self, $new_value, $potential_value ) = @_;
@@ -100,14 +118,13 @@ sub _check_new_members_only {
 
     # If the parent is ArrayRef, that means we can just check the new members
     # of the collection, because we know that we will always be generating an
-    # ArrayRef.
+    # ArrayRef. However, if this type has its own constraint, we don't know
+    # what the constraint checks, so we need to check the whole value, not
+    # just the members.
     return 1
         if $tc->parent->name eq 'ArrayRef'
-            && $tc->isa('Moose::Meta::TypeConstraint::Parameterized');
+            && !$tc->constraint;
 
-    # If our parent is something else ( subtype 'Foo' as 'ArrayRef[Str]' )
-    # then there may be additional constraints on the whole value, as opposed
-    # to constraints just on the members.
     return 0;
 }
 
@@ -143,7 +160,7 @@ sub _inline_check_constraint {
 
     return q{} unless $self->_constraint_must_be_checked;
 
-    return $self->SUPER::_inline_check_constraint(@_);
+    return $self->SUPER::_inline_check_constraint( '\\' . $_[0] );
 }
 
 sub _capture_old_value { return q{} }
