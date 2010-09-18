@@ -10,7 +10,7 @@ use Test::Exception;
 
     subtype 'A1', as 'ArrayRef[Int]';
     subtype 'A2', as 'ArrayRef', where { @$_ < 2 };
-    subtype 'A3', as 'ArrayRef[Int]', where { sum(@$_) < 5 };
+    subtype 'A3', as 'ArrayRef[Int]', where { ( sum(@$_) || 0 ) < 5 };
 
     no Moose::Util::TypeConstraints;
 }
