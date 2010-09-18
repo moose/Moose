@@ -66,11 +66,11 @@ sub _generate_method {
     return $code;
 }
 
-sub _inline_process_arguments { q{} }
+sub _inline_process_arguments {q{}}
 
-sub _inline_check_arguments { q{} }
+sub _inline_check_arguments {q{}}
 
-sub _new_values { '@_' }
+sub _new_values {'@_'}
 
 sub _value_needs_copy {
     my $self = shift;
@@ -164,7 +164,7 @@ sub _inline_check_constraint {
 }
 
 sub _capture_old_value { return q{} }
-sub _return_value { return q{} }
+sub _return_value      { return q{} }
 
 sub _eval_environment {
     my $self = shift;
