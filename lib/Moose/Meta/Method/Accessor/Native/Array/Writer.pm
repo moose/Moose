@@ -90,8 +90,8 @@ sub _inline_tc_code {
         return $self->_inline_check_member_constraint($new_value);
     }
     else {
-        return $self->_inline_check_coercion($potential_value) . "\n"
-            . $self->_inline_check_constraint($potential_value);
+        return $self->_inline_check_coercion( '\\' . $potential_value ) . "\n"
+            . $self->_inline_check_constraint( '\\' . $potential_value );
     }
 }
 
@@ -123,7 +123,7 @@ sub _check_new_members_only {
     # just the members.
     return 1
         if $tc->parent->name eq 'ArrayRef'
-            && !$tc->constraint;
+            && $tc->isa('Moose::Meta::TypeConstraint::Parameterized');
 
     return 0;
 }
@@ -160,7 +160,7 @@ sub _inline_check_constraint {
 
     return q{} unless $self->_constraint_must_be_checked;
 
-    return $self->SUPER::_inline_check_constraint( '\\' . $_[0] );
+    return $self->SUPER::_inline_check_constraint( $_[0] );
 }
 
 sub _capture_old_value { return q{} }
