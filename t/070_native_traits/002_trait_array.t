@@ -6,7 +6,7 @@ use warnings;
 use Moose ();
 use Test::More;
 use Test::Exception;
-use Test::Moose qw( does_ok with_immutable );
+use Test::Moose;
 
 {
     my %handles = (
