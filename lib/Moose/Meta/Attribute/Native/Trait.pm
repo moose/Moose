@@ -143,7 +143,7 @@ See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 SEE ALSO
 
-Documentation for Moose native traits starts at L<Moose::Meta::Attribute Native>
+Documentation for Moose native traits starts at L<Moose::Meta::Attribute::Native>
 
 =head1 AUTHORS
 
