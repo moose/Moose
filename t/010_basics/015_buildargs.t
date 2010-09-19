@@ -24,7 +24,7 @@ use Test::More;
     extends qw(Foo);
 }
 
-foreach my $class qw(Foo Bar) {
+foreach my $class (qw(Foo Bar)) {
     is( $class->new->bar, undef, "no args" );
     is( $class->new( bar => 42 )->bar, 42, "normal args" );
     is( $class->new( 37 )->bar, 37, "single arg" );
