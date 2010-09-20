@@ -17,25 +17,37 @@ sub _generate_method {
     my $slot_access = $self->_inline_get($inv);
 
     my $code = 'sub {';
+
     $code .= "\n" . $self->_inline_pre_body(@_);
 
     $code .= "\n" . 'my $self = shift;';
 
-    $code .= "\n" . $self->_inline_check_lazy($inv);
-
     $code .= "\n" . $self->_inline_curried_arguments;
 
+    $code .= $self->_writer_core( $inv, $slot_access );
+
+    $code .= "\n" . $self->_inline_post_body(@_);
+
+    $code .= "\n}";
+
+    return $code;
+}
+
+sub _writer_core {
+    my ( $self, $inv, $slot_access ) = @_;
+
+    my $code = q{};
+
     $code .= "\n" . $self->_inline_check_argument_count;
+    $code .= "\n" . $self->_inline_process_arguments( $inv, $slot_access );
+    $code .= "\n" . $self->_inline_check_arguments('for writer');
 
-    $code .= "\n" . $self->_inline_process_arguments;
-
-    $code .= "\n" . $self->_inline_check_arguments;
+    $code .= "\n" . $self->_inline_check_lazy($inv);
 
     my $new_value       = $self->_new_value($slot_access);
     my $potential_value = $self->_potential_value($slot_access);
 
     $code .= "\n" . $self->_inline_copy_value( \$potential_value );
-
     $code .= "\n"
         . $self->_inline_tc_code(
         $new_value,
@@ -44,19 +56,13 @@ sub _generate_method {
 
     $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
     $code .= "\n" . $self->_capture_old_value($slot_access);
-
     $code .= "\n"
         . $self->_inline_set_new_value(
         $inv,
         $potential_value
         );
-
-    $code .= "\n" . $self->_inline_post_body(@_);
     $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
-
-    $code .= "\n" . $self->_return_value( $inv, '@old' );
-
-    $code .= "\n}";
+    $code .= "\n" . $self->_return_value( $inv, '@old', 'for writer' );
 
     return $code;
 }
@@ -67,9 +73,13 @@ sub _inline_check_arguments {q{}}
 
 sub _value_needs_copy {0}
 
-sub _inline_tc_code {die}
+sub _inline_tc_code {
+    die '_inline_tc_code must be overridden by ' . ref $_[0];
+}
 
-sub _inline_check_coercion {die}
+sub _inline_check_coercion {
+    die '_inline_check_coercion must be overridden by ' . ref $_[0];
+}
 
 sub _inline_check_constraint {
     my $self = shift;
@@ -79,7 +89,9 @@ sub _inline_check_constraint {
     return $self->SUPER::_inline_check_constraint( $_[0] );
 }
 
-sub _constraint_must_be_checked {die}
+sub _constraint_must_be_checked {
+    die '_constraint_must_be_checked must be overridden by ' . ref $_[0];
+}
 
 sub _capture_old_value { return q{} }
 
@@ -89,6 +101,6 @@ sub _inline_set_new_value {
     return $self->SUPER::_inline_store(@_);
 }
 
-sub _return_value      { return q{} }
+sub _return_value { return q{} }
 
 1;

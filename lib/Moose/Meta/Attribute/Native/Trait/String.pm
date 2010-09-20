@@ -5,20 +5,24 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Native::MethodProvider::String;
+use Moose::Meta::Method::Accessor::Native::String::append;
+use Moose::Meta::Method::Accessor::Native::String::chomp;
+use Moose::Meta::Method::Accessor::Native::String::chop;
+use Moose::Meta::Method::Accessor::Native::String::clear;
+use Moose::Meta::Method::Accessor::Native::String::inc;
+use Moose::Meta::Method::Accessor::Native::String::length;
+use Moose::Meta::Method::Accessor::Native::String::match;
+use Moose::Meta::Method::Accessor::Native::String::prepend;
+use Moose::Meta::Method::Accessor::Native::String::replace;
+use Moose::Meta::Method::Accessor::Native::String::substr;
 
 with 'Moose::Meta::Attribute::Native::Trait';
-
-has 'method_provider' => (
-    is        => 'ro',
-    isa       => 'ClassName',
-    predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Native::MethodProvider::String',
-);
 
 sub _default_default { q{} }
 sub _default_is { 'rw' }
 sub _helper_type { 'Str' }
+
+sub _native_type { 'String' }
 
 no Moose::Role;
 

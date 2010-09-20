@@ -3,115 +3,268 @@
 use strict;
 use warnings;
 
+use Moose ();
 use Test::More;
-use Test::Moose 'does_ok';
+use Test::Exception;
+use Test::Moose;
 
-my $uc;
 {
-    package MyHomePage;
-    use Moose;
-
-    has 'string' => (
-        traits  => ['String'],
-        is      => 'rw',
-        isa     => 'Str',
-        default => sub {''},
-        handles => {
-            inc_string     => 'inc',
-            append_string  => 'append',
-            prepend_string => 'prepend',
-            match_string   => 'match',
-            replace_string => 'replace',
-            chop_string    => 'chop',
-            chomp_string   => 'chomp',
-            clear_string   => 'clear',
-            length_string  => 'length',
-            exclaim        => [ append => '!' ],
-            capitalize_last => [ replace => qr/(.)$/, ($uc = sub { uc $1 }) ],
-            invalid_number => [ match => qr/\D/ ],
-        },
+    my %handles = (
+        inc             => 'inc',
+        append          => 'append',
+        append_curried  => [ append => '!' ],
+        prepend         => 'prepend',
+        prepend_curried => [ prepend => '-' ],
+        replace         => 'replace',
+        replace_curried => [ replace => qr/(.)$/, sub { uc $1 } ],
+        chop            => 'chop',
+        chomp           => 'chomp',
+        clear           => 'clear',
+        match           => 'match',
+        match_curried    => [ match  => qr/\D/ ],
+        length           => 'length',
+        substr           => 'substr',
+        substr_curried_1 => [ substr => (1) ],
+        substr_curried_2 => [ substr => ( 1, 3 ) ],
+        substr_curried_3 => [ substr => ( 1, 3, 'ong' ) ],
     );
+
+    my $name = 'Foo1';
+
+    sub build_class {
+        my %attr = @_;
+
+        my $class = Moose::Meta::Class->create(
+            $name++,
+            superclasses => ['Moose::Object'],
+        );
+
+        $class->add_attribute(
+            _string => (
+                traits  => ['String'],
+                is      => 'rw',
+                isa     => 'Str',
+                default => q{},
+                handles => \%handles,
+                clearer => '_clear_string',
+                %attr,
+            ),
+        );
+
+        return ( $class->name, \%handles );
+    }
 }
 
-my $page = MyHomePage->new();
-isa_ok( $page, 'MyHomePage' );
+{
+    run_tests(build_class);
+    run_tests( build_class( lazy => 1, default => q{} ) );
+}
 
-is( $page->string, '', '... got the default value' );
-is( $page->length_string, 0,'... length is zero' );
+sub run_tests {
+    my ( $class, $handles ) = @_;
 
-$page->string('a');
-is( $page->length_string, 1,'... new string has length of one' );
+    can_ok( $class, $_ ) for sort keys %{$handles};
 
-$page->inc_string;
-is( $page->string, 'b', '... got the incremented value' );
+    with_immutable {
+        my $obj = $class->new();
 
-$page->inc_string;
-is( $page->string, 'c', '... got the incremented value (again)' );
+        is( $obj->length, 0, 'length returns zero' );
 
-$page->append_string("foo$/");
-is( $page->string, "cfoo$/", 'appended to string' );
+        $obj->_string('a');
+        is( $obj->length, 1, 'length returns 1 for new string' );
 
-$page->chomp_string;
-is( $page->string, "cfoo", 'chomped string' );
+        throws_ok { $obj->length(42) }
+        qr/Cannot call length with any arguments/,
+            'length throws an error when an argument is passed';
 
-$page->chomp_string;
-is( $page->string, "cfoo", 'chomped is noop' );
+        $obj->inc;
+        is( $obj->_string, 'b', 'a becomes b after inc' );
 
-$page->chop_string;
-is( $page->string, "cfo", 'chopped string' );
+        throws_ok { $obj->inc(42) }
+        qr/Cannot call inc with any arguments/,
+            'inc throws an error when an argument is passed';
 
-$page->prepend_string("bar");
-is( $page->string, 'barcfo', 'prepended to string' );
+        $obj->append('foo');
+        is( $obj->_string, 'bfoo', 'appended to the string' );
 
-is_deeply( [ $page->match_string(qr/([ao])/) ], ["a"], "match" );
+        throws_ok { $obj->append( 'foo', 2 ) }
+        qr/Cannot call append with more than 1 argument/,
+            'append throws an error when two arguments are passed';
 
-$page->replace_string( qr/([ao])/, sub { uc($1) } );
-is( $page->string, 'bArcfo', "substitution" );
-is( $page->length_string, 6, 'right length' );
+        $obj->append_curried;
+        is( $obj->_string, 'bfoo!', 'append_curried appended to the string' );
 
-$page->exclaim;
-is( $page->string, 'bArcfo!', 'exclaim!' );
+        throws_ok { $obj->append_curried('foo') }
+        qr/Cannot call append with more than 1 argument/,
+            'append_curried throws an error when two arguments are passed';
 
-$page->string('Moosex');
-$page->capitalize_last;
-is( $page->string, 'MooseX', 'capitalize last' );
+        $obj->_string("has nl$/");
+        $obj->chomp;
+        is( $obj->_string, 'has nl', 'chomped string' );
 
-$page->string('1234');
-ok( !$page->invalid_number, 'string "isn\'t an invalid number' );
+        $obj->chomp;
+        is(
+            $obj->_string, 'has nl',
+            'chomp is a no-op when string has no line ending'
+        );
 
-$page->string('one two three four');
-ok( $page->invalid_number, 'string an invalid number' );
+        throws_ok { $obj->chomp(42) }
+        qr/Cannot call chomp with any arguments/,
+            'chomp throws an error when an argument is passed';
 
-$page->clear_string;
-is( $page->string, '', "clear" );
+        $obj->chop;
+        is( $obj->_string, 'has n', 'chopped string' );
 
-# check the meta ..
+        throws_ok { $obj->chop(42) }
+        qr/Cannot call chop with any arguments/,
+            'chop throws an error when an argument is passed';
 
-my $string = $page->meta->get_attribute('string');
-does_ok( $string, 'Moose::Meta::Attribute::Native::Trait::String' );
+        $obj->_string('x');
+        $obj->prepend('bar');
+        is( $obj->_string, 'barx', 'prepended to string' );
 
-is(
-    $string->type_constraint->name, 'Str',
-    '... got the expected type constraint'
-);
+        $obj->prepend_curried;
+        is( $obj->_string, '-barx', 'prepend_curried prepended to string' );
 
-is_deeply(
-    $string->handles,
-    {
-        inc_string      => 'inc',
-        append_string   => 'append',
-        prepend_string  => 'prepend',
-        match_string    => 'match',
-        replace_string  => 'replace',
-        chop_string     => 'chop',
-        chomp_string    => 'chomp',
-        clear_string    => 'clear',
-        length_string   => 'length',
-        exclaim         => [ append => '!' ],
-        capitalize_last => [ replace => qr/(.)$/, $uc ],
-        invalid_number => [ match => qr/\D/ ],
-    },
-    '... got the right handles methods'
-);
+        $obj->replace( qr/([ao])/, sub { uc($1) } );
+        is(
+            $obj->_string, '-bArx',
+            'substitution using coderef for replacement'
+        );
+
+        $obj->replace( qr/A/, 'X' );
+        is(
+            $obj->_string, '-bXrx',
+            'substitution using string as replacement'
+        );
+
+        throws_ok { $obj->replace( {}, 'x' ) }
+        qr/The first argument passed to replace must be a string or regexp reference/,
+            'replace throws an error when the first argument is not a string or regexp';
+
+        throws_ok { $obj->replace( qr/x/, {} ) }
+        qr/The second argument passed to replace must be a string or code reference/,
+            'replace throws an error when the first argument is not a string or regexp';
+
+        $obj->_string('Moosex');
+        $obj->replace_curried;
+        is( $obj->_string, 'MooseX', 'capitalize last' );
+
+        $obj->_string('abcdef');
+
+        is_deeply(
+            [ $obj->match(qr/([az]).*([fy])/) ], [ 'a', 'f' ],
+            'match -barx against /[aq]/ returns matches'
+        );
+
+        ok(
+            scalar $obj->match('b'),
+            'match with string as argument returns true'
+        );
+
+        throws_ok { $obj->match }
+        qr/Cannot call match without at least 1 argument/,
+            'match throws an error when no arguments are passed';
+
+        throws_ok { $obj->match( {} ) }
+        qr/The argument passed to match must be a string or regexp reference/,
+            'match throws an error when an invalid argument is passed';
+
+        $obj->_string('1234');
+        ok( !$obj->match_curried, 'match_curried returns false' );
+
+        $obj->_string('one two three four');
+        ok( $obj->match_curried, 'match curried returns true' );
+
+        $obj->clear;
+        is( $obj->_string, q{}, 'clear' );
+
+        throws_ok { $obj->clear(42) }
+        qr/Cannot call clear with any arguments/,
+            'clear throws an error when an argument is passed';
+
+        $obj->_string('some long string');
+        is(
+            $obj->substr(1), 'ome long string',
+            'substr as getter with one argument'
+        );
+
+        $obj->_string('some long string');
+        is(
+            $obj->substr( 1, 3 ), 'ome',
+            'substr as getter with two arguments'
+        );
+
+        $obj->substr( 1, 3, 'ong' );
+
+        is(
+            $obj->_string, 'song long string',
+            'substr as setter with three arguments'
+        );
+
+        throws_ok { $obj->substr }
+        qr/Cannot call substr without at least 1 argument/,
+            'substr throws an error when no argumemts are passed';
+
+        throws_ok { $obj->substr( 1, 2, 3, 4 ) }
+        qr/Cannot call substr with more than 3 arguments/,
+            'substr throws an error when four argumemts are passed';
+
+        throws_ok { $obj->substr( {} ) }
+        qr/The first argument passed to substr must be an integer/,
+            'substr throws an error when first argument is not an integer';
+
+        throws_ok { $obj->substr( 1, {} ) }
+        qr/The second argument passed to substr must be a positive integer/,
+            'substr throws an error when second argument is not a positive integer';
+
+        throws_ok { $obj->substr( 1, 2, {} ) }
+        qr/The third argument passed to substr must be a string/,
+            'substr throws an error when third argument is not a string';
+
+        $obj->_string('some long string');
+
+        is(
+            $obj->substr_curried_1, 'ome long string',
+            'substr_curried_1 returns expected value'
+        );
+
+        is(
+            $obj->substr_curried_1(3), 'ome',
+            'substr_curried_1 with one argument returns expected value'
+        );
+
+        $obj->substr_curried_1( 3, 'ong' );
+
+        is(
+            $obj->_string, 'song long string',
+            'substr_curried_1 as setter with two arguments'
+        );
+
+        $obj->_string('some long string');
+
+        is(
+            $obj->substr_curried_2, 'ome',
+            'substr_curried_2 returns expected value'
+        );
+
+        $obj->substr_curried_2('ong');
+
+        is(
+            $obj->_string, 'song long string',
+            'substr_curried_2 as setter with one arguments'
+        );
+
+        $obj->_string('some long string');
+
+        $obj->substr_curried_3;
+
+        is(
+            $obj->_string, 'song long string',
+            'substr_curried_3 as setter'
+        );
+    }
+    $class;
+}
 
 done_testing;
