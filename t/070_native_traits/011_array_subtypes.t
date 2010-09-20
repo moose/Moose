@@ -64,8 +64,6 @@ use Test::Exception;
 my $foo = Foo->new;
 
 {
-    dies_ok { $foo->push_array('foo') } "array - can't push onto undef";
-
     $foo->array( [] );
     is_deeply( $foo->array, [], "array - correct contents" );
 
@@ -74,8 +72,6 @@ my $foo = Foo->new;
 }
 
 {
-    dies_ok { $foo->push_array_int(1) } "array_int - can't push onto undef";
-
     $foo->array_int( [] );
     is_deeply( $foo->array_int, [], "array_int - correct contents" );
 
