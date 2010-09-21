@@ -1,21 +1,18 @@
 package Moose::Meta::Attribute::Native::Trait::Code;
 use Moose::Role;
-use Moose::Meta::Attribute::Native::MethodProvider::Code;
 
 our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Moose::Meta::Method::Accessor::Native::Code::execute;
+use Moose::Meta::Method::Accessor::Native::Code::execute_method;
+
 with 'Moose::Meta::Attribute::Native::Trait';
 
-has method_provider => (
-    is        => 'ro',
-    isa       => 'ClassName',
-    predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Code',
-);
-
 sub _helper_type { 'CodeRef' }
+
+sub _native_type { 'Code' }
 
 no Moose::Role;
 
