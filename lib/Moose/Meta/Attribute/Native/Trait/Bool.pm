@@ -1,22 +1,22 @@
 package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
-use Moose::Meta::Attribute::Native::MethodProvider::Bool;
 
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
+
+use Moose::Meta::Method::Accessor::Native::Bool::not;
+use Moose::Meta::Method::Accessor::Native::Bool::set;
+use Moose::Meta::Method::Accessor::Native::Bool::toggle;
+use Moose::Meta::Method::Accessor::Native::Bool::unset;
+
 
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_is  { 'rw' }
 sub _helper_type { 'Bool' }
 
-has 'method_provider' => (
-    is        => 'ro',
-    isa       => 'ClassName',
-    predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Bool'
-);
+sub _native_type { 'Bool' }
 
 no Moose::Role;
 
