@@ -12,23 +12,7 @@ use base qw(
     Moose::Meta::Method::Accessor::Native::Writer
 );
 
-sub _inline_process_arguments {q{}}
-
-sub _inline_check_arguments {q{}}
-
 sub _new_value {'@_'}
-
-sub _inline_copy_value {
-    my ( $self, $potential_ref ) = @_;
-
-    return q{} unless $self->_value_needs_copy;
-
-    my $code = "my \$potential = ${$potential_ref};";
-
-    ${$potential_ref} = '$potential';
-
-    return $code;
-}
 
 sub _value_needs_copy {
     my $self = shift;
@@ -133,8 +117,6 @@ sub _inline_get_old_value_for_trigger {
         . $self->_inline_get($instance)
         . '} ] : ()' . ";\n";
 }
-
-sub _return_value      { return q{} }
 
 sub _eval_environment {
     my $self = shift;

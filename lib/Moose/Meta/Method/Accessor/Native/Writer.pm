@@ -74,6 +74,18 @@ sub _inline_check_arguments {q{}}
 
 sub _value_needs_copy {0}
 
+sub _inline_copy_value {
+    my ( $self, $potential_ref ) = @_;
+
+    return q{} unless $self->_value_needs_copy;
+
+    my $code = "my \$potential = ${$potential_ref};";
+
+    ${$potential_ref} = '$potential';
+
+    return $code;
+}
+
 sub _inline_tc_code {
     die '_inline_tc_code must be overridden by ' . ref $_[0];
 }
