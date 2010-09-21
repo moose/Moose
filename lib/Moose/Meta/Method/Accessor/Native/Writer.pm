@@ -91,7 +91,12 @@ sub _inline_copy_value {
 }
 
 sub _inline_tc_code {
-    die '_inline_tc_code must be overridden by ' . ref $_[0];
+    my ( $self, $new_value, $potential_value ) = @_;
+
+    return q{} unless $self->_constraint_must_be_checked;
+
+    return $self->_inline_check_coercion($potential_value) . "\n"
+        . $self->_inline_check_constraint($potential_value);
 }
 
 sub _inline_check_coercion {
