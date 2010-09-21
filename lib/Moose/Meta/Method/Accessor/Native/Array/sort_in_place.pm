@@ -25,7 +25,7 @@ sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
     return
-        "( \$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ $slot_access } : sort \@{ $slot_access} )";
+        "[ \$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ $slot_access } : sort \@{ $slot_access} ]";
 }
 
 1;

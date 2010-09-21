@@ -87,13 +87,8 @@ sub _potential_value {
         "( do { my \$potential = $slot_access; substr \$potential, \$offset, \$length, \$replacement; \$potential; } )";
 }
 
-sub _inline_set_new_value {
-    my ( $self, $inv, $new ) = @_;
-
-    return $self->SUPER::_inline_set_new_value(@_)
-        if $self->_value_needs_copy;
-
-    my $slot_access = $self->_inline_get($inv);
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
 
     return "substr $slot_access, \$offset, \$length, \$replacement;";
 }

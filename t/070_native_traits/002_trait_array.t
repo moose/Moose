@@ -118,6 +118,11 @@ sub run_tests {
         lives_ok { $obj->unshift( 101, 22 ) }
         'unshifted two values and lived';
 
+        is_deeply(
+            $obj->_values, [ 101, 22, 10, 12, 42, 1, 2, 3 ],
+            'unshift changed the value of the array in the object'
+        );
+
         lives_ok { $obj->unshift() }
         'call to unshift without arguments lives';
 

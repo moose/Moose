@@ -15,4 +15,10 @@ sub _adds_members { 0 }
 
 sub _potential_value { return '()' }
 
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
+
+    return "$slot_access = [];";
+}
+
 1;

@@ -51,11 +51,12 @@ sub _generate_method {
     $code .= "\n"
         . $self->_inline_tc_code(
         $new_values,
-        $potential_value
+        $potential_value,
+        $slot_access,
         );
 
     $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
-    $code .= "\n" . $self->_capture_old_value($slot_access);
+    $code .= "\n" . $self->_inline_capture_return_value($slot_access);
 
     $code
         .= "\n" . $self->_inline_store( $inv, '[' . $potential_value . ']' );

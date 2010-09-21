@@ -23,9 +23,9 @@ sub _inline_copy_value {
 
     return q{} unless $self->_value_needs_copy;
 
-    my $code = "my \@potential = ${$potential_ref};";
+    my $code = "my \$potential = ${$potential_ref};";
 
-    ${$potential_ref} = '@potential';
+    ${$potential_ref} = '$potential';
 
     return $code;
 }
@@ -48,8 +48,8 @@ sub _inline_tc_code {
         return $self->_inline_check_member_constraint($new_value);
     }
     else {
-        return $self->_inline_check_coercion( '\\' . $potential_value ) . "\n"
-            . $self->_inline_check_constraint( '\\' . $potential_value );
+        return $self->_inline_check_coercion($potential_value) . "\n"
+            . $self->_inline_check_constraint($potential_value);
     }
 }
 
@@ -107,10 +107,7 @@ sub _inline_check_coercion {
     return ''
         unless $attr->should_coerce && $attr->type_constraint->has_coercion;
 
-    # We want to break the aliasing in @_ in case the coercion tries to make a
-    # destructive change to an array member.
-    my $code = 'my @copy = @{ $value }';
-    return '@_ = @{ $attr->type_constraint->coerce(\@copy) };';
+    return "$value = \$type_constraint_obj->coerce($value);";
 }
 
 sub _inline_check_constraint {
@@ -121,15 +118,20 @@ sub _inline_check_constraint {
     return $self->SUPER::_inline_check_constraint( $_[0] );
 }
 
-sub _capture_old_value { return q{} }
+sub _inline_get_old_value_for_trigger {
+    my ( $self, $instance ) = @_;
 
-sub _inline_set_new_value {
-    my ( $self, $inv, $new ) = @_;
+    my $attr = $self->associated_attribute;
+    return '' unless $attr->has_trigger;
 
-    return $self->SUPER::_inline_store(
-        $inv,
-        $self->_value_needs_copy ? '\\' . $new : '[' . $new . ']'
-    );
+    my $mi = $attr->associated_class->get_meta_instance;
+    my $pred = $mi->inline_is_slot_initialized( $instance, $attr->name );
+
+    return
+          'my @old = '
+        . $pred . q{ ? } . '[ @{'
+        . $self->_inline_get($instance)
+        . '} ] : ()' . ";\n";
 }
 
 sub _return_value      { return q{} }

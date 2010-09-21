@@ -30,13 +30,8 @@ sub _potential_value {
     return "( do { my \$val = $slot_access; ref \$_[1] ? \$val =~ s/\$_[0]/\$_[1]->()/e : \$val =~ s/\$_[0]/\$_[1]/; \$val } )";
 }
 
-sub _inline_set_new_value {
-    my ( $self, $inv, $new ) = @_;
-
-    return $self->SUPER::_inline_set_new_value(@_)
-        if $self->_value_needs_copy;
-
-    my $slot_access = $self->_inline_get($inv);
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
 
     return "if ( ref \$_[1] ) { $slot_access =~ s/\$_[0]/\$_[1]->()/e; } else { $slot_access =~ s/\$_[0]/\$_[1]/; }";
 }

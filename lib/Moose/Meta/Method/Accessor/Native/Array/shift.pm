@@ -16,24 +16,25 @@ sub _adds_members { 0 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "( \@{ $slot_access } > 1 ? \@{ $slot_access }[ 1 .. \$#{ $slot_access } ] : () )";
+    return "[ \@{ $slot_access } > 1 ? \@{ $slot_access }[ 1 .. \$#{ $slot_access } ] : () ]";
 }
 
-sub _capture_old_value {
+sub _inline_capture_return_value {
     my ( $self, $slot_access ) = @_;
 
-    if ( $self->associated_attribute->has_trigger ) {
-        return 'my $old = $old[-1];';
-    }
-    else {
-        return "my \$old = $slot_access;";
-    }
+    return "my \$old = ${slot_access}->[0];";
+}
+
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
+
+    return "shift \@{ $slot_access };";
 }
 
 sub _return_value {
-    my ( $self, $instance, $old_value ) = @_;
+    my ( $self, $slot_access ) = @_;
 
-    return 'return $old->[0]';
+    return 'return $old';
 }
 
 1;

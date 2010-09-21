@@ -55,14 +55,15 @@ sub _writer_core {
         );
 
     $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
-    $code .= "\n" . $self->_capture_old_value($slot_access);
+    $code .= "\n" . $self->_inline_capture_return_value($slot_access);
     $code .= "\n"
         . $self->_inline_set_new_value(
         $inv,
-        $potential_value
+        $potential_value,
+        $slot_access,
         );
     $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
-    $code .= "\n" . $self->_return_value( $inv, '@old', 'for writer' );
+    $code .= "\n" . $self->_return_value( $slot_access, 'for writer' );
 
     return $code;
 }
@@ -93,12 +94,21 @@ sub _constraint_must_be_checked {
     die '_constraint_must_be_checked must be overridden by ' . ref $_[0];
 }
 
-sub _capture_old_value { return q{} }
+sub _inline_capture_return_value { return q{} }
 
 sub _inline_set_new_value {
     my $self = shift;
 
-    return $self->SUPER::_inline_store(@_);
+    return $self->SUPER::_inline_store(@_)
+        if $self->_value_needs_copy;
+
+    return $self->_inline_optimized_set_new_value(@_);
+}
+
+sub _inline_optimized_set_new_value {
+    my $self = shift;
+
+    return $self->SUPER::_inline_store(@_)
 }
 
 sub _return_value { return q{} }

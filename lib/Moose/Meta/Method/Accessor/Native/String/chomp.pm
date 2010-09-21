@@ -18,15 +18,10 @@ sub _potential_value {
     return "( do { my \$val = $slot_access; chomp \$val; \$val } )";
 }
 
-sub _inline_set_new_value {
-    my ( $self, $inv, $new ) = @_;
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return $self->SUPER::_inline_set_new_value(@_)
-        if $self->_value_needs_copy;
-
-    my $slot_access = $self->_inline_get($inv);
-
-    return "chomp ${slot_access}";
+    return "chomp $slot_access;";
 }
 
 1;

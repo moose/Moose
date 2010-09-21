@@ -25,9 +25,15 @@ sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
     return
-        "( do { my \@potential = \@{ $slot_access }; \$potential[ \$_[0] ] = \$_[1]; \@potential } )";
+        "( do { my \@potential = \@{ $slot_access }; \$potential[ \$_[0] ] = \$_[1]; \\\@potential } )";
 }
 
 sub _new_values { '$_[1]' }
+
+sub _inline_optimized_set_new_value {
+    my ( $self, $inv, $new, $slot_access ) = @_;
+
+    return "${slot_access}->[ \$_[0] ] = \$_[1];";
+}
 
 1;
