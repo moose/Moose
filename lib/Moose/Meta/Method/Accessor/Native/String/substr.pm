@@ -8,7 +8,7 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base qw(
-    Moose::Meta::Method::Accessor::Native::String::Reader
+    Moose::Meta::Method::Accessor::Native::Reader
     Moose::Meta::Method::Accessor::Native::String::Writer
 );
 

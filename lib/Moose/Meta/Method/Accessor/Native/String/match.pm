@@ -7,7 +7,7 @@ our $VERSION = '1.13';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::String::Reader';
+use base 'Moose::Meta::Method::Accessor::Native::Reader';
 
 sub _minimum_arguments { 1 }
 sub _maximum_arguments { 1 }
