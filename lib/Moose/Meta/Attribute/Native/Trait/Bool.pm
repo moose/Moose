@@ -10,7 +10,6 @@ use Moose::Meta::Method::Accessor::Native::Bool::set;
 use Moose::Meta::Method::Accessor::Native::Bool::toggle;
 use Moose::Meta::Method::Accessor::Native::Bool::unset;
 
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_is  { 'rw' }
