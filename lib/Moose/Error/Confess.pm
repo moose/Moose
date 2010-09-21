@@ -3,7 +3,7 @@ package Moose::Error::Confess;
 use strict;
 use warnings;
 
-our $VERSION   = '1.13';
+our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
