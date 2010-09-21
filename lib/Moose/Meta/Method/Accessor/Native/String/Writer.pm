@@ -11,12 +11,6 @@ use base 'Moose::Meta::Method::Accessor::Native::Writer';
 
 sub _new_value {'$_[0]'}
 
-sub _value_needs_copy {
-    my $self = shift;
-
-    return $self->_constraint_must_be_checked;
-}
-
 sub _inline_tc_code {
     my ( $self, $new_value, $potential_value ) = @_;
 

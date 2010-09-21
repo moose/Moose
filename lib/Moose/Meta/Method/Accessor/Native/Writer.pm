@@ -72,7 +72,11 @@ sub _inline_process_arguments {q{}}
 
 sub _inline_check_arguments {q{}}
 
-sub _value_needs_copy {0}
+sub _value_needs_copy {
+    my $self = shift;
+
+    return $self->_constraint_must_be_checked;
+}
 
 sub _inline_copy_value {
     my ( $self, $potential_ref ) = @_;
