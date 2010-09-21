@@ -11,18 +11,6 @@ use base 'Moose::Meta::Method::Accessor::Native::Writer';
 
 sub _new_value {'$_[0]'}
 
-sub _inline_copy_value {
-    my ( $self, $potential_ref ) = @_;
-
-    return q{} unless $self->_value_needs_copy;
-
-    my $code = "my \$potential = ${$potential_ref};";
-
-    ${$potential_ref} = '$potential';
-
-    return $code;
-}
-
 sub _value_needs_copy {
     my $self = shift;
 
