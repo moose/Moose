@@ -54,7 +54,7 @@ sub _check_handles_values {
         # XXX - bridge code
         ( ( $accessor_class && $accessor_class->can('new') )
                 || exists $method_constructors->{$name} )
-            || confess "$name is an unsupported method type";
+            || confess "$name is an unsupported method type - $accessor_class";
     }
 }
 
