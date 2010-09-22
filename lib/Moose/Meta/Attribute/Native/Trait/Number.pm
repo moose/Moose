@@ -5,50 +5,17 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Moose::Meta::Method::Accessor::Native::Number::abs;
+use Moose::Meta::Method::Accessor::Native::Number::add;
+use Moose::Meta::Method::Accessor::Native::Number::div;
+use Moose::Meta::Method::Accessor::Native::Number::mod;
+use Moose::Meta::Method::Accessor::Native::Number::mul;
+use Moose::Meta::Method::Accessor::Native::Number::set;
+use Moose::Meta::Method::Accessor::Native::Number::sub;
+
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'Num' }
-
-# NOTE: we don't use the method provider for this module since many of
-# the names of the provided methods would conflict with keywords - SL
-
-has 'method_constructors' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    lazy    => 1,
-    default => sub {
-        return +{
-            set => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $_[1] ) };
-            },
-            add => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $reader->( $_[0] ) + $_[1] ) };
-            },
-            sub => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $reader->( $_[0] ) - $_[1] ) };
-            },
-            mul => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $reader->( $_[0] ) * $_[1] ) };
-            },
-            div => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $reader->( $_[0] ) / $_[1] ) };
-            },
-            mod => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], $reader->( $_[0] ) % $_[1] ) };
-            },
-            abs => sub {
-                my ( $attr, $reader, $writer ) = @_;
-                return sub { $writer->( $_[0], abs( $reader->( $_[0] ) ) ) };
-            },
-        };
-    }
-);
 
 no Moose::Role;
 
