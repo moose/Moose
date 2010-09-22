@@ -12,6 +12,7 @@ use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Deprecated;
 use Moose::Util::MetaRole;
+use Scalar::Util qw(reftype);
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
 
@@ -130,6 +131,30 @@ sub build_import_methods {
     }
 }
 
+sub _parse_trait_aliases {
+    my $class   = shift;
+    my ($package, $aliases) = @_;
+
+    my @ret;
+    for my $alias (@$aliases) {
+        my $name;
+        if (ref($alias)) {
+            reftype($alias) eq 'ARRAY'
+                or Moose->throw_error(reftype($alias) . " references are not "
+                                    . "valid arguments to the 'trait_aliases' "
+                                    . "option");
+
+            ($alias, $name) = @$alias;
+        }
+        else {
+            ($name = $alias) =~ s/.*:://;
+        }
+        push @ret, subname "${package}::${name}" => sub () { $alias };
+    }
+
+    return @ret;
+}
+
 sub _make_sub_exporter_params {
     my $class           = shift;
     my $packages        = shift;
@@ -168,7 +193,10 @@ sub _make_sub_exporter_params {
             );
         }
 
-        for my $name ( @{ $args->{as_is} } ) {
+        my @extra_exports = $class->_parse_trait_aliases(
+            $package, $args->{trait_aliases},
+        );
+        for my $name ( @{ $args->{as_is} }, @extra_exports ) {
             my ( $sub, $coderef_name );
 
             if ( ref $name ) {
@@ -677,6 +705,14 @@ If you do export some other package's function, this function will never be
 removed by the C<unimport> method. The reason for this is we cannot know if
 the caller I<also> explicitly imported the sub themselves, and therefore wants
 to keep it.
+
+=item * trait_aliases => [ ... ]
+
+This is a list of package names which should have shortened alias exported,
+similar to the functionality of L<aliased>. Each element in the list can be
+either a package name, in which case the export will be named as the last
+namespace component of the package, or an arrayref, whose first element is the
+package to alias to, and second element is the alias to export.
 
 =item * also => $name or \@names
 
