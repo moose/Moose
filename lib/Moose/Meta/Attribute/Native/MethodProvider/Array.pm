@@ -8,6 +8,117 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+sub find_after : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::after { $predicate->() } @{ $reader->($instance) };
+    };
+}
+
+sub find_before: method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::before{ $predicate->() } @{ $reader->($instance) };
+    };
+}
+
+sub find_after_incl : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::after_incl{ $predicate->() } @{ $reader->($instance) };
+    };
+}
+
+sub find_before_incl : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::before_incl { $predicate->() } @{ $reader->($instance) };
+    };
+}
+
+sub insert_after : method {
+    my ( $attr, $reader, $writer ) = @_;
+    if (
+        $attr->has_type_constraint
+        && $attr->type_constraint->isa(
+            'Moose::Meta::TypeConstraint::Parameterized')
+      )
+    {
+        my $container_type_constraint = $attr->type_constraint->type_parameter;
+        return sub {
+            ( $container_type_constraint->check( $_[1] ) )
+              || confess "Value "
+              . ( $_[1] || 'undef' )
+              . " did not pass container type constraint '$container_type_constraint'";
+            List::MoreUtils::insert_after { $_[2]->() } $_[1], @{ $reader->( $_[0] ) } ;
+        };
+    }
+    else {
+        return sub {
+            List::MoreUtils::insert_after { $_[2]->() } $_[1], @{ $reader->( $_[0] ) } ;
+        };
+    }
+}
+
+sub sort_in_place_start_end : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+	use integer;
+        my ( $instance, $predicate, $start, $end ) = @_;
+
+        die "Argument must be a code reference"
+          if $predicate && ref $predicate ne 'CODE';
+
+	my $count = $#{ $reader->($instance) };
+	($start, $end) = sort {$a <=> $b} (int($start // 0), int($end // $count));
+        my(@sorted,@array_start,@array_end);
+	if ($start < 1 ) {
+		$start = 0;
+	} elsif($start < $count) {
+		@array_start[0 .. $start-1] = @{ $reader->($instance) }[0 .. $start-1];
+	} else {
+		return $writer->( $instance, $reader->($instance) );
+	}
+	if($end < 0 || $end >= $count) {
+		$end = $count;
+	} else {
+		@array_end[$end + 1 .. $count] = @{ $reader->($instance) }[$end + 1 .. $count];
+	}
+
+        if ($predicate) {
+            @sorted[$start .. $end] =
+              CORE::sort { $predicate->( $a, $b ) } @{ $reader->($instance) }[$start .. $end];
+        }
+        else {
+            @sorted[$start .. $end] = CORE::sort @{ $reader->($instance) }[$start .. $end];
+        }
+	unshift @sorted, @array_start;
+	push @sorted, @array_end;
+
+        $writer->( $instance, \@sorted );
+    };
+}
+
+sub firstidx : method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::firstidx { $predicate->() } @{ $reader->($instance) };
+    };
+}
+
+sub lastidx: method {
+    my ( $attr, $reader, $writer ) = @_;
+    return sub {
+        my ( $instance, $predicate ) = @_;
+        List::MoreUtils::lastidx { $predicate->() } @{ $reader->($instance) };
+    };
+}
+
 sub count : method {
     my ( $attr, $reader, $writer ) = @_;
     return sub {
