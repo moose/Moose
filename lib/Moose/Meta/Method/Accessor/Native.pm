@@ -58,6 +58,8 @@ sub _new {
     return bless $options, $class;
 }
 
+sub root_types { (shift)->{'root_types'} }
+
 sub _initialize_body {
     my $self = shift;
 

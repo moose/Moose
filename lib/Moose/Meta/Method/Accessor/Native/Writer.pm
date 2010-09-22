@@ -3,6 +3,8 @@ package Moose::Meta::Method::Accessor::Native::Writer;
 use strict;
 use warnings;
 
+use List::MoreUtils qw( any );
+
 our $VERSION = '1.13';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -72,10 +74,30 @@ sub _inline_process_arguments {q{}}
 
 sub _inline_check_arguments {q{}}
 
+sub _new_value {'$_[0]'}
+
 sub _value_needs_copy {
     my $self = shift;
 
     return $self->_constraint_must_be_checked;
+}
+
+sub _constraint_must_be_checked {
+    my $self = shift;
+
+    my $attr = $self->associated_attribute;
+
+    return $attr->has_type_constraint
+        && ( !$self->_is_root_type( $attr->type_constraint )
+        || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
+}
+
+sub _is_root_type {
+    my ($self, $type) = @_;
+
+    my $name = $type->name();
+
+    return any { $name eq $_ } @{ $self->root_types };
 }
 
 sub _inline_copy_value {
@@ -100,7 +122,16 @@ sub _inline_tc_code {
 }
 
 sub _inline_check_coercion {
-    die '_inline_check_coercion must be overridden by ' . ref $_[0];
+    my ( $self, $value ) = @_;
+
+    my $attr = $self->associated_attribute;
+
+    return ''
+        unless $attr->should_coerce && $attr->type_constraint->has_coercion;
+
+    # We want to break the aliasing in @_ in case the coercion tries to make a
+    # destructive change to an array member.
+    return "$value = \$type_constraint_obj->coerce($value);";
 }
 
 sub _inline_check_constraint {
@@ -109,10 +140,6 @@ sub _inline_check_constraint {
     return q{} unless $self->_constraint_must_be_checked;
 
     return $self->SUPER::_inline_check_constraint( $_[0] );
-}
-
-sub _constraint_must_be_checked {
-    die '_constraint_must_be_checked must be overridden by ' . ref $_[0];
 }
 
 sub _inline_capture_return_value { return q{} }

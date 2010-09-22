@@ -37,16 +37,6 @@ sub _inline_tc_code {
     }
 }
 
-sub _constraint_must_be_checked {
-    my $self = shift;
-
-    my $attr = $self->associated_attribute;
-
-    return $attr->has_type_constraint
-        && ( $attr->type_constraint->name ne 'ArrayRef'
-        || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
-}
-
 sub _check_new_members_only {
     my $self = shift;
 
@@ -81,17 +71,6 @@ sub _inline_check_member_constraint {
             . ' . $member_tc->get_message($_)',
         "data => \$_"
         ) . " for $new_value;";
-}
-
-sub _inline_check_coercion {
-    my ( $self, $value ) = @_;
-
-    my $attr = $self->associated_attribute;
-
-    return ''
-        unless $attr->should_coerce && $attr->type_constraint->has_coercion;
-
-    return "$value = \$type_constraint_obj->coerce($value);";
 }
 
 sub _inline_check_constraint {

@@ -9,7 +9,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base qw(
     Moose::Meta::Method::Accessor::Native::Reader
-    Moose::Meta::Method::Accessor::Native::String::Writer
+    Moose::Meta::Method::Accessor::Native::Writer
 );
 
 sub _generate_method {

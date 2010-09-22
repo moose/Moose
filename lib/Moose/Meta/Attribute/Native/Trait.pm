@@ -92,6 +92,7 @@ around '_make_delegation_method' => sub {
             package_name      => $self->associated_class->name,
             attribute         => $self,
             curried_arguments => \@curried_args,
+            root_types        => [ $self->_root_types ],
         );
     }
     # XXX - bridge code
@@ -114,6 +115,10 @@ around '_make_delegation_method' => sub {
         );
     }
 };
+
+sub _root_types {
+    return $_[0]->_helper_type;
+}
 
 sub _native_accessor_class_for {
     my ( $self, $suffix ) = @_;
