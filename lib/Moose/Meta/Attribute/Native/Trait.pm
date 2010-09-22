@@ -123,11 +123,25 @@ sub _root_types {
 sub _native_accessor_class_for {
     my ( $self, $suffix ) = @_;
 
-    # XXX - bridge code
-    return unless $self->can('_native_type');
-
     return 'Moose::Meta::Method::Accessor::Native::' . $self->_native_type . '::' . $suffix;
 }
+
+sub _build_native_type {
+    my $self = shift;
+
+    for my $role_name ( map { $_->name } $self->meta->calculate_all_roles ) {
+        return $1 if $role_name =~ /::Native::Trait::(\w+)$/;
+    }
+
+    die "Cannot calculate native type for " . ref $self;
+}
+
+has '_native_type' => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    builder => '_build_native_type',
+);
 
 has 'method_constructors' => (
     is      => 'ro',

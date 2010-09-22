@@ -35,8 +35,6 @@ with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'ArrayRef' }
 
-sub _native_type { 'Array' }
-
 no Moose::Role;
 
 1;

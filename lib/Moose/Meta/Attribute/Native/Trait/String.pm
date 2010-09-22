@@ -22,8 +22,6 @@ sub _default_default { q{} }
 sub _default_is { 'rw' }
 sub _helper_type { 'Str' }
 
-sub _native_type { 'String' }
-
 no Moose::Role;
 
 1;

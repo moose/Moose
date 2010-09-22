@@ -12,8 +12,6 @@ with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'CodeRef' }
 
-sub _native_type { 'Code' }
-
 no Moose::Role;
 
 1;
