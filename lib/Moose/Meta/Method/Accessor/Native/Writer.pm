@@ -46,13 +46,11 @@ sub _writer_core {
 
     $code .= "\n" . $self->_inline_check_lazy($inv);
 
-    my $new_value       = $self->_new_value($slot_access);
     my $potential_value = $self->_potential_value($slot_access);
 
     $code .= "\n" . $self->_inline_copy_value( \$potential_value );
     $code .= "\n"
         . $self->_inline_tc_code(
-        $new_value,
         $potential_value
         );
 
@@ -73,8 +71,6 @@ sub _writer_core {
 sub _inline_process_arguments {q{}}
 
 sub _inline_check_arguments {q{}}
-
-sub _new_value {'$_[0]'}
 
 sub _value_needs_copy {
     my $self = shift;
@@ -113,7 +109,7 @@ sub _inline_copy_value {
 }
 
 sub _inline_tc_code {
-    my ( $self, $new_value, $potential_value ) = @_;
+    my ( $self, $potential_value ) = @_;
 
     return q{} unless $self->_constraint_must_be_checked;
 

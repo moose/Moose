@@ -9,8 +9,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method::Accessor::Native::Writer';
 
-sub _new_value {'$_[0]'}
-
 sub _constraint_must_be_checked {
     my $self = shift;
 

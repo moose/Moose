@@ -1,4 +1,4 @@
-package Moose::Meta::Method::Accessor::Native::Array::Writer;
+package Moose::Meta::Method::Accessor::Native::Hash::Writer;
 
 use strict;
 use warnings;
@@ -12,18 +12,18 @@ our $AUTHORITY = 'cpan:STEVAN';
 use base 'Moose::Meta::Method::Accessor::Native::Writer';
 
 Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Array'
+    'Moose::Meta::Method::Accessor::Native::Hash'
 );
 Class::MOP::MiniTrait::apply( __PACKAGE__,
     'Moose::Meta::Method::Accessor::Native::Collection'
 );
 
-sub _new_members {'@_'}
+sub _new_values {'@values'}
 
 sub _inline_copy_old_value {
     my ( $self, $slot_access ) = @_;
 
-    return '[ @{' . $slot_access . '} ]';
+    return '{ @{' . $slot_access . '} }';
 }
 
 1;

@@ -8,6 +8,19 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Attribute::Native::MethodProvider::Hash;
 
+use Moose::Meta::Method::Accessor::Native::Hash::clear;
+use Moose::Meta::Method::Accessor::Native::Hash::count;
+use Moose::Meta::Method::Accessor::Native::Hash::defined;
+use Moose::Meta::Method::Accessor::Native::Hash::delete;
+use Moose::Meta::Method::Accessor::Native::Hash::elements;
+use Moose::Meta::Method::Accessor::Native::Hash::exists;
+use Moose::Meta::Method::Accessor::Native::Hash::get;
+use Moose::Meta::Method::Accessor::Native::Hash::is_empty;
+use Moose::Meta::Method::Accessor::Native::Hash::keys;
+use Moose::Meta::Method::Accessor::Native::Hash::kv;
+use Moose::Meta::Method::Accessor::Native::Hash::set;
+use Moose::Meta::Method::Accessor::Native::Hash::values;
+
 with 'Moose::Meta::Attribute::Native::Trait';
 
 has 'method_provider' => (

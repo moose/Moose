@@ -1,4 +1,4 @@
-package Moose::Meta::Method::Accessor::Native::Array::accessor;
+package Moose::Meta::Method::Accessor::Native::Hash::accessor;
 
 use strict;
 use warnings;
@@ -8,8 +8,8 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base qw(
-    Moose::Meta::Method::Accessor::Native::Array::set
-    Moose::Meta::Method::Accessor::Native::Array::get
+    Moose::Meta::Method::Accessor::Native::Hash::set
+    Moose::Meta::Method::Accessor::Native::Hash::get
 );
 
 sub _generate_method {
@@ -37,7 +37,7 @@ sub _generate_method {
         .= "\n"
         . 'return '
         . $self
-        ->Moose::Meta::Method::Accessor::Native::Array::get::_return_value(
+        ->Moose::Meta::Method::Accessor::Native::Hash::get::_return_value(
         $slot_access)
         . ';';
 
@@ -49,7 +49,7 @@ sub _generate_method {
     $code
         .= "\n"
         . $self
-        ->Moose::Meta::Method::Accessor::Native::Array::set::_inline_check_arguments;
+        ->Moose::Meta::Method::Accessor::Native::Hash::set::_inline_check_arguments;
 
     my $potential_value = $self->_potential_value($slot_access);
 
@@ -83,8 +83,7 @@ sub _adds_members {1}
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return
-        "( do { my \@potential = \@{ $slot_access }; \$potential[ \$_[0] ] = \$_[1]; \@potential } )";
+    return "%{ $slot_access, @_ }";
 }
 
 sub _new_members {'$_[1]'}
