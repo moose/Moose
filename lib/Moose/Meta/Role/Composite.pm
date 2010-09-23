@@ -57,7 +57,6 @@ sub new {
             roles        => [ @composition_roles ],
             cache        => 1,
         );
-        $meta->add_method(meta => sub { $meta });
         $class = $meta->name;
     }
 
