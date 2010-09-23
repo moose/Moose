@@ -58,6 +58,7 @@ my %trustme = (
             )
     ],
     'Moose::Meta::Method::Destructor' => [ 'initialize_body', 'options' ],
+    'Moose::Meta::Method::Meta'       => [ 'wrap' ],
     'Moose::Meta::Role'               => [
         qw( alias_method
             get_method_modifier_list

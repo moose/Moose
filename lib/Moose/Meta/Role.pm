@@ -18,6 +18,7 @@ use Moose::Meta::Role::Attribute;
 use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
+use Moose::Meta::Method::Meta;
 use Moose::Util qw( ensure_all_roles );
 use Class::MOP::MiniTrait;
 
@@ -365,6 +366,7 @@ sub update_package_cache_flag {
 }
 
 
+sub _meta_method_class { 'Moose::Meta::Method::Meta' }
 
 ## ------------------------------------------------------------------
 ## subroles
@@ -482,6 +484,7 @@ sub create {
         package
         attributes
         methods
+        no_meta
         version
         authority
     )};
@@ -490,10 +493,7 @@ sub create {
 
     $meta->_instantiate_module( $options{version}, $options{authority} );
 
-    # FIXME totally lame
-    $meta->add_method('meta' => sub {
-        $role->initialize(ref($_[0]) || $_[0]);
-    });
+    $meta->_add_meta_method if !$options{no_meta};
 
     if (exists $options{attributes}) {
         foreach my $attribute_name (keys %{$options{attributes}}) {

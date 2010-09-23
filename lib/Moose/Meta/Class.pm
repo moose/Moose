@@ -22,6 +22,7 @@ use Moose::Error::Default;
 use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
+use Moose::Meta::Method::Meta;
 use Moose::Util;
 use Class::MOP::MiniTrait;
 
@@ -111,6 +112,8 @@ sub create_anon_class {
 
     return $new_class;
 }
+
+sub _meta_method_class { 'Moose::Meta::Method::Meta' }
 
 sub _anon_cache_key {
     # Makes something like Super::Class|Super::Class::2=Role|Role::1
