@@ -34,7 +34,7 @@ of the ::Instance protocol.
 
 BEGIN {
 
-    package Moose::POOP::Meta::Instance;
+    package MooseX::POOP::Meta::Instance;
     use Moose;
 
     use DBM::Deep;
@@ -128,7 +128,7 @@ BEGIN {
         sprintf "%s->{instance}->{%s}", $instance, $slot_name;
     }
 
-    package Moose::POOP::Meta::Class;
+    package MooseX::POOP::Meta::Class;
     use Moose;
 
     extends 'Moose::Meta::Class';
@@ -143,9 +143,9 @@ BEGIN {
 
 }
 {
-    package Moose::POOP::Object;
-    use metaclass 'Moose::POOP::Meta::Class' => (
-        instance_metaclass => 'Moose::POOP::Meta::Instance'
+    package MooseX::POOP::Object;
+    use metaclass 'MooseX::POOP::Meta::Class' => (
+        instance_metaclass => 'MooseX::POOP::Meta::Instance'
     );
     use Moose;
 
@@ -161,7 +161,7 @@ BEGIN {
     package Newswriter::Author;
     use Moose;
 
-    extends 'Moose::POOP::Object';
+    extends 'MooseX::POOP::Object';
 
     has 'first_name' => (is => 'rw', isa => 'Str');
     has 'last_name'  => (is => 'rw', isa => 'Str');
@@ -172,7 +172,7 @@ BEGIN {
 
     use DateTime::Format::MySQL;
 
-    extends 'Moose::POOP::Object';
+    extends 'MooseX::POOP::Object';
 
     subtype 'Headline'
         => as 'Str'
@@ -208,29 +208,29 @@ BEGIN {
 }
 
 { # check the meta stuff first
-    isa_ok(Moose::POOP::Object->meta, 'Moose::POOP::Meta::Class');
-    isa_ok(Moose::POOP::Object->meta, 'Moose::Meta::Class');
-    isa_ok(Moose::POOP::Object->meta, 'Class::MOP::Class');
+    isa_ok(MooseX::POOP::Object->meta, 'MooseX::POOP::Meta::Class');
+    isa_ok(MooseX::POOP::Object->meta, 'Moose::Meta::Class');
+    isa_ok(MooseX::POOP::Object->meta, 'Class::MOP::Class');
 
-    is(Moose::POOP::Object->meta->instance_metaclass,
-      'Moose::POOP::Meta::Instance',
+    is(MooseX::POOP::Object->meta->instance_metaclass,
+      'MooseX::POOP::Meta::Instance',
       '... got the right instance metaclass name');
 
-    isa_ok(Moose::POOP::Object->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
+    isa_ok(MooseX::POOP::Object->meta->get_meta_instance, 'MooseX::POOP::Meta::Instance');
 
-    my $base = Moose::POOP::Object->new;
-    isa_ok($base, 'Moose::POOP::Object');
+    my $base = MooseX::POOP::Object->new;
+    isa_ok($base, 'MooseX::POOP::Object');
     isa_ok($base, 'Moose::Object');
 
-    isa_ok($base->meta, 'Moose::POOP::Meta::Class');
+    isa_ok($base->meta, 'MooseX::POOP::Meta::Class');
     isa_ok($base->meta, 'Moose::Meta::Class');
     isa_ok($base->meta, 'Class::MOP::Class');
 
     is($base->meta->instance_metaclass,
-      'Moose::POOP::Meta::Instance',
+      'MooseX::POOP::Meta::Instance',
       '... got the right instance metaclass name');
 
-    isa_ok($base->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
+    isa_ok($base->meta->get_meta_instance, 'MooseX::POOP::Meta::Instance');
 }
 
 my $article_oid;
@@ -252,7 +252,7 @@ my $article_ref;
         );
     } '... created my article successfully';
     isa_ok($article, 'Newswriter::Article');
-    isa_ok($article, 'Moose::POOP::Object');
+    isa_ok($article, 'MooseX::POOP::Object');
 
     lives_ok {
         $article->start_date(DateTime->new(year => 2006, month => 6, day => 10));
@@ -261,15 +261,15 @@ my $article_ref;
 
     ## check some meta stuff
 
-    isa_ok($article->meta, 'Moose::POOP::Meta::Class');
+    isa_ok($article->meta, 'MooseX::POOP::Meta::Class');
     isa_ok($article->meta, 'Moose::Meta::Class');
     isa_ok($article->meta, 'Class::MOP::Class');
 
     is($article->meta->instance_metaclass,
-      'Moose::POOP::Meta::Instance',
+      'MooseX::POOP::Meta::Instance',
       '... got the right instance metaclass name');
 
-    isa_ok($article->meta->get_meta_instance, 'Moose::POOP::Meta::Instance');
+    isa_ok($article->meta->get_meta_instance, 'MooseX::POOP::Meta::Instance');
 
     ok($article->oid, '... got a oid for the article');
 
@@ -294,7 +294,7 @@ my $article_ref;
     is($article->status, 'pending', '... got the right status');
 }
 
-Moose::POOP::Meta::Instance->_reload_db();
+MooseX::POOP::Meta::Instance->_reload_db();
 
 my $article2_oid;
 my $article2_ref;
@@ -315,7 +315,7 @@ my $article2_ref;
         );
     } '... created my article successfully';
     isa_ok($article2, 'Newswriter::Article');
-    isa_ok($article2, 'Moose::POOP::Object');
+    isa_ok($article2, 'MooseX::POOP::Object');
 
     $article2_oid = $article2->oid;
     $article2_ref = "$article2";
@@ -344,7 +344,7 @@ my $article2_ref;
         $article = Newswriter::Article->new(oid => $article_oid);
     } '... (re)-created my article successfully';
     isa_ok($article, 'Newswriter::Article');
-    isa_ok($article, 'Moose::POOP::Object');
+    isa_ok($article, 'MooseX::POOP::Object');
 
     is($article->oid, $article_oid, '... got a oid for the article');
     isnt($article_ref, "$article", '... got a new article instance');
@@ -375,7 +375,7 @@ my $article2_ref;
     is($article->status, 'pending', '... got the right status');
 }
 
-Moose::POOP::Meta::Instance->_reload_db();
+MooseX::POOP::Meta::Instance->_reload_db();
 
 {
     my $article;
@@ -383,7 +383,7 @@ Moose::POOP::Meta::Instance->_reload_db();
         $article = Newswriter::Article->new(oid => $article_oid);
     } '... (re)-created my article successfully';
     isa_ok($article, 'Newswriter::Article');
-    isa_ok($article, 'Moose::POOP::Object');
+    isa_ok($article, 'MooseX::POOP::Object');
 
     is($article->oid, $article_oid, '... got a oid for the article');
     isnt($article_ref, "$article", '... got a new article instance');
@@ -410,7 +410,7 @@ Moose::POOP::Meta::Instance->_reload_db();
         $article2 = Newswriter::Article->new(oid => $article2_oid);
     } '... (re)-created my article successfully';
     isa_ok($article2, 'Newswriter::Article');
-    isa_ok($article2, 'Moose::POOP::Object');
+    isa_ok($article2, 'MooseX::POOP::Object');
 
     is($article2->oid, $article2_oid, '... got a oid for the article');
     isnt($article2_ref, "$article2", '... got a new article instance');

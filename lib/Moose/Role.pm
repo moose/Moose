@@ -136,12 +136,7 @@ sub init_meta {
     unless ( $meta->has_method("meta") ) { # don't overwrite
         # also check for inherited non moose 'meta' method?
         # FIXME also skip this if the user requested by passing an option
-        $meta->add_method(
-            'meta' => sub {
-                # re-initialize so it inherits properly
-                $metaclass->initialize( ref($_[0]) || $_[0] );
-            }
-        );
+        $meta->_add_meta_method;
     }
 
     return $meta;
