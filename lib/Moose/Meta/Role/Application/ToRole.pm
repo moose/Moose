@@ -81,7 +81,7 @@ sub apply_methods {
 
         my $method_name = $method->name;
 
-        next if $method_name eq 'meta';
+        next if $method->isa('Class::MOP::Method::Meta');
 
         unless ( $self->is_method_excluded($method_name) ) {
 

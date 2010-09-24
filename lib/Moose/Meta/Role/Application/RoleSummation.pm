@@ -156,7 +156,6 @@ sub apply_methods {
         my $role     = $_;
         my $aliases  = $self->get_method_aliases_for_role($role);
         my %excludes = map { $_ => undef } @{ $self->get_exclusions_for_role($role) };
-        $excludes{meta} = undef;
         (
             (map {
                 exists $excludes{$_} ? () :
@@ -165,7 +164,9 @@ sub apply_methods {
                     name   => $_,
                     method => $role->get_method($_),
                 }
-            } $role->get_method_list),
+            } map { $_->name }
+              grep { !$_->isa('Class::MOP::Method::Meta') }
+                   $role->_get_local_methods),
             (map {
                 +{
                     role   => $role,

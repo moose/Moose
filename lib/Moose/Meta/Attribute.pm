@@ -685,9 +685,10 @@ sub _canonicalize_handles {
         || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
 
     return map { $_ => $_ }
-        grep { $_ ne 'meta' } (
-        $role_meta->get_method_list,
-        map { $_->name } $role_meta->get_required_method_list,
+        map { $_->name }
+        grep { !$_->isa('Class::MOP::Method::Meta') } (
+        $role_meta->_get_local_methods,
+        $role_meta->get_required_method_list,
         );
 }
 
@@ -712,7 +713,7 @@ sub _get_delegate_method_list {
     my $meta = $self->_find_delegate_metaclass;
     if ($meta->isa('Class::MOP::Class')) {
         return map  { $_->name }  # NOTE: !never! delegate &meta
-               grep { $_->package_name ne 'Moose::Object' && $_->name ne 'meta' }
+               grep { $_->package_name ne 'Moose::Object' && !$_->isa('Class::MOP::Method::Meta') }
                     $meta->get_all_methods;
     }
     elsif ($meta->isa('Moose::Meta::Role')) {

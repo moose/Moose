@@ -408,7 +408,7 @@ sub _is_role_only_subclass {
     # (not inherited)
     for my $method ( $meta->_get_local_methods ) {
         # always ignore meta
-        next if $method->name eq 'meta';
+        next if $method->isa('Class::MOP::Method::Meta');
         # we'll deal with attributes below
         next if $method->can('associated_attribute');
         # if the method comes from a role we consumed, ignore it
