@@ -31,7 +31,7 @@ sub _generate_method {
     # get
     $code .= "\n" . 'if ( @_ == 1 ) {';
 
-    $code .= "\n" . $self->_inline_check_var_is_valid_index('$_[0]');
+    $code .= "\n" . $self->_inline_check_var_is_valid_key('$_[0]');
 
     $code
         .= "\n"
@@ -45,7 +45,7 @@ sub _generate_method {
     $code .= "\n" . '} else {';
 
     $code .= "\n" . $self->_inline_check_argument_count;
-
+    $code .= "\n" . $self->_inline_process_arguments( $inv, $slot_access );
     $code
         .= "\n"
         . $self
@@ -62,11 +62,15 @@ sub _generate_method {
     $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
     $code .= "\n" . $self->_inline_capture_return_value($slot_access);
 
-    $code
-        .= "\n" . $self->_inline_store( $inv, '[' . $potential_value . ']' );
+    $code .= "\n"
+        . $self->_inline_set_new_value(
+        $inv,
+        $potential_value,
+        $slot_access,
+        );
 
-    $code .= "\n" . $self->_inline_post_body(@_);
     $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
+    $code .= "\n" . $self->_inline_post_body(@_);
 
     $code .= "\n}";
     $code .= "\n}";
