@@ -6,6 +6,16 @@ use warnings;
 use Test::More;
 use Test::Moose 'does_ok';
 
+my %handles = (
+    inc_counter    => 'inc',
+    inc_counter_2  => [ inc => 2 ],
+    dec_counter    => 'dec',
+    dec_counter_2  => [ dec => 2 ],
+    reset_counter  => 'reset',
+    set_counter    => 'set',
+    set_counter_42 => [ set => 42 ],
+);
+
 {
     package MyHomePage;
     use Moose;
@@ -15,24 +25,14 @@ use Test::Moose 'does_ok';
         is      => 'ro',
         isa     => 'Int',
         default => 0,
-        handles => {
-            inc_counter   => 'inc',
-            dec_counter   => 'dec',
-            reset_counter => 'reset',
-            set_counter   => 'set'
-        }
+        handles => \%handles,
     );
 }
 
 my $page = MyHomePage->new();
 isa_ok( $page, 'MyHomePage' );
 
-can_ok( $page, $_ ) for qw[
-    dec_counter
-    inc_counter
-    reset_counter
-    set_counter
-];
+can_ok( $page, $_ ) for sort keys %handles;
 
 is( $page->counter, 0, '... got the default value' );
 
@@ -57,23 +57,13 @@ is( $page->counter, 7, '... increment by arg' );
 $page->dec_counter(5);
 is( $page->counter, 2, '... decrement by arg' );
 
-# check the meta ..
+$page->inc_counter_2;
+is( $page->counter, 4, '... curried increment' );
 
-my $counter = $page->meta->get_attribute('counter');
-does_ok( $counter, 'Moose::Meta::Attribute::Native::Trait::Counter' );
+$page->dec_counter_2;
+is( $page->counter, 2, '... curried deccrement' );
 
-is( $counter->type_constraint->name, 'Int',
-    '... got the expected type constraint' );
-
-is_deeply(
-    $counter->handles,
-    {
-        inc_counter   => 'inc',
-        dec_counter   => 'dec',
-        reset_counter => 'reset',
-        set_counter   => 'set'
-    },
-    '... got the right handles methods'
-);
+$page->set_counter_42;
+is( $page->counter, 42, '... curried set' );
 
 done_testing;
