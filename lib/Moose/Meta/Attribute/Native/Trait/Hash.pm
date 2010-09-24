@@ -6,6 +6,7 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Moose::Meta::Method::Accessor::Native::Hash::accessor;
 use Moose::Meta::Method::Accessor::Native::Hash::clear;
 use Moose::Meta::Method::Accessor::Native::Hash::count;
 use Moose::Meta::Method::Accessor::Native::Hash::defined;
