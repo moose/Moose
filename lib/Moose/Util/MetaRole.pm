@@ -26,7 +26,7 @@ sub apply_metaroles {
     my %args = @_;
 
     _fixup_old_style_args(\%args);
-    Carp::cluck('applying') if $::D;
+
     my $for
         = blessed $args{for}
         ? $args{for}
