@@ -42,8 +42,6 @@ before 'install_accessors' => sub { (shift)->_check_handles_values };
 sub _check_handles_values {
     my $self = shift;
 
-    my $method_constructors = $self->method_constructors;
-
     my %handles = $self->_canonicalize_handles;
 
     for my $original_method ( values %handles ) {
@@ -51,10 +49,9 @@ sub _check_handles_values {
 
         my $accessor_class = $self->_native_accessor_class_for($name);
 
-        # XXX - bridge code
-        ( ( $accessor_class && $accessor_class->can('new') )
-                || exists $method_constructors->{$name} )
-            || confess "$name is an unsupported method type - $accessor_class";
+        ( $accessor_class && $accessor_class->can('new') )
+            || confess
+            "$name is an unsupported method type - $accessor_class";
     }
 }
 
@@ -85,35 +82,16 @@ around '_make_delegation_method' => sub {
 
     my $accessor_class = $self->_native_accessor_class_for($name);
 
-    # XXX - bridge code
-    if ( $accessor_class && $accessor_class->can('new') ) {
-        return $accessor_class->new(
-            name              => $handle_name,
-            package_name      => $self->associated_class->name,
-            attribute         => $self,
-            curried_arguments => \@curried_args,
-            root_types        => [ $self->_root_types ],
-        );
-    }
-    # XXX - bridge code
-    else {
-        my $method_constructors = $self->method_constructors;
+    die "Cannot find an accessor class for $name"
+        unless $accessor_class && $accessor_class->can('new');
 
-        my $code = $method_constructors->{$name}->(
-            $self,
-            $self->get_read_method_ref,
-            $self->get_write_method_ref,
-        );
-
-        return $next->(
-            $self,
-            $handle_name,
-            sub {
-                my $instance = shift;
-                return $code->( $instance, @curried_args, @_ );
-            }
-        );
-    }
+    return $accessor_class->new(
+        name              => $handle_name,
+        package_name      => $self->associated_class->name,
+        attribute         => $self,
+        curried_arguments => \@curried_args,
+        root_types        => [ $self->_root_types ],
+    );
 };
 
 sub _root_types {
@@ -141,23 +119,6 @@ has '_native_type' => (
     isa     => 'Str',
     lazy    => 1,
     builder => '_build_native_type',
-);
-
-has 'method_constructors' => (
-    is      => 'ro',
-    isa     => 'HashRef',
-    lazy    => 1,
-    default => sub {
-        my $self = shift;
-        return +{}
-            unless $self->can('has_method_provider')
-                && $self->has_method_provider;
-
-        # or grab them from the role/class
-        my $method_provider = $self->method_provider->meta;
-        return +{ map { $_->name => $_ }
-                $method_provider->_get_local_methods };
-    },
 );
 
 no Moose::Role;
