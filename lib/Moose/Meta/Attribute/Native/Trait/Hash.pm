@@ -6,8 +6,6 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Attribute::Native::MethodProvider::Hash;
-
 use Moose::Meta::Method::Accessor::Native::Hash::clear;
 use Moose::Meta::Method::Accessor::Native::Hash::count;
 use Moose::Meta::Method::Accessor::Native::Hash::defined;
@@ -22,13 +20,6 @@ use Moose::Meta::Method::Accessor::Native::Hash::set;
 use Moose::Meta::Method::Accessor::Native::Hash::values;
 
 with 'Moose::Meta::Attribute::Native::Trait';
-
-has 'method_provider' => (
-    is        => 'ro',
-    isa       => 'ClassName',
-    predicate => 'has_method_provider',
-    default   => 'Moose::Meta::Attribute::Native::MethodProvider::Hash'
-);
 
 sub _helper_type { 'HashRef' }
 
@@ -70,9 +61,6 @@ This module provides a Hash attribute which provides a number of
 hash-like operations.
 
 =head1 PROVIDED METHODS
-
-These methods are implemented in
-L<Moose::Meta::Attribute::Native::MethodProvider::Hash>.
 
 =over 4
 
@@ -144,10 +132,6 @@ arguments, sets the value of the specified key.
 =over 4
 
 =item B<meta>
-
-=item B<method_provider>
-
-=item B<has_method_provider>
 
 =back
 

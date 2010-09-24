@@ -70,11 +70,6 @@ above. This allows for a very basic string definition:
 
 =head1 PROVIDED METHODS
 
-These methods are implemented in
-L<Moose::Meta::Attribute::Native::MethodProvider::String>. It is important to
-note that all those methods do in place modification of the value stored in
-the attribute.
-
 =over 4
 
 =item B<inc>
@@ -130,10 +125,6 @@ based on C<substr>'s arity.
 =over 4
 
 =item B<meta>
-
-=item B<method_provider>
-
-=item B<has_method_provider>
 
 =back
 

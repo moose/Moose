@@ -65,10 +65,6 @@ Calls the coderef with the the instance as invocant and given args.
 
 =item B<meta>
 
-=item B<method_provider>
-
-=item B<has_method_provider>
-
 =back
 
 =head1 BUGS

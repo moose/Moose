@@ -82,9 +82,6 @@ array operations.
 
 =head1 PROVIDED METHODS
 
-These methods are implemented in
-L<Moose::Meta::Attribute::Native::MethodProvider::Array>.
-
 =over 4
 
 =item B<count>
@@ -245,10 +242,6 @@ in the array.
 =over 4
 
 =item B<meta>
-
-=item B<method_provider>
-
-=item B<has_method_provider>
 
 =back
 
