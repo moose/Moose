@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Moose ();
+use Moose::Util::TypeConstraints;
 use Test::More;
 use Test::Exception;
 use Test::Moose;
@@ -58,6 +59,15 @@ use Test::Moose;
 {
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => q{} ) );
+
+    # Will force the inlining code to check the entire hashref when it is modified.
+    subtype 'MyStr', as 'Str', where { 1 };
+
+    run_tests( build_class( isa => 'MyStr' ) );
+
+    coerce 'MyStr', from 'Str', via { $_ };
+
+    run_tests( build_class( isa => 'MyStr', coerce => 1 ) );
 }
 
 sub run_tests {
