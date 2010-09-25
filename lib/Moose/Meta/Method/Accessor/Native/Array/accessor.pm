@@ -45,7 +45,7 @@ sub _generate_method {
     $code .= "\n" . '} else {';
 
     $code .= "\n" . $self->_inline_check_argument_count;
-
+    $code .= "\n" . $self->_inline_process_arguments( $inv, $slot_access );
     $code
         .= "\n"
         . $self
@@ -53,6 +53,7 @@ sub _generate_method {
 
     my $potential_value = $self->_potential_value($slot_access);
 
+    $code .= "\n" . $self->_inline_copy_value( \$potential_value );
     $code .= "\n"
         . $self->_inline_tc_code(
         $potential_value,
