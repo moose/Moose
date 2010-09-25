@@ -28,11 +28,11 @@ sub _generate_method {
 
     $code .= "\n" . 'if ( @_ == 1 || @_ == 2 ) {';
 
-    $code .= $self->_reader_core( $inv, $slot_access, @_ );
+    $code .= $self->_reader_core( $inv, $slot_access );
 
     $code .= "\n" . '} elsif ( @_ == 3 ) {';
 
-    $code .= $self->_writer_core( $inv, $slot_access, @_ );
+    $code .= $self->_writer_core( $inv, $slot_access );
 
     $code .= "\n" . $self->_inline_post_body(@_);
 
