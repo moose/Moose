@@ -68,25 +68,49 @@ sub run_tests {
 
         is( $obj->integer, 15, 'Add ten for fithteen' );
 
+        throws_ok { $obj->add( 10, 2 ) }
+        qr/Cannot call add with more than 1 argument/,
+            'add throws an error when 2 arguments are passed';
+
         $obj->sub(3);
 
         is( $obj->integer, 12, 'Subtract three for 12' );
+
+        throws_ok { $obj->sub( 10, 2 ) }
+        qr/Cannot call sub with more than 1 argument/,
+            'sub throws an error when 2 arguments are passed';
 
         $obj->set(10);
 
         is( $obj->integer, 10, 'Set to ten' );
 
+        throws_ok { $obj->set( 10, 2 ) }
+        qr/Cannot call set with more than 1 argument/,
+            'set throws an error when 2 arguments are passed';
+
         $obj->div(2);
 
         is( $obj->integer, 5, 'divide by 2' );
+
+        throws_ok { $obj->div( 10, 2 ) }
+        qr/Cannot call div with more than 1 argument/,
+            'div throws an error when 2 arguments are passed';
 
         $obj->mul(2);
 
         is( $obj->integer, 10, 'multiplied by 2' );
 
+        throws_ok { $obj->mul( 10, 2 ) }
+        qr/Cannot call mul with more than 1 argument/,
+            'mul throws an error when 2 arguments are passed';
+
         $obj->mod(2);
 
         is( $obj->integer, 0, 'Mod by 2' );
+
+        throws_ok { $obj->mod( 10, 2 ) }
+        qr/Cannot call mod with more than 1 argument/,
+            'mod throws an error when 2 arguments are passed';
 
         $obj->set(7);
 
@@ -97,6 +121,10 @@ sub run_tests {
         $obj->set(-1);
 
         $obj->abs;
+
+        throws_ok { $obj->abs(10) }
+        qr/Cannot call abs with any arguments/,
+            'abs throws an error when an argument is passed';
 
         is( $obj->integer, 1, 'abs 1' );
 
