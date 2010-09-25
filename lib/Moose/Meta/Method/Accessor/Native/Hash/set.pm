@@ -47,7 +47,7 @@ sub _adds_members { 1 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "%{ $slot_access, @_ }";
+    return "%{ $slot_access, \@_ }";
 }
 
 sub _new_members { '@_[ @values_idx ]' }
