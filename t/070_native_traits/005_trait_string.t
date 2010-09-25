@@ -263,6 +263,17 @@ sub run_tests {
             $obj->_string, 'song long string',
             'substr_curried_3 as setter'
         );
+
+        if ( $class->meta->get_attribute('_string')->is_lazy ) {
+            my $obj = $class->new;
+
+            $obj->append('foo');
+
+            is(
+                $obj->_string, 'foo',
+                'append with lazy default'
+            );
+        }
     }
     $class;
 }
