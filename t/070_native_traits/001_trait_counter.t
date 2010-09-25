@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use Moose ();
 use Test::Exception;
 use Test::More;
 use Test::Moose;
@@ -18,72 +19,105 @@ my %handles = (
 );
 
 {
+    my $name = 'Foo1';
 
-    package Foo;
-    use Moose;
+    sub build_class {
+        my %attr = @_;
 
-    has 'counter' => (
-        traits  => ['Counter'],
-        is      => 'ro',
-        isa     => 'Int',
-        default => 0,
-        handles => \%handles,
-    );
+        my $class = Moose::Meta::Class->create(
+            $name++,
+            superclasses => ['Moose::Object'],
+        );
+
+        $class->add_attribute(
+            counter => (
+                traits  => ['Counter'],
+                is      => 'ro',
+                isa     => 'Int',
+                default => 0,
+                handles => \%handles,
+                clearer => '_clear_counter',
+                %attr,
+            ),
+        );
+
+        return ( $class->name, \%handles );
+    }
 }
 
-can_ok( 'Foo', $_ ) for sort keys %handles;
-
-with_immutable {
-    my $foo = Foo->new();
-
-    is( $foo->counter, 0, '... got the default value' );
-
-    $foo->inc_counter;
-    is( $foo->counter, 1, '... got the incremented value' );
-
-    $foo->inc_counter;
-    is( $foo->counter, 2, '... got the incremented value (again)' );
-
-    throws_ok { $foo->inc_counter( 1, 2 ) }
-    qr/Cannot call inc with more than 1 argument/,
-        'inc throws an error when two arguments are passed';
-
-    $foo->dec_counter;
-    is( $foo->counter, 1, '... got the decremented value' );
-
-    throws_ok { $foo->dec_counter( 1, 2 ) }
-    qr/Cannot call dec with more than 1 argument/,
-        'dec throws an error when two arguments are passed';
-
-    $foo->reset_counter;
-    is( $foo->counter, 0, '... got the original value' );
-
-    throws_ok { $foo->reset_counter(2) }
-    qr/Cannot call reset with any arguments/,
-        'reset throws an error when an argument is passed';
-
-    $foo->set_counter(5);
-    is( $foo->counter, 5, '... set the value' );
-
-    throws_ok { $foo->set_counter( 1, 2 ) }
-    qr/Cannot call set with more than 1 argument/,
-        'set throws an error when two arguments are passed';
-
-    $foo->inc_counter(2);
-    is( $foo->counter, 7, '... increment by arg' );
-
-    $foo->dec_counter(5);
-    is( $foo->counter, 2, '... decrement by arg' );
-
-    $foo->inc_counter_2;
-    is( $foo->counter, 4, '... curried increment' );
-
-    $foo->dec_counter_2;
-    is( $foo->counter, 2, '... curried deccrement' );
-
-    $foo->set_counter_42;
-    is( $foo->counter, 42, '... curried set' );
+{
+    run_tests(build_class);
+    run_tests(build_class(lazy => 1));
 }
-'Foo';
+
+sub run_tests {
+    my ( $class, $handles ) = @_;
+
+    can_ok( $class, $_ ) for sort keys %{$handles};
+    with_immutable {
+        my $obj = $class->new();
+
+        is( $obj->counter, 0, '... got the default value' );
+
+        $obj->inc_counter;
+        is( $obj->counter, 1, '... got the incremented value' );
+
+        $obj->inc_counter;
+        is( $obj->counter, 2, '... got the incremented value (again)' );
+
+        throws_ok { $obj->inc_counter( 1, 2 ) }
+        qr/Cannot call inc with more than 1 argument/,
+            'inc throws an error when two arguments are passed';
+
+        $obj->dec_counter;
+        is( $obj->counter, 1, '... got the decremented value' );
+
+        throws_ok { $obj->dec_counter( 1, 2 ) }
+        qr/Cannot call dec with more than 1 argument/,
+            'dec throws an error when two arguments are passed';
+
+        $obj->reset_counter;
+        is( $obj->counter, 0, '... got the original value' );
+
+        throws_ok { $obj->reset_counter(2) }
+        qr/Cannot call reset with any arguments/,
+            'reset throws an error when an argument is passed';
+
+        $obj->set_counter(5);
+        is( $obj->counter, 5, '... set the value' );
+
+        throws_ok { $obj->set_counter( 1, 2 ) }
+        qr/Cannot call set with more than 1 argument/,
+            'set throws an error when two arguments are passed';
+
+        $obj->inc_counter(2);
+        is( $obj->counter, 7, '... increment by arg' );
+
+        $obj->dec_counter(5);
+        is( $obj->counter, 2, '... decrement by arg' );
+
+        $obj->inc_counter_2;
+        is( $obj->counter, 4, '... curried increment' );
+
+        $obj->dec_counter_2;
+        is( $obj->counter, 2, '... curried deccrement' );
+
+        $obj->set_counter_42;
+        is( $obj->counter, 42, '... curried set' );
+
+        if ( $class->meta->get_attribute('counter')->is_lazy ) {
+            my $obj = $class->new;
+
+            $obj->inc_counter;
+            is( $obj->counter, 1, 'inc increments - with lazy default' );
+
+            $obj->_clear_counter;
+
+            $obj->dec_counter;
+            is( $obj->counter, -1, 'dec decrements - with lazy default' );
+        }
+    }
+    $class;
+}
 
 done_testing;
