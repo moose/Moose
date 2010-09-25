@@ -48,7 +48,7 @@ sub _writer_core {
 
     my $potential_value = $self->_potential_value($slot_access);
 
-    $code .= "\n" . $self->_inline_copy_value( \$potential_value );
+    $code .= "\n" . $self->_inline_copy_native_value( \$potential_value );
     $code .= "\n"
         . $self->_inline_tc_code(
         $potential_value
@@ -96,7 +96,7 @@ sub _is_root_type {
     return any { $name eq $_ } @{ $self->root_types };
 }
 
-sub _inline_copy_value {
+sub _inline_copy_native_value {
     my ( $self, $potential_ref ) = @_;
 
     return q{} unless $self->_value_needs_copy;
