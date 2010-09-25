@@ -3,111 +3,128 @@
 use strict;
 use warnings;
 
+use Moose ();
+use Test::Exception;
 use Test::More;
 use Test::Moose;
 
 {
-    package Real;
-    use Moose;
-
-    has 'integer' => (
-        traits  => ['Number'],
-        is      => 'ro',
-        isa     => 'Int',
-        default => 5,
-        handles => {
-            set         => 'set',
-            add         => 'add',
-            sub         => 'sub',
-            mul         => 'mul',
-            div         => 'div',
-            mod         => 'mod',
-            abs         => 'abs',
-            inc         => [ add => 1 ],
-            dec         => [ sub => 1 ],
-            odd         => [ mod => 2 ],
-            cut_in_half => [ div => 2 ],
-
-        },
+    my %handles = (
+        abs         => 'abs',
+        add         => 'add',
+        inc         => [ add => 1 ],
+        div         => 'div',
+        cut_in_half => [ div => 2 ],
+        mod         => 'mod',
+        odd         => [ mod => 2 ],
+        mul         => 'mul',
+        set         => 'set',
+        sub         => 'sub',
+        dec         => [ sub => 1 ],
     );
+
+    my $name = 'Foo1';
+
+    sub build_class {
+        my %attr = @_;
+
+        my $class = Moose::Meta::Class->create(
+            $name++,
+            superclasses => ['Moose::Object'],
+        );
+
+        $class->add_attribute(
+            integer => (
+                traits  => ['Number'],
+                is      => 'ro',
+                isa     => 'Int',
+                default => 5,
+                handles => \%handles,
+                clearer => '_clear_integer',
+                %attr,
+            ),
+        );
+
+        return ( $class->name, \%handles );
+    }
 }
 
-my $real = Real->new;
-isa_ok( $real, 'Real' );
+{
+    run_tests(build_class);
+    run_tests( build_class( lazy => 1 ) );
+}
 
-can_ok( $real, $_ ) for qw[
-    set add sub mul div mod abs inc dec odd cut_in_half
-];
+sub run_tests {
+    my ( $class, $handles ) = @_;
 
-is $real->integer, 5, 'Default to five';
+    can_ok( $class, $_ ) for sort keys %{$handles};
 
-$real->add(10);
+    with_immutable {
+        my $obj = $class->new;
 
-is $real->integer, 15, 'Add ten for fithteen';
+        is( $obj->integer, 5, 'Default to five' );
 
-$real->sub(3);
+        $obj->add(10);
 
-is $real->integer, 12, 'Subtract three for 12';
+        is( $obj->integer, 15, 'Add ten for fithteen' );
 
-$real->set(10);
+        $obj->sub(3);
 
-is $real->integer, 10, 'Set to ten';
+        is( $obj->integer, 12, 'Subtract three for 12' );
 
-$real->div(2);
+        $obj->set(10);
 
-is $real->integer, 5, 'divide by 2';
+        is( $obj->integer, 10, 'Set to ten' );
 
-$real->mul(2);
+        $obj->div(2);
 
-is $real->integer, 10, 'multiplied by 2';
+        is( $obj->integer, 5, 'divide by 2' );
 
-$real->mod(2);
+        $obj->mul(2);
 
-is $real->integer, 0, 'Mod by 2';
+        is( $obj->integer, 10, 'multiplied by 2' );
 
-$real->set(7);
+        $obj->mod(2);
 
-$real->mod(5);
+        is( $obj->integer, 0, 'Mod by 2' );
 
-is $real->integer, 2, 'Mod by 5';
+        $obj->set(7);
 
-$real->set(-1);
+        $obj->mod(5);
 
-$real->abs;
+        is( $obj->integer, 2, 'Mod by 5' );
 
-is $real->integer, 1, 'abs 1';
+        $obj->set(-1);
 
-$real->set(12);
+        $obj->abs;
 
-$real->inc;
+        is( $obj->integer, 1, 'abs 1' );
 
-is $real->integer, 13, 'inc 12';
+        $obj->set(12);
 
-$real->dec;
+        $obj->inc;
 
-is $real->integer, 12, 'dec 13';
+        is( $obj->integer, 13, 'inc 12' );
 
-## test the meta
+        $obj->dec;
 
-my $attr = $real->meta->get_attribute('integer');
-does_ok( $attr, 'Moose::Meta::Attribute::Native::Trait::Number' );
+        is( $obj->integer, 12, 'dec 13' );
 
-is_deeply(
-    $attr->handles,
-    {
-        set         => 'set',
-        add         => 'add',
-        sub         => 'sub',
-        mul         => 'mul',
-        div         => 'div',
-        mod         => 'mod',
-        abs         => 'abs',
-        inc         => [ add => 1 ],
-        dec         => [ sub => 1 ],
-        odd         => [ mod => 2 ],
-        cut_in_half => [ div => 2 ],
-    },
-    '... got the right handles mapping'
-);
+        if ( $class->meta->get_attribute('integer')->is_lazy ) {
+            my $obj = $class->new;
+
+            $obj->add(2);
+
+            is( $obj->integer, 7, 'add with lazy default' );
+
+            $obj->_clear_integer;
+
+            $obj->mod(2);
+
+            is( $obj->integer, 1, 'mod with lazy default' );
+        }
+    }
+    $class;
+}
 
 done_testing;
