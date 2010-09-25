@@ -8,17 +8,17 @@ use Test::Exception;
 use Test::More;
 use Test::Moose;
 
-my %handles = (
-    inc_counter    => 'inc',
-    inc_counter_2  => [ inc => 2 ],
-    dec_counter    => 'dec',
-    dec_counter_2  => [ dec => 2 ],
-    reset_counter  => 'reset',
-    set_counter    => 'set',
-    set_counter_42 => [ set => 42 ],
-);
-
 {
+    my %handles = (
+        inc_counter    => 'inc',
+        inc_counter_2  => [ inc => 2 ],
+        dec_counter    => 'dec',
+        dec_counter_2  => [ dec => 2 ],
+        reset_counter  => 'reset',
+        set_counter    => 'set',
+        set_counter_42 => [ set => 42 ],
+    );
+
     my $name = 'Foo1';
 
     sub build_class {
@@ -47,13 +47,14 @@ my %handles = (
 
 {
     run_tests(build_class);
-    run_tests(build_class(lazy => 1));
+    run_tests( build_class( lazy => 1 ) );
 }
 
 sub run_tests {
     my ( $class, $handles ) = @_;
 
     can_ok( $class, $_ ) for sort keys %{$handles};
+
     with_immutable {
         my $obj = $class->new();
 
