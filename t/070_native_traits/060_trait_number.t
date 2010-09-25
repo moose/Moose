@@ -53,6 +53,7 @@ use Test::Moose;
 {
     run_tests(build_class);
     run_tests( build_class( lazy => 1 ) );
+    run_tests( build_class( trigger => sub { } ) );
 
     # Will force the inlining code to check the entire hashref when it is modified.
     subtype 'MyInt', as 'Int', where { 1 };

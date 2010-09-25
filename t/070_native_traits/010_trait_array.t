@@ -89,6 +89,7 @@ use Test::Moose;
 {
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
+    run_tests( build_class( trigger => sub { } ) );
 
     # Will force the inlining code to check the entire arrayref when it is modified.
     subtype 'MyArrayRef', as 'ArrayRef', where { 1 };
