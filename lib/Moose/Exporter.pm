@@ -357,6 +357,9 @@ sub _make_import_sub {
             = Moose::Util::resolve_metaclass_alias( 'Class' => $metaclass )
             if defined $metaclass && length $metaclass;
 
+        my $no_meta;
+        ( $no_meta, @_ ) = _strip_no_meta(@_);
+
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
         # else (like Squirrel).
@@ -380,7 +383,11 @@ sub _make_import_sub {
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
-            $c->init_meta( for_class => $CALLER, metaclass => $metaclass );
+            $c->init_meta(
+                for_class => $CALLER,
+                metaclass => $metaclass,
+                no_meta   => $no_meta,
+            );
             $did_init_meta = 1;
         }
 
@@ -442,6 +449,18 @@ sub _strip_metaclass {
     splice @_, $idx, 2;
 
     return ( $metaclass, @_ );
+}
+
+sub _strip_no_meta {
+    my $idx = first_index { $_ eq '-no_meta' } @_;
+
+    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+
+    my $no_meta = $_[ $idx + 1 ];
+
+    splice @_, $idx, 2;
+
+    return ( $no_meta, @_ );
 }
 
 sub _apply_meta_traits {
