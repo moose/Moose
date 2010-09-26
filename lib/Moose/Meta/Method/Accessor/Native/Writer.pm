@@ -9,7 +9,11 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native';
+
+requires '_potential_value';
 
 sub _generate_method {
     my $self = shift;
@@ -130,31 +134,33 @@ sub _inline_check_coercion {
     return "$value = \$type_constraint_obj->coerce($value);";
 }
 
-sub _inline_check_constraint {
+override _inline_check_constraint => sub {
     my $self = shift;
 
     return q{} unless $self->_constraint_must_be_checked;
 
-    return $self->SUPER::_inline_check_constraint( $_[0] );
-}
+    return super();
+};
 
 sub _inline_capture_return_value { return q{} }
 
 sub _inline_set_new_value {
     my $self = shift;
 
-    return $self->SUPER::_inline_store(@_)
+    return $self->_inline_store(@_)
         if $self->_value_needs_copy || !$self->_slot_access_can_be_inlined;
 
     return $self->_inline_optimized_set_new_value(@_);
-}
+};
 
 sub _inline_optimized_set_new_value {
     my $self = shift;
 
-    return $self->SUPER::_inline_store(@_)
+    return $self->_inline_store(@_);
 }
 
 sub _return_value { return q{} }
+
+no Moose::Role;
 
 1;

@@ -9,11 +9,18 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
 
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Array'
-);
+with 'Moose::Meta::Method::Accessor::Native::Reader' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            )
+    ],
+    },
+    'Moose::Meta::Method::Accessor::Native::Array';
 
 sub _minimum_arguments { 1 }
 

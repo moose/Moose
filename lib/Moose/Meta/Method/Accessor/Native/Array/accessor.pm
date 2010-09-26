@@ -7,10 +7,27 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base qw(
-    Moose::Meta::Method::Accessor::Native::Array::set
-    Moose::Meta::Method::Accessor::Native::Array::get
-);
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Array::set' => {
+    -excludes => [
+        qw( _generate_method
+            _minimum_arguments
+            _maximum_arguments
+            _inline_process_arguments
+            _inline_check_arguments
+            _return_value)
+    ]
+    },
+    'Moose::Meta::Method::Accessor::Native::Array::get' => {
+    -excludes => [
+        qw(
+            _generate_method
+            _minimum_arguments
+            _maximum_arguments
+            )
+    ]
+    };
 
 sub _generate_method {
     my $self = shift;
@@ -58,8 +75,6 @@ sub _generate_method {
 sub _minimum_arguments {2}
 sub _maximum_arguments {2}
 
-sub _adds_members {1}
-
-sub _new_members {'$_[1]'}
+no Moose::Role;
 
 1;

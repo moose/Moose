@@ -3,8 +3,11 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Moose ();
 use Moose::Util::TypeConstraints;
+use NoInlineAttribute;
 use Test::Exception;
 use Test::More;
 use Test::Moose;
@@ -30,9 +33,13 @@ use Test::Moose;
             superclasses => ['Moose::Object'],
         );
 
+        my @traits = 'Counter';
+        push @traits, 'NoInlineAttribute'
+            if delete $attr{no_inline};
+
         $class->add_attribute(
             counter => (
-                traits  => ['Counter'],
+                traits  => \@traits,
                 is      => 'ro',
                 isa     => 'Int',
                 default => 0,
@@ -50,6 +57,7 @@ use Test::Moose;
     run_tests(build_class);
     run_tests( build_class( lazy => 1 ) );
     run_tests( build_class( trigger => sub { } ) );
+    run_tests( build_class( no_inline => 1 ) );
 
     # Will force the inlining code to check the entire hashref when it is modified.
     subtype 'MyInt', as 'Int', where { 1 };

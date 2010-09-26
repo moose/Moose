@@ -10,25 +10,12 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor', 'Moose::Meta::Method::Delegation';
+use Moose::Role;
 
-sub new {
+around new => sub {
+    my $orig = shift;
     my $class   = shift;
     my %options = @_;
-
-    die "Cannot instantiate a $class object directly"
-        if $class eq __PACKAGE__;
-
-    ( exists $options{attribute} )
-        || confess "You must supply an attribute to construct with";
-
-    ( blessed( $options{attribute} )
-            && $options{attribute}->isa('Class::MOP::Attribute') )
-        || confess
-        "You must supply an attribute which is a 'Class::MOP::Attribute' instance";
-
-    ( $options{package_name} && $options{name} )
-        || confess "You must supply the package_name and name parameters";
 
     exists $options{curried_arguments}
         || ( $options{curried_arguments} = [] );
@@ -38,25 +25,20 @@ sub new {
         || confess
         'You must supply a curried_arguments which is an ARRAY reference';
 
-    $options{delegate_to_method} = lc( ( split /::/, $class)[-1] );
-
     $options{definition_context} = $options{attribute}->definition_context;
 
-    my $self = $class->_new( \%options );
+    $options{accessor_type} = 'native';
 
-    weaken( $self->{'attribute'} );
+    return $class->$orig(%options);
+};
 
-    $self->_initialize_body;
-
-    return $self;
-}
-
-sub _new {
+around _new => sub {
+    shift;
     my $class = shift;
     my $options = @_ == 1 ? $_[0] : {@_};
 
     return bless $options, $class;
-}
+};
 
 sub root_types { (shift)->{'root_types'} }
 
@@ -115,28 +97,26 @@ sub _inline_check_argument_count {
 sub _minimum_arguments { 0 }
 sub _maximum_arguments { undef }
 
-sub _inline_check_arguments { q{} }
-
-sub _inline_get {
+override _inline_get => sub {
     my ( $self, $instance ) = @_;
 
     return $self->_slot_access_can_be_inlined
-        ? $self->SUPER::_inline_get($instance)
+        ? super()
         : "${instance}->\$reader";
-}
+};
 
-sub _inline_store {
+override _inline_store => sub {
     my ( $self, $instance, $value ) = @_;
 
     return $self->_slot_access_can_be_inlined
-        ? $self->SUPER::_inline_store( $instance, $value )
+        ? super()
         : "${instance}->\$writer($value)";
-}
+};
 
-sub _eval_environment {
+override _eval_environment => sub {
     my $self = shift;
 
-    my $env = $self->SUPER::_eval_environment(@_);
+    my $env = super();
 
     $env->{'@curried'} = $self->curried_arguments;
 
@@ -153,12 +133,14 @@ sub _eval_environment {
     $env->{'$writer'} = \$writer;
 
     return $env;
-}
+};
 
 sub _slot_access_can_be_inlined {
     my $self = shift;
 
     return $self->is_inline && $self->_instance_is_inlinable;
 }
+
+no Moose::Role;
 
 1;

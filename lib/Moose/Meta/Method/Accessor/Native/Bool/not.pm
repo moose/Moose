@@ -7,9 +7,11 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
 
-sub _minimum_arguments { 0 }
+with 'Moose::Meta::Method::Accessor::Native::Reader' =>
+    { -excludes => ['_maximum_arguments'] };
+
 sub _maximum_arguments { 0 }
 
 sub _return_value {

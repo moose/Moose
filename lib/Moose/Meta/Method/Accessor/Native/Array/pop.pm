@@ -7,7 +7,16 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Array::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
+    -excludes => [
+        qw( _maximum_arguments
+            _inline_capture_return_value
+            _inline_optimized_set_new_value
+            _return_value )
+    ]
+};
 
 sub _maximum_arguments { 0 }
 
@@ -36,5 +45,7 @@ sub _return_value {
 
     return 'return $old;';
 }
+
+no Moose::Role;
 
 1;

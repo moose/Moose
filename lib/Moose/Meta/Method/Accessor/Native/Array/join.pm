@@ -7,7 +7,17 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Reader' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            )
+    ]
+};
 
 sub _minimum_arguments { 1 }
 
@@ -27,5 +37,7 @@ sub _return_value {
 
     return "join \$_[0], \@{ $slot_access }";
 }
+
+no Moose::Role;
 
 1;

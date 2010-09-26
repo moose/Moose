@@ -9,10 +9,18 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base qw(
-    Moose::Meta::Method::Accessor::Native::Hash
-    Moose::Meta::Method::Accessor::Native::Reader
-);
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Reader' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            )
+    ],
+    },
+    'Moose::Meta::Method::Accessor::Native::Hash';
 
 sub _minimum_arguments { 1 }
 
@@ -31,5 +39,6 @@ sub _return_value {
     return "defined ${slot_access}->{ \$_[0] }";
 }
 
+no Moose::Role;
 
 1;

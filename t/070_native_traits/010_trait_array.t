@@ -3,8 +3,12 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Moose ();
+use Moose::Util::MetaRole;
 use Moose::Util::TypeConstraints;
+use NoInlineAttribute;
 use Test::More;
 use Test::Exception;
 use Test::Moose;
@@ -70,9 +74,13 @@ use Test::Moose;
             superclasses => ['Moose::Object'],
         );
 
+        my @traits = 'Array';
+        push @traits, 'NoInlineAttribute'
+            if delete $attr{no_inline};
+
         $class->add_attribute(
             _values => (
-                traits  => ['Array'],
+                traits  => \@traits,
                 is      => 'rw',
                 isa     => 'ArrayRef[Int]',
                 default => sub { [] },
@@ -90,6 +98,7 @@ use Test::Moose;
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
     run_tests( build_class( trigger => sub { } ) );
+    run_tests( build_class( no_inline => 1 ) );
 
     # Will force the inlining code to check the entire arrayref when it is modified.
     subtype 'MyArrayRef', as 'ArrayRef', where { 1 };
@@ -278,6 +287,10 @@ sub run_tests {
             !$obj->is_empty,
             'values is not empty after failed call to clear'
         );
+
+        throws_ok { $obj->is_empty(50) }
+        qr/Cannot call is_empty with any arguments/,
+            'throws an error when is_empty is called with an argument';
 
         $obj->clear;
         $obj->push( 1, 5, 10, 42 );

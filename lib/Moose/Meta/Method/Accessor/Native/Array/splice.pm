@@ -7,7 +7,18 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Array::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _inline_process_arguments
+            _inline_check_arguments
+            _inline_optimized_set_new_value
+            )
+    ]
+};
 
 sub _minimum_arguments { 1 }
 
@@ -38,5 +49,7 @@ sub _inline_optimized_set_new_value {
 
     return "defined \$len ? ( splice \@{ $slot_access }, \$idx, \$len, \@_ ) : ( splice \@{ $slot_access }, \$idx )";
 }
+
+no Moose::Role;
 
 1;

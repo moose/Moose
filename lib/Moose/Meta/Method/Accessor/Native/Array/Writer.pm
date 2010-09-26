@@ -3,20 +3,15 @@ package Moose::Meta::Method::Accessor::Native::Array::Writer;
 use strict;
 use warnings;
 
-use Class::MOP::MiniTrait;
-
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Writer';
+use Moose::Role;
 
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Array'
-);
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Collection'
-);
+with 'Moose::Meta::Method::Accessor::Native::Writer',
+    'Moose::Meta::Method::Accessor::Native::Array',
+    'Moose::Meta::Method::Accessor::Native::Collection';
 
 sub _new_members {'@_'}
 

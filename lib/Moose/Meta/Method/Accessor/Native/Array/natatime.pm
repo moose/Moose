@@ -9,7 +9,18 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Reader' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            _inline_return_value
+            )
+    ]
+};
 
 sub _minimum_arguments {1}
 
@@ -38,5 +49,10 @@ sub _inline_return_value {
         . '} else {' . "\n"
         . 'return $iter;' . "\n" . '}';
 }
+
+# Not called, but needed to satisfy the Reader role
+sub _return_value { }
+
+no Moose::Role;
 
 1;

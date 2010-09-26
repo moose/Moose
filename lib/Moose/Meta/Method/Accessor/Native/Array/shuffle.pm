@@ -9,7 +9,10 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Reader' =>
+    { -excludes => ['_maximum_arguments'] };
 
 sub _maximum_arguments { 0 }
 
@@ -19,5 +22,7 @@ sub _return_value {
 
     return "List::Util::shuffle \@{ $slot_access }";
 }
+
+no Moose::Role;
 
 1;

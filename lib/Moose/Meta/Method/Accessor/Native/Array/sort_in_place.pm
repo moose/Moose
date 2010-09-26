@@ -7,7 +7,16 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Array::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
+    -excludes => [
+        qw(
+            _maximum_arguments
+            _inline_check_arguments
+            )
+    ]
+};
 
 sub _maximum_arguments { 1 }
 
@@ -27,5 +36,7 @@ sub _potential_value {
     return
         "[ \$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ $slot_access } : sort \@{ $slot_access} ]";
 }
+
+no Moose::Role;
 
 1;

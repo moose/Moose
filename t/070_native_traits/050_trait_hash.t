@@ -3,8 +3,11 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Moose ();
 use Moose::Util::TypeConstraints;
+use NoInlineAttribute;
 use Test::Exception;
 use Test::More;
 use Test::Moose;
@@ -35,9 +38,13 @@ use Test::Moose;
             superclasses => ['Moose::Object'],
         );
 
+        my @traits = 'Hash';
+        push @traits, 'NoInlineAttribute'
+            if delete $attr{no_inline};
+
         $class->add_attribute(
             options => (
-                traits  => ['Hash'],
+                traits  => \@traits,
                 is      => 'ro',
                 isa     => 'HashRef[Str]',
                 default => sub { {} },
@@ -55,6 +62,7 @@ use Test::Moose;
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => sub { { x => 1 } } ) );
     run_tests( build_class( trigger => sub { } ) );
+    run_tests( build_class( no_inline => 1 ) );
 
     # Will force the inlining code to check the entire hashref when it is modified.
     subtype 'MyHashRef', as 'HashRef[Str]', where { 1 };

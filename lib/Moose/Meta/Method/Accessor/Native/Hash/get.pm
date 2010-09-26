@@ -9,15 +9,19 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Reader';
+use Moose::Role;
 
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Hash'
-);
+with 'Moose::Meta::Method::Accessor::Native::Reader' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _inline_check_arguments
+            )
+    ],
+    },
+    'Moose::Meta::Method::Accessor::Native::Hash';
 
 sub _minimum_arguments { 1 }
-
-sub _maximum_arguments { undef }
 
 sub _inline_check_arguments {
     my $self = shift;
@@ -34,5 +38,6 @@ sub _return_value {
     return "\@_ > 1 ? \@{ $slot_access }{\@_} : ${slot_access}->{ \$_[0] }";
 }
 
+no Moose::Role;
 
 1;

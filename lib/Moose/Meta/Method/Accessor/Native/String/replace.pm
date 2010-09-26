@@ -7,9 +7,21 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Writer' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            _inline_optimized_set_new_value
+            )
+    ]
+};
 
 sub _minimum_arguments { 1 }
+
 sub _maximum_arguments { 2 }
 
 sub _inline_check_arguments {
@@ -35,5 +47,7 @@ sub _inline_optimized_set_new_value {
 
     return "if ( ref \$_[1] ) { $slot_access =~ s/\$_[0]/\$_[1]->()/e; } else { $slot_access =~ s/\$_[0]/\$_[1]/; }";
 }
+
+no Moose::Role;
 
 1;

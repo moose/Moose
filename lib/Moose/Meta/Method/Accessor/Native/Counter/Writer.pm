@@ -7,7 +7,9 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Writer';
 
 sub _constraint_must_be_checked {
     my $self = shift;
@@ -19,17 +21,6 @@ sub _constraint_must_be_checked {
         || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
 }
 
-sub _inline_check_coercion {
-    my ( $self, $value ) = @_;
-
-    my $attr = $self->associated_attribute;
-
-    return ''
-        unless $attr->should_coerce && $attr->type_constraint->has_coercion;
-
-    # We want to break the aliasing in @_ in case the coercion tries to make a
-    # destructive change to an array member.
-    return "$value = $attr->type_constraint->coerce($value);";
-}
+no Moose::Role;
 
 1;

@@ -7,7 +7,11 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native';
+
+requires '_return_value';
 
 sub _generate_method {
     my $self = shift;
@@ -48,10 +52,14 @@ sub _reader_core {
 
 sub _inline_process_arguments {q{}}
 
+sub _inline_check_arguments {q{}}
+
 sub _inline_return_value {
     my ( $self, $slot_access ) = @_;
 
     'return ' . $self->_return_value($slot_access) . ';';
 }
+
+no Moose::Role;
 
 1;

@@ -7,15 +7,19 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-sub _value_needs_copy {
+use Moose::Role;
+
+requires qw( _adds_members );
+
+around _value_needs_copy => sub {
     shift;
     my $self = shift;
 
     return $self->_constraint_must_be_checked
         && !$self->_check_new_members_only;
-}
+};
 
-sub _inline_tc_code {
+around _inline_tc_code => sub {
     shift;
     my ( $self, $potential_value ) = @_;
 
@@ -30,7 +34,7 @@ sub _inline_tc_code {
         return $self->_inline_check_coercion($potential_value) . "\n"
             . $self->_inline_check_constraint($potential_value);
     }
-}
+};
 
 sub _check_new_members_only {
     my $self = shift;
@@ -70,16 +74,16 @@ sub _inline_check_member_constraint {
         ) . " for $new_value;";
 }
 
-sub _inline_check_constraint {
+around _inline_check_constraint => sub {
     my $orig = shift;
     my $self = shift;
 
     return q{} unless $self->_constraint_must_be_checked;
 
     return $self->$orig( $_[0] );
-}
+};
 
-sub _inline_get_old_value_for_trigger {
+around _inline_get_old_value_for_trigger => sub {
     shift;
     my ( $self, $instance ) = @_;
 
@@ -91,9 +95,9 @@ sub _inline_get_old_value_for_trigger {
         . $self->_inline_has($instance) . q{ ? }
         . $self->_inline_copy_old_value( $self->_inline_get($instance) )
         . ": ();\n";
-}
+};
 
-sub _eval_environment {
+around _eval_environment => sub {
     my $orig = shift;
     my $self = shift;
 
@@ -108,7 +112,7 @@ sub _eval_environment {
             ->_compiled_type_constraint );
 
     return $env;
-}
+};
 
 no Moose::Role;
 

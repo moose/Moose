@@ -86,12 +86,13 @@ around '_make_delegation_method' => sub {
         unless $accessor_class && $accessor_class->can('new');
 
     return $accessor_class->new(
-        name              => $handle_name,
-        package_name      => $self->associated_class->name,
-        attribute         => $self,
-        is_inline         => 1,
-        curried_arguments => \@curried_args,
-        root_types        => [ $self->_root_types ],
+        name               => $handle_name,
+        package_name       => $self->associated_class->name,
+        delegate_to_method => $name,
+        attribute          => $self,
+        is_inline          => 1,
+        curried_arguments  => \@curried_args,
+        root_types         => [ $self->_root_types ],
     );
 };
 
@@ -102,7 +103,17 @@ sub _root_types {
 sub _native_accessor_class_for {
     my ( $self, $suffix ) = @_;
 
-    return 'Moose::Meta::Method::Accessor::Native::' . $self->_native_type . '::' . $suffix;
+    my $role
+        = 'Moose::Meta::Method::Accessor::Native::'
+        . $self->_native_type . '::'
+        . $suffix;
+
+    return Moose::Meta::Class->create_anon_class(
+        superclasses =>
+            [ $self->accessor_metaclass, $self->delegation_metaclass ],
+        roles => [$role],
+        cache => 1,
+    )->name;
 }
 
 sub _build_native_type {

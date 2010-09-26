@@ -1,7 +1,10 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+
 use Moose ();
+use NoInlineAttribute;
 use Test::More;
 use Test::Exception;
 use Test::Moose;
@@ -10,16 +13,20 @@ use Test::Moose;
     my $name = 'Foo1';
 
     sub build_class {
-        my ( $attr1, $attr2, $attr3 ) = @_;
+        my ( $attr1, $attr2, $attr3, $no_inline ) = @_;
 
         my $class = Moose::Meta::Class->create(
             $name++,
             superclasses => ['Moose::Object'],
         );
 
+        my @traits = 'Code';
+        push @traits, 'NoInlineAttribute'
+            if $no_inline;
+
         $class->add_attribute(
             callback => (
-                traits   => ['Code'],
+                traits   => \@traits,
                 isa      => 'CodeRef',
                 required => 1,
                 handles  => { 'invoke_callback' => 'execute' },
@@ -29,7 +36,7 @@ use Test::Moose;
 
         $class->add_attribute(
             callback_method => (
-                traits   => ['Code'],
+                traits   => \@traits,
                 isa      => 'CodeRef',
                 required => 1,
                 handles  => { 'invoke_method_callback' => 'execute_method' },
@@ -39,7 +46,7 @@ use Test::Moose;
 
         $class->add_attribute(
             multiplier => (
-                traits   => ['Code'],
+                traits   => \@traits,
                 isa      => 'CodeRef',
                 required => 1,
                 handles  => { 'multiply' => 'execute' },
@@ -61,6 +68,8 @@ use Test::Moose;
     );
 
     run_tests( build_class, \$i, \%subs );
+
+    run_tests( build_class( undef, undef, undef, 1 ), \$i, \%subs );
 
     run_tests(
         build_class(

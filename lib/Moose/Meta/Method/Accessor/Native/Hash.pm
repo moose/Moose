@@ -7,7 +7,7 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-# This package is really more of a role, so it doesn't inherit from anything.
+use Moose::Role;
 
 sub _inline_check_var_is_valid_key {
     my ( $self, $var ) = @_;
@@ -17,5 +17,7 @@ sub _inline_check_var_is_valid_key {
             . q{ must be a defined value'} )
         . qq{ unless defined $var;};
 }
+
+no Moose::Role;
 
 1;

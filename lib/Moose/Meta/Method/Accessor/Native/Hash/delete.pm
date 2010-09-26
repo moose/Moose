@@ -7,7 +7,10 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Hash::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' =>
+    { -excludes => ['_inline_optimized_set_new_value'] };
 
 sub _adds_members { 0 }
 
@@ -22,5 +25,7 @@ sub _inline_optimized_set_new_value {
 
     return "delete \@{ $slot_access }{\@_}";
 }
+
+no Moose::Role;
 
 1;

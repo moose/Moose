@@ -7,7 +7,19 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Array::Writer';
+use Moose::Role;
+
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
+    -excludes => [
+        qw(
+            _minimum_arguments
+            _maximum_arguments
+            _inline_check_arguments
+            _new_members
+            _inline_optimized_set_new_value
+            )
+    ]
+};
 
 sub _minimum_arguments { 2 }
 
@@ -35,5 +47,7 @@ sub _inline_optimized_set_new_value {
 
     return "${slot_access}->[ \$_[0] ] = \$_[1]";
 }
+
+no Moose::Role;
 
 1;

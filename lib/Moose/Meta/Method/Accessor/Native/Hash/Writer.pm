@@ -9,14 +9,11 @@ our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Method::Accessor::Native::Writer';
+use Moose::Role;
 
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Hash'
-);
-Class::MOP::MiniTrait::apply( __PACKAGE__,
-    'Moose::Meta::Method::Accessor::Native::Collection'
-);
+with 'Moose::Meta::Method::Accessor::Native::Writer',
+    'Moose::Meta::Method::Accessor::Native::Hash',
+    'Moose::Meta::Method::Accessor::Native::Collection';
 
 sub _new_values {'@values'}
 
@@ -25,5 +22,7 @@ sub _inline_copy_old_value {
 
     return '{ %{' . $slot_access . '} }';
 }
+
+no Moose::Role;
 
 1;
