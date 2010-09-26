@@ -163,7 +163,9 @@ sub create_class_type_constraint {
 
     $options{name} ||= "__ANON__";
 
-    Moose::Meta::TypeConstraint::Class->new(%options);
+    my $tc = Moose::Meta::TypeConstraint::Class->new(%options);
+    $REGISTRY->add_type_constraint($tc);
+    return $tc;
 }
 
 sub create_role_type_constraint {
@@ -181,7 +183,9 @@ sub create_role_type_constraint {
 
     $options{name} ||= "__ANON__";
 
-    Moose::Meta::TypeConstraint::Role->new(%options);
+    my $tc = Moose::Meta::TypeConstraint::Role->new(%options);
+    $REGISTRY->add_type_constraint($tc);
+    return $tc;
 }
 
 sub find_or_create_type_constraint {
@@ -323,21 +327,11 @@ sub subtype {
 }
 
 sub class_type {
-    register_type_constraint(
-        create_class_type_constraint(
-            $_[0],
-            ( defined( $_[1] ) ? $_[1] : () ),
-        )
-    );
+    create_class_type_constraint(@_);
 }
 
 sub role_type ($;$) {
-    register_type_constraint(
-        create_role_type_constraint(
-            $_[0],
-            ( defined( $_[1] ) ? $_[1] : () ),
-        )
-    );
+    create_role_type_constraint(@_);
 }
 
 sub maybe_type {
