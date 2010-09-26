@@ -45,14 +45,23 @@ value, this was never checked.
 
 In addition, coercions are now called on the whole value.
 
+The delegation methods now do more argument checking. All of the methods check
+that a valid number of arguments were passed to the method. In addition, the
+delegation methods check that the arguments are sane (array indexes, hash
+keys, numbers, etc.) when applicable. We have tried to emulate the behavior of
+Perl builtins as much as possible.
+
 Finally, triggers are called whenever the value of the attribute is changed by
 a Native delegation.
 
-These changes are only likely to break code in two cases. If you have a typed
-arrayref or hashref attribute where the type enforces a constraint on the
-whole collection, this constraint will now be checked. It's possible that code
-which previously ran without errors will now cause the constraint to
+These changes are only likely to break code in a few cases. If you have a
+typed arrayref or hashref attribute where the type enforces a constraint on
+the whole collection, this constraint will now be checked. It's possible that
+code which previously ran without errors will now cause the constraint to
 fail. However, presumably this is a good thing ;)
+
+If you are passing invalid arguments to a delegation which were previously
+being ignore, these will now fail.
 
 The other issue is the use of a trigger. If your code relied on the trigger
 only being called for a regular writer, that may cause problems.
