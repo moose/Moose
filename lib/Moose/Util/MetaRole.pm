@@ -224,16 +224,9 @@ extensions can apply roles in any order.
 
 =head1 USAGE
 
-B<It is very important that you only call this module's functions when
-your module is imported by the caller>. The process of applying roles
-to the metaclass reinitializes the metaclass object, which wipes out
-any existing attributes already defined. However, as long as you do
-this when your module is imported, the caller should not have any
-attributes defined yet.
-
-The easiest way to ensure that this happens is to use
-L<Moose::Exporter>, which can generate the appropriate C<init_meta>
-method for you, and make sure it is called when imported.
+The easiest way to use this module is through L<Moose::Exporter>, which can
+generate the appropriate C<init_meta> method for you, and make sure it is
+called when imported.
 
 =head1 FUNCTIONS
 
