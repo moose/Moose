@@ -21,7 +21,6 @@ NEXT
     was constructed caused an error. Now we only call weaken when the new
     value is a reference.
 
-
 1.14 Tue, Sep 21, 2010
 
   [BUG FIXES]
