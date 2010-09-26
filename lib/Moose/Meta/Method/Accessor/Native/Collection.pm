@@ -86,14 +86,11 @@ sub _inline_get_old_value_for_trigger {
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-    my $pred = $mi->inline_is_slot_initialized( $instance, $attr->name );
-
     return
-          'my @old = ' 
-        . $pred . q{ ? }
+          'my @old = '
+        . $self->_inline_has($instance) . q{ ? }
         . $self->_inline_copy_old_value( $self->_inline_get($instance) )
-        . " : ();\n";
+        . ": ();\n";
 }
 
 sub _eval_environment {

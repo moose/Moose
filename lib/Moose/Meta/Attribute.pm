@@ -577,6 +577,46 @@ sub remove_accessors {
     return;
 }
 
+sub inline_get {
+    my $self = shift;
+    my ($instance) = @_;
+
+    return $self->associated_class->get_meta_instance->inline_get_slot_value(
+        $instance, $self->slots );
+}
+
+sub inline_access {
+    my $self = shift;
+    my ($instance) = @_;
+
+    return $self->associated_class->get_meta_instance->inline_slot_access(
+        $instance, $self->slots );
+}
+
+sub inline_has {
+    my $self = shift;
+    my ($instance) = @_;
+
+    $self->associated_class->get_meta_instance->inline_is_slot_initialized(
+        $instance, $self->slots );
+}
+
+sub inline_store {
+    my $self = shift;
+    my ( $instance, $value ) = @_;
+
+    my $mi = $self->associated_class->get_meta_instance;
+
+    my $code
+        = $mi->inline_set_slot_value( $instance, $self->slots, $value ) . ";";
+    $code
+        .= $mi->inline_weaken_slot_value( $instance, $self->slots, $value )
+        . ";"
+        if $self->is_weak_ref;
+
+    return $code;
+}
+
 sub install_delegation {
     my $self = shift;
 
@@ -962,6 +1002,14 @@ methods is almost always an error.)
 =item B<< $attr->remove_accessors >>
 
 This method overrides the parent to also remove delegation methods.
+
+=item B<< $attr->inline_get >>
+
+=item B<< $attr->inline_access >>
+
+=item B<< $attr->inline_has >>
+
+=item B<< $attr->inline_store >>
 
 =item B<< $attr->install_delegation >>
 

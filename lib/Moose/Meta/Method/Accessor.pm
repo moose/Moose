@@ -247,15 +247,9 @@ sub _inline_init_slot {
 }
 
 sub _inline_store {
-    my ($self, $instance, $value) = @_;
-    my $attr = $self->associated_attribute;
+    my ( $self, $instance, $value ) = @_;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-
-    my $code = $mi->inline_set_slot_value($instance, $attr->slots, $value)    . ";";
-    $code   .= $mi->inline_weaken_slot_value($instance, $attr->slots, $value) . ";"
-        if $attr->is_weak_ref;
-    return $code;
+    return $self->associated_attribute->inline_store( $instance, $value );
 }
 
 sub _inline_get_old_value_for_trigger {
@@ -264,12 +258,9 @@ sub _inline_get_old_value_for_trigger {
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-    my $pred = $mi->inline_is_slot_initialized($instance, $attr->name);
-
     return
           'my @old = '
-        . $pred . q{ ? }
+        . $self->_inline_has($instance) . q{ ? }
         . $self->_inline_get($instance) . q{ : ()} . ";\n";
 }
 
@@ -282,29 +273,20 @@ sub _inline_trigger {
 
 sub _inline_get {
     my ($self, $instance) = @_;
-    my $attr = $self->associated_attribute;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-
-    return $mi->inline_get_slot_value($instance, $attr->slots);
+    return $self->associated_attribute->inline_get($instance);
 }
 
 sub _inline_access {
     my ($self, $instance) = @_;
-    my $attr = $self->associated_attribute;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-
-    return $mi->inline_slot_access($instance, $attr->slots);
+    return $self->associated_attribute->inline_access($instance);
 }
 
 sub _inline_has {
     my ($self, $instance) = @_;
-    my $attr = $self->associated_attribute;
 
-    my $mi = $attr->associated_class->get_meta_instance;
-
-    return $mi->inline_is_slot_initialized($instance, $attr->slots);
+    return $self->associated_attribute->inline_has($instance);
 }
 
 sub _inline_auto_deref {
