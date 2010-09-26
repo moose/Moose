@@ -144,7 +144,7 @@ sub _inline_set_new_value {
     my $self = shift;
 
     return $self->SUPER::_inline_store(@_)
-        if $self->_value_needs_copy;
+        if $self->_value_needs_copy || !$self->_slot_access_can_be_inlined;
 
     return $self->_inline_optimized_set_new_value(@_);
 }

@@ -68,16 +68,6 @@ sub _initialize_body {
     return;
 }
 
-sub _eval_environment {
-    my $self = shift;
-
-    my $env = $self->SUPER::_eval_environment;
-
-    $env->{'@curried'} = $self->curried_arguments;
-
-    return $env;
-}
-
 sub _inline_curried_arguments {
     my $self = shift;
 
@@ -126,5 +116,49 @@ sub _minimum_arguments { 0 }
 sub _maximum_arguments { undef }
 
 sub _inline_check_arguments { q{} }
+
+sub _inline_get {
+    my ( $self, $instance ) = @_;
+
+    return $self->_slot_access_can_be_inlined
+        ? $self->SUPER::_inline_get($instance)
+        : "${instance}->\$reader";
+}
+
+sub _inline_store {
+    my ( $self, $instance, $value ) = @_;
+
+    return $self->_slot_access_can_be_inlined
+        ? $self->SUPER::_inline_store( $instance, $value )
+        : "${instance}->\$writer($value)";
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my $env = $self->SUPER::_eval_environment(@_);
+
+    $env->{'@curried'} = $self->curried_arguments;
+
+    return $env if $self->_slot_access_can_be_inlined;
+
+    my $reader = $self->associated_attribute->get_read_method_ref;
+    $reader = $reader->body if blessed $reader;
+
+    $env->{'$reader'} = \$reader;
+
+    my $writer = $self->associated_attribute->get_write_method_ref;
+    $writer = $writer->body if blessed $writer;
+
+    $env->{'$writer'} = \$writer;
+
+    return $env;
+}
+
+sub _slot_access_can_be_inlined {
+    my $self = shift;
+
+    return $self->is_inline && $self->_instance_is_inlinable;
+}
 
 1;

@@ -89,6 +89,7 @@ around '_make_delegation_method' => sub {
         name              => $handle_name,
         package_name      => $self->associated_class->name,
         attribute         => $self,
+        is_inline         => 1,
         curried_arguments => \@curried_args,
         root_types        => [ $self->_root_types ],
     );
