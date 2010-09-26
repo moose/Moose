@@ -31,7 +31,7 @@ sub _potential_value {
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "splice \@{ $slot_access }, \$_[0], 1;";
+    return "splice \@{ $slot_access }, \$_[0], 1";
 }
 
 1;

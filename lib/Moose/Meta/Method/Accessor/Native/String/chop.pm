@@ -21,7 +21,7 @@ sub _potential_value {
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "chop $slot_access;";
+    return "chop $slot_access";
 }
 
 1;

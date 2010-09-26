@@ -33,7 +33,7 @@ sub _new_members { '$_[1]' }
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "${slot_access}->[ \$_[0] ] = \$_[1];";
+    return "${slot_access}->[ \$_[0] ] = \$_[1]";
 }
 
 1;

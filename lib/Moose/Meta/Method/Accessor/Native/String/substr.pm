@@ -90,7 +90,7 @@ sub _potential_value {
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "substr $slot_access, \$offset, \$length, \$replacement;";
+    return "substr $slot_access, \$offset, \$length, \$replacement";
 }
 
 sub _return_value {

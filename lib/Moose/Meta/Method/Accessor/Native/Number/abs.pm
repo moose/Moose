@@ -15,7 +15,7 @@ sub _maximum_arguments {0}
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "abs($slot_access);";
+    return "abs($slot_access)";
 }
 
 sub _inline_optimized_set_new_value {

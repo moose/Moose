@@ -15,13 +15,13 @@ sub _maximum_arguments { 1 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "$slot_access + ( defined \$_[0] ? \$_[0] : 1 );";
+    return "$slot_access + ( defined \$_[0] ? \$_[0] : 1 )";
 }
 
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "$slot_access += defined \$_[0] ? \$_[0] : 1;";
+    return "$slot_access += defined \$_[0] ? \$_[0] : 1";
 }
 
 1;

@@ -61,7 +61,7 @@ sub _writer_core {
         $inv,
         $potential_value,
         $slot_access,
-        );
+        ) . ';';
     $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
     $code .= "\n" . $self->_return_value( $slot_access, 'for writer' );
 

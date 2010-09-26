@@ -20,7 +20,7 @@ sub _potential_value {
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "push \@{ $slot_access }, \@_;";
+    return "push \@{ $slot_access }, \@_";
 }
 
 1;

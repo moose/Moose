@@ -55,7 +55,7 @@ sub _new_members { '@_[ @values_idx ]' }
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "\@{ $slot_access }{ \@_[ \@keys_idx] } = \@_[ \@values_idx ];";
+    return "\@{ $slot_access }{ \@_[ \@keys_idx] } = \@_[ \@values_idx ]";
 }
 
 1;
