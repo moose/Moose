@@ -522,7 +522,7 @@ sub _reconcile_roles_for_metaclass {
 
     return Moose::Meta::Class->create_anon_class(
         superclasses => [$super_meta_name],
-        roles        => \@role_differences,
+        roles        => [map { $_->name } @role_differences],
         cache        => 1,
     );
 }
