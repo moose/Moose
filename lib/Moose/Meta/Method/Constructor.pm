@@ -129,7 +129,7 @@ sub _generate_params {
 sub _generate_instance {
     my ( $self, $var, $class_var ) = @_;
     "my $var = "
-        . $self->_meta_instance->inline_create_instance($class_var) . ";\n";
+        . $self->associated_metaclass->inline_create_instance($class_var) . ";\n";
 }
 
 sub _generate_slot_initializers {
@@ -186,10 +186,7 @@ sub _generate_triggers {
             . $i
             . ']->trigger->('
             . '$instance, '
-            . $self->_meta_instance->inline_get_slot_value(
-                  '$instance',
-                  $attr->name,
-              )
+            . $attr->inline_get('$instance')
             . ', '
             . ');' . "\n}";
     }
@@ -273,32 +270,18 @@ sub _generate_slot_assignment {
 
     my $source;
 
-    if ($attr->has_initializer) {
-        $source = (
-            '$attrs->[' . $index . ']->set_initial_value($instance, ' . $value . ');'
-        );
+    if ( $attr->has_initializer ) {
+        return
+              '$attrs->['
+            . $index
+            . ']->set_initial_value($instance, '
+            . $value . ');';
     }
     else {
-        $source = (
-            $self->_meta_instance->inline_set_slot_value(
-                '$instance',
-                $attr->name,
-                $value
-            ) . ';'
-        );
-    }
-
-    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
-
-    if ($is_moose && $attr->is_weak_ref) {
-        $source .= (
-            "\n" .
-            $self->_meta_instance->inline_weaken_slot_value(
-                '$instance',
-                $attr->name
-            ) .
-            ' if ref ' . $value . ';'
-        );
+        return $attr->inline_set(
+            '$instance',
+            $value
+        ) . ';';
     }
 
     return $source;
