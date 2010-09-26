@@ -587,7 +587,7 @@ sub inline_set {
         = $mi->inline_set_slot_value( $instance, $self->slots, $value ) . ";";
     $code
         .= $mi->inline_weaken_slot_value( $instance, $self->slots, $value )
-        . ";"
+        . "    if ref $value;"
         if $self->is_weak_ref;
 
     return $code;
