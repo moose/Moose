@@ -606,6 +606,22 @@ sub _replace_self {
     Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
 }
 
+sub _get_compatible_single_metaclass_by_role_reconciliation {
+    my $self = shift;
+    my ($single_meta_name) = @_;
+
+    my $current_single_meta_name = $self->_get_associated_single_metaclass($single_meta_name);
+
+    return $self->_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name)->name;
+}
+
+sub _get_compatible_single_metaclass {
+    my $self = shift;
+
+    return $self->SUPER::_get_compatible_single_metaclass(@_)
+        || $self->_get_compatible_single_metaclass_by_role_reconciliation(@_);
+}
+
 sub _process_attribute {
     my ( $self, $name, @args ) = @_;
 
