@@ -11,7 +11,7 @@ use Test::Requires {
 
 # This is a stripped down version of all_pod_coverage_ok which lets us
 # vary the trustme parameter per module.
-my @modules = grep { !/Accessor::Native.+$/ } all_modules();
+my @modules = grep { !/Accessor::Native.*$/ } all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
