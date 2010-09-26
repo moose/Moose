@@ -15,6 +15,12 @@ NEXT
     be much faster than the previous method of delegation. In the best case,
     native trait methods will be very highly optimized.
 
+  * Reinitializing a metaclass no longer removes the existing method and
+    attribute objects (it instead fixes them so they are correct for the
+    reinitialized metaclass). This should make Moose::Util::MetaRole not so
+    sensitive about when it's able to be called without messing up things
+    that may already be set up in the metaclass. (doy)
+
   [BUG FIXES]
 
   * If an attribute was weak, setting it to a non-ref value after the object
