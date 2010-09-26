@@ -249,7 +249,7 @@ sub _inline_init_slot {
 sub _inline_store {
     my ( $self, $instance, $value ) = @_;
 
-    return $self->associated_attribute->inline_store( $instance, $value );
+    return $self->associated_attribute->inline_set( $instance, $value );
 }
 
 sub _inline_get_old_value_for_trigger {
@@ -275,12 +275,6 @@ sub _inline_get {
     my ($self, $instance) = @_;
 
     return $self->associated_attribute->inline_get($instance);
-}
-
-sub _inline_access {
-    my ($self, $instance) = @_;
-
-    return $self->associated_attribute->inline_access($instance);
 }
 
 sub _inline_has {

@@ -577,31 +577,7 @@ sub remove_accessors {
     return;
 }
 
-sub inline_get {
-    my $self = shift;
-    my ($instance) = @_;
-
-    return $self->associated_class->get_meta_instance->inline_get_slot_value(
-        $instance, $self->slots );
-}
-
-sub inline_access {
-    my $self = shift;
-    my ($instance) = @_;
-
-    return $self->associated_class->get_meta_instance->inline_slot_access(
-        $instance, $self->slots );
-}
-
-sub inline_has {
-    my $self = shift;
-    my ($instance) = @_;
-
-    $self->associated_class->get_meta_instance->inline_is_slot_initialized(
-        $instance, $self->slots );
-}
-
-sub inline_store {
+sub inline_set {
     my $self = shift;
     my ( $instance, $value ) = @_;
 
@@ -1003,13 +979,11 @@ methods is almost always an error.)
 
 This method overrides the parent to also remove delegation methods.
 
-=item B<< $attr->inline_get >>
+=item B<< $attr->inline_set($instance_var, $value_var) >>
 
-=item B<< $attr->inline_access >>
-
-=item B<< $attr->inline_has >>
-
-=item B<< $attr->inline_store >>
+This method return a code snippet suitable for inlining the relevant
+operation. It expect strings containing variable names to be used in the
+inlining, like C<'$self'> or C<'$_[1]'>.
 
 =item B<< $attr->install_delegation >>
 
