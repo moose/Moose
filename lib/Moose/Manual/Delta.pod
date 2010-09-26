@@ -16,6 +16,52 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 NEXT
+
+=over 4
+
+=item Native Traits
+
+In previous versions of Moose, the Native delegations were created as
+closures. The generated code was often quite slow compared to doing the same
+thing by hand. For example, the Array's push delegation ended up doing
+something like this:
+
+  push @{ $self->$reader() }, @_;
+
+If the attribute was created without a reader, the C<$reader> sub reference
+followed a very slow code path. Even with a reader, this is still slower than
+it needs to be.
+
+Native delegations are now generated as inline code, just like other
+accessors, so we can access the slot directly.
+
+In addition, native traits now do proper constraint checking in all cases. In
+particular, constraint checking has been improved for array and hash
+references. Previously, only the I<contained> type (the C<Str> in
+C<HashRef[Str]>) would be checked when a new value was added to the
+collection. However, if there was a constraint that applied to the whole
+value, this was never checked.
+
+In addition, coercions are now called on the whole value.
+
+Finally, triggers are called whenever the value of the attribute is changed by
+a Native delegation.
+
+These changes are only likely to break code in two cases. If you have a typed
+arrayref or hashref attribute where the type enforces a constraint on the
+whole collection, this constraint will now be checked. It's possible that code
+which previously ran without errors will now cause the constraint to
+fail. However, presumably this is a good thing ;)
+
+The other issue is the use of a trigger. If your code relied on the trigger
+only being called for a regular writer, that may cause problems.
+
+As always, you are encouraged to test before deploying the latest version of
+Moose to production.
+
+=back
+
 =head1 1.09
 
 =over 4

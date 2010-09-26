@@ -1,6 +1,21 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [API CHANGES]
+
+  * Major changes to Native Traits, most of which make them act more like
+    "normal" attributes. This should be mostly compatible with existing code,
+    but see Moose::Manual::Delta for details.
+
+  [ENHANCEMENTS]
+
+  * Native Trait delegations are now all generated as inline code. This should
+    be much faster than the previous method of delegation. In the best case,
+    native trait methods will be very highly optimized.
+
+
 1.14 Tue, Sep 21, 2010
 
   [BUG FIXES]
