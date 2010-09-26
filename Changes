@@ -15,6 +15,12 @@ NEXT
     be much faster than the previous method of delegation. In the best case,
     native trait methods will be very highly optimized.
 
+  [BUG FIXES]
+
+  * If an attribute was weak, setting it to a non-ref value after the object
+    was constructed caused an error. Now we only call weaken when the new
+    value is a reference.
+
 
 1.14 Tue, Sep 21, 2010
 
