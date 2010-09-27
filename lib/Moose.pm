@@ -153,6 +153,7 @@ sub init_meta {
         or Moose->throw_error("Cannot call init_meta without specifying a for_class");
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
+    my $meta_name  = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
     Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
         unless $metaclass->isa('Moose::Meta::Class');
@@ -198,17 +199,19 @@ sub init_meta {
         $meta = $metaclass->initialize($class);
     }
 
-    unless ($args{no_meta}) {
+    if (defined $meta_name) {
         # also check for inherited non moose 'meta' method?
-        my $existing = $meta->get_method('meta');
+        my $existing = $meta->get_method($meta_name);
         if ($existing && !$existing->isa('Class::MOP::Method::Meta')) {
             Carp::cluck "Moose is overwriting an existing method named "
-                      . "'meta' with its own version, in class $class. If "
-                      . "this is actually what you want, you should remove "
-                      . "the existing method, otherwise, you should pass "
-                      . "the '-no_meta => 1' option to 'use Moose'.";
+                      . "$meta_name in class $class with a method "
+                      . "which returns the class's metaclass. If this is "
+                      . "actually what you want, you should remove the "
+                      . "existing method, otherwise, you should rename or "
+                      . "disable this generated method using the "
+                      . "'-meta_name' option to 'use Moose'.";
         }
-        $meta->_add_meta_method;
+        $meta->_add_meta_method($meta_name);
     }
 
     # make sure they inherit from Moose::Object

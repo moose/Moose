@@ -479,12 +479,15 @@ sub create {
         || confess "You must pass a HASH ref of methods"
             if exists $options{methods};
 
+    $options{meta_name} = 'meta'
+        unless exists $options{meta_name};
+
     my (%initialize_options) = %options;
     delete @initialize_options{qw(
         package
         attributes
         methods
-        no_meta
+        meta_name
         version
         authority
     )};
@@ -493,7 +496,8 @@ sub create {
 
     $meta->_instantiate_module( $options{version}, $options{authority} );
 
-    $meta->_add_meta_method if !$options{no_meta};
+    $meta->_add_meta_method($options{meta_name})
+        if defined $options{meta_name};
 
     if (exists $options{attributes}) {
         foreach my $attribute_name (keys %{$options{attributes}}) {

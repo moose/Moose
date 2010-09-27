@@ -111,6 +111,7 @@ sub init_meta {
     }
 
     my $metaclass = $args{metaclass} || "Moose::Meta::Role";
+    my $meta_name = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
     Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Role.")
         unless $metaclass->isa('Moose::Meta::Role');
@@ -133,17 +134,19 @@ sub init_meta {
         $meta = $metaclass->initialize($role);
     }
 
-    unless ($args{no_meta}) {
+    if (defined $meta_name) {
         # also check for inherited non moose 'meta' method?
-        my $existing = $meta->get_method('meta');
+        my $existing = $meta->get_method($meta_name);
         if ($existing && !$existing->isa('Class::MOP::Method::Meta')) {
             Carp::cluck "Moose::Role is overwriting an existing method named "
-                      . "'meta' with its own version, in role $role. If "
-                      . "this is actually what you want, you should remove "
-                      . "the existing method, otherwise, you should pass "
-                      . "the '-no_meta => 1' option to 'use Moose::Role'.";
+                      . "$meta_name in role $role with a method "
+                      . "which returns the class's metaclass. If this is "
+                      . "actually what you want, you should remove the "
+                      . "existing method, otherwise, you should rename or "
+                      . "disable this generated method using the "
+                      . "'-meta_name' option to 'use Moose::Role'.";
         }
-        $meta->_add_meta_method;
+        $meta->_add_meta_method($meta_name);
     }
 
     return $meta;

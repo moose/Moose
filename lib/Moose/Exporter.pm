@@ -357,8 +357,8 @@ sub _make_import_sub {
             = Moose::Util::resolve_metaclass_alias( 'Class' => $metaclass )
             if defined $metaclass && length $metaclass;
 
-        my $no_meta;
-        ( $no_meta, @_ ) = _strip_no_meta(@_);
+        my $meta_name;
+        ( $meta_name, @_ ) = _strip_meta_name(@_);
 
         # Normally we could look at $_[0], but in some weird cases
         # (involving goto &Moose::import), $_[0] ends as something
@@ -386,7 +386,7 @@ sub _make_import_sub {
             $c->init_meta(
                 for_class => $CALLER,
                 metaclass => $metaclass,
-                no_meta   => $no_meta,
+                meta_name => $meta_name,
             );
             $did_init_meta = 1;
         }
@@ -451,16 +451,16 @@ sub _strip_metaclass {
     return ( $metaclass, @_ );
 }
 
-sub _strip_no_meta {
-    my $idx = first_index { $_ eq '-no_meta' } @_;
+sub _strip_meta_name {
+    my $idx = first_index { $_ eq '-meta_name' } @_;
 
-    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
+    return ( 'meta', @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
 
-    my $no_meta = $_[ $idx + 1 ];
+    my $meta_name = $_[ $idx + 1 ];
 
     splice @_, $idx, 2;
 
-    return ( $no_meta, @_ );
+    return ( $meta_name, @_ );
 }
 
 sub _apply_meta_traits {
