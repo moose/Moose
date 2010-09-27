@@ -9,6 +9,8 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Carp::Heavy;
 
+use base 'Class::MOP::Object';
+
 
 sub new {
     my ( $self, @args ) = @_;
