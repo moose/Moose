@@ -521,12 +521,12 @@ sub _fix_class_metaclass_incompatibility {
                      . $self->name
                      . " because it is not pristine.";
         my $super_meta_name = $super_meta->_real_ref_name;
-        my $class_meta_subclass_meta = $self->_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
-        my $new_self = $class_meta_subclass_meta->name->reinitialize(
+        my $class_meta_subclass_meta_name = $self->_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
+        my $new_self = $class_meta_subclass_meta_name->reinitialize(
             $self->name,
         );
 
-        $self->_replace_self( $new_self, $class_meta_subclass_meta->name );
+        $self->_replace_self( $new_self, $class_meta_subclass_meta_name );
     }
 }
 
@@ -542,10 +542,10 @@ sub _fix_single_metaclass_incompatibility {
                      . $self->name
                      . " because it is not pristine.";
         my $super_meta_name = $super_meta->_real_ref_name;
-        my $class_specific_meta_subclass_meta = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
+        my $class_specific_meta_subclass_meta_name = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
             $self->name,
-            $metaclass_type => $class_specific_meta_subclass_meta->name,
+            $metaclass_type => $class_specific_meta_subclass_meta_name,
         );
 
         $self->_replace_self( $new_self, $super_meta_name );
@@ -564,14 +564,14 @@ sub _reconcile_roles_for_metaclass {
     # its parent, but all roles in the class are already also done by the
     # parent
     # see t/050/054.t
-    return Class::MOP::class_of($super_meta_name)
+    return $super_meta_name
         unless @role_differences;
 
     return Moose::Meta::Class->create_anon_class(
         superclasses => [$super_meta_name],
         roles        => [map { $_->name } @role_differences],
         cache        => 1,
-    );
+    )->name;
 }
 
 sub _role_differences {
@@ -618,7 +618,7 @@ sub _get_compatible_single_metaclass_by_role_reconciliation {
 
     my $current_single_meta_name = $self->_get_associated_single_metaclass($single_meta_name);
 
-    return $self->_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name)->name;
+    return $self->_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name);
 }
 
 sub _process_attribute {
