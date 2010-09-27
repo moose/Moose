@@ -126,18 +126,13 @@ does_ok(Bar->meta->get_attribute('bar'), 'Foo::Role::Attribute');
     BEGIN { extends 'Moose::Meta::Attribute' };
 }
 
-Moose::Meta::Class->reinitialize(
-    'Bar',
-    method_metaclass    => 'Bar::Meta::Method',
-    attribute_metaclass => 'Bar::Meta::Attribute',
-);
-check_meta_sanity(Bar->meta, 'Bar');
-isa_ok(Bar->meta->get_method('foo'), 'Bar::Meta::Method');
-does_ok(Bar->meta->get_method('foo'), 'Bar::Role::Method');
-does_ok(Bar->meta->get_method('foo'), 'Foo::Role::Method');
-isa_ok(Bar->meta->get_attribute('bar'), 'Bar::Meta::Attribute');
-does_ok(Bar->meta->get_attribute('bar'), 'Bar::Role::Attribute');
-does_ok(Bar->meta->get_attribute('bar'), 'Foo::Role::Attribute');
+throws_ok {
+    Moose::Meta::Class->reinitialize(
+        'Bar',
+        method_metaclass    => 'Bar::Meta::Method',
+        attribute_metaclass => 'Bar::Meta::Attribute',
+    );
+} qr/compatible/;
 
 {
     package Baz::Meta::Class;
@@ -182,11 +177,23 @@ isa_ok(Baz->meta->get_attribute('bar'), 'Bar::Meta::Attribute');
 does_ok(Baz->meta->get_method('foo'), 'Foo::Role::Method');
 does_ok(Baz->meta->get_attribute('bar'), 'Foo::Role::Attribute');
 
+{
+    package Baz::Meta::Method;
+    use Moose;
+    extends 'Moose::Meta::Method';
+}
+
+{
+    package Baz::Meta::Attribute;
+    use Moose;
+    extends 'Moose::Meta::Attribute';
+}
+
 throws_ok {
     Moose::Meta::Class->reinitialize(
         'Baz',
-        method_metaclass    => 'Foo::Meta::Method',
-        attribute_metaclass => 'Foo::Meta::Attribute',
+        method_metaclass    => 'Baz::Meta::Method',
+        attribute_metaclass => 'Baz::Meta::Attribute',
     );
 } qr/compatible/;
 
