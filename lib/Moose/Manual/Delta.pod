@@ -74,6 +74,12 @@ that may cause problems.
 As always, you are encouraged to test before deploying the latest version of
 Moose to production.
 
+=item Defaults is and default for String, Counter, and Bool
+
+A few native traits (String, Counter, Bool) provide default values or "is" and
+"default" when you created an attribute. Allowing them to provide these values
+is now deprecated. Supply the value yourself when creating the attribute.
+
 =item The C<meta> method
 
 Moose and Class::MOP have been cleaned up internally enough to make the
