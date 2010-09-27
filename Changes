@@ -13,6 +13,10 @@ NEXT
     generate non-global aliases for your traits (and allow your users to
     rename the aliases, etc). (doy)
 
+  * 'use Moose' and 'use Moose::Role' now accept a '-meta_name' option, to
+    determine which name to install the 'meta' name under. Passing 'undef'
+    to this option will suppress generation of the meta method entirely. (doy)
+
   [ENHANCEMENTS]
 
   * Native Trait delegations are now all generated as inline code. This should

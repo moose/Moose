@@ -74,6 +74,16 @@ that may cause problems.
 As always, you are encouraged to test before deploying the latest version of
 Moose to production.
 
+=item The C<meta> method
+
+Moose and Class::MOP have been cleaned up internally enough to make the
+C<meta> method that you get by default optional. C<use Moose> and
+C<use Moose::Role> now can take an additional C<-meta_name> option, which
+tells Moose what name to use when installing the C<meta> method. Passing
+C<undef> to this option suppresses generation of the C<meta> method
+entirely. This should be useful for users of modules which also use a C<meta>
+method or function, such as L<Curses> or L<Rose::DB::Object>.
+
 =back
 
 =head1 1.09
