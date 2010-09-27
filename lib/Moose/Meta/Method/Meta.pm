@@ -24,6 +24,11 @@ sub wrap {
     return $class->Class::MOP::Method::Meta::wrap(@_);
 }
 
+sub _make_compatible_with {
+    my $self = shift;
+    return $self->Class::MOP::Method::Meta::_make_compatible_with(@_);
+}
+
 1;
 
 __END__
