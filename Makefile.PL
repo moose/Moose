@@ -75,6 +75,7 @@ sub check_conflicts {
         'Fey::ORM'                       => '0.34',
         'File::ChangeNotify'             => '0.15',
         'KiokuDB'                        => '0.41',
+        'Markdent'                       => '0.16',
         'MooseX::Aliases'                => '0.07',
         'MooseX::AlwaysCoerce'           => '0.05',
         'MooseX::AttributeHelpers'       => '0.22',
