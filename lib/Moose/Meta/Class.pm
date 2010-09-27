@@ -348,6 +348,83 @@ sub _base_metaclasses {
     );
 }
 
+sub _can_fix_metaclass_incompatibility {
+    my $self = shift;
+    return 1 if $self->_can_fix_metaclass_incompatibility_by_role_reconciliation(@_);
+    return $self->SUPER::_can_fix_metaclass_incompatibility(@_);
+}
+
+sub _can_fix_metaclass_incompatibility_by_role_reconciliation {
+    my $self = shift;
+    my ($super_meta) = @_;
+
+    return 1 if $self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta);
+
+    my %base_metaclass = $self->_base_metaclasses;
+    for my $metaclass_type (keys %base_metaclass) {
+        next unless defined $self->$metaclass_type;
+        return 1 if $self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta);
+    }
+
+    return;
+}
+
+sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
+    my $self = shift;
+    my ($super_meta) = @_;
+
+    my $super_meta_name = $super_meta->_real_ref_name;
+
+    return $self->_classes_differ_by_roles_only(
+        blessed($self),
+        $super_meta_name,
+        'Moose::Meta::Class',
+    );
+}
+
+sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
+    my $self = shift;
+    my ($metaclass_type, $super_meta) = @_;
+
+    my $class_specific_meta_name = $self->$metaclass_type;
+    return unless $super_meta->can($metaclass_type);
+    my $super_specific_meta_name = $super_meta->$metaclass_type;
+    my %metaclasses = $self->_base_metaclasses;
+
+    return $self->_classes_differ_by_roles_only(
+        $class_specific_meta_name,
+        $super_specific_meta_name,
+        $metaclasses{$metaclass_type},
+    );
+}
+
+sub _classes_differ_by_roles_only {
+    my $self = shift;
+    my ( $self_meta_name, $super_meta_name, $expected_ancestor ) = @_;
+
+    my $common_base_name
+        = $self->_find_common_base( $self_meta_name, $super_meta_name );
+
+    # If they're not both moose metaclasses, and the cmop fixing couldn't do
+    # anything, there's nothing more we can do. The $expected_ancestor should
+    # always be a Moose metaclass name like Moose::Meta::Class or
+    # Moose::Meta::Attribute.
+    return unless defined $common_base_name;
+    return unless $common_base_name->isa($expected_ancestor);
+
+    my @super_meta_name_ancestor_names
+        = $self->_get_ancestors_until( $super_meta_name, $common_base_name );
+    my @class_meta_name_ancestor_names
+        = $self->_get_ancestors_until( $self_meta_name, $common_base_name );
+
+    return
+        unless all { $self->_is_role_only_subclass($_) }
+        @super_meta_name_ancestor_names,
+        @class_meta_name_ancestor_names;
+
+    return 1;
+}
+
 sub _find_common_base {
     my $self = shift;
     my ($meta1, $meta2) = map { Class::MOP::class_of($_) } @_;
@@ -432,122 +509,6 @@ sub _is_role_only_subclass {
     return 1;
 }
 
-sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($super_meta) = @_;
-
-    my $super_meta_name = $super_meta->_real_ref_name;
-
-    return $self->_classes_differ_by_roles_only(
-        blessed($self),
-        $super_meta_name,
-        'Moose::Meta::Class',
-    );
-}
-
-sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($metaclass_type, $super_meta) = @_;
-
-    my $class_specific_meta_name = $self->$metaclass_type;
-    return unless $super_meta->can($metaclass_type);
-    my $super_specific_meta_name = $super_meta->$metaclass_type;
-    my %metaclasses = $self->_base_metaclasses;
-
-    return $self->_classes_differ_by_roles_only(
-        $class_specific_meta_name,
-        $super_specific_meta_name,
-        $metaclasses{$metaclass_type},
-    );
-}
-
-sub _classes_differ_by_roles_only {
-    my $self = shift;
-    my ( $self_meta_name, $super_meta_name, $expected_ancestor ) = @_;
-
-    my $common_base_name
-        = $self->_find_common_base( $self_meta_name, $super_meta_name );
-
-    # If they're not both moose metaclasses, and the cmop fixing couldn't do
-    # anything, there's nothing more we can do. The $expected_ancestor should
-    # always be a Moose metaclass name like Moose::Meta::Class or
-    # Moose::Meta::Attribute.
-    return unless defined $common_base_name;
-    return unless $common_base_name->isa($expected_ancestor);
-
-    my @super_meta_name_ancestor_names
-        = $self->_get_ancestors_until( $super_meta_name, $common_base_name );
-    my @class_meta_name_ancestor_names
-        = $self->_get_ancestors_until( $self_meta_name, $common_base_name );
-
-    return
-        unless all { $self->_is_role_only_subclass($_) }
-        @super_meta_name_ancestor_names,
-        @class_meta_name_ancestor_names;
-
-    return 1;
-}
-
-sub _role_differences {
-    my $self = shift;
-    my ($class_meta_name, $super_meta_name) = @_;
-    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
-                         : ();
-    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
-                         : ();
-    my @differences;
-    for my $role_meta (@role_metas) {
-        push @differences, $role_meta
-            unless any { $_->name eq $role_meta->name } @super_role_metas;
-    }
-    return @differences;
-}
-
-sub _reconcile_roles_for_metaclass {
-    my $self = shift;
-    my ($class_meta_name, $super_meta_name) = @_;
-
-    my @role_differences = $self->_role_differences(
-        $class_meta_name, $super_meta_name,
-    );
-
-    # handle the case where we need to fix compatibility between a class and
-    # its parent, but all roles in the class are already also done by the
-    # parent
-    # see t/050/054.t
-    return Class::MOP::class_of($super_meta_name)
-        unless @role_differences;
-
-    return Moose::Meta::Class->create_anon_class(
-        superclasses => [$super_meta_name],
-        roles        => [map { $_->name } @role_differences],
-        cache        => 1,
-    );
-}
-
-sub _can_fix_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($super_meta) = @_;
-
-    return 1 if $self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta);
-
-    my %base_metaclass = $self->_base_metaclasses;
-    for my $metaclass_type (keys %base_metaclass) {
-        next unless defined $self->$metaclass_type;
-        return 1 if $self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta);
-    }
-
-    return;
-}
-
-sub _can_fix_metaclass_incompatibility {
-    my $self = shift;
-    return 1 if $self->_can_fix_metaclass_incompatibility_by_role_reconciliation(@_);
-    return $self->SUPER::_can_fix_metaclass_incompatibility(@_);
-}
-
 sub _fix_class_metaclass_incompatibility {
     my $self = shift;
     my ($super_meta) = @_;
@@ -591,6 +552,44 @@ sub _fix_single_metaclass_incompatibility {
     }
 }
 
+sub _reconcile_roles_for_metaclass {
+    my $self = shift;
+    my ($class_meta_name, $super_meta_name) = @_;
+
+    my @role_differences = $self->_role_differences(
+        $class_meta_name, $super_meta_name,
+    );
+
+    # handle the case where we need to fix compatibility between a class and
+    # its parent, but all roles in the class are already also done by the
+    # parent
+    # see t/050/054.t
+    return Class::MOP::class_of($super_meta_name)
+        unless @role_differences;
+
+    return Moose::Meta::Class->create_anon_class(
+        superclasses => [$super_meta_name],
+        roles        => [map { $_->name } @role_differences],
+        cache        => 1,
+    );
+}
+
+sub _role_differences {
+    my $self = shift;
+    my ($class_meta_name, $super_meta_name) = @_;
+    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
+                         : ();
+    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
+                         : ();
+    my @differences;
+    for my $role_meta (@role_metas) {
+        push @differences, $role_meta
+            unless any { $_->name eq $role_meta->name } @super_role_metas;
+    }
+    return @differences;
+}
 
 sub _replace_self {
     my $self      = shift;
@@ -606,6 +605,13 @@ sub _replace_self {
     Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
 }
 
+sub _get_compatible_single_metaclass {
+    my $self = shift;
+
+    return $self->SUPER::_get_compatible_single_metaclass(@_)
+        || $self->_get_compatible_single_metaclass_by_role_reconciliation(@_);
+}
+
 sub _get_compatible_single_metaclass_by_role_reconciliation {
     my $self = shift;
     my ($single_meta_name) = @_;
@@ -613,13 +619,6 @@ sub _get_compatible_single_metaclass_by_role_reconciliation {
     my $current_single_meta_name = $self->_get_associated_single_metaclass($single_meta_name);
 
     return $self->_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name)->name;
-}
-
-sub _get_compatible_single_metaclass {
-    my $self = shift;
-
-    return $self->SUPER::_get_compatible_single_metaclass(@_)
-        || $self->_get_compatible_single_metaclass_by_role_reconciliation(@_);
 }
 
 sub _process_attribute {
