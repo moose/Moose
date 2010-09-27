@@ -9,6 +9,10 @@ NEXT
     "normal" attributes. This should be mostly compatible with existing code,
     but see Moose::Manual::Delta for details.
 
+  * New option 'trait_aliases' for Moose::Exporter, which will allow you to
+    generate non-global aliases for your traits (and allow your users to
+    rename the aliases, etc). (doy)
+
   [ENHANCEMENTS]
 
   * Native Trait delegations are now all generated as inline code. This should
