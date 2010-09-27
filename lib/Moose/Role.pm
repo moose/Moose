@@ -137,11 +137,11 @@ sub init_meta {
         # also check for inherited non moose 'meta' method?
         my $existing = $meta->get_method('meta');
         if ($existing && !$existing->isa('Class::MOP::Method::Meta')) {
-            warn "Moose::Role is overwriting an existing method named 'meta' "
-               . "with its own version, in role $role. If this is actually "
-               . "what you want, you should remove the existing method, "
-               . "otherwise, you should pass the '-no_meta => 1' option to "
-               . "'use Moose::Role'.";
+            Carp::cluck "Moose::Role is overwriting an existing method named "
+                      . "'meta' with its own version, in role $role. If "
+                      . "this is actually what you want, you should remove "
+                      . "the existing method, otherwise, you should pass "
+                      . "the '-no_meta => 1' option to 'use Moose::Role'.";
         }
         $meta->_add_meta_method;
     }
