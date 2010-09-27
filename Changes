@@ -21,9 +21,8 @@ NEXT
 
   * Reinitializing a metaclass no longer removes the existing method and
     attribute objects (it instead fixes them so they are correct for the
-    reinitialized metaclass). This should make Moose::Util::MetaRole not so
-    sensitive about when it's able to be called without messing up things
-    that may already be set up in the metaclass. (doy)
+    reinitialized metaclass). This should make the order of loading many
+    MooseX modules less of an issue. (doy)
 
   [BUG FIXES]
 
