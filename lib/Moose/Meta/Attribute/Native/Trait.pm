@@ -2,6 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 use Moose::Util::TypeConstraints;
+use Moose::Deprecated;
 
 our $VERSION   = '1.15';
 $VERSION = eval $VERSION;
@@ -14,11 +15,25 @@ before '_process_options' => sub {
 
     $self->_check_helper_type( $options, $name );
 
-    $options->{is} = $self->_default_is
-        if !exists $options->{is} && $self->can('_default_is');
+    if ( !exists $options->{is} && $self->can('_default_is') ) {
+        $options->{is} = $self->_default_is;
 
-    $options->{default} = $self->_default_default
-        if !exists $options->{default} && $self->can('_default_default');
+        Moose::Deprecated::deprecated(
+            feature => 'default is for Native Trait',
+            message =>
+                q{Allowing a native trait to automatically supply a value for "is" is deprecated}
+        );
+    }
+
+    if ( !exists $options->{default} && $self->can('_default_default') ) {
+        $options->{default} = $self->_default_default;
+
+        Moose::Deprecated::deprecated(
+            feature => 'default default for Native Trait',
+            message =>
+                'Allowing a native trait to automatically supply a default is deprecated'
+        );
+    }
 };
 
 sub _check_helper_type {
