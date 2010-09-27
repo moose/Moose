@@ -4,8 +4,10 @@ use warnings;
 use Cwd qw( abs_path );
 use Test::More;
 
-plan skip_all => 'This test will not run unless you set MOOSE_TEST_MD to a true value'
-    unless $ENV{MOOSE_TEST_MD};
+BEGIN {
+    plan skip_all => 'This test will not run unless you set MOOSE_TEST_MD to a true value'
+        unless $ENV{MOOSE_TEST_MD};
+}
 
 use Test::Requires {
     'Test::DependentModules' => '0.01', # skip all if not installed
