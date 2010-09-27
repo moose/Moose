@@ -86,7 +86,7 @@ sub check_conflicts {
         'MooseX::InstanceTracking'       => '0.04',
         'MooseX::LazyRequire'            => '0.05',
         'MooseX::MethodAttributes'       => '0.22',
-        'MooseX::NonMoose'               => '0.13',
+        'MooseX::NonMoose'               => '0.15',
         'MooseX::Params::Validate'       => '0.05',
         'MooseX::POE'                    => '0.205',
         'MooseX::Role::Cmd'              => '0.06',
