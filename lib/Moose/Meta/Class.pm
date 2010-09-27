@@ -466,9 +466,14 @@ sub _is_role_only_subclass {
     my ($parent_name) = @parent_names;
     my $parent_meta = Class::MOP::Class->initialize($parent_name);
 
-    my @roles = $meta->can('calculate_all_roles_with_inheritance')
-                    ? $meta->calculate_all_roles_with_inheritance
+    # only get the roles attached to this particular class, don't look at
+    # superclasses
+    my @roles = $meta->can('calculate_all_roles')
+                    ? $meta->calculate_all_roles
                     : ();
+
+    # it's obviously not a role-only subclass if it doesn't do any roles
+    return unless @roles;
 
     # loop over all methods that are a part of the current class
     # (not inherited)
