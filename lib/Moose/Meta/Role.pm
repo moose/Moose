@@ -188,11 +188,25 @@ sub reinitialize {
         );
     }
 
-    return $self->SUPER::reinitialize(
+    # don't need to remove generated metaobjects here yet, since we don't
+    # yet generate anything in roles. this may change in the future though...
+    # keep an eye on that
+    my $new_meta = $self->SUPER::reinitialize(
         $pkg,
         %existing_classes,
         @_,
     );
+    $new_meta->_restore_metaobjects_from($meta)
+        if $meta && $meta->isa('Moose::Meta::Role');
+    return $new_meta;
+}
+
+sub _restore_metaobjects_from {
+    my $self = shift;
+    my ($old_meta) = @_;
+
+    $self->_restore_metamethods_from($old_meta);
+    $self->_restore_metaattributes_from($old_meta);
 }
 
 sub add_attribute {
