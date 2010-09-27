@@ -7,7 +7,11 @@ our $VERSION   = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
+use Class::MOP::MiniTrait;
+
 use base 'Class::MOP::Method';
+
+Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 sub _error_thrower {
     my $self = shift;
