@@ -352,61 +352,13 @@ sub _base_metaclasses {
     );
 }
 
-sub _can_fix_metaclass_incompatibility {
-    my $self = shift;
-    return 1 if $self->_can_fix_metaclass_incompatibility_by_role_reconciliation(@_);
-    return $self->SUPER::_can_fix_metaclass_incompatibility(@_);
-}
-
-sub _can_fix_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($super_meta) = @_;
-
-    return 1 if $self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta);
-
-    my %base_metaclass = $self->_base_metaclasses;
-    for my $metaclass_type (keys %base_metaclass) {
-        next unless defined $self->$metaclass_type;
-        return 1 if $self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta);
-    }
-
-    return;
-}
-
-sub _can_fix_class_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($super_meta) = @_;
-
-    my $super_meta_name = $super_meta->_real_ref_name;
-
-    return Moose::Util::_classes_differ_by_roles_only(
-        blessed($self),
-        $super_meta_name,
-    );
-}
-
-sub _can_fix_single_metaclass_incompatibility_by_role_reconciliation {
-    my $self = shift;
-    my ($metaclass_type, $super_meta) = @_;
-
-    my $class_specific_meta_name = $self->$metaclass_type;
-    return unless $super_meta->can($metaclass_type);
-    my $super_specific_meta_name = $super_meta->$metaclass_type;
-    my %metaclasses = $self->_base_metaclasses;
-
-    return Moose::Util::_classes_differ_by_roles_only(
-        $class_specific_meta_name,
-        $super_specific_meta_name,
-    );
-}
-
 sub _fix_class_metaclass_incompatibility {
     my $self = shift;
     my ($super_meta) = @_;
 
     $self->SUPER::_fix_class_metaclass_incompatibility(@_);
 
-    if ($self->_can_fix_class_metaclass_incompatibility_by_role_reconciliation($super_meta)) {
+    if ($self->_class_metaclass_can_be_made_compatible($super_meta)) {
         ($self->is_pristine)
             || confess "Can't fix metaclass incompatibility for "
                      . $self->name
@@ -427,7 +379,7 @@ sub _fix_single_metaclass_incompatibility {
 
     $self->SUPER::_fix_single_metaclass_incompatibility(@_);
 
-    if ($self->_can_fix_single_metaclass_incompatibility_by_role_reconciliation($metaclass_type, $super_meta)) {
+    if ($self->_single_metaclass_can_be_made_compatible($super_meta, $metaclass_type)) {
         ($self->is_pristine)
             || confess "Can't fix metaclass incompatibility for "
                      . $self->name
