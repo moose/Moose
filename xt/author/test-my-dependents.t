@@ -186,7 +186,6 @@ Lighttpd::Control
 Locale::POFileManager
 Markdent
 namespace::autoclean
-NetHack::Item
 Net::HTTP::API
 Net::Twitter
 Path::Router
