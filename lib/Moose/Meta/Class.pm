@@ -580,6 +580,15 @@ sub _get_compatible_single_metaclass_by_role_reconciliation {
 
     my $current_single_meta_name = $self->_get_associated_single_metaclass($single_meta_name);
 
+    # XXX: gross
+    return unless $self->_classes_differ_by_roles_only(
+        $single_meta_name,
+        $current_single_meta_name,
+        $single_meta_name->isa('Class::MOP::Attribute')
+            ? 'Moose::Meta::Attribute'
+            : 'Moose::Meta::Method'
+    );
+
     return Moose::Util::_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name);
 }
 

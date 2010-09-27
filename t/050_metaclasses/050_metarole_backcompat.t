@@ -105,6 +105,10 @@ use Moose::Util::MetaRole;
     My::Class->meta()->add_after_method_modifier( 'bar' => sub { 'bar' } );
     is( My::Class->meta()->get_method('bar')->foo(), 10,
         '... call foo() on a wrapped method metaclass object' );
+    # so that it doesn't break on reinitialization, since it's a
+    # Class::MOP::Method::Wrapped object, which isn't a Moose::Meta::Method
+    # object. Someday we'll fix this...
+    My::Class->meta()->remove_method('bar');
 }
 
 {
