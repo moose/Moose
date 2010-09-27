@@ -11,7 +11,7 @@ use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use Class::MOP   0.60;
 
-our $VERSION   = '1.14';
+our $VERSION   = '1.15';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
