@@ -8,9 +8,11 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Carp::Heavy;
+use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Object';
 
+Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 sub new {
     my ( $self, @args ) = @_;
