@@ -197,4 +197,83 @@ throws_ok {
     );
 } qr/compatible/;
 
+{
+    package Quux;
+    use Moose;
+    sub foo { }
+    before foo => sub { };
+    has bar => (is => 'ro');
+    sub DEMOLISH { }
+    __PACKAGE__->meta->make_immutable;
+}
+
+ok(Quux->meta->has_method('new'));
+isa_ok(Quux->meta->get_method('new'), 'Moose::Meta::Method::Constructor');
+ok(Quux->meta->has_method('meta'));
+isa_ok(Quux->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
+ok(Quux->meta->has_method('foo'));
+isa_ok(Quux->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
+ok(Quux->meta->has_method('bar'));
+isa_ok(Quux->meta->get_method('bar'), 'Moose::Meta::Method::Accessor');
+ok(Quux->meta->has_method('DESTROY'));
+isa_ok(Quux->meta->get_method('DESTROY'), 'Moose::Meta::Method::Destructor');
+ok(Quux->meta->has_method('DEMOLISH'));
+isa_ok(Quux->meta->get_method('DEMOLISH'), 'Moose::Meta::Method');
+
+Quux->meta->make_mutable;
+Moose::Meta::Class->reinitialize('Quux');
+Quux->meta->make_immutable;
+
+ok(Quux->meta->has_method('new'));
+isa_ok(Quux->meta->get_method('new'), 'Moose::Meta::Method::Constructor');
+ok(Quux->meta->has_method('meta'));
+isa_ok(Quux->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
+ok(Quux->meta->has_method('foo'));
+isa_ok(Quux->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
+ok(Quux->meta->has_method('bar'));
+isa_ok(Quux->meta->get_method('bar'), 'Moose::Meta::Method::Accessor');
+ok(Quux->meta->has_method('DESTROY'));
+isa_ok(Quux->meta->get_method('DESTROY'), 'Moose::Meta::Method::Destructor');
+ok(Quux->meta->has_method('DEMOLISH'));
+isa_ok(Quux->meta->get_method('DEMOLISH'), 'Moose::Meta::Method');
+
+Quux->meta->make_mutable;
+Moose::Util::MetaRole::apply_metaroles(
+    for => 'Quux',
+    class_metaroles => {
+        method    => ['Foo::Role::Method'],
+        attribute => ['Foo::Role::Attribute'],
+    },
+);
+Quux->meta->make_immutable;
+
+ok(Quux->meta->has_method('new'));
+isa_ok(Quux->meta->get_method('new'), 'Moose::Meta::Method::Constructor');
+{ local $TODO = "constructor methods don't get metaroles yet";
+does_ok(Quux->meta->get_method('new'), 'Foo::Role::Method');
+}
+ok(Quux->meta->has_method('meta'));
+isa_ok(Quux->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
+{ local $TODO = "meta methods don't get metaroles yet";
+does_ok(Quux->meta->get_method('meta'), 'Foo::Role::Method');
+}
+ok(Quux->meta->has_method('foo'));
+isa_ok(Quux->meta->get_method('foo'), 'Class::MOP::Method::Wrapped');
+{ local $TODO = "modified methods don't get metaroles yet";
+does_ok(Quux->meta->get_method('foo'), 'Foo::Role::Method');
+}
+ok(Quux->meta->has_method('bar'));
+isa_ok(Quux->meta->get_method('bar'), 'Moose::Meta::Method::Accessor');
+{ local $TODO = "accessor methods don't get metaroles yet";
+does_ok(Quux->meta->get_method('bar'), 'Foo::Role::Method');
+}
+ok(Quux->meta->has_method('DESTROY'));
+isa_ok(Quux->meta->get_method('DESTROY'), 'Moose::Meta::Method::Destructor');
+{ local $TODO = "destructor methods don't get metaroles yet";
+does_ok(Quux->meta->get_method('DESTROY'), 'Foo::Role::Method');
+}
+ok(Quux->meta->has_method('DEMOLISH'));
+isa_ok(Quux->meta->get_method('DEMOLISH'), 'Moose::Meta::Method');
+does_ok(Quux->meta->get_method('DEMOLISH'), 'Foo::Role::Method');
+
 done_testing;
