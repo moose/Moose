@@ -80,7 +80,7 @@ sub check_conflicts {
         'MooseX::AttributeHelpers'       => '0.22',
         'MooseX::AttributeInflate'       => '0.02',
         'MooseX::Attribute::Prototype'   => '0.10',
-        'MooseX::ClassAttribute'         => '0.13',
+        'MooseX::ClassAttribute'         => '0.16',
         'MooseX::FollowPBP'              => '0.02',
         'MooseX::HasDefaults'            => '0.02',
         'MooseX::InstanceTracking'       => '0.04',
