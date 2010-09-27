@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use List::Util ();
+use Params::Util ();
 
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
@@ -30,7 +31,7 @@ sub _inline_check_arguments {
 
     return $self->_inline_throw_error(
         q{'The argument passed to first must be a code reference'})
-        . q{if $_[0] && ( ref $_[0] || q{} ) ne 'CODE';};
+        . q{ unless Params::Util::_CODELIKE( $_[0] );};
 }
 
 sub _return_value {

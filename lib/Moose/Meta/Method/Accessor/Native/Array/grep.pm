@@ -3,6 +3,8 @@ package Moose::Meta::Method::Accessor::Native::Array::grep;
 use strict;
 use warnings;
 
+use Params::Util ();
+
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -28,7 +30,7 @@ sub _inline_check_arguments {
 
     return $self->_inline_throw_error(
         q{'The argument passed to grep must be a code reference'})
-        . q{if $_[0] && ( ref $_[0] || q{} ) ne 'CODE';};
+        . q{ unless Params::Util::_CODELIKE( $_[0] );};
 }
 
 sub _return_value {

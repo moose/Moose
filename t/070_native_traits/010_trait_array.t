@@ -95,6 +95,18 @@ use Test::Moose;
 }
 
 {
+    package Overloader;
+
+    use overload
+        '&{}' => sub { ${ $_[0] } },
+        bool  => sub {1};
+
+    sub new {
+        bless \$_[1], $_[0];
+    }
+}
+
+{
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
     run_tests( build_class( trigger => sub { } ) );
@@ -492,6 +504,13 @@ sub run_tests {
         throws_ok { $obj->grep( {} ) }
         qr/The argument passed to grep must be a code reference/,
             'throws an error when passing a non coderef to grep';
+
+        my $overloader = Overloader->new( sub { $_ < 5 } );
+        is_deeply(
+            [ $obj->grep($overloader) ],
+            [ 2 .. 4 ],
+            'grep works with obj that overload code dereferencing'
+        );
 
         is_deeply(
             [ $obj->grep_curried ],

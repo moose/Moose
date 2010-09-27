@@ -3,6 +3,8 @@ package Moose::Meta::Method::Accessor::Native::String::substr;
 use strict;
 use warnings;
 
+use Moose::Util ();
+
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -86,17 +88,17 @@ sub _inline_check_arguments {
     my $code
         = $self->_inline_throw_error(
         q{'The first argument passed to substr must be an integer'})
-        . q{ if ref $offset || $offset !~ /^-?\\d+$/;} . "\n"
+        . q{ unless $offset =~ /^-?\\d+$/;} . "\n"
         . $self->_inline_throw_error(
-        q{'The second argument passed to substr must be a positive integer'})
-        . q{ if ref $length || $offset !~ /^-?\\d+$/;};
+        q{'The second argument passed to substr must be an integer'})
+        . q{ unless $length =~ /^-?\\d+$/;};
 
     if ($for_writer) {
         $code
             .= "\n"
             . $self->_inline_throw_error(
             q{'The third argument passed to substr must be a string'})
-            . q{ unless defined $replacement && ! ref $replacement;};
+            . q{ unless Moose::Util::_STRINGLIKE($replacement);};
     }
 
     return $code;

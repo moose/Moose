@@ -234,8 +234,8 @@ sub run_tests {
             'substr throws an error when first argument is not an integer';
 
         throws_ok { $obj->substr( 1, {} ) }
-        qr/The second argument passed to substr must be a positive integer/,
-            'substr throws an error when second argument is not a positive integer';
+        qr/The second argument passed to substr must be an integer/,
+            'substr throws an error when second argument is not an integer';
 
         throws_ok { $obj->substr( 1, 2, {} ) }
         qr/The third argument passed to substr must be a string/,

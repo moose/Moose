@@ -3,6 +3,8 @@ package Moose::Meta::Method::Accessor::Native::Array::join;
 use strict;
 use warnings;
 
+use Moose::Util ();
+
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -28,7 +30,7 @@ sub _inline_check_arguments {
 
     return $self->_inline_throw_error(
         q{'The argument passed to join must be a string'})
-        . ' unless defined $_[0] && ! ref $_[0];';
+        . ' unless Moose::Util::_STRINGLIKE( $_[0] );';
 }
 
 sub _return_value {

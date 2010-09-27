@@ -3,6 +3,9 @@ package Moose::Meta::Method::Accessor::Native::String::replace;
 use strict;
 use warnings;
 
+use Moose::Util ();
+use Params::Util ();
+
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -30,10 +33,10 @@ sub _inline_check_arguments {
     return $self->_inline_throw_error(
         q{'The first argument passed to replace must be a string or regexp reference'}
         )
-        . q{ unless ! ref $_[0] || ref $_[0] eq 'Regexp';} . "\n"
+        . q{ unless Moose::Util::_STRINGLIKE( $_[0] ) || Params::Util::_REGEX( $_[0] );}
         . $self->_inline_throw_error(
         q{'The second argument passed to replace must be a string or code reference'}
-        ) . q{ unless ! ref $_[1] || ref $_[1] eq 'CODE';};
+        ) . q{ unless Moose::Util::_STRINGLIKE( $_[1] ) || Params::Util::_CODELIKE( $_[1] );};
 }
 
 sub _potential_value {

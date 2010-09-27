@@ -3,6 +3,9 @@ package Moose::Meta::Method::Accessor::Native::String::match;
 use strict;
 use warnings;
 
+use Moose::Util ();
+use Params::Util ();
+
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -28,7 +31,7 @@ sub _inline_check_arguments {
 
     return $self->_inline_throw_error(
         q{'The argument passed to match must be a string or regexp reference'}
-    ) . q{ unless ! ref $_[0] || ref $_[0] eq 'Regexp';};
+    ) . q{ unless Moose::Util::_STRINGLIKE( $_[0] ) || Params::Util::_REGEX( $_[0] );};
 }
 
 sub _return_value {

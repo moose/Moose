@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Data::OptList;
+use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
 use Class::MOP   0.60;
@@ -283,6 +284,14 @@ sub meta_class_alias {
     my $meta = Class::MOP::class_of($from);
     my $trait = $meta->isa('Moose::Meta::Role');
     _create_alias('Class', $to, $trait, $from);
+}
+
+# XXX - this should be added to Params::Util
+sub _STRINGLIKE ($) {
+    return _STRING( $_[0] )
+        || ( blessed $_[0]
+        && overload::Method( $_[0], q{""} )
+        && length "$_[0]" );
 }
 
 1;

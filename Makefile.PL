@@ -18,6 +18,7 @@ requires 'Class::MOP'                  => '1.05';
 requires 'Data::OptList'               => '0';
 requires 'List::MoreUtils'             => '0.12';
 requires 'Package::DeprecationManager' => '0.04';
+requires 'Params::Util'                => '0';
 requires 'Scalar::Util'                => '1.19';
 requires 'Sub::Exporter'               => '0.980';
 requires 'Sub::Name'                   => '0';

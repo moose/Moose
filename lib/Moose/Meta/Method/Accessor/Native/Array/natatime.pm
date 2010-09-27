@@ -3,7 +3,8 @@ package Moose::Meta::Method::Accessor::Native::Array::natatime;
 use strict;
 use warnings;
 
-use List::MoreUtils;
+use List::MoreUtils ();
+use Params::Util ();
 
 our $VERSION = '1.14';
 $VERSION = eval $VERSION;
@@ -34,7 +35,7 @@ sub _inline_check_arguments {
         . ' unless defined $_[0] && $_[0] =~ /^\\d+$/;' . "\n"
         . $self->_inline_throw_error(
         q{'The second argument passed to natatime must be a code reference'})
-        . q{ if defined $_[1] && ( ref $_[1] || q{} ) ne 'CODE';};
+        . q{ if @_ == 2 && ! Params::Util::_CODELIKE( $_[1] );};
 }
 
 sub _inline_return_value {
