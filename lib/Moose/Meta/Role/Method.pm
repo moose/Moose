@@ -10,6 +10,17 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method';
 
+sub _make_compatible_with {
+    my $self = shift;
+    my ($other) = @_;
+
+    # XXX: this is pretty gross. the issue here is blah blah blah
+    # see the comments in CMOP::Method::Meta and CMOP::Method::Wrapped
+    return $self unless $other->_is_compatible_with($self->_real_ref_name);
+
+    return $self->SUPER::_make_compatible_with(@_);
+}
+
 1;
 
 __END__
