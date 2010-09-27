@@ -426,7 +426,7 @@ sub _make_import_sub {
 }
 
 sub _strip_traits {
-    my $idx = first_index { $_ eq '-traits' } @_;
+    my $idx = first_index { ( $_ || '' ) eq '-traits' } @_;
 
     return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
 
@@ -440,7 +440,7 @@ sub _strip_traits {
 }
 
 sub _strip_metaclass {
-    my $idx = first_index { $_ eq '-metaclass' } @_;
+    my $idx = first_index { ( $_ || '' ) eq '-metaclass' } @_;
 
     return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
 
@@ -452,7 +452,7 @@ sub _strip_metaclass {
 }
 
 sub _strip_meta_name {
-    my $idx = first_index { $_ eq '-meta_name' } @_;
+    my $idx = first_index { ( $_ || '' ) eq '-meta_name' } @_;
 
     return ( 'meta', @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
 
