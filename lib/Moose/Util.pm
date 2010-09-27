@@ -7,6 +7,7 @@ use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
+use List::MoreUtils qw(any);
 use Class::MOP   0.60;
 
 our $VERSION   = '1.14';
@@ -292,6 +293,43 @@ sub _STRINGLIKE ($) {
         || ( blessed $_[0]
         && overload::Method( $_[0], q{""} )
         && length "$_[0]" );
+}
+
+sub _reconcile_roles_for_metaclass {
+    my ($class_meta_name, $super_meta_name) = @_;
+
+    my @role_differences = _role_differences(
+        $class_meta_name, $super_meta_name,
+    );
+
+    # handle the case where we need to fix compatibility between a class and
+    # its parent, but all roles in the class are already also done by the
+    # parent
+    # see t/050/054.t
+    return $super_meta_name
+        unless @role_differences;
+
+    return Moose::Meta::Class->create_anon_class(
+        superclasses => [$super_meta_name],
+        roles        => [map { $_->name } @role_differences],
+        cache        => 1,
+    )->name;
+}
+
+sub _role_differences {
+    my ($class_meta_name, $super_meta_name) = @_;
+    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
+                         : ();
+    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
+                         : ();
+    my @differences;
+    for my $role_meta (@role_metas) {
+        push @differences, $role_meta
+            unless any { $_->name eq $role_meta->name } @super_role_metas;
+    }
+    return @differences;
 }
 
 1;

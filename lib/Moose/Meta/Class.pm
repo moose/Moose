@@ -22,6 +22,7 @@ use Moose::Error::Default;
 use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
+use Moose::Util;
 
 use base 'Class::MOP::Class';
 
@@ -521,7 +522,7 @@ sub _fix_class_metaclass_incompatibility {
                      . $self->name
                      . " because it is not pristine.";
         my $super_meta_name = $super_meta->_real_ref_name;
-        my $class_meta_subclass_meta_name = $self->_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
+        my $class_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
         my $new_self = $class_meta_subclass_meta_name->reinitialize(
             $self->name,
         );
@@ -542,7 +543,7 @@ sub _fix_single_metaclass_incompatibility {
                      . $self->name
                      . " because it is not pristine.";
         my $super_meta_name = $super_meta->_real_ref_name;
-        my $class_specific_meta_subclass_meta_name = $self->_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
+        my $class_specific_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
             $self->name,
             $metaclass_type => $class_specific_meta_subclass_meta_name,
@@ -550,45 +551,6 @@ sub _fix_single_metaclass_incompatibility {
 
         $self->_replace_self( $new_self, $super_meta_name );
     }
-}
-
-sub _reconcile_roles_for_metaclass {
-    my $self = shift;
-    my ($class_meta_name, $super_meta_name) = @_;
-
-    my @role_differences = $self->_role_differences(
-        $class_meta_name, $super_meta_name,
-    );
-
-    # handle the case where we need to fix compatibility between a class and
-    # its parent, but all roles in the class are already also done by the
-    # parent
-    # see t/050/054.t
-    return $super_meta_name
-        unless @role_differences;
-
-    return Moose::Meta::Class->create_anon_class(
-        superclasses => [$super_meta_name],
-        roles        => [map { $_->name } @role_differences],
-        cache        => 1,
-    )->name;
-}
-
-sub _role_differences {
-    my $self = shift;
-    my ($class_meta_name, $super_meta_name) = @_;
-    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
-                         : ();
-    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
-                         : ();
-    my @differences;
-    for my $role_meta (@role_metas) {
-        push @differences, $role_meta
-            unless any { $_->name eq $role_meta->name } @super_role_metas;
-    }
-    return @differences;
 }
 
 sub _replace_self {
@@ -618,7 +580,7 @@ sub _get_compatible_single_metaclass_by_role_reconciliation {
 
     my $current_single_meta_name = $self->_get_associated_single_metaclass($single_meta_name);
 
-    return $self->_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name);
+    return Moose::Util::_reconcile_roles_for_metaclass($single_meta_name, $current_single_meta_name);
 }
 
 sub _process_attribute {
