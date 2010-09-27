@@ -56,7 +56,7 @@ a Native delegation.
 
 These changes are only likely to break code in a few cases.
 
-The inlning code may or may not preserve the original reference when changes
+The inlining code may or may not preserve the original reference when changes
 are made. In some cases, methods which change the value may replace it
 entirely. This will break tied values.
 
@@ -66,7 +66,7 @@ possible that code which previously ran without errors will now cause the
 constraint to fail. However, presumably this is a good thing ;)
 
 If you are passing invalid arguments to a delegation which were previously
-being ignore, these calls will now fail.
+being ignored, these calls will now fail.
 
 If your code relied on the trigger only being called for a regular writer,
 that may cause problems.
