@@ -39,6 +39,9 @@ NEXT
     was constructed caused an error. Now we only call weaken when the new
     value is a reference.
 
+  * t/040_type_constraints/036_match_type_operator.t failed on 5.13.5+. Fixed
+    based on a patch from Andreas Koenig.
+
 1.14 Tue, Sep 21, 2010
 
   [BUG FIXES]
