@@ -159,6 +159,9 @@ sub ppprint {
                   => sub { die "I don't know what $_ is"                };
 }
 
+# The stringification of qr// has changed in 5.13.5+
+my $re_prefix = qr/x/ =~ /\(\?\^/ ? '(?^:' :'(?-xism:';
+
 is(
     ppprint(
         {
@@ -170,7 +173,7 @@ is(
             six   => Foo->new,
         }
     ),
-    '{ five => *ppprint, four => qr/(?-xism:.*?)/, one => [ 1, 2, "three", 4, "five", \"six" ], six => Foo(), three => sub { ... }, two => undef }',
+    qq~{ five => *ppprint, four => qr/$re_prefix.*?)/, one => [ 1, 2, "three", 4, "five", \\"six" ], six => Foo(), three => sub { ... }, two => undef }~,
     '... got the right pretty printed values'
 );
 
