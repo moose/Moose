@@ -519,25 +519,7 @@ C<push()>, C<shift()>, C<map()>, C<count()>, and more.
       },
   );
 
-Moose includes the following native traits:
-
-=over 4
-
-=item * L<Array|Moose::Meta::Attribute::Native::Trait::Array>
-
-=item * L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
-
-=item * L<Code|Moose::Meta::Attribute::Native::Trait::Code>
-
-=item * L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
-
-=item * L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
-
-=item * L<Number|Moose::Meta::Attribute::Native::Trait::Number>
-
-=item * L<String|Moose::Meta::Attribute::Native::Trait::String>
-
-=back
+See L<Moose::Manual::Delegation> for more details.
 
 =head1 ATTRIBUTE INHERITANCE
 

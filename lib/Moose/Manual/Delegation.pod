@@ -6,10 +6,10 @@ Moose::Manual::Delegation - Attribute delegation
 
 =head1 WHAT IS DELEGATION?
 
-Delegation is a feature that lets you create "proxy" methods that
-do nothing more than call some other method on an attribute. This
-is quite handy since it lets you simplify a complex set of "has-a"
-relationships and present a single unified API from one class.
+Delegation is a feature that lets you create "proxy" methods that do nothing
+more than call some other method on an attribute. This lets you simplify a
+complex set of "has-a" relationships and present a single unified API from one
+class.
 
 With delegation, consumers of a class don't need to know about all the
 objects it contains, reducing the amount of API they need to learn.
@@ -66,7 +66,7 @@ In this example, we've created a C<< $website->hostname >> method,
 rather than using C<URI.pm>'s name, C<host>.
 
 These two mapping forms are the ones you will use most often. The
-remainder are a bit more complex, and less common.
+remaining methods are a bit more complex.
 
   has 'uri' => (
       is      => 'ro',
@@ -95,16 +95,14 @@ Finally, you can also provide a sub reference to I<generate> a
 mapping. You probably won't need this version often (if ever). See the
 L<Moose> docs for more details on exactly how this works.
 
-=head1 PERL DATA STRUCTURES
+=head1 NATIVE TRAIT DELEGATION
 
-Handles also will allow you to delegate to "helper" methods that work on
-common Perl data structures. If you remember or have ever used
-L<MooseX::AttributeHelpers|MooseX::AttributeHelpers> the mechanism is very
-similar.
+The Native Traits feature allows standard Perl data structures to be treated
+as if they were objects for the purposes of delegation.
 
   has 'queue' => (
-      isa     => 'ArrayRef[Item]',
       traits  => ['Array'],
+      isa     => 'ArrayRef[Item]',
       default => sub { [ ] },
       handles => {
           add_item  => 'push',
@@ -112,10 +110,10 @@ similar.
       },
   )
 
-By providing the C<Array> trait to the C<traits> parameter you signal to
-Moose that you would like to use the set of Array helpers. Moose will then
-create C<add_item> and C<next_item> method that "just works". Behind the
-scenes C<add_item> is something like
+By providing the C<Array> trait to the C<traits> parameter you tell Moose that
+you would like to use the set of Array helpers. Moose will then create
+C<add_item> and C<next_item> methods that "just works". Behind the scenes
+C<add_item> is something like
 
   sub add_item {
       my ($self, @items) = @_;
@@ -127,15 +125,30 @@ scenes C<add_item> is something like
       push @{ $self->queue }, @items;
   }
 
-There are traits for not only C<Array> but also C<Hash>, C<Bool>, C<String>,
-C<Number>, and C<Counter>. For more information see the documentation in
-L<Moose::Meta::Attribute::Native|Moose::Meta::Attribute::Native>.
+Moose includes the following native traits:
+
+=over 4
+
+=item * L<Array|Moose::Meta::Attribute::Native::Trait::Array>
+
+=item * L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
+
+=item * L<Code|Moose::Meta::Attribute::Native::Trait::Code>
+
+=item * L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
+
+=item * L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
+
+=item * L<Number|Moose::Meta::Attribute::Native::Trait::Number>
+
+=item * L<String|Moose::Meta::Attribute::Native::Trait::String>
+
+=back
 
 =head1 CURRYING
 
-Currying is a way of creating a method or function from another method or
-function with some of the parameters pre-defined. Moose provides the ability to
-curry methods when creating delegates.
+Currying allows you to create a method with some pre-set parameters. You can
+create a curried delegation method:
 
     package Spider;
     use Moose;
@@ -149,7 +162,12 @@ curry methods when creating delegates.
     )
 
 With this definition, calling C<< $spider->set_user_agent('MyClient') >> will
-behind the scenes call C<< $spider->request->header('UserAgent', 'MyClient') >>.
+call C<< $spider->request->header('UserAgent', 'MyClient') >> behind the
+scenes.
+
+Note that with currying, the currying always start with the first parameter to
+a method (C<$_[0]). Any arguments you pass to the delegation come after the
+curried arguments.
 
 =head1 MISSING ATTRIBUTES
 
