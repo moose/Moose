@@ -95,9 +95,92 @@ allowed.  Keys are method names that you want installed locally, and values are
 methods from the method providers (below).  Currying with delegated methods
 works normally for C<< handles >>.
 
-=head1 METHOD PROVIDERS
+=head1 NATIVE TYPES
 
 =over
+
+=item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
+
+Common methods for array references.
+
+    has 'queue' => (
+        traits    => ['Array'],
+        is        => 'ro',
+        isa       => 'ArrayRef[Str]',
+        default   => sub { [] },
+        handles   => {
+            add_item  => 'push',
+            next_item => 'shift',
+            # ...
+        }
+    );
+
+=item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
+
+Common methods for boolean values.
+
+    has 'is_lit' => (
+        traits    => ['Bool'],
+        is        => 'rw',
+        isa       => 'Bool',
+        default   => 0,
+        handles   => {
+            illuminate  => 'set',
+            darken      => 'unset',
+            flip_switch => 'toggle',
+            is_dark     => 'not',
+            # ...
+        }
+    );
+
+=item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
+
+Common methods for code references.
+
+    has 'callback' => (
+        traits    => ['Code'],
+        is        => 'ro',
+        isa       => 'CodeRef',
+        default   => sub { sub { 'called' } },
+        handles   => {
+            call => 'execute',
+            # ...
+        }
+    );
+
+=item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
+
+Methods for incrementing and decrementing a counter attribute.
+
+    has 'counter' => (
+        traits    => ['Counter'],
+        is        => 'ro',
+        isa       => 'Num',
+        default   => 0,
+        handles   => {
+            inc_counter   => 'inc',
+            dec_counter   => 'dec',
+            reset_counter => 'reset',
+            # ...
+        }
+    );
+
+=item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
+
+Common methods for hash references.
+
+    has 'options' => (
+        traits    => ['Hash'],
+        is        => 'ro',
+        isa       => 'HashRef[Str]',
+        default   => sub { {} },
+        handles   => {
+            set_option => 'set',
+            get_option => 'get',
+            has_option => 'exists',
+            # ...
+        }
+    );
 
 =item L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
@@ -132,89 +215,6 @@ Common methods for string operations.
         handles   => {
             add_text     => 'append',
             replace_text => 'replace',
-            # ...
-        }
-    );
-
-=item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
-
-Methods for incrementing and decrementing a counter attribute.
-
-    has 'counter' => (
-        traits    => ['Counter'],
-        is        => 'ro',
-        isa       => 'Num',
-        default   => 0,
-        handles   => {
-            inc_counter   => 'inc',
-            dec_counter   => 'dec',
-            reset_counter => 'reset',
-            # ...
-        }
-    );
-
-=item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
-
-Common methods for boolean values.
-
-    has 'is_lit' => (
-        traits    => ['Bool'],
-        is        => 'rw',
-        isa       => 'Bool',
-        default   => 0,
-        handles   => {
-            illuminate  => 'set',
-            darken      => 'unset',
-            flip_switch => 'toggle',
-            is_dark     => 'not',
-            # ...
-        }
-    );
-
-=item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
-
-Common methods for hash references.
-
-    has 'options' => (
-        traits    => ['Hash'],
-        is        => 'ro',
-        isa       => 'HashRef[Str]',
-        default   => sub { {} },
-        handles   => {
-            set_option => 'set',
-            get_option => 'get',
-            has_option => 'exists',
-            # ...
-        }
-    );
-
-=item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
-
-Common methods for array references.
-
-    has 'queue' => (
-        traits    => ['Array'],
-        is        => 'ro',
-        isa       => 'ArrayRef[Str]',
-        default   => sub { [] },
-        handles   => {
-            add_item  => 'push',
-            next_item => 'shift',
-            # ...
-        }
-    );
-
-=item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
-
-Common methods for code references.
-
-    has 'callback' => (
-        traits    => ['Code'],
-        is        => 'ro',
-        isa       => 'CodeRef',
-        default   => sub { sub { 'called' } },
-        handles   => {
-            call => 'execute',
             # ...
         }
     );
