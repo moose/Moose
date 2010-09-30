@@ -38,12 +38,11 @@ This says that all C<Person> objects have an optional read-write
 
 =head2 Read-write vs. read-only
 
-The options passed to C<has> define the properties of the
-attribute. There are many options, but in the simplest form you just
-need to set C<is>, which can be either C<rw> (read-write) or C<ro>
-(read-only). When an attribute is C<rw>, you can change it by passing
-a value to its accessor. When an attribute is C<ro>, you may only read
-the current value of the attribute.
+The options passed to C<has> define the properties of the attribute. There are
+many options, but in the simplest form you just need to set C<is>, which can
+be either C<ro> (read-only) or C<rw> (read-write). When an attribute is C<rw>,
+you can change it by passing a value to its accessor. When an attribute is
+C<ro>, you may only read the current value of the attribute.
 
 In fact, you could even omit C<is>, but that gives you an attribute
 that has no accessor. This can be useful with other attribute options,
@@ -218,11 +217,11 @@ When you provide a C<default> subroutine reference, it is called as a
 method on the object, with no additional parameters:
 
   has 'size' => (
-      is => 'ro',
+      is      => 'ro',
       default => sub {
           my $self = shift;
 
-          return $self->height > 200 ? 'big' : 'average';
+          return $self->height > 200 ? 'large' : 'average';
       },
   );
 
@@ -232,9 +231,15 @@ dependent on other parts of the object's state, you can make the
 attribute C<lazy>. Laziness is covered in the next section.
 
 If you want to use a reference of any sort as the default value, you
-must return it from a subroutine. This is necessary because otherwise
-Perl would instantiate the reference exactly once, and it would be
-shared by all objects:
+must return it from a subroutine.
+
+  has 'mapping' => (
+      is      => 'ro',
+      default => sub { {} },
+  );
+
+This is necessary because otherwise Perl would instantiate the reference
+exactly once, and it would be shared by all objects:
 
   has 'mapping' => (
       is      => 'ro',
@@ -246,17 +251,12 @@ as the default.
 
 If Moose allowed this then the default mapping attribute could easily
 end up shared across many objects. Instead, wrap it in a subroutine
-reference:
-
-  has 'mapping' => (
-      is      => 'ro',
-      default => sub { {} }, # right!
-  );
+reference as we saw above.
 
 This is a bit awkward, but it's just the way Perl works.
 
-As an alternative to using a subroutine reference, you can instead
-supply a C<builder> method for your attribute:
+As an alternative to using a subroutine reference, you can supply a C<builder>
+method for your attribute:
 
   has 'size' => (
       is        => 'ro',
@@ -268,9 +268,9 @@ supply a C<builder> method for your attribute:
       return ( 'small', 'medium', 'large' )[ int( rand 3 ) ];
   }
 
-This has several advantages. First, it moves a chunk of code to its
-own named method, which improves readability and code
-organization.
+This has several advantages. First, it moves a chunk of code to its own named
+method, which improves readability and code organization. Second, because this
+is a I<named> method, it can be subclassed or provided by a role.
 
 We strongly recommend that you use a C<builder> instead of a
 C<default> for anything beyond the most trivial default.
@@ -293,7 +293,7 @@ If we subclass our C<Person> class, we can override C<_build_size>:
 
   sub _build_size { return 'small' }
 
-=head3 Builders can be composed from roles
+=head3 Builders work well with roles
 
 Because builders are called by name, they work well with roles. For
 example, a role could provide an attribute but require that the
@@ -319,7 +319,7 @@ consuming class provide the C<builder>:
 
 Roles are covered in L<Moose::Manual::Roles>.
 
-=head2 Laziness and C<lazy_build>
+=head2 Laziness
 
 Moose lets you defer attribute population by making an attribute
 C<lazy>:
@@ -348,58 +348,6 @@ some CPU time.
 We recommend that you make any attribute with a builder or non-trivial
 default C<lazy> as a matter of course.
 
-To facilitate this, you can simply specify the C<lazy_build> attribute
-option. This bundles up a number of options together:
-
-  has 'size' => (
-      is         => 'ro',
-      lazy_build => 1,
-  );
-
-This is the same as specifying all of these options:
-
-  has 'size' => (
-      is        => 'ro',
-      lazy      => 1,
-      builder   => '_build_size',
-      clearer   => 'clear_size',
-      predicate => 'has_size',
-  );
-
-If your attribute name starts with an underscore (C<_>), then the clearer
-and predicate will as well:
-
-  has '_size' => (
-      is         => 'ro',
-      lazy_build => 1,
-  );
-
-becomes:
-
-  has '_size' => (
-      is        => 'ro',
-      lazy      => 1,
-      builder   => '_build__size',
-      clearer   => '_clear_size',
-      predicate => '_has_size',
-  );
-
-Note the doubled underscore in the builder name. Internally, Moose
-simply prepends the attribute name with "_build_" to come up with the
-builder name.
-
-If you don't like the names that C<lazy_build> generates, you can
-always provide your own:
-
-  has 'size' => (
-      is         => 'ro',
-      lazy_build => 1,
-      clearer    => '_clear_size',
-  );
-
-Options that you explicitly provide are always used in favor of
-Moose's internal defaults.
-
 =head2 Constructor parameters (C<init_arg>)
 
 By default, each attribute can be passed by name to the class's
@@ -407,7 +355,7 @@ constructor. On occasion, you may want to use a different name for
 the constructor parameter. You may also want to make an attribute
 unsettable via the constructor.
 
-Both of these goals can be accomplished with the C<init_arg> option:
+You can do either of these things with the C<init_arg> option:
 
   has 'bigness' => (
       is       => 'ro',
@@ -421,9 +369,10 @@ Even more useful is the ability to disable setting an attribute via
 the constructor. This is particularly handy for private attributes:
 
   has '_genetic_code' => (
-      is         => 'ro',
-      lazy_build => 1,
-      init_arg   => undef,
+      is       => 'ro',
+      lazy     => 1,
+      builder  => '_build_genetic_code',
+      init_arg => undef,
   );
 
 By setting the C<init_arg> to C<undef>, we make it impossible to set
@@ -472,7 +421,7 @@ The trigger is called I<after> an attribute's value is set. It is
 called as a method on the object, and receives the new and old values as
 its arguments. If the attribute had not previously been set at all,
 then only the new value is passed. This lets you distinguish between
-the case where the attribute had no value versus when it was C<undef>.
+the case where the attribute had no value versus when the old value was C<undef>.
 
 This differs from an C<after> method modifier in two ways. First, a
 trigger is only called when the attribute is set, as opposed to
@@ -522,29 +471,12 @@ $self->hair_color->as_hex_string >>.
 See L<Moose::Manual::Delegation> for documentation on how to set up
 delegation methods.
 
-=head2 Metaclass and traits
+=head2 Attribute traits and metaclasses
 
-One of Moose's best features is that it can be extended in all sorts
-of ways through the use of custom metaclasses and metaclass traits.
+One of Moose's best features is that it can be extended in all sorts of ways
+through the use of metaclass traits and custom metaclasses.
 
-When declaring an attribute, you can declare a metaclass or a set of
-traits for the attribute:
-
-  has 'mapping' => (
-      metaclass => 'Hash',
-      is        => 'ro',
-      default   => sub { {} },
-  );
-
-In this case, the metaclass C<Hash> really refers to
-L<Moose::Meta::Attribute::Native::Trait::Hash>. Moose also provides
-native traits for L<Number|Moose::Meta::Attribute::Native::Trait::Number>, 
-L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>, 
-L<String|Moose::Meta::Attribute::Native::Trait::String>, 
-L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>, and 
-L<Array|Moose::Meta::Attribute::Native::Trait::Array>.
-
-You can also apply one or more traits to an attribute:
+You can apply one or more traits to an attribute:
 
   use MooseX::MetaDescription;
 
@@ -565,37 +497,54 @@ attribute metaclasses and traits. See L<Moose::Manual::MooseX> for
 some examples. You can also write your own metaclasses and traits. See
 the "Meta" and "Extending" recipes in L<Moose::Cookbook> for examples.
 
-=head1 ATTRIBUTE INHERITANCE
+=head2 Native Traits
 
-By default, a child inherits all of its parent class(es)' attributes
-as-is. However, you can explicitly change some aspects of the
-inherited attribute in the child class.
+The Native Traits feature allows standard Perl data structures to be treated
+as if they were objects for the purposes of delegation.
 
-The options that can be overridden in a subclass are:
+For example, we can pretend that an array reference has methods like
+C<push()>, C<shift()>, C<map()>, C<count()>, and more.
+
+  has 'options' => (
+      traits  => ['Array'],
+      is      => 'ro',
+      isa     => 'ArrayRef[Str]',
+      default => sub { [] },
+      handles => {
+          all_options    => 'elements',
+          add_option     => 'push',
+          map_options    => 'map',
+          option_count   => 'count',
+          sorted_options => 'sort',
+      },
+  );
+
+Moose includes the following native traits:
 
 =over 4
 
-=item * default
+=item * L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
-=item * coerce
+=item * L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
 
-=item * required
+=item * L<Code|Moose::Meta::Attribute::Native::Trait::Code>
 
-=item * documentation
+=item * L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
 
-=item * lazy
+=item * L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
-=item * isa
+=item * L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
-=item * handles
-
-=item * builder
-
-=item * metaclass
-
-=item * traits
+=item * L<String|Moose::Meta::Attribute::Native::Trait::String>
 
 =back
+
+=head1 ATTRIBUTE INHERITANCE
+
+By default, a child inherits all of its parent class(es)' attributes
+as-is. However, you can change most aspects of the inherited attribute in the
+child class. You cannot change any of its associated method names (reader,
+writer, predicate, etc).
 
 To override an attribute, you simply prepend its name with a plus sign
 (C<+>):
@@ -677,12 +626,9 @@ they are accessed and manipulated.
 
 =head2 Initializer
 
-Moose provides an attribute option called C<initializer>. This is
-similar to C<builder>, except that it is I<only> called during object
-construction.
-
-This option is inherited from L<Class::MOP>, but we recommend that you
-use a C<builder> (which is Moose-only) instead.
+Moose provides an attribute option called C<initializer>. This is called when
+the attribute's value is being set in the constructor, and lets you change the
+value before it is set.
 
 =head1 AUTHOR
 

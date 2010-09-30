@@ -8,8 +8,8 @@ Moose::Manual::Concepts - Moose OO concepts
 
 In the past, you may not have thought too much about the difference
 between packages and classes, attributes and methods, constructors and
-methods, etc. With Moose, these are all conceptually separate things,
-even though under the hood they're implemented with plain old Perl.
+methods, etc. With Moose, these are all conceptually separate,
+though under the hood they're implemented with plain old Perl.
 
 Our meta-object protocol (aka MOP) provides well-defined introspection
 features for each of those concepts, and Moose in turn provides
@@ -67,8 +67,8 @@ method names, B<delegations>, a default value, and more.
 
 Attributes I<are not> methods, but defining them causes various
 accessor methods to be created. At a minimum, a normal attribute will
-always have a reader accessor method. Many attributes also have other
-methods, such as a writer method, clearer method, and predicate method
+have a reader accessor method. Many attributes have other
+methods, such as a writer method, a clearer method, or a predicate method
 ("has it been set?").
 
 An attribute may also define B<delegations>, which will create
@@ -99,7 +99,7 @@ example, a User can login.
 
   sub login { ... }
 
-=head2 Roles
+=head2 Role
 
 A role is something that a class I<does>. We also say that classes
 I<consume> roles. For example, a Machine class might do the Breakable
@@ -115,8 +115,8 @@ A role I<has> zero or more B<method modifiers>.
 
 A role I<has> zero or more B<required methods>.
 
-A required method is not implemented by the role. Required methods say
-"to use this Role you must implement this method".
+A required method is not implemented by the role. Required methods are a way
+for the role to declare "to use this role you must implement this method".
 
 A role I<has> zero or more B<excluded roles>.
 
@@ -172,22 +172,22 @@ that gets called before or after (or around, etc.) some named method.
 
 =head2 Type
 
-Moose also comes with a (miniature) type system. This allows you to
-define types for attributes. Moose has a set of built-in types based
-on what Perl provides, such as C<Str>, C<Num>, C<Bool>, C<HashRef>, etc.
+Moose also comes with a (miniature) type system. This allows you to define
+types for attributes. Moose has a set of built-in types based on the types
+Perl provides in its core, such as C<Str>, C<Num>, C<Bool>, C<HashRef>, etc.
 
 In addition, every class name in your application can also be used as
 a type name.
 
-Finally, you can define your own types, either as subtypes or entirely
-new types, with their own constraints. For example, you could define a
-type C<PosInt>, a subtype of C<Int> which only allows positive numbers.
+Finally, you can define your own types with their own constraints. For
+example, you could define a C<PosInt> type, a subtype of C<Int> which only
+allows positive numbers.
 
 =head2 Delegation
 
-Moose attributes provide declarative syntax for defining
-delegations. A delegation is a method which calls some method on an
-attribute to do its real work.
+Moose attributes provide declarative syntax for defining delegations. A
+delegation is a method which in turn calls some method on an attribute to do
+its real work.
 
 =head2 Constructor
 
@@ -265,7 +265,7 @@ probably never saw this before (at least in Perl 5).
 Hand-written parameter checking in your C<new()> method and accessors.
 
 With Moose, you define types declaratively, and then use them by name
-in your attributes.
+with your attributes.
 
 =item * Delegation
 
@@ -305,10 +305,10 @@ like object construction and so on.
 
 =head1 META WHAT?
 
-A metaclass is a class that describes classes. With Moose, every class
-you define gets a C<meta()> method. It returns a L<Moose::Meta::Class>
-object, which has an introspection API that can tell you about the
-class it represents.
+A metaclass is a class that describes classes. With Moose, every class you
+define gets a C<meta()> method. The C<meta()> method returns a
+L<Moose::Meta::Class> object, which has an introspection API that can tell you
+about the class it represents.
 
   my $meta = User->meta();
 
@@ -370,7 +370,7 @@ basic OO features.
 
 After that, check out the Role recipes. If you're really curious, go
 on and read the Meta and Extending recipes, but those are mostly there
-for people who want to be Moose wizards and change how Moose works.
+for people who want to be Moose wizards and extend Moose itself.
 
 =head1 AUTHOR
 

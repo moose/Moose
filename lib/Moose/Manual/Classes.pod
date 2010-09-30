@@ -17,10 +17,9 @@ That's it, you've made a class with Moose!
 There's actually a lot going on here under the hood, so let's step
 through it.
 
-When you load L<Moose>, a bunch of sugar functions are exported into
-your class. These include things like C<extends>, C<has>, C<with>, and
-more. These functions are what you use to define your class. For
-example, you might define an attribute ...
+When you load L<Moose>, a bunch of sugar functions are exported into your
+class, such as C<extends>, C<has>, C<with>, and more. These functions are what
+you use to define your class. For example, you might define an attribute ...
 
   package Person;
 
@@ -31,7 +30,7 @@ example, you might define an attribute ...
 Attributes are described in the L<Moose::Manual::Attributes>
 documentation.
 
-Loading Moose also enables C<strict> and C<warnings> pragmas in your
+Loading Moose also enables the C<strict> and C<warnings> pragmas in your
 class.
 
 When you load Moose, your class will become a subclass of
@@ -76,12 +75,28 @@ also called C<new>). In that case, you will have to take care of
 initializing attributes manually, either in the parent's constructor,
 or in your subclass, and you will lose a lot of Moose magic.
 
-=head1 NO MOOSE
+See the L<MooseX::NonMoose> module on CPAN if you're interested in extending
+non-Moose parent classes with Moose child classes.
 
-Moose also allows you to remove its sugar functions from your class's
-namespace. We recommend that you take advantage of this feature, since
-it just makes your classes "cleaner". You can do this by simply adding
-C<no Moose> at the end of your module file.
+=head1 CLEANING UP MOOSE DROPPINGS
+
+Moose exports a number of functions into your class. It's a good idea to
+remove these sugar functions from your class's namespace, so that C<<
+Person->can('has') >> will no longer return true.
+
+There are several ways to do this. We recommend using L<namespace::autoclean>,
+a CPAN module. Not only will it remove Moose exports, it will also remove
+any other exports.
+
+  package Person;
+
+  use namespace::autoclean;
+
+  use Moose;
+
+If you absolutely can't use a CPAN module (but can use Moose?), you can write
+C<no Moose> at the end of your class. This will remove any Moose exports in
+your class.
 
   package Person;
 
@@ -91,17 +106,10 @@ C<no Moose> at the end of your module file.
 
   no Moose;
 
-This deletes Moose's sugar functions from your class's namespace, so
-that C<< Person->can('has') >> will no longer return true.
-
-A more generic way to unimport not only L<Moose>'s exports but also
-those from type libraries and other modules is to use
-L<namespace::clean> or L<namespace::autoclean>.
-
 =head1 MAKING IT FASTER
 
 Moose has a feature called "immutabilization" that you can use to
-greatly speed up your classes at runtime. However, using it does incur
+greatly speed up your classes at runtime. However, using it incurs
 a cost when your class is first being loaded. When you make your class
 immutable you tell Moose that you will not be changing it in the
 future. You will not be adding any more attributes, methods, roles, etc.
