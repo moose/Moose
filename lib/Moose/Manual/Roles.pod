@@ -6,14 +6,14 @@ Moose::Manual::Roles - Roles, an alternative to deep hierarchies and base classe
 
 =head1 WHAT IS A ROLE?
 
-A role is something that classes do. Usually, a role encapsulates some
-piece of behavior or state that can be shared between classes. It is
-important to understand that I<roles are not classes>. You cannot
-inherit from a role, and a role cannot be instantiated. We sometimes
-say that roles are I<consumed>, either by classes or other roles.
+A role encapsulates some piece of behavior or state that can be shared between
+classes. Is something that classes I<do>. It is important to understand that
+I<roles are not classes>. You cannot inherit from a role, and a role cannot be
+instantiated. We sometimes say that roles are I<consumed>, either by classes
+or other roles.
 
 Instead, a role is I<composed> into a class. In practical terms, this
-means that all of the methods and attributes defined in a role are
+means that all of the methods, method modifiers, and attributes defined in a role are
 added directly to (we sometimes say "flattened into") the class that
 consumes the role. These attributes and methods then appear as if they
 were defined in the class itself. A subclass of the consuming class
@@ -28,7 +28,7 @@ methods, in which case the role would be very much like a Java
 interface.
 
 Note that attribute accessors also count as methods for the
-purposes of satisfying the requirements of a role. 
+purposes of satisfying the requirements of a role.
 
 =head1 A SIMPLE ROLE
 
@@ -173,10 +173,10 @@ interface.
 
 =head2 Required Attributes
 
-As mentioned before, a role requirement may also be satisfied by an
-attribute accessor. But any C<has> functions, which will generate
-accessors that satisfy the role requirement, must be placed
-I<before> the C<with> function that composes the role.
+As mentioned before, a role's required method may also be satisfied by an
+attribute accessor. However, the call to C<has> which defines an attribute
+happens at runtime. This means that you must define the attribute I<before>
+consuming the role, or else the role will not see the generated accessor.
 
   package Breakable;
 
@@ -188,7 +188,7 @@ I<before> the C<with> function that composes the role.
 
   use Moose;
 
-  has 'stress' => ( 
+  has 'stress' => (
       is  => 'rw',
       isa => 'Int',
   );
@@ -304,49 +304,14 @@ the role.
 
   excludes 'BreakDancer';
 
-=head1 APPLYING ROLES
-
-A role can be applied to a class or an instance in other ways besides
-using the 'with' syntax.
-
-To apply a role to a class, use L<Moose::Util> and the 'apply_all_roles'
-function. If you apply the role to a class, it will affect all objects of that
-class. You can't apply a role to a class if it has been made immutable. In
-some circumstances it may make sense to make the class mutable, apply the role,
-then make the class immutable again.
-
-   use Moose::Util;
-   ...
-   my $class = 'MyApp::Test';
-   $class->meta->make_mutable;
-   Moose::Util::apply_all_roles($class->meta, ('MyApp::SomeRole'));
-   $class->meta->make_immutable;
-
-Do not apply roles to classes that have immutable subclasses, since that
-will invalidate the metadata of the subclasses.
-
-If you want the role to be applied only to a particular instance and not to the
-class, you can apply the roles to the instance instead of the class's meta:
-
-   Moose::Util::apply_all_roles($instance, ('MyApp::SomeRole'));
-
-Or you can use the role's meta object:
-
-   MyApp::SomeRole->meta->apply($instance);
-
-The mutable/immutable state is not relevant to roles applied to instances. 
-See L<Moose::Role> and L<Moose::Util> for more details and 
-L<Moose::Cookbook::Roles::Recipe3> for a more developed example.
-
 =head1 ADDING A ROLE TO AN OBJECT INSTANCE
 
-Sometimes you may want to add a role to an object instance, rather than to a
-class. For example, you may want to add debug tracing to one instance of an
-object while debugging a particular bug. Another use case might be to
-dynamically change objects based on a user's configuration, as a plugin
-system.
+You may want to add a role to an object instance, rather than to a class. For
+example, you may want to add debug tracing to one instance of an object while
+debugging a particular bug. Another use case might be to dynamically change
+objects based on a user's configuration, as a plugin system.
 
-The best way to do this is to use the C<apply_all_roles> function from
+The best way to do this is to use the C<apply_all_roles()> function from
 L<Moose::Util>:
 
   use Moose::Util qw( apply_all_roles );

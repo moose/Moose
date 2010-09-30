@@ -11,17 +11,16 @@ these types to validate method parameters with the help of a MooseX
 module.
 
 Moose's type system is based on a combination of Perl 5's own
-I<implicit> types and some Perl 6 concepts. You can easily create your
+I<implicit> types and some Perl 6 concepts. You can create your
 own subtypes with custom constraints, making it easy to express any
 sort of validation.
 
 Types have names, and you can re-use them by name, making it easy to
 share types throughout a large application.
 
-Let us be clear that is not a "real" type system. Moose does not
-magically make Perl start associating types with variables. This is
-just an advanced parameter checking system which allows you to
-associate a name with a constraint.
+However, this is not a "real" type system. Moose does not magically make Perl
+start associating types with variables. This is just an advanced parameter
+checking system which allows you to associate a name with a constraint.
 
 That said, it's still pretty damn useful, and we think it's one of the
 things that makes Moose both fun and powerful. Taking advantage of the
@@ -40,10 +39,10 @@ The basic Moose type hierarchy looks like this
       Defined
           Value
               Str
-                Num
-                    Int
-                ClassName
-                RoleName
+                  Num
+                      Int
+                  ClassName
+                  RoleName
           Ref
               ScalarRef[`a]
               ArrayRef[`a]
@@ -51,7 +50,7 @@ The basic Moose type hierarchy looks like this
               CodeRef
               RegexpRef
               GlobRef
-                FileHandle
+                  FileHandle
               Object
 
 In practice, the only difference between C<Any> and C<Item> is
@@ -62,17 +61,29 @@ In particular:
 
 =over 4
 
-=item C<Bool> accepts C<1> for true, and any value that perl treats as false for false.
+=item
 
-=item C<Maybe[`a]> accepts either C<`a> or C<undef>.
+C<Bool> accepts C<1> for true, and undef, 0, or the empty string as false.
 
-=item C<Num> accepts anything that perl thinks looks like a number (see L<Scalar::Util/looks_like_number>).
+=item
 
-=item C<ClassName> and C<RoleName> accept strings that are either the name of a class or the name of a role. The class/role must be loaded beforehand for this to succeed.
+C<Maybe[`a]> accepts either C<`a> or C<undef>.
 
-=item C<FileHandle> accepts either an object of type L<IO::Handle> or a builtin perl filehandle (see L<Scalar::Util/openhandle>).
+=item
 
-=item C<Object> accepts any blessed reference.
+C<Num> accepts anything that perl thinks looks like a number (see L<Scalar::Util/looks_like_number>).
+
+=item
+
+C<ClassName> and C<RoleName> accept strings that are either the name of a class or the name of a role. The class/role must already be loaded when the constraint is checked.
+
+=item
+
+C<FileHandle> accepts either an L<IO::Handle> object or a builtin perl filehandle (see L<Scalar::Util/openhandle>).
+
+=item
+
+C<Object> accepts any blessed reference.
 
 =back
 
@@ -165,21 +176,6 @@ Here's a simple (and useful) subtype example:
 Note that the sugar functions for working with types are all exported
 by L<Moose::Util::TypeConstraints>.
 
-=head2 Creating a new type (that isn't a subtype)
-
-You can also create new top-level types:
-
-  type 'FourCharacters' => where { defined $_ && length $_ == 4 };
-
-In practice, this example is more or less the same as subtyping
-C<Str>, except you have to check definedness yourself.
-
-It's hard to find a case where you wouldn't want to subtype a very
-broad type like C<Defined>, C<Ref> or C<Object>.
-
-Defining a new top-level type is conceptually the same as subtyping
-C<Item>.
-
 =head1 TYPE NAMES
 
 Type names are global throughout the current Perl
@@ -197,9 +193,9 @@ recommend that you centralize all of these definitions in a single
 package, C<MyApp::Types>, which can be loaded by other classes in your
 application.
 
-Once you're doing this, you should almost certainly look at the
-L<MooseX::Types> module. This module makes it easy to create a "type library"
-module, which can export your types as perl constants.
+However, before you do this, you should look at the L<MooseX::Types>
+module. This module makes it easy to create a "type library" module, which can
+export your types as perl constants.
 
   has 'counter' => (is => 'rw', isa => PositiveInt);
 
@@ -213,8 +209,7 @@ robust than the string type parsing for complex cases.
 
 =head1 COERCION
 
-One of the most powerful features of Moose's type system is its
-coercions. A coercion is a way to convert from one type to another.
+A coercion lets you tell Moose to automatically convert one type to another.
 
   subtype 'ArrayRefOfInts'
       => as 'ArrayRef[Int]';
@@ -223,14 +218,16 @@ coercions. A coercion is a way to convert from one type to another.
       => from 'Int'
       => via { [ $_ ] };
 
-You'll note that we had to create a subtype rather than coercing
-C<ArrayRef[Int]> directly. This is just a quirk of how Moose
-works.
+You'll note that we created a subtype rather than coercing C<ArrayRef[Int]>
+directly. It's a bad idea to add coercions to the raw built in
+types.
 
-Coercions, like type names, are global. This is I<another> reason why
-it is good to namespace your types. Moose will I<never> try to coerce
-a value unless you explicitly ask for it. This is done by setting the
-C<coerce> attribute option to a true value:
+Coercions are global, just like type names, so a coercion applied to a built
+in type is seen by all modules using Moose types. This is I<another> reason
+why it is good to namespace your types.
+
+Moose will I<never> try to coerce a value unless you explicitly ask for
+it. This is done by setting the C<coerce> attribute option to a true value:
 
   package Foo;
 
@@ -284,7 +281,7 @@ two parameterized types.
 
 Now Moose will coerce the hex numbers to integers.
 
-However, Moose does not attempt to chain coercions, so it will not
+Moose does not attempt to chain coercions, so it will not
 coerce a single hex number. To do that, we need to define a separate
 coercion:
 
@@ -337,7 +334,7 @@ with a simple wrapper class:
       my $self = shift;
       my $fh   = $self->handle();
 
-      print $fh @_;
+      print {$fh} @_;
   }
 
 Now we can define a coercion from C<FileHandle> to our wrapper class:
@@ -376,8 +373,8 @@ object can be used wherever you would use a type name, as a parent
 type, or as the value for an attribute's C<isa> option:
 
   has 'size' => (
-      is => 'ro',
-      isa => subtype('Int' => where { $_ > 0 }),
+      is  => 'ro',
+      isa => subtype( 'Int' => where { $_ > 0 } ),
   );
 
 This is handy when you want to create a one-off type and don't want to
@@ -411,7 +408,7 @@ parameter validation using Moose types, including
 L<MooseX::Method::Signatures>, which gives you a full-blown C<method>
 keyword.
 
-  method morning (Str $name) {
+  method morning ( Str $name ) {
       $self->say("Good morning ${name}!");
   }
 
@@ -421,10 +418,9 @@ Because Moose types are defined at runtime, you may run into load
 order problems. In particular, you may want to use a class's type
 constraint before that type has been defined.
 
-We have several recommendations for ameliorating this problem. First,
-define I<all> of your custom types in one module,
-C<MyApp::Types>. Second, load this module in all of your other
-modules.
+In order to ameliorate this problem, we recommend defining I<all> of your
+custom types in one module, C<MyApp::Types>, and then loading this module in
+all of your other modules.
 
 =head1 AUTHOR
 

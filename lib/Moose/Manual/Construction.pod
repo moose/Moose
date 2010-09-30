@@ -8,10 +8,10 @@ Moose::Manual::Construction - Object construction (and destruction) with Moose
 
 B<Do not define a C<new()> method for your classes!>
 
-When you C<use Moose> in your class, you will become a subclass of
-L<Moose::Object>, which provides a C<new> method for you. If you
-follow our recommendations in L<Moose::Manual::BestPractices> and make
-your class immutable, then you actually get a class-specific C<new>
+When you C<use Moose> in your class, your class becomes a subclass of
+L<Moose::Object>. The L<Moose::Object> provides a C<new()> method for your
+class. If you follow our recommendations in L<Moose::Manual::BestPractices>
+and make your class immutable, then you actually get a class-specific C<new()>
 method "inlined" in your class.
 
 =head1 OBJECT CONSTRUCTION AND ATTRIBUTES
@@ -37,7 +37,7 @@ be called as part of the object construction process.
 
 The C<BUILDARGS> method is called as a class method I<before> an
 object is created. It will receive all of the arguments that were
-passed to C<new> I<as-is>, and is expected to return a hash
+passed to C<new()> I<as-is>, and is expected to return a hash
 reference. This hash reference will be used to construct the object,
 so it should contain keys matching your attributes' names (well,
 C<init_arg>s).
@@ -52,25 +52,25 @@ a hash or hash reference. We can use the C<BUILDARGS> method to
 accommodate this calling style:
 
   around BUILDARGS => sub {
-      my $orig = shift;
+      my $orig  = shift;
       my $class = shift;
 
-      if ( @_ == 1 && ! ref $_[0] ) {
-          return $class->$orig(ssn => $_[0]);
+      if ( @_ == 1 && !ref $_[0] ) {
+          return $class->$orig( ssn => $_[0] );
       }
       else {
           return $class->$orig(@_);
       }
   };
 
-Note the call to C<< $class->$orig >>. This will call the default
-C<BUILDARGS> in L<Moose::Object>. This method handles distinguishing
-between a hash reference and a plain hash for you.
+Note the call to C<< $class->$orig >>. This will call the default C<BUILDARGS>
+in L<Moose::Object>. This method takes care of distinguishing between a hash
+reference and a plain hash for you.
 
 =head2 BUILD
 
 The C<BUILD> method is called I<after> an object is created. There are
-several ways to use a C<BUILD> method. One of the most common is to
+several reasons to use a C<BUILD> method. One of the most common is to
 check that the object state is valid. While we can validate individual
 attributes through the use of types, we can't validate the state of a
 whole object that way.
@@ -111,9 +111,10 @@ do something with parameters that do not represent object attributes.
 
 =head3 BUILD and parent classes
 
-The interaction between multiple C<BUILD> methods in an inheritance
-hierarchy is different from normal Perl methods. B<You should never
-call C<< $self->SUPER::BUILD >>.>
+The interaction between multiple C<BUILD> methods in an inheritance hierarchy
+is different from normal Perl methods. B<You should never call C<<
+$self->SUPER::BUILD >>>, nor should you ever apply a method modifier to
+C<BUILD>.
 
 Moose arranges to have all of the C<BUILD> methods in a hierarchy
 called when an object is constructed, I<from parents to

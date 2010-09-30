@@ -16,7 +16,7 @@ It's probably easiest to understand this feature with a few examples:
   use Moose;
 
   sub foo {
-      print "foo\n";
+      print "    foo\n";
   }
 
   before 'foo' => sub { print "about to call foo\n"; };
@@ -26,19 +26,19 @@ It's probably easiest to understand this feature with a few examples:
       my $orig = shift;
       my $self = shift;
 
-      print "I'm around foo\n";
+      print "  I'm around foo\n";
 
       $self->$orig(@_);
 
-      print "I'm still around foo\n";
+      print "  I'm still around foo\n";
   };
 
 Now if I call C<< Example->new->foo >> I'll get the following output:
 
   about to call foo
-  I'm around foo
-  foo
-  I'm still around foo
+    I'm around foo
+      foo
+    I'm still around foo
   just called foo
 
 You probably could have figured that out from the names "before",
@@ -63,9 +63,9 @@ modifiers run from first added to last:
 
 =head1 WHY USE THEM?
 
-Method modifiers have many uses. One very common use is in roles. This
-lets roles alter the behavior of methods in the classes that use
-them. See L<Moose::Manual::Roles> for more information about roles.
+Method modifiers have many uses. They are often used in roles to alter the
+behavior of methods in the classes that consume the role. See
+L<Moose::Manual::Roles> for more information about roles.
 
 Since modifiers are mostly useful in roles, some of the examples below
 are a bit artificial. They're intended to give you an idea of how
@@ -106,7 +106,7 @@ was taken.
 Note that the return values of both before and after modifiers are
 ignored.
 
-An around modifier is a bit more powerful than either a before or
+An around modifier is more powerful than either a before or
 after modifier. It can modify the arguments being passed to the
 original method, and you can even decide to simply not call the
 original method at all. You can also modify the return value with an
@@ -132,7 +132,7 @@ I<then> the object, and finally any arguments passed to the method.
 C<before>, C<after>, and C<around> can also modify multiple methods
 at once. The simplest example of this is passing them as a list:
 
-  before qw(foo bar baz) => sub {
+  before [qw(foo bar baz)] => sub {
       warn "something is being called!";
   };
 
@@ -142,15 +142,13 @@ call to C<before> was made for each of them. The list can be passed
 either as a bare list, or as an arrayref. Note that the name of the
 function being modified isn't passed in in any way; this syntax is
 only intended for cases where the function being modified doesn't
-actually matter. If the function name does matter, something like:
+actually matter. If the function name does matter, use something like this:
 
   for my $func (qw(foo bar baz)) {
       before $func => sub {
           warn "$func was called!";
       };
   }
-
-would be more appropriate.
 
 In addition, you can specify a regular expression to indicate the
 methods to wrap, like so:
@@ -161,12 +159,11 @@ methods to wrap, like so:
 
 This will match the regular expression against each method name
 returned by L<Class::MOP::Class/get_method_list>, and add a modifier
-to each one that matches. The same caveats apply as above, regarding
-not being given the name of the method being modified. Using regular
+to each one that matches. The same caveats apply as above. Using regular
 expressions to determine methods to wrap is quite a bit more powerful
 than the previous alternatives, but it's also quite a bit more
 dangerous. In particular, you should make sure to avoid wrapping
-methods with a special meaning to Moose or Perl, such as C<meta>,
+methods with a special meaning to Moose or Perl, such as C<meta>, C<new>,
 C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc., as this could cause
 unintended (and hard to debug) problems.
 
@@ -207,9 +204,9 @@ implementation:
   augment 'as_xml' => sub {
       my $self = shift;
 
-      my $xml = "<report>\n";
+      my $xml = "  <report>\n";
       $xml .= inner();
-      $xml .= "</report>\n";
+      $xml .= "  </report>\n";
 
       return $xml;
   };
@@ -217,8 +214,8 @@ implementation:
 When we call C<as_xml> on a Report object, we get something like this:
 
   <document>
-  <report>
-  </report>
+    <report>
+    </report>
   </document>
 
 But we also called C<inner()> in C<Report>, so we can continue
@@ -233,9 +230,9 @@ subclassing and adding more content inside the document:
   augment 'as_xml' => sub {
       my $self = shift;
 
-      my $xml = '<income>' . $self->income . '</income>';
+      my $xml = '    <income>' . $self->income . '</income>';
       $xml .= "\n";
-      $xml .= '<expenses>' . $self->expenses . '</expenses>';
+      $xml .= '    <expenses>' . $self->expenses . '</expenses>';
       $xml .= "\n";
 
       $xml .= inner() || q{};
@@ -246,10 +243,10 @@ subclassing and adding more content inside the document:
 Now our report has some content:
 
   <document>
-  <report>
-  <income>$10</income>
-  <expenses>$8</expenses>
-  </report>
+    <report>
+      <income>$10</income>
+      <expenses>$8</expenses>
+    </report>
   </document>
 
 What makes this combination of C<augment> and C<inner()> special is
@@ -257,9 +254,10 @@ that it allows us to have methods which are called from parent (least
 specific) to child (most specific). This inverts the normal
 inheritance pattern.
 
-Note that in C<Report::IncomeAndExpenses> we call C<inner()> again. If
-the object is an instance of C<Report::IncomeAndExpenses> then this
-call is a no-op, and just returns false.
+Note that in C<Report::IncomeAndExpenses> we call C<inner()> again. If the
+object is an instance of C<Report::IncomeAndExpenses> then this call is a
+no-op, and just returns false. It's a good idea to always call C<inner()> to
+allow for future subclassing.
 
 =head1 OVERRIDE AND SUPER
 
