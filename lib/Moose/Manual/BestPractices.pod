@@ -34,14 +34,11 @@ definitions by making your class immutable.
 The C<use namespace::autoclean> bit is simply good code hygiene, as it removes
 imported symbols from  you class's namespace at the end of your package's
 compile cycle, including Moose keywords.  Once the class has been
-built, these keywords are not needed. The C<make_immutable>
-call allows Moose to speed up a lot of things, most notably object
-construction. The trade-off is that you can no longer change the class
-definition.
+built, these keywords are not needed.
 
-You can also write C<no Moose> to unimport only Moose's imported symbols. The
-L<namespace::clean> module is another alternative, providing finer-grained
-control than L<namespace::autoclean>.
+The C<make_immutable> call allows Moose to speed up a lot of things, most
+notably object construction. The trade-off is that you can no longer change
+the class definition.
 
 =head2 Never override C<new>
 
@@ -58,11 +55,10 @@ constructor. Two, you are subclassing a non-Moose parent.
 If you know how to do that, you know when to ignore this best practice
 ;)
 
-=head2 Always call C<SUPER::BUILDARGS>
+=head2 Always call the original/parent C<BUILD>
 
-If you override the C<BUILDARGS> method in your class, make sure to
-play nice and call C<SUPER::BUILDARGS> to handle cases you're not
-checking for explicitly.
+If you C<override> the C<BUILDARGS> method in your class, make sure to play
+nice and call C<super()> to handle cases you're not checking for explicitly.
 
 The default C<BUILDARGS> method in L<Moose::Object> handles both a
 list and hashref of named parameters correctly, and also checks for a
@@ -88,12 +84,11 @@ I<or> when the default is simply an empty reference of some sort.
 
 Also, keep your builder methods private.
 
-=head2 Use C<lazy_build>
+=head2 Be C<lazy>
 
-Lazy is good, and often solves initialization ordering problems. It's
-also good for deferring work that may never have to be done. If you're
-going to be lazy, use C<lazy_build> to save yourself some typing and
-standardize names.
+Lazy is good, and often solves initialization ordering problems. It's also
+good for deferring work that may never have to be done. Make your attributes
+C<lazy> unless they're C<required> or have trivial defaults.
 
 =head2 Consider keeping clearers and predicates private
 
@@ -135,10 +130,10 @@ Don't know what we're talking about? That's fine.
 
 =head2 Use L<Moose::Meta::Attribute::Native> traits instead of C<auto_deref>
 
-The C<auto_deref> feature is a bit troublesome. Directly exposing a
-complex attribute is ugly. Instead, consider using
-L<Moose::Meta::Attribute::Native> traits to define an API that exposes only
-necessary pieces of functionality.
+The C<auto_deref> feature is a bit troublesome. Directly exposing a complex
+attribute is ugly. Instead, consider using L<Moose::Meta::Attribute::Native>
+traits to define an API that only exposes the necessary pieces of
+functionality.
 
 =head2 Always call C<inner> in the most specific subclass
 
@@ -149,12 +144,8 @@ changing the parents.
 
 =head2 Namespace your types
 
-Use some sort of namespacing convention for type names. We recommend
-something like "MyApp::Type::Foo".
-
-If you're intending to package your types up for re-use using
-L<MooseX::Types> later, avoid using characters that are invalid in
-perl identifiers such as a space or period.
+Use some sort of namespacing convention for type names. We recommend something
+like "MyApp::Type::Foo". We also recommend considering L<MooseX::Types>.
 
 =head2 Do not coerce Moose built-ins directly
 
@@ -197,7 +188,7 @@ Instead, we can create an "empty" subtype for the coercion:
 =head2 Use coercion instead of unions
 
 Consider using a type coercion instead of a type union. This was
-covered at length in L<Moose::Manual::Types>.
+covered in L<Moose::Manual::Types>.
 
 =head2 Define all your types in one module
 
