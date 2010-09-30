@@ -33,6 +33,8 @@ NEXT
     reinitialized metaclass). This should make the order of loading many
     MooseX modules less of an issue. (doy)
 
+  * The Moose::Manual docs have been revised and updated. (Dave Rolsky)
+
   [BUG FIXES]
 
   * If an attribute was weak, setting it to a non-ref value after the object
