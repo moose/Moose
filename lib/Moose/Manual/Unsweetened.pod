@@ -47,10 +47,7 @@ First, we define two very small classes the Moose way.
       handles => { birth_year => 'year' },
   );
 
-  subtype 'ShirtSize'
-      => as 'Str'
-      => where { /^(?:s|m|l|xl|xxl)$/i }
-      => message { "$_ is not a valid shirt size (s, m, l, xl, xxl)" };
+  enum 'ShirtSize' => qw( s m l xl xxl );
 
   has shirt_size => (
       is      => 'rw',
@@ -58,9 +55,9 @@ First, we define two very small classes the Moose way.
       default => 'l',
   );
 
-This is a fairly simple class with three attributes. We also define a
-type to validate t-shirt sizes because we don't want to end up with
-something like "blue" for the shirt size!
+This is a fairly simple class with three attributes. We also define an enum
+type to validate t-shirt sizes because we don't want to end up with something
+like "blue" for the shirt size!
 
   package User;
 
@@ -95,7 +92,6 @@ helpers like C<Class::Accessor>.
   use Carp qw( confess );
   use DateTime;
   use DateTime::Format::Natural;
-
 
   sub new {
       my $class = shift;
@@ -166,7 +162,9 @@ helpers like C<Class::Accessor>.
       defined $shirt_size
           or confess 'shirt_size cannot be undef';
 
-      $shirt_size =~ /^(?:s|m|l|xl|xxl)$/
+      my %sizes = map { $_ => 1 } qw( s m l xl xxl );
+
+      $sizes{$shirt_size}
           or confess "$shirt_size is not a valid shirt size (s, m, l, xl, xxl)";
   }
 
@@ -243,7 +241,6 @@ Now let's see User:
   use Scalar::Util qw( blessed );
 
   use base 'Person';
-
 
   sub new {
       my $class = shift;
