@@ -161,12 +161,22 @@ $META->add_attribute(
 sub initialize {
     my $class = shift;
     my $pkg   = shift;
-    return Class::MOP::get_metaclass_by_name($pkg)
-        || $class->SUPER::initialize(
+
+    if (defined(my $meta = Class::MOP::get_metaclass_by_name($pkg))) {
+        return $meta;
+    }
+
+    my %options = @_;
+
+    my $meta = $class->SUPER::initialize(
         $pkg,
         'attribute_metaclass' => 'Moose::Meta::Role::Attribute',
-        @_
-        );
+        %options,
+    );
+
+    Class::MOP::weaken_metaclass($pkg) if $options{weaken};
+
+    return $meta;
 }
 
 sub reinitialize {
@@ -189,13 +199,19 @@ sub reinitialize {
         );
     }
 
+    my %options = @_;
+    $options{weaken} = Class::MOP::metaclass_is_weak($meta->name)
+        if !exists $options{weaken}
+        && blessed($meta)
+        && $meta->isa('Moose::Meta::Role');
+
     # don't need to remove generated metaobjects here yet, since we don't
     # yet generate anything in roles. this may change in the future though...
     # keep an eye on that
     my $new_meta = $self->SUPER::reinitialize(
         $pkg,
         %existing_classes,
-        @_,
+        %options,
     );
     $new_meta->_restore_metaobjects_from($meta)
         if $meta && $meta->isa('Moose::Meta::Role');
@@ -513,9 +529,6 @@ sub create {
         }
     }
 
-    Class::MOP::weaken_metaclass($meta->name)
-        if $meta->is_anon_role;
-
     return $meta;
 }
 
@@ -557,6 +570,7 @@ sub consumers {
 
     sub create_anon_role {
         my ($role, %options) = @_;
+        $options{weaken} = 1 unless exists $options{weaken};
         my $package_name = $ANON_ROLE_PREFIX . ++$ANON_ROLE_SERIAL;
         return $role->create($package_name, %options);
     }
