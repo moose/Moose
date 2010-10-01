@@ -84,4 +84,45 @@ use Moose::Meta::Class;
     can_ok( $name, 'meta' );
 }
 
+{
+    my $name;
+    {
+        my $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => ['Class'],
+            cache        => 1,
+        );
+        $name = $meta->name;
+        ok(!Class::MOP::metaclass_is_weak($name), "cache implies weaken => 0");
+    }
+    ok(Class::MOP::class_of($name), "cache implies weaken => 0");
+    Class::MOP::remove_metaclass_by_name($name);
+}
+
+{
+    my $name;
+    {
+        my $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => ['Class'],
+            cache        => 1,
+            weaken       => 1,
+        );
+        my $name = $meta->name;
+        ok(Class::MOP::metaclass_is_weak($name), "but we can override this");
+    }
+    ok(!Class::MOP::class_of($name), "but we can override this");
+    Class::MOP::remove_metaclass_by_name($name);
+}
+
+{
+    my $meta = Moose::Meta::Class->create_anon_class(
+        superclasses => ['Class'],
+        cache        => 1,
+    );
+    ok(!Class::MOP::metaclass_is_weak($meta->name),
+       "creates a nonweak metaclass");
+    Scalar::Util::weaken($meta);
+    Class::MOP::remove_metaclass_by_name($meta->name);
+    ok(!$meta, "removing a cached anon class means it's actually gone");
+}
+
 done_testing;

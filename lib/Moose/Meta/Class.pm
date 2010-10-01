@@ -105,10 +105,15 @@ sub create_anon_class {
         return $ANON_CLASSES{$cache_key};
     }
 
+    $options{weaken} = !$cache_ok
+        unless exists $options{weaken};
+
     my $new_class = $self->SUPER::create_anon_class(%options);
 
-    $ANON_CLASSES{$cache_key} = $new_class
-        if $cache_ok;
+    if ($cache_ok) {
+        $ANON_CLASSES{$cache_key} = $new_class;
+        weaken($ANON_CLASSES{$cache_key});
+    }
 
     return $new_class;
 }
@@ -164,6 +169,7 @@ sub reinitialize {
 
     delete $ANON_CLASSES{$cache_key};
     $ANON_CLASSES{$new_cache_key} = $new_meta;
+    weaken($ANON_CLASSES{$new_cache_key});
 
     return $new_meta;
 }
@@ -408,8 +414,9 @@ sub _replace_self {
     # We need to replace the cached metaclass instance or else when it goes
     # out of scope Class::MOP::Class destroy's the namespace for the
     # metaclass's class, causing much havoc.
+    my $weaken = Class::MOP::metaclass_is_weak( $self->name );
     Class::MOP::store_metaclass_by_name( $self->name, $self );
-    Class::MOP::weaken_metaclass( $self->name ) if $self->is_anon_class;
+    Class::MOP::weaken_metaclass( $self->name ) if $weaken;
 }
 
 sub _process_attribute {
