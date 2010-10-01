@@ -110,7 +110,6 @@ use Moose::Meta::Class;
         ok(Class::MOP::metaclass_is_weak($name), "but we can override this");
     }
     ok(!Class::MOP::class_of($name), "but we can override this");
-    Class::MOP::remove_metaclass_by_name($name);
 }
 
 {
