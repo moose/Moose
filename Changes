@@ -22,6 +22,9 @@ NEXT
     determine which name to install the 'meta' name under. Passing 'undef'
     to this option will suppress generation of the meta method entirely. (doy)
 
+  * Moose now warns if it overwrites an existing method named "meta" in your
+    class when you "use Moose". (doy)
+
   [ENHANCEMENTS]
 
   * Native Trait delegations are now all generated as inline code. This should
