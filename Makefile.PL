@@ -69,7 +69,7 @@ WriteAll();
 # before a release.
 sub check_conflicts {
     my %conflicts = (
-        'Catalyst'                       => '5.80017',
+        'Catalyst'                       => '5.80028',
         'Devel::REPL'                    => '1.003008',
         'Fey'                            => '0.36',
         'Fey::ORM'                       => '0.34',
