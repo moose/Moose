@@ -14,6 +14,14 @@ use Test::Requires {
 };
 use Test::DependentModules qw( test_all_dependents test_module );
 
+use DateTime;
+use Class::MOP ();
+use Moose ();
+print 'Test run performed at: ' . DateTime->now,
+    ' with Class::MOP ', Class::MOP->VERSION,
+    ' and Moose ', Moose->VERSION, "\n";
+
+
 $ENV{PERL_TEST_DM_LOG_DIR} = abs_path('.');
 
 my $exclude = qr/^Acme-/x;
