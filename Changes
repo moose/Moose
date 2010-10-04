@@ -9,7 +9,7 @@ NEXT
     "normal" attributes. This should be mostly compatible with existing code,
     but see Moose::Manual::Delta for details.
 
-  * A few native traits (String, Counter, Bool) provide default values or "is"
+  * A few native traits (String, Counter, Bool) provide default values of "is"
     and "default" when you created an attribute. Allowing them to provide
     these values is now deprecated. Supply the value yourself when creating
     the attribute.
