@@ -73,4 +73,28 @@ ok(!Bar->can($_), '... Bar can no longer do ' . $_) for @moose_type_constraint_e
 
 can_ok( 'Baz', 'blessed' );
 
+{
+    package Moo;
+
+    use Scalar::Util qw( blessed );
+    use Moose;
+
+    no Moose;
+}
+
+can_ok( 'Moo', 'blessed' );
+
+my $blessed;
+{
+    package Quux;
+
+    use Scalar::Util qw( blessed );
+    use Moose blessed => { -as => \$blessed };
+
+    no Moose;
+}
+
+can_ok( 'Quux', 'blessed' );
+is( $blessed, \&Scalar::Util::blessed );
+
 done_testing;

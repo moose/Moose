@@ -51,12 +51,7 @@ sub build_import_methods {
         $is_reexport,
     );
 
-    my $exporter = Sub::Exporter::build_exporter(
-        {
-            exports => $exports,
-            groups  => { default => [':all'] }
-        }
-    );
+    my $exporter = $class->_make_exporter($exports, $is_reexport);
 
     my %methods;
     $methods{import} = $class->_make_import_sub(
@@ -88,6 +83,49 @@ sub build_import_methods {
     }
 
     return ( $methods{import}, $methods{unimport}, $methods{init_meta} );
+}
+
+sub _make_exporter {
+    my ($class, $exports, $is_reexport) = @_;
+
+    return Sub::Exporter::build_exporter(
+        {
+            exports   => $exports,
+            groups    => { default => [':all'] },
+            installer => sub {
+                my ($arg, $to_export) = @_;
+                my $meta = Class::MOP::class_of($arg->{into});
+
+                goto &Sub::Exporter::default_installer unless $meta;
+
+                # don't overwrite existing symbols with our magically flagged
+                # version of it if we would install the same sub that's already
+                # in the importer
+
+                my @filtered_to_export;
+                my %installed;
+                for (my $i = 0; $i < @{ $to_export }; $i += 2) {
+                    my ($as, $cv) = @{ $to_export }[$i, $i + 1];
+
+                    next if !ref($as)
+                         && $meta->has_package_symbol('&' . $as)
+                         && $meta->get_package_symbol('&' . $as) == $cv;
+
+                    push @filtered_to_export, $as, $cv;
+                    $installed{$as} = 1 unless ref $as;
+                }
+
+                Sub::Exporter::default_installer($arg, \@filtered_to_export);
+
+                for my $name ( keys %{$is_reexport} ) {
+                    no strict 'refs';
+                    no warnings 'once';
+                    next unless exists $installed{$name};
+                    _flag_as_reexport( \*{ join q{::}, $arg->{into}, $name } );
+                }
+            },
+        }
+    );
 }
 
 {
@@ -416,12 +454,6 @@ sub _make_import_sub {
         }
 
         $class->$exporter( $extra, @args );
-
-        for my $name ( keys %{$is_reexport} ) {
-            no strict 'refs';
-            no warnings 'once';
-            _flag_as_reexport( \*{ join q{::}, $CALLER, $name } );
-        }
     };
 }
 
