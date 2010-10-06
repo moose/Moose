@@ -44,9 +44,9 @@ As Moose has matured, some structure has emerged in the process.
 
 You.
 
-If you have commit access, you can create a topic on the main Moose.git repo.
-If you don't have a commit bit, give us your SSH key or create your own clone
-of the L<git://git.moose.perl.org/Moose.git> repository.
+If you have commit access, you can create a topic on the main Moose.git
+repository.  If you don't have a commit bit, give us your SSH key or create your
+own clone of the L<git://git.moose.perl.org/Moose.git> repository.
 
 The relevant repository URIs are:
 
