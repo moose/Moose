@@ -166,7 +166,7 @@ call C<< $spider->request->header('UserAgent', 'MyClient') >> behind the
 scenes.
 
 Note that with currying, the currying always start with the first parameter to
-a method (C<$_[0]). Any arguments you pass to the delegation come after the
+a method (C<$_[0]>). Any arguments you pass to the delegation come after the
 curried arguments.
 
 =head1 MISSING ATTRIBUTES
