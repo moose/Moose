@@ -98,7 +98,7 @@ sub _inline_check_arguments {
             .= "\n"
             . $self->_inline_throw_error(
             q{'The third argument passed to substr must be a string'})
-            . q{ unless Moose::Util::_STRINGLIKE($replacement);};
+            . q{ unless Moose::Util::_STRINGLIKE0($replacement);};
     }
 
     return $code;

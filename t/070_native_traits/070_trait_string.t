@@ -157,6 +157,17 @@ sub run_tests {
             'substitution using string as replacement'
         );
 
+        $obj->_string('foo');
+        $obj->replace( qr/oo/, q{} );
+
+        is( $obj->_string, 'f',
+            'replace accepts an empty string as second argument' );
+
+        $obj->replace( q{}, 'a' );
+
+        is( $obj->_string, 'af',
+            'replace accepts an empty string as first argument' );
+
         throws_ok { $obj->replace( {}, 'x' ) }
         qr/The first argument passed to replace must be a string or regexp reference/,
             'replace throws an error when the first argument is not a string or regexp';
@@ -176,9 +187,19 @@ sub run_tests {
             'match -barx against /[aq]/ returns matches'
         );
 
+        is_deeply(
+            [ $obj->match(qr/([az]).*([fy])/) ], [ 'a', 'f' ],
+            'match -barx against /[aq]/ returns matches'
+        );
+
         ok(
             scalar $obj->match('b'),
             'match with string as argument returns true'
+        );
+
+        ok(
+            scalar $obj->match(q{}),
+            'match with empty string as argument returns true'
         );
 
         throws_ok { $obj->match }
@@ -219,6 +240,13 @@ sub run_tests {
         is(
             $obj->_string, 'song long string',
             'substr as setter with three arguments'
+        );
+
+        $obj->substr( 1, 3, '' );
+
+        is(
+            $obj->_string, 's long string',
+            'substr as setter with three arguments, replacment is empty string'
         );
 
         throws_ok { $obj->substr }

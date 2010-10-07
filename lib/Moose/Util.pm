@@ -9,6 +9,7 @@ use Sub::Exporter;
 use Scalar::Util 'blessed';
 use List::Util qw(first);
 use List::MoreUtils qw(any all);
+use overload ();
 use Class::MOP   0.60;
 
 our $VERSION   = '1.15';
@@ -289,8 +290,10 @@ sub meta_class_alias {
 }
 
 # XXX - this should be added to Params::Util
-sub _STRINGLIKE ($) {
+sub _STRINGLIKE0 ($) {
     return _STRING( $_[0] )
+        || ( defined $_[0]
+        && $_[0] eq q{} )
         || ( blessed $_[0]
         && overload::Method( $_[0], q{""} )
         && length "$_[0]" );

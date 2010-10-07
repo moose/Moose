@@ -33,10 +33,10 @@ sub _inline_check_arguments {
     return $self->_inline_throw_error(
         q{'The first argument passed to replace must be a string or regexp reference'}
         )
-        . q{ unless Moose::Util::_STRINGLIKE( $_[0] ) || Params::Util::_REGEX( $_[0] );}
+        . q{ unless Moose::Util::_STRINGLIKE0( $_[0] ) || Params::Util::_REGEX( $_[0] );}
         . $self->_inline_throw_error(
         q{'The second argument passed to replace must be a string or code reference'}
-        ) . q{ unless Moose::Util::_STRINGLIKE( $_[1] ) || Params::Util::_CODELIKE( $_[1] );};
+        ) . q{ unless Moose::Util::_STRINGLIKE0( $_[1] ) || Params::Util::_CODELIKE( $_[1] );};
 }
 
 sub _potential_value {

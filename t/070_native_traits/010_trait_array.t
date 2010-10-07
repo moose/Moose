@@ -565,6 +565,11 @@ sub run_tests {
             'join returns expected result'
         );
 
+        is(
+            $obj->join(q{}), '1234',
+            'join returns expected result when joining with empty string'
+        );
+
         throws_ok { $obj->join }
         qr/Cannot call join without at least 1 argument/,
             'throws an error when passing no arguments to join';
