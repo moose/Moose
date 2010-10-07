@@ -322,16 +322,20 @@ sub _reconcile_roles_for_metaclass {
 
 sub _role_differences {
     my ($class_meta_name, $super_meta_name) = @_;
-    my @super_role_metas = $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $super_meta_name->meta->calculate_all_roles_with_inheritance
-                         : $super_meta_name->meta->can('calculate_all_roles')
-                         ? $super_meta_name->meta->calculate_all_roles
-                         : ();
-    my @role_metas       = $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
-                         ? $class_meta_name->meta->calculate_all_roles_with_inheritance
-                         : $class_meta_name->meta->can('calculate_all_roles')
-                         ? $class_meta_name->meta->calculate_all_roles
-                         : ();
+    my @super_role_metas
+        = grep { !$_->isa('Moose::Meta::Role::Composite') }
+               $super_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                   ? $super_meta_name->meta->calculate_all_roles_with_inheritance
+                   : $super_meta_name->meta->can('calculate_all_roles')
+                   ? $super_meta_name->meta->calculate_all_roles
+                   : ();
+    my @role_metas
+        = grep { !$_->isa('Moose::Meta::Role::Composite') }
+               $class_meta_name->meta->can('calculate_all_roles_with_inheritance')
+                   ? $class_meta_name->meta->calculate_all_roles_with_inheritance
+                   : $class_meta_name->meta->can('calculate_all_roles')
+                   ? $class_meta_name->meta->calculate_all_roles
+                   : ();
     my @differences;
     for my $role_meta (@role_metas) {
         push @differences, $role_meta
