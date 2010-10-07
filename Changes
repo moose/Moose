@@ -8,7 +8,7 @@ NEXT
   * A number of native trait methods which expected strings as arguments did
     not allow the empty string. This included Array->join, String->match,
     String->replace, and String->substr. Reported by Whitney Jackson. RT
-    #61961. (Dave Rolsky)
+    #61962. (Dave Rolsky)
 
 
 1.15 Tue, Oct 5, 2010
