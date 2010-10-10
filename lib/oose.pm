@@ -4,21 +4,26 @@ use strict;
 use warnings;
 
 use Class::MOP;
+use Moose ();
+use Moose::Util::TypeConstraints ();
+use Devel::ChangePackage;
 
 our $VERSION   = '1.15';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-BEGIN {
-    my $package;
-    sub import {
-        $package = $_[1] || 'Class';
-        if ($package =~ /^\+/) {
-            $package =~ s/^\+//;
-            Class::MOP::load_class($package);
-        }
+sub import {
+    my $package = $_[1] || 'Class';
+
+    if ($package =~ /^\+/) {
+        $package =~ s/^\+//;
+        Class::MOP::load_class($package);
     }
-    use Filter::Simple sub { s/^/package $package;\nuse Moose;use Moose::Util::TypeConstraints;\n/; }
+
+    Moose->import({ into => $package });
+    Moose::Util::TypeConstraints->import({ into =>  $package });
+
+    change_package $package;
 }
 
 1;

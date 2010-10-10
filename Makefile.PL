@@ -16,6 +16,7 @@ license 'perl';
 requires 'Carp';
 requires 'Class::MOP'                  => '1.09';
 requires 'Data::OptList'               => '0';
+requires 'Devel::ChangePackage'        => '0';
 requires 'List::MoreUtils'             => '0.12';
 requires 'Package::DeprecationManager' => '0.04';
 requires 'Params::Util'                => '0';

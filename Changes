@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 NEXT
 
+  [ENHANCEMENTS]
+
+  * 'oose.pm', the helper for writing one-liners, now uses Devel::ChangePackage
+    instead of being a source filter. (Florian Ragwitz)
+
   [BUG FIXES]
 
   * A number of native trait methods which expected strings as arguments did
