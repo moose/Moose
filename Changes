@@ -10,6 +10,8 @@ NEXT
     String->replace, and String->substr. Reported by Whitney Jackson. RT
     #61962. (Dave Rolsky)
 
+  * 'no Moose' no longer inadvertently removes imports it didn't create
+    itself. RT #60013. (Florian Ragwitz, doy)
 
 1.15 Tue, Oct 5, 2010
 
