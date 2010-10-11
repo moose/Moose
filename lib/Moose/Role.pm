@@ -50,16 +50,13 @@ sub has {
 sub _add_method_modifier {
     my $type = shift;
     my $meta = shift;
-    my $code = pop @_;
 
-    for (@_) {
-        croak "Roles do not currently support "
-            . ref($_)
-            . " references for $type method modifiers"
-            if ref $_;
-        my $add_method = "add_${type}_method_modifier";
-        $meta->$add_method( $_, $code );
+    if ( ref($_[0]) eq 'Regexp' ) {
+        croak "Roles do not currently support regex "
+            . " references for $type method modifiers";
     }
+
+    Moose::Util::add_method_modifier($meta, $type, \@_);
 }
 
 sub before { _add_method_modifier('before', @_) }
