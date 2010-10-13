@@ -52,6 +52,12 @@ sub _writer_core {
 
     my $potential_value = $self->_potential_value($slot_access);
 
+    if ( $self->_return_value($slot_access) ) {
+        # some writers will save the return value in this variable when they
+        # generate the potential value.
+        $code .= "\n" . 'my @return;';
+    }
+
     $code .= "\n" . $self->_inline_copy_native_value( \$potential_value );
     $code .= "\n"
         . $self->_inline_tc_code(
@@ -167,7 +173,11 @@ sub _inline_optimized_set_new_value {
     return $self->_inline_store(@_);
 }
 
-sub _return_value { return q{} }
+sub _return_value {
+    my ( $self, $slot_access ) = @_;
+
+    return $slot_access;
+}
 
 no Moose::Role;
 

@@ -14,6 +14,7 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' => {
         qw(
             _maximum_arguments
             _inline_optimized_set_new_value
+            _return_value
             )
     ]
 };
@@ -29,6 +30,8 @@ sub _inline_optimized_set_new_value {
 
     return "$slot_access = {}";
 }
+
+sub _return_value { return q{} }
 
 no Moose::Role;
 

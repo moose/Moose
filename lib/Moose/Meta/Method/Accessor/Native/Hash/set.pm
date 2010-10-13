@@ -19,6 +19,7 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' => {
             _inline_process_arguments
             _inline_check_arguments
             _inline_optimized_set_new_value
+            _return_value
             )
     ],
 };
@@ -69,6 +70,12 @@ sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
     return "\@{ $slot_access }{ \@_[ \@keys_idx] } = \@_[ \@values_idx ]";
+}
+
+sub _return_value {
+    my ( $self, $slot_access ) = @_;
+
+    return "return wantarray ? \@{ $slot_access }{ \@_[ \@keys_idx ] } : ${slot_access}->{ \$_[ \$keys_idx[0] ] };";
 }
 
 no Moose::Role;

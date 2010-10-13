@@ -108,19 +108,19 @@ sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
     return
-        "( do { my \$potential = $slot_access; substr \$potential, \$offset, \$length, \$replacement; \$potential; } )";
+        "( do { my \$potential = $slot_access; \@return = substr \$potential, \$offset, \$length, \$replacement; \$potential; } )";
 }
 
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "substr $slot_access, \$offset, \$length, \$replacement";
+    return "\@return = substr $slot_access, \$offset, \$length, \$replacement";
 }
 
 sub _return_value {
     my ( $self, $slot_access, $for_writer ) = @_;
 
-    return q{} if $for_writer;
+    return '$return[0]' if $for_writer;
 
     return "substr $slot_access, \$offset, \$length";
 }

@@ -79,31 +79,31 @@ sub run_tests {
 
         is( $obj->counter, 0, '... got the default value' );
 
-        $obj->inc_counter;
+        is( $obj->inc_counter, 1, 'inc returns new value' );
         is( $obj->counter, 1, '... got the incremented value' );
 
-        $obj->inc_counter;
+        is( $obj->inc_counter, 2, 'inc returns new value' );
         is( $obj->counter, 2, '... got the incremented value (again)' );
 
         throws_ok { $obj->inc_counter( 1, 2 ) }
         qr/Cannot call inc with more than 1 argument/,
             'inc throws an error when two arguments are passed';
 
-        $obj->dec_counter;
+        is( $obj->dec_counter, 1, 'dec returns new value' );
         is( $obj->counter, 1, '... got the decremented value' );
 
         throws_ok { $obj->dec_counter( 1, 2 ) }
         qr/Cannot call dec with more than 1 argument/,
             'dec throws an error when two arguments are passed';
 
-        $obj->reset_counter;
+        is( $obj->reset_counter, 0, 'reset returns new value' );
         is( $obj->counter, 0, '... got the original value' );
 
         throws_ok { $obj->reset_counter(2) }
         qr/Cannot call reset with any arguments/,
             'reset throws an error when an argument is passed';
 
-        $obj->set_counter(5);
+        is( $obj->set_counter(5), 5, 'set returns new value' );
         is( $obj->counter, 5, '... set the value' );
 
         throws_ok { $obj->set_counter( 1, 2 ) }

@@ -147,7 +147,10 @@ sub run_tests {
 
         lives_ok { $obj->push() } 'call to push without arguments lives';
 
-        lives_ok { $obj->unshift( 101, 22 ) }
+        lives_and {
+            is( $obj->unshift( 101, 22 ), 8,
+                'unshift returns size of the new array' );
+        }
         'unshifted two values and lived';
 
         is_deeply(
@@ -216,9 +219,13 @@ sub run_tests {
         qr/Cannot call get with more than 1 argument/,
             'throws an error when get_curried is called with an argument';
 
-        lives_ok { $obj->set( 1, 100 ) } 'set value at index 1 lives';
+        lives_and {
+            is( $obj->set( 1, 100 ), 100, 'set returns new value' );
+        }
+        'set value at index 1 lives';
 
         is( $obj->get(1), 100, 'get value at index 1 returns new value' );
+
 
         throws_ok { $obj->set( 1, 99, 42 ) }
         qr/Cannot call set with more than 2 arguments/,
@@ -245,7 +252,10 @@ sub run_tests {
             'accessor with one argument returns value at index 1'
         );
 
-        lives_ok { $obj->accessor( 1 => 97 ) } 'accessor as writer lives';
+        lives_and {
+            is( $obj->accessor( 1 => 97 ), 97, 'accessor returns new value' );
+        }
+        'accessor as writer lives';
 
         is(
             $obj->get(1), 97,
@@ -305,9 +315,15 @@ sub run_tests {
             'throws an error when is_empty is called with an argument';
 
         $obj->clear;
-        $obj->push( 1, 5, 10, 42 );
+        is(
+            $obj->push( 1, 5, 10, 42 ), 4,
+            'pushed 4 elements, got number of elements in the array back'
+        );
 
-        lives_ok { $obj->delete(2) } 'delete lives';
+        lives_and {
+            is( $obj->delete(2), 10, 'delete returns deleted value' );
+        }
+        'delete lives';
 
         is_deeply(
             $obj->_values, [ 1, 5, 42 ],
@@ -340,17 +356,31 @@ sub run_tests {
         qr/Cannot call insert with more than 2 arguments/,
             'throws an error when insert is called with three arguments';
 
-        lives_ok { $obj->splice( 1, 0, 2, 3 ) } 'splice lives';
+        lives_and {
+            is_deeply(
+                [ $obj->splice( 1, 0, 2, 3 ) ],
+                [],
+                'return value of splice is empty list when not removing elements'
+            );
+        }
+        'splice lives';
 
         is_deeply(
             $obj->_values, [ 1, 2, 3, 21, 42 ],
             'splice added the specified elements'
         );
 
-        lives_ok { $obj->splice( 1, 1, 99 ) } 'splice lives';
+        lives_and {
+            is_deeply(
+                [ $obj->splice( 1, 2, 99 ) ],
+                [ 2, 3 ],
+                'splice returns list of removed values'
+            );
+        }
+        'splice lives';
 
         is_deeply(
-            $obj->_values, [ 1, 99, 3, 21, 42 ],
+            $obj->_values, [ 1, 99, 21, 42 ],
             'splice added the specified elements'
         );
 
@@ -366,14 +396,14 @@ sub run_tests {
         'splice_curried_1 lives';
 
         is_deeply(
-            $obj->_values, [ 1, 101, 21, 42 ],
+            $obj->_values, [ 1, 101, 42 ],
             'splice added the specified elements'
         );
 
         lives_ok { $obj->splice_curried_2(102) } 'splice_curried_2 lives';
 
         is_deeply(
-            $obj->_values, [ 1, 102, 42 ],
+            $obj->_values, [ 1, 102 ],
             'splice added the specified elements'
         );
 
@@ -382,6 +412,18 @@ sub run_tests {
         is_deeply(
             $obj->_values, [ 1, 3, 4, 5 ],
             'splice added the specified elements'
+        );
+
+        is_deeply(
+            scalar $obj->splice( 1, 2 ),
+            4,
+            'splice in scalar context returns last element removed'
+        );
+
+        is_deeply(
+            scalar $obj->splice( 1, 0, 42 ),
+            undef,
+            'splice in scalar context returns undef when no elements are removed'
         );
 
         $obj->_values( [ 3, 9, 5, 22, 11 ] );

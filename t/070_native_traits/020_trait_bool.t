@@ -74,7 +74,7 @@ sub run_tests {
     with_immutable {
         my $obj = $class->new;
 
-        $obj->illuminate;
+        ok( $obj->illuminate, 'set returns true' );
         ok( $obj->is_lit,   'set is_lit to 1 using ->illuminate' );
         ok( !$obj->is_dark, 'check if is_dark does the right thing' );
 
@@ -82,7 +82,7 @@ sub run_tests {
         qr/Cannot call set with any arguments/,
             'set throws an error when an argument is passed';
 
-        $obj->darken;
+        ok( !$obj->darken, 'unset returns false' );
         ok( !$obj->is_lit, 'set is_lit to 0 using ->darken' );
         ok( $obj->is_dark, 'check if is_dark does the right thing' );
 
@@ -90,7 +90,7 @@ sub run_tests {
         qr/Cannot call unset with any arguments/,
             'unset throws an error when an argument is passed';
 
-        $obj->flip_switch;
+        ok( $obj->flip_switch, 'toggle returns new value' );
         ok( $obj->is_lit,   'toggle is_lit back to 1 using ->flip_switch' );
         ok( !$obj->is_dark, 'check if is_dark does the right thing' );
 

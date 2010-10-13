@@ -96,14 +96,14 @@ sub run_tests {
         qr/Cannot call length with any arguments/,
             'length throws an error when an argument is passed';
 
-        $obj->inc;
+        is( $obj->inc, 'b', 'inc returns new value' );
         is( $obj->_string, 'b', 'a becomes b after inc' );
 
         throws_ok { $obj->inc(42) }
         qr/Cannot call inc with any arguments/,
             'inc throws an error when an argument is passed';
 
-        $obj->append('foo');
+        is( $obj->append('foo'), 'bfoo', 'append returns new value' );
         is( $obj->_string, 'bfoo', 'appended to the string' );
 
         throws_ok { $obj->append( 'foo', 2 ) }
@@ -118,10 +118,10 @@ sub run_tests {
             'append_curried throws an error when two arguments are passed';
 
         $obj->_string("has nl$/");
-        $obj->chomp;
+        is( $obj->chomp, 1, 'chomp returns number of characters removed' );
         is( $obj->_string, 'has nl', 'chomped string' );
 
-        $obj->chomp;
+        is( $obj->chomp, 0, 'chomp returns number of characters removed' );
         is(
             $obj->_string, 'has nl',
             'chomp is a no-op when string has no line ending'
@@ -131,7 +131,7 @@ sub run_tests {
         qr/Cannot call chomp with any arguments/,
             'chomp throws an error when an argument is passed';
 
-        $obj->chop;
+        is( $obj->chop, 'l', 'chop returns character removed' );
         is( $obj->_string, 'has n', 'chopped string' );
 
         throws_ok { $obj->chop(42) }
@@ -139,13 +139,18 @@ sub run_tests {
             'chop throws an error when an argument is passed';
 
         $obj->_string('x');
-        $obj->prepend('bar');
+        is( $obj->prepend('bar'), 'barx', 'prepend returns new value' );
         is( $obj->_string, 'barx', 'prepended to string' );
 
         $obj->prepend_curried;
         is( $obj->_string, '-barx', 'prepend_curried prepended to string' );
 
-        $obj->replace( qr/([ao])/, sub { uc($1) } );
+        is(
+            $obj->replace( qr/([ao])/, sub { uc($1) } ),
+            '-bArx',
+            'replace returns new value'
+        );
+
         is(
             $obj->_string, '-bArx',
             'substitution using coderef for replacement'
@@ -235,7 +240,11 @@ sub run_tests {
             'substr as getter with two arguments'
         );
 
-        $obj->substr( 1, 3, 'ong' );
+        is(
+            $obj->substr( 1, 3, 'ong' ),
+            'ome',
+            'substr as setter returns replaced string'
+        );
 
         is(
             $obj->_string, 'song long string',

@@ -16,6 +16,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
         qw(
             _maximum_arguments
             _inline_check_arguments
+            _return_value
             )
     ]
 };
@@ -38,6 +39,8 @@ sub _potential_value {
     return
         "[ \$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ $slot_access } : sort \@{ $slot_access} ]";
 }
+
+sub _return_value { return q{} }
 
 no Moose::Role;
 

@@ -83,7 +83,7 @@ sub run_tests {
 
         is( $obj->integer, 5, 'Default to five' );
 
-        $obj->add(10);
+        is( $obj->add(10), 15, 'add returns new value' );
 
         is( $obj->integer, 15, 'Add ten for fithteen' );
 
@@ -91,7 +91,7 @@ sub run_tests {
         qr/Cannot call add with more than 1 argument/,
             'add throws an error when 2 arguments are passed';
 
-        $obj->sub(3);
+        is( $obj->sub(3), 12, 'sub returns new value' );
 
         is( $obj->integer, 12, 'Subtract three for 12' );
 
@@ -99,7 +99,7 @@ sub run_tests {
         qr/Cannot call sub with more than 1 argument/,
             'sub throws an error when 2 arguments are passed';
 
-        $obj->set(10);
+        is( $obj->set(10), 10, 'set returns new value' );
 
         is( $obj->integer, 10, 'Set to ten' );
 
@@ -107,7 +107,7 @@ sub run_tests {
         qr/Cannot call set with more than 1 argument/,
             'set throws an error when 2 arguments are passed';
 
-        $obj->div(2);
+        is( $obj->div(2), 5, 'div returns new value' );
 
         is( $obj->integer, 5, 'divide by 2' );
 
@@ -115,7 +115,7 @@ sub run_tests {
         qr/Cannot call div with more than 1 argument/,
             'div throws an error when 2 arguments are passed';
 
-        $obj->mul(2);
+        is( $obj->mul(2), 10, 'mul returns new value' );
 
         is( $obj->integer, 10, 'multiplied by 2' );
 
@@ -123,7 +123,7 @@ sub run_tests {
         qr/Cannot call mul with more than 1 argument/,
             'mul throws an error when 2 arguments are passed';
 
-        $obj->mod(2);
+        is( $obj->mod(2), 0, 'mod returns new value' );
 
         is( $obj->integer, 0, 'Mod by 2' );
 
@@ -139,7 +139,7 @@ sub run_tests {
 
         $obj->set(-1);
 
-        $obj->abs;
+        is( $obj->abs, 1, 'abs returns new value' );
 
         throws_ok { $obj->abs(10) }
         qr/Cannot call abs with any arguments/,

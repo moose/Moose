@@ -88,8 +88,12 @@ sub run_tests {
         is_deeply( $obj->options, {}, '... no options yet' );
         ok( !$obj->has_option('foo'), '... we have no foo option' );
 
-        lives_ok {
-            $obj->set_option( foo => 'bar' );
+        lives_and {
+            is(
+                $obj->set_option( foo => 'bar' ),
+                'bar',
+                'set return single new value in scalar context'
+            );
         }
         '... set the option okay';
 
@@ -134,13 +138,18 @@ sub run_tests {
             [qw(bar baz blah flop)], "get multiple options at once"
         );
 
-        lives_ok {
-            $obj->delete_option('bar');
+        lives_and {
+            is( scalar $obj->delete_option('bar'), 'baz',
+                'delete returns deleted value' );
         }
         '... deleted the option okay';
 
         lives_ok {
-            $obj->delete_option( 'oink', 'xxy' );
+            is_deeply(
+                [ $obj->delete_option( 'oink', 'xxy' ) ],
+                [ 'blah', 'flop' ],
+                'delete returns all deleted values in list context'
+            );
         }
         '... deleted multiple option okay';
 
@@ -181,7 +190,12 @@ sub run_tests {
         }
         '... bad constructor params';
 
-        $obj->set_option( oink => "blah", xxy => "flop" );
+        is_deeply(
+            [ $obj->set_option( oink => "blah", xxy => "flop" ) ],
+            [ 'blah', 'flop' ],
+            'set returns newly set values in order of keys provided'
+        );
+
         my @key_value = sort { $a->[0] cmp $b->[0] } $obj->key_value;
         is_deeply(
             \@key_value,

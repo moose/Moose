@@ -16,7 +16,7 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
             _inline_optimized_set_new_value
             )
     ]
-};
+    };
 
 sub _maximum_arguments { 0 }
 
