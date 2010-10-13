@@ -448,6 +448,40 @@ sub apply {
     }
 
     Class::MOP::load_class($application_class);
+
+    my $deprecation_check = 0;
+
+    if ( exists $args{excludes} && !exists $args{'-excludes'} ) {
+        $args{'-excludes'} = delete $args{excludes};
+        $deprecation_check = 1;
+    }
+    if ( exists $args{alias} && !exists $args{'-alias'} ) {
+        $args{'-alias'} = delete $args{alias};
+        $deprecation_check = 1;
+    }
+
+    if ( $deprecation_check ) {
+        
+        Moose::Deprecated::deprecated(
+            feature => 'alias or excludes',
+            message =>
+                'The alias and excludes options for role application'.
+                ' have been renamed -alias and -excludes'.
+                " (${\$other->name} is consuming ${\$self->name}".
+                " - do you need to upgrade ${\$other->name}?)"
+        );
+    }
+
+    if ( exists $args{'-excludes'} ) {
+
+        # I wish we had coercion here :)
+        $args{'-excludes'} = (
+            ref $args{'-excludes'} eq 'ARRAY'
+            ? $args{'-excludes'}
+            : [ $args{'-excludes'} ]
+        );
+    }
+
     return $application_class->new(%args)->apply($self, $other, \%args);
 }
 
