@@ -1240,7 +1240,7 @@ NEXT
         vetting on names created via the sugar functions, so that they
         can only contain alphanumerics, ":", and ".". (Dave Rolsky)
 
-0.65 Thu, January 22, 2008
+0.65 Thu, January 22, 2009
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
         superclass's method (not overridden) _also_ called super(),
