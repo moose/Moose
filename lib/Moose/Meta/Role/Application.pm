@@ -20,15 +20,17 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
     default  => sub { {} }
 ));
 
+__PACKAGE__->meta->add_attribute('fire_alias_excludes_warning' => (
+    init_arg => 'fire_alias_excludes_warning',
+    reader => 'fire_alias_excludes_warning',
+    default => 0
+));
+
 sub new {
     my ($class, %params) = @_;
 
     if ( exists $params{excludes} || exists $params{alias} ) {
-        Moose::Deprecated::deprecated(
-            feature => 'alias or excludes',
-            message =>
-                "The alias and excludes options for role application have been renamed -alias and -excludes"
-        );
+        $params{fire_alias_excludes_warning} = 1;
     }
 
     if ( exists $params{excludes} && !exists $params{'-excludes'} ) {
@@ -72,6 +74,14 @@ sub is_aliased_method {
 
 sub apply {
     my $self = shift;
+
+    if ($self->fire_alias_excludes_warning) {
+        Moose::Deprecated::deprecated(
+            feature => 'alias or excludes',
+            message =>
+                "The alias and excludes options for role application have been renamed -alias and -excludes (applying ${\$_[0]->name} to ${\$_[1]->name} - do you need to upgrade ${\$_[1]->name}?)"
+        );
+    }
 
     $self->check_role_exclusions(@_);
     $self->check_required_methods(@_);

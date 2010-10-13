@@ -49,7 +49,7 @@ use Test::Requires {
             ::stderr_like{ with 'Role' =>
                     { excludes => ['thing'], alias => { thing => 'thing2' } };
                 }
-                qr/\QThe alias and excludes options for role application have been renamed -alias and -excludes/,
+                qr/\QThe alias and excludes options for role application have been renamed -alias and -excludes (applying Role to Foo - do you need to upgrade Foo?)/,
                 'passing excludes or alias with a leading dash warns';
             ::ok(
                 !Foo->meta->has_method('thing'),
@@ -59,9 +59,8 @@ use Test::Requires {
                 Foo->meta->has_method('thing2'),
                 'thing2 method is created as alias in role application'
             );
-        }
-    );
-}
+        } );
+    }
 
 {
     package Pack1;
@@ -131,7 +130,6 @@ use Test::Requires {
                 q{},
                 'Providing a writer for a String trait avoids default is warning';
         }
-    );
 }
 
 {
