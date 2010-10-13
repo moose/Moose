@@ -55,7 +55,7 @@ constructor. Two, you are subclassing a non-Moose parent.
 If you know how to do that, you know when to ignore this best practice
 ;)
 
-=head2 Always call the original/parent C<BUILD>
+=head2 Always call the original/parent C<BUILDARGS>
 
 If you C<override> the C<BUILDARGS> method in your class, make sure to play
 nice and call C<super()> to handle cases you're not checking for explicitly.
