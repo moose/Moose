@@ -16,11 +16,11 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 NEXT
+=head1 1.15
 
 =over 4
 
-=item Native Traits
+=item Native Delegations
 
 In previous versions of Moose, the Native delegations were created as
 closures. The generated code was often quite slow compared to doing the same
