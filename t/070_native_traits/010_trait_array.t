@@ -6,7 +6,6 @@ use warnings;
 use lib 't/lib';
 
 use Moose ();
-use Moose::Util::MetaRole;
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
 use Test::More;
