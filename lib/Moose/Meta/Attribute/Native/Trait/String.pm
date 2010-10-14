@@ -40,18 +40,18 @@ Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
   use Moose;
 
   has 'text' => (
-      traits    => ['String'],
-      is        => 'rw',
-      isa       => 'Str',
-      default   => q{},
-      handles   => {
+      traits  => ['String'],
+      is      => 'rw',
+      isa     => 'Str',
+      default => q{},
+      handles => {
           add_text     => 'append',
           replace_text => 'replace',
       },
   );
 
   my $page = MyHomePage->new();
-  $page->add_text("foo"); # same as $page->text($page->text . "foo");
+  $page->add_text("foo");    # same as $page->text($page->text . "foo");
 
 =head1 DESCRIPTION
 
@@ -72,59 +72,72 @@ above. This allows for a very basic string definition:
 
 =over 4
 
-=item B<inc>
+=item * B<inc>
 
 Increments the value stored in this slot using the magical string autoincrement
 operator. Note that Perl doesn't provide analogous behavior in C<-->, so
-C<dec> is not available.
+C<dec> is not available. This method returns the new value.
 
-=item B<append($string)>
+This method does not accept any arguments.
 
-Append a string, like C<.=>.
+=item * B<append($string)>
 
-=item B<prepend($string)>
+Appends to the string, like C<.=>, and returns the new value.
 
-Prepend a string.
+This method requires a single argument.
 
-=item B<replace($pattern, $replacement)>
+=item * B<prepend($string)>
+
+Prepends to the string and returns the new value.
+
+This method requires a single argument.
+
+=item * B<replace($pattern, $replacement)>
 
 Performs a regexp substitution (L<perlop/s>). There is no way to provide the
 C<g> flag, but code references will be accepted for the replacement, causing
 the regex to be modified with a single C<e>. C</smxi> can be applied using the
-C<qr> operator.
+C<qr> operator. This method returns the new value.
 
-=item B<match($pattern)>
+This method requires two arguments.
 
-Like C<replace> but without the replacement. Provided mostly for completeness.
+=item * B<match($pattern)>
 
-=item B<chop>
+Runs the regex against the string and returns the matching value(s).
 
-L<perlfunc/chop>
+This method requires a single argument.
 
-=item B<chomp>
+=item * B<chop>
 
-L<perlfunc/chomp>
+Just like L<perlfunc/chop>. This method returns the chopped character.
 
-=item B<clear>
+This method does not accept any arguments.
+
+=item * B<chomp>
+
+Just like L<perlfunc/chomp>. This method returns the number of characters
+removed.
+
+This method does not accept any arguments.
+
+=item * B<clear>
 
 Sets the string to the empty string (not the value passed to C<default>).
 
-=item B<length>
+This method does not have a defined return value.
 
-L<perlfunc/length>
+This method does not accept any arguments.
 
-=item B<substr>
+=item * B<length>
 
-L<perlfunc/substr>. We go to some lengths to match the different functionality
-based on C<substr>'s arity.
+Just like L<perlfunc/length>, returns the length of the string.
 
-=back
+=item * B<substr>
 
-=head1 METHODS
+This acts just like L<perlfunc/substr>. When called as a writer, it returns
+the substring that was replaced, just like the Perl builtin.
 
-=over 4
-
-=item B<meta>
+This method requires at least one argument, and accepts no more than three.
 
 =back
 

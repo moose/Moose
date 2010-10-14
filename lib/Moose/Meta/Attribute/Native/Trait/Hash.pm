@@ -69,32 +69,49 @@ hash-like operations.
 
 Returns values from the hash.
 
-In list context return a list of values in the hash for the given keys.
-In scalar context returns the value for the last key specified.
+In list context it returns a list of values in the hash for the given keys. In
+scalar context it returns the value for the last key specified.
+
+This method requires at least one argument.
 
 =item B<set($key =E<gt> $value, $key2 =E<gt> $value2...)>
 
-Sets the elements in the hash to the given values.
+Sets the elements in the hash to the given values. It returns the new values
+set for each key, in the same order as the keys passed to the method.
+
+This method requires at least two arguments, and expects an even number of
+arguments.
 
 =item B<delete($key, $key2, $key3...)>
 
 Removes the elements with the given keys.
 
+In list context it returns a list of values in the hash for the deleted
+keys. In scalar context it returns the value for the last key specified.
+
 =item B<keys>
 
 Returns the list of keys in the hash.
+
+This method does not accept any arguments.
 
 =item B<exists($key)>
 
 Returns true if the given key is present in the hash.
 
+This method requires a single argument.
+
 =item B<defined($key)>
 
 Returns true if the value of a given key is defined.
 
+This method requires a single argument.
+
 =item B<values>
 
 Returns the list of values in the hash.
+
+This method does not accept any arguments.
 
 =item B<kv>
 
@@ -104,27 +121,41 @@ Returns the key/value pairs in the hash as an array of array references.
       print "$pair->[0] = $pair->[1]\n";
   }
 
+This method does not accept any arguments.
+
 =item B<elements>
 
 Returns the key/value pairs in the hash as a flattened list..
 
+This method does not accept any arguments.
+
 =item B<clear>
 
 Resets the hash to an empty value, like C<%hash = ()>.
+
+This method does not accept any arguments.
 
 =item B<count>
 
 Returns the number of elements in the hash. Also useful for not empty: 
 C<< has_options => 'count' >>.
 
+This method does not accept any arguments.
+
 =item B<is_empty>
 
 If the hash is populated, returns false. Otherwise, returns true.
 
-=item B<accessor>
+This method does not accept any arguments.
+
+=item B<accessor($key)>
+
+=item B<accessor($key, $value)>
 
 If passed one argument, returns the value of the specified key. If passed two
 arguments, sets the value of the specified key.
+
+When called as a setter, this method returns the value that was set.
 
 =back
 

@@ -497,10 +497,10 @@ attribute metaclasses and traits. See L<Moose::Manual::MooseX> for
 some examples. You can also write your own metaclasses and traits. See
 the "Meta" and "Extending" recipes in L<Moose::Cookbook> for examples.
 
-=head2 Native Traits
+=head2 Native Delegations
 
-The Native Traits feature allows standard Perl data structures to be treated
-as if they were objects for the purposes of delegation.
+Native delegations allow you to delegate to standard Perl data structures as
+if they were objects.
 
 For example, we can pretend that an array reference has methods like
 C<push()>, C<shift()>, C<map()>, C<count()>, and more.

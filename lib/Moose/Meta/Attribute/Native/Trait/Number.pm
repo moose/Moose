@@ -33,11 +33,11 @@ Moose::Meta::Attribute::Native::Trait::Number - Helper trait for Num attributes
   use Moose;
 
   has 'integer' => (
-      traits    => ['Number'],
-      is        => 'ro',
-      isa       => 'Num',
-      default   => 5,
-      handles   => {
+      traits  => ['Number'],
+      is      => 'ro',
+      isa     => 'Num',
+      default => 5,
+      handles => {
           set => 'set',
           add => 'add',
           sub => 'sub',
@@ -49,8 +49,8 @@ Moose::Meta::Attribute::Native::Trait::Number - Helper trait for Num attributes
   );
 
   my $real = Real->new();
-  $real->add(5); # same as $real->integer($real->integer + 5);
-  $real->sub(2); # same as $real->integer($real->integer - 2);
+  $real->add(5);    # same as $real->integer($real->integer + 5);
+  $real->sub(2);    # same as $real->integer($real->integer - 2);
 
 =head1 DESCRIPTION
 
@@ -65,43 +65,34 @@ package.
 
 =over 4
 
-=item B<set($value)>
+=item * B<add($value)>
 
-Alternate way to set the value.
+Adds the current value of the attribute to C<$value>. Returns the new value.
 
-=item B<add($value)>
+=item * B<sub($value)>
 
-Adds the current value of the attribute to C<$value>.
+Subtracts C<$value> from the current value of the attribute. Returns the new
+value.
 
-=item B<sub($value)>
+=item * B<mul($value)>
 
-Subtracts C<$value> from the current value of the attribute.
+Multiplies the current value of the attribute by C<$value>. Returns the new
+value.
 
-=item B<mul($value)>
+=item * B<div($value)>
 
-Multiplies the current value of the attribute by C<$value>.
+Divides the current value of the attribute by C<$value>. Returns the new
+value.
 
-=item B<div($value)>
+=item * B<mod($value)>
 
-Divides the current value of the attribute by C<$value>.
+Returns the current value of the attribute modulo C<$value>. Returns the new
+value.
 
-=item B<mod($value)>
+=item * B<abs>
 
-Returns the current value of the attribute modulo C<$value>.
-
-=item B<abs>
-
-Sets the current value of the attribute to its absolute value.
-
-=back
-
-=head1 METHODS
-
-=over 4
-
-=item B<meta>
-
-=item B<method_constructors>
+Sets the current value of the attribute to its absolute value. Returns the new
+value.
 
 =back
 

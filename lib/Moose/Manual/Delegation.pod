@@ -95,10 +95,10 @@ Finally, you can also provide a sub reference to I<generate> a
 mapping. You probably won't need this version often (if ever). See the
 L<Moose> docs for more details on exactly how this works.
 
-=head1 NATIVE TRAIT DELEGATION
+=head1 NATIVE DELEGATION
 
-The Native Traits feature allows standard Perl data structures to be treated
-as if they were objects for the purposes of delegation.
+Native delegations allow you to delegate to standard Perl data structures as
+if they were objects.
 
   has 'queue' => (
       traits  => ['Array'],
@@ -110,10 +110,10 @@ as if they were objects for the purposes of delegation.
       },
   )
 
-By providing the C<Array> trait to the C<traits> parameter you tell Moose that
-you would like to use the set of Array helpers. Moose will then create
-C<add_item> and C<next_item> methods that "just works". Behind the scenes
-C<add_item> is something like
+The C<Array> trait in the C<traits> parameter tells Moose that you would like
+to use the set of Array helpers. Moose will then create C<add_item> and
+C<next_item> methods that "just work". Behind the scenes C<add_item> is
+something like
 
   sub add_item {
       my ($self, @items) = @_;
@@ -125,7 +125,7 @@ C<add_item> is something like
       push @{ $self->queue }, @items;
   }
 
-Moose includes the following native traits:
+Moose includes the following traits for native delegation:
 
 =over 4
 

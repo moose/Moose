@@ -157,7 +157,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native::Trait - Base role for helpers
+Moose::Meta::Attribute::Native::Trait - Shared role for native delegation traits
 
 =head1 BUGS
 
@@ -165,7 +165,8 @@ See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 SEE ALSO
 
-Documentation for Moose native traits starts at L<Moose::Meta::Attribute Native>
+Documentation for Moose native traits can be found in
+L<Moose::Meta::Attribute::Native>.
 
 =head1 AUTHORS
 

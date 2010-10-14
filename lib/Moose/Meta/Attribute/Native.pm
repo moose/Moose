@@ -34,7 +34,7 @@ __END__
 
 =head1 NAME
 
-Moose::Meta::Attribute::Native - Extend your attribute interfaces
+Moose::Meta::Attribute::Native - Delegate to native Perl types
 
 =head1 SYNOPSIS
 
@@ -42,11 +42,11 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
   use Moose;
 
   has 'mapping' => (
-      traits    => [ 'Hash' ],
-      is        => 'rw',
-      isa       => 'HashRef[Str]',
-      default   => sub { {} },
-      handles   => {
+      traits  => ['Hash'],
+      is      => 'rw',
+      isa     => 'HashRef[Str]',
+      default => sub { {} },
+      handles => {
           exists_in_mapping => 'exists',
           ids_in_mapping    => 'keys',
           get_mapping       => 'get',
@@ -55,15 +55,11 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
       },
   );
 
-
-  # ...
-
   my $obj = MyClass->new;
   $obj->set_quantity(10);      # quantity => 10
   $obj->set_mapping('foo', 4); # foo => 4
   $obj->set_mapping('bar', 5); # bar => 5
   $obj->set_mapping('baz', 6); # baz => 6
-
 
   # prints 5
   print $obj->get_mapping('bar') if $obj->exists_in_mapping('bar');
@@ -73,42 +69,56 @@ Moose::Meta::Attribute::Native - Extend your attribute interfaces
 
 =head1 DESCRIPTION
 
-While L<Moose> attributes provide a way to name your accessors, readers,
-writers, clearers and predicates, this set of traits provides commonly
-used attribute helper methods for more specific types of data.
+Native delegations allow you to delegate to native Perl data
+structure as if they were objects. For example, in the L</SYNOPSIS> you can
+see a hash reference being treated as if it has methods named C<exists()>,
+C<keys()>, C<get()>, and C<set()>.
 
-As seen in the L</SYNOPSIS>, you specify the data structure via the
-C<trait> parameter. Available traits are below; see L</METHOD PROVIDERS>.
+The delegation methods (mostly) map to Perl builtins and operators. The return
+values of these delegations should be the same as the corresponding Perl
+operation. Any deviations will be explicitly documented.
 
-This module used to exist as the L<MooseX::AttributeHelpers> extension. It was
-very commonly used, so we moved it into core Moose. Since this gave us a chance
-to change the interface, you will have to change your code or continue using
-the L<MooseX::AttributeHelpers> extension. L<MooseX::AttributeHelpers> should
-continue to work.
+=head1 API
 
-=head1 PARAMETERS
+Native delegations are enabled by passing certain options to C<has> when
+creating an attribute.
+
+=head2 traits
+
+To enable this feature, pass the appropriate name in the C<traits> array
+reference for the attribute. For example, to enable this feature for hash
+reference, we include C<'Hash'> in the list of traits.
+
+=head2 isa
+
+You will need to make sure that the attribute has an appropriate type. For
+example, to use this with a Hash you must specify that your attribute is some
+sort of C<HashRef>.
+
+If you I<don't> specify a type, each trait has a default type it will use.
 
 =head2 handles
 
-This is like C<< handles >> in L<Moose/has>, but only HASH references are
-allowed.  Keys are method names that you want installed locally, and values are
-methods from the method providers (below).  Currying with delegated methods
-works normally for C<< handles >>.
+This is just like any other delegation, but only a hash reference is allowed
+when defining native delegations. The keys are the methods to be created in
+the class which contains the attribute. The values are the methods provided by
+the associated trait. Currying works the same way as it does with any other
+delegation.
 
-=head1 NATIVE TYPES
+See the docs for each native trait for details on what methods are available.
+
+=head1 TRAITS FOR NATIVE DELEGATIONS
 
 =over
 
 =item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
-Common methods for array references.
-
     has 'queue' => (
-        traits    => ['Array'],
-        is        => 'ro',
-        isa       => 'ArrayRef[Str]',
-        default   => sub { [] },
-        handles   => {
+        traits  => ['Array'],
+        is      => 'ro',
+        isa     => 'ArrayRef[Str]',
+        default => sub { [] },
+        handles => {
             add_item  => 'push',
             next_item => 'shift',
             # ...
@@ -117,14 +127,12 @@ Common methods for array references.
 
 =item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
 
-Common methods for boolean values.
-
     has 'is_lit' => (
-        traits    => ['Bool'],
-        is        => 'rw',
-        isa       => 'Bool',
-        default   => 0,
-        handles   => {
+        traits  => ['Bool'],
+        is      => 'ro',
+        isa     => 'Bool',
+        default => 0,
+        handles => {
             illuminate  => 'set',
             darken      => 'unset',
             flip_switch => 'toggle',
@@ -135,14 +143,14 @@ Common methods for boolean values.
 
 =item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
 
-Common methods for code references.
-
     has 'callback' => (
-        traits    => ['Code'],
-        is        => 'ro',
-        isa       => 'CodeRef',
-        default   => sub { sub { 'called' } },
-        handles   => {
+        traits  => ['Code'],
+        is      => 'ro',
+        isa     => 'CodeRef',
+        default => sub {
+            sub {'called'}
+        },
+        handles => {
             call => 'execute',
             # ...
         }
@@ -150,14 +158,12 @@ Common methods for code references.
 
 =item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
 
-Methods for incrementing and decrementing a counter attribute.
-
     has 'counter' => (
-        traits    => ['Counter'],
-        is        => 'ro',
-        isa       => 'Num',
-        default   => 0,
-        handles   => {
+        traits  => ['Counter'],
+        is      => 'ro',
+        isa     => 'Num',
+        default => 0,
+        handles => {
             inc_counter   => 'inc',
             dec_counter   => 'dec',
             reset_counter => 'reset',
@@ -167,14 +173,12 @@ Methods for incrementing and decrementing a counter attribute.
 
 =item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
-Common methods for hash references.
-
     has 'options' => (
-        traits    => ['Hash'],
-        is        => 'ro',
-        isa       => 'HashRef[Str]',
-        default   => sub { {} },
-        handles   => {
+        traits  => ['Hash'],
+        is      => 'ro',
+        isa     => 'HashRef[Str]',
+        default => sub { {} },
+        handles => {
             set_option => 'set',
             get_option => 'get',
             has_option => 'exists',
@@ -184,14 +188,12 @@ Common methods for hash references.
 
 =item L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
-Common numerical operations.
-
     has 'integer' => (
-        traits    => ['Number'],
-        is        => 'ro',
-        isa       => 'Int',
-        default   => 5,
-        handles   => {
+        traits  => ['Number'],
+        is      => 'ro',
+        isa     => 'Int',
+        default => 5,
+        handles => {
             set => 'set',
             add => 'add',
             sub => 'sub',
@@ -205,14 +207,12 @@ Common numerical operations.
 
 =item L<String|Moose::Meta::Attribute::Native::Trait::String>
 
-Common methods for string operations.
-
     has 'text' => (
-        traits    => ['String'],
-        is        => 'rw',
-        isa       => 'Str',
-        default   => q{},
-        handles   => {
+        traits  => ['String'],
+        is      => 'ro',
+        isa     => 'Str',
+        default => q{},
+        handles => {
             add_text     => 'append',
             replace_text => 'replace',
             # ...
@@ -220,6 +220,15 @@ Common methods for string operations.
     );
 
 =back
+
+=head1 COMPATIBILITY WITH MooseX::AttributeHelpers
+
+This feature used to be a separated CPAN distribution called
+L<MooseX::AttributeHelpers>.
+
+When the feature was incorporated into the Moose core, some of the API details
+were changed. The underlying capabilities are the same, but some details of
+the API were changed.
 
 =head1 BUGS
 
