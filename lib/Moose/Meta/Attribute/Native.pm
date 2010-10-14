@@ -107,6 +107,12 @@ delegation.
 
 See the docs for each native trait for details on what methods are available.
 
+=head2 default or builder
+
+Some traits provide a "default default" for historical reasons. This behavior
+is deprecated, and you are strongly encouraged to provide a default value or
+make the attribute required.
+
 =head1 TRAITS FOR NATIVE DELEGATIONS
 
 =over
