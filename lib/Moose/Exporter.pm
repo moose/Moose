@@ -10,7 +10,6 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
-use Moose::Deprecated;
 use Moose::Util::MetaRole;
 use Scalar::Util qw(reftype);
 use Sub::Exporter 0.980;
