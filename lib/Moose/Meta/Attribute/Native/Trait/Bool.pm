@@ -51,8 +51,13 @@ Moose::Meta::Attribute::Native::Trait::Bool - Helper trait for Bool attributes
 
 =head1 DESCRIPTION
 
-This provides a simple boolean attribute, which supports most of the
-basic math operations.
+This trait provides native delegation methods for boolean values. A boolean is
+a scalar which can be C<1>, C<0>, C<"">, or C<undef>.
+
+=head1 DEFAULT TYPE
+
+If you don't provide an C<isa> value for your attribute, it will default to
+C<Bool>.
 
 =head1 PROVIDED METHODS
 

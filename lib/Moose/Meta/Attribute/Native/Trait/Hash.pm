@@ -58,8 +58,7 @@ Moose::Meta::Attribute::Native::Trait::Hash - Helper trait for HashRef attribute
 
 =head1 DESCRIPTION
 
-This module provides a Hash attribute which provides a number of
-hash-like operations.
+This trait provides native delegation methods for array references.
 
 =head1 PROVIDED METHODS
 

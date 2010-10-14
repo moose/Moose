@@ -55,18 +55,12 @@ Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
 
 =head1 DESCRIPTION
 
-This module provides a simple string attribute, to which mutating string
-operations can be applied more easily (no need to make an lvalue attribute
-metaclass or use temporary variables). Additional methods are provided for
-completion.
+This trait provides native delegation methods for strings.
 
-If your attribute definition does not include any of I<is>, I<isa>,
-I<default> or I<handles> but does use the C<String> metaclass,
-then this module applies defaults as in the L</SYNOPSIS>
-above. This allows for a very basic string definition:
+=head1 DEFAULT TYPE
 
-  has 'foo' => (traits => ['String']);
-  $obj->append_foo;
+If you don't provide an C<isa> value for your attribute, it will default to
+C<Str>.
 
 =head1 PROVIDED METHODS
 

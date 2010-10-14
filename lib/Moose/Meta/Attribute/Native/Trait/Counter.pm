@@ -57,9 +57,14 @@ Moose::Meta::Attribute::Native::Trait::Counter - Helper trait for counters
 
 =head1 DESCRIPTION
 
-This module provides a simple counter attribute, which can be
-incremented and decremented by arbitrary amounts.  The default
-amount of change is one.
+This trait provides native delegation methods for counters. A counter can be
+any sort of number (integer or not). The delegation methods allow you to
+increment, decrement, or reset the value.
+
+=head1 DEFAULT TYPE
+
+If you don't provide an C<isa> value for your attribute, it will default to
+C<Num>.
 
 =head1 PROVIDED METHODS
 

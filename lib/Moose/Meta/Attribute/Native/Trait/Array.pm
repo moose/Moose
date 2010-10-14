@@ -77,8 +77,12 @@ Moose::Meta::Attribute::Native::Trait::Array - Helper trait for array delegation
 
 =head1 DESCRIPTION
 
-This module provides an Array attribute which provides a number of
-array operations.
+This trait provides native delegation methods for array references.
+
+=head1 DEFAULT TYPE
+
+If you don't provide an C<isa> value for your attribute, it will default to
+C<ArrayRef>.
 
 =head1 PROVIDED METHODS
 

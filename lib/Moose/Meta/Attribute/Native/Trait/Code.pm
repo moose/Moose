@@ -44,7 +44,12 @@ Moose::Meta::Attribute::Native::Trait::Code - Helper trait for Code attributes
 
 =head1 DESCRIPTION
 
-This provides operations on coderef attributes.
+This trait provides native delegation methods for code references.
+
+=head1 DEFAULT TYPE
+
+If you don't provide an C<isa> value for your attribute, it will default to
+C<CodeRef>.
 
 =head1 PROVIDED METHODS
 
