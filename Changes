@@ -31,6 +31,10 @@ NEXT
     something that can be assigned to). This should fix issues with
     KiokuDB::Class. (doy)
 
+  * We now ignore all Class::MOP and Moose classes when determining what
+    package called a deprecated feature. This should make the deprecation
+    warnings saner, and make it possible to turn them off more easily.
+
   * The deprecated "default is" warning no longer happens is the attribute has
     any accessor method defined (accessor, reader, writer).
 
