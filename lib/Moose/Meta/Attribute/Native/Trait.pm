@@ -32,7 +32,7 @@ before '_process_options' => sub {
     if (
         !(
             $options->{required}
-            || any { exists $options->{$_} } qw( default builder )
+            || any { exists $options->{$_} } qw( default builder lazy_build )
         )
         && $self->can('_default_default')
         ) {

@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More;
 
 use Test::Requires {
@@ -67,14 +68,15 @@ use Test::Requires {
         } q{},
         'Providing a reader for a String trait avoids default is warning';
 
-    ::stderr_is{ has bar => (
-            traits  => ['String'],
-            is      => 'ro',
-            isa     => 'Str',
-            builder => '_build_foo',
-        );
-        } q{},
+    ::lives_and{ ::stderr_is{ has bar => (
+                traits  => ['String'],
+                is      => 'ro',
+                isa     => 'Str',
+                builder => '_build_foo',
+            );
+            } q{},
         'Providing a builder for a String trait avoids default default warning';
+        } 'Providing a builder for a String trait does not die';
 
     sub _build_foo { }
 }
@@ -118,6 +120,18 @@ use Test::Requires {
         );
         } q{},
         'Providing an accessor for a String trait avoids default is warning';
+
+    ::lives_and{ ::stderr_is{ has bar => (
+                traits     => ['String'],
+                is         => 'ro',
+                isa        => 'Str',
+                lazy_build => 1,
+            );
+            } q{},
+        'Making a String trait lazy_build avoids default default warning';
+        } 'Providing lazy_build for a String trait lives';
+
+    sub _build_bar { }
 }
 
 done_testing;
