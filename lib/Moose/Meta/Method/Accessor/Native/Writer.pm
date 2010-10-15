@@ -148,10 +148,18 @@ sub _inline_set_new_value {
     my $self = shift;
 
     return $self->_inline_store(@_)
-        if $self->_value_needs_copy || !$self->_slot_access_can_be_inlined;
+        if $self->_value_needs_copy
+        || !$self->_slot_access_can_be_inlined
+        || !$self->_inline_get_is_lvalue;
 
     return $self->_inline_optimized_set_new_value(@_);
-};
+}
+
+sub _inline_get_is_lvalue {
+    my $self = shift;
+
+    return $self->associated_attribute->associated_class->instance_metaclass->inline_get_is_lvalue;
+}
 
 sub _inline_optimized_set_new_value {
     my $self = shift;
