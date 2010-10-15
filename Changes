@@ -16,6 +16,11 @@ NEXT
   * Roles now support passing an array reference of method names to method
     modifier sugar functions. (doy)
 
+  * Native traits now don't use optimized inlining routines if the instance
+    requests it (in particular, if inline_get_slot_value doesn't return
+    something that can be assigned to). This should fix issues with
+    KiokuDB::Class. (doy)
+
 1.15 Tue, Oct 5, 2010
 
   [API CHANGES]
