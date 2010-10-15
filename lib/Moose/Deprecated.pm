@@ -18,14 +18,7 @@ use Package::DeprecationManager -deprecations => {
     'type without sugar'               => '0.72',
     'Moose::init_meta'                 => '0.56',
     },
-    -ignore => [
-    qw( Moose
-        Moose::Exporter
-        Moose::Meta::Attribute
-        Moose::Meta::Class
-        Moose::Util::MetaRole
-        )
-    ],
+    -ignore => [qr/^(?:Class::MOP|Moose)(?:::)?/],
     ;
 
 1;

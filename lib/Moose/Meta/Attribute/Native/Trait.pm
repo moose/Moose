@@ -1,6 +1,8 @@
 
 package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
+
+use List::MoreUtils qw( any );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
 
@@ -15,7 +17,9 @@ before '_process_options' => sub {
 
     $self->_check_helper_type( $options, $name );
 
-    if ( !exists $options->{is} && $self->can('_default_is') ) {
+    if ( !( any { exists $options->{$_} } qw( is reader writer accessor ) )
+        && $self->can('_default_is') ) {
+
         $options->{is} = $self->_default_is;
 
         Moose::Deprecated::deprecated(
@@ -25,7 +29,14 @@ before '_process_options' => sub {
         );
     }
 
-    if ( !exists $options->{default} && $self->can('_default_default') ) {
+    if (
+        !(
+            $options->{required}
+            || any { exists $options->{$_} } qw( default builder )
+        )
+        && $self->can('_default_default')
+        ) {
+
         $options->{default} = $self->_default_default;
 
         Moose::Deprecated::deprecated(

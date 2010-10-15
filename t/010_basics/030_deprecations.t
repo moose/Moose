@@ -53,5 +53,72 @@ use Test::Requires {
     );
 }
 
+{
+    package Pack1;
+
+    use Moose;
+
+    ::stderr_is{ has foo => (
+            traits  => ['String'],
+            reader  => '_foo',
+            isa     => 'Str',
+            default => q{},
+        );
+        } q{},
+        'Providing a reader for a String trait avoids default is warning';
+
+    ::stderr_is{ has bar => (
+            traits  => ['String'],
+            is      => 'ro',
+            isa     => 'Str',
+            builder => '_build_foo',
+        );
+        } q{},
+        'Providing a builder for a String trait avoids default default warning';
+
+    sub _build_foo { }
+}
+
+{
+    package Pack2;
+
+    use Moose;
+
+    ::stderr_is{ has foo => (
+            traits  => ['String'],
+            writer  => '_foo',
+            isa     => 'Str',
+            default => q{},
+        );
+        } q{},
+        'Providing a writer for a String trait avoids default is warning';
+
+    ::stderr_is{ has bar => (
+            traits   => ['String'],
+            is       => 'ro',
+            isa      => 'Str',
+            required => 1,
+        );
+        } q{},
+        'Making a String trait required avoids default default warning';
+
+    sub _build_foo { }
+}
+
+{
+    package Pack3;
+
+    use Moose;
+
+    ::stderr_is{ has foo => (
+            traits   => ['String'],
+            accessor => '_foo',
+            isa      => 'Str',
+            default  => q{},
+        );
+        } q{},
+        'Providing an accessor for a String trait avoids default is warning';
+}
+
 done_testing;
 

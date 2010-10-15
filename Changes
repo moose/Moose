@@ -31,6 +31,15 @@ NEXT
     something that can be assigned to). This should fix issues with
     KiokuDB::Class. (doy)
 
+  * The deprecated "default is" warning no longer happens is the attribute has
+    any accessor method defined (accessor, reader, writer).
+
+  * The "default default" code for some native delegations no longer issues a
+    deprecation warning when the attribute is required or has a builder.
+
+  * Setting a "default default" caused a fatal error if you defined a builder
+    for the attribute.
+
 1.15 Tue, Oct 5, 2010
 
   [API CHANGES]
