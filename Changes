@@ -41,8 +41,9 @@ NEXT
   * The "default default" code for some native delegations no longer issues a
     deprecation warning when the attribute is required or has a builder.
 
-  * Setting a "default default" caused a fatal error if you defined a builder
-    for the attribute.
+  * Setting a "default default" caused a fatal error if you used the builder
+    or lazy_build options for the attribute. Reported by Kent Fredric. RT
+    #59613.
 
 1.15 Tue, Oct 5, 2010
 
