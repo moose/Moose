@@ -110,7 +110,7 @@ See the docs for each native trait for details on what methods are available.
 =head2 is
 
 Some traits provide a default C<is> for historical reasons. This behavior is
-deprecated, and you are strongly encourage to provide a value. If you don't
+deprecated, and you are strongly encouraged to provide a value. If you don't
 plan to read and write the attribute value directly, you can set C<< is =>
 'bare' >> to prevent standard accessor generation.
 
