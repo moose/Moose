@@ -53,6 +53,9 @@ NEXT
     or lazy_build options for the attribute. Reported by Kent Fredric. RT
     #59613. (Dave Rolsky)
 
+  * Allow disabling stack traces by setting an environment variable. (Marcus
+    Ramberg)
+
 1.15 Tue, Oct 5, 2010
 
   [API CHANGES]

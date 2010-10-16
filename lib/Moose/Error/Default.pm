@@ -12,11 +12,17 @@ use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Object';
 
+
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 sub new {
     my ( $self, @args ) = @_;
-    $self->create_error_confess( @args );
+    if(exists $ENV{MOOSE_ERROR_TERSE} && $ENV{MOOSE_ERROR_TERSE}) {
+        $self->create_error_croak( @args );
+    }
+    else {
+        $self->create_error_confess( @args );
+    }
 }
 
 sub create_error_croak {
@@ -59,7 +65,9 @@ Moose::Error::Default - L<Carp> based error generation for Moose.
 
 This class implements L<Carp> based error generation.
 
-The default behavior is like L<Moose::Error::Confess>.
+The default behavior is like L<Moose::Error::Confess>. To override this
+to default to L<Moose::Error::Carp>'s behaviour on a system wide basis,
+set the MOOSE_ERROR_TERSE environment variable to a true value.
 
 =head1 METHODS
 
