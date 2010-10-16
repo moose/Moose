@@ -3,6 +3,16 @@ for, noteworthy changes.
 
 NEXT
 
+  [ENHANCEMENTS]
+
+  * Almost every native delegation method which changes the attribute value
+    now has an explicitly documented return value. In general, this return
+    value matches what Perl would return for the same operation. (Dave Rolsky)
+
+  * Lots of work on native delegation documentation, including documenting
+    what arguments each native delegation method allows or requires. (Dave
+    Rolsky)
+
   [BUG FIXES]
 
   * A number of native trait methods which expected strings as arguments did
