@@ -70,7 +70,7 @@ Moose::Meta::Attribute::Native - Delegate to native Perl types
 =head1 DESCRIPTION
 
 Native delegations allow you to delegate to native Perl data
-structure as if they were objects. For example, in the L</SYNOPSIS> you can
+structures as if they were objects. For example, in the L</SYNOPSIS> you can
 see a hash reference being treated as if it has methods named C<exists()>,
 C<keys()>, C<get()>, and C<set()>.
 
