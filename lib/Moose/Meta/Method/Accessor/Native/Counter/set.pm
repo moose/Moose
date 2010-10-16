@@ -15,7 +15,6 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
             _minimum_arguments
             _maximum_arguments
             _inline_optimized_set_new_value
-            _return_value
             )
     ]
 };
@@ -29,12 +28,6 @@ sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
     return "$slot_access = \$_[0];";
-}
-
-sub _return_value {
-    my ( $self, $slot_access ) = @_;
-
-    return "return $slot_access;";
 }
 
 no Moose::Role;
