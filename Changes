@@ -33,19 +33,21 @@ NEXT
 
   * We now ignore all Class::MOP and Moose classes when determining what
     package called a deprecated feature. This should make the deprecation
-    warnings saner, and make it possible to turn them off more easily.
+    warnings saner, and make it possible to turn them off more easily. (Dave
+    Rolsky)
 
   * The deprecated "default is" warning no longer happens is the attribute has
     any accessor method defined (accessor, reader, writer). Also, this warning
     only happens when a method generated because of the default is is actually
-    called, rather than when the attribute is defined.
+    called, rather than when the attribute is defined. (Dave Rolsky)
 
   * The "default default" code for some native delegations no longer issues a
-    deprecation warning when the attribute is required or has a builder.
+    deprecation warning when the attribute is required or has a builder. (Dave
+    Rolsky)
 
   * Setting a "default default" caused a fatal error if you used the builder
     or lazy_build options for the attribute. Reported by Kent Fredric. RT
-    #59613.
+    #59613. (Dave Rolsky)
 
 1.15 Tue, Oct 5, 2010
 
