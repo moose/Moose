@@ -759,7 +759,7 @@ to keep it.
 
 =item * trait_aliases => [ ... ]
 
-This is a list of package names which should have shortened alias exported,
+This is a list of package names which should have shortened aliases exported,
 similar to the functionality of L<aliased>. Each element in the list can be
 either a package name, in which case the export will be named as the last
 namespace component of the package, or an arrayref, whose first element is the
