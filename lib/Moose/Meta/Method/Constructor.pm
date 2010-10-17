@@ -153,21 +153,23 @@ sub _generate_BUILDARGS {
         # {} block.
         return sprintf( <<'EOF', $self->_inline_throw_error( q{'Single parameters to new() must be a HASH ref'}, 'data => $_[0]' ) );
 do {
+    my $params;
     if ( scalar @_ == 1 ) {
         unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
             %s
         }
-        return { %%{ $_[0] } };
+        $params = { %%{ $_[0] } };
     }
     elsif ( @_ %% 2 ) {
         Carp::carp(
             "The new() method for $class expects a hash reference or a key/value list."
                 . " You passed an odd number of arguments" );
-        return { @_, undef };
+        $params = { @_, undef };
     }
     else {
-        return {@_};
+        $params = {@_};
     }
+    $params
 };
 EOF
             ;
