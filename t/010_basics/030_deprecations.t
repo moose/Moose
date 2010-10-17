@@ -9,7 +9,7 @@ use Test::Requires {
 };
 
 # All tests are wrapped with lives_and because the stderr output tests will
-# otherwies eat exceptions, and the test just dies silently.
+# otherwise eat exceptions, and the test just dies silently.
 
 {
     package Role;
