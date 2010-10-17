@@ -2,7 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 
-use List::MoreUtils qw( any );
+use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
 
@@ -11,6 +11,12 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 requires '_helper_type';
+
+has _used_default_is => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
 
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
@@ -22,11 +28,7 @@ before '_process_options' => sub {
 
         $options->{is} = $self->_default_is;
 
-        Moose::Deprecated::deprecated(
-            feature => 'default is for Native Trait',
-            message =>
-                q{Allowing a native trait to automatically supply a value for "is" is deprecated}
-        );
+        $options->{_used_default_is} = 1;
     }
 
     if (
@@ -46,6 +48,38 @@ before '_process_options' => sub {
         );
     }
 };
+
+after 'install_accessors' => sub {
+    my $self = shift;
+
+    return unless $self->_used_default_is;
+
+    my @methods
+        = $self->_default_is eq 'rw'
+        ? qw( reader writer accessor )
+        : 'reader';
+
+    my $name = $self->name;
+    my $class = $self->associated_class->name;
+
+    for my $meth ( uniq grep {defined} map { $self->$_ } @methods ) {
+
+        my $message
+            = "The $meth method in the $class class was automatically created"
+            . " by the native delegation trait for the $name attribute."
+            . q{ This "default is" feature is deprecated.}
+            . q{ Explicitly set "is" or define accessor names to avoid this};
+
+        $self->associated_class->add_before_method_modifier(
+            $meth => sub {
+                Moose::Deprecated::deprecated(
+                    feature => 'default is for Native Trait',
+                    message =>$message,
+                );
+            }
+        );
+    }
+    };
 
 sub _check_helper_type {
     my ( $self, $options, $name ) = @_;
