@@ -66,7 +66,7 @@ Moose::Error::Default - L<Carp> based error generation for Moose.
 This class implements L<Carp> based error generation.
 
 The default behavior is like L<Moose::Error::Confess>. To override this
-to default to L<Moose::Error::Carp>'s behaviour on a system wide basis,
+to default to L<Moose::Error::Croak>'s behaviour on a system wide basis,
 set the MOOSE_ERROR_TERSE environment variable to a true value.
 
 =head1 METHODS
@@ -75,7 +75,8 @@ set the MOOSE_ERROR_TERSE environment variable to a true value.
 
 =item new @args
 
-Create a new error. Delegates to C<create_error_confess>.
+Create a new error. Delegates to C<create_error_confess> or
+C<create_error_croak>.
 
 =item create_error_confess @args
 
