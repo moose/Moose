@@ -4,6 +4,7 @@ package Moose::Object;
 use strict;
 use warnings;
 
+use Carp ();
 use Devel::GlobalDestruction ();
 use MRO::Compat ();
 use Scalar::Util ();
@@ -34,6 +35,12 @@ sub BUILDARGS {
                 data => $_[0] );
         }
         return { %{ $_[0] } };
+    }
+    elsif ( @_ % 2 ) {
+        Carp::carp(
+            "The new() method for $class expects a hash reference or a key/value list."
+                . " You passed an odd number of arguments" );
+        return { @_, undef };
     }
     else {
         return {@_};

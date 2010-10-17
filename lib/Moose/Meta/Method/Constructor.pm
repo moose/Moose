@@ -4,6 +4,7 @@ package Moose::Meta::Method::Constructor;
 use strict;
 use warnings;
 
+use Carp ();
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
 our $VERSION   = '1.15';
@@ -144,15 +145,34 @@ sub _generate_BUILDARGS {
 
     my $buildargs = $self->associated_metaclass->find_method_by_name("BUILDARGS");
 
-    if ( $args eq '@_' and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS ) ) {
-        return join("\n",
-            'do {',
-            $self->_inline_throw_error('"Single parameters to new() must be a HASH ref"', 'data => $_[0]'),
-            '    if scalar @_ == 1 && !( defined $_[0] && ref $_[0] eq q{HASH} );',
-            '(scalar @_ == 1) ? {%{$_[0]}} : {@_};',
-            '}',
-        );
-    } else {
+    if ( $args eq '@_'
+        and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS )
+        ) {
+
+        # This is basically a copy of Moose::Object::BUILDARGS wrapped in a do
+        # {} block.
+        return sprintf( <<'EOF', $self->_inline_throw_error( q{'Single parameters to new() must be a HASH ref'}, 'data => $_[0]' ) );
+do {
+    if ( scalar @_ == 1 ) {
+        unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
+            %s
+        }
+        return { %%{ $_[0] } };
+    }
+    elsif ( @_ %% 2 ) {
+        Carp::carp(
+            "The new() method for $class expects a hash reference or a key/value list."
+                . " You passed an odd number of arguments" );
+        return { @_, undef };
+    }
+    else {
+        return {@_};
+    }
+};
+EOF
+            ;
+    }
+    else {
         return $class . "->BUILDARGS($args)";
     }
 }

@@ -13,6 +13,10 @@ NEXT
     what arguments each native delegation method allows or requires. (Dave
     Rolsky)
 
+  * Passing an odd number of args to ->new() now gives a more useful warning
+    than Perl's builtin warning. Suggested by Sir Robert Burbridge. (Dave
+    Rolsky)
+
   [BUG FIXES]
 
   * A number of native trait methods which expected strings as arguments did
