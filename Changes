@@ -36,7 +36,9 @@ NEXT
     warnings saner, and make it possible to turn them off more easily.
 
   * The deprecated "default is" warning no longer happens is the attribute has
-    any accessor method defined (accessor, reader, writer).
+    any accessor method defined (accessor, reader, writer). Also, this warning
+    only happens when a method generated because of the default is is actually
+    called, rather than when the attribute is defined.
 
   * The "default default" code for some native delegations no longer issues a
     deprecation warning when the attribute is required or has a builder.
