@@ -149,8 +149,7 @@ sub _generate_BUILDARGS {
         and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS )
         ) {
 
-        # This is basically a copy of Moose::Object::BUILDARGS wrapped in a do
-        # {} block.
+        # This is the same logic as Moose::Object::BUILDARGS
         return sprintf( <<'EOF', $self->_inline_throw_error( q{'Single parameters to new() must be a HASH ref'}, 'data => $_[0]' ) );
 do {
     my $params;
