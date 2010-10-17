@@ -9,6 +9,11 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use base qw(Moose::Error::Default);
 
+sub new {
+    my ( $self, @args ) = @_;
+    $self->create_error_confess(@args);
+}
+
 __PACKAGE__
 
 __END__
