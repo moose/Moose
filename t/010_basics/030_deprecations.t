@@ -32,7 +32,7 @@ use Test::Requires {
                     isa    => 'Str',
                 );
                 }
-                qr/\QAllowing a native trait to automatically supply a default is deprecated/,
+                qr{\QAllowing a native trait to automatically supply a default is deprecated. You can avoid this warning by supply a default, builder, or making the attribute required at t/010_basics/030_deprecations.t line},
                 'Not providing a default for native String trait warns';
 
             ::stderr_is{ has bar => (

@@ -44,7 +44,8 @@ before '_process_options' => sub {
         Moose::Deprecated::deprecated(
             feature => 'default default for Native Trait',
             message =>
-                'Allowing a native trait to automatically supply a default is deprecated'
+                'Allowing a native trait to automatically supply a default is deprecated.'
+                . ' You can avoid this warning by supply a default, builder, or making the attribute required'
         );
     }
 };
