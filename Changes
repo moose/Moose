@@ -38,8 +38,8 @@ NEXT
 
   * The deprecated "default is" warning no longer happens if the attribute has
     any accessor method defined (accessor, reader, writer). Also, this warning
-    only happens when a method is generated because of the default is is
-    actually called, rather than when the attribute is defined. (Dave Rolsky)
+    only happens when a method that was generated because of the "default is"
+    gets called, rather than when the attribute is defined. (Dave Rolsky)
 
   * The "default default" code for some native delegations no longer issues a
     deprecation warning when the attribute is required or has a builder. (Dave
