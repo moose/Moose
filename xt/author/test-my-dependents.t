@@ -47,7 +47,6 @@ MooseX::Accessors::ReadWritePrivate
 MooseX::Aliases
 MooseX::AlwaysCoerce
 MooseX::App::Cmd
-MooseX::App::Cmd::Command::BashComplete
 MooseX::Async
 MooseX::Attribute::ENV
 MooseX::AttributeCloner
