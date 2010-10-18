@@ -15,6 +15,7 @@ my @modules = grep { !/Accessor::Native.*$/ } all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
+    'Moose::Error::Confess'  => ['new'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error
@@ -58,7 +59,7 @@ my %trustme = (
             )
     ],
     'Moose::Meta::Method::Destructor' => [ 'initialize_body', 'options' ],
-    'Moose::Meta::Method::Meta'       => [ 'wrap' ],
+    'Moose::Meta::Method::Meta'       => ['wrap'],
     'Moose::Meta::Role'               => [
         qw( alias_method
             get_method_modifier_list
