@@ -117,7 +117,7 @@ exception. (2)
 In the second recipe the B<BankAccount>'s C<balance> attribute had a
 default value of C<0>. Given a non-reference, Perl copies the
 I<value>. However, given a reference, it does not do a deep clone,
-instead simply copying the reference. If you just specified a simply
+instead simply copying the reference. If you just specified a simple
 reference for a default, Perl would create it once and it would be
 shared by all objects with that attribute.
 
