@@ -461,7 +461,6 @@ sub apply {
     }
 
     if ( $deprecation_check ) {
-        
         Moose::Deprecated::deprecated(
             feature => 'alias or excludes',
             message =>
@@ -473,7 +472,6 @@ sub apply {
     }
 
     if ( exists $args{'-excludes'} ) {
-
         # I wish we had coercion here :)
         $args{'-excludes'} = (
             ref $args{'-excludes'} eq 'ARRAY'
