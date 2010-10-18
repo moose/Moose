@@ -74,14 +74,14 @@ release.
 
 =over 4
 
-=item new @args
+=item B<< Moose::Error::Default->new(@args) >>
 
 Create a new error. Delegates to C<create_error_confess> or
 C<create_error_croak>.
 
-=item create_error_confess @args
+=item B<< $error->create_error_confess(@args) >>
 
-=item create_error_croak @args
+=item B<< $error->create_error_croak(@args) >>
 
 Creates a new errors string of the specified style.
 
