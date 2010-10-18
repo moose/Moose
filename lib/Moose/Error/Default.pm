@@ -12,7 +12,6 @@ use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Object';
 
-
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 sub new {
