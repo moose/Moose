@@ -158,4 +158,75 @@ ok( Foo::Sub::Sub->meta->error_class->meta->does_role('Role::Foo'),
 ok( Foo::Sub::Sub->meta->error_class->isa('Moose::Error::Croak'),
     q{Foo::Sub::Sub's error_class now subclasses Moose::Error::Croak} );
 
+{
+    package Quux::Default;
+    use Moose;
+
+    has foo => (is => 'ro');
+    sub bar { shift->foo(1) }
+}
+
+{
+    package Quux::Croak;
+    use metaclass 'Moose::Meta::Class', error_class => 'Moose::Error::Croak';
+    use Moose;
+
+    has foo => (is => 'ro');
+    sub bar { shift->foo(1) }
+}
+
+{
+    package Quux::Confess;
+    use metaclass 'Moose::Meta::Class', error_class => 'Moose::Error::Confess';
+    use Moose;
+
+    has foo => (is => 'ro');
+    sub bar { shift->foo(1) }
+}
+
+sub stacktrace_ok (&) {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my $code = shift;
+    eval { $code->() };
+    my @lines = split /\n/, $@;
+    cmp_ok(scalar(@lines), '>', 1, "got a stacktrace");
+}
+
+sub stacktrace_not_ok (&) {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my $code = shift;
+    eval { $code->() };
+    my @lines = split /\n/, $@;
+    cmp_ok(scalar(@lines), '==', 1, "didn't get a stacktrace");
+}
+
+my $default = Quux::Default->new;
+my $croak = Quux::Croak->new;
+my $confess = Quux::Confess->new;
+
+is($default->meta->error_class, 'Moose::Error::Default');
+is($croak->meta->error_class, 'Moose::Error::Croak');
+is($confess->meta->error_class, 'Moose::Error::Confess');
+
+{
+    local $ENV{MOOSE_ERROR_STYLE};
+    stacktrace_ok { $default->bar };
+    stacktrace_not_ok { $croak->bar };
+    stacktrace_ok { $confess->bar };
+}
+
+{
+    local $ENV{MOOSE_ERROR_STYLE} = 'croak';
+    stacktrace_not_ok { $default->bar };
+    stacktrace_not_ok { $croak->bar };
+    stacktrace_ok { $confess->bar };
+}
+
+{
+    local $ENV{MOOSE_ERROR_STYLE} = 'confess';
+    stacktrace_ok { $default->bar };
+    stacktrace_not_ok { $croak->bar };
+    stacktrace_ok { $confess->bar };
+}
+
 done_testing;
