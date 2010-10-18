@@ -131,6 +131,7 @@ use Test::Requires {
                 q{},
                 'Providing a writer for a String trait avoids default is warning';
         }
+    );
 }
 
 {
@@ -165,18 +166,6 @@ use Test::Requires {
                 q{},
                 'Providing a accessor for a String trait avoids default is warning';
         }
-<<<<<<< HEAD
-=======
-        qr/\QThe alias and excludes options for role application have been renamed -alias and -excludes (Foo is consuming Role - do you need to upgrade Foo?)/,
-        'passing excludes or alias with a leading dash warns';
-    ::ok(
-        !Foo->meta->has_method('thing'),
-        'thing method is excluded from role application'
-    );
-    ::ok(
-        Foo->meta->has_method('thing2'),
-        'thing2 method is created as alias in role application'
->>>>>>> Move logic into Moose::Meta::Role for deprecation check of excludes and alias. Add friendlier wording to the warning. Update the test to check for new wording
     );
 
     sub _build_foo { q{} }
