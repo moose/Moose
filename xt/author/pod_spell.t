@@ -138,6 +138,7 @@ destructuring
 dev
 DWIM
 DUCKTYPE
+env
 GitHub
 hashrefs
 hotspots
@@ -187,6 +188,7 @@ ROLETYPE
 runtime
 serializer
 stacktrace
+stacktraces
 subclassable
 subname
 subtyping
