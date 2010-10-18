@@ -21,6 +21,10 @@ for, noteworthy changes.
     Moose::Error::Default for details. This feature is considered
     experimental, and may change in a future release. (Marcus Ramberg)
 
+  * The deprecation warning for using alias and excludes without a leading
+    dash now tells you the role being applied and what it was being applied
+    to. (mst).
+
   [BUG FIXES]
 
   * A number of native trait methods which expected strings as arguments did
