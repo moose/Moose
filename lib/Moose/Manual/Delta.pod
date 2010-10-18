@@ -16,6 +16,20 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 1.16
+
+=over 4
+
+=item Configurable stacktraces
+
+Classes which use the L<Moose::Error::Default> error class can now have
+stacktraces disabled by setting the C<MOOSE_ERROR_STYLE> env var to C<croak>.
+This is experimental, fairly incomplete, and won't work in all cases (because
+Moose's error system in general is all of these things), but this should allow
+for reducing at least some of the verbosity in most cases.
+
+=back
+
 =head1 1.15
 
 =over 4
