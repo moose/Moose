@@ -17,6 +17,9 @@ NEXT
     than Perl's builtin warning. Suggested by Sir Robert Burbridge. (Dave
     Rolsky)
 
+  * Allow disabling stack traces by setting an environment variable. See
+    Moose::Error::Default for details. (Marcus Ramberg)
+
   [BUG FIXES]
 
   * A number of native trait methods which expected strings as arguments did
@@ -52,9 +55,6 @@ NEXT
   * Setting a "default default" caused a fatal error if you used the builder
     or lazy_build options for the attribute. Reported by Kent Fredric. RT
     #59613. (Dave Rolsky)
-
-  * Allow disabling stack traces by setting an environment variable. (Marcus
-    Ramberg)
 
 1.15 Tue, Oct 5, 2010
 
