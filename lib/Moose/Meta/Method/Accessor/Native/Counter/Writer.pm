@@ -3,7 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Counter::Writer;
 use strict;
 use warnings;
 
-our $VERSION = '1.15';
+our $VERSION = '1.16';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

@@ -7,7 +7,7 @@ use Carp 'confess';
 use List::MoreUtils 'all';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '1.15';
+our $VERSION   = '1.16';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Mixin::AttributeCore';

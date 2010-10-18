@@ -3,7 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Array::elements;
 use strict;
 use warnings;
 
-our $VERSION = '1.15';
+our $VERSION = '1.16';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util qw( looks_like_number );
 
-our $VERSION = '1.15';
+our $VERSION = '1.16';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

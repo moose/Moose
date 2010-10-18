@@ -7,7 +7,7 @@ use Carp         'croak';
 
 use Sub::Exporter;
 
-our $VERSION   = '1.15';
+our $VERSION   = '1.16';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
