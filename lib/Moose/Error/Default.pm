@@ -64,9 +64,11 @@ Moose::Error::Default - L<Carp> based error generation for Moose.
 
 This class implements L<Carp> based error generation.
 
-The default behavior is like L<Moose::Error::Confess>. To override this
-to default to L<Moose::Error::Croak>'s behaviour on a system wide basis,
-set the MOOSE_ERROR_STYLE environment variable to C<croak>.
+The default behavior is like L<Moose::Error::Confess>. To override this to
+default to L<Moose::Error::Croak>'s behaviour on a system wide basis, set the
+MOOSE_ERROR_STYLE environment variable to C<croak>. The use of this
+environment variable is considered experimental, and may change in a future
+release.
 
 =head1 METHODS
 

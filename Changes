@@ -18,7 +18,8 @@ for, noteworthy changes.
     Rolsky)
 
   * Allow disabling stack traces by setting an environment variable. See
-    Moose::Error::Default for details. (Marcus Ramberg)
+    Moose::Error::Default for details. This feature is considered
+    experimental, and may change in a future release. (Marcus Ramberg)
 
   [BUG FIXES]
 
