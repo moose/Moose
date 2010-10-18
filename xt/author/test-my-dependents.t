@@ -34,7 +34,7 @@ if ( $ENV{MOOSE_TEST_MD_ALL} ) {
     done_testing;
 }
 else {
-    my @modules = grep { $_ eq 'KiokuDB' } map { chomp; $_ } <DATA>;
+    my @modules = map { chomp; $_ } <DATA>;
     plan tests => scalar @modules;
     test_module($_) for @modules;
 }
