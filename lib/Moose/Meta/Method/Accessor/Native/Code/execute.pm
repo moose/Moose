@@ -3,7 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Code::execute;
 use strict;
 use warnings;
 
-our $VERSION = '1.16';
+our $VERSION = '1.17';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

@@ -5,7 +5,7 @@ use warnings;
 
 use List::MoreUtils qw( any );
 
-our $VERSION = '1.16';
+our $VERSION = '1.17';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
