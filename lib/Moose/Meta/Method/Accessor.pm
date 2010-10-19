@@ -13,20 +13,28 @@ use base 'Moose::Meta::Method',
 
 sub _error_thrower {
     my $self = shift;
-    ( ref $self && $self->associated_attribute ) || $self->SUPER::_error_thrower();
+    return $self->associated_attribute
+        if ref($self) && defined($self->associated_attribute);
+    return $self->SUPER::_error_thrower;
 }
 
 sub _eval_code {
-    my ( $self, $source ) = @_;
+    my $self = shift;
+    my $source = join "\n", @_;
 
     my $environment = $self->_eval_environment;
 
-    my ( $code, $e ) = $self->_compile_code( environment => $environment, code => $source );
+    my ( $code, $e ) = $self->_compile_code(
+        environment => $environment,
+        code        => $source
+    );
 
     $self->throw_error(
-        "Could not create writer for '${\$self->associated_attribute->name}' because $e \n code: $source",
-        error => $e, data => $source )
-        if $e;
+        "Could not create writer for '" . $self->associated_attribute->name
+      . "' because: $e\ncode: $source",
+        error => $e,
+        data  => $source,
+    ) if $e;
 
     return $code;
 }
@@ -43,74 +51,96 @@ sub _eval_environment {
         '$type_constraint_obj' => \$type_constraint_obj,
         '$type_constraint'     => \(
               $type_constraint_obj
-            ? $type_constraint_obj->_compiled_type_constraint
-            : undef
+                  ? $type_constraint_obj->_compiled_type_constraint
+                  : undef
         ),
     };
 }
 
 sub _generate_accessor_method_inline {
-    my $self        = $_[0];
-    my $inv         = '$_[0]';
-    my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
+    my $self        = shift;
 
-    $self->_eval_code('sub { ' . "\n"
-    . $self->_inline_pre_body(@_) . "\n"
-    . 'if (scalar(@_) >= 2) {' . "\n"
-        . $self->_inline_copy_value . "\n"
-        . $self->_inline_check_required . "\n"
-        . $self->_inline_check_coercion($value_name) . "\n"
-        . $self->_inline_check_constraint($value_name) . "\n"
-        . $self->_inline_get_old_value_for_trigger($inv, $value_name) . "\n"
-        . $self->_inline_store($inv, $value_name) . "\n"
-        . $self->_inline_trigger($inv, $value_name, '@old') . "\n"
-    . ' }' . "\n"
-    . $self->_inline_check_lazy($inv) . "\n"
-    . $self->_inline_post_body(@_) . "\n"
-    . 'return ' . $self->_inline_auto_deref($self->_inline_get($inv)) . "\n"
-    . ' }');
+    my $inv         = '$_[0]';
+    my $slot_access = $self->_inline_get($inv);
+    my $value       = $self->_value_needs_copy ? '$val' : '$_[1]';
+    my $old         = '@old';
+    my $default     = '$default';
+
+    $self->_eval_code(
+        'sub {',
+            $self->_inline_pre_body(@_),
+            'if (scalar(@_) >= 2) {',
+                $self->_inline_copy_value($value),
+                $self->_inline_check_required,
+                $self->_inline_check_coercion($value),
+                $self->_inline_check_constraint($value),
+                $self->_inline_get_old_value_for_trigger($inv, $old),
+                $self->_inline_store($inv, $value),
+                $self->_inline_trigger($inv, $value, $old),
+            '}',
+            $self->_inline_check_lazy($inv, $default),
+            $self->_inline_post_body(@_),
+            'return ' . $self->_inline_auto_deref($slot_access) . ';',
+        '}',
+    );
 }
 
 sub _generate_writer_method_inline {
-    my $self        = $_[0];
-    my $inv         = '$_[0]';
-    my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
+    my $self        = shift;
 
-    $self->_eval_code('sub { '
-    . $self->_inline_pre_body(@_)
-    . $self->_inline_copy_value
-    . $self->_inline_check_required
-    . $self->_inline_check_coercion($value_name)
-    . $self->_inline_check_constraint($value_name)
-    . $self->_inline_get_old_value_for_trigger($inv, $value_name) . "\n"
-    . $self->_inline_store($inv, $value_name)
-    . $self->_inline_post_body(@_)
-    . $self->_inline_trigger($inv, $value_name, '@old')
-    . ' }');
+    my $inv   = '$_[0]';
+    my $value = $self->_value_needs_copy ? '$val' : '$_[1]';
+    my $old   = '@old';
+
+    $self->_eval_code(
+        'sub {',
+            $self->_inline_pre_body(@_),
+            $self->_inline_copy_value($value),
+            $self->_inline_check_required,
+            $self->_inline_check_coercion($value),
+            $self->_inline_check_constraint($value),
+            $self->_inline_get_old_value_for_trigger($inv, $old),
+            $self->_inline_store($inv, $value),
+            $self->_inline_post_body(@_),
+            $self->_inline_trigger($inv, $value, $old),
+        '}',
+    );
 }
 
 sub _generate_reader_method_inline {
-    my $self        = $_[0];
+    my $self        = shift;
+
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_get($inv);
+    my $default     = '$default';
 
-    $self->_eval_code('sub {'
-    . $self->_inline_pre_body(@_)
-    . $self->_inline_throw_error('"Cannot assign a value to a read-only accessor"', 'data => \@_') . ' if @_ > 1;'
-    . $self->_inline_check_lazy($inv)
-    . $self->_inline_post_body(@_)
-    . 'return ' . $self->_inline_auto_deref( $slot_access ) . ';'
-    . '}');
+    $self->_eval_code(
+        'sub {',
+            $self->_inline_pre_body(@_),
+            'if (@_ > 1) {',
+                $self->_inline_throw_error(
+                    '"Cannot assign a value to a read-only accessor"',
+                    'data => \@_'
+                ) . ';',
+            '}',
+            $self->_inline_check_lazy($inv, $default),
+            $self->_inline_post_body(@_),
+            'return ' . $self->_inline_auto_deref($slot_access) . ';',
+        '}',
+    );
 }
 
 sub _inline_copy_value {
-    return '' unless shift->_value_needs_copy;
-    return 'my $val = $_[1];'
+    my $self = shift;
+    my ($value) = @_;
+
+    return '' unless $self->_value_needs_copy;
+    return 'my ' . $value . ' = $_[1];'
 }
 
 sub _value_needs_copy {
-    my $attr = (shift)->associated_attribute;
-    return $attr->should_coerce;
+    my $self = shift;
+    return $self->associated_attribute->should_coerce;
 }
 
 sub _instance_is_inlinable {
@@ -152,120 +182,154 @@ sub _inline_pre_body  { '' }
 sub _inline_post_body { '' }
 
 sub _inline_check_constraint {
-    my ($self, $value) = @_;
+    my $self = shift;
+    my ($value) = @_;
 
     my $attr = $self->associated_attribute;
-
     return '' unless $attr->has_type_constraint;
 
     my $attr_name = quotemeta( $attr->name );
 
-    qq{\$type_constraint->($value) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) does not pass the type constraint because: " . \$type_constraint_obj->get_message($value)}, "data => $value") . ";";
+    return 'if (!$type_constraint->(' . $value . ')) {',
+               $self->_inline_throw_error(
+                   '"Attribute (' . $attr_name . ') does not pass the type '
+                 . 'constraint because: " . '
+                 . '$type_constraint_obj->get_message(' . $value . ')',
+                   'data => ' . $value
+               ) . ';',
+           '}';
 }
 
 sub _inline_check_coercion {
-    my ($self, $value) = @_;
+    my $self = shift;
+    my ($value) = @_;
 
     my $attr = $self->associated_attribute;
+    return '' unless $attr->should_coerce
+                  && $attr->type_constraint->has_coercion;
 
-    return '' unless $attr->should_coerce && $attr->type_constraint->has_coercion;
-    return "$value = \$type_constraint_obj->coerce($value);";
+    return $value . ' = $type_constraint_obj->coerce(' . $value . ');';
 }
 
 sub _inline_check_required {
     my $self = shift;
-    my $attr = $self->associated_attribute;
 
+    my $attr = $self->associated_attribute;
     return '' unless $attr->is_required;
 
     my $attr_name = quotemeta( $attr->name );
 
-    return qq{(\@_ >= 2) || } . $self->_inline_throw_error(qq{"Attribute ($attr_name) is required, so cannot be set to undef"}) . ';' # defined $_[1] is not good enough
+    return 'if (@_ < 2) {',
+               $self->_inline_throw_error(
+                   '"Attribute (' . $attr_name . ') is required, so cannot '
+                 . 'be set to undef"' # defined $_[1] is not good enough
+               ) . ';',
+           '}';
 }
 
 sub _inline_check_lazy {
-    my ($self, $instance) = @_;
+    my $self = shift;
+    my ($instance, $default) = @_;
 
     my $attr = $self->associated_attribute;
-
     return '' unless $attr->is_lazy;
 
     my $slot_exists = $self->_inline_has($instance);
 
-    my $code = 'unless (' . $slot_exists . ') {' . "\n";
-    if ($attr->has_type_constraint) {
-        if ($attr->has_default || $attr->has_builder) {
-            if ($attr->has_default) {
-                $code .= '    my $default = $attr->default(' . $instance . ');'."\n";
-            }
-            elsif ($attr->has_builder) {
-                $code .= '    my $default;'."\n".
-                         '    if(my $builder = '.$instance.'->can($attr->builder)){ '."\n".
-                         '        $default = '.$instance.'->$builder; '. "\n    } else {\n" .
-                         '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name') .
-                         ';'. "\n    }";
-            }
-            $code .= $self->_inline_check_coercion('$default') . "\n";
-            $code .= $self->_inline_check_constraint('$default') . "\n";
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, '$default') . "\n";
-        }
-        else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, 'undef') . "\n";
-        }
+    return 'if (!' . $slot_exists . ') {',
+               $self->_inline_init_from_default($instance, $default),
+           '}';
+}
 
-    } else {
-        if ($attr->has_default) {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, ('$attr->default(' . $instance . ')')) . "\n";
-        }
-        elsif ($attr->has_builder) {
-            $code .= '    if (my $builder = '.$instance.'->can($attr->builder)) { ' . "\n"
-                  .  '       ' . $self->_inline_init_slot($attr, $instance, ($instance . '->$builder'))
-                  .  "\n    } else {\n"
-                  .  '        ' . $self->_inline_throw_error(q{sprintf "%s does not support builder method '%s' for attribute '%s'", ref(} . $instance . ') || '.$instance.', $attr->builder, $attr->name')
-                  .  ';'. "\n    }";
-        }
-        else {
-            $code .= '    ' . $self->_inline_init_slot($attr, $instance, 'undef') . "\n";
-        }
+sub _inline_init_from_default {
+    my $self = shift;
+    my ($instance, $default) = @_;
+
+    my $attr = $self->associated_attribute;
+    # XXX: should this throw an error instead?
+    return $self->_inline_init_slot($attr, $instance, 'undef')
+        unless $attr->has_default || $attr->has_builder;
+
+    return $self->_inline_generate_default($instance, $default),
+           $attr->has_type_constraint
+               ? ($self->_inline_check_coercion($default),
+                  $self->_inline_check_constraint($default))
+               : (),
+           $self->_inline_init_slot($attr, $instance, $default);
+}
+
+sub _inline_generate_default {
+    my $self = shift;
+    my ($instance, $default) = @_;
+
+    my $attr = $self->associated_attribute;
+
+    if ($attr->has_default) {
+        return 'my ' . $default . ' = $attr->default(' . $instance . ');';
     }
-    $code .= "}\n";
-    return $code;
+    elsif ($attr->has_builder) {
+        return 'my ' . $default . ';',
+               'if (my $builder = ' . $instance . '->can($attr->builder)) {',
+                   $default . ' = ' . $instance . '->$builder;',
+               '}',
+               'else {',
+                   'my $class = ref(' . $instance . ') || ' . $instance . ';',
+                   'my $builder_name = $attr->builder;',
+                   'my $attr_name = $attr->name;',
+                   $self->_inline_throw_error(
+                       '"$class does not support builder method '
+                     . '\'$builder_name\' for attribute \'$attr_name\'"'
+                   ) . ';',
+               '}';
+    }
+    else {
+        $self->throw_error("Can't generate a default for " . $attr->name
+                         . " since no default or builder was specified");
+    }
 }
 
 sub _inline_init_slot {
-    my ($self, $attr, $inv, $value) = @_;
+    my $self = shift;
+    my ($attr, $inv, $value) = @_;
+
     if ($attr->has_initializer) {
-        return ('$attr->set_initial_value(' . $inv . ', ' . $value . ');');
+        return '$attr->set_initial_value(' . $inv . ', ' . $value . ');';
     }
     else {
-        return $self->_inline_store($inv, $value);
+        return $self->_inline_store($inv, $value) . ';';
     }
 }
 
 sub _inline_store {
-    my ( $self, $instance, $value ) = @_;
+    my $self = shift;
+    my ($instance, $value) = @_;
 
-    return $self->associated_attribute->inline_set( $instance, $value );
+    return $self->associated_attribute->inline_set( $instance, $value ) . ';';
 }
 
 sub _inline_get_old_value_for_trigger {
-    my ( $self, $instance ) = @_;
+    my $self = shift;
+    my ($instance, $old) = @_;
 
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
 
-    return
-          'my @old = '
-        . $self->_inline_has($instance) . q{ ? }
-        . $self->_inline_get($instance) . q{ : ()} . ";\n";
+    return 'my ' . $old . ' = ' . $self->_inline_has($instance)
+             . ' ? ' . $self->_inline_get($instance)
+             . ' : ();';
 }
 
 sub _inline_trigger {
-    my ($self, $instance, $value, $old_value) = @_;
+    my $self = shift;
+    my ($instance, $value, $old) = @_;
+
     my $attr = $self->associated_attribute;
     return '' unless $attr->has_trigger;
-    return sprintf('$attr->trigger->(%s, %s, %s);', $instance, $value, $old_value);
+
+    return sprintf('$attr->trigger->(%s, %s, %s);', $instance, $value, $old);
 }
+
+# expressions
 
 sub _inline_get {
     my ($self, $instance) = @_;
@@ -280,9 +344,10 @@ sub _inline_has {
 }
 
 sub _inline_auto_deref {
-    my ( $self, $ref_value ) = @_;
-        my $attr = $self->associated_attribute;
+    my $self = shift;
+    my ($ref_value) = @_;
 
+    my $attr = $self->associated_attribute;
     return $ref_value unless $attr->should_auto_deref;
 
     my $type_constraint = $attr->type_constraint;
@@ -295,9 +360,12 @@ sub _inline_auto_deref {
         $sigil = '%';
     }
     else {
-        $self->throw_error( "Can not auto de-reference the type constraint '"
-                . quotemeta( $type_constraint->name )
-                . "'", type_constraint => $type_constraint );
+        $self->throw_error(
+            "Can not auto de-reference the type constraint '"
+          . $type_constraint->name
+          . "'",
+            type_constraint => $type_constraint,
+        );
     }
 
     "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
