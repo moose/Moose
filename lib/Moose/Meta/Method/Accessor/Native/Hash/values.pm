@@ -20,7 +20,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "values \%{ $slot_access }";
+    return "values \%{ ($slot_access) }";
 }
 
 no Moose::Role;

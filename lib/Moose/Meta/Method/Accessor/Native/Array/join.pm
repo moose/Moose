@@ -37,7 +37,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "join \$_[0], \@{ $slot_access }";
+    return "join \$_[0], \@{ ($slot_access) }";
 }
 
 no Moose::Role;

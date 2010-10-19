@@ -20,7 +20,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "scalar keys \%{ $slot_access } ? 0 : 1";
+    return "scalar keys \%{ ($slot_access) } ? 0 : 1";
 }
 
 no Moose::Role;

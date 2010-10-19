@@ -35,7 +35,7 @@ sub _return_value {
     my $slot_access = shift;
 
     return
-        "\$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ ${slot_access} } : sort \@{ $slot_access }";
+        "\$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ ($slot_access) } : sort \@{ ($slot_access) }";
 }
 
 no Moose::Role;

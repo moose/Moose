@@ -35,7 +35,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "\@_ > 1 ? \@{ $slot_access }{\@_} : ${slot_access}->{ \$_[0] }";
+    return "\@_ > 1 ? \@{ ($slot_access) }{\@_} : ${slot_access}->{ \$_[0] }";
 }
 
 no Moose::Role;

@@ -17,7 +17,7 @@ sub _maximum_arguments { 0 }
 sub _return_value {
     my ( $self, $slot_access ) = @_;
 
-    return "scalar \@{ $slot_access }";
+    return "scalar \@{ ($slot_access) }";
 }
 
 no Moose::Role;

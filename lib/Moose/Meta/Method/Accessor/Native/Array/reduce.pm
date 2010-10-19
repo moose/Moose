@@ -38,7 +38,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "List::Util::reduce { \$_[0]->( \$a, \$b ) } \@{ ${slot_access} }";
+    return "List::Util::reduce { \$_[0]->( \$a, \$b ) } \@{ ($slot_access) }";
 }
 
 no Moose::Role;

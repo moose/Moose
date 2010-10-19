@@ -37,13 +37,13 @@ sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
     return
-        "( do { my \@potential = \@{ $slot_access }; \@return = splice \@potential, \$_[0], 1; \\\@potential } )";
+        "( do { my \@potential = \@{ ($slot_access) }; \@return = splice \@potential, \$_[0], 1; \\\@potential } )";
 }
 
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "\@return = splice \@{ $slot_access }, \$_[0], 1";
+    return "\@return = splice \@{ ($slot_access) }, \$_[0], 1";
 }
 
 sub _return_value {

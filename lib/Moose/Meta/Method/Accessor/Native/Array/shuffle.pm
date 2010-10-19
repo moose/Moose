@@ -20,7 +20,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "List::Util::shuffle \@{ $slot_access }";
+    return "List::Util::shuffle \@{ ($slot_access) }";
 }
 
 no Moose::Role;

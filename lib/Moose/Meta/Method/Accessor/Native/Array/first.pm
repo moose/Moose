@@ -38,7 +38,7 @@ sub _return_value {
     my $self        = shift;
     my $slot_access = shift;
 
-    return "&List::Util::first( \$_[0], \@{ ${slot_access} } )";
+    return "&List::Util::first( \$_[0], \@{ ($slot_access) } )";
 }
 
 no Moose::Role;

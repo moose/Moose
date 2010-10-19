@@ -23,13 +23,13 @@ sub _adds_members { 0 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "( do { my \%potential = %{ $slot_access }; \@return = delete \@potential{\@_}; \\\%potential; } )";
+    return "( do { my \%potential = %{ ($slot_access) }; \@return = delete \@potential{\@_}; \\\%potential; } )";
 }
 
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "\@return = delete \@{ $slot_access }{\@_}";
+    return "\@return = delete \@{ ($slot_access) }{\@_}";
 }
 
 sub _return_value {

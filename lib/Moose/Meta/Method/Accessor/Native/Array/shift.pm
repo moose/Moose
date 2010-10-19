@@ -27,7 +27,7 @@ sub _adds_members { 0 }
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
-    return "[ \@{ $slot_access } > 1 ? \@{ $slot_access }[ 1 .. \$#{ $slot_access } ] : () ]";
+    return "[ \@{ ($slot_access) } > 1 ? \@{ ($slot_access) }[ 1 .. \$#{ ($slot_access) } ] : () ]";
 }
 
 sub _inline_capture_return_value {
@@ -39,7 +39,7 @@ sub _inline_capture_return_value {
 sub _inline_optimized_set_new_value {
     my ( $self, $inv, $new, $slot_access ) = @_;
 
-    return "shift \@{ $slot_access };";
+    return "shift \@{ ($slot_access) };";
 }
 
 sub _return_value {

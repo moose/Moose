@@ -38,7 +38,7 @@ sub _potential_value {
     my ( $self, $slot_access ) = @_;
 
     return
-        "( do { my \@potential = \@{ $slot_access }; \$potential[ \$_[0] ] = \$_[1]; \\\@potential } )";
+        "( do { my \@potential = \@{ ($slot_access) }; \$potential[ \$_[0] ] = \$_[1]; \\\@potential } )";
 }
 
 sub _new_members { '$_[1]' }
