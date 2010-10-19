@@ -1,6 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [BUG FIXES]
+
+  * Wrap inline_get_value results in parentheses when dereferencing them,
+    because perl goes crazy trying to parse @{do {...}}. (Scott, doy)
+
 1.16 Mon, Oct 18, 2010
 
   [ENHANCEMENTS]
