@@ -1,12 +1,13 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-NEXT
+1.17 Tue, Oct 19, 2010
 
   [BUG FIXES]
 
-  * Wrap inline_get_value results in parentheses when dereferencing them,
-    because perl goes crazy trying to parse @{do {...}}. (Scott, doy)
+  * Make native delegation inlining work with instance metaclasses where slot
+    access is an do {} block, like Kioku. This fixes the use of native
+    delegations together with Kioku. (Scott, doy)
 
 1.16 Mon, Oct 18, 2010
 
