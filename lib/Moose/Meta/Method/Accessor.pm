@@ -4,6 +4,8 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
+use Try::Tiny;
+
 our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
@@ -16,19 +18,20 @@ sub _error_thrower {
     ( ref $self && $self->associated_attribute ) || $self->SUPER::_error_thrower();
 }
 
-sub _eval_code {
-    my ( $self, $source ) = @_;
-
-    my $environment = $self->_eval_environment;
-
-    my ( $code, $e ) = $self->_compile_code( environment => $environment, code => $source );
-
-    $self->throw_error(
-        "Could not create writer for '${\$self->associated_attribute->name}' because $e \n code: $source",
-        error => $e, data => $source )
-        if $e;
-
-    return $code;
+sub _compile_code {
+    my $self = shift;
+    my @args = @_;
+    try {
+        $self->SUPER::_compile_code(@args);
+    }
+    catch {
+        $self->throw_error(
+            'Could not create writer for '
+          . "'" . $self->associated_attribute->name . "' "
+          . 'because ' . $_,
+            error => $_,
+        );
+    };
 }
 
 sub _eval_environment {
@@ -54,7 +57,7 @@ sub _generate_accessor_method_inline {
     my $inv         = '$_[0]';
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
-    $self->_eval_code('sub { ' . "\n"
+    $self->_compile_code('sub { ' . "\n"
     . $self->_inline_pre_body(@_) . "\n"
     . 'if (scalar(@_) >= 2) {' . "\n"
         . $self->_inline_copy_value . "\n"
@@ -76,7 +79,7 @@ sub _generate_writer_method_inline {
     my $inv         = '$_[0]';
     my $value_name  = $self->_value_needs_copy ? '$val' : '$_[1]';
 
-    $self->_eval_code('sub { '
+    $self->_compile_code('sub { '
     . $self->_inline_pre_body(@_)
     . $self->_inline_copy_value
     . $self->_inline_check_required
@@ -94,7 +97,7 @@ sub _generate_reader_method_inline {
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_get($inv);
 
-    $self->_eval_code('sub {'
+    $self->_compile_code('sub {'
     . $self->_inline_pre_body(@_)
     . $self->_inline_throw_error('"Cannot assign a value to a read-only accessor"', 'data => \@_') . ' if @_ > 1;'
     . $self->_inline_check_lazy($inv)

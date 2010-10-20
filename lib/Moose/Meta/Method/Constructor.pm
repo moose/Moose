@@ -6,6 +6,7 @@ use warnings;
 
 use Carp ();
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
+use Try::Tiny;
 
 our $VERSION   = '1.19';
 our $AUTHORITY = 'cpan:STEVAN';
@@ -98,21 +99,25 @@ sub _initialize_body {
 
     my $defaults = [map { $_->default } @$attrs];
 
-    my ( $code, $e ) = $self->_compile_code(
-        code => $source,
-        environment => {
-            '$meta'  => \$self,
-            '$attrs' => \$attrs,
-            '$defaults' => \$defaults,
-            '@type_constraints' => \@type_constraints,
-            '@type_constraint_bodies' => \@type_constraint_bodies,
-        },
-    );
-
-    $self->throw_error(
-        "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$e",
-        error => $e, data => $source )
-        if $e;
+    my $code = try {
+        $self->_compile_code(
+            source      => $source,
+            environment => {
+                '$meta'  => \$self,
+                '$attrs' => \$attrs,
+                '$defaults' => \$defaults,
+                '@type_constraints' => \@type_constraints,
+                '@type_constraint_bodies' => \@type_constraint_bodies,
+            },
+        );
+    }
+    catch {
+        $self->throw_error(
+            "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_",
+            error => $_,
+            data  => $source,
+        );
+    };
 
     $self->{'body'} = $code;
 }

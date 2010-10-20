@@ -6,7 +6,7 @@ use warnings;
 
 use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
-use Try::Tiny ();
+use Try::Tiny;
 
 our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
@@ -108,15 +108,16 @@ sub _initialize_body {
 
     warn $source if $self->options->{debug};
 
-    my ( $code, $e ) = $self->_compile_code(
-        environment => {},
-        code => $source,
-    );
-
-    $self->throw_error(
-        "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$e",
-        error => $e, data => $source )
-        if $e;
+    my $code = try {
+        $self->_compile_code(source => $source);
+    }
+    catch {
+        $self->throw_error(
+            "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$_",
+            error => $_,
+            data  => $source,
+        );
+    };
 
     $self->{'body'} = $code;
 }

@@ -45,7 +45,7 @@ sub root_types { (shift)->{'root_types'} }
 sub _initialize_body {
     my $self = shift;
 
-    $self->{'body'} = $self->_eval_code( $self->_generate_method );
+    $self->{'body'} = $self->_compile_code( $self->_generate_method );
 
     return;
 }
