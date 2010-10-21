@@ -100,7 +100,8 @@ my $foo = Foo->new;
     use Moose;
 
     has thing => (
-        is => 'ro', isa => 'Str',
+        is  => 'ro',
+        isa => 'Str',
     );
 }
 
@@ -113,22 +114,18 @@ my $foo = Foo->new;
 
     coerce 'Thing'
         => from 'Str'
-        => via { Thing->new(thing => $_) };
+        => via { Thing->new( thing => $_ ) };
 
     subtype 'ArrayRefOfThings'
         => as 'ArrayRef[Thing]';
 
     coerce 'ArrayRefOfThings'
         => from 'ArrayRef[Str]'
-        => via { [ map { Thing->new(thing => $_) } @$_ ] };
+        => via { [ map { Thing->new( thing => $_ ) } @{$_} ] };
 
     coerce 'ArrayRefOfThings'
         => from 'Str'
-        => via { [ Thing->new(thing => $_) ] };
-
-    coerce 'ArrayRefOfThings'
-        => from 'Thing'
-        => via { [ $_ ] };
+        => via { [ Thing->new( thing => $_ ) ] };
 
     has array => (
         traits  => ['Array'],
