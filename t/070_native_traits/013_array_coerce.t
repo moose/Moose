@@ -95,4 +95,66 @@ my $foo = Foo->new;
     );
 }
 
+{
+    package Thing;
+    use Moose;
+    has thing => (
+        is => 'ro', isa => 'Str',
+    );
+}
+{
+    package Bar;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    class_type 'Thing';
+
+    coerce 'Thing'
+        => from 'Str'
+        => via { Thing->new(thing => $_) };
+
+    subtype 'ArrayRefOfThings'
+        => as 'ArrayRef[Thing]';
+
+    coerce 'ArrayRefOfThings'
+        => from 'ArrayRef[Str]'
+        => via { [ map { Thing->new(thing => $_) } @$_ ] };
+
+    coerce 'ArrayRefOfThings'
+        => from 'Str'
+        => via { [ Thing->new(thing => $_) ] };
+
+    coerce 'ArrayRefOfThings'
+        => from 'Thing'
+        => via { [ $_ ] };
+
+    has array => (
+        traits  => ['Array'],
+        is      => 'rw',
+        isa     => 'ArrayRefOfThings',
+        coerce  => 1,
+        handles => {
+            push_array => 'push',
+            set_array  => 'set',
+        },
+    );
+}
+
+my $bar;
+TODO: {
+    $bar = Bar->new(array => [ qw( a b c ) ]);
+    #print $bar->dump(3);
+
+    todo_skip 'coercion in push dies here!', 1;
+
+    $bar->push_array('d');
+    #print $bar->dump(3);
+
+    is_deeply(
+        $bar->array, [qw( a b c d )],
+        'push coerces the array'
+    );
+
+}
+
 done_testing;
