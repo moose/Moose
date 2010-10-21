@@ -136,6 +136,7 @@ my $foo = Foo->new;
         handles => {
             push_array => 'push',
             set_array  => 'set',
+            get_array  => 'get',
         },
     );
 }
@@ -150,10 +151,7 @@ TODO: {
     $bar->push_array('d');
     #print $bar->dump(3);
 
-    is_deeply(
-        $bar->array, [qw( a b c d )],
-        'push coerces the array'
-    );
+    is($bar->get_array(3)->thing, 'd', 'push coerces the array');
 
 }
 
