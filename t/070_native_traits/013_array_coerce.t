@@ -117,7 +117,8 @@ my $foo = Foo->new;
         => via { Thing->new( thing => $_ ) };
 
     subtype 'ArrayRefOfThings'
-        => as 'ArrayRef[Thing]';
+        => as 'ArrayRef[Thing]'
+        => where { scalar(@$_) < 5 };
 
     coerce 'ArrayRefOfThings'
         => from 'ArrayRef[Str]'
@@ -143,11 +144,14 @@ my $foo = Foo->new;
 TODO: {
     my $bar = Bar->new( array => [qw( a b c )] );
 
-    todo_skip 'coercion in push dies here!', 1;
+    todo_skip 'coercion in push dies here!', 2;
 
     $bar->push_array('d');
 
     is( $bar->get_array(3)->thing, 'd', 'push coerces the array' );
+
+    dies_ok { $bar->push_array('e') }
+        'the type constraint prohibits arrays of length 5';
 }
 
 done_testing;
