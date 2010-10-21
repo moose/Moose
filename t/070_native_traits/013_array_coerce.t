@@ -98,10 +98,12 @@ my $foo = Foo->new;
 {
     package Thing;
     use Moose;
+
     has thing => (
         is => 'ro', isa => 'Str',
     );
 }
+
 {
     package Bar;
     use Moose;
