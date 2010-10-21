@@ -144,12 +144,10 @@ my $foo = Foo->new;
 my $bar;
 TODO: {
     $bar = Bar->new(array => [ qw( a b c ) ]);
-    #print $bar->dump(3);
 
     todo_skip 'coercion in push dies here!', 1;
 
     $bar->push_array('d');
-    #print $bar->dump(3);
 
     is($bar->get_array(3)->thing, 'd', 'push coerces the array');
 
