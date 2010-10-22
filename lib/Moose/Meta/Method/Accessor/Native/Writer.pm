@@ -132,7 +132,7 @@ sub _inline_check_coercion {
 
     my $attr = $self->associated_attribute;
 
-    return ''
+    return q{}
         unless $attr->should_coerce && $attr->type_constraint->has_coercion;
 
     # We want to break the aliasing in @_ in case the coercion tries to make a
