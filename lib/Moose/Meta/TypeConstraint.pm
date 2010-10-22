@@ -90,6 +90,25 @@ sub coerce {
     return $coercion->coerce(@_);
 }
 
+sub assert_coerce {
+    my $self = shift;
+
+    my $coercion = $self->coercion;
+
+    unless ($coercion) {
+        require Moose;
+        Moose->throw_error("Cannot coerce without a type coercion");
+    }
+
+    return $_[0] if $self->check($_[0]);
+
+    my $result = $coercion->coerce(@_);
+
+    $self->assert_valid($result);
+
+    return $result;
+}
+
 sub check {
     my ($self, @args) = @_;
     my $constraint_subref = $self->_compiled_type_constraint;

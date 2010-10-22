@@ -114,4 +114,21 @@ dies_ok {
     Engine->new(header => \(my $var));
 } '... dies correctly with bad params';
 
+{
+    my $tc = Moose::Util::TypeConstraints::find_type_constraint('HTTPHeader');
+    isa_ok($tc, 'Moose::Meta::TypeConstraint', 'HTTPHeader TC');
+
+    my $from_aref = $tc->assert_coerce([ 1, 2, 3 ]);
+    isa_ok($from_aref, 'HTTPHeader', 'assert_coerce from aref to HTTPHeader');
+    is_deeply($from_aref->array, [ 1, 2, 3 ], '...and has the right guts');
+
+    my $from_href = $tc->assert_coerce({ a => 1 });
+    isa_ok($from_href, 'HTTPHeader', 'assert_coerce from href to HTTPHeader');
+    is_deeply($from_href->hash, { a => 1 }, '...and has the right guts');
+
+    throws_ok { $tc->assert_coerce('total garbage') }
+      qr/Validation failed for .HTTPHeader./,
+      "assert_coerce throws if result is not acceptable";
+}
+
 done_testing;
