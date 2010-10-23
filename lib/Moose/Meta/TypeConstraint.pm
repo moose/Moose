@@ -408,7 +408,7 @@ have any defined coercions this will throw an error.
 If no coercion can produce a value matching C<$constraint>, the original
 value is returned.
 
-=item B<< $constraint->assert_coerce($value >>
+=item B<< $constraint->assert_coerce($value) >>
 
 This method behaves just like C<coerce>, but if the result is not valid
 according to C<$constraint>, an error is thrown.
