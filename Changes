@@ -8,6 +8,10 @@ for, noteworthy changes.
   * Type constraint objects now have an assert_coerce method which will either
     return a valid value or throw an error.
 
+  [OTHER]
+
+  * The Moose test suite now uses Test::Fatal instead of Test::Exception
+
 1.17 Tue, Oct 19, 2010
 
   [BUG FIXES]
