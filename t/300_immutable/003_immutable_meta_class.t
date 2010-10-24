@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -20,8 +20,8 @@ use Test::Exception;
     );
 }
 
-lives_ok {
+ok ! exception {
     My::Meta->meta()->make_immutable(debug => 0)
-} '... can make a meta class immutable';
+}, '... can make a meta class immutable';
 
 done_testing;

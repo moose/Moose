@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -35,9 +35,9 @@ not remove the requirement)
     use warnings;
     use Moose::Role;
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will not exist yet (but we will live)';
+    }, '... the required "foo" method will not exist yet (but we will live)';
 
     override 'foo' => sub { 'Role::ProvideFoo::foo' };
 }
@@ -67,9 +67,9 @@ second class citizens.
 
     extends 'Class::ProvideFoo::Base';
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass';
+    }, '... the required "foo" method will be found in the superclass';
 
     override 'foo' => sub { 'Class::ProvideFoo::foo' };
 
@@ -80,9 +80,9 @@ second class citizens.
 
     override 'foo' => sub { 'Class::ProvideFoo::foo' };
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, although it is overriden locally';
+    }, '... the required "foo" method exists, although it is overriden locally';
 
 }
 
@@ -99,9 +99,9 @@ method modifier.
 
     extends 'Class::ProvideFoo::Base';
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass';
+    }, '... the required "foo" method will be found in the superclass';
 
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };
 
@@ -112,9 +112,9 @@ method modifier.
 
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, although it is a before modifier locally';
+    }, '... the required "foo" method exists, although it is a before modifier locally';
 
     package Class::ProvideFoo::Before3;
     use Moose;
@@ -124,9 +124,9 @@ method modifier.
     sub foo { 'Class::ProvideFoo::foo' }
     before 'foo' => sub { 'Class::ProvideFoo::foo:before' };
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists locally, and it is modified locally';
+    }, '... the required "foo" method exists locally, and it is modified locally';
 
     package Class::ProvideFoo::Before4;
     use Moose;
@@ -140,9 +140,9 @@ method modifier.
     ::is(__PACKAGE__->meta->get_method('foo')->get_original_method->package_name, __PACKAGE__,
     '... but the original method is from our package');
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists in the symbol table (and we will live)';
+    }, '... the required "foo" method exists in the symbol table (and we will live)';
 
 }
 
@@ -160,9 +160,9 @@ method modifier.
 
     extends 'Class::ProvideFoo::Base';
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method will be found in the superclass (but then overriden)';
+    }, '... the required "foo" method will be found in the superclass (but then overriden)';
 
     has 'foo' => (is => 'ro');
 
@@ -173,9 +173,9 @@ method modifier.
 
     has 'foo' => (is => 'ro');
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Role::RequireFoo';
-    } '... the required "foo" method exists, and is an accessor';
+    }, '... the required "foo" method exists, and is an accessor';
 }
 
 # ...
@@ -211,9 +211,9 @@ method modifier.
     use Moose;
     extends 'Foo::Class::Base';
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Foo::Role';
-    } '... our role combined successfully';
+    }, '... our role combined successfully';
 }
 
 # a method required in a role and implemented in a superclass, with a method
@@ -236,16 +236,16 @@ method modifier.
     use Moose;
     extends 'Bar::Class::Base';
     after bar => sub { "o noes" };
-    # technically we could run lives_ok here, too, but putting it into a
+    # technically we could run ok exception {} here, too, but putting it into a
     # grandchild class makes it more obvious why this matters.
 }
 {
     package Bar::Class::Grandchild;
     use Moose;
     extends 'Bar::Class::Child';
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Bar::Role';
-    } 'required method exists in superclass as non-modifier, so we live';
+    }, 'required method exists in superclass as non-modifier, so we live';
 }
 
 {
@@ -264,16 +264,16 @@ method modifier.
     use Moose;
     extends 'Bar2::Class::Base';
     override bar => sub { "o noes" };
-    # technically we could run lives_ok here, too, but putting it into a
+    # technically we could run ok exception {} here, too, but putting it into a
     # grandchild class makes it more obvious why this matters.
 }
 {
     package Bar2::Class::Grandchild;
     use Moose;
     extends 'Bar2::Class::Child';
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Bar2::Role';
-    } 'required method exists in superclass as non-modifier, so we live';
+    }, 'required method exists in superclass as non-modifier, so we live';
 }
 
 done_testing;

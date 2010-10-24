@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package MyHomePage;
@@ -33,9 +33,9 @@ can_ok( $page, $_ ) for qw[
     reset_counter
 ];
 
-lives_ok {
+ok ! exception {
     $page->meta->remove_attribute('counter');
-}
+},
 '... removed the counter attribute okay';
 
 ok( !$page->meta->has_attribute('counter'),

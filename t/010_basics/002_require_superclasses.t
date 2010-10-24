@@ -6,7 +6,7 @@ use warnings;
 use lib 't/lib', 'lib';
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -14,7 +14,7 @@ use Test::Exception;
     package Bar;
     use Moose;
 
-    ::lives_ok { extends 'Foo' } 'loaded Foo superclass correctly';
+    ::ok ! ::exception { extends 'Foo' }, 'loaded Foo superclass correctly';
 }
 
 {
@@ -22,7 +22,7 @@ use Test::Exception;
     package Baz;
     use Moose;
 
-    ::lives_ok { extends 'Bar' } 'loaded (inline) Bar superclass correctly';
+    ::ok ! ::exception { extends 'Bar' }, 'loaded (inline) Bar superclass correctly';
 }
 
 {
@@ -30,7 +30,7 @@ use Test::Exception;
     package Foo::Bar;
     use Moose;
 
-    ::lives_ok { extends 'Foo', 'Bar' }
+    ::ok ! ::exception { extends 'Foo', 'Bar' },
     'loaded Foo and (inline) Bar superclass correctly';
 }
 
@@ -39,7 +39,7 @@ use Test::Exception;
     package Bling;
     use Moose;
 
-    ::throws_ok { extends 'No::Class' }
+    ::like ::exception { extends 'No::Class' },
     qr{Can't locate No/Class\.pm in \@INC},
     'correct error when superclass could not be found';
 }
@@ -53,7 +53,7 @@ use Test::Exception;
     package Tiger;
     use Moose;
 
-    ::lives_ok { extends 'Foo', Affe => { -version => 13 } }
+    ::ok ! ::exception { extends 'Foo', Affe => { -version => 13 } },
     'extends with version requirement';
 }
 
@@ -61,7 +61,7 @@ use Test::Exception;
     package Birne;
     use Moose;
 
-    ::throws_ok { extends 'Foo', Affe => { -version => 42 } }
+    ::like ::exception { extends 'Foo', Affe => { -version => 42 } },
     qr/Affe version 42 required--this is only version 23/,
     'extends with unsatisfied version requirement';
 }

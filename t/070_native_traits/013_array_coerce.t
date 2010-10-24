@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
 
@@ -150,7 +150,7 @@ TODO: {
 
     is( $bar->get_array(3)->thing, 'd', 'push coerces the array' );
 
-    dies_ok { $bar->push_array('e') }
+    ok exception { $bar->push_array('e') },
         'the type constraint prohibits arrays of length 5';
 }
 

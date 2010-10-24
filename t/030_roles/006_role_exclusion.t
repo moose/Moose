@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -53,28 +53,28 @@ the roles into the same class
     package My::Test1;
     use Moose;
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Molecule::Organic';
-    } '... adding the role (w/ excluded roles) okay';
+    }, '... adding the role (w/ excluded roles) okay';
 
     package My::Test2;
     use Moose;
 
-    ::throws_ok {
+    ::like ::exception {
         with 'Molecule::Organic', 'Molecule::Inorganic';
-    } qr/Conflict detected: Role Molecule::Organic excludes role 'Molecule::Inorganic'/,
+    }, qr/Conflict detected: Role Molecule::Organic excludes role 'Molecule::Inorganic'/,
     '... adding the role w/ excluded role conflict dies okay';
 
     package My::Test3;
     use Moose;
 
-    ::lives_ok {
+    ::ok ! ::exception {
         with 'Molecule::Organic';
-    } '... adding the role (w/ excluded roles) okay';
+    }, '... adding the role (w/ excluded roles) okay';
 
-    ::throws_ok {
+    ::like ::exception {
         with 'Molecule::Inorganic';
-    } qr/Conflict detected: My::Test3 excludes role 'Molecule::Inorganic'/,
+    }, qr/Conflict detected: My::Test3 excludes role 'Molecule::Inorganic'/,
     '... adding the role w/ excluded role conflict dies okay';
 }
 
@@ -108,9 +108,9 @@ the roles into the a superclass
 
     extends 'Methane';
 
-    ::throws_ok {
+    ::like ::exception {
         with 'Molecule::Inorganic';
-    } qr/Conflict detected: My::Test4 excludes role \'Molecule::Inorganic\'/,
+    }, qr/Conflict detected: My::Test4 excludes role \'Molecule::Inorganic\'/,
     '... cannot add exculded role into class which extends Methane';
 }
 

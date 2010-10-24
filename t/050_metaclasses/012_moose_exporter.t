@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Test::Requires {
     'Test::Output' => '0.01', # skip all if not installed
@@ -197,8 +197,9 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    my $error;
+    ::ok($error = ::exception
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'Moose', 'MooseX::CircularAlso' ],
             );
@@ -207,7 +208,7 @@ use Test::Requires {
     );
 
     ::like(
-        $@,
+        $error,
         qr/\QCircular reference in 'also' parameter to Moose::Exporter between MooseX::CircularAlso and MooseX::CircularAlso/,
         'got the expected error from circular reference in also'
     );
@@ -218,8 +219,9 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    my $error;
+    ::ok($error = ::exception
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'NoSuchThing' ],
             );
@@ -228,7 +230,7 @@ use Test::Requires {
     );
 
     ::like(
-        $@,
+        $error,
         qr/\QPackage in also (NoSuchThing) does not seem to use Moose::Exporter (is it loaded?) at /,
         'got the expected error from a reference in also to a package which is not loaded'
     );
@@ -239,8 +241,9 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    my $error;
+    ::ok($error = ::exception
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'Moose::Meta::Method' ],
             );
@@ -249,7 +252,7 @@ use Test::Requires {
     );
 
     ::like(
-        $@,
+        $error,
         qr/\QPackage in also (Moose::Meta::Method) does not seem to use Moose::Exporter at /,
         'got the expected error from a reference in also to a package which does not use Moose::Exporter'
     );

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package My::Role1;
@@ -54,11 +54,11 @@ use Test::Exception;
 # roles they consume.
 {
     local $TODO = "role attributes don't satisfy method requirements";
-    lives_ok { package My::Test1; use Moose; with 'My::Role2'; }
+    ok ! exception { package My::Test1; use Moose; with 'My::Role2'; },
     'role2(provides attribute) consumes role1';
 }
 
-lives_ok { package My::Test2; use Moose; with 'My::Role3'; }
+ok ! exception { package My::Test2; use Moose; with 'My::Role3'; },
 'role3(provides method) consumes role1';
 
 # As I understand the design, Roles composed in the same with() statement
@@ -66,81 +66,81 @@ lives_ok { package My::Test2; use Moose; with 'My::Role3'; }
 # assumption is false. -Vince Veselosky
 {
     local $TODO = "role attributes don't satisfy method requirements";
-    lives_ok { package My::Test3; use Moose; with 'My::Role4', 'My::Role1'; }
+    ok ! exception { package My::Test3; use Moose; with 'My::Role4', 'My::Role1'; },
     'class consumes role4(provides attribute), role1';
 }
 
 {
     local $TODO = "role attributes don't satisfy method requirements";
-    lives_ok { package My::Test4; use Moose; with 'My::Role1', 'My::Role4'; }
+    ok ! exception { package My::Test4; use Moose; with 'My::Role1', 'My::Role4'; },
     'class consumes role1, role4(provides attribute)';
 }
 
-lives_ok { package My::Test5; use Moose; with 'My::Role5', 'My::Role1'; }
+ok ! exception { package My::Test5; use Moose; with 'My::Role5', 'My::Role1'; },
 'class consumes role5(provides method), role1';
 
-lives_ok { package My::Test6; use Moose; with 'My::Role1', 'My::Role5'; }
+ok ! exception { package My::Test6; use Moose; with 'My::Role1', 'My::Role5'; },
 'class consumes role1, role5(provides method)';
 
 # Inherited methods/attributes should satisfy requires(), as long as
 # extends() comes first in code order.
-lives_ok {
+ok ! exception {
     package My::Test7;
     use Moose;
     extends 'My::Base1';
     with 'My::Role1';
-}
+},
 'class extends base1(provides attribute), consumes role1';
 
-lives_ok {
+ok ! exception {
     package My::Test8;
     use Moose;
     extends 'My::Base2';
     with 'My::Role1';
-}
+},
 'class extends base2(provides method), consumes role1';
 
 # Attributes/methods implemented in class should satisfy requires()
-lives_ok {
+ok ! exception {
 
     package My::Test9;
     use Moose;
     has 'test_output', is => 'rw';
     with 'My::Role1';
-}
+},
 'class provides attribute, consumes role1';
 
-lives_ok {
+ok ! exception {
 
     package My::Test10;
     use Moose;
     sub test_output { }
     with 'My::Role1';
-}
+},
 'class provides method, consumes role1';
 
 # Roles composed in separate with() statements SHOULD demonstrate ordering
 # dependency. See comment with tests 3-6 above.
-lives_ok {
+ok ! exception {
     package My::Test11;
     use Moose;
     with 'My::Role4';
     with 'My::Role1';
-}
+},
 'class consumes role4(provides attribute); consumes role1';
 
-dies_ok { package My::Test12; use Moose; with 'My::Role1'; with 'My::Role4'; }
+ok exception { package My::Test12; use Moose; with 'My::Role1'; with 'My::Role4'; },
 'class consumes role1; consumes role4(provides attribute)';
 
-lives_ok {
+ok ! exception {
     package My::Test13;
     use Moose;
     with 'My::Role5';
     with 'My::Role1';
-}
+},
 'class consumes role5(provides method); consumes role1';
 
-dies_ok { package My::Test14; use Moose; with 'My::Role1'; with 'My::Role5'; }
+ok exception { package My::Test14; use Moose; with 'My::Role1'; with 'My::Role5'; },
 'class consumes role1; consumes role5(provides method)';
 
 done_testing;

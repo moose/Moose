@@ -8,7 +8,7 @@ use lib 't/lib';
 use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
-use Test::Exception;
+use Test::Fatal;
 use Test::More;
 use Test::Moose;
 
@@ -88,13 +88,13 @@ sub run_tests {
         is_deeply( $obj->options, {}, '... no options yet' );
         ok( !$obj->has_option('foo'), '... we have no foo option' );
 
-        lives_and {
+        ok ! exception {
             is(
                 $obj->set_option( foo => 'bar' ),
                 'bar',
                 'set return single new value in scalar context'
             );
-        }
+        },
         '... set the option okay';
 
         ok( $obj->is_defined('foo'), '... foo is defined' );
@@ -104,9 +104,9 @@ sub run_tests {
         ok( $obj->has_option('foo'), '... we have a foo option' );
         is_deeply( $obj->options, { foo => 'bar' }, '... got options now' );
 
-        lives_ok {
+        ok ! exception {
             $obj->set_option( bar => 'baz' );
-        }
+        },
         '... set the option okay';
 
         is( $obj->num_options, 2, '... we have 2 option(s)' );
@@ -127,9 +127,9 @@ sub run_tests {
             '... got last option in scalar context'
         );
 
-        lives_ok {
+        ok ! exception {
             $obj->set_option( oink => "blah", xxy => "flop" );
-        }
+        },
         '... set the option okay';
 
         is( $obj->num_options, 4, "4 options" );
@@ -138,19 +138,19 @@ sub run_tests {
             [qw(bar baz blah flop)], "get multiple options at once"
         );
 
-        lives_and {
+        ok ! exception {
             is( scalar $obj->delete_option('bar'), 'baz',
                 'delete returns deleted value' );
-        }
+        },
         '... deleted the option okay';
 
-        lives_ok {
+        ok ! exception {
             is_deeply(
                 [ $obj->delete_option( 'oink', 'xxy' ) ],
                 [ 'blah', 'flop' ],
                 'delete returns all deleted values in list context'
             );
-        }
+        },
         '... deleted multiple option okay';
 
         is( $obj->num_options, 1, '... we have 1 option(s)' );
@@ -163,9 +163,9 @@ sub run_tests {
 
         is_deeply( $obj->options, {}, "... cleared options" );
 
-        lives_ok {
+        ok ! exception {
             $obj->quantity(4);
-        }
+        },
         '... options added okay with defaults';
 
         is( $obj->quantity, 4, 'reader part of curried accessor works' );
@@ -175,19 +175,19 @@ sub run_tests {
             '... returns what we expect'
         );
 
-        lives_ok {
+        ok ! exception {
             $class->new( options => { foo => 'BAR' } );
-        }
+        },
         '... good constructor params';
 
-        dies_ok {
+        ok exception {
             $obj->set_option( bar => {} );
-        }
+        },
         '... could not add a hash ref where an string is expected';
 
-        dies_ok {
+        ok exception {
             $class->new( options => { foo => [] } );
-        }
+        },
         '... bad constructor params';
 
         is_deeply(

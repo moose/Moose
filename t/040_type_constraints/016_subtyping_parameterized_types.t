@@ -4,15 +4,15 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
 }
 
-lives_ok {
+ok ! exception {
     subtype 'MySpecialHash' => as 'HashRef[Int]';
-} '... created the subtype special okay';
+}, '... created the subtype special okay';
 
 {
     my $t = find_type_constraint('MySpecialHash');
@@ -37,14 +37,14 @@ lives_ok {
     ok( !$t->is_subtype_of("ThisTypeDoesNotExist"), "not a subtype of a non existant type" );
 }
 
-lives_ok {
+ok ! exception {
     subtype 'MySpecialHashExtended'
         => as 'HashRef[Int]'
         => where {
             # all values are less then 10
             (scalar grep { $_ < 10 } values %{$_}) ? 1 : undef
         };
-} '... created the subtype special okay';
+}, '... created the subtype special okay';
 
 {
     my $t = find_type_constraint('MySpecialHashExtended');
@@ -63,7 +63,7 @@ lives_ok {
     ok(!$t->check({ one => "ONE", two => "TWO" }), '... validated it correctly');
 }
 
-lives_ok {
+ok ! exception {
     subtype 'MyNonSpecialHash'
         => as "HashRef"
         => where { keys %$_ == 3 };
@@ -114,10 +114,10 @@ lives_ok {
     ok $SubOfMyArrayRef->check([15,20,25]), '[15,20,25] is a bunch of big ints';
     ok ! $SubOfMyArrayRef->check([15,5,25]), '[15,5,25] is NOT a bunch of big ints';
 
-    throws_ok sub {
+    like exception {
         my $SubOfMyArrayRef = subtype 'SubSubOfMyArrayRef',
             as 'SubOfMyArrayRef[Str]';
-    }, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
+    },, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
 }
 
 {

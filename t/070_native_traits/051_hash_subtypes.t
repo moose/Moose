@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     use Moose::Util::TypeConstraints;
@@ -66,7 +66,7 @@ my $foo = Foo->new;
     $foo->hash_int( {} );
     is_deeply( $foo->hash_int, {}, "hash_int - correct contents" );
 
-    dies_ok { $foo->set_hash_int( x => 'foo' ) }
+    ok exception { $foo->set_hash_int( x => 'foo' ) },
     "hash_int - can't set wrong type";
     is_deeply( $foo->hash_int, {}, "hash_int - correct contents" );
 
@@ -75,12 +75,12 @@ my $foo = Foo->new;
 }
 
 {
-    dies_ok { $foo->set_h1('foo') } "h1 - can't set onto undef";
+    ok exception { $foo->set_h1('foo') }, "h1 - can't set onto undef";
 
     $foo->h1( {} );
     is_deeply( $foo->h1, {}, "h1 - correct contents" );
 
-    dies_ok { $foo->set_h1( x => 'foo' ) } "h1 - can't set wrong type";
+    ok exception { $foo->set_h1( x => 'foo' ) }, "h1 - can't set wrong type";
 
     is_deeply( $foo->h1, {}, "h1 - correct contents" );
 
@@ -89,7 +89,7 @@ my $foo = Foo->new;
 }
 
 {
-    dies_ok { $foo->set_h2('foo') } "h2 - can't set onto undef";
+    ok exception { $foo->set_h2('foo') }, "h2 - can't set onto undef";
 
     $foo->h2( {} );
     is_deeply( $foo->h2, {}, "h2 - correct contents" );
@@ -97,21 +97,21 @@ my $foo = Foo->new;
     $foo->set_h2( x => 'foo' );
     is_deeply( $foo->h2, { x => 'foo' }, "h2 - correct contents" );
 
-    dies_ok { $foo->set_h2( y => 'bar' ) }
+    ok exception { $foo->set_h2( y => 'bar' ) },
     "h2 - can't set more than one element";
 
     is_deeply( $foo->h2, { x => 'foo' }, "h2 - correct contents" );
 }
 
 {
-    dies_ok { $foo->set_h3(1) } "h3 - can't set onto undef";
+    ok exception { $foo->set_h3(1) }, "h3 - can't set onto undef";
 
     $foo->h3( {} );
     is_deeply( $foo->h3, {}, "h3 - correct contents" );
 
-    dies_ok { $foo->set_h3( x => 'foo' ) } "h3 - can't set non-int";
+    ok exception { $foo->set_h3( x => 'foo' ) }, "h3 - can't set non-int";
 
-    dies_ok { $foo->set_h3( x => 100 ) }
+    ok exception { $foo->set_h3( x => 100 ) },
     "h3 - can't violate overall type constraint";
 
     is_deeply( $foo->h3, {}, "h3 - correct contents" );
@@ -119,7 +119,7 @@ my $foo = Foo->new;
     $foo->set_h3( x => 1 );
     is_deeply( $foo->h3, { x => 1 }, "h3 - correct contents" );
 
-    dies_ok { $foo->set_h3( x => 100 ) }
+    ok exception { $foo->set_h3( x => 100 ) },
     "h3 - can't violate overall type constraint";
 
     is_deeply( $foo->h3, { x => 1 }, "h3 - correct contents" );

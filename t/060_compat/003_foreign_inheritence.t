@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -79,14 +79,14 @@ is( $foo_moose->no_moose, 'Elk',
 is( $foo_moose->moose, 'Foo',
     '... got the right value from the Foo::Moose method' );
 
-lives_ok {
+ok ! exception {
     Old::Bucket::Nose->meta->make_immutable( debug => 0 );
-}
+},
 'Immutability on Moose class extending Class::MOP class ok';
 
-lives_ok {
+ok ! exception {
     SubClass2->meta->superclasses('MyBase');
-}
+},
 'Can subclass the same non-Moose class twice with different metaclasses';
 
 done_testing;

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -43,38 +43,38 @@ isa_ok $params, 'Test::Moose::Meta::TypeConstraint::Parameterizable' =>
 
 # test parameterizable
 
-lives_ok sub {
+ok ! exception {
     $params->parameterizable( { a => 'Hello', b => 'World' } );
-} => 'No problem setting parameterizable';
+}, => 'No problem setting parameterizable';
 
 is_deeply $params->parameterizable,
     { a => 'Hello', b => 'World' } => 'Got expected values';
 
 # test parameterized
 
-lives_ok sub {
+ok ! exception {
     $params->parameterized( { a => 1, b => 2 } );
-} => 'No problem setting parameterized';
+}, => 'No problem setting parameterized';
 
 is_deeply $params->parameterized, { a => 1, b => 2 } => 'Got expected values';
 
-throws_ok sub {
+like exception {
     $params->parameterized( { a => 'Hello', b => 'World' } );
-    }, qr/Attribute \(parameterized\) does not pass the type constraint/ =>
+    },, qr/Attribute \(parameterized\) does not pass the type constraint/ =>
     'parameterized throws expected error';
 
 # test from_parameterizable
 
-lives_ok sub {
+ok ! exception {
     $params->from_parameterizable( { a => 1, b => 2 } );
-} => 'No problem setting from_parameterizable';
+}, => 'No problem setting from_parameterizable';
 
 is_deeply $params->from_parameterizable,
     { a => 1, b => 2 } => 'Got expected values';
 
-throws_ok sub {
+like exception {
     $params->from_parameterizable( { a => 'Hello', b => 'World' } );
-    },
+    },,
     qr/Attribute \(from_parameterizable\) does not pass the type constraint/
     => 'from_parameterizable throws expected error';
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo;
@@ -36,11 +36,11 @@ use Test::Exception;
     package Stuff;
     use Moose;
 
-    ::lives_ok{ with 'Stuffed::Role';
-        } '... this should work correctly';
+    ::ok ! ::exception { with 'Stuffed::Role';
+        }, '... this should work correctly';
 
-    ::lives_ok{ with 'Bulkie::Role';
-        } '... this should work correctly';
+    ::ok ! ::exception { with 'Bulkie::Role';
+        }, '... this should work correctly';
 }
 
 done_testing;

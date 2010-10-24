@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Moose;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Attribute::Trait::Awesome;

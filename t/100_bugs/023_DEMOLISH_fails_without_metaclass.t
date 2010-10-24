@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package MyClass;
@@ -21,7 +21,7 @@ Class::MOP::remove_metaclass_by_name('MyClass');
 # The bug happened when DEMOLISHALL called
 # Class::MOP::class_of($object) and did not get a metaclass object
 # back.
-lives_ok { $object->DESTROY }
+ok ! exception { $object->DESTROY },
 'can call DESTROY on an object without a metaclass object in the CMOP cache';
 
 
@@ -30,7 +30,7 @@ Class::MOP::remove_metaclass_by_name('MyClass');
 
 # The bug didn't manifest for immutable objects, but this test should
 # help us prevent it happening in the future.
-lives_ok { $object->DESTROY }
+ok ! exception { $object->DESTROY },
 'can call DESTROY on an object without a metaclass object in the CMOP cache (immutable version)';
 
 done_testing;

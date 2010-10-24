@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 # RT #37569
@@ -52,21 +52,21 @@ use Test::Exception;
 my $foo = Foo->new;
 my $obj = MyObject->new;
 
-throws_ok {
+like exception {
     $foo->ar( [] );
-}
+},
 qr/Attribute \(ar\) does not pass the type constraint because: ref: ARRAY/,
     '... got the right error message';
 
-throws_ok {
+like exception {
     $foo->obj($foo);    # Doh!
-}
+},
 qr/Attribute \(obj\) does not pass the type constraint because: Well it is an object/,
     '... got the right error message';
 
-throws_ok {
+like exception {
     $foo->nt($foo);     # scalar
-}
+},
 qr/Attribute \(nt\) does not pass the type constraint because: blessed/,
     '... got the right error message';
 

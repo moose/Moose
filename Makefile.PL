@@ -26,7 +26,7 @@ requires 'Task::Weaken'                => '0';
 requires 'Try::Tiny'                   => '0.02';
 
 test_requires 'Test::More'      => '0.88';
-test_requires 'Test::Exception' => '0.27';
+test_requires 'Test::Fatal'     => '0.001';
 test_requires 'Test::Requires'  => '0.05';
 
 author_requires 'DateTime';

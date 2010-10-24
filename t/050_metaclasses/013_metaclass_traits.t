@@ -6,7 +6,7 @@ use warnings;
 use lib 't/lib', 'lib';
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package My::SimpleTrait;
@@ -167,9 +167,10 @@ is( Role::Foo->meta()->simple(), 5,
 
 {
     require Moose::Util::TypeConstraints;
-    dies_ok( sub { Moose::Util::TypeConstraints->import( -traits => 'My::SimpleTrait' ) },
-             'cannot provide -traits to an exporting module that does not init_meta' );
-    like( $@, qr/does not have an init_meta/,
+    my $error;
+    ok($error = exception { Moose::Util::TypeConstraints->import( -traits => 'My::SimpleTrait' ) },
+             'cannot provide -traits to an exporting module that does not init_meta');
+    like( $error, qr/does not have an init_meta/,
           '... and error provides a useful explanation' );
 }
 
@@ -198,10 +199,10 @@ is( Foo::Subclass->meta()->attr2(), 'something',
     has an_attr => ( is => 'ro' );
 }
 
-lives_ok {
+ok ! exception {
     my $instance = Class::WithAlreadyPresentTrait->new( an_attr => 'value' );
     is( $instance->an_attr, 'value', 'Can get value' );
-}
+},
 'Can create instance and access attributes';
 
 {
@@ -215,10 +216,10 @@ lives_ok {
     has an_attr => ( is => 'ro' );
 }
 
-lives_ok {
+ok ! exception {
     my $instance = Class::WhichLoadsATraitFromDisk->new( an_attr => 'value' );
     is( $instance->an_attr, 'value', 'Can get value' );
-}
+},
 'Can create instance and access attributes';
 
 done_testing;

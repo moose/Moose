@@ -6,7 +6,7 @@ use warnings;
 use lib 't/lib', 'lib';
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 $SIG{__WARN__} = sub { 0 };

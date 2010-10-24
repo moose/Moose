@@ -19,7 +19,7 @@ use Test::Requires {
     'Test::Deep' => '0.01', # skip all if not installed
 };
 
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo;
@@ -58,19 +58,19 @@ my $array_of_hashes = [
 ];
 
 my $foo;
-lives_ok {
+ok ! exception {
     $foo = Foo->new('bar' => $array_of_hashes);
-} '... construction succeeded';
+}, '... construction succeeded';
 isa_ok($foo, 'Foo');
 
 is_deeply($foo->bar, $array_of_hashes, '... got our value correctly');
 
-dies_ok {
+ok exception {
     $foo->bar({});
-} '... validation failed correctly';
+}, '... validation failed correctly';
 
-dies_ok {
+ok exception {
     $foo->bar([{ foo => 3 }]);
-} '... validation failed correctly';
+}, '... validation failed correctly';
 
 done_testing;

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
 
@@ -17,7 +17,7 @@ use Test::Exception;
     has 'buz' => ( is => 'rw', default => q{"'\\} );
     has 'faz' => ( is => 'rw', default => qq{\0} );
 
-    ::lives_ok {  __PACKAGE__->meta->make_immutable }
+    ::ok ! ::exception {  __PACKAGE__->meta->make_immutable },
         'no errors making a package immutable when it has default values that could break quoting';
 }
 
@@ -47,7 +47,7 @@ is( $foo->faz, qq{\0},
     has 'buz' => ( is => 'rw', default => q{"'\\}, lazy => 1 );
     has 'faz' => ( is => 'rw', default => qq{\0}, lazy => 1 );
 
-    ::lives_ok {  __PACKAGE__->meta->make_immutable }
+    ::ok ! ::exception {  __PACKAGE__->meta->make_immutable },
         'no errors making a package immutable when it has lazy default values that could break quoting';
 }
 

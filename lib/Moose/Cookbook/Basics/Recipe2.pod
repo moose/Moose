@@ -236,9 +236,9 @@ my $savings_account;
     isa_ok( $savings_account, 'BankAccount' );
 
     is( $savings_account->balance, 250, '... got the right savings balance' );
-    lives_ok {
+    ok ! exception {
         $savings_account->withdraw(50);
-    }
+    },
     '... withdrew from savings successfully';
     is( $savings_account->balance, 200,
         '... got the right savings balance after withdrawl' );
@@ -262,9 +262,9 @@ my $savings_account;
     is( $checking_account->balance, 100,
         '... got the right checkings balance' );
 
-    lives_ok {
+    ok ! exception {
         $checking_account->withdraw(50);
-    }
+    },
     '... withdrew from checking successfully';
     is( $checking_account->balance, 50,
         '... got the right checkings balance after withdrawl' );
@@ -272,9 +272,9 @@ my $savings_account;
         '... got the right savings balance after checking withdrawl (no overdraft)'
     );
 
-    lives_ok {
+    ok ! exception {
         $checking_account->withdraw(200);
-    }
+    },
     '... withdrew from checking successfully';
     is( $checking_account->balance, 0,
         '... got the right checkings balance after withdrawl' );
@@ -297,16 +297,16 @@ my $savings_account;
     is( $checking_account->balance, 100,
         '... got the right checkings balance' );
 
-    lives_ok {
+    ok ! exception {
         $checking_account->withdraw(50);
-    }
+    },
     '... withdrew from checking successfully';
     is( $checking_account->balance, 50,
         '... got the right checkings balance after withdrawl' );
 
-    dies_ok {
+    ok exception {
         $checking_account->withdraw(200);
-    }
+    },
     '... withdrawl failed due to attempted overdraft';
     is( $checking_account->balance, 50,
         '... got the right checkings balance after withdrawl failure' );
