@@ -56,27 +56,23 @@ sub _initialize_body {
     # of the possible use cases (even if it
     # requires some adaption on the part of
     # the author, after all, nothing is free)
-    my $source = 'sub {';
-    $source .= "\n" . 'my $_instance = shift;';
 
-    $source .= "\n" . 'my $class = Scalar::Util::blessed($_instance) || $_instance;';
-
-    $source .= "\n" . "if (\$class ne '" . $self->associated_metaclass->name
-            .  "') {";
-    $source .= "\n    return "
-            .  $self->_generate_fallback_constructor('$class') . ";";
-    $source .= "\n}\n";
-
-    $source .= $self->_generate_params('$params', '$class');
-    $source .= $self->_generate_instance('$instance', '$class');
-    $source .= $self->_generate_slot_initializers;
-
-    $source .= $self->_generate_triggers();
-    $source .= ";\n" . $self->_generate_BUILDALL();
-
-    $source .= ";\nreturn \$instance";
-    $source .= ";\n" . '}';
-    warn $source if $self->options->{debug};
+    my @source = (
+        'sub {',
+            'my $_instance = shift;',
+            'my $class = Scalar::Util::blessed($_instance) || $_instance;',
+            'if ($class ne \'' . $self->associated_metaclass->name . '\') {',
+                'return ' . $self->_generate_fallback_constructor('$class') . ';',
+            '}',
+            $self->_generate_params('$params', '$class'),
+            $self->_generate_instance('$instance', '$class'),
+            $self->_generate_slot_initializers,
+            $self->_generate_triggers,
+            $self->_generate_BUILDALL,
+            'return $instance;',
+        '}'
+    );
+    warn join("\n", @source) if $self->options->{debug};
 
     # We need to check if the attribute ->can('type_constraint')
     # since we may be trying to immutabilize a Moose meta class,
@@ -101,7 +97,7 @@ sub _initialize_body {
 
     my $code = try {
         $self->_compile_code(
-            source      => $source,
+            source      => \@source,
             environment => {
                 '$meta'  => \$self,
                 '$attrs' => \$attrs,
@@ -112,6 +108,7 @@ sub _initialize_body {
         );
     }
     catch {
+        my $source = join("\n", @source);
         $self->throw_error(
             "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_",
             error => $_,
@@ -123,232 +120,263 @@ sub _initialize_body {
 }
 
 sub _generate_fallback_constructor {
-    my ( $self, $class_var ) = @_;
-    "${class_var}->Moose::Object::new(\@_)";
+    my $self = shift;
+    my ($class_var) = @_;
+    return $class_var . '->Moose::Object::new(@_)'
 }
 
 sub _generate_params {
-    my ( $self, $var, $class_var ) = @_;
-    "my $var = " . $self->_generate_BUILDARGS( $class_var, '@_' ) . ";\n";
+    my $self = shift;
+    my ($var, $class_var) = @_;
+    return (
+        'my ' . $var . ' = ',
+        $self->_generate_BUILDARGS($class_var, '@_'),
+        ';',
+    );
 }
 
 sub _generate_instance {
-    my ( $self, $var, $class_var ) = @_;
-    "my $var = "
-        . $self->associated_metaclass->inline_create_instance($class_var) . ";\n";
+    my $self = shift;
+    my ($var, $class_var) = @_;
+    my $meta = $self->associated_metaclass;
+
+    return (
+        'my ' . $var . ' = ',
+        $meta->inline_create_instance($class_var) . ';',
+    );
 }
 
 sub _generate_slot_initializers {
-    my ($self) = @_;
-    return (join ";\n" => map {
-        $self->_generate_slot_initializer($_)
-    } 0 .. (@{$self->_attributes} - 1)) . ";\n";
+    my $self = shift;
+    return map { $self->_generate_slot_initializer($_) }
+               0 .. (@{$self->_attributes} - 1);
 }
 
 sub _generate_BUILDARGS {
-    my ( $self, $class, $args ) = @_;
+    my $self = shift;
+    my ($class, $args) = @_;
 
     my $buildargs = $self->associated_metaclass->find_method_by_name("BUILDARGS");
 
-    if ( $args eq '@_'
-        and ( !$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS )
-        ) {
+    if ($args eq '@_'
+     && (!$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS)) {
 
-        # This is the same logic as Moose::Object::BUILDARGS
-        return sprintf( <<'EOF', $self->_inline_throw_error( q{'Single parameters to new() must be a HASH ref'}, 'data => $_[0]' ) );
-do {
-    my $params;
-    if ( scalar @_ == 1 ) {
-        unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            %s
-        }
-        $params = { %%{ $_[0] } };
-    }
-    elsif ( @_ %% 2 ) {
-        Carp::carp(
-            "The new() method for $class expects a hash reference or a key/value list."
-                . " You passed an odd number of arguments" );
-        $params = { @_, undef };
+        return (
+            'do {',
+                'my $params;',
+                'if (scalar @_ == 1) {',
+                    'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
+                        $self->_inline_throw_error(
+                            '"Single parameters to new() must be a HASH ref"',
+                            'data => $_[0]',
+                        ) . ';',
+                    '}',
+                    '$params = { %{ $_[0] } };',
+                '}',
+                'elsif (@_ % 2) {',
+                    'Carp::carp(',
+                        '"The new() method for ' . $class . ' expects a '
+                      . 'hash reference or a key/value list. You passed an '
+                      . 'odd number of arguments"',
+                    ');',
+                    '$params = {@_, undef};',
+                '}',
+                'else {',
+                    '$params = {@_};',
+                '}',
+                '$params;',
+            '}',
+        );
     }
     else {
-        $params = {@_};
-    }
-    $params
-};
-EOF
-            ;
-    }
-    else {
-        return $class . "->BUILDARGS($args)";
+        return $class . '->BUILDARGS(' . $args . ')';
     }
 }
 
 sub _generate_BUILDALL {
     my $self = shift;
+
+    my @methods = reverse $self->associated_metaclass->find_all_methods_by_name('BUILD');
     my @BUILD_calls;
-    foreach my $method (reverse $self->associated_metaclass->find_all_methods_by_name('BUILD')) {
-        push @BUILD_calls => '$instance->' . $method->{class} . '::BUILD($params)';
+
+    foreach my $method (@methods) {
+        push @BUILD_calls,
+            '$instance->' . $method->{class} . '::BUILD($params);';
     }
-    return join ";\n" => @BUILD_calls;
+
+    return @BUILD_calls;
 }
 
 sub _generate_triggers {
     my $self = shift;
     my @trigger_calls;
-    foreach my $i ( 0 .. $#{ $self->_attributes } ) {
+
+    for my $i (0 .. $#{ $self->_attributes }) {
         my $attr = $self->_attributes->[$i];
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
         my $init_arg = $attr->init_arg;
-
         next unless defined $init_arg;
 
-        push @trigger_calls => '(exists $params->{\''
-            . $init_arg
-            . '\'}) && do {'
-            . "\n    "
-            . '$attrs->['
-            . $i
-            . ']->trigger->('
-            . '$instance, '
-            . $attr->inline_get('$instance')
-            . ', '
-            . ');' . "\n}";
+        push @trigger_calls,
+            'if (exists $params->{\'' . $init_arg . '\'}) {',
+                '$attrs->[' . $i . ']->trigger->(',
+                    '$instance,',
+                    $attr->inline_get('$instance') . ',',
+                ');',
+            '}';
     }
 
-    return join ";\n" => @trigger_calls;
+    return @trigger_calls;
 }
 
 sub _generate_slot_initializer {
     my $self  = shift;
-    my $index = shift;
+    my ($index) = @_;
 
     my $attr = $self->_attributes->[$index];
 
     my @source = ('## ' . $attr->name);
 
-    my $is_moose = $attr->isa('Moose::Meta::Attribute'); # XXX FIXME
+    push @source, $self->_check_required_attr($attr);
 
-    if ($is_moose && defined($attr->init_arg) && $attr->is_required && !$attr->has_default && !$attr->has_builder) {
-        push @source => ('(exists $params->{\'' . $attr->init_arg . '\'}) ' .
-                        '|| ' . $self->_inline_throw_error('"Attribute (' . quotemeta($attr->name) . ') is required"') .';');
-    }
-
-    if (($attr->has_default || $attr->has_builder) && !($is_moose && $attr->is_lazy)) {
-
-        if ( defined( my $init_arg = $attr->init_arg ) ) {
-            push @source => 'if (exists $params->{\'' . $init_arg . '\'}) {';
-            push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
-            push @source => $self->_generate_type_constraint_and_coercion($attr, $index)
-                if $is_moose;
-            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-            push @source => "} else {";
+    if (defined $attr->init_arg) {
+        push @source,
+            'if (exists $params->{\'' . $attr->init_arg . '\'}) {',
+                $self->_init_attr_from_constructor($attr, $index),
+            '}';
+        if (my @default = $self->_init_attr_from_default($attr, $index)) {
+            push @source,
+                'else {',
+                    @default,
+                '}';
         }
-            my $default;
-            if ( $attr->has_default ) {
-                $default = $self->_generate_default_value($attr, $index);
-            }
-            else {
-               my $builder = $attr->builder;
-               $default = '$instance->' . $builder;
-            }
-
-            push @source => '{'; # wrap this to avoid my $val overwrite warnings
-            push @source => ('my $val = ' . $default . ';');
-            push @source => $self->_generate_type_constraint_and_coercion($attr, $index)
-                if $is_moose;
-            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-            push @source => '}'; # close - wrap this to avoid my $val overrite warnings
-
-        push @source => "}" if defined $attr->init_arg;
     }
-    elsif ( defined( my $init_arg = $attr->init_arg ) ) {
-        push @source => '(exists $params->{\'' . $init_arg . '\'}) && do {';
-
-            push @source => ('my $val = $params->{\'' . $init_arg . '\'};');
-            if ($is_moose && $attr->has_type_constraint) {
-                if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-                    push @source => $self->_generate_type_coercion(
-                        $attr,
-                        '$type_constraints[' . $index . ']',
-                        '$val',
-                        '$val'
-                    );
-                }
-                push @source => $self->_generate_type_constraint_check(
-                    $attr,
-                    '$type_constraint_bodies[' . $index . ']',
-                    '$type_constraints[' . $index . ']',
-                    '$val'
-                );
-            }
-            push @source => $self->_generate_slot_assignment($attr, '$val', $index);
-
-        push @source => "}";
+    else {
+        if (my @default = $self->_init_attr_from_default($attr, $index)) {
+            push @source,
+                '{', # _init_attr_from_default creates variables
+                    @default,
+                '}';
+        }
     }
 
-    return join "\n" => @source;
+    return @source;
+}
+
+sub _check_required_attr {
+    my $self = shift;
+    my ($attr) = @_;
+
+    return unless defined $attr->init_arg;
+    return unless $attr->can('is_required') && $attr->is_required;
+    return if $attr->has_default || $attr->has_builder;
+
+    return (
+        'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
+            $self->_inline_throw_error(
+                '"Attribute (' . quotemeta($attr->name) . ') is required"'
+            ) . ';',
+        '}',
+    );
+}
+
+sub _init_attr_from_constructor {
+    my $self = shift;
+    my ($attr, $index) = @_;
+
+    return (
+        'my $val = $params->{\'' . $attr->init_arg . '\'};',
+        $self->_generate_slot_assignment($attr, $index, '$val'),
+    );
+}
+
+sub _init_attr_from_default {
+    my $self = shift;
+    my ($attr, $index) = @_;
+
+    my $default = $self->_generate_default_value($attr, $index);
+    return unless $default;
+
+    return (
+        'my $val = ' . $default . ';',
+        $self->_generate_slot_assignment($attr, $index, '$val'),
+    );
 }
 
 sub _generate_slot_assignment {
-    my ($self, $attr, $value, $index) = @_;
+    my $self = shift;
+    my ($attr, $index, $value) = @_;
 
-    my $source;
+    my @source;
 
-    if ( $attr->has_initializer ) {
-        return
-              '$attrs->['
-            . $index
-            . ']->set_initial_value($instance, '
-            . $value . ');';
+    if ($self->can('_generate_type_constraint_and_coercion')) {
+        push @source, $self->_generate_type_constraint_and_coercion(
+            $attr, $index, $value,
+        );
+    }
+
+    if ($attr->has_initializer) {
+        push @source, (
+            '$attrs->[' . $index . ']->set_initial_value(',
+                '$instance' . ',',
+                $value . ',',
+            ');'
+        );
     }
     else {
-        return $attr->inline_set(
-            '$instance',
-            $value
-        ) . ';';
+        push @source, (
+            $attr->inline_set('$instance', $value) . ';',
+        );
     }
 
-    return $source;
+    return @source;
 }
 
 sub _generate_type_constraint_and_coercion {
-    my ($self, $attr, $index) = @_;
+    my $self = shift;
+    my ($attr, $index, $value) = @_;
 
-    return unless $attr->has_type_constraint;
+    return unless $attr->can('has_type_constraint')
+               && $attr->has_type_constraint;
 
     my @source;
+
     if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
         push @source => $self->_generate_type_coercion(
-            $attr,
             '$type_constraints[' . $index . ']',
-            '$val',
-            '$val'
+            $value,
+            $value,
         );
     }
+
     push @source => $self->_generate_type_constraint_check(
         $attr,
-        ('$type_constraint_bodies[' . $index . ']'),
-        ('$type_constraints[' . $index . ']'),
-        '$val'
+        '$type_constraint_bodies[' . $index . ']',
+        '$type_constraints[' . $index . ']',
+        $value,
     );
+
     return @source;
 }
 
 sub _generate_type_coercion {
-    my ($self, $attr, $type_constraint_name, $value_name, $return_value_name) = @_;
-    return ($return_value_name . ' = ' . $type_constraint_name .  '->coerce(' . $value_name . ');');
+    my $self = shift;
+    my ($tc_obj, $value, $return_value) = @_;
+    return $return_value . ' = ' . $tc_obj . '->coerce(' . $value . ');';
 }
 
 sub _generate_type_constraint_check {
-    my ($self, $attr, $type_constraint_cv, $type_constraint_obj, $value_name) = @_;
+    my $self = shift;
+    my ($attr, $tc_body, $tc_obj, $value) = @_;
     return (
-        $self->_inline_throw_error('"Attribute (' # FIXME add 'dad'
-        . quotemeta( $attr->name )
-        . ') does not pass the type constraint because: " . '
-        . $type_constraint_obj . '->get_message(' . $value_name . ')')
-        . "\n\t unless " .  $type_constraint_cv . '->(' . $value_name . ');'
+        $self->_inline_throw_error(
+            '"Attribute (' . quotemeta($attr->name) . ') '
+          . 'does not pass the type constraint because: " . '
+          . $tc_obj . '->get_message(' . $value . ')'
+        ),
+        'unless ' .  $tc_body . '->(' . $value . ');'
     );
 }
 

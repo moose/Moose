@@ -13,7 +13,10 @@ our $called = 0;
     around _generate_BUILDALL => sub {
         my $orig = shift;
         my $self = shift;
-        return $self->$orig(@_) . '$::called++;';
+        return (
+            $self->$orig(@_),
+            '$::called++;'
+        );
     }
 }
 
