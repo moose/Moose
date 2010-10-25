@@ -3,6 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Hash::set;
 use strict;
 use warnings;
 
+use List::MoreUtils ();
 use Scalar::Util qw( looks_like_number );
 
 our $VERSION = '1.17';
@@ -57,6 +58,24 @@ sub _inline_check_arguments {
 }
 
 sub _adds_members { 1 }
+
+# We need to override this because while @_ can be written to, we cannot write
+# directly to $_[1].
+around _inline_coerce_new_values => sub {
+    shift;
+    my $self = shift;
+
+    return q{} unless $self->associated_attribute->should_coerce;
+
+    return q{} unless $self->_tc_member_type_can_coerce;
+
+    # Is there a simpler way to do this?
+    return 'my $iter = List::MoreUtils::natatime 2, @_;'
+         .  '@_ = ();'
+         . 'while ( my ( $key, $val ) = $iter->() ) {'
+         .     'push @_, $key, $member_tc_obj->coerce($val);'
+         . '}';
+};
 
 sub _potential_value {
     my ( $self, $slot_access ) = @_;
