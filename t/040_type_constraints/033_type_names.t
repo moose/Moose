@@ -12,9 +12,21 @@ TODO:
 {
     local $TODO = 'type names are not validated in the TC metaclass';
 
-    like exception { Moose::Meta::TypeConstraint->new( name => 'Foo-Bar' ) },
-    qr/contains invalid characters/,
-        'Type names cannot contain a dash';
+    # Test written in this way to avoid a warning from like(undef, qr...);
+    # -- rjbs, 2010-10-25
+    my $error = exception {
+        Moose::Meta::TypeConstraint->new( name => 'Foo-Bar' )
+    };
+
+    if (defined $error) {
+        like(
+            $error,
+            qr/contains invalid characters/,
+            'Type names cannot contain a dash',
+        );
+    } else {
+        fail("Type names cannot contain a dash");
+    }
 }
 
 ok ! exception { Moose::Meta::TypeConstraint->new( name => 'Foo.Bar::Baz' ) },
