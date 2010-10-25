@@ -73,4 +73,76 @@ my $foo = Foo->new;
     );
 }
 
+{
+    package Thing;
+    use Moose;
+
+    has thing => (
+        is  => 'ro',
+        isa => 'Str',
+    );
+}
+
+{
+    package Bar;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    class_type 'Thing';
+
+    coerce 'Thing'
+        => from 'Str'
+        => via { Thing->new( thing => $_ ) };
+
+    subtype 'HashRefOfThings'
+        => as 'HashRef[Thing]';
+
+    coerce 'HashRefOfThings'
+        => from 'HashRef[Str]'
+        => via {
+            my %new;
+            for my $k ( keys %{$_} ) {
+                $new{$k} = Thing->new( thing => $_->{$k} );
+            }
+            return \%new;
+        };
+
+    coerce 'HashRefOfThings'
+        => from 'Str'
+        => via { [ Thing->new( thing => $_ ) ] };
+
+    has hash => (
+        traits  => ['Hash'],
+        is      => 'rw',
+        isa     => 'HashRefOfThings',
+        coerce  => 1,
+        handles => {
+            set_hash => 'set',
+            get_hash => 'get',
+        },
+    );
+}
+
+{
+    my $bar = Bar->new( hash => { foo => 1, bar => 2 } );
+
+    is(
+        $bar->get_hash('foo')->thing, 1,
+        'constructor coerces hash reference'
+    );
+
+    $bar->set_hash( baz => 3, quux => 4 );
+
+    is(
+        $bar->get_hash('baz')->thing, 3,
+        'set coerces new hash values'
+    );
+
+    is(
+        $bar->get_hash('quux')->thing, 4,
+        'set coerces new hash values'
+    );
+}
+
+
 done_testing;
