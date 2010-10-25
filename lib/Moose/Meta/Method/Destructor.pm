@@ -78,40 +78,22 @@ sub _initialize_body {
     # requires some adaption on the part of
     # the author, after all, nothing is free)
 
-    my @DEMOLISH_methods = $self->associated_metaclass->find_all_methods_by_name('DEMOLISH');
-
-    my $source;
-    $source  = 'sub {' . "\n";
-    $source .= 'my $self = shift;' . "\n";
-    $source .= 'return $self->Moose::Object::DESTROY(@_)' . "\n";
-    $source .= '    if Scalar::Util::blessed($self) ne ';
-    $source .= "'" . $self->associated_metaclass->name . "'";
-    $source .= ';' . "\n";
-
-    if ( @DEMOLISH_methods ) {
-        $source .= 'local $?;' . "\n";
-
-        $source .= 'my $in_global_destruction = Devel::GlobalDestruction::in_global_destruction;' . "\n";
-
-        $source .= 'Try::Tiny::try {' . "\n";
-
-        $source .= '$self->' . $_->{class} . '::DEMOLISH($in_global_destruction);' . "\n"
-            for @DEMOLISH_methods;
-
-        $source .= '}';
-        $source .= q[ Try::Tiny::catch { no warnings 'misc'; die $_ };] . "\n";
-        $source .= 'return;' . "\n";
-
-    }
-
-    $source .= '}';
-
-    warn $source if $self->options->{debug};
+    my $class = $self->associated_metaclass->name;
+    my @source = (
+        'sub {',
+            'my $self = shift;',
+            'return ' . $self->_generate_fallback_destructor('$self'),
+                'if Scalar::Util::blessed($self) ne \'' . $class . '\';',
+            $self->_generate_DEMOLISHALL('$self'),
+        '}',
+    );
+    warn join("\n", @source) if $self->options->{debug};
 
     my $code = try {
-        $self->_compile_code(source => $source);
+        $self->_compile_code(source => \@source);
     }
     catch {
+        my $source = join("\n", @source);
         $self->throw_error(
             "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$_",
             error => $_,
@@ -120,6 +102,34 @@ sub _initialize_body {
     };
 
     $self->{'body'} = $code;
+}
+
+sub _generate_fallback_destructor {
+    my $self = shift;
+    my ($inv) = @_;
+
+    return $inv . '->Moose::Object::DESTROY(@_)';
+}
+
+sub _generate_DEMOLISHALL {
+    my $self = shift;
+    my ($inv) = @_;
+
+    my @methods = $self->associated_metaclass->find_all_methods_by_name('DEMOLISH');
+    return unless @methods;
+
+    return (
+        'local $?;',
+        'my $igd = Devel::GlobalDestruction::in_global_destruction;',
+        'Try::Tiny::try {',
+            (map { $inv . '->' . $_->{class} . '::DEMOLISH($igd);' } @methods),
+        '}',
+        'Try::Tiny::catch {',
+            'no warnings \'misc\';',
+            'die $_;',
+        '};',
+        'return;',
+    );
 }
 
 
