@@ -117,8 +117,7 @@ my $foo = Foo->new;
         => via { Thing->new( thing => $_ ) };
 
     subtype 'ArrayRefOfThings'
-        => as 'ArrayRef[Thing]'
-        => where { scalar(@$_) < 5 };
+        => as 'ArrayRef[Thing]';
 
     coerce 'ArrayRefOfThings'
         => from 'ArrayRef[Str]'
@@ -134,24 +133,84 @@ my $foo = Foo->new;
         isa     => 'ArrayRefOfThings',
         coerce  => 1,
         handles => {
-            push_array => 'push',
-            set_array  => 'set',
-            get_array  => 'get',
+            push_array   => 'push',
+            set_array    => 'set',
+            insert_array => 'insert',
+            get_array    => 'get',
         },
     );
 }
 
-TODO: {
+{
     my $bar = Bar->new( array => [qw( a b c )] );
-
-    todo_skip 'coercion in push dies here!', 2;
 
     $bar->push_array('d');
 
     is( $bar->get_array(3)->thing, 'd', 'push coerces the array' );
 
-    ok exception { $bar->push_array('e') },
-        'the type constraint prohibits arrays of length 5';
+    $bar->set_array( 3 => 'e' );
+
+    is( $bar->get_array(3)->thing, 'e', 'set coerces the new member' );
+
+    $bar->insert_array( 3 => 'f' );
+
+    is( $bar->get_array(3)->thing, 'f', 'insert coerces the new member' );
+}
+
+{
+    package Baz;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    subtype 'SmallArrayRef'
+        => as 'ArrayRef'
+        => where { @{$_} <= 2 };
+
+    coerce 'SmallArrayRef'
+        => from 'ArrayRef'
+        => via { [ @{$_}[ -2, -1 ] ] };
+
+    has array => (
+        traits  => ['Array'],
+        is      => 'rw',
+        isa     => 'SmallArrayRef',
+        coerce  => 1,
+        handles => {
+            push_array   => 'push',
+            set_array    => 'set',
+            insert_array => 'insert',
+        },
+    );
+}
+
+{
+    my $baz = Baz->new( array => [ 1, 2, 3 ] );
+
+    is_deeply(
+        $baz->array, [ 2, 3 ],
+        'coercion truncates array ref in constructor'
+    );
+
+    $baz->push_array(4);
+
+    is_deeply(
+        $baz->array, [ 3, 4 ],
+        'coercion truncates array ref on push'
+    );
+
+    $baz->insert_array( 1 => 5 );
+
+    is_deeply(
+        $baz->array, [ 5, 4 ],
+        'coercion truncates array ref on insert'
+    );
+
+    $baz->push_array( 7, 8, 9 );
+
+    is_deeply(
+        $baz->array, [ 8, 9 ],
+        'coercion truncates array ref on push'
+    );
 }
 
 done_testing;

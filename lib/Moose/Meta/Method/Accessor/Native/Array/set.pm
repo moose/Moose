@@ -41,6 +41,19 @@ sub _potential_value {
         "( do { my \@potential = \@{ ($slot_access) }; \$potential[ \$_[0] ] = \$_[1]; \\\@potential } )";
 }
 
+# We need to override this because while @_ can be written to, we cannot write
+# directly to $_[1].
+around _inline_coerce_new_values => sub {
+    shift;
+    my $self = shift;
+
+    return q{} unless $self->associated_attribute->should_coerce;
+
+    return q{} unless $self->_tc_member_type_can_coerce;
+
+    return '@_ = ( $_[0], $member_tc_obj->coerce( $_[1] ) );';
+};
+
 sub _new_members { '$_[1]' }
 
 sub _inline_optimized_set_new_value {

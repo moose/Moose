@@ -11,6 +11,45 @@ use Moose::Role;
 
 requires qw( _adds_members );
 
+around _inline_coerce_new_values => sub {
+    shift;
+    my $self = shift;
+
+    return q{} unless $self->associated_attribute->should_coerce;
+
+    return q{} unless $self->_tc_member_type_can_coerce;
+
+    return
+          '('
+        . $self->_new_members
+        . ') = map { $member_tc_obj->coerce($_) } '
+        . $self->_new_members . ';';
+};
+
+sub _tc_member_type_can_coerce {
+    my $self = shift;
+
+    my $member_tc = $self->_tc_member_type;
+
+    return $member_tc && $member_tc->has_coercion;
+}
+
+sub _tc_member_type {
+    my $self = shift;
+
+    for (
+        my $tc = $self->associated_attribute->type_constraint;
+        $tc;
+        $tc = $tc->parent
+        ) {
+
+        return $tc->type_parameter
+            if $tc->can('type_parameter');
+    }
+
+    return;
+}
+
 around _value_needs_copy => sub {
     shift;
     my $self = shift;
@@ -103,13 +142,13 @@ around _eval_environment => sub {
 
     my $env = $self->$orig(@_);
 
-    return $env
-        unless $self->_constraint_must_be_checked
-            && $self->_check_new_members_only;
+    my $member_tc = $self->_tc_member_type;
 
-    $env->{'$member_tc'}
-        = \( $self->associated_attribute->type_constraint->type_parameter
-            ->_compiled_type_constraint );
+    return $env unless $member_tc;
+
+    $env->{'$member_tc_obj'} = \($member_tc);
+
+    $env->{'$member_tc'} = \( $member_tc->_compiled_type_constraint );
 
     return $env;
 };
