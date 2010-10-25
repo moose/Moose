@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
 
 use Moose ();
 use Moose::Meta::Role;

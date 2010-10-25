@@ -6,7 +6,6 @@ use lib 't/lib';
 use Moose ();
 use NoInlineAttribute;
 use Test::More;
-use Test::Fatal;
 use Test::Moose;
 
 {
