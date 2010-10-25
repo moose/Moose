@@ -101,7 +101,7 @@ my $foo = Foo->new;
 
     has thing => (
         is  => 'ro',
-        isa => 'Str',
+        isa => 'Int',
     );
 }
 
@@ -113,18 +113,18 @@ my $foo = Foo->new;
     class_type 'Thing';
 
     coerce 'Thing'
-        => from 'Str'
+        => from 'Int'
         => via { Thing->new( thing => $_ ) };
 
     subtype 'ArrayRefOfThings'
         => as 'ArrayRef[Thing]';
 
     coerce 'ArrayRefOfThings'
-        => from 'ArrayRef[Str]'
+        => from 'ArrayRef[Int]'
         => via { [ map { Thing->new( thing => $_ ) } @{$_} ] };
 
     coerce 'ArrayRefOfThings'
-        => from 'Str'
+        => from 'Int'
         => via { [ Thing->new( thing => $_ ) ] };
 
     has array => (
@@ -134,27 +134,47 @@ my $foo = Foo->new;
         coerce  => 1,
         handles => {
             push_array   => 'push',
+            unshift_array   => 'unshift',
             set_array    => 'set',
             insert_array => 'insert',
-            get_array    => 'get',
         },
     );
 }
 
 {
-    my $bar = Bar->new( array => [qw( a b c )] );
+    my $bar = Bar->new( array => [ 1, 2, 3 ] );
 
-    $bar->push_array('d');
+    $bar->push_array( 4, 5 );
 
-    is( $bar->get_array(3)->thing, 'd', 'push coerces the array' );
+    is_deeply(
+        [ map { $_->thing } @{ $bar->array } ],
+        [ 1, 2, 3, 4, 5 ],
+        'push coerces new members'
+    );
 
-    $bar->set_array( 3 => 'e' );
+    $bar->unshift_array( -1, 0 );
 
-    is( $bar->get_array(3)->thing, 'e', 'set coerces the new member' );
+    is_deeply(
+        [ map { $_->thing } @{ $bar->array } ],
+        [ -1, 0, 1, 2, 3, 4, 5 ],
+        'unshift coerces new members'
+    );
 
-    $bar->insert_array( 3 => 'f' );
+    $bar->set_array( 3 => 9 );
 
-    is( $bar->get_array(3)->thing, 'f', 'insert coerces the new member' );
+    is_deeply(
+        [ map { $_->thing } @{ $bar->array } ],
+        [ -1, 0, 1, 9, 3, 4, 5 ],
+        'set coerces new members'
+    );
+
+    $bar->insert_array( 3 => 42 );
+
+    is_deeply(
+        [ map { $_->thing } @{ $bar->array } ],
+        [ -1, 0, 1, 42, 9, 3, 4, 5 ],
+        'insert coerces new members'
+    );
 }
 
 {
