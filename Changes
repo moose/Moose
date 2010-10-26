@@ -8,6 +8,9 @@ for, noteworthy changes.
   * Type constraint objects now have an assert_coerce method which will either
     return a valid value or throw an error. (rjbs)
 
+  * We now warn when an accessor for one attribute ovewrites an accessor for
+    another attribute. RT #57510. (Dave Rolsky)
+
   [BUG FIXES]
 
   * The native Array and Hash delegation methods now coerce individual new
