@@ -17,6 +17,13 @@ for, noteworthy changes.
     method will coerce the integer to a DateTime object. Reported by Karen
     Etheridge. RT #62351. (Dave Rolsky)
 
+  * Using a regexp to define delegation for a class which was not yet loaded
+    caused an error when the class was loaded later. Reported by Max
+    Kanat-Alexander. RT #60596. (Dave Rolsky)
+
+  * Attempting to delegate to a class or role which is not yet loaded will now
+    throw an explicit error. (Dave Rolsky)
+
   * Attempting to set lazy_build in an inherited attribute was ignored. RT
     #62057. (perigrin)
 
