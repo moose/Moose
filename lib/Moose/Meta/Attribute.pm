@@ -4,6 +4,7 @@ package Moose::Meta::Attribute;
 use strict;
 use warnings;
 
+use Class::MOP ();
 use Scalar::Util 'blessed', 'weaken';
 use List::MoreUtils 'any';
 use Try::Tiny;
@@ -722,12 +723,29 @@ sub _get_delegate_method_list {
 sub _find_delegate_metaclass {
     my $self = shift;
     if (my $class = $self->_isa_metadata) {
+        unless ( Class::MOP::is_class_loaded($class) ) {
+            $self->throw_error(
+                sprintf(
+                    'The %s attribute is trying to delegate to a class which has not been loaded - %s',
+                    $self->name, $class
+                )
+            );
+        }
         # we might be dealing with a non-Moose class,
         # and need to make our own metaclass. if there's
         # already a metaclass, it will be returned
         return Class::MOP::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
+        unless ( Class::MOP::is_class_loaded($class) ) {
+            $self->throw_error(
+                sprintf(
+                    'The %s attribute is trying to delegate to a role which has not been loaded - %s',
+                    $self->name, $role
+                )
+            );
+        }
+
         return Class::MOP::class_of($role);
     }
     else {
