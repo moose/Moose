@@ -189,7 +189,7 @@ Role attribute conflicts
 
     ::like ::exception {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    }, qr/We have encountered an attribute conflict/,
+    }, qr/We have encountered an attribute conflict.+ghost/,
       '... role attrs conflict and method was required';
 
     package My::Test8;
