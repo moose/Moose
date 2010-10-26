@@ -703,22 +703,6 @@ sub _canonicalize_handles {
         );
 }
 
-sub _find_delegate_metaclass {
-    my $self = shift;
-    if (my $class = $self->_isa_metadata) {
-        # we might be dealing with a non-Moose class,
-        # and need to make our own metaclass. if there's
-        # already a metaclass, it will be returned
-        return Class::MOP::Class->initialize($class);
-    }
-    elsif (my $role = $self->_does_metadata) {
-        return Class::MOP::class_of($role);
-    }
-    else {
-        $self->throw_error("Cannot find delegate metaclass for attribute " . $self->name);
-    }
-}
-
 sub _get_delegate_method_list {
     my $self = shift;
     my $meta = $self->_find_delegate_metaclass;
@@ -732,6 +716,22 @@ sub _get_delegate_method_list {
     }
     else {
         $self->throw_error("Unable to recognize the delegate metaclass '$meta'", data => $meta);
+    }
+}
+
+sub _find_delegate_metaclass {
+    my $self = shift;
+    if (my $class = $self->_isa_metadata) {
+        # we might be dealing with a non-Moose class,
+        # and need to make our own metaclass. if there's
+        # already a metaclass, it will be returned
+        return Class::MOP::Class->initialize($class);
+    }
+    elsif (my $role = $self->_does_metadata) {
+        return Class::MOP::class_of($role);
+    }
+    else {
+        $self->throw_error("Cannot find delegate metaclass for attribute " . $self->name);
     }
 }
 
