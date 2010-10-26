@@ -648,6 +648,18 @@ sub _process_accessors {
     $accessor = ( keys %$accessor )[0] if ( ref($accessor) || '' ) eq 'HASH';
     my $method = $self->associated_class->get_method($accessor);
 
+    if (   $method
+        && $method->isa('Class::MOP::Method::Accessor')
+        && $method->associated_attribute->name ne $self->name ) {
+
+        my $other_attr_name = $method->associated_attribute->name;
+        my $name            = $self->name;
+
+        Carp::cluck(
+            "You are overwriting an accessor ($accessor) for the $other_attr_name attribute"
+                . " with a new accessor method for the $name attribute" );
+    }
+
     if (
            $method
         && !$method->isa('Class::MOP::Method::Accessor')
@@ -659,6 +671,7 @@ sub _process_accessors {
             "You are overwriting a locally defined method ($accessor) with "
                 . "an accessor" );
     }
+
     if (  !$self->associated_class->has_method($accessor)
         && $self->associated_class->has_package_symbol( '&' . $accessor ) ) {
 
