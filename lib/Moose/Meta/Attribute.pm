@@ -565,23 +565,29 @@ sub _check_associated_methods {
 sub _process_accessors {
     my $self = shift;
     my ($type, $accessor, $generate_as_inline_methods) = @_;
-    $accessor = (keys %$accessor)[0] if (ref($accessor)||'') eq 'HASH';
+
+    $accessor = ( keys %$accessor )[0] if ( ref($accessor) || '' ) eq 'HASH';
     my $method = $self->associated_class->get_method($accessor);
-    if ($method && !$method->isa('Class::MOP::Method::Accessor')
-     && (!$self->definition_context
-      || $method->package_name eq $self->definition_context->{package})) {
+
+    if (
+           $method
+        && !$method->isa('Class::MOP::Method::Accessor')
+        && (  !$self->definition_context
+            || $method->package_name eq $self->definition_context->{package} )
+        ) {
+
         Carp::cluck(
             "You are overwriting a locally defined method ($accessor) with "
-          . "an accessor"
-        );
+                . "an accessor" );
     }
-    if (!$self->associated_class->has_method($accessor)
-     && $self->associated_class->has_package_symbol('&' . $accessor)) {
+    if (  !$self->associated_class->has_method($accessor)
+        && $self->associated_class->has_package_symbol( '&' . $accessor ) ) {
+
         Carp::cluck(
             "You are overwriting a locally defined function ($accessor) with "
-          . "an accessor"
-        );
+                . "an accessor" );
     }
+
     $self->SUPER::_process_accessors(@_);
 }
 
