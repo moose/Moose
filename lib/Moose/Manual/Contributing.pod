@@ -352,8 +352,9 @@ Merged branches should be deleted.
 Failed branches may be kept, but consider moving to refs/attic/ (e.g.
 http://danns.co.uk/node/295) to keep git branch -l current.
 
-Any branch that could still realistically be merged in the future, even if it
-hasn't had work recently, should not be archived.
+Branches that have not been worked on for a long time will be moved to
+refs/abandoned/ periodically, but feel free to move the branch back to
+refs/topic/ if you want to start working on it again.
 
 =head1 TESTS, TESTS, TESTS
 
