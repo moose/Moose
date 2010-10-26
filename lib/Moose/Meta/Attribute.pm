@@ -212,6 +212,8 @@ sub clone_and_inherit_options {
         $options{traits} = \@all_traits if @all_traits;
     }
 
+    $self->_modify_attr_options_for_lazy_build( $self->name, \%options );
+
     $self->clone(%options);
 }
 
@@ -331,20 +333,7 @@ sub _process_options {
             || $class->throw_error("You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)", data => $options);
     }
 
-    if (exists $options->{lazy_build} && $options->{lazy_build} == 1) {
-        $class->throw_error("You can not use lazy_build and default for the same attribute ($name)", data => $options)
-            if exists $options->{default};
-        $options->{lazy}      = 1;
-        $options->{builder} ||= "_build_${name}";
-        if ($name =~ /^_/) {
-            $options->{clearer}   ||= "_clear${name}";
-            $options->{predicate} ||= "_has${name}";
-        }
-        else {
-            $options->{clearer}   ||= "clear_${name}";
-            $options->{predicate} ||= "has_${name}";
-        }
-    }
+    $class->_modify_attr_options_for_lazy_build( $name, $options );
 
     if (exists $options->{lazy} && $options->{lazy}) {
         (exists $options->{default} || defined $options->{builder} )
@@ -355,6 +344,28 @@ sub _process_options {
         $class->throw_error("You cannot have a required attribute ($name) without a default, builder, or an init_arg", data => $options);
     }
 
+}
+
+sub _modify_attr_options_for_lazy_build {
+    my ( $class, $name, $options ) = @_;
+
+    return unless $options->{lazy_build};
+
+    $class->throw_error(
+        "You can not use lazy_build and default for the same attribute ($name)",
+        data => $options )
+        if exists $options->{default};
+
+    $options->{lazy} = 1;
+    $options->{builder} ||= "_build_${name}";
+    if ( $name =~ /^_/ ) {
+        $options->{clearer}   ||= "_clear${name}";
+        $options->{predicate} ||= "_has${name}";
+    }
+    else {
+        $options->{clearer}   ||= "clear_${name}";
+        $options->{predicate} ||= "has_${name}";
+    }
 }
 
 sub initialize_instance_slot {
