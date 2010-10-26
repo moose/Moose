@@ -17,6 +17,9 @@ for, noteworthy changes.
     method will coerce the integer to a DateTime object. Reported by Karen
     Etheridge. RT #62351. (Dave Rolsky)
 
+  * Attempting to set lazy_build in an inherited attribute was ignored. RT
+    #62057. (perigrin)
+
   [OTHER]
 
   * The Moose test suite now uses Test::Fatal instead of
