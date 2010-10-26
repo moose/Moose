@@ -80,7 +80,7 @@ use Test::Fatal;
     }, '... we can change/add lazy as an attribute option';
 
     ::ok ! ::exception {
-        has '+gloum' => (lazy_build => 1);
+        has '+fleem' => (lazy_build => 1);
     }, '... we can add lazy_build as an attribute option';
 
     ::ok ! ::exception {
