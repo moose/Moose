@@ -152,7 +152,7 @@ use Test::Fatal;
     is_deeply(\%Blarg::trigger_calls, { map { $_ => 1 } qw/foo bar baz/ }, 'All triggers fired once on assign');
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Different $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 
-    ok ! exception { $blarg => Blarg->new( map { $_ => "Yet another $_ value" } qw/foo bar baz/ ) }, '->new() with parameters';
+    ok ! exception { $blarg = Blarg->new( map { $_ => "Yet another $_ value" } qw/foo bar baz/ ) }, '->new() with parameters';
     is_deeply(\%Blarg::trigger_calls, { map { $_ => 2 } qw/foo bar baz/ }, 'All triggers fired once on construct');
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Yet another $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 }
