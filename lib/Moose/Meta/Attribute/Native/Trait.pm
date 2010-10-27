@@ -45,7 +45,7 @@ before '_process_options' => sub {
             feature => 'default default for Native Trait',
             message =>
                 'Allowing a native trait to automatically supply a default is deprecated.'
-                . ' You can avoid this warning by supply a default, builder, or making the attribute required'
+                . ' You can avoid this warning by supplying a default, builder, or making the attribute required'
         );
     }
 };
