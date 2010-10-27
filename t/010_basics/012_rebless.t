@@ -66,7 +66,7 @@ qr/^Attribute \(type_constrained\) does not pass the type constraint because\: V
 '... this failed cause of type check';
 like exception { Child->meta->rebless_instance($bar) },
 qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 5\.5/,
-'... this failed cause of type check';;
+'... this failed cause of type check';
 
 $foo->type_constrained(10);
 $bar->type_constrained(5);
