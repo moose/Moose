@@ -214,9 +214,9 @@ sub clone_and_inherit_options {
     }
 
     # This method can be called on a CMOP::Attribute object, so we need to
-    # make sure that $self actually has this method.
-    $self->_modify_attr_options_for_lazy_build( $self->name, \%options )
-        if $self->can('_modify_attr_options_for_lazy_build');
+    # make sure we can call this method.
+    $self->_process_lazy_build_option( $self->name, \%options )
+        if $self->can('_process_lazy_build_option');
 
     $self->clone(%options);
 }
@@ -246,111 +246,158 @@ sub clone {
 }
 
 sub _process_options {
-    my ($class, $name, $options) = @_;
+    my ( $class, $name, $options ) = @_;
 
-    if (exists $options->{is}) {
-
-        ### -------------------------
-        ## is => ro, writer => _foo    # turns into (reader => foo, writer => _foo) as before
-        ## is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
-        ## is => rw, accessor => _foo  # turns into (accessor => _foo)
-        ## is => ro, accessor => _foo  # error, accesor is rw
-        ### -------------------------
-
-        if ($options->{is} eq 'ro') {
-            $class->throw_error("Cannot define an accessor name on a read-only attribute, accessors are read/write", data => $options)
-                if exists $options->{accessor};
-            $options->{reader} ||= $name;
-        }
-        elsif ($options->{is} eq 'rw') {
-            if ($options->{writer}) {
-                $options->{reader} ||= $name;
-            }
-            else {
-                $options->{accessor} ||= $name;
-            }
-        }
-        elsif ($options->{is} eq 'bare') {
-            # do nothing, but don't complain (later) about missing methods
-        }
-        else {
-            $class->throw_error("I do not understand this option (is => " . $options->{is} . ") on attribute ($name)", data => $options->{is});
-        }
-    }
-
-    if (exists $options->{isa}) {
-        if (exists $options->{does}) {
-            if (try { $options->{isa}->can('does') }) {
-                ($options->{isa}->does($options->{does}))
-                    || $class->throw_error("Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)", data => $options);
-            }
-            else {
-                $class->throw_error("Cannot have an isa option which cannot ->does() on attribute ($name)", data => $options);
-            }
-        }
-
-        # allow for anon-subtypes here ...
-        if (blessed($options->{isa}) && $options->{isa}->isa('Moose::Meta::TypeConstraint')) {
-            $options->{type_constraint} = $options->{isa};
-        }
-        else {
-            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options->{isa});
-        }
-    }
-    elsif (exists $options->{does}) {
-        # allow for anon-subtypes here ...
-        if (blessed($options->{does}) && $options->{does}->isa('Moose::Meta::TypeConstraint')) {
-                $options->{type_constraint} = $options->{does};
-        }
-        else {
-            $options->{type_constraint} = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options->{does});
-        }
-    }
-
-    if (exists $options->{coerce} && $options->{coerce}) {
-        (exists $options->{type_constraint})
-            || $class->throw_error("You cannot have coercion without specifying a type constraint on attribute ($name)", data => $options);
-        $class->throw_error("You cannot have a weak reference to a coerced value on attribute ($name)", data => $options)
-            if $options->{weak_ref};
-
-        unless ( $options->{type_constraint}->has_coercion ) {
-            my $type = $options->{type_constraint}->name;
-
-            Moose::Deprecated::deprecated(
-                feature => 'coerce without coercion',
-                message =>
-                    "You cannot coerce an attribute ($name) unless its type ($type) has a coercion"
-            );
-        }
-    }
-
-    if (exists $options->{trigger}) {
-        ('CODE' eq ref $options->{trigger})
-            || $class->throw_error("Trigger must be a CODE ref on attribute ($name)", data => $options->{trigger});
-    }
-
-    if (exists $options->{auto_deref} && $options->{auto_deref}) {
-        (exists $options->{type_constraint})
-            || $class->throw_error("You cannot auto-dereference without specifying a type constraint on attribute ($name)", data => $options);
-        ($options->{type_constraint}->is_a_type_of('ArrayRef') ||
-         $options->{type_constraint}->is_a_type_of('HashRef'))
-            || $class->throw_error("You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)", data => $options);
-    }
-
-    $class->_modify_attr_options_for_lazy_build( $name, $options );
-
-    if (exists $options->{lazy} && $options->{lazy}) {
-        (exists $options->{default} || defined $options->{builder} )
-            || $class->throw_error("You cannot have lazy attribute ($name) without specifying a default value for it", data => $options);
-    }
-
-    if ( $options->{required} && !( ( !exists $options->{init_arg} || defined $options->{init_arg} ) || exists $options->{default} || defined $options->{builder} ) ) {
-        $class->throw_error("You cannot have a required attribute ($name) without a default, builder, or an init_arg", data => $options);
-    }
-
+    $class->_process_is_option( $name, $options );
+    $class->_process_isa_option( $name, $options );
+    $class->_process_does_option( $name, $options );
+    $class->_process_coerce_option( $name, $options );
+    $class->_process_trigger_option( $name, $options );
+    $class->_process_auto_deref_option( $name, $options );
+    $class->_process_lazy_build_option( $name, $options );
+    $class->_process_lazy_option( $name, $options );
+    $class->_process_required_option( $name, $options );
 }
 
-sub _modify_attr_options_for_lazy_build {
+sub _process_is_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless $options->{is};
+
+    ### -------------------------
+    ## is => ro, writer => _foo    # turns into (reader => foo, writer => _foo) as before
+    ## is => rw, writer => _foo    # turns into (reader => foo, writer => _foo)
+    ## is => rw, accessor => _foo  # turns into (accessor => _foo)
+    ## is => ro, accessor => _foo  # error, accesor is rw
+    ### -------------------------
+
+    if ( $options->{is} eq 'ro' ) {
+        $class->throw_error(
+            "Cannot define an accessor name on a read-only attribute, accessors are read/write",
+            data => $options )
+            if exists $options->{accessor};
+        $options->{reader} ||= $name;
+    }
+    elsif ( $options->{is} eq 'rw' ) {
+        if ( $options->{writer} ) {
+            $options->{reader} ||= $name;
+        }
+        else {
+            $options->{accessor} ||= $name;
+        }
+    }
+    elsif ( $options->{is} eq 'bare' ) {
+        return;
+        # do nothing, but don't complain (later) about missing methods
+    }
+    else {
+        $class->throw_error( "I do not understand this option (is => "
+                . $options->{is}
+                . ") on attribute ($name)", data => $options->{is} );
+    }
+}
+
+sub _process_isa_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless exists $options->{isa};
+
+    if ( exists $options->{does} ) {
+        if ( try { $options->{isa}->can('does') } ) {
+            ( $options->{isa}->does( $options->{does} ) )
+                || $class->throw_error(
+                "Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)",
+                data => $options );
+        }
+        else {
+            $class->throw_error(
+                "Cannot have an isa option which cannot ->does() on attribute ($name)",
+                data => $options );
+        }
+    }
+
+    # allow for anon-subtypes here ...
+    if ( blessed( $options->{isa} )
+        && $options->{isa}->isa('Moose::Meta::TypeConstraint') ) {
+        $options->{type_constraint} = $options->{isa};
+    }
+    else {
+        $options->{type_constraint}
+            = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint(
+            $options->{isa} );
+    }
+}
+
+sub _process_does_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless exists $options->{does} && ! exists $options->{isa};
+
+    # allow for anon-subtypes here ...
+    if ( blessed( $options->{does} )
+        && $options->{does}->isa('Moose::Meta::TypeConstraint') ) {
+        $options->{type_constraint} = $options->{does};
+    }
+    else {
+        $options->{type_constraint}
+            = Moose::Util::TypeConstraints::find_or_create_does_type_constraint(
+            $options->{does} );
+    }
+}
+
+sub _process_coerce_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless $options->{coerce};
+
+    ( exists $options->{type_constraint} )
+        || $class->throw_error(
+        "You cannot have coercion without specifying a type constraint on attribute ($name)",
+        data => $options );
+
+    $class->throw_error(
+        "You cannot have a weak reference to a coerced value on attribute ($name)",
+        data => $options )
+        if $options->{weak_ref};
+
+    unless ( $options->{type_constraint}->has_coercion ) {
+        my $type = $options->{type_constraint}->name;
+
+        Moose::Deprecated::deprecated(
+            feature => 'coerce without coercion',
+            message =>
+                "You cannot coerce an attribute ($name) unless its type ($type) has a coercion"
+        );
+    }
+}
+
+sub _process_trigger_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless exists $options->{trigger};
+
+    ( 'CODE' eq ref $options->{trigger} )
+        || $class->throw_error("Trigger must be a CODE ref on attribute ($name)", data => $options->{trigger});
+}
+
+sub _process_auto_deref_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless $options->{auto_deref};
+
+    ( exists $options->{type_constraint} )
+        || $class->throw_error(
+        "You cannot auto-dereference without specifying a type constraint on attribute ($name)",
+        data => $options );
+
+    ( $options->{type_constraint}->is_a_type_of('ArrayRef')
+      || $options->{type_constraint}->is_a_type_of('HashRef') )
+        || $class->throw_error(
+        "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)",
+        data => $options );
+}
+
+sub _process_lazy_build_option {
     my ( $class, $name, $options ) = @_;
 
     return unless $options->{lazy_build};
@@ -362,6 +409,7 @@ sub _modify_attr_options_for_lazy_build {
 
     $options->{lazy} = 1;
     $options->{builder} ||= "_build_${name}";
+
     if ( $name =~ /^_/ ) {
         $options->{clearer}   ||= "_clear${name}";
         $options->{predicate} ||= "_has${name}";
@@ -369,6 +417,34 @@ sub _modify_attr_options_for_lazy_build {
     else {
         $options->{clearer}   ||= "clear_${name}";
         $options->{predicate} ||= "has_${name}";
+    }
+}
+
+sub _process_lazy_option {
+    my ( $class, $name, $options ) = @_;
+
+    return unless $options->{lazy};
+
+    ( exists $options->{default} || defined $options->{builder} )
+        || $class->throw_error(
+        "You cannot have a lazy attribute ($name) without specifying a default value for it",
+        data => $options );
+}
+
+sub _process_required_option {
+    my ( $class, $name, $options ) = @_;
+
+    if (
+        $options->{required}
+        && !(
+            ( !exists $options->{init_arg} || defined $options->{init_arg} )
+            || exists $options->{default}
+            || defined $options->{builder}
+        )
+        ) {
+        $class->throw_error(
+            "You cannot have a required attribute ($name) without a default, builder, or an init_arg",
+            data => $options );
     }
 }
 
