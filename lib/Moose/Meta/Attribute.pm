@@ -213,7 +213,10 @@ sub clone_and_inherit_options {
         $options{traits} = \@all_traits if @all_traits;
     }
 
-    $self->_modify_attr_options_for_lazy_build( $self->name, \%options );
+    # This method can be called on a CMOP::Attribute object, so we need to
+    # make sure that $self actually has this method.
+    $self->_modify_attr_options_for_lazy_build( $self->name, \%options )
+        if $self->can('_modify_attr_options_for_lazy_build');
 
     $self->clone(%options);
 }
