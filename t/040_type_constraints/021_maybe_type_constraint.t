@@ -121,14 +121,14 @@ ok sub {$obj->Maybe_Int(undef); 1}->()
 ok !$Maybe_Int->check("")
  => 'failed ("")';
 
-throws_ok sub { $obj->Maybe_Int("") },
+throws_ok { $obj->Maybe_Int("") }
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("")';
 
 ok !$Maybe_Int->check("a")
  => 'failed ("a")';
 
-throws_ok sub { $obj->Maybe_Int("a") },
+throws_ok { $obj->Maybe_Int("a") }
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("a")';
 

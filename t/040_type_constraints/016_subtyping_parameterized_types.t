@@ -114,10 +114,10 @@ lives_ok {
     ok $SubOfMyArrayRef->check([15,20,25]), '[15,20,25] is a bunch of big ints';
     ok ! $SubOfMyArrayRef->check([15,5,25]), '[15,5,25] is NOT a bunch of big ints';
 
-    throws_ok sub {
+    throws_ok {
         my $SubOfMyArrayRef = subtype 'SubSubOfMyArrayRef',
             as 'SubOfMyArrayRef[Str]';
-    }, qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
+    } qr/Str is not a subtype of BiggerInt/, 'Failed to parameterize with a bad type parameter';
 }
 
 {

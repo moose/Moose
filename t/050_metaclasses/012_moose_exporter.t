@@ -197,14 +197,13 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    ::dies_ok
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'Moose', 'MooseX::CircularAlso' ],
             );
-        },
-        'a circular reference in also dies with an error'
-    );
+        }
+        'a circular reference in also dies with an error';
 
     ::like(
         $@,
@@ -218,14 +217,13 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    ::dies_ok
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'NoSuchThing' ],
             );
-        },
-        'a package which does not use Moose::Exporter in also dies with an error'
-    );
+        }
+        'a package which does not use Moose::Exporter in also dies with an error';
 
     ::like(
         $@,
@@ -239,14 +237,13 @@ use Test::Requires {
 
     use Moose ();
 
-    ::dies_ok(
-        sub {
+    ::dies_ok
+        {
             Moose::Exporter->setup_import_methods(
                 also => [ 'Moose::Meta::Method' ],
             );
-        },
-        'a package which does not use Moose::Exporter in also dies with an error'
-    );
+        }
+        'a package which does not use Moose::Exporter in also dies with an error';
 
     ::like(
         $@,
