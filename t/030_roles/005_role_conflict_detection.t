@@ -189,7 +189,7 @@ Role attribute conflicts
 
     ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    }, qr/We have encountered an attribute conflict.+ghost/,
+    }, qr/We have encountered an attribute conflict.+ghost/;
 
     package My::Test8;
     use Moose;
