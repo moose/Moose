@@ -25,9 +25,9 @@ requires 'Sub::Name'                   => '0';
 requires 'Task::Weaken'                => '0';
 requires 'Try::Tiny'                   => '0.02';
 
-test_requires 'Test::More'      => '0.88';
-test_requires 'Test::Fatal'     => '0.001';
-test_requires 'Test::Requires'  => '0.05';
+test_requires 'Test::More'     => '0.88';
+test_requires 'Test::Fatal'    => '0.001';
+test_requires 'Test::Requires' => '0.05';
 
 author_requires 'DateTime';
 author_requires 'DateTime::Calendar::Mayan';
