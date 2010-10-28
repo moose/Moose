@@ -170,9 +170,7 @@ ok(My::Foo::AliasOnly->meta->has_method('foo_foo'), '.. and the aliased foo_foo 
     package Role::Bar;
     use Moose::Role;
 
-    use Test::Exception;
-
-    lives_ok {
+    ::lives_ok {
         with 'Role::Foo' => {
             -alias    => { x1 => 'foo_x1' },
             -excludes => ['y1'],
@@ -194,9 +192,7 @@ ok(My::Foo::AliasOnly->meta->has_method('foo_foo'), '.. and the aliased foo_foo 
     package Role::Baz;
     use Moose::Role;
 
-    use Test::Exception;
-
-    lives_ok {
+    ::lives_ok {
         with 'Role::Foo' => {
             -alias    => { x1 => 'foo_x1' },
             -excludes => ['y1'],
