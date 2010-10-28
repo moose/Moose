@@ -3,6 +3,7 @@ use warnings;
 
 use Test::More;
 use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::TypeConstraint;
 use Moose::Util::TypeConstraints;
