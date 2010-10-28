@@ -22,10 +22,10 @@ use Class::MOP ();
     package SubSubClassUseBase;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends 'SubClassUseBase';
-    },
+    }
     'Can extend non-Moose class with parent class that is a Moose class with a meta role';
 }
 
@@ -54,10 +54,10 @@ Class::MOP::remove_metaclass_by_name('SubClassUseBase');
     package MultiParent1;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends qw( SubClassUseBase OtherSubClassUseBase );
-    },
+    }
     'Can extend two non-Moose classes with parents that are different Moose metaclasses';
 }
 
@@ -74,10 +74,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiParent2;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends qw( OtherSubClassUseBase SubClassUseBase );
-    },
+    }
     'Can extend two non-Moose classes with parents that are different Moose metaclasses (reverse order)';
 }
 
@@ -94,10 +94,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiParent3;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends qw( OtherClass SubClassUseBase );
-    },
+    }
     'Can extend one Moose class and one non-Moose class';
 }
 
@@ -114,10 +114,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiParent4;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends qw( SubClassUseBase OtherClass );
-    },
+    }
     'Can extend one non-Moose class and one Moose class';
 }
 
@@ -134,10 +134,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiChild1;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends 'MultiParent1';
-    },
+    }
     'Can extend class that itself extends two non-Moose classes with Moose parents';
 }
 
@@ -154,10 +154,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiChild2;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends 'MultiParent2';
-    },
+    }
     'Can extend class that itself extends two non-Moose classes with Moose parents (reverse order)';
 }
 
@@ -174,10 +174,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiChild3;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends 'MultiParent3';
-    },
+    }
     'Can extend class that itself extends one Moose and one non-Moose parent';
 }
 
@@ -194,10 +194,10 @@ Class::MOP::remove_metaclass_by_name($_)
     package MultiChild4;
     use Moose;
     use Test::More;
-    use Test::Fatal;
-    ok ! exception {
+    use Test::Exception;
+    lives_ok {
         extends 'MultiParent4';
-    },
+    }
     'Can extend class that itself extends one non-Moose and one Moose parent';
 }
 

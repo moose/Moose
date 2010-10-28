@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 =pod
@@ -29,9 +29,9 @@ on role attributes works right.
 
     with 'Foo::Role';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+bar' => (default => sub { 100 });
-    }, '... extended the attribute successfully';
+    } '... extended the attribute successfully';
 }
 
 my $foo = Foo->new;
@@ -54,11 +54,11 @@ is($foo->bar, 100, '... got the extended attribute');
 
     with 'Bar::Role';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+foo' => (
             isa => 'Int',
         )
-    }, "... narrowed the role's type constraint successfully";
+    } "... narrowed the role's type constraint successfully";
 }
 
 my $bar = Bar->new(foo => 42);
@@ -67,7 +67,7 @@ is($bar->foo, 42, '... got the extended attribute');
 $bar->foo(100);
 is($bar->foo, 100, "... can change the attribute's value to an Int");
 
-like exception { $bar->foo("baz") }, qr/^Attribute \(foo\) does not pass the type constraint because: Validation failed for 'Int' with value baz at /;
+throws_ok { $bar->foo("baz") } qr/^Attribute \(foo\) does not pass the type constraint because: Validation failed for 'Int' with value baz at /;
 is($bar->foo, 100, "... still has the old Int value");
 
 
@@ -85,11 +85,11 @@ is($bar->foo, 100, "... still has the old Int value");
 
     with 'Baz::Role';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+baz' => (
             isa => 'Int | ClassName',
         )
-    }, "... narrowed the role's type constraint successfully";
+    } "... narrowed the role's type constraint successfully";
 }
 
 my $baz = Baz->new(baz => 99);
@@ -98,7 +98,7 @@ is($baz->baz, 99, '... got the extended attribute');
 $baz->baz('Foo');
 is($baz->baz, 'Foo', "... can change the attribute's value to a ClassName");
 
-like exception { $baz->baz("zonk") }, qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'ClassName\|Int' with value zonk at /;
+throws_ok { $baz->baz("zonk") } qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'ClassName\|Int' with value zonk at /;
 is_deeply($baz->baz, 'Foo', "... still has the old ClassName value");
 
 
@@ -121,11 +121,11 @@ is_deeply($baz->baz, 'Foo', "... still has the old ClassName value");
         => as 'Int'
         => where { $_ > 0 };
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+quux' => (
             isa => 'Positive | ArrayRef',
         )
-    }, "... narrowed the role's type constraint successfully";
+    } "... narrowed the role's type constraint successfully";
 }
 
 my $quux = Quux->new(quux => 99);
@@ -136,10 +136,10 @@ is($quux->quux, 100, "... can change the attribute's value to an Int");
 $quux->quux(["hi"]);
 is_deeply($quux->quux, ["hi"], "... can change the attribute's value to an ArrayRef");
 
-like exception { $quux->quux("quux") }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value quux at /;
+throws_ok { $quux->quux("quux") } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value quux at /;
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
-like exception { $quux->quux({a => 1}) }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value HASH\(\w+\) at /;
+throws_ok { $quux->quux({a => 1}) } qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value HASH\(\w+\) at /;
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
 
@@ -159,17 +159,17 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
     with 'Err::Role';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+err1' => (isa => 'Defined');
-    }, "can get less specific in the subclass";
+    } "can get less specific in the subclass";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+err2' => (isa => 'Bool');
-    }, "or change the type completely";
+    } "or change the type completely";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+err3' => (isa => 'Str | ArrayRef');
-    }, "or add new types to the union";
+    } "or add new types to the union";
 }
 
 {
@@ -178,9 +178,9 @@ is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
     with 'Foo::Role';
 
-    ::like ::exception {
+    ::throws_ok {
         has '+bar' => ( is => 'ro' );
-    }, qr/has '\+attr' is not supported in roles/,
+    } qr/has '\+attr' is not supported in roles/,
         "Test has '+attr' in roles explodes";
 }
 

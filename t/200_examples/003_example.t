@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 sub U {
     my $f = shift;
@@ -81,16 +81,16 @@ sub Y {
     package My::List1;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'List', 'List::Immutable';
-    }, '... successfully composed roles together';
+    } '... successfully composed roles together';
 
     package My::List2;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'List::Immutable', 'List';
-    }, '... successfully composed roles together';
+    } '... successfully composed roles together';
 
 }
 

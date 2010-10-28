@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 use Test::Moose;
 
 {
@@ -55,7 +55,7 @@ use Test::Moose;
         }
     );
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has array => (
             traits  => ['Array'],
             isa     => 'ArrayRef',
@@ -110,9 +110,9 @@ use Test::Moose;
                 array_natatime_curried   => [ natatime => 2 ],
             },
         );
-    }, "native array trait inlines properly";
+    } "native array trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has bool => (
             traits  => ['Bool'],
             isa     => 'Bool',
@@ -124,9 +124,9 @@ use Test::Moose;
                 bool_is_dark     => 'not',
             },
         );
-    }, "native bool trait inlines properly";
+    } "native bool trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has code => (
             traits  => ['Code'],
             isa     => 'CodeRef',
@@ -136,9 +136,9 @@ use Test::Moose;
                 code_execute_method => 'execute_method',
             },
         );
-    }, "native code trait inlines properly";
+    } "native code trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has counter => (
             traits  => ['Counter'],
             isa     => 'Int',
@@ -153,9 +153,9 @@ use Test::Moose;
                 set_counter_42 => [ set => 42 ],
             },
         );
-    }, "native counter trait inlines properly";
+    } "native counter trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has hash => (
             traits  => ['Hash'],
             isa     => 'HashRef',
@@ -175,9 +175,9 @@ use Test::Moose;
                 hash_set_option       => 'set',
             },
         );
-    }, "native hash trait inlines properly";
+    } "native hash trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has number => (
             traits  => ['Number'],
             isa     => 'Num',
@@ -196,9 +196,9 @@ use Test::Moose;
                 num_dec         => [ sub => 1 ],
             },
         );
-    }, "native number trait inlines properly";
+    } "native number trait inlines properly";
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has string => (
             traits  => ['String'],
             is      => 'ro',
@@ -224,7 +224,7 @@ use Test::Moose;
                 string_substr_curried_3 => [ substr => ( 1, 3, 'ong' ) ],
             },
         );
-    }, "native string trait inlines properly";
+    } "native string trait inlines properly";
 }
 
 with_immutable {

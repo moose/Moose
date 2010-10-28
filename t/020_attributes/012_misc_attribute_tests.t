@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -57,13 +57,13 @@ use Test::Fatal;
     my $test = Test::For::Lazy::TypeConstraint->new;
     isa_ok($test, 'Test::For::Lazy::TypeConstraint');
 
-    ok exception {
+    dies_ok {
         $test->bad_lazy_attr;
-    }, '... this does not work';
+    } '... this does not work';
 
-    ok ! exception {
+    lives_ok {
         $test->good_lazy_attr;
-    }, '... this does not work';
+    } '... this does not work';
 }
 
 {
@@ -118,9 +118,9 @@ use Test::Fatal;
 
     }
 
-    ok exception {
+    dies_ok {
         Test::UndefDefault::Attributes->new;
-    }, '... default must return a value which passes the type constraint';
+    } '... default must return a value which passes the type constraint';
 
 }
 
@@ -138,9 +138,9 @@ use Test::Fatal;
     is($moose_obj->a_str( 'foobar' ), 'foobar', 'setter took string');
     ok($moose_obj, 'this is a *not* a string');
 
-    like exception {
+    throws_ok {
         $moose_obj->a_str( $moose_obj )
-    }, qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/,
+    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/,
     '... dies without overloading the string';
 
 }
@@ -153,14 +153,14 @@ use Test::Fatal;
         has 'a_num' => ( isa => 'Int' , is => 'rw', default => 7.5 );
     }
 
-    like exception {
+    throws_ok {
         OverloadBreaker->new;
-    }, qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' with value 7\.5/,
+    } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' with value 7\.5/,
     '... this doesnt trip overload to break anymore ';
 
-    ok ! exception {
+    lives_ok {
         OverloadBreaker->new(a_num => 5);
-    }, '... this works fine though';
+    } '... this works fine though';
 
 }
 
@@ -192,9 +192,9 @@ use Test::Fatal;
         has 'foo'  => ( required => 1, builder => 'build_foo', is => 'ro');
     }
 
-    ok exception {
+    dies_ok {
         Test::Builder::Attribute::Broken->new;
-    }, '... no builder, wtf';
+    } '... no builder, wtf';
 }
 
 
@@ -244,7 +244,7 @@ use Test::Fatal;
     ok(!$instance->_has_foo, "noo _foo value yet");
     is($instance->foo, 'works', "foo builder works");
     is($instance->_foo, 'works too', "foo builder works too");
-    like exception { $instance->fool },
+    throws_ok { $instance->fool }
         qr/Test::LazyBuild::Attribute does not support builder method \'_build_fool\' for attribute \'fool\'/,
             "Correct error when a builder method is not present";
 
@@ -256,8 +256,8 @@ use Test::Fatal;
     use Moose;
 }
 
-ok ! exception { OutOfClassTest::has('foo', is => 'bare'); }, 'create attr via direct sub call';
-ok ! exception { OutOfClassTest->can('has')->('bar', is => 'bare'); }, 'create attr via can';
+lives_ok { OutOfClassTest::has('foo', is => 'bare'); } 'create attr via direct sub call';
+lives_ok { OutOfClassTest->can('has')->('bar', is => 'bare'); } 'create attr via can';
 
 ok(OutOfClassTest->meta->get_attribute('foo'), 'attr created from sub call');
 ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
@@ -268,7 +268,7 @@ ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
         package Foo;
         use Moose;
 
-        ::like ::exception { has 'foo' => ( 'ro', isa => 'Str' ) },
+        ::throws_ok { has 'foo' => ( 'ro', isa => 'Str' ) }
             qr/^Usage/, 'has throws error with odd number of attribute options';
     }
 

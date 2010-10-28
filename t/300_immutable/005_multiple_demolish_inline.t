@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -26,20 +26,20 @@ use Test::Fatal;
     sub DEMOLISH { }
 }
 
-ok ! exception {
+lives_ok {
     Bar->new();
-}, 'Bar->new()';
+} 'Bar->new()';
 
-ok ! exception {
+lives_ok {
     Bar->meta->make_immutable;
-}, 'Bar->meta->make_immutable';
+} 'Bar->meta->make_immutable';
 
 is( Bar->meta->get_method('DESTROY')->package_name, 'Bar',
     'Bar has a DESTROY method in the Bar class (not inherited)' );
 
-ok ! exception {
+lives_ok {
     Foo->meta->make_immutable;
-}, 'Foo->meta->make_immutable';
+} 'Foo->meta->make_immutable';
 
 is( Foo->meta->get_method('DESTROY')->package_name, 'Foo',
     'Foo has a DESTROY method in the Bar class (not inherited)' );

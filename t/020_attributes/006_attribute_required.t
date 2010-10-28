@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -44,25 +44,25 @@ use Test::Fatal;
 }
 
 #Yeah.. this doesn't work like this anymore, see below. (groditi)
-#like exception {
+#throws_ok {
 #    Foo->new(bar => 10, baz => undef);
-#}, qr/^Attribute \(baz\) is required and cannot be undef/, '... must supply all the required attribute';
+#} qr/^Attribute \(baz\) is required and cannot be undef/, '... must supply all the required attribute';
 
-#like exception {
+#throws_ok {
 #    Foo->new(bar => 10, boo => undef);
-#}, qr/^Attribute \(boo\) is required and cannot be undef/, '... must supply all the required attribute';
+#} qr/^Attribute \(boo\) is required and cannot be undef/, '... must supply all the required attribute';
 
-ok ! exception {
+lives_ok {
     Foo->new(bar => 10, baz => undef);
-}, '... undef is a valid attribute value';
+} '... undef is a valid attribute value';
 
-ok ! exception {
+lives_ok {
     Foo->new(bar => 10, boo => undef);
-},  '... undef is a valid attribute value';
+}  '... undef is a valid attribute value';
 
 
-like exception {
+throws_ok {
     Foo->new;
-}, qr/^Attribute \(bar\) is required/, '... must supply all the required attribute';
+} qr/^Attribute \(bar\) is required/, '... must supply all the required attribute';
 
 done_testing;

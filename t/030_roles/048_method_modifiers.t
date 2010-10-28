@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 my $FooRole;
 {
@@ -66,7 +66,7 @@ my $QuuxRole;
     package Quux::Role;
     use Moose::Role;
     { our $TODO; local $TODO = "can't handle regexes yet";
-    ::ok ! ::exception {
+    ::lives_ok {
         after qr/foo|bar/ => sub { $QuuxRole++ }
     };
     }

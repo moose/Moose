@@ -9,7 +9,7 @@ use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 use Test::Moose;
 
 {
@@ -137,19 +137,19 @@ sub run_tests {
         ok( !$obj->is_empty, 'values is not empty' );
         is( $obj->count, 3, 'count returns 3' );
 
-        like exception { $obj->count(22) },
+        throws_ok { $obj->count(22) }
         qr/Cannot call count with any arguments/,
             'throws an error when passing an argument passed to count';
 
-        ok ! exception { $obj->push( 1, 2, 3 ) },
+        lives_ok { $obj->push( 1, 2, 3 ) }
         'pushed three new values and lived';
 
-        ok ! exception { $obj->push() }, 'call to push without arguments lives';
+        lives_ok { $obj->push() } 'call to push without arguments lives';
 
-        ok ! exception {
+        lives_and {
             is( $obj->unshift( 101, 22 ), 8,
                 'unshift returns size of the new array' );
-        },
+        }
         'unshifted two values and lived';
 
         is_deeply(
@@ -157,7 +157,7 @@ sub run_tests {
             'unshift changed the value of the array in the object'
         );
 
-        ok ! exception { $obj->unshift() },
+        lives_ok { $obj->unshift() }
         'call to unshift without arguments lives';
 
         is( $obj->pop, 3, 'pop returns the last value in the array' );
@@ -167,13 +167,13 @@ sub run_tests {
             'pop changed the value of the array in the object'
         );
 
-        like exception { $obj->pop(42) },
+        throws_ok { $obj->pop(42) }
         qr/Cannot call pop with any arguments/,
             'call to pop with arguments dies';
 
         is( $obj->shift, 101, 'shift returns the first value' );
 
-        like exception { $obj->shift(42) },
+        throws_ok { $obj->shift(42) }
         qr/Cannot call shift with any arguments/,
             'call to shift with arguments dies';
 
@@ -187,7 +187,7 @@ sub run_tests {
             'call to elements returns values as a list'
         );
 
-        like exception { $obj->elements(22) },
+        throws_ok { $obj->elements(22) }
         qr/Cannot call elements with any arguments/,
             'throws an error when passing an argument passed to elements';
 
@@ -198,51 +198,51 @@ sub run_tests {
         is( $obj->get(2),      3, 'get values at index 2' );
         is( $obj->get_curried, 2, 'get_curried returns value at index 1' );
 
-        like exception { $obj->get() },
+        throws_ok { $obj->get() }
         qr/Cannot call get without at least 1 argument/,
             'throws an error when get is called without any arguments';
 
-        like exception { $obj->get( {} ) },
+        throws_ok { $obj->get( {} ) }
         qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
-        like exception { $obj->get(2.2) },
+        throws_ok { $obj->get(2.2) }
         qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
-        like exception { $obj->get('foo') },
+        throws_ok { $obj->get('foo') }
         qr/The index passed to get must be an integer/,
             'throws an error when get is called with an invalid argument';
 
-        like exception { $obj->get_curried(2) },
+        throws_ok { $obj->get_curried(2) }
         qr/Cannot call get with more than 1 argument/,
             'throws an error when get_curried is called with an argument';
 
-        ok ! exception {
+        lives_and {
             is( $obj->set( 1, 100 ), 100, 'set returns new value' );
-        },
+        }
         'set value at index 1 lives';
 
         is( $obj->get(1), 100, 'get value at index 1 returns new value' );
 
 
-        like exception { $obj->set( 1, 99, 42 ) },
+        throws_ok { $obj->set( 1, 99, 42 ) }
         qr/Cannot call set with more than 2 arguments/,
             'throws an error when set is called with three arguments';
 
-        ok ! exception { $obj->set_curried_1(99) }, 'set_curried_1 lives';
+        lives_ok { $obj->set_curried_1(99) } 'set_curried_1 lives';
 
         is( $obj->get(1), 99, 'get value at index 1 returns new value' );
 
-        like exception { $obj->set_curried_1( 99, 42 ) },
+        throws_ok { $obj->set_curried_1( 99, 42 ) }
         qr/Cannot call set with more than 2 arguments/,
             'throws an error when set_curried_1 is called with two arguments';
 
-        ok ! exception { $obj->set_curried_2 }, 'set_curried_2 lives';
+        lives_ok { $obj->set_curried_2 } 'set_curried_2 lives';
 
         is( $obj->get(1), 98, 'get value at index 1 returns new value' );
 
-        like exception { $obj->set_curried_2(42) },
+        throws_ok { $obj->set_curried_2(42) }
         qr/Cannot call set with more than 2 arguments/,
             'throws an error when set_curried_2 is called with one argument';
 
@@ -251,9 +251,9 @@ sub run_tests {
             'accessor with one argument returns value at index 1'
         );
 
-        ok ! exception {
+        lives_and {
             is( $obj->accessor( 1 => 97 ), 97, 'accessor returns new value' );
-        },
+        }
         'accessor as writer lives';
 
         is(
@@ -261,7 +261,7 @@ sub run_tests {
             'accessor set value at index 1'
         );
 
-        like exception { $obj->accessor( 1, 96, 42 ) },
+        throws_ok { $obj->accessor( 1, 96, 42 ) }
         qr/Cannot call accessor with more than 2 arguments/,
             'throws an error when accessor is called with three arguments';
 
@@ -270,7 +270,7 @@ sub run_tests {
             'accessor_curried_1 returns expected value when called with no arguments'
         );
 
-        ok ! exception { $obj->accessor_curried_1(95) },
+        lives_ok { $obj->accessor_curried_1(95) }
         'accessor_curried_1 as writer lives';
 
         is(
@@ -278,11 +278,11 @@ sub run_tests {
             'accessor_curried_1 set value at index 1'
         );
 
-        like exception { $obj->accessor_curried_1( 96, 42 ) },
+        throws_ok { $obj->accessor_curried_1( 96, 42 ) }
         qr/Cannot call accessor with more than 2 arguments/,
             'throws an error when accessor_curried_1 is called with two arguments';
 
-        ok ! exception { $obj->accessor_curried_2 },
+        lives_ok { $obj->accessor_curried_2 }
         'accessor_curried_2 as writer lives';
 
         is(
@@ -290,17 +290,17 @@ sub run_tests {
             'accessor_curried_2 set value at index 1'
         );
 
-        like exception { $obj->accessor_curried_2(42) },
+        throws_ok { $obj->accessor_curried_2(42) }
         qr/Cannot call accessor with more than 2 arguments/,
             'throws an error when accessor_curried_2 is called with one argument';
 
-        ok ! exception { $obj->clear }, 'clear lives';
+        lives_ok { $obj->clear } 'clear lives';
 
         ok( $obj->is_empty, 'values is empty after call to clear' );
 
         $obj->set( 0 => 42 );
 
-        like exception { $obj->clear(50) },
+        throws_ok { $obj->clear(50) }
         qr/Cannot call clear with any arguments/,
             'throws an error when clear is called with an argument';
 
@@ -309,7 +309,7 @@ sub run_tests {
             'values is not empty after failed call to clear'
         );
 
-        like exception { $obj->is_empty(50) },
+        throws_ok { $obj->is_empty(50) }
         qr/Cannot call is_empty with any arguments/,
             'throws an error when is_empty is called with an argument';
 
@@ -319,9 +319,9 @@ sub run_tests {
             'pushed 4 elements, got number of elements in the array back'
         );
 
-        ok ! exception {
+        lives_and {
             is( $obj->delete(2), 10, 'delete returns deleted value' );
-        },
+        }
         'delete lives';
 
         is_deeply(
@@ -329,39 +329,39 @@ sub run_tests {
             'delete removed the specified element'
         );
 
-        like exception { $obj->delete( 2, 3 ) },
+        throws_ok { $obj->delete( 2, 3 ) }
         qr/Cannot call delete with more than 1 argument/,
             'throws an error when delete is called with two arguments';
 
-        ok ! exception { $obj->delete_curried }, 'delete_curried lives';
+        lives_ok { $obj->delete_curried } 'delete_curried lives';
 
         is_deeply(
             $obj->_values, [ 1, 42 ],
             'delete removed the specified element'
         );
 
-        like exception { $obj->delete_curried(2) },
+        throws_ok { $obj->delete_curried(2) }
         qr/Cannot call delete with more than 1 argument/,
             'throws an error when delete_curried is called with one argument';
 
-        ok ! exception { $obj->insert( 1, 21 ) }, 'insert lives';
+        lives_ok { $obj->insert( 1, 21 ) } 'insert lives';
 
         is_deeply(
             $obj->_values, [ 1, 21, 42 ],
             'insert added the specified element'
         );
 
-        like exception { $obj->insert( 1, 22, 44 ) },
+        throws_ok { $obj->insert( 1, 22, 44 ) }
         qr/Cannot call insert with more than 2 arguments/,
             'throws an error when insert is called with three arguments';
 
-        ok ! exception {
+        lives_and {
             is_deeply(
                 [ $obj->splice( 1, 0, 2, 3 ) ],
                 [],
                 'return value of splice is empty list when not removing elements'
             );
-        },
+        }
         'splice lives';
 
         is_deeply(
@@ -369,13 +369,13 @@ sub run_tests {
             'splice added the specified elements'
         );
 
-        ok ! exception {
+        lives_and {
             is_deeply(
                 [ $obj->splice( 1, 2, 99 ) ],
                 [ 2, 3 ],
                 'splice returns list of removed values'
             );
-        },
+        }
         'splice lives';
 
         is_deeply(
@@ -383,15 +383,15 @@ sub run_tests {
             'splice added the specified elements'
         );
 
-        like exception { $obj->splice() },
+        throws_ok { $obj->splice() }
         qr/Cannot call splice without at least 1 argument/,
             'throws an error when splice is called with no arguments';
 
-        like exception { $obj->splice( 1, 'foo', ) },
+        throws_ok { $obj->splice( 1, 'foo', ) }
         qr/The length argument passed to splice must be an integer/,
             'throws an error when splice is called with an invalid length';
 
-        ok ! exception { $obj->splice_curried_1( 2, 101 ) },
+        lives_ok { $obj->splice_curried_1( 2, 101 ) }
         'splice_curried_1 lives';
 
         is_deeply(
@@ -399,14 +399,14 @@ sub run_tests {
             'splice added the specified elements'
         );
 
-        ok ! exception { $obj->splice_curried_2(102) }, 'splice_curried_2 lives';
+        lives_ok { $obj->splice_curried_2(102) } 'splice_curried_2 lives';
 
         is_deeply(
             $obj->_values, [ 1, 102 ],
             'splice added the specified elements'
         );
 
-        ok ! exception { $obj->splice_curried_all }, 'splice_curried_all lives';
+        lives_ok { $obj->splice_curried_all } 'splice_curried_all lives';
 
         is_deeply(
             $obj->_values, [ 1, 3, 4, 5 ],
@@ -437,13 +437,13 @@ sub run_tests {
             'sort returns values sorted by provided function'
         );
 
-        like exception { $obj->sort(1) },
+        throws_ok { $obj->sort(1) }
         qr/The argument passed to sort must be a code reference/,
             'throws an error when passing a non coderef to sort';
 
-        like exception {
+        throws_ok {
             $obj->sort( sub { }, 27 );
-        },
+        }
         qr/Cannot call sort with more than 1 argument/,
             'throws an error when passing two arguments to sort';
 
@@ -463,15 +463,15 @@ sub run_tests {
             'sort_in_place with function sorts values'
         );
 
-        like exception {
+        throws_ok {
             $obj->sort_in_place( 27 );
-        },
+        }
         qr/The argument passed to sort_in_place must be a code reference/,
             'throws an error when passing a non coderef to sort_in_place';
 
-        like exception {
+        throws_ok {
             $obj->sort_in_place( sub { }, 27 );
-        },
+        }
         qr/Cannot call sort_in_place with more than 1 argument/,
             'throws an error when passing two arguments to sort_in_place';
 
@@ -484,7 +484,7 @@ sub run_tests {
             'sort_in_place_curried sorts values'
         );
 
-        like exception { $obj->sort_in_place_curried(27) },
+        throws_ok { $obj->sort_in_place_curried(27) }
         qr/Cannot call sort_in_place with more than 1 argument/,
             'throws an error when passing one argument passed to sort_in_place_curried';
 
@@ -496,17 +496,17 @@ sub run_tests {
             'map returns the expected values'
         );
 
-        like exception { $obj->map },
+        throws_ok { $obj->map }
         qr/Cannot call map without at least 1 argument/,
             'throws an error when passing no arguments to map';
 
-        like exception {
+        throws_ok {
             $obj->map( sub { }, 2 );
-        },
+        }
         qr/Cannot call map with more than 1 argument/,
             'throws an error when passing two arguments to map';
 
-        like exception { $obj->map( {} ) },
+        throws_ok { $obj->map( {} ) }
         qr/The argument passed to map must be a code reference/,
             'throws an error when passing a non coderef to map';
 
@@ -518,9 +518,9 @@ sub run_tests {
             'map_curried returns the expected values'
         );
 
-        like exception {
+        throws_ok {
             $obj->map_curried( sub { } );
-        },
+        }
         qr/Cannot call map with more than 1 argument/,
             'throws an error when passing one argument passed to map_curried';
 
@@ -532,17 +532,17 @@ sub run_tests {
             'grep returns the expected values'
         );
 
-        like exception { $obj->grep },
+        throws_ok { $obj->grep }
         qr/Cannot call grep without at least 1 argument/,
             'throws an error when passing no arguments to grep';
 
-        like exception {
+        throws_ok {
             $obj->grep( sub { }, 2 );
-        },
+        }
         qr/Cannot call grep with more than 1 argument/,
             'throws an error when passing two arguments to grep';
 
-        like exception { $obj->grep( {} ) },
+        throws_ok { $obj->grep( {} ) }
         qr/The argument passed to grep must be a code reference/,
             'throws an error when passing a non coderef to grep';
 
@@ -559,9 +559,9 @@ sub run_tests {
             'grep_curried returns the expected values'
         );
 
-        like exception {
+        throws_ok {
             $obj->grep_curried( sub { } );
-        },
+        }
         qr/Cannot call grep with more than 1 argument/,
             'throws an error when passing one argument passed to grep_curried';
 
@@ -573,17 +573,17 @@ sub run_tests {
             'first returns expected value'
         );
 
-        like exception { $obj->first },
+        throws_ok { $obj->first }
         qr/Cannot call first without at least 1 argument/,
             'throws an error when passing no arguments to first';
 
-        like exception {
+        throws_ok {
             $obj->first( sub { }, 2 );
-        },
+        }
         qr/Cannot call first with more than 1 argument/,
             'throws an error when passing two arguments to first';
 
-        like exception { $obj->first( {} ) },
+        throws_ok { $obj->first( {} ) }
         qr/The argument passed to first must be a code reference/,
             'throws an error when passing a non coderef to first';
 
@@ -593,9 +593,9 @@ sub run_tests {
             'first_curried returns expected value'
         );
 
-        like exception {
+        throws_ok {
             $obj->first_curried( sub { } );
-        },
+        }
         qr/Cannot call first with more than 1 argument/,
             'throws an error when passing one argument passed to first_curried';
 
@@ -611,15 +611,15 @@ sub run_tests {
             'join returns expected result when joining with empty string'
         );
 
-        like exception { $obj->join },
+        throws_ok { $obj->join }
         qr/Cannot call join without at least 1 argument/,
             'throws an error when passing no arguments to join';
 
-        like exception { $obj->join( '-', 2 ) },
+        throws_ok { $obj->join( '-', 2 ) }
         qr/Cannot call join with more than 1 argument/,
             'throws an error when passing two arguments to join';
 
-        like exception { $obj->join( {} ) },
+        throws_ok { $obj->join( {} ) }
         qr/The argument passed to join must be a string/,
             'throws an error when passing a non string to join';
 
@@ -629,7 +629,7 @@ sub run_tests {
             'shuffle returns all values (cannot check for a random order)'
         );
 
-        like exception { $obj->shuffle(2) },
+        throws_ok { $obj->shuffle(2) }
         qr/Cannot call shuffle with any arguments/,
             'throws an error when passing an argument passed to shuffle';
 
@@ -641,7 +641,7 @@ sub run_tests {
             'uniq returns expected values (in original order)'
         );
 
-        like exception { $obj->uniq(2) },
+        throws_ok { $obj->uniq(2) }
         qr/Cannot call uniq with any arguments/,
             'throws an error when passing an argument passed to uniq';
 
@@ -653,17 +653,17 @@ sub run_tests {
             'reduce returns expected value'
         );
 
-        like exception { $obj->reduce },
+        throws_ok { $obj->reduce }
         qr/Cannot call reduce without at least 1 argument/,
             'throws an error when passing no arguments to reduce';
 
-        like exception {
+        throws_ok {
             $obj->reduce( sub { }, 2 );
-        },
+        }
         qr/Cannot call reduce with more than 1 argument/,
             'throws an error when passing two arguments to reduce';
 
-        like exception { $obj->reduce( {} ) },
+        throws_ok { $obj->reduce( {} ) }
         qr/The argument passed to reduce must be a code reference/,
             'throws an error when passing a non coderef to reduce';
 
@@ -673,9 +673,9 @@ sub run_tests {
             'reduce_curried returns expected value'
         );
 
-        like exception {
+        throws_ok {
             $obj->reduce_curried( sub { } );
-        },
+        }
         qr/Cannot call reduce with more than 1 argument/,
             'throws an error when passing one argument passed to reduce_curried';
 
@@ -702,11 +702,11 @@ sub run_tests {
             'natatime with function returns expected value'
         );
 
-        like exception { $obj->natatime( {} ) },
+        throws_ok { $obj->natatime( {} ) }
         qr/The n value passed to natatime must be an integer/,
             'throws an error when passing a non integer to natatime';
 
-        like exception { $obj->natatime( 2, {} ) },
+        throws_ok { $obj->natatime( 2, {} ) }
         qr/The second argument passed to natatime must be a code reference/,
             'throws an error when passing a non code ref to natatime';
 
@@ -731,7 +731,7 @@ sub run_tests {
             'natatime_curried with function returns expected value'
         );
 
-        like exception { $obj->natatime_curried( {} ) },
+        throws_ok { $obj->natatime_curried( {} ) }
         qr/The second argument passed to natatime must be a code reference/,
             'throws an error when passing a non code ref to natatime_curried';
 

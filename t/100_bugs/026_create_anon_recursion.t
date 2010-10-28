@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Meta::Class;
 
@@ -14,11 +14,11 @@ TODO:
         = 'Loading Moose::Meta::Class without loading Moose.pm causes weird problems';
 
     my $meta;
-    ok ! exception {
+    lives_ok {
         $meta = Moose::Meta::Class->create_anon_class(
             superclasses => [ 'Moose::Object', ],
         );
-    },
+    }
     'Class is created successfully';
 }
 

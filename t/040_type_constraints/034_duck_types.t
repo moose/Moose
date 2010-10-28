@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
 
@@ -62,21 +62,21 @@ use Test::Fatal;
 }
 
 # try giving it a duck
-ok ! exception { DucktypeTest->new( duck => Duck->new ) }, 'the Duck lives okay';
+lives_ok { DucktypeTest->new( duck => Duck->new ) } 'the Duck lives okay';
 
 # try giving it a swan which is like a duck, but not close enough
-like exception { DucktypeTest->new( duck => Swan->new ) },
+throws_ok { DucktypeTest->new( duck => Swan->new ) }
 qr/Swan is missing methods 'quack'/,
     "the Swan doesn't quack";
 
 # try giving it a rubber RubberDuckey
-ok ! exception { DucktypeTest->new( swan => Swan->new ) }, 'but a Swan can honk';
+lives_ok { DucktypeTest->new( swan => Swan->new ) } 'but a Swan can honk';
 
 # try giving it a rubber RubberDuckey
-ok ! exception { DucktypeTest->new( duck => RubberDuck->new ) },
+lives_ok { DucktypeTest->new( duck => RubberDuck->new ) }
 'the RubberDuck lives okay';
 
 # try with the other constraint form
-ok ! exception { DucktypeTest->new( other_swan => Swan->new ) }, 'but a Swan can honk';
+lives_ok { DucktypeTest->new( other_swan => Swan->new ) } 'but a Swan can honk';
 
 done_testing;

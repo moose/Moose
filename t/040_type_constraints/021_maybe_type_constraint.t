@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Util::TypeConstraints;
 
@@ -38,41 +38,41 @@ ok(!$type->check([]), '... checked type correctly (fail)');
     has 'maybe_bar' => (is => 'rw', isa => maybe_type(class_type('Bar')));
 }
 
-ok ! exception {
+lives_ok {
     Foo->new(arr => [], bar => Bar->new);
-}, '... Bar->new isa Bar';
+} '... Bar->new isa Bar';
 
-ok exception {
+dies_ok {
     Foo->new(arr => [], bar => undef);
-}, '... undef isnta Bar';
+} '... undef isnta Bar';
 
-ok ! exception {
+lives_ok {
     Foo->new(arr => [], maybe_bar => Bar->new);
-}, '... Bar->new isa maybe(Bar)';
+} '... Bar->new isa maybe(Bar)';
 
-ok ! exception {
+lives_ok {
     Foo->new(arr => [], maybe_bar => undef);
-}, '... undef isa maybe(Bar)';
+} '... undef isa maybe(Bar)';
 
-ok exception {
+dies_ok {
     Foo->new(arr => [], maybe_bar => 1);
-}, '... 1 isnta maybe(Bar)';
+} '... 1 isnta maybe(Bar)';
 
-ok ! exception {
+lives_ok {
     Foo->new(arr => []);
-}, '... it worked!';
+} '... it worked!';
 
-ok ! exception {
+lives_ok {
     Foo->new(arr => undef);
-}, '... it worked!';
+} '... it worked!';
 
-ok exception {
+dies_ok {
     Foo->new(arr => 100);
-}, '... failed the type check';
+} '... failed the type check';
 
-ok exception {
+dies_ok {
     Foo->new(arr => 'hello world');
-}, '... failed the type check';
+} '... failed the type check';
 
 
 {
@@ -121,14 +121,14 @@ ok sub {$obj->Maybe_Int(undef); 1}->()
 ok !$Maybe_Int->check("")
  => 'failed ("")';
 
-like exception { $obj->Maybe_Int("") },,
+throws_ok sub { $obj->Maybe_Int("") },
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("")';
 
 ok !$Maybe_Int->check("a")
  => 'failed ("a")';
 
-like exception { $obj->Maybe_Int("a") },,
+throws_ok sub { $obj->Maybe_Int("a") },
  qr/Attribute \(Maybe_Int\) does not pass the type constraint/
  => 'failed assigned ("a")';
 

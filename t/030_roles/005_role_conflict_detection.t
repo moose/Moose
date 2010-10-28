@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 =pod
 
@@ -32,16 +32,16 @@ Mutually recursive roles.
     package My::Test1;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Foo', 'Role::Bar';
-    }, '... our mutually recursive roles combine okay';
+    } '... our mutually recursive roles combine okay';
 
     package My::Test2;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Bar', 'Role::Foo';
-    }, '... our mutually recursive roles combine okay (no matter what order)';
+    } '... our mutually recursive roles combine okay (no matter what order)';
 }
 
 my $test1 = My::Test1->new;
@@ -98,32 +98,32 @@ Role method conflicts
     package My::Test3;
     use Moose;
 
-    ::like ::exception {
+    ::throws_ok {
         with 'Role::Bling', 'Role::Bling::Bling';
-    }, qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
+    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
 
     package My::Test4;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Bling';
         with 'Role::Bling::Bling';
-    }, '... role methods didnt conflict when manually combined';
+    } '... role methods didnt conflict when manually combined';
 
     package My::Test5;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Bling::Bling';
         with 'Role::Bling';
-    }, '... role methods didnt conflict when manually combined (in opposite order)';
+    } '... role methods didnt conflict when manually combined (in opposite order)';
 
     package My::Test6;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Bling::Bling', 'Role::Bling';
-    }, '... role methods didnt conflict when manually resolved';
+    } '... role methods didnt conflict when manually resolved';
 
     sub bling { 'My::Test6::bling' }
 }
@@ -187,35 +187,34 @@ Role attribute conflicts
     package My::Test7;
     use Moose;
 
-    ::like ::exception {
+    ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
     }, qr/We have encountered an attribute conflict.+ghost/,
-      '... role attrs conflict and method was required';
 
     package My::Test8;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Boo';
         with 'Role::Boo::Hoo';
-    }, '... role attrs didnt conflict when manually combined';
+    } '... role attrs didnt conflict when manually combined';
 
     package My::Test9;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Boo::Hoo';
         with 'Role::Boo';
-    }, '... role attrs didnt conflict when manually combined';
+    } '... role attrs didnt conflict when manually combined';
 
     package My::Test10;
     use Moose;
 
     has 'ghost' => (is => 'ro', default => 'My::Test10::ghost');
 
-    ::like ::exception {
+    ::throws_ok {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    }, qr/We have encountered an attribute conflict/,
+    } qr/We have encountered an attribute conflict/,
       '... role attrs conflict and cannot be manually disambiguted';
 
 }
@@ -275,34 +274,34 @@ Role override method conflicts
 
     extends 'My::Test::Base';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Truth';
-    }, '... composed the role with override okay';
+    } '... composed the role with override okay';
 
     package My::Test12;
     use Moose;
 
     extends 'My::Test::Base';
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Plot';
-    }, '... composed the role with override okay';
+    } '... composed the role with override okay';
 
     package My::Test13;
     use Moose;
 
-    ::ok ::exception {
+    ::dies_ok {
         with 'Role::Plot';
-    }, '... cannot compose it because we have no superclass';
+    } '... cannot compose it because we have no superclass';
 
     package My::Test14;
     use Moose;
 
     extends 'My::Test::Base';
 
-    ::like ::exception {
+    ::throws_ok {
         with 'Role::Plot', 'Role::Truth';
-    }, qr/Two \'override\' methods of the same name encountered/,
+    } qr/Two \'override\' methods of the same name encountered/,
       '... cannot compose it because we have no superclass';
 }
 
@@ -328,9 +327,9 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
     package Role::Reality;
     use Moose::Role;
 
-    ::like ::exception {
+    ::throws_ok {
         with 'Role::Plot';
-    }, qr/A local method of the same name as been found/,
+    } qr/A local method of the same name as been found/,
     '... could not compose roles here, it dies';
 
     sub twist {
@@ -361,9 +360,9 @@ is(Role::Reality->meta->get_method('twist')->(),
     package Conflicts;
     use Moose;
 
-    ::like ::exception {
+    ::throws_ok {
         with qw(Role1 Role2);
-    }, qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/;
+    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/;
 }
 
 =pod
@@ -418,108 +417,108 @@ Now I have to decide actually what happens, and how to fix it.
     package My::Test15;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Method';
-    }, '... composed the method role into the method class';
+    } '... composed the method role into the method class';
 
     sub ghost { 'My::Test15::ghost' }
 
     package My::Test16;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Method';
-    }, '... composed the method role into the attribute class';
+    } '... composed the method role into the attribute class';
 
     has 'ghost' => (is => 'ro', default => 'My::Test16::ghost');
 
     package My::Test17;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Attribute';
-    }, '... composed the attribute role into the method class';
+    } '... composed the attribute role into the method class';
 
     sub ghost { 'My::Test17::ghost' }
 
     package My::Test18;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Attribute';
-    }, '... composed the attribute role into the attribute class';
+    } '... composed the attribute role into the attribute class';
 
     has 'ghost' => (is => 'ro', default => 'My::Test18::ghost');
 
     package My::Test19;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Method', 'Role::Method2';
-    }, '... composed method roles into class with method tiebreaker';
+    } '... composed method roles into class with method tiebreaker';
 
     sub ghost { 'My::Test19::ghost' }
 
     package My::Test20;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Method', 'Role::Method2';
-    }, '... composed method roles into class with attribute tiebreaker';
+    } '... composed method roles into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test20::ghost');
 
     package My::Test21;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Attribute', 'Role::Attribute2';
-    }, '... composed attribute roles into class with method tiebreaker';
+    } '... composed attribute roles into class with method tiebreaker';
 
     sub ghost { 'My::Test21::ghost' }
 
     package My::Test22;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
        with 'Role::Attribute', 'Role::Attribute2';
-    }, '... composed attribute roles into class with attribute tiebreaker';
+    } '... composed attribute roles into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test22::ghost');
 
     package My::Test23;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Method', 'Role::Attribute';
-    }, '... composed method and attribute role into class with method tiebreaker';
+    } '... composed method and attribute role into class with method tiebreaker';
 
     sub ghost { 'My::Test23::ghost' }
 
     package My::Test24;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Method', 'Role::Attribute';
-    }, '... composed method and attribute role into class with attribute tiebreaker';
+    } '... composed method and attribute role into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test24::ghost');
 
     package My::Test25;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Attribute', 'Role::Method';
-    }, '... composed attribute and method role into class with method tiebreaker';
+    } '... composed attribute and method role into class with method tiebreaker';
 
     sub ghost { 'My::Test25::ghost' }
 
     package My::Test26;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Role::Attribute', 'Role::Method';
-    }, '... composed attribute and method role into class with attribute tiebreaker';
+    } '... composed attribute and method role into class with attribute tiebreaker';
 
     has 'ghost' => (is => 'ro', default => 'My::Test26::ghost');
 }

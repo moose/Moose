@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package Foo;
@@ -20,7 +20,7 @@ use Test::Fatal;
     package Bar;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'baz' => (
             is      => 'ro',
             isa     => 'Foo',
@@ -28,14 +28,14 @@ use Test::Fatal;
             default => sub { Foo->new() },
             handles => qr/^a$/,
         );
-    }, '... can create the attribute with delegations';
+    } '... can create the attribute with delegations';
 
 }
 
 my $bar;
-ok ! exception {
+lives_ok {
     $bar = Bar->new;
-}, '... created the object ok';
+} '... created the object ok';
 isa_ok($bar, 'Bar');
 
 is($bar->a, 'Foo::a', '... got the right delgated value');
@@ -46,7 +46,7 @@ $SIG{__WARN__} = sub { push @w, "@_" };
     package Baz;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'bar' => (
             is      => 'ro',
             isa     => 'Foo',
@@ -54,7 +54,7 @@ $SIG{__WARN__} = sub { push @w, "@_" };
             default => sub { Foo->new() },
             handles => qr/.*/,
         );
-    }, '... can create the attribute with delegations';
+    } '... can create the attribute with delegations';
 
 }
 
@@ -62,9 +62,9 @@ is(@w, 0, "no warnings");
 
 
 my $baz;
-ok ! exception {
+lives_ok {
     $baz = Baz->new;
-}, '... created the object ok';
+} '... created the object ok';
 isa_ok($baz, 'Baz');
 
 is($baz->a, 'Foo::a', '... got the right delgated value');
@@ -79,7 +79,7 @@ is($baz->a, 'Foo::a', '... got the right delgated value');
     package Blart;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'bar' => (
             is      => 'ro',
             isa     => 'Foo',
@@ -87,7 +87,7 @@ is($baz->a, 'Foo::a', '... got the right delgated value');
             default => sub { Foo->new() },
             handles => [qw(a new)],
         );
-    }, '... can create the attribute with delegations';
+    } '... can create the attribute with delegations';
 
 }
 
@@ -101,9 +101,9 @@ is($baz->a, 'Foo::a', '... got the right delgated value');
 
 
 my $blart;
-ok ! exception {
+lives_ok {
     $blart = Blart->new;
-}, '... created the object ok';
+} '... created the object ok';
 isa_ok($blart, 'Blart');
 
 is($blart->a, 'Foo::a', '... got the right delgated value');

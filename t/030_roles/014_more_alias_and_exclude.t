@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -45,12 +45,12 @@ use Test::Fatal;
     package My::Class;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         with 'Foo'   => { -excludes => [qw/bar baz gorch/], -alias => { gorch => 'foo_gorch' } },
              'Bar'   => { -excludes => [qw/foo baz gorch/] },
              'Baz'   => { -excludes => [qw/foo bar gorch/], -alias => { foo => 'baz_foo', bar => 'baz_bar' } },
              'Gorch' => { -excludes => [qw/foo bar baz/] };
-    }, '... everything works out all right';
+    } '... everything works out all right';
 }
 
 my $c = My::Class->new;

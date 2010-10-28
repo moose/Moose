@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package MyRole1;
@@ -37,8 +37,8 @@ ok ((not $instance_with_role2->can('a_role_method')),
 ok (($instance_with_role1->does('MyRole1')),
     'role was applied to the correct instance');
 
-ok ! exception {
+lives_and {
     is $instance_with_role1->a_role_method, 'foo'
-}, 'instance has correct role method';
+} 'instance has correct role method';
 
 done_testing;

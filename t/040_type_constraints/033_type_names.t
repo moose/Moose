@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Meta::TypeConstraint;
 use Moose::Util::TypeConstraints;
@@ -29,14 +29,14 @@ TODO:
     }
 }
 
-ok ! exception { Moose::Meta::TypeConstraint->new( name => 'Foo.Bar::Baz' ) },
+lives_ok { Moose::Meta::TypeConstraint->new( name => 'Foo.Bar::Baz' ) }
 'Type names can contain periods and colons';
 
-like exception { subtype 'Foo-Baz' => as 'Item' },
+throws_ok { subtype 'Foo-Baz' => as 'Item' }
 qr/contains invalid characters/,
     'Type names cannot contain a dash (via subtype sugar)';
 
-ok ! exception { subtype 'Foo.Bar::Baz' => as 'Item' },
+lives_ok { subtype 'Foo.Bar::Baz' => as 'Item' }
 'Type names can contain periods and colons (via subtype sugar)';
 
 is( Moose::Util::TypeConstraints::find_or_parse_type_constraint('ArrayRef[In-valid]'),

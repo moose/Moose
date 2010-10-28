@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 BEGIN {
     {
@@ -52,7 +52,7 @@ BEGIN {
     package Child;
     use Moose -traits => 'Bar';
     { our $TODO; local $TODO = "no idea what's going on here";
-    ::ok ! ::exception { extends 'Parent' };
+    ::lives_ok { extends 'Parent' };
     }
 }
 

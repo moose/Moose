@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -70,41 +70,41 @@ ok(String('Foo'),  '... "Foo" is a String');
 
 my $foo = Foo->new;
 
-ok ! exception { $foo->vUndef(undef) }, '... undef is a Foo->Undef';
-ok exception { $foo->vDefined(undef) }, '... undef is NOT a Foo->Defined';
-ok exception { $foo->vInt(undef) }, '... undef is NOT a Foo->Int';
-ok exception { $foo->vNumber(undef) }, '... undef is NOT a Foo->Number';
-ok exception { $foo->vStr(undef) }, '... undef is NOT a Foo->Str';
-ok exception { $foo->vString(undef) }, '... undef is NOT a Foo->String';
+lives_ok { $foo->vUndef(undef) } '... undef is a Foo->Undef';
+dies_ok { $foo->vDefined(undef) } '... undef is NOT a Foo->Defined';
+dies_ok { $foo->vInt(undef) } '... undef is NOT a Foo->Int';
+dies_ok { $foo->vNumber(undef) } '... undef is NOT a Foo->Number';
+dies_ok { $foo->vStr(undef) } '... undef is NOT a Foo->Str';
+dies_ok { $foo->vString(undef) } '... undef is NOT a Foo->String';
 
-ok exception { $foo->vUndef(5) }, '... 5 is NOT a Foo->Undef';
-ok ! exception { $foo->vDefined(5) }, '... 5 is a Foo->Defined';
-ok ! exception { $foo->vInt(5) }, '... 5 is a Foo->Int';
-ok ! exception { $foo->vNumber(5) }, '... 5 is a Foo->Number';
-ok ! exception { $foo->vStr(5) }, '... 5 is a Foo->Str';
-ok exception { $foo->vString(5) }, '... 5 is NOT a Foo->String';
+dies_ok { $foo->vUndef(5) } '... 5 is NOT a Foo->Undef';
+lives_ok { $foo->vDefined(5) } '... 5 is a Foo->Defined';
+lives_ok { $foo->vInt(5) } '... 5 is a Foo->Int';
+lives_ok { $foo->vNumber(5) } '... 5 is a Foo->Number';
+lives_ok { $foo->vStr(5) } '... 5 is a Foo->Str';
+dies_ok { $foo->vString(5) } '... 5 is NOT a Foo->String';
 
-ok exception { $foo->vUndef(0.5) }, '... 0.5 is NOT a Foo->Undef';
-ok ! exception { $foo->vDefined(0.5) }, '... 0.5 is a Foo->Defined';
-ok exception { $foo->vInt(0.5) }, '... 0.5 is NOT a Foo->Int';
-ok ! exception { $foo->vNumber(0.5) }, '... 0.5 is a Foo->Number';
-ok ! exception { $foo->vStr(0.5) }, '... 0.5 is a Foo->Str';
-ok exception { $foo->vString(0.5) }, '... 0.5 is NOT a Foo->String';
+dies_ok { $foo->vUndef(0.5) } '... 0.5 is NOT a Foo->Undef';
+lives_ok { $foo->vDefined(0.5) } '... 0.5 is a Foo->Defined';
+dies_ok { $foo->vInt(0.5) } '... 0.5 is NOT a Foo->Int';
+lives_ok { $foo->vNumber(0.5) } '... 0.5 is a Foo->Number';
+lives_ok { $foo->vStr(0.5) } '... 0.5 is a Foo->Str';
+dies_ok { $foo->vString(0.5) } '... 0.5 is NOT a Foo->String';
 
-ok exception { $foo->vUndef('Foo') }, '... "Foo" is NOT a Foo->Undef';
-ok ! exception { $foo->vDefined('Foo') }, '... "Foo" is a Foo->Defined';
-ok exception { $foo->vInt('Foo') }, '... "Foo" is NOT a Foo->Int';
-ok exception { $foo->vNumber('Foo') }, '... "Foo" is NOT a Foo->Number';
-ok ! exception { $foo->vStr('Foo') }, '... "Foo" is a Foo->Str';
-ok ! exception { $foo->vString('Foo') }, '... "Foo" is a Foo->String';
+dies_ok { $foo->vUndef('Foo') } '... "Foo" is NOT a Foo->Undef';
+lives_ok { $foo->vDefined('Foo') } '... "Foo" is a Foo->Defined';
+dies_ok { $foo->vInt('Foo') } '... "Foo" is NOT a Foo->Int';
+dies_ok { $foo->vNumber('Foo') } '... "Foo" is NOT a Foo->Number';
+lives_ok { $foo->vStr('Foo') } '... "Foo" is a Foo->Str';
+lives_ok { $foo->vString('Foo') } '... "Foo" is a Foo->String';
 
 # the lazy tests
 
-ok ! exception { $foo->v_lazy_Undef() }, '... undef is a Foo->Undef';
-ok exception { $foo->v_lazy_Defined() }, '... undef is NOT a Foo->Defined';
-ok exception { $foo->v_lazy_Int() }, '... undef is NOT a Foo->Int';
-ok exception { $foo->v_lazy_Number() }, '... undef is NOT a Foo->Number';
-ok exception { $foo->v_lazy_Str() }, '... undef is NOT a Foo->Str';
-ok exception { $foo->v_lazy_String() }, '... undef is NOT a Foo->String';
+lives_ok { $foo->v_lazy_Undef() } '... undef is a Foo->Undef';
+dies_ok { $foo->v_lazy_Defined() } '... undef is NOT a Foo->Defined';
+dies_ok { $foo->v_lazy_Int() } '... undef is NOT a Foo->Int';
+dies_ok { $foo->v_lazy_Number() } '... undef is NOT a Foo->Number';
+dies_ok { $foo->v_lazy_Str() } '... undef is NOT a Foo->Str';
+dies_ok { $foo->v_lazy_String() } '... undef is NOT a Foo->String';
 
 done_testing;

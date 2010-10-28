@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -31,9 +31,9 @@ isa_ok($foo, 'Foo');
 
 is($foo->baz, 'Foo::baz', '... got the right value');
 
-ok ! exception {
+lives_ok {
     My::Role->meta->apply($foo)
-}, '... successfully applied the role to immutable instance';
+} '... successfully applied the role to immutable instance';
 
 is($foo->baz, 'My::Role::baz(Foo::baz)', '... got the right value');
 

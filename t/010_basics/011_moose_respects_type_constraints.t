@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Util::TypeConstraints;
 
@@ -50,12 +50,12 @@ ok(!$foo_constraint->check('Bar'), '... my constraint failed correctly');
 my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 
-ok ! exception {
+lives_ok {
     $bar->foo('Foo');
-}, '... checked the type constraint correctly';
+} '... checked the type constraint correctly';
 
-ok exception {
+dies_ok {
     $bar->foo(Foo->new);
-}, '... checked the type constraint correctly';
+} '... checked the type constraint correctly';
 
 done_testing;

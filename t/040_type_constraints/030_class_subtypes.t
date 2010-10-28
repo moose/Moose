@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Util::TypeConstraints;
 use Moose::Meta::TypeConstraint;
@@ -98,11 +98,11 @@ like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' with 
     );
 }
 
-like exception {
+throws_ok {
     Quux->new(age => 3)
-}, qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
 
-ok ! exception {
+lives_ok {
     Quux->new(age => (bless {}, 'Positive'));
 };
 
@@ -111,11 +111,11 @@ eval "
     use Moose;
 ";
 
-like exception {
+throws_ok {
     Quux->new(age => 3)
-}, qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
+} qr/^Attribute \(age\) does not pass the type constraint because: Validation failed for 'Positive' with value 3 \(not isa Positive\)/;
 
-ok ! exception {
+lives_ok {
     Quux->new(age => Positive->new)
 };
 
@@ -132,11 +132,11 @@ class_type 'Negative' => message { "$_ is not a Negative Nancy" };
     );
 }
 
-like exception {
+throws_ok {
     Quux::Ier->new(age => 3)
-}, qr/^Attribute \(age\) does not pass the type constraint because: 3 is not a Negative Nancy /;
+} qr/^Attribute \(age\) does not pass the type constraint because: 3 is not a Negative Nancy /;
 
-ok ! exception {
+lives_ok {
     Quux::Ier->new(age => (bless {}, 'Negative'))
 };
 

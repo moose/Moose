@@ -3,57 +3,57 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 my $exception_regex = qr/You must provide a name for the attribute/;
 {
     package My::Role;
     use Moose::Role;
 
-    ::like ::exception {
+    ::throws_ok {
         has;
-    }, $exception_regex, 'has; fails';
+    } $exception_regex, 'has; fails';
 
-    ::like ::exception {
+    ::throws_ok {
         has undef;
-    }, $exception_regex, 'has undef; fails';
+    } $exception_regex, 'has undef; fails';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has "" => (
             is => 'bare',
         );
-    }, 'has ""; works now';
+    } 'has ""; works now';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 0 => (
             is => 'bare',
         );
-    }, 'has 0; works now';
+    } 'has 0; works now';
 }
 
 {
     package My::Class;
     use Moose;
 
-    ::like ::exception {
+    ::throws_ok {
         has;
-    }, $exception_regex, 'has; fails';
+    } $exception_regex, 'has; fails';
 
-    ::like ::exception {
+    ::throws_ok {
         has undef;
-    }, $exception_regex, 'has undef; fails';
+    } $exception_regex, 'has undef; fails';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has "" => (
             is => 'bare',
         );
-    }, 'has ""; works now';
+    } 'has ""; works now';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 0 => (
             is => 'bare',
         );
-    }, 'has 0; works now';
+    } 'has 0; works now';
 }
 
 done_testing;

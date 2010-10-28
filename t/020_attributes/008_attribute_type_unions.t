@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -17,39 +17,39 @@ use Test::Fatal;
 my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
-ok ! exception {
+lives_ok {
     $foo->bar([])
-}, '... set bar successfully with an ARRAY ref';
+} '... set bar successfully with an ARRAY ref';
 
-ok ! exception {
+lives_ok {
     $foo->bar({})
-}, '... set bar successfully with a HASH ref';
+} '... set bar successfully with a HASH ref';
 
-ok exception {
+dies_ok {
     $foo->bar(100)
-}, '... couldnt set bar successfully with a number';
+} '... couldnt set bar successfully with a number';
 
-ok exception {
+dies_ok {
     $foo->bar(sub {})
-}, '... couldnt set bar successfully with a CODE ref';
+} '... couldnt set bar successfully with a CODE ref';
 
 # check the constructor
 
-ok ! exception {
+lives_ok {
     Foo->new(bar => [])
-}, '... created new Foo with bar successfully set with an ARRAY ref';
+} '... created new Foo with bar successfully set with an ARRAY ref';
 
-ok ! exception {
+lives_ok {
     Foo->new(bar => {})
-}, '... created new Foo with bar successfully set with a HASH ref';
+} '... created new Foo with bar successfully set with a HASH ref';
 
-ok exception {
+dies_ok {
     Foo->new(bar => 50)
-}, '... didnt create a new Foo with bar as a number';
+} '... didnt create a new Foo with bar as a number';
 
-ok exception {
+dies_ok {
     Foo->new(bar => sub {})
-}, '... didnt create a new Foo with bar as a CODE ref';
+} '... didnt create a new Foo with bar as a CODE ref';
 
 {
     package Bar;
@@ -61,38 +61,38 @@ ok exception {
 my $bar = Bar->new;
 isa_ok($bar, 'Bar');
 
-ok ! exception {
+lives_ok {
     $bar->baz('a string')
-}, '... set baz successfully with a string';
+} '... set baz successfully with a string';
 
-ok ! exception {
+lives_ok {
     $bar->baz(sub { 'a sub' })
-}, '... set baz successfully with a CODE ref';
+} '... set baz successfully with a CODE ref';
 
-ok exception {
+dies_ok {
     $bar->baz(\(my $var1))
-}, '... couldnt set baz successfully with a SCALAR ref';
+} '... couldnt set baz successfully with a SCALAR ref';
 
-ok exception {
+dies_ok {
     $bar->baz({})
-}, '... couldnt set bar successfully with a HASH ref';
+} '... couldnt set bar successfully with a HASH ref';
 
 # check the constructor
 
-ok ! exception {
+lives_ok {
     Bar->new(baz => 'a string')
-}, '... created new Bar with baz successfully set with a string';
+} '... created new Bar with baz successfully set with a string';
 
-ok ! exception {
+lives_ok {
     Bar->new(baz => sub { 'a sub' })
-}, '... created new Bar with baz successfully set with a CODE ref';
+} '... created new Bar with baz successfully set with a CODE ref';
 
-ok exception {
+dies_ok {
     Bar->new(baz => \(my $var2))
-}, '... didnt create a new Bar with baz as a number';
+} '... didnt create a new Bar with baz as a number';
 
-ok exception {
+dies_ok {
     Bar->new(baz => {})
-}, '... didnt create a new Bar with baz as a HASH ref';
+} '... didnt create a new Bar with baz as a HASH ref';
 
 done_testing;

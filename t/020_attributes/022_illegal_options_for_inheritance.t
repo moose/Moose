@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package Foo;
@@ -24,12 +24,12 @@ use Test::Fatal;
 
     extends 'Foo';
 
-    ::ok ! ::exception { has '+foo' => (is => 'rw') }, "can override is";
-    ::like ::exception { has '+foo' => (reader => 'bar') }, qr/illegal/, "can't override reader";
-    ::ok ! ::exception { has '+foo' => (clearer => 'baz') },  "can override unspecified things";
+    ::lives_ok { has '+foo' => (is => 'rw') } "can override is";
+    ::throws_ok { has '+foo' => (reader => 'bar') } qr/illegal/, "can't override reader";
+    ::lives_ok { has '+foo' => (clearer => 'baz') }  "can override unspecified things";
 
-    ::like ::exception { has '+bar' => (clearer => 'quux') },  qr/illegal/, "can't override clearer";
-    ::ok ! ::exception { has '+bar' => (predicate => 'has_bar') },  "can override unspecified things";
+    ::throws_ok { has '+bar' => (clearer => 'quux') }  qr/illegal/, "can't override clearer";
+    ::lives_ok { has '+bar' => (predicate => 'has_bar') }  "can override unspecified things";
 }
 
 {
@@ -47,13 +47,13 @@ use Test::Fatal;
     package Bar;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has bar => (
             traits            => ['Bar::Meta::Attribute'],
             my_illegal_option => 'FOO',
             is                => 'bare',
         );
-    }, "can use illegal options";
+    } "can use illegal options";
 
     has baz => (
         traits => ['Bar::Meta::Attribute'],
@@ -67,10 +67,10 @@ use Test::Fatal;
 
     extends 'Bar';
 
-    ::like ::exception { has '+bar' => (my_illegal_option => 'BAR') },
+    ::throws_ok { has '+bar' => (my_illegal_option => 'BAR') }
                 qr/illegal/,
                 "can't override illegal attribute";
-    ::ok ! ::exception { has '+baz' => (my_illegal_option => 'BAR') },
+    ::lives_ok { has '+baz' => (my_illegal_option => 'BAR') }
                "can add illegal option if superclass doesn't set it";
 }
 

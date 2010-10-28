@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package My::Role1;
@@ -22,7 +22,7 @@ use Test::Fatal;
         is => 'ro',
     );
 
-    ::like ::exception { with 'My::Role1' }, qr/attribute conflict.+My::Role2.+foo/,
+    ::throws_ok { with 'My::Role1' } qr/attribute conflict.+My::Role2.+foo/,
         'attribute conflict when composing one role into another';
 }
 

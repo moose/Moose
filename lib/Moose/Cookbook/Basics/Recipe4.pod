@@ -315,7 +315,7 @@ it under the same terms as Perl itself.
 use Scalar::Util 'isweak';
 
 my $ii;
-ok ! exception {
+lives_ok {
     $ii = Company->new(
         {
             name    => 'Infinity Interactive',
@@ -351,7 +351,7 @@ ok ! exception {
             ]
         }
     );
-},
+}
 '... created the entire company successfully';
 isa_ok( $ii, 'Company' );
 
@@ -460,54 +460,54 @@ foreach my $employee ( @{ $new_company->employees } ) {
 
 ## check some error conditions for the subtypes
 
-ok exception {
+dies_ok {
     Address->new( street => {} ),;
-},
+}
 '... we die correctly with bad args';
 
-ok exception {
+dies_ok {
     Address->new( city => {} ),;
-},
+}
 '... we die correctly with bad args';
 
-ok exception {
+dies_ok {
     Address->new( state => 'British Columbia' ),;
-},
+}
 '... we die correctly with bad args';
 
-ok ! exception {
+lives_ok {
     Address->new( state => 'Connecticut' ),;
-},
+}
 '... we live correctly with good args';
 
-ok exception {
+dies_ok {
     Address->new( zip_code => 'AF5J6$' ),;
-},
+}
 '... we die correctly with bad args';
 
-ok ! exception {
+lives_ok {
     Address->new( zip_code => '06443' ),;
-},
+}
 '... we live correctly with good args';
 
-ok exception {
+dies_ok {
     Company->new(),;
-},
+}
 '... we die correctly without good args';
 
-ok ! exception {
+lives_ok {
     Company->new( name => 'Foo' ),;
-},
+}
 '... we live correctly without good args';
 
-ok exception {
+dies_ok {
     Company->new( name => 'Foo', employees => [ Person->new ] ),;
-},
+}
 '... we die correctly with good args';
 
-ok ! exception {
+lives_ok {
     Company->new( name => 'Foo', employees => [] ),;
-},
+}
 '... we live correctly with good args';
 
 =end testing

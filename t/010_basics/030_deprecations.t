@@ -1,14 +1,14 @@
 use strict;
 use warnings;
 
-use Test::Fatal;
+use Test::Exception;
 use Test::More;
 
 use Test::Requires {
     'Test::Output' => '0.01',
 };
 
-# All tests are wrapped with exception{} because the stderr output tests will
+# All tests are wrapped with lives_and because the stderr output tests will
 # otherwise eat exceptions, and the test just dies silently.
 
 {
@@ -24,7 +24,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::ok not ::exception(
+    ::lives_and(
         sub {
             ::stderr_like{ has foo => (
                     traits => ['String'],
@@ -68,7 +68,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::ok not ::exception(
+    ::lives_and(
         sub {
             ::stderr_is{ has foo => (
                     traits  => ['String'],
@@ -104,7 +104,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::ok not ::exception(
+    ::lives_and(
         sub {
             ::stderr_is{ has foo => (
                     traits   => ['String'],
@@ -139,7 +139,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::ok not ::exception(
+    ::lives_and(
         sub {
             ::stderr_is{ has foo => (
                     traits     => ['String'],

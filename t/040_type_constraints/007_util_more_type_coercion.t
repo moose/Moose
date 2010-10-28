@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -37,9 +37,9 @@ use Test::Fatal;
 
     # try with arrays
 
-    ok ! exception {
+    lives_ok {
         $engine->header([ 1, 2, 3 ]);
-    }, '... type was coerced without incident';
+    } '... type was coerced without incident';
     isa_ok($engine->header, 'HTTPHeader');
 
     is_deeply(
@@ -50,9 +50,9 @@ use Test::Fatal;
 
     # try with hash
 
-    ok ! exception {
+    lives_ok {
         $engine->header({ one => 1, two => 2, three => 3 });
-    }, '... type was coerced without incident';
+    } '... type was coerced without incident';
     isa_ok($engine->header, 'HTTPHeader');
 
     is_deeply(
@@ -61,13 +61,13 @@ use Test::Fatal;
         '... got the right hash value of the header');
     ok(!defined($engine->header->array), '... no array value set');
 
-    ok exception {
+    dies_ok {
        $engine->header("Foo");
-    }, '... dies with the wrong type, even after coercion';
+    } '... dies with the wrong type, even after coercion';
 
-    ok ! exception {
+    lives_ok {
        $engine->header(HTTPHeader->new);
-    }, '... lives with the right type, even after coercion';
+    } '... lives with the right type, even after coercion';
 }
 
 {
@@ -106,13 +106,13 @@ use Test::Fatal;
     ok(!defined($engine->header->array), '... no array value set');
 }
 
-ok exception {
+dies_ok {
     Engine->new(header => 'Foo');
-}, '... dies correctly with bad params';
+} '... dies correctly with bad params';
 
-ok exception {
+dies_ok {
     Engine->new(header => \(my $var));
-}, '... dies correctly with bad params';
+} '... dies correctly with bad params';
 
 {
     my $tc = Moose::Util::TypeConstraints::find_type_constraint('HTTPHeader');
@@ -126,7 +126,7 @@ ok exception {
     isa_ok($from_href, 'HTTPHeader', 'assert_coerce from href to HTTPHeader');
     is_deeply($from_href->hash, { a => 1 }, '...and has the right guts');
 
-    like exception { $tc->assert_coerce('total garbage') },
+    throws_ok { $tc->assert_coerce('total garbage') }
       qr/Validation failed for .HTTPHeader./,
       "assert_coerce throws if result is not acceptable";
 }

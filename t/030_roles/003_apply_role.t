@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package FooRole;
@@ -46,11 +46,11 @@ use Test::Fatal;
 
     extends 'BarClass';
 
-    ::like ::exception { with 'FooRole' => { -version => 42 } },
+    ::throws_ok { with 'FooRole' => { -version => 42 } }
         qr/FooRole version 42 required--this is only version 23/,
         'applying role with unsatisfied version requirement';
 
-    ::ok ! ::exception { with 'FooRole' => { -version => 13 } },
+    ::lives_ok { with 'FooRole' => { -version => 13 } }
         'applying role with satisfied version requirement';
 
     sub blau {'FooClass::blau'}    # << the role wraps this ...
@@ -72,19 +72,19 @@ isa_ok( $foo_class_meta, 'Moose::Meta::Class' );
 my $foobar_class_meta = FooBarClass->meta;
 isa_ok( $foobar_class_meta, 'Moose::Meta::Class' );
 
-ok exception {
+dies_ok {
     $foo_class_meta->does_role();
-},
+}
 '... does_role requires a role name';
 
-ok exception {
+dies_ok {
     $foo_class_meta->add_role();
-},
+}
 '... apply_role requires a role';
 
-ok exception {
+dies_ok {
     $foo_class_meta->add_role( bless( {} => 'Fail' ) );
-},
+}
 '... apply_role requires a role';
 
 ok( $foo_class_meta->does_role('FooRole'),
@@ -171,22 +171,22 @@ foreach my $foo ( $foo, $foobar ) {
     ok( !defined( $foo->baz ), '... $foo->baz is undefined' );
     ok( !defined( $foo->bar ), '... $foo->bar is undefined' );
 
-    ok exception {
+    dies_ok {
         $foo->baz(1);
-    },
+    }
     '... baz is a read-only accessor';
 
-    ok exception {
+    dies_ok {
         $foo->bar(1);
-    },
+    }
     '... bar is a read-write accessor with a type constraint';
 
     my $foo2 = FooClass->new();
     isa_ok( $foo2, 'FooClass' );
 
-    ok ! exception {
+    lives_ok {
         $foo->bar($foo2);
-    },
+    }
     '... bar is a read-write accessor with a type constraint';
 
     is( $foo->bar, $foo2, '... got the right value for bar now' );

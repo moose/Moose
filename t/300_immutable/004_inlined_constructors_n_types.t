@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 =pod
 
@@ -42,19 +42,19 @@ as with a Class::MOP::Attribute object.
 for (1..2) {
     my $is_immutable   = Foo->meta->is_immutable;
     my $mutable_string = $is_immutable ? 'immutable' : 'mutable';
-    ok ! exception {
+    lives_ok {
         my $f = Foo->new(foo => 10, bar => "Hello World", baz => 10, zot => 4);
         is($f->moo, 69, "Type coercion works as expected on default ($mutable_string)");
         is($f->boo, 69, "Type coercion works as expected on builder ($mutable_string)");
-    }, "... this passes the constuctor correctly ($mutable_string)";
+    } "... this passes the constuctor correctly ($mutable_string)";
 
-    ok ! exception {
+    lives_ok {
         Foo->new(foo => 10, bar => "Hello World", baz => 10, zot => "not an int");
-    }, "... the constructor doesn't care about 'zot' ($mutable_string)";
+    } "... the constructor doesn't care about 'zot' ($mutable_string)";
 
-    ok exception {
+    dies_ok {
         Foo->new(foo => "Hello World", bar => 100, baz => "Hello World");
-    }, "... this fails the constuctor correctly ($mutable_string)";
+    } "... this fails the constuctor correctly ($mutable_string)";
 
     Foo->meta->make_immutable(debug => 0) unless $is_immutable;
 }

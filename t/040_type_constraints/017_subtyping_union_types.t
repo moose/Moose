@@ -4,15 +4,15 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
 }
 
-ok ! exception {
+lives_ok {
     subtype 'MyCollections' => as 'ArrayRef | HashRef';
-}, '... created the subtype special okay';
+} '... created the subtype special okay';
 
 {
     my $t = find_type_constraint('MyCollections');
@@ -31,7 +31,7 @@ ok ! exception {
     ok(!$t->check(1), '... validated it correctly');
 }
 
-ok ! exception {
+lives_ok {
     subtype 'MyCollectionsExtended'
         => as 'ArrayRef|HashRef'
         => where {
@@ -43,7 +43,7 @@ ok ! exception {
             }
             1;
         };
-}, '... created the subtype special okay';
+} '... created the subtype special okay';
 
 {
     my $t = find_type_constraint('MyCollectionsExtended');

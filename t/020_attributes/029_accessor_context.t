@@ -3,9 +3,9 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
-ok ! exception {
+lives_ok {
     package My::Class;
     use Moose;
 
@@ -44,9 +44,9 @@ ok ! exception {
 
         auto_deref => 1,
     );
-}, 'class definition';
+} 'class definition';
 
-ok ! exception {
+lives_ok {
     my $o = My::Class->new();
 
     is_deeply [scalar $o->s_rw], [undef], 'uninitialized scalar attribute/rw in scalar context';
@@ -65,6 +65,6 @@ ok ! exception {
     is_deeply [scalar $o->h_ro], [undef], 'uninitialized HashRef attribute/ro in scalar context';
     is_deeply [$o->h_ro],        [],      'uninitialized HashRef attribute/ro in list context';
 
-}, 'testing';
+} 'testing';
 
 done_testing;

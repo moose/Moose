@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Util::TypeConstraints;
 
@@ -87,9 +87,9 @@ is( is_acceptable_color( 'magenta' ), 'CMYK', '... got the right value');
 is( is_acceptable_color( 'yellow' ), 'CMYK', '... got the right value');
 is( is_acceptable_color( 'black' ), 'CMYK', '... got the right value');
 
-ok exception {
+dies_ok {
     is_acceptable_color( 'orange' )
-}, '... got the exception';
+} '... got the exception';
 
 ## using it in an OO context
 
@@ -222,8 +222,8 @@ sub not_enough_matches {
       CodeRef => sub { $_->('Hello code ref world') };
 }
 
-like exception {
+throws_ok {
     not_enough_matches( [] )
-}, qr/No cases matched for /, '... not enough matches';
+} qr/No cases matched for /, '... not enough matches';
 
 done_testing;

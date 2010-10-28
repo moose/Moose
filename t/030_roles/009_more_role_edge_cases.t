@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -30,9 +30,9 @@ use Test::Fatal;
         package SubAB;
         use Moose;
 
-        ::ok ! ::exception {
+        ::lives_ok {
             with "SubAA", "RootA";
-        }, '... role was composed as expected';
+        } '... role was composed as expected';
     }
 
     ok( SubAB->does("SubAA"), "does SubAA");
@@ -45,9 +45,9 @@ use Test::Fatal;
 
     can_ok( $i, "foo" );
     my $foo_rv;
-    ok ! exception {
+    lives_ok {
         $foo_rv = $i->foo;
-    }, '... called foo successfully';
+    } '... called foo successfully';
     is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
 
@@ -94,9 +94,9 @@ use Test::Fatal;
         package SubBB;
         use Moose;
 
-        ::ok ! ::exception {
+        ::lives_ok {
             with "SubBA";
-        }, '... composed the role successfully';
+        } '... composed the role successfully';
     }
 
     ok( SubBB->does("SubBA"), "BB does SubBA" );
@@ -107,20 +107,20 @@ use Test::Fatal;
     can_ok( $i, "foo" );
 
     my $foo_rv;
-    ok ! exception {
+    lives_ok {
         $foo_rv = $i->foo
-    }, '... called foo successfully';
+    } '... called foo successfully';
     is( $foo_rv, "RootB::foo", "foo rv" );
     is( $i->counter, 1, "after hook called" );
 
-    ok ! exception { $i->foo }, '... called foo successfully (again)';
+    lives_ok { $i->foo } '... called foo successfully (again)';
     is( $i->counter, 2, "after hook called (again)" );
 
     ok(SubBA->meta->has_method('foo'), '... this has the foo method');
     #my $subba_foo_rv;
-    #ok ! exception {
+    #lives_ok {
     #    $subba_foo_rv = SubBA::foo();
-    #}, '... called the sub as a function correctly';
+    #} '... called the sub as a function correctly';
     #is($subba_foo_rv, 'RootB::foo', '... the SubBA->foo is still the RootB version');
 }
 
@@ -143,9 +143,9 @@ use Test::Fatal;
 
         with "RootC";
 
-        ::ok ::exception {
+        ::dies_ok {
             override foo => sub { "overridden" };
-        }, '... cannot compose an override over a local method';
+        } '... cannot compose an override over a local method';
     }
 }
 

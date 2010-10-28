@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 use Test::Moose;
 
 {
@@ -31,7 +31,7 @@ use Test::Moose;
         for => __PACKAGE__,
         class_metaroles => { class => ['Foo::Role', 'Bar::Role'] },
     );
-    ::ok ! ::exception { extends 'Parent' };
+    ::lives_ok { extends 'Parent' };
 }
 
 with_immutable {

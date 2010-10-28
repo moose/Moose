@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -44,17 +44,17 @@ use Test::Fatal;
 
     can_ok($foo, 'get_foo');
     is($foo->get_foo(), undef, '... got an undefined value');
-    ok exception {
+    dies_ok {
         $foo->get_foo(100);
-    }, '... get_foo is a read-only';
+    } '... get_foo is a read-only';
 
     ok(!exists($foo->{lazy_foo}), '... no value in get_lazy_foo slot');
 
     can_ok($foo, 'get_lazy_foo');
     is($foo->get_lazy_foo(), 10, '... got an deferred value');
-    ok exception {
+    dies_ok {
         $foo->get_lazy_foo(100);
-    }, '... get_lazy_foo is a read-only';
+    } '... get_lazy_foo is a read-only';
 }
 
 {

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
@@ -48,9 +48,9 @@ use Moose::Meta::Role::Composite;
 
     is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
 
-    ok ! exception {
+    lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    }, '... this lives ok';
+    } '... this lives ok';
 
     is_deeply(
         [ sort $c->get_method_modifier_list('override') ],
@@ -60,7 +60,7 @@ use Moose::Meta::Role::Composite;
 }
 
 # test simple overrides w/ conflicts
-ok exception {
+dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -69,10 +69,10 @@ ok exception {
             ]
         )
     );
-}, '... this fails as expected';
+} '... this fails as expected';
 
 # test simple overrides w/ conflicts
-ok exception {
+dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -81,11 +81,11 @@ ok exception {
             ]
         )
     );
-}, '... this fails as expected';
+} '... this fails as expected';
 
 
 # test simple overrides w/ conflicts
-ok exception {
+dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -95,11 +95,11 @@ ok exception {
             ]
         )
     );
-}, '... this fails as expected';
+} '... this fails as expected';
 
 
 # test simple overrides w/ conflicts
-ok exception {
+dies_ok {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -109,6 +109,6 @@ ok exception {
             ]
         )
     );
-}, '... this fails as expected';
+} '... this fails as expected';
 
 done_testing;

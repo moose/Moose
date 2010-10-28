@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -143,8 +143,8 @@ use Test::Fatal;
     __PACKAGE__->meta->make_immutable;
 }
 
-ok exception {
+dies_ok {
     Fail::Bar->new(foo => 10)
-}, '... this fails, because initializer returns a bad type';
+} '... this fails, because initializer returns a bad type';
 
 done_testing;

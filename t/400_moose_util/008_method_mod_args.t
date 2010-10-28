@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 use Moose::Util qw( add_method_modifier );
 
 my $COUNT = 0;
@@ -14,13 +14,13 @@ my $COUNT = 0;
     sub bar { }
 }
 
-ok ! exception {
+lives_ok {
     add_method_modifier('Foo', 'before', [ ['foo', 'bar'], sub { $COUNT++ } ]);
-}, 'method modifier with an arrayref';
+} 'method modifier with an arrayref';
 
-ok exception {
+dies_ok {
     add_method_modifier('Foo', 'before', [ {'foo' => 'bar'}, sub { $COUNT++ } ]);
-}, 'method modifier with a hashref';
+} 'method modifier with a hashref';
 
 my $foo = Foo->new;
 $foo->foo;

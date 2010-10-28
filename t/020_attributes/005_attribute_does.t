@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -46,25 +46,25 @@ isa_ok($foo, 'Foo::Class');
 my $bar = Bar::Class->new;
 isa_ok($bar, 'Bar::Class');
 
-ok ! exception {
+lives_ok {
     $foo->bar($bar);
-}, '... bar passed the type constraint okay';
+} '... bar passed the type constraint okay';
 
-ok exception {
+dies_ok {
     $foo->bar($foo);
-}, '... foo did not pass the type constraint okay';
+} '... foo did not pass the type constraint okay';
 
-ok ! exception {
+lives_ok {
     $foo->baz($bar);
-}, '... baz passed the type constraint okay';
+} '... baz passed the type constraint okay';
 
-ok exception {
+dies_ok {
     $foo->baz($foo);
-}, '... foo did not pass the type constraint okay';
+} '... foo did not pass the type constraint okay';
 
-ok ! exception {
+lives_ok {
     $bar->foo($foo);
-}, '... foo passed the type constraint okay';
+} '... foo passed the type constraint okay';
 
 
 
@@ -76,9 +76,9 @@ ok ! exception {
 
     # if isa and does appear together, then see if Class->does(Role)
     # if it does not,.. we have a conflict... so we die loudly
-    ::ok ::exception {
+    ::dies_ok {
         has 'foo' => (isa => 'Foo::Class', does => 'Bar::Class');
-    }, '... cannot have a does() which is not done by the isa()';
+    } '... cannot have a does() which is not done by the isa()';
 }
 
 {
@@ -93,9 +93,9 @@ ok ! exception {
 
     # if isa and does appear together, then see if Class->does(Role)
     # if it does not,.. we have a conflict... so we die loudly
-    ::ok ::exception {
+    ::dies_ok {
         has 'foo' => (isa => 'Bling', does => 'Bar::Class');
-    }, '... cannot have a isa() which is cannot does()';
+    } '... cannot have a isa() which is cannot does()';
 }
 
 done_testing;

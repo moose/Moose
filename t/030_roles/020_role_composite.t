@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
@@ -48,9 +48,9 @@ use Moose::Meta::Role::Composite;
             Role::Baz
         );
 
-    ok ! exception {
+    lives_ok {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    }, '... this composed okay';
+    } '... this composed okay';
 
     ##... now nest 'em
     {

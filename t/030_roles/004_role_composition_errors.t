@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -27,7 +27,7 @@ is_deeply(
     package Foo::Class;
     use Moose;
 
-    ::ok ::exception { with('Foo::Role') },
+    ::dies_ok { with('Foo::Role') }
         '... no foo method implemented by Foo::Class';
 }
 
@@ -37,9 +37,9 @@ is_deeply(
     package Bar::Class;
     use Moose;
 
-    ::ok ::exception { with('Foo::Class') },
+    ::dies_ok { with('Foo::Class') }
         '... cannot consume a class, it must be a role';
-    ::ok ! ::exception { with('Foo::Role') },
+    ::lives_ok { with('Foo::Role') }
         '... has a foo method implemented by Bar::Class';
 
     sub foo {'Bar::Class::foo'}
@@ -51,7 +51,7 @@ is_deeply(
     package Bar::Role;
     use Moose::Role;
 
-    ::ok ! ::exception { with('Foo::Role') },
+    ::lives_ok { with('Foo::Role') }
         '... has a foo method implemented by Bar::Role';
 
     sub foo {'Bar::Role::foo'}
@@ -69,7 +69,7 @@ is_deeply(
     package Baz::Role;
     use Moose::Role;
 
-    ::ok ! ::exception { with('Foo::Role') },
+    ::lives_ok { with('Foo::Role') }
         '... no foo method implemented by Baz::Role';
 }
 
@@ -85,7 +85,7 @@ is_deeply(
     package Baz::Class;
     use Moose;
 
-    ::ok ::exception { with('Baz::Role') },
+    ::dies_ok { with('Baz::Role') }
         '... no foo method implemented by Baz::Class2';
 }
 
@@ -95,7 +95,7 @@ is_deeply(
     package Baz::Class2;
     use Moose;
 
-    ::ok ! ::exception { with('Baz::Role') },
+    ::lives_ok { with('Baz::Role') }
         '... has a foo method implemented by Baz::Class2';
 
     sub foo {'Baz::Class2::foo'}
@@ -115,7 +115,7 @@ is_deeply(
     package Quux::Class;
     use Moose;
 
-    ::like ::exception { with('Quux::Role') },
+    ::throws_ok { with('Quux::Role') }
         qr/\Q'Quux::Role' requires the methods 'meth1', 'meth2', 'meth3', and 'meth4' to be implemented by 'Quux::Class'/,
         'exception mentions all the missing required methods at once';
 }
@@ -126,7 +126,7 @@ is_deeply(
 
     sub meth1 { }
 
-    ::like ::exception { with('Quux::Role') },
+    ::throws_ok { with('Quux::Role') }
         qr/'Quux::Role' requires the methods 'meth2', 'meth3', and 'meth4' to be implemented by 'Quux::Class2'/,
         'exception mentions all the missing required methods at once, but not the one that exists';
 }
@@ -138,7 +138,7 @@ is_deeply(
     has 'meth1' => ( is => 'ro' );
     has 'meth2' => ( is => 'ro' );
 
-    ::like ::exception { with('Quux::Role') },
+    ::throws_ok { with('Quux::Role') }
         qr/'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class3'/,
         'exception mentions all the missing methods at once, but not the accessors';
 }
@@ -150,7 +150,7 @@ is_deeply(
     sub meth1 { }
     has 'meth2' => ( is => 'ro' );
 
-    ::like ::exception { with('Quux::Role') },
+    ::throws_ok { with('Quux::Role') }
         qr/'Quux::Role' requires the methods 'meth3' and 'meth4' to be implemented by 'Quux::Class4'/,
         'exception mentions all the require methods that are accessors at once, as well as missing methods, but not the one that exists';
 }

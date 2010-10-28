@@ -6,7 +6,7 @@ use warnings;
 use Scalar::Util 'isweak';
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -50,27 +50,27 @@ use Test::Fatal;
     my $baz = Baz->new;
     isa_ok($baz, 'Baz');
 
-    ok ! exception {
+    lives_ok {
         $foo->bar($bar);
-    }, '... did not die setting bar';
+    } '... did not die setting bar';
 
     is($foo->bar, $bar, '... set the value foo.bar correctly');
     is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
 
     ok(isweak($bar->{foo}), '... bar.foo is a weak reference');
 
-    ok ! exception {
+    lives_ok {
         $foo->bar(undef);
-    }, '... did not die un-setting bar';
+    } '... did not die un-setting bar';
 
     is($foo->bar, undef, '... set the value foo.bar correctly');
     is($bar->foo, $foo, '... which in turn set the value bar.foo correctly');
 
     # test the writer
 
-    ok ! exception {
+    lives_ok {
         $foo->set_baz($baz);
-    }, '... did not die setting baz';
+    } '... did not die setting baz';
 
     is($foo->get_baz, $baz, '... set the value foo.baz correctly');
     is($baz->foo, $foo, '... which in turn set the value baz.foo correctly');
@@ -105,13 +105,13 @@ use Test::Fatal;
     package Bling;
     use Moose;
 
-    ::ok ::exception {
+    ::dies_ok {
         has('bling' => (is => 'rw', trigger => 'Fail'));
-    }, '... a trigger must be a CODE ref';
+    } '... a trigger must be a CODE ref';
 
-    ::ok ::exception {
+    ::dies_ok {
         has('bling' => (is => 'rw', trigger => []));
-    }, '... a trigger must be a CODE ref';
+    } '... a trigger must be a CODE ref';
 }
 
 # Triggers do not fire on built values
@@ -140,7 +140,7 @@ use Test::Fatal;
 
 {
     my $blarg;
-    ok ! exception { $blarg = Blarg->new; }, 'Blarg->new() lives';
+    lives_ok { $blarg = Blarg->new; } 'Blarg->new() lives';
     ok($blarg, 'Have a $blarg');
     foreach my $attr (qw/foo bar baz/) {
         is($blarg->$attr(), "default $attr value", "$attr has default value");
@@ -152,7 +152,7 @@ use Test::Fatal;
     is_deeply(\%Blarg::trigger_calls, { map { $_ => 1 } qw/foo bar baz/ }, 'All triggers fired once on assign');
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Different $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 
-    ok ! exception { $blarg = Blarg->new( map { $_ => "Yet another $_ value" } qw/foo bar baz/ ) }, '->new() with parameters';
+    lives_ok { $blarg => Blarg->new( map { $_ => "Yet another $_ value" } qw/foo bar baz/ ) } '->new() with parameters';
     is_deeply(\%Blarg::trigger_calls, { map { $_ => 2 } qw/foo bar baz/ }, 'All triggers fired once on construct');
     is_deeply(\%Blarg::trigger_vals, { map { $_ => "Yet another $_ value" } qw/foo bar baz/ }, 'All triggers given assigned values');
 }

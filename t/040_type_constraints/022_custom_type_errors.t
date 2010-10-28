@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 {
     package Animal;
@@ -25,35 +25,35 @@ use Test::Fatal;
     );
 }
 
-ok ! exception { my $goat = Animal->new( leg_count => 4 ) },
+lives_ok { my $goat = Animal->new( leg_count => 4 ) }
 '... no errors thrown, value is good';
-ok ! exception { my $spider = Animal->new( leg_count => 8 ) },
+lives_ok { my $spider = Animal->new( leg_count => 8 ) }
 '... no errors thrown, value is good';
 
-like exception { my $fern = Animal->new( leg_count => 0 ) },
+throws_ok { my $fern = Animal->new( leg_count => 0 ) }
 qr/This number \(0\) is not less than ten!/,
     'gave custom supertype error message on new';
 
-like exception { my $centipede = Animal->new( leg_count => 30 ) },
+throws_ok { my $centipede = Animal->new( leg_count => 30 ) }
 qr/This number \(30\) is not less than ten!/,
     'gave custom subtype error message on new';
 
 my $chimera;
-ok ! exception { $chimera = Animal->new( leg_count => 4 ) },
+lives_ok { $chimera = Animal->new( leg_count => 4 ) }
 '... no errors thrown, value is good';
 
-like exception { $chimera->leg_count(0) },
+throws_ok { $chimera->leg_count(0) }
 qr/This number \(0\) is not less than ten!/,
     'gave custom supertype error message on set to 0';
 
-like exception { $chimera->leg_count(16) },
+throws_ok { $chimera->leg_count(16) }
 qr/This number \(16\) is not less than ten!/,
     'gave custom subtype error message on set to 16';
 
 my $gimp = eval { Animal->new() };
 is( $@, '', '... no errors thrown, value is good' );
 
-like exception { $gimp->leg_count },
+throws_ok { $gimp->leg_count }
 qr/This number \(0\) is not less than ten!/,
     'gave custom supertype error message on lazy set to 0';
 

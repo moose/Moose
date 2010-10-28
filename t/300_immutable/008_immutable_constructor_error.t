@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 =pod
@@ -25,11 +25,11 @@ constructor.
 }
 
 my $scalar = 1;
-like exception { Foo->new($scalar) }, qr/\QSingle parameters to new() must be a HASH ref/,
+throws_ok { Foo->new($scalar) } qr/\QSingle parameters to new() must be a HASH ref/,
           'Non-ref provided to immutable constructor gives useful error message';
-like exception { Foo->new(\$scalar) }, qr/\QSingle parameters to new() must be a HASH ref/,
+throws_ok { Foo->new(\$scalar) } qr/\QSingle parameters to new() must be a HASH ref/,
           'Scalar ref provided to immutable constructor gives useful error message';
-like exception { Foo->new(undef) }, qr/\QSingle parameters to new() must be a HASH ref/,
+throws_ok { Foo->new(undef) } qr/\QSingle parameters to new() must be a HASH ref/,
           'undef provided to immutable constructor gives useful error message';
 
 done_testing;

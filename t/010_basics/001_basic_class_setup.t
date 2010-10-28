@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -19,9 +19,9 @@ isa_ok(Foo->meta, 'Moose::Meta::Class');
 ok(Foo->meta->has_method('meta'), '... we got the &meta method');
 ok(Foo->isa('Moose::Object'), '... Foo is automagically a Moose::Object');
 
-ok exception {
+dies_ok {
    Foo->meta->has_method()
-}, '... has_method requires an arg';
+} '... has_method requires an arg';
 
 can_ok('Foo', 'does');
 

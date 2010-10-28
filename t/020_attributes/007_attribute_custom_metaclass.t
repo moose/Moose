@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -53,9 +53,9 @@ use Test::Fatal;
     package Bar;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'bar' => (metaclass => 'Bar::Meta::Attribute');
-    }, '... the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
+    } '... the attribute metaclass need not be a Moose::Meta::Attribute as long as it behaves';
 }
 
 {
@@ -70,13 +70,13 @@ use Test::Fatal;
     package Another::Foo;
     use Moose;
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'foo' => (metaclass => 'Foo');
-    }, '... the attribute metaclass alias worked correctly';
+    } '... the attribute metaclass alias worked correctly';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has 'bar' => (metaclass => 'Bar', is => 'bare');
-    }, '... the attribute metaclass alias worked correctly';
+    } '... the attribute metaclass alias worked correctly';
 }
 
 {

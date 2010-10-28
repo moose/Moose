@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -15,9 +15,9 @@ use Test::Fatal;
     package My::Class;
     use Moose;
 
-    ::like ::exception {
+    ::throws_ok {
         extends 'My::Role';
-    }, qr/You cannot inherit from a Moose Role \(My\:\:Role\)/,
+    } qr/You cannot inherit from a Moose Role \(My\:\:Role\)/,
     '... this croaks correctly';
 }
 

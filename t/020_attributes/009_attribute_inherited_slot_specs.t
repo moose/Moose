@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
+use Test::Exception;
 
 
 {
@@ -59,138 +59,138 @@ use Test::Fatal;
 
     extends 'Foo';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+bar' => (default => 'Bar::bar');
-    }, '... we can change the default attribute option';
+    } '... we can change the default attribute option';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+baz' => (isa => 'ArrayRef');
-    }, '... we can add change the isa as long as it is a subtype';
+    } '... we can add change the isa as long as it is a subtype';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+foo' => (coerce => 1);
-    }, '... we can change/add coerce as an attribute option';
+    } '... we can change/add coerce as an attribute option';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+gorch' => (required => 1);
-    }, '... we can change/add required as an attribute option';
+    } '... we can change/add required as an attribute option';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+gloum' => (lazy => 1);
-    }, '... we can change/add lazy as an attribute option';
+    } '... we can change/add lazy as an attribute option';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+fleem' => (lazy_build => 1);
-    }, '... we can add lazy_build as an attribute option';
+    } '... we can add lazy_build as an attribute option';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+bunch_of_stuff' => (isa => 'ArrayRef[Int]');
-    }, '... extend an attribute with parameterized type';
+    } '... extend an attribute with parameterized type';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+one_last_one' => (isa => subtype('Ref', where { blessed $_ eq 'CODE' }));
-    }, '... extend an attribute with anon-subtype';
+    } '... extend an attribute with anon-subtype';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+one_last_one' => (isa => 'Value');
-    }, '... now can extend an attribute with a non-subtype';
+    } '... now can extend an attribute with a non-subtype';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+fleem' => (weak_ref => 1);
-    }, '... now allowed to add the weak_ref option via inheritance';
+    } '... now allowed to add the weak_ref option via inheritance';
 
-    ::ok ! ::exception {
+    ::lives_ok {
         has '+bling' => (handles => ['hello']);
-    }, '... we can add the handles attribute option';
+    } '... we can add the handles attribute option';
 
     # this one will *not* work here ....
-    ::ok ::exception {
+    ::dies_ok {
         has '+blang' => (handles => ['hello']);
-    }, '... we can not alter the handles attribute option';
-    ::ok ! ::exception {
+    } '... we can not alter the handles attribute option';
+    ::lives_ok {
         has '+fail' => (isa => 'Ref');
-    }, '... can now create an attribute with an improper subtype relation';
-    ::ok ::exception {
+    } '... can now create an attribute with an improper subtype relation';
+    ::dies_ok {
         has '+other_fail' => (trigger => sub {});
-    }, '... cannot create an attribute with an illegal option';
-    ::like ::exception {
+    } '... cannot create an attribute with an illegal option';
+    ::throws_ok {
         has '+does_not_exist' => (isa => 'Str');
-    }, qr/in Bar/, '... cannot extend a non-existing attribute';
+    } qr/in Bar/, '... cannot extend a non-existing attribute';
 }
 
 my $foo = Foo->new;
 isa_ok($foo, 'Foo');
 
 is($foo->foo, undef, '... got the right undef default value');
-ok ! exception { $foo->foo('FooString') }, '... assigned foo correctly';
+lives_ok { $foo->foo('FooString') } '... assigned foo correctly';
 is($foo->foo, 'FooString', '... got the right value for foo');
 
-ok exception { $foo->foo([]) }, '... foo is not coercing (as expected)';
+dies_ok { $foo->foo([]) } '... foo is not coercing (as expected)';
 
 is($foo->bar, 'Foo::bar', '... got the right default value');
-ok exception { $foo->bar(10) }, '... Foo::bar is a read/only attr';
+dies_ok { $foo->bar(10) } '... Foo::bar is a read/only attr';
 
 is($foo->baz, undef, '... got the right undef default value');
 
 {
     my $hash_ref = {};
-    ok ! exception { $foo->baz($hash_ref) }, '... Foo::baz accepts hash refs';
+    lives_ok { $foo->baz($hash_ref) } '... Foo::baz accepts hash refs';
     is($foo->baz, $hash_ref, '... got the right value assigned to baz');
 
     my $array_ref = [];
-    ok ! exception { $foo->baz($array_ref) }, '... Foo::baz accepts an array ref';
+    lives_ok { $foo->baz($array_ref) } '... Foo::baz accepts an array ref';
     is($foo->baz, $array_ref, '... got the right value assigned to baz');
 
     my $scalar_ref = \(my $var);
-    ok ! exception { $foo->baz($scalar_ref) }, '... Foo::baz accepts scalar ref';
+    lives_ok { $foo->baz($scalar_ref) } '... Foo::baz accepts scalar ref';
     is($foo->baz, $scalar_ref, '... got the right value assigned to baz');
 
-    ok ! exception { $foo->bunch_of_stuff([qw[one two three]]) }, '... Foo::bunch_of_stuff accepts an array of strings';
+    lives_ok { $foo->bunch_of_stuff([qw[one two three]]) } '... Foo::bunch_of_stuff accepts an array of strings';
 
-    ok ! exception { $foo->one_last_one(sub { 'Hello World'}) }, '... Foo::one_last_one accepts a code ref';
+    lives_ok { $foo->one_last_one(sub { 'Hello World'}) } '... Foo::one_last_one accepts a code ref';
 
     my $code_ref = sub { 1 };
-    ok ! exception { $foo->baz($code_ref) }, '... Foo::baz accepts a code ref';
+    lives_ok { $foo->baz($code_ref) } '... Foo::baz accepts a code ref';
     is($foo->baz, $code_ref, '... got the right value assigned to baz');
 }
 
-ok exception {
+dies_ok {
     Bar->new;
-}, '... cannot create Bar without required gorch param';
+} '... cannot create Bar without required gorch param';
 
 my $bar = Bar->new(gorch => 'Bar::gorch');
 isa_ok($bar, 'Bar');
 isa_ok($bar, 'Foo');
 
 is($bar->foo, undef, '... got the right undef default value');
-ok ! exception { $bar->foo('FooString') }, '... assigned foo correctly';
+lives_ok { $bar->foo('FooString') } '... assigned foo correctly';
 is($bar->foo, 'FooString', '... got the right value for foo');
-ok ! exception { $bar->foo([]) }, '... assigned foo correctly';
+lives_ok { $bar->foo([]) } '... assigned foo correctly';
 is($bar->foo, 'FooArrayRef', '... got the right value for foo');
 
 is($bar->gorch, 'Bar::gorch', '... got the right default value');
 
 is($bar->bar, 'Bar::bar', '... got the right default value');
-ok exception { $bar->bar(10) }, '... Bar::bar is a read/only attr';
+dies_ok { $bar->bar(10) } '... Bar::bar is a read/only attr';
 
 is($bar->baz, undef, '... got the right undef default value');
 
 {
     my $hash_ref = {};
-    ok exception { $bar->baz($hash_ref) }, '... Bar::baz does not accept hash refs';
+    dies_ok { $bar->baz($hash_ref) } '... Bar::baz does not accept hash refs';
 
     my $array_ref = [];
-    ok ! exception { $bar->baz($array_ref) }, '... Bar::baz can accept an array ref';
+    lives_ok { $bar->baz($array_ref) } '... Bar::baz can accept an array ref';
     is($bar->baz, $array_ref, '... got the right value assigned to baz');
 
     my $scalar_ref = \(my $var);
-    ok exception { $bar->baz($scalar_ref) }, '... Bar::baz does not accept a scalar ref';
+    dies_ok { $bar->baz($scalar_ref) } '... Bar::baz does not accept a scalar ref';
 
-    ok ! exception { $bar->bunch_of_stuff([1, 2, 3]) }, '... Bar::bunch_of_stuff accepts an array of ints';
-    ok exception { $bar->bunch_of_stuff([qw[one two three]]) }, '... Bar::bunch_of_stuff does not accept an array of strings';
+    lives_ok { $bar->bunch_of_stuff([1, 2, 3]) } '... Bar::bunch_of_stuff accepts an array of ints';
+    dies_ok { $bar->bunch_of_stuff([qw[one two three]]) } '... Bar::bunch_of_stuff does not accept an array of strings';
 
     my $code_ref = sub { 1 };
-    ok exception { $bar->baz($code_ref) }, '... Bar::baz does not accept a code ref';
+    dies_ok { $bar->baz($code_ref) } '... Bar::baz does not accept a code ref';
 }
 
 # check some meta-stuff
