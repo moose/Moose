@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
-lives_ok {
+is( exception {
     eval 'use Moose';
-} "export to main";
+}, undef, "export to main" );
 
 isa_ok( main->meta, "Moose::Meta::Class" );
 

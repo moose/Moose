@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -38,9 +38,9 @@ words, should 'has_method' return true for them?
     override 'bling' => sub { "FooRole::bling:override" };
     override 'fling' => sub { "FooRole::fling:override" };
 
-    ::dies_ok { extends() } '... extends() is not supported';
-    ::dies_ok { augment() } '... augment() is not supported';
-    ::dies_ok { inner()   } '... inner() is not supported';
+    ::isnt( ::exception { extends() }, undef, '... extends() is not supported' );
+    ::isnt( ::exception { augment() }, undef, '... augment() is not supported' );
+    ::isnt( ::exception { inner()   }, undef, '... inner() is not supported' );
 
     no Moose::Role;
 }

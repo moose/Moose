@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 =pod
@@ -18,14 +18,14 @@ test makes sure it does not creep back in.
     package Foo;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         has 'bar' => (
             is      => 'ro',
             isa     => 'Int',
             lazy    => 1,
             default => 10,
         );
-    } '... this didnt die';
+    }, undef, '... this didnt die' );
 }
 
 done_testing;

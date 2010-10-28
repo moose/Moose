@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Scalar::Util ();
 
@@ -63,19 +63,15 @@ ok( !$anon_enum->is_subtype_of('ThisTypeDoesNotExist'), 'enum not a subtype of n
 ok( !$anon_enum->is_a_type_of('ThisTypeDoesNotExist'), 'enum not type of nonexistant type');
 
 # validation
-throws_ok { Moose::Meta::TypeConstraint::Enum->new(name => 'ZeroValues', values => []) }
-    qr/You must have at least two values to enumerate through/;
+like( exception { Moose::Meta::TypeConstraint::Enum->new(name => 'ZeroValues', values => []) }, qr/You must have at least two values to enumerate through/ );
 
-throws_ok { Moose::Meta::TypeConstraint::Enum->new(name => 'OneValue', values => [ 'a' ]) }
-    qr/You must have at least two values to enumerate through/;
+like( exception { Moose::Meta::TypeConstraint::Enum->new(name => 'OneValue', values => [ 'a' ]) }, qr/You must have at least two values to enumerate through/ );
 
-throws_ok { Moose::Meta::TypeConstraint::Enum->new(name => 'ReferenceInEnum', values => [ 'a', {} ]) }
-    qr/Enum values must be strings, not 'HASH\(0x\w+\)'/;
+like( exception { Moose::Meta::TypeConstraint::Enum->new(name => 'ReferenceInEnum', values => [ 'a', {} ]) }, qr/Enum values must be strings, not 'HASH\(0x\w+\)'/ );
 
-throws_ok { Moose::Meta::TypeConstraint::Enum->new(name => 'UndefInEnum', values => [ 'a', undef ]) }
-    qr/Enum values must be strings, not undef/;
+like( exception { Moose::Meta::TypeConstraint::Enum->new(name => 'UndefInEnum', values => [ 'a', undef ]) }, qr/Enum values must be strings, not undef/ );
 
-throws_ok {
+like( exception {
     package Foo;
     use Moose;
     use Moose::Util::TypeConstraints;
@@ -85,7 +81,7 @@ throws_ok {
         isa     => enum ['a', 'aa', 'aaa'], # should be parenthesized!
         default => 'aa',
     );
-} qr/enum called with an array reference and additional arguments\. Did you mean to parenthesize the enum call's parameters\?/;
+}, qr/enum called with an array reference and additional arguments\. Did you mean to parenthesize the enum call's parameters\?/ );
 
 
 done_testing;

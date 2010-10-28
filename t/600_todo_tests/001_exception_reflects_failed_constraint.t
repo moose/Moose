@@ -8,20 +8,20 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
 }
 
-lives_ok {
+is( exception {
     subtype 'ParentConstraint' => as 'Str' => where {0};
-} 'specified parent type constraint';
+}, undef, 'specified parent type constraint' );
 
 my $tc;
-lives_ok {
+is( exception {
     $tc = subtype 'ChildConstraint' => as 'ParentConstraint' => where {1};
-} 'specified child type constraint';
+}, undef, 'specified child type constraint' );
 
 {
     my $errmsg = $tc->validate();

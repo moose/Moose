@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -52,17 +52,17 @@ use Test::Exception;
 #    Foo->new(bar => 10, boo => undef);
 #} qr/^Attribute \(boo\) is required and cannot be undef/, '... must supply all the required attribute';
 
-lives_ok {
+is( exception {
     Foo->new(bar => 10, baz => undef);
-} '... undef is a valid attribute value';
+}, undef, '... undef is a valid attribute value' );
 
-lives_ok {
+is( exception {
     Foo->new(bar => 10, boo => undef);
-}  '... undef is a valid attribute value';
+}, undef, '... undef is a valid attribute value' );
 
 
-throws_ok {
+like( exception {
     Foo->new;
-} qr/^Attribute \(bar\) is required/, '... must supply all the required attribute';
+}, qr/^Attribute \(bar\) is required/, '... must supply all the required attribute' );
 
 done_testing;

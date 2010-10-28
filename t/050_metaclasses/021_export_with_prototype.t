@@ -3,20 +3,20 @@ package MyExporter::User;
 use MyExporter;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
-lives_and {
+is( exception {
     with_prototype {
         my $caller = caller(0);
         is($caller, 'MyExporter', "With_caller prototype code gets called from MyMooseX");
     };
-} "check function with prototype";
+}, undef, "check function with prototype" );
 
-lives_and {
+is( exception {
     as_is_prototype {
         my $caller = caller(0);
         is($caller, 'MyExporter', "As-is prototype code gets called from MyMooseX");
     };
-} "check function with prototype";
+}, undef, "check function with prototype" );
 
 done_testing;

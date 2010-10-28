@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::Exception;
+use Test::Fatal;
 use Test::More;
 
 use Test::Requires {
@@ -24,7 +24,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::lives_and(
+    ::is( ::exception (
         sub {
             ::stderr_like{ has foo => (
                     traits => ['String'],
@@ -60,7 +60,7 @@ use Test::Requires {
                 'thing2 method is created as alias in role application'
             );
         }
-    );
+    ), undef );
 }
 
 {
@@ -68,7 +68,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::lives_and(
+    ::is( ::exception (
         sub {
             ::stderr_is{ has foo => (
                     traits  => ['String'],
@@ -94,7 +94,7 @@ use Test::Requires {
             ::stderr_is{ Pack1->new->_bar } q{},
                 'Providing a reader for a String trait avoids default is warning';
         }
-    );
+    ), undef );
 
     sub _build_foo { q{} }
 }
@@ -104,7 +104,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::lives_and(
+    ::is( ::exception (
         sub {
             ::stderr_is{ has foo => (
                     traits   => ['String'],
@@ -131,7 +131,7 @@ use Test::Requires {
                 q{},
                 'Providing a writer for a String trait avoids default is warning';
         }
-    );
+    ), undef );
 }
 
 {
@@ -139,7 +139,7 @@ use Test::Requires {
 
     use Moose;
 
-    ::lives_and(
+    ::is( ::exception (
         sub {
             ::stderr_is{ has foo => (
                     traits     => ['String'],
@@ -166,7 +166,7 @@ use Test::Requires {
                 q{},
                 'Providing a accessor for a String trait avoids default is warning';
         }
-    );
+    ), undef );
 
     sub _build_foo { q{} }
 }

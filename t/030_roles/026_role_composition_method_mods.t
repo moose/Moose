@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
@@ -62,9 +62,9 @@ use Moose::Meta::Role::Composite;
 
     is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
 
-    lives_ok {
+    is( exception {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    }, undef, '... this succeeds as expected' );
 
     is_deeply(
         [ sort $c->get_method_modifier_list('before') ],

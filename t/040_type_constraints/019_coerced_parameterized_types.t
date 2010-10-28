@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
@@ -26,11 +26,11 @@ BEGIN {
 
 subtype 'MyList' => as 'Object' => where { $_->isa('MyList') };
 
-lives_ok {
+is( exception {
     coerce 'ArrayRef'
         => from 'MyList'
             => via { [ $_->items ] }
-} '... created the coercion okay';
+}, undef, '... created the coercion okay' );
 
 my $mylist = Moose::Util::TypeConstraints::find_or_parse_type_constraint('MyList[Int]');
 
@@ -43,11 +43,11 @@ subtype 'EvenList' => as 'MyList' => where { $_->items % 2 == 0 };
 # XXX: get this to work *without* the declaration. I suspect it'll be a new
 # method in Moose::Meta::TypeCoercion that will look at the parents of the
 # coerced type as well. but will that be too "action at a distance"-ey?
-lives_ok {
+is( exception {
     coerce 'ArrayRef'
         => from 'EvenList'
             => via { [ $_->items ] }
-} '... created the coercion okay';
+}, undef, '... created the coercion okay' );
 
 my $evenlist = Moose::Util::TypeConstraints::find_or_parse_type_constraint('EvenList[Int]');
 

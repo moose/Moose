@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -26,9 +26,9 @@ use Test::Exception;
     is($foo->bar, 'BAR', '... got the expect value');
     ok(!$foo->can('baz'), '... no baz method though');
 
-    lives_ok {
+    is( exception {
         Bar->meta->apply($foo)
-    } '... this works';
+    }, undef, '... this works' );
 
     is($foo->bar, 'BAR', '... got the expect value');
     ok($foo->can('baz'), '... we have baz method now');
@@ -43,9 +43,9 @@ use Test::Exception;
     is($foo->bar, 'BAR', '... got the expect value');
     ok(!$foo->can('baz'), '... no baz method though');
 
-    lives_ok {
+    is( exception {
         Bar->meta->apply($foo, (rebless_params => { baz => 'FOO-BAZ' }))
-    } '... this works';
+    }, undef, '... this works' );
 
     is($foo->bar, 'BAR', '... got the expect value');
     ok($foo->can('baz'), '... we have baz method now');
@@ -60,9 +60,9 @@ use Test::Exception;
     is($foo->bar, 'BAR', '... got the expect value');
     ok(!$foo->can('baz'), '... no baz method though');
 
-    lives_ok {
+    is( exception {
         Bar->meta->apply($foo, (rebless_params => { bar => 'FOO-BAR', baz => 'FOO-BAZ' }))
-    } '... this works';
+    }, undef, '... this works' );
 
     is($foo->bar, 'FOO-BAR', '... got the expect value');
     ok($foo->can('baz'), '... we have baz method now');

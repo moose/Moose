@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo::API;
@@ -24,7 +24,7 @@ use Test::Exception;
     package Foo::Class;
     use Moose;
     { our $TODO; local $TODO = "role accessors don't satisfy other role requires";
-    ::lives_ok { with 'Foo' } 'requirements are satisfied properly';
+    ::is( ::exception { with 'Foo' }, undef, 'requirements are satisfied properly' );
     }
 }
 
@@ -51,7 +51,7 @@ use Test::Exception;
     use Moose;
 
     { our $TODO; local $TODO = "role accessors don't satisfy other role requires";
-    ::lives_ok { with qw(Bar Baz) } 'requirements are satisfied properly';
+    ::is( ::exception { with qw(Bar Baz) }, undef, 'requirements are satisfied properly' );
     }
 }
 

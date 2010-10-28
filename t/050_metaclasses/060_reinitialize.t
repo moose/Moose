@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Moose;
-use Test::Exception;
+use Test::Fatal;
 
 sub check_meta_sanity {
     my ($meta, $class) = @_;
@@ -126,13 +126,13 @@ does_ok(Bar->meta->get_attribute('bar'), 'Foo::Role::Attribute');
     BEGIN { extends 'Moose::Meta::Attribute' };
 }
 
-throws_ok {
+like( exception {
     Moose::Meta::Class->reinitialize(
         'Bar',
         method_metaclass    => 'Bar::Meta::Method',
         attribute_metaclass => 'Bar::Meta::Attribute',
     );
-} qr/compatible/;
+}, qr/compatible/ );
 
 {
     package Baz::Meta::Class;
@@ -189,13 +189,13 @@ does_ok(Baz->meta->get_attribute('bar'), 'Foo::Role::Attribute');
     extends 'Moose::Meta::Attribute';
 }
 
-throws_ok {
+like( exception {
     Moose::Meta::Class->reinitialize(
         'Baz',
         method_metaclass    => 'Baz::Meta::Method',
         attribute_metaclass => 'Baz::Meta::Attribute',
     );
-} qr/compatible/;
+}, qr/compatible/ );
 
 {
     package Quux;

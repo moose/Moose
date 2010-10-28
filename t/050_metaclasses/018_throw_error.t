@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
 
@@ -119,7 +119,7 @@ sub create_error {
     );
     use Moose;
 
-    ::dies_ok { extends 'Baz::Sub' } 'error_class is included in metaclass compatibility checks';
+    ::isnt( ::exception { extends 'Baz::Sub' }, undef, 'error_class is included in metaclass compatibility checks' );
 }
 
 {
@@ -145,7 +145,7 @@ ok( Foo::Sub->meta->error_class->isa('Moose::Error::Croak'),
     package Foo::Sub::Sub;
     use Moose;
 
-    ::lives_ok { extends 'Foo::Sub' } 'error_class differs by role so incompat is handled';
+    ::is( ::exception { extends 'Foo::Sub' }, undef, 'error_class differs by role so incompat is handled' );
 
     Moose::Util::MetaRole::apply_metaroles(
         for             => __PACKAGE__,

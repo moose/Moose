@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Test::Requires {
     'IO::String' => '0.01', # skip all if not installed
@@ -79,9 +79,9 @@ use Test::Requires {
 
     is($email->as_string, '... this is my body ...', '... got correct string');
 
-    lives_ok {
+    is( exception {
         $email->raw_body('... this is the next body ...');
-    } '... this will coerce correctly';
+    }, undef, '... this will coerce correctly' );
 
     isa_ok($email->raw_body, 'IO::String');
 
@@ -100,9 +100,9 @@ use Test::Requires {
 
     my $str2 = '... this is the next body (ref) ...';
 
-    lives_ok {
+    is( exception {
         $email->raw_body(\$str2);
-    } '... this will coerce correctly';
+    }, undef, '... this will coerce correctly' );
 
     isa_ok($email->raw_body, 'IO::String');
 
@@ -122,9 +122,9 @@ use Test::Requires {
 
     my $io_str2 = IO::String->new('... this is the next body (IO::String) ...');
 
-    lives_ok {
+    is( exception {
         $email->raw_body($io_str2);
-    } '... this will coerce correctly';
+    }, undef, '... this will coerce correctly' );
 
     isa_ok($email->raw_body, 'IO::String');
     is($email->raw_body, $io_str2, '... and it is the one we expected');
@@ -175,16 +175,13 @@ use Test::Requires {
 
 {
     my $foo;
-    lives_ok { $foo = Foo->new( carray => 1 ) }
-    'Can pass non-ref value for carray';
+    is( exception { $foo = Foo->new( carray => 1 ) }, undef, 'Can pass non-ref value for carray' );
     is_deeply(
         $foo->carray, [1],
         'carray was coerced to an array ref'
     );
 
-    throws_ok { Foo->new( carray => {} ) }
-    qr/\QValidation failed for 'Coerced|Coerced' with value \E(?!undef)/,
-        'Cannot pass a hash ref for carray attribute, and hash ref is not coerced to an undef';
+    like( exception { Foo->new( carray => {} ) }, qr/\QValidation failed for 'Coerced|Coerced' with value \E(?!undef)/, 'Cannot pass a hash ref for carray attribute, and hash ref is not coerced to an undef' );
 }
 
 done_testing;

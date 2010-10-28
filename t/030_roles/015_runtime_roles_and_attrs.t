@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Scalar::Util 'blessed';
 
 
@@ -36,9 +36,9 @@ ok(!$obj->can( 'talk' ), "... the role is not composed yet");
 ok(!$obj->can( 'fur' ), 'ditto');
 ok(!$obj->does('Dog'), '... we do not do any roles yet');
 
-dies_ok {
+isnt( exception {
     $obj->dog($obj)
-} '... and setting the accessor fails (not a Dog yet)';
+}, undef, '... and setting the accessor fails (not a Dog yet)' );
 
 Dog->meta->apply($obj);
 
@@ -48,9 +48,9 @@ ok($obj->can('fur'), "it has fur");
 
 is($obj->talk, 'woof', '... got the right return value for the newly composed method');
 
-lives_ok {
+is( exception {
     $obj->dog($obj)
-} '... and setting the accessor is okay';
+}, undef, '... and setting the accessor is okay' );
 
 is($obj->fur, "dirty", "role attr initialized");
 

@@ -9,7 +9,7 @@ use warnings;
 use lib 't/lib', 'lib';
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Util::MetaRole;
 
@@ -583,10 +583,10 @@ use Moose::Util::MetaRole;
     }
 }
 
-lives_ok {
+is( exception {
     package UsesExportedMoose;
     ExportsMoose->import;
-} 'import module which loads a role from disk during init_meta';
+}, undef, 'import module which loads a role from disk during init_meta' );
 
 {
     package Foo::Meta::Role;

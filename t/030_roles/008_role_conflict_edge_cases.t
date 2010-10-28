@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -33,9 +33,9 @@ a conflict)
     package My::Test::Class1;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Derived1', 'Role::Derived2';
-    } '... roles composed okay (no conflicts)';
+    }, undef, '... roles composed okay (no conflicts)' );
 }
 
 ok(Role::Base->meta->has_method('foo'), '... have the method foo as expected');
@@ -79,9 +79,9 @@ a method conflict with method modifiers
 
     extends 'My::Test::Class2::Base';
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Derived3', 'Role::Derived4';
-    } '... roles composed okay (no conflicts)';
+    }, undef, '... roles composed okay (no conflicts)' );
 }
 
 ok(Role::Base2->meta->has_override_method_modifier('foo'), '... have the method foo as expected');
@@ -132,9 +132,9 @@ same for before/afters as well
 
     extends 'My::Test::Class3::Base';
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Derived5', 'Role::Derived6';
-    } '... roles composed okay (no conflicts)';
+    }, undef, '... roles composed okay (no conflicts)' );
 }
 
 ok(Role::Base3->meta->has_around_method_modifiers('foo'), '... have the method foo as expected');
@@ -175,9 +175,9 @@ a conflict)
     package My::Test::Class4;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Derived7', 'Role::Derived8';
-    } '... roles composed okay (no conflicts)';
+    }, undef, '... roles composed okay (no conflicts)' );
 }
 
 ok(Role::Base4->meta->has_attribute('foo'), '... have the attribute foo as expected');

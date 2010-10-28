@@ -76,7 +76,7 @@ use warnings;
 
         my $base = $self->SUPER::process(@_);
 
-        $base =~ s/(\$\| = 1;)/use Test::Exception;\n$1/;
+        $base =~ s/(\$\| = 1;)/use Test::Fatal;\n$1/;
 
         return $base;
     }

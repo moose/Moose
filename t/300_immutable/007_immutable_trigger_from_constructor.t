@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -33,6 +33,6 @@ like ($@, qr/^Pulling the Foo trigger/, "trigger from immutable constructor");
 eval { AClass->new(baz => 'bar') };
 like ($@, qr/^Pulling the Baz trigger/, "trigger from immutable constructor");
 
-lives_ok { AClass->new(bar => 'bar') } '... no triggers called';
+is( exception { AClass->new(bar => 'bar') }, undef, '... no triggers called' );
 
 done_testing;

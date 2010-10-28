@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Scalar::Util ();
 
@@ -118,8 +118,7 @@ is($string->validate(5),
 "This is not a string (5)",
 '... validated unsuccessfully (got error)');
 
-lives_ok { Moose::Meta::Attribute->new('bob', isa => 'Spong') }
-  'meta-attr construction ok even when type constraint utils loaded first';
+is( exception { Moose::Meta::Attribute->new('bob', isa => 'Spong') }, undef, 'meta-attr construction ok even when type constraint utils loaded first' );
 
 # Test type constraint predicate return values.
 
@@ -130,9 +129,9 @@ foreach my $predicate (qw/equals is_subtype_of is_a_type_of/) {
 # Test adding things which don't look like types to the registry throws an exception
 
 my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
-throws_ok {$r->add_type_constraint()} qr/not a valid type constraint/, '->add_type_constraint(undef) throws';
-throws_ok {$r->add_type_constraint('foo')} qr/not a valid type constraint/, '->add_type_constraint("foo") throws';
-throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type constraint/, '->add_type_constraint(SomeClass->new) throws';
+like( exception {$r->add_type_constraint()}, qr/not a valid type constraint/, '->add_type_constraint(undef) throws' );
+like( exception {$r->add_type_constraint('foo')}, qr/not a valid type constraint/, '->add_type_constraint("foo") throws' );
+like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid type constraint/, '->add_type_constraint(SomeClass->new) throws' );
 
 # Test some specific things that in the past did not work,
 # specifically weird variations on anon subtypes.
@@ -186,8 +185,7 @@ throws_ok {$r->add_type_constraint(bless {}, 'SomeClass')} qr/not a valid type c
 }
 
 {
-    throws_ok { subtype 'Foo' } qr/cannot consist solely of a name/,
-        'Cannot call subtype with a single string argument';
+    like( exception { subtype 'Foo' }, qr/cannot consist solely of a name/, 'Cannot call subtype with a single string argument' );
 }
 
 # Back-compat for being called without sugar. Previously, calling with

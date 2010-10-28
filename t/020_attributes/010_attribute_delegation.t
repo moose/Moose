@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 # -------------------------------------------------------------------
@@ -77,9 +77,9 @@ isa_ok($foo, 'Foo');
 
 is($foo->bar, 25, '... got the right foo->bar');
 
-lives_ok {
+is( exception {
     $bar->foo($foo);
-} '... assigned the new Foo to Bar->foo';
+}, undef, '... assigned the new Foo to Bar->foo' );
 
 is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
 
@@ -323,13 +323,13 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     package Goorch::Autoloaded;
     use Moose;
 
-    ::dies_ok {
+    ::isnt( ::exception {
         has 'foo' => (
             is      => 'rw',
             default => sub { Foo::Autoloaded->new },
             handles => qr/bar/
         );
-    } '... you cannot delegate to AUTOLOADED class with regexp';
+    }, undef, '... you cannot delegate to AUTOLOADED class with regexp' );
 }
 
 # check HASH based delegation w/ AUTOLOAD
@@ -368,9 +368,9 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     is($foo->bar, 25, '... got the right foo->bar');
 
-    lives_ok {
+    is( exception {
         $bar->foo($foo);
-    } '... assigned the new Foo to Bar->foo';
+    }, undef, '... assigned the new Foo to Bar->foo' );
 
     is($bar->foo, $foo, '... assigned bar->foo with the new Foo');
 
@@ -414,9 +414,9 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     is($foo->bar, 25, '... got the right foo->bar');
 
-    lives_ok {
+    is( exception {
         $baz->foo($foo);
-    } '... assigned the new Foo to Baz->foo';
+    }, undef, '... assigned the new Foo to Baz->foo' );
 
     is($baz->foo, $foo, '... assigned baz->foo with the new Foo');
 
@@ -445,15 +445,13 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 # not an object
 {
     my $i = Bar->new(foo => undef);
-    throws_ok { $i->foo_bar } qr/is not defined/,
-        'useful error from unblessed reference';
+    like( exception { $i->foo_bar }, qr/is not defined/, 'useful error from unblessed reference' );
 
     my $j = Bar->new(foo => []);
-    throws_ok { $j->foo_bar } qr/is not an object \(got 'ARRAY/,
-        'useful error from unblessed reference';
+    like( exception { $j->foo_bar }, qr/is not an object \(got 'ARRAY/, 'useful error from unblessed reference' );
 
     my $k = Bar->new(foo => "Foo");
-    lives_ok { $k->foo_baz } "but not for class name";
+    is( exception { $k->foo_baz }, undef, "but not for class name" );
 }
 
 done_testing;

@@ -10,7 +10,7 @@ use Test::Requires {
     'DateTime::Format::MySQL' => '0.01',
 };
 
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     # in case there are leftovers
@@ -237,7 +237,7 @@ my $article_oid;
 my $article_ref;
 {
     my $article;
-    lives_ok {
+    is( exception {
         $article = Newswriter::Article->new(
             headline => 'Home Office Redecorated',
             summary  => 'The home office was recently redecorated to match the new company colors',
@@ -250,14 +250,14 @@ my $article_ref;
 
             status => 'pending'
         );
-    } '... created my article successfully';
+    }, undef, '... created my article successfully' );
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'MooseX::POOP::Object');
 
-    lives_ok {
+    is( exception {
         $article->start_date(DateTime->new(year => 2006, month => 6, day => 10));
         $article->end_date(DateTime->new(year => 2006, month => 6, day => 17));
-    } '... add the article date-time stuff';
+    }, undef, '... add the article date-time stuff' );
 
     ## check some meta stuff
 
@@ -300,7 +300,7 @@ my $article2_oid;
 my $article2_ref;
 {
     my $article2;
-    lives_ok {
+    is( exception {
         $article2 = Newswriter::Article->new(
             headline => 'Company wins Lottery',
             summary  => 'An email was received today that informed the company we have won the lottery',
@@ -313,7 +313,7 @@ my $article2_ref;
 
             status => 'posted'
         );
-    } '... created my article successfully';
+    }, undef, '... created my article successfully' );
     isa_ok($article2, 'Newswriter::Article');
     isa_ok($article2, 'MooseX::POOP::Object');
 
@@ -340,9 +340,9 @@ my $article2_ref;
     ## orig-article
 
     my $article;
-    lives_ok {
+    is( exception {
         $article = Newswriter::Article->new(oid => $article_oid);
-    } '... (re)-created my article successfully';
+    }, undef, '... (re)-created my article successfully' );
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'MooseX::POOP::Object');
 
@@ -364,10 +364,10 @@ my $article2_ref;
     is($article->author->first_name, 'Truman', '... got the right author first name');
     is($article->author->last_name, 'Capote', '... got the right author last name');
 
-    lives_ok {
+    is( exception {
         $article->author->first_name('Dan');
         $article->author->last_name('Rather');
-    } '... changed the value ok';
+    }, undef, '... changed the value ok' );
 
     is($article->author->first_name, 'Dan', '... got the changed author first name');
     is($article->author->last_name, 'Rather', '... got the changed author last name');
@@ -379,9 +379,9 @@ MooseX::POOP::Meta::Instance->_reload_db();
 
 {
     my $article;
-    lives_ok {
+    is( exception {
         $article = Newswriter::Article->new(oid => $article_oid);
-    } '... (re)-created my article successfully';
+    }, undef, '... (re)-created my article successfully' );
     isa_ok($article, 'Newswriter::Article');
     isa_ok($article, 'MooseX::POOP::Object');
 
@@ -406,9 +406,9 @@ MooseX::POOP::Meta::Instance->_reload_db();
     is($article->status, 'pending', '... got the right status');
 
     my $article2;
-    lives_ok {
+    is( exception {
         $article2 = Newswriter::Article->new(oid => $article2_oid);
-    } '... (re)-created my article successfully';
+    }, undef, '... (re)-created my article successfully' );
     isa_ok($article2, 'Newswriter::Article');
     isa_ok($article2, 'MooseX::POOP::Object');
 

@@ -9,7 +9,7 @@ use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Test::Moose;
 
 {
@@ -78,25 +78,19 @@ sub run_tests {
         ok( $obj->is_lit,   'set is_lit to 1 using ->illuminate' );
         ok( !$obj->is_dark, 'check if is_dark does the right thing' );
 
-        throws_ok { $obj->illuminate(1) }
-        qr/Cannot call set with any arguments/,
-            'set throws an error when an argument is passed';
+        like( exception { $obj->illuminate(1) }, qr/Cannot call set with any arguments/, 'set throws an error when an argument is passed' );
 
         ok( !$obj->darken, 'unset returns false' );
         ok( !$obj->is_lit, 'set is_lit to 0 using ->darken' );
         ok( $obj->is_dark, 'check if is_dark does the right thing' );
 
-        throws_ok { $obj->darken(1) }
-        qr/Cannot call unset with any arguments/,
-            'unset throws an error when an argument is passed';
+        like( exception { $obj->darken(1) }, qr/Cannot call unset with any arguments/, 'unset throws an error when an argument is passed' );
 
         ok( $obj->flip_switch, 'toggle returns new value' );
         ok( $obj->is_lit,   'toggle is_lit back to 1 using ->flip_switch' );
         ok( !$obj->is_dark, 'check if is_dark does the right thing' );
 
-        throws_ok { $obj->flip_switch(1) }
-        qr/Cannot call toggle with any arguments/,
-            'toggle throws an error when an argument is passed';
+        like( exception { $obj->flip_switch(1) }, qr/Cannot call toggle with any arguments/, 'toggle throws an error when an argument is passed' );
 
         $obj->flip_switch;
         ok( !$obj->is_lit,

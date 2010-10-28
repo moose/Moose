@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -24,9 +24,8 @@ BEGIN {
 
 }
 
-lives_ok { class_type 'Beep' } 'class_type keywork works';
-lives_ok { class_type('Boop', message { "${_} is not a Boop" }) }
-  'class_type keywork works with message';
+is( exception { class_type 'Beep' }, undef, 'class_type keywork works' );
+is( exception { class_type('Boop', message { "${_} is not a Boop" }) }, undef, 'class_type keywork works with message' );
 
 my $type = find_type_constraint("Foo");
 

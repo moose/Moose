@@ -315,44 +315,49 @@ it under the same terms as Perl itself.
 use Scalar::Util 'isweak';
 
 my $ii;
-lives_ok {
-    $ii = Company->new(
-        {
-            name    => 'Infinity Interactive',
-            address => Address->new(
-                street   => '565 Plandome Rd., Suite 307',
-                city     => 'Manhasset',
-                state    => 'NY',
-                zip_code => '11030'
-            ),
-            employees => [
-                Employee->new(
-                    first_name => 'Jeremy',
-                    last_name  => 'Shao',
-                    title      => 'President / Senior Consultant',
-                    address =>
-                        Address->new( city => 'Manhasset', state => 'NY' )
+is(
+    exception {
+        $ii = Company->new(
+            {
+                name    => 'Infinity Interactive',
+                address => Address->new(
+                    street   => '565 Plandome Rd., Suite 307',
+                    city     => 'Manhasset',
+                    state    => 'NY',
+                    zip_code => '11030'
                 ),
-                Employee->new(
-                    first_name => 'Tommy',
-                    last_name  => 'Lee',
-                    title      => 'Vice President / Senior Developer',
-                    address =>
-                        Address->new( city => 'New York', state => 'NY' )
-                ),
-                Employee->new(
-                    first_name     => 'Stevan',
-                    middle_initial => 'C',
-                    last_name      => 'Little',
-                    title          => 'Senior Developer',
-                    address =>
-                        Address->new( city => 'Madison', state => 'CT' )
-                ),
-            ]
-        }
-    );
-}
-'... created the entire company successfully';
+                employees => [
+                    Employee->new(
+                        first_name => 'Jeremy',
+                        last_name  => 'Shao',
+                        title      => 'President / Senior Consultant',
+                        address    => Address->new(
+                            city => 'Manhasset', state => 'NY'
+                        )
+                    ),
+                    Employee->new(
+                        first_name => 'Tommy',
+                        last_name  => 'Lee',
+                        title      => 'Vice President / Senior Developer',
+                        address =>
+                            Address->new( city => 'New York', state => 'NY' )
+                    ),
+                    Employee->new(
+                        first_name     => 'Stevan',
+                        middle_initial => 'C',
+                        last_name      => 'Little',
+                        title          => 'Senior Developer',
+                        address =>
+                            Address->new( city => 'Madison', state => 'CT' )
+                    ),
+                ]
+            }
+        );
+    },
+    undef,
+    '... created the entire company successfully'
+);
+
 isa_ok( $ii, 'Company' );
 
 is( $ii->name, 'Infinity Interactive',
@@ -460,55 +465,85 @@ foreach my $employee ( @{ $new_company->employees } ) {
 
 ## check some error conditions for the subtypes
 
-dies_ok {
-    Address->new( street => {} ),;
-}
-'... we die correctly with bad args';
+isnt(
+    exception {
+        Address->new( street => {} ),;
+    },
+    undef,
+    '... we die correctly with bad args'
+);
 
-dies_ok {
-    Address->new( city => {} ),;
-}
-'... we die correctly with bad args';
+isnt(
+    exception {
+        Address->new( city => {} ),;
+    },
+    undef,
+    '... we die correctly with bad args'
+);
 
-dies_ok {
-    Address->new( state => 'British Columbia' ),;
-}
-'... we die correctly with bad args';
+isnt(
+    exception {
+        Address->new( state => 'British Columbia' ),;
+    },
+    undef,
+    '... we die correctly with bad args'
+);
 
-lives_ok {
-    Address->new( state => 'Connecticut' ),;
-}
-'... we live correctly with good args';
+is(
+    exception {
+        Address->new( state => 'Connecticut' ),;
+    },
+    undef,
+    '... we live correctly with good args'
+);
 
-dies_ok {
-    Address->new( zip_code => 'AF5J6$' ),;
-}
-'... we die correctly with bad args';
+isnt(
+    exception {
+        Address->new( zip_code => 'AF5J6$' ),;
+    },
+    undef,
+    '... we die correctly with bad args'
+);
 
-lives_ok {
-    Address->new( zip_code => '06443' ),;
-}
-'... we live correctly with good args';
+is(
+    exception {
+        Address->new( zip_code => '06443' ),;
+    },
+    undef,
+    '... we live correctly with good args'
+);
 
-dies_ok {
-    Company->new(),;
-}
-'... we die correctly without good args';
+isnt(
+    exception {
+        Company->new(),;
+    },
+    undef,
+    '... we die correctly without good args'
+);
 
-lives_ok {
-    Company->new( name => 'Foo' ),;
-}
-'... we live correctly without good args';
+is(
+    exception {
+        Company->new( name => 'Foo' ),;
+    },
+    undef,
+    '... we live correctly without good args'
+);
 
-dies_ok {
-    Company->new( name => 'Foo', employees => [ Person->new ] ),;
-}
-'... we die correctly with good args';
+isnt(
+    exception {
+        Company->new( name => 'Foo', employees => [ Person->new ] ),;
+    },
+    undef,
+    '... we die correctly with good args'
+);
 
-lives_ok {
-    Company->new( name => 'Foo', employees => [] ),;
-}
-'... we live correctly with good args';
+is(
+    exception {
+        Company->new( name => 'Foo', employees => [] ),;
+    },
+    undef,
+    '... we live correctly with good args'
+);
 
 =end testing
 

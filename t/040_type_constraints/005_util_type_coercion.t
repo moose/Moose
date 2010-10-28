@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -40,13 +40,13 @@ ok(!Header({}), '... this did not pass the type test');
 
 my $anon_type = subtype Object => where { $_->isa('HTTPHeader') };
 
-lives_ok {
+is( exception {
     coerce $anon_type
         => from ArrayRef
             => via { HTTPHeader->new(array => $_[0]) }
         => from HashRef
             => via { HTTPHeader->new(hash => $_[0]) };
-} 'coercion of anonymous subtype succeeds';
+}, undef, 'coercion of anonymous subtype succeeds' );
 
 foreach my $coercion (
     find_type_constraint('Header')->coercion,

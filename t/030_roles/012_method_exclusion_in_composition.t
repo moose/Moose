@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -58,21 +58,20 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
     package My::Foo::Class;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Foo::Role' => { -excludes => 'foo' },
              'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
-    } '... composed our roles correctly';
+    }, undef, '... composed our roles correctly' );
 
     package My::Foo::Class::Broken;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Foo::Role',
              'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
-    } qr/Due to a method name conflict in roles 'Baz::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'/,
-      '... composed our roles correctly';
+    }, qr/Due to a method name conflict in roles 'Baz::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'/, '... composed our roles correctly' );
 }
 
 {
@@ -86,11 +85,11 @@ ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is requ
     package My::Foo::Role;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Foo::Role' => { -excludes => 'foo' },
              'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
-    } '... composed our roles correctly';
+    }, undef, '... composed our roles correctly' );
 }
 
 ok(My::Foo::Role->meta->has_method('foo'), "we have a foo method");
@@ -100,11 +99,11 @@ ok(!My::Foo::Role->meta->requires_method('foo'), '... and the &foo method is not
     package My::Foo::Role::Other;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Foo::Role',
              'Bar::Role' => { -excludes => 'foo' },
              'Baz::Role';
-    } '... composed our roles correctly';
+    }, undef, '... composed our roles correctly' );
 }
 
 ok(!My::Foo::Role::Other->meta->has_method('foo'), "we dont have a foo method");

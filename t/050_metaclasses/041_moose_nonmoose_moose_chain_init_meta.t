@@ -15,10 +15,10 @@ use warnings;
 }
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
-lives_ok {
+is( exception {
     Moose->init_meta(for_class => 'SomeClass');
-} 'Moose class => use base => Moose Class, then Moose->init_meta on middle class ok';
+}, undef, 'Moose class => use base => Moose Class, then Moose->init_meta on middle class ok' );
 
 done_testing;

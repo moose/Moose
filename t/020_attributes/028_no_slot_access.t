@@ -61,32 +61,29 @@ use warnings;
     use Moose::Util::MetaRole;
 
     use Test::More;
-    use Test::Exception;
+    use Test::Fatal;
 
     Moose::Util::MetaRole::apply_metaroles(
         for             => __PACKAGE__,
         class_metaroles => { instance => ['MooseX::SomeAwesomeDBFields'] },
     );
 
-    lives_ok {
+    is( exception {
         has lazy_attr => (
             is      => 'ro',
             isa     => 'Bool',
             lazy    => 1,
             default => sub {0},
         );
-    }
-    "Adding lazy accessor does not use inline_slot_access";
+    }, undef, "Adding lazy accessor does not use inline_slot_access" );
 
-    lives_ok {
+    is( exception {
         has rw_attr => (
             is => 'rw',
         );
-    }
-    "Adding read-write accessor does not use inline_slot_access";
+    }, undef, "Adding read-write accessor does not use inline_slot_access" );
 
-    lives_ok { __PACKAGE__->meta->make_immutable; }
-    "Inling constructor does not use inline_slot_access";
+    is( exception { __PACKAGE__->meta->make_immutable; }, undef, "Inling constructor does not use inline_slot_access" );
 
     done_testing;
 }

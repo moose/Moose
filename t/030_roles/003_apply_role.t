@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package FooRole;
@@ -46,12 +46,9 @@ use Test::Exception;
 
     extends 'BarClass';
 
-    ::throws_ok { with 'FooRole' => { -version => 42 } }
-        qr/FooRole version 42 required--this is only version 23/,
-        'applying role with unsatisfied version requirement';
+    ::like( ::exception { with 'FooRole' => { -version => 42 } }, qr/FooRole version 42 required--this is only version 23/, 'applying role with unsatisfied version requirement' );
 
-    ::lives_ok { with 'FooRole' => { -version => 13 } }
-        'applying role with satisfied version requirement';
+    ::is( ::exception { with 'FooRole' => { -version => 13 } }, undef, 'applying role with satisfied version requirement' );
 
     sub blau {'FooClass::blau'}    # << the role wraps this ...
 
@@ -72,20 +69,17 @@ isa_ok( $foo_class_meta, 'Moose::Meta::Class' );
 my $foobar_class_meta = FooBarClass->meta;
 isa_ok( $foobar_class_meta, 'Moose::Meta::Class' );
 
-dies_ok {
+isnt( exception {
     $foo_class_meta->does_role();
-}
-'... does_role requires a role name';
+}, undef, '... does_role requires a role name' );
 
-dies_ok {
+isnt( exception {
     $foo_class_meta->add_role();
-}
-'... apply_role requires a role';
+}, undef, '... apply_role requires a role' );
 
-dies_ok {
+isnt( exception {
     $foo_class_meta->add_role( bless( {} => 'Fail' ) );
-}
-'... apply_role requires a role';
+}, undef, '... apply_role requires a role' );
 
 ok( $foo_class_meta->does_role('FooRole'),
     '... the FooClass->meta does_role FooRole' );
@@ -171,23 +165,20 @@ foreach my $foo ( $foo, $foobar ) {
     ok( !defined( $foo->baz ), '... $foo->baz is undefined' );
     ok( !defined( $foo->bar ), '... $foo->bar is undefined' );
 
-    dies_ok {
+    isnt( exception {
         $foo->baz(1);
-    }
-    '... baz is a read-only accessor';
+    }, undef, '... baz is a read-only accessor' );
 
-    dies_ok {
+    isnt( exception {
         $foo->bar(1);
-    }
-    '... bar is a read-write accessor with a type constraint';
+    }, undef, '... bar is a read-write accessor with a type constraint' );
 
     my $foo2 = FooClass->new();
     isa_ok( $foo2, 'FooClass' );
 
-    lives_ok {
+    is( exception {
         $foo->bar($foo2);
-    }
-    '... bar is a read-write accessor with a type constraint';
+    }, undef, '... bar is a read-write accessor with a type constraint' );
 
     is( $foo->bar, $foo2, '... got the right value for bar now' );
 }

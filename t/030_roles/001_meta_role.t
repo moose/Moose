@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints ();
@@ -45,9 +45,9 @@ is_deeply(
 
 ok(!$foo_role->has_attribute('bar'), '... FooRole does not have the bar attribute');
 
-lives_ok {
+is( exception {
     $foo_role->add_attribute('bar' => (is => 'rw', isa => 'Foo'));
-} '... added the bar attribute okay';
+}, undef, '... added the bar attribute okay' );
 
 is_deeply(
     [ $foo_role->get_attribute_list() ],
@@ -66,9 +66,9 @@ is(
     'bar has a Foo class type'
 );
 
-lives_ok {
+is( exception {
     $foo_role->add_attribute('baz' => (is => 'ro'));
-} '... added the baz attribute okay';
+}, undef, '... added the baz attribute okay' );
 
 is_deeply(
     [ sort $foo_role->get_attribute_list() ],
@@ -81,9 +81,9 @@ my $baz = $foo_role->get_attribute('baz');
 is_deeply( $baz->original_options, { is => 'ro' },
     'original options for baz attribute' );
 
-lives_ok {
+is( exception {
     $foo_role->remove_attribute('bar');
-} '... removed the bar attribute okay';
+}, undef, '... removed the bar attribute okay' );
 
 is_deeply(
     [ $foo_role->get_attribute_list() ],
@@ -98,9 +98,9 @@ ok($foo_role->has_attribute('baz'), '... FooRole does still have the baz attribu
 ok(!$foo_role->has_before_method_modifiers('boo'), '... no boo:before modifier');
 
 my $method = sub { "FooRole::boo:before" };
-lives_ok {
+is( exception {
     $foo_role->add_before_method_modifier('boo' => $method);
-} '... added a method modifier okay';
+}, undef, '... added a method modifier okay' );
 
 ok($foo_role->has_before_method_modifiers('boo'), '... now we have a boo:before modifier');
 is(($foo_role->get_before_method_modifiers('boo'))[0], $method, '... got the right method back');

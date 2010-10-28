@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Scalar::Util qw(refaddr);
 
 BEGIN {
@@ -13,9 +13,9 @@ BEGIN {
 
 # subtype 'aliasing' ...
 
-lives_ok {
+is( exception {
     subtype 'Numb3rs' => as 'Num';
-} '... create bare subtype fine';
+}, undef, '... create bare subtype fine' );
 
 my $numb3rs = find_type_constraint('Numb3rs');
 isa_ok($numb3rs, 'Moose::Meta::TypeConstraint');

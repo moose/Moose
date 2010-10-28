@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -32,16 +32,16 @@ Mutually recursive roles.
     package My::Test1;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Foo', 'Role::Bar';
-    } '... our mutually recursive roles combine okay';
+    }, undef, '... our mutually recursive roles combine okay' );
 
     package My::Test2;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Bar', 'Role::Foo';
-    } '... our mutually recursive roles combine okay (no matter what order)';
+    }, undef, '... our mutually recursive roles combine okay (no matter what order)' );
 }
 
 my $test1 = My::Test1->new;
@@ -98,32 +98,32 @@ Role method conflicts
     package My::Test3;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::Bling', 'Role::Bling::Bling';
-    } qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required';
+    }, qr/Due to a method name conflict in roles 'Role::Bling' and 'Role::Bling::Bling', the method 'bling' must be implemented or excluded by 'My::Test3'/, '... role methods conflict and method was required' );
 
     package My::Test4;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Bling';
         with 'Role::Bling::Bling';
-    } '... role methods didnt conflict when manually combined';
+    }, undef, '... role methods didnt conflict when manually combined' );
 
     package My::Test5;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Bling::Bling';
         with 'Role::Bling';
-    } '... role methods didnt conflict when manually combined (in opposite order)';
+    }, undef, '... role methods didnt conflict when manually combined (in opposite order)' );
 
     package My::Test6;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Bling::Bling', 'Role::Bling';
-    } '... role methods didnt conflict when manually resolved';
+    }, undef, '... role methods didnt conflict when manually resolved' );
 
     sub bling { 'My::Test6::bling' }
 }
@@ -187,35 +187,34 @@ Role attribute conflicts
     package My::Test7;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    } qr/We have encountered an attribute conflict.+ghost/;
+    }, qr/We have encountered an attribute conflict.+ghost/ );
 
     package My::Test8;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Boo';
         with 'Role::Boo::Hoo';
-    } '... role attrs didnt conflict when manually combined';
+    }, undef, '... role attrs didnt conflict when manually combined' );
 
     package My::Test9;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Boo::Hoo';
         with 'Role::Boo';
-    } '... role attrs didnt conflict when manually combined';
+    }, undef, '... role attrs didnt conflict when manually combined' );
 
     package My::Test10;
     use Moose;
 
     has 'ghost' => (is => 'ro', default => 'My::Test10::ghost');
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::Boo', 'Role::Boo::Hoo';
-    } qr/We have encountered an attribute conflict/,
-      '... role attrs conflict and cannot be manually disambiguted';
+    }, qr/We have encountered an attribute conflict/, '... role attrs conflict and cannot be manually disambiguted' );
 
 }
 
@@ -274,35 +273,34 @@ Role override method conflicts
 
     extends 'My::Test::Base';
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::Truth';
-    } '... composed the role with override okay';
+    }, undef, '... composed the role with override okay' );
 
     package My::Test12;
     use Moose;
 
     extends 'My::Test::Base';
 
-    ::lives_ok {
+    ::is( ::exception {
        with 'Role::Plot';
-    } '... composed the role with override okay';
+    }, undef, '... composed the role with override okay' );
 
     package My::Test13;
     use Moose;
 
-    ::dies_ok {
+    ::isnt( ::exception {
         with 'Role::Plot';
-    } '... cannot compose it because we have no superclass';
+    }, undef, '... cannot compose it because we have no superclass' );
 
     package My::Test14;
     use Moose;
 
     extends 'My::Test::Base';
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::Plot', 'Role::Truth';
-    } qr/Two \'override\' methods of the same name encountered/,
-      '... cannot compose it because we have no superclass';
+    }, qr/Two \'override\' methods of the same name encountered/, '... cannot compose it because we have no superclass' );
 }
 
 ok(My::Test11->meta->has_method('twist'), '... the twist method has been added');
@@ -327,10 +325,9 @@ is(My::Test14->twist(), 'My::Test::Base::twist', '... got the right method retur
     package Role::Reality;
     use Moose::Role;
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::Plot';
-    } qr/A local method of the same name as been found/,
-    '... could not compose roles here, it dies';
+    }, qr/A local method of the same name as been found/, '... could not compose roles here, it dies' );
 
     sub twist {
         'Role::Reality::twist';
@@ -360,9 +357,9 @@ is(Role::Reality->meta->get_method('twist')->(),
     package Conflicts;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with qw(Role1 Role2);
-    } qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/;
+    }, qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/ );
 }
 
 =pod

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -32,8 +32,7 @@ BEGIN {
 
 }
 
-lives_ok { role_type('Boop', message { "${_} is not a Boop" }) }
-  'role_type keywork works with message';
+is( exception { role_type('Boop', message { "${_} is not a Boop" }) }, undef, 'role_type keywork works with message' );
 
 my $type = find_type_constraint("Foo");
 

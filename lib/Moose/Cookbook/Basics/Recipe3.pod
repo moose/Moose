@@ -261,9 +261,13 @@ ok(!$left->has_right, '... $left no right node yet');
 
 is($left->node, undef, '... left has got no node value');
 
-lives_ok {
-    $left->node('left')
-} '... assign to lefts node';
+is(
+    exception {
+        $left->node('left');
+    },
+    undef,
+    '... assign to lefts node'
+);
 
 is($left->node, 'left', '... left now has a node value');
 
@@ -278,9 +282,13 @@ ok($root->has_right, '... now we have a right node');
 my $right = $root->right;
 isa_ok($right, 'BinaryTree');
 
-lives_ok {
-    $right->node('right')
-} '... assign to rights node';
+is(
+    exception {
+        $right->node('right');
+    },
+    undef,
+    '... assign to rights node'
+);
 
 is($right->node, 'right', '... left now has a node value');
 
@@ -310,9 +318,13 @@ ok(isweak($left_left->{parent}), '... parent is a weakened ref');
 my $left_right = BinaryTree->new;
 isa_ok($left_right, 'BinaryTree');
 
-lives_ok {
-    $left->right($left_right)
-} '... assign to rights node';
+is(
+    exception {
+        $left->right($left_right);
+    },
+    undef,
+    '... assign to rights node'
+);
 
 ok($left_right->has_parent, '... left does have a parent');
 
@@ -324,9 +336,13 @@ ok(isweak($left_right->{parent}), '... parent is a weakened ref');
 
 # and check the error
 
-dies_ok {
-    $left_right->right($left_left)
-} '... cant assign a node which already has a parent';
+isnt(
+    exception {
+        $left_right->right($left_left);
+    },
+    undef,
+    '... cannot assign a node which already has a parent'
+);
 
 =end testing
 

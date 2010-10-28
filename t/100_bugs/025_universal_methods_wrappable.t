@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::Exception;
+use Test::Fatal;
 use Test::More;
 
 {
@@ -22,7 +22,7 @@ use Test::More;
 
     local $TODO = 'UNIVERSAL methods should be wrappable';
 
-    ::lives_ok { with 'FakeBar' } 'applied role';
+    ::is( ::exception { with 'FakeBar' }, undef, 'applied role' );
 
     my $foo = Foo->new;
     ::isa_ok $foo, 'Bar';

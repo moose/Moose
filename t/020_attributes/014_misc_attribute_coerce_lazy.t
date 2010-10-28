@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 
@@ -43,8 +43,8 @@ use Test::Exception;
 my $r = Request->new;
 isa_ok($r, 'Request');
 
-lives_ok {
+is( exception {
     $r->headers;
-} '... this coerces and passes the type constraint even with lazy';
+}, undef, '... this coerces and passes the type constraint even with lazy' );
 
 done_testing;

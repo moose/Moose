@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -69,17 +69,17 @@ is( $Cat::AFTER_BARK_COUNTER,  2, 'after modifier is called twice' );
     package Dog::Role;
     use Moose::Role;
 
-    ::dies_ok {
+    ::isnt( ::exception {
         before qr/bark.*/ => sub {};
-    } '... this is not currently supported';
+    }, undef, '... this is not currently supported' );
 
-    ::dies_ok {
+    ::isnt( ::exception {
         around qr/bark.*/ => sub {};
-    } '... this is not currently supported';
+    }, undef, '... this is not currently supported' );
 
-    ::dies_ok {
+    ::isnt( ::exception {
         after  qr/bark.*/ => sub {};
-    } '... this is not currently supported';
+    }, undef, '... this is not currently supported' );
 
 }
 

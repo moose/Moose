@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -15,14 +15,14 @@ use Test::Exception;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    ::lives_ok {
+    ::is( ::exception {
         has 'customers' => (
             is         => 'ro',
             isa        => subtype('ArrayRef' => where {
                             (blessed($_) && $_->isa('Customer') || return) for @$_; 1 }),
             auto_deref => 1,
         );
-    } '... successfully created attr';
+    }, undef, '... successfully created attr' );
 }
 
 {
@@ -68,13 +68,13 @@ use Test::Exception;
 {
     my $autoderef = AutoDeref->new;
 
-    dies_ok {
+    isnt( exception {
         $autoderef->bar(1, 2, 3);
-    } '... its auto-de-ref-ing, not auto-en-ref-ing';
+    }, undef, '... its auto-de-ref-ing, not auto-en-ref-ing' );
 
-    lives_ok  {
+    is( exception {
         $autoderef->bar([ 1, 2, 3 ])
-    } '... set the results of bar correctly';
+    }, undef, '... set the results of bar correctly' );
 
     is_deeply [ $autoderef->bar ], [ 1, 2, 3 ], '... auto-dereffed correctly';
 }

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::Role;
 
@@ -33,25 +33,25 @@ use Moose::Meta::Role;
     my $foo_role = Moose::Meta::Role->initialize('FooRole');
     my $meta     = Foo->meta;
 
-    lives_ok { Foo->new } "lazy_build works";
+    is( exception { Foo->new }, undef, "lazy_build works" );
     is( Foo->new->foos, 'many foos',
         "correct value for 'foos'  before inlining constructor" );
     is( Foo->new->bars, 'many bars',
         "correct value for 'bars'  before inlining constructor" );
     is( Foo->new->bazes, 'many bazes',
         "correct value for 'bazes' before inlining constructor" );
-    lives_ok { $meta->make_immutable } "Foo is imutable";
-    lives_ok { $meta->identifier } "->identifier on metaclass lives";
-    dies_ok { $meta->add_role($foo_role) } "Add Role is locked";
-    lives_ok { Foo->new } "Inlined constructor works with lazy_build";
+    is( exception { $meta->make_immutable }, undef, "Foo is imutable" );
+    is( exception { $meta->identifier }, undef, "->identifier on metaclass lives" );
+    isnt( exception { $meta->add_role($foo_role) }, undef, "Add Role is locked" );
+    is( exception { Foo->new }, undef, "Inlined constructor works with lazy_build" );
     is( Foo->new->foos, 'many foos',
         "correct value for 'foos'  after inlining constructor" );
     is( Foo->new->bars, 'many bars',
         "correct value for 'bars'  after inlining constructor" );
     is( Foo->new->bazes, 'many bazes',
         "correct value for 'bazes' after inlining constructor" );
-    lives_ok { $meta->make_mutable } "Foo is mutable";
-    lives_ok { $meta->add_role($foo_role) } "Add Role is unlocked";
+    is( exception { $meta->make_mutable }, undef, "Foo is mutable" );
+    is( exception { $meta->add_role($foo_role) }, undef, "Add Role is unlocked" );
 
 }
 
@@ -73,11 +73,9 @@ use Moose::Meta::Role;
   sub BUILD { 'baz' }
 }
 
-lives_ok { Bar->meta->make_immutable }
-  'Immutable meta with single BUILD';
+is( exception { Bar->meta->make_immutable }, undef, 'Immutable meta with single BUILD' );
 
-lives_ok { Baz->meta->make_immutable }
-  'Immutable meta with multiple BUILDs';
+is( exception { Baz->meta->make_immutable }, undef, 'Immutable meta with multiple BUILDs' );
 
 =pod
 

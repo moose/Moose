@@ -4,31 +4,31 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok("Moose::Util::TypeConstraints");
     use_ok('Moose::Meta::TypeConstraint::Parameterized');
 }
 
-lives_ok {
+is( exception {
     subtype 'AlphaKeyHash' => as 'HashRef'
         => where {
             # no keys match non-alpha
             (grep { /[^a-zA-Z]/ } keys %$_) == 0
         };
-} '... created the subtype special okay';
+}, undef, '... created the subtype special okay' );
 
-lives_ok {
+is( exception {
     subtype 'Trihash' => as 'AlphaKeyHash'
         => where {
             keys(%$_) == 3
         };
-} '... created the subtype special okay';
+}, undef, '... created the subtype special okay' );
 
-lives_ok {
+is( exception {
     subtype 'Noncon' => as 'Item';
-} '... created the subtype special okay';
+}, undef, '... created the subtype special okay' );
 
 {
     my $t = find_type_constraint('AlphaKeyHash');
@@ -68,20 +68,20 @@ ok($th->check({ one => 1, two => 0, three => 1 }), '... validated it correctly')
 ok(!$th->check({ one => 1, two => 2, three => 1 }), '... validated it correctly');
 ok(!$th->check({foo1 => 1, bar2 => 0, baz3 => 1}), '... validated it correctly');
 
-dies_ok {
+isnt( exception {
     Moose::Meta::TypeConstraint::Parameterized->new(
         name           => 'Str[Int]',
         parent         => find_type_constraint('Str'),
         type_parameter => find_type_constraint('Int'),
     );
-} 'non-containers cannot be parameterized';
+}, undef, 'non-containers cannot be parameterized' );
 
-dies_ok {
+isnt( exception {
     Moose::Meta::TypeConstraint::Parameterized->new(
         name           => 'Noncon[Int]',
         parent         => find_type_constraint('Noncon'),
         type_parameter => find_type_constraint('Int'),
     );
-} 'non-containers cannot be parameterized';
+}, undef, 'non-containers cannot be parameterized' );
 
 done_testing;

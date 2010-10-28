@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Class;
@@ -24,13 +24,13 @@ use Test::Exception;
 
 my $new_class;
 
-lives_ok {
+is( exception {
     $new_class = Moose::Meta::Class->create(
         'Class::WithFoo',
         superclasses => ['Class'],
         roles        => ['Foo'],
     );
-} 'creating lives';
+}, undef, 'creating lives' );
 ok $new_class;
 
 my $with_foo = Class::WithFoo->new;
@@ -38,23 +38,23 @@ my $with_foo = Class::WithFoo->new;
 ok $with_foo->foo_role_applied;
 isa_ok $with_foo, 'Class', '$with_foo';
 
-throws_ok {
+like( exception {
     Moose::Meta::Class->create(
         'Made::Of::Fail',
         superclasses => ['Class'],
         roles => 'Foo', # "oops"
     );
-} qr/You must pass an ARRAY ref of roles/;
+}, qr/You must pass an ARRAY ref of roles/ );
 
 ok !Made::Of::Fail->isa('UNIVERSAL'), "did not create Made::Of::Fail";
 
-dies_ok {
+isnt( exception {
     Moose::Meta::Class->create(
         'Continuing::To::Fail',
         superclasses => ['Class'],
         roles        => ['Foo', 'Conflicts::With::Foo'],
     );
-} 'conflicting roles == death';
+}, undef, 'conflicting roles == death' );
 
 # XXX: Continuing::To::Fail gets created anyway
 

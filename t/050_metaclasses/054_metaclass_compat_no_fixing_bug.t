@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo::Meta::Constructor1;
@@ -40,7 +40,7 @@ use Test::Exception;
         for             => __PACKAGE__,
         class_metaroles => { constructor => ['Foo::Meta::Constructor2'] },
     );
-    ::lives_ok { extends 'Foo::Sub' } "doesn't try to fix if nothing is needed";
+    ::is( ::exception { extends 'Foo::Sub' }, undef, "doesn't try to fix if nothing is needed" );
 }
 
 done_testing;

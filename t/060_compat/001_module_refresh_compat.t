@@ -6,7 +6,7 @@ use warnings;
 use lib 't/lib', 'lib';
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use File::Spec;
 use File::Temp 'tempdir';
@@ -28,9 +28,9 @@ do {
 
     is($_->meta->name, $_, '... initialized the meta correctly');
 
-    lives_ok {
+    is( exception {
         Module::Refresh->new->refresh_module($_ . '.pm')
-    } '... successfully refreshed ' . $_;
+    }, undef, '... successfully refreshed ' );
 } foreach @modules;
 
 =pod
@@ -79,9 +79,9 @@ ok(!TestBaz->isa('Foo'), '... TestBaz is not a Foo');
     close FILE;
 }
 
-lives_ok {
+is( exception {
     Module::Refresh->new->refresh_module('TestBaz.pm')
-} '... successfully refreshed ' . $test_module_file;
+}, undef, '... successfully refreshed ' );
 
 is(TestBaz->meta->name, 'TestBaz', '... initialized the meta correctly');
 ok(TestBaz->meta->has_attribute('foo'), '... it has the foo attribute as well');

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -30,9 +30,9 @@ use Test::Exception;
         package SubAB;
         use Moose;
 
-        ::lives_ok {
+        ::is( ::exception {
             with "SubAA", "RootA";
-        } '... role was composed as expected';
+        }, undef, '... role was composed as expected' );
     }
 
     ok( SubAB->does("SubAA"), "does SubAA");
@@ -45,9 +45,9 @@ use Test::Exception;
 
     can_ok( $i, "foo" );
     my $foo_rv;
-    lives_ok {
+    is( exception {
         $foo_rv = $i->foo;
-    } '... called foo successfully';
+    }, undef, '... called foo successfully' );
     is($foo_rv, "RootA::foo", "... got the right foo rv");
 }
 
@@ -94,9 +94,9 @@ use Test::Exception;
         package SubBB;
         use Moose;
 
-        ::lives_ok {
+        ::is( ::exception {
             with "SubBA";
-        } '... composed the role successfully';
+        }, undef, '... composed the role successfully' );
     }
 
     ok( SubBB->does("SubBA"), "BB does SubBA" );
@@ -107,13 +107,13 @@ use Test::Exception;
     can_ok( $i, "foo" );
 
     my $foo_rv;
-    lives_ok {
+    is( exception {
         $foo_rv = $i->foo
-    } '... called foo successfully';
+    }, undef, '... called foo successfully' );
     is( $foo_rv, "RootB::foo", "foo rv" );
     is( $i->counter, 1, "after hook called" );
 
-    lives_ok { $i->foo } '... called foo successfully (again)';
+    is( exception { $i->foo }, undef, '... called foo successfully (again)' );
     is( $i->counter, 2, "after hook called (again)" );
 
     ok(SubBA->meta->has_method('foo'), '... this has the foo method');
@@ -143,9 +143,9 @@ use Test::Exception;
 
         with "RootC";
 
-        ::dies_ok {
+        ::isnt( ::exception {
             override foo => sub { "overridden" };
-        } '... cannot compose an override over a local method';
+        }, undef, '... cannot compose an override over a local method' );
     }
 }
 

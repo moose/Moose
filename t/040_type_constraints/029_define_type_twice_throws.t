@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 BEGIN {
     use_ok('Moose::Util::TypeConstraints');
@@ -17,11 +17,11 @@ BEGIN {
     subtype 'MySubType' => as 'Int' => where { 1 };
 }
 
-throws_ok {
+like( exception {
     package Some::Other::Class;
     use Moose::Util::TypeConstraints;
 
     subtype 'MySubType' => as 'Int' => where { 1 };
-} qr/cannot be created again/, 'Trying to create same type twice throws';
+}, qr/cannot be created again/, 'Trying to create same type twice throws' );
 
 done_testing;

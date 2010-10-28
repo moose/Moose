@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo;
@@ -24,12 +24,12 @@ use Test::Exception;
 
     extends 'Foo';
 
-    ::lives_ok { has '+foo' => (is => 'rw') } "can override is";
-    ::throws_ok { has '+foo' => (reader => 'bar') } qr/illegal/, "can't override reader";
-    ::lives_ok { has '+foo' => (clearer => 'baz') }  "can override unspecified things";
+    ::is( ::exception { has '+foo' => (is => 'rw') }, undef, "can override is" );
+    ::like( ::exception { has '+foo' => (reader => 'bar') }, qr/illegal/, "can't override reader" );
+    ::is( ::exception { has '+foo' => (clearer => 'baz') }, undef, "can override unspecified things" );
 
-    ::throws_ok { has '+bar' => (clearer => 'quux') }  qr/illegal/, "can't override clearer";
-    ::lives_ok { has '+bar' => (predicate => 'has_bar') }  "can override unspecified things";
+    ::like( ::exception { has '+bar' => (clearer => 'quux') }, qr/illegal/, "can't override clearer" );
+    ::is( ::exception { has '+bar' => (predicate => 'has_bar') }, undef, "can override unspecified things" );
 }
 
 {
@@ -47,13 +47,13 @@ use Test::Exception;
     package Bar;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         has bar => (
             traits            => ['Bar::Meta::Attribute'],
             my_illegal_option => 'FOO',
             is                => 'bare',
         );
-    } "can use illegal options";
+    }, undef, "can use illegal options" );
 
     has baz => (
         traits => ['Bar::Meta::Attribute'],
@@ -67,11 +67,8 @@ use Test::Exception;
 
     extends 'Bar';
 
-    ::throws_ok { has '+bar' => (my_illegal_option => 'BAR') }
-                qr/illegal/,
-                "can't override illegal attribute";
-    ::lives_ok { has '+baz' => (my_illegal_option => 'BAR') }
-               "can add illegal option if superclass doesn't set it";
+    ::like( ::exception { has '+bar' => (my_illegal_option => 'BAR') }, qr/illegal/, "can't override illegal attribute" );
+    ::is( ::exception { has '+baz' => (my_illegal_option => 'BAR') }, undef, "can add illegal option if superclass doesn't set it" );
 }
 
 my $bar_attr = Bar->meta->get_attribute('bar');

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Scalar::Util 'isweak';
 
@@ -90,29 +90,29 @@ use Scalar::Util 'isweak';
 
     can_ok($foo, 'foo');
     is($foo->foo(), undef, '... got an unset value');
-    lives_ok {
+    is( exception {
         $foo->foo(100);
-    } '... foo wrote successfully';
+    }, undef, '... foo wrote successfully' );
     is($foo->foo(), 100, '... got the correct set value');
 
     ok(!isweak($foo->{foo}), '... it is not a weak reference');
 
     # required writer
 
-    dies_ok {
+    isnt( exception {
         Foo->new;
-    } '... cannot create without the required attribute';
+    }, undef, '... cannot create without the required attribute' );
 
     can_ok($foo, 'foo_required');
     is($foo->foo_required(), 'required', '... got an unset value');
-    lives_ok {
+    is( exception {
         $foo->foo_required(100);
-    } '... foo_required wrote successfully';
+    }, undef, '... foo_required wrote successfully' );
     is($foo->foo_required(), 100, '... got the correct set value');
 
-    lives_ok {
+    is( exception {
         $foo->foo_required(undef);
-    } '... foo_required did not die with undef';
+    }, undef, '... foo_required did not die with undef' );
 
     is($foo->foo_required, undef, "value is undef");
 
@@ -129,14 +129,14 @@ use Scalar::Util 'isweak';
 
     can_ok($foo, 'foo_int');
     is($foo->foo_int(), undef, '... got an unset value');
-    lives_ok {
+    is( exception {
         $foo->foo_int(100);
-    } '... foo_int wrote successfully';
+    }, undef, '... foo_int wrote successfully' );
     is($foo->foo_int(), 100, '... got the correct set value');
 
-    dies_ok {
+    isnt( exception {
         $foo->foo_int("Foo");
-    } '... foo_int died successfully';
+    }, undef, '... foo_int died successfully' );
 
     ok(!isweak($foo->{foo_int}), '... it is not a weak reference');
 
@@ -146,9 +146,9 @@ use Scalar::Util 'isweak';
 
     can_ok($foo, 'foo_weak');
     is($foo->foo_weak(), undef, '... got an unset value');
-    lives_ok {
+    is( exception {
         $foo->foo_weak($test);
-    } '... foo_weak wrote successfully';
+    }, undef, '... foo_weak wrote successfully' );
     is($foo->foo_weak(), $test, '... got the correct set value');
 
     ok(isweak($foo->{foo_weak}), '... it is a weak reference');
@@ -156,14 +156,14 @@ use Scalar::Util 'isweak';
     can_ok( $foo, 'foo_deref');
     is_deeply( [$foo->foo_deref()], [], '... default default value');
     my @list;
-    lives_ok {
+    is( exception {
         @list = $foo->foo_deref();
-    } "... doesn't deref undef value";
+    }, undef, "... doesn't deref undef value" );
     is_deeply( \@list, [], "returns empty list in list context");
 
-    lives_ok {
+    is( exception {
         $foo->foo_deref( [ qw/foo bar gorch/ ] );
-    } '... foo_deref wrote successfully';
+    }, undef, '... foo_deref wrote successfully' );
 
     is( Scalar::Util::reftype( scalar $foo->foo_deref() ), "ARRAY", "returns an array reference in scalar context" );
     is_deeply( scalar($foo->foo_deref()), [ qw/foo bar gorch/ ], "correct array" );
@@ -175,9 +175,9 @@ use Scalar::Util 'isweak';
     can_ok( $foo, 'foo_deref' );
     is_deeply( [$foo->foo_deref_ro()], [], "... default default value" );
 
-    dies_ok {
+    isnt( exception {
         $foo->foo_deref_ro( [] );
-    } "... read only";
+    }, undef, "... read only" );
 
     $foo->{foo_deref_ro} = [qw/la la la/];
 
@@ -188,14 +188,14 @@ use Scalar::Util 'isweak';
     is_deeply( { $foo->foo_deref_hash() }, {}, "... default default value" );
 
     my %hash;
-    lives_ok {
+    is( exception {
         %hash = $foo->foo_deref_hash();
-    } "... doesn't deref undef value";
+    }, undef, "... doesn't deref undef value" );
     is_deeply( \%hash, {}, "returns empty list in list context");
 
-    lives_ok {
+    is( exception {
         $foo->foo_deref_hash( { foo => 1, bar => 2 } );
-    } '... foo_deref_hash wrote successfully';
+    }, undef, '... foo_deref_hash wrote successfully' );
 
     is_deeply( scalar($foo->foo_deref_hash), { foo => 1, bar => 2 }, "scalar context" );
 

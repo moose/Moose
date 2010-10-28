@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 BEGIN {
@@ -41,9 +41,9 @@ is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
-lives_ok {
+is( exception {
     MyClass->meta->make_immutable;
-} '... make MyClass immutable okay';
+}, undef, '... make MyClass immutable okay' );
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
@@ -53,9 +53,9 @@ is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
-lives_ok {
+is( exception {
     MyClass->meta->make_mutable;
-} '... make MyClass mutable okay';
+}, undef, '... make MyClass mutable okay' );
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
@@ -65,9 +65,9 @@ is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
-lives_ok {
+is( exception {
     MyMetaclass->meta->make_immutable;
-} '... make MyMetaclass immutable okay';
+}, undef, '... make MyMetaclass immutable okay' );
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');
@@ -77,9 +77,9 @@ is( $a->meta->foo, 'i am foo', '... foo method returns expected value' );
 ok( MyClass->meta->meta->does_role('MyRole'), 'metaclass does MyRole' );
 is( MyClass->meta->foo, 'i am foo', '... foo method returns expected value' );
 
-lives_ok {
+is( exception {
     MyClass->meta->make_immutable;
-} '... make MyClass immutable (again) okay';
+}, undef, '... make MyClass immutable (again) okay' );
 
 is(MyClass->meta, $mc, '... these metas are still the same thing');
 is(MyClass->meta->meta, $mc->meta, '... these meta-metas are the same thing');

@@ -9,7 +9,7 @@ use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Test::Moose;
 
 {
@@ -92,30 +92,22 @@ sub run_tests {
         $obj->_string('a');
         is( $obj->length, 1, 'length returns 1 for new string' );
 
-        throws_ok { $obj->length(42) }
-        qr/Cannot call length with any arguments/,
-            'length throws an error when an argument is passed';
+        like( exception { $obj->length(42) }, qr/Cannot call length with any arguments/, 'length throws an error when an argument is passed' );
 
         is( $obj->inc, 'b', 'inc returns new value' );
         is( $obj->_string, 'b', 'a becomes b after inc' );
 
-        throws_ok { $obj->inc(42) }
-        qr/Cannot call inc with any arguments/,
-            'inc throws an error when an argument is passed';
+        like( exception { $obj->inc(42) }, qr/Cannot call inc with any arguments/, 'inc throws an error when an argument is passed' );
 
         is( $obj->append('foo'), 'bfoo', 'append returns new value' );
         is( $obj->_string, 'bfoo', 'appended to the string' );
 
-        throws_ok { $obj->append( 'foo', 2 ) }
-        qr/Cannot call append with more than 1 argument/,
-            'append throws an error when two arguments are passed';
+        like( exception { $obj->append( 'foo', 2 ) }, qr/Cannot call append with more than 1 argument/, 'append throws an error when two arguments are passed' );
 
         $obj->append_curried;
         is( $obj->_string, 'bfoo!', 'append_curried appended to the string' );
 
-        throws_ok { $obj->append_curried('foo') }
-        qr/Cannot call append with more than 1 argument/,
-            'append_curried throws an error when two arguments are passed';
+        like( exception { $obj->append_curried('foo') }, qr/Cannot call append with more than 1 argument/, 'append_curried throws an error when two arguments are passed' );
 
         $obj->_string("has nl$/");
         is( $obj->chomp, 1, 'chomp returns number of characters removed' );
@@ -127,16 +119,12 @@ sub run_tests {
             'chomp is a no-op when string has no line ending'
         );
 
-        throws_ok { $obj->chomp(42) }
-        qr/Cannot call chomp with any arguments/,
-            'chomp throws an error when an argument is passed';
+        like( exception { $obj->chomp(42) }, qr/Cannot call chomp with any arguments/, 'chomp throws an error when an argument is passed' );
 
         is( $obj->chop, 'l', 'chop returns character removed' );
         is( $obj->_string, 'has n', 'chopped string' );
 
-        throws_ok { $obj->chop(42) }
-        qr/Cannot call chop with any arguments/,
-            'chop throws an error when an argument is passed';
+        like( exception { $obj->chop(42) }, qr/Cannot call chop with any arguments/, 'chop throws an error when an argument is passed' );
 
         $obj->_string('x');
         is( $obj->prepend('bar'), 'barx', 'prepend returns new value' );
@@ -173,13 +161,9 @@ sub run_tests {
         is( $obj->_string, 'af',
             'replace accepts an empty string as first argument' );
 
-        throws_ok { $obj->replace( {}, 'x' ) }
-        qr/The first argument passed to replace must be a string or regexp reference/,
-            'replace throws an error when the first argument is not a string or regexp';
+        like( exception { $obj->replace( {}, 'x' ) }, qr/The first argument passed to replace must be a string or regexp reference/, 'replace throws an error when the first argument is not a string or regexp' );
 
-        throws_ok { $obj->replace( qr/x/, {} ) }
-        qr/The second argument passed to replace must be a string or code reference/,
-            'replace throws an error when the first argument is not a string or regexp';
+        like( exception { $obj->replace( qr/x/, {} ) }, qr/The second argument passed to replace must be a string or code reference/, 'replace throws an error when the first argument is not a string or regexp' );
 
         $obj->_string('Moosex');
         $obj->replace_curried;
@@ -207,13 +191,9 @@ sub run_tests {
             'match with empty string as argument returns true'
         );
 
-        throws_ok { $obj->match }
-        qr/Cannot call match without at least 1 argument/,
-            'match throws an error when no arguments are passed';
+        like( exception { $obj->match }, qr/Cannot call match without at least 1 argument/, 'match throws an error when no arguments are passed' );
 
-        throws_ok { $obj->match( {} ) }
-        qr/The argument passed to match must be a string or regexp reference/,
-            'match throws an error when an invalid argument is passed';
+        like( exception { $obj->match( {} ) }, qr/The argument passed to match must be a string or regexp reference/, 'match throws an error when an invalid argument is passed' );
 
         $obj->_string('1234');
         ok( !$obj->match_curried, 'match_curried returns false' );
@@ -224,9 +204,7 @@ sub run_tests {
         $obj->clear;
         is( $obj->_string, q{}, 'clear' );
 
-        throws_ok { $obj->clear(42) }
-        qr/Cannot call clear with any arguments/,
-            'clear throws an error when an argument is passed';
+        like( exception { $obj->clear(42) }, qr/Cannot call clear with any arguments/, 'clear throws an error when an argument is passed' );
 
         $obj->_string('some long string');
         is(
@@ -258,25 +236,15 @@ sub run_tests {
             'substr as setter with three arguments, replacment is empty string'
         );
 
-        throws_ok { $obj->substr }
-        qr/Cannot call substr without at least 1 argument/,
-            'substr throws an error when no argumemts are passed';
+        like( exception { $obj->substr }, qr/Cannot call substr without at least 1 argument/, 'substr throws an error when no argumemts are passed' );
 
-        throws_ok { $obj->substr( 1, 2, 3, 4 ) }
-        qr/Cannot call substr with more than 3 arguments/,
-            'substr throws an error when four argumemts are passed';
+        like( exception { $obj->substr( 1, 2, 3, 4 ) }, qr/Cannot call substr with more than 3 arguments/, 'substr throws an error when four argumemts are passed' );
 
-        throws_ok { $obj->substr( {} ) }
-        qr/The first argument passed to substr must be an integer/,
-            'substr throws an error when first argument is not an integer';
+        like( exception { $obj->substr( {} ) }, qr/The first argument passed to substr must be an integer/, 'substr throws an error when first argument is not an integer' );
 
-        throws_ok { $obj->substr( 1, {} ) }
-        qr/The second argument passed to substr must be an integer/,
-            'substr throws an error when second argument is not an integer';
+        like( exception { $obj->substr( 1, {} ) }, qr/The second argument passed to substr must be an integer/, 'substr throws an error when second argument is not an integer' );
 
-        throws_ok { $obj->substr( 1, 2, {} ) }
-        qr/The third argument passed to substr must be a string/,
-            'substr throws an error when third argument is not a string';
+        like( exception { $obj->substr( 1, 2, {} ) }, qr/The third argument passed to substr must be a string/, 'substr throws an error when third argument is not a string' );
 
         $obj->_string('some long string');
 

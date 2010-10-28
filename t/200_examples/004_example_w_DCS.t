@@ -18,7 +18,7 @@ use Test::Requires {
     'Declare::Constraints::Simple' => '0.01', # skip all if not installed
 };
 
-use Test::Exception;
+use Test::Fatal;
 
 {
     package Foo;
@@ -58,35 +58,35 @@ my $hash_of_arrays_of_objs = {
 my $array_of_ints = [ 1 .. 10 ];
 
 my $foo;
-lives_ok {
+is( exception {
     $foo = Foo->new(
        'bar' => $hash_of_arrays_of_objs,
        'baz' => $array_of_ints,
     );
-} '... construction succeeded';
+}, undef, '... construction succeeded' );
 isa_ok($foo, 'Foo');
 
 is_deeply($foo->bar, $hash_of_arrays_of_objs, '... got our value correctly');
 is_deeply($foo->baz, $array_of_ints, '... got our value correctly');
 
-dies_ok {
+isnt( exception {
     $foo->bar([]);
-} '... validation failed correctly';
+}, undef, '... validation failed correctly' );
 
-dies_ok {
+isnt( exception {
     $foo->bar({ foo => 3 });
-} '... validation failed correctly';
+}, undef, '... validation failed correctly' );
 
-dies_ok {
+isnt( exception {
     $foo->bar({ foo => [ 1, 2, 3 ] });
-} '... validation failed correctly';
+}, undef, '... validation failed correctly' );
 
-dies_ok {
+isnt( exception {
     $foo->baz([ "foo" ]);
-} '... validation failed correctly';
+}, undef, '... validation failed correctly' );
 
-dies_ok {
+isnt( exception {
     $foo->baz({});
-} '... validation failed correctly';
+}, undef, '... validation failed correctly' );
 
 done_testing;

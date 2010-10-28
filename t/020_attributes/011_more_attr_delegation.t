@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 =pod
 
@@ -94,41 +94,41 @@ do not fail at compile time.
     sub parent_method_1 { "parent_1" }
     ::can_ok('Parent', 'parent_method_1');
 
-    ::dies_ok {
+    ::isnt( ::exception {
         has child_a => (
             is      => "ro",
             default => sub { ChildA->new },
             handles => qr/.*/,
         );
-    } "all_methods requires explicit isa";
+    }, undef, "all_methods requires explicit isa" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_a => (
             isa     => "ChildA",
             is      => "ro",
             default => sub { ChildA->new },
             handles => qr/.*/,
         );
-    } "allow all_methods with explicit isa";
+    }, undef, "allow all_methods with explicit isa" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_b => (
             is      => 'ro',
             default => sub { ChildB->new },
             handles => [qw/child_b_method_1/],
         );
-    } "don't need to declare isa if method list is predefined";
+    }, undef, "don't need to declare isa if method list is predefined" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_c => (
             isa     => "ChildC",
             is      => "ro",
             default => sub { ChildC->new },
             handles => qr/_la$/,
         );
-    } "can declare regex collector";
+    }, undef, "can declare regex collector" );
 
-    ::dies_ok {
+    ::isnt( ::exception {
         has child_d => (
             is      => "ro",
             default => sub { ChildD->new },
@@ -136,9 +136,9 @@ do not fail at compile time.
                 my ( $class, $delegate_class ) = @_;
             }
         );
-    } "can't create attr with generative handles parameter and no isa";
+    }, undef, "can't create attr with generative handles parameter and no isa" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_d => (
             isa     => "ChildD",
             is      => "ro",
@@ -148,19 +148,19 @@ do not fail at compile time.
                 return;
             }
         );
-    } "can't create attr with generative handles parameter and no isa";
+    }, undef, "can't create attr with generative handles parameter and no isa" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_e => (
             isa     => "ChildE",
             is      => "ro",
             default => sub { ChildE->new },
             handles => ["child_e_method_2"],
         );
-    } "can delegate to non moose class using explicit method list";
+    }, undef, "can delegate to non moose class using explicit method list" );
 
     my $delegate_class;
-    ::lives_ok {
+    ::is( ::exception {
         has child_f => (
             isa     => "ChildF",
             is      => "ro",
@@ -170,30 +170,30 @@ do not fail at compile time.
                 return;
             },
         );
-    } "subrefs on non moose class give no meta";
+    }, undef, "subrefs on non moose class give no meta" );
 
     ::is( $delegate_class, "ChildF", "plain classes are handed down to subs" );
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_g => (
             isa     => "ChildG",
             default => sub { ChildG->new },
             handles => ["child_g_method_1"],
         );
-    } "can delegate to object even without explicit reader";
+    }, undef, "can delegate to object even without explicit reader" );
 
     ::can_ok('Parent', 'parent_method_1');
-    ::dies_ok {
+    ::isnt( ::exception {
         has child_h => (
             isa     => "ChildH",
             is      => "ro",
             default => sub { ChildH->new },
             handles => sub { map { $_, $_ } $_[1]->get_all_method_names },
         );
-    } "Can't override exisiting class method in delegate";
+    }, undef, "Can't override exisiting class method in delegate" );
     ::can_ok('Parent', 'parent_method_1');
 
-    ::lives_ok {
+    ::is( ::exception {
         has child_i => (
             isa     => "ChildI",
             is      => "ro",
@@ -203,7 +203,7 @@ do not fail at compile time.
                     $_[1]->get_all_method_names;
             },
         );
-    } "Test handles code ref for skipping predefined methods";
+    }, undef, "Test handles code ref for skipping predefined methods" );
 
 
     sub parent_method { "p" }

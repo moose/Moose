@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
@@ -33,7 +33,7 @@ ok(Role::ExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclu
 ok(Role::DoesExcludesFoo->meta->excludes_role('Role::Foo'), '... got the right exclusions');
 
 # test simple exclusion
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -42,7 +42,7 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 # test no conflicts
 {
@@ -56,9 +56,9 @@ dies_ok {
 
     is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
 
-    lives_ok {
+    is( exception {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';
+    }, undef, '... this lives as expected' );
 }
 
 # test no conflicts w/exclusion
@@ -73,16 +73,16 @@ dies_ok {
 
     is($c->name, 'Role::Bar|Role::ExcludesFoo', '... got the composite role name');
 
-    lives_ok {
+    is( exception {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this lives as expected';
+    }, undef, '... this lives as expected' );
 
     is_deeply([$c->get_excluded_roles_list], ['Role::Foo'], '... has excluded roles');
 }
 
 
 # test conflict with an "inherited" exclusion
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -92,10 +92,10 @@ dies_ok {
         )
     );
 
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 # test conflict with an "inherited" exclusion of an "inherited" role
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -104,6 +104,6 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 done_testing;

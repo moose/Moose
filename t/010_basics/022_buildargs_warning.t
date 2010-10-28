@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::Exception;
+use Test::Fatal;
 use Test::More;
 use Test::Moose qw( with_immutable );
 
@@ -17,7 +17,7 @@ use Test::Requires {
 }
 
 with_immutable {
-    lives_and {
+    is( exception {
         stderr_like { Baz->new( x => 42, 'y' ) }
         qr{\QThe new() method for Baz expects a hash reference or a key/value list. You passed an odd number of arguments at t/010_basics/022_buildargs_warning.t line \E\d+},
             'warning when passing an odd number of args to new()';
@@ -29,7 +29,7 @@ with_immutable {
         stderr_is { Baz->new( { x => 42 } ) }
         q{},
             'we handle a single hashref to new without errors';
-    };
+    }, undef );
 }
 'Baz';
 

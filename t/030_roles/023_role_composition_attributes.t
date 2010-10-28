@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Meta::Role::Application::RoleSummation;
 use Moose::Meta::Role::Composite;
@@ -43,9 +43,9 @@ use Moose::Meta::Role::Composite;
 
     is($c->name, 'Role::Foo|Role::Bar', '... got the composite role name');
 
-    lives_ok {
+    is( exception {
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
-    } '... this succeeds as expected';
+    }, undef, '... this succeeds as expected' );
 
     is_deeply(
         [ sort $c->get_attribute_list ],
@@ -55,7 +55,7 @@ use Moose::Meta::Role::Composite;
 }
 
 # test simple conflict
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -64,10 +64,10 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 # test complex conflict
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -78,10 +78,10 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 # test simple conflict
-dies_ok {
+isnt( exception {
     Moose::Meta::Role::Application::RoleSummation->new->apply(
         Moose::Meta::Role::Composite->new(
             roles => [
@@ -90,6 +90,6 @@ dies_ok {
             ]
         )
     );
-} '... this fails as expected';
+}, undef, '... this fails as expected' );
 
 done_testing;

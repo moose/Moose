@@ -8,7 +8,7 @@ use lib 't/lib';
 use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
-use Test::Exception;
+use Test::Fatal;
 use Test::More;
 use Test::Moose;
 
@@ -87,49 +87,37 @@ sub run_tests {
 
         is( $obj->integer, 15, 'Add ten for fithteen' );
 
-        throws_ok { $obj->add( 10, 2 ) }
-        qr/Cannot call add with more than 1 argument/,
-            'add throws an error when 2 arguments are passed';
+        like( exception { $obj->add( 10, 2 ) }, qr/Cannot call add with more than 1 argument/, 'add throws an error when 2 arguments are passed' );
 
         is( $obj->sub(3), 12, 'sub returns new value' );
 
         is( $obj->integer, 12, 'Subtract three for 12' );
 
-        throws_ok { $obj->sub( 10, 2 ) }
-        qr/Cannot call sub with more than 1 argument/,
-            'sub throws an error when 2 arguments are passed';
+        like( exception { $obj->sub( 10, 2 ) }, qr/Cannot call sub with more than 1 argument/, 'sub throws an error when 2 arguments are passed' );
 
         is( $obj->set(10), 10, 'set returns new value' );
 
         is( $obj->integer, 10, 'Set to ten' );
 
-        throws_ok { $obj->set( 10, 2 ) }
-        qr/Cannot call set with more than 1 argument/,
-            'set throws an error when 2 arguments are passed';
+        like( exception { $obj->set( 10, 2 ) }, qr/Cannot call set with more than 1 argument/, 'set throws an error when 2 arguments are passed' );
 
         is( $obj->div(2), 5, 'div returns new value' );
 
         is( $obj->integer, 5, 'divide by 2' );
 
-        throws_ok { $obj->div( 10, 2 ) }
-        qr/Cannot call div with more than 1 argument/,
-            'div throws an error when 2 arguments are passed';
+        like( exception { $obj->div( 10, 2 ) }, qr/Cannot call div with more than 1 argument/, 'div throws an error when 2 arguments are passed' );
 
         is( $obj->mul(2), 10, 'mul returns new value' );
 
         is( $obj->integer, 10, 'multiplied by 2' );
 
-        throws_ok { $obj->mul( 10, 2 ) }
-        qr/Cannot call mul with more than 1 argument/,
-            'mul throws an error when 2 arguments are passed';
+        like( exception { $obj->mul( 10, 2 ) }, qr/Cannot call mul with more than 1 argument/, 'mul throws an error when 2 arguments are passed' );
 
         is( $obj->mod(2), 0, 'mod returns new value' );
 
         is( $obj->integer, 0, 'Mod by 2' );
 
-        throws_ok { $obj->mod( 10, 2 ) }
-        qr/Cannot call mod with more than 1 argument/,
-            'mod throws an error when 2 arguments are passed';
+        like( exception { $obj->mod( 10, 2 ) }, qr/Cannot call mod with more than 1 argument/, 'mod throws an error when 2 arguments are passed' );
 
         $obj->set(7);
 
@@ -141,9 +129,7 @@ sub run_tests {
 
         is( $obj->abs, 1, 'abs returns new value' );
 
-        throws_ok { $obj->abs(10) }
-        qr/Cannot call abs with any arguments/,
-            'abs throws an error when an argument is passed';
+        like( exception { $obj->abs(10) }, qr/Cannot call abs with any arguments/, 'abs throws an error when an argument is passed' );
 
         is( $obj->integer, 1, 'abs 1' );
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -70,41 +70,41 @@ ok(String('Foo'),  '... "Foo" is a String');
 
 my $foo = Foo->new;
 
-lives_ok { $foo->vUndef(undef) } '... undef is a Foo->Undef';
-dies_ok { $foo->vDefined(undef) } '... undef is NOT a Foo->Defined';
-dies_ok { $foo->vInt(undef) } '... undef is NOT a Foo->Int';
-dies_ok { $foo->vNumber(undef) } '... undef is NOT a Foo->Number';
-dies_ok { $foo->vStr(undef) } '... undef is NOT a Foo->Str';
-dies_ok { $foo->vString(undef) } '... undef is NOT a Foo->String';
+is( exception { $foo->vUndef(undef) }, undef, '... undef is a Foo->Undef' );
+isnt( exception { $foo->vDefined(undef) }, undef, '... undef is NOT a Foo->Defined' );
+isnt( exception { $foo->vInt(undef) }, undef, '... undef is NOT a Foo->Int' );
+isnt( exception { $foo->vNumber(undef) }, undef, '... undef is NOT a Foo->Number' );
+isnt( exception { $foo->vStr(undef) }, undef, '... undef is NOT a Foo->Str' );
+isnt( exception { $foo->vString(undef) }, undef, '... undef is NOT a Foo->String' );
 
-dies_ok { $foo->vUndef(5) } '... 5 is NOT a Foo->Undef';
-lives_ok { $foo->vDefined(5) } '... 5 is a Foo->Defined';
-lives_ok { $foo->vInt(5) } '... 5 is a Foo->Int';
-lives_ok { $foo->vNumber(5) } '... 5 is a Foo->Number';
-lives_ok { $foo->vStr(5) } '... 5 is a Foo->Str';
-dies_ok { $foo->vString(5) } '... 5 is NOT a Foo->String';
+isnt( exception { $foo->vUndef(5) }, undef, '... 5 is NOT a Foo->Undef' );
+is( exception { $foo->vDefined(5) }, undef, '... 5 is a Foo->Defined' );
+is( exception { $foo->vInt(5) }, undef, '... 5 is a Foo->Int' );
+is( exception { $foo->vNumber(5) }, undef, '... 5 is a Foo->Number' );
+is( exception { $foo->vStr(5) }, undef, '... 5 is a Foo->Str' );
+isnt( exception { $foo->vString(5) }, undef, '... 5 is NOT a Foo->String' );
 
-dies_ok { $foo->vUndef(0.5) } '... 0.5 is NOT a Foo->Undef';
-lives_ok { $foo->vDefined(0.5) } '... 0.5 is a Foo->Defined';
-dies_ok { $foo->vInt(0.5) } '... 0.5 is NOT a Foo->Int';
-lives_ok { $foo->vNumber(0.5) } '... 0.5 is a Foo->Number';
-lives_ok { $foo->vStr(0.5) } '... 0.5 is a Foo->Str';
-dies_ok { $foo->vString(0.5) } '... 0.5 is NOT a Foo->String';
+isnt( exception { $foo->vUndef(0.5) }, undef, '... 0.5 is NOT a Foo->Undef' );
+is( exception { $foo->vDefined(0.5) }, undef, '... 0.5 is a Foo->Defined' );
+isnt( exception { $foo->vInt(0.5) }, undef, '... 0.5 is NOT a Foo->Int' );
+is( exception { $foo->vNumber(0.5) }, undef, '... 0.5 is a Foo->Number' );
+is( exception { $foo->vStr(0.5) }, undef, '... 0.5 is a Foo->Str' );
+isnt( exception { $foo->vString(0.5) }, undef, '... 0.5 is NOT a Foo->String' );
 
-dies_ok { $foo->vUndef('Foo') } '... "Foo" is NOT a Foo->Undef';
-lives_ok { $foo->vDefined('Foo') } '... "Foo" is a Foo->Defined';
-dies_ok { $foo->vInt('Foo') } '... "Foo" is NOT a Foo->Int';
-dies_ok { $foo->vNumber('Foo') } '... "Foo" is NOT a Foo->Number';
-lives_ok { $foo->vStr('Foo') } '... "Foo" is a Foo->Str';
-lives_ok { $foo->vString('Foo') } '... "Foo" is a Foo->String';
+isnt( exception { $foo->vUndef('Foo') }, undef, '... "Foo" is NOT a Foo->Undef' );
+is( exception { $foo->vDefined('Foo') }, undef, '... "Foo" is a Foo->Defined' );
+isnt( exception { $foo->vInt('Foo') }, undef, '... "Foo" is NOT a Foo->Int' );
+isnt( exception { $foo->vNumber('Foo') }, undef, '... "Foo" is NOT a Foo->Number' );
+is( exception { $foo->vStr('Foo') }, undef, '... "Foo" is a Foo->Str' );
+is( exception { $foo->vString('Foo') }, undef, '... "Foo" is a Foo->String' );
 
 # the lazy tests
 
-lives_ok { $foo->v_lazy_Undef() } '... undef is a Foo->Undef';
-dies_ok { $foo->v_lazy_Defined() } '... undef is NOT a Foo->Defined';
-dies_ok { $foo->v_lazy_Int() } '... undef is NOT a Foo->Int';
-dies_ok { $foo->v_lazy_Number() } '... undef is NOT a Foo->Number';
-dies_ok { $foo->v_lazy_Str() } '... undef is NOT a Foo->Str';
-dies_ok { $foo->v_lazy_String() } '... undef is NOT a Foo->String';
+is( exception { $foo->v_lazy_Undef() }, undef, '... undef is a Foo->Undef' );
+isnt( exception { $foo->v_lazy_Defined() }, undef, '... undef is NOT a Foo->Defined' );
+isnt( exception { $foo->v_lazy_Int() }, undef, '... undef is NOT a Foo->Int' );
+isnt( exception { $foo->v_lazy_Number() }, undef, '... undef is NOT a Foo->Number' );
+isnt( exception { $foo->v_lazy_Str() }, undef, '... undef is NOT a Foo->Str' );
+isnt( exception { $foo->v_lazy_String() }, undef, '... undef is NOT a Foo->String' );
 
 done_testing;

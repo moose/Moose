@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 use Moose::Util::TypeConstraints;
 
@@ -38,41 +38,41 @@ ok(!$type->check([]), '... checked type correctly (fail)');
     has 'maybe_bar' => (is => 'rw', isa => maybe_type(class_type('Bar')));
 }
 
-lives_ok {
+is( exception {
     Foo->new(arr => [], bar => Bar->new);
-} '... Bar->new isa Bar';
+}, undef, '... Bar->new isa Bar' );
 
-dies_ok {
+isnt( exception {
     Foo->new(arr => [], bar => undef);
-} '... undef isnta Bar';
+}, undef, '... undef isnta Bar' );
 
-lives_ok {
+is( exception {
     Foo->new(arr => [], maybe_bar => Bar->new);
-} '... Bar->new isa maybe(Bar)';
+}, undef, '... Bar->new isa maybe(Bar)' );
 
-lives_ok {
+is( exception {
     Foo->new(arr => [], maybe_bar => undef);
-} '... undef isa maybe(Bar)';
+}, undef, '... undef isa maybe(Bar)' );
 
-dies_ok {
+isnt( exception {
     Foo->new(arr => [], maybe_bar => 1);
-} '... 1 isnta maybe(Bar)';
+}, undef, '... 1 isnta maybe(Bar)' );
 
-lives_ok {
+is( exception {
     Foo->new(arr => []);
-} '... it worked!';
+}, undef, '... it worked!' );
 
-lives_ok {
+is( exception {
     Foo->new(arr => undef);
-} '... it worked!';
+}, undef, '... it worked!' );
 
-dies_ok {
+isnt( exception {
     Foo->new(arr => 100);
-} '... failed the type check';
+}, undef, '... failed the type check' );
 
-dies_ok {
+isnt( exception {
     Foo->new(arr => 'hello world');
-} '... failed the type check';
+}, undef, '... failed the type check' );
 
 
 {
@@ -121,15 +121,11 @@ ok sub {$obj->Maybe_Int(undef); 1}->()
 ok !$Maybe_Int->check("")
  => 'failed ("")';
 
-throws_ok { $obj->Maybe_Int("") }
- qr/Attribute \(Maybe_Int\) does not pass the type constraint/
- => 'failed assigned ("")';
+like( exception { $obj->Maybe_Int("") }, qr/Attribute \(Maybe_Int\) does not pass the type constraint/, 'failed assigned ("")' );
 
 ok !$Maybe_Int->check("a")
  => 'failed ("a")';
 
-throws_ok { $obj->Maybe_Int("a") }
- qr/Attribute \(Maybe_Int\) does not pass the type constraint/
- => 'failed assigned ("a")';
+like( exception { $obj->Maybe_Int("a") }, qr/Attribute \(Maybe_Int\) does not pass the type constraint/, 'failed assigned ("a")' );
 
 done_testing;

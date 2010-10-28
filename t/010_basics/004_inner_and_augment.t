@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -77,9 +77,9 @@ is($foo->baz(), 'Foo::baz()', '... got the right value from &baz');
 
     sub bling { 'Bling::bling' }
 
-    ::dies_ok {
+    ::isnt( ::exception {
         augment 'bling' => sub {};
-    } '... cannot augment a method which has a local equivalent';
+    }, undef, '... cannot augment a method which has a local equivalent' );
 
 }
 

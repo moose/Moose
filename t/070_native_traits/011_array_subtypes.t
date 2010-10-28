@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 {
     use Moose::Util::TypeConstraints;
@@ -75,8 +75,7 @@ my $foo = Foo->new;
     $foo->array_int( [] );
     is_deeply( $foo->array_int, [], "array_int - correct contents" );
 
-    dies_ok { $foo->push_array_int('foo') }
-    "array_int - can't push wrong type";
+    isnt( exception { $foo->push_array_int('foo') }, undef, "array_int - can't push wrong type" );
     is_deeply( $foo->array_int, [], "array_int - correct contents" );
 
     $foo->push_array_int(1);
@@ -84,12 +83,12 @@ my $foo = Foo->new;
 }
 
 {
-    dies_ok { $foo->push_a1('foo') } "a1 - can't push onto undef";
+    isnt( exception { $foo->push_a1('foo') }, undef, "a1 - can't push onto undef" );
 
     $foo->a1( [] );
     is_deeply( $foo->a1, [], "a1 - correct contents" );
 
-    dies_ok { $foo->push_a1('foo') } "a1 - can't push wrong type";
+    isnt( exception { $foo->push_a1('foo') }, undef, "a1 - can't push wrong type" );
 
     is_deeply( $foo->a1, [], "a1 - correct contents" );
 
@@ -98,7 +97,7 @@ my $foo = Foo->new;
 }
 
 {
-    dies_ok { $foo->push_a2('foo') } "a2 - can't push onto undef";
+    isnt( exception { $foo->push_a2('foo') }, undef, "a2 - can't push onto undef" );
 
     $foo->a2( [] );
     is_deeply( $foo->a2, [], "a2 - correct contents" );
@@ -106,29 +105,27 @@ my $foo = Foo->new;
     $foo->push_a2('foo');
     is_deeply( $foo->a2, ['foo'], "a2 - correct contents" );
 
-    dies_ok { $foo->push_a2('bar') } "a2 - can't push more than one element";
+    isnt( exception { $foo->push_a2('bar') }, undef, "a2 - can't push more than one element" );
 
     is_deeply( $foo->a2, ['foo'], "a2 - correct contents" );
 }
 
 {
-    dies_ok { $foo->push_a3(1) } "a3 - can't push onto undef";
+    isnt( exception { $foo->push_a3(1) }, undef, "a3 - can't push onto undef" );
 
     $foo->a3( [] );
     is_deeply( $foo->a3, [], "a3 - correct contents" );
 
-    dies_ok { $foo->push_a3('foo') } "a3 - can't push non-int";
+    isnt( exception { $foo->push_a3('foo') }, undef, "a3 - can't push non-int" );
 
-    dies_ok { $foo->push_a3(100) }
-    "a3 - can't violate overall type constraint";
+    isnt( exception { $foo->push_a3(100) }, undef, "a3 - can't violate overall type constraint" );
 
     is_deeply( $foo->a3, [], "a3 - correct contents" );
 
     $foo->push_a3(1);
     is_deeply( $foo->a3, [1], "a3 - correct contents" );
 
-    dies_ok { $foo->push_a3(100) }
-    "a3 - can't violate overall type constraint";
+    isnt( exception { $foo->push_a3(100) }, undef, "a3 - can't violate overall type constraint" );
 
     is_deeply( $foo->a3, [1], "a3 - correct contents" );
 

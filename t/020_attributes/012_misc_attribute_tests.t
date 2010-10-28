@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -57,13 +57,13 @@ use Test::Exception;
     my $test = Test::For::Lazy::TypeConstraint->new;
     isa_ok($test, 'Test::For::Lazy::TypeConstraint');
 
-    dies_ok {
+    isnt( exception {
         $test->bad_lazy_attr;
-    } '... this does not work';
+    }, undef, '... this does not work' );
 
-    lives_ok {
+    is( exception {
         $test->good_lazy_attr;
-    } '... this does not work';
+    }, undef, '... this does not work' );
 }
 
 {
@@ -118,9 +118,9 @@ use Test::Exception;
 
     }
 
-    dies_ok {
+    isnt( exception {
         Test::UndefDefault::Attributes->new;
-    } '... default must return a value which passes the type constraint';
+    }, undef, '... default must return a value which passes the type constraint' );
 
 }
 
@@ -138,10 +138,9 @@ use Test::Exception;
     is($moose_obj->a_str( 'foobar' ), 'foobar', 'setter took string');
     ok($moose_obj, 'this is a *not* a string');
 
-    throws_ok {
+    like( exception {
         $moose_obj->a_str( $moose_obj )
-    } qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/,
-    '... dies without overloading the string';
+    }, qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/, '... dies without overloading the string' );
 
 }
 
@@ -153,14 +152,13 @@ use Test::Exception;
         has 'a_num' => ( isa => 'Int' , is => 'rw', default => 7.5 );
     }
 
-    throws_ok {
+    like( exception {
         OverloadBreaker->new;
-    } qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' with value 7\.5/,
-    '... this doesnt trip overload to break anymore ';
+    }, qr/Attribute \(a_num\) does not pass the type constraint because\: Validation failed for 'Int' with value 7\.5/, '... this doesnt trip overload to break anymore ' );
 
-    lives_ok {
+    is( exception {
         OverloadBreaker->new(a_num => 5);
-    } '... this works fine though';
+    }, undef, '... this works fine though' );
 
 }
 
@@ -192,9 +190,9 @@ use Test::Exception;
         has 'foo'  => ( required => 1, builder => 'build_foo', is => 'ro');
     }
 
-    dies_ok {
+    isnt( exception {
         Test::Builder::Attribute::Broken->new;
-    } '... no builder, wtf';
+    }, undef, '... no builder, wtf' );
 }
 
 
@@ -244,9 +242,7 @@ use Test::Exception;
     ok(!$instance->_has_foo, "noo _foo value yet");
     is($instance->foo, 'works', "foo builder works");
     is($instance->_foo, 'works too', "foo builder works too");
-    throws_ok { $instance->fool }
-        qr/Test::LazyBuild::Attribute does not support builder method \'_build_fool\' for attribute \'fool\'/,
-            "Correct error when a builder method is not present";
+    like( exception { $instance->fool }, qr/Test::LazyBuild::Attribute does not support builder method \'_build_fool\' for attribute \'fool\'/, "Correct error when a builder method is not present" );
 
 }
 
@@ -256,8 +252,8 @@ use Test::Exception;
     use Moose;
 }
 
-lives_ok { OutOfClassTest::has('foo', is => 'bare'); } 'create attr via direct sub call';
-lives_ok { OutOfClassTest->can('has')->('bar', is => 'bare'); } 'create attr via can';
+is( exception { OutOfClassTest::has('foo', is => 'bare'); }, undef, 'create attr via direct sub call' );
+is( exception { OutOfClassTest->can('has')->('bar', is => 'bare'); }, undef, 'create attr via can' );
 
 ok(OutOfClassTest->meta->get_attribute('foo'), 'attr created from sub call');
 ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
@@ -268,8 +264,7 @@ ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
         package Foo;
         use Moose;
 
-        ::throws_ok { has 'foo' => ( 'ro', isa => 'Str' ) }
-            qr/^Usage/, 'has throws error with odd number of attribute options';
+        ::like( ::exception { has 'foo' => ( 'ro', isa => 'Str' ) }, qr/^Usage/, 'has throws error with odd number of attribute options' );
     }
 
 }

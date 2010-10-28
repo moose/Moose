@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 
 {
@@ -22,9 +22,9 @@ use Test::Exception;
     package Role::C;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::A Role::B); # no conflict here
-    } "define role C";
+    }, undef, "define role C" );
 
     sub foo { 'Role::C::foo' }
     sub zot { 'Role::C::zot' }
@@ -32,9 +32,9 @@ use Test::Exception;
     package Class::A;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::C);
-    } "define class A";
+    }, undef, "define class A" );
 
     sub zot { 'Class::A::zot' }
 }
@@ -61,16 +61,16 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
     package Class::A::Conflict;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with 'Role::A::Conflict';
-    }  qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented or excluded by 'Class::A::Conflict'/, '... did not fufill the requirement of &bar method';
+    }, qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented or excluded by 'Class::A::Conflict'/, '... did not fufill the requirement of &bar method' );
 
     package Class::A::Resolved;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with 'Role::A::Conflict';
-    } '... did fufill the requirement of &bar method';
+    }, undef, '... did fufill the requirement of &bar method' );
 
     sub bar { 'Class::A::Resolved::bar' }
 }
@@ -100,9 +100,9 @@ is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right 
     package Role::F;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::D Role::E); # conflict between 'foo's here
-    } "define role Role::F";
+    }, undef, "define role Role::F" );
 
     sub foo { 'Role::F::foo' }
     sub zot { 'Role::F::zot' }
@@ -110,9 +110,9 @@ is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right 
     package Class::B;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::F);
-    } "define class Class::B";
+    }, undef, "define class Class::B" );
 
     sub zot { 'Class::B::zot' }
 }
@@ -134,9 +134,9 @@ ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requir
     package Role::D::And::E::Conflict;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::D Role::E); # conflict between 'foo's here
-    } "... define role Role::D::And::E::Conflict";
+    }, undef, "... define role Role::D::And::E::Conflict" );
 
     sub foo { 'Role::D::And::E::Conflict::foo' }  # this overrides ...
 
@@ -168,9 +168,9 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     package Role::I;
     use Moose::Role;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::J Role::H); # conflict between 'foo's here
-    } "define role Role::I";
+    }, undef, "define role Role::I" );
 
     sub zot { 'Role::I::zot' }
     sub zzy { 'Role::I::zzy' }
@@ -178,18 +178,18 @@ ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E
     package Class::C;
     use Moose;
 
-    ::throws_ok {
+    ::like( ::exception {
         with qw(Role::I);
-    } qr/Due to a method name conflict in roles 'Role::H' and 'Role::J', the method 'foo' must be implemented or excluded by 'Class::C'/, "defining class Class::C fails";
+    }, qr/Due to a method name conflict in roles 'Role::H' and 'Role::J', the method 'foo' must be implemented or excluded by 'Class::C'/, "defining class Class::C fails" );
 
     sub zot { 'Class::C::zot' }
 
     package Class::E;
     use Moose;
 
-    ::lives_ok {
+    ::is( ::exception {
         with qw(Role::I);
-    } "resolved with method";
+    }, undef, "resolved with method" );
 
     sub foo { 'Class::E::foo' }
     sub zot { 'Class::E::zot' }
@@ -205,7 +205,7 @@ is( Class::E->new->xxy, "Role::J::xxy",  "... got the right &xxy method" );
 ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requirement');
 
 {
-    lives_ok {
+    is( exception {
         package Class::D;
         use Moose;
 
@@ -215,7 +215,7 @@ ok(Role::I->meta->requires_method('foo'), '... Role::I still have the &foo requi
 
         with qw(Role::I);
 
-    } "resolved with attr";
+    }, undef, "resolved with attr" );
 
     can_ok( Class::D->new, qw(foo bar xxy zot) );
     is( eval { Class::D->new->bar }, "Role::H::bar", "bar" );

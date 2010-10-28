@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 sub req_or_has ($$) {
     my ( $role, $method ) = @_;
@@ -73,7 +73,7 @@ sub req_or_has ($$) {
     # this doesn't fail but it produces a requires in the role
     # the order doesn't matter
     has twist => ( is => "rw" );
-    ::lives_ok { with qw(Dancer) };
+    ::is( ::exception { with qw(Dancer) }, undef );
 
     package Dancer::Something;
     use Moose;
@@ -83,7 +83,7 @@ sub req_or_has ($$) {
     has twist => ( is => "rw" );
 
     {
-        ::lives_ok { with qw(Dancer) };
+        ::is( ::exception { with qw(Dancer) }, undef );
     }
 
     package Dancer::80s;
@@ -93,7 +93,7 @@ sub req_or_has ($$) {
     # but due to the deferrence logic that doesn't actually work
     {
         local our $TODO = "attribute accessor in role doesn't satisfy role requires";
-        ::lives_ok { with qw(Dancer::Robot) };
+        ::is( ::exception { with qw(Dancer::Robot) }, undef );
     }
 
     package Foo;
@@ -135,7 +135,7 @@ sub req_or_has ($$) {
 
     {
         local our $TODO = "attrs and methods from a role should clash";
-        ::dies_ok { with qw(Tree Dog) }
+        ::isnt( ::exception { with qw(Tree Dog) }, undef );
     }
 }
 

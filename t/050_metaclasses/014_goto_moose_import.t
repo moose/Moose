@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 
 # Some packages out in the wild cooperate with Moose by using goto
 # &Moose::import. we want to make sure it still works.
@@ -31,8 +31,7 @@ use Test::Exception;
 
     MooseAlike1->import();
 
-    ::lives_ok { has( 'size', is => 'bare' ) }
-        'has was exported via MooseAlike1';
+    ::is( ::exception { has( 'size', is => 'bare' ) }, undef, 'has was exported via MooseAlike1' );
 
     MooseAlike1->unimport();
 }
@@ -68,8 +67,7 @@ isa_ok( Foo->meta(), 'Moose::Meta::Class' );
 
     MooseAlike2->import();
 
-    ::lives_ok { has( 'size', is => 'bare' ) }
-        'has was exported via MooseAlike2';
+    ::is( ::exception { has( 'size', is => 'bare' ) }, undef, 'has was exported via MooseAlike2' );
 
     MooseAlike2->unimport();
 }
