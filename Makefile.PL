@@ -58,7 +58,13 @@ if ( is_maintainer() ) {
 tests_recursive();
 
 repository 'git://git.moose.perl.org/Moose.git';
-add_metadata(x_authority => 'cpan:STEVAN');
+add_metadata( x_authority => 'cpan:STEVAN' );
+add_metadata(
+    no_index => {
+        files     => ['lib/Moose/Meta/Method/Accessor/Native.pm'],
+        directory => ['lib/Moose/Meta/Method/Accessor/Native'],
+    }
+);
 
 extra_tests();
 
