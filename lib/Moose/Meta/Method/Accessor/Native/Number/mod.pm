@@ -3,7 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Number::mod;
 use strict;
 use warnings;
 
-our $VERSION = '1.17';
+our $VERSION = '1.18';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

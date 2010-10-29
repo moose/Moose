@@ -5,7 +5,7 @@ use warnings;
 
 use Class::MOP::MiniTrait;
 
-our $VERSION = '1.17';
+our $VERSION = '1.18';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
