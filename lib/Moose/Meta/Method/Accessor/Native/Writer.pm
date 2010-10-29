@@ -137,7 +137,8 @@ sub _inline_check_coercion {
     my $attr = $self->associated_attribute;
 
     return q{}
-        unless $attr->should_coerce && $attr->type_constraint->has_coercion;
+        unless $attr->should_coerce
+            && $attr->type_constraint->has_coercion;
 
     # We want to break the aliasing in @_ in case the coercion tries to make a
     # destructive change to an array member.
@@ -145,9 +146,9 @@ sub _inline_check_coercion {
 }
 
 override _inline_check_constraint => sub {
-    my $self = shift;
+    my ( $self, $value, $for_lazy ) = @_;
 
-    return q{} unless $self->_constraint_must_be_checked;
+    return q{} unless $for_lazy || $self->_constraint_must_be_checked;
 
     return super();
 };

@@ -206,7 +206,7 @@ sub _inline_check_lazy {
                          ';'. "\n    }";
             }
             $code .= $self->_inline_check_coercion('$default') . "\n";
-            $code .= $self->_inline_check_constraint('$default') . "\n";
+            $code .= $self->_inline_check_constraint('$default', 'lazy') . "\n";
             $code .= '    ' . $self->_inline_init_slot($attr, $instance, '$default') . "\n";
         }
         else {

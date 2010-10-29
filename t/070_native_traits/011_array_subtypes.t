@@ -59,6 +59,20 @@ use Test::Fatal;
             push_a3 => 'push',
         },
     );
+
+    has a4 => (
+        traits  => ['Array'],
+        is      => 'rw',
+        isa     => 'ArrayRef',
+        lazy    => 1,
+        default => 'invalid',
+        clearer => '_clear_a4',
+        handles => {
+            get_a4     => 'get',
+            push_a4     => 'push',
+            accessor_a4 => 'accessor',
+        },
+    );
 }
 
 my $foo = Foo->new;
@@ -131,6 +145,34 @@ my $foo = Foo->new;
 
     $foo->push_a3(3);
     is_deeply( $foo->a3, [ 1, 3 ], "a3 - correct contents" );
+}
+
+{
+    my $expect = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value invalid/;
+
+    like(
+        exception { $foo->accessor_a4(0); },
+        $expect,
+        'invalid default is caught when trying to read via accessor'
+    );
+
+    like(
+        exception { $foo->accessor_a4(0 => 42); },
+        $expect,
+        'invalid default is caught when trying to write via accessor'
+    );
+
+    like(
+        exception { $foo->push_a4(42); },
+        $expect,
+        'invalid default is caught when trying to push'
+    );
+
+    like(
+        exception { $foo->get_a4(42); },
+        $expect,
+        'invalid default is caught when trying to get'
+    );
 }
 
 done_testing;
