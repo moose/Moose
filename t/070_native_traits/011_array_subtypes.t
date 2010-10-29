@@ -30,6 +30,7 @@ use Test::Fatal;
             push_array => 'push',
         },
     );
+
     has array_int => (
         traits  => ['Array'],
         is      => 'rw',
@@ -38,6 +39,7 @@ use Test::Fatal;
             push_array_int => 'push',
         },
     );
+
     has a1 => (
         traits  => ['Array'],
         is      => 'rw',
@@ -46,6 +48,7 @@ use Test::Fatal;
             push_a1 => 'push',
         },
     );
+
     has a2 => (
         traits  => ['Array'],
         is      => 'rw',
@@ -54,6 +57,7 @@ use Test::Fatal;
             push_a2 => 'push',
         },
     );
+
     has a3 => (
         traits  => ['Array'],
         is      => 'rw',
@@ -62,6 +66,7 @@ use Test::Fatal;
             push_a3 => 'push',
         },
     );
+
     has a4 => (
         traits  => ['Array'],
         is      => 'rw',
@@ -75,6 +80,7 @@ use Test::Fatal;
             accessor_a4 => 'accessor',
         },
     );
+
     has a5 => (
         traits  => ['Array'],
         is      => 'rw',
