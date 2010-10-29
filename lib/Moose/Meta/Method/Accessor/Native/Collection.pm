@@ -113,15 +113,6 @@ sub _inline_check_member_constraint {
         ) . " for $new_value;";
 }
 
-around _inline_check_constraint => sub {
-    my $orig = shift;
-    my $self = shift;
-
-    return q{} unless $self->_constraint_must_be_checked;
-
-    return $self->$orig( $_[0] );
-};
-
 around _inline_get_old_value_for_trigger => sub {
     shift;
     my ( $self, $instance ) = @_;
