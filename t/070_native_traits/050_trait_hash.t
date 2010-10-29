@@ -25,6 +25,7 @@ use Test::Moose;
         get_option       => 'get',
         has_no_options   => 'is_empty',
         keys             => 'keys',
+        values           => 'values',
         key_value        => 'kv',
         set_option       => 'set',
     );
@@ -186,6 +187,18 @@ sub run_tests {
             [ $obj->set_option( oink => "blah", xxy => "flop" ) ],
             [ 'blah', 'flop' ],
             'set returns newly set values in order of keys provided'
+        );
+
+        is_deeply(
+            [ sort $obj->keys ],
+            [ 'oink', 'quantity', 'xxy' ],
+            'keys returns expected keys'
+        );
+
+        is_deeply(
+            [ sort $obj->values ],
+            [ 4, 'blah', 'flop' ],
+            'values returns expected values'
         );
 
         my @key_value = sort { $a->[0] cmp $b->[0] } $obj->key_value;
