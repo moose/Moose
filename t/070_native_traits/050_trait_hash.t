@@ -178,9 +178,13 @@ sub run_tests {
 
         $obj->option_accessor( size => 42 );
 
-        like( exception {
-            $obj->option_accessor;
-        }, qr/Cannot call accessor without at least 1 argument/, '... options added okay with defaults' );
+        like(
+            exception {
+                $obj->option_accessor;
+            },
+            qr/Cannot call accessor without at least 1 argument/,
+            'error when calling accessor with no arguments'
+        );
 
         is_deeply(
             $obj->options, { quantity => 4, size => 42 },
