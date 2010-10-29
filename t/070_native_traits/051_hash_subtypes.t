@@ -15,6 +15,9 @@ use Test::Fatal;
     subtype 'H3', as 'HashRef[Int]',
         where { ( sum( values %{$_} ) || 0 ) < 5 };
 
+    subtype 'H5', as 'HashRef';
+    coerce 'H5', from 'Str', via { { key => $_ } };
+
     no Moose::Util::TypeConstraints;
 }
 
@@ -56,6 +59,33 @@ use Test::Fatal;
         isa     => 'H3',
         handles => {
             set_h3 => 'set',
+        },
+    );
+
+    has h4 => (
+        traits  => ['Hash'],
+        is      => 'rw',
+        isa     => 'HashRef',
+        lazy    => 1,
+        default => 'invalid',
+        clearer => '_clear_h4',
+        handles => {
+            get_h4      => 'get',
+            accessor_h4 => 'accessor',
+        },
+    );
+
+    has h5 => (
+        traits  => ['Hash'],
+        is      => 'rw',
+        isa     => 'H5',
+        coerce  => 1,
+        lazy    => 1,
+        default => 'invalid',
+        clearer => '_clear_h5',
+        handles => {
+            get_h5      => 'get',
+            accessor_h5 => 'accessor',
         },
     );
 }
@@ -122,6 +152,55 @@ my $foo = Foo->new;
 
     $foo->set_h3( y => 3 );
     is_deeply( $foo->h3, { x => 1, y => 3 }, "h3 - correct contents" );
+}
+
+{
+    my $expect
+        = qr/\QAttribute (h4) does not pass the type constraint because: Validation failed for 'HashRef' with value invalid/;
+
+    like(
+        exception { $foo->accessor_h4('key'); },
+        $expect,
+        'invalid default is caught when trying to read via accessor'
+    );
+
+    like(
+        exception { $foo->accessor_h4( size => 42 ); },
+        $expect,
+        'invalid default is caught when trying to write via accessor'
+    );
+
+    like(
+        exception { $foo->get_h4(42); },
+        $expect,
+        'invalid default is caught when trying to get'
+    );
+}
+
+{
+    my $foo = Foo->new;
+
+    is(
+        $foo->accessor_h5('key'), 'invalid',
+        'lazy default is coerced when trying to read via accessor'
+    );
+
+    $foo->_clear_h5;
+
+    $foo->accessor_h5( size => 42 );
+
+    is_deeply(
+        $foo->h5,
+        { key => 'invalid', size => 42 },
+        'lazy default is coerced when trying to write via accessor'
+    );
+
+    $foo->_clear_h5;
+
+    is(
+        $foo->get_h5('key'), 'invalid',
+        'lazy default is coerced when trying to get'
+    );
 }
 
 done_testing;
