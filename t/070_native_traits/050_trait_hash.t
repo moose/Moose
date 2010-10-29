@@ -47,7 +47,7 @@ use Test::Moose;
         $class->add_attribute(
             options => (
                 traits  => \@traits,
-                is      => 'ro',
+                is      => 'rw',
                 isa     => 'HashRef[Str]',
                 default => sub { {} },
                 handles => \%handles,
@@ -166,9 +166,21 @@ sub run_tests {
 
         is( $obj->quantity, 4, 'reader part of curried accessor works' );
 
+        is(
+            $obj->option_accessor('quantity'), 4,
+            'accessor as reader'
+        );
+
         is_deeply(
             $obj->options, { quantity => 4 },
             '... returns what we expect'
+        );
+
+        $obj->option_accessor( size => 42 );
+
+        is_deeply(
+            $obj->options, { quantity => 4, size => 42 },
+            'accessor as writer'
         );
 
         is( exception {
@@ -183,6 +195,8 @@ sub run_tests {
             $class->new( options => { foo => [] } );
         }, undef, '... bad constructor params' );
 
+        $obj->options( {} );
+
         is_deeply(
             [ $obj->set_option( oink => "blah", xxy => "flop" ) ],
             [ 'blah', 'flop' ],
@@ -191,13 +205,13 @@ sub run_tests {
 
         is_deeply(
             [ sort $obj->keys ],
-            [ 'oink', 'quantity', 'xxy' ],
+            [ 'oink', 'xxy' ],
             'keys returns expected keys'
         );
 
         is_deeply(
             [ sort $obj->values ],
-            [ 4, 'blah', 'flop' ],
+            [ 'blah', 'flop' ],
             'values returns expected values'
         );
 
@@ -206,7 +220,6 @@ sub run_tests {
             \@key_value,
             [
                 sort { $a->[0] cmp $b->[0] }[ 'xxy', 'flop' ],
-                [ 'quantity', 4 ],
                 [ 'oink',     'blah' ]
             ],
             '... got the right key value pairs'
@@ -220,7 +233,6 @@ sub run_tests {
         is_deeply(
             \%options_elements, {
                 'oink'     => 'blah',
-                'quantity' => 4,
                 'xxy'      => 'flop'
             },
             '... got the right hash elements'
