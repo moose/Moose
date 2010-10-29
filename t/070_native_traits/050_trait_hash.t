@@ -24,6 +24,7 @@ use Test::Moose;
         has_option       => 'exists',
         get_option       => 'get',
         has_no_options   => 'is_empty',
+        keys             => 'keys',
         key_value        => 'kv',
         set_option       => 'set',
     );
@@ -242,6 +243,17 @@ sub run_tests {
                 [ $obj->key_value ],
                 [ [ x => 1 ] ],
                 'kv returns lazy default'
+            );
+
+
+            $obj->_clear_options;
+
+            $obj->option_accessor( y => 2 );
+
+            is_deeply(
+                [ sort $obj->keys ],
+                [ 'x', 'y' ],
+                'accessor triggers lazy default generator'
             );
         }
     }
