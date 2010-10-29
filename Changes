@@ -14,7 +14,7 @@ for, noteworthy changes.
   [BUG FIXES]
 
   * The native Array and Hash delegation methods now coerce individual new
-    members, if the _member type_ has a coercion. In other words, if the array
+    members if the _member type_ has a coercion. In other words, if the array
     reference is defined as an ArrayRef[DateTime], and you've defined a
     coercion from Int to DateTime, then pushing an integer via a delegation
     method will coerce the integer to a DateTime object. Reported by Karen
