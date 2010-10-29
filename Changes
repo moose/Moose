@@ -20,6 +20,9 @@ for, noteworthy changes.
     method will coerce the integer to a DateTime object. Reported by Karen
     Etheridge. RT #62351. (Dave Rolsky)
 
+  * An attribute using native delegations did not always properly coerce and
+    type check a lazily set default value. (doy and Dave Rolsky)
+
   * Using a regexp to define delegations for a class which was not yet loaded
     did not actually work, but did not explicitly fail. However, it caused an
     error when the class was loaded later. Reported by Max Kanat-Alexander. RT
