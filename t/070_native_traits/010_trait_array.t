@@ -227,6 +227,14 @@ sub run_tests {
             is( $obj->accessor( 1 => 97 ), 97, 'accessor returns new value' );
         }, undef, 'accessor as writer lives' );
 
+        like(
+            exception {
+                $obj->accessor;
+            },
+            qr/Cannot call accessor without at least 1 argument/,
+            'throws an error when accessor is called without arguments'
+        );
+
         is(
             $obj->get(1), 97,
             'accessor set value at index 1'
