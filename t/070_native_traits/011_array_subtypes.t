@@ -12,6 +12,9 @@ use Test::Fatal;
     subtype 'A2', as 'ArrayRef', where { @$_ < 2 };
     subtype 'A3', as 'ArrayRef[Int]', where { ( sum(@$_) || 0 ) < 5 };
 
+    subtype 'A5', as 'ArrayRef';
+    coerce 'A5', from 'Str', via { [ $_ ] };
+
     no Moose::Util::TypeConstraints;
 }
 
@@ -59,7 +62,6 @@ use Test::Fatal;
             push_a3 => 'push',
         },
     );
-
     has a4 => (
         traits  => ['Array'],
         is      => 'rw',
@@ -68,9 +70,23 @@ use Test::Fatal;
         default => 'invalid',
         clearer => '_clear_a4',
         handles => {
-            get_a4     => 'get',
+            get_a4      => 'get',
             push_a4     => 'push',
             accessor_a4 => 'accessor',
+        },
+    );
+    has a5 => (
+        traits  => ['Array'],
+        is      => 'rw',
+        isa     => 'A5',
+        coerce  => 1,
+        lazy    => 1,
+        default => 'invalid',
+        clearer => '_clear_a5',
+        handles => {
+            get_a5      => 'get',
+            push_a5     => 'push',
+            accessor_a5 => 'accessor',
         },
     );
 }
@@ -172,6 +188,42 @@ my $foo = Foo->new;
         exception { $foo->get_a4(42); },
         $expect,
         'invalid default is caught when trying to get'
+    );
+}
+
+{
+    my $foo = Foo->new;
+
+    is(
+        $foo->accessor_a5(0), 'invalid',
+        'lazy default is coerced when trying to read via accessor'
+    );
+
+    $foo->_clear_a5;
+
+    $foo->accessor_a5( 1 => 'thing' );
+
+    is_deeply(
+        $foo->a5,
+        [ 'invalid', 'thing' ],
+        'lazy default is coerced when trying to write via accessor'
+    );
+
+    $foo->_clear_a5;
+
+    $foo->push_a5('thing');
+
+    is_deeply(
+        $foo->a5,
+        [ 'invalid', 'thing' ],
+        'lazy default is coerced when trying to push'
+    );
+
+    $foo->_clear_a5;
+
+    is(
+        $foo->get_a5(0), 'invalid',
+        'lazy default is coerced when trying to get'
     );
 }
 
