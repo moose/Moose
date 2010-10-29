@@ -170,7 +170,8 @@ my $foo = Foo->new;
 }
 
 {
-    my $expect = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value invalid/;
+    my $expect
+        = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value invalid/;
 
     like(
         exception { $foo->accessor_a4(0); },
@@ -179,7 +180,7 @@ my $foo = Foo->new;
     );
 
     like(
-        exception { $foo->accessor_a4(0 => 42); },
+        exception { $foo->accessor_a4( 0 => 42 ); },
         $expect,
         'invalid default is caught when trying to write via accessor'
     );
