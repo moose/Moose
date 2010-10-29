@@ -178,6 +178,10 @@ sub run_tests {
 
         $obj->option_accessor( size => 42 );
 
+        like( exception {
+            $obj->option_accessor;
+        }, qr/Cannot call accessor without at least 1 argument/, '... options added okay with defaults' );
+
         is_deeply(
             $obj->options, { quantity => 4, size => 42 },
             'accessor as writer'
@@ -269,7 +273,6 @@ sub run_tests {
                 [ [ x => 1 ] ],
                 'kv returns lazy default'
             );
-
 
             $obj->_clear_options;
 

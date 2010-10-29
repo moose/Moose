@@ -75,7 +75,7 @@ sub _generate_method {
 }
 
 # If we get one argument we won't check the argument count
-sub _minimum_arguments {2}
+sub _minimum_arguments {1}
 sub _maximum_arguments {2}
 
 no Moose::Role;
