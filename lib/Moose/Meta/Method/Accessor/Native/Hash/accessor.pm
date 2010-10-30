@@ -75,7 +75,7 @@ sub _generate_method {
 }
 
 sub _minimum_arguments {1}
-sub _maximum_arguments {2}
+sub _maximum_arguments {undef}
 
 no Moose::Role;
 

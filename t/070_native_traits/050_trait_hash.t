@@ -176,7 +176,7 @@ sub run_tests {
             '... returns what we expect'
         );
 
-        $obj->option_accessor( size => 42 );
+        $obj->option_accessor( size => 42, group => 10 );
 
         like(
             exception {
@@ -187,7 +187,7 @@ sub run_tests {
         );
 
         is_deeply(
-            $obj->options, { quantity => 4, size => 42 },
+            $obj->options, { quantity => 4, size => 42, group => 10 },
             'accessor as writer'
         );
 
