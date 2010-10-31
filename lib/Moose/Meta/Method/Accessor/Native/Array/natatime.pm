@@ -23,9 +23,9 @@ with 'Moose::Meta::Method::Accessor::Native::Reader' => {
     ]
 };
 
-sub _minimum_arguments {1}
+sub _minimum_arguments { 1 }
 
-sub _maximum_arguments {2}
+sub _maximum_arguments { 2 }
 
 sub _inline_check_arguments {
     my $self = shift;

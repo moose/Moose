@@ -23,7 +23,7 @@ sub _maximum_arguments { 0 }
 
 sub _adds_members { 0 }
 
-sub _potential_value { return '{}' }
+sub _potential_value { '{}' }
 
 sub _optimized_set_new_value {
     my $self = shift;
@@ -32,7 +32,7 @@ sub _optimized_set_new_value {
     return $slot_access . ' = {}';
 }
 
-sub _return_value { return '' }
+sub _return_value { '' }
 
 no Moose::Role;
 

@@ -40,7 +40,7 @@ sub _generate_method {
     my $self = shift;
 
     my $inv         = '$self';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
 
     return (
         'sub {',
@@ -48,10 +48,10 @@ sub _generate_method {
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
             'if (@_ == 1 || @_ == 2) {',
-                $self->_reader_core($inv, $slot_access),
+                $self->_inline_reader_core($inv, $slot_access),
             '}',
             'elsif (@_ == 3) {',
-                $self->_writer_core($inv, $slot_access),
+                $self->_inline_writer_core($inv, $slot_access),
                 $self->_inline_post_body(@_),
             '}',
             'else {',
@@ -61,8 +61,8 @@ sub _generate_method {
     );
 }
 
-sub _minimum_arguments {1}
-sub _maximum_arguments {3}
+sub _minimum_arguments { 1 }
+sub _maximum_arguments { 3 }
 
 sub _inline_process_arguments {
     my $self = shift;

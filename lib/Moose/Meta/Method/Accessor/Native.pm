@@ -17,13 +17,12 @@ around new => sub {
     my $class   = shift;
     my %options = @_;
 
-    exists $options{curried_arguments}
-        || ( $options{curried_arguments} = [] );
+    $options{curried_arguments} = []
+        unless exists $options{curried_arguments};
 
-    ( $options{curried_arguments}
-            && ( 'ARRAY' eq ref $options{curried_arguments} ) )
-        || confess
-        'You must supply a curried_arguments which is an ARRAY reference';
+    confess 'You must supply a curried_arguments which is an ARRAY reference'
+        unless $options{curried_arguments}
+            && ref($options{curried_arguments}) eq 'ARRAY';
 
     $options{definition_context} = $options{attribute}->definition_context;
 
@@ -54,7 +53,7 @@ sub _inline_curried_arguments {
 
     return unless @{ $self->curried_arguments };
 
-    return ('unshift @_, @curried;');
+    return 'unshift @_, @curried;';
 }
 
 sub _inline_check_argument_count {
@@ -99,15 +98,13 @@ sub _inline_return_value {
     my $self = shift;
     my ($slot_access, $for_writer) = @_;
 
-    return (
-        'return ' . $self->_return_value($slot_access, $for_writer) . ';',
-    );
+    return 'return ' . $self->_return_value($slot_access, $for_writer) . ';';
 }
 
 sub _minimum_arguments { 0 }
 sub _maximum_arguments { undef }
 
-override _inline_get => sub {
+override _get_value => sub {
     my $self = shift;
     my ($instance) = @_;
 
@@ -116,7 +113,7 @@ override _inline_get => sub {
         : $instance . '->$reader';
 };
 
-override _inline_store => sub {
+override _store_value => sub {
     my $self = shift;
     my ($instance, $value) = @_;
 

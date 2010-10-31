@@ -47,7 +47,7 @@ sub _potential_value {
              . ': sort @{ (' . $slot_access . ') } ]';
 }
 
-sub _return_value { return '' }
+sub _return_value { '' }
 
 no Moose::Role;
 

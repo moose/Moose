@@ -124,8 +124,8 @@ sub _inline_get_old_value_for_trigger {
     return unless $attr->has_trigger;
 
     return (
-        'my ' . $old . ' = ' . $self->_inline_has($instance),
-            '? ' . $self->_inline_copy_old_value($self->_inline_get($instance)),
+        'my ' . $old . ' = ' . $self->_has_value($instance),
+            '? ' . $self->_copy_old_value($self->_get_value($instance)),
             ': ();',
     );
 }

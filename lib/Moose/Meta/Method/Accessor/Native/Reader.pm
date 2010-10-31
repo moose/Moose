@@ -17,19 +17,19 @@ sub _generate_method {
     my $self = shift;
 
     my $inv         = '$self';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
 
     return (
         'sub {',
             $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
-            $self->_reader_core($inv, $slot_access, @_),
+            $self->_inline_reader_core($inv, $slot_access, @_),
         '}',
     );
 }
 
-sub _reader_core {
+sub _inline_reader_core {
     my $self = shift;
     my ($inv, $slot_access, @extra) = @_;
 

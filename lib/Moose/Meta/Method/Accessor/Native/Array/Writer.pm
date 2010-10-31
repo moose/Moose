@@ -15,9 +15,9 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
     'Moose::Meta::Method::Accessor::Native::Array',
     'Moose::Meta::Method::Accessor::Native::Collection';
 
-sub _new_members {'@_'}
+sub _new_members { '@_' }
 
-sub _inline_copy_old_value {
+sub _copy_old_value {
     my $self = shift;
     my ($slot_access) = @_;
 

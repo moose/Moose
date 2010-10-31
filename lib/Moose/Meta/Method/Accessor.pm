@@ -58,7 +58,7 @@ sub _generate_accessor_method_inline {
     my $self        = shift;
 
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
     my $value       = $self->_value_needs_copy ? '$val' : '$_[1]';
     my $old         = '@old';
 
@@ -70,12 +70,12 @@ sub _generate_accessor_method_inline {
                 $self->_inline_check_required,
                 $self->_inline_tc_code($value),
                 $self->_inline_get_old_value_for_trigger($inv, $old),
-                $self->_inline_store($inv, $value),
+                $self->_inline_store_value($inv, $value),
                 $self->_inline_trigger($inv, $value, $old),
             '}',
             $self->_inline_check_lazy($inv),
             $self->_inline_post_body(@_),
-            'return ' . $self->_inline_auto_deref($slot_access) . ';',
+            $self->_inline_return_auto_deref($slot_access),
         '}',
     ]);
 }
@@ -94,7 +94,7 @@ sub _generate_writer_method_inline {
             $self->_inline_check_required,
             $self->_inline_tc_code($value),
             $self->_inline_get_old_value_for_trigger($inv, $old),
-            $self->_inline_store($inv, $value),
+            $self->_inline_store_value($inv, $value),
             $self->_inline_post_body(@_),
             $self->_inline_trigger($inv, $value, $old),
         '}',
@@ -105,7 +105,7 @@ sub _generate_reader_method_inline {
     my $self        = shift;
 
     my $inv         = '$_[0]';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
 
     $self->_compile_code([
         'sub {',
@@ -118,7 +118,7 @@ sub _generate_reader_method_inline {
             '}',
             $self->_inline_check_lazy($inv),
             $self->_inline_post_body(@_),
-            'return ' . $self->_inline_auto_deref($slot_access) . ';',
+            $self->_inline_return_auto_deref($slot_access),
         '}',
     ]);
 }
@@ -127,7 +127,7 @@ sub _inline_copy_value {
     my $self = shift;
     my ($value) = @_;
 
-    return '' unless $self->_value_needs_copy;
+    return unless $self->_value_needs_copy;
     return 'my ' . $value . ' = $_[1];'
 }
 
@@ -174,25 +174,6 @@ sub _generate_clearer_method {
 sub _inline_pre_body  { return }
 sub _inline_post_body { return }
 
-sub _inline_check_constraint {
-    my $self = shift;
-    my ($value) = @_;
-
-    my $attr = $self->associated_attribute;
-    return '' unless $attr->has_type_constraint;
-
-    my $attr_name = quotemeta( $attr->name );
-
-    return 'if (!$type_constraint->(' . $value . ')) {',
-               $self->_inline_throw_error(
-                   '"Attribute (' . $attr_name . ') does not pass the type '
-                 . 'constraint because: " . '
-                 . '$type_constraint_obj->get_message(' . $value . ')',
-                   'data => ' . $value
-               ) . ';',
-           '}';
-}
-
 sub _inline_tc_code {
     my $self = shift;
     return (
@@ -201,13 +182,33 @@ sub _inline_tc_code {
     );
 }
 
+sub _inline_check_constraint {
+    my $self = shift;
+    my ($value) = @_;
+
+    my $attr = $self->associated_attribute;
+    return unless $attr->has_type_constraint;
+
+    my $attr_name = quotemeta($attr->name);
+
+    return (
+        'if (!$type_constraint->(' . $value . ')) {',
+            $self->_inline_throw_error(
+                '"Attribute (' . $attr_name . ') does not pass the type '
+              . 'constraint because: " . '
+              . '$type_constraint_obj->get_message(' . $value . ')',
+                'data => ' . $value
+            ) . ';',
+        '}',
+    );
+}
+
 sub _inline_check_coercion {
     my $self = shift;
     my ($value) = @_;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->should_coerce
-                  && $attr->type_constraint->has_coercion;
+    return unless $attr->should_coerce && $attr->type_constraint->has_coercion;
 
     return $value . ' = $type_constraint_obj->coerce(' . $value . ');';
 }
@@ -216,16 +217,18 @@ sub _inline_check_required {
     my $self = shift;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->is_required;
+    return unless $attr->is_required;
 
-    my $attr_name = quotemeta( $attr->name );
+    my $attr_name = quotemeta($attr->name);
 
-    return 'if (@_ < 2) {',
-               $self->_inline_throw_error(
-                   '"Attribute (' . $attr_name . ') is required, so cannot '
-                 . 'be set to undef"' # defined $_[1] is not good enough
-               ) . ';',
-           '}';
+    return (
+        'if (@_ < 2) {',
+            $self->_inline_throw_error(
+                '"Attribute (' . $attr_name . ') is required, so cannot '
+              . 'be set to undef"' # defined $_[1] is not good enough
+            ) . ';',
+        '}',
+    );
 }
 
 sub _inline_check_lazy {
@@ -235,11 +238,13 @@ sub _inline_check_lazy {
     my $attr = $self->associated_attribute;
     return unless $attr->is_lazy;
 
-    my $slot_exists = $self->_inline_has($instance);
+    my $slot_exists = $self->_has_value($instance);
 
-    return 'if (!' . $slot_exists . ') {',
-               $self->_inline_init_from_default($instance, '$default', 'lazy'),
-           '}';
+    return (
+        'if (!' . $slot_exists . ') {',
+            $self->_inline_init_from_default($instance, '$default', 'lazy'),
+        '}',
+    );
 }
 
 sub _inline_init_from_default {
@@ -251,16 +256,17 @@ sub _inline_init_from_default {
     return $self->_inline_init_slot($attr, $instance, 'undef')
         unless $attr->has_default || $attr->has_builder;
 
-    return $self->_inline_generate_default($instance, $default),
-           $attr->has_type_constraint
-                 # intentionally not using _inline_tc_code, since that can be
-                 # overridden to do things like possibly only do member tc
-                 # checks, which isn't appropriate for checking the result
-                 # of a default
-               ? ($self->_inline_check_coercion($default, $for_lazy),
-                  $self->_inline_check_constraint($default, $for_lazy))
-               : (),
-           $self->_inline_init_slot($attr, $instance, $default);
+    return (
+        $self->_inline_generate_default($instance, $default),
+        # intentionally not using _inline_tc_code, since that can be overridden
+        # to do things like possibly only do member tc checks, which isn't
+        # appropriate for checking the result of a default
+        $attr->has_type_constraint
+            ? ($self->_inline_check_coercion($default, $for_lazy),
+               $self->_inline_check_constraint($default, $for_lazy))
+            : (),
+        $self->_inline_init_slot($attr, $instance, $default),
+    );
 }
 
 sub _inline_generate_default {
@@ -273,23 +279,27 @@ sub _inline_generate_default {
         return 'my ' . $default . ' = $attr->default(' . $instance . ');';
     }
     elsif ($attr->has_builder) {
-        return 'my ' . $default . ';',
-               'if (my $builder = ' . $instance . '->can($attr->builder)) {',
-                   $default . ' = ' . $instance . '->$builder;',
-               '}',
-               'else {',
-                   'my $class = ref(' . $instance . ') || ' . $instance . ';',
-                   'my $builder_name = $attr->builder;',
-                   'my $attr_name = $attr->name;',
-                   $self->_inline_throw_error(
-                       '"$class does not support builder method '
-                     . '\'$builder_name\' for attribute \'$attr_name\'"'
-                   ) . ';',
-               '}';
+        return (
+            'my ' . $default . ';',
+            'if (my $builder = ' . $instance . '->can($attr->builder)) {',
+                $default . ' = ' . $instance . '->$builder;',
+            '}',
+            'else {',
+                'my $class = ref(' . $instance . ') || ' . $instance . ';',
+                'my $builder_name = $attr->builder;',
+                'my $attr_name = $attr->name;',
+                $self->_inline_throw_error(
+                    '"$class does not support builder method '
+                  . '\'$builder_name\' for attribute \'$attr_name\'"'
+                ) . ';',
+            '}',
+        );
     }
     else {
-        $self->throw_error("Can't generate a default for " . $attr->name
-                         . " since no default or builder was specified");
+        $self->throw_error(
+            "Can't generate a default for " . $attr->name
+          . " since no default or builder was specified"
+        );
     }
 }
 
@@ -301,15 +311,15 @@ sub _inline_init_slot {
         return '$attr->set_initial_value(' . $inv . ', ' . $value . ');';
     }
     else {
-        return $self->_inline_store($inv, $value) . ';';
+        return $self->_inline_store_value($inv, $value);
     }
 }
 
-sub _inline_store {
+sub _inline_store_value {
     my $self = shift;
-    my ($instance, $value) = @_;
+    my ($inv, $value) = @_;
 
-    return $self->associated_attribute->inline_set( $instance, $value ) . ';';
+    return $self->_store_value($inv, $value) . ';';
 }
 
 sub _inline_get_old_value_for_trigger {
@@ -317,11 +327,13 @@ sub _inline_get_old_value_for_trigger {
     my ($instance, $old) = @_;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->has_trigger;
+    return unless $attr->has_trigger;
 
-    return 'my ' . $old . ' = ' . $self->_inline_has($instance)
-             . ' ? ' . $self->_inline_get($instance)
-             . ' : ();';
+    return (
+        'my ' . $old . ' = ' . $self->_has_value($instance),
+            '? ' . $self->_get_value($instance),
+            ': ();',
+    );
 }
 
 sub _inline_trigger {
@@ -329,26 +341,39 @@ sub _inline_trigger {
     my ($instance, $value, $old) = @_;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->has_trigger;
+    return unless $attr->has_trigger;
 
-    return sprintf('$attr->trigger->(%s, %s, %s);', $instance, $value, $old);
+    return '$attr->trigger->(' . $instance . ', ' . $value . ', ' . $old . ');';
+}
+
+sub _inline_return_auto_deref {
+    my $self = shift;
+
+    return 'return ' . $self->_auto_deref(@_) . ';';
 }
 
 # expressions
 
-sub _inline_get {
+sub _store_value {
+    my $self = shift;
+    my ($instance, $value) = @_;
+
+    return $self->associated_attribute->inline_set($instance, $value) . ';';
+}
+
+sub _get_value {
     my ($self, $instance) = @_;
 
     return $self->associated_attribute->inline_get($instance);
 }
 
-sub _inline_has {
+sub _has_value {
     my ($self, $instance) = @_;
 
     return $self->associated_attribute->inline_has($instance);
 }
 
-sub _inline_auto_deref {
+sub _auto_deref {
     my $self = shift;
     my ($ref_value) = @_;
 
@@ -366,14 +391,16 @@ sub _inline_auto_deref {
     }
     else {
         $self->throw_error(
-            "Can not auto de-reference the type constraint '"
+            'Can not auto de-reference the type constraint \''
           . $type_constraint->name
-          . "'",
+          . '\'',
             type_constraint => $type_constraint,
         );
     }
 
-    "(wantarray() ? $sigil\{ ( $ref_value ) || return } : ( $ref_value ) )";
+    return 'wantarray '
+             . '? ' . $sigil . '{ (' . $ref_value . ') || return } '
+             . ': (' . $ref_value . ')';
 }
 
 1;

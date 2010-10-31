@@ -18,8 +18,7 @@ sub _inline_check_var_is_valid_index {
     return (
         'if (!defined(' . $var . ') || ' . $var . ' !~ /^-?\d+$/) {',
             $self->_inline_throw_error(
-                '"The index passed to '
-              . $self->delegate_to_method
+                '"The index passed to ' . $self->delegate_to_method
               . ' must be an integer"',
             ) . ';',
         '}',

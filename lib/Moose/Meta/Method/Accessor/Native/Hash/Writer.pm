@@ -17,13 +17,13 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
     'Moose::Meta::Method::Accessor::Native::Hash',
     'Moose::Meta::Method::Accessor::Native::Collection';
 
-sub _new_values {'@values'}
+sub _new_values { '@values' }
 
-sub _inline_copy_old_value {
+sub _copy_old_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return '{ %{(' . $slot_access . ')} }';
+    return '{ %{ (' . $slot_access . ') } }';
 }
 
 no Moose::Role;

@@ -36,7 +36,7 @@ sub _generate_method {
     my $self = shift;
 
     my $inv         = '$self';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
 
     return (
         'sub {',
@@ -51,15 +51,15 @@ sub _generate_method {
             '}',
             # set
             'else {',
-                $self->_writer_core($inv, $slot_access),
+                $self->_inline_writer_core($inv, $slot_access),
                 $self->_inline_post_body(@_),
             '}',
         '}',
     );
 }
 
-sub _minimum_arguments {1}
-sub _maximum_arguments {2}
+sub _minimum_arguments { 1 }
+sub _maximum_arguments { 2 }
 
 no Moose::Role;
 

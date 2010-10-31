@@ -27,7 +27,7 @@ sub _potential_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return '( $_[0] . ' . $slot_access . ' )';
+    return '$_[0] . ' . $slot_access;
 }
 
 sub _optimized_set_new_value {

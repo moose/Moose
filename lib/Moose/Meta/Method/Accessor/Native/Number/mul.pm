@@ -19,9 +19,9 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
     ]
     };
 
-sub _minimum_arguments {1}
+sub _minimum_arguments { 1 }
 
-sub _maximum_arguments {1}
+sub _maximum_arguments { 1 }
 
 sub _potential_value {
     my $self = shift;

@@ -20,12 +20,7 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
 
 sub _maximum_arguments { 0 }
 
-sub _potential_value {
-    my $self = shift;
-    my ($slot_access) = @_;
-
-    return '""';
-}
+sub _potential_value { '""' }
 
 sub _optimized_set_new_value {
     my $self = shift;

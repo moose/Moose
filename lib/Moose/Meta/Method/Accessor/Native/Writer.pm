@@ -19,20 +19,20 @@ sub _generate_method {
     my $self = shift;
 
     my $inv         = '$self';
-    my $slot_access = $self->_inline_get($inv);
+    my $slot_access = $self->_get_value($inv);
 
     return (
         'sub {',
             $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
-            $self->_writer_core($inv, $slot_access),
+            $self->_inline_writer_core($inv, $slot_access),
             $self->_inline_post_body(@_),
         '}',
     );
 }
 
-sub _writer_core {
+sub _inline_writer_core {
     my $self = shift;
     my ($inv, $slot_access) = @_;
 
@@ -85,8 +85,9 @@ sub _constraint_must_be_checked {
     my $attr = $self->associated_attribute;
 
     return $attr->has_type_constraint
-        && ( !$self->_is_root_type( $attr->type_constraint )
-        || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
+        && (!$self->_is_root_type( $attr->type_constraint )
+         || ( $attr->should_coerce && $attr->type_constraint->has_coercion)
+           );
 }
 
 sub _is_root_type {
@@ -108,7 +109,7 @@ sub _inline_copy_native_value {
 
     ${$potential_ref} = '$potential';
 
-    return ($code);
+    return $code;
 }
 
 around _inline_tc_code => sub {
@@ -130,7 +131,7 @@ sub _inline_check_coercion {
 
     # We want to break the aliasing in @_ in case the coercion tries to make a
     # destructive change to an array member.
-    return ($value . ' = $type_constraint_obj->coerce(' . $value . ');');
+    return $value . ' = $type_constraint_obj->coerce(' . $value . ');';
 }
 
 around _inline_check_constraint => sub {
@@ -148,10 +149,10 @@ sub _inline_capture_return_value { return }
 sub _set_new_value {
     my $self = shift;
 
-    return $self->_inline_store(@_)
+    return $self->_store_value(@_)
         if $self->_value_needs_copy
         || !$self->_slot_access_can_be_inlined
-        || !$self->_inline_get_is_lvalue;
+        || !$self->_get_is_lvalue;
 
     return $self->_optimized_set_new_value(@_);
 }
@@ -161,7 +162,7 @@ sub _inline_set_new_value {
     return $self->_set_new_value(@_) . ';';
 }
 
-sub _inline_get_is_lvalue {
+sub _get_is_lvalue {
     my $self = shift;
 
     return $self->associated_attribute->associated_class->instance_metaclass->inline_get_is_lvalue;
@@ -170,7 +171,7 @@ sub _inline_get_is_lvalue {
 sub _optimized_set_new_value {
     my $self = shift;
 
-    return $self->_inline_store(@_);
+    return $self->_store_value(@_);
 }
 
 sub _return_value {
