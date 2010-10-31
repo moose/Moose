@@ -18,73 +18,60 @@ requires '_potential_value';
 sub _generate_method {
     my $self = shift;
 
-    my $inv = '$self';
-
+    my $inv         = '$self';
     my $slot_access = $self->_inline_get($inv);
 
-    my $code = 'sub {';
-
-    $code .= "\n" . $self->_inline_pre_body(@_);
-
-    $code .= "\n" . 'my $self = shift;';
-
-    $code .= "\n" . $self->_inline_curried_arguments;
-
-    $code .= $self->_writer_core( $inv, $slot_access );
-
-    $code .= "\n" . $self->_inline_post_body(@_);
-
-    $code .= "\n}";
-
-    return $code;
+    return (
+        'sub {',
+            $self->_inline_pre_body(@_),
+            'my ' . $inv . ' = shift;',
+            $self->_inline_curried_arguments,
+            $self->_writer_core($inv, $slot_access),
+            $self->_inline_post_body(@_),
+        '}',
+    );
 }
 
 sub _writer_core {
-    my ( $self, $inv, $slot_access ) = @_;
+    my $self = shift;
+    my ($inv, $slot_access) = @_;
 
-    my $code = q{};
+    my $potential = $self->_potential_value($slot_access);
+    my $old       = '@old';
 
-    $code .= "\n" . $self->_inline_check_argument_count;
-    $code .= "\n" . $self->_inline_process_arguments( $inv, $slot_access );
-    $code .= "\n" . $self->_inline_check_arguments('for writer');
+    my @code;
+    push @code, (
+        $self->_inline_check_argument_count,
+        $self->_inline_process_arguments($inv, $slot_access),
+        $self->_inline_check_arguments('for writer'),
+        $self->_inline_check_lazy($inv),
+    );
 
-    $code .= "\n" . $self->_inline_check_lazy($inv);
-
-    my $potential_value = $self->_potential_value($slot_access);
-
-    if ( $self->_return_value($slot_access) ) {
+    if ($self->_return_value($slot_access)) {
         # some writers will save the return value in this variable when they
         # generate the potential value.
-        $code .= "\n" . 'my @return;';
+        push @code, 'my @return;'
     }
 
-    # This is only needed by collections.
-    $code .= "\n" . $self->_inline_coerce_new_values;
-    $code .= "\n" . $self->_inline_copy_native_value( \$potential_value );
-    $code .= "\n"
-        . $self->_inline_tc_code(
-        $potential_value
-        );
+    push @code, (
+        $self->_inline_coerce_new_values,
+        $self->_inline_copy_native_value(\$potential),
+        $self->_inline_tc_code($potential),
+        $self->_inline_get_old_value_for_trigger($inv, $old),
+        $self->_inline_capture_return_value($slot_access),
+        $self->_inline_set_new_value($inv, $potential, $slot_access),
+        $self->_inline_trigger($inv, $slot_access, $old),
+        $self->_inline_return_value($slot_access, 'for writer'),
+    );
 
-    $code .= "\n" . $self->_inline_get_old_value_for_trigger($inv);
-    $code .= "\n" . $self->_inline_capture_return_value($slot_access);
-    $code .= "\n"
-        . $self->_inline_set_new_value(
-        $inv,
-        $potential_value,
-        $slot_access,
-        ) . ';';
-    $code .= "\n" . $self->_inline_trigger( $inv, $slot_access, '@old' );
-    $code .= "\n" . $self->_return_value( $slot_access, 'for writer' );
-
-    return $code;
+    return @code;
 }
 
-sub _inline_process_arguments {q{}}
+sub _inline_process_arguments { return }
 
-sub _inline_check_arguments {q{}}
+sub _inline_check_arguments { return }
 
-sub _inline_coerce_new_values {q{}}
+sub _inline_coerce_new_values { return }
 
 sub _value_needs_copy {
     my $self = shift;
@@ -103,59 +90,62 @@ sub _constraint_must_be_checked {
 }
 
 sub _is_root_type {
-    my ($self, $type) = @_;
+    my $self = shift;
+    my ($type) = @_;
 
-    my $name = $type->name();
+    my $name = $type->name;
 
     return any { $name eq $_ } @{ $self->root_types };
 }
 
 sub _inline_copy_native_value {
-    my ( $self, $potential_ref ) = @_;
+    my $self = shift;
+    my ($potential_ref) = @_;
 
-    return q{} unless $self->_value_needs_copy;
+    return unless $self->_value_needs_copy;
 
-    my $code = "my \$potential = ${$potential_ref};";
+    my $code = 'my $potential = ' . ${$potential_ref} . ';';
 
     ${$potential_ref} = '$potential';
 
-    return $code;
+    return ($code);
 }
 
-sub _inline_tc_code {
-    my ( $self, $potential_value ) = @_;
+around _inline_tc_code => sub {
+    my $orig = shift;
+    my $self = shift;
+    my ($value, $for_lazy) = @_;
 
-    return q{} unless $self->_constraint_must_be_checked;
+    return unless $for_lazy || $self->_constraint_must_be_checked;
 
-    return $self->_inline_check_coercion($potential_value) . "\n"
-        . $self->_inline_check_constraint($potential_value);
-}
+    return $self->$orig(@_);
+};
 
 sub _inline_check_coercion {
-    my ( $self, $value ) = @_;
+    my $self = shift;
+    my ($value) = @_;
 
     my $attr = $self->associated_attribute;
-
-    return q{}
-        unless $attr->should_coerce
-            && $attr->type_constraint->has_coercion;
+    return unless $attr->should_coerce && $attr->type_constraint->has_coercion;
 
     # We want to break the aliasing in @_ in case the coercion tries to make a
     # destructive change to an array member.
-    return "$value = \$type_constraint_obj->coerce($value);";
+    return ($value . ' = $type_constraint_obj->coerce(' . $value . ');');
 }
 
-override _inline_check_constraint => sub {
-    my ( $self, $value, $for_lazy ) = @_;
+around _inline_check_constraint => sub {
+    my $orig = shift;
+    my $self = shift;
+    my ($value, $for_lazy) = @_;
 
-    return q{} unless $for_lazy || $self->_constraint_must_be_checked;
+    return unless $for_lazy || $self->_constraint_must_be_checked;
 
-    return super();
+    return $self->$orig(@_);
 };
 
-sub _inline_capture_return_value { return q{} }
+sub _inline_capture_return_value { return }
 
-sub _inline_set_new_value {
+sub _set_new_value {
     my $self = shift;
 
     return $self->_inline_store(@_)
@@ -163,7 +153,12 @@ sub _inline_set_new_value {
         || !$self->_slot_access_can_be_inlined
         || !$self->_inline_get_is_lvalue;
 
-    return $self->_inline_optimized_set_new_value(@_);
+    return $self->_optimized_set_new_value(@_);
+}
+
+sub _inline_set_new_value {
+    my $self = shift;
+    return $self->_set_new_value(@_) . ';';
 }
 
 sub _inline_get_is_lvalue {
@@ -172,14 +167,15 @@ sub _inline_get_is_lvalue {
     return $self->associated_attribute->associated_class->instance_metaclass->inline_get_is_lvalue;
 }
 
-sub _inline_optimized_set_new_value {
+sub _optimized_set_new_value {
     my $self = shift;
 
     return $self->_inline_store(@_);
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
     return $slot_access;
 }

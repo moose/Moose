@@ -19,7 +19,8 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' => {
             _maximum_arguments
             _inline_process_arguments
             _inline_check_arguments
-            _inline_optimized_set_new_value
+            _inline_coerce_new_values
+            _optimized_set_new_value
             _return_value
             )
     ],
@@ -33,68 +34,83 @@ around _inline_check_argument_count => sub {
     my $orig = shift;
     my $self = shift;
 
-    return
-        $self->$orig(@_) . "\n"
-        . $self->_inline_throw_error(
-        q{'You must pass an even number of arguments to set'})
-        . ' if @_ % 2;';
+    return (
+        $self->$orig(@_),
+        'if (@_ % 2) {',
+            $self->_inline_throw_error(
+                '"You must pass an even number of arguments to set"',
+            ) . ';',
+        '}',
+    );
 };
 
 sub _inline_process_arguments {
     my $self = shift;
 
-    return 'my @keys_idx = grep { ! ($_ % 2) } 0..$#_;' . "\n"
-        . 'my @values_idx = grep { $_ % 2 } 0..$#_;';
+    return (
+        'my @keys_idx = grep { ! ($_ % 2) } 0..$#_;',
+        'my @values_idx = grep { $_ % 2 } 0..$#_;',
+    );
 }
 
 sub _inline_check_arguments {
     my $self = shift;
 
-    return
-        'for (@keys_idx) {' . "\n"
-        . $self->_inline_throw_error(
-        q{'Hash keys passed to set must be defined'})
-        . ' unless defined $_[$_];' . "\n" . '}';
+    return (
+        'for (@keys_idx) {',
+            'if (!defined($_[$_])) {',
+                $self->_inline_throw_error(
+                    '"Hash keys passed to set must be defined"',
+                ) . ';',
+            '}',
+        '}',
+    );
 }
 
 sub _adds_members { 1 }
 
 # We need to override this because while @_ can be written to, we cannot write
 # directly to $_[1].
-around _inline_coerce_new_values => sub {
-    shift;
+sub _inline_coerce_new_values {
     my $self = shift;
 
-    return q{} unless $self->associated_attribute->should_coerce;
+    return unless $self->associated_attribute->should_coerce;
 
-    return q{} unless $self->_tc_member_type_can_coerce;
+    return unless $self->_tc_member_type_can_coerce;
 
     # Is there a simpler way to do this?
-    return 'my $iter = List::MoreUtils::natatime 2, @_;'
-         .  '@_ = ();'
-         . 'while ( my ( $key, $val ) = $iter->() ) {'
-         .     'push @_, $key, $member_tc_obj->coerce($val);'
-         . '}';
+    return (
+        'my $iter = List::MoreUtils::natatime(2, @_);',
+        '@_ = ();',
+        'while (my ($key, $val) = $iter->()) {',
+            'push @_, $key, $member_tc_obj->coerce($val);',
+        '}',
+    );
 };
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "{ %{ ($slot_access) }, \@_ }";
+    return '{ %{ (' . $slot_access . ') }, @_ }';
 }
 
 sub _new_members { '@_[ @values_idx ]' }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "\@{ ($slot_access) }{ \@_[ \@keys_idx] } = \@_[ \@values_idx ]";
+    return '@{ (' . $slot_access . ') }{ @_[@keys_idx] } = @_[@values_idx]';
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "return wantarray ? \@{ ($slot_access) }{ \@_[ \@keys_idx ] } : ${slot_access}->{ \$_[ \$keys_idx[0] ] };";
+    return 'wantarray '
+             . '? @{ (' . $slot_access . ') }{ @_[@keys_idx] } '
+             . ': ' . $slot_access . '->{ $_[$keys_idx[0]] }';
 }
 
 no Moose::Role;

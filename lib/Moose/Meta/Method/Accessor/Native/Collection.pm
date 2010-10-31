@@ -11,20 +11,18 @@ use Moose::Role;
 
 requires qw( _adds_members );
 
-around _inline_coerce_new_values => sub {
-    shift;
+sub _inline_coerce_new_values {
     my $self = shift;
 
-    return q{} unless $self->associated_attribute->should_coerce;
+    return unless $self->associated_attribute->should_coerce;
 
-    return q{} unless $self->_tc_member_type_can_coerce;
+    return unless $self->_tc_member_type_can_coerce;
 
-    return
-          '('
-        . $self->_new_members
-        . ') = map { $member_tc_obj->coerce($_) } '
-        . $self->_new_members . ';';
-};
+    return (
+        '(' . $self->_new_members . ') = map { $member_tc_obj->coerce($_) }',
+                                             $self->_new_members . ';',
+    );
+}
 
 sub _tc_member_type_can_coerce {
     my $self = shift;
@@ -37,43 +35,41 @@ sub _tc_member_type_can_coerce {
 sub _tc_member_type {
     my $self = shift;
 
-    for (
-        my $tc = $self->associated_attribute->type_constraint;
-        $tc;
-        $tc = $tc->parent
-        ) {
-
+    my $tc = $self->associated_attribute->type_constraint;
+    while ($tc) {
         return $tc->type_parameter
             if $tc->can('type_parameter');
+        $tc = $tc->parent;
     }
 
     return;
 }
 
-around _value_needs_copy => sub {
-    shift;
+sub _value_needs_copy {
     my $self = shift;
 
     return $self->_constraint_must_be_checked
         && !$self->_check_new_members_only;
-};
+}
 
-around _inline_tc_code => sub {
-    shift;
-    my ( $self, $potential_value ) = @_;
+sub _inline_tc_code {
+    my $self = shift;
+    my ($potential_value) = @_;
 
-    return q{} unless $self->_constraint_must_be_checked;
+    return unless $self->_constraint_must_be_checked;
 
-    if ( $self->_check_new_members_only ) {
-        return q{} unless $self->_adds_members;
+    if ($self->_check_new_members_only) {
+        return unless $self->_adds_members;
 
-        return $self->_inline_check_member_constraint( $self->_new_members );
+        return $self->_inline_check_member_constraint($self->_new_members);
     }
     else {
-        return $self->_inline_check_coercion($potential_value) . "\n"
-            . $self->_inline_check_constraint($potential_value);
+        return (
+            $self->_inline_check_coercion($potential_value),
+            $self->_inline_check_constraint($potential_value),
+        );
     }
-};
+}
 
 sub _check_new_members_only {
     my $self = shift;
@@ -101,31 +97,38 @@ sub _check_new_members_only {
 }
 
 sub _inline_check_member_constraint {
-    my ( $self, $new_value ) = @_;
+    my $self = shift;
+    my ($new_value) = @_;
 
     my $attr_name = $self->associated_attribute->name;
 
-    return '$member_tc->($_) || '
-        . $self->_inline_throw_error(
-        qq{"A new member value for '$attr_name' does not pass its type constraint because: "}
-            . ' . $member_tc->get_message($_)',
-        "data => \$_"
-        ) . " for $new_value;";
+    return (
+        'for (' . $new_value . ') {',
+            'if (!$member_tc->($_)) {',
+                $self->_inline_throw_error(
+                    '"A new member value for ' . $attr_name
+                  . ' does not pass its type constraint because: "'
+                  . ' . $member_tc->get_message($_)',
+                    'data => $_',
+                ) . ';',
+            '}',
+        '}',
+    );
 }
 
-around _inline_get_old_value_for_trigger => sub {
-    shift;
-    my ( $self, $instance ) = @_;
+sub _inline_get_old_value_for_trigger {
+    my $self = shift;
+    my ($instance, $old) = @_;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->has_trigger;
+    return unless $attr->has_trigger;
 
-    return
-          'my @old = '
-        . $self->_inline_has($instance) . q{ ? }
-        . $self->_inline_copy_old_value( $self->_inline_get($instance) )
-        . ": ();\n";
-};
+    return (
+        'my ' . $old . ' = ' . $self->_inline_has($instance),
+            '? ' . $self->_inline_copy_old_value($self->_inline_get($instance)),
+            ': ();',
+    );
+}
 
 around _eval_environment => sub {
     my $orig = shift;

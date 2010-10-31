@@ -12,12 +12,18 @@ $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub _inline_check_var_is_valid_index {
-    my ( $self, $var ) = @_;
+    my $self = shift;
+    my ($var) = @_;
 
-    return $self->_inline_throw_error( q{'The index passed to }
-            . $self->delegate_to_method
-            . q{ must be an integer'} )
-        . qq{ unless defined $var && $var =~ /^-?\\d+\$/;};
+    return (
+        'if (!defined(' . $var . ') || ' . $var . ' !~ /^-?\d+$/) {',
+            $self->_inline_throw_error(
+                '"The index passed to '
+              . $self->delegate_to_method
+              . ' must be an integer"',
+            ) . ';',
+        '}',
+    );
 }
 
 no Moose::Role;

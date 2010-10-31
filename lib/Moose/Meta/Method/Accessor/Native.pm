@@ -32,20 +32,19 @@ around new => sub {
     return $class->$orig(%options);
 };
 
-around _new => sub {
-    shift;
+sub _new {
     my $class = shift;
     my $options = @_ == 1 ? $_[0] : {@_};
 
     return bless $options, $class;
-};
+}
 
 sub root_types { (shift)->{'root_types'} }
 
 sub _initialize_body {
     my $self = shift;
 
-    $self->{'body'} = $self->_compile_code( $self->_generate_method );
+    $self->{'body'} = $self->_compile_code( [$self->_generate_method] );
 
     return;
 }
@@ -53,64 +52,77 @@ sub _initialize_body {
 sub _inline_curried_arguments {
     my $self = shift;
 
-    return q{} unless @{ $self->curried_arguments };
+    return unless @{ $self->curried_arguments };
 
-    return 'unshift @_, @curried;'
+    return ('unshift @_, @curried;');
 }
 
 sub _inline_check_argument_count {
     my $self = shift;
 
-    my $code = q{};
+    my @code;
 
-    if ( my $min = $self->_minimum_arguments ) {
-        my $err_msg = sprintf(
-            q{"Cannot call %s without at least %s argument%s"},
-            $self->delegate_to_method,
-            $min,
-            ( $min == 1 ? q{} : 's' )
+    if (my $min = $self->_minimum_arguments) {
+        push @code, (
+            'if (@_ < ' . $min . ') {',
+                $self->_inline_throw_error(
+                    sprintf(
+                        '"Cannot call %s without at least %s argument%s"',
+                        $self->delegate_to_method,
+                        $min,
+                        ($min == 1 ? '' : 's'),
+                    )
+                ) . ';',
+            '}',
         );
-
-        $code
-            .= "\n"
-            . $self->_inline_throw_error($err_msg)
-            . " unless \@_ >= $min;";
     }
 
-    if ( defined( my $max = $self->_maximum_arguments ) ) {
-        my $err_msg = sprintf(
-            q{"Cannot call %s with %s argument%s"},
-            $self->delegate_to_method,
-            ( $max ? "more than $max" : 'any' ),
-            ( $max == 1 ? q{} : 's' )
+    if (defined(my $max = $self->_maximum_arguments)) {
+        push @code, (
+            'if (@_ > ' . $max . ') {',
+                $self->_inline_throw_error(
+                    sprintf(
+                        '"Cannot call %s with %s argument%s"',
+                        $self->delegate_to_method,
+                        $max ? "more than $max" : 'any',
+                        ($max == 1 ? '' : 's'),
+                    )
+                ) . ';',
+            '}',
         );
-
-        $code
-            .= "\n"
-            . $self->_inline_throw_error($err_msg)
-            . " if \@_ > $max;";
     }
 
-    return $code;
+    return @code;
+}
+
+sub _inline_return_value {
+    my $self = shift;
+    my ($slot_access, $for_writer) = @_;
+
+    return (
+        'return ' . $self->_return_value($slot_access, $for_writer) . ';',
+    );
 }
 
 sub _minimum_arguments { 0 }
 sub _maximum_arguments { undef }
 
 override _inline_get => sub {
-    my ( $self, $instance ) = @_;
+    my $self = shift;
+    my ($instance) = @_;
 
     return $self->_slot_access_can_be_inlined
         ? super()
-        : "${instance}->\$reader";
+        : $instance . '->$reader';
 };
 
 override _inline_store => sub {
-    my ( $self, $instance, $value ) = @_;
+    my $self = shift;
+    my ($instance, $value) = @_;
 
     return $self->_slot_access_can_be_inlined
         ? super()
-        : "${instance}->\$writer($value)";
+        : $instance . '->$writer(' . $value . ')';
 };
 
 override _eval_environment => sub {

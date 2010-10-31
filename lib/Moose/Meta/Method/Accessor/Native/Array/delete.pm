@@ -15,7 +15,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
             _minimum_arguments
             _maximum_arguments
             _inline_check_arguments
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             _return_value
             )
     ],
@@ -34,22 +34,28 @@ sub _inline_check_arguments {
 sub _adds_members { 0 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return
-        "( do { my \@potential = \@{ ($slot_access) }; \@return = splice \@potential, \$_[0], 1; \\\@potential } )";
+    return '(do { '
+             . 'my @potential = @{ (' . $slot_access . ') }; '
+             . '@return = splice @potential, $_[0], 1; '
+             . '\@potential; '
+         . '})';
 }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "\@return = splice \@{ ($slot_access) }, \$_[0], 1";
+    return '@return = splice @{ (' . $slot_access . ') }, $_[0], 1';
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return 'return $return[0];';
+    return '$return[0]';
 }
 
 no Moose::Role;

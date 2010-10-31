@@ -29,15 +29,21 @@ sub _maximum_arguments { 1 }
 sub _inline_check_arguments {
     my $self = shift;
 
-    return $self->_inline_throw_error(
-        q{'The argument passed to match must be a string or regexp reference'}
-    ) . q{ unless Moose::Util::_STRINGLIKE0( $_[0] ) || Params::Util::_REGEX( $_[0] );};
+    return (
+        'if (!Moose::Util::_STRINGLIKE0($_[0]) && !Params::Util::_REGEX($_[0])) {',
+            $self->_inline_throw_error(
+                '"The argument passed to match must be a string or regexp '
+              . 'reference"',
+            ) . ';',
+        '}',
+    );
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "$slot_access =~ \$_[0]";
+    return $slot_access . ' =~ $_[0]';
 }
 
 no Moose::Role;

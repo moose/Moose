@@ -14,7 +14,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
         qw(
             _maximum_arguments
             _inline_capture_return_value
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             _return_value
             )
     ]
@@ -25,27 +25,33 @@ sub _maximum_arguments { 0 }
 sub _adds_members { 0 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "[ \@{ ($slot_access) } > 1 ? \@{ ($slot_access) }[ 1 .. \$#{ ($slot_access) } ] : () ]";
+    return '[ @{ (' . $slot_access . ') } > 1 '
+             . '? @{ (' . $slot_access . ') }[1..$#{ (' . $slot_access . ') }] '
+             . ': () ]';
 }
 
 sub _inline_capture_return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "my \$old = ${slot_access}->[0];";
+    return 'my $old = ' . $slot_access . '->[0];';
 }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "shift \@{ ($slot_access) };";
+    return 'shift @{ (' . $slot_access . ') }';
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return 'return $old';
+    return '$old';
 }
 
 no Moose::Role;

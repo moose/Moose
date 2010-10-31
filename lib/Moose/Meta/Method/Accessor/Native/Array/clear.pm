@@ -13,7 +13,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
     -excludes => [
         qw(
             _maximum_arguments
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             _return_value
             )
     ]
@@ -25,13 +25,14 @@ sub _adds_members { 0 }
 
 sub _potential_value { return '[]' }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "$slot_access = []";
+    return $slot_access . ' = []';
 }
 
-sub _return_value { return q{} }
+sub _return_value { return '' }
 
 no Moose::Role;
 

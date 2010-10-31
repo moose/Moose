@@ -61,7 +61,6 @@ sub _generate_accessor_method_inline {
     my $slot_access = $self->_inline_get($inv);
     my $value       = $self->_value_needs_copy ? '$val' : '$_[1]';
     my $old         = '@old';
-    my $default     = '$default';
 
     $self->_compile_code([
         'sub {',
@@ -69,13 +68,12 @@ sub _generate_accessor_method_inline {
             'if (scalar(@_) >= 2) {',
                 $self->_inline_copy_value($value),
                 $self->_inline_check_required,
-                $self->_inline_check_coercion($value),
-                $self->_inline_check_constraint($value),
+                $self->_inline_tc_code($value),
                 $self->_inline_get_old_value_for_trigger($inv, $old),
                 $self->_inline_store($inv, $value),
                 $self->_inline_trigger($inv, $value, $old),
             '}',
-            $self->_inline_check_lazy($inv, $default),
+            $self->_inline_check_lazy($inv),
             $self->_inline_post_body(@_),
             'return ' . $self->_inline_auto_deref($slot_access) . ';',
         '}',
@@ -94,8 +92,7 @@ sub _generate_writer_method_inline {
             $self->_inline_pre_body(@_),
             $self->_inline_copy_value($value),
             $self->_inline_check_required,
-            $self->_inline_check_coercion($value),
-            $self->_inline_check_constraint($value),
+            $self->_inline_tc_code($value),
             $self->_inline_get_old_value_for_trigger($inv, $old),
             $self->_inline_store($inv, $value),
             $self->_inline_post_body(@_),
@@ -109,7 +106,6 @@ sub _generate_reader_method_inline {
 
     my $inv         = '$_[0]';
     my $slot_access = $self->_inline_get($inv);
-    my $default     = '$default';
 
     $self->_compile_code([
         'sub {',
@@ -120,7 +116,7 @@ sub _generate_reader_method_inline {
                     'data => \@_'
                 ) . ';',
             '}',
-            $self->_inline_check_lazy($inv, $default),
+            $self->_inline_check_lazy($inv),
             $self->_inline_post_body(@_),
             'return ' . $self->_inline_auto_deref($slot_access) . ';',
         '}',
@@ -175,8 +171,8 @@ sub _generate_clearer_method {
                                   : $self->SUPER::_generate_clearer_method(@_);
 }
 
-sub _inline_pre_body  { '' }
-sub _inline_post_body { '' }
+sub _inline_pre_body  { return }
+sub _inline_post_body { return }
 
 sub _inline_check_constraint {
     my $self = shift;
@@ -195,6 +191,14 @@ sub _inline_check_constraint {
                    'data => ' . $value
                ) . ';',
            '}';
+}
+
+sub _inline_tc_code {
+    my $self = shift;
+    return (
+        $self->_inline_check_coercion(@_),
+        $self->_inline_check_constraint(@_),
+    );
 }
 
 sub _inline_check_coercion {
@@ -229,18 +233,18 @@ sub _inline_check_lazy {
     my ($instance, $default) = @_;
 
     my $attr = $self->associated_attribute;
-    return '' unless $attr->is_lazy;
+    return unless $attr->is_lazy;
 
     my $slot_exists = $self->_inline_has($instance);
 
     return 'if (!' . $slot_exists . ') {',
-               $self->_inline_init_from_default($instance, $default),
+               $self->_inline_init_from_default($instance, '$default', 'lazy'),
            '}';
 }
 
 sub _inline_init_from_default {
     my $self = shift;
-    my ($instance, $default) = @_;
+    my ($instance, $default, $for_lazy) = @_;
 
     my $attr = $self->associated_attribute;
     # XXX: should this throw an error instead?
@@ -249,8 +253,12 @@ sub _inline_init_from_default {
 
     return $self->_inline_generate_default($instance, $default),
            $attr->has_type_constraint
-               ? ($self->_inline_check_coercion($default),
-                  $self->_inline_check_constraint($default))
+                 # intentionally not using _inline_tc_code, since that can be
+                 # overridden to do things like possibly only do member tc
+                 # checks, which isn't appropriate for checking the result
+                 # of a default
+               ? ($self->_inline_check_coercion($default, $for_lazy),
+                  $self->_inline_check_constraint($default, $for_lazy))
                : (),
            $self->_inline_init_slot($attr, $instance, $default);
 }

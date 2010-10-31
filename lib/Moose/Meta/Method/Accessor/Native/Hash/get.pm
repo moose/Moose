@@ -26,16 +26,20 @@ sub _minimum_arguments { 1 }
 sub _inline_check_arguments {
     my $self = shift;
 
-    return
-        'for (@_) {' . "\n"
-        . $self->_inline_check_var_is_valid_key('$_') . "\n" . '}';
+    return (
+        'for (@_) {',
+            $self->_inline_check_var_is_valid_key('$_'),
+        '}',
+    );
 }
 
 sub _return_value {
-    my $self        = shift;
-    my $slot_access = shift;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "\@_ > 1 ? \@{ ($slot_access) }{\@_} : ${slot_access}->{ \$_[0] }";
+    return '@_ > 1 '
+             . '? @{ (' . $slot_access . ') }{@_} '
+             . ': ' . $slot_access . '->{$_[0]}';
 }
 
 no Moose::Role;

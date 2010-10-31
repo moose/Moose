@@ -12,7 +12,7 @@ use Moose::Role;
 with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
     -excludes => [
         qw(
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             _return_value
             )
     ]
@@ -21,21 +21,24 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
 sub _adds_members { 1 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "[ \@{ ($slot_access) }, \@_ ]";
+    return '[ @{ (' . $slot_access . ') }, @_ ]';
 }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "push \@{ ($slot_access) }, \@_";
+    return 'push @{ (' . $slot_access . ') }, @_';
 }
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "return scalar \@{ ($slot_access) }";
+    return 'scalar @{ (' . $slot_access . ') }';
 }
 
 no Moose::Role;

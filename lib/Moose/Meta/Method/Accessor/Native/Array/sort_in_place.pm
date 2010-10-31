@@ -26,21 +26,28 @@ sub _maximum_arguments { 1 }
 sub _inline_check_arguments {
     my $self = shift;
 
-    return $self->_inline_throw_error(
-        q{'The argument passed to sort_in_place must be a code reference'})
-        . q{ if @_ && ! Params::Util::_CODELIKE( $_[0] );};
+    return (
+        'if (@_ && !Params::Util::_CODELIKE($_[0])) {',
+            $self->_inline_throw_error(
+                '"The argument passed to sort_in_place must be a code '
+              . 'reference"',
+            ) . ';',
+        '}',
+    );
 }
 
 sub _adds_members { 0 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return
-        "[ \$_[0] ? sort { \$_[0]->( \$a, \$b ) } \@{ ($slot_access) } : sort \@{ ($slot_access) } ]";
+    return '[ $_[0] '
+             . '? sort { $_[0]->($a, $b) } @{ (' . $slot_access . ') } '
+             . ': sort @{ (' . $slot_access . ') } ]';
 }
 
-sub _return_value { return q{} }
+sub _return_value { return '' }
 
 no Moose::Role;
 

@@ -12,9 +12,10 @@ use Moose::Role;
 with 'Moose::Meta::Method::Accessor::Native::Reader';
 
 sub _return_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "${slot_access}->(\@_)";
+    return $slot_access . '->(@_)';
 }
 
 no Moose::Role;

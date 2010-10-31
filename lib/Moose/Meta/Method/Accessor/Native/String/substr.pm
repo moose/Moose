@@ -30,7 +30,7 @@ with 'Moose::Meta::Method::Accessor::Native::Reader' => {
             _maximum_arguments
             _inline_process_arguments
             _inline_check_arguments
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             _return_value
             )
     ]
@@ -39,90 +39,98 @@ with 'Moose::Meta::Method::Accessor::Native::Reader' => {
 sub _generate_method {
     my $self = shift;
 
-    my $inv = '$self';
-
+    my $inv         = '$self';
     my $slot_access = $self->_inline_get($inv);
 
-    my $code = 'sub {';
-
-    $code .= "\n" . $self->_inline_pre_body(@_);
-    $code .= "\n" . 'my $self = shift;';
-
-    $code .= "\n" . $self->_inline_curried_arguments;
-
-    $code .= "\n" . 'if ( @_ == 1 || @_ == 2 ) {';
-
-    $code .= $self->_reader_core( $inv, $slot_access );
-
-    $code .= "\n" . '} elsif ( @_ == 3 ) {';
-
-    $code .= $self->_writer_core( $inv, $slot_access );
-
-    $code .= "\n" . $self->_inline_post_body(@_);
-
-    $code .= "\n" . '} else {';
-
-    $code .= "\n" . $self->_inline_check_argument_count;
-
-    $code .= "\n" . '}';
-    $code .= "\n" . '}';
-
-    return $code;
+    return (
+        'sub {',
+            $self->_inline_pre_body(@_),
+            'my ' . $inv . ' = shift;',
+            $self->_inline_curried_arguments,
+            'if (@_ == 1 || @_ == 2) {',
+                $self->_reader_core($inv, $slot_access),
+            '}',
+            'elsif (@_ == 3) {',
+                $self->_writer_core($inv, $slot_access),
+                $self->_inline_post_body(@_),
+            '}',
+            'else {',
+                $self->_inline_check_argument_count,
+            '}',
+        '}',
+    );
 }
 
 sub _minimum_arguments {1}
 sub _maximum_arguments {3}
 
 sub _inline_process_arguments {
-    my ( $self, $inv, $slot_access ) = @_;
+    my $self = shift;
+    my ($inv, $slot_access) = @_;
 
-    return
-          'my $offset = shift;' . "\n"
-        . "my \$length = \@_ ? shift : length $slot_access;" . "\n"
-        . 'my $replacement = shift;';
+    return (
+        'my $offset = shift;',
+        'my $length = @_ ? shift : length ' . $slot_access . ';',
+        'my $replacement = shift;',
+    );
 }
 
 sub _inline_check_arguments {
-    my ( $self, $for_writer ) = @_;
+    my $self = shift;
+    my ($for_writer) = @_;
 
-    my $code
-        = $self->_inline_throw_error(
-        q{'The first argument passed to substr must be an integer'})
-        . q{ unless $offset =~ /^-?\\d+$/;} . "\n"
-        . $self->_inline_throw_error(
-        q{'The second argument passed to substr must be an integer'})
-        . q{ unless $length =~ /^-?\\d+$/;};
+    my @code = (
+        'if ($offset !~ /^-?\d+$/) {',
+            $self->_inline_throw_error(
+                '"The first argument passed to substr must be an integer"'
+            ) . ';',
+        '}',
+        'if ($length !~ /^-?\d+$/) {',
+            $self->_inline_throw_error(
+                '"The second argument passed to substr must be an integer"'
+            ) . ';',
+        '}',
+    );
 
     if ($for_writer) {
-        $code
-            .= "\n"
-            . $self->_inline_throw_error(
-            q{'The third argument passed to substr must be a string'})
-            . q{ unless Moose::Util::_STRINGLIKE0($replacement);};
+        push @code, (
+            'if (!Moose::Util::_STRINGLIKE0($replacement)) {',
+                $self->_inline_throw_error(
+                    '"The third argument passed to substr must be a string"'
+                ) . ';',
+            '}',
+        );
     }
 
-    return $code;
+    return @code;
 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return
-        "( do { my \$potential = $slot_access; \@return = substr \$potential, \$offset, \$length, \$replacement; \$potential; } )";
+    return '(do { '
+             . 'my $potential = ' . $slot_access . '; '
+             . '@return = substr $potential, $offset, $length, $replacement; '
+             . '$potential; '
+         . '})';
 }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "\@return = substr $slot_access, \$offset, \$length, \$replacement";
+    return '@return = substr ' . $slot_access . ', '
+                           . '$offset, $length, $replacement';
 }
 
 sub _return_value {
-    my ( $self, $slot_access, $for_writer ) = @_;
+    my $self = shift;
+    my ($slot_access, $for_writer) = @_;
 
     return '$return[0]' if $for_writer;
 
-    return "substr $slot_access, \$offset, \$length";
+    return 'substr ' . $slot_access . ', $offset, $length';
 }
 
 no Moose::Role;

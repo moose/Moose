@@ -28,16 +28,20 @@ sub _maximum_arguments { 1 }
 sub _inline_check_arguments {
     my $self = shift;
 
-    return $self->_inline_throw_error(
-        q{'The argument passed to join must be a string'})
-        . ' unless Moose::Util::_STRINGLIKE0( $_[0] );';
+    return (
+        'if (!Moose::Util::_STRINGLIKE0($_[0])) {',
+            $self->_inline_throw_error(
+                '"The argument passed to join must be a string"',
+            ) . ';',
+        '}',
+    );
 }
 
 sub _return_value {
-    my $self        = shift;
-    my $slot_access = shift;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "join \$_[0], \@{ ($slot_access) }";
+    return 'join $_[0], @{ (' . $slot_access . ') }';
 }
 
 no Moose::Role;

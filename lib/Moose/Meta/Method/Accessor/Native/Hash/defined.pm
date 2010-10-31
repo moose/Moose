@@ -33,10 +33,10 @@ sub _inline_check_arguments {
 }
 
 sub _return_value {
-    my $self        = shift;
-    my $slot_access = shift;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "defined ${slot_access}->{ \$_[0] }";
+    return 'defined ' . $slot_access . '->{ $_[0] }';
 }
 
 no Moose::Role;

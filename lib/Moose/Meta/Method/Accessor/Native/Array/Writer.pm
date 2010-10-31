@@ -9,14 +9,17 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Writer',
+with 'Moose::Meta::Method::Accessor::Native::Writer' => {
+        -excludes => ['_inline_coerce_new_values'],
+    },
     'Moose::Meta::Method::Accessor::Native::Array',
     'Moose::Meta::Method::Accessor::Native::Collection';
 
 sub _new_members {'@_'}
 
 sub _inline_copy_old_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
     return '[ @{(' . $slot_access . ')} ]';
 }

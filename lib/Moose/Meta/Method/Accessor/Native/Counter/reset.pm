@@ -13,7 +13,7 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
     -excludes => [
         qw(
             _maximum_arguments
-            _inline_optimized_set_new_value
+            _optimized_set_new_value
             )
     ]
 };
@@ -21,15 +21,17 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
 sub _maximum_arguments { 0 }
 
 sub _potential_value {
-    my ( $self, $slot_access ) = @_;
+    my $self = shift;
+    my ($slot_access) = @_;
 
-    return "\$attr->default(\$self)"
+    return '$attr->default($self)';
 }
 
-sub _inline_optimized_set_new_value {
-    my ( $self, $inv, $new, $slot_access ) = @_;
+sub _optimized_set_new_value {
+    my $self = shift;
+    my ($inv, $new, $slot_access) = @_;
 
-    return "$slot_access = \$attr->default(\$self)";
+    return $slot_access . ' = $attr->default($self)';
 }
 
 no Moose::Role;
