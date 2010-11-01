@@ -402,7 +402,7 @@ C<equals> and C<is_subtype_of>.
 
 =item B<< $constraint->coerce($value) >>
 
-This will attempt to coerce the value to the type. If the type does
+This will attempt to coerce the value to the type. If the type does not
 have any defined coercions this will throw an error.
 
 If no coercion can produce a value matching C<$constraint>, the original
