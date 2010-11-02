@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.19 Tue, Nov 2, 2010
+
+  [BUG FIXES]
+
+  * There was still one place in the code trying to load Test::Exception
+    instead of Test::Fatal. (Karen Etheridge)
+
+
 1.18 Sun, Oct 31, 2010
 
   [ENHANCEMENTS]
