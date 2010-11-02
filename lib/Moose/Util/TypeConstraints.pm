@@ -1279,10 +1279,16 @@ See the L</SYNOPSIS> for an example of how to use these.
 
 =over 4
 
-=item B<< coerce 'Name' => from 'OtherName' => via { ... } >>
+=item B<< coerce 'Name' => from 'OtherName' => via { ... }  >>
 
 This defines a coercion from one type to another. The C<Name> argument
 is the type you are coercing I<to>.
+
+To define multiple coercions, supply more sets of from/via pairs:
+
+  coerce 'Name' =>
+    from 'OtherName' => via { ... },
+    from 'ThirdName' => via { ... };
 
 =item B<from 'OtherName'>
 
