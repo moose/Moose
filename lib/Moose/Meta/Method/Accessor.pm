@@ -252,9 +252,15 @@ sub _inline_init_from_default {
     my ($instance, $default, $for_lazy) = @_;
 
     my $attr = $self->associated_attribute;
-    # XXX: should this throw an error instead?
-    return $self->_inline_init_slot($attr, $instance, 'undef')
-        unless $attr->has_default || $attr->has_builder;
+
+    if (!($attr->has_default || $attr->has_builder)) {
+        $self->throw_error(
+            'You cannot have a lazy attribute '
+          . '(' . $attr->name . ') '
+          . 'without specifying a default value for it',
+            attr => $attr,
+        );
+    }
 
     return (
         $self->_inline_generate_default($instance, $default),
