@@ -338,34 +338,13 @@ sub _inline_BUILDARGS {
 
 sub _inline_slot_initializer {
     my $self  = shift;
-    my ($attr, $index) = @_;
+    my ($attr, $idx) = @_;
 
-    my @source = ('## ' . $attr->name);
-
-    push @source, $self->_inline_check_required_attr($attr);
-
-    if (defined $attr->init_arg) {
-        push @source,
-            'if (exists $params->{\'' . $attr->init_arg . '\'}) {',
-                $self->_inline_init_attr_from_constructor($attr, $index),
-            '}';
-        if (my @default = $self->_inline_init_attr_from_default($attr, $index)) {
-            push @source,
-                'else {',
-                    @default,
-                '}';
-        }
-    }
-    else {
-        if (my @default = $self->_inline_init_attr_from_default($attr, $index)) {
-            push @source,
-                '{', # _init_attr_from_default creates variables
-                    @default,
-                '}';
-        }
-    }
-
-    return @source;
+    return (
+        '## ' . $attr->name,
+        $self->_inline_check_required_attr($attr),
+        $self->SUPER::_inline_slot_initializer(@_),
+    );
 }
 
 sub _inline_check_required_attr {
@@ -387,98 +366,52 @@ sub _inline_check_required_attr {
 
 sub _inline_init_attr_from_constructor {
     my $self = shift;
-    my ($attr, $index) = @_;
+    my ($attr, $idx) = @_;
 
-    return (
-        'my $val = $params->{\'' . $attr->init_arg . '\'};',
-        $self->_inline_slot_assignment($attr, $index, '$val'),
+    my @initial_value = $attr->_inline_set_value(
+        '$instance',
+        '$params->{\'' . $attr->init_arg . '\'}',
+        '$type_constraint_bodies[' . $idx . ']',
+        '$type_constraints[' . $idx . ']',
+        'for constructor',
     );
+
+    push @initial_value, (
+        '$attrs->[' . $idx . ']->set_initial_value(',
+            '$instance,',
+            $attr->_inline_instance_get('$instance'),
+        ');',
+    ) if $attr->has_initializer;
+
+    return @initial_value;
 }
 
 sub _inline_init_attr_from_default {
     my $self = shift;
-    my ($attr, $index) = @_;
+    my ($attr, $idx) = @_;
 
-    my $default = $self->_inline_default_value($attr, $index);
+    my $default = $self->_inline_default_value($attr, $idx);
     return unless $default;
 
-    return (
-        'my $val = ' . $default . ';',
-        $self->_inline_slot_assignment($attr, $index, '$val'),
-    );
-}
-
-sub _inline_slot_assignment {
-    my $self = shift;
-    my ($attr, $index, $value) = @_;
-
-    my @source;
-
-    push @source, $self->_inline_type_constraint_and_coercion(
-        $attr, $index, $value,
-    );
-
-    if ($attr->has_initializer) {
-        push @source, (
-            '$attrs->[' . $index . ']->set_initial_value(',
-                '$instance' . ',',
-                $value . ',',
-            ');'
-        );
-    }
-    else {
-        push @source, (
-            $attr->_inline_instance_set('$instance', $value) . ';',
-        );
-    }
-
-    return @source;
-}
-
-sub _inline_type_constraint_and_coercion {
-    my $self = shift;
-    my ($attr, $index, $value) = @_;
-
-    return unless $attr->can('has_type_constraint')
-               && $attr->has_type_constraint;
-
-    my @source;
-
-    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
-        push @source => $self->_inline_type_coercion(
-            '$type_constraints[' . $index . ']',
-            $value,
-            $value,
-        );
-    }
-
-    push @source => $self->_inline_type_constraint_check(
-        $attr,
-        '$type_constraint_bodies[' . $index . ']',
-        '$type_constraints[' . $index . ']',
-        $value,
-    );
-
-    return @source;
-}
-
-sub _inline_type_coercion {
-    my $self = shift;
-    my ($tc_obj, $value, $return_value) = @_;
-    return $return_value . ' = ' . $tc_obj . '->coerce(' . $value . ');';
-}
-
-sub _inline_type_constraint_check {
-    my $self = shift;
-    my ($attr, $tc_body, $tc_obj, $value) = @_;
-    return (
-        $self->_inline_throw_error(
-            '"Attribute (' . quotemeta($attr->name) . ') '
-          . 'does not pass the type constraint because: " . '
-          . $tc_obj . '->get_message(' . $value . ')'
+    my @initial_value = (
+        'my $default = ' . $default . ';',
+        $attr->_inline_set_value(
+            '$instance',
+            '$default',
+            '$type_constraint_bodies[' . $idx . ']',
+            '$type_constraints[' . $idx . ']',
+            'for constructor',
         ),
-        'unless ' .  $tc_body . '->(' . $value . ');'
     );
+
+    push @initial_value, (
+        '$attrs->[' . $idx . ']->set_initial_value(',
+            '$instance,',
+            $attr->_inline_instance_get('$instance'),
+        ');',
+    ) if $attr->has_initializer;
+
+    return @initial_value;
 }
 
 sub _inline_extra_init {
@@ -493,7 +426,7 @@ sub _inline_triggers {
     my $self = shift;
     my @trigger_calls;
 
-    my @attrs = $self->get_all_attributes;
+    my @attrs = sort { $a->name cmp $b->name } $self->get_all_attributes;
     for my $i (0 .. $#attrs) {
         my $attr = $attrs[$i];
 

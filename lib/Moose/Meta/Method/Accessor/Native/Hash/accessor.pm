@@ -42,7 +42,7 @@ sub _generate_method {
         'sub {',
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
-            $self->_inline_check_lazy($inv),
+            $self->_inline_check_lazy($inv, '$type_constraint', '$type_constraint_obj'),
             # get
             'if (@_ == 1) {',
                 $self->_inline_check_var_is_valid_key('$_[0]'),

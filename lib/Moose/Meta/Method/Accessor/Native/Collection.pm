@@ -54,7 +54,6 @@ sub _writer_value_needs_copy {
 
 sub _inline_tc_code {
     my $self = shift;
-    my ($potential_value) = @_;
 
     return unless $self->_constraint_must_be_checked;
 
@@ -65,8 +64,8 @@ sub _inline_tc_code {
     }
     else {
         return (
-            $self->_inline_check_coercion($potential_value),
-            $self->_inline_check_constraint($potential_value),
+            $self->_inline_check_coercion(@_),
+            $self->_inline_check_constraint(@_),
         );
     }
 }
