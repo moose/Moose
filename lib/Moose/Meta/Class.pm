@@ -280,6 +280,254 @@ sub new_object {
     return $object;
 }
 
+sub _generate_fallback_constructor {
+    my $self = shift;
+    my ($class) = @_;
+    return $class . '->Moose::Object::new(@_)'
+}
+
+sub _inline_params {
+    my $self = shift;
+    my ($params, $class) = @_;
+    return (
+        'my ' . $params . ' = ',
+        $self->_inline_BUILDARGS($class, '@_'),
+        ';',
+    );
+}
+
+sub _inline_BUILDARGS {
+    my $self = shift;
+    my ($class, $args) = @_;
+
+    my $buildargs = $self->find_method_by_name("BUILDARGS");
+
+    if ($args eq '@_'
+     && (!$buildargs or $buildargs->body == \&Moose::Object::BUILDARGS)) {
+        return (
+            'do {',
+                'my $params;',
+                'if (scalar @_ == 1) {',
+                    'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
+                        $self->_inline_throw_error(
+                            '"Single parameters to new() must be a HASH ref"',
+                            'data => $_[0]',
+                        ) . ';',
+                    '}',
+                    '$params = { %{ $_[0] } };',
+                '}',
+                'elsif (@_ % 2) {',
+                    'Carp::carp(',
+                        '"The new() method for ' . $class . ' expects a '
+                      . 'hash reference or a key/value list. You passed an '
+                      . 'odd number of arguments"',
+                    ');',
+                    '$params = {@_, undef};',
+                '}',
+                'else {',
+                    '$params = {@_};',
+                '}',
+                '$params;',
+            '}',
+        );
+    }
+    else {
+        return $class . '->BUILDARGS(' . $args . ')';
+    }
+}
+
+sub _inline_slot_initializer {
+    my $self  = shift;
+    my ($attr, $index) = @_;
+
+    my @source = ('## ' . $attr->name);
+
+    push @source, $self->_inline_check_required_attr($attr);
+
+    if (defined $attr->init_arg) {
+        push @source,
+            'if (exists $params->{\'' . $attr->init_arg . '\'}) {',
+                $self->_inline_init_attr_from_constructor($attr, $index),
+            '}';
+        if (my @default = $self->_inline_init_attr_from_default($attr, $index)) {
+            push @source,
+                'else {',
+                    @default,
+                '}';
+        }
+    }
+    else {
+        if (my @default = $self->_inline_init_attr_from_default($attr, $index)) {
+            push @source,
+                '{', # _init_attr_from_default creates variables
+                    @default,
+                '}';
+        }
+    }
+
+    return @source;
+}
+
+sub _inline_check_required_attr {
+    my $self = shift;
+    my ($attr) = @_;
+
+    return unless defined $attr->init_arg;
+    return unless $attr->can('is_required') && $attr->is_required;
+    return if $attr->has_default || $attr->has_builder;
+
+    return (
+        'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
+            $self->_inline_throw_error(
+                '"Attribute (' . quotemeta($attr->name) . ') is required"'
+            ) . ';',
+        '}',
+    );
+}
+
+sub _inline_init_attr_from_constructor {
+    my $self = shift;
+    my ($attr, $index) = @_;
+
+    return (
+        'my $val = $params->{\'' . $attr->init_arg . '\'};',
+        $self->_inline_slot_assignment($attr, $index, '$val'),
+    );
+}
+
+sub _inline_init_attr_from_default {
+    my $self = shift;
+    my ($attr, $index) = @_;
+
+    my $default = $self->_inline_default_value($attr, $index);
+    return unless $default;
+
+    return (
+        'my $val = ' . $default . ';',
+        $self->_inline_slot_assignment($attr, $index, '$val'),
+    );
+}
+
+sub _inline_slot_assignment {
+    my $self = shift;
+    my ($attr, $index, $value) = @_;
+
+    my @source;
+
+    push @source, $self->_inline_type_constraint_and_coercion(
+        $attr, $index, $value,
+    );
+
+    if ($attr->has_initializer) {
+        push @source, (
+            '$attrs->[' . $index . ']->set_initial_value(',
+                '$instance' . ',',
+                $value . ',',
+            ');'
+        );
+    }
+    else {
+        push @source, (
+            $attr->_inline_instance_set('$instance', $value) . ';',
+        );
+    }
+
+    return @source;
+}
+
+sub _inline_type_constraint_and_coercion {
+    my $self = shift;
+    my ($attr, $index, $value) = @_;
+
+    return unless $attr->can('has_type_constraint')
+               && $attr->has_type_constraint;
+
+    my @source;
+
+    if ($attr->should_coerce && $attr->type_constraint->has_coercion) {
+        push @source => $self->_inline_type_coercion(
+            '$type_constraints[' . $index . ']',
+            $value,
+            $value,
+        );
+    }
+
+    push @source => $self->_inline_type_constraint_check(
+        $attr,
+        '$type_constraint_bodies[' . $index . ']',
+        '$type_constraints[' . $index . ']',
+        $value,
+    );
+
+    return @source;
+}
+
+sub _inline_type_coercion {
+    my $self = shift;
+    my ($tc_obj, $value, $return_value) = @_;
+    return $return_value . ' = ' . $tc_obj . '->coerce(' . $value . ');';
+}
+
+sub _inline_type_constraint_check {
+    my $self = shift;
+    my ($attr, $tc_body, $tc_obj, $value) = @_;
+    return (
+        $self->_inline_throw_error(
+            '"Attribute (' . quotemeta($attr->name) . ') '
+          . 'does not pass the type constraint because: " . '
+          . $tc_obj . '->get_message(' . $value . ')'
+        ),
+        'unless ' .  $tc_body . '->(' . $value . ');'
+    );
+}
+
+sub _inline_extra_init {
+    my $self = shift;
+    return (
+        $self->_inline_triggers,
+        $self->_inline_BUILDALL,
+    );
+}
+
+sub _inline_triggers {
+    my $self = shift;
+    my @trigger_calls;
+
+    my @attrs = $self->get_all_attributes;
+    for my $i (0 .. $#attrs) {
+        my $attr = $attrs[$i];
+
+        next unless $attr->can('has_trigger') && $attr->has_trigger;
+
+        my $init_arg = $attr->init_arg;
+        next unless defined $init_arg;
+
+        push @trigger_calls,
+            'if (exists $params->{\'' . $init_arg . '\'}) {',
+                '$attrs->[' . $i . ']->trigger->(',
+                    '$instance,',
+                    $attr->_inline_instance_get('$instance') . ',',
+                ');',
+            '}';
+    }
+
+    return @trigger_calls;
+}
+
+sub _inline_BUILDALL {
+    my $self = shift;
+
+    my @methods = reverse $self->find_all_methods_by_name('BUILD');
+    my @BUILD_calls;
+
+    foreach my $method (@methods) {
+        push @BUILD_calls,
+            '$instance->' . $method->{class} . '::BUILD($params);';
+    }
+
+    return @BUILD_calls;
+}
+
 sub superclasses {
     my $self = shift;
     my $supers = Data::OptList::mkopt(\@_);
@@ -476,6 +724,11 @@ sub throw_error {
     my ( $self, @args ) = @_;
     local $error_level = ($error_level || 0) + 1;
     $self->raise_error($self->create_error(@args));
+}
+
+sub _inline_throw_error {
+    my ( $self, $msg, $args ) = @_;
+    "\$meta->throw_error($msg" . ($args ? ", $args" : "") . ")"; # FIXME makes deparsing *REALLY* hard
 }
 
 sub raise_error {
