@@ -364,6 +364,9 @@ sub _inline_check_required_attr {
     );
 }
 
+# XXX: these two are duplicated from cmop, because we have to pass the tc stuff
+# through to _inline_set_value - this should probably be fixed, but i'm not
+# quite sure how. -doy
 sub _inline_init_attr_from_constructor {
     my $self = shift;
     my ($attr, $idx) = @_;
