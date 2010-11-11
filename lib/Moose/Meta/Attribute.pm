@@ -690,20 +690,20 @@ sub remove_accessors {
     return;
 }
 
-sub inline_set {
+sub _inline_set_value {
     my $self = shift;
-    my ( $instance, $value ) = @_;
+    my ($instance, $value) = @_;
 
     my $mi = $self->associated_class->get_meta_instance;
 
-    my $code
-        = $mi->inline_set_slot_value( $instance, $self->slots, $value ) . ";";
-    $code
-        .= $mi->inline_weaken_slot_value( $instance, $self->slots, $value )
-        . "    if ref $value;"
-        if $self->is_weak_ref;
+    my @code = ($self->SUPER::_inline_set_value(@_));
 
-    return $code;
+    push @code, (
+        $mi->inline_weaken_slot_value($instance, $self->name, $value),
+            'if ref ' . $value . ';',
+    ) if $self->is_weak_ref;
+
+    return @code;
 }
 
 sub install_delegation {

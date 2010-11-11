@@ -16,7 +16,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
             _maximum_arguments
             _inline_coerce_new_values
             _new_members
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             _return_value
             )
     ]
@@ -53,11 +53,11 @@ sub _inline_coerce_new_values {
 
 sub _new_members { '$_[1]' }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return 'splice @{ (' . $slot_access . ') }, $_[0], 0, $_[1]';
+    return 'splice @{ (' . $slot_access . ') }, $_[0], 0, $_[1];';
 }
 
 sub _return_value {

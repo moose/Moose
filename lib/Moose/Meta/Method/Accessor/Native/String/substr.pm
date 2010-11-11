@@ -30,7 +30,7 @@ with 'Moose::Meta::Method::Accessor::Native::Reader' => {
             _maximum_arguments
             _inline_process_arguments
             _inline_check_arguments
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             _return_value
             )
     ]
@@ -116,12 +116,12 @@ sub _potential_value {
          . '})';
 }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
     return '@return = substr ' . $slot_access . ', '
-                           . '$offset, $length, $replacement';
+                           . '$offset, $length, $replacement;';
 }
 
 sub _return_value {

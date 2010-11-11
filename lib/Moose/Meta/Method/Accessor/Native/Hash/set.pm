@@ -20,7 +20,7 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' => {
             _inline_process_arguments
             _inline_check_arguments
             _inline_coerce_new_values
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             _return_value
             )
     ],
@@ -97,11 +97,11 @@ sub _potential_value {
 
 sub _new_members { '@_[ @values_idx ]' }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return '@{ (' . $slot_access . ') }{ @_[@keys_idx] } = @_[@values_idx]';
+    return '@{ (' . $slot_access . ') }{ @_[@keys_idx] } = @_[@values_idx];';
 }
 
 sub _return_value {

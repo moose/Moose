@@ -14,7 +14,7 @@ with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
         qw(
             _maximum_arguments
             _inline_capture_return_value
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             _return_value
             )
     ]
@@ -40,11 +40,11 @@ sub _inline_capture_return_value {
     return 'my $old = ' . $slot_access . '->[0];';
 }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return 'shift @{ (' . $slot_access . ') }';
+    return 'shift @{ (' . $slot_access . ') };';
 }
 
 sub _return_value {

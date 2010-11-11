@@ -18,7 +18,7 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
             _minimum_arguments
             _maximum_arguments
             _inline_check_arguments
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             )
     ]
     };
@@ -59,15 +59,15 @@ sub _potential_value {
          . '})';
 }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return '(do { '
-             . 'ref $_[1] '
-                 . '? ' . $slot_access . ' =~ s/$_[0]/$_[1]->()/e '
-                 . ': ' . $slot_access . ' =~ s/$_[0]/$_[1]/; '
-         . '})';
+    return (
+        'ref $_[1]',
+            '? ' . $slot_access . ' =~ s/$_[0]/$_[1]->()/e',
+            ': ' . $slot_access . ' =~ s/$_[0]/$_[1]/;',
+     );
 }
 
 no Moose::Role;

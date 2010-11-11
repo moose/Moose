@@ -14,7 +14,7 @@ with 'Moose::Meta::Method::Accessor::Native::Writer' => {
         qw(
             _minimum_arguments
             _maximum_arguments
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             )
     ]
 };
@@ -24,11 +24,11 @@ sub _maximum_arguments { 1 }
 
 sub _potential_value { '$_[0]' }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return $slot_access . ' = $_[0]';
+    return $slot_access . ' = $_[0];';
 }
 
 no Moose::Role;

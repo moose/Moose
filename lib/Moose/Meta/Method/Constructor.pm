@@ -223,7 +223,7 @@ sub _generate_triggers {
             'if (exists $params->{\'' . $init_arg . '\'}) {',
                 '$attrs->[' . $i . ']->trigger->(',
                     '$instance,',
-                    $attr->inline_get('$instance') . ',',
+                    $attr->_inline_instance_get('$instance') . ',',
                 ');',
             '}';
     }
@@ -327,7 +327,7 @@ sub _generate_slot_assignment {
     }
     else {
         push @source, (
-            $attr->inline_set('$instance', $value) . ';',
+            $attr->_inline_set_value('$instance', $value),
         );
     }
 

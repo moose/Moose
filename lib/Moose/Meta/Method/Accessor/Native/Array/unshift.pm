@@ -12,7 +12,7 @@ use Moose::Role;
 with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
     -excludes => [
         qw(
-            _optimized_set_new_value
+            _inline_optimized_set_new_value
             _return_value
             )
     ]
@@ -27,11 +27,11 @@ sub _potential_value {
     return '[ @_, @{ (' . $slot_access . ') } ]';
 }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
     my ($inv, $new, $slot_access) = @_;
 
-    return 'unshift @{ (' . $slot_access . ') }, @_';
+    return 'unshift @{ (' . $slot_access . ') }, @_;';
 }
 
 sub _return_value {

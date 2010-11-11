@@ -113,13 +113,13 @@ override _get_value => sub {
         : $instance . '->$reader';
 };
 
-override _store_value => sub {
+override _inline_store_value => sub {
     my $self = shift;
     my ($instance, $value) = @_;
 
     return $self->_slot_access_can_be_inlined
         ? super()
-        : $instance . '->$writer(' . $value . ')';
+        : $instance . '->$writer(' . $value . ');';
 };
 
 override _eval_environment => sub {

@@ -146,20 +146,15 @@ around _inline_check_constraint => sub {
 
 sub _inline_capture_return_value { return }
 
-sub _set_new_value {
+sub _inline_set_new_value {
     my $self = shift;
 
-    return $self->_store_value(@_)
+    return $self->_inline_store_value(@_)
         if $self->_value_needs_copy
         || !$self->_slot_access_can_be_inlined
         || !$self->_get_is_lvalue;
 
-    return $self->_optimized_set_new_value(@_);
-}
-
-sub _inline_set_new_value {
-    my $self = shift;
-    return $self->_set_new_value(@_) . ';';
+    return $self->_inline_optimized_set_new_value(@_);
 }
 
 sub _get_is_lvalue {
@@ -168,10 +163,10 @@ sub _get_is_lvalue {
     return $self->associated_attribute->associated_class->instance_metaclass->inline_get_is_lvalue;
 }
 
-sub _optimized_set_new_value {
+sub _inline_optimized_set_new_value {
     my $self = shift;
 
-    return $self->_store_value(@_);
+    return $self->_inline_store_value(@_);
 }
 
 sub _return_value {

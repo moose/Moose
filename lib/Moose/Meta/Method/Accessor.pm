@@ -325,7 +325,7 @@ sub _inline_store_value {
     my $self = shift;
     my ($inv, $value) = @_;
 
-    return $self->_store_value($inv, $value) . ';';
+    return $self->associated_attribute->_inline_set_value($inv, $value);
 }
 
 sub _inline_get_old_value_for_trigger {
@@ -360,23 +360,16 @@ sub _inline_return_auto_deref {
 
 # expressions
 
-sub _store_value {
-    my $self = shift;
-    my ($instance, $value) = @_;
-
-    return $self->associated_attribute->inline_set($instance, $value) . ';';
-}
-
 sub _get_value {
     my ($self, $instance) = @_;
 
-    return $self->associated_attribute->inline_get($instance);
+    return $self->associated_attribute->_inline_instance_get($instance);
 }
 
 sub _has_value {
     my ($self, $instance) = @_;
 
-    return $self->associated_attribute->inline_has($instance);
+    return $self->associated_attribute->_inline_instance_has($instance);
 }
 
 sub _auto_deref {
