@@ -49,6 +49,44 @@ sub new {
 
 sub _initialize_body {
     my $self = shift;
+    $self->{'body'} = $self->_generate_constructor_method_inline;
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my $attrs = $self->_attributes;
+
+    my $defaults = [map { $_->default } @$attrs];
+
+    # We need to check if the attribute ->can('type_constraint')
+    # since we may be trying to immutabilize a Moose meta class,
+    # which in turn has attributes which are Class::MOP::Attribute
+    # objects, rather than Moose::Meta::Attribute. And
+    # Class::MOP::Attribute attributes have no type constraints.
+    # However we need to make sure we leave an undef value there
+    # because the inlined code is using the index of the attributes
+    # to determine where to find the type constraint
+
+    my @type_constraints = map {
+        $_->can('type_constraint') ? $_->type_constraint : undef
+    } @$attrs;
+
+    my @type_constraint_bodies = map {
+        defined $_ ? $_->_compiled_type_constraint : undef;
+    } @type_constraints;
+
+    return {
+        '$meta'  => \$self,
+        '$attrs' => \$attrs,
+        '$defaults' => \$defaults,
+        '@type_constraints' => \@type_constraints,
+        '@type_constraint_bodies' => \@type_constraint_bodies,
+    };
+}
+
+sub _generate_constructor_method_inline {
+    my $self = shift;
     # TODO:
     # the %options should also include a both
     # a call 'initializer' and call 'SUPER::'
@@ -74,16 +112,7 @@ sub _initialize_body {
     );
     warn join("\n", @source) if $self->options->{debug};
 
-    # We need to check if the attribute ->can('type_constraint')
-    # since we may be trying to immutabilize a Moose meta class,
-    # which in turn has attributes which are Class::MOP::Attribute
-    # objects, rather than Moose::Meta::Attribute. And
-    # Class::MOP::Attribute attributes have no type constraints.
-    # However we need to make sure we leave an undef value there
-    # because the inlined code is using the index of the attributes
-    # to determine where to find the type constraint
-
-    my $code = try {
+    return try {
         $self->_compile_code(\@source);
     }
     catch {
@@ -93,32 +122,6 @@ sub _initialize_body {
             error => $_,
             data  => $source,
         );
-    };
-
-    $self->{'body'} = $code;
-}
-
-sub _eval_environment {
-    my $self = shift;
-
-    my $attrs = $self->_attributes;
-
-    my $defaults = [map { $_->default } @$attrs];
-
-    my @type_constraints = map {
-        $_->can('type_constraint') ? $_->type_constraint : undef
-    } @$attrs;
-
-    my @type_constraint_bodies = map {
-        defined $_ ? $_->_compiled_type_constraint : undef;
-    } @type_constraints;
-
-    return {
-        '$meta'  => \$self,
-        '$attrs' => \$attrs,
-        '$defaults' => \$defaults,
-        '@type_constraints' => \@type_constraints,
-        '@type_constraint_bodies' => \@type_constraint_bodies,
     };
 }
 
