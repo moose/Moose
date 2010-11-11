@@ -37,7 +37,6 @@ sub _generate_method {
 
     return (
         'sub {',
-            $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
             $self->_inline_check_lazy($inv),
@@ -49,7 +48,6 @@ sub _generate_method {
             # set
             'else {',
                 $self->_inline_writer_core($inv, $slot_access),
-                $self->_inline_post_body(@_),
             '}',
         '}',
     );

@@ -23,11 +23,9 @@ sub _generate_method {
 
     return (
         'sub {',
-            $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
             $self->_inline_writer_core($inv, $slot_access),
-            $self->_inline_post_body(@_),
         '}',
     );
 }
@@ -73,7 +71,7 @@ sub _inline_check_arguments { return }
 
 sub _inline_coerce_new_values { return }
 
-sub _value_needs_copy {
+sub _writer_value_needs_copy {
     my $self = shift;
 
     return $self->_constraint_must_be_checked;
@@ -103,7 +101,7 @@ sub _inline_copy_native_value {
     my $self = shift;
     my ($potential_ref) = @_;
 
-    return unless $self->_value_needs_copy;
+    return unless $self->_writer_value_needs_copy;
 
     my $code = 'my $potential = ' . ${$potential_ref} . ';';
 
@@ -150,7 +148,7 @@ sub _inline_set_new_value {
     my $self = shift;
 
     return $self->_inline_store_value(@_)
-        if $self->_value_needs_copy
+        if $self->_writer_value_needs_copy
         || !$self->_slot_access_can_be_inlined
         || !$self->_get_is_lvalue;
 

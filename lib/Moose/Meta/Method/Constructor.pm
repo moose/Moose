@@ -327,7 +327,7 @@ sub _generate_slot_assignment {
     }
     else {
         push @source, (
-            $attr->_inline_set_value('$instance', $value),
+            $attr->_inline_instance_set('$instance', $value) . ';',
         );
     }
 

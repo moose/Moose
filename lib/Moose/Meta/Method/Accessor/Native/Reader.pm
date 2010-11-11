@@ -21,7 +21,6 @@ sub _generate_method {
 
     return (
         'sub {',
-            $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
             $self->_inline_reader_core($inv, $slot_access, @_),
@@ -38,7 +37,6 @@ sub _inline_reader_core {
         $self->_inline_process_arguments($inv, $slot_access),
         $self->_inline_check_arguments,
         $self->_inline_check_lazy($inv),
-        $self->_inline_post_body(@extra),
         $self->_inline_return_value($slot_access),
     );
 }

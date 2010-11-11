@@ -44,7 +44,6 @@ sub _generate_method {
 
     return (
         'sub {',
-            $self->_inline_pre_body(@_),
             'my ' . $inv . ' = shift;',
             $self->_inline_curried_arguments,
             'if (@_ == 1 || @_ == 2) {',
@@ -52,7 +51,6 @@ sub _generate_method {
             '}',
             'elsif (@_ == 3) {',
                 $self->_inline_writer_core($inv, $slot_access),
-                $self->_inline_post_body(@_),
             '}',
             'else {',
                 $self->_inline_check_argument_count,

@@ -45,7 +45,7 @@ sub _tc_member_type {
     return;
 }
 
-sub _value_needs_copy {
+sub _writer_value_needs_copy {
     my $self = shift;
 
     return $self->_constraint_must_be_checked
