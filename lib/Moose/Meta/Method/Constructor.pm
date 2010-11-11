@@ -83,29 +83,8 @@ sub _initialize_body {
     # because the inlined code is using the index of the attributes
     # to determine where to find the type constraint
 
-    my $attrs = $self->_attributes;
-
-    my @type_constraints = map {
-        $_->can('type_constraint') ? $_->type_constraint : undef
-    } @$attrs;
-
-    my @type_constraint_bodies = map {
-        defined $_ ? $_->_compiled_type_constraint : undef;
-    } @type_constraints;
-
-    my $defaults = [map { $_->default } @$attrs];
-
     my $code = try {
-        $self->_compile_code(
-            source      => \@source,
-            environment => {
-                '$meta'  => \$self,
-                '$attrs' => \$attrs,
-                '$defaults' => \$defaults,
-                '@type_constraints' => \@type_constraints,
-                '@type_constraint_bodies' => \@type_constraint_bodies,
-            },
-        );
+        $self->_compile_code(\@source);
     }
     catch {
         my $source = join("\n", @source);
@@ -117,6 +96,30 @@ sub _initialize_body {
     };
 
     $self->{'body'} = $code;
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my $attrs = $self->_attributes;
+
+    my $defaults = [map { $_->default } @$attrs];
+
+    my @type_constraints = map {
+        $_->can('type_constraint') ? $_->type_constraint : undef
+    } @$attrs;
+
+    my @type_constraint_bodies = map {
+        defined $_ ? $_->_compiled_type_constraint : undef;
+    } @type_constraints;
+
+    return {
+        '$meta'  => \$self,
+        '$attrs' => \$attrs,
+        '$defaults' => \$defaults,
+        '@type_constraints' => \@type_constraints,
+        '@type_constraint_bodies' => \@type_constraint_bodies,
+    };
 }
 
 sub _generate_fallback_constructor {
