@@ -509,29 +509,13 @@ sub _call_builder {
 
 ## Slot management
 
-# FIXME:
-# this duplicates too much code from
-# Class::MOP::Attribute, we need to
-# refactor these bits eventually.
-# - SL
-sub _set_initial_slot_value {
-    my ($self, $meta_instance, $instance, $value) = @_;
-
-    my $slot_name = $self->name;
-
-    return $meta_instance->set_slot_value($instance, $slot_name, $value)
-        unless $self->has_initializer;
-
-    my $callback = sub {
-        my $val = $self->_coerce_and_verify( shift, $instance );;
-
-        $meta_instance->set_slot_value($instance, $slot_name, $val);
+sub _make_initializer_writer_callback {
+    my $self = shift;
+    my ($meta_instance, $instance, $slot_name) = @_;
+    my $old_callback = $self->SUPER::_make_initializer_writer_callback(@_);
+    return sub {
+        $old_callback->($self->_coerce_and_verify($_[0], $instance));
     };
-
-    my $initializer = $self->initializer;
-
-    # most things will just want to set a value, so make it first arg
-    $instance->$initializer($value, $callback, $self);
 }
 
 sub set_value {
