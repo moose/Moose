@@ -414,7 +414,7 @@ set:
       }
 
       $msg .= " - size is now $size";
-      warn $msg.
+      warn $msg;
   }
 
 The trigger is called I<after> an attribute's value is set. It is
