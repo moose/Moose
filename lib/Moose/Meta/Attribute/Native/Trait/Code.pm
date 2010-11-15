@@ -5,9 +5,6 @@ our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Method::Accessor::Native::Code::execute;
-use Moose::Meta::Method::Accessor::Native::Code::execute_method;
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'CodeRef' }

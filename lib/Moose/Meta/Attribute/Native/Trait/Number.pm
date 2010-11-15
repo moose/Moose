@@ -5,14 +5,6 @@ our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Method::Accessor::Native::Number::abs;
-use Moose::Meta::Method::Accessor::Native::Number::add;
-use Moose::Meta::Method::Accessor::Native::Number::div;
-use Moose::Meta::Method::Accessor::Native::Number::mod;
-use Moose::Meta::Method::Accessor::Native::Number::mul;
-use Moose::Meta::Method::Accessor::Native::Number::set;
-use Moose::Meta::Method::Accessor::Native::Number::sub;
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'Num' }

@@ -6,11 +6,6 @@ our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Method::Accessor::Native::Counter::dec;
-use Moose::Meta::Method::Accessor::Native::Counter::inc;
-use Moose::Meta::Method::Accessor::Native::Counter::reset;
-use Moose::Meta::Method::Accessor::Native::Counter::set;
-
 with 'Moose::Meta::Attribute::Native::Trait' =>
     { -excludes => ['_root_types'] };
 

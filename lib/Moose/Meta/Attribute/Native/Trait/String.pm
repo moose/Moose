@@ -5,17 +5,6 @@ our $VERSION   = '1.19';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
-use Moose::Meta::Method::Accessor::Native::String::append;
-use Moose::Meta::Method::Accessor::Native::String::chomp;
-use Moose::Meta::Method::Accessor::Native::String::chop;
-use Moose::Meta::Method::Accessor::Native::String::clear;
-use Moose::Meta::Method::Accessor::Native::String::inc;
-use Moose::Meta::Method::Accessor::Native::String::length;
-use Moose::Meta::Method::Accessor::Native::String::match;
-use Moose::Meta::Method::Accessor::Native::String::prepend;
-use Moose::Meta::Method::Accessor::Native::String::replace;
-use Moose::Meta::Method::Accessor::Native::String::substr;
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_default { q{} }
