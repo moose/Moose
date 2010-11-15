@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [ENHANCEMENTS]
+
+  * We now load the roles needed for native delegations only as needed. This
+    speeds up the compilation time for Moose itself. (doy)
+
+
 1.19 Tue, Nov 2, 2010
 
   [BUG FIXES]
