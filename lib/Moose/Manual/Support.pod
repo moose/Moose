@@ -7,33 +7,38 @@ compatibility.
 
 =head1 SUPPORT POLICY
 
-There are two principles to Moose's Policy of Supported Behavior
+There are two principles to Moose's policy of supported behavior.
 
 1. Moose favors correctness over everything.
-2. Moose supports documented and tested behavior, not accidental behavior or side effects.
+2. Moose supports documented and tested behavior, not accidental behavior or
+side effects.
 
-If a behavior has never been documented or tested, the behavior is I<officially> undefined. Relying
-upon undocumented and untested behavior is done at your own risk.
+If a behavior has never been documented or tested, the behavior is
+I<officially> undefined. Relying upon undocumented and untested behavior is
+done at your own risk.
 
-If a behavior is documented or tested but found to be incorrect later, the behavior will go through a
-deprecation period in which it warns before being removed.
+If a behavior is documented or tested but found to be incorrect later, the
+behavior will go through a deprecation period in which it warns before being
+removed.
 
 =head1 RELEASE SCHEDULE
 
-Moose uses the release early, release often philosophy. 
+Moose uses the release early, release often philosophy.
 
-Moose is on a system of weekly minor releases, and quarterly major releases. A minor release is
-deifined as one that makes every attempt to not break backwards compatibility. Currently this means
-that the dependency conflict lists, and test suite did not change substantially, or that any changes
-were additive.
+Moose is on a system of weekly minor releases and quarterly major releases. A
+minor release is defined as one that makes every attempt to not break
+backwards compatibility. Currently this means that the dependency conflict
+lists and test suite did not change substantially, or that any changes were
+additive.
 
-Major releases are potentially backwards incompatibiliy. Moose prioritizes correcness over backwards
-compatibility or performance, see the Deprecation Policy below for how backwards incompatible changes
-are announced.
+Major releases are potentially backwards incompatible. Moose prioritizes
+correctness over backwards compatibility or performance; see the Deprecation
+Policy below for how backwards incompatible changes are announced.
 
-Before a major release, a series of Development Releases will be made so that users can test the
-upcoming major release before it is distributed to CPAN. It is in the best interests of everyone
-involved if these releases are tested as widely as possible.
+Before a major release, a series of development releases will be made so that
+users can test the upcoming major release before it is distributed to CPAN. It
+is in the best interests of everyone involved if these releases are tested as
+widely as possible.
 
 =head1 DEPRECATION POLICY
 
