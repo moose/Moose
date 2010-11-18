@@ -1039,6 +1039,29 @@ is equivalent to this:
       predicate => 'has_size',
   );
 
+
+If your attribute name starts with an underscore (C<_>), then the clearer
+and predicate will as well:
+
+  has '_size' => (
+      is         => 'ro',
+      lazy_build => 1,
+  );
+
+becomes:
+
+  has '_size' => (
+      is        => 'ro',
+      lazy      => 1,
+      builder   => '_build__size',
+      clearer   => '_clear_size',
+      predicate => '_has_size',
+  );
+
+Note the doubled underscore in the builder name. Internally, Moose
+simply prepends the attribute name with "_build_" to come up with the
+builder name.
+
 =item * documentation
 
 An arbitrary string that can be retrieved later by calling C<<
