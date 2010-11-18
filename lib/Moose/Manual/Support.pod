@@ -9,31 +9,39 @@ compatibility.
 
 There are two principles to Moose's policy of supported behavior.
 
-1. Moose favors correctness over everything.
-2. Moose supports documented and tested behavior, not accidental behavior or
-side effects.
+=over 4
+
+=item 1.
+
+Moose favors correctness over everything.
+
+=item 2.
+
+Moose supports documented and tested behavior, not accidental behavior or side
+effects.
+
+=back
 
 If a behavior has never been documented or tested, the behavior is
 I<officially> undefined. Relying upon undocumented and untested behavior is
 done at your own risk.
 
 If a behavior is documented or tested but found to be incorrect later, the
-behavior will go through a deprecation period in which it warns before being
-removed.
+behavior will go through a deprecation period. During the deprecation period,
+use of that feature will cause a warning. Eventually, the deprecated feature
+will be removed.
 
 =head1 RELEASE SCHEDULE
 
-Moose uses the release early, release often philosophy.
-
 Moose is on a system of weekly minor releases and quarterly major releases. A
-minor release is defined as one that makes every attempt to not break
-backwards compatibility. Currently this means that the dependency conflict
-lists and test suite did not change substantially, or that any changes were
-additive.
+minor release is defined as one that makes every attempt to preserve backwards
+compatibility. Currently this means that we did not introduce any new
+dependency conflicts, and that we did not make any changes to documented,
+tested behavior. A minor release can include new features and bug fixes.
 
-Major releases are potentially backwards incompatible. Moose prioritizes
-correctness over backwards compatibility or performance; see the Deprecation
-Policy below for how backwards incompatible changes are announced.
+Major releases may be backwards incompatible. Moose prioritizes
+correctness over backwards compatibility or performance; see the L<Deprecation
+Policy> to understand how backwards incompatible changes are announced.
 
 Before a major release, a series of development releases will be made so that
 users can test the upcoming major release before it is distributed to CPAN. It
@@ -45,14 +53,16 @@ widely as possible.
 Moose has always prioritized correctness over performance and backwards
 compatibility.
 
-Major deprecations or API changes are first documented in the Changes
-file as well as in L<Moose::Manual::Delta>.
+Major deprecations or API changes are documented in the Changes file as well
+as in L<Moose::Manual::Delta>. The Moose developers will also make an effort
+to warn users of upcoming deprecations and breakage through the Moose blog
+(http://blog.moose.perl.org).
 
-Moose then attempts to warn for deprecated features and API changes for
-a reasonable number of releases before breaking any tested API.
+Deprecated APIs will be preserved for at least one year. Of course, the
+removal of a deprecated API will only happen in a major release.
 
-Moose will also warn during installation if the version being installed
-will break a known installed dependency. Unfortunately due to the nature
+Moose will also warn during installation if the version of Moose being
+installed will break an installed dependency. Unfortunately, due to the nature
 of the Perl install process these warnings may be easy to miss.
 
 =head1 BACKWARDS COMPATIBILITY
@@ -67,15 +77,21 @@ C<xt/author/test-my-dependents.t>.
 
 =head1 VERSION NUMBERS
 
-Moose's version numbers are monotonically incrementing two decimal
-values. The version numbers in Moose are I<not> semantic. This means
-that version 1.00 will be the hundredth release, nothing more.
+Moose version numbers consist of three parts, in the form X.YYZZ. The X is the
+"special magic number" that only gets changed for really big changes. Think of
+this as being like the "5" in Perl 5.12.1.
 
-Occasionally, we will release a test release with a version like
-0.90_03. These versions may be less stable than non-test releases, and exist
-so that developers can test potentially code-breaking changes. By default, the
-CPAN client will not install a distribution which has an underscore in its
-version.
+The YY portion is the major version number. Moose uses even numbers for stable
+releases, and odd numbers for trial releases. The ZZ is the minor version, and
+it simply increases monotonically. It starts at "00" each time a new major
+version is released.
+
+Semantically, this means that any two releases which share a major version
+should be API-compatible with each other. In other words, 2.0200, 2.0201, and
+2.0274 are all API-compatible.
+
+Prior to version 2.0, Moose version numbers were monotonically incrementing
+two decimal values (0.01, 0.02, ... 1.11, 1.12, etc.).
 
 Moose was declared production ready at version 0.18 (via L<<
 http://www.perlmonks.org/?node_id=608144 >>).
