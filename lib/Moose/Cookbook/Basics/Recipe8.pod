@@ -100,7 +100,7 @@ do the right thing with the C<predicate> and C<clearer>, making them
 both start with an underscore. The C<builder> method I<always> starts
 with an underscore.
 
-You can read more about C<lazy_build> in L<Moose::Manual::Attributes>
+You can read more about C<lazy_build> in L<Moose::Meta::Attribute>
 
 =head1 CONCLUSION
 
