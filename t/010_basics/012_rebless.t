@@ -61,8 +61,8 @@ is($foo->lazy_classname, 'Parent', "lazy attribute initialized");
 is( exception { $foo->type_constrained(10.5) }, undef, "Num type constraint for now.." );
 
 # try to rebless, except it will fail due to Child's stricter type constraint
-like( exception { Child->meta->rebless_instance($foo) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed cause of type check' );
-like( exception { Child->meta->rebless_instance($bar) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 5\.5/, '... this failed cause of type check' );
+like( exception { Child->meta->rebless_instance($foo) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
+like( exception { Child->meta->rebless_instance($bar) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 5\.5/, '... this failed because of type check' );
 
 $foo->type_constrained(10);
 $bar->type_constrained(5);
@@ -76,6 +76,6 @@ is($foo->name, 'Junior', "Child->name's default came through");
 is($foo->lazy_classname, 'Parent', "lazy attribute was already initialized");
 is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
 
-like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed cause of type check' );
+like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
 
 done_testing;
