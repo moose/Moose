@@ -58,8 +58,8 @@ as in L<Moose::Manual::Delta>. The Moose developers will also make an effort
 to warn users of upcoming deprecations and breakage through the Moose blog
 (http://blog.moose.perl.org).
 
-Deprecated APIs will be preserved for at least one year. Of course, we will
-only remove a deprecated API in a major release, even after a year has passed.
+Deprecated APIs will be preserved for at least one year, and will only be
+removed in a major release.
 
 Moose will also warn during installation if the version of Moose being
 installed will break an installed dependency. Unfortunately, due to the nature
