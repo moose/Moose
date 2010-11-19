@@ -84,10 +84,13 @@ everyone involved. The branches below are ordered by level of stability.
 =item stable/*
 
 The branch from which releases are cut. When making a new major release, the
-release manager makes a new C<stable/$version> branch at the current position
-of C<master>. For minor releases, patches will be committed to C<master>, and
-backported (cherry-picked) to the appropriate stable branch as needed. The
-C<stable> branch is only updated by someone from the Cabal during a release.
+release manager makes a new C<stable/X.YY> branch at the current position of
+C<master>. The version used in the stable branch should not include the last
+two digits of the version number.
+
+For minor releases, patches will be committed to C<master>, and
+backported (cherry-picked) to the appropriate stable branch as needed. A
+stable branch is only updated by someone from the Cabal during a release.
 
 =item master
 
@@ -232,23 +235,23 @@ defend your change.
     git checkout master
 
     # minor releases
-    git checkout stable
+    git checkout stable/X.YY
 
     # edit for final version bumping, changelogging, etc
     # prepare release (test suite etc)
     perl-reversion -bump
     make manifest
     git commit
-    git branch stable/2.XXYY # only for non-trial major releases
+    git branch stable/X.YY # only for non-trial major releases
     shipit # does not ship the tarball, but does everything else
 
     # non-trial releases
-    cpan-upload ~/shipit-dist/Moose-2.XXYY.tar.gz
+    cpan-upload ~/shipit-dist/Moose-X.YYZZ.tar.gz
 
     # trial releases
     cd ~/shipit-dist
-    mv Moose-2.XXYY.tar.gz Moose-2.XXYY-TRIAL.tar.gz
-    cpan-upload Moose-2.XXYY-TRIAL.tar.gz
+    mv Moose-X.YYZZ.tar.gz Moose-X.YYZZ-TRIAL.tar.gz
+    cpan-upload Moose-X.YYZZ-TRIAL.tar.gz
 
 =head2 Release How-To
 
@@ -291,12 +294,12 @@ The stable branch exists for easily making bug fix releases.
     git commit
 
 Then a cabal member merges into C<master>, and backports the change into
-C<stable>:
+C<stable/X.YY>:
 
     git checkout master
     git merge topic/my-emergency-fix
     git push
-    git checkout stable
+    git checkout stable/X.YY
     git cherry-pick -x master
     git push
     # release
