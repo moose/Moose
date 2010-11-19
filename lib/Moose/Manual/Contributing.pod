@@ -69,6 +69,9 @@ release. They're listed under L<Moose/CABAL> in the Moose documentation. They
 are responsible for reviewing branches, and are the only people who are allowed
 to push to stable branches.
 
+Cabal members are listed in L<Moose> and can often be found on irc in the
+L<irc://irc.perl.org/#moose-dev> channel.
+
 =back
 
 =head1 BRANCH LAYOUT
