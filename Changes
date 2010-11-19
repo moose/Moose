@@ -10,6 +10,10 @@ NEXT
     attribute_metaclass. This is also overridable via ::MetaRole, with the
     applied_attribute key in the role_metaroles hashref (doy).
 
+  * The internal code used to generate inlined methods (accessor, constructor,
+    etc.) has been massively rewritten. MooseX modules that do inlining will
+    almost certainly need to be updated as well.
+
   [ENHANCEMENTS]
 
   * We now load the roles needed for native delegations only as needed. This
