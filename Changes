@@ -1,6 +1,15 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+NEXT
+
+  [BUG FIXES]
+
+  * When using native delegations, if an array or hash ref member failed a
+    type constraint check, Moose ended up erroring out with "Can't call method
+    "get_message" on unblessed reference" instead of generating a useful error
+    based on the failed type constraint. Reported by t0m. (Dave Rolsky)
+
 1.19 Tue, Nov 2, 2010
 
   [BUG FIXES]
