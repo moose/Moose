@@ -19,6 +19,12 @@ NEXT
   * We now load the roles needed for native delegations only as needed. This
     speeds up the compilation time for Moose itself. (doy)
 
+  [BUG FIXES]
+
+  * When using native delegations, if an array or hash ref member failed a
+    type constraint check, Moose ended up erroring out with "Can't call method
+    "get_message" on unblessed reference" instead of generating a useful error
+    based on the failed type constraint. Reported by t0m. (Dave Rolsky)
 
 1.19 Tue, Nov 2, 2010
 

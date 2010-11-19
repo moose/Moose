@@ -234,4 +234,32 @@ my $foo = Foo->new;
     );
 }
 
+{
+    package Bar;
+    use Moose;
+}
+
+{
+    package HasArray;
+    use Moose;
+
+    has objects => (
+        isa     => 'ArrayRef[Foo]',
+        traits  => ['Array'],
+        handles => {
+            push_objects => 'push',
+        },
+    );
+}
+
+{
+    my $ha = HasArray->new();
+
+    like(
+        exception { $ha->push_objects( Bar->new ) },
+        qr/\QValidation failed for 'Foo'/,
+        'got expected error when pushing an object of the wrong class onto an array ref'
+    );
+}
+
 done_testing;

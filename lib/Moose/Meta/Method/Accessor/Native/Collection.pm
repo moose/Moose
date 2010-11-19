@@ -107,7 +107,7 @@ sub _inline_check_member_constraint {
                 $self->_inline_throw_error(
                     '"A new member value for ' . $attr_name
                   . ' does not pass its type constraint because: "'
-                  . ' . $member_tc->get_message($_)',
+                  . ' . $member_tc_obj->get_message($_)',
                     'data => $_',
                 ) . ';',
             '}',
