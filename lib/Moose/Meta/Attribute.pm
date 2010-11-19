@@ -10,7 +10,7 @@ use List::MoreUtils 'any';
 use Try::Tiny;
 use overload     ();
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.20';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Deprecated;

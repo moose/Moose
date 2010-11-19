@@ -12,7 +12,7 @@ use List::MoreUtils qw(any all);
 use overload ();
 use Class::MOP   0.60;
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.20';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

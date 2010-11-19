@@ -6,7 +6,7 @@ use warnings;
 use List::Util ();
 use Params::Util ();
 
-our $VERSION = '1.19';
+our $VERSION = '1.20';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
