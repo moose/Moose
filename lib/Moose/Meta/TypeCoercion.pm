@@ -8,7 +8,7 @@ use metaclass;
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.9900';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

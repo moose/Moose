@@ -1,6 +1,6 @@
 package Moose::Meta::Attribute::Native;
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.9900';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

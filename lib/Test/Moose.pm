@@ -9,7 +9,7 @@ use Test::Builder;
 use List::MoreUtils 'all';
 use Moose::Util 'does_role', 'find_meta';
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.9900';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

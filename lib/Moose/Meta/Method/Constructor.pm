@@ -8,7 +8,7 @@ use Carp ();
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 use Try::Tiny;
 
-our $VERSION   = '1.19';
+our $VERSION   = '1.9900';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
