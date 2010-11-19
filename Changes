@@ -26,7 +26,8 @@ NEXT
   * When using native delegations, if an array or hash ref member failed a
     type constraint check, Moose ended up erroring out with "Can't call method
     "get_message" on unblessed reference" instead of generating a useful error
-    based on the failed type constraint. Reported by t0m. (Dave Rolsky)
+    based on the failed type constraint. Reported by t0m. RT #63113. (Dave
+    Rolsky)
 
 1.19 Tue, Nov 2, 2010
 
