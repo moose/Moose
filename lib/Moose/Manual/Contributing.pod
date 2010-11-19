@@ -391,7 +391,7 @@ Jesse Luehrs E<lt>doy at tozt dot netE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2009 by Infinity Interactive, Inc.
+Copyright 2009-2010 by Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
