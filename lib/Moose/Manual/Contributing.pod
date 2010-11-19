@@ -121,10 +121,10 @@ moved here, to keep the main areas clean.
 
 =back
 
-Larger, more long term branches can also be created in the root namespace (i.e.
-at the same level as master and stable). This is more appropriate if multiple
+Larger, longer term branches can also be created in the root namespace (i.e.
+at the same level as master and stable). This may be appropriate if multiple
 people are intending to work on the branch. These branches should not be
-rebased.
+rebased without checking with other developers first.
 
 =head1 STANDARD WORKFLOW
 
@@ -216,8 +216,9 @@ branch's approval.
 
 =item Backwards incompatible changes.
 
-Anything that breaks backwards compatibility must be discussed by the cabal
-and agreed to by a majority of the members.
+Anything that breaks backwards compatibility must be discussed by the
+cabal. Backwards incompatbible changes should not be merged to master if there
+are strong objections for any cabal members.
 
 We have a policy for what we see as sane L</BACKWARDS COMPATIBILITY> for
 Moose. If your changes break back-compat, you must be ready to discuss and
@@ -329,8 +330,8 @@ C<my-project> is a valid ref).
 
 Merged branches should be deleted.
 
-Failed branches may be kept, but should be to C<attic/> to differentiate them
-from in-progress topic branches.
+Failed branches may be kept, but should be moved to C<attic/> to differentiate
+them from in-progress topic branches.
 
 Branches that have not been worked on for a long time will be moved to
 C<abandoned/> periodically, but feel free to move the branch back to C<topic/>
@@ -351,6 +352,16 @@ the test so that others know.
 We also greatly appreciate documentation to go with your changes, and an entry
 in the Changes file. Make sure to give yourself credit! Major changes or new
 user-facing features should also be documented in L<Moose::Manual::Delta>.
+
+=head1 DOCS, DOCS, DOCS
+
+Any user-facing changes must be accompanied by documentation. If you're not
+comfortable writing docs yourself, you might be able to convince another Moose
+dev to help you.
+
+Our goal is to make sure that all features are documented. Undocumented
+features are not considered part of the API when it comes to determining
+whether a change is backwards compatible.
 
 =head1 BACKWARDS COMPATIBILITY
 
