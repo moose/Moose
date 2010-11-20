@@ -59,7 +59,14 @@ sub _inline_throw_error {
 
 sub new {
     my ($class, $name, %options) = @_;
-    $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
+    return $class->SUPER::new($name, $class->BUILDARGS($name, %options));
+}
+
+sub BUILDARGS {
+    my ( $class, $name, %options ) = @_;
+
+    $class->_process_options($name, \%options)
+        unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
     
     delete $options{__hack_no_process_options};
 
@@ -77,7 +84,7 @@ sub new {
         Carp::cluck "Found unknown argument(s) passed to '$name' attribute constructor in '$class': @bad";
     }
 
-    return $class->SUPER::new($name, %options);
+    return %options;
 }
 
 sub interpolate_class_and_new {
