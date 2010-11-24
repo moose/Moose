@@ -1,6 +1,25 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.21 Wed, Nov 24, 2010
+
+  [ENHANCEMENTS]
+
+  * The Support manual has been updated to reflect our new major/minor version
+    policy. (Chris Prather)
+
+  * The Contributing manual has been updated to reflect workflow changes based
+    on this new support policy. (doy)
+
+  [BUG FIXES]
+
+  * The role attribute metaclass did not inherit from Class::MOP::Object,
+    which could cause errors when trying to resolve metaclass compatibility
+    issues. Reported by Daniel Ruoso. (doy)
+
+  * The lazy_build feature was accidentally removed all the docs. Now it's
+    listed in Moose.pm again. (Chris Prather)
+
 1.20 Fri, Nov 19, 2010
 
   [BUG FIXES]
