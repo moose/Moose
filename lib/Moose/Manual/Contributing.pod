@@ -229,7 +229,7 @@ branch's approval.
 
 Anything that breaks backwards compatibility must be discussed by the
 cabal. Backwards incompatible changes should not be merged to master if there
-are strong objections for any cabal members.
+are strong objections from any cabal members.
 
 We have a policy for what we see as sane L</BACKWARDS COMPATIBILITY> for
 Moose. If your changes break back-compat, you must be ready to discuss and
