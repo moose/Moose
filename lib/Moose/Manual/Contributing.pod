@@ -89,7 +89,16 @@ everyone involved. The branches below are ordered by level of stability.
 
 =over
 
-=item Stable (refs/heads/stable)
+=item stable/*
+
+The branch from which releases are cut. When making a new major release, the
+release manager makes a new C<stable/X.YY> branch at the current position of
+C<master>. The version used in the stable branch should not include the last
+two digits of the version number.
+
+For minor releases, patches will be committed to C<master>, and
+backported (cherry-picked) to the appropriate stable branch as needed. A
+stable branch is only updated by someone from the Cabal during a release.
 
 The branch from which releases are cut. When making a new release, the
 release manager merges from master to stable. The stable branch is only
@@ -230,18 +239,39 @@ defend your change.
 =head1 RELEASE WORKFLOW
 
     git checkout master
+<<<<<<< HEAD
+=======
+
+    # minor releases
+    git checkout stable/X.YY
+
+>>>>>>> c5d6da2... Tweaks to clarify stable branch naming scheme.
     # edit for final version bumping, changelogging, etc
     # prepare release (test suite etc)
     perl-reversion -bump
     make manifest
     git commit
+<<<<<<< HEAD
     git checkout stable
     git merge master # must be a fast forward
     git push both
+=======
+    git branch stable/X.YY # only for non-trial major releases
+>>>>>>> c5d6da2... Tweaks to clarify stable branch naming scheme.
     shipit # does not ship the tarball, but does everything else
     cpan-upload ~/shipit-dist/Moose-X.YZ.tar.gz
 
+<<<<<<< HEAD
 Development releases are made without merging into the stable branch.
+=======
+    # non-trial releases
+    cpan-upload ~/shipit-dist/Moose-X.YYZZ.tar.gz
+
+    # trial releases
+    cd ~/shipit-dist
+    mv Moose-X.YYZZ.tar.gz Moose-X.YYZZ-TRIAL.tar.gz
+    cpan-upload Moose-X.YYZZ-TRIAL.tar.gz
+>>>>>>> c5d6da2... Tweaks to clarify stable branch naming scheme.
 
 =head2 Release How-To
 
@@ -283,10 +313,21 @@ Anyone can create the necessary fix by branching off of the stable branch:
     # hack
     git commit
 
+<<<<<<< HEAD
 Then a cabal member merges into stable:
 
     git checkout stable
     git merge topic/my-emergency-fix
+=======
+Then a cabal member merges into C<master>, and backports the change into
+C<stable/X.YY>:
+
+    git checkout master
+    git merge topic/my-emergency-fix
+    git push
+    git checkout stable/X.YY
+    git cherry-pick -x master
+>>>>>>> c5d6da2... Tweaks to clarify stable branch naming scheme.
     git push
     # release
     git checkout master
