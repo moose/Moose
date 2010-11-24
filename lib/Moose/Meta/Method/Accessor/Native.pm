@@ -6,7 +6,7 @@ use warnings;
 use Carp qw( confess );
 use Scalar::Util qw( blessed weaken );
 
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
