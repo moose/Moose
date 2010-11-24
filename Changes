@@ -19,6 +19,25 @@ NEXT
   * We now load the roles needed for native delegations only as needed. This
     speeds up the compilation time for Moose itself. (doy)
 
+1.21 Wed, Nov 24, 2010
+
+  [ENHANCEMENTS]
+
+  * The Support manual has been updated to reflect our new major/minor version
+    policy. (Chris Prather)
+
+  * The Contributing manual has been updated to reflect workflow changes based
+    on this new support policy. (doy)
+
+  [BUG FIXES]
+
+  * The role attribute metaclass did not inherit from Class::MOP::Object,
+    which could cause errors when trying to resolve metaclass compatibility
+    issues. Reported by Daniel Ruoso. (doy)
+
+  * The lazy_build feature was accidentally removed all the docs. Now it's
+    listed in Moose.pm again. (Chris Prather)
+
 1.20 Fri, Nov 19, 2010
 
   [BUG FIXES]
