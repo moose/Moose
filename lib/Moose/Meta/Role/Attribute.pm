@@ -10,7 +10,7 @@ use Scalar::Util 'blessed', 'weaken';
 our $VERSION   = '1.9900';
 our $AUTHORITY = 'cpan:STEVAN';
 
-use base 'Moose::Meta::Mixin::AttributeCore';
+use base 'Moose::Meta::Mixin::AttributeCore', 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute(
     'metaclass' => (
