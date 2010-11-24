@@ -220,7 +220,7 @@ branch's approval.
 =item Backwards incompatible changes.
 
 Anything that breaks backwards compatibility must be discussed by the
-cabal. Backwards incompatbible changes should not be merged to master if there
+cabal. Backwards incompatible changes should not be merged to master if there
 are strong objections for any cabal members.
 
 We have a policy for what we see as sane L</BACKWARDS COMPATIBILITY> for
