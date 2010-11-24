@@ -33,11 +33,12 @@ will be removed.
 
 =head1 RELEASE SCHEDULE
 
-Moose is on a system of weekly minor releases and quarterly major releases. A
-minor release is defined as one that makes every attempt to preserve backwards
-compatibility. Currently this means that we did not introduce any new
-dependency conflicts, and that we did not make any changes to documented,
-tested behavior. A minor release can include new features and bug fixes.
+Moose is on a system of quarterly major releases, with minor releases as
+needed between major releases. A minor release is defined as one that makes
+every attempt to preserve backwards compatibility. Currently this means that
+we did not introduce any new dependency conflicts, and that we did not make
+any changes to documented, tested behavior. A minor release can include new
+features and bug fixes.
 
 Major releases may be backwards incompatible. Moose prioritizes
 correctness over backwards compatibility or performance; see the L<Deprecation
