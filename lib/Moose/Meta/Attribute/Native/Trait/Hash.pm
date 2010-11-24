@@ -144,6 +144,9 @@ When called as a setter, this method returns the value that was set.
 
 =back
 
+Note that C<each> is deliberately omitted, due to its stateful interaction
+with the hash iterator. C<keys> or C<kv> are much safer.
+
 =head1 METHODS
 
 =over 4
