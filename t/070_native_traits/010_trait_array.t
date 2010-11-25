@@ -269,6 +269,11 @@ sub run_tests {
 
         ok( $obj->is_empty, 'values is empty after call to clear' );
 
+        is( exception {
+            is( $obj->shift, undef,
+                'shift returns undef on an empty array' );
+        }, undef, 'shifted from an empty array and lived' );
+
         $obj->set( 0 => 42 );
 
         like( exception { $obj->clear(50) }, qr/Cannot call clear with any arguments/, 'throws an error when clear is called with an argument' );
