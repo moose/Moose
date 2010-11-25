@@ -166,6 +166,10 @@ This method transforms every element in the array and returns a new array,
 just like Perl's core C<map> function. This method requires a subroutine which
 implements the transformation.
 
+Note that if you add or subtract values within the supplied coderef, the
+values are I<not> saved back to the attribute. You need to use the attribute
+writer wrapped around the map call for that.
+
   my @mod_options = $stuff->map_options( sub { $_ . "-tag" } );
   print "@mod_options\n";    # prints "foo-tag bar-tag baz-tag boo-tag"
 
