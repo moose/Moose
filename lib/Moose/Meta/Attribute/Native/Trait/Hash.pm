@@ -102,7 +102,7 @@ This method does not accept any arguments.
 
 Returns the key/value pairs in the hash as an array of array references.
 
-  for my $pair ( $object->options->pairs ) {
+  for my $pair ( $object->options->kv ) {
       print "$pair->[0] = $pair->[1]\n";
   }
 
