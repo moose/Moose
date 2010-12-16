@@ -160,6 +160,14 @@ matching logic.
 
 This method requires a single argument.
 
+=item * B<grep_in_place( sub { ... } )>
+
+This method greps through the array I<in place>, modifying the attributes value.
+This method accepts a subroutine which implements the matching logic.
+
+This method does not define a return value.
+
+
 =item * B<map( sub { ... } )>
 
 This method transforms every element in the array and returns a new array,

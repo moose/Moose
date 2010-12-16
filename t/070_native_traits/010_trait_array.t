@@ -50,6 +50,7 @@ use Test::Moose;
         map           => 'map',
         map_curried   => [ map => ( sub { $_ + 1 } ) ],
         grep          => 'grep',
+        grep_in_place => 'grep_in_place',
         grep_curried  => [ grep => ( sub { $_ < 5 } ) ],
         first         => 'first',
         first_curried => [ first => ( sub { $_ % 2 } ) ],
@@ -496,6 +497,16 @@ sub run_tests {
         like( exception {
             $obj->grep_curried( sub { } );
         }, qr/Cannot call grep with more than 1 argument/, 'throws an error when passing one argument passed to grep_curried' );
+
+        $obj->_values( [ 1, 2, 3, 4, 5, 6, 7, 8 ] );
+
+        $obj->grep_in_place(sub { $_ > 4 } );
+
+        is_deeply (
+            $obj->_values,
+            [5, 6, 7, 8], 
+            'grep_in_place alters attribute vars'
+        );
 
         $obj->_values( [ 2, 4, 22, 99, 101, 6 ] );
 
