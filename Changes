@@ -8,6 +8,11 @@ for, noteworthy changes.
   * Several things that have been deprecated for a while have been removed. See
     the 2.0000 section in Moose::Manual::Delta for details.
 
+  [BUG FIXES]
+
+  * duck_type type constraints now report reasonable errors when given
+    something which isn't an instance of an object. (t0m)
+
 2.0102 Sat, Jun 18, 2011
 
   [ENHANCEMENTS]

@@ -98,6 +98,8 @@ sub get_message {
         return $self->SUPER::get_message(@_);
     }
 
+    return $self->SUPER::get_message($value) unless blessed($value);
+
     my @methods = grep { !$value->can($_) } @{ $self->methods };
     my $class = blessed $value;
     $class ||= $value;

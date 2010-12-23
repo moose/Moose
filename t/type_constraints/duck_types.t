@@ -76,4 +76,11 @@ is( exception { DucktypeTest->new( duck => RubberDuck->new ) }, undef, 'the Rubb
 # try with the other constraint form
 is( exception { DucktypeTest->new( other_swan => Swan->new ) }, undef, 'but a Swan can honk' );
 
+my $re = qr/Validation failed for 'DuckType' with value/;
+
+like( exception { DucktypeTest->new( duck => undef ) }, $re, 'Exception for undef' );
+like( exception { DucktypeTest->new( duck => [] ) }, $re, 'Exception for arrayref' );
+like( exception { DucktypeTest->new( duck => {} ) }, $re, 'Exception for hashref' );
+like( exception { DucktypeTest->new( duck => \'foo' ) }, $re, 'Exception for scalar ref' );
+
 done_testing;
