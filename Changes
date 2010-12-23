@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * duck_type type constraints now report reasonable errors when given
+    something which isn't an instance of an object. (t0m)
+
 2.0008 Thu, Jun 16, 2011
 
   [BUG FIXES]
