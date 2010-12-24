@@ -311,7 +311,7 @@ Moose - A postmodern object system for Perl 5
 Moose is an extension of the Perl 5 object system.
 
 The main goal of Moose is to make Perl 5 Object Oriented programming
-easier, more consistent and less tedious. With Moose you can to think
+easier, more consistent, and less tedious. With Moose you can think
 more about what you want to do and less about the mechanics of OOP.
 
 Additionally, Moose is built on top of L<Class::MOP>, which is a
@@ -501,7 +501,7 @@ either C<ArrayRef> or C<HashRef>.
 
 The I<trigger> option is a CODE reference which will be called after
 the value of the attribute is set. The CODE ref is passed the
-instance itself, the updated value, and the original value if the 
+instance itself, the updated value, and the original value if the
 attribute was already set.
 
 You B<can> have a trigger on a read-only attribute.
@@ -573,7 +573,7 @@ quick example (soon to be expanded into a Moose::Cookbook recipe):
   has 'parent' => (
       is          => 'rw',
       isa         => 'Tree',
-      weak_ref => 1,
+      weak_ref    => 1,
       handles     => {
           parent_node => 'node',
           siblings    => 'children',
@@ -618,7 +618,7 @@ is consistent with role composition).
 =item C<DUCKTYPE>
 
 With the duck type option, you pass a duck type object whose "interface" then
-becomes the list of methods to handle. The "interface" can be defined as; the
+becomes the list of methods to handle. The "interface" can be defined as the
 list of methods passed to C<duck_type> to create a duck type object. For more
 information on C<duck_type> please check
 L<Moose::Util::TypeConstraints>.
@@ -641,7 +641,7 @@ a HASH ref) of the methods you want mapped.
 This tells the class to use a custom attribute metaclass for this particular
 attribute. Custom attribute metaclasses are useful for extending the
 capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
-but they are still a fairly advanced topic and too much to cover here, see
+but they are still a fairly advanced topic and too much to cover here. See
 L<Moose::Cookbook::Meta::Recipe1> for more information.
 
 See L<Metaclass and Trait Name Resolution> for details on how a metaclass name
@@ -664,7 +664,7 @@ example.
 The value of this key is the name of the method that will be called to
 obtain the value used to initialize the attribute. See the L<builder
 option docs in Class::MOP::Attribute|Class::MOP::Attribute/builder>
- and/or L<Moose::Cookbook::Basics::Recipe8> for more information.
+and/or L<Moose::Cookbook::Basics::Recipe8> for more information.
 
 =item I<default> => SCALAR | CODE
 
@@ -679,14 +679,14 @@ information.
 
 =item I<clearer> => Str
 
-Creates a method allowing you to clear the value, see the L<clearer option
+Creates a method allowing you to clear the value. See the L<clearer option
 docs in Class::MOP::Attribute|Class::MOP::Attribute/clearer> for more
 information.
 
 =item I<predicate> => Str
 
 Creates a method to perform a basic test to see if a value has been set in the
-attribute, see the L<predicate option docs in
+attribute. See the L<predicate option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more information.
 
 =item I<lazy_build> => (0|1)
@@ -867,7 +867,7 @@ all the time.
 
 =item B<blessed>
 
-This is the C<Scalar::Util::blessed> function, it is exported here because I
+This is the C<Scalar::Util::blessed> function. It is exported here because I
 use it all the time. It is highly recommended that this is used instead of
 C<ref> anywhere you need to test for an object's class name.
 
@@ -967,7 +967,7 @@ for you.
 
 =head2 B<throw_error>
 
-An alias for C<confess>, used by internally by Moose.
+An alias for C<confess>, used internally by Moose.
 
 =head2 The MooseX:: namespace
 
@@ -998,7 +998,7 @@ modules, many of which apply roles to the metaclass.
 
 If the parent and child do differ by roles, Moose replaces the
 metaclass in the child with a newly created metaclass. This metaclass
-is a subclass of the parent's metaclass, does all of the roles that
+is a subclass of the parent's metaclass which does all of the roles that
 the child's metaclass did before being replaced. Effectively, this
 means the new metaclass does all of the roles done by both the
 parent's and child's original metaclasses.
@@ -1091,7 +1091,7 @@ See L<http://search.cpan.org/search?query=MooseX::> for extensions.
 
 =item The Art of the MetaObject Protocol
 
-I mention this in the L<Class::MOP> docs too, this book was critical in
+I mention this in the L<Class::MOP> docs too, as this book was critical in
 the development of both modules and is highly recommended.
 
 =back
