@@ -12,6 +12,7 @@
 !.gitignore
 Moose-*
 *.bs
+/xs/*.c
 *.o
 cover_db
 *.gc??
