@@ -8,8 +8,6 @@ use metaclass;
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
@@ -99,13 +97,11 @@ sub coerce { $_[0]->_compiled_type_coercion->($_[1]) }
 
 1;
 
+# ABSTRACT: The Moose Type Coercion metaclass
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::TypeCoercion - The Moose Type Coercion metaclass
 
 =head1 DESCRIPTION
 
@@ -175,18 +171,5 @@ This will return a L<Class::MOP::Class> instance for this class.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

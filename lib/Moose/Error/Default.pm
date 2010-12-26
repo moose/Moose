@@ -3,8 +3,6 @@ package Moose::Error::Default;
 use strict;
 use warnings;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Carp::Heavy;
@@ -52,13 +50,11 @@ sub _create_error_carpmess {
 
 __PACKAGE__
 
+# ABSTRACT: L<Carp> based error generation for Moose.
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Error::Default - L<Carp> based error generation for Moose.
 
 =head1 DESCRIPTION
 

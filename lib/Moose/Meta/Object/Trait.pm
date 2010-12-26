@@ -3,8 +3,6 @@ package Moose::Meta::Object::Trait;
 
 use Scalar::Util qw(blessed);
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 sub _get_compatible_metaclass {
@@ -30,13 +28,11 @@ sub _get_compatible_metaclass_by_role_reconciliation {
 
 1;
 
+# ABSTRACT: Some overrides for L<Class::MOP::Object> functionality
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Object::Trait - Some overrides for L<Class::MOP::Object> functionality
 
 =head1 DESCRIPTION
 
@@ -46,18 +42,5 @@ it directly.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Jesse Luehrs E<lt>doy at tozt dot netE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

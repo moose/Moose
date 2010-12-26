@@ -9,8 +9,6 @@ use Moose::Meta::TypeCoercion::Union;
 
 use List::Util qw(first);
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::TypeConstraint';
@@ -164,13 +162,11 @@ sub create_child_type {
 
 1;
 
+# ABSTRACT: A union of Moose type constraints
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::TypeConstraint::Union - A union of Moose type constraints
 
 =head1 DESCRIPTION
 
@@ -253,18 +249,5 @@ as its parent.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

@@ -9,8 +9,6 @@ use Test::Builder;
 use List::MoreUtils 'all';
 use Moose::Util 'does_role', 'find_meta';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
@@ -84,13 +82,11 @@ sub with_immutable (&@) {
 
 1;
 
+# ABSTRACT: Test functions for Moose specific features
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Test::Moose - Test functions for Moose specific features
 
 =head1 SYNOPSIS
 
@@ -164,21 +160,6 @@ class in C<@class_names> immutable in between the two runs.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Anders Nor Berle E<lt>debolaz@gmail.comE<gt>
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

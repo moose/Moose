@@ -12,8 +12,6 @@ use List::MoreUtils qw(any all);
 use overload ();
 use Class::MOP   0.60;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 my @exports = qw[
@@ -453,13 +451,11 @@ sub _is_role_only_subclass {
 
 1;
 
+# ABSTRACT: Utilities for working with Moose classes
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Util - Utilities for working with Moose classes
 
 =head1 SYNOPSIS
 
@@ -586,25 +582,6 @@ Here is a list of possible functions to write
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Anders Nor Berle E<lt>debolaz@gmail.comE<gt>
-
-B<with contributions from:>
-
-Robert (phaylon) Sedlacek
-
-Stevan Little
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

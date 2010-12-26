@@ -5,8 +5,6 @@ use warnings;
 
 use Class::MOP;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 BEGIN {
@@ -23,13 +21,11 @@ BEGIN {
 
 1;
 
+# ABSTRACT: syntactic sugar to make Moose one-liners easier
+
 __END__
 
 =pod
-
-=head1 NAME
-
-oose - syntactic sugar to make Moose one-liners easier
 
 =head1 SYNOPSIS
 
@@ -73,18 +69,5 @@ None reported. But it is a source filter and might have issues there.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Chris Prather  C<< <chris@prather.org> >>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

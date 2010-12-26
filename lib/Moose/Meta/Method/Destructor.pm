@@ -8,8 +8,6 @@ use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -135,13 +133,11 @@ sub _generate_DEMOLISHALL {
 
 1;
 
+# ABSTRACT: Method Meta Object for destructors
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Method::Destructor - Method Meta Object for destructors
 
 =head1 DESCRIPTION
 
@@ -194,19 +190,6 @@ of its parents defines a C<DEMOLISH> method, it needs a destructor.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

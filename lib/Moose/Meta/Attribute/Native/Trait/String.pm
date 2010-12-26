@@ -1,8 +1,6 @@
 package Moose::Meta::Attribute::Native::Trait::String;
 use Moose::Role;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -15,13 +13,11 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for Str attributes
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
 
 =head1 SYNOPSIS
 
@@ -127,18 +123,5 @@ This method requires at least one argument, and accepts no more than three.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

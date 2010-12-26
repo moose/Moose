@@ -10,7 +10,6 @@ use List::MoreUtils 'any';
 use Try::Tiny;
 use overload     ();
 
-our $VERSION   = '1.9900';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Deprecated;
@@ -1150,13 +1149,11 @@ sub register_implementation { 'Moose::Meta::Attribute' }
 
 1;
 
+# ABSTRACT: The Moose attribute metaclass
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 DESCRIPTION
 
@@ -1535,20 +1532,5 @@ Returns true if this attribute has any traits applied.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

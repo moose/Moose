@@ -2,8 +2,6 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
 use Moose::Role;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -14,13 +12,11 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for array delegation
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native::Trait::Array - Helper trait for array delegation
 
 =head1 SYNOPSIS
 
@@ -301,18 +297,5 @@ This method accepts one or two arguments.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

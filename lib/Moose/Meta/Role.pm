@@ -9,8 +9,6 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Meta::Class;
@@ -750,13 +748,11 @@ sub consumers {
 
 1;
 
+# ABSTRACT: The Moose Role metaclass
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Role - The Moose Role metaclass
 
 =head1 DESCRIPTION
 
@@ -1018,18 +1014,5 @@ This will return a L<Class::MOP::Class> instance for this class.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

@@ -7,8 +7,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Class::MOP::Object';
@@ -63,14 +61,12 @@ sub find_type_constraint {
 
 1;
 
+# ABSTRACT: registry for type constraints
+
 __END__
 
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::TypeConstraint::Registry - registry for type constraints
 
 =head1 DESCRIPTION
 
@@ -145,18 +141,5 @@ parent, if it has one.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

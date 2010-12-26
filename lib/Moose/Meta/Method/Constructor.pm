@@ -8,7 +8,6 @@ use Carp ();
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 use Try::Tiny;
 
-our $VERSION   = '1.9900';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -87,13 +86,11 @@ sub _eval_environment {
 
 1;
 
+# ABSTRACT: Method Meta Object for constructors
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
 =head1 DESCRIPTION
 
@@ -111,19 +108,6 @@ L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

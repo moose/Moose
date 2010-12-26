@@ -7,8 +7,6 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use base 'Moose::Meta::Method',
@@ -133,13 +131,11 @@ sub _get_delegate_accessor {
 
 1;
 
+# ABSTRACT: A Moose Method metaclass for delegation methods
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Method::Delegation - A Moose Method metaclass for delegation methods
 
 =head1 DESCRIPTION
 
@@ -191,18 +187,5 @@ constructor.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

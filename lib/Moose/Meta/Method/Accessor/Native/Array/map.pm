@@ -5,8 +5,6 @@ use warnings;
 
 use Params::Util ();
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Role;

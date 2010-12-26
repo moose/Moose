@@ -3,8 +3,6 @@ package Moose::Meta::Method::Accessor::Native::Code::execute;
 use strict;
 use warnings;
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Moose::Role;
