@@ -8,8 +8,6 @@ use Moose::Util;
 
 use base qw(Moose::Meta::Role::Method::Required);
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('roles' => (
     reader   => 'roles',
     required => 1,

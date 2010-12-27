@@ -8,8 +8,6 @@ use MRO::Compat;
 use Carp 'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 # the original class of the metaclass instance
 sub _get_mutable_metaclass_name { $_[0]{__immutable}{original_class} }
 

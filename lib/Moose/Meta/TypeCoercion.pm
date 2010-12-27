@@ -8,8 +8,6 @@ use metaclass;
 use Moose::Meta::Attribute;
 use Moose::Util::TypeConstraints ();
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
     reader  => 'type_coercion_map',
     default => sub { [] }

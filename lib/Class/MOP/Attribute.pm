@@ -10,8 +10,6 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
 
 # NOTE: (meta-circularity)

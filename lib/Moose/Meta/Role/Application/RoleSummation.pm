@@ -8,8 +8,6 @@ use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role_params' => (

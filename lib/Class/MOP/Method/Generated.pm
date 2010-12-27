@@ -7,8 +7,6 @@ use warnings;
 use Carp 'confess';
 use Eval::Closure;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Method';
 
 ## accessors

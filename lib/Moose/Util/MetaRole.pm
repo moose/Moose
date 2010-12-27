@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use List::MoreUtils qw( all );
 use List::Util qw( first );
 use Moose::Deprecated;

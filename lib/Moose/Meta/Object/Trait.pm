@@ -3,8 +3,6 @@ package Moose::Meta::Object::Trait;
 
 use Scalar::Util qw(blessed);
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub _get_compatible_metaclass {
     my $orig = shift;
     my $self = shift;

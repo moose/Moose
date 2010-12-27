@@ -3,8 +3,6 @@ package Moose::Meta::Method::Augmented;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method';
 
 sub new {

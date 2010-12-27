@@ -6,8 +6,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Role';
 
 # NOTE:

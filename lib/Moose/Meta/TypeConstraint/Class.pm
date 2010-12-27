@@ -7,8 +7,6 @@ use metaclass;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('class' => (

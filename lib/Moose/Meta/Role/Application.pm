@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
     init_arg => '-excludes',
     reader   => 'get_method_exclusions',

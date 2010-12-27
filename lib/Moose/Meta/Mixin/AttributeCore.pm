@@ -3,8 +3,6 @@ package Moose::Meta::Mixin::AttributeCore;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Mixin::AttributeCore';
 
 __PACKAGE__->meta->add_attribute( 'isa'  => ( reader => '_isa_metadata' ) );

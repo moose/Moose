@@ -6,8 +6,6 @@ use warnings;
 
 use Scalar::Util 'weaken', 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Object';
 
 # make this not a valid method name, to avoid (most) attribute conflicts

@@ -3,8 +3,6 @@ package Moose::Error::Default;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Carp::Heavy;
 use Class::MOP::MiniTrait;
 

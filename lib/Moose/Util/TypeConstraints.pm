@@ -6,8 +6,6 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 ## --------------------------------------------------------
 # Prototyped subs must be predeclared because we have a
 # circular dependency with Moose::Meta::Attribute et. al.

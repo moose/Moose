@@ -10,8 +10,6 @@ use overload '""'     => sub { shift->name },   # stringify to method name
 
 use base qw(Class::MOP::Object);
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 # This is not a Moose::Meta::Role::Method because it has no implementation, it
 # is just a name
 

@@ -29,8 +29,6 @@ BEGIN {
     *check_package_cache_flag = \&mro::get_pkg_gen;
 }
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 XSLoader::load(
     'Moose',
     $Moose::{VERSION} ? $Moose::{VERSION} : ()

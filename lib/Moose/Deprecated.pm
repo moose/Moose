@@ -3,8 +3,6 @@ package Moose::Deprecated;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Package::DeprecationManager 0.07 -deprecations => {
     'default is for Native Trait'      => '1.14',
     'default default for Native Trait' => '1.14',

@@ -9,8 +9,6 @@ use Moose::Meta::TypeCoercion::Union;
 
 use List::Util qw(first);
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (

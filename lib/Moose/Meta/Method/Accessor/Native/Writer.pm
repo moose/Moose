@@ -5,8 +5,6 @@ use warnings;
 
 use List::MoreUtils qw( any );
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native';

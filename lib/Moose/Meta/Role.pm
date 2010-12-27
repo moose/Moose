@@ -9,8 +9,6 @@ use Scalar::Util 'blessed';
 use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Meta::Class;
 use Moose::Meta::Role::Attribute;
 use Moose::Meta::Role::Method;

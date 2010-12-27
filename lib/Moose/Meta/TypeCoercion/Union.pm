@@ -7,8 +7,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeCoercion';
 
 sub compile_type_coercion {

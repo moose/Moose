@@ -7,8 +7,6 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'reftype', 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Object';
 
 # NOTE:

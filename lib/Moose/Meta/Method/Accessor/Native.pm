@@ -6,8 +6,6 @@ use warnings;
 use Carp qw( confess );
 use Scalar::Util qw( blessed weaken );
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 around new => sub {

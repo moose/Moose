@@ -7,8 +7,6 @@ use Carp         'croak';
 
 use Sub::Exporter;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose       ();
 use Moose::Util ();
 

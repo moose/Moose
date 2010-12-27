@@ -1,7 +1,5 @@
 package Moose::Meta::Attribute::Native;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 my @trait_names = qw(Bool Counter Number String Array Hash Code);
 
 for my $trait_name (@trait_names) {

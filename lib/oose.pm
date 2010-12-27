@@ -5,8 +5,6 @@ use warnings;
 
 use Class::MOP;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 BEGIN {
     my $package;
     sub import {

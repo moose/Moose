@@ -3,8 +3,6 @@ package Moose::Meta::Method::Accessor::Native::Hash;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 sub _inline_check_var_is_valid_key {

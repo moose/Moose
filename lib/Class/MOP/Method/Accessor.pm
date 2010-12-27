@@ -8,8 +8,6 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Method::Generated';
 
 sub new {

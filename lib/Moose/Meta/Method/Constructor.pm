@@ -8,8 +8,6 @@ use Carp ();
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Constructor';
 

@@ -3,8 +3,6 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use XSLoader;
 
 BEGIN {

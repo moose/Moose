@@ -2,8 +2,6 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
 use Moose::Role;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'ArrayRef' }

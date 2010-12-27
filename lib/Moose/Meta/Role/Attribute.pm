@@ -7,8 +7,6 @@ use Carp 'confess';
 use List::MoreUtils 'all';
 use Scalar::Util 'blessed', 'weaken';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Mixin::AttributeCore', 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute(

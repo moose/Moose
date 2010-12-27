@@ -4,8 +4,6 @@ package Moose::Meta::Method::Meta;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Meta';
 

@@ -12,8 +12,6 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
 use Moose::Error::Default;

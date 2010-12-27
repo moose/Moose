@@ -3,8 +3,6 @@ package Moose::Meta::Method::Accessor::Native::Collection;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 requires qw( _adds_members );

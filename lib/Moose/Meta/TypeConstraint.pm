@@ -15,8 +15,6 @@ use Sub::Name qw(subname);
 
 use base qw(Class::MOP::Object);
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));
 __PACKAGE__->meta->add_attribute('parent'     => (
     reader    => 'parent',

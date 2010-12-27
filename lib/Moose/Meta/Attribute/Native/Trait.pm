@@ -6,8 +6,6 @@ use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 requires '_helper_type';
 
 has _used_default_is => (

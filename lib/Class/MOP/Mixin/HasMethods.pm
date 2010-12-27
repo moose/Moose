@@ -5,8 +5,6 @@ use warnings;
 
 use Class::MOP::Method::Meta;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Scalar::Util 'blessed';
 use Carp         'confess';
 use Sub::Name    'subname';

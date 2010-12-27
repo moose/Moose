@@ -4,8 +4,6 @@ use warnings;
 
 use 5.008;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Scalar::Util 'blessed';
 use Carp         'confess';
 

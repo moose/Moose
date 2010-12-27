@@ -3,8 +3,6 @@ package Moose::Meta::Method::Accessor::Native::Hash::accessor;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Hash::set' => {

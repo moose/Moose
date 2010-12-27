@@ -4,8 +4,6 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Class::MOP::MiniTrait;
 
 use base "Class::MOP::Instance";

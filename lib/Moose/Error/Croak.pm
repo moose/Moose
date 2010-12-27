@@ -3,8 +3,6 @@ package Moose::Error::Croak;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base qw(Moose::Error::Default);
 
 sub new {

@@ -7,8 +7,6 @@ use metaclass;
 use Moose::Util  'english_list';
 use Scalar::Util 'weaken', 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role' => (

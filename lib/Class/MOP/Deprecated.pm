@@ -3,8 +3,6 @@ package Class::MOP::Deprecated;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Package::DeprecationManager -deprecations => {
     'Class::MOP::HAVE_ISAREV'           => '0.93',
     'Class::MOP::subname'               => '0.93',

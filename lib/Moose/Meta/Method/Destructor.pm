@@ -8,8 +8,6 @@ use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Inlined';
 

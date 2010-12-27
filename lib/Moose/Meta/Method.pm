@@ -3,8 +3,6 @@ package Moose::Meta::Method;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Method';

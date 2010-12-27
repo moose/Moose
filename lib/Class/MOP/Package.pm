@@ -8,8 +8,6 @@ use Scalar::Util 'blessed', 'reftype';
 use Carp         'confess';
 use Package::Stash;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Object';
 
 # creation ...

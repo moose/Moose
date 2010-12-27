@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeConstraint';
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Util::TypeConstraints ();

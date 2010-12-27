@@ -4,8 +4,6 @@ package Moose::Meta::Role::Method;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method';
 
 sub _make_compatible_with {

@@ -3,8 +3,6 @@ package Class::MOP::Mixin::AttributeCore;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Scalar::Util 'blessed';
 
 use base 'Class::MOP::Mixin';

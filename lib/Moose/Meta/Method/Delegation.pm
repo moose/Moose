@@ -7,8 +7,6 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Generated';
 

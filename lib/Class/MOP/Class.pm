@@ -17,8 +17,6 @@ use Devel::GlobalDestruction 'in_global_destruction';
 use Try::Tiny;
 use List::MoreUtils 'all';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
          'Class::MOP::Mixin::HasMethods';

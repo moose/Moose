@@ -3,8 +3,6 @@ package Class::MOP::Mixin::HasAttributes;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Carp         'confess';
 use Scalar::Util 'blessed';
 

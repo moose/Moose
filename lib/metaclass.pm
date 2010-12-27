@@ -8,8 +8,6 @@ use Carp         'confess';
 use Scalar::Util 'blessed';
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Class::MOP;
 
 sub import {

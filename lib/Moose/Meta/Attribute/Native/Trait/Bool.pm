@@ -1,8 +1,6 @@
 package Moose::Meta::Attribute::Native::Trait::Bool;
 use Moose::Role;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_is  { 'rw' }

@@ -6,8 +6,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('rebless_params' => (

@@ -6,8 +6,6 @@ use warnings;
 
 use Try::Tiny;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 

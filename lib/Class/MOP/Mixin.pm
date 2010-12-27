@@ -3,8 +3,6 @@ package Class::MOP::Mixin;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Scalar::Util 'blessed';
 
 sub meta {

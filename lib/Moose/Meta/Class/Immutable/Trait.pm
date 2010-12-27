@@ -6,8 +6,6 @@ use warnings;
 use Class::MOP;
 use Scalar::Util qw( blessed );
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Class::Immutable::Trait';
 
 sub add_role { $_[1]->_immutable_cannot_call }

@@ -13,8 +13,6 @@ use Try::Tiny ();
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub new {
     my $class = shift;
     my $real_class = Scalar::Util::blessed($class) || $class;

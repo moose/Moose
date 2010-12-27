@@ -7,8 +7,6 @@ use Class::MOP;
 use Moose::Deprecated;
 use Scalar::Util 'blessed', 'looks_like_number';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub Value { defined($_[0]) && !ref($_[0]) }
 
 sub Ref { ref($_[0]) }

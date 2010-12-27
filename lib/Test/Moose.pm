@@ -9,8 +9,6 @@ use Test::Builder;
 use List::MoreUtils 'all';
 use Moose::Util 'does_role', 'find_meta';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 my @exports = qw[
     meta_ok
     does_ok

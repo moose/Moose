@@ -8,8 +8,6 @@ use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints;
 use Moose::Meta::TypeConstraint::Parameterizable;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_parameter' => (

@@ -2,8 +2,6 @@
 package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 with 'Moose::Meta::Attribute::Native::Trait' =>
     { -excludes => ['_root_types'] };
 

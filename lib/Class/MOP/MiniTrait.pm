@@ -3,8 +3,6 @@ package Class::MOP::MiniTrait;
 use strict;
 use warnings;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub apply {
     my ( $to_class, $trait ) = @_;
 

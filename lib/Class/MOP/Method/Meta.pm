@@ -7,8 +7,6 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use constant DEBUG_NO_META => $ENV{DEBUG_NO_META} ? 1 : 0;
 
 use base 'Class::MOP::Method';

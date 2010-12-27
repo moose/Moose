@@ -5,8 +5,6 @@ use warnings;
 
 use List::Util ();
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Reader' =>

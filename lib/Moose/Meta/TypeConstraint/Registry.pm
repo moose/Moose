@@ -7,8 +7,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute('parent_registry' => (

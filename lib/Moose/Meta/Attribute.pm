@@ -10,8 +10,6 @@ use List::MoreUtils 'any';
 use Try::Tiny;
 use overload     ();
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Deprecated;
 use Moose::Meta::Method::Accessor;
 use Moose::Meta::Method::Delegation;

@@ -12,8 +12,6 @@ use List::MoreUtils qw(any all);
 use overload ();
 use Class::MOP;
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 my @exports = qw[
     find_meta
     does_role

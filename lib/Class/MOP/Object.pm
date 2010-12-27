@@ -7,8 +7,6 @@ use warnings;
 use Carp qw(confess);
 use Scalar::Util 'blessed';
 
-our $AUTHORITY = 'cpan:STEVAN';
-
 # introspection
 
 sub meta { 
