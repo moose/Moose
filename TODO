@@ -83,10 +83,6 @@ returns an attribute vs a name, that needs to be clear from the method
 name. We also need to make sure that local vs. "entire inheritance
 chain" is clear from the name.
 
-Finally, kill all the public get_X_map methods. The hashref it returns
-is the internal reference, and the fact that it _is_ a hashref is just
-an implementation detail.
-
 This is mostly a CMOP change.
 
 - Metaclass constructors
@@ -119,17 +115,6 @@ The Util module has _way_ too much functionality. It needs to be
 refactored so it's a thin sugar layer on top of the meta API. As it
 stands now, it does things like parse type names (and determine if
 they're valid), manage the registry, and much more.
-
-- Moose::Meta::Role::Application::*
-
-These class names are hardcoded throughout Moose, making replacing
-them very difficult.
-
-- Moose::Meta::Role & attributes
-
-The way a role stores attributes is nasty and not very
-introspectable. It should store some sort of object, possibly one that
-knows how to turn itself into a "real" attribute.
 
 - Anything with a _(meta)?class method
 
