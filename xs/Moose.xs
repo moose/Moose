@@ -2,6 +2,7 @@
 #include "perl.h"
 #include "XSUB.h"
 #include "ppport.h"
+#include "mop.h"
 
 #ifndef MGf_COPY
 # define MGf_COPY 0
@@ -85,17 +86,42 @@ unset_export_flag (pTHX_ SV *sv, MAGIC *mymg)
     return 0;
 }
 
+EXTERN_C XS(boot_Class__MOP);
+EXTERN_C XS(boot_Class__MOP__Mixin__HasAttributes);
+EXTERN_C XS(boot_Class__MOP__Mixin__HasMethods);
+EXTERN_C XS(boot_Class__MOP__Package);
+EXTERN_C XS(boot_Class__MOP__Mixin__AttributeCore);
+EXTERN_C XS(boot_Class__MOP__Method);
+EXTERN_C XS(boot_Class__MOP__Method__Inlined);
+EXTERN_C XS(boot_Class__MOP__Method__Generated);
+EXTERN_C XS(boot_Class__MOP__Class);
+EXTERN_C XS(boot_Class__MOP__Attribute);
+EXTERN_C XS(boot_Class__MOP__Instance);
+
 MODULE = Moose  PACKAGE = Moose::Exporter
+
+BOOT:
+    mop_prehash_keys();
+
+    MOP_CALL_BOOT (boot_Class__MOP);
+    MOP_CALL_BOOT (boot_Class__MOP__Mixin__HasAttributes);
+    MOP_CALL_BOOT (boot_Class__MOP__Mixin__HasMethods);
+    MOP_CALL_BOOT (boot_Class__MOP__Package);
+    MOP_CALL_BOOT (boot_Class__MOP__Mixin__AttributeCore);
+    MOP_CALL_BOOT (boot_Class__MOP__Method);
+    MOP_CALL_BOOT (boot_Class__MOP__Method__Inlined);
+    MOP_CALL_BOOT (boot_Class__MOP__Method__Generated);
+    MOP_CALL_BOOT (boot_Class__MOP__Class);
+    MOP_CALL_BOOT (boot_Class__MOP__Attribute);
+    MOP_CALL_BOOT (boot_Class__MOP__Instance);
 
 void
 _flag_as_reexport (SV *sv)
-    PROTOTYPE: \*
     CODE:
         sv_magicext(SvRV(sv), NULL, PERL_MAGIC_ext, &export_flag_vtbl, NULL, 0);
 
 bool
 _export_is_flagged (SV *sv)
-    PROTOTYPE: \*
     CODE:
         RETVAL = export_flag_is_set(aTHX_ sv);
     OUTPUT:

@@ -12,7 +12,7 @@ use Carp         'confess';
 use Moose::Deprecated;
 use Moose::Exporter;
 
-use Class::MOP 1.10;
+use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;

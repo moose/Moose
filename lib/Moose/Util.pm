@@ -10,7 +10,7 @@ use Scalar::Util 'blessed';
 use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use overload ();
-use Class::MOP   0.60;
+use Class::MOP;
 
 our $AUTHORITY = 'cpan:STEVAN';
 
