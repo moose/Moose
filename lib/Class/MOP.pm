@@ -33,9 +33,7 @@ our $AUTHORITY = 'cpan:STEVAN';
 
 XSLoader::load(
     'Moose',
-    $Moose::{VERSION}   ? $Moose::{VERSION}
-    : $ENV{_XS_VERSION} ? $ENV{_XS_VERSION}
-    : ()
+    $Moose::{VERSION} ? $Moose::{VERSION} : ()
 );
 
 {
