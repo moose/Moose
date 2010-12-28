@@ -8,7 +8,7 @@ use XSLoader;
 BEGIN {
     XSLoader::load(
         'Moose',
-        $Moose::{VERSION} ? $Moose::{VERSION} : ()
+        $Moose::Exporter::{VERSION} ? ${ $Moose::Exporter::{VERSION} } : ()
     );
 }
 

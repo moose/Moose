@@ -31,7 +31,7 @@ BEGIN {
 
 XSLoader::load(
     'Moose',
-    $Moose::{VERSION} ? $Moose::{VERSION} : ()
+    $Class::MOP::{VERSION} ? ${ $Class::MOP::{VERSION} } : ()
 );
 
 {
