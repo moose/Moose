@@ -8,16 +8,17 @@ use Cwd qw( abs_path );
 use File::Basename qw( dirname );
 
 sub mm_args {
-    my $root = shift;
+    my $is_dev = shift;
 
     my $ccflags = ( $Config::Config{ccflags} || '' ) . ' -I.';
-    $ccflags .= ' -Wall -Wdeclaration-after-statement';
+    $ccflags .= ' -Wall -Wdeclaration-after-statement'
+        if $is_dev;
 
     my %mm = ( CCFLAGS => $ccflags );
 
     my ( @object, %xs );
 
-    for my $xs ( glob "$root/xs/*.xs" ) {
+    for my $xs ( glob "xs/*.xs" ) {
         ( my $c = $xs ) =~ s/\.xs$/.c/i;
         ( my $o = $xs ) =~ s/\.xs$/\$(OBJ_EXT)/i;
 
@@ -25,7 +26,7 @@ sub mm_args {
         push @object, $o;
     }
 
-    for my $c ( glob "$root/*.c" ) {
+    for my $c ( glob "*.c" ) {
         ( my $o = $c ) =~ s/\.c$/\$(OBJ_EXT)/i;
         push @object, $o;
     }
@@ -40,6 +41,7 @@ sub mm_args {
 
 sub my_package_subs {
     return <<'EOP';
+{
 package MY;
 
 use Config;
@@ -63,6 +65,7 @@ sub postamble {
     return <<'EOF';
 $(OBJECT) : mop.h
 EOF
+}
 }
 EOP
 }
