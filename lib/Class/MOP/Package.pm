@@ -65,7 +65,9 @@ sub _new {
     my $params = @_ == 1 ? $_[0] : {@_};
 
     return bless {
-        package   => $params->{package},
+        # Need to quote package to avoid a problem with PPI mis-parsing this
+        # as a package statement.
+        'package' => $params->{package},
 
         # NOTE:
         # because of issues with the Perl API

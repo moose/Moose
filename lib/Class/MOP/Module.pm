@@ -16,9 +16,11 @@ sub _new {
 
     my $params = @_ == 1 ? $_[0] : {@_};
     return bless {
+        # Need to quote package to avoid a problem with PPI mis-parsing this
+        # as a package statement.
 
         # from Class::MOP::Package
-        package   => $params->{package},
+        'package' => $params->{package},
         namespace => \undef,
 
         # attributes

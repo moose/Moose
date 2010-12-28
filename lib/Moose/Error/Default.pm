@@ -46,7 +46,7 @@ sub _create_error_carpmess {
     }
 }
 
-__PACKAGE__
+1;
 
 # ABSTRACT: L<Carp> based error generation for Moose.
 

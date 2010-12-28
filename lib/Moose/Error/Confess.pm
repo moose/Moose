@@ -10,7 +10,7 @@ sub new {
     $self->create_error_confess(@args);
 }
 
-__PACKAGE__
+1;
 
 # ABSTRACT: Prefer C<confess>
 
