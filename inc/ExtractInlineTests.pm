@@ -1,4 +1,4 @@
-package inc::Moose::DZ::Plugin::ExtractInlineTests;
+package inc::ExtractInlineTests;
 
 use Moose;
 
