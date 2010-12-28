@@ -4,6 +4,10 @@ use warnings;
 use Config;
 use ExtUtils::MakeMaker;
 
+use lib 'inc';
+
+use MMHelper;
+
 warn <<'EOF';
 
   ********************************* WARNING **********************************
@@ -16,61 +20,10 @@ warn <<'EOF';
 
 EOF
 
-my $ccflags = ( $Config::Config{ccflags} || '' ) . ' -I.';
-$ccflags .= ' -Wall -Wdeclaration-after-statement';
-
-my %mm = ( CCFLAGS => $ccflags );
-
-{
-    my (@OBJECT, %XS);
-
-    for my $xs (<xs/*.xs>) {
-        (my $c = $xs) =~ s/\.xs$/.c/i;
-        (my $o = $xs) =~ s/\.xs$/\$(OBJ_EXT)/i;
-
-        $XS{$xs} = $c;
-        push @OBJECT, $o;
-    }
-
-    for my $c (<*.c>) {
-        (my $o = $c) =~ s/\.c$/\$(OBJ_EXT)/i;
-        push @OBJECT, $o;
-    }
-
-    %mm = (
-        %mm,
-        clean => { FILES => join( q{ }, @OBJECT ) },
-        OBJECT => join( q{ }, @OBJECT ),
-        XS     => \%XS,
-    );
-}
+eval MMHelper::my_package_subs();
 
 WriteMakefile(
     NAME => 'Moose',
-    %mm,
+    test => { TESTS => 't/*.t t/*/*.t' },
+    MMHelper::mm_args(q{.}),
 );
-
-package MY;
-
-use Config;
-
-sub const_cccmd {
-    my $ret = shift->SUPER::const_cccmd(@_);
-    return q{} unless $ret;
-
-    if ($Config{cc} =~ /^cl\b/i) {
-        warn 'you are using MSVC... my condolences.';
-        $ret .= ' /Fo$@';
-    }
-    else {
-        $ret .= ' -o $@';
-    }
-
-    return $ret;
-}
-
-sub postamble {
-    return <<'EOF';
-$(OBJECT) : mop.h
-EOF
-}
