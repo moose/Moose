@@ -1,8 +1,10 @@
+package Moose::Manual::Types;
+
+# ABSTRACT: Moose's type system
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Types - Moose's type system
 
 =head1 TYPES IN PERL?
 
@@ -421,18 +423,5 @@ constraint before that type has been defined.
 In order to ameliorate this problem, we recommend defining I<all> of your
 custom types in one module, C<MyApp::Types>, and then loading this module in
 all of your other modules.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

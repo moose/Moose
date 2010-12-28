@@ -1,8 +1,10 @@
+package Moose::Manual::Roles;
+
+# ABSTRACT: Roles, an alternative to deep hierarchies and base classes
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Roles - Roles, an alternative to deep hierarchies and base classes
 
 =head1 WHAT IS A ROLE?
 
@@ -323,18 +325,5 @@ This function can apply more than one role at a time, and will do so using the
 normal Moose role combination system. We recommend using this function to
 apply roles to an object. This is what Moose uses internally when you call
 C<with>.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

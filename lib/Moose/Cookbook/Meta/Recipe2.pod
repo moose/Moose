@@ -1,9 +1,11 @@
+package Moose::Cookbook::Meta::Recipe2;
+
+# ABSTRACT: A meta-attribute, attributes with labels
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Meta::Recipe2 - A meta-attribute, attributes with labels
 
 =head1 SYNOPSIS
 
@@ -259,21 +261,6 @@ of time:
    );
 
 The sky's the limit!
-
-=head1 AUTHOR
-
-Shawn M Moore E<lt>sartak@gmail.comE<gt>
-
-Dave Rolsky E<lt>autarch@urth.org<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

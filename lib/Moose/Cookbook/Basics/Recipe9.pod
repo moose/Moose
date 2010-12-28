@@ -1,9 +1,11 @@
+package Moose::Cookbook::Basics::Recipe9;
+
+# ABSTRACT: Operator overloading, subtypes, and coercion
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe9 - Operator overloading, subtypes, and coercion
 
 =head1 SYNOPSIS
 
@@ -252,12 +254,6 @@ Had this been a real project we'd probably want:
 =item Artificial Life
 
 =back
-
-=head1 AUTHORS
-
-Aran Clary Deltac <bluefeet@cpan.org>
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
 =head1 LICENSE
 

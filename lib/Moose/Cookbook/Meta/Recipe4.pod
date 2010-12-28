@@ -1,9 +1,11 @@
+package Moose::Cookbook::Meta::Recipe4;
+
+# ABSTRACT: Adding a "table" attribute to the metaclass
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Meta::Recipe4 - Adding a "table" attribute to the metaclass
 
 =head1 SYNOPSIS
 
@@ -61,18 +63,5 @@ as a metaclass trait
 
 L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and
 providing sugar Moose-style
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =pod

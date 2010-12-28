@@ -1,8 +1,10 @@
+package Moose::Manual::Contributing;
+
+# ABSTRACT: How to get involved in Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 GETTING INVOLVED
 
@@ -381,24 +383,5 @@ L<Moose::Manual::Support>.
 All backwards incompatible changes B<must> be documented in
 L<Moose::Manual::Delta>. Make sure to document any useful tips or workarounds
 for the change in that document.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Chris (perigrin) Prather
-
-Yuval (nothingmuch) Kogman
-
-Jesse Luehrs E<lt>doy at tozt dot netE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

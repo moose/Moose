@@ -1,9 +1,11 @@
+package Moose::Spec::Role;
+
+# ABSTRACT: Formal spec for Role behavior
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Spec::Role - Formal spec for Role behavior
 
 =head1 DESCRIPTION
 
@@ -330,19 +332,6 @@ Which, of course, includes roles.
 =back
 
 =back
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

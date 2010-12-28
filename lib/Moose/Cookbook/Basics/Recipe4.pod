@@ -1,3 +1,9 @@
+package Moose::Cookbook::Basics::Recipe4;
+
+# ABSTRACT: Subtypes, and modeling a simple B<Company> class hierarchy
+
+__END__
+
 
 =pod
 
@@ -9,10 +15,6 @@ use Test::Requires {
 };
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe4 - Subtypes, and modeling a simple B<Company> class hierarchy
 
 =head1 SYNOPSIS
 
@@ -288,21 +290,6 @@ method climbs the object inheritance graph and calls any C<BUILD>
 methods it finds in the correct order.
 
 =back
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

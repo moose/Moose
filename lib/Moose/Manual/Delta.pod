@@ -1,8 +1,10 @@
+package Moose::Manual::Delta;
+
+# ABSTRACT: Important Changes in Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Delta - Important Changes in Moose
 
 =head1 DESCRIPTION
 
@@ -813,18 +815,5 @@ crazy to not upgrade.
 
 Also, I am tired of going through the Changelog so I am stopping here,
 if anyone would like to continue this please feel free.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

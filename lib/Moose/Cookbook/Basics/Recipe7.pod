@@ -1,9 +1,11 @@
+package Moose::Cookbook::Basics::Recipe7;
+
+# ABSTRACT: Making Moose fast with immutable
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe7 - Making Moose fast with immutable
 
 =head1 SYNOPSIS
 
@@ -32,18 +34,5 @@ need to do this after first loading the class.
 We strongly recommend you make your classes immutable. It makes your
 code much faster, with a small compile-time cost. This will be
 especially noticeable when creating many objects.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

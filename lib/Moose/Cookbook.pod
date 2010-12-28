@@ -1,9 +1,11 @@
+package Moose::Cookbook;
+
+# ABSTRACT: How to cook a Moose
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook - How to cook a Moose
 
 =head1 DESCRIPTION
 
@@ -224,18 +226,5 @@ object class.
 =item L<http://www.gsph.com/index.php?Lang=En&ID=291>
 
 =back
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

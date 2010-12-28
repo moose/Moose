@@ -1,8 +1,10 @@
+package Moose::Manual::MOP;
+
+# ABSTRACT: The Moose (and Class::MOP) meta API
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::MOP - The Moose (and Class::MOP) meta API
 
 =head1 INTRODUCTION
 
@@ -146,19 +148,5 @@ C<Class::MOP> distribution.
 Finally, we welcome questions on the Moose mailing list and
 IRC. Information on the mailing list, IRC, and more references can be
 found in the L<Moose.pm docs|Moose/GETTING HELP>.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt> and Stevan Little
-E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

@@ -1,3 +1,9 @@
+package Moose::Cookbook::Basics::Recipe5;
+
+# ABSTRACT: More subtypes, coercion in a B<Request> class
+
+__END__
+
 
 =pod
 
@@ -10,10 +16,6 @@ use Test::Requires {
 };
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe5 - More subtypes, coercion in a B<Request> class
 
 =head1 SYNOPSIS
 
@@ -202,21 +204,6 @@ C<EvenElementArrayRef> type, and then coerce from that type, as
 opposed to from a plain C<ArrayRef>
 
 =back
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

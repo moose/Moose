@@ -1,9 +1,11 @@
+package Moose::Manual::FAQ;
+
+# ABSTRACT: Frequently asked questions about Moose
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Manual::FAQ - Frequently asked questions about Moose
 
 =head1 FREQUENTLY ASKED QUESTIONS
 
@@ -385,18 +387,5 @@ Note that we're talking about Perl's subroutine attributes here, not
 Moose attributes:
 
   sub foo : Bar(27) { ... }
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

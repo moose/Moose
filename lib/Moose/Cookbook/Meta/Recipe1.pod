@@ -1,9 +1,11 @@
+package Moose::Cookbook::Meta::Recipe1;
+
+# ABSTRACT: Welcome to the meta world (Why Go Meta?)
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Meta::Recipe1 - Welcome to the meta world (Why Go Meta?)
 
 =head1 SUMMARY
 
@@ -51,19 +53,6 @@ Many of the MooseX modules on CPAN implement metaclass extensions. A
 couple good examples include L<MooseX::Singleton> and
 L<MooseX::AttributeHelpers>. For a more complex example see
 L<Fey::ORM> or L<Reaction>.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.org<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 
