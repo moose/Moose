@@ -7,6 +7,7 @@ use Carp qw/confess/;
 
 use metaclass;
 
+our $VERSION = '0.02';
 
 BinaryTree->meta->add_attribute('uid' => (
     reader  => 'getUID',
