@@ -7,6 +7,7 @@ use ExtUtils::MakeMaker;
 use lib 'inc';
 
 use MMHelper;
+use MyInline;
 
 warn <<'EOF';
 
@@ -19,6 +20,8 @@ warn <<'EOF';
   ****************************************************************************
 
 EOF
+
+system( $^X, 'author/extract-inline-tests', '--quiet' );
 
 eval MMHelper::my_package_subs();
 
