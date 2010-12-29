@@ -82,7 +82,7 @@ sub gather_files {
 
         # If we have just one element it's a SYNOPSIS, so there's no
         # tests.
-        return unless @elements > 1;
+        return unless @elements > 2;
 
         if ( @elements && $self->{source} =~ /=head1 NAME\n\n(Moose::Cookbook\S+)/ ) {
             unshift @elements, 'package ' . $1 . ';';
@@ -122,6 +122,8 @@ sub gather_files {
         my $self    = shift;
         my $name    = shift;
         my $content = shift;
+
+        $name =~ s/^moose_cookbook_//;
 
         $self->{dzil}->add_file(
             Dist::Zilla::File::InMemory->new(
