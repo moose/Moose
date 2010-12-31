@@ -96,6 +96,7 @@ DEMOLISHALL
 Debuggable
 JVM
 METACLASS
+Metaclass
 MOPs
 MetaModel
 MetaObject
@@ -114,6 +115,7 @@ hardcode
 immutabilization
 immutabilize
 introspectable
+metaclass
 metaclass's
 metadata
 metaprogrammer
