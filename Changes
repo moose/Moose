@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 1.9900
 
+  [OTHER]
+
+  * The entire Class::MOP distribution has been merged with Moose. In the
+    future, the Class::MOP code itself will be merged into Moose, and
+    eventually the Class::MOP namespace will disappear entirely. For the
+    current release, we have simply changed how Class::MOP is
+    distributed. (Dave Rolsky).
+
   [API CHANGES]
 
   * Roles now have their own default attribute metaclass to use during
