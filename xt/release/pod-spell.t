@@ -72,6 +72,7 @@ rindolf
 rlb
 robkinyon
 sartak
+stevan
 tozt
 wreis
 
@@ -148,6 +149,10 @@ TODO
 UNIMPORTING
 Unported
 Whitelist
+# from the Support manual talking about version numbers
+YY
+YYZZ
+ZZ
 arity
 arrayrefs
 clearers
@@ -175,6 +180,7 @@ inline
 inlines
 invocant
 invocant's
+irc
 isa
 kv
 login
@@ -216,11 +222,13 @@ sigil
 sigils
 stacktrace
 stacktraces
+stateful
 subclassable
 subname
 subtyping
 unblessed
 unexport
+unimporting
 uninitialize
 unsets
 unsettable
