@@ -11,6 +11,10 @@ for, noteworthy changes.
     current release, we have simply changed how Class::MOP is
     distributed. (Dave Rolsky).
 
+  * Switched to Dist::Zilla for development. However, we still have a minimal
+    Makefile.PL in the repository that can be used for development. (Dave
+    Rolsky)
+
   [API CHANGES]
 
   * Roles now have their own default attribute metaclass to use during
