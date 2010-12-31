@@ -27,4 +27,13 @@ override _build_WriteMakefile_args => sub {
     };
 };
 
+override test => sub {
+    my $self = shift;
+
+    local $ENV{PERL5LIB} = join ':',
+        grep {defined} @ENV{ 'PERL5LIB', 'DZIL_TEST_INC' };
+
+    super();
+};
+
 1;
