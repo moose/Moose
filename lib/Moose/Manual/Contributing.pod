@@ -280,11 +280,7 @@ to fix them. If the module author simply isn't available or does not want to
 fix the bug, it is okay to make a release.
 
 Regardless of whether or not a new module is available, any breakages should
-be noted in the conflicts list in the distribution's F<Makefile.PL>.
-
-Both Class::MOP and Moose have a F<.shipit> file you can use to make sure the
-release goes smoothly. You are strongly encouraged to use this instead of
-doing the final release steps by hand.
+be noted in the conflicts list in the distribution's F<dist.ini>.
 
 =head1 EMERGENCY BUG WORKFLOW (for immediate release)
 
