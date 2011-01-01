@@ -16,3 +16,4 @@ Moose-*
 cover_db
 *.gc??
 test-mydeps-*
+nytprof*
