@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+1.9900 Sat, Jan 01, 2011
+
   [OTHER]
 
   * The entire Class::MOP distribution has been merged with Moose. In the
