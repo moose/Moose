@@ -1,9 +1,11 @@
+package Moose::Cookbook::Basics::Recipe10;
+
+# ABSTRACT: Using BUILDARGS and BUILD to hook into object construction
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe10 - Using BUILDARGS and BUILD to hook into object construction
 
 =head1 SYNOPSIS
 
@@ -113,18 +115,5 @@ to hook into object construction without overriding C<new>
 The C<BUILDARGS> method lets us expand on Moose's built-in parameter
 handling for constructors. The C<BUILD> method lets us implement
 logical constraints across the whole object after it is created.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

@@ -6,10 +6,6 @@ use warnings;
 use List::MoreUtils ();
 use Scalar::Util qw( looks_like_number );
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Hash::Writer' => {

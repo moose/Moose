@@ -1,9 +1,11 @@
+package Moose::Cookbook::Roles::Recipe1;
+
+# ABSTRACT: The Moose::Role example
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Roles::Recipe1 - The Moose::Role example
 
 =head1 SYNOPSIS
 
@@ -192,21 +194,6 @@ I<actually does>. If we require an object that implements the
 C<Executable> role, we're saying something about semantics.
 
 =back
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

@@ -1,8 +1,10 @@
+package Moose::Manual::MethodModifiers;
+
+# ABSTRACT: Moose's method modifiers
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::MethodModifiers - Moose's method modifiers
 
 =head1 WHAT IS A METHOD MODIFIER?
 
@@ -294,18 +296,5 @@ functions, you must always end the modifier declaration with a
 semi-colon:
 
   after 'foo' => sub { };
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2008-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

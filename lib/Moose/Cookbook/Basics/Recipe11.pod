@@ -1,3 +1,9 @@
+package Moose::Cookbook::Basics::Recipe11;
+
+# ABSTRACT: Extending a non-Moose base class
+
+__END__
+
 
 =pod
 
@@ -9,10 +15,6 @@ use Test::Requires {
 };
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe11 - Extending a non-Moose base class
 
 =head1 SYNOPSIS
 
@@ -107,19 +109,6 @@ However, you won't be able to easily override a parent's "attributes",
 since they're not Moose attributes. Nor will you be able to inline a
 constructor, since you need to explicitly use the metaclass's object
 constructor.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

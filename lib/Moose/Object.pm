@@ -13,10 +13,6 @@ use Try::Tiny ();
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub new {
     my $class = shift;
     my $real_class = Scalar::Util::blessed($class) || $class;
@@ -135,13 +131,11 @@ sub dump {
 
 1;
 
+# ABSTRACT: The base object for Moose
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Object - The base object for Moose
 
 =head1 DESCRIPTION
 
@@ -217,18 +211,5 @@ the maximum depth is 1, to avoid making a mess.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

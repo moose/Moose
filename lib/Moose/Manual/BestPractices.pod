@@ -1,8 +1,10 @@
+package Moose::Manual::BestPractices;
+
+# ABSTRACT: Get the most out of Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::BestPractices - Get the most out of Moose
 
 =head1 RECOMMENDATIONS
 
@@ -216,20 +218,5 @@ programming. If you used an overridden C<new> to do type coercion by
 hand, rather than defining a real coercion, there is no introspectable
 metadata. This sort of thing is particularly problematic for MooseX
 extensions which rely on introspection to do the right thing.
-
-=head1 AUTHOR
-
-Yuval (nothingmuch) Kogman
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

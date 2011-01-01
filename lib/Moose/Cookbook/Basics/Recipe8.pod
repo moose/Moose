@@ -1,9 +1,11 @@
+package Moose::Cookbook::Basics::Recipe8;
+
+# ABSTRACT: Builder methods and lazy_build
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe8 - Builder methods and lazy_build
 
 =head1 SYNOPSIS
 
@@ -108,18 +110,5 @@ The C<builder> option is a more OO-friendly version of the C<default>
 functionality. It also separates the default-generating code into a
 well-defined method. Sprinkling your attribute definitions with
 anonymous subroutines can be quite ugly and hard to follow.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

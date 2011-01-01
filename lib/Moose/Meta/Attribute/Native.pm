@@ -1,9 +1,5 @@
 package Moose::Meta::Attribute::Native;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 my @trait_names = qw(Bool Counter Number String Array Hash Code);
 
 for my $trait_name (@trait_names) {
@@ -28,13 +24,11 @@ for my $trait_name (@trait_names) {
 
 1;
 
+# ABSTRACT: Delegate to native Perl types
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native - Delegate to native Perl types
 
 =head1 SYNOPSIS
 
@@ -246,48 +240,5 @@ the API were changed.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-B<with contributions from:>
-
-Robert (rlb3) Boone
-
-Paul (frodwith) Driver
-
-Shawn (Sartak) Moore
-
-Chris (perigrin) Prather
-
-Robert (phaylon) Sedlacek
-
-Tom (dec) Lanyon
-
-Yuval Kogman
-
-Jason May
-
-Cory (gphat) Watson
-
-Florian (rafl) Ragwitz
-
-Evan Carroll
-
-Jesse (doy) Luehrs
-
-Jay Hannah
-
-Robert Buels
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

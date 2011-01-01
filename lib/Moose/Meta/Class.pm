@@ -12,10 +12,6 @@ use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
 use Scalar::Util 'weaken', 'blessed';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
 use Moose::Error::Default;
@@ -699,13 +695,11 @@ sub create_error {
 
 1;
 
+# ABSTRACT: The Moose metaclass
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Class - The Moose metaclass
 
 =head1 DESCRIPTION
 
@@ -864,19 +858,6 @@ Throws the error created by C<create_error> using C<raise_error>
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

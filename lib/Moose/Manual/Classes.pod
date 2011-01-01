@@ -1,8 +1,10 @@
+package Moose::Manual::Classes;
+
+# ABSTRACT: Making your classes use Moose (and subclassing)
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Classes - Making your classes use Moose (and subclassing)
 
 =head1 USING MOOSE
 
@@ -134,18 +136,5 @@ Alternately, if you really need to provide a different C<new()>, you
 can also provide your own immutabilization method. Doing so requires
 extending the Moose metaclasses, and is well beyond the scope of this
 manual.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2008-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

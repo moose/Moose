@@ -1,5 +1,11 @@
 package Moose::Cookbook::Roles::Recipe3;
 
+# ABSTRACT: Applying a role to an object instance
+
+__END__
+
+package Moose::Cookbook::Roles::Recipe3;
+
 =pod
 
 =begin testing-SETUP
@@ -24,10 +30,6 @@ package Moose::Cookbook::Roles::Recipe3;
 }
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Roles::Recipe3 - Applying a role to an object instance
 
 =head1 SYNOPSIS
 
@@ -103,20 +105,6 @@ model a promotion.
 It can also be useful as a sort of controlled monkey-patching for
 existing code, particularly non-Moose code. For example, you could
 create a debugging role and apply it to an object at runtime.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
 
 =begin testing
 

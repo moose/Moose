@@ -3,10 +3,6 @@ package Moose::Deprecated;
 use strict;
 use warnings;
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Package::DeprecationManager 0.07 -deprecations => {
     'default is for Native Trait'      => '1.14',
     'default default for Native Trait' => '1.14',
@@ -43,18 +39,5 @@ deprecated in Moose.
 If you specify C<< -api_version => $version >>, you can use deprecated features
 without warnings. Note that this special treatment is limited to the package
 that loads C<Moose::Deprecated>.
-
-=head1 AUTHORS
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

@@ -1,10 +1,6 @@
 package Moose::Meta::Attribute::Native::Trait::Number;
 use Moose::Role;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'Num' }
@@ -14,10 +10,6 @@ no Moose::Role;
 1;
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native::Trait::Number - Helper trait for Num attributes
 
 =head1 SYNOPSIS
 
@@ -91,18 +83,5 @@ Sets the current value of the attribute to its absolute value.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Robert Boone
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

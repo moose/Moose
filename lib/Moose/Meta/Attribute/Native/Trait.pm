@@ -6,10 +6,6 @@ use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 requires '_helper_type';
 
 has _used_default_is => (
@@ -200,11 +196,9 @@ no Moose::Util::TypeConstraints;
 
 1;
 
+# ABSTRACT: Shared role for native delegation traits
+
 __END__
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native::Trait - Shared role for native delegation traits
 
 =head1 BUGS
 
@@ -214,22 +208,5 @@ See L<Moose/BUGS> for details on reporting bugs.
 
 Documentation for Moose native traits can be found in
 L<Moose::Meta::Attribute::Native>.
-
-=head1 AUTHORS
-
-Yuval Kogman
-
-Shawn M Moore
-
-Jesse Luehrs
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

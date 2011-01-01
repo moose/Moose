@@ -6,10 +6,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('rebless_params' => (
@@ -39,13 +35,11 @@ sub apply {
 
 1;
 
+# ABSTRACT: Compose a role into an instance
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 
 =head1 DESCRIPTION
 
@@ -66,19 +60,6 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

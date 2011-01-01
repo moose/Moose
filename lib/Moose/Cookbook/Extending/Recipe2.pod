@@ -1,3 +1,9 @@
+package Moose::Cookbook::Extending::Recipe2;
+
+# ABSTRACT: Providing a role for the base object class
+
+__END__
+
 
 =pod
 
@@ -8,10 +14,6 @@ use Test::Requires {
 };
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Extending::Recipe2 - Providing a role for the base object class
 
 =head1 SYNOPSIS
 
@@ -60,19 +62,6 @@ ensure that our C<init_meta> method is called. The C<init_meta> is created by
 C<setup_import_methods> for us, since we passed the C<base_class_roles>
 parameter. The generated C<init_meta> will in turn call
 L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

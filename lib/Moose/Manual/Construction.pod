@@ -1,8 +1,10 @@
+package Moose::Manual::Construction;
+
+# ABSTRACT: Object construction (and destruction) with Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Construction - Object construction (and destruction) with Moose
 
 =head1 WHERE'S THE CONSTRUCTOR?
 
@@ -156,18 +158,5 @@ If you do not like this behavior, you will have to provide your own C<DESTROY>
 method and use that instead of the one provided by L<Moose::Object>. You can
 do this to preserve C<$@> I<and> capture any errors from object destruction by
 creating an error stack.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

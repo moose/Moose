@@ -8,10 +8,6 @@ use Moose::Util;
 
 use base qw(Moose::Meta::Role::Method::Required);
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('roles' => (
     reader   => 'roles',
     required => 1,
@@ -24,13 +20,11 @@ sub roles_as_english_list {
 
 1;
 
+# ABSTRACT: A Moose metaclass for conflicting methods in Roles
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Role::Method::Conflicting - A Moose metaclass for conflicting methods in Roles
 
 =head1 DESCRIPTION
 
@@ -77,18 +71,5 @@ Returns the roles that generated this conflicting method as an English list.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

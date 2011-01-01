@@ -4,10 +4,6 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Class::MOP::MiniTrait;
 
 use base "Class::MOP::Instance";
@@ -16,13 +12,11 @@ Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 1;
 
+# ABSTRACT: The Moose Instance metaclass
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Instance - The Moose Instance metaclass
 
 =head1 SYNOPSIS
 
@@ -48,20 +42,5 @@ C<Moose::Meta::Instance> is a subclass of L<Class::MOP::Instance>.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

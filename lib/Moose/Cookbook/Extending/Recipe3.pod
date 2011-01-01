@@ -1,3 +1,9 @@
+package Moose::Cookbook::Extending::Recipe3;
+
+# ABSTRACT: Providing an alternate base object class
+
+__END__
+
 
 =pod
 
@@ -8,10 +14,6 @@ use Test::Requires {
 };
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
 
 =head1 SYNOPSIS
 
@@ -81,19 +83,6 @@ class.
 This is an awful lot of magic for a simple base class. You will often
 want to combine a metaclass trait with a base class extension, and
 that's when this technique is useful.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

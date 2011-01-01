@@ -1,8 +1,10 @@
+package Moose::Manual::Unsweetened;
+
+# ABSTRACT: Moose idioms in plain old Perl 5 without the sugar
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Unsweetened - Moose idioms in plain old Perl 5 without the sugar
 
 =head1 DESCRIPTION
 
@@ -318,18 +320,5 @@ replace or extend a piece of built-in functionality.
 Moose is a complete OO package in and of itself, and is part of a rich
 ecosystem of extensions. It also has an enthusiastic community of
 users, and is being actively maintained and developed.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

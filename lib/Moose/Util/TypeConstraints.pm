@@ -6,10 +6,6 @@ use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 ## --------------------------------------------------------
 # Prototyped subs must be predeclared because we have a
 # circular dependency with Moose::Meta::Attribute et. al.
@@ -879,13 +875,11 @@ sub _throw_error {
 
 1;
 
+# ABSTRACT: Type constraint system for Moose
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Util::TypeConstraints - Type constraint system for Moose
 
 =head1 SYNOPSIS
 
@@ -1436,18 +1430,5 @@ Adds C<$type> to the list of parameterizable types
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

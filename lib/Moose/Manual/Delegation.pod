@@ -1,8 +1,10 @@
+package Moose::Manual::Delegation;
+
+# ABSTRACT: Attribute delegation
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Delegation - Attribute delegation
 
 =head1 WHAT IS DELEGATION?
 
@@ -175,18 +177,5 @@ It is perfectly valid to delegate methods to an attribute which is not
 required or can be undefined. When a delegated method is called, Moose
 will throw a runtime error if the attribute does not contain an
 object.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

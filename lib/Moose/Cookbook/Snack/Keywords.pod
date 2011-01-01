@@ -1,8 +1,10 @@
+package Moose::Cookbook::Snack::Keywords;
+
+# ABSTRACT: Restricted "keywords" in Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Snack::Keywords - Restricted "keywords" in Moose
 
 =head1 DESCRIPTION
 
@@ -153,20 +155,5 @@ you must be careful not to remove C<meta> when doing so:
 =item L<namespace::clean>
 
 =back
-
-=head1 AUTHOR
-
-John Goulah C<E<lt>jgoulah@cpan.org<gt>>
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

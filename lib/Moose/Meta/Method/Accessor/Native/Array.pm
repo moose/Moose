@@ -7,10 +7,6 @@ use Moose::Role;
 
 use Scalar::Util qw( looks_like_number );
 
-our $VERSION = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 sub _inline_check_var_is_valid_index {
     my $self = shift;
     my ($var) = @_;

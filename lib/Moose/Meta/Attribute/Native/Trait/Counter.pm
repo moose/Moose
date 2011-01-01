@@ -2,10 +2,6 @@
 package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 with 'Moose::Meta::Attribute::Native::Trait' =>
     { -excludes => ['_root_types'] };
 
@@ -18,13 +14,11 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for counters
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Attribute::Native::Trait::Counter - Helper trait for counters
 
 =head1 SYNOPSIS
 
@@ -99,18 +93,5 @@ value.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2007-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

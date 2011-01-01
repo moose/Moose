@@ -7,10 +7,6 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::TypeCoercion';
 
 sub compile_type_coercion {
@@ -45,13 +41,11 @@ sub add_type_coercions {
 
 1;
 
+# ABSTRACT: The Moose Type Coercion metaclass for Unions
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::TypeCoercion::Union - The Moose Type Coercion metaclass for Unions
 
 =head1 DESCRIPTION
 
@@ -80,18 +74,5 @@ union.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

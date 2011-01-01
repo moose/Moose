@@ -1,8 +1,10 @@
+package Moose::Intro;
+
+# ABSTRACT: Expanded into Moose::Manual, so go read that
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Intro - Expanded into Moose::Manual, so go read that
 
 =head1 DESCRIPTION
 

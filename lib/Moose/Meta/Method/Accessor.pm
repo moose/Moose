@@ -6,10 +6,6 @@ use warnings;
 
 use Try::Tiny;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
@@ -127,13 +123,11 @@ sub _has_value {
 
 1;
 
+# ABSTRACT: A Moose Method metaclass for accessors
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Method::Accessor - A Moose Method metaclass for accessors
 
 =head1 DESCRIPTION
 
@@ -147,20 +141,5 @@ L<Class::MOP::Method::Accessor> documentation.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Yuval Kogman E<lt>nothingmuch@woobling.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

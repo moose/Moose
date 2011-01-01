@@ -1,3 +1,9 @@
+package Moose::Cookbook::Meta::Recipe7;
+
+# ABSTRACT: Creating a glob reference meta-instance class
+
+__END__
+
 
 =pod
 
@@ -15,10 +21,6 @@
 }
 
 =end testing-SETUP
-
-=head1 NAME
-
-Moose::Cookbook::Meta::Recipe7 - Creating a glob reference meta-instance class
 
 =head1 SYNOPSIS
 
@@ -189,19 +191,6 @@ This module makes the instance a blessed glob reference. This lets you
 use a handle as an object instance.
 
 =back
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

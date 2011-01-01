@@ -3,10 +3,14 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-our $VERSION = '1.9900';
-our $XS_VERSION = $VERSION;
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
+use XSLoader;
+
+BEGIN {
+    XSLoader::load(
+        'Moose',
+        $Moose::Exporter::{VERSION} ? ${ $Moose::Exporter::{VERSION} } : ()
+    );
+}
 
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
@@ -14,10 +18,6 @@ use Moose::Util::MetaRole;
 use Scalar::Util qw(reftype);
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
-
-use XSLoader;
-
-XSLoader::load( 'Moose', $XS_VERSION );
 
 my %EXPORT_SPEC;
 
@@ -650,11 +650,9 @@ sub import {
 
 1;
 
+# ABSTRACT: make an import() and unimport() just like Moose.pm
+
 __END__
-
-=head1 NAME
-
-Moose::Exporter - make an import() and unimport() just like Moose.pm
 
 =head1 SYNOPSIS
 
@@ -863,21 +861,5 @@ a metaclass for the caller is an error.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-This is largely a reworking of code in Moose.pm originally written by
-Stevan Little and others.
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

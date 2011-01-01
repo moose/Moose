@@ -4,17 +4,13 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use Scalar::Util 'blessed';
 use Carp         'confess';
 
 use Moose::Deprecated;
 use Moose::Exporter;
 
-use Class::MOP 1.10;
+use Class::MOP;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -272,13 +268,11 @@ Moose::Meta::Mixin::AttributeCore->meta->make_immutable(
 
 1;
 
+# ABSTRACT: A postmodern object system for Perl 5
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose - A postmodern object system for Perl 5
 
 =head1 SYNOPSIS
 
@@ -1133,17 +1127,11 @@ L<irc://irc.perl.org/#moose> to discuss. The
 L<Moose::Manual::Contributing> has more detail about how and when you
 can contribute.
 
-=head1 AUTHOR
+=head1 CABAL
 
-Moose is an open project, there are at this point dozens of people who have
-contributed, and can contribute. If you have added anything to the Moose
-project you have a commit bit on this file and can add your name to the list.
-
-=head2 CABAL
-
-However there are only a few people with the rights to release a new version
+There are only a few people with the rights to release a new version
 of Moose. The Moose Cabal are the people to go to with questions regarding
-the wider purview of Moose, and help out maintaining not just the code
+the wider purview of Moose. They help maintain not just the code
 but the community as well.
 
 Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
@@ -1162,7 +1150,7 @@ Florian Ragwitz E<lt>rafl@debian.orgE<gt>
 
 Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
-=head2 OTHER CONTRIBUTORS
+=head1 CONTRIBUTORS
 
 Aankhen
 
@@ -1170,47 +1158,56 @@ Adam (Alias) Kennedy
 
 Anders (Debolaz) Nor Berle
 
-Nathan (kolibrie) Gray
+Chris (perigrin) Prather
 
 Christian (chansen) Hansen
-
-Eric (ewilhelm) Wilhelm
-
-Guillermo (groditi) Roditi
-
-Jess (castaway) Robinson
-
-Matt (mst) Trout
-
-Robert (phaylon) Sedlacek
-
-Robert (rlb3) Boone
-
-Scott (konobi) McWhirter
-
-Shlomi (rindolf) Fish
-
-Wallace (wreis) Reis
-
-Jonathan (jrockway) Rockway
-
-Piotr (dexter) Roszatycki
-
-Sam (mugwump) Vilain
 
 Cory (gphat) Watson
 
 Dylan Hardison (doc fixes)
 
+Eric (ewilhelm) Wilhelm
+
+Evan Carroll
+
+Florian (rafl) Ragwitz
+
+Guillermo (groditi) Roditi
+
+Jason May
+
+Jay Hannah
+
+Jess (castaway) Robinson
+
+Jonathan (jrockway) Rockway
+
+Matt (mst) Trout
+
+Nathan (kolibrie) Gray
+
+Paul (frodwith) Driver
+
+Piotr (dexter) Roszatycki
+
+Robert Buels
+
+Robert (phaylon) Sedlacek
+
+Robert (rlb3) Boone
+
+Sam (mugwump) Vilain
+
+Scott (konobi) McWhirter
+
+Shawn (Sartak) Moore
+
+Shlomi (rindolf) Fish
+
+Tom (dec) Lanyon
+
+Wallace (wreis) Reis
+
 ... and many other #moose folks
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

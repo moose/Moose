@@ -1,8 +1,10 @@
+package Moose::Cookbook::Style;
+
+# ABSTRACT: Expanded into Moose::Manual::BestPractices, so go read that
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Style - Expanded into Moose::Manual::BestPractices, so go read that
 
 =head1 DESCRIPTION
 

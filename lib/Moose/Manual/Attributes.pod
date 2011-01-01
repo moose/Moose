@@ -1,8 +1,10 @@
+package Moose::Manual::Attributes;
+
+# ABSTRACT: Object attributes with Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Attributes - Object attributes with Moose
 
 =head1 INTRODUCTION
 
@@ -611,18 +613,5 @@ they are accessed and manipulated.
 Moose provides an attribute option called C<initializer>. This is called when
 the attribute's value is being set in the constructor, and lets you change the
 value before it is set.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

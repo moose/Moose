@@ -1,7 +1,19 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
-NEXT
+1.9900
+
+  [OTHER]
+
+  * The entire Class::MOP distribution has been merged with Moose. In the
+    future, the Class::MOP code itself will be merged into Moose, and
+    eventually the Class::MOP namespace will disappear entirely. For the
+    current release, we have simply changed how Class::MOP is
+    distributed. (Dave Rolsky).
+
+  * Switched to Dist::Zilla for development. However, we still have a minimal
+    Makefile.PL in the repository that can be used for development. (Dave
+    Rolsky)
 
   [API CHANGES]
 

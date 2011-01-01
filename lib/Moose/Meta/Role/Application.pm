@@ -4,10 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
     init_arg => '-excludes',
     reader   => 'get_method_exclusions',
@@ -76,13 +72,11 @@ sub apply_after_method_modifiers    { (shift)->apply_method_modifiers('after'  =
 
 1;
 
+# ABSTRACT: A base class for role application
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Role::Application - A base class for role application
 
 =head1 DESCRIPTION
 
@@ -136,19 +130,6 @@ consideration, and is intentionally not yet documented.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

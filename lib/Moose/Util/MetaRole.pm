@@ -4,10 +4,6 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use List::MoreUtils qw( all );
 use List::Util qw( first );
 use Moose::Deprecated;
@@ -169,11 +165,9 @@ sub _make_new_class {
 
 1;
 
+# ABSTRACT: Apply roles to any metaclass, as well as the object base class
+
 __END__
-
-=head1 NAME
-
-Moose::Util::MetaRole - Apply roles to any metaclass, as well as the object base class
 
 =head1 SYNOPSIS
 
@@ -315,18 +309,5 @@ This function will apply the specified roles to the object's base class.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

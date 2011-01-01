@@ -1,8 +1,10 @@
+package Moose::Manual;
+
+# ABSTRACT: What is Moose, and how do I use it?
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual - What is Moose, and how do I use it?
 
 =head1 WHAT IS MOOSE?
 
@@ -247,20 +249,5 @@ has re-dubbed Moose a I<postmodern> object system.
 Nuff Said.
 
 =back
-
-=head1 AUTHORS
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2008-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

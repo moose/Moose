@@ -1,8 +1,10 @@
+package Moose::Manual::MooseX;
+
+# ABSTRACT: Recommended Moose extensions
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::MooseX - Recommended Moose extensions
 
 =head1 MooseX?
 
@@ -256,18 +258,5 @@ taking care of the annoying details connected with doing this, such as
 setting up proper inheritance from Moose::Object and installing
 (and inlining, at make_immutable time) a constructor that makes sure things
 like BUILD methods are called.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

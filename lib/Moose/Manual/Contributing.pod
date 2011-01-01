@@ -1,8 +1,10 @@
+package Moose::Manual::Contributing;
+
+# ABSTRACT: How to get involved in Moose
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 GETTING INVOLVED
 
@@ -278,11 +280,7 @@ to fix them. If the module author simply isn't available or does not want to
 fix the bug, it is okay to make a release.
 
 Regardless of whether or not a new module is available, any breakages should
-be noted in the conflicts list in the distribution's F<Makefile.PL>.
-
-Both Class::MOP and Moose have a F<.shipit> file you can use to make sure the
-release goes smoothly. You are strongly encouraged to use this instead of
-doing the final release steps by hand.
+be noted in the conflicts list in the distribution's F<dist.ini>.
 
 =head1 EMERGENCY BUG WORKFLOW (for immediate release)
 
@@ -381,24 +379,5 @@ L<Moose::Manual::Support>.
 All backwards incompatible changes B<must> be documented in
 L<Moose::Manual::Delta>. Make sure to document any useful tips or workarounds
 for the change in that document.
-
-=head1 AUTHOR
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Chris (perigrin) Prather
-
-Yuval (nothingmuch) Kogman
-
-Jesse Luehrs E<lt>doy at tozt dot netE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

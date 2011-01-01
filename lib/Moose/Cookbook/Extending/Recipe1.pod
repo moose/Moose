@@ -1,9 +1,11 @@
+package Moose::Cookbook::Extending::Recipe1;
+
+# ABSTRACT: Moose extension overview
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Extending::Recipe1 - Moose extension overview
 
 =head1 DESCRIPTION
 
@@ -300,18 +302,5 @@ cooperate with each other.
 If you can write your extension as one or more metaclass and base
 object roles, please consider doing so. Make sure to read the docs for
 L<Moose::Exporter> and L<Moose::Util::MetaRole> as well.
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut

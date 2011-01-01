@@ -1,9 +1,11 @@
+package Moose::Cookbook::Roles::Recipe2;
+
+# ABSTRACT: Advanced Role Composition - method exclusion and aliasing
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Roles::Recipe2 - Advanced Role Composition - method exclusion and aliasing
 
 =head1 SYNOPSIS
 
@@ -122,19 +124,6 @@ The mention of wrapper should tell you that we could do the same thing
 using method modifiers, but for the sake of this example, we don't.
 
 =back
-
-=head1 AUTHOR
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 

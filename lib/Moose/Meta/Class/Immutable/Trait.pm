@@ -6,10 +6,6 @@ use warnings;
 use Class::MOP;
 use Scalar::Util qw( blessed );
 
-our $VERSION   = '1.9900';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
-
 use base 'Class::MOP::Class::Immutable::Trait';
 
 sub add_role { $_[1]->_immutable_cannot_call }
@@ -43,13 +39,11 @@ sub does_role {
 
 1;
 
+# ABSTRACT: Implements immutability for metaclass objects
+
 __END__
 
 =pod
-
-=head1 NAME
-
-Moose::Meta::Class::Immutable::Trait - Implements immutability for metaclass objects
 
 =head1 DESCRIPTION
 
@@ -59,19 +53,6 @@ is deep guts.
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHOR
-
-Yuval Kogman E<lt>nothingmuch@cpan.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2009-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =cut
 

@@ -1,9 +1,11 @@
+package Moose::Cookbook::Basics::Recipe1;
+
+# ABSTRACT: The (always classic) B<Point> example.
+
+__END__
+
 
 =pod
-
-=head1 NAME
-
-Moose::Cookbook::Basics::Recipe1 - The (always classic) B<Point> example.
 
 =head1 SYNOPSIS
 
@@ -222,21 +224,6 @@ great explanation of them can be found by following this link.
 L<http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html>
 
 =back
-
-=head1 AUTHORS
-
-Stevan Little E<lt>stevan@iinteractive.comE<gt>
-
-Dave Rolsky E<lt>autarch@urth.orgE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright 2006-2010 by Infinity Interactive, Inc.
-
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 =begin testing
 
