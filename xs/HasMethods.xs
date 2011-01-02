@@ -5,7 +5,7 @@ SV *mop_associated_metaclass;
 SV *mop_wrap;
 
 static void
-mop_update_method_map(pTHX_ SV *const self, SV *const class_name, HV *const stash, HV *const map)
+mop_update_method_map(pTHX_ HV *const stash, HV *const map)
 {
     char *method_name;
     I32   method_name_len;
@@ -74,7 +74,7 @@ _method_map(self)
         }
 
         if ( !SvOK(cache_flag) || SvUV(cache_flag) != current ) {
-            mop_update_method_map(aTHX_ self, class_name, stash, (HV *)SvRV(map_ref));
+            mop_update_method_map(aTHX_ stash, (HV *)SvRV(map_ref));
             sv_setuv(cache_flag, mop_check_package_cache_flag(aTHX_ stash)); /* update_cache_flag() */
         }
 
