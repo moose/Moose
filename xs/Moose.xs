@@ -100,6 +100,8 @@ EXTERN_C XS(boot_Class__MOP__Instance);
 
 MODULE = Moose  PACKAGE = Moose::Exporter
 
+PROTOTYPES: DISABLE
+
 BOOT:
     mop_prehash_keys();
 
