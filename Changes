@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  * Fix some indexing issues.
+  * Fix a few issues with the conflict checking stuff.
+
 1.9900-TRIAL Sat, Jan 01, 2011
 
   [OTHER]
