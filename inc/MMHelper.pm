@@ -7,15 +7,23 @@ use Config;
 use Cwd qw( abs_path );
 use File::Basename qw( dirname );
 
-sub mm_args {
+sub ccflags_dyn {
     my $is_dev = shift;
 
-    my $ccflags = ( $Config::Config{ccflags} || '' ) . ' -I.';
-    $ccflags .= ' -Wall -Wdeclaration-after-statement'
+    my $ccflags = q<( $Config::Config{ccflags} || '' ) . ' -I.'>;
+    $ccflags .= q< . ' -Wall -Wdeclaration-after-statement'>
         if $is_dev;
 
-    my %mm = ( CCFLAGS => $ccflags );
+    return $ccflags;
+}
 
+sub ccflags_static {
+    my $is_dev = shift;
+
+    return eval(ccflags_dyn($is_dev));
+}
+
+sub mm_args {
     my ( @object, %xs );
 
     for my $xs ( glob "xs/*.xs" ) {
@@ -32,7 +40,6 @@ sub mm_args {
     }
 
     return (
-        CCFLAGS => $ccflags,
         clean   => { FILES => join( q{ }, @object ) },
         OBJECT => join( q{ }, @object ),
         XS     => \%xs,

@@ -13,6 +13,9 @@ override _build_MakeFile_PL_template => sub {
 
     my $tmpl = super();
 
+    my $ccflags = MMHelper::ccflags_dyn();
+    $tmpl =~ s/^(WriteMakefile\()/\$WriteMakefileArgs{CCFLAGS} = $ccflags;\n\n$1/m;
+
     return $tmpl . "\n\n" . MMHelper::my_package_subs();
 };
 

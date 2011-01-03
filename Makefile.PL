@@ -28,5 +28,6 @@ eval MMHelper::my_package_subs();
 WriteMakefile(
     NAME => 'Moose',
     test => { TESTS => 't/*.t t/*/*.t' },
-    MMHelper::mm_args('dev'),
+    CCFLAGS => MMHelper::ccflags_static('dev'),
+    MMHelper::mm_args(),
 );
