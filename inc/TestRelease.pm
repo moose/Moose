@@ -11,6 +11,9 @@ around before_release => sub {
     local $ENV{MOOSE_TEST_MD} = $self->zilla->is_trial
         ? $ENV{MOOSE_TEST_MD}
         : 1;
+    local $ENV{AUTHOR_TESTING} = $self->zilla->is_trial
+        ? $ENV{AUTHOR_TESTING}
+        : 1;
 
     $self->$orig(@_);
 };
