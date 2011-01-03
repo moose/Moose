@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+1.9902-TRIAL Mon, Jan 03, 2011
+
   [OTHER]
 
   * Fix generation of CCFLAGS.
