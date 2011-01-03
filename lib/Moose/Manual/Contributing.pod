@@ -14,8 +14,6 @@ the L</STANDARD WORKFLOW> is very simple. The general gist is: clone the Git
 repository, create a new topic branch, hack away, then find a committer to
 review your changes.
 
-Note that this document applies to both Moose and L<Class::MOP> development.
-
 =head1 NEW FEATURES
 
 Moose already has a fairly large feature set, and we are currently
@@ -239,39 +237,38 @@ defend your change.
     # minor releases
     git checkout stable/X.YY
 
-    # edit for final version bumping, changelogging, etc
-    # prepare release (test suite etc)
-    perl-reversion -bump
-    make manifest
+    # do final changelogging, etc
+    vim dist.ini # increment version number
     git commit
+    dzil release # or dzil release --trial for trial releases
+    git commit # to add the actual release date
     git branch stable/X.YY # only for non-trial major releases
-    shipit # does not ship the tarball, but does everything else
-
-    # non-trial releases
-    cpan-upload ~/shipit-dist/Moose-X.YYZZ.tar.gz
-
-    # trial releases
-    cd ~/shipit-dist
-    mv Moose-X.YYZZ.tar.gz Moose-X.YYZZ-TRIAL.tar.gz
-    cpan-upload Moose-X.YYZZ-TRIAL.tar.gz
 
 =head2 Release How-To
 
-Moose (and L<Class::MOP>) releases fall into two categories, each with their
-own level of release preparation. A minor release is one which does not
-include any API changes, deprecations, and so on. In that case, it is
-sufficient to simply test the release candidate against a few different
-different Perls. Testing should be done against at least two recent major
-version of Perl (5.8.8 and 5.10.1, for example). If you have more versions
-available, you are encouraged to test them all. However, we do not put a lot
-of effort into supporting older 5.8.x releases.
+Moose uses L<Dist::Zilla> to manage releases. Although the git repository comes
+with a C<Makefile.PL>, it is a very basic one just to allow the basic
+C<perl Makefile.PL && make && make test> cycle to work. In particular, it
+doesn't include any release metadata, such as dependencies. In order to get
+started with Dist::Zilla, first install it: C<cpanm Dist::Zilla>, and then
+install the plugins necessary for reading the C<dist.ini>:
+C<dzil authordeps | cpanm>.
+
+Moose releases fall into two categories, each with their own level of release
+preparation. A minor release is one which does not include any API changes,
+deprecations, and so on. In that case, it is sufficient to simply test the
+release candidate against a few different different Perls. Testing should be
+done against at least two recent major version of Perl (5.8.8 and 5.10.1, for
+example). If you have more versions available, you are encouraged to test them
+all. However, we do not put a lot of effort into supporting older 5.8.x
+releases.
 
 For major releases which include an API change or deprecation, you should run
 the F<xt/author/test-my-dependents.t> test. This tests a long list of MooseX
 and other Moose-using modules from CPAN. In order to run this script, you must
-arrange to have the new version of Moose and/or Class::MOP in Perl's include
-path. You can use C<prove -b> and C<prove -I>, install the module, or fiddle
-with the C<PERL5LIB> environment variable, whatever makes you happy.
+arrange to have the new version of Moose in Perl's include path. You can use
+C<prove -b> and C<prove -I>, install the module, or fiddle with the C<PERL5LIB>
+environment variable, whatever makes you happy.
 
 This test downloads each module from CPAN, runs its tests, and logs failures
 and warnings to a set of files named F<test-mydeps-$$-*.log>. If there are
@@ -340,15 +337,14 @@ if you want to start working on it again.
 
 =head1 TESTS, TESTS, TESTS
 
-If you write I<any> code for Moose or Class::MOP, you B<must> add
-tests for that code. If you do not write tests then we cannot
-guarantee your change will not be removed or altered at a later date,
-as there is nothing to confirm this is desired behavior.
+If you write I<any> code for Moose, you B<must> add tests for that code. If you
+do not write tests then we cannot guarantee your change will not be removed or
+altered at a later date, as there is nothing to confirm this is desired
+behavior.
 
-If your code change/addition is deep within the bowels of
-Moose/Class::MOP and your test exercises this feature in a non-obvious
-way, please add some comments either near the code in question or in
-the test so that others know.
+If your code change/addition is deep within the bowels of Moose and your test
+exercises this feature in a non-obvious way, please add some comments either
+near the code in question or in the test so that others know.
 
 We also greatly appreciate documentation to go with your changes, and an entry
 in the Changes file. Make sure to give yourself credit! Major changes or new
