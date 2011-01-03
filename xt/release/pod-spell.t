@@ -205,6 +205,7 @@ parameterized
 parameterizes
 params
 pluggable
+plugins
 prechecking
 prepends
 pu
