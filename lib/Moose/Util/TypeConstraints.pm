@@ -1170,8 +1170,8 @@ This can be used to define a "hand optimized" version of your
 type constraint which can be used to avoid traversing a subtype
 constraint hierarchy.
 
-B<NOTE:> You should only use this if you know what you are doing,
-all the built in types use this, so your subtypes (assuming they
+B<NOTE:> You should only use this if you know what you are doing.
+All the built in types use this, so your subtypes (assuming they
 are shallow) will not likely need to use this.
 
 =item B<< type 'Name' => where { } ... >>
