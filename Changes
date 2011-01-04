@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Don't initialize lazy attributes with defaults in the constructor (for
+    immutable classes). (mo)
+
 1.9902-TRIAL Mon, Jan 03, 2011
 
   [OTHER]

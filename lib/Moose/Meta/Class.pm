@@ -389,6 +389,7 @@ sub _inline_init_attr_from_default {
     my $self = shift;
     my ($attr, $idx) = @_;
 
+    return if $attr->can('is_lazy') && $attr->is_lazy;
     my $default = $self->_inline_default_value($attr, $idx);
     return unless $default;
 
