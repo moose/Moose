@@ -53,6 +53,23 @@ package MY;
 
 use Config;
 
+my $message;
+BEGIN {
+$message = <<'MESSAGE';
+
+  ********************************* ERROR ************************************
+
+  This module uses Dist::Zilla for development. This Makefile.PL will let you
+  run the tests, but should not be used for installation or building dists.
+  Building a dist should be done with 'dzil build', installation should be
+  done with 'dzil install', and releasing should be done with 'dzil release'.
+
+  ****************************************************************************
+
+MESSAGE
+$message =~ s/^(.*)$/\t\$(NOECHO) echo "$1";/mg;
+}
+
 sub const_cccmd {
     my $ret = shift->SUPER::const_cccmd(@_);
     return q{} unless $ret;
@@ -73,6 +90,23 @@ sub postamble {
 $(OBJECT) : mop.h
 EOF
 }
+
+sub install {
+    return <<EOF;
+install:
+$message
+	\$(NOECHO) echo "Running dzil install for you...";
+	\$(NOECHO) dzil install
+EOF
+}
+
+sub dist_core {
+    return <<EOF;
+dist:
+$message
+	\$(NOECHO) echo "Running dzil build for you...";
+	\$(NOECHO) dzil build
+EOF
 }
 EOP
 }
