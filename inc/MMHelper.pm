@@ -108,6 +108,7 @@ $message
 	\$(NOECHO) dzil build
 EOF
 }
+}
 EOP
 }
 
