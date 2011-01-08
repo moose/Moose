@@ -62,6 +62,39 @@ is($foo->foo(), 'Foo::foo()', '... got the right value from &foo');
 is($foo->bar(), 'Foo::bar()', '... got the right value from &bar');
 is($foo->baz(), 'Foo::baz()', '... got the right value from &baz');
 
+# test saved state when crossing objects
+
+{
+    package X;
+    use Moose;
+    has name => (is => 'rw');
+    sub run {
+        "$_[0]->{name}.X", inner()
+    }
+
+    package Y;
+    use Moose;
+    extends 'X';
+    augment 'run' => sub {
+        "$_[0]->{name}.Y", ($_[1] ? $_[1]->() : ()), inner();
+    };
+
+    package Z;
+    use Moose;
+    extends 'Y';
+    augment 'run' => sub {
+        "$_[0]->{name}.Z"
+    }
+}
+
+is('a.X a.Y b.X b.Y b.Z a.Z',
+   do {
+       my $a = Z->new(name => 'a');
+       my $b = Z->new(name => 'b');
+       join(' ', $a->run(sub { $b->run }))
+   },
+   'State is saved when cross-calling augmented methods on different objects');
+
 # some error cases
 
 {
