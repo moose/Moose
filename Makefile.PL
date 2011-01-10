@@ -1,25 +1,12 @@
 use strict;
 use warnings;
 
-use Config;
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker::Dist::Zilla::Develop;
 
 use lib 'inc';
 
 use MMHelper;
 use MyInline;
-
-warn <<'EOF';
-
-  ********************************* WARNING **********************************
-
-  This module uses Dist::Zilla for development. This Makefile.PL will let you
-  run the tests, but you are encouraged to install Dist::Zilla and the needed
-  plugins if you intend on doing any serious hacking.
-
-  ****************************************************************************
-
-EOF
 
 system( $^X, 'author/extract-inline-tests', '--quiet' );
 
