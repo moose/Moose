@@ -38,7 +38,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This trait provides native delegation methods for array references.
+This trait provides native delegation methods for hash references.
 
 =head1 PROVIDED METHODS
 
