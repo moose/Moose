@@ -37,8 +37,8 @@ mop_update_method_map(pTHX_ HV *const stash, HV *const map)
             continue;
         }
 
-        /* $map->{$method_name} = undef */
-        sv_setsv(method, &PL_sv_undef);
+        /* delete $map->{$method_name} */
+        hv_delete(map, method_name, method_name_len, G_DISCARD);
     }
 }
 

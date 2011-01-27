@@ -394,5 +394,14 @@ is_deeply(
     ok(!DeleteFromMe->can('foo'));
 }
 
+{
+    my $baz_meta = Class::MOP::Class->initialize('Baz');
+    $baz_meta->add_method(foo => sub { });
+    my $stash = Package::Stash->new('Baz');
+    $stash->remove_package_symbol('&foo');
+    is_deeply([$baz_meta->get_method_list], [], "method is deleted");
+    ok(!Baz->can('foo'), "Baz can't foo");
+}
+
 
 done_testing;
