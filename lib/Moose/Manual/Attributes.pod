@@ -396,6 +396,15 @@ C<Scalar::Util::weaken> whenever the attribute is set:
 This is very useful when you're building objects that may contain
 circular references.
 
+When the object in a weak references goes out of scope, the attribute's value
+will become C<undef> "behind the scenes". This is done by the Perl interpreter
+directly, so Moose does not see this change. This means that triggers don't
+fire, coercions aren't applied, etc.
+
+The attribute is not cleared, so a predicate method for that attribute will
+still return true. Similarly, when the attribute is next accessed, a default
+value will not be generated.
+
 =head2 Triggers
 
 A C<trigger> is a subroutine that is called whenever the attribute is
