@@ -474,7 +474,8 @@ say anything about the attribute's value, which can be C<undef>.
 
 This will tell the class to store the value of this attribute as a weakened
 reference. If an attribute is a weakened reference, it B<cannot> also be
-coerced.
+coerced. Note that when a weak ref expires, the attribute is still considered
+to be set for purposes of predicate, default, etc.
 
 =item I<lazy =E<gt> (1|0)>
 
@@ -682,6 +683,8 @@ information.
 Creates a method to perform a basic test to see if a value has been set in the
 attribute. See the L<predicate option docs in
 Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more information.
+Note that the predicate will return true even for a C<weak_ref> attribute whose
+value has expired.
 
 =item I<lazy_build> => (0|1)
 
