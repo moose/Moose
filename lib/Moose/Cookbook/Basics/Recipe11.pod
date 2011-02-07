@@ -12,6 +12,7 @@ __END__
 use Test::Requires {
     'DateTime'                  => '0',
     'DateTime::Calendar::Mayan' => '0',
+    'MooseX::NonMoose'          => '0',
 };
 
 =end testing-SETUP
@@ -21,9 +22,8 @@ use Test::Requires {
   package My::DateTime;
 
   use Moose;
-  extends qw( DateTime Moose::Object );
-
-  use DateTime::Calendar::Mayan;
+  use MooseX::NonMoose;
+  extends qw( DateTime );
 
   has 'mayan_date' => (
       is        => 'ro',
@@ -61,54 +61,8 @@ is not Moose based. This recipe only works if the parent class uses a
 blessed hash reference for object instances. If your parent is doing
 something funkier, you should check out L<MooseX::InsideOut>.
 
-You might also want to check out L<MooseX::NonMoose>, which does all
+The meat of this recipe is contained in L<MooseX::NonMoose>, which does all
 the grunt work for you.
-
-There are a couple pieces worth noting:
-
-  use Moose;
-  extends qw( DateTime Moose::Object );
-
-First, we C<use Moose> just like we always do. This lets us declare
-attributes and use all the Moose sugar to which we are accustomed.
-
-The C<extends> declaration explicitly include L<Moose::Object> as well
-as L<DateTime>. This lets us use methods which are provided by
-L<Moose::Object>, like C<does>.
-
-The constructor demonstrates a particular hack/pattern (hacktern?) for
-working with non-Moose parent classes:
-
-  sub new {
-      my $class = shift;
-
-      my $obj = $class->SUPER::new(@_);
-
-      return $class->meta->new_object(
-          __INSTANCE__ => $obj,
-          @_,
-      );
-  }
-
-We explicitly call C<< $class->meta->new_object >> and pass the
-already-created object in the C<__INSTANCE__> key. Internally, Moose
-will take the existing object and initialize any attributes defined in
-our subclass.
-
-The C<after> modifier works just like we'd expect. The fact that
-C<set> is defined in our non-Moose parent does not matter.
-
-=head1 CONCLUSION
-
-Moose can play nice with non-Moose classes when you follow the pattern
-shown here. Your subclass has access to all the power of Moose,
-including attribute declaration, method modifiers, type constraints
-(for new attributes), and roles.
-
-However, you won't be able to easily override a parent's "attributes",
-since they're not Moose attributes. Nor will you be able to inline a
-constructor, since you need to explicitly use the metaclass's object
-constructor.
 
 =begin testing
 
