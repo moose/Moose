@@ -66,7 +66,7 @@ MooseX::AutoImmute
 MooseX::BatmanBeforeRobin
 MooseX::Blessed::Reconstruct
 MooseX::CascadeClearing
-MooseX::ChainedAccessors
+MooseX::ChainedAccessors::Accessor
 MooseX::ClassAttribute
 MooseX::Clone
 MooseX::CompileTime::Traits
@@ -77,11 +77,9 @@ MooseX::Constructor::AllErrors
 MooseX::Contract
 MooseX::Control
 MooseX::CurriedHandles
-MooseX::DBIC::Scaffold
 MooseX::Daemonize
 MooseX::Declare
 MooseX::DeepAccessors
-MooseX::Dumper
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Error::Exception::Class
 MooseX::Error::Trap
@@ -126,7 +124,6 @@ MooseX::Net::API
 MooseX::NonMoose
 MooseX::Object::Pluggable
 MooseX::OneArgNew
-MooseX::POE
 MooseX::Param
 MooseX::Params::Validate
 MooseX::Plaggerize
@@ -176,7 +173,6 @@ MooseX::Types::Data::GUID
 MooseX::Types::DateTime
 MooseX::Types::DateTime::ButMaintained
 MooseX::Types::DateTime::W3C
-MooseX::Types::DateTimeX
 MooseX::Types::Digest
 MooseX::Types::Email
 MooseX::Types::IO
@@ -251,13 +247,11 @@ Mongoose
 namespace::autoclean
 Net::HTTP::API
 Net::Twitter
-Nginx::Control
 Path::Class::Versioned
 Path::Router
 Perl::PrereqScanner
 Pod::Elemental
 Pod::Weaver
-POE::Component::Server::PSGI
 PRANG
 Reaction
 Reflex
