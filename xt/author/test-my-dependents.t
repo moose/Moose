@@ -26,6 +26,7 @@ diag(     'Test run performed at: '
         . Moose->VERSION );
 
 $ENV{PERL_TEST_DM_LOG_DIR} = abs_path('.');
+delete $ENV{AUTHOR_TESTING};
 
 my $exclude = qr/^Acme-/x;
 
