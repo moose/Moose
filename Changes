@@ -8,6 +8,10 @@ for, noteworthy changes.
   * Don't initialize lazy attributes with defaults in the constructor (for
     immutable classes). (mo)
 
+  * When reinitializing meta objects for classes and roles, we failed to
+    preserve roles and role applications. This led to weird bugs. Many MooseX
+    modules end up reinitializing your class or role. (Dave Rolsky)
+
 1.9902-TRIAL Mon, Jan 03, 2011
 
   [OTHER]

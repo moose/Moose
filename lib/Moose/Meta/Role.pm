@@ -227,6 +227,10 @@ sub _restore_metaobjects_from {
 
     $self->_restore_metamethods_from($old_meta);
     $self->_restore_metaattributes_from($old_meta);
+
+    for my $role ( @{ $old_meta->get_roles } ) {
+        $self->add_role($role);
+    }
 }
 
 sub add_attribute {

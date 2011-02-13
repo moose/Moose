@@ -634,6 +634,24 @@ sub _process_inherited_attribute {
     }
 }
 
+# reinitialization support
+
+sub _restore_metaobjects_from {
+    my $self = shift;
+    my ($old_meta) = @_;
+
+    $self->SUPER::_restore_metaobjects_from($old_meta);
+
+    for my $role ( @{ $old_meta->roles } ) {
+        $self->add_role($role);
+    }
+
+    for my $application ( @{ $old_meta->_get_role_applications } ) {
+        $application->class($self);
+        $self->add_role_application ($application);
+    }
+}
+
 ## Immutability
 
 sub _immutable_options {

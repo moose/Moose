@@ -14,12 +14,40 @@ sub check_meta_sanity {
     isa_ok($meta->get_method('foo'), 'Moose::Meta::Method');
     ok($meta->has_attribute('bar'));
     isa_ok($meta->get_attribute('bar'), 'Moose::Meta::Attribute');
+
+    if ( $meta->name eq 'Foo' ) {
+        ok($meta->does_role('Role1'), 'does Role1');
+        ok($meta->does_role('Role2'), 'does Role2');
+
+        is_deeply(
+            [
+                map { [ $_->role->name, $_->class->name ] }
+                    sort { $a->role->name cmp $b->role->name }
+                    $meta->role_applications
+            ],
+            [
+                [ 'Role1|Role2', 'Foo' ],
+            ],
+            'role applications for Role1 and Role2'
+        );
+    }
+}
+
+{
+    package Role1;
+    use Moose::Role;
+}
+
+{
+    package Role2;
+    use Moose::Role;
 }
 
 {
     package Foo;
     use Moose;
     sub foo {}
+    with 'Role1', 'Role2';
     has bar => (is => 'ro');
 }
 
@@ -275,5 +303,19 @@ does_ok(Quux->meta->get_method('DESTROY'), 'Foo::Role::Method');
 ok(Quux->meta->has_method('DEMOLISH'));
 isa_ok(Quux->meta->get_method('DEMOLISH'), 'Moose::Meta::Method');
 does_ok(Quux->meta->get_method('DEMOLISH'), 'Foo::Role::Method');
+
+{
+    package Role3;
+    use Moose::Role;
+    with 'Role1', 'Role2';
+}
+
+ok( Role3->meta->does_role('Role1'), 'Role3 does Role1' );
+ok( Role3->meta->does_role('Role2'), 'Role3 does Role2' );
+
+Moose::Meta::Role->reinitialize('Role3');
+
+ok( Role3->meta->does_role('Role1'), 'Role3 does Role1 after reinitialize' );
+ok( Role3->meta->does_role('Role2'), 'Role3 does Role2 after reinitialize' );
 
 done_testing;
