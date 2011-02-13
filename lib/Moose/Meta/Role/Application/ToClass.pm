@@ -18,7 +18,7 @@ __PACKAGE__->meta->add_attribute('role' => (
 ));
 
 __PACKAGE__->meta->add_attribute('class' => (
-    reader => 'class',
+    accessor => 'class',
 ));
 
 sub apply {

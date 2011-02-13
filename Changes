@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+{{$NEXT}}
+
+  [BUG FIXES]
+
+  * When reinitializing meta objects for classes and roles, we failed to
+    preserve roles and role applications. This led to weird bugs. Many MooseX
+    modules end up reinitializing your class or role. (Dave Rolsky)
+
 1.21 Wed, Nov 24, 2010
 
   [ENHANCEMENTS]
