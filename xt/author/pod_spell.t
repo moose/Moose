@@ -191,6 +191,7 @@ runtime
 serializer
 stacktrace
 stacktraces
+stateful
 subclassable
 subname
 subtyping
@@ -207,6 +208,9 @@ whitelist
 Whitelist
 whitelisted
 workflow
+YY
+YYZZ
+ZZ
 
 ## other jargon
 bey
