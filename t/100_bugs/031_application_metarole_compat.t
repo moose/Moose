@@ -51,9 +51,7 @@ BEGIN {
 {
     package Child;
     use Moose -traits => 'Bar';
-    { our $TODO; local $TODO = "no idea what's going on here";
     ::is( ::exception { extends 'Parent' }, undef );
-    }
 }
 
 done_testing;
