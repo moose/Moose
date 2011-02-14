@@ -25,3 +25,4 @@ cover_db
 ^Moose-.*
 \.git.*
 xs/.*\.(?:c|bs|o)
+Moose\.(?:c|bs|o)
