@@ -24,4 +24,4 @@ cover_db
 \.shipit
 ^Moose-.*
 \.git.*
-Moose\.(?:c|bs|o)
+xs/.*\.(?:c|bs|o)
