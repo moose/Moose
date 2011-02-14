@@ -9,7 +9,7 @@ use Moose::Meta::TypeCoercion::Union;
 
 use List::Util qw(first);
 
-our $VERSION   = '1.22';
+our $VERSION   = '1.23';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

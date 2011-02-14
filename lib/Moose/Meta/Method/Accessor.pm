@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-our $VERSION   = '1.22';
+our $VERSION   = '1.23';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

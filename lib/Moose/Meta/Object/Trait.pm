@@ -3,7 +3,7 @@ package Moose::Meta::Object::Trait;
 
 use Scalar::Util qw(blessed);
 
-our $VERSION   = '1.22';
+our $VERSION   = '1.23';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

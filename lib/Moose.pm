@@ -4,7 +4,7 @@ use warnings;
 
 use 5.008;
 
-our $VERSION   = '1.22';
+our $VERSION   = '1.23';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
