@@ -4,6 +4,13 @@ for, noteworthy changes.
 
 1.22 Sun, Feb 13, 2010
 
+  [RELEASE FIX]
+
+  * The 1.22 release had a bad MANIFEST. This has been fixed.
+
+
+1.22 Sun, Feb 13, 2010
+
   [BUG FIXES]
 
   * When reinitializing meta objects for classes and roles, we failed to
