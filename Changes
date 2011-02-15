@@ -63,6 +63,21 @@ for, noteworthy changes.
   * We now load the roles needed for native delegations only as needed. This
     speeds up the compilation time for Moose itself. (doy)
 
+1.23 Sun, Feb 13, 2010
+
+  [PACKAGING FIX]
+
+  * The 1.22 release had a bad MANIFEST. This has been fixed.
+
+
+1.22 Sun, Feb 13, 2010
+
+  [BUG FIXES]
+
+  * When reinitializing meta objects for classes and roles, we failed to
+    preserve roles and role applications. This led to weird bugs. Many MooseX
+    modules end up reinitializing your class or role. (Dave Rolsky)
+
 1.21 Wed, Nov 24, 2010
 
   [ENHANCEMENTS]
