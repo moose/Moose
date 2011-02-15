@@ -12,6 +12,11 @@ for, noteworthy changes.
     preserve roles and role applications. This led to weird bugs. Many MooseX
     modules end up reinitializing your class or role. (Dave Rolsky)
 
+  * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
+    trying to re-export from a package that itself exported a modified set of 
+    Moose sugar, you'd get the original Moose sugar instead of the overrides. 
+    There are also now tests for this. (perigrin)
+
 1.9902-TRIAL Mon, Jan 03, 2011
 
   [OTHER]
