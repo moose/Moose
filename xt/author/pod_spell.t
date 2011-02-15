@@ -126,6 +126,7 @@ APIs
 arrayrefs
 arity
 Baz
+blog
 Changelog
 codebase
 committer
