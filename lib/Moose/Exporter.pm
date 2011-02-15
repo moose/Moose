@@ -136,7 +136,7 @@ sub _make_exporter {
 
         local %$seen = ( $exporting_package => 1 );
 
-        return uniq( _follow_also_real($exporting_package) );
+        return reverse uniq( _follow_also_real($exporting_package) );
     }
 
     sub _follow_also_real {
