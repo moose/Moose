@@ -3,7 +3,7 @@ for, noteworthy changes.
 
 1.24 ???
 
-  [RELEASE FIX]
+  [BUG FIX]
   
   * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
     trying to re-export from a package that itself exported a modified set of 
