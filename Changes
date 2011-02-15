@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.24 ???
+
+  [RELEASE FIX]
+  
+  * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
+    trying to re-export from a package that itself exported a modified set of 
+    Moose sugar, you'd get the original Moose sugar instead of the overrides. 
+    There are also now tests for this. (perigrin)
 
 1.23 Sun, Feb 13, 2010
 
