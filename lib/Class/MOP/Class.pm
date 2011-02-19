@@ -464,11 +464,12 @@ sub _remove_generated_metaobjects {
         my $current_meta = Class::MOP::get_metaclass_by_name($name);
         return if $current_meta ne $self;
 
-        my ($serial_id) = ($name =~ /^$ANON_CLASS_PREFIX(\d+)/o);
+        my ($first_fragments, $last_fragment) = ($name =~ /^(.*)::(.*)$/);
+
         no strict 'refs';
         @{$name . '::ISA'} = ();
         %{$name . '::'}    = ();
-        delete ${$ANON_CLASS_PREFIX}{$serial_id . '::'};
+        delete ${$first_fragments}{$last_fragment . '::'};
 
         Class::MOP::remove_metaclass_by_name($name);
     }
