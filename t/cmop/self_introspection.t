@@ -55,7 +55,7 @@ my @class_mop_class_methods = qw(
 
     initialize reinitialize create
 
-    create_anon_class is_anon_class
+    create_anon_class is_anon_class free_anon_class
 
     instance_metaclass get_meta_instance
     _inline_create_instance
