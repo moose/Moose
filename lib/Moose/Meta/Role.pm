@@ -619,8 +619,15 @@ sub consumers {
 
         return if in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
 
-        no warnings 'uninitialized';
-        return unless $self->name =~ /^$ANON_ROLE_PREFIX/;
+        $self->free_anon_role
+            if $self->is_anon_role;
+    }
+
+    sub free_anon_role {
+        my $self = shift;
+        my $name = $self->name;
+
+        my ($first_fragments, $last_fragment) = ($name =~ /^(.*)::(.*)$/);
 
         # Moose does a weird thing where it replaces the metaclass for
         # class when fixing metaclass incompatibility. In that case,
@@ -630,12 +637,12 @@ sub consumers {
         my $current_meta = Class::MOP::get_metaclass_by_name($self->name);
         return if $current_meta ne $self;
 
-        my ($serial_id) = ($self->name =~ /^$ANON_ROLE_PREFIX(\d+)/);
         no strict 'refs';
-        foreach my $key (keys %{$ANON_ROLE_PREFIX . $serial_id}) {
-            delete ${$ANON_ROLE_PREFIX . $serial_id}{$key};
-        }
-        delete ${'main::' . $ANON_ROLE_PREFIX}{$serial_id . '::'};
+        @{$name . '::ISA'} = ();
+        %{$name . '::'}    = ();
+        delete ${$first_fragments}{$last_fragment . '::'};
+
+        Class::MOP::remove_metaclass_by_name($name);
     }
 }
 
