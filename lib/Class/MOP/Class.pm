@@ -469,7 +469,7 @@ sub _remove_generated_metaobjects {
         no strict 'refs';
         @{$name . '::ISA'} = ();
         %{$name . '::'}    = ();
-        delete ${$first_fragments}{$last_fragment . '::'};
+        delete ${$first_fragments . '::'}{$last_fragment . '::'};
 
         Class::MOP::remove_metaclass_by_name($name);
     }
