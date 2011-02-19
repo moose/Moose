@@ -448,9 +448,13 @@ sub _remove_generated_metaobjects {
 
         return if in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
 
-        no warnings 'uninitialized';
+        $self->free_anon_class
+            unless $name =~ /^$ANON_CLASS_PREFIX/o;
+    }
+
+    sub free_anon_class {
+        my $self = shift;
         my $name = $self->name;
-        return unless $name =~ /^$ANON_CLASS_PREFIX/o;
 
         # Moose does a weird thing where it replaces the metaclass for
         # class when fixing metaclass incompatibility. In that case,
