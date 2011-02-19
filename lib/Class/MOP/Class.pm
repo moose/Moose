@@ -461,6 +461,7 @@ sub _remove_generated_metaobjects {
         # we don't want to clean out the namespace now. We can detect
         # that because Moose will explicitly update the singleton
         # cache in Class::MOP.
+        no warnings 'uninitialized';
         my $current_meta = Class::MOP::get_metaclass_by_name($name);
         return if $current_meta ne $self;
 
