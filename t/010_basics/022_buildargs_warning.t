@@ -19,7 +19,7 @@ use Test::Requires {
 with_immutable {
     is( exception {
         stderr_like { Baz->new( x => 42, 'y' ) }
-        qr{\QThe new() method for Baz expects a hash reference or a key/value list. You passed an odd number of arguments at t/010_basics/022_buildargs_warning.t line \E\d+},
+        qr{\QThe new() method for Baz expects a hash reference or a key/value list. You passed an odd number of arguments at $0 line \E\d+},
             'warning when passing an odd number of args to new()';
 
         stderr_unlike { Baz->new( x => 42, 'y' ) }

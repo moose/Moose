@@ -32,7 +32,7 @@ use Test::Requires {
                     isa    => 'Str',
                 );
                 }
-                qr{\QAllowing a native trait to automatically supply a default is deprecated. You can avoid this warning by supplying a default, builder, or making the attribute required at t/010_basics/030_deprecations.t line},
+                qr{\QAllowing a native trait to automatically supply a default is deprecated. You can avoid this warning by supplying a default, builder, or making the attribute required at $0 line},
                 'Not providing a default for native String trait warns';
 
             ::stderr_is{ has bar => (
@@ -43,7 +43,7 @@ use Test::Requires {
                 } q{}, 'No warning when _default_is is set';
 
             ::stderr_like{ Foo->new->bar }
-                qr{\QThe bar method in the Foo class was automatically created by the native delegation trait for the bar attribute. This "default is" feature is deprecated. Explicitly set "is" or define accessor names to avoid this at t/010_basics/030_deprecations.t line},
+                qr{\QThe bar method in the Foo class was automatically created by the native delegation trait for the bar attribute. This "default is" feature is deprecated. Explicitly set "is" or define accessor names to avoid this at $0 line},
                 'calling a reader on a method created by a _default_is warns';
 
             ::stderr_like{ with 'Role' =>
