@@ -1018,6 +1018,15 @@ This will return a L<Class::MOP::Class> instance for this class.
 
 =back
 
+=head2 Destruction
+
+=over 4
+
+=item B<< $metarole->free_anon_role >>
+
+This removes the metarole from the symbol table and L<Moose>'s own
+bookkeeping. This should probably only be called by L</DESTROY>.
+
 =head1 BUGS
 
 See L<Moose/BUGS> for details on reporting bugs.
