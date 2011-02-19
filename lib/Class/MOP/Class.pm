@@ -437,12 +437,6 @@ sub _remove_generated_metaobjects {
         return $class->create($package_name, %options);
     }
 
-    # NOTE:
-    # this will only get called for
-    # anon-classes, all other calls
-    # are assumed to occur during
-    # global destruction and so don't
-    # really need to be handled explicitly
     sub DESTROY {
         my $self = shift;
 
