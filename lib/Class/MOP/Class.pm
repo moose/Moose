@@ -2196,4 +2196,13 @@ metaclass.
 
 =back
 
+=head2 Destruction
+
+=over 4
+
+=item B<< $metaclass->free_anon_class >>
+
+This removes the metaclass from the symbol table and L<Class::MOP>'s own
+bookkeeping. This should probably only be called by L</DESTROY>.
+
 =cut
