@@ -449,7 +449,7 @@ sub _remove_generated_metaobjects {
         return if in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
 
         $self->free_anon_class
-            unless $name =~ /^$ANON_CLASS_PREFIX/o;
+            if $self->is_anon_class;
     }
 
     sub free_anon_class {
