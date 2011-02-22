@@ -120,7 +120,6 @@ MooseX::MultiInitArg
 MooseX::MultiMethods
 MooseX::MultiObject
 MooseX::MutatorAttributes
-MooseX::NaturalKey
 MooseX::Net::API
 MooseX::NonMoose
 MooseX::Object::Pluggable
@@ -143,7 +142,6 @@ MooseX::Role::Strict
 MooseX::Role::Timer
 MooseX::Role::TraitConstructor
 MooseX::Role::WithOverloading
-MooseX::Role::XMLRPC::Client
 MooseX::Runnable
 MooseX::Scaffold
 MooseX::SemiAffordanceAccessor
@@ -155,11 +153,9 @@ MooseX::SlurpyConstructor
 MooseX::Storage
 MooseX::Storage::Format::XML::Simple
 MooseX::StrictConstructor
-MooseX::Struct
 MooseX::SymmetricAttribute
 MooseX::Templated
 MooseX::Timestamp
-MooseX::TrackDirty::Attributes
 MooseX::Traits
 MooseX::Traits::Attribute::CascadeClear
 MooseX::Traits::Attribute::MergeHashRef
@@ -197,7 +193,6 @@ MooseX::Types::URI
 MooseX::Types::UUID
 MooseX::Types::UniStr
 MooseX::Types::Varchar
-MooseX::Types::VariantTable
 MooseX::UndefTolerant
 MooseX::WithCache
 MooseX::Workers
