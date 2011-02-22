@@ -3,8 +3,8 @@ for, noteworthy changes.
 
 1.24 ???
 
-  [BUG FIX]
-  
+  [BUG FIXES]
+
   * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
     trying to re-export from a package that itself exported a modified set of 
     Moose sugar, you'd get the original Moose sugar instead of the overrides. 
