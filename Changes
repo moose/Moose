@@ -63,14 +63,14 @@ for, noteworthy changes.
   * We now load the roles needed for native delegations only as needed. This
     speeds up the compilation time for Moose itself. (doy)
 
-1.23 Sun, Feb 13, 2010
+1.23 Sun, Feb 13, 2011
 
   [PACKAGING FIX]
 
   * The 1.22 release had a bad MANIFEST. This has been fixed.
 
 
-1.22 Sun, Feb 13, 2010
+1.22 Sun, Feb 13, 2011
 
   [BUG FIXES]
 
