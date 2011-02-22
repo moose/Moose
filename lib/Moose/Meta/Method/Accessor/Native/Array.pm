@@ -7,7 +7,7 @@ use Moose::Role;
 
 use Scalar::Util qw( looks_like_number );
 
-our $VERSION = '1.23';
+our $VERSION = '1.24';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
