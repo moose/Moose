@@ -10,14 +10,14 @@ for, noteworthy changes.
     Moose sugar, you'd get the original Moose sugar instead of the overrides. 
     There are also now tests for this. (perigrin)
 
-1.23 Sun, Feb 13, 2010
+1.23 Sun, Feb 13, 2011
 
   [PACKAGING FIX]
 
   * The 1.22 release had a bad MANIFEST. This has been fixed.
 
 
-1.22 Sun, Feb 13, 2010
+1.22 Sun, Feb 13, 2011
 
   [BUG FIXES]
 
