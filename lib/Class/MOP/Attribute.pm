@@ -617,8 +617,31 @@ attribute initialization use the writer:
       )
   );
 
-Your writer will need to examine C<@_> and determine under which
-context it is being called.
+Your writer (actually, a wrapper around the writer, using
+L<method modifications|Moose::Manual::MethodModifiers>) will need to examine
+C<@_> and determine under which
+context it is being called:
+
+  around 'some_attr' => sub {
+      my $orig = shift;
+      my $self = shift;
+      # $value is not defined if being called as a reader
+      # $setter and $attr are only defined if being called as an initializer
+      my ($value, $setter, $attr) = @_;
+
+      # the reader behaves normally
+      return $self->$orig if not @_;
+
+      # mutate $value as desired
+      # $value = <something($value);
+
+      # if called as an initializer, set the value and we're done
+      return $setter->($row) if $setter;
+
+      # otherwise, call the real writer with the new value
+      $self->$orig($row);
+  };
+
 
 =back
 
