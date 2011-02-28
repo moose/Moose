@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+1.9903-TRIAL Mon, Feb 28, 2011
+
   [BUG FIXES]
 
   * Don't initialize lazy attributes with defaults in the constructor (for
