@@ -804,7 +804,7 @@ value) used to be silently ignored, now it throws an error.
 Added parameterized types and did a pretty heavy refactoring of the
 type constraint system.
 
-Better framework extendability and better support for "making your own
+Better framework extensibility and better support for "making your own
 Moose".
 
 =head1 0.25 or before

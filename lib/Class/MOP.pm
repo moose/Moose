@@ -954,7 +954,7 @@ unconditionally.
 If the module cannot be loaded, an exception is thrown.
 
 You can pass a hash reference with options as second argument. The
-only option currently recognised is C<-version>, which will ensure
+only option currently recognized is C<-version>, which will ensure
 that the loaded class has at least the required version.
 
 See also L</Class Loading Options>.
@@ -974,7 +974,7 @@ cause most of the rest of the core L<IO> modules to falsely report
 having been loaded, due to the way the base L<IO> module works.
 
 You can pass a hash reference with options as second argument. The
-only option currently recognised is C<-version>, which will ensure
+only option currently recognized is C<-version>, which will ensure
 that the loaded class has at least the required version.
 
 See also L</Class Loading Options>.
@@ -1016,7 +1016,7 @@ If it finds a class it can load, it will return that class' name.  If
 none of the classes can be loaded, it will throw an exception.
 
 Additionally, you can pass a hash reference with options after each
-class name. Currently, only C<-version> is recognised and will ensure
+class name. Currently, only C<-version> is recognized and will ensure
 that the loaded class has at least the required version. If the class
 version is not sufficient, an exception will be raised.
 
