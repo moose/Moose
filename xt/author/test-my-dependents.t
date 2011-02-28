@@ -82,7 +82,6 @@ MooseX::Daemonize
 MooseX::Declare
 MooseX::DeepAccessors
 MooseX::Emulate::Class::Accessor::Fast
-MooseX::Error::Exception::Class
 MooseX::Error::Trap
 MooseX::FSM
 MooseX::FileAttribute
@@ -95,7 +94,6 @@ MooseX::GlobRef
 MooseX::Has::Sugar
 MooseX::HasDefaults
 MooseX::InsideOut
-MooseX::InstanceTracking
 MooseX::Iterator
 MooseX::KeyedMutex
 MooseX::LazyLogDispatch
