@@ -83,7 +83,6 @@ MooseX::Declare
 MooseX::DeepAccessors
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Error::Trap
-MooseX::FSM
 MooseX::FileAttribute
 MooseX::File_or_DB::Storage
 MooseX::FollowPBP
