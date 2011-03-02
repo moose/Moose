@@ -25,7 +25,7 @@ sub Num { !ref($_[0]) && looks_like_number($_[0]) }
 # and that confuses some things (like JSON.pm)
 sub Int {
     my $value = $_[0];
-    defined($value) && !ref($value) && $value =~ /^-?[0-9]+$/
+    defined($value) && !ref($value) && $value =~ /\A-?[0-9]+\z/
 }
 
 sub ScalarRef { ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF' }
