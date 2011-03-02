@@ -202,7 +202,7 @@ export your types as perl constants.
   has 'counter' => (is => 'rw', isa => PositiveInt);
 
 This lets you use a short name rather than needing to fully qualify the name
-everywhere. It also allows you to write easily create parameterized types:
+everywhere. It also allows you to easily create parameterized types:
 
   has 'counts' => (is => 'ro', isa => HashRef[PositiveInt]);
 
