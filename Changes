@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * The Int type constraint now rejects integers with trailing newlines.
+    (Matthew Horsfall)
+
 1.9903-TRIAL Mon, Feb 28, 2011
 
   [BUG FIXES]
