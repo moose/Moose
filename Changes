@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+1.9904-TRIAL Fri, Mar 04, 2011
+
   [BUG FIXES]
 
   * Reinitializing anonymous roles used to accidentally clear out the role's
