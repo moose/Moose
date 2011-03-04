@@ -5,6 +5,9 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
+  * Reinitializing anonymous roles used to accidentally clear out the role's
+    stash in some circumstances. This is now fixed. (doy)
+
   * The Int type constraint now rejects integers with trailing newlines.
     (Matthew Horsfall)
 
