@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Moose;
 
 {
     package Foo::Meta::Attribute;
@@ -199,6 +200,50 @@ ok(!Moose::Util::does_role(Baz->meta->get_attribute('foo'), 'Baz::Meta::Attribut
 {
     can_ok('Class::With::Role::With::Trait', 'foo_foo');
     can_ok('Class::With::Role::With::Trait', 'bar');
+}
+
+{
+    package Quux::Meta::Role::Attribute;
+    use Moose::Role;
+}
+
+{
+    package Quux::Role1;
+    use Moose::Role;
+
+    has foo => (traits => ['Quux::Meta::Role::Attribute'], is => 'ro');
+}
+
+{
+    package Quux::Role2;
+    use Moose::Role;
+    Moose::Util::MetaRole::apply_metaroles(
+        for            => __PACKAGE__,
+        role_metaroles => {
+            applied_attribute => ['Quux::Meta::Role::Attribute']
+        },
+    );
+
+    has bar => (is => 'ro');
+}
+
+{
+    package Quux;
+    use Moose;
+    with 'Quux::Role1', 'Quux::Role2';
+}
+
+{
+    my $foo = Quux->meta->get_attribute('foo');
+    does_ok($foo, 'Quux::Meta::Role::Attribute',
+            "individual attribute trait applied correctly");
+}
+
+{
+    local $TODO = "applied_attribute metaroles are lost in role composition";
+    my $bar = Quux->meta->get_attribute('bar');
+    does_ok($bar, 'Quux::Meta::Role::Attribute',
+            "attribute metarole applied correctly");
 }
 
 done_testing;
