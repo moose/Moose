@@ -375,8 +375,8 @@ an example:
 
   package Car;
   use Moose;
-  with 'Breakable';
   has 'stress' => ( is  => 'rw', isa => 'Int' );
+  with 'Breakable';
 
 If you mistakenly consume the C<Breakable> role before declaring your
 C<stress> attribute, you would see an error like this:
