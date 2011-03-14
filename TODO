@@ -1,3 +1,37 @@
+== Todo for 2.0200
+
+=== Revise MetaRole API to reunify class/role metaroles:
+
+  apply_metaroles(
+      for   => $meta,
+      roles => {
+          attribute => [...],
+          class     => [...],
+          role_attribute => [ ... ],
+      }
+  );
+
+If the $meta is a class, we apply the roles to the class. If it's a role, we
+hold onto them and apply them as part of applying the role to a class.
+
+To make this all work nicely, we'll probably want to track the original role
+where a method was defined, just like we do with attributes currently. We'll
+also need to store method modifiers with their original role, which may mean
+adding some sort of Moose::Meta::Role::MethodModifier class.
+
+For each role-specific thing (methods, attributes, etc.) we should allow a
+role_attribute, role_method, etc. key. The common case will be that the
+metaroles are intended for the consuming class, but we should allow for
+metaroles on the role's metaobjects as well.
+
+=== Remove a bunch of deprecated crap
+
+See Moose::Manual::Delta for a list. Some of this is important to make merging
+Class::MOP into Moose core much easier. Other is just removing complexity
+needed to support ancient APIs.
+
+== Old todo (does anyone look at this?)
+
 -------------------------------------------------------------------------------
 BUGS
 -------------------------------------------------------------------------------
