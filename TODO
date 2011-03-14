@@ -127,12 +127,6 @@ There's a _lot_ of different conventions in here. Some things to consider:
 * allowing new( 'name', %args ) vs ( name => 'name', %args )
 * Method->wrap vs Method->new
 
-- Role & Class
-
-These two share a _lot_ of logic, but it's not via shared code. Maybe
-implement some sort of role-lit internal thing so we can have a
-"HasAttributes" and "HasMethods" role for classes and roles.
-
 - Moose::Meta::TypeConstraint::Parameter{izable,ized}
 
 The relationship between these two classes is very odd. In particular,
