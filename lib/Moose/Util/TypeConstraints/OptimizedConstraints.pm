@@ -43,7 +43,7 @@ sub Role {
     Moose::Deprecated::deprecated(
         feature => 'Role type',
         message =>
-            'The Role type has been deprecated. Maybe you meant to create a RoleName type?'
+            'The Role type has been deprecated. Maybe you meant to create a RoleName type? This type be will be removed in Moose 2.0200.'
     );
     blessed( $_[0] ) && $_[0]->can('does');
 }

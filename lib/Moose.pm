@@ -132,7 +132,8 @@ sub init_meta {
     if ( $_[0] ne __PACKAGE__ ) {
         Moose::Deprecated::deprecated(
             feature => 'Moose::init_meta',
-            message => 'Calling Moose::init_meta as a function is deprecated',
+            message => 'Calling Moose::init_meta as a function is deprecated.'
+                . ' Doing so will throw an error in Moose 2.0200.'
         );
 
         return __PACKAGE__->init_meta(

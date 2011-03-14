@@ -50,21 +50,21 @@ package
 
 sub HAVE_ISAREV () {
     Class::MOP::Deprecated::deprecated(
-        "Class::MOP::HAVE_ISAREV is deprecated and will be removed in a future release. It has always returned 1 anyway."
+        "Class::MOP::HAVE_ISAREV is deprecated and will be removed in a future release. It has always returned 1 anyway. This function will be removed in the Moose 2.0200 release."
     );
     return 1;
 }
 
 sub subname {
     Class::MOP::Deprecated::deprecated(
-        "Class::MOP::subname is deprecated. Please use Sub::Name directly.");
+        "Class::MOP::subname is deprecated. Please use Sub::Name directly. This function will be removed in the Moose 2.0200 release.");
     require Sub::Name;
     goto \&Sub::Name::subname;
 }
 
 sub in_global_destruction {
     Class::MOP::Deprecated::deprecated(
-        "Class::MOP::in_global_destruction is deprecated. Please use Devel::GlobalDestruction directly."
+        "Class::MOP::in_global_destruction is deprecated. Please use Devel::GlobalDestruction directly. This function will be removed in the Moose 2.0200 release."
     );
     require Devel::GlobalDestruction;
     goto \&Devel::GlobalDestruction::in_global_destruction;
@@ -78,7 +78,7 @@ use Scalar::Util qw( blessed );
 sub get_method_map {
     Class::MOP::Deprecated::deprecated(
               'The get_method_map method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            . ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     my $self = shift;
 
@@ -94,7 +94,7 @@ package
 sub construct_class_instance {
     Class::MOP::Deprecated::deprecated(
               'The construct_class_instance method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_construct_class_instance(@_);
 }
@@ -102,7 +102,7 @@ sub construct_class_instance {
 sub check_metaclass_compatibility {
     Class::MOP::Deprecated::deprecated(
         'The check_metaclass_compatibility method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_check_metaclass_compatibility(@_);
 }
@@ -110,7 +110,7 @@ sub check_metaclass_compatibility {
 sub construct_instance {
     Class::MOP::Deprecated::deprecated(
               'The construct_instance method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_construct_instance(@_);
 }
@@ -118,7 +118,7 @@ sub construct_instance {
 sub create_meta_instance {
     Class::MOP::Deprecated::deprecated(
               'The create_meta_instance method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_create_meta_instance(@_);
 }
@@ -126,14 +126,14 @@ sub create_meta_instance {
 sub clone_instance {
     Class::MOP::Deprecated::deprecated(
               'The clone_instance method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_clone_instance(@_);
 }
 
 sub alias_method {
     Class::MOP::Deprecated::deprecated(
-        "The alias_method method is deprecated. Use add_method instead.\n");
+        'The alias_method method is deprecated. Use add_method instead. This method will be removed in the Moose 2.0200 release.');
 
     shift->add_method(@_);
 }
@@ -141,7 +141,7 @@ sub alias_method {
 sub compute_all_applicable_methods {
     Class::MOP::Deprecated::deprecated(
               'The compute_all_applicable_methods method is deprecated.'
-            . " Use get_all_methods instead.\n" );
+            . ' Use get_all_methods instead. This method will be removed in the Moose 2.0200 release.' );
 
     return map {
         {
@@ -155,14 +155,14 @@ sub compute_all_applicable_methods {
 sub compute_all_applicable_attributes {
     Class::MOP::Deprecated::deprecated(
         'The compute_all_applicable_attributes method has been deprecated.'
-            . " Use get_all_attributes instead.\n" );
+            . ' Use get_all_attributes instead. This method will be removed in the Moose 2.0200 release.' );
 
     shift->get_all_attributes(@_);
 }
 
 sub get_attribute_map {
     Class::MOP::Deprecated::deprecated(
-        "The get_attribute_map method has been deprecated.\n");
+        'The get_attribute_map method has been deprecated. This method will be removed in the Moose 2.0200 release.');
 
     shift->_attribute_map(@_);
 }
@@ -173,7 +173,7 @@ package
 sub bless_instance_structure {
     Class::MOP::Deprecated::deprecated(
               'The bless_instance_structure method is deprecated.'
-            . " It will be removed in a future release.\n" );
+            . ' This method will be removed in the Moose 2.0200 release.' );
 
     my ( $self, $instance_structure ) = @_;
     bless $instance_structure, $self->_class_name;
@@ -185,7 +185,7 @@ package
 sub process_accessors {
     Class::MOP::Deprecated::deprecated(
               'The process_accessors method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_process_accessors(@_);
 }
@@ -196,7 +196,7 @@ package
 sub initialize_body {
     Class::MOP::Deprecated::deprecated(
               'The initialize_body method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_initialize_body;
 }
@@ -204,7 +204,7 @@ sub initialize_body {
 sub generate_accessor_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_accessor_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_accessor_method;
 }
@@ -212,7 +212,7 @@ sub generate_accessor_method {
 sub generate_reader_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_reader_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_reader_method;
 }
@@ -220,7 +220,7 @@ sub generate_reader_method {
 sub generate_writer_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_writer_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_writer_method;
 }
@@ -228,7 +228,7 @@ sub generate_writer_method {
 sub generate_predicate_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_predicate_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_predicate_method;
 }
@@ -236,7 +236,7 @@ sub generate_predicate_method {
 sub generate_clearer_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_clearer_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_clearer_method;
 }
@@ -244,7 +244,7 @@ sub generate_clearer_method {
 sub generate_accessor_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_accessor_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_accessor_method_inline;
 }
@@ -252,7 +252,7 @@ sub generate_accessor_method_inline {
 sub generate_reader_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_reader_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_reader_method_inline;
 }
@@ -260,7 +260,7 @@ sub generate_reader_method_inline {
 sub generate_writer_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_writer_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_writer_method_inline;
 }
@@ -268,7 +268,7 @@ sub generate_writer_method_inline {
 sub generate_predicate_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_predicate_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_predicate_method_inline;
 }
@@ -276,7 +276,7 @@ sub generate_predicate_method_inline {
 sub generate_clearer_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_clearer_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_clearer_method_inline;
 }
@@ -287,7 +287,7 @@ package
 sub meta_instance {
     Class::MOP::Deprecated::deprecated(
               'The meta_instance method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_meta_instance;
 }
@@ -295,7 +295,7 @@ sub meta_instance {
 sub attributes {
     Class::MOP::Deprecated::deprecated(
               'The attributes method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
 
     return shift->_attributes;
@@ -304,7 +304,7 @@ sub attributes {
 sub initialize_body {
     Class::MOP::Deprecated::deprecated(
               'The initialize_body method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_initialize_body;
 }
@@ -312,7 +312,7 @@ sub initialize_body {
 sub generate_constructor_method {
     Class::MOP::Deprecated::deprecated(
               'The generate_constructor_method method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_constructor_method;
 }
@@ -320,7 +320,7 @@ sub generate_constructor_method {
 sub generate_constructor_method_inline {
     Class::MOP::Deprecated::deprecated(
         'The generate_constructor_method_inline method has been made private.'
-            . " The public version is deprecated and will be removed in a future release.\n"
+            .  ' The public version is deprecated. This method will be removed in the Moose 2.0200 release.'
     );
     shift->_generate_constructor_method_inline;
 }

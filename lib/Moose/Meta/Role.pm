@@ -467,7 +467,8 @@ sub apply {
                 'The alias and excludes options for role application'.
                 ' have been renamed -alias and -excludes'.
                 " (${\$other->name} is consuming ${\$self->name}".
-                " - do you need to upgrade ${\$other->name}?)"
+                " - do you need to upgrade ${\$other->name}?).".
+                ' This will be an error in Moose 2.0200.'
         );
     }
 

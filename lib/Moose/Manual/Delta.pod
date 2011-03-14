@@ -44,6 +44,64 @@ C<role_metaroles> option, as in:
         },
     );
 
+=item Most deprecated APIs/features are slated for removal in Moose 2.0200
+
+Most of the deprecated APIs and features in Moose will start throwing an error
+in Moose 2.0200. Some of the features will go away entirely, and some will
+simply throw an error.
+
+The things on the chopping block are:
+
+=over 8
+
+=item * Old public methods in Class::MOP and Moose
+
+This includes things like C<< Class::MOP::Class->get_attribute_map >>, C<<
+Class::MOP::Class->construct_instance >>, and many others. These were
+deprecated in L<Class::MOP> 0.80_01, release on April 5, 2009.
+
+These methods will be removed entirely in Moose 2.0200.
+
+=item * Old public functions in Class::MOP
+
+This include C<Class::MOP::subname>, C<Class::MOP::in_global_destruction>, and
+the C<Class::MOP::HAS_ISAREV> constant. The first two were deprecated in 0.84,
+and the last in 0.80. Class::MOP 0.84 was released on May 12, 2009.
+
+These functions will be removed entirely in Moose 2.0200.
+
+=item * The C<alias> and C<excludes> option for role composition
+
+These were renamed to C<-alias> and C<-excludes> in Moose 0.89, released on
+August 13, 2009.
+
+Passing these will throw an error in Moose 2.0200.
+
+=item * The old L<Moose::Util::MetaRole> API
+
+This include the C<apply_metaclass_roles()> function, as well as passing the
+C<for_class> or any key ending in C<_roles> to C<apply_metaroles()>. This was
+deprecated in Moose 0.93_01, released on January 4, 2010.
+
+These will all throw an error in Moose 2.0200.
+
+=item * Passing plain lists to C<type()> or C<subtype()>
+
+The old API for these functions allowed you to pass a plain list of parameter,
+rather than a list of hash references (which is what C<as()>, C<where>,
+etc. return). This was deprecated in Moose 0.71_01, released on February 22,
+2009.
+
+This will throw an error in Moose 2.0200.
+
+=item * The Role subtype
+
+This subtype was deprecated in Moose 0.84, released on June 26, 2009.
+
+This will be removed entirely in Moose 2.0200.
+
+=back
+
 =back
 
 =head1 1.16

@@ -275,7 +275,7 @@ sub type {
         Moose::Deprecated::deprecated(
             feature => 'type without sugar',
             message =>
-                'Calling type() with a simple list of parameters is deprecated'
+                'Calling type() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
         );
 
         return _create_type_constraint( $_[0], undef, $_[1] );
@@ -300,7 +300,7 @@ sub subtype {
         Moose::Deprecated::deprecated(
             feature => 'subtype without sugar',
             message =>
-                'Calling subtype() with a simple list of parameters is deprecated'
+                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
         );
 
         return _create_type_constraint( undef, @_ );
@@ -313,7 +313,7 @@ sub subtype {
         Moose::Deprecated::deprecated(
             feature => 'subtype without sugar',
             message =>
-                'Calling subtype() with a simple list of parameters is deprecated'
+                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
         );
 
         return _create_type_constraint( undef, @_ );
@@ -324,7 +324,7 @@ sub subtype {
         Moose::Deprecated::deprecated(
             feature => 'subtype without sugar',
             message =>
-                'Calling subtype() with a simple list of parameters is deprecated'
+                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
         );
 
         return _create_type_constraint(@_);
