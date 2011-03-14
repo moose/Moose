@@ -243,10 +243,7 @@ ok(!Moose::Util::does_role(Baz->meta->get_attribute('foo'), 'Baz::Meta::Attribut
     my $baz = Quux->meta->get_attribute('baz');
     ok(! does_role($baz, 'Quux::Meta::Role::Attribute'),
        "applied_attribute traits do not end up applying to attributes from other roles during composition");
-}
 
-{
-    local $TODO = "applied_attribute metaroles are lost in role composition";
     my $bar = Quux->meta->get_attribute('bar');
     does_ok($bar, 'Quux::Meta::Role::Attribute',
             "attribute metarole applied correctly");
