@@ -49,7 +49,7 @@ sub gather_files {
 
         $self->{dzil}->add_file(
             Dist::Zilla::File::InMemory->new(
-                name    => "t/002_recipes/$name",
+                name    => "t/recipes/$name",
                 content => $content,
             )
         );

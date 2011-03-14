@@ -46,6 +46,6 @@ use Test::More;
 ok(
     $_,
     'in_global_destruction state is passed to DEMOLISH properly (true)'
-) for split //, `$^X t/010_basics/020-global-destruction-helper.pl`;
+) for split //, `$^X t/basics/global-destruction-helper.pl`;
 
 done_testing;

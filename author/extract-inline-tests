@@ -39,7 +39,7 @@ $inline->save;
 
         $name =~ s/^moose_cookbook_//;
 
-        write_file( "t/002_recipes/$name", $content );
+        write_file( "t/recipes/$name", $content );
 
         return 1;
     }
