@@ -676,7 +676,7 @@ for, noteworthy changes.
     too. (Dave Rolsky)
 
   * Moose::Util::MetaRole::apply_metaclass_roles is now called
-    apply_metaroles. The old name is deprecated. Dave Rolsky>
+    apply_metaroles. The old name is deprecated. (Dave Rolsky)
 
   * The unimport subs created by Moose::Exporter now clean up re-exported
     functions like blessed and confess, unless the caller imported them from
