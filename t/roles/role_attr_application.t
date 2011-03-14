@@ -252,4 +252,44 @@ ok(!Moose::Util::does_role(Baz->meta->get_attribute('foo'), 'Baz::Meta::Attribut
             "attribute metarole applied correctly");
 }
 
+{
+    package HasMeta;
+    use Moose::Role;
+    Moose::Util::MetaRole::apply_metaroles(
+        for            => __PACKAGE__,
+        role_metaroles => {
+            applied_attribute => ['Quux::Meta::Role::Attribute']
+        },
+    );
+
+    has foo => (is => 'ro');
+}
+
+{
+    package NoMeta;
+    use Moose::Role;
+
+    with 'HasMeta';
+
+    has bar => (is => 'ro');
+}
+
+{
+    package ConsumesBoth;
+    use Moose;
+    with 'HasMeta', 'NoMeta';
+}
+
+{
+    my $foo = ConsumesBoth->meta->get_attribute('foo');
+    does_ok($foo, 'Quux::Meta::Role::Attribute',
+            'applied_attribute traits are preserved when one role consumes another');
+
+    my $bar = ConsumesBoth->meta->get_attribute('bar');
+    ok(! does_role($bar, 'Quux::Meta::Role::Attribute'),
+       "applied_attribute traits do not spill over from consumed role");
+}
+
+
+
 done_testing;
