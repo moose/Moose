@@ -38,7 +38,7 @@ mop_update_method_map(pTHX_ HV *const stash, HV *const map)
         }
 
         /* delete $map->{$method_name} */
-        hv_delete(map, method_name, method_name_len, G_DISCARD);
+        (void)hv_delete(map, method_name, method_name_len, G_DISCARD);
     }
 }
 
