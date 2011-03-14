@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Moose;
+use Moose::Util qw( does_role );
 
 {
     package Foo::Meta::Attribute;
@@ -212,6 +213,7 @@ ok(!Moose::Util::does_role(Baz->meta->get_attribute('foo'), 'Baz::Meta::Attribut
     use Moose::Role;
 
     has foo => (traits => ['Quux::Meta::Role::Attribute'], is => 'ro');
+    has baz => (is => 'ro');
 }
 
 {
@@ -237,6 +239,10 @@ ok(!Moose::Util::does_role(Baz->meta->get_attribute('foo'), 'Baz::Meta::Attribut
     my $foo = Quux->meta->get_attribute('foo');
     does_ok($foo, 'Quux::Meta::Role::Attribute',
             "individual attribute trait applied correctly");
+
+    my $baz = Quux->meta->get_attribute('baz');
+    ok(! does_role($baz, 'Quux::Meta::Role::Attribute'),
+       "applied_attribute traits do not end up applying to attributes from other roles during composition");
 }
 
 {
