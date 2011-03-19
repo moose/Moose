@@ -196,7 +196,7 @@ sub _make_sub_exporter_params {
     my $class           = shift;
     my $packages        = shift;
     my $export_recorder = shift;
-    my $is_reexport  = shift;
+    my $is_reexport     = shift;
 
     my %exports;
 
@@ -373,7 +373,7 @@ sub _make_import_sub {
     my $exporting_package = shift;
     my $exporter          = shift;
     my $exports_from      = shift;
-    my $is_reexport    = shift;
+    my $is_reexport       = shift;
 
     return sub {
 
@@ -544,7 +544,7 @@ sub _make_unimport_sub {
     my $exporting_package = shift;
     my $exports           = shift;
     my $export_recorder   = shift;
-    my $is_reexport    = shift;
+    my $is_reexport       = shift;
 
     return sub {
         my $caller = scalar caller();
@@ -562,7 +562,7 @@ sub _remove_keywords {
     my $package          = shift;
     my $keywords         = shift;
     my $recorded_exports = shift;
-    my $is_reexport   = shift;
+    my $is_reexport      = shift;
 
     no strict 'refs';
 
