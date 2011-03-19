@@ -24,7 +24,7 @@ my %EXPORT_SPEC;
 sub setup_import_methods {
     my ( $class, %args ) = @_;
 
-    my $exporting_package = $args{exporting_package} ||= caller();
+    $args{exporting_package} ||= caller();
 
     $class->build_import_methods(
         %args,
