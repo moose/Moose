@@ -672,4 +672,56 @@ is( exception {
     );
 }
 
+{
+    package NotMoosey;
+
+    use metaclass;
+}
+
+{
+    like(
+        exception {
+            Moose::Util::MetaRole::apply_metaroles(
+                for             => 'Does::Not::Exist',
+                class_metaroles => { class => ['Role::Foo'] },
+            );
+        },
+        qr/When using Moose::Util::MetaRole.+You passed Does::Not::Exist.+Maybe you need to call.+/,
+        'useful error when apply metaroles to a class without a metaclass'
+    );
+
+    like(
+        exception {
+            Moose::Util::MetaRole::apply_metaroles(
+                for             => 'NotMoosey',
+                class_metaroles => { class => ['Role::Foo'] },
+            );
+        },
+        qr/When using Moose::Util::MetaRole.+You passed NotMoosey.+we resolved this to a Class::MOP::Class object.+/,
+        'useful error when using apply metaroles to a class with a Class::MOP::Class metaclass'
+    );
+
+    like(
+        exception {
+            Moose::Util::MetaRole::apply_base_class_roles(
+                for   => 'NotMoosey',
+                roles => { class => ['Role::Foo'] },
+            );
+        },
+        qr/When using Moose::Util::MetaRole.+You passed NotMoosey.+we resolved this to a Class::MOP::Class object.+/,
+        'useful error when applying base class to roles to a non-Moose class'
+    );
+
+    like(
+        exception {
+            Moose::Util::MetaRole::apply_base_class_roles(
+                for   => 'My::Role',
+                roles => { class => ['Role::Foo'] },
+            );
+        },
+        qr/You can only apply base class roles to a Moose class.+/,
+        'useful error when applying base class to roles to a non-Moose class'
+    );
+}
+
 done_testing;

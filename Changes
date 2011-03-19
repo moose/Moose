@@ -9,6 +9,12 @@ for, noteworthy changes.
     which returns the role which first defined an attribute. See the docs for
     details. (Dave Rolsky)
 
+  * Moose::Util::MetaRole will make sure that the class to which you're
+    applying metaroles or base class roles can actually have them applied. If
+    not (it's not a Moose class, it has a non-Moose metaclass, etc.), then it
+    gives a useful error message. Previously, this would just end up dying in
+    the MetaRole code without a useful message. (Dave Rolsky)
+
   [BUG FIXES]
 
   * When a role had its own applied_attribute metaclass (usually from MetaRole

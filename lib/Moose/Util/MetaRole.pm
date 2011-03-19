@@ -4,9 +4,11 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
+use Carp qw( croak );
 use List::MoreUtils qw( all );
 use List::Util qw( first );
 use Moose::Deprecated;
+use Scalar::Util qw( blessed );
 
 sub apply_metaclass_roles {
     Moose::Deprecated::deprecated(
@@ -24,16 +26,53 @@ sub apply_metaroles {
 
     _fixup_old_style_args(\%args);
 
-    my $for
-        = blessed $args{for}
-        ? $args{for}
-        : Class::MOP::class_of( $args{for} );
+    my $for = _metathing_for( $args{for} );
 
     if ( $for->isa('Moose::Meta::Role') ) {
         return _make_new_metaclass( $for, $args{role_metaroles}, 'role' );
     }
     else {
         return _make_new_metaclass( $for, $args{class_metaroles}, 'class' );
+    }
+}
+
+sub _metathing_for {
+    my $passed = shift;
+
+    my $found
+        = blessed $passed
+        ? $passed
+        : Class::MOP::class_of($passed);
+
+    return $found
+        if defined $found
+            && blessed $found
+            && (   $found->isa('Moose::Meta::Role')
+                || $found->isa('Moose::Meta::Class') );
+
+    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+
+    my $error_start
+        = 'When using Moose::Util::MetaRole, you must pass a Moose class name,'
+        . ' role name, metaclass object, or metarole object.';
+
+    if ( defined $found && blessed $found ) {
+        croak $error_start
+            . " You passed $passed, and we resolved this to a "
+            . ( blessed $found )
+            . ' object.';
+    }
+
+    if ( defined $passed && !defined $found ) {
+        croak $error_start
+            . " You passed $passed, and this did not resolve to a metaclass or metarole."
+            . ' Maybe you need to call Moose->init_meta to initialize the metaclass first?';
+    }
+
+    if ( !defined $passed ) {
+        croak $error_start
+            . " You passed an undef."
+            . ' Maybe you need to call Moose->init_meta to initialize the metaclass first?';
     }
 }
 
@@ -131,12 +170,12 @@ sub _make_new_metaclass {
 sub apply_base_class_roles {
     my %args = @_;
 
-    my $for = $args{for} || $args{for_class};
-
-    my $meta = Class::MOP::class_of($for);
+    my $meta = _metathing_for( $args{for} || $args{for_class} );
+    croak 'You can only apply base class roles to a Moose class, not a role.'
+        if $meta->isa('Moose::Meta::Role');
 
     my $new_base = _make_new_class(
-        $for,
+        $meta->name,
         $args{roles},
         [ $meta->superclasses() ],
     );
