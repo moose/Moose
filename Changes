@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+1.9905-TRIAL Mon, Mar 28, 2011
+
   [NEW FEATURES]
 
   * The Moose::Meta::Role::Attribute class now has an original_role method
