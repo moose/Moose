@@ -95,7 +95,7 @@ numbers, just as with Perl's core array handling.
 
 If the specified element does not exist, this will return C<undef>.
 
-This method does accepts just one argument.
+This method accepts just one argument.
 
 =item * B<pop>
 

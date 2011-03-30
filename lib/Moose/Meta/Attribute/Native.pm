@@ -89,8 +89,6 @@ You will need to make sure that the attribute has an appropriate type. For
 example, to use this with a Hash you must specify that your attribute is some
 sort of C<HashRef>.
 
-If you I<don't> specify a type, each trait has a default type it will use.
-
 =head2 handles
 
 This is just like any other delegation, but only a hash reference is allowed
@@ -105,8 +103,8 @@ See the docs for each native trait for details on what methods are available.
 
 Some traits provide a default C<is> for historical reasons. This behavior is
 deprecated, and you are strongly encouraged to provide a value. If you don't
-plan to read and write the attribute value directly, you can set C<< is =>
-'bare' >> to prevent standard accessor generation.
+plan to read and write the attribute value directly, not passing the C<is>
+option will prevent standard accessor generation.
 
 =head2 default or builder
 
