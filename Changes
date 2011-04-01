@@ -1,6 +1,14 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+1.25 Fri, Apr 1, 2011
+
+  [BUG FIXES]
+
+  * Reinitializing anonymous roles used to accidentally clear out the role's
+    stash in some circumstances. This is now fixed. (doy)
+    (backported from 1.9904)
+
 1.24 Tue, Feb 24, 2011
 
   [BUG FIXES]
