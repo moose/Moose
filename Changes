@@ -6,8 +6,8 @@ for, noteworthy changes.
   [BUG FIXES]
 
   * Reinitializing anonymous roles used to accidentally clear out the role's
-    stash in some circumstances. This is now fixed. (doy)
-    (backported from 1.9904)
+    stash in some circumstances. This is now fixed. (doy) (backported from
+    1.9904)
 
 1.24 Tue, Feb 24, 2011
 
@@ -23,7 +23,6 @@ for, noteworthy changes.
   [PACKAGING FIX]
 
   * The 1.22 release had a bad MANIFEST. This has been fixed.
-
 
 1.22 Sun, Feb 13, 2011
 
