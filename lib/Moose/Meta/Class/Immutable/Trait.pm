@@ -6,7 +6,7 @@ use warnings;
 use Class::MOP;
 use Scalar::Util qw( blessed );
 
-our $VERSION   = '1.24';
+our $VERSION   = '1.25';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 

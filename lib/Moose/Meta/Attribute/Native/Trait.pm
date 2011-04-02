@@ -6,7 +6,7 @@ use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
 
-our $VERSION   = '1.24';
+our $VERSION   = '1.25';
 $VERSION = eval $VERSION;
 our $AUTHORITY = 'cpan:STEVAN';
 
