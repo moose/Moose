@@ -1387,7 +1387,7 @@ global registry.
 =item B<find_or_create_does_type_constraint($type_name)>
 
 These functions will first call C<find_or_parse_type_constraint>. If
-that function does not return a type, a new anonymous type object will
+that function does not return a type, a new type object will
 be created.
 
 The C<isa> variant will use C<create_class_type_constraint> and the
