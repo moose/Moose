@@ -23,7 +23,7 @@ for, noteworthy changes.
     application), that metaclass would get lost when that role participated in
     role composition. It was also lost if that role was consumed by some other
     role. Both of these cases have been fixed. Attributes are always applied
-    with the applied_attribute metaclass of the role which originall defined
+    with the applied_attribute metaclass of the role which originally defined
     them. (Dave Rolsky)
 
 1.9904-TRIAL Fri, Mar 04, 2011
