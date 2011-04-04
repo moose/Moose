@@ -258,7 +258,9 @@ ok(!defined RegexpRef($GLOB),            '... RegexpRef rejects anything which i
 ok(!defined RegexpRef($GLOB_REF),        '... RegexpRef rejects anything which is not a RegexpRef');
 ok(!defined RegexpRef($fh),              '... RegexpRef rejects anything which is not a RegexpRef');
 ok(defined RegexpRef(qr/../),            '... RegexpRef accepts anything which is a RegexpRef');
+ok(defined RegexpRef(bless qr/../, 'Foo'), '... RegexpRef accepts anything which is a RegexpRef');
 ok(!defined RegexpRef(bless {}, 'Foo'),  '... RegexpRef rejects anything which is not a RegexpRef');
+ok(!defined RegexpRef(bless {}, 'Regexp'), '... RegexpRef rejects anything which is not a RegexpRef');
 ok(!defined RegexpRef(undef),            '... RegexpRef rejects anything which is not a RegexpRef');
 
 ok(!defined GlobRef(0),                '... GlobRef rejects anything which is not a GlobRef');
@@ -304,7 +306,7 @@ ok(!defined Object($SCALAR_REF),      '... Object rejects anything which is not 
 ok(!defined Object($GLOB),            '... Object rejects anything which is not blessed');
 ok(!defined Object($GLOB_REF),        '... Object rejects anything which is not blessed');
 ok(!defined Object($fh),              '... Object rejects anything which is not blessed');
-ok(!defined Object(qr/../),           '... Object rejects anything which is not blessed');
+ok(defined Object(qr/../),           '... Object accepts anything which is blessed');
 ok(defined Object(bless {}, 'Foo'),   '... Object accepts anything which is blessed');
 ok(!defined Object(undef),             '... Object accepts anything which is blessed');
 
@@ -360,6 +362,18 @@ ok(!defined RoleName('UNIVERSAL'),     '... Rolename rejects anything which is n
 ok(!defined RoleName('Quux::Wibble'),  '... Rolename rejects anything which is not a RoleName');
 ok(!defined RoleName('Moose::Meta::TypeConstraint'),  '... RoleName accepts anything which is a RoleName');
 ok(defined RoleName('Quux::Wibble::Role'),      '... RoleName accepts anything which is a RoleName');
+
+# Test $_ is read in XS implementation
+{
+  local $_ = qr//;
+  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is RegexpRef');
+  ok(!Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(1), '$_ is not read when param provided');
+  $_ = bless qr//, "blessed";
+  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is RegexpRef');
+  $_ = 42;
+  ok(!Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is not RegexpRef');
+  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(qr//), '$_ is not read when param provided');
+}
 
 close($fh) || die "Could not close the filehandle $0 for test";
 

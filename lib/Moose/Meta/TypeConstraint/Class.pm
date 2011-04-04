@@ -30,7 +30,7 @@ sub _create_hand_optimized_type_constraint {
     my $class = $self->class;
     $self->hand_optimized_type_constraint(
         sub {
-            blessed( $_[0] ) && blessed( $_[0] ) ne 'Regexp' && $_[0]->isa($class)
+            blessed( $_[0] ) && $_[0]->isa($class)
         }
     );
 }

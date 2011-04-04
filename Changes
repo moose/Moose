@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [API CHANGES]
+
+  * The RegexpRef type constraint now accepts regular expressions blessed into
+    other classes, such as those found in pluggable regexp engines.
+    Additionally the 'Object' constraint no longer rejects objects which
+    implementation is a regular expression. (David Leadbeater)
+
 1.9906-TRIAL Mon, Apr 04, 2011
 
   [OTHER]

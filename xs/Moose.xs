@@ -86,6 +86,27 @@ unset_export_flag (pTHX_ SV *sv, MAGIC *mymg)
     return 0;
 }
 
+#ifndef SvRXOK
+/* SvRXOK appeared before SVt_REGEXP did, so this implementation assumes magic
+ * based qr//. Note re::is_regexp isn't in 5.8, hence the need for this XS.
+ */
+#define SvRXOK(sv) is_regexp(aTHX_ sv)
+
+STATIC int
+is_regexp (pTHX_ SV* sv) {
+    SV* tmpsv;
+
+    if (SvMAGICAL(sv))
+        mg_get(sv);
+    if (SvROK(sv) &&
+      (tmpsv = (SV*) SvRV(sv)) &&
+      SvTYPE(tmpsv) == SVt_PVMG &&
+      (mg_find(tmpsv, PERL_MAGIC_qr)))
+        return TRUE;
+    return FALSE;
+}
+#endif
+
 EXTERN_C XS(boot_Class__MOP);
 EXTERN_C XS(boot_Class__MOP__Mixin__HasAttributes);
 EXTERN_C XS(boot_Class__MOP__Mixin__HasMethods);
@@ -126,5 +147,17 @@ bool
 _export_is_flagged (SV *sv)
     CODE:
         RETVAL = export_flag_is_set(aTHX_ sv);
+    OUTPUT:
+        RETVAL
+
+MODULE = Moose  PACKAGE = Moose::Util::TypeConstraints::OptimizedConstraints
+
+bool
+RegexpRef (SV *sv=NULL)
+    INIT:
+        if (!items)
+            sv = DEFSV;
+    CODE:
+        RETVAL = SvRXOK(sv);
     OUTPUT:
         RETVAL

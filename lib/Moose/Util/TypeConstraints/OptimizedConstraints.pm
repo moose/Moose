@@ -32,12 +32,13 @@ sub ScalarRef { ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF' }
 sub ArrayRef  { ref($_[0]) eq 'ARRAY'  }
 sub HashRef   { ref($_[0]) eq 'HASH'   }
 sub CodeRef   { ref($_[0]) eq 'CODE'   }
-sub RegexpRef { ref($_[0]) eq 'Regexp' }
 sub GlobRef   { ref($_[0]) eq 'GLOB'   }
+
+# RegexpRef is implemented in Moose.xs
 
 sub FileHandle { ref($_[0]) eq 'GLOB' && Scalar::Util::openhandle($_[0]) or blessed($_[0]) && $_[0]->isa("IO::Handle") }
 
-sub Object { blessed($_[0]) && blessed($_[0]) ne 'Regexp' }
+sub Object { blessed($_[0]) }
 
 sub Role {
     Moose::Deprecated::deprecated(
