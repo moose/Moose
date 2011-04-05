@@ -18,7 +18,7 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 NEXT
+=head1 2.0000
 
 =over 4
 
@@ -43,6 +43,28 @@ C<role_metaroles> option, as in:
             applied_attribute => ['My::Meta::Role::Attribute'],
         },
     );
+
+=item Class::MOP has been folded into the Moose dist
+
+Moose and Class::MOP are tightly related enough that they have always had to be
+kept pretty closely in step in terms of versions. Making them into a single
+dist should simplify the upgrade process for users, as it should no longer be
+possible to upgrade one without the other and potentially cause issues. No
+functionality has changed, and this should be entirely transparent.
+
+=item Moose's conflict checking is more robust and useful
+
+There are two parts to this. The most useful one right now is that Moose will
+ship with a C<moose-outdated> script, which can be run at any point to list the
+modules which are installed that conflict with the installed version of Moose.
+After upgrading Moose, running C<moose-outdated | cpanm> should be sufficient
+to ensure that all of the Moose extensions you use will continue to work.
+
+The other part is that Moose's C<META.json> file will also specify the
+conflicts under the C<x_conflicts> key. We are working with the Perl toolchain
+developers to try to get conflicts support added to CPAN clients, and if/when
+that happens, the metadata already exists, and so the conflict checking will
+become automatic.
 
 =item Most deprecated APIs/features are slated for removal in Moose 2.0200
 
