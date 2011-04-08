@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Data::OptList;
+use Data::OptList 0.107;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
@@ -96,7 +96,18 @@ sub _apply_all_roles {
         Moose->throw_error("Must specify at least one role to apply to $applicant");
     }
 
-    my $roles = Data::OptList::mkopt( [@_] );
+    # If @_ contains role meta objects, mkopt will think that they're values,
+    # because they're references.  In other words (roleobj1, roleobj2,
+    # roleobj3) will become [ [ roleobj1, roleobj2 ], [ roleobj3, undef ] ]
+    # -- this is no good.  We'll preprocess @_ first to eliminate the potential
+    # bug.
+    # -- rjbs, 2011-04-08
+    my $roles = Data::OptList::mkopt( [@_], {
+      moniker   => 'role',
+      name_test => sub {
+        ! ref $_[0] or blessed($_[0]) && $_[0]->isa('Moose::Meta::Role')
+      }
+    });
 
     my @role_metas;
     foreach my $role (@$roles) {

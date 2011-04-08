@@ -183,4 +183,33 @@ foreach my $foo ( $foo, $foobar ) {
     is( $foo->bar, $foo2, '... got the right value for bar now' );
 }
 
+{
+    {
+        package MRole;
+        use Moose::Role;
+        sub meth { }
+    }
+
+    {
+        package MRole2;
+        use Moose::Role;
+        sub meth2 { }
+    }
+
+    {
+        use Moose::Meta::Class;
+        use Moose::Object;
+        use Moose::Util qw(apply_all_roles);
+
+        my $class = Moose::Meta::Class->create( 'Class' => (
+          superclasses => [ 'Moose::Object' ],
+        ));
+
+        apply_all_roles($class, MRole->meta, MRole2->meta);
+
+        ok(Class->can('meth'), "can meth");
+        ok(Class->can('meth2'), "can meth2");
+    }
+}
+
 done_testing;
