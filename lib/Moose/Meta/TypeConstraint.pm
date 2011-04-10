@@ -253,7 +253,6 @@ sub _compile_hand_optimized_type_constraint {
 
     unless ( ref $type_constraint ) {
         require Moose;
-        Carp::confess ("Hand optimized type constraint for " . $self->name . " is not a code reference");
         Moose->throw_error("Hand optimized type constraint is not a code reference");
     }
 
