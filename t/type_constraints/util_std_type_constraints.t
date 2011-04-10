@@ -720,7 +720,6 @@ for my $name ( sort keys %tests ) {
                 ( bless {}, 'DuckLike' ),
             ],
             reject => [
-                'Thing',
                 $ZERO,
                 $ONE,
                 $INT,
@@ -757,7 +756,6 @@ for my $name ( sort keys %tests ) {
         'Enumerated', {
             accept => \@allowed,
             reject => [
-                'Thing',
                 $ZERO,
                 $ONE,
                 $INT,
@@ -779,6 +777,46 @@ for my $name ( sort keys %tests ) {
                 $REGEX,
                 $REGEX_OBJ,
                 $OBJECT,
+                $UNDEF,
+            ],
+        }
+    );
+}
+
+{
+    my $union = Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => [
+            find_type_constraint('Int'),
+            find_type_constraint('Object'),
+        ],
+    );
+
+    test_constraint(
+        $union, {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $OBJECT,
+            ],
+            reject => [
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
                 $UNDEF,
             ],
         }

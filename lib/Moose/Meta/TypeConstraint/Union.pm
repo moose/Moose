@@ -7,6 +7,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
+use List::MoreUtils qw(all);
 use List::Util qw(first);
 
 use base 'Moose::Meta::TypeConstraint';
@@ -70,6 +71,21 @@ sub _actually_compile_type_constraint {
     };
 }
 
+sub has_inlined_type_constraint {
+    my $self = shift;
+
+    return all { $_->has_inlined_type_constraint }
+        @{ $self->type_constraints };
+}
+
+sub _inline_check {
+    my $self = shift;
+    my $val  = shift;
+
+    return
+        join ' || ', map { '(' . $_->_inline_check($val) . ')' }
+        @{ $self->type_constraints };
+};
 
 sub equals {
     my ( $self, $type_or_name ) = @_;
