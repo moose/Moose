@@ -3,7 +3,7 @@ package Moose::Util::TypeConstraints::Builtins;
 use strict;
 use warnings;
 
-use Scalar::Util qw( blessed reftype );
+use Scalar::Util qw( blessed looks_like_number reftype );
 
 sub type { goto &Moose::Util::TypeConstraints::type }
 sub subtype { goto &Moose::Util::TypeConstraints::subtype }
@@ -27,50 +27,42 @@ sub define_builtins {
     subtype 'Value'
         => as 'Defined'
         => where { !ref($_) }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Value;
+        => optimize_as \&_Value;
 
     subtype 'Ref'
         => as 'Defined'
         => where { ref($_) }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Ref;
+        => optimize_as \&_Ref;
 
     subtype 'Str'
         => as 'Value'
         => where { ref(\$_) eq 'SCALAR' }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Str;
+        => optimize_as \&_Str;
 
     subtype 'Num'
         => as 'Str'
         => where { Scalar::Util::looks_like_number($_) }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Num;
+        => optimize_as \&_Num;
 
     subtype 'Int'
         => as 'Num'
         => where { "$_" =~ /^-?[0-9]+$/ }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Int;
+        => optimize_as \&_Int;
 
     subtype 'CodeRef'
         => as 'Ref'
         => where { ref($_) eq 'CODE' }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::CodeRef;
+        => optimize_as \&_CodeRef;
 
     subtype 'RegexpRef'
         => as 'Ref'
-        => where( \&Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef )
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef;
+        => where( \&_RegexpRef )
+        => optimize_as \&_RegexpRef;
 
     subtype 'GlobRef'
         => as 'Ref'
         => where { ref($_) eq 'GLOB' }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::GlobRef;
+        => optimize_as \&_GlobRef;
 
     # NOTE: scalar filehandles are GLOB refs, but a GLOB ref is not always a
     # filehandle
@@ -79,34 +71,30 @@ sub define_builtins {
         => where {
             Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
         }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::FileHandle;
+        => optimize_as \&_FileHandle;
 
     subtype 'Object'
         => as 'Ref'
         => where { blessed($_) }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::Object;
+        => optimize_as \&_Object;
 
     # This type is deprecated.
     subtype 'Role'
         => as 'Object'
         => where { $_->can('does') }
-        => optimize_as \&Moose::Util::TypeConstraints::OptimizedConstraints::Role;
+        => optimize_as \&_Role;
 
     subtype 'ClassName'
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::ClassName;
+        => optimize_as \&_ClassName;
 
     subtype 'RoleName'
         => as 'ClassName'
         => where {
             (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
         }
-        => optimize_as
-            \&Moose::Util::TypeConstraints::OptimizedConstraints::RoleName;
+        => optimize_as \&_RoleName;
 
     $registry->add_type_constraint(
         Moose::Meta::TypeConstraint::Parameterizable->new(
@@ -115,8 +103,7 @@ sub define_builtins {
             parent =>
                 Moose::Util::TypeConstraints::find_type_constraint('Ref'),
             constraint => sub { ref($_) eq 'SCALAR' || ref($_) eq 'REF' },
-            optimized =>
-                \&Moose::Util::TypeConstraints::OptimizedConstraints::ScalarRef,
+            optimized            => \&_ScalarRef,
             constraint_generator => sub {
                 my $type_parameter = shift;
                 my $check = $type_parameter->_compiled_type_constraint;
@@ -134,8 +121,7 @@ sub define_builtins {
             parent =>
                 Moose::Util::TypeConstraints::find_type_constraint('Ref'),
             constraint => sub { ref($_) eq 'ARRAY' },
-            optimized =>
-                \&Moose::Util::TypeConstraints::OptimizedConstraints::ArrayRef,
+            optimized => \&_ArrayRef,
             constraint_generator => sub {
                 my $type_parameter = shift;
                 my $check = $type_parameter->_compiled_type_constraint;
@@ -156,8 +142,7 @@ sub define_builtins {
             parent =>
                 Moose::Util::TypeConstraints::find_type_constraint('Ref'),
             constraint => sub { ref($_) eq 'HASH' },
-            optimized =>
-                \&Moose::Util::TypeConstraints::OptimizedConstraints::HashRef,
+            optimized => \&_HashRef,
             constraint_generator => sub {
                 my $type_parameter = shift;
                 my $check = $type_parameter->_compiled_type_constraint;
@@ -188,6 +173,61 @@ sub define_builtins {
             }
         )
     );
+}
+
+sub _Value { defined($_[0]) && !ref($_[0]) }
+
+sub _Ref { ref($_[0]) }
+
+# We might need to use a temporary here to flatten LVALUEs, for instance as in
+# Str(substr($_,0,255)).
+sub _Str {
+    defined($_[0])
+      && (   ref(\             $_[0] ) eq 'SCALAR'
+          || ref(\(my $value = $_[0])) eq 'SCALAR')
+}
+
+sub _Num { !ref($_[0]) && looks_like_number($_[0]) }
+
+# using a temporary here because regex matching promotes an IV to a PV,
+# and that confuses some things (like JSON.pm)
+sub _Int {
+    my $value = $_[0];
+    defined($value) && !ref($value) && $value =~ /\A-?[0-9]+\z/
+}
+
+sub _ScalarRef { ref($_[0]) eq 'SCALAR' || ref($_[0]) eq 'REF' }
+sub _ArrayRef  { ref($_[0]) eq 'ARRAY'  }
+sub _HashRef   { ref($_[0]) eq 'HASH'   }
+sub _CodeRef   { ref($_[0]) eq 'CODE'   }
+sub _GlobRef   { ref($_[0]) eq 'GLOB'   }
+
+# RegexpRef is implemented in Moose.xs
+
+sub _FileHandle {
+    ref( $_[0] ) eq 'GLOB' && Scalar::Util::openhandle( $_[0] )
+        or blessed( $_[0] ) && $_[0]->isa("IO::Handle");
+}
+
+sub _Object { blessed($_[0]) }
+
+sub _Role {
+    Moose::Deprecated::deprecated(
+        feature => 'Role type',
+        message =>
+            'The Role type has been deprecated. Maybe you meant to create a RoleName type? This type be will be removed in Moose 2.0200.'
+    );
+    blessed( $_[0] ) && $_[0]->can('does');
+}
+
+sub _ClassName {
+    return Class::MOP::is_class_loaded( $_[0] );
+}
+
+sub _RoleName {
+    ClassName( $_[0] )
+        && ( Class::MOP::class_of( $_[0] ) || return )
+        ->isa('Moose::Meta::Role');
 }
 
 1;

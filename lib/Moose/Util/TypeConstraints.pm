@@ -33,7 +33,6 @@ use Moose::Meta::TypeConstraint::DuckType;
 use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
-use Moose::Util::TypeConstraints::OptimizedConstraints;
 
 Moose::Exporter->setup_import_methods(
     as_is => [
