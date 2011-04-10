@@ -70,7 +70,6 @@ sub has_inlined_type_constraint {
            $self->has_parameterized_from
         && $self->parameterized_from->has_inline_generator
         && $self->type_parameter->has_inlined_type_constraint;
-
 }
 
 sub _inline_check {
