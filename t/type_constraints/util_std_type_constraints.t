@@ -5,376 +5,726 @@ use warnings;
 
 use Test::More;
 
-use Scalar::Util ();
+use IO::File;
+use Moose::Util::TypeConstraints ();
+use Scalar::Util qw( blessed openhandle );
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-}
+my $ZERO    = 0;
+my $ONE     = 1;
+my $INT     = 100;
+my $NEG_INT = -100;
+my $NUM     = 42.42;
+my $NEG_NUM = -42.42;
 
-my $STRING     = "foo";
+my $EMPTY_STRING  = q{};
+my $STRING        = 'foo';
+my $NUM_IN_STRING = 'has 42 in it';
 
-my $SCALAR_REF = \(my $var);
+my $SCALAR_REF     = \( my $var );
+my $SCALAR_REF_REF = \$SCALAR_REF;
+my $ARRAY_REF      = [];
+my $HASH_REF       = {};
+my $CODE_REF       = sub { };
 
-no warnings 'once'; # << I *hates* that warning ...
-my $GLOB       = *GLOB_REF;
-my $GLOB_REF   = \$GLOB;
+no warnings 'once';    # << I *hates* that warning ...
+my $GLOB     = *GLOB_REF;
+my $GLOB_REF = \$GLOB;
 
-my $fh;
-open($fh, '<', $0) || die "Could not open $0 for the test";
+open my $FH, '<', $0 or die "Could not open $0 for the test";
 
-my $fh_obj = bless {}, "IO::Handle"; # not really
+my $FH_OBJECT = IO::File->new( $0, 'r' )
+    or die "Could not open $0 for the test";
 
-Moose::Util::TypeConstraints->export_type_constraints_as_functions();
+my $REGEX = qr/../;
+my $REGEX_OBJ = bless qr/../, 'BlessedQR';
 
-ok(defined Any(0),               '... Any accepts anything');
-ok(defined Any(100),             '... Any accepts anything');
-ok(defined Any(''),              '... Any accepts anything');
-ok(defined Any('Foo'),           '... Any accepts anything');
-ok(defined Any([]),              '... Any accepts anything');
-ok(defined Any({}),              '... Any accepts anything');
-ok(defined Any(sub {}),          '... Any accepts anything');
-ok(defined Any($SCALAR_REF),     '... Any accepts anything');
-ok(defined Any($GLOB),           '... Any accepts anything');
-ok(defined Any($GLOB_REF),       '... Any accepts anything');
-ok(defined Any($fh),             '... Any accepts anything');
-ok(defined Any(qr/../),          '... Any accepts anything');
-ok(defined Any(bless {}, 'Foo'), '... Any accepts anything');
-ok(defined Any(undef),           '... Any accepts anything');
+my $OBJECT = bless {}, 'Foo';
 
-ok(defined Item(0),               '... Item is the base type, so accepts anything');
-ok(defined Item(100),             '... Item is the base type, so accepts anything');
-ok(defined Item(''),              '... Item is the base type, so accepts anything');
-ok(defined Item('Foo'),           '... Item is the base type, so accepts anything');
-ok(defined Item([]),              '... Item is the base type, so accepts anything');
-ok(defined Item({}),              '... Item is the base type, so accepts anything');
-ok(defined Item(sub {}),          '... Item is the base type, so accepts anything');
-ok(defined Item($SCALAR_REF),     '... Item is the base type, so accepts anything');
-ok(defined Item($GLOB),           '... Item is the base type, so accepts anything');
-ok(defined Item($GLOB_REF),       '... Item is the base type, so accepts anything');
-ok(defined Item($fh),             '... Item is the base type, so accepts anything');
-ok(defined Item(qr/../),          '... Item is the base type, so accepts anything');
-ok(defined Item(bless {}, 'Foo'), '... Item is the base type, so accepts anything');
-ok(defined Item(undef),           '... Item is the base type, so accepts anything');
-
-ok(defined Defined(0),               '... Defined accepts anything which is defined');
-ok(defined Defined(100),             '... Defined accepts anything which is defined');
-ok(defined Defined(''),              '... Defined accepts anything which is defined');
-ok(defined Defined('Foo'),           '... Defined accepts anything which is defined');
-ok(defined Defined([]),              '... Defined accepts anything which is defined');
-ok(defined Defined({}),              '... Defined accepts anything which is defined');
-ok(defined Defined(sub {}),          '... Defined accepts anything which is defined');
-ok(defined Defined($SCALAR_REF),     '... Defined accepts anything which is defined');
-ok(defined Defined($GLOB),           '... Defined accepts anything which is defined');
-ok(defined Defined($GLOB_REF),       '... Defined accepts anything which is defined');
-ok(defined Defined($fh),             '... Defined accepts anything which is defined');
-ok(defined Defined(qr/../),          '... Defined accepts anything which is defined');
-ok(defined Defined(bless {}, 'Foo'), '... Defined accepts anything which is defined');
-ok(!defined Defined(undef),          '... Defined accepts anything which is defined');
-
-ok(!defined Undef(0),               '... Undef accepts anything which is not defined');
-ok(!defined Undef(100),             '... Undef accepts anything which is not defined');
-ok(!defined Undef(''),              '... Undef accepts anything which is not defined');
-ok(!defined Undef('Foo'),           '... Undef accepts anything which is not defined');
-ok(!defined Undef([]),              '... Undef accepts anything which is not defined');
-ok(!defined Undef({}),              '... Undef accepts anything which is not defined');
-ok(!defined Undef(sub {}),          '... Undef accepts anything which is not defined');
-ok(!defined Undef($SCALAR_REF),     '... Undef accepts anything which is not defined');
-ok(!defined Undef($GLOB),           '... Undef accepts anything which is not defined');
-ok(!defined Undef($GLOB_REF),       '... Undef accepts anything which is not defined');
-ok(!defined Undef($fh),             '... Undef accepts anything which is not defined');
-ok(!defined Undef(qr/../),          '... Undef accepts anything which is not defined');
-ok(!defined Undef(bless {}, 'Foo'), '... Undef accepts anything which is not defined');
-ok(defined Undef(undef),            '... Undef accepts anything which is not defined');
-
-ok(defined Bool(0),                 '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(defined Bool(1),                 '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool(100),              '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(defined Bool(''),                '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool('Foo'),            '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool([]),               '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool({}),               '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool(sub {}),           '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool($SCALAR_REF),      '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool($GLOB),            '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool($GLOB_REF),        '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool($fh),              '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool(qr/../),           '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(!defined Bool(bless {}, 'Foo'),  '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-ok(defined Bool(undef),             '... Bool rejects anything which is not a 1 or 0 or "" or undef');
-
-ok(defined Value(0),                 '... Value accepts anything which is not a Ref');
-ok(defined Value(100),               '... Value accepts anything which is not a Ref');
-ok(defined Value(''),                '... Value accepts anything which is not a Ref');
-ok(defined Value('Foo'),             '... Value accepts anything which is not a Ref');
-ok(!defined Value([]),               '... Value rejects anything which is not a Value');
-ok(!defined Value({}),               '... Value rejects anything which is not a Value');
-ok(!defined Value(sub {}),           '... Value rejects anything which is not a Value');
-ok(!defined Value($SCALAR_REF),      '... Value rejects anything which is not a Value');
-ok(defined Value($GLOB),             '... Value accepts anything which is not a Ref');
-ok(!defined Value($GLOB_REF),        '... Value rejects anything which is not a Value');
-ok(!defined Value($fh),              '... Value rejects anything which is not a Value');
-ok(!defined Value(qr/../),           '... Value rejects anything which is not a Value');
-ok(!defined Value(bless {}, 'Foo'),  '... Value rejects anything which is not a Value');
-ok(!defined Value(undef),            '... Value rejects anything which is not a Value');
-
-ok(!defined Ref(0),               '... Ref accepts anything which is not a Value');
-ok(!defined Ref(100),             '... Ref accepts anything which is not a Value');
-ok(!defined Ref(''),              '... Ref accepts anything which is not a Value');
-ok(!defined Ref('Foo'),           '... Ref accepts anything which is not a Value');
-ok(defined Ref([]),               '... Ref rejects anything which is not a Ref');
-ok(defined Ref({}),               '... Ref rejects anything which is not a Ref');
-ok(defined Ref(sub {}),           '... Ref rejects anything which is not a Ref');
-ok(defined Ref($SCALAR_REF),      '... Ref rejects anything which is not a Ref');
-ok(!defined Ref($GLOB),           '... Ref accepts anything which is not a Value');
-ok(defined Ref($GLOB_REF),        '... Ref rejects anything which is not a Ref');
-ok(defined Ref($fh),              '... Ref rejects anything which is not a Ref');
-ok(defined Ref(qr/../),           '... Ref rejects anything which is not a Ref');
-ok(defined Ref(bless {}, 'Foo'),  '... Ref rejects anything which is not a Ref');
-ok(!defined Ref(undef),           '... Ref rejects anything which is not a Ref');
-
-ok(defined Int(0),                 '... Int accepts anything which is an Int');
-ok(defined Int(100),               '... Int accepts anything which is an Int');
-ok(defined Int(-5),                '... Int accepts anything which is an Int');
-ok(!defined Int(0.5),              '... Int rejects anything which is not an Int');
-ok(!defined Int(100.01),           '... Int rejects anything which is not an Int');
-ok(!defined Int(''),               '... Int rejects anything which is not an Int');
-ok(!defined Int('Foo'),            '... Int rejects anything which is not an Int');
-ok(!defined Int([]),               '... Int rejects anything which is not an Int');
-ok(!defined Int({}),               '... Int rejects anything which is not an Int');
-ok(!defined Int(sub {}),           '... Int rejects anything which is not an Int');
-ok(!defined Int($SCALAR_REF),      '... Int rejects anything which is not an Int');
-ok(!defined Int($GLOB),            '... Int rejects anything which is not an Int');
-ok(!defined Int($GLOB_REF),        '... Int rejects anything which is not an Int');
-ok(!defined Int($fh),              '... Int rejects anything which is not an Int');
-ok(!defined Int(qr/../),           '... Int rejects anything which is not an Int');
-ok(!defined Int(bless {}, 'Foo'),  '... Int rejects anything which is not an Int');
-ok(!defined Int(undef),            '... Int rejects anything which is not an Int');
-ok(!defined Int("1\n"),            '... Int rejects anything which is not an Int');
-ok(!defined Int("\n1"),            '... Int rejects anything which is not an Int');
-
-ok(defined Num(0),                 '... Num accepts anything which is an Num');
-ok(defined Num(100),               '... Num accepts anything which is an Num');
-ok(defined Num(0.5),               '... Num accepts anything which is an Num');
-ok(defined Num(100.01),            '... Num accepts anything which is an Num');
-ok(!defined Num(''),               '... Num rejects anything which is not a Num');
-ok(!defined Num('Foo'),            '... Num rejects anything which is not a Num');
-ok(!defined Num([]),               '... Num rejects anything which is not a Num');
-ok(!defined Num({}),               '... Num rejects anything which is not a Num');
-ok(!defined Num(sub {}),           '... Num rejects anything which is not a Num');
-ok(!defined Num($SCALAR_REF),      '... Num rejects anything which is not a Num');
-ok(!defined Num($GLOB),            '... Num rejects anything which is not a Num');
-ok(!defined Num($GLOB_REF),        '... Num rejects anything which is not a Num');
-ok(!defined Num($fh),              '... Num rejects anything which is not a Num');
-ok(!defined Num(qr/../),           '... Num rejects anything which is not a Num');
-ok(!defined Num(bless {}, 'Foo'),  '... Num rejects anything which is not a Num');
-ok(!defined Num(undef),            '... Num rejects anything which is not a Num');
-
-ok(defined Str(0),                 '... Str accepts anything which is a Str');
-ok(defined Str(100),               '... Str accepts anything which is a Str');
-ok(defined Str(''),                '... Str accepts anything which is a Str');
-ok(defined Str('Foo'),             '... Str accepts anything which is a Str');
-ok(defined Str(substr($STRING,0,1)),'... Str accepts anything which is a Str');
-ok(!defined Str([]),               '... Str rejects anything which is not a Str');
-ok(!defined Str({}),               '... Str rejects anything which is not a Str');
-ok(!defined Str(sub {}),           '... Str rejects anything which is not a Str');
-ok(!defined Str($SCALAR_REF),      '... Str rejects anything which is not a Str');
-ok(!defined Str($fh),              '... Str rejects anything which is not a Str');
-ok(!defined Str($GLOB),            '... Str rejects anything which is not a Str');
-ok(!defined Str($GLOB_REF),        '... Str rejects anything which is not a Str');
-ok(!defined Str(qr/../),           '... Str rejects anything which is not a Str');
-ok(!defined Str(bless {}, 'Foo'),  '... Str rejects anything which is not a Str');
-ok(!defined Str(undef),            '... Str rejects anything which is not a Str');
-
-ok(!defined ScalarRef(0),                '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(100),              '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(''),               '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef('Foo'),            '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef([]),               '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef({}),               '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(sub {}),           '... ScalarRef rejects anything which is not a ScalarRef');
-ok(defined ScalarRef($SCALAR_REF),       '... ScalarRef accepts anything which is a ScalarRef');
-ok(defined ScalarRef(\$SCALAR_REF),      '... ScalarRef accepts references to references');
-ok(!defined ScalarRef($GLOB),            '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef($GLOB_REF),        '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef($fh),              '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(qr/../),           '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(bless {}, 'Foo'),  '... ScalarRef rejects anything which is not a ScalarRef');
-ok(!defined ScalarRef(undef),            '... ScalarRef rejects anything which is not a ScalarRef');
-
-ok(!defined ArrayRef(0),                '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(100),              '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(''),               '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef('Foo'),            '... ArrayRef rejects anything which is not a ArrayRef');
-ok(defined ArrayRef([]),                '... ArrayRef accepts anything which is a ArrayRef');
-ok(!defined ArrayRef({}),               '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(sub {}),           '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef($SCALAR_REF),      '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef($GLOB),            '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef($GLOB_REF),        '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef($fh),              '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(qr/../),           '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(bless {}, 'Foo'),  '... ArrayRef rejects anything which is not a ArrayRef');
-ok(!defined ArrayRef(undef),            '... ArrayRef rejects anything which is not a ArrayRef');
-
-ok(!defined HashRef(0),                '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef(100),              '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef(''),               '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef('Foo'),            '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef([]),               '... HashRef rejects anything which is not a HashRef');
-ok(defined HashRef({}),                '... HashRef accepts anything which is a HashRef');
-ok(!defined HashRef(sub {}),           '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef($SCALAR_REF),      '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef($GLOB),            '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef($GLOB_REF),        '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef($fh),              '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef(qr/../),           '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef(bless {}, 'Foo'),  '... HashRef rejects anything which is not a HashRef');
-ok(!defined HashRef(undef),            '... HashRef rejects anything which is not a HashRef');
-
-ok(!defined CodeRef(0),                '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef(100),              '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef(''),               '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef('Foo'),            '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef([]),               '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef({}),               '... CodeRef rejects anything which is not a CodeRef');
-ok(defined CodeRef(sub {}),            '... CodeRef accepts anything which is a CodeRef');
-ok(!defined CodeRef($SCALAR_REF),      '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef($GLOB),            '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef($GLOB_REF),        '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef($fh),              '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef(qr/../),           '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef(bless {}, 'Foo'),  '... CodeRef rejects anything which is not a CodeRef');
-ok(!defined CodeRef(undef),            '... CodeRef rejects anything which is not a CodeRef');
-
-ok(!defined RegexpRef(0),                '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef(100),              '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef(''),               '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef('Foo'),            '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef([]),               '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef({}),               '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef(sub {}),           '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef($SCALAR_REF),      '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef($GLOB),            '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef($GLOB_REF),        '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef($fh),              '... RegexpRef rejects anything which is not a RegexpRef');
-ok(defined RegexpRef(qr/../),            '... RegexpRef accepts anything which is a RegexpRef');
-ok(defined RegexpRef(bless qr/../, 'Foo'), '... RegexpRef accepts anything which is a RegexpRef');
-ok(!defined RegexpRef(bless {}, 'Foo'),  '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef(bless {}, 'Regexp'), '... RegexpRef rejects anything which is not a RegexpRef');
-ok(!defined RegexpRef(undef),            '... RegexpRef rejects anything which is not a RegexpRef');
-
-ok(!defined GlobRef(0),                '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(100),              '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(''),               '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef('Foo'),            '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef([]),               '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef({}),               '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(sub {}),           '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef($SCALAR_REF),      '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef($GLOB),            '... GlobRef rejects anything which is not a GlobRef');
-ok(defined GlobRef($GLOB_REF),         '... GlobRef accepts anything which is a GlobRef');
-ok(defined GlobRef($fh),               '... GlobRef accepts anything which is a GlobRef');
-ok(!defined GlobRef($fh_obj),          '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(qr/../),           '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(bless {}, 'Foo'),  '... GlobRef rejects anything which is not a GlobRef');
-ok(!defined GlobRef(undef),            '... GlobRef rejects anything which is not a GlobRef');
-
-ok(!defined FileHandle(0),                '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle(100),              '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle(''),               '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle('Foo'),            '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle([]),               '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle({}),               '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle(sub {}),           '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle($SCALAR_REF),      '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle($GLOB),            '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle($GLOB_REF),        '... FileHandle rejects anything which is not a FileHandle');
-ok(defined FileHandle($fh),               '... FileHandle accepts anything which is a FileHandle');
-ok(defined FileHandle($fh_obj),           '... FileHandle accepts anything which is a FileHandle');
-ok(!defined FileHandle(qr/../),           '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle(bless {}, 'Foo'),  '... FileHandle rejects anything which is not a FileHandle');
-ok(!defined FileHandle(undef),            '... FileHandle rejects anything which is not a FileHandle');
-
-ok(!defined Object(0),                '... Object rejects anything which is not blessed');
-ok(!defined Object(100),              '... Object rejects anything which is not blessed');
-ok(!defined Object(''),               '... Object rejects anything which is not blessed');
-ok(!defined Object('Foo'),            '... Object rejects anything which is not blessed');
-ok(!defined Object([]),               '... Object rejects anything which is not blessed');
-ok(!defined Object({}),               '... Object rejects anything which is not blessed');
-ok(!defined Object(sub {}),           '... Object rejects anything which is not blessed');
-ok(!defined Object($SCALAR_REF),      '... Object rejects anything which is not blessed');
-ok(!defined Object($GLOB),            '... Object rejects anything which is not blessed');
-ok(!defined Object($GLOB_REF),        '... Object rejects anything which is not blessed');
-ok(!defined Object($fh),              '... Object rejects anything which is not blessed');
-ok(defined Object(qr/../),           '... Object accepts anything which is blessed');
-ok(defined Object(bless {}, 'Foo'),   '... Object accepts anything which is blessed');
-ok(!defined Object(undef),             '... Object accepts anything which is blessed');
-
-ok(!defined ClassName(0),               '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(100),             '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(''),              '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName('Baz'),           '... ClassName rejects anything which is not a ClassName');
+my $UNDEF = undef;
 
 {
-  package Quux::Wibble; # this makes Quux symbol table exist
+    package Thing;
 
-  sub foo {}
+    sub foo { }
 }
 
-ok(!defined ClassName('Quux'),           '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName([]),              '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName({}),              '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(sub {}),          '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName($SCALAR_REF),     '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName($fh),             '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName($GLOB),           '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName($GLOB_REF),       '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(qr/../),          '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(bless {}, 'Foo'), '... ClassName rejects anything which is not a ClassName');
-ok(!defined ClassName(undef),           '... ClassName rejects anything which is not a ClassName');
-ok(defined ClassName('UNIVERSAL'),      '... ClassName accepts anything which is a ClassName');
-ok(defined ClassName('Quux::Wibble'),      '... ClassName accepts anything which is a ClassName');
-ok(defined ClassName('Moose::Meta::TypeConstraint'), '... ClassName accepts anything which is a ClassName');
-
-ok(!defined RoleName(0),               '... RoleName rejects anything which is not a RoleName');
-ok(!defined RoleName(100),             '... RoleName rejects anything which is not a RoleName');
-ok(!defined RoleName(''),              '... RoleName rejects anything which is not a RoleName');
-ok(!defined RoleName('Baz'),           '... RoleName rejects anything which is not a RoleName');
+my $CLASS_NAME = 'Thing';
 
 {
-  package Quux::Wibble::Role; # this makes Quux symbol table exist
-  use Moose::Role;
-  sub foo {}
+    package Role;
+    use Moose::Role;
+
+    sub foo { }
 }
 
-ok(!defined RoleName('Quux'),           '... RoleName rejects anything which is not a RoleName');
-ok(!defined RoleName([]),              '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName({}),              '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName(sub {}),          '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName($SCALAR_REF),     '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName($fh),             '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName($GLOB),           '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName($GLOB_REF),       '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName(qr/../),          '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName(bless {}, 'Foo'), '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName(undef),           '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName('UNIVERSAL'),     '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName('Quux::Wibble'),  '... Rolename rejects anything which is not a RoleName');
-ok(!defined RoleName('Moose::Meta::TypeConstraint'),  '... RoleName accepts anything which is a RoleName');
-ok(defined RoleName('Quux::Wibble::Role'),      '... RoleName accepts anything which is a RoleName');
+my $ROLE_NAME = 'Role';
 
-# Test $_ is read in XS implementation
+my %tests = (
+    Any => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    Item => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    Defined => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+        ],
+        reject => [
+            $UNDEF,
+        ],
+    },
+    Undef => {
+        accept => [
+            $UNDEF,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+        ],
+    },
+    Bool => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $EMPTY_STRING,
+            $UNDEF,
+        ],
+        reject => [
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+        ],
+    },
+    Value => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $GLOB,
+        ],
+        reject => [
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    Ref => {
+        accept => [
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $GLOB,
+            $UNDEF,
+        ],
+    },
+    Num => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+        ],
+        reject => [
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    Int => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+        ],
+        reject => [
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    Str => {
+        accept => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+        ],
+        reject => [
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    ScalarRef => {
+        accept => [
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    ArrayRef => {
+        accept => [
+            $ARRAY_REF,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    HashRef => {
+        accept => [
+            $HASH_REF,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    CodeRef => {
+        accept => [
+            $CODE_REF,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    RegexpRef => {
+        accept => [
+            $REGEX,
+            $REGEX_OBJ,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    GlobRef => {
+        accept => [
+            $GLOB_REF,
+            $FH,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $FH_OBJECT,
+            $OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $UNDEF,
+        ],
+    },
+    FileHandle => {
+        accept => [
+            $FH,
+            $FH_OBJECT,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $UNDEF,
+        ],
+    },
+    Object => {
+        accept => [
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $UNDEF,
+        ],
+    },
+    ClassName => {
+        accept => [
+            $CLASS_NAME,
+            $ROLE_NAME,
+        ],
+        reject => [
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+    RoleName => {
+        accept => [
+            $ROLE_NAME,
+        ],
+        reject => [
+            $CLASS_NAME,
+            $ZERO,
+            $ONE,
+            $INT,
+            $NEG_INT,
+            $NUM,
+            $NEG_NUM,
+            $EMPTY_STRING,
+            $STRING,
+            $NUM_IN_STRING,
+            $SCALAR_REF,
+            $SCALAR_REF_REF,
+            $ARRAY_REF,
+            $HASH_REF,
+            $CODE_REF,
+            $GLOB,
+            $GLOB_REF,
+            $FH,
+            $FH_OBJECT,
+            $REGEX,
+            $REGEX_OBJ,
+            $OBJECT,
+            $UNDEF,
+        ],
+    },
+);
+
+for my $name ( sort keys %tests ) {
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($name)
+        or BAIL_OUT("No such type $name!");
+
+    my $unoptimized
+        = $type->has_parent
+        ? $type->_compile_subtype( $type->constraint )
+        : $type->_compile_type( $type->constraint );
+
+    my $inlined;
+    if ( $type->has_inlined_type_constraint ) {
+        local $@;
+        $inlined = eval 'sub { ( ' . $type->inlined->('$_[0]') . ' ) }';
+        die $@ if $@;
+    }
+
+    for my $accept ( @{ $tests{$name}{accept} || [] } ) {
+        my $described = describe($accept);
+        ok(
+            $type->check($accept),
+            "$name accepts $described using ->check"
+        );
+        ok(
+            $unoptimized->($accept),
+            "$name accepts $described using unoptimized constraint"
+        );
+        if ($inlined) {
+            ok(
+                $inlined->($accept),
+                "$name accepts $described using inlined constraint"
+            );
+        }
+    }
+
+    for my $reject ( @{ $tests{$name}{reject} || [] } ) {
+        my $described = describe($reject);
+        ok(
+            !$type->check($reject),
+            "$name rejects $described using ->check"
+        );
+        ok(
+            !$unoptimized->($reject),
+            "$name rejects $described using unoptimized constraint"
+        );
+        if ($inlined) {
+            ok(
+                !$inlined->($reject),
+                "$name rejects $described using inlined constraint"
+            );
+        }
+    }
+}
+
+# Test how $_ is used in XS implementation
 {
-  local $_ = qr//;
-  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is RegexpRef');
-  ok(!Moose::Util::TypeConstraints::Builtins::_RegexpRef(1), '$_ is not read when param provided');
-  $_ = bless qr//, "blessed";
-  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is RegexpRef');
-  $_ = 42;
-  ok(!Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is not RegexpRef');
-  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(qr//), '$_ is not read when param provided');
+    local $_ = qr/./;
+    ok(
+        Moose::Util::TypeConstraints::Builtins::_RegexpRef(),
+        '$_ is RegexpRef'
+    );
+    ok(
+        !Moose::Util::TypeConstraints::Builtins::_RegexpRef(1),
+        '$_ is not read when param provided'
+    );
+
+    $_ = bless qr/./, 'Blessed';
+
+    ok(
+        Moose::Util::TypeConstraints::Builtins::_RegexpRef(),
+        '$_ is RegexpRef'
+    );
+
+    $_ = 42;
+    ok(
+        !Moose::Util::TypeConstraints::Builtins::_RegexpRef(),
+        '$_ is not RegexpRef'
+    );
+    ok(
+        Moose::Util::TypeConstraints::Builtins::_RegexpRef(qr/./),
+        '$_ is not read when param provided'
+    );
 }
 
-close($fh) || die "Could not close the filehandle $0 for test";
+close $FH
+    or warn "Could not close the filehandle $0 for test";
+$FH_OBJECT->close
+    or warn "Could not close the filehandle $0 for test";
 
 done_testing;
+
+sub describe {
+    my $val = shift;
+
+    return 'undef' unless defined $val;
+
+    if ( !ref $val ) {
+        return q{''} if $val eq q{};
+    }
+
+    return $val unless ref $val;
+
+    return 'open filehandle'
+        if openhandle $val && !blessed $val;
+
+    return ( ref $val ) . ' reference';
+}

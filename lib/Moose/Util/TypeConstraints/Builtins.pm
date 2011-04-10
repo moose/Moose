@@ -20,7 +20,8 @@ sub define_builtins {
         => inline_as { '1' };
 
     subtype 'Item'  # base-type
-        => as 'Any';
+        => as 'Any'
+        => inline_as { '1' };
 
     subtype 'Undef'
         => as 'Item'
@@ -79,32 +80,32 @@ sub define_builtins {
         => as 'Ref'
         => where { ref($_) eq 'CODE' }
         => optimize_as( \&_CodeRef )
-        => inline_as { qq{ref( $_[0] ) eq 'CODE'} };
+        => inline_as { qq{ref $_[0] eq 'CODE'} };
 
     subtype 'RegexpRef'
         => as 'Ref'
         => where( \&_RegexpRef )
         => optimize_as( \&_RegexpRef )
-        => inline_as { "_RegexpRef( $_[0] )" };
+        => inline_as { "Moose::Util::TypeConstraints::Builtins::_RegexpRef( $_[0] )" };
 
     subtype 'GlobRef'
         => as 'Ref'
         => where { ref($_) eq 'GLOB' }
         => optimize_as( \&_GlobRef )
-        => inline_as { qq{ref( $_[0] ) eq 'GLOB'} };
+        => inline_as { qq{ref $_[0] eq 'GLOB'} };
 
     # NOTE: scalar filehandles are GLOB refs, but a GLOB ref is not always a
     # filehandle
     subtype 'FileHandle'
-        => as 'GlobRef'
+        => as 'Ref'
         => where {
             Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
         }
         => optimize_as( \&_FileHandle )
         => inline_as {
-            return (  qq{ref( $_[0] ) eq 'GLOB'}
+            return (  qq{ref $_[0] eq 'GLOB'}
                     . qq{&& Scalar::Util::openhandle( $_[0] )}
-                    . qq{or blessed( $_[0] ) && $_[0]->isa("IO::Handle")} );
+                    . qq{or Scalar::Util::blessed( $_[0] ) && $_[0]->isa("IO::Handle")} );
         };
 
     subtype 'Object'

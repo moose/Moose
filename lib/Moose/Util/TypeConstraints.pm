@@ -831,7 +831,7 @@ that hierarchy represented visually.
               CodeRef
               RegexpRef
               GlobRef
-                  FileHandle
+              FileHandle
               Object
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
