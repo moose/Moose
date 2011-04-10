@@ -3,6 +3,7 @@ package Moose::Util::TypeConstraints::Builtins;
 use strict;
 use warnings;
 
+use List::MoreUtils ();
 use Scalar::Util qw( blessed looks_like_number reftype );
 
 sub type { goto &Moose::Util::TypeConstraints::type }
@@ -152,7 +153,14 @@ sub define_builtins {
                 return sub {
                     return $check->( ${$_} );
                 };
-            }
+            },
+            inlined => sub {qq{ref $_[0] eq 'SCALAR' || ref $_[0] eq 'REF'}},
+            inline_generator => sub {
+                my $type_parameter = shift;
+                my $val            = shift;
+                return $type_parameter->_inline_check(
+                    '${ (' . $val . ') }' );
+            },
         )
     );
 
@@ -173,7 +181,16 @@ sub define_builtins {
                     }
                     1;
                     }
-            }
+            },
+            inlined          => sub {qq{ref $_[0] eq 'ARRAY'}},
+            inline_generator => sub {
+                my $type_parameter = shift;
+                my $val            = shift;
+                return
+                      '&List::MoreUtils::all( sub { '
+                    . $type_parameter->_inline_check('$_')
+                    . " }, \@{$val} )";
+            },
         )
     );
 
@@ -194,7 +211,16 @@ sub define_builtins {
                     }
                     1;
                     }
-            }
+            },
+            inlined          => sub {qq{ref $_[0] eq 'HASH'}},
+            inline_generator => sub {
+                my $type_parameter = shift;
+                my $val            = shift;
+                return
+                      '&List::MoreUtils::all( sub { '
+                    . $type_parameter->_inline_check('$_')
+                    . " }, values \%{$val} )";
+            },
         )
     );
 
@@ -212,7 +238,15 @@ sub define_builtins {
                     return 1 if not( defined($_) ) || $check->($_);
                     return;
                     }
-            }
+            },
+            inlined          => sub {'1'},
+            inline_generator => sub {
+                my $type_parameter = shift;
+                my $val            = shift;
+                return
+                    "(! defined $val) || ("
+                    . $type_parameter->_inline_check($val) . ')';
+            },
         )
     );
 }

@@ -15,6 +15,11 @@ __PACKAGE__->meta->add_attribute('type_parameter' => (
     predicate => 'has_type_parameter',
 ));
 
+__PACKAGE__->meta->add_attribute('parameterized_from' => (
+    accessor   => 'parameterized_from',
+    predicate  => 'has_parameterized_from',
+));
+
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
@@ -56,6 +61,23 @@ sub compile_type_constraint {
     require Moose;
     Moose->throw_error("The " . $self->name . " constraint cannot be used, because "
           . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.");
+}
+
+sub has_inlined_type_constraint {
+    my $self = shift;
+
+    return $self->has_parameterized_from
+        && $self->has_parameterized_from->has_inline_generator;
+}
+
+sub _inline_check {
+    my $self = shift;
+
+    return
+        unless $self->has_parameterized_from
+            && $self->has_parameterized_from->has_inline_generator;
+
+    return $self->parameterized_from->generate_inline_for( $self->type, @_ );
 }
 
 sub create_child_type {

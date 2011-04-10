@@ -13,6 +13,11 @@ __PACKAGE__->meta->add_attribute('constraint_generator' => (
     predicate => 'has_constraint_generator',
 ));
 
+__PACKAGE__->meta->add_attribute('inline_generator' => (
+    accessor  => 'inline_generator',
+    predicate => 'has_inline_generator',
+));
+
 sub generate_constraint_for {
     my ($self, $type) = @_;
 
@@ -63,9 +68,10 @@ sub parameterize {
     if ( $contained_tc->isa('Moose::Meta::TypeConstraint') ) {
         my $tc_name = $self->name . '[' . $contained_tc->name . ']';
         return Moose::Meta::TypeConstraint::Parameterized->new(
-            name           => $tc_name,
-            parent         => $self,
-            type_parameter => $contained_tc,
+            name               => $tc_name,
+            parent             => $self,
+            type_parameter     => $contained_tc,
+            parameterized_from => $self,
         );
     }
     else {
