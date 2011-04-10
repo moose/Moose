@@ -97,9 +97,14 @@ sub _inline_check_member_constraint {
 
     my $attr_name = $self->associated_attribute->name;
 
+    my $check
+        = $self->_tc_member_type->has_inlined_type_constraint
+        ? '! (' . $self->_tc_member_type->_inline_check('$_') . ')'
+        : ' !$member_tc->($_) ';
+
     return (
         'for (' . $new_value . ') {',
-            'if (!$member_tc->($_)) {',
+            "if ($check) {",
                 $self->_inline_throw_error(
                     '"A new member value for ' . $attr_name
                   . ' does not pass its type constraint because: "'
