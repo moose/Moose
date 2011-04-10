@@ -58,7 +58,7 @@ sub define_builtins {
         => inline_as {
             return (  qq{defined $_[1]}
                     . qq{&& (   ref(\\             $_[1] ) eq 'SCALAR'}
-                    . qq{    || ref(\\(my \$value = $_[1])) eq 'SCALAR')} );
+                    . qq{    || ref(\\(my \$str_value = $_[1])) eq 'SCALAR')} );
         };
 
     subtype 'Num'
@@ -74,7 +74,7 @@ sub define_builtins {
         => inline_as {
             return (  qq{defined $_[1]}
                     . qq{&& ! ref $_[1]}
-                    . qq{&& ( my \$value = $_[1] ) =~ /\\A-?[0-9]+\\z/} );
+                    . qq{&& ( my \$int_value = $_[1] ) =~ /\\A-?[0-9]+\\z/} );
         };
 
     subtype 'CodeRef'
