@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use B;
 use Scalar::Util 'blessed';
 use List::MoreUtils qw(all);
 use Moose::Util 'english_list';
@@ -16,10 +17,30 @@ __PACKAGE__->meta->add_attribute('methods' => (
     accessor => 'methods',
 ));
 
+my $inliner = sub {
+    my $self = shift;
+    my $val  = shift;
+
+    return
+          "Scalar::Util::blessed($val)"
+        . qq{&& Scalar::Util::blessed($val) ne 'Regexp'}
+        . "&& &List::MoreUtils::all( sub { $val->can(\$_) }, "
+        . ( join ', ', map { B::perlstring($_) } @{ $self->methods } ) . ' )';
+};
+
 sub new {
     my ( $class, %args ) = @_;
 
-    $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
+    $args{parent}
+        = Moose::Util::TypeConstraints::find_type_constraint('Object');
+
+    my @methods = @{ $args{methods} };
+    $args{constraint} = sub {
+        blessed( $_[0] ) ne 'Regexp'
+            && all { $_[0]->can($_) } @methods;
+    };
+
+    $args{inlined} = $inliner;
 
     my $self = $class->_new(\%args);
 

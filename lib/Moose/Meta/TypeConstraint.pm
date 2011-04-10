@@ -133,7 +133,7 @@ sub _inline_check {
     die 'Cannot inline a type constraint check for ' . $self->name
         unless $self->has_inlined_type_constraint;
 
-    return $self->inlined()->(@_);
+    return $self->inlined->( $self, @_ );
 }
 
 sub assert_valid {

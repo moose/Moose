@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 
 use IO::File;
-use Moose::Util::TypeConstraints ();
+use Moose::Util::TypeConstraints;
 use Scalar::Util qw( blessed openhandle );
 
 my $ZERO    = 0;
@@ -649,56 +649,148 @@ my %tests = (
 );
 
 for my $name ( sort keys %tests ) {
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($name)
-        or BAIL_OUT("No such type $name!");
+    test_constraint( $name, $tests{$name} );
+}
 
-    my $unoptimized
-        = $type->has_parent
-        ? $type->_compile_subtype( $type->constraint )
-        : $type->_compile_type( $type->constraint );
+{
+    my $class_tc = class_type('Thing');
 
-    my $inlined;
-    if ( $type->has_inlined_type_constraint ) {
-        local $@;
-        $inlined = eval 'sub { ( ' . $type->inlined->('$_[0]') . ' ) }';
-        die $@ if $@;
-    }
-
-    for my $accept ( @{ $tests{$name}{accept} || [] } ) {
-        my $described = describe($accept);
-        ok(
-            $type->check($accept),
-            "$name accepts $described using ->check"
-        );
-        ok(
-            $unoptimized->($accept),
-            "$name accepts $described using unoptimized constraint"
-        );
-        if ($inlined) {
-            ok(
-                $inlined->($accept),
-                "$name accepts $described using inlined constraint"
-            );
+    test_constraint(
+        $class_tc, {
+            accept => [
+                ( bless {}, 'Thing' ),
+            ],
+            reject => [
+                'Thing',
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $OBJECT,
+                $UNDEF,
+            ],
         }
-    }
+    );
+}
 
-    for my $reject ( @{ $tests{$name}{reject} || [] } ) {
-        my $described = describe($reject);
-        ok(
-            !$type->check($reject),
-            "$name rejects $described using ->check"
-        );
-        ok(
-            !$unoptimized->($reject),
-            "$name rejects $described using unoptimized constraint"
-        );
-        if ($inlined) {
-            ok(
-                !$inlined->($reject),
-                "$name rejects $described using inlined constraint"
-            );
+{
+    package Duck;
+
+    sub quack {}
+    sub flap {}
+}
+
+{
+    package DuckLike;
+
+    sub quack {}
+    sub flap {}
+}
+
+{
+    package Bird;
+
+    sub flap {}
+}
+
+{
+    my @methods = qw( quack flap );
+    duck_type 'Duck' => @methods;
+
+    test_constraint(
+        'Duck', {
+            accept => [
+                ( bless {}, 'Duck' ),
+                ( bless {}, 'DuckLike' ),
+            ],
+            reject => [
+                'Thing',
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $OBJECT,
+                ( bless {}, 'Bird' ),
+                $UNDEF,
+            ],
         }
-    }
+    );
+}
+
+{
+    my @allowed = qw( bar baz quux );
+    enum 'Enumerated' => @allowed;
+
+    test_constraint(
+        'Enumerated', {
+            accept => \@allowed,
+            reject => [
+                'Thing',
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $OBJECT,
+                $UNDEF,
+            ],
+        }
+    );
+}
+
+{
+    package DoesRole;
+
+    use Moose;
+
+    with 'Role';
 }
 
 # Test how $_ is used in XS implementation
@@ -738,6 +830,68 @@ $FH_OBJECT->close
 
 done_testing;
 
+sub test_constraint {
+    my $type  = shift;
+    my $tests = shift;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    unless ( blessed $type ) {
+        $type = Moose::Util::TypeConstraints::find_type_constraint($type)
+            or BAIL_OUT("No such type $type!");
+    }
+
+    my $name = $type->name;
+
+    my $unoptimized
+        = $type->has_parent
+        ? $type->_compile_subtype( $type->constraint )
+        : $type->_compile_type( $type->constraint );
+
+    my $inlined;
+    if ( $type->has_inlined_type_constraint ) {
+        local $@;
+        $inlined = eval 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }';
+        die $@ if $@;
+    }
+
+    for my $accept ( @{ $tests->{accept} || [] } ) {
+        my $described = describe($accept);
+        ok(
+            $type->check($accept),
+            "$name accepts $described using ->check"
+        );
+        ok(
+            $unoptimized->($accept),
+            "$name accepts $described using unoptimized constraint"
+        );
+        if ($inlined) {
+            ok(
+                $inlined->($accept),
+                "$name accepts $described using inlined constraint"
+            );
+        }
+    }
+
+    for my $reject ( @{ $tests->{reject} || [] } ) {
+        my $described = describe($reject);
+        ok(
+            !$type->check($reject),
+            "$name rejects $described using ->check"
+        );
+        ok(
+            !$unoptimized->($reject),
+            "$name rejects $described using unoptimized constraint"
+        );
+        if ($inlined) {
+            ok(
+                !$inlined->($reject),
+                "$name rejects $described using inlined constraint"
+            );
+        }
+    }
+}
+
 sub describe {
     my $val = shift;
 
@@ -752,5 +906,7 @@ sub describe {
     return 'open filehandle'
         if openhandle $val && !blessed $val;
 
-    return ( ref $val ) . ' reference';
+    return blessed $val
+        ? ( ref $val ) . ' object'
+        : ( ref $val ) . ' reference';
 }

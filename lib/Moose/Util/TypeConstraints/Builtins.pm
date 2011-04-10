@@ -27,73 +27,73 @@ sub define_builtins {
     subtype 'Undef'
         => as 'Item'
         => where { !defined($_) }
-        => inline_as { "! defined $_[0]" };
+        => inline_as { "! defined $_[1]" };
 
     subtype 'Defined'
         => as 'Item'
         => where { defined($_) }
-        => inline_as { "defined $_[0]" };
+        => inline_as { "defined $_[1]" };
 
     subtype 'Bool'
         => as 'Item'
         => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
-        => inline_as { qq{!defined($_[0]) || $_[0] eq "" || "$_[0]" eq '1' || "$_[0]" eq '0'} };
+        => inline_as { qq{!defined($_[1]) || $_[1] eq "" || "$_[1]" eq '1' || "$_[1]" eq '0'} };
 
     subtype 'Value'
         => as 'Defined'
         => where { !ref($_) }
         => optimize_as( \&_Value )
-        => inline_as { "defined $_[0] && ! ref $_[0]" };
+        => inline_as { "defined $_[1] && ! ref $_[1]" };
 
     subtype 'Ref'
         => as 'Defined'
         => where { ref($_) }
         => optimize_as( \&_Ref )
-        => inline_as { "ref $_[0]" };
+        => inline_as { "ref $_[1]" };
 
     subtype 'Str'
         => as 'Value'
         => where { ref(\$_) eq 'SCALAR' }
         => optimize_as( \&_Str )
         => inline_as {
-            return (  qq{defined $_[0]}
-                    . qq{&& (   ref(\\             $_[0] ) eq 'SCALAR'}
-                    . qq{    || ref(\\(my \$value = $_[0])) eq 'SCALAR')} );
+            return (  qq{defined $_[1]}
+                    . qq{&& (   ref(\\             $_[1] ) eq 'SCALAR'}
+                    . qq{    || ref(\\(my \$value = $_[1])) eq 'SCALAR')} );
         };
 
     subtype 'Num'
         => as 'Str'
         => where { Scalar::Util::looks_like_number($_) }
         => optimize_as( \&_Num )
-        => inline_as { "!ref $_[0] && Scalar::Util::looks_like_number($_[0])" };
+        => inline_as { "!ref $_[1] && Scalar::Util::looks_like_number($_[1])" };
 
     subtype 'Int'
         => as 'Num'
         => where { "$_" =~ /^-?[0-9]+$/ }
         => optimize_as( \&_Int )
         => inline_as {
-            return (  qq{defined $_[0]}
-                    . qq{&& ! ref $_[0]}
-                    . qq{&& ( my \$value = $_[0] ) =~ /\\A-?[0-9]+\\z/} );
+            return (  qq{defined $_[1]}
+                    . qq{&& ! ref $_[1]}
+                    . qq{&& ( my \$value = $_[1] ) =~ /\\A-?[0-9]+\\z/} );
         };
 
     subtype 'CodeRef'
         => as 'Ref'
         => where { ref($_) eq 'CODE' }
         => optimize_as( \&_CodeRef )
-        => inline_as { qq{ref $_[0] eq 'CODE'} };
+        => inline_as { qq{ref $_[1] eq 'CODE'} };
 
     subtype 'RegexpRef'
         => as 'Ref'
         => where( \&_RegexpRef )
         => optimize_as( \&_RegexpRef )
-        => inline_as { "Moose::Util::TypeConstraints::Builtins::_RegexpRef( $_[0] )" };
+        => inline_as { "Moose::Util::TypeConstraints::Builtins::_RegexpRef( $_[1] )" };
 
     subtype 'GlobRef'
         => as 'Ref'
         => where { ref($_) eq 'GLOB' }
         => optimize_as( \&_GlobRef )
-        => inline_as { qq{ref $_[0] eq 'GLOB'} };
+        => inline_as { qq{ref $_[1] eq 'GLOB'} };
 
     # NOTE: scalar filehandles are GLOB refs, but a GLOB ref is not always a
     # filehandle
@@ -104,16 +104,16 @@ sub define_builtins {
         }
         => optimize_as( \&_FileHandle )
         => inline_as {
-            return (  qq{ref $_[0] eq 'GLOB'}
-                    . qq{&& Scalar::Util::openhandle( $_[0] )}
-                    . qq{or Scalar::Util::blessed( $_[0] ) && $_[0]->isa("IO::Handle")} );
+            return (  qq{ref $_[1] eq 'GLOB'}
+                    . qq{&& Scalar::Util::openhandle( $_[1] )}
+                    . qq{or Scalar::Util::blessed( $_[1] ) && $_[1]->isa("IO::Handle")} );
         };
 
     subtype 'Object'
         => as 'Ref'
         => where { blessed($_) }
         => optimize_as( \&_Object )
-        => inline_as { "Scalar::Util::blessed( $_[0] )" };
+        => inline_as { "Scalar::Util::blessed( $_[1] )" };
 
     # This type is deprecated.
     subtype 'Role'
@@ -125,7 +125,7 @@ sub define_builtins {
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
         => optimize_as( \&_ClassName )
-        => inline_as { "Class::MOP::is_class_loaded( $_[0] )" };
+        => inline_as { "Class::MOP::is_class_loaded( $_[1] )" };
 
     subtype 'RoleName'
         => as 'ClassName'
@@ -134,8 +134,8 @@ sub define_builtins {
         }
         => optimize_as( \&_RoleName )
         => inline_as {
-            return (  qq{Class::MOP::is_class_loaded( $_[0] )}
-                    . qq{&& ( Class::MOP::class_of( $_[0] ) || return )}
+            return (  qq{Class::MOP::is_class_loaded( $_[1] )}
+                    . qq{&& ( Class::MOP::class_of( $_[1] ) || return )}
                     . qq{       ->isa('Moose::Meta::Role')} );
         };
 
@@ -154,8 +154,9 @@ sub define_builtins {
                     return $check->( ${$_} );
                 };
             },
-            inlined => sub {qq{ref $_[0] eq 'SCALAR' || ref $_[0] eq 'REF'}},
+            inlined => sub {qq{ref $_[1] eq 'SCALAR' || ref $_[1] eq 'REF'}},
             inline_generator => sub {
+                my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
                 return $type_parameter->_inline_check(
@@ -182,8 +183,9 @@ sub define_builtins {
                     1;
                     }
             },
-            inlined          => sub {qq{ref $_[0] eq 'ARRAY'}},
+            inlined          => sub {qq{ref $_[1] eq 'ARRAY'}},
             inline_generator => sub {
+                my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
                 return
@@ -212,8 +214,9 @@ sub define_builtins {
                     1;
                     }
             },
-            inlined          => sub {qq{ref $_[0] eq 'HASH'}},
+            inlined          => sub {qq{ref $_[1] eq 'HASH'}},
             inline_generator => sub {
+                my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
                 return
@@ -241,6 +244,7 @@ sub define_builtins {
             },
             inlined          => sub {'1'},
             inline_generator => sub {
+                my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
                 return

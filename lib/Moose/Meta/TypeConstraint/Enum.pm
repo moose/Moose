@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use B;
 use Moose::Util::TypeConstraints ();
 
 use base 'Moose::Meta::TypeConstraint';
@@ -12,10 +13,28 @@ __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',
 ));
 
+our %ENUMS;
+
+my $inliner = sub {
+    my $self = shift;
+    my $val  = shift;
+
+    my $name = $self->name();
+    $ENUMS{$name} ||= { map { $_ => 1 } @{ $self->values() } };
+
+    return
+          "defined $val && " . '$'
+        . __PACKAGE__
+        . '::ENUMS{'
+        . B::perlstring($name)
+        . "}{ $val }";
+};
+
 sub new {
     my ( $class, %args ) = @_;
 
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Str');
+    $args{inlined} = $inliner;
 
     if ( scalar @{ $args{values} } < 2 ) {
         require Moose;
@@ -32,6 +51,9 @@ sub new {
             Moose->throw_error("Enum values must be strings, not '$_'");
         }
     }
+
+    my %values = map { $_ => 1 } @{ $args{values} };
+    $args{constraint} = sub { $values{ $_[0] } };
 
     my $self = $class->_new(\%args);
 

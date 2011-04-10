@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use B;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
@@ -13,11 +14,27 @@ __PACKAGE__->meta->add_attribute('class' => (
     reader => 'class',
 ));
 
+my $inliner = sub {
+    my $self = shift;
+    my $val  = shift;
+
+    return
+        "Scalar::Util::blessed($val) && $val->isa("
+        . B::perlstring( $self->class ) . ')';
+};
+
 sub new {
     my ( $class, %args ) = @_;
 
-    $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
-    my $self      = $class->_new(\%args);
+    $args{parent}
+        = Moose::Util::TypeConstraints::find_type_constraint('Object');
+
+    my $class_name = $args{class};
+    $args{constraint} = sub { $_[0]->isa($class_name) };
+
+    $args{inlined} = $inliner;
+
+    my $self = $class->_new( \%args );
 
     $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();

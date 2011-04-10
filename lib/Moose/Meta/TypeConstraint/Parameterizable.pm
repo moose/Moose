@@ -48,7 +48,7 @@ sub generate_inline_for {
 
     return unless $self->has_inline_generator;
 
-    return $self->inline_generator->( $type, $val );
+    return $self->inline_generator->( $self, $type, $val );
 }
 
 sub _parse_type_parameter {
