@@ -66,18 +66,19 @@ sub compile_type_constraint {
 sub has_inlined_type_constraint {
     my $self = shift;
 
-    return $self->has_parameterized_from
-        && $self->has_parameterized_from->has_inline_generator;
+    return
+           $self->has_parameterized_from
+        && $self->parameterized_from->has_inline_generator
+        && $self->type_parameter->has_inlined_type_constraint;
+
 }
 
 sub _inline_check {
     my $self = shift;
 
-    return
-        unless $self->has_parameterized_from
-            && $self->has_parameterized_from->has_inline_generator;
+    return unless $self->has_inlined_type_constraint;
 
-    return $self->parameterized_from->generate_inline_for( $self->type, @_ );
+    return $self->parameterized_from->generate_inline_for( $self->type_parameter, @_ );
 }
 
 sub create_child_type {

@@ -43,6 +43,14 @@ sub _can_coerce_constraint_from {
     };
 }
 
+sub generate_inline_for {
+    my ($self, $type, $val) = @_;
+
+    return unless $self->has_inline_generator;
+
+    return $self->inline_generator->( $type, $val );
+}
+
 sub _parse_type_parameter {
     my ($self, $type_parameter) = @_;
     return Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($type_parameter);
