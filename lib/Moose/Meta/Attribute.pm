@@ -639,16 +639,30 @@ sub _inline_check_constraint {
 
     my $attr_name = quotemeta($self->name);
 
-    return (
-        'if (!' . $tc . '->(' . $value . ')) {',
-            $self->_inline_throw_error(
-                '"Attribute (' . $attr_name . ') does not pass the type '
-              . 'constraint because: " . '
-              . $tc_obj . '->get_message(' . $value . ')',
-                'data => ' . $value
-            ) . ';',
-        '}',
-    );
+    if ( $self->type_constraint->has_inlined_type_constraint ) {
+        return (
+            'if (! (' . $self->type_constraint->_inline_check($value) . ')) {',
+                $self->_inline_throw_error(
+                    '"Attribute (' . $attr_name . ') does not pass the type '
+                  . 'constraint because: " . '
+                  . $tc_obj . '->get_message(' . $value . ')',
+                    'data => ' . $value
+                ) . ';',
+            '}',
+        );
+    }
+    else {
+        return (
+            'if (!' . $tc . '->(' . $value . ')) {',
+                $self->_inline_throw_error(
+                    '"Attribute (' . $attr_name . ') does not pass the type '
+                  . 'constraint because: " . '
+                  . $tc_obj . '->get_message(' . $value . ')',
+                    'data => ' . $value
+                ) . ';',
+            '}',
+        );
+    }
 }
 
 sub _inline_get_old_value_for_trigger {

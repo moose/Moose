@@ -10,59 +10,88 @@ sub subtype { goto &Moose::Util::TypeConstraints::subtype }
 sub as { goto &Moose::Util::TypeConstraints::as }
 sub where (&) { goto &Moose::Util::TypeConstraints::where }
 sub optimize_as (&) { goto &Moose::Util::TypeConstraints::optimize_as }
+sub inline_as (&) { goto &Moose::Util::TypeConstraints::inline_as }
 
 sub define_builtins {
     my $registry = shift;
 
-    type 'Any'  => where {1};    # meta-type including all
-    subtype 'Item' => as 'Any';  # base-type
+    type 'Any'    # meta-type including all
+        => where {1}
+        => inline_as { '1' };
 
-    subtype 'Undef'   => as 'Item' => where { !defined($_) };
-    subtype 'Defined' => as 'Item' => where { defined($_) };
+    subtype 'Item'  # base-type
+        => as 'Any';
+
+    subtype 'Undef'
+        => as 'Item'
+        => where { !defined($_) }
+        => inline_as { "! defined $_[0]" };
+
+    subtype 'Defined'
+        => as 'Item'
+        => where { defined($_) }
+        => inline_as { "defined $_[0]" };
 
     subtype 'Bool'
         => as 'Item'
-        => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' };
+        => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
+        => inline_as { qq{!defined($_[0]) || $_[0] eq "" || "$_[0]" eq '1' || "$_[0]" eq '0'} };
 
     subtype 'Value'
         => as 'Defined'
         => where { !ref($_) }
-        => optimize_as \&_Value;
+        => optimize_as( \&_Value )
+        => inline_as { "defined $_[0] && ! ref $_[0]" };
 
     subtype 'Ref'
         => as 'Defined'
         => where { ref($_) }
-        => optimize_as \&_Ref;
+        => optimize_as( \&_Ref )
+        => inline_as { "ref $_[0]" };
 
     subtype 'Str'
         => as 'Value'
         => where { ref(\$_) eq 'SCALAR' }
-        => optimize_as \&_Str;
+        => optimize_as( \&_Str )
+        => inline_as {
+            return (  qq{defined $_[0]}
+                    . qq{&& (   ref(\\             $_[0] ) eq 'SCALAR'}
+                    . qq{    || ref(\\(my \$value = $_[0])) eq 'SCALAR')} );
+        };
 
     subtype 'Num'
         => as 'Str'
         => where { Scalar::Util::looks_like_number($_) }
-        => optimize_as \&_Num;
+        => optimize_as( \&_Num )
+        => inline_as { "!ref $_[0] && Scalar::Util::looks_like_number($_[0])" };
 
     subtype 'Int'
         => as 'Num'
         => where { "$_" =~ /^-?[0-9]+$/ }
-        => optimize_as \&_Int;
+        => optimize_as( \&_Int )
+        => inline_as {
+            return (  qq{defined $_[0]}
+                    . qq{&& ! ref $_[0]}
+                    . qq{&& ( my \$value = $_[0] ) =~ /\\A-?[0-9]+\\z/} );
+        };
 
     subtype 'CodeRef'
         => as 'Ref'
         => where { ref($_) eq 'CODE' }
-        => optimize_as \&_CodeRef;
+        => optimize_as( \&_CodeRef )
+        => inline_as { qq{ref( $_[0] ) eq 'CODE'} };
 
     subtype 'RegexpRef'
         => as 'Ref'
         => where( \&_RegexpRef )
-        => optimize_as \&_RegexpRef;
+        => optimize_as( \&_RegexpRef )
+        => inline_as { "_RegexpRef( $_[0] )" };
 
     subtype 'GlobRef'
         => as 'Ref'
         => where { ref($_) eq 'GLOB' }
-        => optimize_as \&_GlobRef;
+        => optimize_as( \&_GlobRef )
+        => inline_as { qq{ref( $_[0] ) eq 'GLOB'} };
 
     # NOTE: scalar filehandles are GLOB refs, but a GLOB ref is not always a
     # filehandle
@@ -71,30 +100,42 @@ sub define_builtins {
         => where {
             Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
         }
-        => optimize_as \&_FileHandle;
+        => optimize_as( \&_FileHandle )
+        => inline_as {
+            return (  qq{ref( $_[0] ) eq 'GLOB'}
+                    . qq{&& Scalar::Util::openhandle( $_[0] )}
+                    . qq{or blessed( $_[0] ) && $_[0]->isa("IO::Handle")} );
+        };
 
     subtype 'Object'
         => as 'Ref'
         => where { blessed($_) }
-        => optimize_as \&_Object;
+        => optimize_as( \&_Object )
+        => inline_as { "Scalar::Util::blessed( $_[0] )" };
 
     # This type is deprecated.
     subtype 'Role'
         => as 'Object'
         => where { $_->can('does') }
-        => optimize_as \&_Role;
+        => optimize_as( \&_Role );
 
     subtype 'ClassName'
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
-        => optimize_as \&_ClassName;
+        => optimize_as( \&_ClassName )
+        => inline_as { "Class::MOP::is_class_loaded( $_[0] )" };
 
     subtype 'RoleName'
         => as 'ClassName'
         => where {
             (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
         }
-        => optimize_as \&_RoleName;
+        => optimize_as( \&_RoleName )
+        => inline_as {
+            return (  qq{Class::MOP::is_class_loaded( $_[0] )}
+                    . qq{&& ( Class::MOP::class_of( $_[0] ) || return )}
+                    . qq{       ->isa('Moose::Meta::Role')} );
+        };
 
     $registry->add_type_constraint(
         Moose::Meta::TypeConstraint::Parameterizable->new(
@@ -225,7 +266,7 @@ sub _ClassName {
 }
 
 sub _RoleName {
-    ClassName( $_[0] )
+    _ClassName( $_[0] )
         && ( Class::MOP::class_of( $_[0] ) || return )
         ->isa('Moose::Meta::Role');
 }

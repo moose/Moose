@@ -366,13 +366,13 @@ ok(defined RoleName('Quux::Wibble::Role'),      '... RoleName accepts anything w
 # Test $_ is read in XS implementation
 {
   local $_ = qr//;
-  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is RegexpRef');
-  ok(!Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(1), '$_ is not read when param provided');
+  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is RegexpRef');
+  ok(!Moose::Util::TypeConstraints::Builtins::_RegexpRef(1), '$_ is not read when param provided');
   $_ = bless qr//, "blessed";
-  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is RegexpRef');
+  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is RegexpRef');
   $_ = 42;
-  ok(!Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(), '$_ is not RegexpRef');
-  ok(Moose::Util::TypeConstraints::OptimizedConstraints::RegexpRef(qr//), '$_ is not read when param provided');
+  ok(!Moose::Util::TypeConstraints::Builtins::_RegexpRef(), '$_ is not RegexpRef');
+  ok(Moose::Util::TypeConstraints::Builtins::_RegexpRef(qr//), '$_ is not read when param provided');
 }
 
 close($fh) || die "Could not close the filehandle $0 for test";

@@ -18,6 +18,7 @@ sub where (&);
 sub via (&);
 sub message (&);
 sub optimize_as (&);
+sub inline_as (&);
 
 ## --------------------------------------------------------
 
@@ -286,7 +287,7 @@ sub type {
 
     return _create_type_constraint(
         $name, undef, $p{where}, $p{message},
-        $p{optimize_as}
+        $p{optimize_as}, $p{inline_as},
     );
 }
 
@@ -349,7 +350,7 @@ sub subtype {
 
     return _create_type_constraint(
         $name, $p{as}, $p{where}, $p{message},
-        $p{optimize_as}
+        $p{optimize_as}, $p{inline_as},
     );
 }
 
@@ -419,6 +420,7 @@ sub as { { as => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
 sub message (&)     { { message     => $_[0] } }
 sub optimize_as (&) { { optimize_as => $_[0] } }
+sub inline_as (&)   { { inline_as   => $_[0] } }
 
 sub from    {@_}
 sub via (&) { $_[0] }
@@ -510,6 +512,7 @@ sub _create_type_constraint ($$$;$$) {
     my $check     = shift;
     my $message   = shift;
     my $optimized = shift;
+    my $inlined   = shift;
 
     my $pkg_defined_in = scalar( caller(1) );
 
@@ -536,6 +539,7 @@ sub _create_type_constraint ($$$;$$) {
         ( $check     ? ( constraint => $check )     : () ),
         ( $message   ? ( message    => $message )   : () ),
         ( $optimized ? ( optimized  => $optimized ) : () ),
+        ( $inlined   ? ( inlined    => $inlined )   : () ),
     );
 
     my $constraint;

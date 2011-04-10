@@ -43,6 +43,11 @@ __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     predicate => 'has_hand_optimized_type_constraint',
 ));
 
+__PACKAGE__->meta->add_attribute('inlined' => (
+    accessor  => 'inlined',
+    predicate => 'has_inlined_type_constraint',
+));
+
 sub parents {
     my $self;
     $self->parent;
@@ -120,6 +125,15 @@ sub validate {
     else {
         $self->get_message($value);
     }
+}
+
+sub _inline_check {
+    my $self = shift;
+
+    die 'Cannot inline a type constraint check for ' . $self->name
+        unless $self->has_inlined_type_constraint;
+
+    return $self->inlined()->(@_);
 }
 
 sub assert_valid {
