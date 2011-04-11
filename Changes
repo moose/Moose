@@ -10,6 +10,11 @@ for, noteworthy changes.
     Additionally the 'Object' constraint no longer rejects objects which
     implementation is a regular expression. (David Leadbeater)
 
+  [OTHER]
+
+  * Moose::Manual::Support now explicitly states when major releases are
+    allowed to happen (January, April, July, or October).
+
 1.9906-TRIAL Mon, Apr 04, 2011
 
   [OTHER]
