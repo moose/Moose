@@ -220,7 +220,6 @@ Fey
 Fey::ORM
 File::ChangeNotify
 Forest
-Frost
 Git::PurePerl
 Gitalist
 Hailo
