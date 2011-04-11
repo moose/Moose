@@ -61,7 +61,7 @@ After upgrading Moose, running C<moose-outdated | cpanm> should be sufficient
 to ensure that all of the Moose extensions you use will continue to work.
 
 The other part is that Moose's C<META.json> file will also specify the
-conflicts under the C<x_conflicts> key. We are working with the Perl toolchain
+conflicts under the C<x_conflicts> key. We are working with the Perl tool chain
 developers to try to get conflicts support added to CPAN clients, and if/when
 that happens, the metadata already exists, and so the conflict checking will
 become automatic.
