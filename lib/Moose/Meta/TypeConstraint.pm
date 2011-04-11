@@ -130,8 +130,10 @@ sub validate {
 sub _inline_check {
     my $self = shift;
 
-    die 'Cannot inline a type constraint check for ' . $self->name
-        unless $self->has_inlined_type_constraint;
+    unless ( $self->has_inlined_type_constraint ) {
+        require Moose;
+        Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
+    }
 
     return $self->inlined->( $self, @_ );
 }
