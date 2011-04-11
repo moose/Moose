@@ -124,6 +124,12 @@ This will be removed entirely in Moose 2.0200.
 
 =back
 
+=back
+
+=head1 1.21
+
+=over 4
+
 =item * New release policy
 
 As of the 2.0 release, Moose now has an official release and support policy,
