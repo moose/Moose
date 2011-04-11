@@ -124,6 +124,16 @@ This will be removed entirely in Moose 2.0200.
 
 =back
 
+=item * New release policy
+
+As of the 2.0 release, Moose now has an official release and support policy,
+documented in L<Moose::Manual::Support>. All API changes will now go through a
+deprecation cycle of at least one year, after which the deprecated API can be
+removed. Deprecations and removals will only happen in major releases.
+
+In between major release, we will still make minor releases to add new
+features, fix bugs, update documentation, etc.
+
 =back
 
 =head1 1.16
