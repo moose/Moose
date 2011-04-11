@@ -44,6 +44,11 @@ Major releases may be backwards incompatible. Moose prioritizes
 correctness over backwards compatibility or performance; see the L<Deprecation
 Policy> to understand how backwards incompatible changes are announced.
 
+Major releases are scheduled to happen during fixed release windows. If the
+window is missed, then there will not be a major release until the next
+release window. The release windows are one month long, and occur during the
+months of January, April, July, and October.
+
 Before a major release, a series of development releases will be made so that
 users can test the upcoming major release before it is distributed to CPAN. It
 is in the best interests of everyone involved if these releases are tested as
