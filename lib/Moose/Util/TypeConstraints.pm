@@ -39,7 +39,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
             type subtype class_type role_type maybe_type duck_type
-            as where message optimize_as
+            as where message optimize_as inline_as
             coerce from via
             enum
             find_type_constraint
