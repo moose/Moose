@@ -9,8 +9,8 @@ for, noteworthy changes.
 
   * The RegexpRef type constraint now accepts regular expressions blessed into
     other classes, such as those found in pluggable regexp engines.
-    Additionally the 'Object' constraint no longer rejects objects which
-    implementation is a regular expression. (David Leadbeater)
+    Additionally the 'Object' constraint no longer rejects objects implemented
+    as a blessed regular expression. (David Leadbeater)
 
   [OTHER]
 
