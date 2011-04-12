@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0000 Mon, Apr 11, 2011
+
   [API CHANGES]
 
   * The RegexpRef type constraint now accepts regular expressions blessed into
