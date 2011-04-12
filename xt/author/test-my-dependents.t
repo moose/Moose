@@ -154,7 +154,6 @@ MooseX::SymmetricAttribute
 MooseX::Templated
 MooseX::Timestamp
 MooseX::Traits
-MooseX::Traits::Attribute::CascadeClear
 MooseX::Traits::Attribute::MergeHashRef
 MooseX::Traits::Pluggable
 MooseX::TransactionalMethods
