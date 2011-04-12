@@ -194,7 +194,6 @@ MooseX::WithCache
 MooseX::Workers
 MooseX::YAML
 App::Nopaste
-App::Termcast
 Bread::Board
 Bread::Board::Declare
 Cache::Ref
