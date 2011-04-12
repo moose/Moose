@@ -59,6 +59,11 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
+  * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
+    trying to re-export from a package that itself exported a modified set of
+    Moose sugar, you'd get the original Moose sugar instead of the overrides.
+    There are also now tests for this. (perigrin)
+
   * Don't initialize lazy attributes with defaults in the constructor (for
     immutable classes). (mo)
 
@@ -127,9 +132,9 @@ for, noteworthy changes.
   [BUG FIXES]
 
   * Reverse the order that Moose::Exporter 'also' exports are dispatched. When
-    trying to re-export from a package that itself exported a modified set of 
-    Moose sugar, you'd get the original Moose sugar instead of the overrides. 
-    There are also now tests for this. (perigrin)
+    trying to re-export from a package that itself exported a modified set of
+    Moose sugar, you'd get the original Moose sugar instead of the overrides.
+    There are also now tests for this. (perigrin) (backported from 1.9903)
 
 
 1.23 Sun, Feb 13, 2011
@@ -145,7 +150,8 @@ for, noteworthy changes.
 
   * When reinitializing meta objects for classes and roles, we failed to
     preserve roles and role applications. This led to weird bugs. Many MooseX
-    modules end up reinitializing your class or role. (Dave Rolsky)
+    modules end up reinitializing your class or role. (Dave Rolsky) (backported
+    from 1.9903)
 
 1.21 Wed, Nov 24, 2010
 
