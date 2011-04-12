@@ -10,7 +10,7 @@ BEGIN {
 }
 
 use Test::Requires {
-    'Test::DependentModules' => '0.08', # skip all if not installed
+    'Test::DependentModules' => '0.09', # skip all if not installed
 };
 use Test::DependentModules qw( test_all_dependents test_modules );
 
