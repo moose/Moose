@@ -10,9 +10,9 @@ BEGIN {
 }
 
 use Test::Requires {
-    'Test::DependentModules' => '0.01', # skip all if not installed
+    'Test::DependentModules' => '0.08', # skip all if not installed
 };
-use Test::DependentModules qw( test_all_dependents test_module );
+use Test::DependentModules qw( test_all_dependents test_modules );
 
 use DateTime;
 use Class::MOP ();
@@ -37,7 +37,7 @@ if ( $ENV{MOOSE_TEST_MD_ALL} ) {
 else {
     my @modules = map { chomp; $_ } <DATA>;
     plan tests => scalar @modules;
-    test_module($_) for @modules;
+    test_modules(@modules);
 }
 
 __DATA__
