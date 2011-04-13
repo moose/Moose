@@ -96,13 +96,17 @@ STATIC int
 is_regexp (pTHX_ SV* sv) {
     SV* tmpsv;
 
-    if (SvMAGICAL(sv))
+    if (SvMAGICAL(sv)) {
         mg_get(sv);
+    }
+
     if (SvROK(sv) &&
-      (tmpsv = (SV*) SvRV(sv)) &&
-      SvTYPE(tmpsv) == SVt_PVMG &&
-      (mg_find(tmpsv, PERL_MAGIC_qr)))
+        (tmpsv = (SV*) SvRV(sv)) &&
+        SvTYPE(tmpsv) == SVt_PVMG &&
+        (mg_find(tmpsv, PERL_MAGIC_qr))) {
         return TRUE;
+    }
+
     return FALSE;
 }
 #endif
@@ -155,8 +159,9 @@ MODULE = Moose  PACKAGE = Moose::Util::TypeConstraints::OptimizedConstraints
 bool
 RegexpRef (SV *sv=NULL)
     INIT:
-        if (!items)
+        if (!items) {
             sv = DEFSV;
+        }
     CODE:
         RETVAL = SvRXOK(sv);
     OUTPUT:
