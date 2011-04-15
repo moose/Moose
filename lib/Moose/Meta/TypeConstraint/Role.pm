@@ -17,7 +17,11 @@ sub new {
     my ( $class, %args ) = @_;
 
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Object');
-    my $self      = $class->_new(\%args);
+
+    my $role_name = $args{role};
+    $args{constraint} = sub { Moose::Util::does_role( $_[0], $role_name ) };
+
+    my $self = $class->_new( \%args );
 
     $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();
