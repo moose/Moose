@@ -28,8 +28,7 @@ my $ARRAY_REF      = [];
 my $HASH_REF       = {};
 my $CODE_REF       = sub { };
 
-no warnings 'once';    # << I *hates* that warning ...
-my $GLOB     = *GLOB_REF;
+my $GLOB     = do { no warnings 'once'; *GLOB_REF };
 my $GLOB_REF = \$GLOB;
 
 open my $FH, '<', $0 or die "Could not open $0 for the test";
@@ -37,8 +36,8 @@ open my $FH, '<', $0 or die "Could not open $0 for the test";
 my $FH_OBJECT = IO::File->new( $0, 'r' )
     or die "Could not open $0 for the test";
 
-my $REGEX = qr/../;
-my $REGEX_OBJ = bless qr/../, 'BlessedQR';
+my $REGEX      = qr/../;
+my $REGEX_OBJ  = bless qr/../, 'BlessedQR';
 
 my $OBJECT = bless {}, 'Foo';
 
