@@ -23,7 +23,8 @@ my $inliner = sub {
     $ENUMS{$name} ||= { map { $_ => 1 } @{ $self->values() } };
 
     return
-          "defined $val && " . '$'
+          "defined $val"
+        . "&& ! ref $val" . '&& $'
         . __PACKAGE__
         . '::ENUMS{'
         . B::perlstring($name)
