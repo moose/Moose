@@ -65,7 +65,7 @@ sub define_builtins {
 
     subtype 'Int'
         => as 'Num'
-        => where { "$_" =~ /^-?[0-9]+$/ }
+        => where { "$_" =~ /\A-?[0-9]+\z/ }
         => inline_as {
             return (  qq{defined $_[1]}
                     . qq{&& ! ref $_[1]}

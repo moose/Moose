@@ -19,6 +19,8 @@ my $NEG_NUM = -42.42;
 my $EMPTY_STRING  = q{};
 my $STRING        = 'foo';
 my $NUM_IN_STRING = 'has 42 in it';
+my $INT_WITH_NL1  = "1\n";
+my $INT_WITH_NL2  = "\n1";
 
 my $SCALAR_REF     = \( my $var );
 my $SCALAR_REF_REF = \$SCALAR_REF;
@@ -71,6 +73,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -97,6 +101,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -123,6 +129,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -154,6 +162,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -182,6 +192,8 @@ my %tests = (
             $NEG_NUM,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -207,6 +219,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -233,6 +247,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $GLOB,
         ],
         reject => [
@@ -274,6 +290,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $GLOB,
             $UNDEF,
         ],
@@ -286,6 +304,8 @@ my %tests = (
             $NEG_INT,
             $NUM,
             $NEG_NUM,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
         ],
         reject => [
             $EMPTY_STRING,
@@ -319,6 +339,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -345,6 +367,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
         ],
         reject => [
             $SCALAR_REF,
@@ -377,6 +401,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $ARRAY_REF,
             $HASH_REF,
             $CODE_REF,
@@ -404,6 +430,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $HASH_REF,
@@ -432,6 +460,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -460,6 +490,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -489,6 +521,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -517,6 +551,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -545,6 +581,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -575,6 +613,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -601,6 +641,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -631,6 +673,8 @@ my %tests = (
             $EMPTY_STRING,
             $STRING,
             $NUM_IN_STRING,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
             $SCALAR_REF,
             $SCALAR_REF_REF,
             $ARRAY_REF,
@@ -671,6 +715,8 @@ for my $name ( sort keys %tests ) {
                 $EMPTY_STRING,
                 $STRING,
                 $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
                 $SCALAR_REF,
                 $SCALAR_REF_REF,
                 $ARRAY_REF,
@@ -692,21 +738,21 @@ for my $name ( sort keys %tests ) {
 {
     package Duck;
 
-    sub quack {}
-    sub flap {}
+    sub quack { }
+    sub flap  { }
 }
 
 {
     package DuckLike;
 
-    sub quack {}
-    sub flap {}
+    sub quack { }
+    sub flap  { }
 }
 
 {
     package Bird;
 
-    sub flap {}
+    sub flap { }
 }
 
 {
@@ -729,6 +775,8 @@ for my $name ( sort keys %tests ) {
                 $EMPTY_STRING,
                 $STRING,
                 $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
                 $SCALAR_REF,
                 $SCALAR_REF_REF,
                 $ARRAY_REF,
@@ -765,6 +813,8 @@ for my $name ( sort keys %tests ) {
                 $EMPTY_STRING,
                 $STRING,
                 $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
                 $SCALAR_REF,
                 $SCALAR_REF_REF,
                 $ARRAY_REF,
@@ -809,6 +859,8 @@ for my $name ( sort keys %tests ) {
                 $EMPTY_STRING,
                 $STRING,
                 $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
                 $SCALAR_REF,
                 $SCALAR_REF_REF,
                 $ARRAY_REF,
@@ -937,9 +989,11 @@ sub describe {
 
     if ( !ref $val ) {
         return q{''} if $val eq q{};
-    }
 
-    return $val unless ref $val;
+        $val =~ s/\n/\\n/g;
+
+        return $val;
+    }
 
     return 'open filehandle'
         if openhandle $val && !blessed $val;
