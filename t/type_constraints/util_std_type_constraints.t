@@ -696,6 +696,52 @@ for my $name ( sort keys %tests ) {
     test_constraint( $name, $tests{$name} );
 }
 
+# We need to test that the Str constraint accepts the return val of substr() -
+# which means passing that return val directly to the checking code
+{
+    my $str = 'some string';
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint('Str');
+
+    my $unoptimized
+        = $type->has_parent
+        ? $type->_compile_subtype( $type->constraint )
+        : $type->_compile_type( $type->constraint );
+
+    my $inlined;
+    {
+        local $@;
+        $inlined = eval 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }';
+        die $@ if $@;
+    }
+
+    ok(
+        $type->check( substr( $str, 1, 3 ) ),
+        'Str accepts return val from substr using ->check'
+    );
+    ok(
+        $unoptimized->( substr( $str, 1, 3 ) ),
+        'Str accepts return val from substr using unoptimized constraint'
+    );
+    ok(
+        $inlined->( substr( $str, 1, 3 ) ),
+        'Str accepts return val from substr using inlined constraint'
+    );
+
+    ok(
+        $type->check( substr( $str, 0, 0 ) ),
+        'Str accepts empty return val from substr using ->check'
+    );
+    ok(
+        $unoptimized->( substr( $str, 0, 0 ) ),
+        'Str accepts empty return val from substr using unoptimized constraint'
+    );
+    ok(
+        $inlined->( substr( $str, 0, 0 ) ),
+        'Str accepts empty return val from substr using inlined constraint'
+    );
+}
+
 {
     my $class_tc = class_type('Thing');
 
