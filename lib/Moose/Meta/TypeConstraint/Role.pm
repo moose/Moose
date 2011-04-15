@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use B;
 use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
 
@@ -13,6 +14,14 @@ __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
 ));
 
+my $inliner = sub {
+    my $self = shift;
+    my $val  = shift;
+
+    return
+        "Moose::Util::does_role( $val, " . B::perlstring( $self->role ) . ')';
+};
+
 sub new {
     my ( $class, %args ) = @_;
 
@@ -20,6 +29,8 @@ sub new {
 
     my $role_name = $args{role};
     $args{constraint} = sub { Moose::Util::does_role( $_[0], $role_name ) };
+
+    $args{inlined} = $inliner;
 
     my $self = $class->_new( \%args );
 
