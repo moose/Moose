@@ -75,16 +75,27 @@ subtype 'ArrayOfInlinable',
 
 subtype 'ArrayOfNotInlinable',
     as 'ArrayRef[NotInlinable]';
-
 {
-    local $TODO = 'A subtype of a Parameterized type should not be a Parameterizable type';
-
     my $aofi = Moose::Util::TypeConstraints::find_or_create_type_constraint(
         'ArrayOfInlinable');
 
     ok(
         $aofi->has_inlined_type_constraint,
         'ArrayOfInlinable returns true for has_inlined_type_constraint'
+    );
+
+    is(
+        $aofi->_inline_check('$foo'),
+        q{ref $foo eq 'ARRAY' && &List::MoreUtils::all( sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo} )},
+        'got expected inline code for ArrayOfInlinable constraint'
+    );
+
+    my $aofni = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+        'ArrayOfNotInlinable');
+
+    ok(
+        !$aofni->has_inlined_type_constraint,
+        'ArrayOfNotInlinable returns false for has_inlined_type_constraint'
     );
 }
 

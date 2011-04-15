@@ -44,8 +44,9 @@ __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
 ));
 
 __PACKAGE__->meta->add_attribute('inlined' => (
+    init_arg  => 'inlined',
     accessor  => 'inlined',
-    predicate => 'has_inlined_type_constraint',
+    predicate => '_has_inlined_type_constraint',
 ));
 
 sub parents {
@@ -127,12 +128,26 @@ sub validate {
     }
 }
 
+sub has_inlined_type_constraint {
+    my $self = shift;
+
+    if ( $self->has_parent && $self->constraint eq $null_constraint ) {
+        return $self->parent->has_inlined_type_constraint;
+    }
+
+    return $self->_has_inlined_type_constraint;
+}
+
 sub _inline_check {
     my $self = shift;
 
     unless ( $self->has_inlined_type_constraint ) {
         require Moose;
         Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
+    }
+
+    if ( $self->has_parent && $self->constraint eq $null_constraint ) {
+        return $self->parent->_inline_check(@_);
     }
 
     return $self->inlined->( $self, @_ );

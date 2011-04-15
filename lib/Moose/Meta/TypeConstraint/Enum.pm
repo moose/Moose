@@ -94,14 +94,6 @@ sub constraint {
     return sub { exists $values{$_[0]} };
 }
 
-sub _compile_hand_optimized_type_constraint {
-    my $self  = shift;
-
-    my %values = map { $_ => undef } @{ $self->values };
-
-    sub { defined($_[0]) && !ref($_[0]) && exists $values{$_[0]} };
-}
-
 sub create_child_type {
     my ($self, @args) = @_;
     return Moose::Meta::TypeConstraint->new(@args, parent => $self);

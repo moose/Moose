@@ -83,20 +83,6 @@ sub constraint {
     };
 }
 
-sub _compile_hand_optimized_type_constraint {
-    my $self  = shift;
-
-    my @methods = @{ $self->methods };
-
-    sub {
-        my $obj = shift;
-
-        return blessed($obj)
-            && blessed($obj) ne 'Regexp'
-            && all { $obj->can($_) } @methods;
-    };
-}
-
 sub create_child_type {
     my ($self, @args) = @_;
     return Moose::Meta::TypeConstraint->new(@args, parent => $self);

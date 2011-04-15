@@ -36,20 +36,9 @@ sub new {
 
     my $self = $class->_new( \%args );
 
-    $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();
 
     return $self;
-}
-
-sub _create_hand_optimized_type_constraint {
-    my $self = shift;
-    my $class = $self->class;
-    $self->hand_optimized_type_constraint(
-        sub {
-            blessed( $_[0] ) && $_[0]->isa($class)
-        }
-    );
 }
 
 sub parents {
