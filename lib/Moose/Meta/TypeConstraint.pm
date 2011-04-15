@@ -234,6 +234,14 @@ sub _actually_compile_type_constraint {
     return $self->_compile_hand_optimized_type_constraint
         if $self->has_hand_optimized_type_constraint;
 
+    if ( $self->has_inlined_type_constraint ) {
+        local $@;
+        my $sub = eval 'sub { ' . $self->_inline_check('$_[0]') . '}';
+        die $@ if $@;
+
+        return $sub;
+    }
+
     my $check = $self->constraint;
     unless ( defined $check ) {
         require Moose;
