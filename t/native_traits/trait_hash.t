@@ -25,6 +25,12 @@ use Test::Moose;
         get_option       => 'get',
         has_no_options   => 'is_empty',
         keys             => 'keys',
+        grep_keys        => 'grep_keys',
+        grep_values      => 'grep_values',
+        sort_keys        => 'sort_keys',
+        sort_values      => 'sort_values',
+        map_keys         => 'map_keys',
+        map_values       => 'map_values',
         values           => 'values',
         key_value        => 'kv',
         set_option       => 'set',
@@ -307,6 +313,25 @@ sub run_tests {
             );
         }
     }
+
+    my $obj = $class->new(options => { B => 2, C => 1, A => 3 });
+
+    is_deeply([ $obj->grep_keys(  sub { /B/ }) ], [ 'B' ], 'grep_keys works'  );
+    is_deeply([ $obj->grep_values(sub { /3/ }) ], [ '3' ], 'grep_values works');
+
+    is_deeply([ $obj->sort_keys   ], [ qw{ A  B  C } ], 'sort_keys works');
+    is_deeply([ $obj->sort_values ], [     1, 2, 3   ], 'sort_values works');
+    is_deeply(
+        [ sort $obj->map_keys(sub { "x$_" }) ],
+        [ qw{ xA xB xC }                     ],
+        'map_keys works',
+    );
+    is_deeply(
+        [ sort $obj->map_values(sub { "x$_" } ) ],
+        [ qw{ x1 x2 x3 }                        ],
+        'map_values works',
+    );
+
     $class;
 }
 
