@@ -10,7 +10,7 @@ use Carp qw( confess );
 use Data::OptList;
 use List::Util qw( first );
 use List::MoreUtils qw( any all uniq first_index );
-use Scalar::Util 'weaken', 'blessed';
+use Scalar::Util 'blessed';
 
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
@@ -60,25 +60,34 @@ __PACKAGE__->meta->add_attribute('error_class' => (
 
 sub initialize {
     my $class = shift;
-    my $pkg   = shift;
-    return Class::MOP::get_metaclass_by_name($pkg)
-        || $class->SUPER::initialize($pkg,
+    my @args = @_;
+    unshift @args, 'package' if @args % 2;
+    my %opts = @args;
+    my $package = delete $opts{package};
+    return Class::MOP::get_metaclass_by_name($package)
+        || $class->SUPER::initialize($package,
                 'attribute_metaclass' => 'Moose::Meta::Attribute',
                 'method_metaclass'    => 'Moose::Meta::Method',
                 'instance_metaclass'  => 'Moose::Meta::Instance',
-                @_
+                %opts,
             );
 }
 
 sub create {
-    my ($class, $package_name, %options) = @_;
+    my $class = shift;
+    my @args = @_;
+
+    unshift @args, 'package' if @args % 2 == 1;
+    my %options = @args;
 
     (ref $options{roles} eq 'ARRAY')
         || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
             if exists $options{roles};
-    my $roles = delete $options{roles};
 
-    my $new_meta = $class->SUPER::create($package_name, %options);
+    my $package = delete $options{package};
+    my $roles   = delete $options{roles};
+
+    my $new_meta = $class->SUPER::create($package, %options);
 
     if ($roles) {
         Moose::Util::apply_all_roles( $new_meta, @$roles );
@@ -87,40 +96,17 @@ sub create {
     return $new_meta;
 }
 
-my %ANON_CLASSES;
-
-sub create_anon_class {
-    my ($self, %options) = @_;
-
-    my $cache_ok = delete $options{cache};
-
-    my $cache_key
-        = _anon_cache_key( $options{superclasses}, $options{roles} );
-
-    if ($cache_ok && defined $ANON_CLASSES{$cache_key}) {
-        return $ANON_CLASSES{$cache_key};
-    }
-
-    $options{weaken} = !$cache_ok
-        unless exists $options{weaken};
-
-    my $new_class = $self->SUPER::create_anon_class(%options);
-
-    if ($cache_ok) {
-        $ANON_CLASSES{$cache_key} = $new_class;
-        weaken($ANON_CLASSES{$cache_key});
-    }
-
-    return $new_class;
-}
-
 sub _meta_method_class { 'Moose::Meta::Method::Meta' }
 
+sub _anon_package_prefix { 'Moose::Meta::Class::__ANON__::SERIAL::' }
+
 sub _anon_cache_key {
+    my $class = shift;
+    my %options = @_;
     # Makes something like Super::Class|Super::Class::2=Role|Role::1
     return join '=' => (
-        join( '|', @{ $_[0]      || [] } ),
-        join( '|', sort @{ $_[1] || [] } ),
+        join( '|', @{ $options{superclasses} || [] } ),
+        join( '|', sort @{ $options{roles}   || [] } ),
     );
 }
 
@@ -129,8 +115,6 @@ sub reinitialize {
     my $pkg  = shift;
 
     my $meta = blessed $pkg ? $pkg : Class::MOP::class_of($pkg);
-
-    my $cache_key;
 
     my %existing_classes;
     if ($meta) {
@@ -143,31 +127,13 @@ sub reinitialize {
             destructor_class
             error_class
         );
-
-        $cache_key = _anon_cache_key(
-            [ $meta->superclasses ],
-            [ map { $_->name } @{ $meta->roles } ],
-        ) if $meta->is_anon_class;
     }
 
-    my $new_meta = $self->SUPER::reinitialize(
+    return $self->SUPER::reinitialize(
         $pkg,
         %existing_classes,
         @_,
     );
-
-    return $new_meta unless defined $cache_key;
-
-    my $new_cache_key = _anon_cache_key(
-        [ $meta->superclasses ],
-        [ map { $_->name } @{ $meta->roles } ],
-    );
-
-    delete $ANON_CLASSES{$cache_key};
-    $ANON_CLASSES{$new_cache_key} = $new_meta;
-    weaken($ANON_CLASSES{$new_cache_key});
-
-    return $new_meta;
 }
 
 sub add_role {

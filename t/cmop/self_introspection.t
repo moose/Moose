@@ -26,7 +26,8 @@ isa_ok($class_mop_module_meta, 'Class::MOP::Module');
 my @class_mop_package_methods = qw(
     _new
 
-    initialize reinitialize
+    initialize reinitialize create create_anon is_anon
+    _free_anon _anon_cache_key _anon_package_prefix
 
     name
     namespace
@@ -38,6 +39,8 @@ my @class_mop_package_methods = qw(
     _package_stash
 
     get_method_map
+
+    DESTROY
 );
 
 my @class_mop_module_methods = qw(
@@ -46,6 +49,8 @@ my @class_mop_module_methods = qw(
     _instantiate_module
 
     version authority identifier create
+
+    _anon_cache_key _anon_package_prefix
 );
 
 my @class_mop_class_methods = qw(
@@ -55,7 +60,8 @@ my @class_mop_class_methods = qw(
 
     initialize reinitialize create
 
-    create_anon_class is_anon_class free_anon_class
+    create_anon_class is_anon_class
+    _anon_cache_key _anon_package_prefix
 
     instance_metaclass get_meta_instance
     _inline_create_instance
@@ -115,8 +121,6 @@ my @class_mop_class_methods = qw(
     _immutable_metaclass
     immutable_trait immutable_options
     constructor_name constructor_class destructor_class
-
-    DESTROY
 );
 
 # check the class ...

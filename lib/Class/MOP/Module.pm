@@ -49,8 +49,26 @@ sub identifier {
 }
 
 sub create {
-    confess "The Class::MOP::Module->create method has been made a private object method.\n";
+    my $class = shift;
+    my @args = @_;
+
+    unshift @args, 'package' if @args % 2 == 1;
+    my %options = @args;
+
+    my $package   = delete $options{package};
+    my $version   = delete $options{version};
+    my $authority = delete $options{authority};
+
+    my $meta = $class->SUPER::create($package => %options);
+
+    $meta->_instantiate_module($version, $authority);
+
+    return $meta;
 }
+
+sub _anon_package_prefix { 'Class::MOP::Module::__ANON__::SERIAL::' }
+sub _anon_cache_key      { confess "Modules are not cacheable" }
+
 
 sub _instantiate_module {
     my($self, $version, $authority) = @_;

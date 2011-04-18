@@ -13,7 +13,6 @@ use Class::MOP::MiniTrait;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'reftype', 'weaken';
 use Sub::Name    'subname';
-use Devel::GlobalDestruction 'in_global_destruction';
 use Try::Tiny;
 use List::MoreUtils 'all';
 
@@ -408,129 +407,73 @@ sub _remove_generated_metaobjects {
     }
 }
 
-## ANON classes
-
-{
-    # NOTE:
-    # this should be sufficient, if you have a
-    # use case where it is not, write a test and
-    # I will change it.
-    my $ANON_CLASS_SERIAL = 0;
-
-    # NOTE:
-    # we need a sufficiently annoying prefix
-    # this should suffice for now, this is
-    # used in a couple of places below, so
-    # need to put it up here for now.
-    my $ANON_CLASS_PREFIX = 'Class::MOP::Class::__ANON__::SERIAL::';
-
-    sub is_anon_class {
-        my $self = shift;
-        no warnings 'uninitialized';
-        $self->name =~ /^$ANON_CLASS_PREFIX/o;
-    }
-
-    sub create_anon_class {
-        my ($class, %options) = @_;
-        $options{weaken} = 1 unless exists $options{weaken};
-        my $package_name = $ANON_CLASS_PREFIX . ++$ANON_CLASS_SERIAL;
-        return $class->create($package_name, %options);
-    }
-
-    sub DESTROY {
-        my $self = shift;
-
-        return if in_global_destruction(); # it'll happen soon anyway and this just makes things more complicated
-
-        $self->free_anon_class
-            if $self->is_anon_class;
-    }
-
-    sub free_anon_class {
-        my $self = shift;
-        my $name = $self->name;
-
-        # Moose does a weird thing where it replaces the metaclass for
-        # class when fixing metaclass incompatibility. In that case,
-        # we don't want to clean out the namespace now. We can detect
-        # that because Moose will explicitly update the singleton
-        # cache in Class::MOP.
-        no warnings 'uninitialized';
-        my $current_meta = Class::MOP::get_metaclass_by_name($name);
-        return if $current_meta ne $self;
-
-        my ($first_fragments, $last_fragment) = ($name =~ /^(.*)::(.*)$/);
-
-        no strict 'refs';
-        @{$name . '::ISA'} = ();
-        %{$name . '::'}    = ();
-        delete ${$first_fragments . '::'}{$last_fragment . '::'};
-
-        Class::MOP::remove_metaclass_by_name($name);
-    }
-
-}
-
 # creating classes with MOP ...
 
 sub create {
-    my ( $class, @args ) = @_;
+    my $class = shift;
+    my @args = @_;
 
     unshift @args, 'package' if @args % 2 == 1;
-
-    my (%options) = @args;
-    my $package_name = $options{package};
+    my %options = @args;
 
     (ref $options{superclasses} eq 'ARRAY')
         || confess "You must pass an ARRAY ref of superclasses"
             if exists $options{superclasses};
-            
+
     (ref $options{attributes} eq 'ARRAY')
         || confess "You must pass an ARRAY ref of attributes"
-            if exists $options{attributes};      
-            
+            if exists $options{attributes};
+
     (ref $options{methods} eq 'HASH')
         || confess "You must pass a HASH ref of methods"
-            if exists $options{methods};                  
+            if exists $options{methods};
 
-    $options{meta_name} = 'meta'
-        unless exists $options{meta_name};
+    my $package      = delete $options{package};
+    my $superclasses = delete $options{superclasses};
+    my $attributes   = delete $options{attributes};
+    my $methods      = delete $options{methods};
+    my $meta_name    = exists $options{meta_name}
+                         ? delete $options{meta_name}
+                         : 'meta';
 
-    my (%initialize_options) = @args;
-    delete @initialize_options{qw(
-        package
-        superclasses
-        attributes
-        methods
-        meta_name
-        version
-        authority
-    )};
-    my $meta = $class->initialize( $package_name => %initialize_options );
+    my $meta = $class->SUPER::create($package => %options);
 
-    $meta->_instantiate_module( $options{version}, $options{authority} );
+    $meta->_add_meta_method($meta_name)
+        if defined $meta_name;
 
-    $meta->_add_meta_method($options{meta_name})
-        if defined $options{meta_name};
-
-    $meta->superclasses(@{$options{superclasses}})
-        if exists $options{superclasses};
+    $meta->superclasses(@{$superclasses})
+        if defined $superclasses;
     # NOTE:
     # process attributes first, so that they can
     # install accessors, but locally defined methods
     # can then overwrite them. It is maybe a little odd, but
     # I think this should be the order of things.
-    if (exists $options{attributes}) {
-        foreach my $attr (@{$options{attributes}}) {
+    if (defined $attributes) {
+        foreach my $attr (@{$attributes}) {
             $meta->add_attribute($attr);
         }
     }
-    if (exists $options{methods}) {
-        foreach my $method_name (keys %{$options{methods}}) {
-            $meta->add_method($method_name, $options{methods}->{$method_name});
+    if (defined $methods) {
+        foreach my $method_name (keys %{$methods}) {
+            $meta->add_method($method_name, $methods->{$method_name});
         }
     }
     return $meta;
+}
+
+# XXX: something more intelligent here?
+sub _anon_package_prefix { 'Class::MOP::Class::__ANON__::SERIAL::' }
+
+sub create_anon_class { shift->create_anon(@_) }
+sub is_anon_class     { shift->is_anon(@_)     }
+
+sub _anon_cache_key {
+    my $class = shift;
+    my %options = @_;
+    # Makes something like Super::Class|Super::Class::2
+    return join '=' => (
+        join( '|', sort @{ $options{superclasses} || [] } ),
+    );
 }
 
 # Instance Construction & Cloning
@@ -2189,14 +2132,5 @@ this module by installing a number of attribute meta-objects into its
 metaclass.
 
 =back
-
-=head2 Destruction
-
-=over 4
-
-=item B<< $metaclass->free_anon_class >>
-
-This removes the metaclass from the symbol table and L<Class::MOP>'s own
-bookkeeping. This should probably only be called by L</DESTROY>.
 
 =cut
