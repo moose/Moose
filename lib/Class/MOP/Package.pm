@@ -89,7 +89,7 @@ sub create {
         my $self = shift;
         no warnings 'uninitialized';
         my $prefix = $self->_anon_package_prefix;
-        $self->name =~ /^$prefix/;
+        $self->name =~ /^\Q$prefix/;
     }
 
     sub create_anon {
