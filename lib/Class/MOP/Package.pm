@@ -97,10 +97,13 @@ sub create {
 
         my $cache_ok = delete $options{cache};
 
-        my $cache_key = $class->_anon_cache_key(%options);
+        my $cache_key;
+        if ($cache_ok) {
+            $cache_key = $class->_anon_cache_key(%options);
 
-        if ($cache_ok && defined $ANON_PACKAGE_CACHE{$cache_key}) {
-            return $ANON_PACKAGE_CACHE{$cache_key};
+            if (defined $ANON_PACKAGE_CACHE{$cache_key}) {
+                return $ANON_PACKAGE_CACHE{$cache_key};
+            }
         }
 
         $options{weaken} = !$cache_ok unless exists $options{weaken};
