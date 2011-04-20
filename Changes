@@ -5,7 +5,7 @@ for, noteworthy changes.
 
   [ENHANCEMENTS]
 
-  * Anonymous classes and roles now have a unified implementation, in
+  * Anonymous classes and roles now have a unified implementation in
     Class::MOP::Package. This means that anonymous packages are now also
     possible. (Shawn M Moore, doy)
 
