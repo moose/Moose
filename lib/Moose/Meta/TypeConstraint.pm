@@ -52,7 +52,7 @@ __PACKAGE__->meta->add_attribute('inlined' => (
 
 __PACKAGE__->meta->add_attribute('inline_environment' => (
     init_arg => 'inline_environment',
-    accessor => 'inline_environment',
+    accessor => '_inline_environment',
     default  => sub { {} },
 ));
 
@@ -158,6 +158,16 @@ sub _inline_check {
     }
 
     return $self->inlined->( $self, @_ );
+}
+
+sub inline_environment {
+    my $self = shift;
+
+    if ( $self->has_parent && $self->constraint == $null_constraint ) {
+        return $self->parent->inline_environment;
+    }
+
+    return $self->_inline_environment;
 }
 
 sub assert_valid {

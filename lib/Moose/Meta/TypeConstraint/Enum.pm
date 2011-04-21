@@ -13,14 +13,21 @@ __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',
 ));
 
+__PACKAGE__->meta->add_attribute('_inline_var_name' => (
+    accessor => '_inline_var_name',
+));
+
 my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
     return 'defined(' . $val . ') '
              . '&& !ref(' . $val . ') '
-             . '&& $enums{' . $val . '}';
+             . '&& $' . $self->_inline_var_name . '{' . $val . '}';
 };
+
+# a quadrillion enums ought to be enough for any app
+my $var_suffix = '000000000000000000';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -46,7 +53,10 @@ sub new {
 
     my %values = map { $_ => 1 } @{ $args{values} };
     $args{constraint} = sub { $values{ $_[0] } };
-    $args{inline_environment} = { '%enums' => \%values };
+
+    my $var_name = 'enums' . $var_suffix++;;
+    $args{_inline_var_name} = $var_name;
+    $args{inline_environment} = { '%' . $var_name => \%values };
 
     my $self = $class->_new(\%args);
 

@@ -86,6 +86,13 @@ sub _inline_check {
         @{ $self->type_constraints };
 };
 
+sub inline_environment {
+    my $self = shift;
+
+    return { map { %{ $_->inline_environment } }
+            @{ $self->type_constraints } };
+}
+
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
