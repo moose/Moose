@@ -13,19 +13,13 @@ __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',
 ));
 
-our %ENUMS;
-
 my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
-    my $name = $self->name();
-    $ENUMS{$name} ||= { map { $_ => 1 } @{ $self->values() } };
-
     return 'defined(' . $val . ') '
              . '&& !ref(' . $val . ') '
-             . '&& $' . __PACKAGE__ . '::ENUMS{' . B::perlstring($name) . '}'
-                 . '{' . $val . '}';
+             . '&& $enums{' . $val . '}';
 };
 
 sub new {
@@ -52,6 +46,7 @@ sub new {
 
     my %values = map { $_ => 1 } @{ $args{values} };
     $args{constraint} = sub { $values{ $_[0] } };
+    $args{inline_environment} = { '%enums' => \%values };
 
     my $self = $class->_new(\%args);
 

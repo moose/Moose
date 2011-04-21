@@ -50,6 +50,12 @@ __PACKAGE__->meta->add_attribute('inlined' => (
     predicate => '_has_inlined_type_constraint',
 ));
 
+__PACKAGE__->meta->add_attribute('inline_environment' => (
+    init_arg => 'inline_environment',
+    accessor => 'inline_environment',
+    default  => sub { {} },
+));
+
 sub parents {
     my $self;
     $self->parent;
@@ -252,7 +258,8 @@ sub _actually_compile_type_constraint {
 
     if ( $self->has_inlined_type_constraint ) {
         return eval_closure(
-            source => 'sub { ' . $self->_inline_check('$_[0]') . ' }',
+            source      => 'sub { ' . $self->_inline_check('$_[0]') . ' }',
+            environment => $self->inline_environment,
         );
     }
 
