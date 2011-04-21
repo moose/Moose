@@ -8,6 +8,8 @@ use base 'Moose::Meta::TypeConstraint';
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Util::TypeConstraints ();
 
+use Carp 'confess';
+
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
     predicate => 'has_constraint_generator',
@@ -46,7 +48,9 @@ sub _can_coerce_constraint_from {
 sub generate_inline_for {
     my ($self, $type, $val) = @_;
 
-    return unless $self->has_inline_generator;
+    confess "Can't generate an inline constraint for $type, since none "
+          . "was defined"
+        unless $self->has_inline_generator;
 
     return $self->inline_generator->( $self, $type, $val );
 }
