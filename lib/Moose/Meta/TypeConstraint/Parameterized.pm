@@ -76,8 +76,12 @@ sub inline_environment {
     my $self = shift;
 
     return {
-        %{ $self->parameterized_from->inline_environment },
-        %{ $self->type_parameter->inline_environment },
+        ($self->has_parameterized_from
+            ? (%{ $self->parameterized_from->inline_environment })
+            : ()),
+        ($self->has_type_parameter
+            ? (%{ $self->type_parameter->inline_environment })
+            : ()),
     };
 }
 
