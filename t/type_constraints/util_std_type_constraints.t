@@ -732,9 +732,9 @@ for my $name ( sort keys %tests ) {
 
     my $inlined;
     {
-        local $@;
-        $inlined = eval 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }';
-        die $@ if $@;
+        $inlined = eval_closure(
+            source => 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }',
+        );
     }
 
     ok(
