@@ -57,7 +57,7 @@ my $not_inlinable = find_type_constraint('NotInlinable');
 
     is(
         $aofi->_inline_check('$foo'),
-        q{ref($foo) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo})},
+        q{do {my $check = $foo;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$check})}},
         'got expected inline code for ArrayRef[Inlinable] constraint'
     );
 
@@ -86,7 +86,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $aofi->_inline_check('$foo'),
-        q{ref($foo) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo})},
+        q{do {my $check = $foo;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$check})}},
         'got expected inline code for ArrayOfInlinable constraint'
     );
 
@@ -110,7 +110,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $hoaofi->_inline_check('$foo'),
-        q{ref($foo) eq "HASH" && &List::MoreUtils::all(sub { ref($_) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$_}) }, values %{$foo})},
+        q{do {my $check = $foo;ref($check) eq "HASH" && &List::MoreUtils::all(sub { do {my $check = $_;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$check})} }, values %{$check})}},
         'got expected inline code for HashRef[ArrayRef[Inlinable]] constraint'
     );
 
