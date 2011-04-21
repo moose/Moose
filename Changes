@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [NEW FEATURES]
+
+  * Type constraints can now provide inlined versions, which should make
+    inlined code which uses type constraints (such as accessors) faster.
+    (Dave Rolsky)
+
   [BUG FIXES]
 
   * Make sure weak attributes remain weak when cloning. (doy, rafl)
