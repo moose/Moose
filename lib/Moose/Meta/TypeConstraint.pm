@@ -10,6 +10,7 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              bool     => sub { 1 },
              fallback => 1;
 
+use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
@@ -250,11 +251,9 @@ sub _actually_compile_type_constraint {
         if $self->has_hand_optimized_type_constraint;
 
     if ( $self->has_inlined_type_constraint ) {
-        local $@;
-        my $sub = eval 'sub { ' . $self->_inline_check('$_[0]') . '}';
-        die $@ if $@;
-
-        return $sub;
+        return eval_closure(
+            source => 'sub { ' . $self->_inline_check('$_[0]') . ' }',
+        );
     }
 
     my $check = $self->constraint;
