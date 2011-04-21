@@ -99,6 +99,8 @@ sub get_message {
 
     my @methods = grep { !$value->can($_) } @{ $self->methods };
     my $class = blessed $value;
+    $class ||= $value;
+
     return $class
          . " is missing methods "
          . english_list(map { "'$_'" } @methods);
