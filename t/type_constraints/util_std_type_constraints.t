@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 
+use Eval::Closure;
 use IO::File;
 use Moose::Util::TypeConstraints;
 use Scalar::Util qw( blessed openhandle );
@@ -1011,9 +1012,9 @@ sub test_constraint {
 
     my $inlined;
     if ( $type->has_inlined_type_constraint ) {
-        local $@;
-        $inlined = eval 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }';
-        die $@ if $@;
+        $inlined = eval_closure(
+            source      => 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }',
+        );
     }
 
     for my $accept ( @{ $tests->{accept} || [] } ) {
