@@ -3,15 +3,6 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
-use XSLoader;
-
-BEGIN {
-    XSLoader::load(
-        'Moose',
-        $Moose::Exporter::{VERSION} ? ${ $Moose::Exporter::{VERSION} } : ()
-    );
-}
-
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
