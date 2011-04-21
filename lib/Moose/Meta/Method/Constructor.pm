@@ -80,7 +80,8 @@ sub _eval_environment {
         '$defaults' => \$defaults,
         '@type_constraints' => \@type_constraints,
         '@type_constraint_bodies' => \@type_constraint_bodies,
-        ( map { %{ $_->inline_environment } } @type_constraints ),
+        ( map { defined($_) ? %{ $_->inline_environment } : () }
+              @type_constraints ),
     };
 }
 
