@@ -102,7 +102,8 @@ sub define_builtins {
     subtype 'FileHandle'
         => as 'Ref'
         => where {
-            Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
+            (ref($_) eq "GLOB" && Scalar::Util::openhandle($_))
+         || (blessed($_) && $_->isa("IO::Handle"));
         }
         => inline_as {
             '(ref(' . $_[1] . ') eq "GLOB" '
