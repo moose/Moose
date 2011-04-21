@@ -9,6 +9,11 @@ for, noteworthy changes.
     Class::MOP::Package. This means that anonymous packages are now also
     possible. (Shawn M Moore, doy)
 
+  [BUG FIXES]
+
+  * No longer call XSLoader from multiple places, as this causes issues on
+    older perls. (doy, ribasushi)
+
 2.0000 Mon, Apr 11, 2011
 
   [API CHANGES]
