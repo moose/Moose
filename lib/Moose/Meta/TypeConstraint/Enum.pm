@@ -26,8 +26,7 @@ my $inliner = sub {
              . '&& $' . $self->_inline_var_name . '{' . $val . '}';
 };
 
-# a quadrillion enums ought to be enough for any app
-my $var_suffix = '000000000000000000';
+my $var_suffix = 0;
 
 sub new {
     my ( $class, %args ) = @_;
