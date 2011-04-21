@@ -60,7 +60,7 @@ sub define_builtins {
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
-              . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR")'
+              . '|| do { ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR" })'
         };
 
     subtype 'Num'
