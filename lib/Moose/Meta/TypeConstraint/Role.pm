@@ -18,8 +18,10 @@ my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
-    return
-        "Moose::Util::does_role( $val, " . B::perlstring( $self->role ) . ')';
+    return 'Moose::Util::does_role('
+             . $val . ', '
+             . B::perlstring($self->role)
+         . ')';
 };
 
 sub new {

@@ -57,7 +57,7 @@ my $not_inlinable = find_type_constraint('NotInlinable');
 
     is(
         $aofi->_inline_check('$foo'),
-        q{ref $foo eq 'ARRAY' && &List::MoreUtils::all( sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo} )},
+        q{ref($foo) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo})},
         'got expected inline code for ArrayRef[Inlinable] constraint'
     );
 
@@ -86,7 +86,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $aofi->_inline_check('$foo'),
-        q{ref $foo eq 'ARRAY' && &List::MoreUtils::all( sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo} )},
+        q{ref($foo) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$foo})},
         'got expected inline code for ArrayOfInlinable constraint'
     );
 
@@ -110,7 +110,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $hoaofi->_inline_check('$foo'),
-        q{ref $foo eq 'HASH' && &List::MoreUtils::all( sub { ref $_ eq 'ARRAY' && &List::MoreUtils::all( sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$_} ) }, values %{$foo} )},
+        q{ref($foo) eq "HASH" && &List::MoreUtils::all(sub { ref($_) eq "ARRAY" && &List::MoreUtils::all(sub { defined $_ && ! ref $_ && $_ !~ /Q/ }, @{$_}) }, values %{$foo})},
         'got expected inline code for HashRef[ArrayRef[Inlinable]] constraint'
     );
 
@@ -134,7 +134,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $iunion->_inline_check('$foo'),
-        '(defined $foo && ! ref $foo && $foo !~ /Q/) || (Scalar::Util::blessed( $foo ))',
+        '(defined $foo && ! ref $foo && $foo !~ /Q/) || (Scalar::Util::blessed($foo))',
         'got expected inline code for Inlinable | Object constraint'
     );
 
@@ -158,7 +158,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $iunion->_inline_check('$foo'),
-        '(Scalar::Util::blessed( $foo )) || (defined $foo && ! ref $foo && $foo !~ /Q/)',
+        '(Scalar::Util::blessed($foo)) || (defined $foo && ! ref $foo && $foo !~ /Q/)',
         'got expected inline code for Object | Inlinable constraint'
     );
 
@@ -182,7 +182,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $iunion->_inline_check('$foo'),
-        q{(Scalar::Util::blessed( $foo )) || (defined $foo && ! ref $foo && $foo !~ /Q/) || (ref $foo eq 'CODE')},
+        q{(Scalar::Util::blessed($foo)) || (defined $foo && ! ref $foo && $foo !~ /Q/) || (ref($foo) eq "CODE")},
         'got expected inline code for Object | Inlinable | CodeRef constraint'
     );
 

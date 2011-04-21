@@ -18,9 +18,8 @@ my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
-    return
-        "Scalar::Util::blessed($val) && $val->isa("
-        . B::perlstring( $self->class ) . ')';
+    return 'Scalar::Util::blessed(' . $val . ')'
+             . ' && ' . $val . '->isa(' . B::perlstring($self->class) . ')';
 };
 
 sub new {

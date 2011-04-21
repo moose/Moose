@@ -27,65 +27,75 @@ sub define_builtins {
     subtype 'Undef'
         => as 'Item'
         => where { !defined($_) }
-        => inline_as { "! defined $_[1]" };
+        => inline_as { '!defined(' . $_[1] . ')' };
 
     subtype 'Defined'
         => as 'Item'
         => where { defined($_) }
-        => inline_as { "defined $_[1]" };
+        => inline_as { 'defined(' . $_[1] . ')' };
 
     subtype 'Bool'
         => as 'Item'
         => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
-        => inline_as { qq{!defined($_[1]) || $_[1] eq "" || "$_[1]" eq '1' || "$_[1]" eq '0'} };
+        => inline_as {
+            '!defined(' . $_[1] . ') '
+              . '|| ' . $_[1] . ' eq "" '
+              . '|| "' . $_[1] . '" eq "1" '
+              . '|| "' . $_[1] . '" eq "0"'
+        };
 
     subtype 'Value'
         => as 'Defined'
         => where { !ref($_) }
-        => inline_as { "defined $_[1] && ! ref $_[1]" };
+        => inline_as { 'defined(' . $_[1] . ') && !ref(' . $_[1] . ')' };
 
     subtype 'Ref'
         => as 'Defined'
         => where { ref($_) }
-        => inline_as { "ref $_[1]" };
+        => inline_as { 'ref(' . $_[1] . ')' };
 
     subtype 'Str'
         => as 'Value'
         => where { ref(\$_) eq 'SCALAR' }
         => inline_as {
-            return (  qq{defined $_[1]}
-                    . qq{&& (   ref(\\             $_[1] ) eq 'SCALAR'}
-                    . qq{    || ref(\\(my \$str_value = $_[1])) eq 'SCALAR')} );
+            'defined(' . $_[1] . ') '
+              . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
+               . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR")'
         };
 
     subtype 'Num'
         => as 'Str'
         => where { Scalar::Util::looks_like_number($_) }
-        => inline_as { "!ref $_[1] && Scalar::Util::looks_like_number($_[1])" };
+        => inline_as {
+            '!ref(' . $_[1] . ') '
+              . '&& Scalar::Util::looks_like_number(' . $_[1] . ')'
+        };
 
     subtype 'Int'
         => as 'Num'
         => where { "$_" =~ /\A-?[0-9]+\z/ }
         => inline_as {
-            return (  qq{defined $_[1]}
-                    . qq{&& ! ref $_[1]}
-                    . qq{&& ( my \$int_value = $_[1] ) =~ /\\A-?[0-9]+\\z/} );
+            'defined(' . $_[1] . ') '
+              . '&& !ref(' . $_[1] . ') '
+              . '&& (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/'
         };
 
     subtype 'CodeRef'
         => as 'Ref'
         => where { ref($_) eq 'CODE' }
-        => inline_as { qq{ref $_[1] eq 'CODE'} };
+        => inline_as { 'ref(' . $_[1] . ') eq "CODE"' };
 
     subtype 'RegexpRef'
         => as 'Ref'
         => where( \&_RegexpRef )
-        => inline_as { "Moose::Util::TypeConstraints::Builtins::_RegexpRef( $_[1] )" };
+        => inline_as {
+            'Moose::Util::TypeConstraints::Builtins::_RegexpRef(' . $_[1] . ')'
+        };
 
     subtype 'GlobRef'
         => as 'Ref'
         => where { ref($_) eq 'GLOB' }
-        => inline_as { qq{ref $_[1] eq 'GLOB'} };
+        => inline_as { 'ref(' . $_[1] . ') eq "GLOB"' };
 
     # NOTE: scalar filehandles are GLOB refs, but a GLOB ref is not always a
     # filehandle
@@ -95,15 +105,16 @@ sub define_builtins {
             Scalar::Util::openhandle($_) || ( blessed($_) && $_->isa("IO::Handle") );
         }
         => inline_as {
-            return (  qq{ref $_[1] eq 'GLOB'}
-                    . qq{&& Scalar::Util::openhandle( $_[1] )}
-                    . qq{or Scalar::Util::blessed( $_[1] ) && $_[1]->isa("IO::Handle")} );
+            '(ref(' . $_[1] . ') eq "GLOB" '
+              . '&& Scalar::Util::openhandle(' . $_[1] . ')) '
+       . '|| (Scalar::Util::blessed(' . $_[1] . ') '
+              . '&& ' . $_[1] . '->isa("IO::Handle"))'
         };
 
     subtype 'Object'
         => as 'Ref'
         => where { blessed($_) }
-        => inline_as { "Scalar::Util::blessed( $_[1] )" };
+        => inline_as { 'Scalar::Util::blessed(' . $_[1] . ')' };
 
     # This type is deprecated.
     subtype 'Role'
@@ -113,7 +124,7 @@ sub define_builtins {
     subtype 'ClassName'
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
-        => inline_as { "Class::MOP::is_class_loaded( $_[1] )" };
+        => inline_as { 'Class::MOP::is_class_loaded(' . $_[1] . ')' };
 
     subtype 'RoleName'
         => as 'ClassName'
@@ -121,9 +132,10 @@ sub define_builtins {
             (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
         }
         => inline_as {
-            return (  qq{Class::MOP::is_class_loaded( $_[1] )}
-                    . qq{&& ( Class::MOP::class_of( $_[1] ) || return )}
-                    . qq{       ->isa('Moose::Meta::Role')} );
+            'Class::MOP::is_class_loaded(' . $_[1] . ') '
+              . '&& (Class::MOP::class_of(' . $_[1] . ') || return)->isa('
+                  . '"Moose::Meta::Role"'
+              . ')'
         };
 
     $registry->add_type_constraint(
@@ -140,13 +152,16 @@ sub define_builtins {
                     return $check->( ${$_} );
                 };
             },
-            inlined => sub {qq{ref $_[1] eq 'SCALAR' || ref $_[1] eq 'REF'}},
+            inlined => sub {
+                'ref(' . $_[1] . ') eq "SCALAR" '
+                  . '|| ref(' . $_[1] . ') eq "REF"'
+            },
             inline_generator => sub {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                return qq{(ref $val eq 'SCALAR' || ref $val eq 'REF') && }
-                    . $type_parameter->_inline_check( '${ (' . $val . ') }' );
+                '(ref(' . $val . ') eq "SCALAR" || ref(' . $val . ') eq "REF") '
+                  . '&& ' . $type_parameter->_inline_check('${(' . $val . ')}')
             },
         )
     );
@@ -168,16 +183,16 @@ sub define_builtins {
                     1;
                     }
             },
-            inlined          => sub {qq{ref $_[1] eq 'ARRAY'}},
+            inlined          => sub { 'ref(' . $_[1] . ') eq "ARRAY"' },
             inline_generator => sub {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                return
-                      qq{ref $val eq 'ARRAY' && }
-                    . '&List::MoreUtils::all( sub { '
-                    . $type_parameter->_inline_check('$_')
-                    . " }, \@{$val} )";
+                'ref(' . $val . ') eq "ARRAY" '
+                  . '&& &List::MoreUtils::all('
+                      . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
+                      . '@{' . $val . '}'
+                  . ')'
             },
         )
     );
@@ -199,16 +214,16 @@ sub define_builtins {
                     1;
                     }
             },
-            inlined          => sub {qq{ref $_[1] eq 'HASH'}},
+            inlined          => sub { 'ref(' . $_[1] . ') eq "HASH"' },
             inline_generator => sub {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                return
-                      qq{ref $val eq 'HASH' && }
-                    . '&List::MoreUtils::all( sub { '
-                    . $type_parameter->_inline_check('$_')
-                    . " }, values \%{$val} )";
+                'ref(' . $val . ') eq "HASH" '
+                  . '&& &List::MoreUtils::all('
+                      . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
+                      . 'values %{' . $val . '}'
+                  . ')'
             },
         )
     );
@@ -233,9 +248,8 @@ sub define_builtins {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                return
-                    "(! defined $val) || ("
-                    . $type_parameter->_inline_check($val) . ')';
+                '!defined(' . $val . ') '
+                  . '|| (' . $type_parameter->_inline_check($val) . ')'
             },
         )
     );

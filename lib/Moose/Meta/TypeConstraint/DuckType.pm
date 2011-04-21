@@ -21,11 +21,12 @@ my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
-    return
-          "Scalar::Util::blessed($val)"
-        . qq{&& Scalar::Util::blessed($val) ne 'Regexp'}
-        . "&& &List::MoreUtils::all( sub { $val->can(\$_) }, "
-        . ( join ', ', map { B::perlstring($_) } @{ $self->methods } ) . ' )';
+    return 'Scalar::Util::blessed(' . $val . ') '
+             . '&& Scalar::Util::blessed(' . $val . ') ne "Regexp" '
+             . '&& &List::MoreUtils::all('
+                 . 'sub { ' . $val . '->can($_) }, '
+                 . join(', ', map { B::perlstring($_) } @{ $self->methods })
+             . ')';
 };
 
 sub new {

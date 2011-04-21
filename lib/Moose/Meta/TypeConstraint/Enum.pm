@@ -22,13 +22,10 @@ my $inliner = sub {
     my $name = $self->name();
     $ENUMS{$name} ||= { map { $_ => 1 } @{ $self->values() } };
 
-    return
-          "defined $val"
-        . "&& ! ref $val" . '&& $'
-        . __PACKAGE__
-        . '::ENUMS{'
-        . B::perlstring($name)
-        . "}{ $val }";
+    return 'defined(' . $val . ') '
+             . '&& !ref(' . $val . ') '
+             . '&& $' . __PACKAGE__ . '::ENUMS{' . B::perlstring($name) . '}'
+                 . '{' . $val . '}';
 };
 
 sub new {
