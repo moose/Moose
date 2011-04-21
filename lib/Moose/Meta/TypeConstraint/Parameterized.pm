@@ -72,6 +72,15 @@ sub can_be_inlined {
         && $self->type_parameter->can_be_inlined;
 }
 
+sub inline_environment {
+    my $self = shift;
+
+    return {
+        %{ $self->parameterized_from->inline_environment },
+        %{ $self->type_parameter->inline_environment },
+    };
+}
+
 sub _inline_check {
     my $self = shift;
 

@@ -1028,10 +1028,10 @@ sub test_constraint {
             isa => $type,
         )
     );
+
     $class->add_attribute(
         collection => (
             traits  => ['Array'],
-            is      => 'ro',
             isa     => 'ArrayRef[' . $type->name . ']',
             default => sub { [] },
             handles => { add_to_collection => 'push' },
@@ -1062,7 +1062,7 @@ sub test_constraint {
                 $anon_class->new( simple => $accept );
             },
             undef,
-            "no exception passing $described to constructor"
+            "no exception passing $described to constructor with $name"
         );
 
         is(
@@ -1070,7 +1070,7 @@ sub test_constraint {
                 $anon_class->new()->add_to_collection($accept);
             },
             undef,
-            "no exception passing $described to constructor"
+            "no exception passing $described to native trait push method with $name"
         );
     }
 
@@ -1095,14 +1095,14 @@ sub test_constraint {
             exception {
                 $anon_class->new( simple => $reject );
             },
-            "got exception passing $described to constructor"
+            "got exception passing $described to constructor with $name"
         );
 
         ok(
             exception {
                 $anon_class->new()->add_to_collection($reject);
             },
-            "got exception passing $described to constructor"
+            "got exception passing $described to native trait push method with $name"
         );
     }
 }

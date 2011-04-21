@@ -44,8 +44,13 @@ sub _eval_environment {
         '$type_constraint_obj' => \$type_constraint_obj,
         '$type_constraint'     => \(
               $type_constraint_obj
-                  ? $type_constraint_obj->_compiled_type_constraint
-                  : undef
+            ? $type_constraint_obj->_compiled_type_constraint
+            : undef
+        ),
+        (
+            $type_constraint_obj
+            ? %{ $type_constraint_obj->inline_environment }
+            : ()
         ),
     };
 }
