@@ -99,17 +99,17 @@ sub _inline_check_member_constraint {
 
     my $check
         = $self->_tc_member_type->can_be_inlined
-        ? '! (' . $self->_tc_member_type->_inline_check('$_') . ')'
-        : ' !$member_tc->($_) ';
+        ? '! (' . $self->_tc_member_type->_inline_check('$new_val') . ')'
+        : ' !$member_tc->($new_val) ';
 
     return (
-        'for (' . $new_value . ') {',
+        'for my $new_val (' . $new_value . ') {',
             "if ($check) {",
                 $self->_inline_throw_error(
                     '"A new member value for ' . $attr_name
                   . ' does not pass its type constraint because: "'
-                  . ' . $member_tc_obj->get_message($_)',
-                    'data => $_',
+                  . ' . $member_tc_obj->get_message($new_val)',
+                    'data => $new_val',
                 ) . ';',
             '}',
         '}',
@@ -143,6 +143,10 @@ around _eval_environment => sub {
     $env->{'$member_tc_obj'} = \($member_tc);
 
     $env->{'$member_tc'} = \( $member_tc->_compiled_type_constraint );
+
+    my $tc_env = $member_tc->inline_environment();
+
+    $env = { %{$env}, %{$tc_env} };
 
     return $env;
 };
