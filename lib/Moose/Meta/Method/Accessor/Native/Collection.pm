@@ -98,7 +98,7 @@ sub _inline_check_member_constraint {
     my $attr_name = $self->associated_attribute->name;
 
     my $check
-        = $self->_tc_member_type->has_inlined_type_constraint
+        = $self->_tc_member_type->can_be_inlined
         ? '! (' . $self->_tc_member_type->_inline_check('$_') . ')'
         : ' !$member_tc->($_) ';
 

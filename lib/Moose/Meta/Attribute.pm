@@ -639,7 +639,7 @@ sub _inline_check_constraint {
 
     my $attr_name = quotemeta($self->name);
 
-    if ( $self->type_constraint->has_inlined_type_constraint ) {
+    if ( $self->type_constraint->can_be_inlined ) {
         return (
             'if (! (' . $self->type_constraint->_inline_check($value) . ')) {',
                 $self->_inline_throw_error(

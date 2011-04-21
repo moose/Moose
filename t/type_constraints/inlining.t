@@ -24,8 +24,8 @@ my $not_inlinable = find_type_constraint('NotInlinable');
 
 {
     ok(
-        $inlinable->has_inlined_type_constraint,
-        'Inlinable returns true for has_inlined_type_constraint'
+        $inlinable->can_be_inlined,
+        'Inlinable returns true for can_be_inlined'
     );
 
     is(
@@ -35,8 +35,8 @@ my $not_inlinable = find_type_constraint('NotInlinable');
     );
 
     ok(
-        !$not_inlinable->has_inlined_type_constraint,
-        'NotInlinable returns false for has_inlined_type_constraint'
+        !$not_inlinable->can_be_inlined,
+        'NotInlinable returns false for can_be_inlined'
     );
 
     like(
@@ -51,8 +51,8 @@ my $not_inlinable = find_type_constraint('NotInlinable');
         'ArrayRef[Inlinable]');
 
     ok(
-        $aofi->has_inlined_type_constraint,
-        'ArrayRef[Inlinable] returns true for has_inlined_type_constraint'
+        $aofi->can_be_inlined,
+        'ArrayRef[Inlinable] returns true for can_be_inlined'
     );
 
     is(
@@ -65,8 +65,8 @@ my $not_inlinable = find_type_constraint('NotInlinable');
         'ArrayRef[NotInlinable]');
 
     ok(
-        !$aofni->has_inlined_type_constraint,
-        'ArrayRef[NotInlinable] returns false for has_inlined_type_constraint'
+        !$aofni->can_be_inlined,
+        'ArrayRef[NotInlinable] returns false for can_be_inlined'
     );
 }
 
@@ -80,8 +80,8 @@ subtype 'ArrayOfNotInlinable',
         'ArrayOfInlinable');
 
     ok(
-        $aofi->has_inlined_type_constraint,
-        'ArrayOfInlinable returns true for has_inlined_type_constraint'
+        $aofi->can_be_inlined,
+        'ArrayOfInlinable returns true for can_be_inlined'
     );
 
     is(
@@ -94,8 +94,8 @@ subtype 'ArrayOfNotInlinable',
         'ArrayOfNotInlinable');
 
     ok(
-        !$aofni->has_inlined_type_constraint,
-        'ArrayOfNotInlinable returns false for has_inlined_type_constraint'
+        !$aofni->can_be_inlined,
+        'ArrayOfNotInlinable returns false for can_be_inlined'
     );
 }
 
@@ -104,8 +104,8 @@ subtype 'ArrayOfNotInlinable',
         'HashRef[ArrayRef[Inlinable]]');
 
     ok(
-        $hoaofi->has_inlined_type_constraint,
-        'HashRef[ArrayRef[Inlinable]] returns true for has_inlined_type_constraint'
+        $hoaofi->can_be_inlined,
+        'HashRef[ArrayRef[Inlinable]] returns true for can_be_inlined'
     );
 
     is(
@@ -118,8 +118,8 @@ subtype 'ArrayOfNotInlinable',
         'HashRef[ArrayRef[NotInlinable]]');
 
     ok(
-        !$hoaofni->has_inlined_type_constraint,
-        'HashRef[ArrayRef[NotInlinable]] returns false for has_inlined_type_constraint'
+        !$hoaofni->can_be_inlined,
+        'HashRef[ArrayRef[NotInlinable]] returns false for can_be_inlined'
     );
 }
 
@@ -128,8 +128,8 @@ subtype 'ArrayOfNotInlinable',
         'Inlinable | Object');
 
     ok(
-        $iunion->has_inlined_type_constraint,
-        'Inlinable | Object returns true for has_inlined_type_constraint'
+        $iunion->can_be_inlined,
+        'Inlinable | Object returns true for can_be_inlined'
     );
 
     is(
@@ -142,8 +142,8 @@ subtype 'ArrayOfNotInlinable',
         'NotInlinable | Object');
 
     ok(
-        !$niunion->has_inlined_type_constraint,
-        'NotInlinable | Object returns false for has_inlined_type_constraint'
+        !$niunion->can_be_inlined,
+        'NotInlinable | Object returns false for can_be_inlined'
     );
 }
 
@@ -152,8 +152,8 @@ subtype 'ArrayOfNotInlinable',
         'Object | Inlinable');
 
     ok(
-        $iunion->has_inlined_type_constraint,
-        'Object | Inlinable returns true for has_inlined_type_constraint'
+        $iunion->can_be_inlined,
+        'Object | Inlinable returns true for can_be_inlined'
     );
 
     is(
@@ -166,8 +166,8 @@ subtype 'ArrayOfNotInlinable',
         'Object | NotInlinable');
 
     ok(
-        !$niunion->has_inlined_type_constraint,
-        'Object | NotInlinable returns false for has_inlined_type_constraint'
+        !$niunion->can_be_inlined,
+        'Object | NotInlinable returns false for can_be_inlined'
     );
 }
 
@@ -176,8 +176,8 @@ subtype 'ArrayOfNotInlinable',
         'Object | Inlinable | CodeRef');
 
     ok(
-        $iunion->has_inlined_type_constraint,
-        'Object | Inlinable | CodeRef returns true for has_inlined_type_constraint'
+        $iunion->can_be_inlined,
+        'Object | Inlinable | CodeRef returns true for can_be_inlined'
     );
 
     is(
@@ -190,8 +190,8 @@ subtype 'ArrayOfNotInlinable',
         'Object | NotInlinable | CodeRef');
 
     ok(
-        !$niunion->has_inlined_type_constraint,
-        'Object | NotInlinable | CodeRef returns false for has_inlined_type_constraint'
+        !$niunion->can_be_inlined,
+        'Object | NotInlinable | CodeRef returns false for can_be_inlined'
     );
 }
 

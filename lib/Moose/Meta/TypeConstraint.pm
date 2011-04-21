@@ -135,11 +135,11 @@ sub validate {
     }
 }
 
-sub has_inlined_type_constraint {
+sub can_be_inlined {
     my $self = shift;
 
     if ( $self->has_parent && $self->constraint == $null_constraint ) {
-        return $self->parent->has_inlined_type_constraint;
+        return $self->parent->can_be_inlined;
     }
 
     return $self->_has_inlined_type_constraint;
@@ -148,7 +148,7 @@ sub has_inlined_type_constraint {
 sub _inline_check {
     my $self = shift;
 
-    unless ( $self->has_inlined_type_constraint ) {
+    unless ( $self->can_be_inlined ) {
         require Moose;
         Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
     }
@@ -256,7 +256,7 @@ sub _actually_compile_type_constraint {
     return $self->_compile_hand_optimized_type_constraint
         if $self->has_hand_optimized_type_constraint;
 
-    if ( $self->has_inlined_type_constraint ) {
+    if ( $self->can_be_inlined ) {
         return eval_closure(
             source      => 'sub { ' . $self->_inline_check('$_[0]') . ' }',
             environment => $self->inline_environment,

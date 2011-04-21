@@ -71,11 +71,10 @@ sub _actually_compile_type_constraint {
     };
 }
 
-sub has_inlined_type_constraint {
+sub can_be_inlined {
     my $self = shift;
 
-    return all { $_->has_inlined_type_constraint }
-        @{ $self->type_constraints };
+    return all { $_->can_be_inlined } @{ $self->type_constraints };
 }
 
 sub _inline_check {

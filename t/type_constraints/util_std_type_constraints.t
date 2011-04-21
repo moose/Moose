@@ -1011,7 +1011,7 @@ sub test_constraint {
         : $type->_compile_type( $type->constraint );
 
     my $inlined;
-    if ( $type->has_inlined_type_constraint ) {
+    if ( $type->can_be_inlined ) {
         $inlined = eval_closure(
             source      => 'sub { ( ' . $type->_inline_check('$_[0]') . ' ) }',
             environment => $type->inline_environment,

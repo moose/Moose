@@ -63,19 +63,19 @@ sub compile_type_constraint {
           . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.");
 }
 
-sub has_inlined_type_constraint {
+sub can_be_inlined {
     my $self = shift;
 
     return
            $self->has_parameterized_from
         && $self->parameterized_from->has_inline_generator
-        && $self->type_parameter->has_inlined_type_constraint;
+        && $self->type_parameter->can_be_inlined;
 }
 
 sub _inline_check {
     my $self = shift;
 
-    return unless $self->has_inlined_type_constraint;
+    return unless $self->can_be_inlined;
 
     return $self->parameterized_from->generate_inline_for( $self->type_parameter, @_ );
 }
