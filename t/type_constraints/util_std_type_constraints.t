@@ -717,6 +717,12 @@ my %tests = (
 
 for my $name ( sort keys %tests ) {
     test_constraint( $name, $tests{$name} );
+
+    test_constraint(
+        Moose::Util::TypeConstraints::find_or_create_type_constraint(
+            "$name|$name"),
+        $tests{$name}
+    );
 }
 
 # We need to test that the Str constraint accepts the return val of substr() -
