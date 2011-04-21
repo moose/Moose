@@ -60,7 +60,7 @@ sub define_builtins {
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
-               . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR")'
+              . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR")'
         };
 
     subtype 'Num'
@@ -77,7 +77,7 @@ sub define_builtins {
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& !ref(' . $_[1] . ') '
-              . '&& (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/'
+              . '&& do { (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/ }'
         };
 
     subtype 'CodeRef'
@@ -134,9 +134,10 @@ sub define_builtins {
         }
         => inline_as {
             'Class::MOP::is_class_loaded(' . $_[1] . ') '
-              . '&& (Class::MOP::class_of(' . $_[1] . ') || return)->isa('
-                  . '"Moose::Meta::Role"'
-              . ')'
+              . '&& do {'
+                  . 'my $meta = Class::MOP::class_of(' . $_[1] . ');'
+                  . '$meta && $meta->isa("Moose::Meta::Role");'
+              . '}'
         };
 
     $registry->add_type_constraint(
@@ -189,11 +190,15 @@ sub define_builtins {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                'ref(' . $val . ') eq "ARRAY" '
-                  . '&& &List::MoreUtils::all('
-                      . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
-                      . '@{' . $val . '}'
-                  . ')'
+
+                'do {'
+                    . 'my $check = ' . $val . ';'
+                    . 'ref($check) eq "ARRAY" '
+                        . '&& &List::MoreUtils::all('
+                            . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
+                            . '@{$check}'
+                        . ')'
+                . '}';
             },
         )
     );
@@ -220,11 +225,15 @@ sub define_builtins {
                 my $self           = shift;
                 my $type_parameter = shift;
                 my $val            = shift;
-                'ref(' . $val . ') eq "HASH" '
-                  . '&& &List::MoreUtils::all('
-                      . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
-                      . 'values %{' . $val . '}'
-                  . ')'
+
+                'do {'
+                    . 'my $check = ' . $val . ';'
+                    . 'ref($check) eq "HASH" '
+                        . '&& &List::MoreUtils::all('
+                            . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
+                            . 'values %{$check}'
+                        . ')'
+                . '}';
             },
         )
     );
