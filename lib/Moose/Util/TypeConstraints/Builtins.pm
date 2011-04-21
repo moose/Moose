@@ -56,7 +56,7 @@ sub define_builtins {
 
     subtype 'Str'
         => as 'Value'
-        => where { ref(\$_) eq 'SCALAR' }
+        => where { ref(\$_) eq 'SCALAR' || ref(\(my $val = $_)) eq 'SCALAR' }
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
@@ -73,7 +73,7 @@ sub define_builtins {
 
     subtype 'Int'
         => as 'Num'
-        => where { "$_" =~ /\A-?[0-9]+\z/ }
+        => where { (my $val = $_) =~ /\A-?[0-9]+\z/ }
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& !ref(' . $_[1] . ') '
