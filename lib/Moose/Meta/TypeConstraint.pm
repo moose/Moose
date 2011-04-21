@@ -131,7 +131,7 @@ sub validate {
 sub has_inlined_type_constraint {
     my $self = shift;
 
-    if ( $self->has_parent && $self->constraint eq $null_constraint ) {
+    if ( $self->has_parent && $self->constraint == $null_constraint ) {
         return $self->parent->has_inlined_type_constraint;
     }
 
@@ -146,7 +146,7 @@ sub _inline_check {
         Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
     }
 
-    if ( $self->has_parent && $self->constraint eq $null_constraint ) {
+    if ( $self->has_parent && $self->constraint == $null_constraint ) {
         return $self->parent->_inline_check(@_);
     }
 
