@@ -75,6 +75,15 @@ for, noteworthy changes.
     Class::MOP::Package. This means that anonymous packages are now also
     possible. (Shawn M Moore, doy)
 
+  * Type constraints can now inline their constraint checks. This replaces the
+    existing hand-optimized constraint feature.
+
+  [DEPRECATIONS]
+
+  * Using a hand-optimized type constraint is now deprecated. In keeping with
+    our release policy, this won't actually start warning until the 2.0200
+    release.
+
   [BUG FIXES]
 
   * No longer call XSLoader from multiple places, as this causes issues on

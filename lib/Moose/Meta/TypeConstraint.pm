@@ -425,7 +425,23 @@ the constraint fails. This is optional.
 A L<Moose::Meta::TypeCoercion> object representing the coercions to
 the type. This is optional.
 
+=item * inlined
+
+A subroutine which returns a string suitable for inlining this type
+constraint. It will be called as a method on the type constraint object, and
+will receive a single additional parameter, a variable name to be tested
+(usually C<"$_"> or C<"$_[0]">.
+
+This is optional.
+
+=item * inline_environment
+
+A hash reference of variables to close over. The keys are variables names, and
+the values are I<references> to the variables.
+
 =item * optimized
+
+B<This option is deprecated.>
 
 This is a variant of the C<constraint> parameter that is somehow
 optimized. Typically, this means incorporating both the type's
@@ -524,12 +540,22 @@ exists.
 
 Returns true if the type has a coercion.
 
+=item B<< $constraint->can_be_inlined >>
+
+Returns true if this type constraint can be inlined. A type constraint which
+subtypes an inlinable constraint and does not add an additional constraint
+"inherits" its parent type's inlining.
+
 =item B<< $constraint->hand_optimized_type_constraint >>
+
+B<This method is deprecated.>
 
 Returns the type's hand optimized constraint, as provided to the
 constructor via the C<optimized> option.
 
 =item B<< $constraint->has_hand_optimized_type_constraint >>
+
+B<This method is deprecated.>
 
 Returns true if the type has an optimized constraint.
 

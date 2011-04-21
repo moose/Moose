@@ -1045,7 +1045,32 @@ constraint fails, then the code block is run with the value provided
 in C<$_>. This reference should return a string, which will be used in
 the text of the exception thrown.
 
+=item B<inline_as { ... }>
+
+This can be used to define a "hand optimized" inlinable version of your type
+constraint.
+
+You provide a subroutine which will be called I<as a method> on a
+L<Moose::Meta::TypeConstraint> object. It will receive a single parameter, the
+name of the variable to check, typically something like C<"$_"> or C<"$_[0]">.
+
+The subroutine should return a code string suitable for inlining. You can
+assume that the check will be wrapped in parenthese when it is inlined.
+
+The inlined code should include any checks that your type's parent type's
+do. For example, the C<Num> type's inlining sub looks like this:
+
+    sub {
+        '!ref(' . $_[1] . ') '
+          . '&& Scalar::Util::looks_like_number(' . $_[1] . ')'
+    }
+
+Note that it checks if the variable is a reference, since it is a subtype of
+the C<Value> type.
+
 =item B<optimize_as { ... }>
+
+B<This feature is deprecated, use C<inline_as> instead.>
 
 This can be used to define a "hand optimized" version of your
 type constraint which can be used to avoid traversing a subtype
@@ -1065,7 +1090,7 @@ parameters:
 
   type( 'Foo', { where => ..., message => ... } );
 
-The valid hashref keys are C<where>, C<message>, and C<optimize_as>.
+The valid hashref keys are C<where>, C<message>, and C<inlined_as>.
 
 =back
 

@@ -18,6 +18,22 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 $NEXT
+
+=over 4
+
+=item Hand-optimized type constraint code is deprecated in favor of inlining
+
+Moose allows you to provide a hand-optimized version of a type constraint's
+subroutine reference. This version allows type constraints to generate inline
+code, and you should use this inlining instead of providing a hand-optimized
+subroutine reference.
+
+This affects the C<optimize_as> sub exported by
+L<Moose::Util::TypeConstraints>. Use C<inline_as> instead.
+
+This will start warning in the 2.0200 release.
+
 =head1 2.0002
 
 =over 4
