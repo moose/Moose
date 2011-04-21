@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use Test::Fatal;
 use Test::More;
 
 use Eval::Closure;
@@ -1018,6 +1019,27 @@ sub test_constraint {
         );
     }
 
+    my $class = Moose::Meta::Class->create_anon(
+        superclasses => ['Moose::Object'],
+    );
+    $class->add_attribute(
+        simple => (
+            is  => 'ro',
+            isa => $type,
+        )
+    );
+    $class->add_attribute(
+        collection => (
+            traits  => ['Array'],
+            is      => 'ro',
+            isa     => 'ArrayRef[' . $type->name . ']',
+            default => sub { [] },
+            handles => { add_to_collection => 'push' },
+        )
+    );
+
+    my $anon_class = $class->name;
+
     for my $accept ( @{ $tests->{accept} || [] } ) {
         my $described = describe($accept);
         ok(
@@ -1034,6 +1056,22 @@ sub test_constraint {
                 "$name accepts $described using inlined constraint"
             );
         }
+
+        is(
+            exception {
+                $anon_class->new( simple => $accept );
+            },
+            undef,
+            "no exception passing $described to constructor"
+        );
+
+        is(
+            exception {
+                $anon_class->new()->add_to_collection($accept);
+            },
+            undef,
+            "no exception passing $described to constructor"
+        );
     }
 
     for my $reject ( @{ $tests->{reject} || [] } ) {
@@ -1052,6 +1090,20 @@ sub test_constraint {
                 "$name rejects $described using inlined constraint"
             );
         }
+
+        ok(
+            exception {
+                $anon_class->new( simple => $reject );
+            },
+            "got exception passing $described to constructor"
+        );
+
+        ok(
+            exception {
+                $anon_class->new()->add_to_collection($reject);
+            },
+            "got exception passing $described to constructor"
+        );
     }
 }
 
