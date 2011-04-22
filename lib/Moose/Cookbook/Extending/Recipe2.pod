@@ -29,7 +29,8 @@ use Test::Requires {
 
   use Moose::Role;
 
-  after 'BUILDALL' => sub {
+  sub BUILD {}
+  after BUILD => sub {
       my $self = shift;
 
       warn "Made a new " . ( ref $self ) . " object\n";
@@ -62,6 +63,19 @@ ensure that our C<init_meta> method is called. The C<init_meta> is created by
 C<setup_import_methods> for us, since we passed the C<base_class_roles>
 parameter. The generated C<init_meta> will in turn call
 L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>.
+
+  sub BUILD {}
+  after BUILD => sub {
+      ...
+  };
+
+Due to the way role composition currently works, if the class that a role is
+composed into contains a C<BUILD> method, then that will override the C<BUILD>
+method in any roles it composes, which is typically not what you want. Using a
+method modifier on C<BUILD> avoids this issue, since method modifiers compose
+together rather than being overridden. Method modifiers require that a method
+exists in order to wrap, however, so we also provide a stub method to wrap if
+no C<BUILD> method exists in the class.
 
 =begin testing
 
