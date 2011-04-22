@@ -523,7 +523,7 @@ sub create {
             if exists $options{methods};
 
     (ref $options{roles} eq 'ARRAY')
-        || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
+        || confess "You must pass an ARRAY ref of roles"
             if exists $options{roles};
 
     my $package      = delete $options{package};
