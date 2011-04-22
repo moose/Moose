@@ -17,6 +17,9 @@ for, noteworthy changes.
   * Moose::Meta::Role->create now accepts the 'roles' parameter, as it was
     documented to. (Chris Weyl)
 
+  * Depend on Eval::Closure 0.04, which fixes some issues in mod_perl
+    environments. (doy, mateu)
+
 2.0000 Mon, Apr 11, 2011
 
   [API CHANGES]
