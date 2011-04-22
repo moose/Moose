@@ -14,6 +14,9 @@ for, noteworthy changes.
   * No longer call XSLoader from multiple places, as this causes issues on
     older perls. (doy, ribasushi)
 
+  * Moose::Meta::Role->create now accepts the 'roles' parameter, as it was
+    documented to. (Chris Weyl)
+
 2.0000 Mon, Apr 11, 2011
 
   [API CHANGES]
