@@ -522,7 +522,12 @@ sub create {
         || confess "You must pass a HASH ref of methods"
             if exists $options{methods};
 
+    (ref $options{roles} eq 'ARRAY')
+        || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
+            if exists $options{roles};
+
     my $package      = delete $options{package};
+    my $roles        = delete $options{roles};
     my $attributes   = delete $options{attributes};
     my $methods      = delete $options{methods};
     my $meta_name    = exists $options{meta_name}
@@ -546,6 +551,10 @@ sub create {
         foreach my $method_name (keys %{$methods}) {
             $meta->add_method($method_name, $methods->{$method_name});
         }
+    }
+
+    if ($roles) {
+        Moose::Util::apply_all_roles($meta, @$roles);
     }
 
     return $meta;
