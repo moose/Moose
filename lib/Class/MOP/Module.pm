@@ -110,6 +110,23 @@ B<Class::MOP::Module> is a subclass of L<Class::MOP::Package>.
 
 =over 4
 
+=item B<< Class::MOP::Module->create($package, %options) >>
+
+Overrides C<create> from L<Class::MOP::Package> to provide these additional
+options:
+
+=over 4
+
+=item C<version>
+
+A version number, to be installed in the C<$VERSION> package global variable.
+
+=item C<authority>
+
+An authority, to be installed in the C<$AUTHORITY> package global variable.
+
+=back
+
 =item B<< $metamodule->version >>
 
 This is a read-only attribute which returns the C<$VERSION> of the
