@@ -259,13 +259,14 @@ looking at and changing that namespace's symbol table.
 
 =over 4
 
-=item B<< Class::MOP::Package->initialize($package_name) >>
+=item B<< Class::MOP::Package->initialize($package_name, %options) >>
 
 This method creates a new C<Class::MOP::Package> instance which
 represents specified package. If an existing metaclass object exists
-for the package, that will be returned instead.
+for the package, that will be returned instead. No options are valid at the
+package level.
 
-=item B<< Class::MOP::Package->reinitialize($package) >>
+=item B<< Class::MOP::Package->reinitialize($package, %options) >>
 
 This method forcibly removes any existing metaclass for the package
 before calling C<initialize>. In contrast to C<initialize>, you may
@@ -273,6 +274,31 @@ also pass an existing C<Class::MOP::Package> instance instead of just
 a package name as C<$package>.
 
 Do not call this unless you know what you are doing.
+
+=item B<< Class::MOP::Package->create($package, %options) >>
+
+Creates a new C<Class::MOP::Package> instance which represents the specified
+package, and also does some initialization of that package. Currently, this
+just does the same thing as C<initialize>, but is overridden in subclasses,
+such as C<Class::MOP::Class>.
+
+=item B<< Class::MOP::Package->create_anon(%options) >>
+
+Creates a new anonymous package. Valid keys for C<%options> are:
+
+=over 4
+
+=item C<weaken>
+
+If this is true (the default), the instance stored in C<Class::MOP>'s metaclass
+cache will be weakened, so that the anonymous package will be garbage collected
+when the returned instance goes out of scope.
+
+=back
+
+=item B<< $metapackage->is_anon >>
+
+Returns true if the package is an anonymous package.
 
 =item B<< $metapackage->name >>
 
