@@ -30,4 +30,11 @@ ok(!$visored->is_worn, "method was consumed");
 
 ok(!$role->is_anon_role, "the role is not anonymous");
 
+my $composed_role = Moose::Meta::Role->create(
+    'MyItem::Role::Equipment2',
+    roles => [ $role ],
+);
+
+ok($composed_role->does_role('MyItem::Role::Equipment2'), "Role composed into role");
+
 done_testing;
