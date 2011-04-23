@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0001 Fri, Apr 22, 2011
+
   [ENHANCEMENTS]
 
   * Anonymous classes and roles now have a unified implementation in
