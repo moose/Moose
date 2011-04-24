@@ -1256,8 +1256,13 @@ sub _immutable_options {
 sub make_immutable {
     my ( $self, @args ) = @_;
 
+    my ($file, $line) = (caller)[1..2];
     if ( $self->is_mutable ) {
-        $self->_initialize_immutable( $self->_immutable_options(@args) );
+        $self->_initialize_immutable(
+            $self->_immutable_options(@args),
+            file => $file,
+            line => $line,
+        );
         $self->_rebless_as_immutable(@args);
         return $self;
     }
@@ -1413,6 +1418,11 @@ sub _inline_constructor {
         is_inline    => 1,
         package_name => $self->name,
         name         => $name,
+        definition_context => {
+            description => "constructor " . $self->name . "::" . $name,
+            file        => $args{file},
+            line        => $args{line},
+        },
     );
 
     if ( $args{replace_constructor} or $constructor->can_be_inlined ) {
@@ -1445,7 +1455,12 @@ sub _inline_destructor {
         options      => \%args,
         metaclass    => $self,
         package_name => $self->name,
-        name         => 'DESTROY'
+        name         => 'DESTROY',
+        definition_context => {
+            description => "destructor " . $self->name . "::DESTROY",
+            file        => $args{file},
+            line        => $args{line},
+        },
     );
 
     if ( $args{replace_destructor} or $destructor->can_be_inlined ) {

@@ -29,6 +29,7 @@ sub new {
         'name'          => $options{name},
         'options'       => $options{options},
         'associated_metaclass' => $meta,
+        'definition_context' => $options{definition_context},
         '_expected_method_class' => $options{_expected_method_class} || 'Moose::Object',
     } => $class;
 
