@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Class::MOP ();
+use B ();
 use Scalar::Util 'blessed', 'weaken';
 use List::MoreUtils 'any';
 use Try::Tiny;
@@ -524,7 +525,7 @@ sub set_value {
     my ($self, $instance, @args) = @_;
     my $value = $args[0];
 
-    my $attr_name = $self->name;
+    my $attr_name = quotemeta($self->name);
 
     if ($self->is_required and not @args) {
         $self->throw_error("Attribute ($attr_name) is required", object => $instance);
@@ -697,7 +698,7 @@ sub _inline_trigger {
 
     return unless $self->has_trigger;
 
-    return '$attr->trigger->(' . $instance . ', ' . $value . ', ' . $old . ');';
+    return '$trigger->(' . $instance . ', ' . $value . ', ' . $old . ');';
 }
 
 sub _weaken_value {
@@ -812,21 +813,26 @@ sub _inline_generate_default {
     my ($instance, $default) = @_;
 
     if ($self->has_default) {
-        return 'my ' . $default . ' = $attr->default(' . $instance . ');';
+        my $source = 'my ' . $default . ' = $default';
+        $source .= '->(' . $instance . ')'
+            if $self->is_default_a_coderef;
+        return $source . ';';
     }
     elsif ($self->has_builder) {
+        my $builder = B::perlstring($self->builder);
+        my $builder_str = quotemeta($self->builder);
+        my $attr_name_str = quotemeta($self->name);
         return (
             'my ' . $default . ';',
-            'if (my $builder = ' . $instance . '->can($attr->builder)) {',
+            'if (my $builder = ' . $instance . '->can(' . $builder . ')) {',
                 $default . ' = ' . $instance . '->$builder;',
             '}',
             'else {',
                 'my $class = ref(' . $instance . ') || ' . $instance . ';',
-                'my $builder_name = $attr->builder;',
-                'my $attr_name = $attr->name;',
                 $self->_inline_throw_error(
                     '"$class does not support builder method '
-                  . '\'$builder_name\' for attribute \'$attr_name\'"'
+                  . '\'' . $builder_str . '\' for attribute '
+                  . '\'' . $attr_name_str . '\'"'
                 ) . ';',
             '}',
         );

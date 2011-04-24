@@ -39,7 +39,8 @@ sub _eval_environment {
     my $type_constraint_obj = $attr->type_constraint;
 
     return {
-        '$attr'                => \$attr,
+        '$trigger'             => \($attr->trigger),
+        '$default'             => \($attr->default),
         '$meta'                => \$self,
         '$type_constraint_obj' => \$type_constraint_obj,
         '$type_constraint'     => \(
@@ -52,6 +53,10 @@ sub _eval_environment {
             ? %{ $type_constraint_obj->inline_environment }
             : ()
         ),
+        # XXX ugh
+        ($attr->has_initializer
+            ? ('$attr' => \$attr)
+            : ()),
     };
 }
 
