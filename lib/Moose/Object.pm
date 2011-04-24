@@ -92,9 +92,6 @@ sub DESTROY {
         $self->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
     }
     Try::Tiny::catch {
-        # Without this, Perl will warn "\t(in cleanup)$@" because of some
-        # bizarre fucked-up logic deep in the internals.
-        no warnings 'misc';
         die $_;
     };
 

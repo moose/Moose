@@ -122,7 +122,6 @@ sub _generate_DEMOLISHALL {
             (map { $inv . '->' . $_->{class} . '::DEMOLISH($igd);' } @methods),
         '}',
         'Try::Tiny::catch {',
-            'no warnings \'misc\';',
             'die $_;',
         '};',
     );
