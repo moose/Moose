@@ -140,7 +140,12 @@ sub get_message {
     }
     else {
         # have to load it late like this, since it uses Moose itself
-        if (try { Class::MOP::load_class('Devel::PartialDump'); 1 }) {
+        my $can_partialdump = try {
+            # versions prior to 0.14 had a potential infinite loop bug
+            Class::MOP::load_class('Devel::PartialDump', { -version => 0.14 });
+            1;
+        };
+        if ($can_partialdump) {
             $value = Devel::PartialDump->new->dump($value);
         }
         else {
