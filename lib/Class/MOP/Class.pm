@@ -1259,9 +1259,9 @@ sub make_immutable {
     my ($file, $line) = (caller)[1..2];
     if ( $self->is_mutable ) {
         $self->_initialize_immutable(
-            $self->_immutable_options(@args),
             file => $file,
             line => $line,
+            $self->_immutable_options(@args),
         );
         $self->_rebless_as_immutable(@args);
         return $self;
