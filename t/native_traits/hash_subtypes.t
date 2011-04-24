@@ -156,7 +156,7 @@ my $foo = Foo->new;
 
 {
     my $expect
-        = qr/\QAttribute (h4) does not pass the type constraint because: Validation failed for 'HashRef' with value invalid/;
+        = qr/\QAttribute (h4) does not pass the type constraint because: Validation failed for 'HashRef' with value \E.*invalid.*/;
 
     like(
         exception { $foo->accessor_h4('key'); },

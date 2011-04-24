@@ -80,10 +80,10 @@ ok $isa_foo, 'Created subtype of Foo type';
 ok $isa_foo->check( Foo->new ), 'Foo passes check';
 ok $isa_foo->check( Bar->new ), 'Bar passes check';
 ok ! $isa_foo->check( Baz->new ), 'Baz does not pass check';
-like $foo->get_message( Baz->new ), qr/^Validation failed for 'Foo' with value Baz=HASH\(0x\w+\) \(not isa Foo\)/, 'Better validation message';
+like $foo->get_message( Baz->new ), qr/^Validation failed for 'Foo' with value .*Baz.* \(not isa Foo\)/, 'Better validation message';
 
 # Maybe in the future this *should* inherit?
-like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' with value Baz=HASH\(0x\w+\)$/, "Subtypes do not automatically inherit parent type's message";
+like $isa_foo->get_message( Baz->new ), qr/^Validation failed for 'IsaFoo' with value .*Baz.*/, "Subtypes do not automatically inherit parent type's message";
 
 
 # Implicit types

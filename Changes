@@ -10,6 +10,9 @@ for, noteworthy changes.
     origin)". Also, add the package that accessors are defined in to their
     definition context.
 
+  * Use Devel::PartialDump in type constraint error messages, if it is
+    installed.
+
   [BUG FIXES]
 
   * Stop hiding warnings produced by throwing errors in DEMOLISH methods.
