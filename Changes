@@ -3,6 +3,17 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * Provide definition context information for constructors and destructors, so
+    that they will show up as something other than "generated method (unknown
+    origin)". Also, add the package that accessors are defined in to their
+    definition context.
+
+  [BUG FIXES]
+
+  * Stop hiding warnings produced by throwing errors in DEMOLISH methods.
+
 2.0001 Fri, Apr 22, 2011
 
   [ENHANCEMENTS]
