@@ -35,28 +35,33 @@ sub _compile_code {
 sub _eval_environment {
     my $self = shift;
 
-    my $attr                = $self->associated_attribute;
-    my $type_constraint_obj = $attr->type_constraint;
+    my $env = { };
 
-    return {
-        '$trigger'             => \($attr->trigger),
-        '$default'             => \($attr->default),
-        '$meta'                => \$self,
-        '$type_constraint_obj' => \$type_constraint_obj,
-        ($type_constraint_obj && !$type_constraint_obj->can_be_inlined
-            ? ('$type_constraint'
-                => \($type_constraint_obj->_compiled_type_constraint))
-            : ()),
-        (
-            $type_constraint_obj
-            ? %{ $type_constraint_obj->inline_environment }
-            : ()
-        ),
-        # XXX ugh
-        ($attr->has_initializer
-            ? ('$attr' => \$attr)
-            : ()),
-    };
+    my $attr = $self->associated_attribute;
+
+    $env->{'$trigger'} = \($attr->trigger)
+        if $attr->has_trigger;
+    $env->{'$default'} = \($attr->default)
+        if $attr->has_default;
+
+    if ($attr->has_type_constraint) {
+        my $tc_obj = $attr->type_constraint;
+
+        # is this going to be an issue? it's currently used for coercions
+        # and the tc message, is there a way to inline those too?
+        $env->{'$type_constraint_obj'} = \$tc_obj;
+        $env->{'$type_constraint'}     = \($tc_obj->_compiled_type_constraint)
+            unless $tc_obj->can_be_inlined;
+
+        $env = { %$env, %{ $tc_obj->inline_environment } };
+    }
+
+    # XXX ugh, fix these
+    $env->{'$attr'} = \$attr
+        if $attr->has_initializer;
+    $env->{'$meta'} = \$self;
+
+    return $env;
 }
 
 sub _instance_is_inlinable {
