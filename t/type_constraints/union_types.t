@@ -70,11 +70,11 @@ ok(!defined($HashOrArray->validate([])), '... (ArrayRef | HashRef) can accept []
 ok(!defined($HashOrArray->validate({})), '... (ArrayRef | HashRef) can accept {}');
 
 like($HashOrArray->validate(\(my $var2)),
-qr/Validation failed for \'ArrayRef\' with value SCALAR\(0x.+?\) and Validation failed for \'HashRef\' with value SCALAR\(0x.+?\) in \(ArrayRef\|HashRef\)/,
+qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
 '... (ArrayRef | HashRef) cannot accept scalar refs');
 
 like($HashOrArray->validate(sub {}),
-qr/Validation failed for \'ArrayRef\' with value CODE\(0x.+?\) and Validation failed for \'HashRef\' with value CODE\(0x.+?\) in \(ArrayRef\|HashRef\)/,
+qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
 '... (ArrayRef | HashRef) cannot accept code refs');
 
 is($HashOrArray->validate(50),

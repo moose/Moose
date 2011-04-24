@@ -12,6 +12,7 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
 
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
+use Try::Tiny;
 
 use base qw(Class::MOP::Object);
 
@@ -138,7 +139,13 @@ sub get_message {
         return $msg->($value);
     }
     else {
-        $value = (defined $value ? overload::StrVal($value) : 'undef');
+        # have to load it late like this, since it uses Moose itself
+        if (try { Class::MOP::load_class('Devel::PartialDump'); 1 }) {
+            $value = Devel::PartialDump->new->dump($value);
+        }
+        else {
+            $value = (defined $value ? overload::StrVal($value) : 'undef');
+        }
         return "Validation failed for '" . $self->name . "' with value $value";
     }
 }

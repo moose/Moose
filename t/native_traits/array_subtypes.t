@@ -171,7 +171,7 @@ my $foo = Foo->new;
 
 {
     my $expect
-        = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value invalid/;
+        = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value \E.*invalid.*/;
 
     like(
         exception { $foo->accessor_a4(0); },

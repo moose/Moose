@@ -140,7 +140,7 @@ use Test::Fatal;
 
     like( exception {
         $moose_obj->a_str( $moose_obj )
-    }, qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value OverloadedStr=HASH\(0x.+?\)/, '... dies without overloading the string' );
+    }, qr/Attribute \(a_str\) does not pass the type constraint because\: Validation failed for 'Str' with value .*OverloadedStr/, '... dies without overloading the string' );
 
 }
 

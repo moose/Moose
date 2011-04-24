@@ -67,7 +67,7 @@ is($bar->foo, 42, '... got the extended attribute');
 $bar->foo(100);
 is($bar->foo, 100, "... can change the attribute's value to an Int");
 
-like( exception { $bar->foo("baz") }, qr/^Attribute \(foo\) does not pass the type constraint because: Validation failed for 'Int' with value baz at / );
+like( exception { $bar->foo("baz") }, qr/^Attribute \(foo\) does not pass the type constraint because: Validation failed for 'Int' with value .*baz.* at / );
 is($bar->foo, 100, "... still has the old Int value");
 
 
@@ -98,7 +98,7 @@ is($baz->baz, 99, '... got the extended attribute');
 $baz->baz('Foo');
 is($baz->baz, 'Foo', "... can change the attribute's value to a ClassName");
 
-like( exception { $baz->baz("zonk") }, qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'ClassName\|Int' with value zonk at / );
+like( exception { $baz->baz("zonk") }, qr/^Attribute \(baz\) does not pass the type constraint because: Validation failed for 'ClassName\|Int' with value .*zonk.* at / );
 is_deeply($baz->baz, 'Foo', "... still has the old ClassName value");
 
 
@@ -136,10 +136,10 @@ is($quux->quux, 100, "... can change the attribute's value to an Int");
 $quux->quux(["hi"]);
 is_deeply($quux->quux, ["hi"], "... can change the attribute's value to an ArrayRef");
 
-like( exception { $quux->quux("quux") }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value quux at / );
+like( exception { $quux->quux("quux") }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value .*quux.* at / );
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
-like( exception { $quux->quux({a => 1}) }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value HASH\(\w+\) at / );
+like( exception { $quux->quux({a => 1}) }, qr/^Attribute \(quux\) does not pass the type constraint because: Validation failed for 'ArrayRef\|Positive' with value .+ at / );
 is_deeply($quux->quux, ["hi"], "... still has the old ArrayRef value");
 
 
