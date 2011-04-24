@@ -107,6 +107,10 @@ sub _inline_tc_code {
     shift->associated_attribute->_inline_tc_code(@_);
 }
 
+sub _inline_check_coercion {
+    shift->associated_attribute->_inline_check_coercion(@_);
+}
+
 sub _inline_check_constraint {
     shift->associated_attribute->_inline_check_constraint(@_);
 }

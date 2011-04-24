@@ -116,18 +116,6 @@ around _inline_tc_code => sub {
     return $self->$orig(@_);
 };
 
-sub _inline_check_coercion {
-    my $self = shift;
-    my ($value, $tc, $tc_obj) = @_;
-
-    my $attr = $self->associated_attribute;
-    return unless $attr->should_coerce && $attr->type_constraint->has_coercion;
-
-    # We want to break the aliasing in @_ in case the coercion tries to make a
-    # destructive change to an array member.
-    return $value . ' = ' . $tc_obj . '->coerce(' . $value . ');';
-}
-
 around _inline_check_constraint => sub {
     my $orig = shift;
     my $self = shift;
