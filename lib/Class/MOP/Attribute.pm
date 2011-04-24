@@ -378,7 +378,7 @@ sub _process_accessors {
         my $method;
         try {
             if ( $method_ctx ) {
-                my $desc = "accessor $accessor";
+                my $desc = "accessor " . $self->associated_class->name . "::$accessor";
                 if ( $accessor ne $self->name ) {
                     $desc .= " of attribute " . $self->name;
                 }

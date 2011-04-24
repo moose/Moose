@@ -28,6 +28,7 @@ sub new {
         'name'                 => $options{name},
         # ...
         'options'              => $options{options},
+        'definition_context'   => $options{definition_context},
         'associated_metaclass' => $options{metaclass},
     } => $class;
 
