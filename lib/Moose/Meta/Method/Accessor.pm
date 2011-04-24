@@ -43,11 +43,10 @@ sub _eval_environment {
         '$default'             => \($attr->default),
         '$meta'                => \$self,
         '$type_constraint_obj' => \$type_constraint_obj,
-        '$type_constraint'     => \(
-              $type_constraint_obj
-            ? $type_constraint_obj->_compiled_type_constraint
-            : undef
-        ),
+        ($type_constraint_obj && !$type_constraint_obj->can_be_inlined
+            ? ('$type_constraint'
+                => \($type_constraint_obj->_compiled_type_constraint))
+            : ()),
         (
             $type_constraint_obj
             ? %{ $type_constraint_obj->inline_environment }
