@@ -46,6 +46,7 @@ use Class::MOP;
     );
 
     $meta->make_immutable;
+    my $line = __LINE__ - 1;
 
     my $immutable_metaclass = $meta->_immutable_metaclass->meta;
 
@@ -67,6 +68,8 @@ use Class::MOP;
             constructor_name   => 'new',
             constructor_class  => 'Class::MOP::Method::Constructor',
             destructor_class   => undef,
+            file               => $0,
+            line               => $line,
         },
         'immutable_options is empty before a class is made_immutable'
     );
@@ -272,6 +275,7 @@ use Class::MOP;
         inline_constructor => 0,
         constructor_name   => 'newer',
     );
+    my $line = __LINE__ - 5;
 
     is_deeply(
         { $meta->immutable_options },
@@ -284,6 +288,8 @@ use Class::MOP;
             constructor_name   => 'newer',
             constructor_class  => 'Class::MOP::Method::Constructor',
             destructor_class   => undef,
+            file               => $0,
+            line               => $line,
         },
         'custom immutable_options are returned by immutable_options accessor'
     );
