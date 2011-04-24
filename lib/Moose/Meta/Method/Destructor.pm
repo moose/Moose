@@ -80,7 +80,9 @@ sub _initialize_body {
             'my $self = shift;',
             'return ' . $self->_generate_fallback_destructor('$self'),
                 'if Scalar::Util::blessed($self) ne \'' . $class . '\';',
+            'local $?;',
             $self->_generate_DEMOLISHALL('$self'),
+            'return;',
         '}',
     );
     warn join("\n", @source) if $self->options->{debug};
@@ -115,7 +117,6 @@ sub _generate_DEMOLISHALL {
     return unless @methods;
 
     return (
-        'local $?;',
         'my $igd = Devel::GlobalDestruction::in_global_destruction;',
         'Try::Tiny::try {',
             (map { $inv . '->' . $_->{class} . '::DEMOLISH($igd);' } @methods),
@@ -124,7 +125,6 @@ sub _generate_DEMOLISHALL {
             'no warnings \'misc\';',
             'die $_;',
         '};',
-        'return;',
     );
 }
 
