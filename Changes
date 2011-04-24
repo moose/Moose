@@ -14,6 +14,9 @@ for, noteworthy changes.
 
   * Stop hiding warnings produced by throwing errors in DEMOLISH methods.
 
+  * The 'reset' native delegation for Counter attributes will now also respect
+    builders (previously, it only respected defaults).
+
 2.0001 Fri, Apr 22, 2011
 
   [ENHANCEMENTS]

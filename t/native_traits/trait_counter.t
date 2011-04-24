@@ -132,4 +132,41 @@ sub run_tests {
     $class;
 }
 
+{
+    package WithBuilder;
+    use Moose;
+
+    has nonlazy => (
+        traits  => ['Counter'],
+        is      => 'rw',
+        isa     => 'Int',
+        builder => '_builder',
+        handles => {
+            reset_nonlazy => 'reset',
+        },
+    );
+
+    has lazy => (
+        traits  => ['Counter'],
+        is      => 'rw',
+        isa     => 'Int',
+        lazy    => 1,
+        builder => '_builder',
+        handles => {
+            reset_lazy => 'reset',
+        },
+    );
+
+    sub _builder { 1 }
+}
+
+for my $attr ('lazy', 'nonlazy') {
+    my $obj = WithBuilder->new;
+    is($obj->$attr, 1, "built properly");
+    $obj->$attr(0);
+    is($obj->$attr, 0, "can be manually set");
+    $obj->${\"reset_$attr"};
+    is($obj->$attr, 1, "reset resets it to its default value");
+}
+
 done_testing;
