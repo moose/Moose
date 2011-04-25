@@ -81,6 +81,18 @@ inlining type constraints.
     __PACKAGE__->meta->make_immutable;
 }
 
+{
+    package Simple;
+    use Moose;
+
+    has str => (
+        is  => 'rw',
+        isa => 'Str',
+    );
+
+    __PACKAGE__->meta->make_immutable;
+}
+
 my @ints    = 1 .. 10;
 my @strs    = 'a' .. 'j';
 my @fhs     = map { my $fh; open $fh, '<', $0 or die; $fh; } 1 .. 10;
@@ -92,10 +104,22 @@ my %fhs     = map { $_ => $_ } @fhs;
 my %objects = map { $_ => $_ } @objects;
 
 my $thing = Thing->new;
+my $simple = Simple->new;
 
 timethese(
-    200_00, {
-        constructor => sub {
+    500_000, {
+        constructor_simple => sub {
+            Simple->new( str => $strs[0] );
+        },
+        accessors_simple => sub {
+            $simple->str( $strs[0] );
+        },
+    }
+);
+
+timethese(
+    20_000, {
+        constructor_all => sub {
             Thing->new(
                 int      => $ints[0],
                 str      => $strs[0],
@@ -111,7 +135,7 @@ timethese(
                 h_object => \%objects,
             );
         },
-        accessors => sub {
+        accessors_all => sub {
             $thing->int( $ints[0] );
             $thing->str( $strs[0] );
             $thing->fh( $fhs[0] );
