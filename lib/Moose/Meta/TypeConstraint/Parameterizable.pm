@@ -52,7 +52,7 @@ sub generate_inline_for {
           . "was defined"
         unless $self->has_inline_generator;
 
-    return $self->inline_generator->( $self, $type, $val );
+    return '( do { ' . $self->inline_generator->( $self, $type, $val ) . ' } )';
 }
 
 sub _parse_type_parameter {

@@ -157,7 +157,7 @@ sub _inline_check {
         return $self->parent->_inline_check(@_);
     }
 
-    return $self->inlined->( $self, @_ );
+    return '( do { ' . $self->inlined->( $self, @_ ) . ' } )';
 }
 
 sub inline_environment {

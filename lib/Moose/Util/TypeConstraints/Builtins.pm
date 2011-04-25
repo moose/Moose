@@ -60,7 +60,7 @@ sub define_builtins {
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
-              . '|| do { ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR" })'
+              . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR" )'
         };
 
     subtype 'Num'
@@ -77,7 +77,7 @@ sub define_builtins {
         => inline_as {
             'defined(' . $_[1] . ') '
               . '&& !ref(' . $_[1] . ') '
-              . '&& do { (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/ }'
+              . '&& (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/'
         };
 
     subtype 'CodeRef'
