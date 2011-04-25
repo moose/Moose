@@ -85,15 +85,21 @@ sub _eval_environment {
             : undef
     } @type_constraints;
 
+    my @type_constraint_messages = map {
+        defined $_
+            ? ($_->has_message ? $_->message : $_->_default_message)
+            : undef
+    } @type_constraints;
+
     return {
         ((any { defined && $_->has_initializer } @$attrs)
             ? ('$attrs' => \$attrs)
             : ()),
         '$defaults' => \$defaults,
         '$triggers' => \$triggers,
-        '@type_constraints' => \@type_constraints,
         '@type_coercions' => \@type_coercions,
         '@type_constraint_bodies' => \@type_constraint_bodies,
+        '@type_constraint_messages' => \@type_constraint_messages,
         ( map { defined($_) ? %{ $_->inline_environment } : () }
               @type_constraints ),
         # pretty sure this is only going to be closed over if you use a custom

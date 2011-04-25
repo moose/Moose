@@ -382,7 +382,7 @@ sub _inline_init_attr_from_constructor {
         '$params->{\'' . $attr->init_arg . '\'}',
         '$type_constraint_bodies[' . $idx . ']',
         '$type_coercions[' . $idx . ']',
-        '$type_constraints[' . $idx . ']',
+        '$type_constraint_messages[' . $idx . ']',
         'for constructor',
     );
 
@@ -411,7 +411,7 @@ sub _inline_init_attr_from_default {
             '$default',
             '$type_constraint_bodies[' . $idx . ']',
             '$type_coercions[' . $idx . ']',
-            '$type_constraints[' . $idx . ']',
+            '$type_constraint_messages[' . $idx . ']',
             'for constructor',
         ),
     );

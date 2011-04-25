@@ -56,16 +56,16 @@ sub _eval_environment {
     if ($attr->has_type_constraint) {
         my $tc_obj = $attr->type_constraint;
 
-        # is this going to be an issue? it's currently only used for the tc
-        # message. is there a way to inline that too?
-        $env->{'$type_constraint_obj'} = \$tc_obj;
-
         $env->{'$type_constraint'} = \(
             $tc_obj->_compiled_type_constraint
         ) unless $tc_obj->can_be_inlined;
+        # these two could probably get inlined versions too
         $env->{'$type_coercion'} = \(
             $tc_obj->coercion->_compiled_type_coercion
         ) if $tc_obj->has_coercion;
+        $env->{'$type_message'} = \(
+            $tc_obj->has_message ? $tc_obj->message : $tc_obj->_default_message
+        );
 
         $env = { %$env, %{ $tc_obj->inline_environment } };
     }
