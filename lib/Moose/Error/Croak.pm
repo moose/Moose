@@ -11,9 +11,13 @@ sub new {
 }
 
 sub _inline_new {
-    my ( $self, @args ) = @_;
+    my ( $self, %args ) = @_;
 
-    return $self->_inline_create_error_carpmess(@args);
+    my $depth = ($args{depth} || 0) - 1;
+    return $self . '->new('
+      . 'message => ' . $args{message} . ', '
+      . 'depth   => ' . $depth         . ', '
+  . ')';
 }
 
 1;

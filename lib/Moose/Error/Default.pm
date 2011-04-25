@@ -21,13 +21,13 @@ sub new {
 }
 
 sub _inline_new {
-    my ( $self, @args ) = @_;
+    my ( $self, %args ) = @_;
 
-    return '(do { '
-             . '(defined $ENV{MOOSE_ERROR_STYLE} && $ENV{MOOSE_ERROR_STYLE} eq "croak"'
-               . ' ? ' . $self->_inline_create_error_carpmess(@args)
-               . ' : ' . $self->_inline_create_error_carpmess(@args, longmess => 1)
-         . ')})';
+    my $depth = ($args{depth} || 0) - 1;
+    return $self . '->new('
+      . 'message => ' . $args{message} . ', '
+      . 'depth   => ' . $depth         . ', '
+  . ')';
 }
 
 sub create_error_croak {
@@ -43,7 +43,7 @@ sub create_error_confess {
 sub _create_error_carpmess {
     my ( $self, %args ) = @_;
 
-    my $carp_level = 3 + ( $args{depth} || 1 );
+    my $carp_level = 4 + ( $args{depth} || 0 );
     local $Carp::MaxArgNums = 20; # default is 8, usually we use named args which gets messier though
 
     my @args = exists $args{message} ? $args{message} : ();
@@ -54,31 +54,6 @@ sub _create_error_carpmess {
     } else {
         return Carp::ret_summary($carp_level, @args);
     }
-}
-
-sub _inline_create_error_carpmess {
-    my ( $self, %args ) = @_;
-
-    my $carp_level = $args{depth} || 0;
-
-    my $create_message = 'Carp::longmess(' . $args{message} . ')';
-
-    if (!$args{longmess}) {
-        $create_message =
-            '($Carp::Verbose '
-              . '? ' . $create_message . ' '
-              . ': Carp::ret_summary('
-                  . $carp_level . ', ' . $args{message}
-              . '))';
-    }
-
-    return
-        '(do { '
-          . 'local $Carp::MaxArgNums = 20; '
-          . 'local $Carp::CarpLevel = ($Carp::CarpLevel || 0) + '
-              . $carp_level . '; '
-          . $create_message
-      . '})';
 }
 
 1;
