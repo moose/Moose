@@ -63,7 +63,7 @@ sub _eval_environment {
 
     # XXX ugh, fix these
     $env->{'$attr'} = \$attr
-        if $attr->has_initializer;
+        if $attr->has_initializer && $attr->is_lazy;
     $env->{'$meta'} = \$self;
 
     return $env;
