@@ -91,6 +91,8 @@ my %strs    = map { $_ => $_ } @ints;
 my %fhs     = map { $_ => $_ } @fhs;
 my %objects = map { $_ => $_ } @objects;
 
+my $thing = Thing->new;
+
 timethese(
     200_00, {
         constructor => sub {
@@ -110,8 +112,6 @@ timethese(
             );
         },
         accessors => sub {
-            my $thing = Thing->new;
-
             $thing->int( $ints[0] );
             $thing->str( $strs[0] );
             $thing->fh( $fhs[0] );
