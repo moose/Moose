@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Carp ();
+use List::MoreUtils 'any';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 use Try::Tiny;
 
@@ -56,6 +57,10 @@ sub _eval_environment {
     my $attrs = $self->_attributes;
 
     my $defaults = [map { $_->default } @$attrs];
+    my $triggers = [
+        map { $_->can('has_trigger') && $_->has_trigger ? $_->trigger : undef }
+            @$attrs
+    ];
 
     # We need to check if the attribute ->can('type_constraint')
     # since we may be trying to immutabilize a Moose meta class,
@@ -82,8 +87,11 @@ sub _eval_environment {
 
     return {
         '$meta'  => \$self,
-        '$attrs' => \$attrs,
+        ((any { defined && $_->has_initializer } @$attrs)
+            ? ('$attrs' => \$attrs)
+            : ()),
         '$defaults' => \$defaults,
+        '$triggers' => \$triggers,
         '@type_constraints' => \@type_constraints,
         '@type_coercions' => \@type_coercions,
         '@type_constraint_bodies' => \@type_constraint_bodies,

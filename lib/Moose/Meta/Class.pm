@@ -449,7 +449,7 @@ sub _inline_triggers {
 
         push @trigger_calls,
             'if (exists $params->{\'' . $init_arg . '\'}) {',
-                '$attrs->[' . $i . ']->trigger->(',
+                '$triggers->[' . $i . ']->(',
                     '$instance,',
                     $attr->_inline_instance_get('$instance') . ',',
                 ');',
