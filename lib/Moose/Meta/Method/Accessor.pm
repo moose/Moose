@@ -9,6 +9,15 @@ use Try::Tiny;
 use base 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
+# multiple inheritance is terrible
+sub new {
+    goto &Class::MOP::Method::Accessor::new;
+}
+
+sub _new {
+    goto &Class::MOP::Method::Accessor::_new;
+}
+
 sub _error_thrower {
     my $self = shift;
     return $self->associated_attribute

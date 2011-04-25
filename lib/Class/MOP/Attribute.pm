@@ -366,8 +366,10 @@ sub _process_accessors {
         my ($name, $method) = %{$accessor};
         $method = $self->accessor_metaclass->wrap(
             $method,
+            attribute    => $self,
             package_name => $self->associated_class->name,
             name         => $name,
+            associated_metaclass => $self->associated_class,
             definition_context => $method_ctx,
         );
         $self->associate_method($method);
@@ -392,6 +394,7 @@ sub _process_accessors {
                 accessor_type => $type,
                 package_name  => $self->associated_class->name,
                 name          => $accessor,
+                associated_metaclass => $self->associated_class,
                 definition_context => $method_ctx,
             );
         }
