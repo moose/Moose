@@ -118,7 +118,7 @@ timethese(
 );
 
 timethese(
-    200_000, {
+    20_000, {
         constructor_all => sub {
             Thing->new(
                 int      => $ints[0],
