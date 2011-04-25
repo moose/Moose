@@ -81,9 +81,12 @@ sub _inline_check {
     my $self = shift;
     my $val  = shift;
 
-    return
-        join ' || ', map { '(' . $_->_inline_check($val) . ')' }
-        @{ $self->type_constraints };
+    return '('
+               . (
+                  join ' || ', map { '(' . $_->_inline_check($val) . ')' }
+                  @{ $self->type_constraints }
+                 )
+           . ')';
 };
 
 sub inline_environment {
