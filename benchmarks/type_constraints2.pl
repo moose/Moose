@@ -107,7 +107,7 @@ my $thing = Thing->new;
 my $simple = Simple->new;
 
 timethese(
-    500_000, {
+    1_000_000, {
         constructor_simple => sub {
             Simple->new( str => $strs[0] );
         },
@@ -118,7 +118,7 @@ timethese(
 );
 
 timethese(
-    20_000, {
+    200_000, {
         constructor_all => sub {
             Thing->new(
                 int      => $ints[0],
