@@ -73,7 +73,10 @@ sub _eval_environment {
     # XXX ugh, fix these
     $env->{'$attr'} = \$attr
         if $attr->has_initializer && $attr->is_lazy;
-    $env->{'$meta'} = \$self;
+    # pretty sure this is only going to be closed over if you use a custom
+    # error class at this point, but we should still get rid of this
+    # at some point
+    $env->{'$meta'} = \($self->associated_metaclass);
 
     return $env;
 }

@@ -10,6 +10,12 @@ sub new {
     $self->create_error_confess(@args);
 }
 
+sub _inline_new {
+    my ( $self, @args ) = @_;
+
+    return $self->_inline_create_error_carpmess(@args, longmess => 1);
+}
+
 1;
 
 # ABSTRACT: Prefer C<confess>

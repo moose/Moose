@@ -690,13 +690,21 @@ sub throw_error {
 }
 
 sub _inline_throw_error {
-    my ( $self, $msg, $args ) = @_;
-    "\$meta->throw_error($msg" . ($args ? ", $args" : "") . ")"; # FIXME makes deparsing *REALLY* hard
+    my ( $self, @args ) = @_;
+    $self->_inline_raise_error($self->_inline_create_error(@args));
 }
 
 sub raise_error {
     my ( $self, @args ) = @_;
     die @args;
+}
+
+sub _inline_raise_error {
+    my ( $self, $message ) = @_;
+
+    return (
+        'die ' . $message . ';',
+    );
 }
 
 sub create_error {
@@ -720,6 +728,36 @@ sub create_error {
 
     $class->new(
         Carp::caller_info($args{depth}),
+        %args
+    );
+}
+
+sub _inline_create_error {
+    my ( $self, $msg, $args ) = @_;
+    # XXX ignore $args for now, nothing currently uses it anyway
+
+    require Carp::Heavy;
+
+    my %args = (
+        metaclass  => $self,
+        last_error => $@,
+        message    => $msg,
+    );
+
+    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
+
+    Class::MOP::load_class($class);
+
+    # don't check inheritance here - the intention is that the class needs
+    # to provide a non-inherited inlining method, because falling back to
+    # the default inlining method is most likely going to be wrong
+    # yes, this is a huge hack, but so is the entire error system, so.
+    return '$meta->create_error(' . $msg . ', ' . $args . ');'
+        unless $class->meta->has_method('_inline_new');
+
+    $class->_inline_new(
+        # XXX ignore this for now too
+        # Carp::caller_info($args{depth}),
         %args
     );
 }

@@ -40,19 +40,40 @@ sub does {
     return $self->Moose::Object::does($name);
 }
 
+sub _error_thrower {
+    my $self = shift;
+    require Moose::Meta::Class;
+    ( ref $self && $self->associated_class ) || "Moose::Meta::Class";
+}
+
 sub throw_error {
     my $self = shift;
-    my $class = ( ref $self && $self->associated_class ) || "Moose::Meta::Class";
+    my $inv = $self->_error_thrower;
     unshift @_, "message" if @_ % 2 == 1;
     unshift @_, attr => $self if ref $self;
-    unshift @_, $class;
-    my $handler = $class->can("throw_error"); # to avoid incrementing depth by 1
+    unshift @_, $inv;
+    my $handler = $inv->can("throw_error"); # to avoid incrementing depth by 1
     goto $handler;
 }
 
 sub _inline_throw_error {
     my ( $self, $msg, $args ) = @_;
-    "\$meta->throw_error($msg" . ($args ? ", $args" : "") . ")"; # FIXME makes deparsing *REALLY* hard
+
+    my $inv = $self->_error_thrower;
+    # XXX ugh
+    $inv = 'Moose::Meta::Class' unless $inv->can('_inline_throw_error');
+
+    # XXX ugh ugh UGH
+    my $class = $self->associated_class;
+    if ($class) {
+        my $class_name = B::perlstring($class->name);
+        my $attr_name = B::perlstring($self->name);
+        $args = 'attr => Class::MOP::class_of(' . $class_name . ')'
+              . '->find_attribute_by_name(' . $attr_name . '), '
+              . (defined $args ? $args : '');
+    }
+
+    return $inv->_inline_throw_error($msg, $args)
 }
 
 sub new {

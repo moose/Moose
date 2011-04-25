@@ -86,7 +86,6 @@ sub _eval_environment {
     } @type_constraints;
 
     return {
-        '$meta'  => \$self,
         ((any { defined && $_->has_initializer } @$attrs)
             ? ('$attrs' => \$attrs)
             : ()),
@@ -97,6 +96,10 @@ sub _eval_environment {
         '@type_constraint_bodies' => \@type_constraint_bodies,
         ( map { defined($_) ? %{ $_->inline_environment } : () }
               @type_constraints ),
+        # pretty sure this is only going to be closed over if you use a custom
+        # error class at this point, but we should still get rid of this
+        # at some point
+        '$meta'  => \($self->associated_metaclass),
     };
 }
 

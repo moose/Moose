@@ -10,6 +10,12 @@ sub new {
     $self->create_error_croak(@args);
 }
 
+sub _inline_new {
+    my ( $self, @args ) = @_;
+
+    return $self->_inline_create_error_carpmess(@args);
+}
+
 1;
 
 # ABSTRACT: Prefer C<croak>
