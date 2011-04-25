@@ -14,7 +14,7 @@ sub _inline_new {
     my ( $self, %args ) = @_;
 
     my $depth = ($args{depth} || 0) - 1;
-    return $self . '->new('
+    return 'Moose::Error::Util::create_error_croak('
       . 'message => ' . $args{message} . ', '
       . 'depth   => ' . $depth         . ', '
   . ')';
