@@ -33,7 +33,7 @@ sub new {
 
     $args{inlined} = $inliner;
 
-    my $self = $class->_new( \%args );
+    my $self = $class->SUPER::new( \%args );
 
     $self->compile_type_constraint();
 

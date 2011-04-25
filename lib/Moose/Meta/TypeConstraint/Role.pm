@@ -34,7 +34,7 @@ sub new {
 
     $args{inlined} = $inliner;
 
-    my $self = $class->_new( \%args );
+    my $self = $class->SUPER::new( \%args );
 
     $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();

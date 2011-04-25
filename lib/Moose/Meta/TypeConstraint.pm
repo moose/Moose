@@ -33,6 +33,30 @@ __PACKAGE__->meta->add_attribute('message'   => (
     accessor  => 'message',
     predicate => 'has_message'
 ));
+__PACKAGE__->meta->add_attribute('_default_message' => (
+    accessor  => '_default_message',
+));
+# can't make this a default because it has to close over the type name, and
+# cmop attributes don't have lazy
+my $_default_message_generator = sub {
+    my $name = shift;
+    sub {
+        my $value = shift;
+        # have to load it late like this, since it uses Moose itself
+        my $can_partialdump = try {
+            # versions prior to 0.14 had a potential infinite loop bug
+            Class::MOP::load_class('Devel::PartialDump', { -version => 0.14 });
+            1;
+        };
+        if ($can_partialdump) {
+            $value = Devel::PartialDump->new->dump($value);
+        }
+        else {
+            $value = (defined $value ? overload::StrVal($value) : 'undef');
+        }
+        return "Validation failed for '" . $name . "' with value $value";
+    }
+};
 __PACKAGE__->meta->add_attribute('coercion'   => (
     accessor  => 'coercion',
     predicate => 'has_coercion'
@@ -80,6 +104,8 @@ sub new {
     my $self  = $class->_new(%args);
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
+    $self->_default_message($_default_message_generator->($self->name))
+        unless $self->has_message;
     return $self;
 }
 
@@ -182,25 +208,9 @@ sub assert_valid {
 
 sub get_message {
     my ($self, $value) = @_;
-    if (my $msg = $self->message) {
-        local $_ = $value;
-        return $msg->($value);
-    }
-    else {
-        # have to load it late like this, since it uses Moose itself
-        my $can_partialdump = try {
-            # versions prior to 0.14 had a potential infinite loop bug
-            Class::MOP::load_class('Devel::PartialDump', { -version => 0.14 });
-            1;
-        };
-        if ($can_partialdump) {
-            $value = Devel::PartialDump->new->dump($value);
-        }
-        else {
-            $value = (defined $value ? overload::StrVal($value) : 'undef');
-        }
-        return "Validation failed for '" . $self->name . "' with value $value";
-    }
+    my $msg = $self->message || $self->_default_message;
+    local $_ = $value;
+    return $msg->($value);
 }
 
 ## type predicates ...

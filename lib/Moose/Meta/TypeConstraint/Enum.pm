@@ -57,7 +57,7 @@ sub new {
     $args{_inline_var_name} = $var_name;
     $args{inline_environment} = { '%' . $var_name => \%values };
 
-    my $self = $class->_new(\%args);
+    my $self = $class->SUPER::new(\%args);
 
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
