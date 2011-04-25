@@ -551,12 +551,13 @@ sub set_value {
 
 sub _inline_set_value {
     my $self = shift;
-    my ($instance, $value, $tc, $tc_obj, $for_constructor) = @_;
+    my ($instance, $value, $tc, $coercion, $tc_obj, $for_constructor) = @_;
 
-    my $old   = '@old';
-    my $copy  = '$val';
-    $tc     ||= '$type_constraint';
-    $tc_obj ||= '$type_constraint_obj';
+    my $old     = '@old';
+    my $copy    = '$val';
+    $tc       ||= '$type_constraint';
+    $coercion ||= '$type_coercion';
+    $tc_obj   ||= '$type_constraint_obj';
 
     my @code;
     if ($self->_writer_value_needs_copy) {
@@ -568,7 +569,7 @@ sub _inline_set_value {
     push @code, $self->_inline_check_required
         unless $for_constructor;
 
-    push @code, $self->_inline_tc_code($value, $tc, $tc_obj);
+    push @code, $self->_inline_tc_code($value, $tc, $coercion, $tc_obj);
 
     # constructors do triggers all at once at the end
     push @code, $self->_inline_get_old_value_for_trigger($instance, $old)
@@ -617,19 +618,37 @@ sub _inline_check_required {
 
 sub _inline_tc_code {
     my $self = shift;
+    my ($value, $tc, $coercion, $tc_obj, $is_lazy) = @_;
     return (
-        $self->_inline_check_coercion(@_),
-        $self->_inline_check_constraint(@_),
+        $self->_inline_check_coercion(
+            $value, $tc, $coercion, $is_lazy,
+        ),
+        $self->_inline_check_constraint(
+            $value, $tc, $tc_obj, $is_lazy,
+        ),
     );
 }
 
 sub _inline_check_coercion {
     my $self = shift;
-    my ($value, $tc, $tc_obj) = @_;
+    my ($value, $tc, $coercion) = @_;
 
     return unless $self->should_coerce && $self->type_constraint->has_coercion;
 
-    return $value . ' = ' . $tc_obj . '->coerce(' . $value . ');';
+    if ( $self->type_constraint->can_be_inlined ) {
+        return (
+            'if (! (' . $self->type_constraint->_inline_check($value) . ')) {',
+                $value . ' = ' . $coercion . '->(' . $value . ');',
+            '}',
+        );
+    }
+    else {
+        return (
+            'if (!' . $tc . '->(' . $value . ')) {',
+                $value . ' = ' . $coercion . '->(' . $value . ');',
+            '}',
+        );
+    }
 }
 
 sub _inline_check_constraint {
@@ -755,21 +774,22 @@ sub get_value {
 
 sub _inline_get_value {
     my $self = shift;
-    my ($instance, $tc, $tc_obj) = @_;
+    my ($instance, $tc, $coercion, $tc_obj) = @_;
 
     my $slot_access = $self->_inline_instance_get($instance);
     $tc           ||= '$type_constraint';
+    $coercion     ||= '$type_coercion';
     $tc_obj       ||= '$type_constraint_obj';
 
     return (
-        $self->_inline_check_lazy($instance, $tc, $tc_obj),
+        $self->_inline_check_lazy($instance, $tc, $coercion, $tc_obj),
         $self->_inline_return_auto_deref($slot_access),
     );
 }
 
 sub _inline_check_lazy {
     my $self = shift;
-    my ($instance, $tc, $tc_obj) = @_;
+    my ($instance, $tc, $coercion, $tc_obj) = @_;
 
     return unless $self->is_lazy;
 
@@ -777,14 +797,14 @@ sub _inline_check_lazy {
 
     return (
         'if (!' . $slot_exists . ') {',
-            $self->_inline_init_from_default($instance, '$default', $tc, $tc_obj, 'lazy'),
+            $self->_inline_init_from_default($instance, '$default', $tc, $coercion, $tc_obj, 'lazy'),
         '}',
     );
 }
 
 sub _inline_init_from_default {
     my $self = shift;
-    my ($instance, $default, $tc, $tc_obj, $for_lazy) = @_;
+    my ($instance, $default, $tc, $coercion, $tc_obj, $for_lazy) = @_;
 
     if (!($self->has_default || $self->has_builder)) {
         $self->throw_error(
@@ -801,7 +821,7 @@ sub _inline_init_from_default {
         # to do things like possibly only do member tc checks, which isn't
         # appropriate for checking the result of a default
         $self->has_type_constraint
-            ? ($self->_inline_check_coercion($default, $tc, $tc_obj, $for_lazy),
+            ? ($self->_inline_check_coercion($default, $tc, $coercion, $for_lazy),
                $self->_inline_check_constraint($default, $tc, $tc_obj, $for_lazy))
             : (),
         $self->_inline_init_slot($instance, $default),

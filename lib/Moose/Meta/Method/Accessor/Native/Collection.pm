@@ -50,6 +50,7 @@ sub _writer_value_needs_copy {
 
 sub _inline_tc_code {
     my $self = shift;
+    my ($value, $tc, $coercion, $tc_obj, $is_lazy) = @_;
 
     return unless $self->_constraint_must_be_checked;
 
@@ -60,8 +61,8 @@ sub _inline_tc_code {
     }
     else {
         return (
-            $self->_inline_check_coercion(@_),
-            $self->_inline_check_constraint(@_),
+            $self->_inline_check_coercion($value, $tc, $coercion, $is_lazy),
+            $self->_inline_check_constraint($value, $tc, $tc_obj, $is_lazy),
         );
     }
 }

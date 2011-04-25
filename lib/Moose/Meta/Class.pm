@@ -381,6 +381,7 @@ sub _inline_init_attr_from_constructor {
         '$instance',
         '$params->{\'' . $attr->init_arg . '\'}',
         '$type_constraint_bodies[' . $idx . ']',
+        '$type_coercions[' . $idx . ']',
         '$type_constraints[' . $idx . ']',
         'for constructor',
     );
@@ -409,6 +410,7 @@ sub _inline_init_attr_from_default {
             '$instance',
             '$default',
             '$type_constraint_bodies[' . $idx . ']',
+            '$type_coercions[' . $idx . ']',
             '$type_constraints[' . $idx . ']',
             'for constructor',
         ),

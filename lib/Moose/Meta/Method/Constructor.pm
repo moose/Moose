@@ -74,11 +74,18 @@ sub _eval_environment {
         defined $_ ? $_->_compiled_type_constraint : undef;
     } @type_constraints;
 
+    my @type_coercions = map {
+        defined $_ && $_->has_coercion
+            ? $_->coercion->_compiled_type_coercion
+            : undef
+    } @type_constraints;
+
     return {
         '$meta'  => \$self,
         '$attrs' => \$attrs,
         '$defaults' => \$defaults,
         '@type_constraints' => \@type_constraints,
+        '@type_coercions' => \@type_coercions,
         '@type_constraint_bodies' => \@type_constraint_bodies,
         ( map { defined($_) ? %{ $_->inline_environment } : () }
               @type_constraints ),
