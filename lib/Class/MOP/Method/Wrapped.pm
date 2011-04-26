@@ -72,7 +72,7 @@ sub wrap {
 
     my $modifier_table = {
         cache  => undef,
-        orig   => $code,
+        orig   => $code->body,
         before => [],
         after  => [],
         around => {
@@ -87,6 +87,7 @@ sub wrap {
         # unless explicitly overriden
         package_name   => $params{package_name} || $code->package_name,
         name           => $params{name}         || $code->name,
+        original_method => $code,
 
         modifier_table => $modifier_table,
     );
@@ -114,7 +115,7 @@ sub _new {
 
 sub get_original_method {
     my $code = shift;
-    $code->{'modifier_table'}->{orig};
+    $code->original_method;
 }
 
 sub add_before_modifier {
@@ -162,7 +163,7 @@ sub after_modifiers {
         unshift @{$code->{'modifier_table'}->{around}->{methods}} => $modifier;
         $code->{'modifier_table'}->{around}->{cache} = $compile_around_method->(
             @{$code->{'modifier_table'}->{around}->{methods}},
-            $code->{'modifier_table'}->{orig}->body
+            $code->{'modifier_table'}->{orig}
         );
         $_build_wrapped_method->($code->{'modifier_table'});
     }
