@@ -60,6 +60,10 @@ for, noteworthy changes.
   * Use Devel::PartialDump in type constraint error messages, if it is
     installed.
 
+  * Remove a lot of cases where generated methods closed over meta objects.
+    Most simple cases should now only close over simple data types and
+    coderefs. This should make deparsing simpler.
+
   [BUG FIXES]
 
   * Stop hiding warnings produced by throwing errors in DEMOLISH methods.
