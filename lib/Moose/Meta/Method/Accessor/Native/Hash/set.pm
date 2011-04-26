@@ -79,7 +79,7 @@ sub _inline_coerce_new_values {
         'my $iter = List::MoreUtils::natatime(2, @_);',
         '@_ = ();',
         'while (my ($key, $val) = $iter->()) {',
-            'push @_, $key, $member_tc_obj->coerce($val);',
+            'push @_, $key, $member_coercion->($val);',
         '}',
     );
 };
