@@ -18,6 +18,29 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.0002
+
+=over 4
+
+=item More useful type constraint error messages
+
+If you have L<Devel::PartialDump> version 0.14 or higher installed, Moose's
+type constraint error messages will use it to display the invalid value, rather
+than just displaying it directly. This will generally be much more useful. For
+instance, instead of this:
+
+  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value ARRAY(0x275eed8)
+
+the error message will instead look like
+
+  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value [ "a" ]
+
+Note that L<Devel::PartialDump> can't be made a direct dependency at the
+moment, because it uses Moose itself, but we're considering options to make
+this easier.
+
+=back
+
 =head1 2.0000
 
 =over 4
