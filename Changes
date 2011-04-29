@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0002 Thu, Apr 28, 2011
+
   [ENHANCEMENTS]
 
   * Provide definition context information for constructors and destructors, so
