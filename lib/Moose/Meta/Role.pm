@@ -708,7 +708,7 @@ __END__
 This class is a subclass of L<Class::MOP::Module> that provides
 additional Moose-specific functionality.
 
-It's API looks a lot like L<Moose::Meta::Class>, but internally it
+Its API looks a lot like L<Moose::Meta::Class>, but internally it
 implements many things differently. This may change in the future.
 
 =head1 INHERITANCE
