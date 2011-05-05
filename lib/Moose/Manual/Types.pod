@@ -166,7 +166,9 @@ A subtype can also define its own constraint failure message. This
 lets you do things like have an error "The value you provided (20),
 was not a valid rating, which must be a number from 1-10." This is
 much friendlier than the default error, which just says that the value
-failed a validation check for the type.
+failed a validation check for the type. The default error can, however,
+be made more friendly by installing L<Devel::PartialDump> (version 0.14 or
+higher), which Moose will use if possible to display the invalid value.
 
 Here's a simple (and useful) subtype example:
 

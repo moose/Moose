@@ -1042,6 +1042,22 @@ related C<eq_deeply> function.
 For a complete example see the
 F<t/200_examples/005_example_w_TestDeep.t> test file.
 
+=head2 Error messages
+
+Type constraints can also specify custom error messages, for when they fail to
+validate. This is provided as just another coderef, which receives the invalid
+value in C<$_>, as in:
+
+  subtype 'PositiveInt',
+       as 'Int',
+       where { $_ > 0 },
+       message { "$_ is not a positive integer!" };
+
+If no message is specified, a default message will be used, which indicates
+which type constraint was being used and what value failed. If
+L<Devel::PartialDump> (version 0.14 or higher) is installed, it will be used to
+display the invalid value, otherwise it will just be printed as is.
+
 =head1 FUNCTIONS
 
 =head2 Type Constraint Constructors
