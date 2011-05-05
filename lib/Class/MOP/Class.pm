@@ -783,7 +783,8 @@ sub _force_rebless_instance {
     }
 
     # rebless!
-    # we use $_[1] here because of t/306_rebless_overload.t regressions on 5.8.8
+    # we use $_[1] here because of t/cmop/rebless_overload.t regressions
+    # on 5.8.8
     $meta_instance->rebless_instance_structure($_[1], $self);
 
     $self->_fixup_attributes_after_rebless($instance, $old_metaclass, %params);

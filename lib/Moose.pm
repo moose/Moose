@@ -84,7 +84,7 @@ our @SUPER_ARGS;
 
 sub super {
     # This check avoids a recursion loop - see
-    # t/100_bugs/020_super_recursion.t
+    # t/bugs/super_recursion.t
     return if defined $SUPER_PACKAGE && $SUPER_PACKAGE ne caller();
     return unless $SUPER_BODY; $SUPER_BODY->(@SUPER_ARGS);
 }
@@ -1014,7 +1014,7 @@ unresolvable conflict.
 
 It should be noted that C<super> and C<inner> B<cannot> be used in the same
 method. However, they may be combined within the same class hierarchy; see
-F<t/014_override_augment_inner_super.t> for an example.
+F<t/basics/override_augment_inner_super.t> for an example.
 
 The reason for this is that C<super> is only valid within a method
 with the C<override> modifier, and C<inner> will never be valid within an

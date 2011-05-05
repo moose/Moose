@@ -305,7 +305,7 @@ sub _reconcile_roles_for_metaclass {
     # handle the case where we need to fix compatibility between a class and
     # its parent, but all roles in the class are already also done by the
     # parent
-    # see t/050/054.t
+    # see t/metaclasses/metaclass_compat_no_fixing_bug.t
     return $super_meta_name
         unless @role_differences;
 

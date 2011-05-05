@@ -1024,7 +1024,7 @@ L<Declare::Constraints::Simple> to declare a completely new type.
           )->(@_);
       };
 
-For more examples see the F<t/200_examples/004_example_w_DCS.t> test
+For more examples see the F<t/examples/example_w_DCS.t> test
 file.
 
 Here is an example of using L<Test::Deep> and it's non-test
@@ -1040,7 +1040,7 @@ related C<eq_deeply> function.
         };
 
 For a complete example see the
-F<t/200_examples/005_example_w_TestDeep.t> test file.
+F<t/examples/example_w_TestDeep.t> test file.
 
 =head2 Error messages
 
