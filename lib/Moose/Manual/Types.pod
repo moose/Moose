@@ -318,9 +318,7 @@ coercion might be a better answer.
 For our example above, we might want to be more specific, and insist
 that output be an object with a C<print> method:
 
-  subtype 'CanPrint'
-      => as 'Object'
-      => where { $_->can('print') };
+  duck_type 'CanPrint', [qw(print)];
 
 We can coerce file handles to an object that satisfies this condition
 with a simple wrapper class:
@@ -360,8 +358,8 @@ make your class internals simpler.
 
 The L<Moose::Util::TypeConstraints> module exports a number of helper
 functions for creating specific kinds of types. These include
-C<class_type>, C<role_type>, and C<maybe_type>. See the docs for
-details.
+C<class_type>, C<role_type>, C<maybe_type>, and C<duck_type>. See the
+docs for details.
 
 One helper worth noting is C<enum>, which allows you to create a
 subtype of C<Str> that only allows the specified values:
