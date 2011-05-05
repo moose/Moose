@@ -172,10 +172,10 @@ higher), which Moose will use if possible to display the invalid value.
 
 Here's a simple (and useful) subtype example:
 
-  subtype 'PositiveInt'
-      => as 'Int'
-      => where { $_ > 0 }
-      => message { "The number you provided, $_, was not a positive number" }
+  subtype 'PositiveInt',
+      as 'Int',
+      where { $_ > 0 },
+      message { "The number you provided, $_, was not a positive number" };
 
 Note that the sugar functions for working with types are all exported
 by L<Moose::Util::TypeConstraints>.
@@ -215,12 +215,12 @@ robust than the string type parsing for complex cases.
 
 A coercion lets you tell Moose to automatically convert one type to another.
 
-  subtype 'ArrayRefOfInts'
-      => as 'ArrayRef[Int]';
+  subtype 'ArrayRefOfInts',
+      as 'ArrayRef[Int]';
 
-  coerce 'ArrayRefOfInts'
-      => from 'Int'
-      => via { [ $_ ] };
+  coerce 'ArrayRefOfInts',
+      from 'Int',
+      via { [ $_ ] };
 
 You'll note that we created a subtype rather than coercing C<ArrayRef[Int]>
 directly. It's a bad idea to add coercions to the raw built in
@@ -251,13 +251,13 @@ object will have C<[ 42 ]> as its C<sizes> attribute.
 Deep coercion is the coercion of type parameters for parameterized
 types. Let's take these types as an example:
 
-  subtype 'HexNum'
-      => as 'Str'
-      => where { /[a-f0-9]/i };
+  subtype 'HexNum',
+      as 'Str',
+      where { /[a-f0-9]/i };
 
-  coerce 'Int'
-      => from 'HexNum'
-      => via { hex $_ };
+  coerce 'Int',
+      from 'HexNum',
+      via { hex $_ };
 
   has 'sizes' => (
       is     => 'ro',
@@ -271,15 +271,15 @@ attribute, Moose will not do any coercion.
 However, you can define a set of subtypes to enable coercion between
 two parameterized types.
 
-  subtype 'ArrayRefOfHexNums'
-      => as 'ArrayRef[HexNum]';
+  subtype 'ArrayRefOfHexNums',
+      as 'ArrayRef[HexNum]';
 
-  subtype 'ArrayRefOfInts'
-      => as 'ArrayRef[Int]';
+  subtype 'ArrayRefOfInts',
+      as 'ArrayRef[Int]';
 
-  coerce 'ArrayRefOfInts'
-      => from 'ArrayRefOfHexNums'
-      => via { [ map { hex } @{$_} ] };
+  coerce 'ArrayRefOfInts',
+      from 'ArrayRefOfHexNums',
+      via { [ map { hex } @{$_} ] };
 
   Foo->new( sizes => [ 'a1', 'ff', '22' ] );
 
@@ -289,9 +289,9 @@ Moose does not attempt to chain coercions, so it will not
 coerce a single hex number. To do that, we need to define a separate
 coercion:
 
-  coerce 'ArrayRefOfInts'
-      => from 'HexNum'
-      => via { [ hex $_ ] };
+  coerce 'ArrayRefOfInts',
+      from 'HexNum',
+      via { [ hex $_ ] };
 
 Yes, this can all get verbose, but coercion is tricky magic, and we
 think it's best to make it explicit.
@@ -366,7 +366,7 @@ details.
 One helper worth noting is C<enum>, which allows you to create a
 subtype of C<Str> that only allows the specified values:
 
-  enum 'RGB' => qw( red green blue );
+  enum 'RGB', [qw( red green blue )];
 
 This creates a type named C<RGB>.
 

@@ -883,20 +883,20 @@ __END__
 
   use Moose::Util::TypeConstraints;
 
-  subtype 'Natural'
-      => as 'Int'
-      => where { $_ > 0 };
+  subtype 'Natural',
+      as 'Int',
+      where { $_ > 0 };
 
-  subtype 'NaturalLessThanTen'
-      => as 'Natural'
-      => where { $_ < 10 }
-      => message { "This number ($_) is not less than ten!" };
+  subtype 'NaturalLessThanTen',
+      as 'Natural',
+      where { $_ < 10 },
+      message { "This number ($_) is not less than ten!" };
 
-  coerce 'Num'
-      => from 'Str'
-        => via { 0+$_ };
+  coerce 'Num',
+      from 'Str',
+      via { 0+$_ };
 
-  enum 'RGBColors' => qw(red green blue);
+  enum 'RGBColors', [qw(red green blue)];
 
   no Moose::Util::TypeConstraints;
 
@@ -938,7 +938,7 @@ this, as well as future proof your subtypes from classes which have
 yet to have been created, is to quote the type name:
 
   use DateTime;
-  subtype 'DateTime' => as 'Object' => where { $_->isa('DateTime') };
+  subtype 'DateTime', as 'Object', where { $_->isa('DateTime') };
 
 =head2 Default Type Constraints
 
@@ -1017,12 +1017,12 @@ For instance, this is how you could use it with
 L<Declare::Constraints::Simple> to declare a completely new type.
 
   type 'HashOfArrayOfObjects',
-      {
-      where => IsHashRef(
-          -keys   => HasLength,
-          -values => IsArrayRef(IsObject)
-      )
-  };
+      where {
+          IsHashRef(
+              -keys   => HasLength,
+              -values => IsArrayRef(IsObject)
+          )->(@_);
+      };
 
 For more examples see the F<t/200_examples/004_example_w_DCS.t> test
 file.
@@ -1030,8 +1030,8 @@ file.
 Here is an example of using L<Test::Deep> and it's non-test
 related C<eq_deeply> function.
 
-  type 'ArrayOfHashOfBarsAndRandomNumbers'
-      => where {
+  type 'ArrayOfHashOfBarsAndRandomNumbers',
+      where {
           eq_deeply($_,
               array_each(subhashof({
                   bar           => isa('Bar'),
@@ -1070,7 +1070,7 @@ See the L</SYNOPSIS> for an example of how to use these.
 
 =over 4
 
-=item B<< subtype 'Name' => as 'Parent' => where { } ... >>
+=item B<< subtype 'Name', as 'Parent', where { } ... >>
 
 This creates a named subtype.
 
@@ -1086,7 +1086,7 @@ name and a hashref of parameters:
 The valid hashref keys are C<as> (the parent), C<where>, C<message>,
 and C<optimize_as>.
 
-=item B<< subtype as 'Parent' => where { } ... >>
+=item B<< subtype as 'Parent', where { } ... >>
 
 This creates an unnamed subtype and will return the type
 constraint meta-object, which will be an instance of
@@ -1188,7 +1188,7 @@ B<NOTE:> You should only use this if you know what you are doing.
 All the built in types use this, so your subtypes (assuming they
 are shallow) will not likely need to use this.
 
-=item B<< type 'Name' => where { } ... >>
+=item B<< type 'Name', where { } ... >>
 
 This creates a base type, which has no parent.
 
@@ -1287,16 +1287,16 @@ See the L</SYNOPSIS> for an example of how to use these.
 
 =over 4
 
-=item B<< coerce 'Name' => from 'OtherName' => via { ... }  >>
+=item B<< coerce 'Name', from 'OtherName', via { ... }  >>
 
 This defines a coercion from one type to another. The C<Name> argument
 is the type you are coercing I<to>.
 
 To define multiple coercions, supply more sets of from/via pairs:
 
-  coerce 'Name' =>
-    from 'OtherName' => via { ... },
-    from 'ThirdName' => via { ... };
+  coerce 'Name',
+    from 'OtherName', via { ... },
+    from 'ThirdName', via { ... };
 
 =item B<from 'OtherName'>
 
