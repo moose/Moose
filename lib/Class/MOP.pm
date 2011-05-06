@@ -945,8 +945,6 @@ You can pass a hash reference with options as second argument. The
 only option currently recognized is C<-version>, which will ensure
 that the loaded class has at least the required version.
 
-See also L</Class Loading Options>.
-
 For historical reasons, this function explicitly returns a true value.
 
 =item B<Class::MOP::is_class_loaded($class_name, \%options?)>
@@ -964,8 +962,6 @@ having been loaded, due to the way the base L<IO> module works.
 You can pass a hash reference with options as second argument. The
 only option currently recognized is C<-version>, which will ensure
 that the loaded class has at least the required version.
-
-See also L</Class Loading Options>.
 
 =item B<Class::MOP::get_code_info($code)>
 
@@ -1035,17 +1031,6 @@ C<$name> key, and return false otherwise.
 =item B<Class::MOP::remove_metaclass_by_name($name)>
 
 This will remove the metaclass stored in the C<$name> key.
-
-=back
-
-=head2 Class Loading Options
-
-=over 4
-
-=item -version
-
-Can be used to pass a minimum required version that will be checked
-against the class version after it was loaded.
 
 =back
 
