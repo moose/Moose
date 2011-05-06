@@ -482,7 +482,8 @@ default, etc.
 =item I<lazy =E<gt> (1|0)>
 
 This will tell the class to not create this slot until absolutely necessary.
-If an attribute is marked as lazy it B<must> have a default supplied.
+If an attribute is marked as lazy it B<must> have a default or builder
+supplied.
 
 =item I<trigger =E<gt> $code>
 
