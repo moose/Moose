@@ -102,6 +102,7 @@ my %trustme = (
     'Class::MOP::Mixin::HasAttributes' => ['.+'],
     'Class::MOP::Mixin::HasMethods'    => ['.+'],
     'Class::MOP::Package'    => [ 'get_method_map', 'wrap_method_body' ],
+    'Moose' => ['init_meta', 'throw_error'],
     'Moose::Error::Confess'  => ['new'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
