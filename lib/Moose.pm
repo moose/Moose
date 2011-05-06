@@ -795,16 +795,16 @@ an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
 the L<Moose::Cookbook::Basics::Recipe6>.
 
-=item B<confess>
-
-This is the C<Carp::confess> function, and exported here because I use it
-all the time.
-
 =item B<blessed>
 
-This is the C<Scalar::Util::blessed> function. It is exported here because I
-use it all the time. It is highly recommended that this is used instead of
-C<ref> anywhere you need to test for an object's class name.
+This is the C<Scalar::Util::blessed> function. It is highly recommended that
+this is used instead of C<ref> anywhere you need to test for an object's class
+name.
+
+=item B<confess>
+
+This is the C<Carp::confess> function, and exported here for historical
+reasons.
 
 =back
 
