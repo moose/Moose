@@ -484,16 +484,6 @@ default, etc.
 This will tell the class to not create this slot until absolutely necessary.
 If an attribute is marked as lazy it B<must> have a default supplied.
 
-=item I<auto_deref =E<gt> (1|0)>
-
-This tells the accessor to automatically dereference the value of this
-attribute when called in list context.  The accessor will still return a
-reference when called in scalar context.  If this behavior isn't desirable,
-L<Moose::Meta::Attribute::Native::Trait::Array/elements> or
-L<Moose::Meta::Attribute::Native::Trait::Hash/elements> may be a better
-choice.  The I<auto_deref> option is only legal if your I<isa> option is
-either C<ArrayRef> or C<HashRef>.
-
 =item I<trigger =E<gt> $code>
 
 The I<trigger> option is a CODE reference which will be called after
