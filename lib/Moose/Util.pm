@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Data::OptList 0.107;
+use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
