@@ -769,12 +769,6 @@ modifier features that L<Class::MOP> provides. More information on these may be
 found in L<Moose::Manual::MethodModifiers> and the
 L<Class::MOP::Class documentation|Class::MOP::Class/"Method Modifiers">.
 
-=item B<super>
-
-The keyword C<super> is a no-op when called outside of an C<override> method. In
-the context of an C<override> method, it will call the next most appropriate
-superclass method with the same arguments as the original method.
-
 =item B<override ($name, &sub)>
 
 An C<override> method is a way of explicitly saying "I am overriding this
@@ -782,18 +776,24 @@ method from my superclass". You can call C<super> within this method, and
 it will work as expected. The same thing I<can> be accomplished with a normal
 method call and the C<SUPER::> pseudo-package; it is really your choice.
 
-=item B<inner>
+=item B<super>
 
-The keyword C<inner>, much like C<super>, is a no-op outside of the context of
-an C<augment> method. You can think of C<inner> as being the inverse of
-C<super>; the details of how C<inner> and C<augment> work is best described in
-the L<Moose::Cookbook::Basics::Recipe6>.
+The keyword C<super> is a no-op when called outside of an C<override> method. In
+the context of an C<override> method, it will call the next most appropriate
+superclass method with the same arguments as the original method.
 
 =item B<augment ($name, &sub)>
 
 An C<augment> method, is a way of explicitly saying "I am augmenting this
 method from my superclass". Once again, the details of how C<inner> and
 C<augment> work is best described in the L<Moose::Cookbook::Basics::Recipe6>.
+
+=item B<inner>
+
+The keyword C<inner>, much like C<super>, is a no-op outside of the context of
+an C<augment> method. You can think of C<inner> as being the inverse of
+C<super>; the details of how C<inner> and C<augment> work is best described in
+the L<Moose::Cookbook::Basics::Recipe6>.
 
 =item B<confess>
 
