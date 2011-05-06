@@ -100,7 +100,10 @@ sub create {
         my $cache_key;
         if ($cache_ok) {
             $cache_key = $class->_anon_cache_key(%options);
+            undef $cache_ok if !defined($cache_key);
+        }
 
+        if ($cache_ok) {
             if (defined $ANON_PACKAGE_CACHE{$cache_key}) {
                 return $ANON_PACKAGE_CACHE{$cache_key};
             }
