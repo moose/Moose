@@ -3,6 +3,15 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Applying multiple role objects (rather than role names) at once no longer
+    skips every other role. (rjbs)
+
+  * Caching of anon classes now works more sanely in the presence of role
+    application parameters - alias and excludes options are taken into account,
+    and caching is disabled entirely if other parameters exist. (doy, autarch)
+
 2.0002 Thu, Apr 28, 2011
 
   [ENHANCEMENTS]
