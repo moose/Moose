@@ -624,22 +624,13 @@ a HASH ref) of the methods you want mapped.
 
 =back
 
-=item I<metaclass =E<gt> $metaclass_name>
-
-This tells the class to use a custom attribute metaclass for this particular
-attribute. Custom attribute metaclasses are useful for extending the
-capabilities of the I<has> keyword: they are the simplest way to extend the MOP,
-but they are still a fairly advanced topic and too much to cover here. See
-L<Moose::Cookbook::Meta::Recipe1> for more information.
-
-See L<Metaclass and Trait Name Resolution> for details on how a metaclass name
-is resolved to a class name.
-
 =item I<traits =E<gt> [ @role_names ]>
 
 This tells Moose to take the list of C<@role_names> and apply them to the
-attribute meta-object. This is very similar to the I<metaclass> option, but
-allows you to use more than one extension at a time.
+attribute meta-object. Custom attribute metaclass traits are useful for
+extending the capabilities of the I<has> keyword: they are the simplest way to
+extend the MOP, but they are still a fairly advanced topic and too much to
+cover here.
 
 See L<Metaclass and Trait Name Resolution> for details on how a trait name is
 resolved to a role name.
@@ -679,21 +670,6 @@ Class::MOP::Attribute|Class::MOP::Attribute/predicate> for more information.
 
 Note that the predicate will return true even for a C<weak_ref> attribute
 whose value has expired.
-
-=item I<lazy_build> => (0|1)
-
-Automatically define lazy => 1 as well as builder => "_build_$attr", clearer =>
-"clear_$attr', predicate => 'has_$attr' unless they are already defined.
-
-=item I<initializer> => Str
-
-This may be a method name (referring to a method on the class with
-this attribute) or a CODE ref.  The initializer is used to set the
-attribute value on an instance when the attribute is set during
-instance initialization (but not when the value is being assigned
-to). See the L<initializer option docs in
-Class::MOP::Attribute|Class::MOP::Attribute/initializer> for more
-information.
 
 =item I<documentation> => $string
 
