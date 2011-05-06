@@ -987,8 +987,6 @@ Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
 
 See L<http://search.cpan.org/search?query=MooseX::> for extensions.
 
-=item Moose stats on ohloh.net - L<http://www.ohloh.net/projects/moose>
-
 =back
 
 =head2 Books
