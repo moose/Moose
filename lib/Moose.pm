@@ -871,38 +871,9 @@ to work. Here is an example:
 To learn more about extending Moose, we recommend checking out the
 "Extending" recipes in the L<Moose::Cookbook>, starting with
 L<Moose::Cookbook::Extending::Recipe1>, which provides an overview of
-all the different ways you might extend Moose.
-
-=head2 B<< Moose->init_meta(for_class => $class, base_class => $baseclass, metaclass => $metaclass) >>
-
-The C<init_meta> method sets up the metaclass object for the class
-specified by C<for_class>. This method injects a a C<meta> accessor
-into the class so you can get at this object. It also sets the class's
-superclass to C<base_class>, with L<Moose::Object> as the default.
-
-C<init_meta> returns the metaclass object for C<$class>.
-
-You can specify an alternate metaclass with the C<metaclass> option.
-
-For more detail on this topic, see L<Moose::Cookbook::Extending::Recipe2>.
-
-This method used to be documented as a function which accepted
-positional parameters. This calling style will still work for
-backwards compatibility, but is deprecated.
-
-=head2 B<import>
-
-Moose's C<import> method supports the L<Sub::Exporter> form of C<{into =E<gt> $pkg}>
-and C<{into_level =E<gt> 1}>.
-
-B<NOTE>: Doing this is more or less deprecated. Use L<Moose::Exporter>
-instead, which lets you stack multiple C<Moose.pm>-alike modules
-sanely. It handles getting the exported functions into the right place
-for you.
-
-=head2 B<throw_error>
-
-An alias for C<confess>, used internally by Moose.
+all the different ways you might extend Moose. L<Moose::Exporter> and
+L<Moose::Util::MetaRole> are the modules which provide the majority of the
+extension functionality, so reading their documentation should also be helpful.
 
 =head2 The MooseX:: namespace
 
