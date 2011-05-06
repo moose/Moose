@@ -16,12 +16,14 @@ __END__
   has 'y' => ( isa => 'Int', is => 'rw' );
 
   package main;
+  use Try::Tiny;
 
-  my $point = eval { Point->new( x => 'fifty', y => 'forty' ); };
-
-  if ($@) {
-      print "Oops: $@";
+  my $point = try {
+      Point->new( x => 'fifty', y => 'forty' );
   }
+  catch {
+      print "Oops: $_";
+  };
 
   my $point;
   my $xval             = 'forty-two';
@@ -45,7 +47,7 @@ Moose will die with an explicit error message. The error will include
 the attribute name, as well as the type constraint name and the value
 which failed the constraint check.
 
-We use C<eval> to catch this error message in C<$@>.
+We use L<Try::Tiny> to catch this error message.
 
 Later, we get the L<Moose::Meta::TypeConstraint> object from a
 L<Moose::Meta::Attribute> and use the L<Moose::Meta::TypeConstraint>
