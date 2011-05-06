@@ -926,18 +926,6 @@ See L<Class::MOP::Instance> for more details.
 
 Note that this module does not export any constants or functions.
 
-=head2 Constants
-
-=over 4
-
-=item I<Class::MOP::IS_RUNNING_ON_5_10>
-
-We set this constant depending on what version perl we are on, this
-allows us to take advantage of new 5.10 features and stay backwards
-compatible.
-
-=back
-
 =head2 Utility functions
 
 Note that these are all called as B<functions, not methods>.
@@ -991,36 +979,6 @@ from.
 This will return the metaclass of the given instance or class name.  If the
 class lacks a metaclass, no metaclass will be initialized, and C<undef> will be
 returned.
-
-=item B<Class::MOP::check_package_cache_flag($pkg)>
-
-B<NOTE: DO NOT USE THIS FUNCTION, IT IS FOR INTERNAL USE ONLY!>
-
-This will return an integer that is managed by L<Class::MOP::Class> to
-determine if a module's symbol table has been altered.
-
-In Perl 5.10 or greater, this flag is package specific. However in
-versions prior to 5.10, this will use the C<PL_sub_generation>
-variable which is not package specific.
-
-=item B<Class::MOP::load_first_existing_class(@class_names)>
-
-=item B<Class::MOP::load_first_existing_class($classA, \%optionsA?, $classB, ...)>
-
-B<NOTE: DO NOT USE THIS FUNCTION, IT IS FOR INTERNAL USE ONLY!>
-
-Given a list of class names, this function will attempt to load each
-one in turn.
-
-If it finds a class it can load, it will return that class' name.  If
-none of the classes can be loaded, it will throw an exception.
-
-Additionally, you can pass a hash reference with options after each
-class name. Currently, only C<-version> is recognized and will ensure
-that the loaded class has at least the required version. If the class
-version is not sufficient, an exception will be raised.
-
-See also L</Class Loading Options>.
 
 =back
 

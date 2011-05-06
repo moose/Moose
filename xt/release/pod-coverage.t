@@ -19,8 +19,11 @@ my %trustme = (
     'Class::MOP' => [
         'DEBUG_NO_META',
         'HAVE_ISAREV',
+        'IS_RUNNING_ON_5_10',
         'subname',
         'in_global_destruction',
+        'check_package_cache_flag',
+        'load_first_existing_class',
     ],
     'Class::MOP::Attribute' => ['process_accessors'],
     'Class::MOP::Class'     => [
