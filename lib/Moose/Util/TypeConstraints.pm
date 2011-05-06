@@ -414,7 +414,7 @@ sub coerce {
 #
 # subtype( 'Foo', as( 'Str', where { ... } ) );
 #
-# If as() returns all it's extra arguments, this just works, and
+# If as() returns all its extra arguments, this just works, and
 # preserves backwards compatibility.
 sub as { { as => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
@@ -1009,7 +1009,7 @@ I<My::Graphics::Types::Color> instead.
 
 This module can play nicely with other constraint modules with some
 slight tweaking. The C<where> clause in types is expected to be a
-C<CODE> reference which checks it's first argument and returns a
+C<CODE> reference which checks its first argument and returns a
 boolean. Since most constraint modules work in a similar way, it
 should be simple to adapt them to work with Moose.
 
@@ -1027,7 +1027,7 @@ L<Declare::Constraints::Simple> to declare a completely new type.
 For more examples see the F<t/examples/example_w_DCS.t> test
 file.
 
-Here is an example of using L<Test::Deep> and it's non-test
+Here is an example of using L<Test::Deep> and its non-test
 related C<eq_deeply> function.
 
   type 'ArrayOfHashOfBarsAndRandomNumbers',

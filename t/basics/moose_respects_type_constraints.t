@@ -15,7 +15,7 @@ a preexisting type constraint of the same name when
 making constraints for a Moose-class.
 
 It also tests that an attribute which uses a 'Foo' for
-it's isa option will get the subtype Foo, and not a
+its isa option will get the subtype Foo, and not a
 type representing the Foo moose class.
 
 =cut
