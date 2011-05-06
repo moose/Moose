@@ -1167,7 +1167,7 @@ As I have said above, this module is a class-builder-builder, so it is
 not the same thing as modules like L<Class::Accessor> and
 L<Class::MethodMaker>. That being said there are very few modules on CPAN
 with similar goals to this module. The one I have found which is most
-like this module is L<Class::Meta>, although it's philosophy and the MOP it
+like this module is L<Class::Meta>, although its philosophy and the MOP it
 creates are very different from this modules.
 
 =head1 BUGS

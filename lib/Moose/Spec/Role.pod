@@ -56,7 +56,7 @@ a subtype of an ArrayRef.
 =item Overridden Methods
 
 The C<override> and C<super> keywords are allowed in roles, but
-their behavior is different from that of it's class counterparts.
+their behavior is different from that of its class counterparts.
 The C<super> in a class refers directly to that class's superclass,
 while the C<super> in a role is deferred and only has meaning once
 the role is composed into a class. Once that composition occurs,
@@ -283,7 +283,7 @@ time using the I<excludes> option.
     sub bar { ... }
 
 By specifically excluding the C<foo> method during composition,
-we allow B<Role::FooBar> to define it's own version of C<foo>.
+we allow B<Role::FooBar> to define its own version of C<foo>.
 
 =back
 

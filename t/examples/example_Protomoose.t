@@ -252,10 +252,10 @@ is(Foo->bar, 100, '... got the value stored in the prototype (through the Foo cl
 
 # now we can check that the subclass
 # will seek out the correct prototypical
-# value from it's "parent"
+# value from its "parent"
 is(Bar->bar, 100, '... got the value stored in the Foo prototype (through the Bar class)');
 
-# we can then also set it's local attrs
+# we can then also set its local attrs
 Bar->baz(50);
 is(Bar->baz, 50, '... got the value stored in the prototype (through the Bar class)');
 
