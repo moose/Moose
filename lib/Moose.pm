@@ -734,54 +734,21 @@ another role.
 
 Aside from where the attributes come from (one from superclass, the other
 from a role), this feature works exactly the same. This feature is restricted
-somewhat, so as to try and force at least I<some> sanity into it. You are only
-allowed to change the following attributes:
+somewhat, so as to try and force at least I<some> sanity into it. Most options work the same, but there are some exceptions:
 
 =over 4
 
-=item I<default>
+=item I<reader>
 
-Change the default value of an attribute.
+=item I<writer>
 
-=item I<coerce>
+=item I<accessor>
 
-Change whether the attribute attempts to coerce a value passed to it.
+=item I<clearer>
 
-=item I<required>
+=item I<predicate>
 
-Change if the attribute is required to have a value.
-
-=item I<documentation>
-
-Change the documentation string associated with the attribute.
-
-=item I<lazy>
-
-Change if the attribute lazily initializes the slot.
-
-=item I<isa>
-
-You I<are> allowed to change the type without restriction.
-
-It is recommended that you use this freedom with caution. We used to
-only allow for extension only if the type was a subtype of the parent's
-type, but we felt that was too restrictive and is better left as a
-policy decision.
-
-=item I<handles>
-
-You are allowed to B<add> a new C<handles> definition, but you are B<not>
-allowed to I<change> one.
-
-=item I<builder>
-
-You are allowed to B<add> a new C<builder> definition, but you are B<not>
-allowed to I<change> one.
-
-=item I<metaclass>
-
-You are allowed to B<add> a new C<metaclass> definition, but you are
-B<not> allowed to I<change> one.
+These options can be added, but cannot override a superclass definition.
 
 =item I<traits>
 
