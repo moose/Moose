@@ -424,9 +424,10 @@ hash reference as well.
 
 This will install an attribute of a given C<$name> into the current class. If
 the first parameter is an array reference, it will create an attribute for
-every C<$name> in the list. The C<%options> are the same as those provided by
-L<Class::MOP::Attribute>, in addition to the list below which are provided by
-Moose (L<Moose::Meta::Attribute> to be more specific):
+every C<$name> in the list. The C<%options> will be passed to the constructor
+for L<Moose::Meta::Attribute> (which inherits from L<Class::MOP::Attribute>),
+so the full documentation for the valid options can be found there. These are
+the most commonly used options:
 
 =over 4
 
