@@ -89,4 +89,7 @@ and a set of custom attribute and method metaclasses. It also
 installs a C<meta> method to your class as well, unless C<undef>
 is passed to the C<meta_name> option.
 
+Note that if you are using Moose, you most likely do B<not> want
+to be using this - look into L<Moose::Util::MetaRole> instead.
+
 =cut
