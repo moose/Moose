@@ -163,6 +163,7 @@ my %trustme = (
     'Moose::Meta::Mixin::AttributeCore' => ['.+'],
     'Moose::Meta::Role::Composite' =>
         [ 'get_method', 'get_method_list', 'has_method', 'add_method' ],
+    'Moose::Object' => ['BUILDALL', 'DEMOLISHALL'],
     'Moose::Role' => [
         qw( after
             around
@@ -173,7 +174,8 @@ my %trustme = (
             inner
             override
             super
-            with )
+            with
+            init_meta )
     ],
     'Moose::Meta::TypeCoercion'        => ['compile_type_coercion'],
     'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
