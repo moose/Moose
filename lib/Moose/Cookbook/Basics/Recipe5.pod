@@ -67,9 +67,9 @@ C<coerce> sugar function. Coercions are attached to existing type
 constraints, and define a (one-way) transformation from one type to
 another.
 
-This is very powerful, but it's also magical, so you have to
-explicitly ask for an attribute to be coerced. To do this, you must
-set the C<coerce> attribute option to a true value.
+This is very powerful, but it can also have unexpected consequences, so
+you have to explicitly ask for an attribute to be coerced. To do this,
+you must set the C<coerce> attribute option to a true value.
 
 First, we create the subtype to which we will coerce the other types:
 
@@ -185,7 +185,7 @@ attributes.
 =head1 CONCLUSION
 
 This recipe showed the use of coercions to create a more flexible and
-DWIM-y API. Like any powerful magic, we recommend some
+DWIM-y API. Like any powerful feature, we recommend some
 caution. Sometimes it's better to reject a value than just guess at
 how to DWIM.
 
