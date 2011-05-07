@@ -53,11 +53,6 @@ following code:
 
   MyClass->meta->make_immutable();
 
-We are regularly converting the hotspots of L<Class::MOP> to XS.
-Florian Ragwitz and Yuval Kogman are currently working on a way to
-compile your accessors and instances directly into C, so that everyone
-can enjoy blazing fast OO.
-
 =head3 When will Moose 1.0 be ready?
 
 Moose is ready now! Stevan Little declared 0.18, released in March
