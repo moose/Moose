@@ -202,18 +202,12 @@ overdraft protection. See note 1.
 
 =back
 
-=head1 SEE ALSO
-
-=over 4
-
-=item Acknowledgment
+=head1 ACKNOWLEDGMENT
 
 The BankAccount example in this recipe is directly taken from the
 examples in this chapter of "Practical Common Lisp":
 
 L<http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html>
-
-=back
 
 =begin testing
 
