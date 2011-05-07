@@ -185,23 +185,6 @@ Still another option is to write a custom attribute metaclass, which
 is also outside the scope of this document, but we would be happy to
 explain it on #moose or the mailing list.
 
-=head3 I created an attribute, where are my accessors?
-
-Accessors are B<not> created implicitly, you B<must> ask Moose to
-create them for you. My guess is that you have this:
-
-  has 'foo' => (isa => 'Bar');
-
-when what you really want to say is:
-
-  has 'foo' => (isa => 'Bar', is => 'rw');
-
-The reason this is so is because it is a perfectly valid use case to
-I<not> have an accessor. The simplest one is that you want to write
-your own. If Moose created one automatically, then because of the
-order in which classes are constructed, Moose would overwrite your
-custom accessor. You wouldn't want that would you?
-
 =head2 Method Modifiers
 
 =head3 How can I affect the values in C<@_> using C<before>?
