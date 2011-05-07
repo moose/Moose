@@ -14,7 +14,7 @@ no Moose::Role;
 
 1;
 
-# ABSTRACT: Helper trait for counters
+# ABSTRACT: Helper trait for Int attributes which represent counters
 
 __END__
 

@@ -9,6 +9,10 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for CodeRef attributes
+
+__END__
+
 =pod
 
 =head1 SYNOPSIS

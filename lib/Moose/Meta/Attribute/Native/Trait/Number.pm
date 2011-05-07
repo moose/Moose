@@ -9,6 +9,10 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for Num attributes
+
+__END__
+
 =pod
 
 =head1 SYNOPSIS

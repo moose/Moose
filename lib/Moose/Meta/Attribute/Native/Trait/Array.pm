@@ -10,7 +10,7 @@ no Moose::Role;
 
 1;
 
-# ABSTRACT: Helper trait for array delegation
+# ABSTRACT: Helper trait for ArrayRef attributes
 
 __END__
 

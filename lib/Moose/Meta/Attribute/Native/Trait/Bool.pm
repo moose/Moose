@@ -10,6 +10,10 @@ no Moose::Role;
 
 1;
 
+# ABSTRACT: Helper trait for Bool attributes
+
+__END__
+
 =pod
 
 =head1 SYNOPSIS

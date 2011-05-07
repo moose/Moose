@@ -116,6 +116,10 @@ sub is_same_as {
 
 1;
 
+# ABSTRACT: The Moose attribute metaclass for Roles
+
+__END__
+
 =pod
 
 =head1 DESCRIPTION
