@@ -142,8 +142,8 @@ recipes show various practical applications of the MOP.
 If you'd like to write your own extensions, one of the best ways to
 learn more about this is to look at other similar extensions to see
 how they work. You'll probably also need to read various API docs,
-including the docs for the various Moose::Meta::* classes and the
-C<Class::MOP> distribution.
+including the docs for the various C<Moose::Meta::*> and
+C<Class::MOP::*> classes.
 
 Finally, we welcome questions on the Moose mailing list and
 IRC. Information on the mailing list, IRC, and more references can be
