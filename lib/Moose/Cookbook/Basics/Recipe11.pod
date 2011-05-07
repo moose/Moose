@@ -35,17 +35,6 @@ use Test::Requires {
       predicate => 'has_mayan_date',
   );
 
-  sub new {
-      my $class = shift;
-
-      my $obj = $class->SUPER::new(@_);
-
-      return $class->meta->new_object(
-          __INSTANCE__ => $obj,
-          @_,
-      );
-  }
-
   after 'set' => sub {
       $_[0]->_clear_mayan_date;
   };
