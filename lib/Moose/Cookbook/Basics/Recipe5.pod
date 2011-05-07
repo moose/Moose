@@ -76,7 +76,7 @@ First, we create the subtype to which we will coerce the other types:
   subtype 'My::Types::HTTP::Headers' => as class_type('HTTP::Headers');
 
 We are creating a subtype rather than using C<HTTP::Headers> as a type
-directly. The reason we do this is coercions are global, and a
+directly. The reason we do this is that coercions are global, and a
 coercion defined for C<HTTP::Headers> in our C<Request> class would
 then be defined for I<all> Moose-using classes in the current Perl
 interpreter. It's a L<best practice|Moose::Manual::BestPractices> to
@@ -96,7 +96,7 @@ We could go ahead and use this new type directly:
 
   has 'headers' => (
       is      => 'rw',
-      isa     => 'HTTP::Headers',
+      isa     => 'My::Types::HTTP::Headers',
       default => sub { HTTP::Headers->new }
   );
 
@@ -106,7 +106,7 @@ L<HTTP::Headers>.
 The constructor for L<HTTP::Headers> accepts a list of key-value pairs
 representing the HTTP header fields. In Perl, such a list could be
 stored in an ARRAY or HASH reference. We want our C<headers> attribute
-to accept those data structure instead of an B<HTTP::Headers>
+to accept those data structures instead of an B<HTTP::Headers>
 instance, and just do the right thing. This is exactly what coercion
 is for:
 
@@ -170,7 +170,7 @@ return value.
 If L<Params::Coerce> didn't return a L<URI> object (for whatever
 reason), Moose would throw a type constraint error.
 
-The other coercion takes a string and converts to a L<URI>. In this
+The other coercion takes a string and converts it to a L<URI>. In this
 case, we are using the coercion to apply a default behavior, where a
 string is assumed to be an C<http> URI.
 
@@ -190,7 +190,7 @@ caution. Sometimes it's better to reject a value than just guess at
 how to DWIM.
 
 We also showed the use of the C<class_type> sugar function as a
-shortcut for defining a new subtype of C<Object>
+shortcut for defining a new subtype of C<Object>.
 
 =head1 FOOTNOTES
 
@@ -201,7 +201,7 @@ shortcut for defining a new subtype of C<Object>
 This particular example could be safer. Really we only want to coerce
 an array with an I<even> number of elements. We could create a new
 C<EvenElementArrayRef> type, and then coerce from that type, as
-opposed to from a plain C<ArrayRef>
+opposed to a plain C<ArrayRef>
 
 =back
 
