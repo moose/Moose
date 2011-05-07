@@ -199,7 +199,9 @@ To do that, we need to hook into object construction. Moose lets us do
 this by writing a C<BUILD> method in our class. When your class
 defines a C<BUILD> method, it will be called immediately after
 object construction, but before the object is returned to the caller
-(3).
+(3). Note that all C<BUILD> methods in your class hierarchy will be
+called automatically; there is no need to (and you should not) call
+the superclass C<BUILD> method.
 
 The C<Company> class uses the C<BUILD> method to ensure that each
 employee of a company has the proper C<Company> object in its
