@@ -151,7 +151,7 @@ The type constraints we created are reusable. Type constraints are
 stored by name in a global registry. This means that we can refer to
 them in other classes. Because the registry is global, we do recommend
 that you use some sort of pseudo-namespacing in real applications,
-like C<MyApp.Type.USState>.
+like C<MyApp::Type::USState>.
 
 These two subtypes allow us to define a simple C<Address> class.
 
