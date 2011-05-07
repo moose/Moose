@@ -71,7 +71,7 @@ that we expect the value stored in this attribute to pass the type
 constraint for C<Int> (1). The accessor generated for this attribute
 will be read-write.
 
-The C<< requires => 1 >> parameter means that this attribute must be
+The C<< required => 1 >> parameter means that this attribute must be
 provided when a new object is created. A point object without
 coordinates doesn't make much sense, so we don't allow it.
 
@@ -193,13 +193,13 @@ subclassing, and a simple method modifier.
 
 =item (1)
 
-Moose provides a number of builtin type constraints are provided by,
-of which C<Int> is one. For more information on the type constraint
-system, see L<Moose::Util::TypeConstraints>.
+Moose provides a number of builtin type constraints, of which C<Int>
+is one. For more information on the type constraint system, see
+L<Moose::Util::TypeConstraints>.
 
 =item (2)
 
-The C<extends> keyword support multiple inheritance. Simply pass all
+The C<extends> keyword supports multiple inheritance. Simply pass all
 of your superclasses to C<extends> as a list:
 
   extends 'Foo', 'Bar', 'Baz';
@@ -207,8 +207,7 @@ of your superclasses to C<extends> as a list:
 =item (3)
 
 Moose supports using instance structures other than blessed hash
-references (such as in a glob reference - see
-L<MooseX::GlobRef::Object>).
+references (such as glob references - see L<MooseX::GlobRef>).
 
 =back
 
