@@ -52,7 +52,7 @@ use Test::Requires {
   has 'address'   => ( is => 'rw', isa => 'Address' );
   has 'employees' => (
       is      => 'rw',
-      isa     => 'ArrayRef[Employee]'
+      isa     => 'ArrayRef[Employee]',
       default => sub { [] },
   );
 
