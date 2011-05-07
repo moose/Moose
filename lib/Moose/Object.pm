@@ -140,8 +140,9 @@ This class is the default base class for all Moose-using classes. When
 you C<use Moose> in this class, your class will inherit from this
 class.
 
-It provides a default constructor and destructor, which run the
-C<BUILDALL> and C<DEMOLISHALL> methods respectively.
+It provides a default constructor and destructor, which run all of the
+C<BUILD> and C<DEMOLISH> methods in the inheritance hierarchy,
+respectively.
 
 You don't actually I<need> to inherit from this in order to use Moose,
 but it makes it easier to take advantage of all of Moose's features.
@@ -154,7 +155,8 @@ but it makes it easier to take advantage of all of Moose's features.
 
 This method calls C<< $class->BUILDARGS(@_) >>, and then creates a new
 instance of the appropriate class. Once the instance is created, it
-calls C<< $instance->BUILDALL($params) >>.
+calls C<< $instance->BUILD($params) >> for each C<BUILD> method in the
+inheritance hierarchy.
 
 =item B<< Moose::Object->BUILDARGS(%params) >>
 
@@ -166,22 +168,6 @@ You can override this method in your class to handle other types of
 options passed to the constructor.
 
 This method should always return a hash reference of named options.
-
-=item B<< $object->BUILDALL($params) >>
-
-This method will call every C<BUILD> method in the inheritance
-hierarchy, starting with the most distant parent class and ending with
-the object's class.
-
-The C<BUILD> method will be passed the hash reference returned by
-C<BUILDARGS>.
-
-=item B<< $object->DEMOLISHALL >>
-
-This will call every C<DEMOLISH> method in the inheritance hierarchy,
-starting with the object's class and ending with the most distant
-parent. C<DEMOLISHALL> and C<DEMOLISH> will receive a boolean
-indicating whether or not we are currently in global destruction.
 
 =item B<< $object->does($role_name) >>
 
@@ -202,6 +188,12 @@ C<UNIVERSAL::DOES>.
 
 This is a handy utility for C<Data::Dumper>ing an object. By default,
 the maximum depth is 1, to avoid making a mess.
+
+=item B<< $object->DESTROY >>
+
+A default destructor is provided, which calls
+C<< $instance->DEMOLISH($in_global_destruction) >> for each C<DEMOLISH>
+method in the inheritance hierarchy.
 
 =back
 
