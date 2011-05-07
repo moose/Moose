@@ -203,6 +203,9 @@ preserve context).
 The C<around> method modifier has neither of these limitations, but is
 a little more verbose.
 
+Alternatively, the L<MooseX::Mangle> extension provides the
+C<mangle_args> function, which does allow you to affect C<@_>.
+
 =head3 Can I use C<before> to stop execution of a method?
 
 Yes, but only if you throw an exception. If this is too drastic a
@@ -222,6 +225,10 @@ of the main method. Here is an example:
 By choosing not to call the C<$next> method, you can stop the
 execution of the main method.
 
+Alternatively, the L<MooseX::Mangle> extension provides the
+C<guard> function, which will conditionally prevent execution
+of the original method.
+
 =head3 Why can't I see return values in an C<after> modifier?
 
 As with the C<before> modifier, the C<after> modifier is simply called
@@ -239,6 +246,10 @@ is some sample code:
       # do something silly with the return values
       return reverse @rv;
   };
+
+Alternatively, the L<MooseX::Mangle> extension provides the
+C<mangle_return> function, which allows modifying the return values
+of the original method.
 
 =head2 Type Constraints
 
