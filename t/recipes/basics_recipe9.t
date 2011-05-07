@@ -12,11 +12,11 @@ use Test::More;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    subtype 'Gender'
+    subtype 'Sex'
         => as 'Str'
         => where { $_ =~ m{^[mf]$}s };
 
-    has 'gender' => ( is => 'ro', isa => 'Gender', required => 1 );
+    has 'sex'    => ( is => 'ro', isa => 'Sex', required => 1 );
 
     has 'mother' => ( is => 'ro', isa => 'Human' );
     has 'father' => ( is => 'ro', isa => 'Human' );
@@ -27,16 +27,16 @@ use Test::More;
         my ( $one, $two ) = @_;
 
         die('Only male and female humans may create children')
-            if ( $one->gender() eq $two->gender() );
+            if ( $one->sex() eq $two->sex() );
 
         my ( $mother, $father )
-            = ( $one->gender eq 'f' ? ( $one, $two ) : ( $two, $one ) );
+            = ( $one->sex eq 'f' ? ( $one, $two ) : ( $two, $one ) );
 
-        my $gender = 'f';
-        $gender = 'm' if ( rand() >= 0.5 );
+        my $sex = 'f';
+        $sex = 'm' if ( rand() >= 0.5 );
 
         return Human->new(
-            gender    => $gender,
+            sex       => $sex,
             eye_color => ( $one->eye_color() + $two->eye_color() ),
             mother    => $mother,
             father    => $father,
@@ -155,7 +155,7 @@ foreach my $set (@$gene_color_sets) {
     my $expected_color = pop(@$set);
 
     my $person = Human->new(
-        gender    => 'f',
+        sex       => 'f',
         eye_color => $set,
     );
 
@@ -189,12 +189,12 @@ foreach my $set (@$parent_sets) {
     my $expected_color = pop(@$set);
 
     my $mother         = Human->new(
-        gender    => 'f',
+        sex       => 'f',
         eye_color => shift(@$set),
     );
 
     my $father = Human->new(
-        gender    => 'm',
+        sex       => 'm',
         eye_color => shift(@$set),
     );
 
