@@ -284,10 +284,9 @@ container type, and instead you will have a new type named
 
 =item (3)
 
-The C<BUILD> method is actually called by C<< Moose::Object->BUILDALL
->>, which is called by C<< Moose::Object->new >>. The C<BUILDALL>
-method climbs the object inheritance graph and calls any C<BUILD>
-methods it finds in the correct order.
+The C<BUILD> method is actually called by C<< Moose::Object->new >>. It climbs
+the object inheritance graph and calls any C<BUILD> methods it finds in the
+correct order.
 
 =back
 
