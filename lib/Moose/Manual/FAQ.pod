@@ -53,11 +53,6 @@ following code:
 
   MyClass->meta->make_immutable();
 
-=head3 When will Moose 1.0 be ready?
-
-Moose is ready now! Stevan Little declared 0.18, released in March
-2007, to be "ready to use".
-
 =head2 Constructors
 
 =head3 How do I write custom constructors with Moose?
