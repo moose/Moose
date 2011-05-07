@@ -14,11 +14,11 @@ __END__
   use Moose;
   use Moose::Util::TypeConstraints;
 
-  subtype 'Gender'
+  subtype 'Sex'
       => as 'Str'
       => where { $_ =~ m{^[mf]$}s };
 
-  has 'gender' => ( is => 'ro', isa => 'Gender', required => 1 );
+  has 'sex'    => ( is => 'ro', isa => 'Sex', required => 1 );
 
   has 'mother' => ( is => 'ro', isa => 'Human' );
   has 'father' => ( is => 'ro', isa => 'Human' );
@@ -29,16 +29,16 @@ __END__
       my ( $one, $two ) = @_;
 
       die('Only male and female humans may create children')
-          if ( $one->gender() eq $two->gender() );
+          if ( $one->sex() eq $two->sex() );
 
       my ( $mother, $father )
-          = ( $one->gender eq 'f' ? ( $one, $two ) : ( $two, $one ) );
+          = ( $one->sex eq 'f' ? ( $one, $two ) : ( $two, $one ) );
 
-      my $gender = 'f';
-      $gender = 'm' if ( rand() >= 0.5 );
+      my $sex = 'f';
+      $sex = 'm' if ( rand() >= 0.5 );
 
       return Human->new(
-          gender => $gender,
+          sex    => $sex,
           mother => $mother,
           father => $father,
       );
@@ -54,7 +54,7 @@ and subtypes can be used to mimic the human reproductive system
 
 Our C<Human> class uses operator overloading to allow us to "add" two
 humans together and produce a child. Our implementation does require
-that the two objects be of opposite genders. Remember, we're talking
+that the two objects be of opposite sex. Remember, we're talking
 about biological reproduction, not marriage.
 
 While this example works as-is, we can take it a lot further by adding
@@ -220,7 +220,7 @@ We also need to modify C<_overload_add()> in the C<Human> class to
 account for eye color:
 
   return Human->new(
-      gender    => $gender,
+      sex       => $sex,
       eye_color => ( $one->eye_color() + $two->eye_color() ),
       mother    => $mother,
       father    => $father,
