@@ -214,22 +214,10 @@ Moose::Role offers a way to remove the keywords it exports, through the
 C<unimport> method. You simply have to say C<no Moose::Role> at the bottom of
 your code for this to work.
 
-=head2 B<< Moose::Role->init_meta(for_class => $role, metaclass => $metaclass) >>
-
-The C<init_meta> method sets up the metaclass object for the role
-specified by C<for_class>. It also injects a a C<meta> accessor into
-the role so you can get at this object.
-
-The default metaclass is L<Moose::Meta::Role>. You can specify an
-alternate metaclass with the C<metaclass> parameter.
-
 =head1 METACLASS
 
-When you use Moose::Role, you can specify which metaclass to use:
-
-    use Moose::Role -metaclass => 'My::Meta::Role';
-
-You can also specify traits which will be applied to your role metaclass:
+When you use Moose::Role, you can specify traits which will be applied to your
+role metaclass:
 
     use Moose::Role -traits => 'My::Trait';
 
@@ -249,11 +237,12 @@ L<Moose::Util> 'apply_all_roles' or the role's metaclass:
 
 Doing this creates a new, mutable, anonymous subclass, applies the role to that,
 and reblesses. In a debugger, for example, you will see class names of the
-form C< Class::MOP::Class::__ANON__::SERIAL::6 >, which means that doing a 'ref'
-on your instance may not return what you expect. See L<Moose::Object> for 'DOES'.
+form C< Moose::Meta::Class::__ANON__::SERIAL::6 >, which means that doing a
+'ref' on your instance may not return what you expect. See L<Moose::Object> for
+'DOES'.
 
-Additional params may be added to the new instance by providing 'rebless_params'.
-See L<Moose::Meta::Role::Application::ToInstance>.
+Additional params may be added to the new instance by providing
+'rebless_params'. See L<Moose::Meta::Role::Application::ToInstance>.
 
 =head1 CAVEATS
 
