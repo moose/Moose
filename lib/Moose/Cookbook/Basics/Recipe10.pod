@@ -110,7 +110,7 @@ modifier.
 
 We have repeatedly discouraged overriding C<new> in Moose
 classes. This recipe shows how you can use C<BUILDARGS> and C<BUILD>
-to hook into object construction without overriding C<new>
+to hook into object construction without overriding C<new>.
 
 The C<BUILDARGS> method lets us expand on Moose's built-in parameter
 handling for constructors. The C<BUILD> method lets us implement
