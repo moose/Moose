@@ -206,11 +206,11 @@ C<Company> in its C<employer> attribute.
 
 To do that, we need to hook into object construction. Moose lets us do
 this by writing a C<BUILD> method in our class. When your class
-defines a C<BUILD> method, it will be called immediately after
-object construction, but before the object is returned to the caller
-(3). Note that all C<BUILD> methods in your class hierarchy will be
-called automatically; there is no need to (and you should not) call
-the superclass C<BUILD> method.
+defines a C<BUILD> method, it will be called by the constructor
+immediately after object construction, but before the object is returned
+to the caller. Note that all C<BUILD> methods in your class hierarchy
+will be called automatically; there is no need to (and you should not)
+call the superclass C<BUILD> method.
 
 The C<Company> class uses the C<BUILD> method to ensure that each
 employee of a company has the proper C<Company> object in its
@@ -296,12 +296,6 @@ the C<where> block, so it can be accessed as C<$_[0]>.
 Note that C<ArrayRef[]> will not work. Moose will not parse this as a
 container type, and instead you will have a new type named
 "ArrayRef[]", which doesn't make any sense.
-
-=item (3)
-
-The C<BUILD> method is actually called by C<< Moose::Object->new >>. It climbs
-the object inheritance graph and calls any C<BUILD> methods it finds in the
-correct order.
 
 =back
 
