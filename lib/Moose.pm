@@ -810,11 +810,8 @@ reasons.
 
 =head1 METACLASS
 
-When you use Moose, you can specify which metaclass to use:
-
-    use Moose -metaclass => 'My::Meta::Class';
-
-You can also specify traits which will be applied to your metaclass:
+When you use Moose, you can specify traits which will be applied to your
+metaclass:
 
     use Moose -traits => 'My::Trait';
 
