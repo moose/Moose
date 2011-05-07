@@ -96,6 +96,7 @@ sub create {
         my ($class, %options) = @_;
 
         my $cache_ok = delete $options{cache};
+        $options{weaken} = !$cache_ok unless exists $options{weaken};
 
         my $cache_key;
         if ($cache_ok) {
@@ -108,8 +109,6 @@ sub create {
                 return $ANON_PACKAGE_CACHE{$cache_key};
             }
         }
-
-        $options{weaken} = !$cache_ok unless exists $options{weaken};
 
         my $package_name = $class->_anon_package_prefix . ++$ANON_SERIAL;
 
