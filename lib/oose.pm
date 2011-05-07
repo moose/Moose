@@ -40,7 +40,8 @@ __END__
 
 =head1 DESCRIPTION
 
-oose.pm is a simple source filter that adds C<package $name; use Moose;>
+oose.pm is a simple source filter that adds
+C<package $name; use Moose; use Moose::Util::TypeConstraints;>
 to the beginning of your script and was entirely created because typing
 C<perl -e'package Foo; use Moose; ...'> was annoying me.
 
@@ -52,7 +53,8 @@ oose provides exactly one method and it's automatically called by perl:
 
 =item B<import($package)>
 
-Pass a package name to import to be used by the source filter.
+Pass a package name to import to be used by the source filter. The
+package defaults to C<Class> if none is given.
 
 =back
 
