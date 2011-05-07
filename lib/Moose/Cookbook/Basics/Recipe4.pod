@@ -148,10 +148,10 @@ simplifies the code. We don't really need a class for these types, as
 they're just strings, but we do want to ensure that they're valid.
 
 The type constraints we created are reusable. Type constraints are
-stored by name in a global registry. This means that we can refer to
+stored by name in a global registry, which means that we can refer to
 them in other classes. Because the registry is global, we do recommend
-that you use some sort of pseudo-namespacing in real applications,
-like C<MyApp::Type::USState>.
+that you use some sort of namespacing in real applications,
+like C<MyApp::Type::USState> (just as you would do with class names).
 
 These two subtypes allow us to define a simple C<Address> class.
 
