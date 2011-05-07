@@ -76,7 +76,7 @@ created will have its C<balance> slot initialized to C<0>, unless some
 other value is provided to the constructor.
 
 The C<deposit> and C<withdraw> methods should be fairly
-self-explanatory, as they are just plain old Perl 5 OO.
+self-explanatory, as they are just plain old Perl 5 OO. (2)
 
 As you know from the first recipe, the keyword C<extends> sets a
 class's superclass. Here we see that B<CheckingAccount> C<extends>
@@ -90,14 +90,14 @@ we saw in the first recipe) is a builtin type constraint. The
 C<BankAccount> type constraint is new, and was actually defined the
 moment we created the B<BankAccount> class itself. In fact, Moose
 creates a corresponding type constraint for every class in your
-program (2).
+program (3).
 
 This means that in the first recipe, constraints for both C<Point> and
 C<Point3D> were created. In this recipe, both C<BankAccount> and
 C<CheckingAccount> type constraints are created automatically. Moose
 does this as a convenience so that your classes and type constraint
 can be kept in sync with one another. In short, Moose makes sure that
-it will just DWIM (3).
+it will just DWIM (4).
 
 In B<CheckingAccount>, we see another method modifier, the C<before>
 modifier.
@@ -120,7 +120,7 @@ the superclass is run. Here, C<before> modifier implements overdraft
 protection by first checking if there are available funds in the
 checking account. If not (and if there is an overdraft account
 available), it transfers the amount needed into the checking
-account (4).
+account (5).
 
 As with the method modifier in the first recipe, we could use
 C<SUPER::> to get the same effect:
@@ -179,12 +179,21 @@ checking account and its overdraft account.
 
 =item (2)
 
+Note that for simple methods like these, which just manipulate some
+single piece of data, it is often not necessary to write them at all.
+For instance, C<deposit> could be implemented via the C<inc> native
+delegation for counters - see
+L<Moose::Meta::Attribute::Native::Trait::Counter> for more specifics,
+and L<Moose::Meta::Attribute::Native> for a broader overview.
+
+=item (3)
+
 In reality, this creation is sensitive to the order in which modules
 are loaded. In more complicated cases, you may find that you need to
 explicitly declare a class type before the corresponding class is
 loaded.
 
-=item (3)
+=item (4)
 
 Moose does not attempt to encode a class's is-a relationships within
 the type constraint hierarchy. Instead, Moose just considers the class
@@ -194,7 +203,7 @@ of B<CheckingAccount> will pass a C<BankAccount> type constraint
 successfully. For more details, please refer to the
 L<Moose::Util::TypeConstraints> documentation.
 
-=item (4)
+=item (5)
 
 If the overdraft account does not have the amount needed, it will
 throw an error. Of course, the overdraft account could also have
