@@ -348,7 +348,7 @@ not the best tool for the job, and you really should be using
 classes. Or, at the very least, you should reduce the amount of
 functionality in your role so that it does not require initialization.
 
-=head3 What are Traits, and how are they different from Roles?
+=head3 What are traits, and how are they different from roles?
 
 In Moose, a trait is almost exactly the same thing as a role, except
 that traits typically register themselves, which allows you to refer
@@ -360,17 +360,17 @@ of a class at runtime to add or modify the behavior of B<just that
 instance>.
 
 Outside the context of Moose, traits and roles generally mean exactly
-the same thing. The original paper called them Traits, however Perl 6
-will call them Roles.
+the same thing. The original paper called them traits, but Perl 6
+will call them roles.
 
 =head2 Moose and Subroutine Attributes
 
 =head3 Why don't subroutine attributes I inherited from a superclass work?
 
-Currently when you subclass a module, this is done at runtime with the
-C<extends> keyword but attributes are checked at compile time by
+Currently when subclassing a module is done at runtime with the
+C<extends> keyword, but attributes are checked at compile time by
 Perl. To make attributes work, you must place C<extends> in a C<BEGIN>
-block so that the attribute handlers will be available at compile time
+block so that the attribute handlers will be available at compile time,
 like this:
 
   BEGIN { extends qw/Foo/ }
