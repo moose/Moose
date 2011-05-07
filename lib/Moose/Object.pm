@@ -151,14 +151,14 @@ but it makes it easier to take advantage of all of Moose's features.
 
 =over 4
 
-=item B<< Moose::Object->new(%params) >>
+=item B<< Moose::Object->new(%params|$params) >>
 
 This method calls C<< $class->BUILDARGS(@_) >>, and then creates a new
 instance of the appropriate class. Once the instance is created, it
 calls C<< $instance->BUILD($params) >> for each C<BUILD> method in the
 inheritance hierarchy.
 
-=item B<< Moose::Object->BUILDARGS(%params) >>
+=item B<< Moose::Object->BUILDARGS(%params|$params) >>
 
 The default implementation of this method accepts a hash or hash
 reference of named parameters. If it receives a single argument that
@@ -173,7 +173,7 @@ This method should always return a hash reference of named options.
 
 This returns true if the object does the given role.
 
-=item B<DOES ($class_or_role_name)>
+=item B<< $object->DOES($class_or_role_name) >>
 
 This is a a Moose role-aware implementation of L<UNIVERSAL/DOES>.
 
