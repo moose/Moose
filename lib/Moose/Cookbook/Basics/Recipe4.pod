@@ -50,18 +50,23 @@ use Test::Requires {
 
   has 'name' => ( is => 'rw', isa => 'Str', required => 1 );
   has 'address'   => ( is => 'rw', isa => 'Address' );
-  has 'employees' => ( is => 'rw', isa => 'ArrayRef[Employee]' );
+  has 'employees' => (
+      is      => 'rw',
+      isa     => 'ArrayRef[Employee]'
+      default => sub { [] },
+  );
 
   sub BUILD {
       my ( $self, $params ) = @_;
-      foreach my $employee ( @{ $self->employees || [] } ) {
+      foreach my $employee ( @{ $self->employees } ) {
           $employee->employer($self);
       }
   }
 
   after 'employees' => sub {
       my ( $self, $employees ) = @_;
-      foreach my $employee ( @{ $employees || [] } ) {
+      return unless $employees;
+      foreach my $employee ( @$employees ) {
           $employee->employer($self);
       }
   };
@@ -175,12 +180,16 @@ constraint allows that.
 The next attribute, C<employees>, uses a I<parameterized> type
 constraint:
 
-  has 'employees' => ( is => 'rw', isa => 'ArrayRef[Employee]' );
+  has 'employees' => (
+      is      => 'rw',
+      isa     => 'ArrayRef[Employee]'
+      default => sub { [] },
+  );
 
 This constraint says that C<employees> must be an array reference
 where each element of the array is an C<Employee> object. It's worth
 noting that an I<empty> array reference also satisfies this
-constraint.
+constraint, such as the value given as the default here.
 
 Parameterizable type constraints (or "container types"), such as
 C<ArrayRef[`a]>, can be made more specific with a type parameter. In
@@ -209,7 +218,7 @@ C<employer> attribute:
 
   sub BUILD {
       my ( $self, $params ) = @_;
-      foreach my $employee ( @{ $self->employees || [] } ) {
+      foreach my $employee ( @{ $self->employees } ) {
           $employee->employer($self);
       }
   }
@@ -227,7 +236,8 @@ To do this we can use an C<after> modifier:
 
   after 'employees' => sub {
       my ( $self, $employees ) = @_;
-      foreach my $employee ( @{ $employees || [] } ) {
+      return unless $employees;
+      foreach my $employee ( @$employees ) {
           $employee->employer($self);
       }
   };
@@ -235,6 +245,9 @@ To do this we can use an C<after> modifier:
 Again, as with the C<BUILD> method, we know that the type constraint check has
 already happened, so we know that if C<$employees> is defined it will contain
 an array reference of C<Employee> objects.
+
+Note that C<employees> is a read/write accessor, so we must return early if
+it's called as a reader.
 
 The B<Person> class does not really demonstrate anything new. It has several
 C<required> attributes. It also has a C<predicate> method, which we
