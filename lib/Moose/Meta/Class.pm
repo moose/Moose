@@ -137,14 +137,14 @@ sub _anon_cache_key {
                 return;
             }
 
-            $key .= '<' . join('+', 'a', join('%', %$alias),
-                                    'e', join('%', @$excludes)) . '>';
+            $key .= '<' . join('+', 'a', join('%', sort %$alias),
+                                    'e', join('%', sort @$excludes)) . '>';
         }
 
         push @role_keys, $key;
     }
 
-    my $role_key = join('|', @role_keys);
+    my $role_key = join('|', sort @role_keys);
 
     # Makes something like Super::Class|Super::Class::2=Role|Role::1
     return join('=', $superclass_key, $role_key);
