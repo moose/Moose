@@ -84,7 +84,6 @@ MooseX::DeepAccessors
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Error::Trap
 MooseX::FileAttribute
-MooseX::File_or_DB::Storage
 MooseX::FollowPBP
 MooseX::Getopt
 MooseX::Getopt::Defanged
