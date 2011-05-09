@@ -10,7 +10,9 @@ for, noteworthy changes.
 
   * Caching of anon classes now works more sanely in the presence of role
     application parameters - alias and excludes options are taken into account,
-    and caching is disabled entirely if other parameters exist. (doy, autarch)
+    and caching is disabled entirely if other parameters exist. Asking for
+    caching (instead of just not weakening) when parameters are given will
+    begin warning in Moose 2.0200. (doy, autarch)
 
 2.0002 Thu, Apr 28, 2011
 

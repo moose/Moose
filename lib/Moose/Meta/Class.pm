@@ -130,9 +130,10 @@ sub _anon_cache_key {
             $excludes = [$excludes] unless ref($excludes) eq 'ARRAY';
 
             if (%$params) {
-                warn "Roles with parameters cannot be cached. Consider "
-                   . "applying the parameters before calling "
-                   . "create_anon_class, or using 'weaken => 0' instead";
+                # disable this warning until 2.02
+                # warn "Roles with parameters cannot be cached. Consider "
+                #    . "applying the parameters before calling "
+                #    . "create_anon_class, or using 'weaken => 0' instead";
                 return;
             }
 
