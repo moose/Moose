@@ -613,8 +613,13 @@ sub _anon_cache_key {
                 return;
             }
 
-            $key .= '<' . join('+', 'a', join('%', sort %$alias),
-                                    'e', join('%', sort @$excludes)) . '>';
+            my $alias_key = join('%',
+                map { $_ => $alias->{$_} } sort keys %$alias
+            );
+            my $excludes_key = join('%',
+                sort @$excludes
+            );
+            $key .= '<' . join('+', 'a', $alias_key, 'e', $excludes_key) . '>';
         }
 
         push @role_keys, $key;
