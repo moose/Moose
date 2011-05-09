@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0003 Mon, May 09, 2011
+
   [BUG FIXES]
 
   * Applying multiple role objects (rather than role names) at once no longer
