@@ -5,7 +5,6 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-use List::MoreUtils 'all';
 
 use base 'Moose::Meta::Role::Application';
 
@@ -25,10 +24,13 @@ sub apply {
     $obj_meta = 'Moose::Meta::Class'
         unless $obj_meta->isa('Moose::Meta::Class');
 
+    my $cache = 1;
+    undef $cache if grep { $_ ne '-alias' && $_ ne '-excludes' } keys %$args;
+
     my $class = $obj_meta->create_anon_class(
         superclasses => [ blessed($object) ],
         roles => [ $role, keys(%$args) ? ($args) : () ],
-        cache => (all { $_ eq '-alias' || $_ eq '-excludes' } keys %$args),
+        cache => $cache,
     );
 
     $class->rebless_instance( $object, %{ $self->rebless_params } );
