@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0004 Mon, May 09, 2011
+
   [BUG FIXES]
 
   * Bump the List::MoreUtils dep to avoid buggy behavior in old versions.
