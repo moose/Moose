@@ -612,15 +612,15 @@ sub _anon_cache_key {
                 return;
             }
 
-            $key .= '<' . join('+', 'a', join('%', %$alias),
-                                    'e', join('%', @$excludes)) . '>';
+            $key .= '<' . join('+', 'a', join('%', sort %$alias),
+                                    'e', join('%', sort @$excludes)) . '>';
         }
 
         push @role_keys, $key;
     }
 
     # Makes something like Role|Role::1
-    return join('|', @role_keys);
+    return join('|', sort @role_keys);
 }
 
 #####################################################################
