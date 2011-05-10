@@ -251,6 +251,7 @@ Role::Subsystem
 Search::GIN
 Silki
 Test::Able
+Test::Magpie
 Test::Routine
 Test::Sweet
 Throwable
