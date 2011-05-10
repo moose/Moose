@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0006 Mon, May 09, 2011
+
+  [BUG FIXES]
+
+  * Revert the List::MoreUtils version bump, as it breaks backwards
+    compatibility. The dependency will be bumped with Moose 2.0200.
+
 2.0005 Mon, May 09, 2011
 
   [BUG FIXES]
