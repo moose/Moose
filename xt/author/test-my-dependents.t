@@ -114,6 +114,7 @@ MooseX::MethodAttributes
 MooseX::Method::Signatures
 MooseX::MultiInitArg
 MooseX::MultiMethods
+MooseX::MultiObject
 MooseX::MutatorAttributes
 MooseX::Net::API
 MooseX::NonMoose
