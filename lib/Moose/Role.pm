@@ -177,6 +177,23 @@ __END__
       $self->as_float == $other->as_float;
   }
 
+  # ... and also
+
+  package Comparator;
+  use Moose;
+
+  has compare_to => (
+      is      => 'ro',
+      does    => 'Eq',
+      handles => 'Eq',
+  );
+
+  # ... which allows
+
+  my $currency1 = Currency->new(...);
+  my $currency2 = Currency->new(...);
+  Comparator->new(compare_to => $currency1)->equal($currency2);
+
 =head1 DESCRIPTION
 
 The concept of roles is documented in L<Moose::Manual::Roles>. This document
