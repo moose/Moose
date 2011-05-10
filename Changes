@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0006 Mon, May 09, 2011
+
   [BUG FIXES]
 
   * Revert the List::MoreUtils version bump, as it breaks backwards
