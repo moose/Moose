@@ -4,7 +4,7 @@ package Class::MOP::Instance;
 use strict;
 use warnings;
 
-use Scalar::Util 'weaken', 'blessed';
+use Scalar::Util 'isweak', 'weaken', 'blessed';
 
 use base 'Class::MOP::Object';
 
@@ -77,11 +77,19 @@ sub create_instance {
 sub clone_instance {
     my ($self, $instance) = @_;
 
-    my $clone = bless {}, $self->_class_name;
+    my $clone = $self->create_instance;
     for my $attr ($self->get_all_attributes) {
-        $attr->set_value($clone, $attr->get_raw_value($instance))
-            if $attr->has_value($instance);
+        next unless $attr->has_value($instance);
+        for my $slot ($attr->slots) {
+            my $val = $self->get_slot_value($instance, $slot);
+            $self->set_slot_value($clone, $slot, $val);
+            $self->weaken_slot_value($clone, $slot)
+                if $self->slot_value_is_weak($instance, $slot);
+        }
     }
+
+    $self->_set_mop_slot($clone, $self->_get_mop_slot($instance))
+        if $self->_has_mop_slot($instance);
 
     return $clone;
 }
@@ -149,6 +157,11 @@ sub weaken_slot_value {
     weaken $instance->{$slot_name};
 }
 
+sub slot_value_is_weak {
+    my ($self, $instance, $slot_name) = @_;
+    isweak $instance->{$slot_name};
+}
+
 sub strengthen_slot_value {
     my ($self, $instance, $slot_name) = @_;
     $self->set_slot_value($instance, $slot_name, $self->get_slot_value($instance, $slot_name));
@@ -169,6 +182,11 @@ sub is_dependent_on_superclasses {
 sub _get_mop_slot {
     my ($self, $instance) = @_;
     $self->get_slot_value($instance, $RESERVED_MOP_SLOT);
+}
+
+sub _has_mop_slot {
+    my ($self, $instance) = @_;
+    $self->is_slot_initialized($instance, $RESERVED_MOP_SLOT);
 }
 
 sub _set_mop_slot {
