@@ -76,7 +76,14 @@ sub create_instance {
 
 sub clone_instance {
     my ($self, $instance) = @_;
-    bless { %$instance }, $self->_class_name;
+
+    my $clone = bless {}, $self->_class_name;
+    for my $attr ($self->get_all_attributes) {
+        $attr->set_value($clone, $attr->get_raw_value($instance))
+            if $attr->has_value($instance);
+    }
+
+    return $clone;
 }
 
 # operations on meta instance
