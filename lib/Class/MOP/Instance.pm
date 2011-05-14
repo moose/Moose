@@ -385,6 +385,8 @@ that the object instance be passed to the method.
 
 =item B<< $metainstance->weaken_slot_value($instance_structure, $slot_name) >>
 
+=item B<< $metainstance->slot_value_is_weak($instance_structure, $slot_name) >>
+
 =item B<< $metainstance->strengthen_slot_value($instance_structure, $slot_name) >>
 
 =item B<< $metainstance->rebless_instance_structure($instance_structure, $new_metaclass) >>
