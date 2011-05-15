@@ -5,7 +5,7 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * Make sure weak attributes remain weak when cloning. (rafl)
+  * Make sure weak attributes remain weak when cloning. (doy, rafl)
 
 2.0006 Mon, May 09, 2011
 
