@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0007 Sun, May 15, 2011
+
   [BUG FIXES]
 
   * Make sure weak attributes remain weak when cloning. (doy, rafl)
