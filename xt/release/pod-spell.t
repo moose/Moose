@@ -81,6 +81,7 @@ wreis
 
 ## proper names
 AOP
+CentOS
 CLOS
 CPAN
 OCaml
