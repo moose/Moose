@@ -266,3 +266,12 @@ sub define_builtins {
 }
 
 1;
+
+__END__
+
+=pod
+
+=for pod_coverage_needs_some_pod
+
+=cut
+

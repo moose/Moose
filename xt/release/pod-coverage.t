@@ -188,11 +188,17 @@ my %trustme = (
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
     'Moose::Meta::TypeConstraint::Role' => [qw( equals is_a_type_of )],
-    'Moose::Meta::TypeConstraint::Union' =>
-        [qw( compile_type_constraint coercion has_coercion)],
+    'Moose::Meta::TypeConstraint::Union' => [
+        qw( compile_type_constraint
+            coercion
+            has_coercion
+            can_be_inlined
+            inline_environment )
+    ],
     'Moose::Util'                  => ['add_method_modifier'],
     'Moose::Util::MetaRole'        => ['apply_metaclass_roles'],
     'Moose::Util::TypeConstraints' => ['find_or_create_type_constraint'],
+    'Moose::Util::TypeConstraints::Builtins' => ['.+'],
 );
 
 for my $module ( sort @modules ) {

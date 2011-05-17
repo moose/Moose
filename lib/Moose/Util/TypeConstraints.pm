@@ -1055,7 +1055,7 @@ L<Moose::Meta::TypeConstraint> object. It will receive a single parameter, the
 name of the variable to check, typically something like C<"$_"> or C<"$_[0]">.
 
 The subroutine should return a code string suitable for inlining. You can
-assume that the check will be wrapped in parenthese when it is inlined.
+assume that the check will be wrapped in parentheses when it is inlined.
 
 The inlined code should include any checks that your type's parent type's
 do. For example, the C<Num> type's inlining sub looks like this:

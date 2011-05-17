@@ -196,6 +196,7 @@ immutabilize
 immutabilized
 immutabilizes
 incrementing
+inlinable
 inline
 inlines
 installable
