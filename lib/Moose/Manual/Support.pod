@@ -104,6 +104,31 @@ two decimal values (0.01, 0.02, ... 1.11, 1.12, etc.).
 Moose was declared production ready at version 0.18 (via L<<
 http://www.perlmonks.org/?node_id=608144 >>).
 
+=head1 PERL VERSION COMPATIBILITY
+
+Currently, Moose officially supports being run on Perl 5.8.3+. Our current
+support policy is to support the earliest version of Perl shipped in a stable
+release of any major operating system (this usually tends to mean CentOS). We
+will provide at least six months notice (two major releases) when we decide to
+increase the officially supported version. The next time this will happen is in
+January of 2012, when Moose 2.0600 will increase the minimum officially
+supported version to 5.10.1.
+
+"Officially supported" does not mean that these are the only version of Perl
+that Moose will work with. Our declared perl dependency will remain at 5.8.3 as
+long as our test suite continues to pass on 5.8.3. What this does mean is that
+the core Moose dev team will not be spending any time fixing bugs on versions
+that aren't officially supported, and new contributions will not be rejected
+due to being incompatible with older versions of perl except in the most
+trivial of cases. We will however still welcome patches to make Moose
+compatible with earlier versions, if other people are still interested in
+maintaining compatibility. Note that although performance regressions are
+acceptable in order to maintain backwards compatibility (as long as they only
+affect the older versions), functionality changes and buggy behavior will not
+be. If it becomes unable to provide identical functionality between modern perl
+versions and unsupported perl versions, we will drop support completely
+instead.
+
 =head1 CONTRIBUTING
 
 Moose has an open contribution policy. Anybody is welcome to submit a
