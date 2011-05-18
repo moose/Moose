@@ -116,7 +116,6 @@ MooseX::MultiInitArg
 MooseX::MultiMethods
 MooseX::MultiObject
 MooseX::MutatorAttributes
-MooseX::Net::API
 MooseX::NonMoose
 MooseX::Object::Pluggable
 MooseX::OneArgNew
