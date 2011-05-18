@@ -213,7 +213,6 @@ Devel::REPL
 Dist::Zilla
 Email::MIME::Kit
 Email::Sender
-FCGI::Engine
 Fey
 Fey::ORM
 File::ChangeNotify
