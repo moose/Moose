@@ -16,16 +16,24 @@ sub is_immutable { 1 }
 
 sub _immutable_metaclass { ref $_[1] }
 
-sub superclasses {
-    my $orig = shift;
-    my $self = shift;
-    confess "This method is read-only" if @_;
-    $self->$orig;
+sub _immutable_read_only {
+    my $name = shift;
+    confess "The '$name' method is read-only when called on an immutable instance";
 }
 
 sub _immutable_cannot_call {
     my $name = shift;
     Carp::confess "The '$name' method cannot be called on an immutable instance";
+}
+
+for my $name (qw/superclasses/) {
+    no strict 'refs';
+    *{__PACKAGE__."::$name"} = sub {
+        my $orig = shift;
+        my $self = shift;
+        _immutable_read_only($name) if @_;
+        $self->$orig;
+    };
 }
 
 for my $name (qw/add_method alias_method remove_method add_attribute remove_attribute remove_package_symbol add_package_symbol/) {
