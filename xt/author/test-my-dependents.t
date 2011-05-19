@@ -203,6 +203,7 @@ Catalyst::Devel
 CatalystX::Declare
 Chart::Clicker
 CHI
+Chloro
 Config::MVP
 Crypt::Util
 Data::Stream::Bulk
