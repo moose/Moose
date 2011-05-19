@@ -222,7 +222,6 @@ Hailo
 HTML::FormHandler
 IM::Engine
 JSON::RPC::Common
-JSORB
 KiokuDB
 KiokuDB::Backend::DBI
 KiokuX::Model::Role::Annotations
