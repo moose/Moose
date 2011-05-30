@@ -1057,7 +1057,7 @@ name of the variable to check, typically something like C<"$_"> or C<"$_[0]">.
 The subroutine should return a code string suitable for inlining. You can
 assume that the check will be wrapped in parentheses when it is inlined.
 
-The inlined code should include any checks that your type's parent type's
+The inlined code should include any checks that your type's parent types
 do. For example, the C<Num> type's inlining sub looks like this:
 
     sub {
