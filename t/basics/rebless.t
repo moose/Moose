@@ -51,6 +51,21 @@ subtype 'Positive'
         isa     => 'Int',
         default => 100,
     );
+
+    our %trigger_calls;
+    our %initializer_calls;
+
+    has new_attr => (
+        is => 'rw', isa => 'Str',
+        trigger => sub {
+            my ($self, $val, $attr) = @_;
+            $trigger_calls{new_attr}++;
+        },
+        initializer => sub {
+            my ($self, $value, $set, $attr) = @_;
+            $initializer_calls{new_attr}++;
+        },
+    );
 }
 
 my @classes = qw(Parent Child);
@@ -73,7 +88,7 @@ with_immutable
     $bar->type_constrained(5);
 
     Child->meta->rebless_instance($foo);
-    Child->meta->rebless_instance($bar);
+    Child->meta->rebless_instance($bar, new_attr => 'blah');
 
     is(blessed($foo), 'Child', 'successfully reblessed into Child');
     is($foo->name, 'Junior', "Child->name's default came through");
@@ -82,6 +97,16 @@ with_immutable
     is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
 
     like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
+
+
+    TODO: {
+        local $TODO = 'Moose::Meta::Class does not yet call triggers for rebless_instance!';
+    is_deeply(\%Child::trigger_calls, { new_attr => 1 }, 'Trigger fired on rebless_instance');
+    }
+    is_deeply(\%Child::initializer_calls, { new_attr => 1 }, 'Initializer fired on rebless_instance');
+
+    undef %Child::trigger_calls;
+    undef %Child::initializer_calls;
 
 }
 @classes;
