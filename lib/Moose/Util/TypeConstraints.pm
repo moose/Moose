@@ -1058,15 +1058,20 @@ The subroutine should return a code string suitable for inlining. You can
 assume that the check will be wrapped in parentheses when it is inlined.
 
 The inlined code should include any checks that your type's parent types
-do. For example, the C<Num> type's inlining sub looks like this:
+do. For example, the C<Value> type's inlining sub looks like this:
 
     sub {
-        '!ref(' . $_[1] . ') '
-          . '&& Scalar::Util::looks_like_number(' . $_[1] . ')'
+        'defined(' . $_[1] . ')'
+        . ' && !ref(' . $_[1] . ')'
     }
 
-Note that it checks if the variable is a reference, since it is a subtype of
-the C<Value> type.
+Note that it checks if the variable is defined, since it is a subtype of
+the C<Defined> type.  However, to avoid repeating code, this can be optimized as:
+
+    sub {
+        $_[0]->parent()->_inline_check($_[1])
+        . ' && !ref(' . $_[1] . ')'
+    }
 
 =item B<optimize_as { ... }>
 
