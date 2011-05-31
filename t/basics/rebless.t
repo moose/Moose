@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
+use Test::Moose qw(with_immutable);
 use Scalar::Util 'blessed';
 
 use Moose::Util::TypeConstraints;
@@ -52,30 +53,37 @@ subtype 'Positive'
     );
 }
 
-my $foo = Parent->new;
-my $bar = Parent->new;
+my @classes = qw(Parent Child);
 
-is(blessed($foo), 'Parent', 'Parent->new gives a Parent object');
-is($foo->name, undef, 'No name yet');
-is($foo->lazy_classname, 'Parent', "lazy attribute initialized");
-is( exception { $foo->type_constrained(10.5) }, undef, "Num type constraint for now.." );
+with_immutable
+{
+    my $foo = Parent->new;
+    my $bar = Parent->new;
 
-# try to rebless, except it will fail due to Child's stricter type constraint
-like( exception { Child->meta->rebless_instance($foo) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
-like( exception { Child->meta->rebless_instance($bar) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 5\.5/, '... this failed because of type check' );
+    is(blessed($foo), 'Parent', 'Parent->new gives a Parent object');
+    is($foo->name, undef, 'No name yet');
+    is($foo->lazy_classname, 'Parent', "lazy attribute initialized");
+    is( exception { $foo->type_constrained(10.5) }, undef, "Num type constraint for now.." );
 
-$foo->type_constrained(10);
-$bar->type_constrained(5);
+    # try to rebless, except it will fail due to Child's stricter type constraint
+    like( exception { Child->meta->rebless_instance($foo) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
+    like( exception { Child->meta->rebless_instance($bar) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 5\.5/, '... this failed because of type check' );
 
-Child->meta->rebless_instance($foo);
-Child->meta->rebless_instance($bar);
+    $foo->type_constrained(10);
+    $bar->type_constrained(5);
 
-is(blessed($foo), 'Child', 'successfully reblessed into Child');
-is($foo->name, 'Junior', "Child->name's default came through");
+    Child->meta->rebless_instance($foo);
+    Child->meta->rebless_instance($bar);
 
-is($foo->lazy_classname, 'Parent', "lazy attribute was already initialized");
-is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
+    is(blessed($foo), 'Child', 'successfully reblessed into Child');
+    is($foo->name, 'Junior', "Child->name's default came through");
 
-like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
+    is($foo->lazy_classname, 'Parent', "lazy attribute was already initialized");
+    is($bar->lazy_classname, 'Child', "lazy attribute just now initialized");
+
+    like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
+
+}
+@classes;
 
 done_testing;
