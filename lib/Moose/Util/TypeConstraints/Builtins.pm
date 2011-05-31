@@ -20,64 +20,79 @@ sub define_builtins {
         => where {1}
         => inline_as { '1' };
 
-    subtype 'Item'  # base-type
+    subtype 'Item'  # base type
         => as 'Any'
         => inline_as { '1' };
 
     subtype 'Undef'
         => as 'Item'
         => where { !defined($_) }
-        => inline_as { '!defined(' . $_[1] . ')' };
+        => inline_as {
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && !defined(' . $_[1] . ')'
+        };
 
     subtype 'Defined'
         => as 'Item'
         => where { defined($_) }
-        => inline_as { 'defined(' . $_[1] . ')' };
+        => inline_as {
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && defined(' . $_[1] . ')'
+        };
 
     subtype 'Bool'
         => as 'Item'
         => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
         => inline_as {
-            '!defined(' . $_[1] . ') '
-              . '|| ' . $_[1] . ' eq "" '
-              . '|| "' . $_[1] . '" eq "1" '
-              . '|| "' . $_[1] . '" eq "0"'
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && ('
+                . '!defined(' . $_[1] . ') '
+                . '|| ' . $_[1] . ' eq "" '
+                . '|| "' . $_[1] . '" eq "1" '
+                . '|| "' . $_[1] . '" eq "0"'
+            . ')'
         };
 
     subtype 'Value'
         => as 'Defined'
         => where { !ref($_) }
-        => inline_as { 'defined(' . $_[1] . ') && !ref(' . $_[1] . ')' };
+        => inline_as {
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && !ref(' . $_[1] . ')'
+        };
 
     subtype 'Ref'
         => as 'Defined'
         => where { ref($_) }
+            # no need to call parent - ref also checks for definedness
         => inline_as { 'ref(' . $_[1] . ')' };
 
     subtype 'Str'
         => as 'Value'
         => where { ref(\$_) eq 'SCALAR' || ref(\(my $val = $_)) eq 'SCALAR' }
         => inline_as {
-            'defined(' . $_[1] . ') '
-              . '&& (ref(\\' . $_[1] . ') eq "SCALAR"'
-              . '|| ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR" )'
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && ('
+                . 'ref(\\' . $_[1] . ') eq "SCALAR"'
+                . ' || ref(\\(my $val = ' . $_[1] . ')) eq "SCALAR"'
+            . ')'
         };
 
     subtype 'Num'
         => as 'Str'
         => where { Scalar::Util::looks_like_number($_) }
         => inline_as {
-            '!ref(' . $_[1] . ') '
-              . '&& Scalar::Util::looks_like_number(' . $_[1] . ')'
+            # the long Str tests are redundant here
+            Moose::Util::TypeConstraints::find_type_constraint('Value')->_inline_check($_[1])
+            . ' && Scalar::Util::looks_like_number(' . $_[1] . ')'
         };
 
     subtype 'Int'
         => as 'Num'
         => where { (my $val = $_) =~ /\A-?[0-9]+\z/ }
         => inline_as {
-            'defined(' . $_[1] . ') '
-              . '&& !ref(' . $_[1] . ') '
-              . '&& (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/'
+            Moose::Util::TypeConstraints::find_type_constraint('Value')->_inline_check($_[1])
+            . ' && (my $val = ' . $_[1] . ') =~ /\A-?[0-9]+\z/'
         };
 
     subtype 'CodeRef'
@@ -107,9 +122,9 @@ sub define_builtins {
         }
         => inline_as {
             '(ref(' . $_[1] . ') eq "GLOB" '
-              . '&& Scalar::Util::openhandle(' . $_[1] . ')) '
-       . '|| (Scalar::Util::blessed(' . $_[1] . ') '
-              . '&& ' . $_[1] . '->isa("IO::Handle"))'
+            . '&& Scalar::Util::openhandle(' . $_[1] . ')) '
+            . '|| (Scalar::Util::blessed(' . $_[1] . ') '
+            . '&& ' . $_[1] . '->isa("IO::Handle"))'
         };
 
     subtype 'Object'
@@ -125,6 +140,7 @@ sub define_builtins {
     subtype 'ClassName'
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
+            # the long Str tests are redundant here
         => inline_as { 'Class::MOP::is_class_loaded(' . $_[1] . ')' };
 
     subtype 'RoleName'
@@ -133,11 +149,11 @@ sub define_builtins {
             (Class::MOP::class_of($_) || return)->isa('Moose::Meta::Role');
         }
         => inline_as {
-            'Class::MOP::is_class_loaded(' . $_[1] . ') '
-              . '&& do {'
-                  . 'my $meta = Class::MOP::class_of(' . $_[1] . ');'
-                  . '$meta && $meta->isa("Moose::Meta::Role");'
-              . '}'
+            $_[0]->parent()->_inline_check($_[1])
+            . ' && do {'
+                . 'my $meta = Class::MOP::class_of(' . $_[1] . ');'
+                . '$meta && $meta->isa("Moose::Meta::Role");'
+            . '}'
         };
 
     $registry->add_type_constraint(
