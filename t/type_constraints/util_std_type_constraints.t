@@ -725,12 +725,19 @@ for my $name ( sort keys %tests ) {
     );
 }
 
-# We need to test that the Str constraint accepts the return val of substr() -
-# which means passing that return val directly to the checking code
-{
-    my $str = 'some string';
+my %substr_test_str = (
+    ClassName   => 'x' . $CLASS_NAME,
+    RoleName    => 'x' . $ROLE_NAME,
+);
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint('Str');
+# We need to test that the Str constraint (and types that derive from it)
+# accept the return val of substr() - which means passing that return val
+# directly to the checking code
+foreach my $type_name (qw(Str Num Int ClassName RoleName))
+{
+    my $str = $substr_test_str{$type_name} || '123456789';
+
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_name);
 
     my $unoptimized
         = $type->has_parent
@@ -745,29 +752,32 @@ for my $name ( sort keys %tests ) {
     }
 
     ok(
-        $type->check( substr( $str, 1, 3 ) ),
-        'Str accepts return val from substr using ->check'
+        $type->check( substr( $str, 1, 5 ) ),
+        $type_name . ' accepts return val from substr using ->check'
     );
     ok(
-        $unoptimized->( substr( $str, 1, 3 ) ),
-        'Str accepts return val from substr using unoptimized constraint'
+        $unoptimized->( substr( $str, 1, 5 ) ),
+        $type_name . ' accepts return val from substr using unoptimized constraint'
     );
     ok(
-        $inlined->( substr( $str, 1, 3 ) ),
-        'Str accepts return val from substr using inlined constraint'
+        $inlined->( substr( $str, 1, 5 ) ),
+        $type_name . ' accepts return val from substr using inlined constraint'
     );
+
+    # only Str accepts empty strings.
+    next unless $type_name eq 'Str';
 
     ok(
         $type->check( substr( $str, 0, 0 ) ),
-        'Str accepts empty return val from substr using ->check'
+        $type_name . ' accepts empty return val from substr using ->check'
     );
     ok(
         $unoptimized->( substr( $str, 0, 0 ) ),
-        'Str accepts empty return val from substr using unoptimized constraint'
+        $type_name . ' accepts empty return val from substr using unoptimized constraint'
     );
     ok(
         $inlined->( substr( $str, 0, 0 ) ),
-        'Str accepts empty return val from substr using inlined constraint'
+        $type_name . ' accepts empty return val from substr using inlined constraint'
     );
 }
 
