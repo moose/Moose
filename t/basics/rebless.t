@@ -64,6 +64,7 @@ subtype 'Positive'
         initializer => sub {
             my ($self, $value, $set, $attr) = @_;
             $initializer_calls{new_attr}++;
+            $set->($value);
         },
     );
 }
@@ -99,10 +100,7 @@ with_immutable
     like( exception { $foo->type_constrained(10.5) }, qr/^Attribute \(type_constrained\) does not pass the type constraint because\: Validation failed for 'Int' with value 10\.5/, '... this failed because of type check' );
 
 
-    TODO: {
-        local $TODO = 'Moose::Meta::Class does not yet call triggers for rebless_instance!';
     is_deeply(\%Child::trigger_calls, { new_attr => 1 }, 'Trigger fired on rebless_instance');
-    }
     is_deeply(\%Child::initializer_calls, { new_attr => 1 }, 'Initializer fired on rebless_instance');
 
     undef %Child::trigger_calls;

@@ -727,6 +727,7 @@ sub _create_meta_instance {
     return $instance;
 }
 
+# TODO: this is actually not being used!
 sub _inline_rebless_instance {
     my $self = shift;
 
