@@ -262,14 +262,22 @@ sub new_object {
     my $params = @_ == 1 ? $_[0] : {@_};
     my $object = $self->SUPER::new_object($params);
 
-    foreach my $attr ( $self->get_all_attributes() ) {
+    $self->call_all_triggers($object, $params);
+
+    $object->BUILDALL($params) if $object->can('BUILDALL');
+
+    return $object;
+}
+
+sub call_all_triggers {
+    my ($self, $object, $params) = @_;
+
+    foreach my $attr ($self->get_all_attributes()) {
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
         my $init_arg = $attr->init_arg;
-
         next unless defined $init_arg;
-
         next unless exists $params->{$init_arg};
 
         $attr->trigger->(
@@ -281,10 +289,6 @@ sub new_object {
             ),
         );
     }
-
-    $object->BUILDALL($params) if $object->can('BUILDALL');
-
-    return $object;
 }
 
 sub _generate_fallback_constructor {
@@ -677,6 +681,18 @@ sub _immutable_options {
         @args,
     );
 }
+
+
+sub _fixup_attributes_after_rebless {
+    my $self = shift;
+    my ($instance, $rebless_from, %params) = @_;
+
+    $self->SUPER::_fixup_attributes_after_rebless($instance, $rebless_from, %params);
+
+    $self->call_all_triggers($instance, \%params);
+}
+
+
 
 ## -------------------------------------------------
 
