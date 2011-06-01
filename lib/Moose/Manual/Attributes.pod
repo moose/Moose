@@ -441,7 +441,7 @@ writing). Second, it is also called when an attribute's value is
 passed to the constructor.
 
 However, triggers are I<not> called when an attribute is populated
-from a C<default> or C<builder>
+from a C<default> or C<builder>.
 
 =head2 Attribute types
 
