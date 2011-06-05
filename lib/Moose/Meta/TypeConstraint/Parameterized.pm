@@ -13,11 +13,13 @@ use base 'Moose::Meta::TypeConstraint';
 __PACKAGE__->meta->add_attribute('type_parameter' => (
     accessor  => 'type_parameter',
     predicate => 'has_type_parameter',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('parameterized_from' => (
     accessor   => 'parameterized_from',
     predicate  => 'has_parameterized_from',
+    Class::MOP::_definition_context(),
 ));
 
 sub equals {

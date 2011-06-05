@@ -14,7 +14,8 @@ use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',
-    default   => sub { [] }
+    default   => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 sub new {

@@ -14,7 +14,10 @@ use base 'Moose::Meta::Role';
 # since we don't have an actual
 # package for this.
 # - SL
-__PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
+__PACKAGE__->meta->add_attribute('name' => (
+    reader => 'name',
+    Class::MOP::_definition_context(),
+));
 
 # NOTE:
 # Again, since we don't have a real
@@ -23,13 +26,15 @@ __PACKAGE__->meta->add_attribute('name' => (reader => 'name'));
 # - SL
 __PACKAGE__->meta->add_attribute('_methods' => (
     reader  => '_method_map',
-    default => sub { {} }
+    default => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute(
     'application_role_summation_class',
     reader  => 'application_role_summation_class',
     default => 'Moose::Meta::Role::Application::RoleSummation',
+    Class::MOP::_definition_context(),
 );
 
 sub new {

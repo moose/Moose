@@ -13,11 +13,13 @@ use Carp 'confess';
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
     predicate => 'has_constraint_generator',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('inline_generator' => (
     accessor  => 'inline_generator',
     predicate => 'has_inline_generator',
+    Class::MOP::_definition_context(),
 ));
 
 sub generate_constraint_for {

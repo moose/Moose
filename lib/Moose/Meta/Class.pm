@@ -28,34 +28,40 @@ Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',
-    default => sub { [] }
+    default => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('role_applications' => (
     reader  => '_get_role_applications',
-    default => sub { [] }
+    default => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute(
     Class::MOP::Attribute->new('immutable_trait' => (
         accessor => "immutable_trait",
         default  => 'Moose::Meta::Class::Immutable::Trait',
+        Class::MOP::_definition_context(),
     ))
 );
 
 __PACKAGE__->meta->add_attribute('constructor_class' => (
     accessor => 'constructor_class',
     default  => 'Moose::Meta::Method::Constructor',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('destructor_class' => (
     accessor => 'destructor_class',
     default  => 'Moose::Meta::Method::Destructor',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('error_class' => (
     accessor => 'error_class',
     default  => 'Moose::Error::Default',
+    Class::MOP::_definition_context(),
 ));
 
 sub initialize {

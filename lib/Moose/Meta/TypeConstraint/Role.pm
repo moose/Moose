@@ -12,6 +12,7 @@ use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
+    Class::MOP::_definition_context(),
 ));
 
 my $inliner = sub {

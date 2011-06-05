@@ -11,7 +11,8 @@ use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('rebless_params' => (
     reader  => 'rebless_params',
-    default => sub { {} }
+    default => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 sub apply {

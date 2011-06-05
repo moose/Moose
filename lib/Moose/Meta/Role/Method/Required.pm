@@ -16,6 +16,7 @@ use base qw(Class::MOP::Object);
 __PACKAGE__->meta->add_attribute('name' => (
     reader   => 'name',
     required => 1,
+    Class::MOP::_definition_context(),
 ));
 
 sub new { shift->_new(@_) }

@@ -17,25 +17,35 @@ use Try::Tiny;
 
 use base qw(Class::MOP::Object);
 
-__PACKAGE__->meta->add_attribute('name'       => (reader => 'name'));
+__PACKAGE__->meta->add_attribute('name'       => (
+    reader => 'name',
+    Class::MOP::_definition_context(),
+));
 __PACKAGE__->meta->add_attribute('parent'     => (
     reader    => 'parent',
     predicate => 'has_parent',
+    Class::MOP::_definition_context(),
 ));
 
 my $null_constraint = sub { 1 };
 __PACKAGE__->meta->add_attribute('constraint' => (
     reader  => 'constraint',
     writer  => '_set_constraint',
-    default => sub { $null_constraint }
+    default => sub { $null_constraint },
+    Class::MOP::_definition_context(),
 ));
+
 __PACKAGE__->meta->add_attribute('message'   => (
     accessor  => 'message',
-    predicate => 'has_message'
+    predicate => 'has_message',
+    Class::MOP::_definition_context(),
 ));
+
 __PACKAGE__->meta->add_attribute('_default_message' => (
     accessor  => '_default_message',
+    Class::MOP::_definition_context(),
 ));
+
 # can't make this a default because it has to close over the type name, and
 # cmop attributes don't have lazy
 my $_default_message_generator = sub {
@@ -59,25 +69,29 @@ my $_default_message_generator = sub {
 };
 __PACKAGE__->meta->add_attribute('coercion'   => (
     accessor  => 'coercion',
-    predicate => 'has_coercion'
+    predicate => 'has_coercion',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
     init_arg  => 'optimized',
     accessor  => 'hand_optimized_type_constraint',
     predicate => 'has_hand_optimized_type_constraint',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('inlined' => (
     init_arg  => 'inlined',
     accessor  => 'inlined',
     predicate => '_has_inlined_type_constraint',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('inline_environment' => (
     init_arg => 'inline_environment',
     accessor => '_inline_environment',
     default  => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 sub parents {
@@ -89,10 +103,13 @@ sub parents {
 
 __PACKAGE__->meta->add_attribute('compiled_type_constraint' => (
     accessor  => '_compiled_type_constraint',
-    predicate => '_has_compiled_type_constraint'
+    predicate => '_has_compiled_type_constraint',
+    Class::MOP::_definition_context(),
 ));
+
 __PACKAGE__->meta->add_attribute('package_defined_in' => (
-    accessor => '_package_defined_in'
+    accessor => '_package_defined_in',
+    Class::MOP::_definition_context(),
 ));
 
 sub new {

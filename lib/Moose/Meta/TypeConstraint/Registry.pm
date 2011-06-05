@@ -13,11 +13,13 @@ __PACKAGE__->meta->add_attribute('parent_registry' => (
     reader    => 'get_parent_registry',
     writer    => 'set_parent_registry',
     predicate => 'has_parent_registry',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     reader  => 'type_constraints',
-    default => sub { {} }
+    default => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 sub new {

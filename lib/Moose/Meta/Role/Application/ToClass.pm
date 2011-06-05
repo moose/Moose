@@ -11,10 +11,12 @@ use base 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('class' => (
     accessor => 'class',
+    Class::MOP::_definition_context(),
 ));
 
 sub apply {

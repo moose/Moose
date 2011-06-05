@@ -7,13 +7,15 @@ use metaclass;
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
     init_arg => '-excludes',
     reader   => 'get_method_exclusions',
-    default  => sub { [] }
+    default  => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('method_aliases' => (
     init_arg => '-alias',
     reader   => 'get_method_aliases',
-    default  => sub { {} }
+    default  => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 sub new {

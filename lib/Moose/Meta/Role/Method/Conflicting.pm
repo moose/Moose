@@ -11,6 +11,7 @@ use base qw(Moose::Meta::Role::Method::Required);
 __PACKAGE__->meta->add_attribute('roles' => (
     reader   => 'roles',
     required => 1,
+    Class::MOP::_definition_context(),
 ));
 
 sub roles_as_english_list {

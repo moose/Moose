@@ -82,7 +82,8 @@ foreach my $action (
     # create the attribute
     $META->add_attribute($action->{name} => (
         reader  => $attr_reader,
-        default => sub { {} }
+        default => sub { {} },
+        Class::MOP::_definition_context(),
     ));
 
     # create some helper methods
@@ -121,42 +122,49 @@ $META->add_attribute(
     'method_metaclass',
     reader  => 'method_metaclass',
     default => 'Moose::Meta::Role::Method',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'required_method_metaclass',
     reader  => 'required_method_metaclass',
     default => 'Moose::Meta::Role::Method::Required',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'conflicting_method_metaclass',
     reader  => 'conflicting_method_metaclass',
     default => 'Moose::Meta::Role::Method::Conflicting',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'application_to_class_class',
     reader  => 'application_to_class_class',
     default => 'Moose::Meta::Role::Application::ToClass',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'application_to_role_class',
     reader  => 'application_to_role_class',
     default => 'Moose::Meta::Role::Application::ToRole',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'application_to_instance_class',
     reader  => 'application_to_instance_class',
     default => 'Moose::Meta::Role::Application::ToInstance',
+    Class::MOP::_definition_context(),
 );
 
 $META->add_attribute(
     'applied_attribute_metaclass',
     reader  => 'applied_attribute_metaclass',
     default => 'Moose::Meta::Attribute',
+    Class::MOP::_definition_context(),
 );
 
 # More or less copied from Moose::Meta::Class
@@ -291,7 +299,8 @@ foreach my $modifier_type (qw[ before around after ]) {
     # create the attribute ...
     $META->add_attribute("${modifier_type}_method_modifiers" => (
         reader  => $attr_reader,
-        default => sub { {} }
+        default => sub { {} },
+        Class::MOP::_definition_context(),
     ));
 
     # and some helper methods ...
@@ -336,7 +345,8 @@ foreach my $modifier_type (qw[ before around after ]) {
 
 $META->add_attribute('override_method_modifiers' => (
     reader  => 'get_override_method_modifiers_map',
-    default => sub { {} }
+    default => sub { {} },
+    Class::MOP::_definition_context(),
 ));
 
 # NOTE:
@@ -381,7 +391,8 @@ sub _meta_method_class { 'Moose::Meta::Method::Meta' }
 
 $META->add_attribute('roles' => (
     reader  => 'get_roles',
-    default => sub { [] }
+    default => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 sub add_role {

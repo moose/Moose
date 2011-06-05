@@ -25,6 +25,7 @@ Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 __PACKAGE__->meta->add_attribute('traits' => (
     reader    => 'applied_traits',
     predicate => 'has_applied_traits',
+    Class::MOP::_definition_context(),
 ));
 
 # we need to have a ->does method in here to

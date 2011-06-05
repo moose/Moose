@@ -10,19 +10,22 @@ use Moose::Util::TypeConstraints ();
 
 __PACKAGE__->meta->add_attribute('type_coercion_map' => (
     reader  => 'type_coercion_map',
-    default => sub { [] }
+    default => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute(
     Moose::Meta::Attribute->new('type_constraint' => (
         reader   => 'type_constraint',
-        weak_ref => 1
+        weak_ref => 1,
+        Class::MOP::_definition_context(),
     ))
 );
 
 # private accessor
 __PACKAGE__->meta->add_attribute('compiled_type_coercion' => (
-    accessor => '_compiled_type_coercion'
+    accessor => '_compiled_type_coercion',
+    Class::MOP::_definition_context(),
 ));
 
 sub new {

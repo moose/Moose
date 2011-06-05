@@ -11,10 +11,12 @@ use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',
+    Class::MOP::_definition_context(),
 ));
 
 __PACKAGE__->meta->add_attribute('_inline_var_name' => (
     accessor => '_inline_var_name',
+    Class::MOP::_definition_context(),
 ));
 
 my $inliner = sub {

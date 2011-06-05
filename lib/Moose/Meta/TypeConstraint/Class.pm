@@ -12,6 +12,7 @@ use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('class' => (
     reader => 'class',
+    Class::MOP::_definition_context(),
 ));
 
 my $inliner = sub {
