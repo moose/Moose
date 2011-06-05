@@ -50,7 +50,7 @@ sub _eval_environment {
 
     $env->{'$trigger'} = \($attr->trigger)
         if $attr->has_trigger;
-    $env->{'$default'} = \($attr->default)
+    $env->{'$attr_default'} = \($attr->default)
         if $attr->has_default;
 
     if ($attr->has_type_constraint) {

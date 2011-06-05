@@ -859,7 +859,7 @@ sub _inline_generate_default {
     my ($instance, $default) = @_;
 
     if ($self->has_default) {
-        my $source = 'my ' . $default . ' = $default';
+        my $source = 'my ' . $default . ' = $attr_default';
         $source .= '->(' . $instance . ')'
             if $self->is_default_a_coderef;
         return $source . ';';
