@@ -88,7 +88,7 @@ sub _inline_check {
                   @{ $self->type_constraints }
                  )
            . ')';
-};
+}
 
 sub inline_environment {
     my $self = shift;
