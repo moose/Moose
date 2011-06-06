@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0100 Mon, Jun 06, 2011
+
   [DEPRECATIONS]
 
   * Using a hand-optimized type constraint is now deprecated. In keeping with
