@@ -218,7 +218,6 @@ Fey::ORM
 File::ChangeNotify
 Forest
 Git::PurePerl
-Gitalist
 Hailo
 HTML::FormHandler
 IM::Engine
