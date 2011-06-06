@@ -23,6 +23,8 @@ for, noteworthy changes.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
 
+2.0007 Sun, May 15, 2011
+
   [BUG FIXES]
 
   * Make sure weak attributes remain weak when cloning. (doy, rafl)
