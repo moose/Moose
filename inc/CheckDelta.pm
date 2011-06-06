@@ -3,9 +3,9 @@ use Moose;
 
 use Path::Class;
 
-with 'Dist::Zilla::Role::BeforeBuild';
+with 'Dist::Zilla::Role::AfterBuild';
 
-sub before_build {
+sub after_build {
     my $self = shift;
 
     return unless $ENV{DZIL_RELEASING};
