@@ -3,10 +3,12 @@ use Moose;
 
 use Path::Class;
 
-with 'Dist::Zilla::Role::BeforeRelease';
+with 'Dist::Zilla::Role::BeforeBuild';
 
-sub before_release {
+sub before_build {
     my $self = shift;
+
+    return unless $ENV{DZIL_RELEASING};
 
     my ($delta) = grep { $_->name eq 'lib/Moose/Manual/Delta.pod' }
                        @{ $self->zilla->files };

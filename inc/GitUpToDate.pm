@@ -1,7 +1,7 @@
 package inc::GitUpToDate;
 use Moose;
 
-with 'Dist::Zilla::Role::BeforeRelease';
+with 'Dist::Zilla::Role::BeforeBuild';
 
 sub git {
     if (wantarray) {
@@ -14,8 +14,10 @@ sub git {
     }
 }
 
-sub before_release {
+sub before_build {
     my $self = shift;
+
+    return unless $ENV{DZIL_RELEASING};
 
     my $branch = git "symbolic-ref HEAD";
     die "Could not get the current branch"
