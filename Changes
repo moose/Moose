@@ -14,17 +14,14 @@ for, noteworthy changes.
   [NEW FEATURES]
 
   * Type constraints can now provide inlined versions, which should make
-    inlined code which uses type constraints (such as accessors) faster.
-    (Dave Rolsky)
+    inlined code which uses type constraints (such as accessors) faster. This
+    replaces the existing hand-optimized constraint feature.  (Dave Rolsky)
 
   [ENHANCEMENTS]
 
   * Remove a lot of cases where generated methods closed over meta objects.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
-
-  * Type constraints can now inline their constraint checks. This replaces the
-    existing hand-optimized constraint feature.
 
   [BUG FIXES]
 
