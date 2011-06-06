@@ -75,7 +75,13 @@ sub _actually_compile_type_constraint {
 sub can_be_inlined {
     my $self = shift;
 
-    return all { $_->can_be_inlined } @{ $self->type_constraints };
+    # This was originally done with all() from List::MoreUtils, but that
+    # caused some sort of bizarro parsing failure under 5.10.
+    for my $tc ( @{ $self->type_constraints } ) {
+        return 0 unless $tc->can_be_inlined;
+    }
+
+    return 1;
 }
 
 sub _inline_check {
@@ -88,7 +94,7 @@ sub _inline_check {
                   @{ $self->type_constraints }
                  )
            . ')';
-};
+}
 
 sub inline_environment {
     my $self = shift;
