@@ -53,6 +53,8 @@ use Test::Moose;
         grep_curried  => [ grep => ( sub { $_ < 5 } ) ],
         first         => 'first',
         first_curried => [ first => ( sub { $_ % 2 } ) ],
+        first_index   => 'first_index',
+        first_index_curried => [ first_index => ( sub { $_ % 2 } ) ],
         join          => 'join',
         join_curried => [ join => '-' ],
         shuffle      => 'shuffle',
@@ -522,6 +524,32 @@ sub run_tests {
         like( exception {
             $obj->first_curried( sub { } );
         }, qr/Cannot call first with more than 1 argument/, 'throws an error when passing one argument passed to first_curried' );
+
+
+        is(
+            $obj->first_index( sub { $_ % 2 } ),
+            3,
+            'first_index returns expected value'
+        );
+
+        like( exception { $obj->first_index }, qr/Cannot call first_index without at least 1 argument/, 'throws an error when passing no arguments to first_index' );
+
+        like( exception {
+            $obj->first_index( sub { }, 2 );
+        }, qr/Cannot call first_index with more than 1 argument/, 'throws an error when passing two arguments to first_index' );
+
+        like( exception { $obj->first_index( {} ) }, qr/The argument passed to first_index must be a code reference/, 'throws an error when passing a non coderef to first_index' );
+
+        is(
+            $obj->first_index_curried,
+            3,
+            'first_index_curried returns expected value'
+        );
+
+        like( exception {
+            $obj->first_index_curried( sub { } );
+        }, qr/Cannot call first_index with more than 1 argument/, 'throws an error when passing one argument passed to first_index_curried' );
+
 
         $obj->_values( [ 1 .. 4 ] );
 

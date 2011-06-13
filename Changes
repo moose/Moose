@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * The native Array trait now has a 'first_index' method, which works just
+    like the version in List::MoreUtils. (Karen Etheridge)
+
 2.0101 Mon, Jun 06, 2011
 
   [OTHER]
