@@ -11,8 +11,6 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::set' => {
             _generate_method
             _minimum_arguments
             _maximum_arguments
-            _inline_check_arguments
-            _return_value
             )
     ]
     },
@@ -23,7 +21,9 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::set' => {
             _minimum_arguments
             _maximum_arguments
             _inline_check_argument_count
+            _inline_check_arguments
             _inline_process_arguments
+            _return_value
             )
     ]
     };
@@ -41,6 +41,12 @@ sub _generate_method {
             $self->_inline_check_lazy($inv, '$type_constraint', '$type_coercion', '$type_message'),
             # get
             'if (@_ == 1) {',
+                # XXX: ugh, this is a hack - we need _return_value from
+                # both ::set and ::get, but we can only have one, so we pick
+                # the one from ::set and munge it to work for the ::get case
+                # this should be fixed in a better way
+                # -doy
+                'my @keys_idx = 0..$#_;',
                 $self->_inline_check_var_is_valid_key('$_[0]'),
                 $self->Moose::Meta::Method::Accessor::Native::Hash::get::_inline_return_value($slot_access),
             '}',
