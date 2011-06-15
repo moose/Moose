@@ -3,6 +3,15 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * The 'accessor' native delegation for hashrefs now allows setting the value
+    to undef. (sugoik, doy)
+
+  [ENHANCEMENTS]
+
+  * Various generated methods have more useful context information. (doy)
+
 2.0007 Sun, May 15, 2011
 
   [BUG FIXES]
