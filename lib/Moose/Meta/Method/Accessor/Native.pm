@@ -20,7 +20,16 @@ around new => sub {
         unless $options{curried_arguments}
             && ref($options{curried_arguments}) eq 'ARRAY';
 
-    $options{definition_context} = $options{attribute}->definition_context;
+    my $attr_context = $options{attribute}->definition_context;
+    my $desc = 'native delegation method ';
+    $desc   .= $options{attribute}->associated_class->name;
+    $desc   .= '::' . $options{name};
+    $desc   .= " ($options{delegate_to_method})";
+    $desc   .= " of attribute " . $options{attribute}->name;
+    $options{definition_context} = {
+        %{ $attr_context || {} },
+        description => $desc,
+    };
 
     $options{accessor_type} = 'native';
 
