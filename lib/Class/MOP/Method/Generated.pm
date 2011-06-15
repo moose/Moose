@@ -23,15 +23,25 @@ sub _generate_description {
     my ( $self, $context ) = @_;
     $context ||= $self->definition_context;
 
-    return "generated method (unknown origin)"
-        unless defined $context;
+    my $desc = "generated method";
+    my $origin = "unknown origin";
 
-    if (defined $context->{description}) {
-        return "$context->{description} "
-             . "(defined at $context->{file} line $context->{line})";
-    } else {
-        return "$context->{file} (line $context->{line})";
+    if (defined $context) {
+        if (defined $context->{description}) {
+            $desc = $context->{description};
+        }
+
+        if (defined $context->{file} || defined $context->{line}) {
+            $origin = "defined at "
+                    . (defined $context->{file}
+                        ? $context->{file} : "<unknown file>")
+                    . " line "
+                    . (defined $context->{line}
+                        ? $context->{line} : "<unknown line>");
+        }
     }
+
+    return "$desc ($origin)";
 }
 
 sub _compile_code {
