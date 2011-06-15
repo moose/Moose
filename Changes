@@ -3,10 +3,17 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * The 'accessor' native delegation for hashrefs now allows setting the value
+    to undef. (sugoik, doy)
+
   [ENHANCEMENTS]
 
   * The native Array trait now has a 'first_index' method, which works just
     like the version in List::MoreUtils. (Karen Etheridge)
+
+  * Various generated methods have more useful context information. (doy)
 
 2.0101 Mon, Jun 06, 2011
 
