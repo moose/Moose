@@ -60,6 +60,7 @@ use Class::MOP;
 
         process_accessors
         _process_accessors
+        _accessor_description
         install_accessors
         remove_accessors
 

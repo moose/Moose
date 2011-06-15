@@ -354,16 +354,15 @@ sub accessor_metaclass { 'Class::MOP::Method::Accessor' }
 sub _process_accessors {
     my ($self, $type, $accessor, $generate_as_inline_methods) = @_;
 
-    my $method_ctx;
-
-    if ( my $ctx = $self->definition_context ) {
-        $method_ctx = { %$ctx };
-    }
+    my $method_ctx = { %{ $self->definition_context || {} } };
 
     if (ref($accessor)) {
         (ref($accessor) eq 'HASH')
             || confess "bad accessor/reader/writer/predicate/clearer format, must be a HASH ref";
         my ($name, $method) = %{$accessor};
+
+        $method_ctx->{description} = $self->_accessor_description($name, $type);
+
         $method = $self->accessor_metaclass->wrap(
             $method,
             package_name => $self->associated_class->name,
@@ -377,14 +376,7 @@ sub _process_accessors {
         my $inline_me = ($generate_as_inline_methods && $self->associated_class->instance_metaclass->is_inlinable);
         my $method;
         try {
-            if ( $method_ctx ) {
-                my $desc = "accessor " . $self->associated_class->name . "::$accessor";
-                if ( $accessor ne $self->name ) {
-                    $desc .= " of attribute " . $self->name;
-                }
-
-                $method_ctx->{description} = $desc;
-            }
+            $method_ctx->{description} = $self->_accessor_description($accessor, $type);
 
             $method = $self->accessor_metaclass->new(
                 attribute     => $self,
@@ -401,6 +393,18 @@ sub _process_accessors {
         $self->associate_method($method);
         return ($accessor, $method);
     }
+}
+
+sub _accessor_description {
+    my $self = shift;
+    my ($name, $type) = @_;
+
+    my $desc = "$type " . $self->associated_class->name . "::$name";
+    if ( $name ne $self->name ) {
+        $desc .= " of attribute " . $self->name;
+    }
+
+    return $desc;
 }
 
 sub install_accessors {
