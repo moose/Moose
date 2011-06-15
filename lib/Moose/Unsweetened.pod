@@ -1,4 +1,4 @@
-package Moose::Intro;
+package Moose::Unsweetened;
 
 # ABSTRACT: Moved to Moose::Manual::Unsweetened, so go read that
 
