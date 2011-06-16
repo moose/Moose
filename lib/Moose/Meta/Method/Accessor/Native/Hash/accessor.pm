@@ -41,12 +41,6 @@ sub _generate_method {
             $self->_inline_check_lazy($inv, '$type_constraint', '$type_constraint_obj'),
             # get
             'if (@_ == 1) {',
-                # XXX: ugh, this is a hack - we need _return_value from
-                # both ::set and ::get, but we can only have one, so we pick
-                # the one from ::set and munge it to work for the ::get case
-                # this should be fixed in a better way
-                # -doy
-                'my @keys_idx = 0;',
                 $self->_inline_check_var_is_valid_key('$_[0]'),
                 $slot_access . '->{$_[0]}',
             '}',
