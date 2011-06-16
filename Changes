@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0008 Thu, Jun 16, 2011
+
   [BUG FIXES]
 
   * The 'accessor' native delegation for hashrefs now allows setting the value
