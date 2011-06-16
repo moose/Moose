@@ -669,4 +669,22 @@ sub run_tests {
     $class;
 }
 
+{
+    my ( $class, $handles ) = build_class( isa => 'ArrayRef' );
+    my $obj = $class->new;
+    with_immutable {
+        is(
+            exception { $obj->accessor( 0, undef ) },
+            undef,
+            'can use accessor to set value to undef'
+        );
+        is(
+            exception { $obj->accessor_curried_1(undef) },
+            undef,
+            'can use curried accessor to set value to undef'
+        );
+    }
+    $class;
+}
+
 done_testing;
