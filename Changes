@@ -3,17 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-  [BUG FIXES]
-
-  * The 'accessor' native delegation for hashrefs now allows setting the value
-    to undef. (sugoik, doy)
-
   [ENHANCEMENTS]
 
   * The native Array trait now has a 'first_index' method, which works just
     like the version in List::MoreUtils. (Karen Etheridge)
-
-  * Various generated methods have more useful context information. (doy)
 
 2.0101 Mon, Jun 06, 2011
 
@@ -40,6 +33,17 @@ for, noteworthy changes.
   * Remove a lot of cases where generated methods closed over meta objects.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
+
+2.0008 Thu, Jun 16, 2011
+
+  [BUG FIXES]
+
+  * The 'accessor' native delegation for hashrefs now allows setting the value
+    to undef. (sugoik, doy)
+
+  [ENHANCEMENTS]
+
+  * Various generated methods have more useful context information. (doy)
 
 2.0007 Sun, May 15, 2011
 
