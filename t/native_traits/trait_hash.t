@@ -293,14 +293,21 @@ sub run_tests {
 }
 
 {
-    my ($class, $handles) = build_class(isa => 'HashRef');
+    my ( $class, $handles ) = build_class( isa => 'HashRef' );
     my $obj = $class->new;
     with_immutable {
-        is(exception { $obj->option_accessor('foo', undef) }, undef,
-           "can use accessor to set to undef");
-        is(exception { $obj->quantity(undef) }, undef,
-           "can use accessor to set to undef");
-    } $class;
+        is(
+            exception { $obj->option_accessor( 'foo', undef ) },
+            undef,
+            'can use accessor to set value to undef'
+        );
+        is(
+            exception { $obj->quantity(undef) },
+            undef,
+            'can use accessor to set value to undef'
+        );
+    }
+    $class;
 }
 
 done_testing;
