@@ -1258,7 +1258,7 @@ sub _immutable_options {
 sub make_immutable {
     my ( $self, @args ) = @_;
 
-    return if not $self->is_mutable;
+    return unless $self->is_mutable;
 
     my ($file, $line) = (caller)[1..2];
 
@@ -1268,6 +1268,7 @@ sub make_immutable {
         $self->_immutable_options(@args),
     );
     $self->_rebless_as_immutable(@args);
+
     return $self;
 }
 
