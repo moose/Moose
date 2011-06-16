@@ -23,6 +23,9 @@ for, noteworthy changes.
   * Moose::Util::apply_all_roles now works even if the applicant is a non-Moose
     class. (perigrin)
 
+  * When an object is reblessed, triggers are called on attributes that are
+    set during the reblessing. (Karen Etheridge).
+
   [OTHER]
 
   * Better error message if Moose->init_meta is called with a 'metaclass'
