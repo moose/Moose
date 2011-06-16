@@ -46,9 +46,9 @@ sub _generate_method {
                 # the one from ::set and munge it to work for the ::get case
                 # this should be fixed in a better way
                 # -doy
-                'my @keys_idx = 0..$#_;',
+                'my @keys_idx = 0;',
                 $self->_inline_check_var_is_valid_key('$_[0]'),
-                $self->Moose::Meta::Method::Accessor::Native::Hash::get::_inline_return_value($slot_access),
+                $slot_access . '->{$_[0]}',
             '}',
             # set
             'else {',
