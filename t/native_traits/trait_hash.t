@@ -98,6 +98,18 @@ sub run_tests {
             );
         }, undef, '... set the option okay' );
 
+        like(
+            exception { $obj->set_option( foo => 'bar', 'baz' ) },
+            qr/You must pass an even number of arguments to set/,
+            'exception with odd number of arguments'
+        );
+
+        like(
+            exception { $obj->set_option( undef, 'bar' ) },
+            qr/Hash keys passed to set must be defined/,
+            'exception when using undef as a key'
+        );
+
         ok( $obj->is_defined('foo'), '... foo is defined' );
 
         ok( !$obj->has_no_options, '... we have options' );
@@ -184,6 +196,12 @@ sub run_tests {
             },
             qr/Cannot call accessor without at least 1 argument/,
             'error when calling accessor with no arguments'
+        );
+
+        like(
+            exception { $obj->option_accessor( undef, 'bar' ) },
+            qr/Hash keys passed to accessor must be defined/,
+            'exception when using undef as a key'
         );
 
         is_deeply(
