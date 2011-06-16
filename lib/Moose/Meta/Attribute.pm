@@ -961,7 +961,7 @@ sub install_delegation {
 
     # install the delegation ...
     my $associated_class = $self->associated_class;
-    foreach my $handle (keys %handles) {
+    foreach my $handle (sort keys %handles) {
         my $method_to_call = $handles{$handle};
         my $class_name = $associated_class->name;
         my $name = "${class_name}::${handle}";
