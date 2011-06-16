@@ -267,17 +267,17 @@ sub new_object {
     my $params = @_ == 1 ? $_[0] : {@_};
     my $object = $self->SUPER::new_object($params);
 
-    $self->call_all_triggers($object, $params);
+    $self->_call_all_triggers($object, $params);
 
     $object->BUILDALL($params) if $object->can('BUILDALL');
 
     return $object;
 }
 
-sub call_all_triggers {
+sub _call_all_triggers {
     my ($self, $object, $params) = @_;
 
-    foreach my $attr ($self->get_all_attributes()) {
+    foreach my $attr ( $self->get_all_attributes() ) {
 
         next unless $attr->can('has_trigger') && $attr->has_trigger;
 
@@ -746,17 +746,18 @@ sub _immutable_options {
     );
 }
 
-
 sub _fixup_attributes_after_rebless {
     my $self = shift;
     my ($instance, $rebless_from, %params) = @_;
 
-    $self->SUPER::_fixup_attributes_after_rebless($instance, $rebless_from, %params);
+    $self->SUPER::_fixup_attributes_after_rebless(
+        $instance,
+        $rebless_from,
+        %params
+    );
 
-    $self->call_all_triggers($instance, \%params);
+    $self->_call_all_triggers( $instance, \%params );
 }
-
-
 
 ## -------------------------------------------------
 
