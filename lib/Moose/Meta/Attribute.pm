@@ -746,6 +746,44 @@ sub _inline_trigger {
     return '$trigger->(' . $instance . ', ' . $value . ', ' . $old . ');';
 }
 
+sub _eval_environment {
+    my $self = shift;
+
+    my $env = { };
+
+    $env->{'$trigger'} = \($self->trigger)
+        if $self->has_trigger;
+    $env->{'$attr_default'} = \($self->default)
+        if $self->has_default;
+
+    if ($self->has_type_constraint) {
+        my $tc_obj = $self->type_constraint;
+
+        $env->{'$type_constraint'} = \(
+            $tc_obj->_compiled_type_constraint
+        ) unless $tc_obj->can_be_inlined;
+        # these two could probably get inlined versions too
+        $env->{'$type_coercion'} = \(
+            $tc_obj->coercion->_compiled_type_coercion
+        ) if $tc_obj->has_coercion;
+        $env->{'$type_message'} = \(
+            $tc_obj->has_message ? $tc_obj->message : $tc_obj->_default_message
+        );
+
+        $env = { %$env, %{ $tc_obj->inline_environment } };
+    }
+
+    # XXX ugh, fix these
+    $env->{'$attr'} = \$self
+        if $self->has_initializer && $self->is_lazy;
+    # pretty sure this is only going to be closed over if you use a custom
+    # error class at this point, but we should still get rid of this
+    # at some point
+    $env->{'$meta'} = \($self->associated_class);
+
+    return $env;
+}
+
 sub _weaken_value {
     my ( $self, $instance ) = @_;
 

@@ -43,42 +43,7 @@ sub _compile_code {
 
 sub _eval_environment {
     my $self = shift;
-
-    my $env = { };
-
-    my $attr = $self->associated_attribute;
-
-    $env->{'$trigger'} = \($attr->trigger)
-        if $attr->has_trigger;
-    $env->{'$attr_default'} = \($attr->default)
-        if $attr->has_default;
-
-    if ($attr->has_type_constraint) {
-        my $tc_obj = $attr->type_constraint;
-
-        $env->{'$type_constraint'} = \(
-            $tc_obj->_compiled_type_constraint
-        ) unless $tc_obj->can_be_inlined;
-        # these two could probably get inlined versions too
-        $env->{'$type_coercion'} = \(
-            $tc_obj->coercion->_compiled_type_coercion
-        ) if $tc_obj->has_coercion;
-        $env->{'$type_message'} = \(
-            $tc_obj->has_message ? $tc_obj->message : $tc_obj->_default_message
-        );
-
-        $env = { %$env, %{ $tc_obj->inline_environment } };
-    }
-
-    # XXX ugh, fix these
-    $env->{'$attr'} = \$attr
-        if $attr->has_initializer && $attr->is_lazy;
-    # pretty sure this is only going to be closed over if you use a custom
-    # error class at this point, but we should still get rid of this
-    # at some point
-    $env->{'$meta'} = \($self->associated_metaclass);
-
-    return $env;
+    return $self->associated_attribute->_eval_environment;
 }
 
 sub _instance_is_inlinable {
