@@ -1,7 +1,22 @@
 use strict;
 use warnings;
 
-use ExtUtils::MakeMaker::Dist::Zilla::Develop;
+BEGIN {
+    eval { require ExtUtils::MakeMaker::Dist::Zilla::Develop };
+    if ($@) {
+        warn
+            "You need to install ExtUtils::MakeMaker::Dist::Zilla::Develop to run this Makefile.PL\n";
+        exit 1;
+    }
+
+    eval { require Test::Inline };
+    if ($@) {
+        warn "You need to install Test::Inline to run this Makefile.PL\n";
+        exit 1;
+    }
+
+    ExtUtils::MakeMaker::Dist::Zilla::Develop->import();
+}
 
 use lib 'inc';
 
