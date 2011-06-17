@@ -74,6 +74,7 @@ my @class_mop_class_methods = qw(
     _inline_generate_instance _inline_params _inline_slot_initializers
     _inline_init_attr_from_constructor _inline_init_attr_from_default
     _generate_fallback_constructor
+    _eval_environment
     construct_instance _construct_instance
     construct_class_instance _construct_class_instance
     clone_instance _clone_instance

@@ -51,64 +51,6 @@ sub _initialize_body {
     $self->{'body'} = $self->_generate_constructor_method_inline;
 }
 
-sub _eval_environment {
-    my $self = shift;
-
-    my $attrs = $self->_attributes;
-
-    my $defaults = [map { $_->default } @$attrs];
-    my $triggers = [
-        map { $_->can('has_trigger') && $_->has_trigger ? $_->trigger : undef }
-            @$attrs
-    ];
-
-    # We need to check if the attribute ->can('type_constraint')
-    # since we may be trying to immutabilize a Moose meta class,
-    # which in turn has attributes which are Class::MOP::Attribute
-    # objects, rather than Moose::Meta::Attribute. And
-    # Class::MOP::Attribute attributes have no type constraints.
-    # However we need to make sure we leave an undef value there
-    # because the inlined code is using the index of the attributes
-    # to determine where to find the type constraint
-
-    my @type_constraints = map {
-        $_->can('type_constraint') ? $_->type_constraint : undef
-    } @$attrs;
-
-    my @type_constraint_bodies = map {
-        defined $_ ? $_->_compiled_type_constraint : undef;
-    } @type_constraints;
-
-    my @type_coercions = map {
-        defined $_ && $_->has_coercion
-            ? $_->coercion->_compiled_type_coercion
-            : undef
-    } @type_constraints;
-
-    my @type_constraint_messages = map {
-        defined $_
-            ? ($_->has_message ? $_->message : $_->_default_message)
-            : undef
-    } @type_constraints;
-
-    return {
-        ((any { defined && $_->has_initializer } @$attrs)
-            ? ('$attrs' => \$attrs)
-            : ()),
-        '$defaults' => \$defaults,
-        '$triggers' => \$triggers,
-        '@type_coercions' => \@type_coercions,
-        '@type_constraint_bodies' => \@type_constraint_bodies,
-        '@type_constraint_messages' => \@type_constraint_messages,
-        ( map { defined($_) ? %{ $_->inline_environment } : () }
-              @type_constraints ),
-        # pretty sure this is only going to be closed over if you use a custom
-        # error class at this point, but we should still get rid of this
-        # at some point
-        '$meta'  => \($self->associated_metaclass),
-    };
-}
-
 1;
 
 # ABSTRACT: Method Meta Object for constructors

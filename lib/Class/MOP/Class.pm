@@ -695,6 +695,18 @@ sub _inline_preserve_weak_metaclasses {
 
 sub _inline_extra_init { }
 
+sub _eval_environment {
+    my $self = shift;
+
+    my @attrs = sort { $a->name cmp $b->name } $self->get_all_attributes;
+
+    my $defaults = [map { $_->default } @attrs];
+
+    return {
+        '$defaults' => \$defaults,
+    };
+}
+
 
 sub get_meta_instance {
     my $self = shift;
