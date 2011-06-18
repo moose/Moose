@@ -8,6 +8,10 @@ for, noteworthy changes.
   * The native Array trait now has a 'first_index' method, which works just
     like the version in List::MoreUtils. (Karen Etheridge)
 
+  [OTHER]
+
+  * Include changes from Moose 2.0008.
+
 2.0101 Mon, Jun 06, 2011
 
   [OTHER]
