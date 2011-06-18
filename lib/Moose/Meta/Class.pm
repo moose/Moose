@@ -765,9 +765,7 @@ sub raise_error {
 sub _inline_raise_error {
     my ( $self, $message ) = @_;
 
-    return (
-        'die ' . $message . ';',
-    );
+    return 'die ' . $message;
 }
 
 sub create_error {
