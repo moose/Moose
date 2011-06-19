@@ -38,8 +38,6 @@ my @class_mop_package_methods = qw(
 
     _package_stash
 
-    get_method_map
-
     DESTROY
 );
 
@@ -67,7 +65,7 @@ my @class_mop_class_methods = qw(
     _inline_create_instance
     _inline_rebless_instance
     _inline_get_mop_slot _inline_set_mop_slot _inline_clear_mop_slot
-    create_meta_instance _create_meta_instance
+    _create_meta_instance
     new_object clone_object
     _inline_new_object _inline_default_value _inline_preserve_weak_metaclasses
     _inline_slot_initializer _inline_extra_init _inline_fallback_constructor
@@ -75,12 +73,12 @@ my @class_mop_class_methods = qw(
     _inline_init_attr_from_constructor _inline_init_attr_from_default
     _generate_fallback_constructor
     _eval_environment
-    construct_instance _construct_instance
-    construct_class_instance _construct_class_instance
-    clone_instance _clone_instance
+    _construct_instance
+    _construct_class_instance
+    _clone_instance
     rebless_instance rebless_instance_back rebless_instance_away
     _force_rebless_instance _fixup_attributes_after_rebless
-    check_metaclass_compatibility _check_metaclass_compatibility
+    _check_metaclass_compatibility
     _check_class_metaclass_compatibility _check_single_metaclass_compatibility
     _class_metaclass_is_compatible _single_metaclass_is_compatible
     _fix_metaclass_incompatibility _fix_class_metaclass_incompatibility
@@ -99,7 +97,7 @@ my @class_mop_class_methods = qw(
     superclasses subclasses direct_subclasses class_precedence_list
     linearized_isa _superclasses_updated _superclass_metas
 
-    alias_method get_all_method_names get_all_methods compute_all_applicable_methods
+    get_all_method_names get_all_methods
         find_method_by_name find_all_methods_by_name find_next_method_by_name
 
         add_before_method_modifier add_after_method_modifier add_around_method_modifier
@@ -109,9 +107,6 @@ my @class_mop_class_methods = qw(
     remove_attribute
     find_attribute_by_name
     get_all_attributes
-
-    compute_all_applicable_attributes
-    get_attribute_map
 
     is_mutable is_immutable make_mutable make_immutable
     _initialize_immutable _install_inlined_code _inlined_methods

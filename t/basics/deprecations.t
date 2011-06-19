@@ -45,20 +45,6 @@ use Test::Requires {
             ::stderr_like{ Foo->new->bar }
                 qr{\QThe bar method in the Foo class was automatically created by the native delegation trait for the bar attribute. This "default is" feature is deprecated. Explicitly set "is" or define accessor names to avoid this at $0 line},
                 'calling a reader on a method created by a _default_is warns';
-
-            ::stderr_like{ with 'Role' =>
-                    { excludes => ['thing'], alias => { thing => 'thing2' } };
-                }
-                qr/\QThe alias and excludes options for role application have been renamed -alias and -excludes (Foo is consuming Role - do you need to upgrade Foo?)/,
-                'passing excludes or alias with a leading dash warns';
-            ::ok(
-                !Foo->meta->has_method('thing'),
-                'thing method is excluded from role application'
-            );
-            ::ok(
-                Foo->meta->has_method('thing2'),
-                'thing2 method is created as alias in role application'
-            );
         }
     ), undef );
 }

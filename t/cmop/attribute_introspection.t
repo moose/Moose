@@ -58,7 +58,6 @@ use Class::MOP;
         associated_methods
         associate_method
 
-        process_accessors
         _process_accessors
         _accessor_description
         install_accessors

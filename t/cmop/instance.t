@@ -12,7 +12,6 @@ can_ok( "Class::MOP::Instance", $_ ) for qw/
         new
 
         create_instance
-        bless_instance_structure
 
         get_all_slots
 

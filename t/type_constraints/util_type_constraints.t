@@ -188,44 +188,4 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
     like( exception { subtype 'Foo' }, qr/cannot consist solely of a name/, 'Cannot call subtype with a single string argument' );
 }
 
-# Back-compat for being called without sugar. Previously, calling with
-# sugar was indistinguishable from calling directly.
-
-{
-    no warnings 'redefine';
-    *Moose::Deprecated::deprecated = sub { return };
-}
-
-{
-    my $type = type( 'Number2', sub { Scalar::Util::looks_like_number($_) } );
-
-    ok( $type->check(5), '... this is a Num' );
-    ok( ! $type->check('Foo'), '... this is not a Num' );
-}
-
-{
-    # anon subtype
-    my $subtype = subtype( 'Number2', sub { $_ > 0 } );
-
-    ok( $subtype->check(5), '... this is a Natural');
-    ok( ! $subtype->check(-5), '... this is not a Natural');
-    ok( ! $subtype->check('Foo'), '... this is not a Natural');
-}
-
-{
-    my $subtype = subtype( 'Natural2', 'Number2', sub { $_ > 0 } );
-
-    ok( $subtype->check(5), '... this is a Natural');
-    ok( ! $subtype->check(-5), '... this is not a Natural');
-    ok( ! $subtype->check('Foo'), '... this is not a Natural');
-}
-
-{
-    my $subtype = subtype( 'Natural3', 'Number2' );
-
-    ok( $subtype->check(5), '... this is a Natural');
-    ok( $subtype->check(-5), '... this is a Natural');
-    ok( ! $subtype->check('Foo'), '... this is not a Natural');
-}
-
 done_testing;
