@@ -15,21 +15,9 @@ for, noteworthy changes.
     This also allows for creating unions of anonymous type constraints.
     (kentnl)
 
-  [BUG FIXES]
-
-  * duck_type type constraints now report reasonable errors when given
-    something which isn't an instance of an object. (t0m)
-
-  * Moose::Util::apply_all_roles now works even if the applicant is a non-Moose
-    class. (perigrin)
-
-  * When an object is reblessed, triggers are called on attributes that are
-    set during the reblessing. (Karen Etheridge).
-
   [OTHER]
 
-  * Better error message if Moose->init_meta is called with a 'metaclass'
-    option when that metaclass hasn't been loaded. (jasonmay)
+  * Include changes from Moose 2.0009.
 
 2.0102 Sat, Jun 18, 2011
 
@@ -69,6 +57,24 @@ for, noteworthy changes.
   * Remove a lot of cases where generated methods closed over meta objects.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
+
+2.0009 Sun, Jun 19, 2011
+
+  [BUG FIXES]
+
+  * duck_type type constraints now report reasonable errors when given
+    something which isn't an instance of an object. (t0m)
+
+  * Moose::Util::apply_all_roles now works even if the applicant is a non-Moose
+    class. (perigrin)
+
+  * When an object is reblessed, triggers are called on attributes that are
+    set during the reblessing. (Karen Etheridge).
+
+  [OTHER]
+
+  * Better error message if Moose->init_meta is called with a 'metaclass'
+    option when that metaclass hasn't been loaded. (jasonmay)
 
 2.0008 Thu, Jun 16, 2011
 
