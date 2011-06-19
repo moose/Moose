@@ -137,6 +137,7 @@ sub _apply_all_roles {
 
     return unless @role_metas;
 
+    Class::MOP::load_class($applicant) unless blessed($applicant);
     my $meta = ( blessed $applicant ? $applicant : Moose::Meta::Class->initialize($applicant) );
 
     if ( scalar @role_metas == 1 ) {
