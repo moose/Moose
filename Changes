@@ -11,6 +11,11 @@ for, noteworthy changes.
   * Moose::Util::apply_all_roles now works even if the applicant is a non-Moose
     class. (perigrin)
 
+  [OTHER]
+
+  * Better error message if Moose->init_meta is called with a 'metaclass'
+    option when that metaclass hasn't been loaded. (jasonmay)
+
 2.0008 Thu, Jun 16, 2011
 
   [BUG FIXES]

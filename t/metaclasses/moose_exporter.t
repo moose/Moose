@@ -416,4 +416,46 @@ use Test::Requires {
         for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
 }
 
+{
+    package InitMetaError;
+    use Moose::Exporter;
+    use Moose ();
+    Moose::Exporter->setup_import_methods(also => ['Moose']);
+    sub init_meta {
+        my $package = shift;
+        my %options = @_;
+        Moose->init_meta(%options, metaclass => 'Not::Loaded');
+    }
+}
+
+{
+    package InitMetaError::Role;
+    use Moose::Exporter;
+    use Moose::Role ();
+    Moose::Exporter->setup_import_methods(also => ['Moose::Role']);
+    sub init_meta {
+        my $package = shift;
+        my %options = @_;
+        Moose::Role->init_meta(%options, metaclass => 'Not::Loaded');
+    }
+}
+
+{
+    package WantsInvalidMetaclass;
+    ::like(
+        ::exception { InitMetaError->import },
+        qr/The Metaclass Not::Loaded must be loaded\. \(Perhaps you forgot to 'use Not::Loaded'\?\)/,
+        "error when wanting a nonexistent metaclass"
+    );
+}
+
+{
+    package WantsInvalidMetaclass::Role;
+    ::like(
+        ::exception { InitMetaError::Role->import },
+        qr/The Metaclass Not::Loaded must be loaded\. \(Perhaps you forgot to 'use Not::Loaded'\?\)/,
+        "error when wanting a nonexistent metaclass"
+    );
+}
+
 done_testing;
