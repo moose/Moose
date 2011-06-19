@@ -41,7 +41,7 @@ Moose::Exporter->setup_import_methods(
             type subtype class_type role_type maybe_type duck_type
             as where message optimize_as inline_as
             coerce from via
-            enum
+            enum union
             find_type_constraint
             register_type_constraint
             match_on_type )
@@ -399,6 +399,25 @@ sub enum {
             \@values,
         )
     );
+}
+
+sub union {
+  my ( $type_name, @constraints ) = @_;
+  if ( ref $type_name eq 'ARRAY' ) {
+    @constraints == 0
+      || __PACKAGE__->_throw_error("union called with an array reference and additional arguments.");
+    @constraints = @$type_name;
+    $type_name   = undef;
+  }
+  if ( @constraints == 1 && ref $constraints[0] eq 'ARRAY' ) {
+    @constraints = @{ $constraints[0] };
+  }
+  my $tc = create_type_constraint_union( @constraints );
+  if ( defined $type_name ) {
+    $tc->name( $type_name );
+    return register_type_constraint( $tc );
+  }
+  return $tc;
 }
 
 sub create_enum_type_constraint {
