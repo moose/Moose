@@ -1041,6 +1041,49 @@ foreach my $type_name (qw(Str Num Int ClassName RoleName))
     );
 }
 
+{
+    note 'Combined Union Test';
+    my $union = union( [ 'Int', enum( [qw[ red green blue ]] ) ] );
+
+    test_constraint(
+        $union, {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                'red',
+                'green',
+                'blue',
+            ],
+            reject => [
+                'yellow',
+                'pink',
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $FAKE_REGEX,
+                $OBJECT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
+                $UNDEF,
+            ],
+        }
+    );
+}
 
 
 {

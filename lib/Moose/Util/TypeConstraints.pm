@@ -764,6 +764,8 @@ __END__
 
   enum 'RGBColors', [qw(red green blue)];
 
+  union 'StringOrArray', [qw( String Array )];
+
   no Moose::Util::TypeConstraints;
 
 =head1 DESCRIPTION
@@ -1018,6 +1020,33 @@ can then be used in an attribute definition like so:
   has 'sort_order' => (
       is  => 'ro',
       isa => enum([qw[ ascending descending ]]),
+  );
+
+=item B<union ($name, \@constraints)>
+
+This will create a basic subtype where any of the provided constraints
+may match in order to satisfy this constraint.
+
+=item B<union (\@constraints)>
+
+If passed an ARRAY reference as the only parameter instead of the
+C<$name>, C<\@constraints> pair, this will create an unnamed union.
+This can then be used in an attribute definition like so:
+
+  has 'items' => (
+      is => 'ro',
+      isa => union([qw[ Str ArrayRef ]]),
+  );
+
+This is similar to the existing string union:
+
+  isa => 'Str|ArrayRef'
+
+except that it supports anonymous elements as child constraints:
+
+  has 'color' => (
+    isa => 'ro',
+    isa => union([ 'Int',  enum([qw[ red green blue ]]) ]),
   );
 
 =item B<as 'Parent'>
