@@ -132,22 +132,6 @@ Moose::Exporter->setup_import_methods(
 );
 
 sub init_meta {
-    # This used to be called as a function. This hack preserves
-    # backwards compatibility.
-    if ( $_[0] ne __PACKAGE__ ) {
-        Moose::Deprecated::deprecated(
-            feature => 'Moose::init_meta',
-            message => 'Calling Moose::init_meta as a function is deprecated.'
-                . ' Doing so will throw an error in Moose 2.0200.'
-        );
-
-        return __PACKAGE__->init_meta(
-            for_class  => $_[0],
-            base_class => $_[1],
-            metaclass  => $_[2],
-        );
-    }
-
     shift;
     my %args = @_;
 

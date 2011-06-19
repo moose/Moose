@@ -269,18 +269,6 @@ sub register_type_constraint {
 # type constructors
 
 sub type {
-
-    # back-compat version, called without sugar
-    if ( !any { ( reftype($_) || '' ) eq 'HASH' } @_ ) {
-        Moose::Deprecated::deprecated(
-            feature => 'type without sugar',
-            message =>
-                'Calling type() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
-        );
-
-        return _create_type_constraint( $_[0], undef, $_[1] );
-    }
-
     my $name = shift;
 
     my %p = map { %{$_} } @_;
@@ -292,44 +280,6 @@ sub type {
 }
 
 sub subtype {
-
-    # crazy back-compat code for being called without sugar ...
-    #
-    # subtype 'Parent', sub { where };
-    if ( scalar @_ == 2 && ( reftype( $_[1] ) || '' ) eq 'CODE' ) {
-        Moose::Deprecated::deprecated(
-            feature => 'subtype without sugar',
-            message =>
-                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
-        );
-
-        return _create_type_constraint( undef, @_ );
-    }
-
-    # subtype 'Parent', sub { where }, sub { message };
-    # subtype 'Parent', sub { where }, sub { message }, sub { optimized };
-    if ( scalar @_ >= 3 && all { ( reftype($_) || '' ) eq 'CODE' }
-        @_[ 1 .. $#_ ] ) {
-        Moose::Deprecated::deprecated(
-            feature => 'subtype without sugar',
-            message =>
-                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
-        );
-
-        return _create_type_constraint( undef, @_ );
-    }
-
-    # subtype 'Name', 'Parent', ...
-    if ( scalar @_ >= 2 && all { !ref } @_[ 0, 1 ] ) {
-        Moose::Deprecated::deprecated(
-            feature => 'subtype without sugar',
-            message =>
-                'Calling subtype() with a simple list of parameters is deprecated. This will be an error in Moose 2.0200.'
-        );
-
-        return _create_type_constraint(@_);
-    }
-
     if ( @_ == 1 && !ref $_[0] ) {
         __PACKAGE__->_throw_error(
             'A subtype cannot consist solely of a name, it must have a parent'

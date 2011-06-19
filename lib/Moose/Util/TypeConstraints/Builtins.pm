@@ -130,11 +130,6 @@ sub define_builtins {
         => where { blessed($_) }
         => inline_as { 'Scalar::Util::blessed(' . $_[1] . ')' };
 
-    # This type is deprecated.
-    subtype 'Role'
-        => as 'Object'
-        => where { $_->can('does') };
-
     subtype 'ClassName'
         => as 'Str'
         => where { Class::MOP::is_class_loaded($_) }
