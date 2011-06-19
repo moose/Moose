@@ -75,6 +75,10 @@ modifiers work, but may not be the most natural usage.
 
 =head1 BEFORE, AFTER, AND AROUND
 
+Method modifiers can be used to add behavior to methods without modifying the definition of those methods.
+
+=head2 BEFORE and AFTER modifiers
+
 Method modifiers can be used to add behavior to a method that Moose
 generates for you, such as an attribute accessor:
 
@@ -108,6 +112,8 @@ was taken.
 Note that the return values of both before and after modifiers are
 ignored.
 
+=head2 AROUND modifiers
+
 An around modifier is more powerful than either a before or
 after modifier. It can modify the arguments being passed to the
 original method, and you can even decide to simply not call the
@@ -131,6 +137,8 @@ I<then> the object, and finally any arguments passed to the method.
       return $self->$orig($size);
   };
 
+=head2 Wrapping multiple methods at once
+
 C<before>, C<after>, and C<around> can also modify multiple methods
 at once. The simplest example of this is passing them as a list:
 
@@ -152,6 +160,8 @@ actually matter. If the function name does matter, use something like this:
       };
   }
 
+=head2 Using regular expressions to select methods to wrap
+
 In addition, you can specify a regular expression to indicate the
 methods to wrap, like so:
 
@@ -161,13 +171,15 @@ methods to wrap, like so:
 
 This will match the regular expression against each method name
 returned by L<Class::MOP::Class/get_method_list>, and add a modifier
-to each one that matches. The same caveats apply as above. Using regular
-expressions to determine methods to wrap is quite a bit more powerful
-than the previous alternatives, but it's also quite a bit more
-dangerous. In particular, you should make sure to avoid wrapping
-methods with a special meaning to Moose or Perl, such as C<meta>, C<new>,
-C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc., as this could cause
-unintended (and hard to debug) problems.
+to each one that matches. The same caveats apply as above. 
+
+Using regular expressions to determine methods to wrap is quite a bit more
+powerful than the previous alternatives, but it's also quite a bit more
+dangerous.  Bear in mind that if your regular expression matches certain Perl
+and Moose reserved method names with a special meaning to Moose or Perl, such
+as C<meta>, C<new>, C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc, this could cause
+unintended (and hard to debug) problems and is best avoided.
+
 
 =head1 INNER AND AUGMENT
 
