@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0009 Sun, Jun 19, 2011
+
   [BUG FIXES]
 
   * duck_type type constraints now report reasonable errors when given
