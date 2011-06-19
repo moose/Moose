@@ -8,6 +8,13 @@ for, noteworthy changes.
   * Several things that have been deprecated for a while have been removed. See
     the 2.0000 section in Moose::Manual::Delta for details.
 
+  [NEW FEATURES]
+
+  * New Moose::Util::TypeConstraints::union function for creating union type
+    constraints without having to rely on the string type constraint parsing.
+    This also allows for creating unions of anonymous type constraints.
+    (kentnl)
+
   [BUG FIXES]
 
   * duck_type type constraints now report reasonable errors when given
