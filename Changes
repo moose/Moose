@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DEPRECATIONS]
+
+  * Several things that have been deprecated for a while have been removed. See
+    the 2.0000 section in Moose::Manual::Delta for details.
+
 2.0102 Sat, Jun 18, 2011
 
   [ENHANCEMENTS]
