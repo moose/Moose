@@ -69,38 +69,26 @@ sub export_type_constraints_as_functions {
 }
 
 sub create_type_constraint_union {
-    my @type_constraint_names;
-
-    if ( scalar @_ == 1 && _detect_type_constraint_union( $_[0] ) ) {
-        @type_constraint_names = _parse_type_constraint_union( $_[0] );
-    }
-    else {
-        @type_constraint_names = @_;
-    }
-
-    ( scalar @type_constraint_names >= 2 )
-        || __PACKAGE__->_throw_error(
-        "You must pass in at least 2 type names to make a union");
-
-    my @type_constraints = map {
-        find_or_parse_type_constraint($_)
-            || __PACKAGE__->_throw_error(
-            "Could not locate type constraint ($_) for the union");
-    } @type_constraint_names;
-
-    return Moose::Meta::TypeConstraint::Union->new(
-        type_constraints => \@type_constraints );
+    _create_type_constraint_union(\@_);
 }
 
 sub create_named_type_constraint_union {
     my $name = shift;
+    _create_type_constraint_union($name, \@_);
+}
+
+sub _create_type_constraint_union {
+    my $name;
+    $name = shift if @_ > 1;
+    my @tcs = @{ shift() };
+
     my @type_constraint_names;
 
-    if ( scalar @_ == 1 && _detect_type_constraint_union( $_[0] ) ) {
-        @type_constraint_names = _parse_type_constraint_union( $_[0] );
+    if ( scalar @tcs == 1 && _detect_type_constraint_union( $tcs[0] ) ) {
+        @type_constraint_names = _parse_type_constraint_union( $tcs[0] );
     }
     else {
-        @type_constraint_names = @_;
+        @type_constraint_names = @tcs;
     }
 
     ( scalar @type_constraint_names >= 2 )
