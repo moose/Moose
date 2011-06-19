@@ -28,24 +28,21 @@ sub define_builtins {
         => as 'Item'
         => where { !defined($_) }
         => inline_as {
-            $_[0]->parent()->_inline_check($_[1])
-            . ' && !defined(' . $_[1] . ')'
+            '!defined(' . $_[1] . ')'
         };
 
     subtype 'Defined'
         => as 'Item'
         => where { defined($_) }
         => inline_as {
-            $_[0]->parent()->_inline_check($_[1])
-            . ' && defined(' . $_[1] . ')'
+            'defined(' . $_[1] . ')'
         };
 
     subtype 'Bool'
         => as 'Item'
         => where { !defined($_) || $_ eq "" || "$_" eq '1' || "$_" eq '0' }
         => inline_as {
-            $_[0]->parent()->_inline_check($_[1])
-            . ' && ('
+            '('
                 . '!defined(' . $_[1] . ') '
                 . '|| ' . $_[1] . ' eq "" '
                 . '|| (' . $_[1] . '."") eq "1" '
