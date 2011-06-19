@@ -92,6 +92,36 @@ sub create_type_constraint_union {
         type_constraints => \@type_constraints );
 }
 
+sub create_named_type_constraint_union {
+    my $name = shift;
+    my @type_constraint_names;
+
+    if ( scalar @_ == 1 && _detect_type_constraint_union( $_[0] ) ) {
+        @type_constraint_names = _parse_type_constraint_union( $_[0] );
+    }
+    else {
+        @type_constraint_names = @_;
+    }
+
+    ( scalar @type_constraint_names >= 2 )
+        || __PACKAGE__->_throw_error(
+        "You must pass in at least 2 type names to make a union");
+
+    my @type_constraints = map {
+        find_or_parse_type_constraint($_)
+            || __PACKAGE__->_throw_error(
+            "Could not locate type constraint ($_) for the union");
+    } @type_constraint_names;
+
+    my %options = (
+      type_constraints => \@type_constraints
+    );
+    $options{name} = $name if defined $name;
+
+    return Moose::Meta::TypeConstraint::Union->new(%options);
+}
+
+
 sub create_parameterized_type_constraint {
     my $type_constraint_name = shift;
     my ( $base_type, $type_parameter )
@@ -412,12 +442,12 @@ sub union {
   if ( @constraints == 1 && ref $constraints[0] eq 'ARRAY' ) {
     @constraints = @{ $constraints[0] };
   }
-  my $tc = create_type_constraint_union( @constraints );
   if ( defined $type_name ) {
-    $tc->name( $type_name );
-    return register_type_constraint( $tc );
+    return register_type_constraint(
+      create_named_type_constraint_union( $type_name, @constraints )
+    );
   }
-  return $tc;
+  return create_type_constraint_union( @constraints );
 }
 
 sub create_enum_type_constraint {
