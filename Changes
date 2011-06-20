@@ -3,10 +3,9 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-  [BUG FIXES]
+  [OTHER]
 
-  * Fix regression in 2.0009 and 2.0103 when applying roles during init_meta in
-    an exporter that also re-exports Moose or Moose::Role. (t0m, ilmari)
+  * Include changes from 2.0010.
 
 2.0103-TRIAL Mon, Jun 20, 2011
 
@@ -64,6 +63,13 @@ for, noteworthy changes.
   * Remove a lot of cases where generated methods closed over meta objects.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
+
+2.0010 Mon, Jun 20, 2011
+
+  [BUG FIXES]
+
+  * Fix regression in 2.0009 and 2.0103 when applying roles during init_meta in
+    an exporter that also re-exports Moose or Moose::Role. (t0m, ilmari)
 
 2.0009 Sun, Jun 19, 2011
 
