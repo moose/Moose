@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Fix regression in 2.0009 and 2.0103 when applying roles during init_meta in
+    an exporter that also re-exports Moose or Moose::Role. (t0m, ilmari)
+
 2.0009 Sun, Jun 19, 2011
 
   [BUG FIXES]
