@@ -1257,6 +1257,8 @@ form. This removes any whitespace in the string.
 
 =item B<create_type_constraint_union($pipe_separated_types | @type_constraint_names)>
 
+=item B<create_named_type_constraint_union($name, $pipe_separated_types | @type_constraint_names)>
+
 This can take a union type specification like C<'Int|ArrayRef[Int]'>,
 or a list of names. It returns a new
 L<Moose::Meta::TypeConstraint::Union> object.
