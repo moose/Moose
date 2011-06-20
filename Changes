@@ -3,7 +3,7 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-2.0103 Mon, Jun 20, 2011
+2.0103-TRIAL Mon, Jun 20, 2011
 
   [DEPRECATIONS]
 
@@ -21,7 +21,7 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0009.
 
-2.0102 Sat, Jun 18, 2011
+2.0102-TRIAL Sat, Jun 18, 2011
 
   [ENHANCEMENTS]
 
@@ -34,13 +34,13 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0008.
 
-2.0101 Mon, Jun 06, 2011
+2.0101-TRIAL Mon, Jun 06, 2011
 
   [OTHER]
 
   * Various packaging issues.
 
-2.0100 Mon, Jun 06, 2011
+2.0100-TRIAL Mon, Jun 06, 2011
 
   [DEPRECATIONS]
 
