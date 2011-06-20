@@ -6,30 +6,6 @@ use warnings;
 use Package::DeprecationManager -deprecations => {
 };
 
-package
-    Class::MOP;
-
-package
-    Class::MOP::Package;
-
-package
-    Class::MOP::Module;
-
-package
-    Class::MOP::Class;
-
-package
-    Class::MOP::Instance;
-
-package
-    Class::MOP::Attribute;
-
-package
-    Class::MOP::Method::Accessor;
-
-package
-    Class::MOP::Method::Constructor;
-
 1;
 
 __END__
