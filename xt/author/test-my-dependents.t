@@ -104,8 +104,6 @@ MooseX::Log::Log4perl
 MooseX::MakeImmutable
 MooseX::Mangle
 MooseX::MarkAsMethods
-MooseX::Meta::Attribute::Index
-MooseX::Meta::Attribute::Lvalue
 MooseX::Meta::TypeConstraint::ForceCoercion
 MooseX::Meta::TypeConstraint::Intersection
 MooseX::MetaDescription
