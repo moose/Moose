@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0010 Mon, Jun 20, 2011
+
   [BUG FIXES]
 
   * Fix regression in 2.0009 and 2.0103 when applying roles during init_meta in
