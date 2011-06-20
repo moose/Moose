@@ -673,6 +673,34 @@ sub _inline_check_coercion {
     }
 }
 
+# Generates the code to run when the result from the message->(value)
+# is not a ref.
+sub __inline_attribute_validation_failure_basic {
+    my ($self) = shift;
+    my ( $attr_name, $value, $message_result ) = @_;
+    return (
+      $self->_inline_throw_error(
+        '"Attribute (' . $attr_name . ') does not pass the type constraint because: " . ' . $message_result,
+        'data => ' . $value
+      ) . ';'
+    );
+}
+
+# Generates the code to run when the result from message->(value) is a ref.
+sub __inline_attribute_validation_failure_object {
+    my ($self) = shift;
+    my ( $attr_name, $value, $message_result ) = @_;
+    return ( $self->_inline_throw_error( $message_result, 'data => ' . $value ) . ';' );
+}
+
+# Generates the code to execute message() with ->(value) and store the result
+# in message_result.
+sub __inline_get_message {
+    my ($self) = shift;
+    my ( $message, $value ) = @_;
+    return ( 'do { local $_ = ' . $value . '; ' . $message . '->(' . $value . ') };' );
+}
+
 sub _inline_check_constraint {
     my $self = shift;
     my ($value, $tc, $message) = @_;
@@ -681,34 +709,29 @@ sub _inline_check_constraint {
 
     my $attr_name = quotemeta($self->name);
 
+    my $check_code;
+
     if ( $self->type_constraint->can_be_inlined ) {
-        return (
-            'if (! (' . $self->type_constraint->_inline_check($value) . ')) {',
-                $self->_inline_throw_error(
-                    '"Attribute (' . $attr_name . ') does not pass the type '
-                  . 'constraint because: " . '
-                  . 'do { local $_ = ' . $value . '; '
-                      . $message . '->(' . $value . ')'
-                  . '}',
-                    'data => ' . $value
-                ) . ';',
-            '}',
-        );
+        $check_code = $self->type_constraint->_inline_check($value);
+    } else {
+        $check_code = $tc . '->(' . $value . ')';
     }
-    else {
-        return (
-            'if (!' . $tc . '->(' . $value . ')) {',
-                $self->_inline_throw_error(
-                    '"Attribute (' . $attr_name . ') does not pass the type '
-                  . 'constraint because: " . '
-                  . 'do { local $_ = ' . $value . '; '
-                      . $message . '->(' . $value . ')'
-                  . '}',
-                    'data => ' . $value
-                ) . ';',
-            '}',
-        );
-    }
+
+    return (
+      sprintf q|
+      if (! ( %s ) ) {
+        my $message_value = %s
+        if( not ref $message_value ) {
+          %s
+        } else {
+          %s
+        }
+      }
+      |, $check_code,
+      $self->__inline_get_message( $message, $value ),
+      $self->__inline_attribute_validation_failure_basic( $attr_name, $value, '$message_value' ),
+      $self->__inline_attribute_validation_failure_object( $attr_name, $value, '$message_value' ),
+    );
 }
 
 sub _inline_get_old_value_for_trigger {
@@ -1240,10 +1263,17 @@ sub verify_against_type_constraint {
     my $type_constraint = $self->type_constraint;
 
     $type_constraint->check($val)
-        || $self->throw_error("Attribute ("
-                 . $self->name
-                 . ") does not pass the type constraint because: "
-                 . $type_constraint->get_message($val), data => $val, @_);
+        || do {
+          my $message = $type_constraint->get_message($val);
+          if ( ref $message ){
+            $self->throw_error( $message, data => $val, @_ );
+          } else {
+            $self->throw_error("Attribute ("
+                   . $self->name
+                   . ") does not pass the type constraint because: "
+                   . $message, data => $val, @_);
+          }
+  };
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
