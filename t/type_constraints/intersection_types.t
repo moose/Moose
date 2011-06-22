@@ -68,6 +68,6 @@ ok(!defined($RefAndArray->validate([])), '... (ArrayRef & Ref) can accept []');
 ok(defined($RefAndArray->validate(undef)), '... (ArrayRef & Ref) cannot accept undef');
 
 like($RefAndArray->validate(undef), 
-qr/Validation failed for \'ArrayRef\' failed with value undef and Validation failed for \'Ref\' failed with value undef in \(ArrayRef&Ref\)/, 
+qr/Validation failed for \'ArrayRef\' with value undef and Validation failed for \'Ref\' with value undef in \(ArrayRef&Ref\)/,
 '... (ArrayRef & Ref) cannot accept undef');
 
