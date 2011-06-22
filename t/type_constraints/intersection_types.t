@@ -7,7 +7,7 @@ use Test::More tests => 34;
 use Test::Exception;
 
 BEGIN {
-    use_ok('Moose::Util::TypeConstraints');           
+    use_ok('Moose::Util::TypeConstraints');
 }
 
 my $Str = find_type_constraint('Str');
@@ -67,7 +67,7 @@ diag $RefAndArray->validate([]);
 ok(!defined($RefAndArray->validate([])), '... (ArrayRef & Ref) can accept []');
 ok(defined($RefAndArray->validate(undef)), '... (ArrayRef & Ref) cannot accept undef');
 
-like($RefAndArray->validate(undef), 
+like($RefAndArray->validate(undef),
 qr/Validation failed for \'ArrayRef\' with value undef and Validation failed for \'Ref\' with value undef in \(ArrayRef&Ref\)/,
 '... (ArrayRef & Ref) cannot accept undef');
 

@@ -31,7 +31,7 @@ lives_ok {
 }
 
 lives_ok {
-    subtype 'MyCollectionsExtended' 
+    subtype 'MyCollectionsExtended'
         => as 'ArrayRef&Ref'
         => where {
             if (ref($_) eq 'ARRAY') {
@@ -54,10 +54,10 @@ lives_ok {
     is($p->name, 'ArrayRef&Ref', '... parent name is correct');
 
     ok(!$t->check([]), '... validated it correctly');
-    ok($t->check([1, 2]), '... validated it correctly');    
-    
-    ok($t->check([ one => 1, two => 2 ]), '... validated it correctly');    
-    
+    ok($t->check([1, 2]), '... validated it correctly');
+
+    ok($t->check([ one => 1, two => 2 ]), '... validated it correctly');
+
     ok(!$t->check(1), '... validated it correctly');
 }
 

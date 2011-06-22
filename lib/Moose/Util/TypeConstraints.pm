@@ -120,7 +120,7 @@ sub create_type_constraint_intersection {
     else {
         @type_constraint_names = @_;
     }
-    
+
     (scalar @type_constraint_names >= 2)
         || __PACKAGE__->_throw_error("You must pass in at least 2 type names to make an intersection");
 

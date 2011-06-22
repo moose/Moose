@@ -18,7 +18,7 @@ __PACKAGE__->meta->add_attribute('type_constraints' => (
     default   => sub { [] }
 ));
 
-sub new { 
+sub new {
     my ($class, %options) = @_;
     my $self = $class->SUPER::new(
         name     => (join '&' => sort {$a cmp $b}
@@ -82,7 +82,7 @@ sub validate {
         $message .= ($message ? ' and ' : '') . $err
             if defined $err;
     }
-    return ($message . ' in (' . $self->name . ')') ;    
+    return ($message . ' in (' . $self->name . ')') ;
 }
 
 sub is_a_type_of {
@@ -90,7 +90,7 @@ sub is_a_type_of {
     foreach my $type (@{$self->type_constraints}) {
         return 1 if $type->is_a_type_of($type_name);
     }
-    return 0;    
+    return 0;
 }
 
 sub is_subtype_of {
@@ -136,15 +136,15 @@ Moose::Meta::TypeConstraint::Intersection - An intersection of Moose type constr
 
 =head1 DESCRIPTION
 
-This metaclass represents an intersection of Moose type constraints. More 
+This metaclass represents an intersection of Moose type constraints. More
 details to be explained later (possibly in a Cookbook recipe).
 
-This actually used to be part of Moose::Meta::TypeConstraint, but it 
-is now better off in it's own file. 
+This actually used to be part of Moose::Meta::TypeConstraint, but it
+is now better off in it's own file.
 
 =head1 METHODS
 
-This class is not a subclass of Moose::Meta::TypeConstraint, 
+This class is not a subclass of Moose::Meta::TypeConstraint,
 but it does provide the same API
 
 =over 4
@@ -167,7 +167,7 @@ but it does provide the same API
 
 =back
 
-=head2 Overridden methods 
+=head2 Overridden methods
 
 =over 4
 
@@ -185,9 +185,9 @@ but it does provide the same API
 
 =head2 Empty or Stub methods
 
-These methods tend to not be very relevant in 
-the context of an intersection. Either that or they are 
-just difficult to specify and not very useful 
+These methods tend to not be very relevant in
+the context of an intersection. Either that or they are
+just difficult to specify and not very useful
 anyway. They are here for completeness.
 
 =over 4
@@ -212,7 +212,7 @@ anyway. They are here for completeness.
 
 =head1 BUGS
 
-All complex software has bugs lurking in it, and this module is no 
+All complex software has bugs lurking in it, and this module is no
 exception. If you find a bug please either email me, or add the bug
 to cpan-RT.
 
