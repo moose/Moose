@@ -10,6 +10,7 @@ use Scalar::Util 'blessed';
 use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use overload ();
+use Try::Tiny;
 use Class::MOP;
 
 my @exports = qw[
@@ -42,6 +43,10 @@ sub find_meta { Class::MOP::class_of(@_) }
 
 sub does_role {
     my ($class_or_obj, $role) = @_;
+
+    if (try { $class_or_obj->can('does') }) {
+        return $class_or_obj->does($role);
+    }
 
     my $meta = find_meta($class_or_obj);
 

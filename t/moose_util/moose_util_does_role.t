@@ -43,6 +43,18 @@ BEGIN {
   with 'Foo';
 }
 
+{
+  package DoesMethod;
+  use Moose;
+
+  sub does {
+    my $self = shift;
+    my ($role) = @_;
+    return 1 if $role eq 'Something::Else';
+    return $self->SUPER::does(@_);
+  }
+}
+
 # Classes
 
 ok(does_role('Bar', 'Foo'), '... Bar does Foo');
@@ -68,6 +80,10 @@ ok(!does_role(1,'Foo'), '... 1 doesnt do Foo');
 # non Moose metaclass
 
 ok(!does_role('Quux', 'Foo'), '... Quux doesnt do Foo (does not die tho)');
+
+# overriding the does method works properly
+
+ok(does_role('DoesMethod', 'Something::Else'), '... can override the does method');
 
 # TODO: make the below work, maybe?
 
