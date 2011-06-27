@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0105-TRIAL Mon, Jun 27, 2011
+
   [ENHANCEMENTS]
 
   * Moose::Util::does_role now respects overridden ->does methods. (doy)
