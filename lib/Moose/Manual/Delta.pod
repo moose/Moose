@@ -9,8 +9,9 @@ __END__
 =head1 DESCRIPTION
 
 This documents any important or noteworthy changes in Moose, with a
-focus on backwards. This does duplicate data from the F<Changes> file,
-but aims to provide more details and when possible workarounds.
+focus on things that affect backwards compatibility. This does duplicate data
+from the F<Changes> file, but aims to provide more details and when possible
+workarounds.
 
 Besides helping keep up with changes, you can also use this document
 for finding the lowest version of Moose that supported a given
@@ -119,7 +120,7 @@ The things on the chopping block are:
 
 This includes things like C<< Class::MOP::Class->get_attribute_map >>, C<<
 Class::MOP::Class->construct_instance >>, and many others. These were
-deprecated in L<Class::MOP> 0.80_01, release on April 5, 2009.
+deprecated in L<Class::MOP> 0.80_01, released on April 5, 2009.
 
 These methods will be removed entirely in Moose 2.0200.
 
