@@ -1,4 +1,4 @@
-== Todo for 2.0200
+== Todo for 2.0400
 
 === Revise MetaRole API to reunify class/role metaroles:
 
@@ -23,12 +23,6 @@ For each role-specific thing (methods, attributes, etc.) we should allow a
 role_attribute, role_method, etc. key. The common case will be that the
 metaroles are intended for the consuming class, but we should allow for
 metaroles on the role's metaobjects as well.
-
-=== Remove a bunch of deprecated crap
-
-See Moose::Manual::Delta for a list. Some of this is important to make merging
-Class::MOP into Moose core much easier. Other is just removing complexity
-needed to support ancient APIs.
 
 == Old todo (does anyone look at this?)
 
