@@ -24,6 +24,147 @@ role_attribute, role_method, etc. key. The common case will be that the
 metaroles are intended for the consuming class, but we should allow for
 metaroles on the role's metaobjects as well.
 
+=== Deprecate old-style Moose extensions
+
+Moose extensions that work by calling Moose->init_meta(metaclass =>
+'Some::Custom::Metaclass', ...) during their own init_meta should be
+deprecated, so they can be removed later (this should fix the issues with
+init_meta generation in Moose::Exporter, see RT51561)
+
+=== Register implicitly created class/role types
+
+When you do has foo => (isa => 'Bar'), it returns a class_type for Bar, but
+doesn't register it. This means that later you can declare "subtype 'Bar', as
+'Str', ..." and it'll work, and later instances of the 'Bar' type will use that
+one. We should register the implicitly created ones so that trying to redefine
+it after it's used throws an error.
+
+=== Attributes in roles need to be able to participate in role composition
+
+Right now, this fails with no decent workaround:
+
+  package R1;
+  use Moose::Role;
+  has foo => (is => 'ro');
+
+  package R2;
+  use Moose::Role;
+  with 'R1';
+  requires 'foo';
+
+  package C;
+  use Moose;
+  with 'R2';
+
+Role attributes really need to be able to participate in role-role combination.
+This should also fix "with 'Role1', 'Role2'" being broken when Role1 implements
+a method as an accessor and Role2 requires that method, but at least in that
+case you can split it into two 'with' statements with minimal loss of
+functionality.
+
+=== Method modifiers in roles should silently add 'requires' for them
+
+This shouldn't be a functionality change, just a better error message (and
+better introspectability). This shouldn't happen if the role already contains a
+method by that name, so it'll depend on the previous fix going in (so "has foo
+=> (is => 'ro'); around foo => sub { }" doesn't produce a 'requires' entry).
+
+=== Add overloading support
+
+or at least, don't break existing overloading support
+
+This shouldn't treat the overloading stuff as actual methods, since that's just
+an implementation detail, but we should provide an API for add_overload,
+get_overload, get_overload_list, etc. In particular, this would allow
+namespace::autoclean to not break things.
+
+Also, MooseX::Role::WithOverloading should probably be cored.
+
+
+== Todo for later
+
+=== Actual API for metaclass extensions
+
+Right now, the only way to bundle multiple metaclass traits is via
+Moose::Exporter. This is unhelpful if you want to apply the extension to a
+metaclass object rather than a class you're actually writing. We should come up
+with an API for doing this.
+
+=== MooseX::NonMoose in core
+
+I think all of the actual issues are solved at this point. The only issue is
+the (necessary) implementation weirdness - it sets up multiple inheritance
+between the non-Moose class and Moose::Object, and it installs a custom
+constructor method at 'extends' time (although perhaps this could be solved by
+moving some of the logic back into Moose::Object::new?). Other than that, it
+handles everything transparently as far as I can tell.
+
+=== Fix attribute and method metaclass compatibility
+
+So i got this wrong when rewriting it last year - right now, metaclass compat
+checks the default attribute and method metaclasses, which is wrong. This means
+that if a parent class does "use MooseX::FollowPBP", then attributes declared
+in a subclass will get PBP-style accessors, which is quite surprising.
+
+On the other hand, sometimes metaclasses might need to be able to say "I'm
+going to assume that all of my attributes at least inherit from this custom
+class", so we might need to split it into "default specified by the user" and
+"default specified by the metaclass" and only do compat checking on the second?
+I'm not actually sure this is a valid use case though.
+
+Something that probably should be taken into account though is attributes and
+methods that extend existing attributes or methods from a superclass should
+inherit the metaclass of the existing one. Also not sure if this is correct,
+but something to think about.
+
+=== Rename a bunch of the public API methods
+
+Right now the public API is kind of a mess - we have things like get_method vs
+find_method_by_name (you almost always want to use the latter), there being no
+has_method equivalent that checks superclasses, get_method_list being public
+but only returning method names, while _get_local_methods is private (returning
+method objects), and yet neither of those looks at superclasses, and basically
+none of this naming follows any kind of consistent pattern.
+
+What we really need is a consistent and easy to remember API where the method
+that people would think to use first is the method that they actually mean.
+Something like renaming find_method_by_name to find_method, and get_method to
+find_local_method or something along those lines.
+
+
+== Things to contemplate
+
+=== Does applying metaroles really need to reinitialize the metaclass?
+
+Seems like the logic that's actually necessary is already contained in
+rebless_instance, and not reinitializing means that existing attributes and
+methods won't be blown away when metaroles are applied.
+
+=== Do we want to core namespace::autoclean behavior somehow?
+
+This would add Variable::Magic as a required XS dep (not a huge deal at the
+moment, since Sub::Name is also a required XS dep, but it'd be nice for Moose
+to be able to be pure perl again at some point in the future, and I'm not sure
+what the relative chances of Sub::Name vs Variable::Magic making it into core
+are). If we enabled it by default, this would also break things for people who
+have introduced Moose into legacy-ish systems where roles are faked using
+exporters (since those imported methods would be cleaned).
+
+If we decide we want this, we may want to core it as an option first ("use
+Moose -clean" or so), and move to making it the default later.
+
+=== Fix the error system
+
+oh god it's terrible
+
+More specifically, we really want exception objects.
+
+=== Should using -excludes with a role add 'requires' for excluded methods?
+
+It seems to make sense, since otherwise you're violating the role's API
+contract.
+
+
 == Old todo (does anyone look at this?)
 
 -------------------------------------------------------------------------------
