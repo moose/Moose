@@ -273,6 +273,13 @@ object is an instance of C<Report::IncomeAndExpenses> then this call is a
 no-op, and just returns false. It's a good idea to always call C<inner()> to
 allow for future subclassing.
 
+=head2 CAVEATS
+
+Inner/augment does not work well with multiple inheritance (that is, a
+sub augmenting one defined in more than one parent), due to how C<inner()>
+looks for implementations in parent classes.
+
+
 =head1 OVERRIDE AND SUPER
 
 Finally, Moose provides some simple sugar for Perl's built-in method
