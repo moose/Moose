@@ -315,7 +315,7 @@ semi-colon:
 
 These method modification features do not work well with multiple inheritance,
 due to how method resolution is performed in Perl. Experiment with a test
-program to ensure your class heiarchy works as expected, or more preferably,
+program to ensure your class hierarchy works as expected, or more preferably,
 don't use multiple inheritance (roles can help with this)!
 
 
