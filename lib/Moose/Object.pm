@@ -112,7 +112,8 @@ BEGIN {
 # as appropiate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
-    my $meta = Class::MOP::class_of($self);
+    my $class = Scalar::Util::blessed($self) || $self;
+    my $meta = Class::MOP::Class->initialize($class);
     (defined $role_name)
         || $meta->throw_error("You must supply a role name to does()");
     return 1 if $meta->can('does_role') && $meta->does_role($role_name);
