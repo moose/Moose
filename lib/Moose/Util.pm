@@ -44,7 +44,7 @@ sub find_meta { Class::MOP::class_of(@_) }
 sub does_role {
     my ($class_or_obj, $role) = @_;
 
-    if (try { $class_or_obj->can('does') }) {
+    if (try { $class_or_obj->isa('Moose::Object') }) {
         return $class_or_obj->does($role);
     }
 
