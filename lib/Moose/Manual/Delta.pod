@@ -19,6 +19,21 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.0300
+
+=over 4
+
+=item Hand-optimized type constraint code causes a deprecation warning
+
+If you provide an optimized sub ref for a type constraint, this now causes a
+deprecation warning. Typically, this comes from passing an C<optimize_as>
+parameter to C<subtype>, but it could also happen if you create a
+L<Moose::Meta::TypeConstraint> object directly.
+
+Use the inlining feature (C<inline_as>) added in 2.0100 instead.
+
+=back
+
 =head1 2.0100
 
 =over 4
