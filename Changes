@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DEPRECATIONS]
+
+  * The optimize_as option for type constraints has been deprecated. Use the
+    inline_as option to provide inlining code instead. (Dave Rolsky)
+
+
 2.0200 Mon, Jul 18, 2011
 
   [OTHER]

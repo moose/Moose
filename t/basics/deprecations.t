@@ -157,5 +157,20 @@ use Test::Requires {
     sub _build_foo { q{} }
 }
 
+{
+    use Moose::Util::TypeConstraints;
+
+    is(
+        exception {
+            stderr_like {
+                subtype 'Frubble', as 'Str', optimize_as sub { };
+            }
+            qr/\QProviding an optimized subroutine ref for type constraints is deprecated./,
+            'Providing an optimize_as sub is deprecated';
+        },
+        undef
+    );
+}
+
 done_testing;
 

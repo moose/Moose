@@ -118,6 +118,15 @@ sub new {
     my %args = ref $first ? %$first : $first ? ($first, @rest) : ();
     $args{name} = $args{name} ? "$args{name}" : "__ANON__";
 
+    if ( $args{optimized} ) {
+        Moose::Deprecated::deprecated(
+            feature => 'optimized type constraint sub ref',
+            message =>
+                'Providing an optimized subroutine ref for type constraints is deprecated.'
+                . ' Use the inlining feature (inline_as) instead.'
+        );
+    }
+
     my $self  = $class->_new(%args);
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
