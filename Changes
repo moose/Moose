@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0201 Fri, Jul 22, 2011
+
   [BUG FIXES]
 
   * Moose::Util::does_role shouldn't call ->does on things that don't inherit
