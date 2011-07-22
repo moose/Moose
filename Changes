@@ -8,6 +8,19 @@ for, noteworthy changes.
   * The optimize_as option for type constraints has been deprecated. Use the
     inline_as option to provide inlining code instead. (Dave Rolsky)
 
+2.0201 Fri, Jul 22, 2011
+
+  [BUG FIXES]
+
+  * Moose::Util::does_role shouldn't call ->does on things that don't inherit
+    from Moose::Object.
+
+  * Make ->does initialize the metaclass, so that calling it as a class method
+    on a class which sets up inheritance via some method other than extends
+    works properly (this fixes an issue with MooseX::Types).
+
+  * Make Dist::CheckConflicts a runtime requirement, so moose-outdated always
+    works.
 
 2.0200 Mon, Jul 18, 2011
 
