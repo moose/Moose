@@ -783,6 +783,10 @@ C<unimport>, and C<init_meta>. Calling C<setup_import_methods> is equivalent
 to calling C<build_import_methods> with C<< install => [qw(import unimport
 init_meta)] >> except that it doesn't also return the methods.
 
+The C<import> method is built using L<Sub::Exporter>.
+It can take a hashref of the form C<{into=>$package}> to specify the package
+it operates on.
+
 Used by C<setup_import_methods>.
 
 =back
@@ -818,7 +822,8 @@ C<init_meta>:
 
      ...
 
-     $class->$import(...);
+     # If you don't use goto you have to specify into.
+     $class->$import({into=>caller},...);
 
      ...
   }
