@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Be more consistent about how type constraint messages are handled.
+
 2.0201 Fri, Jul 22, 2011
 
   [BUG FIXES]
