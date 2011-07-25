@@ -814,18 +814,18 @@ Keep in mind that C<build_import_methods> will return an C<init_meta>
 method for you, which you can also call from within your custom
 C<init_meta>:
 
-  my ( $import, $unimport, $init_meta ) =
-      Moose::Exporter->build_import_methods( ... );
+  my ( $import, $unimport, $init_meta )
+      = Moose::Exporter->build_import_methods(...);
 
   sub import {
-     my $class = shift;
+      my $class = shift;
 
-     ...
+      ...
 
-     # You can either pass an explicit package to import into ...
-     $class->$import({ into => scalar(caller) }, ...);
+      # You can either pass an explicit package to import into ...
+      $class->$import( { into => scalar(caller) }, ... );
 
-     ...
+      ...;
   }
 
   # ... or you can use 'goto' to provide the correct caller info to the
@@ -833,13 +833,13 @@ C<init_meta>:
   sub unimport { goto &$unimport }
 
   sub init_meta {
-     my $class = shift;
+      my $class = shift;
 
-     ...
+      ...
 
-     $class->$init_meta(...);
+      $class->$init_meta(...);
 
-     ...
+      ...
   }
 
 =head1 METACLASS TRAITS
