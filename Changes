@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Be more consistent about how type constraint messages are handled.
+
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
