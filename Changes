@@ -3,14 +3,16 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-  [BUG FIXES]
-
-  * Be more consistent about how type constraint messages are handled.
-
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
     inline_as option to provide inlining code instead. (Dave Rolsky)
+
+2.0202 Tue, Jul 26, 2011
+
+  [BUG FIXES]
+
+  * Be more consistent about how type constraint messages are handled.
 
 2.0201 Fri, Jul 22, 2011
 
