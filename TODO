@@ -1,5 +1,9 @@
 == Todo for 2.0400
 
+=== RT Tickets
+
+RT#67731 - Union types reports spurious parent types - https://rt.cpan.org/Ticket/Display.html?id=67731
+
 === Revise MetaRole API to reunify class/role metaroles:
 
   apply_metaroles(
