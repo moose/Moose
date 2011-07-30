@@ -145,6 +145,36 @@ that people would think to use first is the method that they actually mean.
 Something like renaming find_method_by_name to find_method, and get_method to
 find_local_method or something along those lines.
 
+=== Move load_class and related stuff out to an external module
+
+Choices include Class::Load, Module::Runtime, or writing something ourselves.
+Module::Runtime doesn't currently support is_class_loaded, and neither of those
+two support load_first_existing_class, and we have is_class_loaded in XS at the
+moment, because we call it enough internally (mostly by load_class) for it to
+be noticeable.
+
+=== Move method modifiers out to an external module
+
+Class::Method::Modifiers uses a different method for doing method modifiers,
+which I'm not sure why we aren't using in Moose right now. Optionally using
+Class::Method::Modifiers::Fast would be even better - it uses Data::Util to
+implement XS method modifiers, which could help things a lot.
+
+=== Move type constraints out to an external module
+
+There's nothing about our type constraint system that requires being tied to
+Moose - it's conceptually an entirely separate system that Moose just happens
+to use. Splitting it out into its own thing (that Moose could extend to add
+things like role types) would make things conceptually a lot cleaner, and would
+let people interested in just the type system have that.
+
+=== Merge Class::MOP and Moose
+
+This is a long term goal, but would allow for a lot of things to be cleaned up.
+There's a bunch of stuff that's duplicated, and other stuff that's not
+implemented as well as it could be (Class::MOP::Method::Wrapped should be a
+role, for instance).
+
 
 == Things to contemplate
 
