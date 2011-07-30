@@ -2,7 +2,17 @@
 
 === RT Tickets
 
-RT#67731 - Union types reports spurious parent types - https://rt.cpan.org/Ticket/Display.html?id=67731
+RT#67731 - Union types reports spurious parent types -
+https://rt.cpan.org/Ticket/Display.html?id=67731
+
+RT#59478/RT#63000 - 0+ overload causes NV conversion on == on perls before
+5.14 - this causes comparisons to fail when the number can't fit in an NV
+without precision loss. I'd like to fix this in a more general way (forcing
+anyone else who might be using == on tc objects to do weird things isn't very
+good), although it's hard to test to see what actually works.
+
+RT#69839 - UNIVERSAL methods should show up as methods, so things like method
+modifiers work
 
 === Revise MetaRole API to reunify class/role metaroles:
 
