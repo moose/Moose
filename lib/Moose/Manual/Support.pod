@@ -31,6 +31,9 @@ behavior will go through a deprecation period. During the deprecation period,
 use of that feature will cause a warning. Eventually, the deprecated feature
 will be removed.
 
+In some cases, it is not possible to deprecate a behavior. In this case, the
+behavior will simply be changed in a major release.
+
 =head1 RELEASE SCHEDULE
 
 Moose is on a system of quarterly major releases, with minor releases as
