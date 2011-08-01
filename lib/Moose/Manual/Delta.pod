@@ -38,6 +38,16 @@ The Array and Hash native traits now provide a "shallow_clone" method, which
 will return a reference to a new container with the same contents as the
 attribute's reference.
 
+=item C<Class::MOP::load_class> and C<Class::MOP::is_class_loaded> are deprecated
+
+We now use the L<Class::Load> module internally to provide this
+functionality. Using the Class::MOP subroutines will cause a deprecation
+warning, but will still work (via L<Class::Load).
+
+In addition, the C<Class::MOP::load_first_existing_class> sub has been
+deprecated. This was removed from the docs a long time ago, but has never
+actually warned.
+
 =back
 
 =head1 2.0100
