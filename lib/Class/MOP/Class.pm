@@ -11,6 +11,7 @@ use Class::MOP::Method::Constructor;
 use Class::MOP::MiniTrait;
 
 use Carp         'confess';
+use Class::Load  'is_class_loaded', 'load_class';
 use Scalar::Util 'blessed', 'reftype', 'weaken';
 use Sub::Name    'subname';
 use Try::Tiny;
@@ -1333,7 +1334,7 @@ sub _immutable_metaclass {
     }
 
     return $class_name
-        if Class::MOP::is_class_loaded($class_name);
+        if is_class_loaded($class_name);
 
     # If the metaclass is a subclass of CMOP::Class which has had
     # metaclass roles applied (via Moose), then we want to make sure
@@ -1423,7 +1424,7 @@ sub _inline_constructor {
 
     my $constructor_class = $args{constructor_class};
 
-    Class::MOP::load_class($constructor_class);
+    load_class($constructor_class);
 
     my $constructor = $constructor_class->new(
         options      => \%args,
@@ -1460,7 +1461,7 @@ sub _inline_destructor {
 
     my $destructor_class = $args{destructor_class};
 
-    Class::MOP::load_class($destructor_class);
+    load_class($destructor_class);
 
     return unless $destructor_class->is_needed($self);
 

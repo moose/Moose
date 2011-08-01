@@ -4,6 +4,8 @@ use warnings;
 use Test::More;
 use Moose ();
 
+use Class::Load qw(is_class_loaded);
+
 my $role = Moose::Meta::Role->create_anon_role(
     attributes => {
         is_worn => {
@@ -30,7 +32,7 @@ ok(!$visored->is_worn, "method was consumed");
 like($role->name, qr/^Moose::Meta::Role::__ANON__::SERIAL::\d+$/, "");
 ok($role->is_anon_role, "the role knows it's anonymous");
 
-ok(Class::MOP::is_class_loaded(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes is_class_loaded");
+ok(is_class_loaded(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes is_class_loaded");
 ok(Class::MOP::class_of(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes class_of");
 
 done_testing;

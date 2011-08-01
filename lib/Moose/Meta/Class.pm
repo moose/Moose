@@ -4,8 +4,8 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
+use Class::Load qw(load_class);
 use Class::MOP;
-
 use Carp qw( confess );
 use Data::OptList;
 use List::Util qw( first );
@@ -545,7 +545,7 @@ sub superclasses {
     my $supers = Data::OptList::mkopt(\@_);
     foreach my $super (@{ $supers }) {
         my ($name, $opts) = @{ $super };
-        Class::MOP::load_class($name, $opts);
+        load_class($name, $opts);
         my $meta = Class::MOP::class_of($name);
         $self->throw_error("You cannot inherit from a Moose Role ($name)")
             if $meta && $meta->isa('Moose::Meta::Role')
@@ -802,7 +802,7 @@ sub create_error {
 
     my $class = ref $self ? $self->error_class : "Moose::Error::Default";
 
-    Class::MOP::load_class($class);
+    load_class($class);
 
     $class->new(
         Carp::caller_info($args{depth}),
@@ -824,7 +824,7 @@ sub _inline_create_error {
 
     my $class = ref $self ? $self->error_class : "Moose::Error::Default";
 
-    Class::MOP::load_class($class);
+    load_class($class);
 
     # don't check inheritance here - the intention is that the class needs
     # to provide a non-inherited inlining method, because falling back to

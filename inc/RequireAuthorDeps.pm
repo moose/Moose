@@ -1,5 +1,6 @@
 package inc::RequireAuthorDeps;
 
+use Class::Load qw(load_class);
 use Moose;
 
 use Try::Tiny;
@@ -18,7 +19,7 @@ sub before_release {
     }
 
     for my $mod (grep { $_ ne 'perl' } $req->required_modules) {
-        Class::MOP::load_class($mod);
+        load_class($mod);
     }
 }
 

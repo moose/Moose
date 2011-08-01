@@ -7,7 +7,7 @@ use File::Spec::Functions;
 use Test::More;
 use Test::Fatal;
 
-use Class::MOP;
+use Class::Load qw( is_class_loaded load_class );
 
 use lib catdir($FindBin::Bin, 'lib');
 
@@ -15,13 +15,13 @@ use lib catdir($FindBin::Bin, 'lib');
 ## These are all tests which are derived from the Tree::Binary test suite
 ## ----------------------------------------------------------------------------
 
-ok(!Class::MOP::is_class_loaded('BinaryTree'), '... the binary tree class is not loaded');
+ok(!is_class_loaded('BinaryTree'), '... the binary tree class is not loaded');
 
 is( exception {
-    Class::MOP::load_class('BinaryTree');
+    load_class('BinaryTree');
 }, undef, '... loaded the BinaryTree class without dying' );
 
-ok(Class::MOP::is_class_loaded('BinaryTree'), '... the binary tree class is now loaded');
+ok(is_class_loaded('BinaryTree'), '... the binary tree class is now loaded');
 
 ## ----------------------------------------------------------------------------
 ## t/10_Tree_Binary_test.t

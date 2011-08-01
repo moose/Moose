@@ -2,6 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait;
 use Moose::Role;
 
+use Class::Load qw(load_class);
 use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
@@ -176,7 +177,7 @@ sub _native_accessor_class_for {
         . $self->_native_type . '::'
         . $suffix;
 
-    Class::MOP::load_class($role);
+    load_class($role);
     return Moose::Meta::Class->create_anon_class(
         superclasses =>
             [ $self->accessor_metaclass, $self->delegation_metaclass ],

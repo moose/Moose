@@ -6,7 +6,7 @@ use File::Spec::Functions;
 
 use Test::More;
 
-use Class::MOP;
+use Class::Load qw(is_class_loaded);
 
 use lib catdir($FindBin::Bin, 'lib');
 
@@ -27,15 +27,15 @@ use lib catdir($FindBin::Bin, 'lib');
 my $meta = Foo->meta;
 
 isa_ok($meta, 'MyMetaClass', '... Correct metaclass');
-ok(Class::MOP::is_class_loaded('MyMetaClass'), '... metaclass loaded');
+ok(is_class_loaded('MyMetaClass'), '... metaclass loaded');
 
 is($meta->attribute_metaclass, 'MyMetaClass::Attribute',  '... Correct attribute metaclass');
-ok(Class::MOP::is_class_loaded('MyMetaClass::Attribute'), '... attribute metaclass loaded');
+ok(is_class_loaded('MyMetaClass::Attribute'), '... attribute metaclass loaded');
 
 is($meta->instance_metaclass,  'MyMetaClass::Instance',  '... Correct instance metaclass');
-ok(Class::MOP::is_class_loaded('MyMetaClass::Instance'), '... instance metaclass loaded');
+ok(is_class_loaded('MyMetaClass::Instance'), '... instance metaclass loaded');
 
 is($meta->method_metaclass,    'MyMetaClass::Method',  '... Correct method metaclass');
-ok(Class::MOP::is_class_loaded('MyMetaClass::Method'), '... method metaclass loaded');
+ok(is_class_loaded('MyMetaClass::Method'), '... method metaclass loaded');
 
 done_testing;

@@ -3,6 +3,8 @@ use warnings;
 
 use Test::More;
 
+use Class::Load qw(is_class_loaded);
+
 BEGIN {
     use_ok('Class::MOP');
     use_ok('Class::MOP::Mixin');
@@ -49,7 +51,7 @@ my %METAS = (
     'Class::MOP::Class::Immutable::Class::MOP::Class' => Class::MOP::Class::Immutable::Class::MOP::Class->meta,
 );
 
-ok( Class::MOP::is_class_loaded($_), '... ' . $_ . ' is loaded' )
+ok( is_class_loaded($_), '... ' . $_ . ' is loaded' )
     for keys %METAS;
 
 for my $meta (values %METAS) {

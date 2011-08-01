@@ -11,6 +11,7 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              fallback => 1;
 
 use Carp qw(confess);
+use Class::Load qw(load_class);
 use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
@@ -56,7 +57,7 @@ my $_default_message_generator = sub {
         # have to load it late like this, since it uses Moose itself
         my $can_partialdump = try {
             # versions prior to 0.14 had a potential infinite loop bug
-            Class::MOP::load_class('Devel::PartialDump', { -version => 0.14 });
+            load_class('Devel::PartialDump', { -version => 0.14 });
             1;
         };
         if ($can_partialdump) {

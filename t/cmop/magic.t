@@ -7,6 +7,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Class::Load qw( is_class_loaded load_class );
 use Class::MOP;
 
 use Tie::Scalar;
@@ -55,13 +56,13 @@ use Tie::Scalar;
 {
     my $x = tie my $value, 'Tie::StdScalar', 'Class::MOP';
 
-    is( exception { Class::MOP::load_class($value) }, undef, 'load_class(tied scalar)' );
+    is( exception { load_class($value) }, undef, 'load_class(tied scalar)' );
 
     $value = undef;
     $x->STORE('Class::MOP'); # reset
 
     is( exception {
-        ok Class::MOP::is_class_loaded($value);
+        ok is_class_loaded($value);
     }, undef, 'is_class_loaded(tied scalar)' );
 
     $value = undef;

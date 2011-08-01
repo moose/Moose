@@ -3,11 +3,13 @@ package Class::MOP::MiniTrait;
 use strict;
 use warnings;
 
+use Class::Load qw(load_class);
+
 sub apply {
     my ( $to_class, $trait ) = @_;
 
     for ( grep { !ref } $to_class, $trait ) {
-        Class::MOP::load_class($_);
+        load_class($_);
         $_ = Class::MOP::Class->initialize($_);
     }
 

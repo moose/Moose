@@ -3,6 +3,7 @@ package Moose::Exporter;
 use strict;
 use warnings;
 
+use Class::Load qw(is_class_loaded);
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
@@ -144,7 +145,7 @@ sub _make_exporter {
         my $exporting_package = shift;
 
         if ( !exists $EXPORT_SPEC{$exporting_package} ) {
-            my $loaded = Class::MOP::is_class_loaded($exporting_package);
+            my $loaded = is_class_loaded($exporting_package);
 
             die "Package in also ($exporting_package) does not seem to "
                 . "use Moose::Exporter"

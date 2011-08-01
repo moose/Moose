@@ -3,6 +3,7 @@ package Moose::Util::TypeConstraints::Builtins;
 use strict;
 use warnings;
 
+use Class::Load qw( is_class_loaded );
 use List::MoreUtils ();
 use Scalar::Util qw( blessed looks_like_number reftype );
 
@@ -132,9 +133,9 @@ sub define_builtins {
 
     subtype 'ClassName'
         => as 'Str'
-        => where { Class::MOP::is_class_loaded($_) }
+        => where { is_class_loaded($_) }
             # the long Str tests are redundant here
-        => inline_as { 'Class::MOP::is_class_loaded(' . $_[1] . ')' };
+        => inline_as { 'Class::Load::is_class_loaded(' . $_[1] . ')' };
 
     subtype 'RoleName'
         => as 'ClassName'

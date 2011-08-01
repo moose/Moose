@@ -3,11 +3,12 @@ use strict;
 use warnings;
 use Test::More;
 
+use Class::Load 'load_class';
 use Test::Requires 'Data::Visitor';
 use Test::Requires 'PadWalker';
 use Try::Tiny;
 my $can_partialdump = try {
-    Class::MOP::load_class('Devel::PartialDump', { -version => 0.14 }); 1;
+    load_class('Devel::PartialDump', { -version => 0.14 }); 1;
 };
 
 {

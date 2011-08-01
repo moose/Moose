@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use Class::Load qw(load_class);
 use Scalar::Util 'blessed';
 
 use base 'Moose::Meta::Role';
@@ -120,7 +121,7 @@ sub get_method {
 
 sub apply_params {
     my ($self, $role_params) = @_;
-    Class::MOP::load_class($self->application_role_summation_class);
+    load_class($self->application_role_summation_class);
 
     $self->application_role_summation_class->new(
         role_params => $role_params,
