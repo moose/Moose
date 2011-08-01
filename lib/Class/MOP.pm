@@ -68,23 +68,14 @@ XSLoader::load(
 }
 
 sub load_class {
-    Class::MOP::Deprecated::deprecated(
-              'The Class::MOP::load_class subroutine is deprecated.'
-            . ' Please use Class::Load instead.' );
     goto &Class::Load::load_class;
 }
 
 sub load_first_existing_class {
-    Class::MOP::Deprecated::deprecated(
-        'The Class::MOP::load_first_existing_class subroutine is deprecated.'
-            . ' Please use Class::Load instead.' );
     goto &Class::Load::load_first_existing_class;
 }
 
 sub is_class_loaded {
-    Class::MOP::Deprecated::deprecated(
-              'The Class::MOP::is_class_loaded subroutine is deprecated.'
-            . ' Please use Class::Load instead.' );
     goto &Class::Load::is_class_loaded;
 }
 

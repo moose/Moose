@@ -34,13 +34,12 @@ for, noteworthy changes.
   * The optimize_as option for type constraints has been deprecated. Use the
     inline_as option to provide inlining code instead. (Dave Rolsky)
 
-  * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
-    now deprecated. Moose now uses Class::Load to provide this functionality,
-    and you should as well. (Dave Rolsky)
+  [OTHER]
 
-  * The Class::MOP::load_first_existing_class subroutine is also
-    deprecated. This was removed from the docs a long time ago, but has never
-    actually been deprecated. (Dave Rolsky)
+  * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
+    no longer documented, and will cause a deprecation warning in the
+    future. Moose now uses Class::Load to provide this functionality, and you
+    should as well. (Dave Rolsky)
 
 2.0204 Thu, Aug 25, 2011
 
