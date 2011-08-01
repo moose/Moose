@@ -4,6 +4,9 @@ use strict;
 use warnings;
 
 use Package::DeprecationManager -deprecations => {
+    'Class::MOP::load_class'                => '2.0200',
+    'Class::MOP::load_first_existing_class' => '2.0200',
+    'Class::MOP::is_class_loaded'           => '2.0200',
 };
 
 1;

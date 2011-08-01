@@ -74,7 +74,7 @@ sub _instantiate_module {
     my($self, $version, $authority) = @_;
     my $package_name = $self->name;
 
-    Class::MOP::_is_valid_class_name($package_name)
+    _is_valid_class_name($package_name)
         || confess "creation of $package_name failed: invalid package name";
 
     $self->add_package_symbol('$VERSION' => $version)
@@ -83,6 +83,18 @@ sub _instantiate_module {
         if defined $authority;
 
     return;
+}
+
+sub _is_valid_class_name {
+    my $class = shift;
+
+    return 0 if ref($class);
+    return 0 unless defined($class);
+    return 0 unless length($class);
+
+    return 1 if $class =~ /^\w+(?:::\w+)*$/;
+
+    return 0;
 }
 
 1;
