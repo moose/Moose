@@ -267,6 +267,8 @@ It accepts the following keys:
 
 =item application_role_summation
 
+=item applied_attribute
+
 =back
 
 =back
