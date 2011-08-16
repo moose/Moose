@@ -750,6 +750,10 @@ __END__
       from 'Str',
       via { 0+$_ };
 
+  class_type 'DateTimeish', { class => 'DateTime' };
+
+  role_type 'Barks', { role => 'Some::Library::Role::Barks' };
+
   enum 'RGBColors', [qw(red green blue)];
 
   union 'StringOrArray', [qw( String Array )];
@@ -959,10 +963,30 @@ just a hashref of parameters:
 Creates a new subtype of C<Object> with the name C<$class> and the
 metaclass L<Moose::Meta::TypeConstraint::Class>.
 
+  # Create a type called 'Box' which tests for objects which ->isa('Box')
+  class_type 'Box';
+
+Additionally, you can create a class_type which is a shorthand for another class.
+
+  # Create a type called 'Box' which tests for objects which ->isa('ObjectLibrary::Box');
+  class_type 'Box', { class => 'ObjectLibrary::Box' };
+
+But it's only really necessary to do this if you're working with L<MooseX::Types>.
+
 =item B<role_type ($role, ?$options)>
 
 Creates a C<Role> type constraint with the name C<$role> and the
 metaclass L<Moose::Meta::TypeConstraint::Role>.
+
+  # Create a type called 'Walks' which tests for objects which ->does('Walks')
+  role_type 'Walks';
+
+Additionally, you can create a role_type which is a shorthand for another role.
+
+  # Create a type called 'Walks' which tests for objects which ->does('MooseX::Role::Walks');
+  role_type 'Walks', { role => 'MooseX::Role::Walks' };
+
+But it's only really necessary to do this if you're working with L<MooseX::Types>.
 
 =item B<maybe_type ($type)>
 
