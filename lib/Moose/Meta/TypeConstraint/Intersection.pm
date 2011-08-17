@@ -7,40 +7,70 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Intersection;
 
-our $VERSION   = '0.70';
-$VERSION = eval $VERSION;
-our $AUTHORITY = 'cpan:STEVAN';
+use List::Util qw(first);
+use List::MoreUtils qw(all);
 
 use base 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',
-    default   => sub { [] }
+    default   => sub { [] },
+    Class::MOP::_definition_context(),
 ));
 
 sub new {
     my ($class, %options) = @_;
+
+    my $name = join '&' => sort {$a cmp $b}
+         map { $_->name } @{$options{type_constraints}};
+
     my $self = $class->SUPER::new(
-        name     => (join '&' => sort {$a cmp $b}
-                     map { $_->name } @{$options{type_constraints}}),
-        parent   => undef,
-        message  => undef,
-        hand_optimized_type_constraint => undef,
-        compiled_type_constraint => sub {
-            my $value = shift;
-            my $count = 0;
-            foreach my $type (@{$options{type_constraints}}) {
-                $count++ if $type->check($value);
-            }
-            return $count == scalar @{$options{type_constraints}} ? 1 : undef;
-        },
-        %options
+        name     => $name,
+        %options,
     );
     $self->_set_constraint(sub { $self->check($_[0]) });
     $self->coercion(Moose::Meta::TypeCoercion::Intersection->new(
         type_constraint => $self
     ));
     return $self;
+}
+
+sub _actually_compile_type_constraint {
+    my $self = shift;
+
+    my @constraints = @{ $self->type_constraints };
+
+    return sub {
+      my $value = shift;
+      my $count = 0;
+      foreach my $type (@constraints){
+        $count++ if $type->check($value);
+      }
+      return $count==scalar @constraints ? 1: undef;
+    };
+}
+
+sub can_be_inlined {
+    my $self = shift;
+    for my $tc ( @{ $self->type_constraints }) {
+      return 0 unless $tc->can_be_inlined;
+    }
+    return 1;
+}
+
+sub _inline_check {
+    my $self = shift;
+    my $val  = shift;
+    return '(' .
+      (
+        join ' && ' , map { '(' . $_->_inline_check($val) . ')' } @{ $self->type_constraints }
+      ) . ')';
+}
+
+sub inline_environment {
+    my $self = shift;
+
+    return { map { %{ $_->inline_environment } } @{ $self->type_constraints } };
 }
 
 sub equals {
@@ -83,6 +113,11 @@ sub validate {
             if defined $err;
     }
     return ($message . ' in (' . $self->name . ')') ;
+}
+
+sub find_type_for {
+    my ($self, $value) = @_;
+    return first { $_->check($value) } @{ $self->type_constraints };
 }
 
 sub is_a_type_of {
