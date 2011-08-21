@@ -111,17 +111,17 @@ is_regexp (pTHX_ SV* sv) {
 }
 #endif
 
-EXTERN_C XS(boot_Class__MOP);
-EXTERN_C XS(boot_Class__MOP__Mixin__HasAttributes);
-EXTERN_C XS(boot_Class__MOP__Mixin__HasMethods);
-EXTERN_C XS(boot_Class__MOP__Package);
-EXTERN_C XS(boot_Class__MOP__Mixin__AttributeCore);
-EXTERN_C XS(boot_Class__MOP__Method);
-EXTERN_C XS(boot_Class__MOP__Method__Inlined);
-EXTERN_C XS(boot_Class__MOP__Method__Generated);
-EXTERN_C XS(boot_Class__MOP__Class);
-EXTERN_C XS(boot_Class__MOP__Attribute);
-EXTERN_C XS(boot_Class__MOP__Instance);
+XS_EXTERNAL(boot_Class__MOP);
+XS_EXTERNAL(boot_Class__MOP__Mixin__HasAttributes);
+XS_EXTERNAL(boot_Class__MOP__Mixin__HasMethods);
+XS_EXTERNAL(boot_Class__MOP__Package);
+XS_EXTERNAL(boot_Class__MOP__Mixin__AttributeCore);
+XS_EXTERNAL(boot_Class__MOP__Method);
+XS_EXTERNAL(boot_Class__MOP__Method__Inlined);
+XS_EXTERNAL(boot_Class__MOP__Method__Generated);
+XS_EXTERNAL(boot_Class__MOP__Class);
+XS_EXTERNAL(boot_Class__MOP__Attribute);
+XS_EXTERNAL(boot_Class__MOP__Instance);
 
 MODULE = Moose  PACKAGE = Moose::Exporter
 
