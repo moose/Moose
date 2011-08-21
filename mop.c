@@ -246,7 +246,7 @@ mop_prehash_keys ()
     }
 }
 
-XS(mop_xs_simple_reader)
+XS_EXTERNAL(mop_xs_simple_reader)
 {
 #ifdef dVAR
     dVAR; dXSARGS;

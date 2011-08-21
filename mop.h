@@ -10,10 +10,18 @@
 #define NEED_sv_2pv_nolen
 #include "ppport.h"
 
+/* In theory, ExtUtils::ParseXS provide backcompat for this. However, the only
+ * available version doing that right now is 3.03_02, which is a dev release. We
+ * don't want to depend on dev releases, so we copy the code here. It should be
+ * removed once there's a stable ExtUtils::ParseXS version newer than 3.03_02. */
+#ifndef XS_EXTERNAL
+#  define XS_EXTERNAL XS
+#endif
+
 #define MOP_CALL_BOOT(name)  mop_call_xs(aTHX_ name, cv, mark);
 
 #ifndef XSPROTO
-#define XSPROTO(name) XS(name)
+#define XSPROTO(name) XS_EXTERNAL(name)
 #endif
 
 void mop_call_xs (pTHX_ XSPROTO(subaddr), CV *cv, SV **mark);
@@ -69,7 +77,7 @@ U32 mop_prehashed_hash_for (mop_prehashed_key_t key);
         CvXSUBANY(cv).any_i32 = KEY_ ##key; \
     }
 
-XS(mop_xs_simple_reader);
+XS_EXTERNAL(mop_xs_simple_reader);
 
 extern SV *mop_method_metaclass;
 extern SV *mop_associated_metaclass;
