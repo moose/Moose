@@ -153,7 +153,7 @@ sub _generate_reader_method_inline {
 
 sub _inline_throw_error {
     my $self = shift;
-    return 'confess ' . $_[0];
+    return 'Carp::confess ' . $_[0];
 }
 
 sub _generate_writer_method {
