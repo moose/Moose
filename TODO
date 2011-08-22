@@ -97,6 +97,11 @@ Also, MooseX::Role::WithOverloading should probably be cored.
 
 == Todo for later
 
+=== has +foo in roles
+
+There's no actual reason for this not to work, and it gets asked often enough
+that we really should just do it at some point.
+
 === Actual API for metaclass extensions
 
 Right now, the only way to bundle multiple metaclass traits is via
