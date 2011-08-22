@@ -783,11 +783,20 @@ when C<unimport> is called.
 
 =item * meta_lookup => sub { ... }
 
-This is a function which will be called to provide the metaclass to
-be operated upon by the exporter. This is an advanced feature
+This is a function which will be called to provide the metaclass
+to be operated upon by the exporter. This is an advanced feature
 intended for use by package generator modules in the vein of
-L<MooseX::Role::Parameterized> in order to simplify reusing sugar from other
-modules that use C<Moose::Exporter>.
+L<MooseX::Role::Parameterized> in order to simplify reusing sugar
+from other modules that use C<Moose::Exporter>. This function is
+used, for example, to select the metaclass to bind to functions
+that are exported using the C<with_meta> option.
+
+This function will receive one parameter: the class name into which
+the sugar is being exported. The default implementation is:
+
+    sub { Class::MOP::class_of(shift) }
+
+Accordingly, this function is expected to return a metaclass.
 
 =back
 
