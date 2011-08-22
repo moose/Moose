@@ -781,6 +781,14 @@ can selectively override functions exported by another module.
 C<Moose::Exporter> also makes sure all these functions get removed
 when C<unimport> is called.
 
+=item * meta_lookup => sub { ... }
+
+This is a function which will be called to provide the metaclass to
+be operated upon by the exporter. This is an advanced feature
+intended for use by package generator modules in the vein of
+L<MooseX::Role::Parameterized> in order to simplify reusing sugar from other
+modules that use C<Moose::Exporter>.
+
 =back
 
 You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>
