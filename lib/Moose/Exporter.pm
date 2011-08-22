@@ -28,6 +28,8 @@ sub build_import_methods {
 
     my $exporting_package = $args{exporting_package} ||= caller();
 
+    my $meta_generator = $args{meta_generator} || sub { Class::MOP::class_of(shift) };
+
     $EXPORT_SPEC{$exporting_package} = \%args;
 
     my @exports_from = $class->_follow_also($exporting_package);
@@ -39,28 +41,36 @@ sub build_import_methods {
         [ @exports_from, $exporting_package ],
         $export_recorder,
         $is_reexport,
+        $meta_generator,
     );
 
-    my $exporter = $class->_make_exporter($exports, $is_reexport);
+    my $exporter = $class->_make_exporter(
+        $exports,
+        $is_reexport,
+        $meta_generator,
+    );
 
     my %methods;
     $methods{import} = $class->_make_import_sub(
         $exporting_package,
         $exporter,
         \@exports_from,
-        $is_reexport
+        $is_reexport,
+        $meta_generator,
     );
 
     $methods{unimport} = $class->_make_unimport_sub(
         $exporting_package,
         $exports,
         $export_recorder,
-        $is_reexport
+        $is_reexport,
+        $meta_generator,
     );
 
     $methods{init_meta} = $class->_make_init_meta(
         $exporting_package,
-        \%args
+        \%args,
+        $meta_generator,
     );
 
     my $package = Class::MOP::Package->initialize($exporting_package);
@@ -76,7 +86,7 @@ sub build_import_methods {
 }
 
 sub _make_exporter {
-    my ($class, $exports, $is_reexport) = @_;
+    my ($class, $exports, $is_reexport, $meta_generator) = @_;
 
     return Sub::Exporter::build_exporter(
         {
@@ -84,7 +94,7 @@ sub _make_exporter {
             groups    => { default => [':all'] },
             installer => sub {
                 my ($arg, $to_export) = @_;
-                my $meta = Class::MOP::class_of($arg->{into});
+                my $meta = $meta_generator->($arg->{into});
 
                 goto &Sub::Exporter::default_installer unless $meta;
 
@@ -188,6 +198,7 @@ sub _make_sub_exporter_params {
     my $packages        = shift;
     my $export_recorder = shift;
     my $is_reexport     = shift;
+    my $meta_generator  = shift;
 
     my %exports;
 
@@ -205,6 +216,7 @@ sub _make_sub_exporter_params {
                 $fq_name,
                 $sub,
                 $export_recorder,
+                $meta_generator,
             );
         }
 
@@ -303,13 +315,14 @@ sub _make_wrapped_sub_with_meta {
     my $fq_name         = shift;
     my $sub             = shift;
     my $export_recorder = shift;
+    my $meta_generator  = shift;
 
     return sub {
         my $caller = $CALLER;
 
         my $wrapper = $self->_late_curry_wrapper(
             $sub, $fq_name,
-            sub { Class::MOP::class_of(shift) } => $caller
+            $meta_generator => $caller
         );
 
         my $sub = subname( $fq_name => $wrapper );
@@ -365,6 +378,7 @@ sub _make_import_sub {
     my $exporter          = shift;
     my $exports_from      = shift;
     my $is_reexport       = shift;
+    my $meta_generator    = shift;
 
     return sub {
 
@@ -425,7 +439,7 @@ sub _make_import_sub {
             # Moose::Exporter, which in turn sets $CALLER, so we need
             # to protect against that.
             local $CALLER = $CALLER;
-            _apply_meta_traits( $CALLER, $traits );
+            _apply_meta_traits( $CALLER, $traits, $meta_generator );
         }
         elsif ( @{$traits} ) {
             require Moose;
@@ -486,11 +500,11 @@ sub _strip_meta_name {
 }
 
 sub _apply_meta_traits {
-    my ( $class, $traits ) = @_;
+    my ( $class, $traits, $meta_generator ) = @_;
 
     return unless @{$traits};
 
-    my $meta = Class::MOP::class_of($class);
+    my $meta = $meta_generator->($class);
 
     my $type = ( split /::/, ref $meta )[-1]
         or Moose->throw_error(
@@ -536,6 +550,7 @@ sub _make_unimport_sub {
     my $exports           = shift;
     my $export_recorder   = shift;
     my $is_reexport       = shift;
+    my $meta_generator    = shift;
 
     return sub {
         my $caller = scalar caller();
@@ -579,8 +594,9 @@ sub _remove_keywords {
 
 sub _make_init_meta {
     shift;
-    my $class = shift;
-    my $args  = shift;
+    my $class          = shift;
+    my $args           = shift;
+    my $meta_generator = shift;
 
     my %old_style_roles;
     for my $role (
@@ -613,7 +629,7 @@ sub _make_init_meta {
         shift;
         my %options = @_;
 
-        return unless Class::MOP::class_of( $options{for_class} );
+        return unless $meta_generator->( $options{for_class} );
 
         if ( %new_style_roles || %old_style_roles ) {
             Moose::Util::MetaRole::apply_metaroles(
@@ -627,10 +643,10 @@ sub _make_init_meta {
             for_class => $options{for_class},
             %base_class_roles,
             )
-            if Class::MOP::class_of( $options{for_class} )
+            if $meta_generator->( $options{for_class} )
                 ->isa('Moose::Meta::Class');
 
-        return Class::MOP::class_of( $options{for_class} );
+        return $meta_generator->( $options{for_class} );
     };
 }
 
