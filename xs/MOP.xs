@@ -90,17 +90,9 @@ is_class_loaded(klass, options=NULL)
         if (hv_exists_ent (stash, KEY_FOR(VERSION), HASH_FOR(VERSION))) {
             HE *version = hv_fetch_ent(stash, KEY_FOR(VERSION), 0, HASH_FOR(VERSION));
             SV *version_sv;
-            if (version && HeVAL(version) && (version_sv = GvSV(HeVAL(version)))) {
-                if (SvROK(version_sv)) {
-                    SV *version_sv_ref = SvRV(version_sv);
-
-                    if (SvOK(version_sv_ref)) {
-                        XSRETURN_YES;
-                    }
-                }
-                else if (SvOK(version_sv)) {
-                    XSRETURN_YES;
-                }
+            if (version && HeVAL(version) && (version_sv = GvSV(HeVAL(version)))
+             && SvOK(version_sv)) {
+                XSRETURN_YES;
             }
         }
 
