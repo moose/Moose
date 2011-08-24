@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0203 Tue, Aug 23, 2011
+
   [BUG FIXES]
 
   * is_class_loaded now properly detects packages which have a version object
