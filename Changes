@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0204 Thu, Aug 25, 2011
+
   [BUG FIXES]
 
   * Validating duck_type type constraint turned out to work only by accident,
