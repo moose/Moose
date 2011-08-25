@@ -39,7 +39,7 @@ sub new {
     my @methods = @{ $args{methods} };
     $args{constraint} = sub {
         my $val = $_[0];
-        blessed($val) ne 'Regexp'
+        blessed($val) && blessed($val) ne 'Regexp'
             && all { $val->can($_) } @methods;
     };
 
