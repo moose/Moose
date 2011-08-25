@@ -22,10 +22,10 @@ my $inliner = sub {
     my $self = shift;
     my $val  = shift;
 
-    return 'Scalar::Util::blessed(' . $val . ') '
-             . '&& Scalar::Util::blessed(' . $val . ') ne "Regexp" '
+    return 'my $val = ' . $val . '; Scalar::Util::blessed($val) '
+             . '&& Scalar::Util::blessed($val) ne "Regexp" '
              . '&& &List::MoreUtils::all('
-                 . 'sub { ' . $val . '->can($_) }, '
+                 . 'sub { $val->can($_) }, '
                  . join(', ', map { B::perlstring($_) } @{ $self->methods })
              . ')';
 };
@@ -38,8 +38,9 @@ sub new {
 
     my @methods = @{ $args{methods} };
     $args{constraint} = sub {
-        blessed( $_[0] ) ne 'Regexp'
-            && all { $_[0]->can($_) } @methods;
+        my $val = $_[0];
+        blessed($val) ne 'Regexp'
+            && all { $val->can($_) } @methods;
     };
 
     $args{inlined} = $inliner;

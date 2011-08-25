@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Validating duck_type type constraint turned out to work only by accident,
+    and only when not running under the debugger. This has been fixed.
+    (Florian Ragwitz)
+
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
