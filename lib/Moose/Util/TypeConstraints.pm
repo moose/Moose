@@ -750,7 +750,7 @@ __END__
       from 'Str',
       via { 0+$_ };
 
-  class_type 'DateTimeish', { class => 'DateTime' };
+  class_type 'DateTimeClass', { class => 'DateTime' };
 
   role_type 'Barks', { role => 'Some::Library::Role::Barks' };
 
@@ -966,12 +966,11 @@ metaclass L<Moose::Meta::TypeConstraint::Class>.
   # Create a type called 'Box' which tests for objects which ->isa('Box')
   class_type 'Box';
 
-Additionally, you can create a class_type which is a shorthand for another class.
+By default, the name of the type and the name of the class are the same, but
+you can specify both separately.
 
   # Create a type called 'Box' which tests for objects which ->isa('ObjectLibrary::Box');
   class_type 'Box', { class => 'ObjectLibrary::Box' };
-
-But it's only really necessary to do this if you're working with L<MooseX::Types>.
 
 =item B<role_type ($role, ?$options)>
 
@@ -981,12 +980,11 @@ metaclass L<Moose::Meta::TypeConstraint::Role>.
   # Create a type called 'Walks' which tests for objects which ->does('Walks')
   role_type 'Walks';
 
-Additionally, you can create a role_type which is a shorthand for another role.
+By default, the name of the type and the name of the role are the same, but
+you can specify both separately.
 
   # Create a type called 'Walks' which tests for objects which ->does('MooseX::Role::Walks');
   role_type 'Walks', { role => 'MooseX::Role::Walks' };
-
-But it's only really necessary to do this if you're working with L<MooseX::Types>.
 
 =item B<maybe_type ($type)>
 
