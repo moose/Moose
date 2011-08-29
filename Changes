@@ -16,6 +16,10 @@ for, noteworthy changes.
     and only when not running under the debugger. This has been fixed.
     (Florian Ragwitz)
 
+  * When specifying an attribute trait, passing options for the trait besides
+    -alias or -excludes caused a warning. However, passing other options is
+    totally valid when using MooseX::Role::Parameterized. (sartak)
+
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
