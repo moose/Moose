@@ -675,19 +675,23 @@ sub _inline_check_coercion {
 
 # Generates the code to run when the result from the message->(value)
 # is not a ref.
-sub __inline_attribute_validation_failure_basic {
+sub _inline_attribute_validation_failure_non_object {
     my ($self) = shift;
     my ( $attr_name, $value, $message_result ) = @_;
     return (
-      $self->_inline_throw_error(
-        '"Attribute (' . $attr_name . ') does not pass the type constraint because: " . ' . $message_result,
-        'data => ' . $value
-      ) . ';'
+        $self->_inline_throw_error(
+            '"Attribute ('
+                . $attr_name
+                . ') does not pass the type constraint because: " . '
+                . $message_result,
+            'data => ' . $value
+            )
+            . ';'
     );
 }
 
 # Generates the code to run when the result from message->(value) is a ref.
-sub __inline_attribute_validation_failure_object {
+sub _inline_attribute_validation_failure_object {
     my ($self) = shift;
     my ( $attr_name, $value, $message_result ) = @_;
     return ( $self->_inline_throw_error( $message_result, 'data => ' . $value ) . ';' );
@@ -695,43 +699,44 @@ sub __inline_attribute_validation_failure_object {
 
 # Generates the code to execute message() with ->(value) and store the result
 # in message_result.
-sub __inline_get_message {
+sub _inline_get_message {
     my ($self) = shift;
-    my ( $message, $value ) = @_;
-    return ( 'do { local $_ = ' . $value . '; ' . $message . '->(' . $value . ') };' );
+    my ( $message_generator, $value ) = @_;
+    return (
+            'do {',
+                'local $_ = '
+                    $value . ';',
+                $message_generator . '->(' . $value . ')',
+            '}'
+           );
 }
 
 sub _inline_check_constraint {
     my $self = shift;
-    my ($value, $tc, $message) = @_;
+    my ($value, $tc, $message_generator) = @_;
 
     return unless $self->has_type_constraint;
 
     my $attr_name = quotemeta($self->name);
 
-    my $check_code;
-
-    if ( $self->type_constraint->can_be_inlined ) {
-        $check_code = $self->type_constraint->_inline_check($value);
-    } else {
-        $check_code = $tc . '->(' . $value . ')';
-    }
+    my $type_check = $self->type_constraint->can_be_inlined
+        ? $self->type_constraint->_inline_check($value);
+        : $tc . '->(' . $value . ')';
 
     return (
-      sprintf q|
-      if (! ( %s ) ) {
-        my $message_value = %s
-        if( not ref $message_value ) {
-          %s
-        } else {
-          %s
-        }
-      }
-      |, $check_code,
-      $self->__inline_get_message( $message, $value ),
-      $self->__inline_attribute_validation_failure_basic( $attr_name, $value, '$message_value' ),
-      $self->__inline_attribute_validation_failure_object( $attr_name, $value, '$message_value' ),
-    );
+            'if ( ! ( ' . $type_check . ' ) ) {',
+                'my $message = '
+                    . $self->_inline_get_message( $message_generator, $value ),
+                'if ( ref $value_for_message ) {',
+                    $self->_inline_attribute_validation_failure_ref(
+                        $attr_name, $value, '$message' ),
+                '}',
+                'else {',
+                    $self->_inline_attribute_validation_failure_non_ref(
+                        $attr_name, $value, '$message' ),
+                '}',
+            '}'
+           );
 }
 
 sub _inline_get_old_value_for_trigger {
