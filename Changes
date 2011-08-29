@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * The Moose::Exporter module now has a "meta_lookup" option when creating an
+    importer. This allows you to specify an alternate method for determining
+    the metaclass of a caller. This is useful for modules like
+    MooseX::Role::Parameterized which generate new metaclasses on the fly.
+
   [BUG FIXES]
 
   * Validating duck_type type constraint turned out to work only by accident,
