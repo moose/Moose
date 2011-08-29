@@ -9,6 +9,9 @@ for, noteworthy changes.
     -alias or -excludes caused a warning. However, passing other options is
     totally valid when using MooseX::Role::Parameterized. (sartak)
 
+  * Allow regexp objects in duck_type constraints (to bring this in line with
+    the Object constraint)
+
 2.0204 Thu, Aug 25, 2011
 
   [BUG FIXES]
