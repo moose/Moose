@@ -41,7 +41,7 @@ use Test::Requires {
                 R => { -excludes => ['method'] },
             ],
         );
-    } q{}, 'no warning with -alias parameterized attribute traits';
+    } q{}, 'no warning with -excludes parameterized attribute traits';
 }
 
 done_testing;
