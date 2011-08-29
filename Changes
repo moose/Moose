@@ -8,7 +8,8 @@ for, noteworthy changes.
   * The Moose::Exporter module now has a "meta_lookup" option when creating an
     importer. This allows you to specify an alternate method for determining
     the metaclass of a caller. This is useful for modules like
-    MooseX::Role::Parameterized which generate new metaclasses on the fly.
+    MooseX::Role::Parameterized which generate new metaclasses on the
+    fly. (sartak)
 
   [BUG FIXES]
 
