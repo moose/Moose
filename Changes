@@ -13,10 +13,6 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * Validating duck_type type constraint turned out to work only by accident,
-    and only when not running under the debugger. This has been fixed.
-    (Florian Ragwitz)
-
   * When specifying an attribute trait, passing options for the trait besides
     -alias or -excludes caused a warning. However, passing other options is
     totally valid when using MooseX::Role::Parameterized. (sartak)
@@ -25,6 +21,27 @@ for, noteworthy changes.
 
   * The optimize_as option for type constraints has been deprecated. Use the
     inline_as option to provide inlining code instead. (Dave Rolsky)
+
+2.0204 Thu, Aug 25, 2011
+
+  [BUG FIXES]
+
+  * Validating duck_type type constraint turned out to work only by accident,
+    and only when not running under the debugger. This has been fixed.
+    (Florian Ragwitz)
+
+  [OTHER]
+
+  * Loosen the dependency on ExtUtils::ParseXS.
+
+2.0203 Tue, Aug 23, 2011
+
+  [BUG FIXES]
+
+  * is_class_loaded now properly detects packages which have a version object
+    in their $VERSION.
+
+  * Fix XS compilation under blead.
 
 2.0202 Tue, Jul 26, 2011
 
