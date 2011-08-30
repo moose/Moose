@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+
 {
     package My::Role;
     use Moose::Role;
@@ -20,7 +21,8 @@ use warnings;
 use Test::More;
 use Moose::Util qw/find_meta does_role/;
 
-my $subsubclass_meta = Moose->init_meta( for_class => 'SubSubClassUseBase' );
+my $subsubclass_meta
+    = Moose::Meta::Class->initialize( package => 'SubSubClassUseBase' );
 ok does_role($subsubclass_meta, 'My::Role'),
     'SubSubClass metaclass does role from grandparent metaclass';
 my $subclass_meta = find_meta('SubClassUseBase');
