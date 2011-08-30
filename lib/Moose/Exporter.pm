@@ -418,6 +418,8 @@ sub _make_import_sub {
         strict->import;
         warnings->import;
 
+        local $Moose::CALLED_VIA_EXPORT_HACK = 1;
+
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
 

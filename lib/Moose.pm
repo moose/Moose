@@ -131,9 +131,15 @@ Moose::Exporter->setup_import_methods(
     ],
 );
 
+our $CALLED_VIA_EXPORT_HACK;
 sub init_meta {
     shift;
     my %args = @_;
+
+    Moose::Deprecated::deprecated(
+              'Calling Moose->init_meta directly has been deprecated.'
+            . ' Use Moose::Exporter and let it call init_meta for you' )
+        unless $CALLED_VIA_EXPORT_HACK;
 
     my $class = $args{for_class}
         or Moose->throw_error("Cannot call init_meta without specifying a for_class");

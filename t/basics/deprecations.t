@@ -172,5 +172,17 @@ use Test::Requires {
     );
 }
 
+{
+    package Pack4;
+
+}
+
+stderr_like {
+    Moose->init_meta( for_class => __PACKAGE__ );
+}
+qr/\QCalling Moose->init_meta directly has been deprecated/,
+    'deprecation warning when calling init_meta directly';
+
+
 done_testing;
 
