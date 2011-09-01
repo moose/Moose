@@ -19,6 +19,18 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.0205
+
+=over 4
+
+=item Array and Hash native traits provide a C<shallow_clone> method
+
+The Array and Hash native traits now provide a "shallow_clone" method, which
+will return a reference to a new container with the same contents as the
+attribute's reference.
+
+=back
+
 =head1 2.0100
 
 =over 4

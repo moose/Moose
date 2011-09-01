@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [NEW FEATURES]
+
+  * The Array and Hash native traits now provide a "shallow_clone" method,
+    which will return a reference to a new container with the same contents as
+    the attribute's reference.
+
   [BUG FIXES]
 
   * When specifying an attribute trait, passing options for the trait besides
