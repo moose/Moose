@@ -6,6 +6,7 @@ use Test::Fatal;
 
 use Scalar::Util qw/isweak reftype/;
 
+use Class::MOP;
 use Class::MOP::Instance;
 
 can_ok( "Class::MOP::Instance", $_ ) for qw/

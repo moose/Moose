@@ -4,11 +4,7 @@ package Moose::Meta::Instance;
 use strict;
 use warnings;
 
-use Class::MOP::MiniTrait;
-
 use base "Class::MOP::Instance";
-
-Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 1;
 

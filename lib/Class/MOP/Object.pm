@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Carp qw(confess);
+use Moose::Util;
 use Scalar::Util 'blessed';
 
 # introspection
@@ -73,7 +74,8 @@ sub _get_compatible_metaclass {
     my $self = shift;
     my ($other_name) = @_;
 
-    return $self->_get_compatible_metaclass_by_subclassing($other_name);
+    return $self->_get_compatible_metaclass_by_subclassing($other_name)
+        || $self->_get_compatible_metaclass_by_role_reconciliation(@_);
 }
 
 sub _get_compatible_metaclass_by_subclassing {
@@ -89,6 +91,20 @@ sub _get_compatible_metaclass_by_subclassing {
     }
 
     return;
+}
+
+sub _get_compatible_metaclass_by_role_reconciliation {
+    my $self = shift;
+    my ($other_name) = @_;
+    my $meta_name = blessed($self) ? $self->_real_ref_name : $self;
+
+    return unless Moose::Util::_classes_differ_by_roles_only(
+        $meta_name, $other_name
+    );
+
+    return Moose::Util::_reconcile_roles_for_metaclass(
+        $meta_name, $other_name
+    );
 }
 
 1;

@@ -20,11 +20,8 @@ use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 use Moose::Meta::Method::Meta;
 use Moose::Util;
-use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Class';
-
-Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 __PACKAGE__->meta->add_attribute('roles' => (
     reader  => 'roles',

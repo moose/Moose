@@ -3,11 +3,7 @@ package Moose::Meta::Method;
 use strict;
 use warnings;
 
-use Class::MOP::MiniTrait;
-
 use base 'Class::MOP::Method';
-
-Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 sub _error_thrower {
     my $self = shift;

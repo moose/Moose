@@ -16,13 +16,10 @@ use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
 use Moose::Meta::Method::Meta;
 use Moose::Util qw( ensure_all_roles );
-use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
          'Class::MOP::Mixin::HasMethods';
-
-Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 ## ------------------------------------------------------------------
 ## NOTE:

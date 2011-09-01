@@ -16,11 +16,8 @@ use Moose::Meta::Method::Accessor;
 use Moose::Meta::Method::Delegation;
 use Moose::Util ();
 use Moose::Util::TypeConstraints ();
-use Class::MOP::MiniTrait;
 
 use base 'Class::MOP::Attribute', 'Moose::Meta::Mixin::AttributeCore';
-
-Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 __PACKAGE__->meta->add_attribute('traits' => (
     reader    => 'applied_traits',

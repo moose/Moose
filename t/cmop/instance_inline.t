@@ -4,6 +4,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Class::MOP;
 use Class::MOP::Instance;
 
 my $C = 'Class::MOP::Instance';
