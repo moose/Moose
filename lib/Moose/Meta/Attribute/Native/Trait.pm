@@ -124,12 +124,23 @@ around '_canonicalize_handles' => sub {
             "The 'handles' option must be a HASH reference, not $handles");
     }
 
-    return map {
-        my $to = $handles->{$_};
-        $to = [$to] unless ref $to;
-        $_ => $to
-    } keys %$handles;
+    return
+        map { $_ => $self->_canonicalize_handles_value( $handles->{$_} ) }
+        keys %$handles;
 };
+
+sub _canonicalize_handles_value {
+    my $self  = shift;
+    my $value = shift;
+
+    if ( ref $value && 'ARRAY' ne ref $value ) {
+        $self->throw_error(
+            "All values passed to handles must be strings or ARRAY references, not $value"
+        );
+    }
+
+    return ref $value ? $value : [$value];
+}
 
 around '_make_delegation_method' => sub {
     my $next = shift;
