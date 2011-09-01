@@ -136,6 +136,13 @@ arguments, sets the value of the specified key.
 
 When called as a setter, this method returns the value that was set.
 
+=item B<shallow_clone>
+
+This method returns a shallow clone of the hash reference.  The return value
+is a reference to a new hash with the same keys and values.  It is I<shallow>
+because any values that were references in the original will be the I<same>
+references in the clone.
+
 =back
 
 Note that C<each> is deliberately omitted, due to its stateful interaction

@@ -300,6 +300,13 @@ in the array.
 
 This method accepts one or two arguments.
 
+=item B<shallow_clone>
+
+This method returns a shallow clone of the array reference.  The return value
+is a reference to a new array with the same elements.  It is I<shallow>
+because any elements that were references in the original will be the I<same>
+references in the clone.
+
 =back
 
 =head1 BUGS
