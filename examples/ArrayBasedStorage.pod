@@ -33,6 +33,8 @@ sub clone_instance {
     $self->bless_instance_structure([ @$instance ]);
 }
 
+sub is_inlinable { 0 }
+
 # operations on meta instance
 
 sub get_slot_index_map { (shift)->{'slot_index_map'} }
