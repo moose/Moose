@@ -77,16 +77,81 @@ sub _initialize_body {
     my $method_name = join "_" => (
         '_generate',
         $self->accessor_type,
-        'method',
-        ($self->is_inline ? 'inline' : ())
+        'method'
     );
 
     $self->{'body'} = $self->$method_name();
 }
 
-## generators
+sub _error_thrower {
+    my $self = shift;
+
+    return $self->associated_attribute
+        if ref $self
+            && $self->associated_attribute
+            && $self->associated_attribute->can('throw_error');
+
+    return $self->SUPER::_error_thrower;
+}
+
+sub _compile_code {
+    my $self = shift;
+    my @args = @_;
+    try {
+        $self->SUPER::_compile_code(@args);
+    }
+    catch {
+        $self->throw_error(
+            'Could not create writer for '
+          . "'" . $self->associated_attribute->name . "' "
+          . 'because ' . $_,
+            error => $_,
+        );
+    };
+}
+
+sub _eval_environment {
+    my $self = shift;
+    return $self->associated_attribute->_eval_environment
+        if $self->associated_attribute->can('_eval_environment');
+}
+
+sub _instance_is_inlinable {
+    my $self = shift;
+    return $self->associated_attribute->associated_class->instance_metaclass->is_inlinable;
+}
+
+sub _generate_reader_method {
+    my $self = shift;
+    $self->_instance_is_inlinable ? $self->_generate_reader_method_inline(@_)
+                                  : $self->_generate_reader_method_non_inline(@_);
+}
+
+sub _generate_writer_method {
+    my $self = shift;
+    $self->_instance_is_inlinable ? $self->_generate_writer_method_inline(@_)
+                                  : $self->_generate_writer_method_non_inline(@_);
+}
 
 sub _generate_accessor_method {
+    my $self = shift;
+    $self->_instance_is_inlinable ? $self->_generate_accessor_method_inline(@_)
+                                  : $self->_generate_accessor_method_non_inline(@_);
+}
+
+sub _generate_predicate_method {
+    my $self = shift;
+    $self->_instance_is_inlinable ? $self->_generate_predicate_method_inline(@_)
+                                  : $self->_generate_predicate_method_non_inline(@_);
+}
+
+sub _generate_clearer_method {
+    my $self = shift;
+    $self->_instance_is_inlinable ? $self->_generate_clearer_method_inline(@_)
+                                  : $self->_generate_clearer_method_non_inline(@_);
+}
+
+sub _generate_accessor_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
@@ -117,7 +182,7 @@ sub _generate_accessor_method_inline {
     };
 }
 
-sub _generate_reader_method {
+sub _generate_reader_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
@@ -156,7 +221,7 @@ sub _inline_throw_error {
     return 'Carp::confess ' . $_[0];
 }
 
-sub _generate_writer_method {
+sub _generate_writer_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
@@ -181,7 +246,7 @@ sub _generate_writer_method_inline {
     };
 }
 
-sub _generate_predicate_method {
+sub _generate_predicate_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
@@ -206,7 +271,7 @@ sub _generate_predicate_method_inline {
     };
 }
 
-sub _generate_clearer_method {
+sub _generate_clearer_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
@@ -229,6 +294,46 @@ sub _generate_clearer_method_inline {
     catch {
         confess "Could not generate inline clearer because : $_";
     };
+}
+
+sub _writer_value_needs_copy {
+    shift->associated_attribute->_writer_value_needs_copy(@_);
+}
+
+sub _inline_tc_code {
+    shift->associated_attribute->_inline_tc_code(@_);
+}
+
+sub _inline_check_coercion {
+    shift->associated_attribute->_inline_check_coercion(@_);
+}
+
+sub _inline_check_constraint {
+    shift->associated_attribute->_inline_check_constraint(@_);
+}
+
+sub _inline_check_lazy {
+    shift->associated_attribute->_inline_check_lazy(@_);
+}
+
+sub _inline_store_value {
+    shift->associated_attribute->_inline_instance_set(@_) . ';';
+}
+
+sub _inline_get_old_value_for_trigger {
+    shift->associated_attribute->_inline_get_old_value_for_trigger(@_);
+}
+
+sub _inline_trigger {
+    shift->associated_attribute->_inline_trigger(@_);
+}
+
+sub _get_value {
+    shift->associated_attribute->_inline_instance_get(@_);
+}
+
+sub _has_value {
+    shift->associated_attribute->_inline_instance_has(@_);
 }
 
 1;
