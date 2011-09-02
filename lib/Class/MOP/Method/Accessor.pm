@@ -216,11 +216,6 @@ sub _generate_reader_method_inline {
     };
 }
 
-sub _inline_throw_error {
-    my $self = shift;
-    return 'Carp::confess ' . $_[0];
-}
-
 sub _generate_writer_method_non_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
