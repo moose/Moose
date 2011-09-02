@@ -4,7 +4,7 @@ package Moose::Meta::Method::Accessor;
 use strict;
 use warnings;
 
-use base 'Class::MOP::Method::Accessor';
+use base 'Class::MOP::Method::Accessor', 'Moose::Meta::Method';
 
 1;
 
