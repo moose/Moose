@@ -12,16 +12,30 @@ use base 'Class::MOP::Method::Inlined';
 
 sub new {
     my $class   = shift;
-    my %options = @_;
+    my $params = @_ == 1 ? $_[0] : {@_};
 
-    (blessed $options{metaclass} && $options{metaclass}->isa('Class::MOP::Class'))
-        || confess "You must pass a metaclass instance if you want to inline"
-            if $options{is_inline};
+    my $meta = $params->{metaclass};
 
-    ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+    (blessed $meta && $meta->isa('Class::MOP::Class'))
+        || $class->throw_error("You must pass a metaclass instance if you want to inline")
+            if $params->{is_inline};
 
-    my $self = $class->_new(\%options);
+    (ref $params->{options} eq 'HASH')
+        || $class->throw_error("You must pass a hash of options", data => $params->{options});
+
+    ($params->{package_name} && $params->{name})
+        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
+
+    # XXX - This is a hack that came about from the CMOP/Moose
+    # merge. Previously, Moose::Meta::Method::Constructor defaulted to
+    # Moose::Object in this parameter, while the CMOP version expected
+    # nothing. This should be made less of a hack somehow once the merge is
+    # done.
+    $params->{_expected_method_class} = 'Moose::Object'
+        unless exists $params->{_expected_method_class}
+            || !$class->isa('Moose::Meta::Method::Constructor');
+
+    my $self = $class->_new($params);
 
     # we don't want this creating
     # a cycle in the code, if not
@@ -34,12 +48,13 @@ sub new {
 }
 
 sub _new {
-    my $class = shift;
+    my $class  = shift;
+    my $params = shift;
 
-    return Class::MOP::Class->initialize($class)->new_object(@_)
-        if $class ne __PACKAGE__;
-
-    my $params = @_ == 1 ? $_[0] : {@_};
+    return Class::MOP::Class->initialize($class)->new_object($params)
+        if $class ne __PACKAGE__
+            # XXX - temporary hack until cmop & moose are merged
+            && $class ne 'Moose::Meta::Method::Constructor';
 
     return bless {
         # inherited from Class::MOP::Method
@@ -50,14 +65,14 @@ sub _new {
         original_method      => $params->{original_method},
 
         # inherited from Class::MOP::Generated
-        is_inline            => $params->{is_inline} || 0,
-        definition_context   => $params->{definition_context},
+        is_inline => $params->{is_inline} || 1,
+        definition_context => $params->{definition_context},
 
         # inherited from Class::MOP::Inlined
         _expected_method_class => $params->{_expected_method_class},
 
         # defined in this subclass
-        options              => $params->{options} || {},
+        options => $params->{options} || {},
         associated_metaclass => $params->{metaclass},
     }, $class;
 }
@@ -73,7 +88,9 @@ sub _initialize_body {
     my $self        = shift;
     my $method_name = '_generate_constructor_method';
 
-    $method_name .= '_inline' if $self->is_inline;
+    $method_name .= '_inline'
+        if $self->is_inline
+            && $self->associated_metaclass->can('_inline_new_object');
 
     $self->{'body'} = $self->$method_name;
 }

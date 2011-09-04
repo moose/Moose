@@ -1,55 +1,9 @@
-
 package Moose::Meta::Method::Constructor;
 
 use strict;
 use warnings;
 
-use Carp ();
-use List::MoreUtils 'any';
-use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
-use Try::Tiny;
-
-use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Constructor';
-
-sub new {
-    my $class   = shift;
-    my %options = @_;
-
-    my $meta = $options{metaclass};
-
-    (ref $options{options} eq 'HASH')
-        || $class->throw_error("You must pass a hash of options", data => $options{options});
-
-    ($options{package_name} && $options{name})
-        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
-
-    my $self = bless {
-        'body'          => undef,
-        'package_name'  => $options{package_name},
-        'name'          => $options{name},
-        'options'       => $options{options},
-        'associated_metaclass' => $meta,
-        'definition_context' => $options{definition_context},
-        '_expected_method_class' => $options{_expected_method_class} || 'Moose::Object',
-    } => $class;
-
-    # we don't want this creating
-    # a cycle in the code, if not
-    # needed
-    weaken($self->{'associated_metaclass'});
-
-    $self->_initialize_body;
-
-    return $self;
-}
-
-## method
-
-sub _initialize_body {
-    my $self = shift;
-    $self->{'body'} = $self->_generate_constructor_method_inline;
-}
+use base 'Class::MOP::Method::Constructor', 'Moose::Meta::Method';
 
 1;
 
