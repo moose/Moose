@@ -17,6 +17,9 @@ for, noteworthy changes.
     MooseX::Role::Parameterized which generate new metaclasses on the
     fly. (sartak)
 
+  * Specifying an invalid value in a hashref 'handles' value now throws a
+    sensible error (Dave Rolsky)
+
   [BUG FIXES]
 
   * When specifying an attribute trait, passing options for the trait besides
