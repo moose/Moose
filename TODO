@@ -150,14 +150,6 @@ that people would think to use first is the method that they actually mean.
 Something like renaming find_method_by_name to find_method, and get_method to
 find_local_method or something along those lines.
 
-=== Move load_class and related stuff out to an external module
-
-Choices include Class::Load, Module::Runtime, or writing something ourselves.
-Module::Runtime doesn't currently support is_class_loaded, and neither of those
-two support load_first_existing_class, and we have is_class_loaded in XS at the
-moment, because we call it enough internally (mostly by load_class) for it to
-be noticeable.
-
 === Move method modifiers out to an external module
 
 Class::Method::Modifiers uses a different method for doing method modifiers,
