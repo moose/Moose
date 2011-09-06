@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0205 Tue, Sep 06, 2011
+
   [NEW FEATURES]
 
   * The Array and Hash native traits now provide a "shallow_clone" method,
