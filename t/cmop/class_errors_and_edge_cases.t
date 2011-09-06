@@ -50,8 +50,7 @@ use Class::MOP;
 
     isnt( exception {
         Class::MOP::Class->create('+++');
-    }, undef, '... create requires a valid package_name parameter' );
-
+    }, qr/^\+\+\+ is not a module name/, '... create requires a valid package_name parameter' );
 }
 
 {
