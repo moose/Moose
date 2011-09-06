@@ -48,9 +48,9 @@ use Class::MOP;
         Class::MOP::Class->create('');
     }, undef, '... create requires a valid package_name parameter' );
 
-    like( exception {
+    isnt( exception {
         Class::MOP::Class->create('+++');
-    }, qr/^creation of \+\+\+ failed/, '... create requires a valid package_name parameter' );
+    }, undef, '... create requires a valid package_name parameter' );
 
 }
 
