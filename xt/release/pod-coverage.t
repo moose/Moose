@@ -24,6 +24,8 @@ my %trustme = (
         'in_global_destruction',
         'check_package_cache_flag',
         'load_first_existing_class',
+        'is_class_loaded',
+        'load_class',
     ],
     'Class::MOP::Attribute' => ['process_accessors'],
     'Class::MOP::Class'     => [
