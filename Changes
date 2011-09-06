@@ -18,7 +18,7 @@ for, noteworthy changes.
     fly. (sartak)
 
   * Specifying an invalid value in a hashref 'handles' value now throws a
-    sensible error (Dave Rolsky)
+    sensible error. Fixes RT #69990. (Dave Rolsky)
 
   [BUG FIXES]
 
@@ -27,7 +27,7 @@ for, noteworthy changes.
     totally valid when using MooseX::Role::Parameterized. (sartak)
 
   * Allow regexp objects in duck_type constraints (to bring this in line with
-    the Object constraint)
+    the Object constraint).
 
   [DEPRECATIONS]
 
