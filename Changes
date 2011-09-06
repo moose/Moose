@@ -3,12 +3,6 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-  [NEW FEATURES]
-
-  * The Array and Hash native traits now provide a "shallow_clone" method,
-    which will return a reference to a new container with the same contents as
-    the attribute's reference.
-
   [ENHANCEMENTS]
 
   * The Moose::Exporter module now has a "meta_lookup" option when creating an
@@ -16,18 +10,6 @@ for, noteworthy changes.
     the metaclass of a caller. This is useful for modules like
     MooseX::Role::Parameterized which generate new metaclasses on the
     fly. (sartak)
-
-  * Specifying an invalid value in a hashref 'handles' value now throws a
-    sensible error. Fixes RT #69990. (Dave Rolsky)
-
-  [BUG FIXES]
-
-  * When specifying an attribute trait, passing options for the trait besides
-    -alias or -excludes caused a warning. However, passing other options is
-    totally valid when using MooseX::Role::Parameterized. (sartak)
-
-  * Allow regexp objects in duck_type constraints (to bring this in line with
-    the Object constraint).
 
   [DEPRECATIONS]
 
@@ -40,6 +22,28 @@ for, noteworthy changes.
     no longer documented, and will cause a deprecation warning in the
     future. Moose now uses Class::Load to provide this functionality, and you
     should as well. (Dave Rolsky)
+
+2.0205 Tue, Sep 06, 2011
+
+  [NEW FEATURES]
+
+  * The Array and Hash native traits now provide a "shallow_clone" method,
+    which will return a reference to a new container with the same contents as
+    the attribute's reference.
+
+  [ENHANCEMENTS]
+
+  * Specifying an invalid value in a hashref 'handles' value now throws a
+    sensible error. Fixes RT #69990. (Dave Rolsky)
+
+  [BUG FIXES]
+
+  * When specifying an attribute trait, passing options for the trait besides
+    -alias or -excludes caused a warning. However, passing other options is
+    totally valid when using MooseX::Role::Parameterized. (sartak)
+
+  * Allow regexp objects in duck_type constraints (to bring this in line with
+    the Object constraint).
 
 2.0204 Thu, Aug 25, 2011
 

@@ -32,6 +32,12 @@ L<Moose::Meta::TypeConstraint> object directly.
 
 Use the inlining feature (C<inline_as>) added in 2.0100 instead.
 
+=back
+
+=head1 2.0205
+
+=over 4
+
 =item Array and Hash native traits provide a C<shallow_clone> method
 
 The Array and Hash native traits now provide a "shallow_clone" method, which
