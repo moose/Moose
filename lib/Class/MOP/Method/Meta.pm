@@ -14,7 +14,7 @@ use base 'Class::MOP::Method';
 sub _is_caller_mop_internal {
     my $self = shift;
     my ($caller) = @_;
-    return $caller =~ /^(?:Class::MOP|metaclass)(?:::|$)/;
+    return $caller =~ /^(?:Class::MOP|metaclass|Moose)(?:::|$)/;
 }
 
 sub _generate_meta_method {

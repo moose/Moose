@@ -4,26 +4,7 @@ package Moose::Meta::Method::Meta;
 use strict;
 use warnings;
 
-use base 'Moose::Meta::Method',
-         'Class::MOP::Method::Meta';
-
-sub _is_caller_mop_internal {
-    my $self = shift;
-    my ($caller) = @_;
-    return 1 if $caller =~ /^Moose(?:::|$)/;
-    return $self->SUPER::_is_caller_mop_internal($caller);
-}
-
-# XXX: ugh multiple inheritance
-sub wrap {
-    my $class = shift;
-    return $class->Class::MOP::Method::Meta::wrap(@_);
-}
-
-sub _make_compatible_with {
-    my $self = shift;
-    return $self->Class::MOP::Method::Meta::_make_compatible_with(@_);
-}
+use base 'Class::MOP::Method::Meta', 'Moose::Meta::Method';
 
 1;
 
