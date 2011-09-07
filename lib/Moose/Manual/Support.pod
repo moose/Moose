@@ -1,9 +1,10 @@
+package Moose::Manual::Support
+
+# ABSTRACT: Policies regarding support, releases, and compatibility.
+
+__END__
+
 =pod
-
-=head1 NAME
-
-Moose::Manual::Support - Policies regarding support, releases, and
-compatibility.
 
 =head1 SUPPORT POLICY
 

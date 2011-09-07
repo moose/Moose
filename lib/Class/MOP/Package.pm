@@ -22,8 +22,7 @@ sub initialize {
     my $package_name = delete $options{package};
 
 
-    # we hand-construct the class 
-    # until we can bootstrap it
+    # we hand-construct the class until we can bootstrap it
     if ( my $meta = Class::MOP::get_metaclass_by_name($package_name) ) {
         return $meta;
     } else {
@@ -187,7 +186,7 @@ sub _new {
 # Attributes
 
 # NOTE:
-# all these attribute readers will be bootstrapped 
+# all these attribute readers will be bootstrapped
 # away in the Class::MOP bootstrap section
 
 sub _package_stash {

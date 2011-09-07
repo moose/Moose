@@ -33,13 +33,11 @@ require Class::MOP;
 
 1;
 
+# ABSTRACT: Extremely limited trait application
+
 __END__
 
 =pod
-
-=head1 NAME 
-
-Class::MOP::MiniTrait - Extremely limited trait application
 
 =head1 DESCRIPTION
 

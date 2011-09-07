@@ -14,13 +14,11 @@ use Package::DeprecationManager 0.07 -deprecations => {
 
 1;
 
+# ABSTRACT: Manages deprecation warnings for Moose
+
 __END__
 
 =pod
-
-=head1 NAME 
-
-Moose::Deprecated - Manages deprecation warnings for Moose
 
 =head1 DESCRIPTION
 

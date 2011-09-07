@@ -110,26 +110,26 @@ sub initialize_instance_slot {
     # attribute's default value (if it has one)
     if(defined $init_arg and exists $params->{$init_arg}){
         $self->_set_initial_slot_value(
-            $meta_instance, 
+            $meta_instance,
             $instance,
             $params->{$init_arg},
         );
-    } 
+    }
     elsif (exists $self->{'default'}) {
         $self->_set_initial_slot_value(
-            $meta_instance, 
+            $meta_instance,
             $instance,
             $self->default($instance),
         );
-    } 
+    }
     elsif (defined( my $builder = $self->{'builder'})) {
         if ($builder = $instance->can($builder)) {
             $self->_set_initial_slot_value(
-                $meta_instance, 
+                $meta_instance,
                 $instance,
                 $instance->$builder,
             );
-        } 
+        }
         else {
             confess(ref($instance)." does not support builder method '". $self->{'builder'} ."' for attribute '" . $self->name . "'");
         }
@@ -163,8 +163,8 @@ sub _make_initializer_writer_callback {
     };
 }
 
-sub get_read_method  { 
-    my $self   = shift;    
+sub get_read_method  {
+    my $self   = shift;
     my $reader = $self->reader || $self->accessor;
     # normal case ...
     return $reader unless ref $reader;
@@ -173,19 +173,19 @@ sub get_read_method  {
     return $name;
 }
 
-sub get_write_method { 
+sub get_write_method {
     my $self   = shift;
-    my $writer = $self->writer || $self->accessor; 
+    my $writer = $self->writer || $self->accessor;
     # normal case ...
     return $writer unless ref $writer;
     # the HASH ref case
     my ($name) = %$writer;
-    return $name;    
+    return $name;
 }
 
 sub get_read_method_ref {
     my $self = shift;
-    if ((my $reader = $self->get_read_method) && $self->associated_class) {   
+    if ((my $reader = $self->get_read_method) && $self->associated_class) {
         return $self->associated_class->get_method($reader);
     }
     else {
@@ -204,8 +204,8 @@ sub get_read_method_ref {
 }
 
 sub get_write_method_ref {
-    my $self = shift;    
-    if ((my $writer = $self->get_write_method) && $self->associated_class) {         
+    my $self = shift;
+    if ((my $writer = $self->get_write_method) && $self->associated_class) {
         return $self->associated_class->get_method($writer);
     }
     else {

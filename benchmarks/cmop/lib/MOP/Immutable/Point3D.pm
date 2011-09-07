@@ -12,7 +12,7 @@ __PACKAGE__->meta->add_attribute('z' => (accessor => 'z'));
 sub clear {
     my $self = shift;
     $self->SUPER::clear();
-    $self->z(0);    
+    $self->z(0);
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -29,12 +29,12 @@ sub _new {
     } => $class;
 }
 
-sub version {  
+sub version {
     my $self = shift;
     ${$self->get_or_add_package_symbol('$VERSION')};
 }
 
-sub authority {  
+sub authority {
     my $self = shift;
     ${$self->get_or_add_package_symbol('$AUTHORITY')};
 }
@@ -89,10 +89,6 @@ sub _instantiate_module {
 __END__
 
 =pod
-
-=head1 NAME 
-
-Class::MOP::Module - Module Meta Object
 
 =head1 DESCRIPTION
 

@@ -27,7 +27,7 @@ sub initialize {
     my $class = shift;
 
     my $package_name;
-    
+
     if ( @_ % 2 ) {
         $package_name = shift;
     } else {
@@ -102,7 +102,7 @@ sub _construct_class_instance {
     }
 
     # and check the metaclass compatibility
-    $meta->_check_metaclass_compatibility();  
+    $meta->_check_metaclass_compatibility();
 
     Class::MOP::store_metaclass_by_name($package_name, $meta);
 
@@ -716,7 +716,7 @@ sub get_meta_instance {
 
 sub _create_meta_instance {
     my $self = shift;
-    
+
     my $instance = $self->instance_metaclass->new(
         associated_metaclass => $self,
         attributes => [ $self->get_all_attributes() ],
@@ -997,18 +997,18 @@ sub class_precedence_list {
     my $self = shift;
     my $name = $self->name;
 
-    unless (Class::MOP::IS_RUNNING_ON_5_10()) { 
+    unless (Class::MOP::IS_RUNNING_ON_5_10()) {
         # NOTE:
         # We need to check for circular inheritance here
-        # if we are are not on 5.10, cause 5.8 detects it 
-        # late. This will do nothing if all is well, and 
+        # if we are are not on 5.10, cause 5.8 detects it
+        # late. This will do nothing if all is well, and
         # blow up otherwise. Yes, it's an ugly hack, better
-        # suggestions are welcome.        
+        # suggestions are welcome.
         # - SL
-        ($name || return)->isa('This is a test for circular inheritance') 
+        ($name || return)->isa('This is a test for circular inheritance')
     }
 
-    # if our mro is c3, we can 
+    # if our mro is c3, we can
     # just grab the linear_isa
     if (mro::get_mro($name) eq 'c3') {
         return @{ mro::get_linear_isa($name) }
@@ -1016,7 +1016,7 @@ sub class_precedence_list {
     else {
         # NOTE:
         # we can't grab the linear_isa for dfs
-        # since it has all the duplicates 
+        # since it has all the duplicates
         # already removed.
         return (
             $name,

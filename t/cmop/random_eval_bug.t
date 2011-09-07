@@ -7,9 +7,10 @@ use Class::MOP;
 
 =pod
 
-This tests a bug which is fixed in 0.22 by 
-localizing all the $@'s around any evals.
-This a real pain to track down. 
+This tests a bug which is fixed in 0.22 by localizing all the $@'s around any
+evals.
+
+This a real pain to track down.
 
 Moral of the story:
 

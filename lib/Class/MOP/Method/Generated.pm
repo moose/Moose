@@ -63,13 +63,11 @@ sub _compile_code {
 
 1;
 
+# ABSTRACT: Abstract base class for generated methods
+
 __END__
 
 =pod
-
-=head1 NAME 
-
-Class::MOP::Method::Generated - Abstract base class for generated methods
 
 =head1 DESCRIPTION
 

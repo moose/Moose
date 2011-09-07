@@ -11,7 +11,7 @@ use Class::MOP::Class;
   A
  / \
 B   C
- \ / 
+ \ /
   D
 
 =cut
@@ -73,7 +73,7 @@ ok($@, '... recursive inheritance breaks correctly :)');
  |    A   |
  |   / \  |
  +->B   C-+
-     \ / 
+     \ /
       D
 
 =cut
@@ -101,8 +101,8 @@ is_deeply(
 
 =pod
 
-Test all the class_precedence_lists 
-using Perl's own dispatcher to check 
+Test all the class_precedence_lists
+using Perl's own dispatcher to check
 against.
 
 =cut

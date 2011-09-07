@@ -16,7 +16,7 @@ sub new {
 sub clear {
     my $self = shift;
     $self->x(0);
-    $self->y(0);    
+    $self->y(0);
 }
 
 1;

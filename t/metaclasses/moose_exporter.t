@@ -273,17 +273,16 @@ use Test::Requires {
 
 {
     package MooseX::OverridingSugar::PassThru;
-    
+
     sub with {
         my $caller = shift->name;
         return $caller . ' called with';
     }
-    
+
     Moose::Exporter->setup_import_methods(
         with_meta => ['with'],
         also      => 'MooseX::OverridingSugar',
     );
-    
 }
 
 {

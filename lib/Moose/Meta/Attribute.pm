@@ -80,7 +80,7 @@ sub _inline_throw_error {
 sub new {
     my ($class, $name, %options) = @_;
     $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
-    
+
     delete $options{__hack_no_process_options};
 
     my %attrs =

@@ -8,13 +8,11 @@ use Package::DeprecationManager -deprecations => {
 
 1;
 
+# ABSTRACT: Manages deprecation warnings for Class::MOP
+
 __END__
 
 =pod
-
-=head1 NAME 
-
-Class::MOP::Deprecated - Manages deprecation warnings for Class::MOP
 
 =head1 DESCRIPTION
 

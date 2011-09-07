@@ -11,7 +11,7 @@ __PACKAGE__->meta->add_attribute('y' => (accessor => 'y'));
 sub clear {
     my $self = shift;
     $self->x(0);
-    $self->y(0);    
+    $self->y(0);
 }
 
 __PACKAGE__->meta->make_immutable;
