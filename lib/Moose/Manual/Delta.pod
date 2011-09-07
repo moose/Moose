@@ -62,6 +62,8 @@ L<Moose::Util::TypeConstraints>. Use C<inline_as> instead.
 
 This will start warning in the 2.0300 release.
 
+=back
+
 =head1 2.0002
 
 =over 4
