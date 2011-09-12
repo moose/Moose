@@ -150,6 +150,12 @@ that people would think to use first is the method that they actually mean.
 Something like renaming find_method_by_name to find_method, and get_method to
 find_local_method or something along those lines.
 
+=== use Sub::Identify instead of doing our own thing with get_code_info
+
+No idea why we stopped using Sub::Identify in the past, but there's no reason
+not to do this. We have a bug fix in our version (the isGV_with_GP thing), so
+this should be submitted to Sub::Identify first.
+
 === Move method modifiers out to an external module
 
 Class::Method::Modifiers uses a different method for doing method modifiers,
