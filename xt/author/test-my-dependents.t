@@ -44,7 +44,6 @@ __DATA__
 Moose::Autobox
 MooseX::ABC
 MooseX::APIRole
-MooseX::AbstractFactory
 MooseX::Accessors::ReadWritePrivate
 MooseX::Aliases
 MooseX::AlwaysCoerce
