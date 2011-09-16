@@ -454,4 +454,32 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     is( exception { $k->foo_baz }, undef, "but not for class name" );
 }
 
+{
+    package Delegator;
+    use Moose;
+
+    sub full { 1 }
+    sub stub;
+
+    ::like(
+        ::exception{ has d1 => (
+                isa     => 'X',
+                handles => ['full'],
+            );
+            },
+        qr/\QYou cannot overwrite a locally defined method (full) with a delegation/,
+        'got an error when trying to declare a delegation method that overwrites a local method'
+    );
+
+    ::is(
+        ::exception{ has d2 => (
+                isa     => 'X',
+                handles => ['stub'],
+            );
+            },
+        undef,
+        'no error when trying to declare a delegation method that overwrites a stub method'
+    );
+}
+
 done_testing;
