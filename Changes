@@ -40,7 +40,8 @@ for, noteworthy changes.
 
   * When specifying an attribute trait, passing options for the trait besides
     -alias or -excludes caused a warning. However, passing other options is
-    totally valid when using MooseX::Role::Parameterized. (sartak)
+    totally valid when using MooseX::Role::Parameterized. Fixes RT
+    #70419. (sartak)
 
   * Allow regexp objects in duck_type constraints (to bring this in line with
     the Object constraint).
