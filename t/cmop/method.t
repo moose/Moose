@@ -27,6 +27,8 @@ is( $method->original_name, '__ANON__',
 is( $method->original_fully_qualified_name, 'main::__ANON__',
     '... the original_fully_qualified_name is the same as fully_qualified_name'
 );
+ok( !$method->is_stub,
+    '... the method is not a stub' );
 
 isnt( exception { Class::MOP::Method->wrap }, undef, q{... can't call wrap() without some code} );
 isnt( exception { Class::MOP::Method->wrap( [] ) }, undef, q{... can't call wrap() without some code} );
@@ -145,5 +147,26 @@ is($wrapped->name, '__ANON__', 'method name copied properly');
 
 my $wrapped2 = Method::Subclass->wrap($method, foo => 'baz', name => 'FOO');
 is($wrapped2->name, 'FOO', 'got a new method name');
+
+{
+    package Foo;
+
+    sub full {1}
+    sub stub;
+}
+
+{
+    my $meta = Class::MOP::Class->initialize('Foo');
+
+    ok( $meta->has_method($_), "Foo class has $_ method" )
+        for qw( full stub );
+
+    my $full = $meta->get_method('full');
+    ok( !$full->is_stub, 'full is not a stub' );
+
+    my $stub = $meta->get_method('stub');
+
+    ok( $stub->is_stub, 'stub is a stub' );
+}
 
 done_testing;
