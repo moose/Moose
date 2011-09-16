@@ -16,6 +16,12 @@ for, noteworthy changes.
     MooseX::Role::Parameterized which generate new metaclasses on the
     fly. (sartak)
 
+  * Added a Moose::Meta::Method->is_stub method. (Dave Rolsky)
+
+  * An attribute accessor or delegation method can overwrite a stub method and
+    this will no longer throw an error. Reported by Mark-Jason Dominus. Fixes
+    RT 69988. (Dave Rolsky)
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
