@@ -1109,7 +1109,7 @@ sub find_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
-    foreach my $class ($self->linearized_isa) {
+    foreach my $class ($self->linearized_isa, 'UNIVERSAL') {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);
         return $method if defined $method;
     }
@@ -1120,7 +1120,7 @@ sub get_all_methods {
     my $self = shift;
 
     my %methods;
-    for my $class ( reverse $self->linearized_isa ) {
+    for my $class ( 'UNIVERSAL', reverse $self->linearized_isa ) {
         my $meta = Class::MOP::Class->initialize($class);
 
         $methods{ $_->name } = $_ for $meta->_get_local_methods;
@@ -1132,7 +1132,11 @@ sub get_all_methods {
 sub get_all_method_names {
     my $self = shift;
     my %uniq;
-    return grep { !$uniq{$_}++ } map { Class::MOP::Class->initialize($_)->get_method_list } $self->linearized_isa;
+
+    return
+        grep { !$uniq{$_}++ }
+        map  { Class::MOP::Class->initialize($_)->get_method_list }
+        $self->linearized_isa, 'UNIVERSAL';
 }
 
 sub find_all_methods_by_name {
@@ -1140,7 +1144,7 @@ sub find_all_methods_by_name {
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
     my @methods;
-    foreach my $class ($self->linearized_isa) {
+    foreach my $class ($self->linearized_isa, 'UNIVERSAL') {
         # fetch the meta-class ...
         my $meta = Class::MOP::Class->initialize($class);
         push @methods => {
@@ -1156,7 +1160,7 @@ sub find_next_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
-    my @cpl = $self->linearized_isa;
+    my @cpl = ($self->linearized_isa, 'UNIVERSAL');
     shift @cpl; # discard ourselves
     foreach my $class (@cpl) {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);

@@ -13,7 +13,7 @@ sub apply {
         $_ = Class::MOP::Class->initialize($_);
     }
 
-    for my $meth ( $trait->get_all_methods ) {
+    for my $meth ( grep { $_->package_name ne 'UNIVERSAL' } $trait->get_all_methods ) {
         my $meth_name = $meth->name;
 
         if ( $to_class->find_method_by_name($meth_name) ) {
