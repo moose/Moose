@@ -29,6 +29,12 @@ for, noteworthy changes.
 
   * Added a Moose::Meta::Method->is_stub method. (Dave Rolsky)
 
+  [BUG FIXES]
+
+  * A subtype of a union type did not return the right results when you called
+    ->is_subtype_of or ->is_a_type_of on it. This has been fixed. RT
+    #70322. (Dave Rolsky)
+
   * An attribute accessor or delegation method can overwrite a stub method and
     this will no longer throw an error. Reported by Mark-Jason Dominus. Fixes
     RT 69988. (Dave Rolsky)
