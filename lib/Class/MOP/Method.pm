@@ -240,6 +240,12 @@ If this method is a clone of a clone (of a clone, etc.), this method
 returns the fully qualified name from the I<first> method in the chain
 of clones.
 
+=item B<< $metamethod->is_stub >>
+
+Returns true if the method is just a stub:
+
+  sub foo;
+
 =item B<< $metamethod->attach_to_class($metaclass) >>
 
 Given a L<Class::MOP::Class> object, this method sets the associated
