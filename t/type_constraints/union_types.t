@@ -5,9 +5,7 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 my $Str = find_type_constraint('Str');
 isa_ok($Str, 'Moose::Meta::TypeConstraint');

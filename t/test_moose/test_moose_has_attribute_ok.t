@@ -6,9 +6,7 @@ use warnings;
 use Test::Builder::Tester;
 use Test::More;
 
-BEGIN {
-  use_ok('Test::Moose');
-}
+use Test::Moose;
 
 {
     package Foo;

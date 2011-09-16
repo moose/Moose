@@ -7,9 +7,7 @@ use Test::More;
 use Test::Fatal;
 use Scalar::Util qw(refaddr);
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 # subtype 'aliasing' ...
 

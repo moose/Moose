@@ -6,9 +6,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-BEGIN {
-    use_ok("Moose::Util::TypeConstraints");
-}
+use Moose::Util::TypeConstraints;
 
 is( exception {
     subtype 'MySpecialHash' => as 'HashRef[Int]';

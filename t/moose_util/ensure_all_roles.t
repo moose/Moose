@@ -5,9 +5,7 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    use_ok('Moose::Util', ':all');
-}
+use Moose::Util ':all';
 
 {
     package Foo;

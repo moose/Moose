@@ -6,10 +6,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-BEGIN {
-    use_ok("Moose::Util::TypeConstraints");
-    use_ok('Moose::Meta::TypeConstraint::Parameterized');
-}
+use Moose::Util::TypeConstraints;
+use Moose::Meta::TypeConstraint::Parameterized;
 
 BEGIN {
     package MyList;

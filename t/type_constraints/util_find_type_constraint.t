@@ -5,9 +5,7 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-}
+use Moose::Util::TypeConstraints;
 
 foreach my $type_name (qw(
     Any

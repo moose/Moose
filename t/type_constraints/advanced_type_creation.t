@@ -5,10 +5,8 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    use_ok('Moose::Util::TypeConstraints');
-    use_ok('Moose::Meta::TypeConstraint::Parameterized');
-}
+use Moose::Util::TypeConstraints;
+use Moose::Meta::TypeConstraint::Parameterized;
 
 my $r = Moose::Util::TypeConstraints->get_type_constraint_registry;
 
