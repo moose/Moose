@@ -23,6 +23,12 @@ send us a patch.
 
 =over 4
 
+=item Union types consider all members in the C<is_subtype_of> and C<is_a_type_of> methods
+
+Previously, a union type would report itself as being of a subtype of a type
+if I<any> of its member types were subtypes of that type. This has changed
+so that I<all> of its member types must be a subtype of the specified type.
+
 =item Hand-optimized type constraint code causes a deprecation warning
 
 If you provide an optimized sub ref for a type constraint, this now causes a

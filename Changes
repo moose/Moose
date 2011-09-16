@@ -8,6 +8,13 @@ for, noteworthy changes.
   * The optimize_as option for type constraints has been deprecated. Use the
     inline_as option to provide inlining code instead. (Dave Rolsky)
 
+  [API CHANGES]
+
+  * The ->is_subtype_of and ->is_a_type_of methods have changed their
+    behavior. Previously, they returned true if any of their member types
+    returned true for a given type. Now, all of the member types must return
+    true. Fixes RT #67731. (Dave Rolsky)
+
   [ENHANCEMENTS]
 
   * The Moose::Exporter module now has a "meta_lookup" option when creating an
