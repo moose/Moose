@@ -24,8 +24,8 @@ isa_ok($Str_or_Undef, 'Moose::Meta::TypeConstraint::Union');
 ok($Str_or_Undef->check(undef), '... (Str | Undef) can accept an Undef value');
 ok($Str_or_Undef->check('String'), '... (Str | Undef) can accept a String value');
 
-ok($Str_or_Undef->is_a_type_of($Str), "subtype of Str");
-ok($Str_or_Undef->is_a_type_of($Undef), "subtype of Undef");
+ok(!$Str_or_Undef->is_a_type_of($Str), "subtype of Str");
+ok(!$Str_or_Undef->is_a_type_of($Undef), "subtype of Undef");
 
 cmp_ok($Str_or_Undef->find_type_for('String'), 'eq', 'Str', 'find_type_for Str');
 cmp_ok($Str_or_Undef->find_type_for(undef), 'eq', 'Undef', 'find_type_for Undef');
