@@ -153,18 +153,14 @@ sub find_type_for {
 
 sub is_a_type_of {
     my ($self, $type_name) = @_;
-    foreach my $type (@{$self->type_constraints}) {
-        return 1 if $type->is_a_type_of($type_name);
-    }
-    return 0;
+
+    return all { $_->is_a_type_of($type_name) } @{ $self->type_constraints };
 }
 
 sub is_subtype_of {
     my ($self, $type_name) = @_;
-    foreach my $type (@{$self->type_constraints}) {
-        return 1 if $type->is_subtype_of($type_name);
-    }
-    return 0;
+
+    return all { $_->is_subtype_of($type_name) } @{ $self->type_constraints };
 }
 
 sub create_child_type {
@@ -261,12 +257,12 @@ a given value matches.
 
 =item B<< $constraint->is_a_type_of($type_name_or_object) >>
 
-This returns true if any of the member type constraints return true
+This returns true if all of the member type constraints return true
 for the C<is_a_type_of> method.
 
 =item B<< $constraint->is_subtype_of >>
 
-This returns true if any of the member type constraints return true
+This returns true if all of the member type constraints return true
 for the C<is_a_subtype_of> method.
 
 =item B<< $constraint->create_child_type(%options) >>
