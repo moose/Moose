@@ -14,13 +14,6 @@ good), although it's hard to test to see what actually works.
 RT#69839 - UNIVERSAL methods should show up as methods, so things like method
 modifiers work
 
-=== Deprecate old-style Moose extensions
-
-Moose extensions that work by calling Moose->init_meta(metaclass =>
-'Some::Custom::Metaclass', ...) during their own init_meta should be
-deprecated, so they can be removed later (this should fix the issues with
-init_meta generation in Moose::Exporter, see RT51561)
-
 === Register implicitly created class/role types
 
 When you do has foo => (isa => 'Bar'), it returns a class_type for Bar, but
@@ -54,6 +47,13 @@ For each role-specific thing (methods, attributes, etc.) we should allow a
 role_attribute, role_method, etc. key. The common case will be that the
 metaroles are intended for the consuming class, but we should allow for
 metaroles on the role's metaobjects as well.
+
+=== Deprecate old-style Moose extensions
+
+Moose extensions that work by calling Moose->init_meta(metaclass =>
+'Some::Custom::Metaclass', ...) during their own init_meta should be
+deprecated, so they can be removed later (this should fix the issues with
+init_meta generation in Moose::Exporter, see RT51561)
 
 === Attributes in roles need to be able to participate in role composition
 
