@@ -55,6 +55,8 @@ Moose extensions that work by calling Moose->init_meta(metaclass =>
 deprecated, so they can be removed later (this should fix the issues with
 init_meta generation in Moose::Exporter, see RT51561)
 
+This needs to wait until the previous fix gets in, since it will hopefully eliminate the need to write custom init_meta methods entirely.
+
 === Attributes in roles need to be able to participate in role composition
 
 Right now, this fails with no decent workaround:
@@ -95,6 +97,9 @@ get_overload, get_overload_list, etc. In particular, this would allow
 namespace::autoclean to not break things.
 
 Also, MooseX::Role::WithOverloading should probably be cored.
+
+This should probably also wait for the metarole unification fix, to avoid the
+::WithOverloading stuff being too insane.
 
 
 == Todo for later
