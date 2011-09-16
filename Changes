@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DEPRECATIONS]
+
+  * The optimize_as option for type constraints has been deprecated. Use the
+    inline_as option to provide inlining code instead. (Dave Rolsky)
+
   [ENHANCEMENTS]
 
   * The Moose::Exporter module now has a "meta_lookup" option when creating an
@@ -10,11 +15,6 @@ for, noteworthy changes.
     the metaclass of a caller. This is useful for modules like
     MooseX::Role::Parameterized which generate new metaclasses on the
     fly. (sartak)
-
-  [DEPRECATIONS]
-
-  * The optimize_as option for type constraints has been deprecated. Use the
-    inline_as option to provide inlining code instead. (Dave Rolsky)
 
   [OTHER]
 
