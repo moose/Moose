@@ -1084,8 +1084,10 @@ sub install_delegation {
         my $class_name = $associated_class->name;
         my $name = "${class_name}::${handle}";
 
-            (!$associated_class->has_method($handle))
-                || $self->throw_error("You cannot overwrite a locally defined method ($handle) with a delegation", method_name => $handle);
+        ( !$associated_class->has_method($handle) )
+            || $self->throw_error(
+            "You cannot overwrite a locally defined method ($handle) with a delegation",
+            method_name => $handle );
 
         # NOTE:
         # handles is not allowed to delegate
