@@ -51,6 +51,19 @@ is($Point->get_attribute('y')->insertion_order, 1, 'Insertion order of Attribute
 
     is(
         $class->get_attribute('first')->insertion_order, 0,
+        'insertion_order for first is still 0 after adding first (again)'
+    );
+
+    is(
+        $class->get_attribute('second')->insertion_order, 1,
+        'insertion_order for second is still 0 after adding first (again)'
+    );
+
+    $class->remove_attribute('first');
+    $class->add_attribute('first');
+
+    is(
+        $class->get_attribute('first')->insertion_order, 0,
         'insertion_order for first is still 0 after removing and readding first'
     );
 
