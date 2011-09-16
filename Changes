@@ -16,6 +16,12 @@ for, noteworthy changes.
     MooseX::Role::Parameterized which generate new metaclasses on the
     fly. (sartak)
 
+  [BUG FIXES]
+
+  * When an attribute was removed and then re-added, it's insertion_order
+    could end up being the same as another attribute. This has been fixed so
+    that the old order is reused if possible.
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
