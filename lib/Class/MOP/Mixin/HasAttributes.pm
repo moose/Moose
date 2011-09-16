@@ -22,10 +22,17 @@ sub add_attribute {
 
     my $attr_name = $attribute->name;
 
-    $self->remove_attribute($attr_name)
-        if $self->has_attribute($attr_name);
+    my $old_order;
 
-    my $order = ( scalar keys %{ $self->_attribute_map } );
+    if ($self->has_attribute($attr_name)) {
+        my $old_attr = $self->remove_attribute($attr_name);
+        $old_order = $old_attr->insertion_order;
+    }
+
+    my $order
+        = defined $old_order
+        ? $old_order
+        : ( scalar keys %{ $self->_attribute_map } );
     $attribute->_set_insertion_order($order);
 
     $self->_attribute_map->{$attr_name} = $attribute;
