@@ -289,7 +289,7 @@ sub is_subtype_of {
     my $current = $self;
 
     while (my $parent = $current->parent) {
-        return 1 if $parent->equals($type);
+        return 1 if $parent->is_a_type_of($type);
         $current = $parent;
     }
 
