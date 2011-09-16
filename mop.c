@@ -210,7 +210,6 @@ static struct {
     DECLARE_KEY(insertion_order),
     DECLARE_KEY(instance_metaclass),
     DECLARE_KEY(is_inline),
-    DECLARE_KEY(is_stub),
     DECLARE_KEY(method_metaclass),
     DECLARE_KEY(methods),
     DECLARE_KEY(name),

@@ -49,7 +49,6 @@ typedef enum {
     KEY_insertion_order,
     KEY_instance_metaclass,
     KEY_is_inline,
-    KEY_is_stub,
     KEY_method_metaclass,
     KEY_methods,
     KEY_name,
