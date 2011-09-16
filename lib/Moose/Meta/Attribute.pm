@@ -1037,6 +1037,7 @@ sub _process_accessors {
 
     if (
            $method
+        && !$method->is_stub
         && !$method->isa('Class::MOP::Method::Accessor')
         && (  !$self->definition_context
             || $method->package_name eq $self->definition_context->{package} )

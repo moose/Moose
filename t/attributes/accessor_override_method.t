@@ -17,6 +17,7 @@ use Test::Requires {
     sub has_c   { }
     sub clear_d { }
     sub e       { }
+    sub stub;
 }
 
 my $foo_meta = Foo->meta;
@@ -44,6 +45,11 @@ stderr_like(
     sub { $foo_meta->add_attribute( e => ( is => 'rw' ) ) },
     qr/^You are overwriting a locally defined method \(e\) with an accessor/,
     'accessor overriding gives proper warning'
+);
+stderr_is(
+    sub { $foo_meta->add_attribute( stub => ( is => 'rw' ) ) },
+    q{},
+    'overriding a stub with an accessor does not warn'
 );
 stderr_like(
     sub { $foo_meta->add_attribute( has => ( is => 'rw' ) ) },
