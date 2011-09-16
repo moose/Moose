@@ -29,6 +29,12 @@ for, noteworthy changes.
     this will no longer throw an error. Reported by Mark-Jason Dominus. Fixes
     RT 69988. (Dave Rolsky)
 
+  [BUG FIXES]
+
+  * A subtype of a union type did not return the right results when you called
+    ->is_subtype_of or ->is_a_type_of on it. This has been fixed. RT
+    #70322. (Dave Rolsky)
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
