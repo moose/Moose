@@ -185,7 +185,6 @@ MooseX::Types::UUID
 MooseX::Types::UniStr
 MooseX::Types::Varchar
 MooseX::UndefTolerant
-MooseX::WithCache
 MooseX::Workers
 MooseX::YAML
 App::Nopaste
