@@ -185,11 +185,18 @@ is_deeply(
     '... got the right method list for Foo'
 );
 
+my @universal_methods = qw/isa can VERSION/;
+push @universal_methods, 'DOES' if $] >= 5.010;
+
 is_deeply(
-    [ sort { $a->name cmp $b->name } $Foo->get_all_methods() ],
     [
-        map { $Foo->get_method($_) }
-            qw(
+        map { $_->name => $_ }
+        sort { $a->name cmp $b->name } $Foo->get_all_methods()
+    ],
+    [
+        map { $_->name => $_ }
+            map { $Foo->find_method_by_name($_) }
+            sort qw(
             FOO_CONSTANT
             baaz
             bang
@@ -201,7 +208,8 @@ is_deeply(
             floob
             foo
             pie
-            )
+            ),
+        @universal_methods,
     ],
     '... got the right list of applicable methods for Foo'
 );
@@ -252,25 +260,32 @@ is_deeply(
 );
 
 is_deeply(
-    [ sort { $a->name cmp $b->name } $Bar->get_all_methods() ],
     [
-        $Foo->get_method('FOO_CONSTANT'),
-        $Foo->get_method('baaz'),
-        $Foo->get_method('bang'),
-        $Bar->get_method('bar'),
-        (
-            map { $Foo->get_method($_) }
-                qw(
-                baz
-                blah
-                cake
-                evaled_foo
-                floob
-                )
-        ),
-        $Bar->get_method('foo'),
-        $Bar->get_method('meta'),
-        $Foo->get_method('pie'),
+        map { $_->name => $_ }
+        sort { $a->name cmp $b->name } $Bar->get_all_methods()
+    ],
+    [
+        map { $_->name => $_ }
+            sort { $a->name cmp $b->name } (
+            $Foo->get_method('FOO_CONSTANT'),
+            $Foo->get_method('baaz'),
+            $Foo->get_method('bang'),
+            $Bar->get_method('bar'),
+            (
+                map { $Foo->get_method($_) }
+                    qw(
+                    baz
+                    blah
+                    cake
+                    evaled_foo
+                    floob
+                    )
+            ),
+            $Bar->get_method('foo'),
+            $Bar->get_method('meta'),
+            $Foo->get_method('pie'),
+            ( map { $Bar->find_next_method_by_name($_) } @universal_methods )
+            )
     ],
     '... got the right list of applicable methods for Bar'
 );
