@@ -75,6 +75,18 @@ ok(
     "not subtype of non existent type"
 );
 
+is(
+    $Str_or_Undef->parent,
+    find_type_constraint('Item'),
+    'parent of Str|Undef is Item'
+);
+
+is(
+    $Str_or_Undef->parents,
+    find_type_constraint('Item'),
+    'parents of Str|Undef is Item'
+);
+
 # another ....
 
 my $ArrayRef = find_type_constraint('ArrayRef');
@@ -136,5 +148,8 @@ is(
     'Validation failed for \'ArrayRef\' with value 50 and Validation failed for \'HashRef\' with value 50 in (ArrayRef|HashRef)',
     '... (ArrayRef | HashRef) cannot accept Numbers'
 );
+
+is(
+   $HasOr
 
 done_testing;
