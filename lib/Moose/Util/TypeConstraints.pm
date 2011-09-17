@@ -155,7 +155,7 @@ sub create_class_type_constraint {
 #find_type_constraint("ClassName")->check($class)
 #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
 
-    my $pkg_defined_in = scalar( caller(1) );
+    my $pkg_defined_in = $options->{package_defined_in} || scalar( caller(1) );
 
     if (my $type = $REGISTRY->get_type_constraint($class)) {
         if (!($type->isa('Moose::Meta::TypeConstraint::Class') && $type->class eq $class)) {
@@ -188,7 +188,7 @@ sub create_role_type_constraint {
 #find_type_constraint("ClassName")->check($class)
 #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
 
-    my $pkg_defined_in = scalar( caller(1) );
+    my $pkg_defined_in = $options->{package_defined_in} || scalar( caller(1) );
 
     if (my $type = $REGISTRY->get_type_constraint($role)) {
         if (!($type->isa('Moose::Meta::TypeConstraint::Role') && $type->role eq $role)) {
@@ -244,15 +244,15 @@ sub find_or_create_type_constraint {
 }
 
 sub find_or_create_isa_type_constraint {
-    my $type_constraint_name = shift;
+    my ($type_constraint_name, $options) = @_;
     find_or_parse_type_constraint($type_constraint_name)
-        || create_class_type_constraint($type_constraint_name);
+        || create_class_type_constraint($type_constraint_name, $options);
 }
 
 sub find_or_create_does_type_constraint {
-    my $type_constraint_name = shift;
+    my ($type_constraint_name, $options) = @_;
     find_or_parse_type_constraint($type_constraint_name)
-        || create_role_type_constraint($type_constraint_name);
+        || create_role_type_constraint($type_constraint_name, $options);
 }
 
 sub find_or_parse_type_constraint {

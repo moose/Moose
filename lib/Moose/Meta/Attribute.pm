@@ -217,7 +217,7 @@ sub clone_and_inherit_options {
             $type_constraint = $options{isa};
         }
         else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa}, { package_defined_in => $options{definition_context}->{package} });
             (defined $type_constraint)
                 || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
         }
@@ -231,7 +231,7 @@ sub clone_and_inherit_options {
             $type_constraint = $options{does};
         }
         else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does});
+            $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does}, { package_defined_in => $options{definition_context}->{package} });
             (defined $type_constraint)
                 || $self->throw_error("Could not find the type constraint '" . $options{does} . "'", data => $options{does});
         }
@@ -362,7 +362,9 @@ sub _process_isa_option {
     else {
         $options->{type_constraint}
             = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint(
-            $options->{isa} );
+            $options->{isa},
+            { package_defined_in => $options->{definition_context}->{package} }
+        );
     }
 }
 
@@ -379,7 +381,9 @@ sub _process_does_option {
     else {
         $options->{type_constraint}
             = Moose::Util::TypeConstraints::find_or_create_does_type_constraint(
-            $options->{does} );
+            $options->{does},
+            { package_defined_in => $options->{definition_context}->{package} }
+        );
     }
 }
 
