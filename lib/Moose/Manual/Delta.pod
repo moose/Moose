@@ -40,6 +40,14 @@ because any value that passes a subtype constraint must also pass a parent
 constraint. This has changed so that I<all> of its member types must be a
 subtype of the specified type.
 
+=item Methods defined in UNIVERSAL now appear in the MOP
+
+Any method introspection methods that look at methods from parent classes now
+find methods defined in UNIVERSAL. This includes methods like C<<
+$class->get_all_methods >> and C<< $class->find_method_by_name >>.
+
+This also means that you can now apply method modifiers to these methods.
+
 =item Hand-optimized type constraint code causes a deprecation warning
 
 If you provide an optimized sub ref for a type constraint, this now causes a
