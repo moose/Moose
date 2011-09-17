@@ -81,9 +81,9 @@ is(
     'parent of Str|Undef is Item'
 );
 
-is(
-    $Str_or_Undef->parents,
-    find_type_constraint('Item'),
+is_deeply(
+    [$Str_or_Undef->parents],
+    [find_type_constraint('Item')],
     'parents of Str|Undef is Item'
 );
 
