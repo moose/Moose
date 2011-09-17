@@ -24,8 +24,8 @@ isa_ok($Str_or_Undef, 'Moose::Meta::TypeConstraint::Union');
 ok($Str_or_Undef->check(undef), '... (Str | Undef) can accept an Undef value');
 ok($Str_or_Undef->check('String'), '... (Str | Undef) can accept a String value');
 
-ok(!$Str_or_Undef->is_a_type_of($Str), "subtype of Str");
-ok(!$Str_or_Undef->is_a_type_of($Undef), "subtype of Undef");
+ok(!$Str_or_Undef->is_a_type_of($Str), "not a subtype of Str");
+ok(!$Str_or_Undef->is_a_type_of($Undef), "not a subtype of Undef");
 
 cmp_ok($Str_or_Undef->find_type_for('String'), 'eq', 'Str', 'find_type_for Str');
 cmp_ok($Str_or_Undef->find_type_for(undef), 'eq', 'Undef', 'find_type_for Undef');
@@ -36,8 +36,8 @@ ok( $Str_or_Undef->equals($Str_or_Undef), "equal to self" );
 ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Str, $Undef ])), "equal to clone" );
 ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Undef, $Str ])), "equal to reversed clone" );
 
-ok( !$Str_or_Undef->is_a_type_of("ThisTypeDoesNotExist"), "not type of non existant type" );
-ok( !$Str_or_Undef->is_subtype_of("ThisTypeDoesNotExist"), "not subtype of non existant type" );
+ok( !$Str_or_Undef->is_a_type_of("ThisTypeDoesNotExist"), "not type of non existent type" );
+ok( !$Str_or_Undef->is_subtype_of("ThisTypeDoesNotExist"), "not subtype of non existent type" );
 
 # another ....
 
