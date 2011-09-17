@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [API CHANGES]
+
+  * Methods to introspect a class's methods will now return methods defined in
+    UNIVERSAL (isa, can, etc.). This also means that you can wrap these
+    methods with method modifiers. RT #69839. Reported by Vyacheslav
+    Matyukhin. (Dave Rolsky)
+
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
