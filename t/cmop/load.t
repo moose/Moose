@@ -49,16 +49,19 @@ my %METAS = (
     'Class::MOP::Object'          => Class::MOP::Object->meta,
     'Class::MOP::Class::Immutable::Trait' => Class::MOP::class_of('Class::MOP::Class::Immutable::Trait'),
     'Class::MOP::Class::Immutable::Class::MOP::Class' => Class::MOP::Class::Immutable::Class::MOP::Class->meta,
+    'UNIVERSAL' => Class::MOP::class_of('UNIVERSAL'),
 );
 
 ok( is_class_loaded($_), '... ' . $_ . ' is loaded' )
     for keys %METAS;
 
+# The trait shouldn't be made immutable, it doesn't actually do anything, and
+# it doesn't even matter because it's not a class that will be
+# instantiated. Making UNIVERSAL immutable just seems like a bad idea.
+my %expect_mutable = map { $_ => 1 } qw( Class::MOP::Class::Immutable::Trait UNIVERSAL );
+
 for my $meta (values %METAS) {
-    # the trait shouldn't be made immutable, it doesn't actually do anything,
-    # and it doesn't even matter because it's not a class that will be
-    # instantiated
-    if ($meta->name eq 'Class::MOP::Class::Immutable::Trait') {
+    if ( $expect_mutable{$meta->name} ) {
         ok( $meta->is_mutable(), '... ' . $meta->name . ' is mutable' );
     }
     else {
@@ -96,6 +99,7 @@ is_deeply(
         Class::MOP::Module->meta,
         Class::MOP::Object->meta,
         Class::MOP::Package->meta,
+        Class::MOP::class_of('UNIVERSAL'),
     ],
     '... got all the metaclass instances'
 );
@@ -123,6 +127,7 @@ is_deeply(
             Class::MOP::Module
             Class::MOP::Object
             Class::MOP::Package
+            UNIVERSAL
             /,
     ],
     '... got all the metaclass names'
