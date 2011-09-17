@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
+use List::MoreUtils 'firstval';
 use Moose::Util  'english_list';
 use Scalar::Util 'weaken', 'blessed';
 
@@ -116,6 +117,12 @@ sub check_required_methods {
             . "' requires the $noun $list "
             . "to be implemented by '"
             . $class->name . q{'};
+
+        if (my $meth = firstval { $class->name->can($_) } @missing) {
+            $error .= ". If you imported functions intending to use them as "
+                    . "methods, you need to explicitly mark them as such, via "
+                    . $class->name . "->meta->add_method($meth => \\\&$meth)";
+        }
     }
 
     $class->throw_error($error);
