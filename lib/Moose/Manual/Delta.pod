@@ -26,15 +26,19 @@ send us a patch.
 =item The parent of a union type is its components' nearest common ancestor
 
 Previously, union types considered all of their component types their parent
-types. This has been changed to find the nearest common ancestor for all of
-its components. For example, a union of "Int|ArrayRef[Int]" now has a parent
-of "Defined".
+types. This was incorrect because parent types are defined as types that must
+be satisfied in order for the child type to be satisfied, but in a union,
+validating as any parent type will validate against the entire union. This has
+been changed to find the nearest common ancestor for all of its components. For
+example, a union of "Int|ArrayRef[Int]" now has a parent of "Defined".
 
 =item Union types consider all members in the C<is_subtype_of> and C<is_a_type_of> methods
 
-Previously, a union type would report itself as being of a subtype of a type
-if I<any> of its member types were subtypes of that type. This has changed
-so that I<all> of its member types must be a subtype of the specified type.
+Previously, a union type would report itself as being of a subtype of a type if
+I<any> of its member types were subtypes of that type. This was incorrect
+because any value that passes a subtype constraint must also pass a parent
+constraint. This has changed so that I<all> of its member types must be a
+subtype of the specified type.
 
 =item Hand-optimized type constraint code causes a deprecation warning
 
