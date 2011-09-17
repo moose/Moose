@@ -289,7 +289,7 @@ sub is_subtype_of {
     my $current = $self;
 
     while (my $parent = $current->parent) {
-        return 1 if $parent->is_a_type_of($type);
+        return 1 if $parent->equals($type);
         $current = $parent;
     }
 
@@ -418,6 +418,11 @@ sub _collect_all_parents {
         $current = $current->parent;
     }
     return @parents;
+}
+
+sub _ancestor_count {
+    my $self = shift;
+    return scalar $self->_collect_all_parents;
 }
 
 sub create_child_type {

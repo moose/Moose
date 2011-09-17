@@ -128,9 +128,17 @@ sub equals {
     return @other_constraints == 0;
 }
 
-sub parents {
+sub parent {
     my $self = shift;
-    $self->type_constraints;
+
+    my @tcs = @{ $self->type_constraints };
+
+    my $deepest
+        = ( sort { $a->_ancestor_count <=> $b->_ancestor_count } @tcs )[-1];
+
+    for my $parent ( $deepest->_collect_all_parents ) {
+        return $parent if all { $_->is_a_type_of($parent) } @tcs;
+    }
 }
 
 sub validate {
@@ -229,9 +237,9 @@ attribute is a L<Moose::Meta::TypeCoercion::Union> object.
 This returns the array reference of C<type_constraints> provided to
 the constructor.
 
-=item B<< $constraint->parents >>
+=item B<< $constraint->parent >>
 
-This returns the same constraint as the C<type_constraints> method.
+This returns the nearest common ancestor of all the components of the union.
 
 =item B<< $constraint->check($value) >>
 
