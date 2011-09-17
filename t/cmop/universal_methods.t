@@ -1,9 +1,5 @@
-#!perl
-
 use strict;
 use warnings;
-
-# UNIVERSAL methods
 
 use Test::More;
 use Class::MOP;
@@ -14,10 +10,8 @@ my @universal_methods = qw/isa can VERSION/;
 push @universal_methods, 'DOES' if $] >= 5.010;
 
 TODO: {
-    local $TODO = 'UNIVERSAL methods should be available';
-
     for my $method ( @universal_methods ) {
-       ok $meta_class->find_method_by_name($method), "has UNIVERSAL method $method";
+        ok $meta_class->find_method_by_name($method), "has UNIVERSAL method $method";
     }
 };
 
