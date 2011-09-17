@@ -23,6 +23,13 @@ send us a patch.
 
 =over 4
 
+=item The parent of a union type is its components' nearest common ancestor
+
+Previously, union types considered all of their component types their parent
+types. This has been changed to find the nearest common ancestor for all of
+its components. For example, a union of "Int|ArrayRef[Int]" now has a parent
+of "Defined".
+
 =item Union types consider all members in the C<is_subtype_of> and C<is_a_type_of> methods
 
 Previously, a union type would report itself as being of a subtype of a type
