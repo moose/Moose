@@ -1131,12 +1131,7 @@ sub get_all_methods {
 
 sub get_all_method_names {
     my $self = shift;
-    my %uniq;
-
-    return
-        grep { !$uniq{$_}++ }
-        map  { Class::MOP::Class->initialize($_)->get_method_list }
-        $self->linearized_isa, 'UNIVERSAL';
+    map { $_->name } $self->get_all_methods;
 }
 
 sub find_all_methods_by_name {
