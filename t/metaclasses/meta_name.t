@@ -37,7 +37,10 @@ isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
     no Moose;
 }
 ok(!Baz->can('meta'));
+
+my $universal_method_count = scalar Class::MOP::class_of('UNIVERSAL')->get_all_methods;
 # 1 because of the dummy method we installed in Base
-is(scalar Class::MOP::class_of('Baz')->get_all_methods, 1);
+is( ( scalar Class::MOP::class_of('Baz')->get_all_methods )
+    - $universal_method_count, 1 );
 
 done_testing;
