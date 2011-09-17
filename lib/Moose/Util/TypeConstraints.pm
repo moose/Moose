@@ -155,6 +155,15 @@ sub create_class_type_constraint {
 #find_type_constraint("ClassName")->check($class)
 #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
 
+    if (my $type = $REGISTRY->get_type_constraint($class)) {
+        my $pkg_defined_in = scalar( caller(1) );
+        _confess(
+            "The type constraint '$class' has already been created in "
+          . $type->_package_defined_in
+          . " and cannot be created again in "
+          . $pkg_defined_in )
+    }
+
     my %options = (
         class => $class,
         name  => $class,
@@ -174,6 +183,15 @@ sub create_role_type_constraint {
 # too early for this check
 #find_type_constraint("ClassName")->check($class)
 #    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
+
+    if (my $type = $REGISTRY->get_type_constraint($role)) {
+        my $pkg_defined_in = scalar( caller(1) );
+        _confess(
+            "The type constraint '$role' has already been created in "
+          . $type->_package_defined_in
+          . " and cannot be created again in "
+          . $pkg_defined_in )
+    }
 
     my %options = (
         role => $role,
