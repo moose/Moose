@@ -43,6 +43,14 @@ for, noteworthy changes.
     composition now mentions how to work around imported methods not being
     recognized. Reported by Michael Schwern. Fixes RT 60583. (doy)
 
+  * class_type and role_type will now throw errors if you attempt to use them
+    to override existing types, just like type and subtype have always done.
+    (doy)
+
+  * Implicitly creating class or role types by using them as the 'isa' or
+    'does' parameter to attribute construction will now register the type. This
+    means that it cannot later be redefined as something else. (doy)
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are
