@@ -158,11 +158,13 @@ sub create_class_type_constraint {
     my $pkg_defined_in = scalar( caller(1) );
 
     if (my $type = $REGISTRY->get_type_constraint($class)) {
-        _confess(
-            "The type constraint '$class' has already been created in "
-          . $type->_package_defined_in
-          . " and cannot be created again in "
-          . $pkg_defined_in )
+        if (!($type->isa('Moose::Meta::TypeConstraint::Class') && $type->class eq $class)) {
+            _confess(
+                "The type constraint '$class' has already been created in "
+              . $type->_package_defined_in
+              . " and cannot be created again in "
+              . $pkg_defined_in )
+        }
     }
 
     my %options = (
@@ -189,11 +191,13 @@ sub create_role_type_constraint {
     my $pkg_defined_in = scalar( caller(1) );
 
     if (my $type = $REGISTRY->get_type_constraint($role)) {
-        _confess(
-            "The type constraint '$role' has already been created in "
-          . $type->_package_defined_in
-          . " and cannot be created again in "
-          . $pkg_defined_in )
+        if (!($type->isa('Moose::Meta::TypeConstraint::Role') && $type->role eq $role)) {
+            _confess(
+                "The type constraint '$role' has already been created in "
+              . $type->_package_defined_in
+              . " and cannot be created again in "
+              . $pkg_defined_in )
+        }
     }
 
     my %options = (
