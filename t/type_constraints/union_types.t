@@ -157,4 +157,28 @@ is(
     'parent of ArrayRef|HashRef is Ref'
 );
 
+my $double_union = Moose::Meta::TypeConstraint::Union->new(
+    type_constraints => [ $Str_or_Undef, $ArrayRef_or_HashRef ] );
+
+is(
+    $double_union->parent,
+    find_type_constraint('Item'),
+    'parent of (Str|Undef)|(ArrayRef|HashRef) is Item'
+);
+
+ok(
+    $double_union->is_subtype_of('Item'),
+    '(Str|Undef)|(ArrayRef|HashRef) is a subtype of Item'
+);
+
+ok(
+    $double_union->is_a_type_of('Item'),
+    '(Str|Undef)|(ArrayRef|HashRef) is a type of Item'
+);
+
+ok(
+    !$double_union->is_a_type_of('Str'),
+    '(Str|Undef)|(ArrayRef|HashRef) is not a type of Str'
+);
+
 done_testing;
