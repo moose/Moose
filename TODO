@@ -219,6 +219,122 @@ It seems to make sense, since otherwise you're violating the role's API
 contract.
 
 
+== TODO test summary
+
+Note that some of these are fairly old, and may not be things we actually want
+to do anymore.
+
+=== t/basics/basic_class_setup.t
+
+Imports aren't automatically cleaned. Need to think about bringing
+namespace::autoclean functionality into core.
+
+=== t/bugs/create_anon_recursion.t
+
+Loading Moose::Meta::Class (or probably a lot of other metaclasses) before
+loading Moose or Class::MOP causes issues (the bootstrapping gets confused).
+
+=== t/bugs/handles_foreign_class_bug.t
+
+There should be a warning when delegated methods override 'new' (and possibly
+others?).
+
+=== t/bugs/role_caller.t
+
+Role methods should be cloned into classes on composition so that using
+caller(0) in a role method uses the class's package, not the role's.
+
+=== t/cmop/metaclass_incompatibility.t
+
+If a child class is created before a parent class, metaclass compatibility
+checks won't run on the child when the parent is created, and so the child
+could end up with an incompatible metaclass.
+
+=== t/cmop/modify_parent_method.t
+
+Modifying parent class methods after a child class has already wrapped them
+with a method modifier will cause the child class method to retain the original
+method that it wrapped, not the new one it was replaced with.
+
+=== t/immutable/inline_close_over.t
+
+Initializers and custom error classes still close over metaobjects.
+Initializers do it because the initializer has to be passed in the attribute
+metaobject as a parameter, and custom error classes can't be automatically
+inlined.
+
+=== t/metaclasses/moose_exporter_trait_aliases.t
+
+Renamed imports aren't cleaned on unimport. For instance:
+
+  package Foo;
+  use Moose has => { -as => 'my_has' };
+  no Moose;
+  # Foo still contains my_has
+
+=== t/metaclasses/reinitialize.t
+
+Special method types can't have method metaroles applied. Applying a method
+metarole to a class doesn't apply that role to things like constructors,
+accessors, etc.
+
+=== t/roles/compose_overloading.t
+
+Overload methods aren't composed during role composition (this is detailed
+above - Add overloading support).
+
+=== t/roles/method_modifiers.t
+
+Method modifiers in roles don't support the regex form of method selection.
+
+=== t/roles/role_compose_requires.t
+
+Accessors for attributes defined in roles don't satisfy role method
+requirements (this is detailed above - Attributes in roles need to be able to
+participate in role composition).
+
+=== t/todo_tests/exception_reflects_failed_constraint.t
+
+Type constraint failures should indicate which ancestor constraint failed -
+subtype 'Foo', as 'Str', where { length < 5 } should mention Str when passed an
+arrayref, but not when passed the string "ArrayRef".
+
+=== t/todo_tests/moose_and_threads.t
+
+On 5.8, the type constraint name parser isn't thread safe.
+
+=== t/todo_tests/replacing_super_methods.t
+
+Modifying parent class methods after a child class has already wrapped them
+with a override will cause 'super' in the child class to call the original
+parent class method, not the one it was overridden with.
+
+=== t/todo_tests/required_role_accessors.t
+
+Role attribute accessors don't satisfy requires from roles they consume.
+
+=== t/todo_tests/role_insertion_order.t
+
+Roles don't preserve attribute insertion_order.
+
+=== t/todo_tests/various_role_features.t
+
+* Role attribute accessors don't satisfy requires from roles they consume.
+* Role combination should produce a conflict when one role has an actual method
+  and the other role has an accessor.
+* Role attribute accessors should not override methods in the class the role is
+  applied to.
+* Role attribute accessors should be delegated when a class does
+  handles => 'Role'.
+* Delegating to a role doesn't make $class->does('Role') true.
+* Method modifier in a role doesn't create a method requirement.
+* Role->meta->has_method('attr_accessor') is false.
+
+=== t/type_constraints/type_names.t
+
+Type constraint object constructors don't validate the type name provided.
+
+
 == Old todo (does anyone look at this?)
 
 -------------------------------------------------------------------------------
