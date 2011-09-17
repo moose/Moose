@@ -1027,6 +1027,10 @@ sub class_precedence_list {
     }
 }
 
+sub _method_lookup_order {
+    return (shift->linearized_isa, 'UNIVERSAL');
+}
+
 ## Methods
 
 {
@@ -1109,7 +1113,7 @@ sub find_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
-    foreach my $class ($self->linearized_isa, 'UNIVERSAL') {
+    foreach my $class ($self->_method_lookup_order) {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);
         return $method if defined $method;
     }
@@ -1120,7 +1124,7 @@ sub get_all_methods {
     my $self = shift;
 
     my %methods;
-    for my $class ( 'UNIVERSAL', reverse $self->linearized_isa ) {
+    for my $class ( reverse $self->_method_lookup_order ) {
         my $meta = Class::MOP::Class->initialize($class);
 
         $methods{ $_->name } = $_ for $meta->_get_local_methods;
@@ -1139,7 +1143,7 @@ sub find_all_methods_by_name {
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
     my @methods;
-    foreach my $class ($self->linearized_isa, 'UNIVERSAL') {
+    foreach my $class ($self->_method_lookup_order) {
         # fetch the meta-class ...
         my $meta = Class::MOP::Class->initialize($class);
         push @methods => {
@@ -1155,7 +1159,7 @@ sub find_next_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
         || confess "You must define a method name to find";
-    my @cpl = ($self->linearized_isa, 'UNIVERSAL');
+    my @cpl = ($self->_method_lookup_order);
     shift @cpl; # discard ourselves
     foreach my $class (@cpl) {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);
