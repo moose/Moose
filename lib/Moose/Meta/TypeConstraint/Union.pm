@@ -131,13 +131,10 @@ sub equals {
 sub parent {
     my $self = shift;
 
-    my @tcs = @{ $self->type_constraints };
+    my ($first, @rest) = @{ $self->type_constraints };
 
-    my $deepest
-        = ( sort { $a->_ancestor_count <=> $b->_ancestor_count } @tcs )[-1];
-
-    for my $parent ( $deepest->_collect_all_parents ) {
-        return $parent if all { $_->is_a_type_of($parent) } @tcs;
+    for my $parent ( $first->_collect_all_parents ) {
+        return $parent if all { $_->is_a_type_of($parent) } @rest;
     }
 }
 

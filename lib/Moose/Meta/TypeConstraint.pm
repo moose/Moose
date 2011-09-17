@@ -420,11 +420,6 @@ sub _collect_all_parents {
     return @parents;
 }
 
-sub _ancestor_count {
-    my $self = shift;
-    return scalar $self->_collect_all_parents;
-}
-
 sub create_child_type {
     my ($self, %opts) = @_;
     my $class = ref $self;
