@@ -83,14 +83,12 @@ ok(!does_role('Quux', 'Foo'), '... Quux doesnt do Foo (does not die tho)');
 
 ok(does_role('DoesMethod', 'Something::Else'), '... can override the does method');
 
-# TODO: make the below work, maybe?
-
 # Self
 
-#ok(does_role('Foo', 'Foo'), '... Foo does do Foo');
+ok(does_role('Foo', 'Foo'), '... Foo does do Foo');
 
 # sub-Roles
 
-#ok(does_role('Foo::Foo', 'Foo'), '... Foo::Foo does do Foo');
+ok(does_role('Foo::Foo', 'Foo'), '... Foo::Foo does do Foo');
 
 done_testing;
