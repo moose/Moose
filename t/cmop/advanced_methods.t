@@ -69,7 +69,7 @@ is(Class::MOP::Class->initialize('Foo::Bar::Baz')->find_next_method_by_name('BUI
    '... Foo::Bar::Baz->BUILD does have a next method');
 
 is_deeply(
-    [ sort { $a->{name} cmp $b->{name} } Class::MOP::Class->initialize('Foo')->get_all_methods() ],
+    [ sort { $a->name cmp $b->name } Class::MOP::Class->initialize('Foo')->get_all_methods() ],
     [
         Class::MOP::Class->initialize('Foo')->get_method('BUILD') ,
         Class::MOP::Class->initialize('Foo')->get_method('foo'),
@@ -77,7 +77,7 @@ is_deeply(
     '... got the right list of applicable methods for Foo');
 
 is_deeply(
-    [ sort { $a->{name} cmp $b->{name} } Class::MOP::Class->initialize('Bar')->get_all_methods() ],
+    [ sort { $a->name cmp $b->name } Class::MOP::Class->initialize('Bar')->get_all_methods() ],
     [
         Class::MOP::Class->initialize('Bar')->get_method('BUILD'),
         Class::MOP::Class->initialize('Bar')->get_method('bar'),
@@ -87,7 +87,7 @@ is_deeply(
 
 
 is_deeply(
-    [ sort { $a->{name} cmp $b->{name} } Class::MOP::Class->initialize('Baz')->get_all_methods() ],
+    [ sort { $a->name cmp $b->name } Class::MOP::Class->initialize('Baz')->get_all_methods() ],
     [
         Class::MOP::Class->initialize('Bar')->get_method('BUILD'),
         Class::MOP::Class->initialize('Bar')->get_method('bar'),
@@ -97,7 +97,7 @@ is_deeply(
     '... got the right list of applicable methods for Baz');
 
 is_deeply(
-    [ sort { $a->{name} cmp $b->{name} } Class::MOP::Class->initialize('Foo::Bar')->get_all_methods() ],
+    [ sort { $a->name cmp $b->name } Class::MOP::Class->initialize('Foo::Bar')->get_all_methods() ],
     [
         Class::MOP::Class->initialize('Foo::Bar')->get_method('BUILD'),
         Class::MOP::Class->initialize('Bar')->get_method('bar'),
