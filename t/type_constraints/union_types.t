@@ -8,75 +8,133 @@ use Test::More;
 use Moose::Util::TypeConstraints;
 
 my $Str = find_type_constraint('Str');
-isa_ok($Str, 'Moose::Meta::TypeConstraint');
+isa_ok( $Str, 'Moose::Meta::TypeConstraint' );
 
 my $Undef = find_type_constraint('Undef');
-isa_ok($Undef, 'Moose::Meta::TypeConstraint');
+isa_ok( $Undef, 'Moose::Meta::TypeConstraint' );
 
-ok(!$Str->check(undef), '... Str cannot accept an Undef value');
-ok($Str->check('String'), '... Str can accept an String value');
-ok(!$Undef->check('String'), '... Undef cannot accept an Str value');
-ok($Undef->check(undef), '... Undef can accept an Undef value');
+ok( !$Str->check(undef),      '... Str cannot accept an Undef value' );
+ok( $Str->check('String'),    '... Str can accept an String value' );
+ok( !$Undef->check('String'), '... Undef cannot accept an Str value' );
+ok( $Undef->check(undef),     '... Undef can accept an Undef value' );
 
-my $Str_or_Undef = Moose::Meta::TypeConstraint::Union->new(type_constraints => [$Str, $Undef]);
-isa_ok($Str_or_Undef, 'Moose::Meta::TypeConstraint::Union');
+my $Str_or_Undef = Moose::Meta::TypeConstraint::Union->new(
+    type_constraints => [ $Str, $Undef ] );
+isa_ok( $Str_or_Undef, 'Moose::Meta::TypeConstraint::Union' );
 
-ok($Str_or_Undef->check(undef), '... (Str | Undef) can accept an Undef value');
-ok($Str_or_Undef->check('String'), '... (Str | Undef) can accept a String value');
+ok(
+    $Str_or_Undef->check(undef),
+    '... (Str | Undef) can accept an Undef value'
+);
+ok(
+    $Str_or_Undef->check('String'),
+    '... (Str | Undef) can accept a String value'
+);
 
-ok(!$Str_or_Undef->is_a_type_of($Str), "not a subtype of Str");
-ok(!$Str_or_Undef->is_a_type_of($Undef), "not a subtype of Undef");
+ok( !$Str_or_Undef->is_a_type_of($Str),   "not a subtype of Str" );
+ok( !$Str_or_Undef->is_a_type_of($Undef), "not a subtype of Undef" );
 
-cmp_ok($Str_or_Undef->find_type_for('String'), 'eq', 'Str', 'find_type_for Str');
-cmp_ok($Str_or_Undef->find_type_for(undef), 'eq', 'Undef', 'find_type_for Undef');
-ok(!defined($Str_or_Undef->find_type_for(sub { })), 'no find_type_for CodeRef');
+cmp_ok(
+    $Str_or_Undef->find_type_for('String'), 'eq', 'Str',
+    'find_type_for Str'
+);
+cmp_ok(
+    $Str_or_Undef->find_type_for(undef), 'eq', 'Undef',
+    'find_type_for Undef'
+);
+ok(
+    !defined( $Str_or_Undef->find_type_for( sub { } ) ),
+    'no find_type_for CodeRef'
+);
 
-ok( !$Str_or_Undef->equals($Str), "not equal to Str" );
+ok( !$Str_or_Undef->equals($Str),         "not equal to Str" );
 ok( $Str_or_Undef->equals($Str_or_Undef), "equal to self" );
-ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Str, $Undef ])), "equal to clone" );
-ok( $Str_or_Undef->equals(Moose::Meta::TypeConstraint::Union->new(type_constraints => [ $Undef, $Str ])), "equal to reversed clone" );
+ok(
+    $Str_or_Undef->equals(
+        Moose::Meta::TypeConstraint::Union->new(
+            type_constraints => [ $Str, $Undef ]
+        )
+    ),
+    "equal to clone"
+);
+ok(
+    $Str_or_Undef->equals(
+        Moose::Meta::TypeConstraint::Union->new(
+            type_constraints => [ $Undef, $Str ]
+        )
+    ),
+    "equal to reversed clone"
+);
 
-ok( !$Str_or_Undef->is_a_type_of("ThisTypeDoesNotExist"), "not type of non existent type" );
-ok( !$Str_or_Undef->is_subtype_of("ThisTypeDoesNotExist"), "not subtype of non existent type" );
+ok(
+    !$Str_or_Undef->is_a_type_of("ThisTypeDoesNotExist"),
+    "not type of non existent type"
+);
+ok(
+    !$Str_or_Undef->is_subtype_of("ThisTypeDoesNotExist"),
+    "not subtype of non existent type"
+);
 
 # another ....
 
 my $ArrayRef = find_type_constraint('ArrayRef');
-isa_ok($ArrayRef, 'Moose::Meta::TypeConstraint');
+isa_ok( $ArrayRef, 'Moose::Meta::TypeConstraint' );
 
 my $HashRef = find_type_constraint('HashRef');
-isa_ok($HashRef, 'Moose::Meta::TypeConstraint');
+isa_ok( $HashRef, 'Moose::Meta::TypeConstraint' );
 
-ok($ArrayRef->check([]), '... ArrayRef can accept an [] value');
-ok(!$ArrayRef->check({}), '... ArrayRef cannot accept an {} value');
-ok($HashRef->check({}), '... HashRef can accept an {} value');
-ok(!$HashRef->check([]), '... HashRef cannot accept an [] value');
+ok( $ArrayRef->check( [] ), '... ArrayRef can accept an [] value' );
+ok( !$ArrayRef->check( {} ), '... ArrayRef cannot accept an {} value' );
+ok( $HashRef->check(   {} ), '... HashRef can accept an {} value' );
+ok( !$HashRef->check( [] ), '... HashRef cannot accept an [] value' );
 
-my $HashOrArray = Moose::Meta::TypeConstraint::Union->new(type_constraints => [$ArrayRef, $HashRef]);
-isa_ok($HashOrArray, 'Moose::Meta::TypeConstraint::Union');
+my $HashOrArray = Moose::Meta::TypeConstraint::Union->new(
+    type_constraints => [ $ArrayRef, $HashRef ] );
+isa_ok( $HashOrArray, 'Moose::Meta::TypeConstraint::Union' );
 
-ok($HashOrArray->check([]), '... (ArrayRef | HashRef) can accept []');
-ok($HashOrArray->check({}), '... (ArrayRef | HashRef) can accept {}');
+ok( $HashOrArray->check( [] ), '... (ArrayRef | HashRef) can accept []' );
+ok( $HashOrArray->check( {} ), '... (ArrayRef | HashRef) can accept {}' );
 
-ok(!$HashOrArray->check(\(my $var1)), '... (ArrayRef | HashRef) cannot accept scalar refs');
-ok(!$HashOrArray->check(sub {}), '... (ArrayRef | HashRef) cannot accept code refs');
-ok(!$HashOrArray->check(50), '... (ArrayRef | HashRef) cannot accept Numbers');
+ok(
+    !$HashOrArray->check( \( my $var1 ) ),
+    '... (ArrayRef | HashRef) cannot accept scalar refs'
+);
+ok(
+    !$HashOrArray->check( sub { } ),
+    '... (ArrayRef | HashRef) cannot accept code refs'
+);
+ok(
+    !$HashOrArray->check(50),
+    '... (ArrayRef | HashRef) cannot accept Numbers'
+);
 
-diag $HashOrArray->validate([]);
+diag $HashOrArray->validate( [] );
 
-ok(!defined($HashOrArray->validate([])), '... (ArrayRef | HashRef) can accept []');
-ok(!defined($HashOrArray->validate({})), '... (ArrayRef | HashRef) can accept {}');
+ok(
+    !defined( $HashOrArray->validate( [] ) ),
+    '... (ArrayRef | HashRef) can accept []'
+);
+ok(
+    !defined( $HashOrArray->validate( {} ) ),
+    '... (ArrayRef | HashRef) can accept {}'
+);
 
-like($HashOrArray->validate(\(my $var2)),
-qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
-'... (ArrayRef | HashRef) cannot accept scalar refs');
+like(
+    $HashOrArray->validate( \( my $var2 ) ),
+    qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
+    '... (ArrayRef | HashRef) cannot accept scalar refs'
+);
 
-like($HashOrArray->validate(sub {}),
-qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
-'... (ArrayRef | HashRef) cannot accept code refs');
+like(
+    $HashOrArray->validate( sub { } ),
+    qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
+    '... (ArrayRef | HashRef) cannot accept code refs'
+);
 
-is($HashOrArray->validate(50),
-'Validation failed for \'ArrayRef\' with value 50 and Validation failed for \'HashRef\' with value 50 in (ArrayRef|HashRef)',
-'... (ArrayRef | HashRef) cannot accept Numbers');
+is(
+    $HashOrArray->validate(50),
+    'Validation failed for \'ArrayRef\' with value 50 and Validation failed for \'HashRef\' with value 50 in (ArrayRef|HashRef)',
+    '... (ArrayRef | HashRef) cannot accept Numbers'
+);
 
 done_testing;
