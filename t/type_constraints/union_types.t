@@ -151,4 +151,10 @@ is(
     '... (ArrayRef | HashRef) cannot accept Numbers'
 );
 
+is(
+    $ArrayRef_or_HashRef->parent,
+    find_type_constraint('Ref'),
+    'parent of ArrayRef|HashRef is Ref'
+);
+
 done_testing;
