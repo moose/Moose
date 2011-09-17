@@ -136,6 +136,8 @@ sub parent {
     for my $parent ( $first->_collect_all_parents ) {
         return $parent if all { $_->is_a_type_of($parent) } @rest;
     }
+
+    return;
 }
 
 sub validate {

@@ -181,4 +181,17 @@ ok(
     '(Str|Undef)|(ArrayRef|HashRef) is not a type of Str'
 );
 
+type 'SomeType', where { 1 };
+type 'OtherType', where { 1 };
+
+my $parentless_union = Moose::Meta::TypeConstraint::Union->new(
+    type_constraints => [
+        find_type_constraint('SomeType'),
+        find_type_constraint('OtherType'),
+    ],
+);
+
+is($parentless_union->parent, undef, "no common ancestor gives undef parent");
+
+
 done_testing;
