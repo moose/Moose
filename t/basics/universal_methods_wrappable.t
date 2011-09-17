@@ -18,7 +18,7 @@ use Test::More;
     package Foo;
     use Moose;
 
-    use Test::More; # for $TODO
+    use Test::More;
 
     ::is( ::exception { with 'FakeBar' }, undef, 'applied role' );
 
