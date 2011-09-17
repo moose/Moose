@@ -95,7 +95,7 @@ my @class_mop_class_methods = qw(
     invalidate_meta_instances invalidate_meta_instance
 
     superclasses subclasses direct_subclasses class_precedence_list
-    linearized_isa _superclasses_updated _superclass_metas
+    linearized_isa _method_lookup_order _superclasses_updated _superclass_metas
 
     get_all_method_names get_all_methods
         find_method_by_name find_all_methods_by_name find_next_method_by_name
