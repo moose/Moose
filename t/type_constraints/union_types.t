@@ -100,56 +100,55 @@ ok( !$ArrayRef->check( {} ), '... ArrayRef cannot accept an {} value' );
 ok( $HashRef->check(   {} ), '... HashRef can accept an {} value' );
 ok( !$HashRef->check( [] ), '... HashRef cannot accept an [] value' );
 
-my $HashOrArray = Moose::Meta::TypeConstraint::Union->new(
+my $ArrayRef_or_HashRef = Moose::Meta::TypeConstraint::Union->new(
     type_constraints => [ $ArrayRef, $HashRef ] );
-isa_ok( $HashOrArray, 'Moose::Meta::TypeConstraint::Union' );
+isa_ok( $ArrayRef_or_HashRef, 'Moose::Meta::TypeConstraint::Union' );
 
-ok( $HashOrArray->check( [] ), '... (ArrayRef | HashRef) can accept []' );
-ok( $HashOrArray->check( {} ), '... (ArrayRef | HashRef) can accept {}' );
+ok( $ArrayRef_or_HashRef->check( [] ),
+    '... (ArrayRef | HashRef) can accept []' );
+ok( $ArrayRef_or_HashRef->check( {} ),
+    '... (ArrayRef | HashRef) can accept {}' );
 
 ok(
-    !$HashOrArray->check( \( my $var1 ) ),
+    !$ArrayRef_or_HashRef->check( \( my $var1 ) ),
     '... (ArrayRef | HashRef) cannot accept scalar refs'
 );
 ok(
-    !$HashOrArray->check( sub { } ),
+    !$ArrayRef_or_HashRef->check( sub { } ),
     '... (ArrayRef | HashRef) cannot accept code refs'
 );
 ok(
-    !$HashOrArray->check(50),
+    !$ArrayRef_or_HashRef->check(50),
     '... (ArrayRef | HashRef) cannot accept Numbers'
 );
 
-diag $HashOrArray->validate( [] );
+diag $ArrayRef_or_HashRef->validate( [] );
 
 ok(
-    !defined( $HashOrArray->validate( [] ) ),
+    !defined( $ArrayRef_or_HashRef->validate( [] ) ),
     '... (ArrayRef | HashRef) can accept []'
 );
 ok(
-    !defined( $HashOrArray->validate( {} ) ),
+    !defined( $ArrayRef_or_HashRef->validate( {} ) ),
     '... (ArrayRef | HashRef) can accept {}'
 );
 
 like(
-    $HashOrArray->validate( \( my $var2 ) ),
+    $ArrayRef_or_HashRef->validate( \( my $var2 ) ),
     qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
     '... (ArrayRef | HashRef) cannot accept scalar refs'
 );
 
 like(
-    $HashOrArray->validate( sub { } ),
+    $ArrayRef_or_HashRef->validate( sub { } ),
     qr/Validation failed for \'ArrayRef\' with value .+ and Validation failed for \'HashRef\' with value .+ in \(ArrayRef\|HashRef\)/,
     '... (ArrayRef | HashRef) cannot accept code refs'
 );
 
 is(
-    $HashOrArray->validate(50),
+    $ArrayRef_or_HashRef->validate(50),
     'Validation failed for \'ArrayRef\' with value 50 and Validation failed for \'HashRef\' with value 50 in (ArrayRef|HashRef)',
     '... (ArrayRef | HashRef) cannot accept Numbers'
 );
-
-is(
-   $HasOr
 
 done_testing;
