@@ -97,7 +97,7 @@ __PACKAGE__->meta->add_attribute('inline_environment' => (
 ));
 
 sub parents {
-    my $self;
+    my $self = shift;
     $self->parent;
 }
 
