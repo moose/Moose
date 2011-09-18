@@ -58,6 +58,10 @@ for, noteworthy changes.
     'does' parameter to attribute construction will now register the type. This
     means that it cannot later be redefined as something else. (doy)
 
+  * $class_type->is_subtype_of no longer returns true if passed the name of the
+    class that the class type represents when the class type wasn't registered.
+    (doy)
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are

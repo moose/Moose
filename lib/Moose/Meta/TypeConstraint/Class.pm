@@ -63,7 +63,13 @@ sub equals {
 
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
 
-    return unless defined $other;
+    if (!defined($other)) {
+        if (!ref($type_or_name)) {
+            return $self->class eq $type_or_name;
+        }
+        return;
+    }
+
     return unless $other->isa(__PACKAGE__);
 
     return $self->class eq $other->class;
@@ -72,9 +78,7 @@ sub equals {
 sub is_a_type_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
-
-    ($self->equals($type) || $self->is_subtype_of($type_or_name));
+    ($self->equals($type_or_name) || $self->is_subtype_of($type_or_name));
 }
 
 sub is_subtype_of {
@@ -85,7 +89,9 @@ sub is_subtype_of {
     if ( not defined $type ) {
         if ( not ref $type_or_name_or_class ) {
             # it might be a class
-            return 1 if $self->class->isa( $type_or_name_or_class );
+            my $class = $self->class;
+            return 1 if $class ne $type_or_name_or_class
+                     && $class->isa( $type_or_name_or_class );
         }
         return;
     }
