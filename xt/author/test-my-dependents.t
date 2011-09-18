@@ -185,6 +185,14 @@ Class-OWL                              # uses CMOP::Class without loading cmop
 Cogwheel                               # uses ancient moose apis
 Constructible                          # GD::SVG is a broken dist
 Coro-Amazon-SimpleDB                   # amazon::simpledb::client doesn't exist
+DBICx-Modeler-Generator                # broken (weirdly)
+DBIx-PgLink                            # requires postgres installation
+DBIx-SchemaChecksum                    # broken
+Data-Apache-mod_status                 # invalid characters in type name
+Data-PackageName                       # broken
+Data-Pipeline                          # uses ancient moose apis
+DayDayUp                               # MojoX-Fixup-XHTML doesn't exist
+Devel-Events                           # broken (role conflict)
 
 # dep resolution failures or something (these pass when run manually)
 AXL-Client-Simple
@@ -206,19 +214,11 @@ Chef
 Code-Statistics
 Crypt-PBKDF2
 Curses-Toolkit
+DBIx-Class-DeploymentHandler
+Data-SearchEngine-ElasticSearch
+Devel-IntelliPerl
 
 # failing for some reason or another (need to look into this)
-DBICx-Modeler-Generator
-DBIx-Class-DeploymentHandler
-DBIx-PgLink
-DBIx-SchemaChecksum
-Data-Apache-mod_status
-Data-PackageName
-Data-Pipeline
-Data-SearchEngine-ElasticSearch
-DayDayUp
-Devel-Events
-Devel-IntelliPerl
 Dist-Zilla-Plugin-DualLife
 Dist-Zilla-Plugin-GitFlow
 Dist-Zilla-Plugin-MetaResourcesFromGit
