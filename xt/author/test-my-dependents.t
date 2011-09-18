@@ -28,6 +28,8 @@ diag(     'Test run performed at: '
 $ENV{PERL_TEST_DM_LOG_DIR} = abs_path('.');
 delete @ENV{ qw( AUTHOR_TESTING RELEASE_TESTING SMOKE_TESTING ) };
 
+$ENV{ANY_MOOSE} = 'Moose';
+
 my $mcpan = MetaCPAN::API->new;
 my $res = $mcpan->post(
     '/release/_search' => {
@@ -40,6 +42,7 @@ my $res = $mcpan->post(
                 { term => { 'release.dependency.module' => 'Moose::Exporter' } },
                 { term => { 'release.dependency.module' => 'Class::MOP' } },
                 { term => { 'release.dependency.module' => 'MooseX::Role::Parameterized' } },
+                { term => { 'release.dependency.module' => 'Any::Moose' } },
             ] },
             { term => { 'release.status'   => 'latest' } },
             { term => { 'release.maturity' => 'released' } },
