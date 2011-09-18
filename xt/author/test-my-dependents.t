@@ -85,51 +85,50 @@ __DATA__
 # need Archive::Zip, or .zip dists won't be able to be installed
 
 # won't build, for actual reasons:
-App-CPAN2Pkg                            # Tk doesn't compile
-App-Fotagger                            # Imager doesn't compile
-Black-Board                             # not found on cpan because of mxd
-CM-Permutation                          # OpenGL uses graphics in Makefile.PL
-Dackup                                  # depends on running ssh
-Date-Biorhythm                          # Date::Business prompts in Makefile.PL
-Data-Collector                          # depends on running ssh
-POE-Component-OpenSSH                   # depends on running ssh
-Perl-Dist-Strawberry-BuildPerl-5123     # windows only
-Perl-Dist-WiX                           # windows only
-Perl-Dist-WiX-BuildPerl-5123            # windows only
-Test-SFTP                               # Term::ReadPassword prompts in tests
-VirtualBox-Manage                       # not found on cpan because of mxd
-helm                                    # depends on running ssh
+App-CPAN2Pkg                           # Tk doesn't compile
+App-Fotagger                           # Imager doesn't compile
+Black-Board                            # not found on cpan because of mxd
+CM-Permutation                         # OpenGL uses graphics in Makefile.PL
+Dackup                                 # depends on running ssh
+Date-Biorhythm                         # Date::Business prompts in Makefile.PL
+Data-Collector                         # depends on running ssh
+POE-Component-OpenSSH                  # depends on running ssh
+Perl-Dist-Strawberry-BuildPerl-5123    # windows only
+Perl-Dist-WiX                          # windows only
+Perl-Dist-WiX-BuildPerl-5123           # windows only
+Test-SFTP                              # Term::ReadPassword prompts in tests
+VirtualBox-Manage                      # not found on cpan because of mxd
+helm                                   # depends on running ssh
 
 # won't build, for unknown reasons
-App-HistHub                             # ???
-App-Twitch                              # ???
-CPAN-Patches                            # ???
-CPAN-Patches-Plugin-Debian              # ???
-Debian-Apt-PM                           # ???
-Dist-Zilla-Plugin-BuildSelf             # ???
-Dist-Zilla-Plugin-ModuleBuildTiny       # ???
-Lingua-TreeTagger                       # ???
-POE-Component-CPAN-Mirror-Multiplexer   # ???
-POE-Component-Client-CouchDB            # ???
-POE-Component-Github                    # ???
-POE-Component-Metabase-Relay-Server     # ???
-POE-Component-Server-SimpleHTTP-PreFork # ???
-Tapper-Testplan                         # ??? (hangs)
-Test-Daily                              # ???
-WWW-Alltop                              # ???
-WWW-Hashdb                              # ??? (hangs, pegging cpu)
-WebService-Async                        # ??? (hangs, pegging cpu)
-WebService-LOC-CongRec                  # ???
-Zucchini                                # ??? (hangs)
+App-HistHub                            # ???
+App-Twitch                             # ???
+CPAN-Patches                           # ???
+CPAN-Patches-Plugin-Debian             # ???
+Debian-Apt-PM                          # ???
+Dist-Zilla-Plugin-BuildSelf            # ???
+Dist-Zilla-Plugin-ModuleBuildTiny      # ???
+Dist-Zilla-Plugin-Test-DistManifest    # ???
+Dist-Zilla-Plugin-Test-Portability     # ???
+Dist-Zilla-Plugin-Test-Synopsis        # ???
+Dist-Zilla-Plugin-Test-UnusedVars      # ???
+Lingua-TreeTagger                      # ???
+POE-Component-CPAN-Mirror-Multiplexer  # ???
+POE-Component-Client-CouchDB           # ???
+POE-Component-Github                   # ???
+POE-Component-Metabase-Relay-Server    # ???
+POE-Component-Server-SimpleHTTP-PreFork  # ???
+Tapper-Testplan                        # ??? (hangs)
+Test-Daily                             # ???
+WWW-Alltop                             # ???
+WWW-Hashdb                             # ??? (hangs, pegging cpu)
+WebService-Async                       # ??? (hangs, pegging cpu)
+WebService-LOC-CongRec                 # ???
+Zucchini                               # ??? (hangs)
 
 # not in cpan index for some reason
-Dist-Zilla-Plugin-Test-DistManifest     # not found on cpan (?)
-Dist-Zilla-Plugin-Test-MinimumVersion   # not found on cpan (?)
-Dist-Zilla-Plugin-Test-Portability      # not found on cpan (?)
-Dist-Zilla-Plugin-Test-Synopsis         # not found on cpan (?)
-Dist-Zilla-Plugin-Test-UnusedVars       # not found on cpan (?)
-Hopkins                                 # not found on cpan (?)
-PostScript-Barcode                      # not found on cpan (?)
+Hopkins                                # not found on cpan (?)
+PostScript-Barcode                     # not found on cpan (?)
 
 # failing for a reason
 AI-ExpertSystem-Advanced               # no tests
