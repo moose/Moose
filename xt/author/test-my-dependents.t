@@ -10,6 +10,7 @@ BEGIN {
 }
 
 use Test::Requires {
+    'Archive::Zip' => 0, # or else .zip dists won't be able to be installed
     'Test::DependentModules' => '0.09', # skip all if not installed
     'MetaCPAN::API' => '0.33',
 };
@@ -81,9 +82,6 @@ test_modules(@modules);
 # PRANG - failing for quite some time (since before 2.0400)
 
 __DATA__
-# notes:
-# need Archive::Zip, or .zip dists won't be able to be installed
-
 # won't build, for actual reasons:
 App-CPAN2Pkg                           # Tk doesn't compile
 App-Fotagger                           # Imager doesn't compile
