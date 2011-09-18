@@ -131,47 +131,51 @@ Dist-Zilla-Plugin-Test-UnusedVars       # not found on cpan (?)
 Hopkins                                 # not found on cpan (?)
 PostScript-Barcode                      # not found on cpan (?)
 
-# failing for some reason or another (need to look into this)
-AI-ExpertSystem-Advanced
-API-Assembla
+# failing for a reason
+AI-ExpertSystem-Advanced               # no tests
+API-Assembla                           # no tests
+Algorithm-KernelKMeans                 # mx-types-common changes broke it
+AnyEvent-Inotify-Simple                # ??? (maybe issue with test::sweet)
+AnyEvent-JSONRPC                       # tests require recommended deps
+AnyEvent-Retry                         # mx-types-common changes broke it
+AnyEvent-ZeroMQ                        # requires zeromq installation
+App-Dataninja                          # bad M::I install in inc/
+App-ForExample                         # getopt::chain is broken
+App-Magpie                             # deps on URPM which doesn't exist
+App-PgCryobit                          # requires postgres installation
+App-TemplateServer                     # broken use of types
+App-TemplateServer-Provider-HTML-Template  # dep on app-templateserver
+App-TemplateServer-Provider-Mason      # dep on app-templateserver
+App-TemplateServer-Provider-TD         # dep on app-templateserver
+App-TimeTracker                        # git::repository is broken
+App-USBKeyCopyCon                      # gtk tests are graphical
+App-mkfeyorm                           # no tests
+Archive-RPM                            # requires cpio
+Bio-MAGETAB                            # datetime-format-datemanip is broken
+Bot-Applebot                           # no tests
+Bot-Backbone                           # broken deps
+Business-UPS-Tracking                  # broken
+CHI-Driver-Redis                       # requires redis server
+CPAN-Mini-Webserver                    # undeclared dep on lingua-stopwords
+Cache-Profile                          # broken
+Catalyst-Authentication-Credential-Facebook-OAuth2  # no tests
+Catalyst-Authentication-Store-Fey-ORM  # no tests
+Catalyst-Authentication-Store-LDAP-AD-Class  # pod coverage fail
+Catalyst-Controller-MovableType        # no tests
+Catalyst-Controller-Resources          # broken
+
+# dep resolution failures or something (these pass when run manually)
 AXL-Client-Simple
-Algorithm-KernelKMeans
 Alien-ActiveMQ
 Alien-Ditaa
-AnyEvent-Inotify-Simple
-AnyEvent-JSONRPC
-AnyEvent-Retry
-AnyEvent-ZeroMQ
 App-Benchmark-Accessors
-App-Dataninja
-App-ForExample
-App-Magpie
-App-PgCryobit
-App-TemplateServer
-App-TemplateServer-Provider-HTML-Template
-App-TemplateServer-Provider-Mason
-App-TemplateServer-Provider-TD
-App-TimeTracker
-App-USBKeyCopyCon
-App-mkfeyorm
-Archive-RPM
-Bio-MAGETAB
-Bot-Applebot
-Bot-Backbone
 Bot-BasicBot-Pluggable
 Bot-BasicBot-Pluggable-Module-JIRA
-Business-UPS-Tracking
-CHI-Driver-Redis
 CPAN-Digger
-CPAN-Mini-Webserver
-Cache-Profile
 Cantella-Worker
 Cantella-Worker-Role-Beanstalk
-Catalyst-Authentication-Credential-Facebook-OAuth2
-Catalyst-Authentication-Store-Fey-ORM
-Catalyst-Authentication-Store-LDAP-AD-Class
-Catalyst-Controller-MovableType
-Catalyst-Controller-Resources
+
+# failing for some reason or another (need to look into this)
 Catalyst-Engine-Stomp
 Catalyst-Model-MenuGrinder
 Catalyst-Model-Search-ElasticSearch
