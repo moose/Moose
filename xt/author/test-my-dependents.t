@@ -132,6 +132,7 @@ PostScript-Barcode                     # not found on cpan (?)
 AI-ExpertSystem-Advanced               # no tests
 API-Assembla                           # no tests
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
+Alien-ActiveMQ                         # can't install activemq
 AnyEvent-Inotify-Simple                # ??? (maybe issue with test::sweet)
 AnyEvent-JSONRPC                       # tests require recommended deps
 AnyEvent-Retry                         # mx-types-common changes broke it
@@ -160,10 +161,30 @@ Catalyst-Authentication-Store-Fey-ORM  # no tests
 Catalyst-Authentication-Store-LDAP-AD-Class  # pod coverage fail
 Catalyst-Controller-MovableType        # no tests
 Catalyst-Controller-Resources          # broken
+Catalyst-Engine-Stomp                  # requires alien::activemq
+Catalyst-Model-MenuGrinder             # no tests
+Catalyst-Model-Search-ElasticSearch    # requires elasticsearch
+Catalyst-Model-Sedna                   # deps on Alien-Sedna which doesn't exist
+Catalyst-Plugin-Continuation           # undeclared dep
+Catalyst-Plugin-ErrorCatcher-ActiveMQ-Stomp  # pod coverage fail
+Catalyst-Plugin-SwiffUploaderCookieHack  # undeclared dep
+Catalyst-TraitFor-Component-ConfigPerSite  # undeclared dep
+Catalyst-TraitFor-Controller-jQuery-jqGrid  # bad test (missing files)
+CatalystX-MooseComponent               # broken
+CatalystX-Restarter-GTK                # gtk tests are graphical
+CatalystX-RoleApplicator               # broken
+CatalystX-SimpleAPI                    # depends on ::RoleApplicator
+CatalystX-SimpleLogin                  # broken
+CatalystX-Usul                         # proc::processtable doesn't load
+Cave-Wrapper                           # requires cave to be installed
+Cheater                                # parse::randgen is broken
+Class-OWL                              # uses CMOP::Class without loading cmop
+Cogwheel                               # uses ancient moose apis
+Constructible                          # GD::SVG is a broken dist
+Coro-Amazon-SimpleDB                   # amazon::simpledb::client doesn't exist
 
 # dep resolution failures or something (these pass when run manually)
 AXL-Client-Simple
-Alien-ActiveMQ
 Alien-Ditaa
 App-Benchmark-Accessors
 Bot-BasicBot-Pluggable
@@ -171,40 +192,19 @@ Bot-BasicBot-Pluggable-Module-JIRA
 CPAN-Digger
 Cantella-Worker
 Cantella-Worker-Role-Beanstalk
-
-# failing for some reason or another (need to look into this)
-Catalyst-Engine-Stomp
-Catalyst-Model-MenuGrinder
-Catalyst-Model-Search-ElasticSearch
-Catalyst-Model-Sedna
-Catalyst-Plugin-Continuation
-Catalyst-Plugin-ErrorCatcher-ActiveMQ-Stomp
 Catalyst-Plugin-Session
-Catalyst-Plugin-SwiffUploaderCookieHack
-Catalyst-TraitFor-Component-ConfigPerSite
-Catalyst-TraitFor-Controller-jQuery-jqGrid
 Catalyst-View-ByCode
 Catalyst-View-RDF
 CatalystX-Declare
-CatalystX-MooseComponent
-CatalystX-Restarter-GTK
-CatalystX-RoleApplicator
-CatalystX-SimpleAPI
-CatalystX-SimpleLogin
 CatalystX-Syntax-Action
-CatalystX-Usul
-Cave-Wrapper
 Chart-Clicker
 Chart-Weather-Forecast
-Cheater
 Chef
-Class-OWL
 Code-Statistics
-Cogwheel
-Constructible
-Coro-Amazon-SimpleDB
 Crypt-PBKDF2
 Curses-Toolkit
+
+# failing for some reason or another (need to look into this)
 DBICx-Modeler-Generator
 DBIx-Class-DeploymentHandler
 DBIx-PgLink
