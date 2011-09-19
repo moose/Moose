@@ -193,6 +193,118 @@ Data-PackageName                       # broken
 Data-Pipeline                          # uses ancient moose apis
 DayDayUp                               # MojoX-Fixup-XHTML doesn't exist
 Devel-Events                           # broken (role conflict)
+Dist-Zilla-Plugin-ProgCriticTests      # broken
+Dist-Zilla-Plugin-SVK                  # requires svn bindings
+DustyDB                                # uses old moose apis
+ELF-Extract-Sections                   # uses stash entries with ::
+ETLp                                   # uses stash entries with ::
+FFmpeg-Thumbnail                       # undeclared dep
+Fedora-App-MaintainerTools             # requires rpm to be installed
+Fedora-App-ReviewTool                  # requires koji to be installed
+File-DataClass                         # XML::DTD is a broken dist
+Finance-Bank-SentinelBenefits-Csv401kConverter  # uses stash entries with ::
+Forest-Tree-Viewer-Gtk2                # gtk tests are graphical
+Form-Factory                           # uses old moose apis
+Frost                                  # broken
+GOBO                                   # coerce with no coercion
+Games-Pandemic                         # tk doesn't build
+Games-RailRoad                         # tk doesn't build
+Games-Risk                             # tk doesn't build
+Games-Tetris-Complete                  # requires threads
+Getopt-Chain                           # p::d::builder changed dists
+Google-Spreadsheet-Agent               # pod::coverage fail
+HTML-TreeBuilderX-ASP_NET              # broken
+Hobocamp                               # configure_requires needs EU::CChecker
+Horris                                 # App::Horris isn't on cpan
+IM-Engine-Plugin-Dispatcher            # p::d::declarative changed dists
+JavaScript-Framework-jQuery            # coerce with no coercion
+Jungle                                 # broken
+Kamaitachi                             # pod::coverage fail
+KiokuDB-Backend-Files                  # broken
+Locale-MO-File                         # broken
+Log-Dispatch-Gtk2-Notify               # gtk tests are graphical
+MSWord-ToHTML                          # requires abiword to be installed
+Mail-Summary-Tools                     # DT::Format::DateManip is broken
+MediaWiki-USERINFO                     # broken
+MooseX-Attribute-Prototype             # uses old moose apis
+MooseX-DBIC-Scaffold                   # needs unreleased sql-translator
+MooseX-DOM                             # "no Moose" unimports confess
+MooseX-Documenter                      # broken
+MooseX-Error-Exception-Class           # metaclass compat breakage
+MooseX-Meta-Attribute-Index            # old moose apis
+MooseX-Meta-Attribute-Lvalue           # old moose apis
+MooseX-Struct                          # ancient moose apis
+MooseX-TrackDirty-Attributes           # old moose apis
+Net-Douban                             # broken
+Net-Dropbox                            # no tests
+Net-FluidDB                            # broken
+Net-Fluidinfo                          # broken
+Net-HTTP-Factual                       # broken
+Net-Journyx                            # broken
+Net-Parliament                         # broken
+Net-Plurk                              # broken
+Net-Recurly                            # no tests
+Net-StackExchange                      # broken
+NetHack-Item                           # NH::Monster::Spoiler is broken
+NetHack-Monster-Spoiler                # broken (MX::CA issues)
+Nginx-Control                          # requires nginx to be installed
+ODG-Record                             # Test::Benchmark broken
+POE-Component-DirWatch-Object          # broken
+POE-Component-ResourcePool             # broken
+POE-Component-Server-MySQL             # no tests
+POE-Component-Server-PSGI              # broken deps
+POEx-ProxySession                      # broken deps
+POEx-PubSub                            # broken deps
+POEx-WorkerPool                        # broken deps
+Paludis-UseCleaner                     # needs cave::wrapper
+Parse-FixedRecord                      # broken
+Perlanet                               # HTML::Tidy requires tidyp
+Perlbal-Control                        # proc::processtable doesn't load
+Pg-BulkCopy                            # hardcodes /usr/bin/perl
+Queue-Leaky                            # broken
+Random-Quantum                         # no tests
+RDF-Server                             # "no Moose" unimports confess
+RPC-Any                                # broken
+Reaction                               # signatures is broken
+Reflexive-Role-Collective              # broken (reflex::role changes?)
+Reflexive-Role-DataMover               # broken (reflex::role changes?)
+Reflexive-Role-TCPServer               # broken (reflex::role changes?)
+SRS-EPP-Proxy                          # depends on xml::epp
+STD                                    # no tests
+Scene-Graph                            # has '+attr' in roles
+SchemaEvolution                        # no tests
+Server-Control                         # proc::processtable doesn't load
+SilkiX-Converter-Kwiki                 # file::mimeinfo expects (?-xism:
+SimpleDB-Class                         # requires memcached
+String-Blender                         # broken
+TAEB                                   # broken
+Tail-Tool                              # Getopt::Alt doesn't exist
+Tapper-Installer                       # sys::info::driver::linux is broken
+Tapper-MCP                             # sys::info::driver::linux is broken
+Tapper-MCP-MessageReceiver             # sys::info::driver::linux is broken
+Tapper-Reports-API                     # sys::info::driver::linux is broken
+Telephone-Mnemonic-US                  # rpm-build-perl is broken
+Test-A8N                               # broken
+Thorium                                # requires Hobocamp
+Tk-Role-Dialog                         # tk won't compile
+TryCatch-Error                         # broken
+Verby                                  # requires poe::component::resourcepool
+WWW-FMyLife                            # broken
+WWW-Fandango                           # bad dist
+WWW-Metalgate                          # Cache is broken
+WWW-Scramble                           # pod::coverage fail
+WWW-StaticBlog                         # time::sofar is broken
+WWW-Yahoo-Lyrics-JP                    # broken
+Weaving-Tablet                         # tk doesn't compile
+WebService-Buxfer                      # no tests
+WebService-CloudFlare-Host             # no tests
+WebService-Yes24                       # broken
+WiX3                                   # broken
+XIRCD                                  # undeclared deps
+XML-EPP                                # coerce without coercion
+Yukki                                  # git::repository is broken
+mobirc                                 # http::engine broken
+namespace-alias                        # won't compile
 
 # dep resolution failures or something (these pass when run manually)
 AXL-Client-Simple
@@ -217,14 +329,10 @@ Curses-Toolkit
 DBIx-Class-DeploymentHandler
 Data-SearchEngine-ElasticSearch
 Devel-IntelliPerl
-
-# failing for some reason or another (need to look into this)
 Dist-Zilla-Plugin-DualLife
 Dist-Zilla-Plugin-GitFlow
 Dist-Zilla-Plugin-MetaResourcesFromGit
-Dist-Zilla-Plugin-ProgCriticTests
 Dist-Zilla-Plugin-Rsync
-Dist-Zilla-Plugin-SVK
 Dist-Zilla-Plugin-Test-CPAN-Changes
 Dist-Zilla-Plugin-Test-Kwalitee
 Dist-Zilla-PluginBundle-ARODLAND
@@ -233,176 +341,65 @@ Dist-Zilla-PluginBundle-FLORA
 Dist-Zilla-PluginBundle-NIGELM
 Dist-Zilla-PluginBundle-NUFFIN
 Dist-Zilla-PluginBundle-RBUELS
-DustyDB
-ELF-Extract-Sections
-ETLp
 FCGI-Engine
-FFmpeg-Thumbnail
-Fedora-App-MaintainerTools
-Fedora-App-ReviewTool
 Fey-SQL-Pg
-File-DataClass
-Finance-Bank-SentinelBenefits-Csv401kConverter
 Finance-Bank-SuomenVerkkomaksut
-Forest-Tree-Viewer-Gtk2
-Form-Factory
-Frost
-GOBO
 Games-AssaultCube
 Games-HotPotato
-Games-Pandemic
-Games-RailRoad
-Games-Risk
-Games-Tetris-Complete
 Gearman-Driver
 Geo-Calc
-Getopt-Chain
 Gitalist
-Google-Spreadsheet-Agent
 Grades
 Graphics-Primitive-Driver-Cairo
 Graphics-Primitive-Driver-CairoPango
 HTML-FormHandler
 HTML-FormHandler-Model-DBIC
-HTML-TreeBuilderX-ASP_NET
-Hobocamp
-Horris
-IM-Engine-Plugin-Dispatcher
 IMS-CP-Manifest
 IO-Multiplex-Intermediary
 Image-Placeholder
-JavaScript-Framework-jQuery
-Jungle
 Kafka-Client
-Kamaitachi
 KiokuDB-Backend-BDB
-KiokuDB-Backend-Files
 LWP-UserAgent-OfflineCache
 Locale-Handle-Pluggable
-Locale-MO-File
-Log-Dispatch-Gtk2-Notify
-MSWord-ToHTML
-Mail-Summary-Tools
 Mason
-MediaWiki-USERINFO
 Mildew
 MooseX-APIRole
-MooseX-Attribute-Prototype
 MooseX-AutoImmute
-MooseX-DBIC-Scaffold
-MooseX-DOM
 MooseX-Declare
-MooseX-Documenter
-MooseX-Error-Exception-Class
-MooseX-Meta-Attribute-Index
-MooseX-Meta-Attribute-Lvalue
 MooseX-Method-Signatures
 MooseX-MultiMethods
 MooseX-MultiObject
 MooseX-POE
 MooseX-Params
-MooseX-Struct
-MooseX-TrackDirty-Attributes
 MooseX-Workers
-Net-Douban
-Net-Dropbox
-Net-FluidDB
-Net-Fluidinfo
-Net-HTTP-Factual
-Net-Journyx
-Net-Parliament
-Net-Plurk
-Net-Recurly
-Net-StackExchange
 Net-Topsy
-NetHack-Item
-NetHack-Monster-Spoiler
-Nginx-Control
-ODG-Record
 POE-Component-Client-MPD
 POE-Component-DirWatch
-POE-Component-DirWatch-Object
 POE-Component-IRC-Plugin-Role
 POE-Component-MessageQueue
-POE-Component-ResourcePool
-POE-Component-Server-MySQL
-POE-Component-Server-PSGI
 POE-Component-Server-SimpleHTTP
 POE-Test-Helpers
-POEx-ProxySession
-POEx-PubSub
-POEx-WorkerPool
-Paludis-UseCleaner
 Parse-CPAN-Ratings
-Parse-FixedRecord
-Perlanet
-Perlbal-Control
-Pg-BulkCopy
 Pod-Weaver-Section-Encoding
 Proc-Safetynet
-Queue-Leaky
-RDF-Server
-RPC-Any
-Random-Quantum
-Reaction
 Reflex
-Reflexive-Role-Collective
-Reflexive-Role-DataMover
-Reflexive-Role-TCPServer
 Reflexive-Stream-Filtering
-SRS-EPP-Proxy
-STD
-Scene-Graph
 Schedule-Pluggable
-SchemaEvolution
-Server-Control
-SilkiX-Converter-Kwiki
-SimpleDB-Class
-String-Blender
-TAEB
-Tail-Tool
-Tapper-Installer
-Tapper-MCP
-Tapper-MCP-MessageReceiver
-Tapper-Reports-API
-Telephone-Mnemonic-US
 Template-Plugin-Heritable
-Test-A8N
 Test-BDD-Cucumber
 Test-Sweet
 Test-System
-Thorium
-Tk-Role-Dialog
 TryCatch
-TryCatch-Error
 VANAMBURG-SEMPROG-SimpleGraph
 VCI
-Verby
 W3C-XMLSchema
-WWW-FMyLife
-WWW-Fandango
-WWW-Getsy
 WWW-Getsy
 WWW-Mechanize-Cached
 WWW-MenuGrinder
-WWW-Metalgate
-WWW-Scramble
-WWW-StaticBlog
-WWW-Yahoo-Lyrics-JP
-Weaving-Tablet
 WebNano-Controller-CRUD
-WebService-Buxfer
-WebService-CloudFlare-Host
 WebService-SlimTimer
-WebService-Yes24
-WiX3
-XIRCD
 XML-Ant-BuildFile
-XML-EPP
 XML-LibXSLT-Easy
 XML-Rabbit
 XML-Schematron
 YUM-RepoQuery
-Yukki
-mobirc
-namespace-alias
