@@ -21,6 +21,10 @@ for, noteworthy changes.
     common ancestor of that union's component types. See Moose::Manual::Delta
     for more details. (Dave Rolsky)
 
+  * The ->parents method used to return an arrayref for union types, and a
+    list of one or more types for all other types. Now they all return
+    lists. (Dave Rolsky)
+
   * The ->is_subtype_of and ->is_a_type_of methods have changed their
     behavior. Previously, they returned true if any of their member types
     returned true for a given type. Now, all of the member types must return
