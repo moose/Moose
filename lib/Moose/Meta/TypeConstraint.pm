@@ -566,8 +566,7 @@ Returns true if the type has a parent type.
 
 =item B<< $constraint->parents >>
 
-A synonym for C<parent>. This is useful for polymorphism with types
-that can have more than one parent.
+Returns all of the types parents as an list of type constraint objects.
 
 =item B<< $constraint->constraint >>
 
