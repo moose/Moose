@@ -64,6 +64,9 @@ for, noteworthy changes.
     class that the class type represents when the class type wasn't registered.
     (doy)
 
+  * Removing anonymous metaclasses prematurely no longer prevents reaping of
+    the associated stash. (doy)
+
   [OTHER]
 
   * The Class::MOP::load_class and Class::MOP::is_class_loaded subroutines are

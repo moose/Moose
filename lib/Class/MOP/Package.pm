@@ -140,10 +140,18 @@ sub create {
         # class when fixing metaclass incompatibility. In that case,
         # we don't want to clean out the namespace now. We can detect
         # that because Moose will explicitly update the singleton
-        # cache in Class::MOP.
-        no warnings 'uninitialized';
+        # cache in Class::MOP using store_metaclass_by_name, which
+        # means that the new metaclass will already exist in the cache
+        # by this point.
+        # The other options here are that $current_meta can be undef if
+        # remove_metaclass_by_name is called explicitly (since the hash
+        # entry is removed first, and then this destructor is called),
+        # or that $current_meta can be the same as $self, which happens
+        # when the metaclass goes out of scope (since the weak reference
+        # in the metaclass cache won't be freed until after this
+        # destructor runs).
         my $current_meta = Class::MOP::get_metaclass_by_name($name);
-        return if $current_meta ne $self;
+        return if defined($current_meta) && $current_meta ne $self;
 
         my ($first_fragments, $last_fragment) = ($name =~ /^(.*)::(.*)$/);
 

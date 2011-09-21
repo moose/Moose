@@ -35,4 +35,35 @@ ok($role->is_anon_role, "the role knows it's anonymous");
 ok(is_class_loaded(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes is_class_loaded");
 ok(Class::MOP::class_of(Moose::Meta::Role->create_anon_role->name), "creating an anonymous role satisifes class_of");
 
+{
+    my $role;
+    {
+        my $meta = Moose::Meta::Role->create_anon_role(
+            methods => {
+                foo => sub { 'FOO' },
+            },
+        );
+
+        $role = $meta->name;
+        can_ok($role, 'foo');
+    }
+    ok(!$role->can('foo'));
+}
+
+{
+    my $role;
+    {
+        my $meta = Moose::Meta::Role->create_anon_role(
+            methods => {
+                foo => sub { 'FOO' },
+            },
+        );
+
+        $role = $meta->name;
+        can_ok($role, 'foo');
+        Class::MOP::remove_metaclass_by_name($role);
+    }
+    ok(!$role->can('foo'));
+}
+
 done_testing;
