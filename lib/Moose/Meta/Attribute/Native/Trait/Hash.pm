@@ -143,6 +143,38 @@ is a reference to a new hash with the same keys and values.  It is I<shallow>
 because any values that were references in the original will be the I<same>
 references in the clone.
 
+=item B<map_keys( sub { ... } )>
+
+=item B<map_values( sub { ... } )>
+
+This method transforms every element in the array of keys or values of the hash
+and returns an array, just like Perl's core C<map> function. This method
+requires a subroutine which implements the transformation.
+
+This method requires a single argument.
+
+=item B<grep_keys( sub { ... } )>
+
+=item B<grep_values( sub { ... } )>
+
+This method returns every element in the array of keys or values  matching a
+given criteria, just like Perl's core C<grep> function. This method requires a
+subroutine which implements the matching logic.
+
+This method requires a single argument.
+
+=item B<sort_keys( sub { ... } )>
+
+=item B<sort_values( sub { ... } )>
+
+Returns the elements of the array of keys or values in sorted order.
+
+You can provide an optional subroutine reference to sort with (as you can with
+Perl's core C<sort> function). However, instead of using C<$a> and C<$b> in
+this subroutine, you will need to use C<$_[0]> and C<$_[1]>.
+
+This method accepts a single argument.
+
 =back
 
 Note that C<each> is deliberately omitted, due to its stateful interaction
