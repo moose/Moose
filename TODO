@@ -2,25 +2,11 @@
 
 === RT Tickets
 
-RT#67731 - Union types reports spurious parent types -
-https://rt.cpan.org/Ticket/Display.html?id=67731
-
 RT#59478/RT#63000 - 0+ overload causes NV conversion on == on perls before
 5.14 - this causes comparisons to fail when the number can't fit in an NV
 without precision loss. I'd like to fix this in a more general way (forcing
 anyone else who might be using == on tc objects to do weird things isn't very
 good), although it's hard to test to see what actually works.
-
-RT#69839 - UNIVERSAL methods should show up as methods, so things like method
-modifiers work
-
-=== Register implicitly created class/role types
-
-When you do has foo => (isa => 'Bar'), it returns a class_type for Bar, but
-doesn't register it. This means that later you can declare "subtype 'Bar', as
-'Str', ..." and it'll work, and later instances of the 'Bar' type will use that
-one. We should register the implicitly created ones so that trying to redefine
-it after it's used throws an error.
 
 == Todo for 2.0600
 
