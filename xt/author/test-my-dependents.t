@@ -100,14 +100,29 @@ Catalyst-Authentication-Credential-Facebook-OAuth2
 Catalyst-Authentication-Store-Fey-ORM
 Catalyst-Controller-MovableType
 Catalyst-Model-MenuGrinder
+Chef
+Data-SearchEngine-ElasticSearch
+Dist-Zilla-Plugin-DualLife
+Dist-Zilla-Plugin-GitFlow
+Dist-Zilla-Plugin-MetaResourcesFromGit
+Dist-Zilla-Plugin-Rsync
+Dist-Zilla-PluginBundle-ARODLAND
+Dist-Zilla-PluginBundle-Author-OLIVER
+Dist-Zilla-PluginBundle-NUFFIN
+Games-HotPotato
+Kafka-Client
+LWP-UserAgent-OfflineCache
 Net-Dropbox
 Net-Recurly
+Pod-Weaver-Section-Encoding
 POE-Component-Server-MySQL
 Random-Quantum
 SchemaEvolution
 STD
+Test-System
 WebService-Buxfer
 WebService-CloudFlare-Host
+WWW-MenuGrinder
 
 # failing for a reason
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
@@ -120,6 +135,7 @@ App-CPAN2Pkg                           # Tk doesn't compile
 App-Dataninja                          # bad M::I install in inc/
 App-ForExample                         # getopt::chain is broken
 App-Fotagger                           # Imager doesn't compile
+App-HistHub                            # missing dep on JSON.pm
 App-Magpie                             # deps on URPM which doesn't exist
 App-PgCryobit                          # requires postgres installation
 App-TemplateServer                     # broken use of types
@@ -157,6 +173,7 @@ CM-Permutation                         # OpenGL uses graphics in Makefile.PL
 Cogwheel                               # uses ancient moose apis
 Constructible                          # GD::SVG is a broken dist
 Coro-Amazon-SimpleDB                   # amazon::simpledb::client doesn't exist
+CPAN-Digger                            # requires DBD::SQLite
 CPAN-Mini-Webserver                    # undeclared dep on lingua-stopwords
 CPAN-Patches-Plugin-Debian             # configure time failures
 Dackup                                 # depends on running ssh
@@ -205,6 +222,7 @@ Locale-MO-File                         # broken
 Log-Dispatch-Gtk2-Notify               # gtk tests are graphical
 Mail-Summary-Tools                     # DT::Format::DateManip is broken
 MediaWiki-USERINFO                     # broken
+Mildew                                 # regexp::grammars needs class::accessor
 mobirc                                 # http::engine broken
 MooseX-Attribute-Prototype             # uses old moose apis
 MooseX-DBIC-Scaffold                   # needs unreleased sql-translator
@@ -275,8 +293,10 @@ Tk-Role-Dialog                         # tk won't compile
 TryCatch-Error                         # broken
 Verby                                  # requires poe::component::resourcepool
 Weaving-Tablet                         # tk doesn't compile
+WebService-SlimTimer                   # weird mxms error
 WebService-Yes24                       # broken
 WiX3                                   # broken
+WWW-Alltop                             # XML::SimpleObject configure fail
 WWW-Fandango                           # bad dist
 WWW-FMyLife                            # broken
 WWW-Hashdb                             # test hangs, pegging cpu
@@ -286,114 +306,6 @@ WWW-StaticBlog                         # time::sofar is broken
 WWW-Yahoo-Lyrics-JP                    # broken
 XIRCD                                  # undeclared deps
 XML-EPP                                # coerce without coercion
+XML-LibXSLT-Easy                       # missing dep on mx-getopt
 Yukki                                  # git::repository is broken
 Zucchini                               # File::Rsync prompts in Makefile.PL
-
-# dep resolution failures or something (these pass when run manually)
-App-HistHub # JSON::Any can't see JSON::XS?
-Bot-BasicBot-Pluggable
-Bot-BasicBot-Pluggable-Module-JIRA
-CPAN-Digger
-Cantella-Worker
-Cantella-Worker-Role-Beanstalk
-Catalyst-Plugin-Session
-Catalyst-View-ByCode
-Catalyst-View-RDF
-CatalystX-Declare
-CatalystX-Syntax-Action
-Chart-Clicker
-Chart-Weather-Forecast
-Chef
-Code-Statistics
-CPAN-Patches
-Crypt-PBKDF2
-Curses-Toolkit
-DBIx-Class-DeploymentHandler
-Data-SearchEngine-ElasticSearch
-Devel-IntelliPerl
-Dist-Zilla-Plugin-BuildSelf
-Dist-Zilla-Plugin-DualLife
-Dist-Zilla-Plugin-GitFlow
-Dist-Zilla-Plugin-MetaResourcesFromGit
-Dist-Zilla-Plugin-ModuleBuildTiny
-Dist-Zilla-Plugin-Rsync
-Dist-Zilla-Plugin-Test-CPAN-Changes
-Dist-Zilla-Plugin-Test-DistManifest
-Dist-Zilla-Plugin-Test-Kwalitee
-Dist-Zilla-Plugin-Test-Portability
-Dist-Zilla-Plugin-Test-Synopsis
-Dist-Zilla-Plugin-Test-UnusedVars
-Dist-Zilla-PluginBundle-ARODLAND
-Dist-Zilla-PluginBundle-Author-OLIVER
-Dist-Zilla-PluginBundle-FLORA
-Dist-Zilla-PluginBundle-NIGELM
-Dist-Zilla-PluginBundle-NUFFIN
-Dist-Zilla-PluginBundle-RBUELS
-FCGI-Engine
-Fey-SQL-Pg
-Finance-Bank-SuomenVerkkomaksut
-Games-AssaultCube
-Games-HotPotato
-Gearman-Driver
-Geo-Calc
-Gitalist
-Grades
-Graphics-Primitive-Driver-Cairo
-Graphics-Primitive-Driver-CairoPango
-HTML-FormHandler
-HTML-FormHandler-Model-DBIC
-IMS-CP-Manifest
-IO-Multiplex-Intermediary
-Image-Placeholder
-Kafka-Client
-KiokuDB-Backend-BDB
-LWP-UserAgent-OfflineCache
-Locale-Handle-Pluggable
-Mason
-Mildew
-MooseX-APIRole
-MooseX-AutoImmute
-MooseX-Declare
-MooseX-Method-Signatures
-MooseX-MultiMethods
-MooseX-MultiObject
-MooseX-POE
-MooseX-Params
-MooseX-Workers
-Net-Topsy
-POE-Component-Client-CouchDB
-POE-Component-Client-MPD
-POE-Component-DirWatch
-POE-Component-Github
-POE-Component-IRC-Plugin-Role
-POE-Component-MessageQueue
-POE-Component-Metabase-Relay-Server
-POE-Component-Server-SimpleHTTP
-POE-Test-Helpers
-Parse-CPAN-Ratings
-Pod-Weaver-Section-Encoding
-Proc-Safetynet
-Reflex
-Reflexive-Stream-Filtering
-Schedule-Pluggable
-Template-Plugin-Heritable
-Test-BDD-Cucumber
-Test-Sweet
-Test-System
-TryCatch
-VANAMBURG-SEMPROG-SimpleGraph
-VCI
-W3C-XMLSchema
-WWW-Alltop
-WWW-Getsy
-WWW-Mechanize-Cached
-WWW-MenuGrinder
-WebNano-Controller-CRUD
-WebService-Async
-WebService-LOC-CongRec
-WebService-SlimTimer
-XML-Ant-BuildFile
-XML-LibXSLT-Easy
-XML-Rabbit
-XML-Schematron
-YUM-RepoQuery
