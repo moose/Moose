@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0300 Fri, Sep 23, 2011
+
   [DEPRECATIONS]
 
   * The optimize_as option for type constraints has been deprecated. Use the
