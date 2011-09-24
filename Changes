@@ -25,10 +25,10 @@ for, noteworthy changes.
     list of one or more types for all other types. Now they all return
     lists. (Dave Rolsky)
 
-  * The ->is_subtype_of and ->is_a_type_of methods have changed their
-    behavior. Previously, they returned true if any of their member types
-    returned true for a given type. Now, all of the member types must return
-    true. Fixes RT #67731. (Dave Rolsky)
+  * The ->is_subtype_of and ->is_a_type_of methods have changed their behavior
+    for union types. Previously, they returned true if any of their member
+    types returned true for a given type. Now, all of the member types must
+    return true. Fixes RT #67731. (Dave Rolsky)
 
   [ENHANCEMENTS]
 
