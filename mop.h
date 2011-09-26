@@ -24,6 +24,10 @@
 #define XSPROTO(name) XS_EXTERNAL(name)
 #endif
 
+#ifndef CvISXSUB
+#define CvISXSUB(cv)  (CvXSUB(cv) ? TRUE : FALSE)
+#endif
+
 void mop_call_xs (pTHX_ XSPROTO(subaddr), CV *cv, SV **mark);
 
 typedef enum {
