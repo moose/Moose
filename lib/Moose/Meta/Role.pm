@@ -1,4 +1,3 @@
-
 package Moose::Meta::Role;
 
 use strict;
@@ -44,7 +43,7 @@ my $META = __PACKAGE__->meta;
 
 # NOTE:
 # since roles are lazy, we hold all the attributes
-# of the individual role in 'statis' until which
+# of the individual role in 'stasis' until which
 # time when it is applied to a class. This means
 # keeping a lot of things in hash maps, so we are
 # using a little of that meta-programmin' magic
