@@ -40,7 +40,7 @@ use Test::Requires {
 =head1 DESCRIPTION
 
 A common extension is to provide an alternate base class. One way to
-do that is to make a C<MyApp::base> and add C<S<extends
+do that is to make a C<MyApp::Base> and add C<S<extends
 'MyApp::Base'>> to every class in your application. That's pretty
 tedious. Instead, you can create a Moose-alike module that sets the
 base object class to C<MyApp::Base> for you.
