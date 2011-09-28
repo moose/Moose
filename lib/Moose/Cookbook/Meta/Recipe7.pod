@@ -150,9 +150,9 @@ This level of indirection probably makes our instance class I<slower>
 than the default. However, when attribute access is inlined, this
 lookup will be cached:
 
-  sub inline_create_instance {
-      my ( $self, $class_variable ) = @_;
-      return 'do { my $sym = Symbol::gensym(); bless $sym, ' . $class_variable . ' }';
+  sub inline_slot_access {
+      my ( $self, $instance, $slot_name ) = @_;
+      return '*{' . $instance . '}->{' . $slot_name . '}';
   }
 
 The code snippet that the C<inline_slot_access> method returns will
