@@ -45,11 +45,9 @@ metaclass. If you were writing an ORM, this would be a logical
 extension.
 
 Many of the Moose extensions on CPAN work by providing an attribute
-metaclass extension. For example, the L<MooseX::AttributeHelpers>
-distribution provides a new attribute metaclass that lets you delegate
-behavior to a non-object attribute (a hashref or simple number).
-(MooseX::AttributeHelpers has been deprecated in favour of
-L<Moose::Meta::Attribute::Native>, but can still serve as an example).
+metaclass extension. For example, the L<MooseX::Aliases> module
+provides an attribute metaclass trait that lets you specify aliases
+to install for methods and attribute accessors.
 
 A metaclass extension can be packaged as a subclass or a
 role/trait. If you can, we recommend using traits instead of

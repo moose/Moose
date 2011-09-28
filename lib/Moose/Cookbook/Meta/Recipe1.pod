@@ -50,9 +50,9 @@ object, letting you write C<< My::Class->meta()->table_name() >>.
 =head1 SEE ALSO
 
 Many of the MooseX modules on CPAN implement metaclass extensions. A
-couple good examples include L<MooseX::Singleton> and
-L<MooseX::AttributeHelpers>. For a more complex example see
-L<Fey::ORM> or L<Reaction>.
+couple good examples include L<MooseX::Aliases> and
+L<MooseX::UndefTolerant>. For a more complex example see
+L<Fey::ORM> or L<Bread::Board::Declare>.
 
 =cut
 
