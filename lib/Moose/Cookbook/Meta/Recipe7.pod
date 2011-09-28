@@ -59,17 +59,17 @@ __END__
 
   sub deinitialize_slot {
       my ( $self, $instance, $slot_name ) = @_;
-      delete *$instance->{$slot_name};;
+      delete *$instance->{$slot_name};
   }
 
   sub is_slot_initialized {
-      my ( $self, $instance, $slot_name, $value ) = @_;
-      exists *$instance->{$slot_name};;
+      my ( $self, $instance, $slot_name ) = @_;
+      exists *$instance->{$slot_name};
   }
 
   sub weaken_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
-      weaken *$instance->{$slot_name};;
+      weaken *$instance->{$slot_name};
   }
 
   sub inline_create_instance {
@@ -143,7 +143,7 @@ need to change this to expect a glob reference instead.
 
   sub get_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
-      *$instance->{$slot_name};;
+      *$instance->{$slot_name};
   }
 
 This level of indirection probably makes our instance class I<slower>
