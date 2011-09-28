@@ -230,7 +230,7 @@ directly; see the L<Moose::Exporter> docs.
   use MooseX::Embiggen::Role::Object;
 
   my ( $import, $unimport, $init_meta ) = Moose::Exporter->build_import_methods(
-      also => ['Moose'] metaclass_roles =>
+      also => ['Moose'], metaclass_roles =>
           ['MooseX::Embiggen::Role::Meta::Class'],
       attribute_metaclass_roles => ['MooseX::Embiggen::Role::Meta::Attribute'],
       constructor_class_roles =>
