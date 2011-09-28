@@ -49,8 +49,8 @@ replaced with C<no MyApp::Mooseish>.
 
 The C<with_meta> parameter specifies a list of functions that should
 be wrapped before exporting. The wrapper simply ensures that the
-importing package name is the first argument to the function, so we
-can do C<S<my $caller = shift;>>.
+importing package's appropriate metaclass object is the first argument
+to the function, so we can do C<S<my $meta = shift;>>.
 
 See the L<Moose::Exporter> docs for more details on its API.
 
