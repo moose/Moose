@@ -36,7 +36,8 @@ definitions by making your class immutable.
 The C<use namespace::autoclean> bit is simply good code hygiene, as it removes
 imported symbols from  you class's namespace at the end of your package's
 compile cycle, including Moose keywords.  Once the class has been
-built, these keywords are not needed.
+built, these keywords are not needed.  (This is the preferred to placing
+C<no Moose> at the end of your package).
 
 The C<make_immutable> call allows Moose to speed up a lot of things, most
 notably object construction. The trade-off is that you can no longer change
