@@ -1,6 +1,6 @@
 package Moose::Cookbook::Meta::Recipe5;
 
-# ABSTRACT: The "table" attribute as a metaclass trait
+# ABSTRACT: Adding a "table" attribute as a metaclass trait
 
 __END__
 
@@ -27,47 +27,44 @@ __END__
 
 =head1 DESCRIPTION
 
-This recipe takes the metaclass table attribute from
-L<Moose::Cookbook::Meta::Recipe4> and implements it as a metaclass
-trait. Traits are just roles, as we saw in
-L<Moose::Cookbook::Meta::Recipe3>.
+In this recipe, we'll create a class metaclass trait which has a "table"
+attribute. This trait is for classes associated with a DBMS table, as one
+might do for an ORM.
 
-The advantage of using traits is that it's easy to combine multiple
-traits, whereas combining multiple metaclass subclasses requires
-creating yet another subclass. With traits, Moose takes care of
-applying them to your metaclass.
+In this example, the table name is just a string, but in a real ORM
+the table might be an object describing the table.
+
+=head1 THE METACLASS TRAIT
+
+This really is as simple as the recipe L</SYNOPSIS> shows. The trick is
+getting your classes to use this metaclass, and providing some sort of sugar
+for declaring the table. This is covered in
+L<Moose::Cookbook::Extending::Recipe2>, which shows how to make a module like
+C<Moose.pm> itself, with sugar like C<has_table()>.
 
 =head2 Using this Metaclass Trait in Practice
 
-Once this trait has been applied to a metaclass, it looks exactly like
-the example we saw in L<Moose::Cookbook::Meta::Recipe4>:
+
+Accessing this new C<table> attribute is quite simple. Given a class
+named C<MyApp::User>, we could simply write the following:
 
   my $table = MyApp::User->meta->table;
 
-  # the safe version
-  $table = MyApp::User->meta->table
-      if MyApp::User->meta->meta->can('does')
-         and MyApp::User->meta->meta->does('MyApp::Meta::Class');
-
-The safe version is a little complicated. We have to check that the
-metaclass object's metaclass has a C<does> method, in which case we
-can ask if the the metaclass does a given role.
-
-It's simpler to just write:
+As long as C<MyApp::User> has arranged to apply the
+C<MyApp::Meta::Class::Trait::HasTable> to its metaclass, this method call just
+works. If we want to be more careful, we can check that the class metaclass
+object has a C<table> method:
 
   $table = MyApp::User->meta->table
       if MyApp::User->meta->can('table');
 
-In theory, this is a little less correct, since the metaclass might be
-getting its C<table> method from a I<different> role. In practice, you
-are unlikely to encounter this sort of problem.
+In theory, this is not entirely correct, since the metaclass might be getting
+its C<table> method from a I<different> trait. In practice, you are unlikely
+to encounter this sort of problem.
 
 =head1 SEE ALSO
 
 L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute
 traits
-
-L<Moose::Cookbook::Meta::Recipe4> - Adding a "table" attribute to the
-metaclass
 
 =pod
