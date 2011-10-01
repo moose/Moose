@@ -119,26 +119,12 @@ you extend the object system provided by Moose.
 If you're wondering what all this "meta" stuff is, and why you should
 care about it, read this "recipe".
 
-=item L<Moose::Cookbook::Meta::Recipe2> - A meta-attribute, attributes with labels
-
-One way to extend Moose is to provide your own attribute
-metaclasses. Attribute metaclasses let you extend attribute
-declarations (with C<has>) and behavior to provide additional
-attribute functionality.
-
 =item L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute traits
 
 Extending Moose's attribute metaclass is a great way to add
 functionality. However, attributes can only have one metaclass.
 Applying roles to the attribute metaclass lets you provide
 composable attribute functionality.
-
-=item L<Moose::Cookbook::Meta::Recipe4> - Adding a "table" attribute to the metaclass
-
-If you want to store more information about your classes, you'll have
-to extend C<Moose::Meta::Class>. Doing so is simple, but you'll
-probably also want to provide some sugar, so see
-L<Moose::Cookbook::Extending::Recipe2> as well.
 
 =item L<Moose::Cookbook::Meta::Recipe5> - The "table" attribute implemented as a metaclass trait
 
