@@ -9,7 +9,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  package My::Meta::Method;
+  package MyApp::Meta::Method::PrivateOrPublic;
 
   use Moose;
   use Moose::Util::TypeConstraints;
@@ -66,7 +66,7 @@ __END__
 
   __PACKAGE__->meta()->add_method(
       '_reset_password',
-      My::Meta::Method->new(
+      MyApp::Meta::Method::PrivateOrPublic->new(
           name         => '_reset_password',
           package_name => __PACKAGE__,
           body         => sub { $_[0]->password('reset') },
