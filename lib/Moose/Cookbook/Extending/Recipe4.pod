@@ -11,41 +11,34 @@ __END__
 
   package MyApp::Mooseish;
 
-  use Moose ();
   use Moose::Exporter;
 
   Moose::Exporter->setup_import_methods(
-      with_meta => ['has_table'],
-      also      => 'Moose',
+      with_meta       => ['has_table'],
+      class_metaroles => {
+          class => ['MyApp::Meta::Class::Trait::HasTable'],
+      },
   );
-
-  sub init_meta {
-      shift;
-      return Moose->init_meta( @_, metaclass => 'MyApp::Meta::Class' );
-  }
 
   sub has_table {
       my $meta = shift;
       $meta->table(shift);
   }
 
-  package MyApp::Meta::Class;
-  use Moose;
+  package MyApp::Meta::Class::Trait::HasTable;
+  use Moose::Role;
 
-  extends 'Moose::Meta::Class';
-
-  has 'table' => ( is => 'rw' );
+  has table => (
+      is  => 'rw',
+      isa => 'Str',
+  );
 
 =head1 DESCRIPTION
 
 This recipe expands on the use of L<Moose::Exporter> we saw in
-L<Moose::Cookbook::Extending::Recipe1>. Instead of providing our own
-object base class, we provide our own metaclass class, and we also
-export a C<has_table> sugar function.
-
-Given the above code, you can now replace all instances of C<use
-Moose> with C<use MyApp::Mooseish>. Similarly, C<no Moose> is now
-replaced with C<no MyApp::Mooseish>.
+L<Moose::Cookbook::Extending::Recipe1> and the class metaclass trait we saw in
+L<Moose::Cookbook::Meta::Recipe5>. In this example we provide our own
+metaclass trait, and we also export a C<has_table> sugar function.
 
 The C<with_meta> parameter specifies a list of functions that should
 be wrapped before exporting. The wrapper simply ensures that the
@@ -61,6 +54,9 @@ interface. Here's what it would look like in actual use:
 
   package MyApp::User;
 
+  use namespace::autoclean;
+
+  use Moose;
   use MyApp::Mooseish;
 
   has_table 'User';
@@ -69,11 +65,6 @@ interface. Here's what it would look like in actual use:
   has 'password' => ( is => 'ro' );
 
   sub login { ... }
-
-  no MyApp::Mooseish;
-
-All of the normal Moose sugar (C<has()>, C<with()>, etc) is available
-when you C<use MyApp::Mooseish>.
 
 =head1 CONCLUSION
 
