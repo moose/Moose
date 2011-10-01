@@ -38,9 +38,8 @@ create your own Moose variant.
 Let's say that you want to add additional properties to
 attributes. Specifically, we want to add a "label" property to each
 attribute, so we can write C<<
-My::Class->meta()->get_attribute('size')->label() >>. The first two
-recipes show two different ways to do this, one with a full
-meta-attribute subclass, and the other with an attribute trait.
+My::Class->meta()->get_attribute('size')->label() >>. The first
+recipe shows how to do this using an attribute trait.
 
 You might also want to add additional properties to your
 metaclass. For example, if you were writing an ORM based on Moose, you

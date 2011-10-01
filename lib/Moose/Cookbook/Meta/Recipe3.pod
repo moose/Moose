@@ -65,26 +65,43 @@ __END__
 
   my $app = MyApp::Website->new( url => "http://google.com", name => "Google" );
 
-=head1 BUT FIRST
+=head1 SUMMARY
 
-This recipe is a variation on
-L<Moose::Cookbook::Meta::Recipe2>. Please read that recipe first.
+In this recipe, we begin to delve into the wonder of meta-programming.
+Some readers may scoff and claim that this is the arena of only the
+most twisted Moose developers. Absolutely not! Any sufficiently
+twisted developer can benefit greatly from going more meta.
 
-=head1 MOTIVATION
+Our goal is to allow each attribute to have a human-readable "label"
+attached to it. Such labels would be used when showing data to an end
+user. In this recipe we label the C<url> attribute with "The site's
+URL" and create a simple method showing how to use that label.
 
-In L<Moose::Cookbook::Meta::Recipe2>, we created an attribute
-metaclass which lets you provide a label for attributes.
+=head1 META-ATTRIBUTE OBJECTS
 
-Using a metaclass works fine until you realize you want to add a label
-I<and> an expiration, or some other combination of new behaviors. You
-could create yet another metaclass which subclasses those two, but
-that makes a mess, especially if you want to mix and match behaviors
-across many attributes.
+All the attributes of a Moose-based object are actually objects themselves.
+These objects have methods and attributes. Let's look at a concrete example.
 
-Fortunately, Moose provides a much saner alternative, which is to
-encapsulate each extension as a role, not a class. We can make a role
-which adds a label to an attribute, and could make another to
-implement expiration.
+  has 'x' => ( isa => 'Int', is => 'ro' );
+  has 'y' => ( isa => 'Int', is => 'rw' );
+
+Internally, the metaclass for C<Point> has two L<Moose::Meta::Attribute>
+objects. There are several methods for getting meta-attributes out of a
+metaclass, one of which is C<get_attribute_list>. This method is called on the
+metaclass object.
+
+The C<get_attribute_list> method returns a list of attribute names. You can
+then use C<get_attribute> to get the L<Moose::Meta::Attribute> object itself.
+
+Once you have this meta-attribute object, you can call methods on it like
+this:
+
+  print $point->meta->get_attribute('x')->type_constraint;
+     => Int
+
+To add a label to our attributes there are two steps. First, we need a new
+attribute metaclass trait that can store a label for an attribute. Second, we
+need to apply that trait to our attributes.
 
 =head1 TRAITS
 
@@ -106,9 +123,7 @@ metaclass instead of a user-level class.
 
 =head1 DISSECTION
 
-A side-by-side look of the code examples in this recipe and recipe 2
-show that defining and using a trait is very similar to a full-blown
-metaclass.
+We start by creating a package for our trait.
 
   package MyApp::Meta::Attribute::Trait::Labeled;
   use Moose::Role;
@@ -119,9 +134,11 @@ metaclass.
       predicate => 'has_label',
   );
 
-Instead of subclassing L<Moose::Meta::Attribute>, we define a role. As
-with our metaclass in L<recipe 2|Moose::Cookbook::Meta::Recipe2>,
-registering our role allows us to refer to it by a short name.
+You can see that a trait is just a L<Moose::Role>. In this case, our role
+contains a single attribute, C<label>. Any attribute which does this trait
+will now have a label.
+
+Next we register our trait with Moose:
 
   package Moose::Meta::Attribute::Custom::Trait::Labeled;
   sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
@@ -130,8 +147,7 @@ Moose looks for the C<register_implementation> method in
 C<Moose::Meta::Attribute::Custom::Trait::$TRAIT_NAME> to find the full
 name of the trait.
 
-For the rest of the code, we will only cover what is I<different> from
-L<recipe 2|Moose::Cookbook::Meta::Recipe2>.
+Finally, we pass our trait when defining an attribute:
 
   has url => (
       traits => [qw/Labeled/],
@@ -140,62 +156,115 @@ L<recipe 2|Moose::Cookbook::Meta::Recipe2>.
       label  => "The site's URL",
   );
 
-Instead of passing a C<metaclass> parameter, this time we pass
-C<traits>. This contains a list of trait names. Moose will build an
+The C<traits> parameter contains a list of trait names. Moose will build an
 anonymous attribute metaclass from these traits and use it for this
-attribute. Passing a C<label> parameter works just as it did with the
-metaclass example.
+attribute.
+
+The reason that we can pass the name C<Labeled>, instead of
+C<MyApp::Meta::Attribute::Trait::Labeled>, is because of the
+C<register_implementation> code we touched on previously.
+
+When you pass a metaclass to C<has>, it will take the name you provide and
+prefix it with C<Moose::Meta::Attribute::Custom::Trait::>. Then it calls
+C<register_implementation> in the package. In this case, that means Moose ends
+up calling
+C<Moose::Meta::Attribute::Custom::Trait::Labeled::register_implementation>.
+
+If this function exists, it should return the I<real> trait's package
+name. This is exactly what our code does, returning
+C<MyApp::Meta::Attribute::Trait::Labeled>. This is a little convoluted, and if
+you don't like it, you can always use the fully-qualified name.
+
+We can access this meta-attribute and its label like this:
+
+  $website->meta->get_attribute('url')->label()
+
+  MyApp::Website->meta->get_attribute('url')->label()
+
+We also have a regular attribute, C<name>:
+
+  has name => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+
+Finally, we have a C<dump> method, which creates a human-readable
+representation of a C<MyApp::Website> object. It will use an attribute's label
+if it has one.
+
+  sub dump {
+      my $self = shift;
+
+      my $meta = $self->meta;
+
+      my $dump = '';
+
+      for my $attribute ( map { $meta->get_attribute($_) }
+          sort $meta->get_attribute_list ) {
 
           if (   $attribute->does('MyApp::Meta::Attribute::Trait::Labeled')
               && $attribute->has_label ) {
               $dump .= $attribute->label;
           }
 
-In the metaclass example, we used C<< $attribute->isa >>. With a role,
-we instead ask if the meta-attribute object C<does> the required
-role. If it does not do this role, the attribute meta object won't
-have the C<has_label> method.
+This is a bit of defensive code. We cannot depend on every meta-attribute
+having a label. Even if we define one for every attribute in our class, a
+subclass may neglect to do so. Or a superclass could add an attribute without
+a label.
 
-That's all. Everything else is the same!
+We also check that the attribute has a label using the predicate we
+defined. We could instead make the label C<required>. If we have a label, we
+use it, otherwise we use the attribute name:
 
-=head1 TURNING A METACLASS INTO A TRAIT
+          else {
+              $dump .= $attribute->name;
+          }
 
-"But wait!" you protest. "I've already written all of my extensions as
-attribute metaclasses. I don't want to break all that code out there."
+          my $reader = $attribute->get_read_method;
+          $dump .= ": " . $self->$reader . "\n";
+      }
 
-Fortunately, you can easily turn a metaclass into a trait and still
-provide the original metaclass:
+      return $dump;
+  }
 
-  package MyApp::Meta::Attribute::Labeled;
-  use Moose;
-  extends 'Moose::Meta::Attribute';
-  with 'MyApp::Meta::Attribute::Trait::Labeled';
-
-  package Moose::Meta::Attribute::Custom::Labeled;
-  sub register_implementation { 'MyApp::Meta::Attribute::Labeled' }
-
-Unfortunately, going the other way (providing a trait created from a
-metaclass) is more tricky.
+The C<get_read_method> is part of the L<Moose::Meta::Attribute> API. It
+returns the name of a method that can read the attribute's value, I<when
+called on the real object> (don't call this on the meta-attribute).
 
 =head1 CONCLUSION
 
-If you're extending your attributes, it's easier and more flexible to
-provide composable bits of behavior than to subclass
-L<Moose::Meta::Attribute>. Using traits lets you cooperate with other
-extensions, either from CPAN or that you might write in the
-future. Moose makes it easy to create attribute metaclasses on the fly
-by providing a list of trait names to L<Moose/has>.
+You might wonder why you'd bother with all this. You could just hardcode "The
+Site's URL" in the C<dump> method. But we want to avoid repetition. If you
+need the label once, you may need it elsewhere, maybe in the C<as_form> method
+you write next.
+
+Associating a label with an attribute just makes sense! The label is a piece
+of information I<about> the attribute.
+
+It's also important to realize that this was a trivial example. You can make
+much more powerful metaclasses that I<do> things, as opposed to just storing
+some more information. For example, you could implement a metaclass that
+expires attributes after a certain amount of time:
+
+   has site_cache => (
+       traits        => ['TimedExpiry'],
+       expires_after => { hours => 1 },
+       refresh_with  => sub { get( $_[0]->url ) },
+       isa           => 'Str',
+       is            => 'ro',
+   );
+
+The sky's the limit!
 
 =begin testing
 
-my $app2
-    = MyApp::Website->new( url => "http://google.com", name => "Google" );
+my $app
+    = MyApp::Website->new( url => 'http://google.com', name => 'Google' );
 is(
-    $app2->dump, q{name: Google
+    $app->dump, q{name: Google
 The site's URL: http://google.com
 }, '... got the expected dump value'
 );
-
 
 =end testing
 
