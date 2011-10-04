@@ -971,9 +971,19 @@ early ideas/feature-requests/encouragement/bug-finding.
 
 =item L<http://www.iinteractive.com/moose>
 
-This is the official web home of Moose, it contains links to our public git repository
-as well as links to a number of talks and articles on Moose and Moose related
-technologies.
+This is the official web home of Moose. It contains links to our public git
+repository, as well as links to a number of talks and articles on Moose and
+Moose related technologies.
+
+=item the L<Moose manual|Moose::Manual>
+
+This is an introduction to Moose which covers most of the basics.
+
+=item Modern Perl, by chromatic
+
+This is an introduction to modern Perl programming, which includes a section on
+Moose. It is available in print and as a free download from
+L<http://onyxneon.com/books/modern_perl/>.
 
 =item The Moose is flying, a tutorial by Randal Schwartz
 
