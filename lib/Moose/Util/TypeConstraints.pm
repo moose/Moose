@@ -5,6 +5,7 @@ use Carp ();
 use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
+use Moose::Deprecated;
 
 ## --------------------------------------------------------
 # Prototyped subs must be predeclared because we have a
@@ -376,11 +377,18 @@ sub maybe_type {
 sub duck_type {
     my ( $type_name, @methods ) = @_;
     if ( ref $type_name eq 'ARRAY' && !@methods ) {
-        @methods   = @$type_name;
+        @methods   = ($type_name);
         $type_name = undef;
     }
     if ( @methods == 1 && ref $methods[0] eq 'ARRAY' ) {
         @methods = @{ $methods[0] };
+    }
+    else {
+        Moose::Deprecated::deprecated(
+            feature => 'non-arrayref form of duck_type',
+            message => "Passing a list of values to duck_type is deprecated. "
+                     . "The method names should be wrapped in an arrayref.",
+        );
     }
 
     register_type_constraint(
@@ -428,11 +436,18 @@ sub enum {
         @values == 0
             || __PACKAGE__->_throw_error("enum called with an array reference and additional arguments. Did you mean to parenthesize the enum call's parameters?");
 
-        @values    = @$type_name;
+        @values    = ($type_name);
         $type_name = undef;
     }
     if ( @values == 1 && ref $values[0] eq 'ARRAY' ) {
         @values = @{ $values[0] };
+    }
+    else {
+        Moose::Deprecated::deprecated(
+            feature => 'non-arrayref form of enum',
+            message => "Passing a list of values to enum is deprecated. "
+                     . "Enum values should be wrapped in an arrayref.",
+        );
     }
 
     register_type_constraint(

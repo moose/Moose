@@ -67,8 +67,8 @@ is( break_it_down(), 'undef', '... got the right value');
 
 # checking against enum types
 
-enum RGB  => qw[ red green blue ];
-enum CMYK => qw[ cyan magenta yellow black ];
+enum RGB  => [qw[ red green blue ]];
+enum CMYK => [qw[ cyan magenta yellow black ]];
 
 sub is_acceptable_color {
     match_on_type shift,

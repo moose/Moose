@@ -10,6 +10,9 @@ for, noteworthy changes.
     equivalents in Class::Load instead (or better, just use Module::Runtime
     directly).
 
+  * The non-arrayref forms of enum and duck_type have been deprecated. See
+    Moose::Manual::Delta for details. (doy)
+
   * Many deprecated features have now been removed:
     - optimize_as for type constraints
     - the "default is" and "default default" features for native delegations

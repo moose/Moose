@@ -82,6 +82,29 @@ manually now, where it may have worked in the past. For instance:
 If you don't do this, you will get an error message about not being able to
 locate C<My::NonMoose> in C<@INC>. We hope that this case will be fairly rare.
 
+=item The non-arrayref forms of C<enum> and C<duck_type> have been deprecated
+
+Originally, C<enum> could be called like this:
+
+  enum('MyType' => qw(foo bar baz))
+
+This was confusing, however (since it was different from the syntax for
+anonymous enum types), and it makes error checking more difficult (since you
+can't tell just by looking whether C<enum('Foo', 'Bar', 'Baz')> was intended to
+be a type named C<Foo> with elements of C<Bar> and C<Baz>, or if this was
+actually a mistake where someone got the syntax for an anonymous enum type
+wrong. This all also applies to C<duck_type>.
+
+Calling C<enum> and C<duck_type> with a list of arguments as described above
+has been undocumented since version 0.93, and is now deprecated. You should
+replace
+
+  enum MyType => qw(foo bar baz);
+
+in your code with
+
+  enum MyType => [qw(foo bar baz)];
+
 =back
 
 =head1 2.1000

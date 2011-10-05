@@ -841,7 +841,7 @@ foreach my $type_name (qw(Str Num Int ClassName RoleName))
 
 {
     my @methods = qw( quack flap );
-    duck_type 'Duck' => @methods;
+    duck_type 'Duck' => \@methods;
 
     test_constraint(
         'Duck', {
@@ -883,7 +883,7 @@ foreach my $type_name (qw(Str Num Int ClassName RoleName))
 
 {
     my @allowed = qw( bar baz quux );
-    enum 'Enumerated' => @allowed;
+    enum 'Enumerated' => \@allowed;
 
     test_constraint(
         'Enumerated', {
@@ -1085,8 +1085,8 @@ foreach my $type_name (qw(Str Num Int ClassName RoleName))
 
 
 {
-    enum 'Enum1' => 'a', 'b';
-    enum 'Enum2' => 'x', 'y';
+    enum 'Enum1' => ['a', 'b'];
+    enum 'Enum2' => ['x', 'y'];
 
     subtype 'EnumUnion', as 'Enum1 | Enum2';
 

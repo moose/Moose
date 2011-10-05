@@ -37,7 +37,7 @@ use Test::Fatal;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    duck_type 'DuckType' => qw(quack);
+    duck_type 'DuckType' => [qw(quack)];
     duck_type 'SwanType' => [qw(honk)];
 
     has duck => (

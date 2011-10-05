@@ -8,8 +8,8 @@ use Scalar::Util ();
 
 use Moose::Util::TypeConstraints;
 
-enum Letter => 'a'..'z', 'A'..'Z';
-enum Language => 'Perl 5', 'Perl 6', 'PASM', 'PIR'; # any others? ;)
+enum Letter => ['a'..'z', 'A'..'Z'];
+enum Language => ['Perl 5', 'Perl 6', 'PASM', 'PIR']; # any others? ;)
 enum Metacharacter => ['*', '+', '?', '.', '|', '(', ')', '[', ']', '\\'];
 
 my @valid_letters = ('a'..'z', 'A'..'Z');

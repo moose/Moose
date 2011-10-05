@@ -27,7 +27,7 @@ my @phonograph;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    my $ducktype = duck_type 'DuckType' => qw(walk quack);
+    my $ducktype = duck_type 'DuckType' => [qw(walk quack)];
 
     has duck => (
         isa     => $ducktype,
