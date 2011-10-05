@@ -40,6 +40,11 @@ because any value that passes a subtype constraint must also pass a parent
 constraint. This has changed so that I<all> of its member types must be a
 subtype of the specified type.
 
+=item Enum types now work with just one value
+
+Previously, an C<enum> type needed to have two or more values.  Nobody knew
+why, so we fixed it.
+
 =item Methods defined in UNIVERSAL now appear in the MOP
 
 Any method introspection methods that look at methods from parent classes now

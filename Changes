@@ -7,6 +7,11 @@ for, noteworthy changes.
 
   * Fix compilation on 5.8. Reported by ether. (doy)
 
+  [ENHANCEMENTS]
+
+  * The enum type will now create single value enumerations. Previously, two
+    or more values were required. (rjbs)
+
 2.0300 Fri, Sep 23, 2011
 
   [DEPRECATIONS]
