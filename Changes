@@ -9,8 +9,8 @@ for, noteworthy changes.
 
   [ENHANCEMENTS]
 
-  * The enum type will now create single value enumerations. Previously, two
-    or more values were required. (rjbs)
+  * The enum type will now allow single value enumerations. Previously, two or
+    more values were required. (rjbs)
 
 2.0300 Fri, Sep 23, 2011
 
