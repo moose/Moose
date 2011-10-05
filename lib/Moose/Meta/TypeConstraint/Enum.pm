@@ -36,9 +36,9 @@ sub new {
     $args{parent} = Moose::Util::TypeConstraints::find_type_constraint('Str');
     $args{inlined} = $inliner;
 
-    if ( scalar @{ $args{values} } < 2 ) {
+    if ( scalar @{ $args{values} } < 1 ) {
         require Moose;
-        Moose->throw_error("You must have at least two values to enumerate through");
+        Moose->throw_error("You must have at least one value to enumerate through");
     }
 
     for (@{ $args{values} }) {
