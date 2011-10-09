@@ -79,7 +79,10 @@ sub _inline_throw_error {
 
 sub new {
     my ($class, $name, %options) = @_;
-    $class->_process_options($name, \%options);
+    $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
+
+    delete $options{__hack_no_process_options};
+
     my %attrs =
         ( map { $_ => 1 }
           grep { defined }
@@ -207,8 +210,8 @@ sub clone_and_inherit_options {
     my @found_illegal_options = grep { exists $options{$_} && exists $self->{$_} ? $_ : undef } @illegal_options;
     (scalar @found_illegal_options == 0)
         || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
-
-
+    
+    
     # NOTE:
     # this doesn't apply to Class::MOP::Attributes,
     # so we can ignore it for them.
@@ -220,7 +223,6 @@ sub clone_and_inherit_options {
         my @all_traits = grep { $seen{$_}++ } @{ $self->applied_traits || [] }, @traits;
         $options{traits} = \@all_traits if @all_traits;
     }
-
 
     $self->clone(%options);
 }
@@ -236,11 +238,15 @@ sub clone {
         push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
     }
 
-    my %new_params = ( ( map { $_->init_arg => $_->get_value($self) } @init ), %params );
+    my %init_params = ( map { $_->init_arg => $_->get_value($self) } @init );
+    
+    $self->_process_clone_options($self->name, \%params, \%init_params);
+
+    my %new_params = ( %init_params, %params );
 
     my $name = delete $new_params{name};
-
-    my $clone = $class->new($name, %new_params);
+    
+    my $clone = $class->new($name, %new_params, __hack_no_process_options => 1 );
 
     foreach my $attr ( @non_init ) {
         $attr->set_value($clone, $attr->get_value($self));
@@ -249,12 +255,19 @@ sub clone {
     return $clone;
 }
 
+sub _process_clone_options {
+    my ( $class, $name, $options, $parent_options ) = @_;
+    $class->_process_isa_option( $name, $options, $parent_options );
+    $class->_process_does_option( $name, $options, $parent_options );
+    $class->_process_lazy_build_option( $name, $options, $parent_options );
+}
+
 sub _process_options {
     my ( $class, $name, $options ) = @_;
 
+    $class->_process_is_option( $name, $options );
     $class->_process_isa_option( $name, $options );
     $class->_process_does_option( $name, $options );
-    $class->_process_is_option( $name, $options );
     $class->_process_coerce_option( $name, $options );
     $class->_process_trigger_option( $name, $options );
     $class->_process_auto_deref_option( $name, $options );
@@ -262,7 +275,6 @@ sub _process_options {
     $class->_process_lazy_option( $name, $options );
     $class->_process_required_option( $name, $options );
 }
-
 
 sub _process_is_option {
     my ( $class, $name, $options ) = @_;
