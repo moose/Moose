@@ -79,10 +79,7 @@ sub _inline_throw_error {
 
 sub new {
     my ($class, $name, %options) = @_;
-    $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
-
-    delete $options{__hack_no_process_options};
-
+    $class->_process_options($name, \%options);
     my %attrs =
         ( map { $_ => 1 }
           grep { defined }
@@ -211,33 +208,6 @@ sub clone_and_inherit_options {
     (scalar @found_illegal_options == 0)
         || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
 
-    if ($options{isa}) {
-        my $type_constraint;
-        if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
-            $type_constraint = $options{isa};
-        }
-        else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa}, { package_defined_in => $options{definition_context}->{package} });
-            (defined $type_constraint)
-                || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
-        }
-
-        $options{type_constraint} = $type_constraint;
-    }
-
-    if ($options{does}) {
-        my $type_constraint;
-        if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
-            $type_constraint = $options{does};
-        }
-        else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does}, { package_defined_in => $options{definition_context}->{package} });
-            (defined $type_constraint)
-                || $self->throw_error("Could not find the type constraint '" . $options{does} . "'", data => $options{does});
-        }
-
-        $options{type_constraint} = $type_constraint;
-    }
 
     # NOTE:
     # this doesn't apply to Class::MOP::Attributes,
@@ -251,10 +221,6 @@ sub clone_and_inherit_options {
         $options{traits} = \@all_traits if @all_traits;
     }
 
-    # This method can be called on a CMOP::Attribute object, so we need to
-    # make sure we can call this method.
-    $self->_process_lazy_build_option( $self->name, \%options )
-        if $self->can('_process_lazy_build_option');
 
     $self->clone(%options);
 }
@@ -274,7 +240,7 @@ sub clone {
 
     my $name = delete $new_params{name};
 
-    my $clone = $class->new($name, %new_params, __hack_no_process_options => 1 );
+    my $clone = $class->new($name, %new_params);
 
     foreach my $attr ( @non_init ) {
         $attr->set_value($clone, $attr->get_value($self));
@@ -286,9 +252,9 @@ sub clone {
 sub _process_options {
     my ( $class, $name, $options ) = @_;
 
-    $class->_process_is_option( $name, $options );
     $class->_process_isa_option( $name, $options );
     $class->_process_does_option( $name, $options );
+    $class->_process_is_option( $name, $options );
     $class->_process_coerce_option( $name, $options );
     $class->_process_trigger_option( $name, $options );
     $class->_process_auto_deref_option( $name, $options );
@@ -296,6 +262,7 @@ sub _process_options {
     $class->_process_lazy_option( $name, $options );
     $class->_process_required_option( $name, $options );
 }
+
 
 sub _process_is_option {
     my ( $class, $name, $options ) = @_;
