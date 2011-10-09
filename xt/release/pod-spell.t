@@ -21,6 +21,7 @@ Aankhen
 Anders
 Aran
 Buels
+Clary
 Debolaz
 Deltac
 Florian
@@ -53,6 +54,7 @@ autarch
 backported
 backports
 blblack
+bluefeet
 chansen
 chromatic's
 dexter
@@ -61,6 +63,7 @@ ewilhelm
 frodwith
 gphat
 groditi
+jgoulah
 jrockway
 kolibrie
 konobi
