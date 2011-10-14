@@ -122,11 +122,6 @@ use Test::Requires {
         $error->error, 'Attribute (test1) is required',
         'got the right message (mutable class)'
     );
-    is(
-        $error->package, 'My::TestMutable',
-        'got the right package (mutable class)'
-    );
-    is( $error->line, 42, 'got the right line (mutable class)' );
 }
 
 done_testing;
