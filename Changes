@@ -7,6 +7,9 @@ for, noteworthy changes.
 
   * Fix compilation on 5.8. Reported by ether. (doy)
 
+  * A custom error class caused a warning when the class that used it was made
+    immutable. Reported by Maroš Kollár. RT #71514. (Dave Rolsky)
+
   [ENHANCEMENTS]
 
   * The enum type will now allow single value enumerations. Previously, two or
