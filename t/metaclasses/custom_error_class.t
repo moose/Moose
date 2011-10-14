@@ -68,7 +68,7 @@ use Test::Requires {
 
     ::stderr_is(
         sub { __PACKAGE__->meta->make_immutable },
-        undef,
+        q{},
         'no warnings when calling make_immutable with a custom error class'
     );
 }
