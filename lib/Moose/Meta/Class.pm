@@ -830,7 +830,10 @@ sub _inline_create_error {
     # to provide a non-inherited inlining method, because falling back to
     # the default inlining method is most likely going to be wrong
     # yes, this is a huge hack, but so is the entire error system, so.
-    return '$meta->create_error(' . $msg . ', ' . $args . ');'
+    return
+          '$meta->create_error('
+        . $msg
+        . ( defined $args ? ', ' . $args : q{} ) . ');'
         unless $class->meta->has_method('_inline_new');
 
     $class->_inline_new(
