@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0301 Fri, Oct 21, 2011
+
   [BUG FIXES]
 
   * Fix compilation on 5.8. Reported by ether. (doy)
