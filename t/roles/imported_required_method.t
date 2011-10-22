@@ -32,9 +32,12 @@ BEGIN {
     package Class;
     use Moose;
     use ExportsFoo 'foo';
+
+    # The grossness near the end of the regex works around a bug with \Q not
+    # escaping \& properly with perl 5.8.x
     ::like(
         ::exception { with 'Foo' },
-        qr/^\Q'Foo' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \&foo)/,
+        qr/^\Q'Foo' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \E\\\&foo\)/,
         "imported 'method' isn't seen"
     );
     Class->meta->add_method(foo => \&foo);
