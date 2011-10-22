@@ -325,7 +325,9 @@ is($class_mop_class_meta->find_attribute_by_name('attribute_metaclass')->default
 is($class_mop_class_meta->name, 'Class::MOP::Class', '... Class::MOP::Class->name');
 is($class_mop_class_meta->version, $Class::MOP::Class::VERSION, '... Class::MOP::Class->version');
 
-ok($class_mop_class_meta->has_package_symbol('$VERSION'), '... Class::MOP::Class->has_package_symbol($VERSION)');
+if ( defined $Class::MOP::Class::VERSION ) {
+    ok($class_mop_class_meta->has_package_symbol('$VERSION'), '... Class::MOP::Class->has_package_symbol($VERSION)');
+}
 is(${$class_mop_class_meta->get_package_symbol('$VERSION')},
    $Class::MOP::Class::VERSION,
    '... Class::MOP::Class->get_package_symbol($VERSION)');
