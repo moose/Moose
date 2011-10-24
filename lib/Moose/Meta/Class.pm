@@ -910,15 +910,6 @@ required version. The C<role> option also takes the C<-version> as an
 argument, but the option hash reference can also contain any other
 role relevant values like exclusions or parameterized role arguments.
 
-=item B<< $metaclass->make_immutable(%options) >>
-
-This overrides the parent's method to add a few options. Specifically,
-it uses the Moose-specific constructor and destructor classes, and
-enables inlining the destructor.
-
-Since Moose always inlines attributes, it sets the C<inline_accessors> option
-to false.
-
 =item B<< $metaclass->new_object(%params) >>
 
 This overrides the parent's method in order to add support for
