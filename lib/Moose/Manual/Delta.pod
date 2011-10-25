@@ -62,6 +62,13 @@ L<Moose::Meta::TypeConstraint> object directly.
 
 Use the inlining feature (C<inline_as>) added in 2.0100 instead.
 
+=item C<Class::Load::load_class> and C<is_class_loaded> have been removed
+
+The C<Class::MOP::load_class> and C<Class::MOP::is_class_loaded> subroutines
+are no longer documented, and will cause a deprecation warning in the
+future. Moose now uses L<Class::Load> to provide this functionality, and you
+should do so as well.
+
 =back
 
 =head1 2.0205
