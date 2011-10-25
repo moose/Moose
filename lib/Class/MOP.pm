@@ -988,6 +988,11 @@ This will remove the metaclass stored in the C<$name> key.
 
 =back
 
+Some utility functions (such as C<Class::MOP::load_class>) that 
+were previously defined in C<Class::MOP> regarding loading of 
+classes have been extracted to L<Class::Load>. Please see there 
+for documentation.
+
 =head1 SEE ALSO
 
 =head2 Books
