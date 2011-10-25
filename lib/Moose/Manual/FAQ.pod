@@ -366,7 +366,7 @@ will call them roles.
 =head3 Can an attribute-generated method (e.g. an accessor) satisfy requires?
 
 Yes, just be sure to consume the role I<after> declaring your
-attribute.  L<Moose::Manual::Roles/Required_Attributes> provides
+attribute.  L<Moose::Manual::Roles/Required Attributes> provides
 an example:
 
   package Breakable;
