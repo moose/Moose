@@ -3,6 +3,9 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  * Make make_immutable return value consistent and document it to be true.
+    (mst)
+
 2.0301 Fri, Oct 21, 2011
 
   [BUG FIXES]

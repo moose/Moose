@@ -45,8 +45,10 @@ use Class::MOP;
         'immutable_options is empty before a class is made_immutable'
     );
 
-    $meta->make_immutable;
+    is( $meta->make_immutable, $meta, 'make_immutable returns $self' );
     my $line = __LINE__ - 1;
+
+    is( $meta->make_immutable, $meta, 'make_immutable returns $self again' );
 
     my $immutable_metaclass = $meta->_immutable_metaclass->meta;
 
@@ -145,7 +147,7 @@ use Class::MOP;
         $meta->make_immutable();
     }, undef, '... changed Bar to be immutable' );
 
-    ok( !$meta->make_immutable, '... make immutable now returns nothing' );
+    is( $meta->make_immutable, $meta, '... make immutable returns $meta' );
 
     ok( !$meta->is_mutable,  '... our class is no longer mutable' );
     ok( $meta->is_immutable, '... our class is now immutable' );
@@ -209,7 +211,7 @@ use Class::MOP;
         $meta->make_immutable();
     }, undef, '... changed Baz to be immutable' );
 
-    ok( !$meta->make_immutable, '... make immutable now returns nothing' );
+    is( $meta->make_immutable, $meta, '... make immutable returns $meta' );
 
     ok( !$meta->is_mutable,  '... our class is no longer mutable' );
     ok( $meta->is_immutable, '... our class is now immutable' );

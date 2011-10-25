@@ -1274,7 +1274,7 @@ sub _immutable_options {
 sub make_immutable {
     my ( $self, @args ) = @_;
 
-    return unless $self->is_mutable;
+    return $self unless $self->is_mutable;
 
     my ($file, $line) = (caller)[1..2];
 
@@ -1977,7 +1977,8 @@ of the inlining features than Class::MOP itself does.
 =item B<< $metaclass->make_immutable(%options) >>
 
 This method will create an immutable transformer and use it to make
-the class and its metaclass object immutable.
+the class and its metaclass object immutable, and returns true
+(you should not rely on the details of this value apart from its truth).
 
 This method accepts the following options:
 
