@@ -48,7 +48,7 @@ use Class::MOP;
     is( exception {$meta->make_immutable; }, undef, '... changed Baz to be immutable' );
     ok(!$meta->is_mutable,              '... our class is no longer mutable');
     ok($meta->is_immutable,             '... our class is now immutable');
-    is($meta->make_immutable, $meta,    '... make immutable returns $meta');
+    ok($meta->make_immutable,           '... make immutable returns true');
     ok($meta->get_method('new'),        '... inlined constructor created');
     ok($meta->has_method('new'),        '... inlined constructor created for sure');
     is_deeply([ map { $_->name } $meta->_inlined_methods ], [ 'new' ], '... really, i mean it');
@@ -136,7 +136,7 @@ use Class::MOP;
             }, undef, '... changed class to be immutable' );
     ok(!$meta->is_mutable,                    '... our class is no longer mutable');
     ok($meta->is_immutable,                   '... our class is now immutable');
-    is($meta->make_immutable, $meta,          '... make immutable returns $meta');
+    ok($meta->make_immutable,                 '... make immutable returns true');
 
     is( exception { $meta->make_mutable }, undef, '... changed Baz to be mutable' );
     ok($meta->is_mutable,             '... our class is mutable');
