@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0302 Wed, Nov 02, 2011
+
   [BUG FIXES]
 
   * Fix test failure on 5.8. (Dave Rolsky)
