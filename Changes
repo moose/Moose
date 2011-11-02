@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Fix test failure on 5.8. (Dave Rolsky)
+
   * Make make_immutable return value consistent and document it to be true.
     (mst)
 
