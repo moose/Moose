@@ -1116,7 +1116,7 @@ The subroutine should return a code string suitable for inlining. You can
 assume that the check will be wrapped in parentheses when it is inlined.
 
 The inlined code should include any checks that your type's parent types
-do. If your parent type constraint defines its own inlning, you can simply use
+do. If your parent type constraint defines its own inlining, you can simply use
 that to avoid repeating code. For example, here is the inlining code for the
 C<Value> type, which is a subtype of C<Defined>:
 
