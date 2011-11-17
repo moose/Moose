@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0401 Thu, Nov 17, 2011
+
   [BUG FIXES]
 
   * Attributes with weak_ref now weaken their associated slot when they are
