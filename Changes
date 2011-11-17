@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Attributes with weak_ref now weaken their associated slot when they are
+    initialized through a lazy default or builder. Reported by tome. (doy)
+
 2.0400 Tue, Nov 15, 2011
 
   [OTHER]

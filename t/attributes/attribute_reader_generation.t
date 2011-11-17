@@ -27,6 +27,16 @@ use Test::Fatal;
     };
     ::ok(!$@, '... created the lazy reader method okay') or warn $@;
 
+    eval {
+        has 'lazy_weak_foo' => (
+            reader => 'get_lazy_weak_foo',
+            lazy => 1,
+            default => sub { our $AREF = [] },
+            weak_ref => 1,
+        );
+    };
+    ::ok(!$@, '... created the lazy weak reader method okay') or warn $@;
+
     my $warn;
 
     eval {
@@ -55,6 +65,10 @@ use Test::Fatal;
     isnt( exception {
         $foo->get_lazy_foo(100);
     }, undef, '... get_lazy_foo is a read-only' );
+
+    is($foo->get_lazy_weak_foo(), $Foo::AREF, 'got the right value');
+    ok($foo->meta->get_meta_instance->slot_value_is_weak($foo, 'lazy_weak_foo'),
+       '... and it is weak');
 }
 
 {
@@ -72,6 +86,12 @@ use Test::Fatal;
     is( $attr->get_value($foo), 10, "lazy value" );
 
     is( $attr->get_raw_value($foo), 10, "raw value" );
+
+    my $lazy_weak_attr = $foo->meta->find_attribute_by_name("lazy_weak_foo");
+
+    is( $lazy_weak_attr->get_value($foo), $Foo::AREF, "it's the right value" );
+
+    ok( $foo->meta->get_meta_instance->slot_value_is_weak($foo, 'lazy_weak_foo'), "and it is weak");
 }
 
 {
