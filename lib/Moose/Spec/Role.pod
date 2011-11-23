@@ -277,7 +277,7 @@ time using the I<excludes> option.
     package Role::FooBar;
     use Moose::Role;
 
-    with 'Role::Foo' => { excludes => 'foo' };
+    with 'Role::Foo' => { -excludes => 'foo' };
 
     sub foo { ... }
     sub bar { ... }
