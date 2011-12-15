@@ -92,4 +92,25 @@ ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Class->new( name => "__ANO
     ok($child->is_subtype_of($parent));
 }
 
+{
+    my $type;
+    is( exception { $type = class_type 'MyExampleClass' }, undef, 'Make initial class_type' );
+    coerce 'MyExampleClass', from 'Str', via { bless {}, 'MyExampleClass' };
+    # We test class_type keeping the existing type (not making a new one) here.
+    is( exception { is(class_type('MyExampleClass'), $type, 're-running class_type gives same type') }, undef, 'No exception making duplicate class_type' );;
+
+    # Next define a class which needs this type and it's original coercion
+    # Note this has to be after the 2nd class_type call to test the bug as M::M::Attribute grabs
+    # the type constraint which is there at the time the attribute decleration runs.
+    {
+        package HoldsExample;
+        use Moose;
+
+        has foo => ( isa => 'MyExampleClass', is => 'ro', coerce => 1, required => 1 );
+        no Moose;
+    }
+
+    is( exception { isa_ok(HoldsExample->new(foo => "bar")->foo, 'MyExampleClass') }, undef, 'class_type coercion works' );
+}
+
 done_testing;

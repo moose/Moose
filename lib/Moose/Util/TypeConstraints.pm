@@ -165,6 +165,9 @@ sub create_class_type_constraint {
               . " and cannot be created again in "
               . $pkg_defined_in )
         }
+        else {
+            return $type;
+        }
     }
 
     my %options = (
