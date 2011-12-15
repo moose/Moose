@@ -61,4 +61,10 @@ ok( $type->equals(Moose::Meta::TypeConstraint::Role->new( name => "Oink", role =
 ok( !$type->equals(Moose::Meta::TypeConstraint::Role->new( name => "__ANON__", role => "Bar" )), "doesn't equal other anon constraint" );
 ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Role->new( name => "__ANON__", role => "Bar" )), "subtype of other anon constraint" );
 
+{   # See block comment in t/type_constraints/class_type_constraint.t
+    my $type;
+    is( exception { $type = role_type 'MyExampleRole' }, undef, 'Make initial role_type' );
+    is( exception { is(role_type('MyExampleRole'), $type, 're-running role_type gives same type') }, undef, 'No exception making duplicate role_type' );;
+}
+
 done_testing;
