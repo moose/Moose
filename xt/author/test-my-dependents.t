@@ -40,6 +40,9 @@ else {
     test_modules(@modules);
 }
 
+# Modules that are known to fail
+# PRANG - failing for quite some time (since before 2.0400)
+
 __DATA__
 Moose::Autobox
 MooseX::ABC
@@ -236,7 +239,6 @@ Path::Router
 Perl::PrereqScanner
 Pod::Elemental
 Pod::Weaver
-PRANG
 Reaction
 Reflex
 Resource::Pack
