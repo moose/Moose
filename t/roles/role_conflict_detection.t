@@ -442,6 +442,19 @@ is(Role::Reality->meta->get_method('twist')->(),
     );
 }
 
+{
+    package UsesAlso4;
+    use Moose;
+
+    sub bar {}
+
+    ::is(
+        ::exception{ with 'AlsoHasFooMeth', { -alias => { bar => 'foo' } } },
+        undef,
+        'aliasing one of the conflicting methods as part of consuming the role supresses the conflict error'
+    );
+}
+
 =pod
 
 Role conflicts between attributes and methods
