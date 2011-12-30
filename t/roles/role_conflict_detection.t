@@ -126,12 +126,29 @@ Role method conflicts
     }, undef, '... role methods didnt conflict when manually resolved' );
 
     sub bling { 'My::Test6::bling' }
+
+    package My::Test7;
+    use Moose;
+
+    ::is( ::exception {
+        with 'Role::Bling::Bling', { -excludes => ['bling'] }, 'Role::Bling';
+    }, undef, '... role methods didnt conflict when one of the conflicting methods is excluded' );
+
+    package My::Test8;
+    use Moose;
+
+    ::is( ::exception {
+        with 'Role::Bling::Bling', { -excludes => ['bling'], -alias => { bling => 'bling_bling' } }, 'Role::Bling';
+    }, undef, '... role methods didnt conflict when one of the conflicting methods is excluded and aliased' );
 }
 
 ok(!My::Test3->meta->has_method('bling'), '... we didnt get any methods in the conflict');
 ok(My::Test4->meta->has_method('bling'), '... we did get the method when manually dealt with');
 ok(My::Test5->meta->has_method('bling'), '... we did get the method when manually dealt with');
 ok(My::Test6->meta->has_method('bling'), '... we did get the method when manually dealt with');
+ok(My::Test7->meta->has_method('bling'), '... we did get the method when manually dealt with');
+ok(My::Test8->meta->has_method('bling'), '... we did get the method when manually dealt with');
+ok(My::Test8->meta->has_method('bling_bling'), '... we did get the aliased method too');
 
 ok(!My::Test3->does('Role::Bling'), '... our class does() the correct roles');
 ok(!My::Test3->does('Role::Bling::Bling'), '... our class does() the correct roles');
@@ -141,10 +158,17 @@ ok(My::Test5->does('Role::Bling'), '... our class does() the correct roles');
 ok(My::Test5->does('Role::Bling::Bling'), '... our class does() the correct roles');
 ok(My::Test6->does('Role::Bling'), '... our class does() the correct roles');
 ok(My::Test6->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(My::Test7->does('Role::Bling'), '... our class does() the correct roles');
+ok(My::Test7->does('Role::Bling::Bling'), '... our class does() the correct roles');
+ok(My::Test8->does('Role::Bling'), '... our class does() the correct roles');
+ok(My::Test8->does('Role::Bling::Bling'), '... our class does() the correct roles');
 
 is(My::Test4->bling, 'Role::Bling::bling', '... and we got the first method that was added');
 is(My::Test5->bling, 'Role::Bling::Bling::bling', '... and we got the first method that was added');
 is(My::Test6->bling, 'My::Test6::bling', '... and we got the local method');
+is(My::Test7->bling, 'Role::Bling::bling', '... and we got the non-excluded method');
+is(My::Test8->bling, 'Role::Bling::bling', '... and we got the non-excluded/aliased method');
+is(My::Test8->bling_bling, 'Role::Bling::Bling::bling', '... and the aliased method comes from the correct role');
 
 # check how this affects role compostion
 
