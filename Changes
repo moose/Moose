@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * When RoleA consumes RoleB and both roles define the same method, it is now
+    possible to supress the method conflict error by excluding the conflicting
+    method when RoleA is consumed by a class. The error message from a
+    conflict always said that you could do this, but it didn't actually
+    work. (Dave Rolsky).
+
 2.0401 Thu, Nov 17, 2011
 
   [BUG FIXES]
