@@ -393,6 +393,7 @@ is(Role::Reality->meta->get_method('twist')->(),
     requires 'bar';
 
     sub foo {}
+    sub baz {}
 }
 
 {
@@ -449,9 +450,9 @@ is(Role::Reality->meta->get_method('twist')->(),
     sub bar {}
 
     ::is(
-        ::exception{ with 'AlsoHasFooMeth', { -alias => { bar => 'foo' } } },
+        ::exception{ with 'AlsoHasFooMeth', { -alias => { baz => 'foo' } } },
         undef,
-        'aliasing one of the conflicting methods as part of consuming the role supresses the conflict error'
+        'aliasing a method to the conflicting method suppresses the conflict error'
     );
 }
 
