@@ -386,6 +386,62 @@ is(Role::Reality->meta->get_method('twist')->(),
     }, qr/Due to a method name conflict in roles 'Role1' and 'Role2', the method 'foo' must be implemented or excluded by 'Conflicts'/ );
 }
 
+{
+    package HasFooMeth;
+    use Moose::Role;
+
+    requires 'bar';
+
+    sub foo {}
+}
+
+{
+    package AlsoHasFooMeth;
+    use Moose::Role;
+
+    with 'HasFooMeth';
+
+    sub foo {}
+}
+
+{
+    package UsesAlso1;
+    use Moose;
+
+    sub bar {}
+
+    ::like(
+        ::exception{ with 'AlsoHasFooMeth' },
+        qr/\QDue to a method name conflict in roles 'AlsoHasFooMeth' and 'HasFooMeth', the method 'foo' must be implemented or excluded by 'UsesAlso1'/,
+        'got an exception when trying to consume a role that has a conflict'
+    );
+}
+
+{
+    package UsesAlso2;
+    use Moose;
+
+    sub bar {}
+
+    ::is(
+        ::exception{ with 'AlsoHasFooMeth', { -excludes => ['foo'] } },
+        undef,
+        'no exception when trying to consume a role that has a conflict if we exclude the conflicting method'
+    );
+}
+
+{
+    package UsesAlso3;
+    use Moose;
+
+    ::like(
+        ::exception{ with 'AlsoHasFooMeth',
+            { -excludes => [ 'foo', 'bar' ] } },
+        qr/\Q'AlsoHasFooMeth' requires the method 'bar' to be implemented by 'UsesAlso3'/,
+        'cannot exclude a required method if it is not a conflicting method'
+    );
+}
+
 =pod
 
 Role conflicts between attributes and methods
