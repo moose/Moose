@@ -61,6 +61,8 @@ sub check_required_methods {
         my $required_method_name = $required_method->name;
 
         if (!$class->find_method_by_name($required_method_name)) {
+            next if $self->is_method_excluded($required_method_name)
+                && $required_method->isa('Moose::Meta::Role::Method::Conflicting');
 
             next if $self->is_aliased_method($required_method_name);
 
