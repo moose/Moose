@@ -23,7 +23,7 @@ sub check_role_exclusions {
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
             require Moose;
-            Moose->throw_error("The class " . $role2->name . " does the excluded role '$excluded_role_name'");
+            Moose->throw_error("The role " . $role2->name . " does the excluded role '$excluded_role_name'");
         }
         $role2->add_excluded_roles($excluded_role_name);
     }
