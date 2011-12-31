@@ -68,7 +68,7 @@ sub new {
     $class->_new(\%params);
 }
 
-# This is largely a cope of what's in Moose::Meta::Role (itself
+# This is largely a copy of what's in Moose::Meta::Role (itself
 # largely a copy of Class::MOP::Class). However, we can't actually
 # call add_package_symbol, because there's no package to which which
 # add the symbol.
