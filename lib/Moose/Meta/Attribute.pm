@@ -28,6 +28,11 @@ __PACKAGE__->meta->add_attribute('traits' => (
     Class::MOP::_definition_context(),
 ));
 
+__PACKAGE__->meta->add_attribute('leak_check' => (
+    reader    => 'leak_check',
+    Class::MOP::_definition_context(),
+));
+
 # we need to have a ->does method in here to
 # more easily support traits, and the introspection
 # of those traits. We extend the does check to look
@@ -1383,6 +1388,35 @@ attribute is read.
 
 If this is true, the attribute's value will be stored as a weak
 reference.
+
+=item * leak_check => $bool || sub { ... }
+
+If this is true, a leak check will be run at object destruction.
+
+The leak check will weaken the instance's internal ref to the attribute. If the
+ref does not dissapear a warning will be issued. If a custom handler is
+provided in the form a coderef that will be run as well.
+
+B<Note>: This takes place in destruction, as such throwing an exception will
+not terminate execution.
+
+Example usage:
+
+    has bar => (
+        is => 'ro',
+        default => sub {[]},
+        leak_check => 1,
+    );
+
+    has baz => (
+        is => 'ro',
+        default => sub {[]},
+        leak_check => sub {
+            my $self = shift;
+            my ( $attr_name, $ref ) = @_;
+            ...
+        }
+    );
 
 =item * auto_deref => $bool
 
