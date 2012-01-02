@@ -90,6 +90,25 @@ sub DESTROY {
 
     Try::Tiny::try {
         $self->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
+        return unless $self->can( 'LEAK_CHECKS' );
+        for my $leak_check ( $self->LEAK_CHECKS ) {
+            my ( $name, $has_value, $check ) = @$leak_check;
+
+            # No point if we have no ref
+            next unless $self->$has_value;
+
+            # Weaken it, return if it goes away
+            # Is this correct to get the ref?
+            Scalar::Util::weaken( $self->{$name} );
+            next unless $self->{$name};
+
+            # "$self" gives address and type, not sure if there is a better printout... 
+            warn "External ref to attribute '$name' detected on instance '$self'";
+
+            $check->( $self, $name, \($self->{$name}) )
+                if ref $check
+                && Scalar::Util::reftype( $check ) eq 'CODE';
+        }
     }
     Try::Tiny::catch {
         die $_;

@@ -567,8 +567,35 @@ sub add_attribute {
     if ($attr->can('_check_associated_methods')) {
         $attr->_check_associated_methods;
     }
+    if ($attr->can('leak_check') && $attr->leak_check) {
+        # We cannot depend on the meta class at destruction, store the list in
+        # a closure.
+        my $method = $self->get_method( 'LEAK_CHECKS_REF' );
+
+        unless ( $method ) {
+            my $ref = [];
+            $method = sub { $ref };
+            $self->add_method( LEAK_CHECKS_REF => $method );
+            $self->add_method( LEAK_CHECKS => sub {
+                return(
+                    @$ref,
+                    $self->can( 'SUPER::LEAK_CHECKS' ) ? $self->SUPER::LEAK_CHECKS
+                                                       : ()
+                );
+            });
+        }
+
+        my $list_ref = $method->();
+
+        push @$list_ref => [
+            $attr->name,
+            ($attr->predicate || $attr->reader),
+            $attr->leak_check
+        ];
+    }
     return $attr;
 }
+
 
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
