@@ -174,8 +174,9 @@ sub apply_methods {
         );
     } @{$c->get_roles};
 
-    my (%seen, %method_map);
+    my (%seen, %conflicts, %method_map);
     foreach my $method (@all_methods) {
+        next if $conflicts{$method->{name}};
         my $seen = $seen{$method->{name}};
 
         if ($seen) {
@@ -186,6 +187,7 @@ sub apply_methods {
                 );
 
                 delete $method_map{$method->{name}};
+                $conflicts{$method->{name}} = 1;
                 next;
             }
         }
