@@ -200,6 +200,14 @@ they're valid), manage the registry, and much more.
 Every method that returns a class name needs to become a rw attribute
 that can be set via the constructor.
 
+### Make method conflicts in role -> role application silent
+
+Right now this becomes a conflict. We should make this simply ignore the
+applied role's method (consumer wins), just like with classes.
+
+Note that this does *not* apply to role summation, where the current behavior
+(generates a conflict) is correct.
+
 ## Things to contemplate
 
 These are ideas we're not sure about. Prototypes are welcome, but we may never
