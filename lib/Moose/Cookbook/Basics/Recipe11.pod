@@ -23,6 +23,7 @@ use Test::Requires {
 
   use Moose;
   use MooseX::NonMoose;
+  use DateTime::Calendar::Mayan;
   extends qw( DateTime );
 
   has 'mayan_date' => (
