@@ -4,6 +4,7 @@ use Class::Load qw(load_class);
 use Moose;
 
 use Try::Tiny;
+use Version::Requirements;
 
 with 'Dist::Zilla::Role::BeforeRelease';
 
