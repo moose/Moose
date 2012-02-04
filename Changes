@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  * Minor documentation fixes.
+
+  * Fix test failure on blead (test was unnecessarily strict). Reported by
+    Nicholas Clark. (doy)
+
 2.0401 Thu, Nov 17, 2011
 
   [BUG FIXES]
