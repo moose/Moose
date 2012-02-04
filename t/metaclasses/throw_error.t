@@ -74,7 +74,7 @@ with_immutable {
 {
     my $e = create_error( Bar->new );
     ok( !ref( $e->{error} ), "error is a string" );
-    like( $e->{error}, qr/line $e->{line}$/s, "croak" );
+    like( $e->{error}, qr/line $e->{line}\.?$/s, "croak" );
 }
 
 {
