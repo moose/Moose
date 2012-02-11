@@ -1,4 +1,4 @@
-package Moose::Cookbook::Basics::Recipe10;
+package Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD;
 
 # ABSTRACT: Using BUILDARGS and BUILD to hook into object construction
 
