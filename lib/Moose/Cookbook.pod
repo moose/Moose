@@ -51,11 +51,6 @@ classes that could be used to model companies, people, employees, etc.
 
 This recipe covers more subtype creation, including the use of type coercions.
 
-=item L<Moose::Cookbook::Basics::Recipe6> - The augment/inner example
-
-Demonstrates the use of C<augment> method modifiers, a way of turning
-the usual method overriding style "inside-out".
-
 =item L<Moose::Cookbook::Basics::Recipe7> - Making Moose fast with immutable
 
 Making a class immutable greatly increases the speed of accessors and
@@ -80,6 +75,11 @@ into object construction.
 
 In this recipe, we make a Moose-based subclass of L<DateTime>, a
 module which does not use Moose itself.
+
+=item L<Moose::Cookbook::Basics::Document_AugmentAndInner>
+
+Demonstrates the use of C<augment> method modifiers, a way of turning
+the usual method overriding style "inside-out".
 
 =back
 

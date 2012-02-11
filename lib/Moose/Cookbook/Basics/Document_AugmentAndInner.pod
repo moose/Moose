@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe6;
+package Moose::Cookbook::Basics::Document_AugmentAndInner
 
-# ABSTRACT: The augment/inner example
+# ABSTRACT: The augment modifier, which turns normal method overriding "inside-out"
 
 __END__
 

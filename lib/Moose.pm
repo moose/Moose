@@ -787,14 +787,15 @@ superclass method with the same arguments as the original method.
 
 An C<augment> method, is a way of explicitly saying "I am augmenting this
 method from my superclass". Once again, the details of how C<inner> and
-C<augment> work is best described in the L<Moose::Cookbook::Basics::Recipe6>.
+C<augment> work is best described in the
+L<Moose::Cookbook::Basics::Document_AugmentAndInner>.
 
 =item B<inner>
 
 The keyword C<inner>, much like C<super>, is a no-op outside of the context of
 an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
-the L<Moose::Cookbook::Basics::Recipe6>.
+the L<Moose::Cookbook::Basics::Document_AugmentAndInner>.
 
 =item B<blessed>
 
