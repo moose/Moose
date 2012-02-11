@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe2;
+package Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing;
 
-# ABSTRACT: A simple B<BankAccount> example
+# ABSTRACT: Demonstrates the use of method modifiers in a subclass
 
 __END__
 

@@ -30,10 +30,10 @@ laziness, types, type coercion, method modifiers, and more.
 
 A simple Moose-based class. Demonstrates basic Moose attributes and subclassing.
 
-=item L<Moose::Cookbook::Basics::Recipe2> - A simple B<BankAccount> example
+=item L<Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing>
 
-A slightly more complex Moose class. Demonstrates using a method
-modifier in a subclass.
+A slightly more complex Moose class. Demonstrates using a method modifier in a
+subclass.
 
 =item L<Moose::Cookbook::Basics::Recipe3> - A lazy B<BinaryTree> example
 
