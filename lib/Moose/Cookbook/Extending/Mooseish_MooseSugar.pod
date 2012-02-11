@@ -78,6 +78,7 @@ Moose-ish. See L<Fey::ORM> for a more extensive example.
 {
     package MyApp::User;
 
+    use Moose;
     MyApp::Mooseish->import;
 
     has_table( 'User' );
@@ -88,7 +89,7 @@ Moose-ish. See L<Fey::ORM> for a more extensive example.
     sub login { }
 }
 
-isa_ok( MyApp::User->meta, 'MyApp::Meta::Class' );
+can_ok( MyApp::User->meta, 'table' );
 is( MyApp::User->meta->table, 'User',
     'MyApp::User->meta->table returns User' );
 ok( MyApp::User->can('username'),
