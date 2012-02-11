@@ -3,6 +3,15 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * The cookbook recipes have all been renamed. Instead of numbered recipes
+    (Basics::Recipe1), we now have descriptive names
+    (Basics::Point_AttributesAndSubclassing). This makes it easier for us to
+    add and remove recipes in the future, and makes it a little easier to
+    converse about them, since the name gives us some clue of what they
+    contain.
+
   [BUG FIXES]
 
   * Re-declaring a class_type or role_type constraint that has already been
