@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe5;
+package Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion;
 
-# ABSTRACT: More subtypes, coercion in a B<Request> class
+# ABSTRACT: Demonstrates subtypes and coercion use HTTP-related classes (Request, Protocol, etc.)
 
 __END__
 

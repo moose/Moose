@@ -47,9 +47,9 @@ Introduces the creation and use of custom types, a C<BUILD> method, and the
 use of C<override> in a subclass. This recipe also shows how to model a set of
 classes that could be used to model companies, people, employees, etc.
 
-=item L<Moose::Cookbook::Basics::Recipe5> - More subtypes, coercion in a B<Request> class
+=item L<Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion>
 
-More type examples, including the use of type coercions.
+This recipe covers more subtype creation, including the use of type coercions.
 
 =item L<Moose::Cookbook::Basics::Recipe6> - The augment/inner example
 
