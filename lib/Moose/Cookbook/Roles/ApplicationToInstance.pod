@@ -1,10 +1,8 @@
-package Moose::Cookbook::Roles::Recipe3;
+package Moose::Cookbook::Roles::ApplicationToInstance;
 
 # ABSTRACT: Applying a role to an object instance
 
 __END__
-
-package Moose::Cookbook::Roles::Recipe3;
 
 =pod
 

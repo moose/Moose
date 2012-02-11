@@ -102,7 +102,7 @@ class. Sometimes you want the whole role but one of its methods
 conflicts with one in your class. With method exclusion and aliasing,
 you can work around these problems.
 
-=item L<Moose::Cookbook::Roles::Recipe3> - Applying a role to an object instance
+=item L<Moose::Cookbook::Roles::ApplicationToInstance>
 
 In this recipe, we apply a role to an existing object instance.
 
