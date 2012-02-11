@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe7;
+package Moose::Cookbook::Basics::Immutable;
 
-# ABSTRACT: Making Moose fast with immutable
+# ABSTRACT: Making Moose fast by making your class immutable
 
 __END__
 

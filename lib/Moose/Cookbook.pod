@@ -51,7 +51,7 @@ classes that could be used to model companies, people, employees, etc.
 
 This recipe covers more subtype creation, including the use of type coercions.
 
-=item L<Moose::Cookbook::Basics::Recipe7> - Making Moose fast with immutable
+=item L<Moose::Cookbook::Basics::Immutable>
 
 Making a class immutable greatly increases the speed of accessors and
 object construction.
