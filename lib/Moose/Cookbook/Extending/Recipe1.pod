@@ -39,7 +39,7 @@ a few broad categories.
 =head2 Metaclass Extensions
 
 One way of extending Moose is by extending one or more Moose
-metaclasses. For example, in L<Moose::Cookbook::Meta::Recipe5> we saw
+metaclasses. For example, in L<Moose::Cookbook::Meta::Table_MetaclassTrait> we saw
 a metaclass role that added a C<table> attribute to the
 metaclass. If you were writing an ORM, this would be a logical
 extension.
@@ -120,8 +120,8 @@ can refer to it by a short name like "Big", and Moose will resolve it to a
 class like C<MooseX::Embiggen::Meta::Attribute::Role::Big>.
 
 See L<Moose::Cookbook::Meta::Labeled_AttributeTrait> and
-L<Moose::Cookbook::Meta::Recipe5> for examples of traits in action. In
-particular, both of these recipes demonstrate the trait resolution
+L<Moose::Cookbook::Meta::Table_MetaclassTrait> for examples of traits in
+action. In particular, both of these recipes demonstrate the trait resolution
 mechanism.
 
 Implementing an extension as a (set of) metaclass or base object

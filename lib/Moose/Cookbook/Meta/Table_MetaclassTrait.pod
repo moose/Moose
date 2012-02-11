@@ -1,4 +1,4 @@
-package Moose::Cookbook::Meta::Recipe5;
+package Moose::Cookbook::Meta::Table_MetaclassTrait;
 
 # ABSTRACT: Adding a "table" attribute as a metaclass trait
 

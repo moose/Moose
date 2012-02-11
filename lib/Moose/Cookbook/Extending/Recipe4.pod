@@ -37,8 +37,8 @@ __END__
 
 This recipe expands on the use of L<Moose::Exporter> we saw in
 L<Moose::Cookbook::Extending::Recipe1> and the class metaclass trait we saw in
-L<Moose::Cookbook::Meta::Recipe5>. In this example we provide our own
-metaclass trait, and we also export a C<has_table> sugar function.
+L<Moose::Cookbook::Meta::Table_MetaclassTrait>. In this example we provide our
+own metaclass trait, and we also export a C<has_table> sugar function.
 
 The C<with_meta> parameter specifies a list of functions that should
 be wrapped before exporting. The wrapper simply ensures that the
