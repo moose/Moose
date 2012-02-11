@@ -137,11 +137,14 @@ and reimplements it as a metaclass trait.
 This recipe shows a custom method metaclass that implements making a
 method private.
 
-=item L<Moose::Cookbook::Meta::Recipe7> - Using a blessed array reference as an object instance
+=item L<Moose::Cookbook::Meta::GlobRef_InstanceMetaclass>
 
 This recipe shows an example of how you create your own meta-instance
 class. The meta-instance determines the internal structure of object
 instances and provide access to attribute slots.
+
+In this particular instance, we use a blessed glob reference as the instance
+instead of a blessed hash reference.
 
 =item Moose::Cookbook::Meta::Recipe8 - Hooking into immutabilization (TODO)
 

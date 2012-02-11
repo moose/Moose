@@ -1,4 +1,4 @@
-package Moose::Cookbook::Meta::Recipe7;
+package Moose::Cookbook::Meta::GlobRef_InstanceMetaclass;
 
 # ABSTRACT: Creating a glob reference meta-instance class
 
