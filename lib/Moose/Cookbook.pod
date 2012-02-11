@@ -146,7 +146,7 @@ instances and provide access to attribute slots.
 In this particular instance, we use a blessed glob reference as the instance
 instead of a blessed hash reference.
 
-=item Moose::Cookbook::Meta::Recipe8 - Hooking into immutabilization (TODO)
+=item Hooking into immutabilization (TODO)
 
 Moose has a feature known as "immutabilization". By calling C<<
 __PACKAGE__->meta()->make_immutable() >> after defining your class
