@@ -95,7 +95,7 @@ Demonstrates roles, which are also sometimes known as traits or
 mix-ins. Roles provide a method of code re-use which is orthogonal to
 subclassing.
 
-=item L<Moose::Cookbook::Roles::Recipe2> - Advanced Role Composition - method exclusion and aliasing
+=item L<Moose::Cookbook::Roles::Restartable_AdvancedComposition>
 
 Sometimes you just want to include part of a role in your
 class. Sometimes you want the whole role but one of its methods

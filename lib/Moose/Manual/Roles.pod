@@ -292,7 +292,7 @@ probably expects it to implement that method.
 In some use cases we might alias and exclude methods from roles, but
 then provide a method of the same name in the class itself.
 
-Also see L<Moose::Cookbook::Roles::Recipe2> for an example.
+Also see L<Moose::Cookbook::Roles::Restartable_AdvancedComposition> for an example.
 
 =head1 ROLE EXCLUSION
 
