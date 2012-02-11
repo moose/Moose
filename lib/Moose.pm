@@ -1081,7 +1081,8 @@ John (jgoulah) Goulah wrote L<Moose::Cookbook::Snack::Keywords>.
 
 Jess (castaway) Robinson wrote L<Moose::Cookbook::Snack::Types>.
 
-Aran (bluefeet) Clary Deltac wrote L<Moose::Cookbook::Basics::Recipe9>.
+Aran (bluefeet) Clary Deltac wrote
+L<Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion>.
 
 Anders (Debolaz) Nor Berle contributed L<Test::Moose> and L<Moose::Util>.
 

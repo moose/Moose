@@ -1,4 +1,4 @@
-package Moose::Cookbook::Basics::Recipe9;
+package Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion;
 
 # ABSTRACT: Operator overloading, subtypes, and coercion
 

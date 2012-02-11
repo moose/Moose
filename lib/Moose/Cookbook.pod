@@ -61,7 +61,7 @@ object construction.
 The builder feature provides an inheritable and role-composable way to
 provide a default attribute value.
 
-=item L<Moose::Cookbook::Basics::Recipe9> - Operator overloading, subtypes, and coercion
+=item L<Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion>
 
 Demonstrates using operator overloading, coercion, and subtypes to
 model how eye color is determined during reproduction.
