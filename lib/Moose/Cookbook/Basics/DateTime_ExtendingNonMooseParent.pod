@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe11;
+package Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent;
 
-# ABSTRACT: Extending a non-Moose base class
+# ABSTRACT: Extending a non-Moose parent class
 
 __END__
 

@@ -91,7 +91,7 @@ coercions, and C<lazy_build>, so subclassing is often not the ideal
 route.
 
 That said, if you really need to inherit from a non-Moose class, see
-L<Moose::Cookbook::Basics::Recipe11> for an example of how to do it,
+L<Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent> for an example of how to do it,
 or take a look at L<Moose::Manual::MooseX/"MooseX::NonMoose">.
 
 =head2 Accessors
