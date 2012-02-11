@@ -56,7 +56,7 @@ This recipe covers more subtype creation, including the use of type coercions.
 Making a class immutable greatly increases the speed of accessors and
 object construction.
 
-=item L<Moose::Cookbook::Basics::Recipe8> - Builder methods and lazy_build
+=item L<Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild> - Builder methods and lazy_build
 
 The builder feature provides an inheritable and role-composable way to
 provide a default attribute value.

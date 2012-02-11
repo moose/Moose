@@ -212,7 +212,7 @@ You I<can> use the C<default> option without the C<lazy> option if you
 like, as we showed in the second recipe.
 
 Also, you can use C<builder> instead of C<default>. See
-L<Moose::Cookbook::Basics::Recipe8> for details.
+L<Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild> for details.
 
 =back
 

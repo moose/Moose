@@ -642,10 +642,11 @@ example.
 
 =item I<builder> => Str
 
-The value of this key is the name of the method that will be called to
-obtain the value used to initialize the attribute. See the L<builder
-option docs in Class::MOP::Attribute|Class::MOP::Attribute/builder>
-and/or L<Moose::Cookbook::Basics::Recipe8> for more information.
+The value of this key is the name of the method that will be called to obtain
+the value used to initialize the attribute. See the L<builder option docs in
+Class::MOP::Attribute|Class::MOP::Attribute/builder> and/or
+L<Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild> for more
+information.
 
 =item I<default> => SCALAR | CODE
 
