@@ -170,7 +170,7 @@ if you plan to write your own C<MooseX> module.
 
 =over 4
 
-=item L<Moose::Cookbook::Extending::Recipe1> - Moose extension overview
+=item L<Moose::Cookbook::Extending::ExtensionOverview>
 
 There are quite a few ways to extend Moose. This recipe provides an
 overview of each method, and provides recommendations for when each is

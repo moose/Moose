@@ -870,7 +870,7 @@ to work. Here is an example:
 
 To learn more about extending Moose, we recommend checking out the
 "Extending" recipes in the L<Moose::Cookbook>, starting with
-L<Moose::Cookbook::Extending::Recipe1>, which provides an overview of
+L<Moose::Cookbook::Extending::ExtensionOverview>, which provides an overview of
 all the different ways you might extend Moose. L<Moose::Exporter> and
 L<Moose::Util::MetaRole> are the modules which provide the majority of the
 extension functionality, so reading their documentation should also be helpful.
