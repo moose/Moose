@@ -64,7 +64,7 @@ to encounter this sort of problem.
 
 =head1 SEE ALSO
 
-L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute
-traits
+L<Moose::Cookbook::Meta::Labeled_AttributeTrait> - Labels implemented via
+attribute traits
 
 =pod

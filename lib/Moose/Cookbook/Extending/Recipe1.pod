@@ -119,7 +119,7 @@ resolve a short name to a class name. In other words, with a trait, the caller
 can refer to it by a short name like "Big", and Moose will resolve it to a
 class like C<MooseX::Embiggen::Meta::Attribute::Role::Big>.
 
-See L<Moose::Cookbook::Meta::Recipe3> and
+See L<Moose::Cookbook::Meta::Labeled_AttributeTrait> and
 L<Moose::Cookbook::Meta::Recipe5> for examples of traits in action. In
 particular, both of these recipes demonstrate the trait resolution
 mechanism.

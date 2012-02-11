@@ -1,4 +1,4 @@
-package Moose::Cookbook::Meta::Recipe3;
+package Moose::Cookbook::Meta::Labeled_AttributeTrait;
 
 # ABSTRACT: Labels implemented via attribute traits
 

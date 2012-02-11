@@ -120,7 +120,7 @@ you extend the object system provided by Moose.
 If you're wondering what all this "meta" stuff is, and why you should
 care about it, read this "recipe".
 
-=item L<Moose::Cookbook::Meta::Recipe3> - Labels implemented via attribute traits
+=item L<Moose::Cookbook::Meta::Labeled_AttributeTrait>
 
 Extending Moose's attribute metaclass is a great way to add
 functionality. However, attributes can only have one metaclass.

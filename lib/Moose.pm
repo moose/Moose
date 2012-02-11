@@ -637,8 +637,8 @@ cover here.
 See L<Metaclass and Trait Name Resolution> for details on how a trait name is
 resolved to a role name.
 
-Also see L<Moose::Cookbook::Meta::Recipe3> for a metaclass trait
-example.
+Also see L<Moose::Cookbook::Meta::Labeled_AttributeTrait> for a metaclass
+trait example.
 
 =item I<builder> => Str
 
@@ -842,8 +842,8 @@ The lookup method for metaclasses is the same, except that it looks
 for a class matching B<Moose::Meta::$type::Custom::$metaclass_name>.
 
 If all this is confusing, take a look at
-L<Moose::Cookbook::Meta::Recipe3>, which demonstrates how to create an
-attribute trait.
+L<Moose::Cookbook::Meta::Labeled_AttributeTrait>, which demonstrates how to
+create an attribute trait.
 
 =head1 UNIMPORTING FUNCTIONS
 
