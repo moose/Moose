@@ -41,10 +41,11 @@ Demonstrates several attribute features, including types, weak
 references, predicates ("does this object have a foo?"), defaults,
 laziness, and triggers.
 
-=item L<Moose::Cookbook::Basics::Recipe4> - Subtypes, and modeling a simple B<Company> class hierarchy
+=item L<Moose::Cookbook::Basics::Company_Subtypes>
 
-Introduces the creation and use of custom types, a C<BUILD> method,
-and the use of C<override> in a subclass.
+Introduces the creation and use of custom types, a C<BUILD> method, and the
+use of C<override> in a subclass. This recipe also shows how to model a set of
+classes that could be used to model companies, people, employees, etc.
 
 =item L<Moose::Cookbook::Basics::Recipe5> - More subtypes, coercion in a B<Request> class
 

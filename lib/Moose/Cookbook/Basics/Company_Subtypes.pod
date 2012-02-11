@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe4;
+package Moose::Cookbook::Basics::Company_Subtypes;
 
-# ABSTRACT: Subtypes, and modeling a simple B<Company> class hierarchy
+# ABSTRACT: Demonstrates the use of subtypes and how to model classes related to companies, people, employees, etc.
 
 __END__
 
