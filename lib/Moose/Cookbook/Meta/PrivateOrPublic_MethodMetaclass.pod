@@ -1,4 +1,4 @@
-package Moose::Cookbook::Meta::Recipe6;
+package Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass;
 
 # ABSTRACT: A method metaclass for marking methods public or private
 

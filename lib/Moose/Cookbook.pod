@@ -132,7 +132,7 @@ composable attribute functionality.
 This recipe takes the class metaclass we saw in the previous recipe
 and reimplements it as a metaclass trait.
 
-=item L<Moose::Cookbook::Meta::Recipe6> - A method metaclass for marking methods public or private
+=item L<Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass>
 
 This recipe shows a custom method metaclass that implements making a
 method private.
