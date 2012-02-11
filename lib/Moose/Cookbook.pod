@@ -183,7 +183,7 @@ example shows how to provide a base object class debugging role that
 is applied to any class that uses a notional C<MooseX::Debugging>
 module.
 
-=item L<Moose::Cookbook::Extending::Recipe4> - Acting like Moose.pm and providing sugar Moose-style
+=item L<Moose::Cookbook::Extending::Mooseish_MooseSugar>
 
 This recipe shows how to provide a replacement for C<Moose.pm>. You
 may want to do this as part of the API for a C<MooseX> module,
