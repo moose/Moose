@@ -1,4 +1,4 @@
-package Moose::Cookbook::Meta::Recipe1;
+package Moose::Cookbook::Meta::WhyMeta;
 
 # ABSTRACT: Welcome to the meta world (Why Go Meta?)
 

@@ -115,7 +115,7 @@ you extend the object system provided by Moose.
 
 =over 4
 
-=item L<Moose::Cookbook::Meta::Recipe1> - Welcome to the meta-world (Why Go Meta?)
+=item L<Moose::Cookbook::Meta::WhyMeta>
 
 If you're wondering what all this "meta" stuff is, and why you should
 care about it, read this "recipe".
