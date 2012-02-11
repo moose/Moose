@@ -1024,7 +1024,7 @@ This paper is on how Traits can be used to do safe metaclass composition,
 and offers an excellent introduction section which delves into the topic of
 metaclass compatibility.
 
-L<http://www.iam.unibe.ch/~scg/Archive/Papers/Duca05ySafeMetaclassTrait.pdf>
+L<http://scg.unibe.ch/archive/papers/Duca05ySafeMetaclassTrait.pdf>
 
 =item "Safe Metaclass Programming"
 

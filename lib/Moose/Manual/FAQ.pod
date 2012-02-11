@@ -15,11 +15,11 @@ __END__
 
 Yes! Many sites with household names are using Moose to build
 high-traffic services. Countless others are using Moose in production.
-See L<http://www.iinteractive.com/moose/about.html#organizations> for
+See L<http://moose.iinteractive.com/about.html#organizations> for
 a partial list.
 
 As of this writing, Moose is a dependency of several hundred CPAN
-modules. L<http://cpants.perl.org/dist/used_by/Moose>
+modules. L<https://metacpan.org/requires/module/Moose>
 
 =head3 Is Moose's API stable?
 
