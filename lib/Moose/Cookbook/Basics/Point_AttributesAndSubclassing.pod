@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe1;
+package Moose::Cookbook::Basics::Point_AttributesAndSubclassing;
 
-# ABSTRACT: The (always classic) B<Point> example.
+# ABSTRACT: Point and Point3D classes, showing basic attributes and subclassing.
 
 __END__
 
@@ -165,7 +165,7 @@ required, and calling C<new> without them will throw an error.
 From here on, we can use C<$point> and C<$point3d> just as you would
 any other Perl 5 object. For a more detailed example of what can be
 done, you can refer to the
-F<t/recipes/moose_cookbook_basics_recipe1.t> test file.
+F<t/recipes/moose_cookbook_basics_point_attributesandsubclassing.t> test file.
 
 =head2 Moose Objects are Just Hashrefs
 

@@ -39,8 +39,9 @@ __END__
 
 =head1 DESCRIPTION
 
-This is the Point example from L<Moose::Cookbook::Basics::Recipe1>
-with type checking added.
+This is the Point example from
+L<Moose::Cookbook::Basics::Point_AttributesAndSubclassing> with type checking
+added.
 
 If we try to assign a string value to an attribute that is an C<Int>,
 Moose will die with an explicit error message. The error will include
@@ -57,7 +58,7 @@ to check a value directly.
 
 =over 4
 
-=item L<Moose::Cookbook::Basics::Recipe1>
+=item L<Moose::Cookbook::Basics::Point_AttributesAndSubclassing>
 
 =item L<Moose::Utils::TypeConstraints>
 

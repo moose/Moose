@@ -26,9 +26,9 @@ laziness, types, type coercion, method modifiers, and more.
 
 =over 4
 
-=item L<Moose::Cookbook::Basics::Recipe1> - The (always classic) B<Point> example
+=item L<Moose::Cookbook::Basics::Point_AttributesAndSubclassing>
 
-A simple Moose-based class. Demonstrates Moose attributes and subclassing.
+A simple Moose-based class. Demonstrates basic Moose attributes and subclassing.
 
 =item L<Moose::Cookbook::Basics::Recipe2> - A simple B<BankAccount> example
 
