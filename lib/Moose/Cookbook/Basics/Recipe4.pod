@@ -251,7 +251,7 @@ it's called as a reader.
 
 The B<Person> class does not really demonstrate anything new. It has several
 C<required> attributes. It also has a C<predicate> method, which we
-first used in L<recipe 3|Moose::Cookbook::Basics::Recipe3>.
+first used in L<Moose::Cookbook::Basics::BinaryTree_AttributeFeatures>.
 
 The only new feature in the C<Employee> class is the C<override>
 method modifier:

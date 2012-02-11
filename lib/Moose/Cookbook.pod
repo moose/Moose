@@ -35,7 +35,7 @@ A simple Moose-based class. Demonstrates basic Moose attributes and subclassing.
 A slightly more complex Moose class. Demonstrates using a method modifier in a
 subclass.
 
-=item L<Moose::Cookbook::Basics::Recipe3> - A lazy B<BinaryTree> example
+=item L<Moose::Cookbook::Basics::BinaryTree_AttributeFeatures>
 
 Demonstrates several attribute features, including types, weak
 references, predicates ("does this object have a foo?"), defaults,

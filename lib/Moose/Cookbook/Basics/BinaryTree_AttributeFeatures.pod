@@ -1,6 +1,6 @@
-package Moose::Cookbook::Basics::Recipe3;
+package Moose::Cookbook::Basics::BinaryTree_AttributeFeatures;
 
-# ABSTRACT: A lazy B<BinaryTree> example
+# ABSTRACT: Demonstrates various attribute features including lazy, predicates, weak refs, and more
 
 __END__
 

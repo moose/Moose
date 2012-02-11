@@ -50,9 +50,10 @@ __END__
 
 =head1 DESCRIPTION
 
-If you've already read L<Moose::Cookbook::Basics::Recipe3>, then this
-example should look very familiar. In fact, all we've done here is
-replace the attribute's C<default> parameter with a C<builder>.
+If you've already read
+L<Moose::Cookbook::Basics::BinaryTree_AttributeFeatures>, then this example
+should look very familiar. In fact, all we've done here is replace the
+attribute's C<default> parameter with a C<builder>.
 
 In this particular case, the C<default> and C<builder> options act in
 exactly the same way. When the C<left> or C<right> attribute is read,

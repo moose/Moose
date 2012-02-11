@@ -308,8 +308,9 @@ As for alternate solutions, there are a couple.
 =item *
 
 Using a combination of lazy and default in your attributes to defer
-initialization (see the Binary Tree example in the cookbook for a good
-example of lazy/default usage L<Moose::Cookbook::Basics::Recipe3>)
+initialization (see the Binary Tree example in the cookbook for a good example
+of lazy/default usage
+L<Moose::Cookbook::Basics::BinaryTree_AttributeFeatures>)
 
 =item *
 
