@@ -102,7 +102,7 @@ We could use this same role in a C<Bone> class:
       isa => 'Marrow',
   );
 
-See also L<Moose::Cookbook::Roles::Recipe1> for an example.
+See also L<Moose::Cookbook::Roles::Comparable_CodeReuse> for an example.
 
 =head1 REQUIRED METHODS
 

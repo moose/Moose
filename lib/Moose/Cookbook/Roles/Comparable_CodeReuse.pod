@@ -1,6 +1,6 @@
-package Moose::Cookbook::Roles::Recipe1;
+package Moose::Cookbook::Roles::Comparable_CodeReuse;
 
-# ABSTRACT: The Moose::Role example
+# ABSTRACT: Using roles for code reuse
 
 __END__
 
