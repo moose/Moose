@@ -534,7 +534,7 @@ each of which can be followed by an optional hash reference of options
 
 =item B<ensure_all_roles($applicant, @roles)>
 
-This function is similar to L</apply_all_roles>, but only applies roles that
+This function is similar to C<apply_all_roles>, but only applies roles that
 C<$applicant> does not already consume.
 
 =item B<with_traits($class_name, @role_names)>

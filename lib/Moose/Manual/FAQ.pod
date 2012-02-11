@@ -128,7 +128,7 @@ L<MooseX::SemiAffordanceAccessor>.
 
 NOTE: This B<cannot> be set globally in Moose, as that would break
 other classes which are built with Moose. You can still save on typing
-by defining a new L<MyApp::Moose> that exports Moose's sugar and then
+by defining a new C<MyApp::Moose> that exports Moose's sugar and then
 turns on L<MooseX::FollowPBP>. See
 L<Moose::Cookbook::Extending::Recipe4>.
 

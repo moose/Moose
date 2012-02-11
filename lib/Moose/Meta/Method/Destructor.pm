@@ -139,16 +139,16 @@ __END__
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Class::Generated> that
+This class is a subclass of L<Class::MOP::Method::Inlined> that
 provides Moose-specific functionality for inlining destructors.
 
 To understand this class, you should read the the
-L<Class::MOP::Class::Generated> documentation as well.
+L<Class::MOP::Method::Inlined> documentation as well.
 
 =head1 INHERITANCE
 
 C<Moose::Meta::Method::Destructor> is a subclass of
-L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Generated>.
+L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Inlined>.
 
 =head1 METHODS
 

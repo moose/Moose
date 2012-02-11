@@ -58,7 +58,7 @@ L<git://git.moose.perl.org/Moose.git>
 
 =item Read+Write
 
-L<gitmo@git.moose.perl.org:Moose.git>
+gitmo@git.moose.perl.org:Moose.git
 
 =back
 

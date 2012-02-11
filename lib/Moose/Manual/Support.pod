@@ -46,8 +46,8 @@ releases will not change any existing tests in the test suite, although they
 can add new ones). A minor release can include new features and bug fixes.
 
 Major releases may be backwards incompatible. Moose prioritizes
-correctness over backwards compatibility or performance; see the L<Deprecation
-Policy> to understand how backwards incompatible changes are announced.
+correctness over backwards compatibility or performance; see the L<DEPRECATION
+POLICY> to understand how backwards incompatible changes are announced.
 
 Major releases are scheduled to happen during fixed release windows. If the
 window is missed, then there will not be a major release until the next
