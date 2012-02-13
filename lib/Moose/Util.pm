@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Class::Load qw(load_class load_first_existing_class);
+use Class::Load 0.07 qw(load_class load_first_existing_class);
 use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
