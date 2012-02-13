@@ -64,7 +64,7 @@ typedef enum {
     KEY_writer,
     KEY_package_cache_flag,
     KEY__version,
-    KEY_op,
+    KEY_operator,
     key_last,
 } mop_prehashed_key_t;
 

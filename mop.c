@@ -221,7 +221,7 @@ static struct {
     DECLARE_KEY(writer),
     DECLARE_KEY_WITH_VALUE(package_cache_flag, "_package_cache_flag"),
     DECLARE_KEY_WITH_VALUE(_version, "-version"),
-    DECLARE_KEY(op)
+    DECLARE_KEY(operator)
 };
 
 SV *

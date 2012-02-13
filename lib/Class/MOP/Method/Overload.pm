@@ -14,11 +14,11 @@ sub wrap {
     unshift @args, 'body' if @args % 2 == 1;
     my %params = @args;
 
-    confess "op is required"
-        unless exists $params{op};
+    confess "operator is required"
+        unless exists $params{operator};
 
     return $class->SUPER::wrap(
-        name => "($params{op}",
+        name => "($params{operator}",
         %params,
     );
 }
@@ -39,7 +39,7 @@ sub _new {
         'original_method'      => $params->{original_method},
 
         # defined in this class
-        'op'                   => $params->{op},
+        'operator'             => $params->{operator},
     } => $class;
 }
 
