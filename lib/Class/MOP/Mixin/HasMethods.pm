@@ -4,10 +4,13 @@ use strict;
 use warnings;
 
 use Class::MOP::Method::Meta;
+use Class::MOP::Method::Overload;
 
 use Scalar::Util 'blessed';
 use Carp         'confess';
 use Sub::Name    'subname';
+
+use overload ();
 
 use base 'Class::MOP::Mixin';
 
@@ -198,6 +201,72 @@ sub _full_method_map {
     }
 
     return $self->_method_map;
+}
+
+# overloading
+
+my $overload_ops;
+sub overload_ops {
+    $overload_ops ||= [map { split /\s+/ } values %overload::ops];
+}
+
+# XXX this could probably stand to be cached, but i figure it should be
+# uncommon enough to not particularly matter
+sub _overload_map {
+    my $self = shift;
+
+    return {} unless overload::Overloaded($self->name);
+
+    my %map;
+    for my $op (@{ $self->overload_ops }) {
+        my $body = overload::Method($self->name, $op);
+        next unless defined $body;
+        $map{$op} = $body;
+    }
+
+    return \%map;
+}
+
+sub get_overload_list {
+    my $self = shift;
+    my $map = $self->_overload_map;
+    return map { $self->_wrap_overload($_, $map->{$_}) } keys $map;
+}
+
+sub get_overloaded_ops {
+    my $self = shift;
+    return keys $self->_overload_map;
+}
+
+sub has_overloaded_op {
+    my $self = shift;
+    my ($op) = @_;
+    return defined overload::Method($op);
+}
+
+sub get_overloaded_op {
+    my $self = shift;
+    my ($op) = @_;
+    my $body = overload::Method($op);
+    return unless defined $body;
+    return $self->_wrap_overload($op, $body);
+}
+
+sub add_overload {
+    my $self = shift;
+    my ($op, $body) = @_;
+    overload->import($op => $body);
+}
+
+sub _wrap_overload {
+    my $self = shift;
+    my ($op, $body) = @_;
+    return Class::MOP::Method::Overload->wrap(
+        op                   => $op,
+        package_name         => $self->name,
+        associated_metaclass => $self,
+        body                 => $body,
+    );
 }
 
 1;

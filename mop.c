@@ -220,7 +220,8 @@ static struct {
     DECLARE_KEY(wrapped_method_metaclass),
     DECLARE_KEY(writer),
     DECLARE_KEY_WITH_VALUE(package_cache_flag, "_package_cache_flag"),
-    DECLARE_KEY_WITH_VALUE(_version, "-version")
+    DECLARE_KEY_WITH_VALUE(_version, "-version"),
+    DECLARE_KEY(op)
 };
 
 SV *

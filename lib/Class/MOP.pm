@@ -697,6 +697,7 @@ $_->meta->make_immutable(
     Class::MOP::Method::Wrapped
 
     Class::MOP::Method::Meta
+    Class::MOP::Method::Overload
 /;
 
 $_->meta->make_immutable(
