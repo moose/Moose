@@ -308,12 +308,14 @@ sub meta_class_alias {
 
 # XXX - this should be added to Params::Util
 sub _STRINGLIKE0 ($) {
-    return _STRING( $_[0] )
-        || ( defined $_[0]
-        && $_[0] eq q{} )
-        || ( blessed $_[0]
-        && overload::Method( $_[0], q{""} )
-        && length "$_[0]" );
+    return 1 if _STRING( $_[0] );
+    if ( blessed $_[0] ) {
+        return overload::Method( $_[0], q{""} );
+    }
+
+    return 1 if defined $_[0] && $_[0] eq q{};
+
+    return 0;
 }
 
 sub _reconcile_roles_for_metaclass {
