@@ -108,6 +108,19 @@ use Test::Moose;
 }
 
 {
+    package OverloadStr;
+    use overload
+        q{""} => sub { ${ $_[0] } },
+        fallback => 1;
+
+    sub new {
+        my $class = shift;
+        my $str   = shift;
+        return bless \$str, $class;
+    }
+}
+
+{
     run_tests(build_class);
     run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
     run_tests( build_class( trigger => sub { } ) );
@@ -560,6 +573,11 @@ sub run_tests {
 
         is(
             $obj->join(q{}), '1234',
+            'join returns expected result when joining with empty string'
+        );
+
+        is(
+            $obj->join( OverloadStr->new(q{}) ), '1234',
             'join returns expected result when joining with empty string'
         );
 
