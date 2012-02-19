@@ -23,6 +23,10 @@ __PACKAGE__->meta->add_attribute('class' => (
 sub apply {
     my ($self, $role, $class) = @_;
 
+    # We're not checking for role names to support multiple instances of the
+    # same Parameterized role.
+    return if grep { $role == $_ } @{ $class->roles() };
+
     # We need weak_ref in CMOP :(
     weaken($self->{role}  = $role);
     weaken($self->{class} = $class);

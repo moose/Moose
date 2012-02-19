@@ -10,7 +10,13 @@ use base 'Moose::Meta::Role::Application';
 
 sub apply {
     my ($self, $role1, $role2) = @_;
+
+    # We're not checking for role names to support multiple instances of the
+    # same Parameterized role.
+    return if grep { $role1 == $_ } @{ $role2->get_roles() };
+
     $self->SUPER::apply($role1, $role2);
+
     $role2->add_role($role1);
 }
 
