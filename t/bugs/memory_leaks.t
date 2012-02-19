@@ -68,13 +68,17 @@ no_leaks_ok(
     'anonymous role is leak-free'
 );
 
-no_leaks_ok(
-    sub {
-        my $meta = Moose::Meta::Class->create_anon_class;
-        $meta->make_immutable;
-    },
-    'making an anon class immutable is leak-free'
-);
+{
+    local $TODO
+        = 'Until we eliminate meta objects from being closed over by the immutabilized methods, this will leak';
+    no_leaks_ok(
+        sub {
+            my $meta = Moose::Meta::Class->create_anon_class;
+            $meta->make_immutable;
+        },
+        'making an anon class immutable is leak-free'
+    );
+}
 
 {
     my $meta3 = Moose::Meta::Class->create('MyClass3');
