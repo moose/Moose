@@ -77,17 +77,20 @@ no_leaks_ok(
 );
 
 {
-    my $meta3 = Class::MOP::Class->create('MyClass3');
+    my $meta3 = Moose::Meta::Class->create('MyClass3');
     memory_cycle_ok( $meta3, 'named metaclass object is cycle-free' );
     memory_cycle_ok( $meta3->new_object, 'MyClass3 object is cycle-free' );
 
-    my $anon = Class::MOP::Class->create_anon_class;
-    memory_cycle_ok($anon, 'anon metaclass object is cycle-free' );
-    memory_cycle_ok( $anon->new_object, 'object from anon metaclass is cycle-free' );
+    my $anon_class = Moose::Meta::Class->create_anon_class;
+    memory_cycle_ok($anon_class, 'anon metaclass object is cycle-free' );
+    memory_cycle_ok( $anon_class->new_object, 'object from anon metaclass is cycle-free' );
 
-    $anon->make_immutable;
-    memory_cycle_ok($anon, 'immutable anon metaclass object is cycle-free' );
-    memory_cycle_ok( $anon->new_object, 'object from immutable anon metaclass is cycle-free' );
+    $anon_class->make_immutable;
+    memory_cycle_ok($anon_class, 'immutable anon metaclass object is cycle-free' );
+    memory_cycle_ok( $anon_class->new_object, 'object from immutable anon metaclass is cycle-free' );
+
+    my $anon_role = Moose::Meta::Role->create_anon_role;
+    memory_cycle_ok($anon_role, 'anon role meta object is cycle-free' );
 }
 
 done_testing;
