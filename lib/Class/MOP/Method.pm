@@ -127,6 +127,7 @@ sub clone {
     my $self = shift;
 
     my $clone = bless { %{$self}, @_ }, blessed($self);
+    weaken($clone->{associated_metaclass}) if $clone->{associated_metaclass};
 
     $clone->_set_original_method($self);
 
