@@ -3,8 +3,8 @@ package inc::RequireAuthorDeps;
 use Class::Load qw(load_class);
 use Moose;
 
+use CPAN::Meta::Requirements;
 use Try::Tiny;
-use Version::Requirements;
 
 with 'Dist::Zilla::Role::BeforeRelease';
 
@@ -12,7 +12,7 @@ sub before_release {
     my $self = shift;
 
     $self->log("Ensuring all author dependencies are installed");
-    my $req = Version::Requirements->new;
+    my $req = CPAN::Meta::Requirements->new;
     my $prereqs = $self->zilla->prereqs;
 
     for my $phase (qw(build test configure runtime develop)) {
