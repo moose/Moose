@@ -8,7 +8,7 @@ for, noteworthy changes.
   * Re-declaring a class_type or role_type constraint that has already been
     declared now just returns the original type constraint, rather than
     replacing the original constraint and ergo losing any coercions that were
-    on the original constraint. (t0m)
+    on the original constraint. Fixes RT #73289. (t0m)
 
 2.0402 Sat, Feb 04, 2012
 
