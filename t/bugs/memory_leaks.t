@@ -39,8 +39,7 @@ no_leaks_ok(
 
 no_leaks_ok(
     sub {
-        Moose::Meta::Class->create( 'MyClass', roles => ['MyRole'] )
-            ->new_object;
+        Moose::Meta::Class->create( 'MyClass', roles => ['MyRole'] );
     },
     'named class with roles is leak-free'
 );
@@ -71,7 +70,6 @@ no_leaks_ok(
     sub {
         my $meta = Moose::Meta::Class->create_anon_class;
         $meta->make_immutable;
-        $meta->new_object;
     },
     'making an anon class immutable is leak-free'
 );
