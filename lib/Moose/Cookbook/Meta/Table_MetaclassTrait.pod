@@ -7,8 +7,23 @@ __END__
 
 =pod
 
+=begin testing-SETUP
+
+BEGIN {
+  package MyApp::Meta::Class::Trait::HasTable;
+  use Moose::Role;
+
+  has table => (
+      is  => 'rw',
+      isa => 'Str',
+  );
+}
+
+=end testing-SETUP
+
 =head1 SYNOPSIS
 
+  # in lib/MyApp/Meta/Class/Trait/HasTable.pm
   package MyApp::Meta::Class::Trait::HasTable;
   use Moose::Role;
 
@@ -20,6 +35,7 @@ __END__
   package Moose::Meta::Class::Custom::Trait::HasTable;
   sub register_implementation { 'MyApp::Meta::Class::Trait::HasTable' }
 
+  # in lib/MyApp/User.pm
   package MyApp::User;
   use Moose -traits => 'HasTable';
 
@@ -44,7 +60,6 @@ make a module like C<Moose.pm> itself, with sugar like C<has_table()>.
 
 =head2 Using this Metaclass Trait in Practice
 
-
 Accessing this new C<table> attribute is quite simple. Given a class
 named C<MyApp::User>, we could simply write the following:
 
@@ -62,9 +77,24 @@ In theory, this is not entirely correct, since the metaclass might be getting
 its C<table> method from a I<different> trait. In practice, you are unlikely
 to encounter this sort of problem.
 
+=head1 RECIPE CAVEAT
+
+This recipe doesn't work when you paste it all into a single file. This is
+because the C<< use Moose -traits => 'HasTable'; >> line ends up being
+executed before the C<table> attribute is defined.
+
+When the two packages are separate files, this just works.
+
 =head1 SEE ALSO
 
 L<Moose::Cookbook::Meta::Labeled_AttributeTrait> - Labels implemented via
 attribute traits
 
 =pod
+
+=begin testing
+
+can_ok( MyApp::User->meta, 'table' );
+is( MyApp::User->meta->table, 'User', 'My::User table is User' );
+
+=end testing
