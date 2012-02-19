@@ -7,7 +7,8 @@ use Test::Requires {
 
 use Test::More;
 
-use Moose;
+use Moose ();
+use Moose::Util qw( apply_all_roles );
 
 {
     package MyRole;
@@ -42,6 +43,21 @@ no_leaks_ok(
             ->new_object;
     },
     'named class with roles is leak-free'
+);
+
+no_leaks_ok(
+    sub {
+        Moose::Meta::Role->create( 'MyRole2', roles => ['MyRole'] );
+    },
+    'named role with roles is leak-free'
+);
+
+no_leaks_ok(
+    sub {
+        my $object = Moose::Meta::Class->create('MyClass2')->new_object;
+        apply_all_roles( $object, 'MyRole' );
+    },
+    'applying role to an instance is leak-free'
 );
 
 no_leaks_ok(
