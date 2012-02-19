@@ -208,7 +208,7 @@ metaclasses.
 
 Just as with a subclass, you will probably want to package your
 extensions for consumption with a single module that uses
-L<Moose::Exporter>. However, in this case, you will use
+L<Moose::Exporter>. However, in this case, it will use
 L<Moose::Util::MetaRole> to apply all of your roles. The advantage of
 using this module is that I<it preserves any subclassing or roles
 already applied to the user's metaclasses>. This means that your
@@ -244,7 +244,7 @@ directly; see the L<Moose::Exporter> docs.
       return $package->$init_meta(%options);
   }
 
-As you can see from this example, you can use L<Moose::Util::MetaRole>
+As you can see from this example, you can use L<Moose::Exporter>
 to apply roles to any metaclass, as well as the base object class. If
 some other extension has already applied its own roles, they will be
 preserved when your extension applies its roles, and vice versa.
