@@ -16,8 +16,7 @@ use Moose::Util qw( apply_all_roles );
     use Moose::Role;
     sub myname { "I'm a role" }
 }
-use Data::Dumper ();
-my $o = Data::Dumper->can('_dump'); *Data::Dumper::_dump = sub { Scalar::Util::isweak($_[1]) ? 'WEAK<'.&$o.'>' : &$o };
+
 no_leaks_ok(
     sub {
         Moose::Meta::Class->create_anon_class->new_object;
