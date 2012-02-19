@@ -40,7 +40,7 @@ Foo->meta->apply(Quux->meta);
 Bar->meta->apply(Quux->meta);
 is_deeply(
     Quux->meta->roles,
-    [ Foo->meta, Foo->meta, Bar->meta ],
+    [ Foo->meta, Bar->meta ],
     "duplicated Foo",
 );
 
@@ -49,7 +49,7 @@ is(does_role('Quux', 'Bar'), 1, "Quux does Bar");
 ensure_all_roles('Quux', qw(Foo Bar));
 is_deeply(
     Quux->meta->roles,
-    [ Foo->meta, Foo->meta, Bar->meta ],
+    [ Foo->meta, Bar->meta ],
     "unchanged, since all roles are already applied",
 );
 
@@ -57,7 +57,7 @@ my $obj = Quux->new;
 ensure_all_roles($obj, qw(Foo Bar));
 is_deeply(
     $obj->meta->roles,
-    [ Foo->meta, Foo->meta, Bar->meta ],
+    [ Foo->meta, Bar->meta ],
     "unchanged, since all roles are already applied",
 );
 
