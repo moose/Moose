@@ -2,7 +2,8 @@ use strict;
 use warnings;
 
 use Test::Requires {
-    'Test::LeakTrace' => '0.01',
+    'Test::LeakTrace'     => '0.01',
+    'Test::Memory::Cycle' => '0',
 };
 
 use Test::More;
@@ -15,7 +16,8 @@ use Moose::Util qw( apply_all_roles );
     use Moose::Role;
     sub myname { "I'm a role" }
 }
-
+use Data::Dumper ();
+my $o = Data::Dumper->can('_dump'); *Data::Dumper::_dump = sub { Scalar::Util::isweak($_[1]) ? 'WEAK<'.&$o.'>' : &$o };
 no_leaks_ok(
     sub {
         Moose::Meta::Class->create_anon_class->new_object;
@@ -73,5 +75,19 @@ no_leaks_ok(
     },
     'making an anon class immutable is leak-free'
 );
+
+{
+    my $meta3 = Class::MOP::Class->create('MyClass3');
+    memory_cycle_ok( $meta3, 'named metaclass object is cycle-free' );
+    memory_cycle_ok( $meta3->new_object, 'MyClass3 object is cycle-free' );
+
+    my $anon = Class::MOP::Class->create_anon_class;
+    memory_cycle_ok($anon, 'anon metaclass object is cycle-free' );
+    memory_cycle_ok( $anon->new_object, 'object from anon metaclass is cycle-free' );
+
+    $anon->make_immutable;
+    memory_cycle_ok($anon, 'immutable anon metaclass object is cycle-free' );
+    memory_cycle_ok( $anon->new_object, 'object from immutable anon metaclass is cycle-free' );
+}
 
 done_testing;
