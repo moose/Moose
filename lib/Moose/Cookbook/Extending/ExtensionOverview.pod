@@ -230,59 +230,93 @@ And then the consumer of your extension can use your C<embiggen> sub:
 
 This can be combined with metaclass and base class roles quite easily.
 
-=head2 Extensions as Metaclass (and Base Object) Subclasses
+=head2 More advanced extensions
 
-B<Note: We strongly recommend that you provide your extension as a set of
-roles whenever possible>.
-
-Moose does not provide any simple APIs for consumers to use a subclass
-extension, except for class and attribute metaclasses. The attribute
-declaration options include a C<metaclass> option a consumer of your extension
-can use to specify your subclass, and class metaclasses can be passed via the
-C<-metaclass> import option when you C<use Moose>.
-
-This is one reason why implementing an extension as a subclass can be
-a poor choice. However, you can force the use of certain subclasses at
-import time by calling C<< Moose->init_meta >> for the caller, and
-providing an alternate metaclass or base object class.
-
-If you do want to do this, you should look at using L<Moose::Exporter>
-to re-export the L<Moose.pm|Moose> sugar function. With
-L<Moose::Exporter>, if your exporting class has an C<init_meta>
-method, L<Moose::Exporter> makes sure that this C<init_meta> method
-gets called when your class is imported.
-
-Then in your C<init_meta> you can arrange for the caller to use your
-subclasses:
+Providing your extension simply as a set of traits that gets applied to the
+appropriate metaobjects is easy, but sometimes not sufficient. For instance,
+sometimes you need to supply not just a base object role, but an actual base
+object class (due to needing to interact with existing systems that only
+provide a base class). To write extensions like this, you will need to provide
+a custom C<init_meta> method in your exporter. For instance:
 
   package MooseX::Embiggen;
 
-  use Moose ();
   use Moose::Exporter;
 
-  use MooseX::Embiggen::Meta::Class;
-  use MooseX::Embiggen::Object;
+  my ($import, $unimport, $init_meta) = Moose::Exporter->build_import_methods(
+      install         => ['import', 'unimport'],
+      with_meta       => ['embiggen'],
+      class_metaroles => {
+          class => ['MooseX::Embiggen::Role::Meta::Class'],
+      },
+  );
 
-  Moose::Exporter->setup_import_methods( also => 'Moose' );
-
-  sub init_meta {
-      shift;    # just your package name
-      my %options = @_;
-
-      return Moose->init_meta(
-          for_class  => $options{for_class},
-          metaclass  => 'MooseX::Embiggen::Meta::Class',
-          base_class => 'MooseX::Embiggen::Object',
-      );
+  sub embiggen {
+      my $meta = shift;
+      $meta->embiggen(@_);
   }
 
-Note that there are several issues with this sort of extension mechanism, most
-notably that Moose only ever initializes the metaclass for a class once. This
-means that this extension must be loaded B<first>, before anything
-Moose-related touches the class. If you say C<use Moose; use
-MooseX::Embiggen;>, for instance, the extension will not be applied properly.
-There are very few reasons to implement an extension in this way; using
-metaclass traits is the right answer in nearly every case.
+  sub init_meta {
+      my $package = shift;
+      my %options = @_;
+      if (my $meta = Class::MOP::class_of($options{for_class})) {
+          if ($meta->isa('Class::MOP::Class')) {
+              my @supers = $meta->superclasses;
+              $meta->superclasses('MooseX::Embiggen::Base::Class')
+                  if @supers == 1 && $supers[0] eq 'Moose::Object';
+          }
+      }
+      $package->$init_meta(%options);
+  }
+
+In the previous examples, C<init_meta> was generated for you, but here you must
+override it in order to add additional functionality. Some differences to note:
+
+=over 4
+
+=item C<build_import_methods> instead of C<setup_import_methods>
+
+C<build_import_methods> simply returns the C<import>, C<unimport>, and
+C<init_meta> methods, rather than installing them under the appropriate names.
+This way, you can write your own which wrap the existing functionality.
+C<build_import_methods> also takes an additional C<install> parameter, which
+tells it to just go ahead and install these methods (since we don't need to
+modify them).
+
+=item C<sub init_meta>
+
+Next, we must write our C<init_meta> wrapper. The important things to remember
+are that it is called as a method, and that C<%options> needs to be passed
+through to the existing implementation. Calling the base implementation just
+uses the C<$init_meta> subroutine reference that was returned by
+C<build_import_methods> earlier.
+
+=item Additional implementation
+
+This extension sets a different default base object class. To do so, it first
+checks to see if it's being applied to a class, and then checks to see if
+L<Moose::Object> is that class's only superclass, and if so, replaces that with
+the superclass that this extension requires.
+
+Note that two extensions that do this same thing will not work together
+properly (the second extension to be loaded won't see L<Moose::Object> as the
+base object, since it has already been overridden). This is why using a base
+object role is recommended for the general case.
+
+This C<init_meta> also works defensively, by only applying its functionality if
+a metaclass already exists. This makes sure it doesn't break with legacy
+extensions which override the metaclass directly (and so must be the first
+extension to initialize the metaclass). This is likely not necessary, since
+almost no extensions work this way anymore, but just provides an additional
+level of protection. The common case of C<use Moose; use MooseX::Embiggen;>
+is not affected regardless.
+
+=back
+
+This is just one example of what can be done with a custom C<init_meta> method.
+It can also be used for preventing an extension from being applied to a role,
+doing other kinds of validation on the class being applied to, or pretty much
+anything that would otherwise be done in an C<import> method.
 
 =head1 LEGACY EXTENSION MECHANISMS
 
