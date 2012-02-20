@@ -221,6 +221,7 @@ And then the consumer of your extension can use your C<embiggen> sub:
 
   package Consumer;
 
+  use Moose;
   use MooseX::Embiggen;
 
   extends 'Thing';
