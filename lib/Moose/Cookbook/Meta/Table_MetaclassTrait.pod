@@ -26,14 +26,12 @@ BEGIN {
   # in lib/MyApp/Meta/Class/Trait/HasTable.pm
   package MyApp::Meta::Class::Trait::HasTable;
   use Moose::Role;
+  Moose::Util::meta_class_alias('HasTable');
 
   has table => (
       is  => 'rw',
       isa => 'Str',
   );
-
-  package Moose::Meta::Class::Custom::Trait::HasTable;
-  sub register_implementation { 'MyApp::Meta::Class::Trait::HasTable' }
 
   # in lib/MyApp/User.pm
   package MyApp::User;

@@ -11,15 +11,13 @@ __END__
 
   package MyApp::Meta::Attribute::Trait::Labeled;
   use Moose::Role;
+  Moose::Util::meta_attribute_alias('Labeled');
 
   has label => (
       is        => 'rw',
       isa       => 'Str',
       predicate => 'has_label',
   );
-
-  package Moose::Meta::Attribute::Custom::Trait::Labeled;
-  sub register_implementation {'MyApp::Meta::Attribute::Trait::Labeled'}
 
   package MyApp::Website;
   use Moose;
@@ -138,14 +136,13 @@ You can see that a trait is just a L<Moose::Role>. In this case, our role
 contains a single attribute, C<label>. Any attribute which does this trait
 will now have a label.
 
-Next we register our trait with Moose:
+We also register our trait with Moose:
 
-  package Moose::Meta::Attribute::Custom::Trait::Labeled;
-  sub register_implementation { 'MyApp::Meta::Attribute::Trait::Labeled' }
+  Moose::Util::meta_attribute_alias('Labeled');
 
-Moose looks for the C<register_implementation> method in
-C<Moose::Meta::Attribute::Custom::Trait::$TRAIT_NAME> to find the full
-name of the trait.
+This allows Moose to find our trait by the short name C<Labeled> when passed
+to the C<traits> attribute option, rather than requiring the full package
+name to be specified.
 
 Finally, we pass our trait when defining an attribute:
 
