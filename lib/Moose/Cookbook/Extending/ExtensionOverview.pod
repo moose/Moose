@@ -175,9 +175,6 @@ directly; see the L<Moose::Exporter> docs.
 
   package MooseX::Embiggen;
 
-  use strict;
-  use warnings;
-
   use Moose::Exporter;
 
   use MooseX::Embiggen::Role::Meta::Class;
@@ -205,9 +202,6 @@ preserved when your extension applies its roles, and vice versa.
 With L<Moose::Exporter>, you can also export your own sugar functions:
 
   package MooseX::Embiggen;
-
-  use strict;
-  use warnings;
 
   use Moose::Exporter;
 
