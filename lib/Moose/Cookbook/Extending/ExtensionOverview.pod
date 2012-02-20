@@ -274,6 +274,14 @@ subclasses:
       );
   }
 
+Note that there are several issues with this sort of extension mechanism, most
+notably that Moose only ever initializes the metaclass for a class once. This
+means that this extension must be loaded B<first>, before anything
+Moose-related touches the class. If you say C<use Moose; use
+MooseX::Embiggen;>, for instance, the extension will not be applied properly.
+There are very few reasons to implement an extension in this way; using
+metaclass traits is the right answer in nearly every case.
+
 =head1 LEGACY EXTENSION MECHANISMS
 
 Before the existence of L<Moose::Exporter> and
