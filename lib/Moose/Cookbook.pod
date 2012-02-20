@@ -213,6 +213,8 @@ them in case in you encounter these usages in the wild.
 
 =item L<Moose::Cookbook::Legacy::Table_ClassMetaclass>
 
+=item L<Moose::Cookbook::Legacy::Debugging_BaseClassReplacement>
+
 =back
 
 =head1 SEE ALSO
