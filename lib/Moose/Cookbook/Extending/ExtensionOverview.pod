@@ -274,9 +274,6 @@ subclasses:
       );
   }
 
-NOTE: Make sure that your C<init_meta> returns the metaclass object, just as
-C<< Moose->init_meta >> does.
-
 =head1 LEGACY EXTENSION MECHANISMS
 
 Before the existence of L<Moose::Exporter> and
