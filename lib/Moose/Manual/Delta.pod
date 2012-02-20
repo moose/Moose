@@ -19,6 +19,14 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.0500
+
+=item All the Cookbook recipes have been renamed
+
+We've given them all descriptive names, rather than numbers. This makes it
+easier to talk about them, and eliminates the need to renumber recipes in
+order to reorder them or delete one.
+
 =head1 2.0300
 
 =over 4
