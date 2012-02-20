@@ -235,9 +235,10 @@ B<Note: We strongly recommend that you provide your extension as a set of
 roles whenever possible>.
 
 Moose does not provide any simple APIs for consumers to use a subclass
-extension, except for attribute metaclasses. The attribute declaration
-options include a C<metaclass> option a consumer of your extension can
-use to specify your subclass.
+extension, except for class and attribute metaclasses. The attribute
+declaration options include a C<metaclass> option a consumer of your extension
+can use to specify your subclass, and class metaclasses can be passed via the
+C<-metaclass> import option when you C<use Moose>.
 
 This is one reason why implementing an extension as a subclass can be
 a poor choice. However, you can force the use of certain subclasses at
