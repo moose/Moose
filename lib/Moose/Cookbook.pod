@@ -202,6 +202,19 @@ object class.
 
 =back
 
+=head1 Legacy Recipes
+
+These cover topics that are no longer considered best practice. We've kept
+them in case in you encounter these usages in the wild.
+
+=over 4
+
+=item L<Moose::Cookbook::Meta::Labeled_AttributeMetaclass>
+
+=item L<Moose::Cookbook::Meta::Table_ClassMetaclass>
+
+=back
+
 =head1 SEE ALSO
 
 =over 4
