@@ -278,17 +278,17 @@ override it in order to add additional functionality. Some differences to note:
 
 C<build_import_methods> simply returns the C<import>, C<unimport>, and
 C<init_meta> methods, rather than installing them under the appropriate names.
-This way, you can write your own which wrap the existing functionality.
-C<build_import_methods> also takes an additional C<install> parameter, which
-tells it to just go ahead and install these methods (since we don't need to
-modify them).
+This way, you can write your own methods which wrap the functionality provided
+by L<Moose::Exporter>.  The C<build_import_methods> sub also takes an
+additional C<install> parameter, which tells it to just go ahead and install
+these methods (since we don't need to modify them).
 
 =item C<sub init_meta>
 
 Next, we must write our C<init_meta> wrapper. The important things to remember
 are that it is called as a method, and that C<%options> needs to be passed
-through to the existing implementation. Calling the base implementation just
-uses the C<$init_meta> subroutine reference that was returned by
+through to the existing implementation. We call the base implementation by
+using the C<$init_meta> subroutine reference that was returned by
 C<build_import_methods> earlier.
 
 =item Additional implementation
