@@ -209,9 +209,9 @@ them in case in you encounter these usages in the wild.
 
 =over 4
 
-=item L<Moose::Cookbook::Meta::Labeled_AttributeMetaclass>
+=item L<Moose::Cookbook::Legacy::Labeled_AttributeMetaclass>
 
-=item L<Moose::Cookbook::Meta::Table_ClassMetaclass>
+=item L<Moose::Cookbook::Legacy::Table_ClassMetaclass>
 
 =back
 
