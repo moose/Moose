@@ -29,6 +29,19 @@ We've given them all descriptive names, rather than numbers. This makes it
 easier to talk about them, and eliminates the need to renumber recipes in
 order to reorder them or delete one.
 
+=item Applying the same role more than once is a no-op
+
+In previous versions of Moose, applying the same role more than once actually
+went through the whole role application algorithm each time. This was mostly a
+no-op, but it had a few side effects. First, if you looked at the role objects
+for a metaclass (or role), you'd see the same role object more than
+once. Second, method modifiers would be applied multiple times.
+
+Now, if you try to apply the same role twice, it is a real no-op. Note that
+"same" is based on the Moose::Meta::Role object itself, not the role's
+name. This means you can apply multiple instances of a
+L<MooseX::Role::Parameterized> role if you want.
+
 =back
 
 =head1 2.0300
