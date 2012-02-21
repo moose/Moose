@@ -156,6 +156,8 @@ sub create {
         my ($first_fragments, $last_fragment) = ($name =~ /^(.*)::(.*)$/);
 
         no strict 'refs';
+        # clear @ISA first, to avoid a memory leak
+        # see https://rt.perl.org/rt3/Public/Bug/Display.html?id=92708
         @{$name . '::ISA'} = ();
         %{$name . '::'}    = ();
         delete ${$first_fragments . '::'}{$last_fragment . '::'};
