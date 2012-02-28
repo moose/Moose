@@ -420,7 +420,7 @@ sub _make_import_sub {
         warnings->import;
 
         my $did_init_meta;
-        for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
+        for my $c ( grep { $_->can('init_meta') } @{$exports_from}, $class ) {
 
             # init_meta can apply a role, which when loaded uses
             # Moose::Exporter, which in turn sets $CALLER, so we need
