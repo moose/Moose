@@ -38,8 +38,8 @@ my (@expected_call_order, @actual_call_order);
 
     BEGIN {
         push @expected_call_order, (
-            'GreatGrandParent',
             __PACKAGE__,
+            'GreatGrandParent',
         );
 
         Moose::Exporter->setup_import_methods(
@@ -63,9 +63,9 @@ my (@expected_call_order, @actual_call_order);
 
     BEGIN {
         push @expected_call_order, (
-            'GreatGrandParent',
+            __PACKAGE__,
             'GrandParent',
-            __PACKAGE__
+            'GreatGrandParent',
         );
 
         Moose::Exporter->setup_import_methods(
