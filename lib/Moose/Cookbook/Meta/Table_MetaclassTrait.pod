@@ -12,6 +12,7 @@ __END__
 BEGIN {
   package MyApp::Meta::Class::Trait::HasTable;
   use Moose::Role;
+  Moose::Util::meta_class_alias('HasTable');
 
   has table => (
       is  => 'rw',
