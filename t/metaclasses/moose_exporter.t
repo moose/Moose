@@ -457,4 +457,134 @@ use Test::Requires {
     );
 }
 
+{
+    my @init_metas_called;
+
+    BEGIN {
+        package MultiLevelExporter1;
+        use Moose::Exporter;
+
+        sub foo  { 1 }
+        sub bar  { 1 }
+        sub baz  { 1 }
+        sub quux { 1 }
+
+        Moose::Exporter->setup_import_methods(
+            with_meta => [qw(foo bar baz quux)],
+        );
+
+        sub init_meta {
+            push @init_metas_called, 1;
+        }
+
+        $INC{'MultiLevelExporter1.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package MultiLevelExporter2;
+        use Moose::Exporter;
+
+        sub bar  { 2 }
+        sub baz  { 2 }
+        sub quux { 2 }
+
+        Moose::Exporter->setup_import_methods(
+            also      => ['MultiLevelExporter1'],
+            with_meta => [qw(bar baz quux)],
+        );
+
+        sub init_meta {
+            push @init_metas_called, 2;
+        }
+
+        $INC{'MultiLevelExporter2.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package MultiLevelExporter3;
+        use Moose::Exporter;
+
+        sub baz  { 3 }
+        sub quux { 3 }
+
+        Moose::Exporter->setup_import_methods(
+            also      => ['MultiLevelExporter2'],
+            with_meta => [qw(baz quux)],
+        );
+
+        sub init_meta {
+            push @init_metas_called, 3;
+        }
+
+        $INC{'MultiLevelExporter3.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package MultiLevelExporter4;
+        use Moose::Exporter;
+
+        sub quux { 4 }
+
+        Moose::Exporter->setup_import_methods(
+            also      => ['MultiLevelExporter3'],
+            with_meta => [qw(quux)],
+        );
+
+        sub init_meta {
+            push @init_metas_called, 4;
+        }
+
+        $INC{'MultiLevelExporter4.pm'} = __FILE__;
+    }
+
+    BEGIN { @init_metas_called = () }
+    {
+        package UsesMulti1;
+        use Moose;
+        use MultiLevelExporter1;
+        ::is(foo(), 1);
+        ::is(bar(), 1);
+        ::is(baz(), 1);
+        ::is(quux(), 1);
+    }
+    use Data::Dumper;
+    BEGIN { is_deeply(\@init_metas_called, [ 1 ]) || diag(Dumper(\@init_metas_called)) }
+
+    BEGIN { @init_metas_called = () }
+    {
+        package UsesMulti2;
+        use Moose;
+        use MultiLevelExporter2;
+        ::is(foo(), 1);
+        ::is(bar(), 2);
+        ::is(baz(), 2);
+        ::is(quux(), 2);
+    }
+    BEGIN { is_deeply(\@init_metas_called, [ 2, 1 ]) || diag(Dumper(\@init_metas_called)) }
+
+    BEGIN { @init_metas_called = () }
+    {
+        package UsesMulti3;
+        use Moose;
+        use MultiLevelExporter3;
+        ::is(foo(), 1);
+        ::is(bar(), 2);
+        ::is(baz(), 3);
+        ::is(quux(), 3);
+    }
+    BEGIN { is_deeply(\@init_metas_called, [ 3, 2, 1 ]) || diag(Dumper(\@init_metas_called)) }
+
+    BEGIN { @init_metas_called = () }
+    {
+        package UsesMulti4;
+        use Moose;
+        use MultiLevelExporter4;
+        ::is(foo(), 1);
+        ::is(bar(), 2);
+        ::is(baz(), 3);
+        ::is(quux(), 4);
+    }
+    BEGIN { is_deeply(\@init_metas_called, [ 4, 3, 2, 1 ]) || diag(Dumper(\@init_metas_called)) }
+}
+
 done_testing;
