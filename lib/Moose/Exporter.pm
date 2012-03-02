@@ -39,10 +39,10 @@ sub build_import_methods {
     my $is_reexport     = {};
 
     my $exports = $class->_make_sub_exporter_params(
-        [ @exports_from, $exporting_package ],
+        [ $exporting_package, @exports_from ],
         $export_recorder,
         $is_reexport,
-        $meta_lookup,
+        $args{meta_lookup}, # so that we don't pass through the default
     );
 
     my $exporter = $class->_make_exporter(
@@ -138,7 +138,7 @@ sub _make_exporter {
 
         local %$seen = ( $exporting_package => 1 );
 
-        return reverse uniq( _follow_also_real($exporting_package) );
+        return uniq( _follow_also_real($exporting_package) );
     }
 
     sub _follow_also_real {
@@ -195,17 +195,24 @@ sub _parse_trait_aliases {
 }
 
 sub _make_sub_exporter_params {
-    my $class           = shift;
-    my $packages        = shift;
-    my $export_recorder = shift;
-    my $is_reexport     = shift;
-    my $meta_lookup     = shift;
+    my $class                = shift;
+    my $packages             = shift;
+    my $export_recorder      = shift;
+    my $is_reexport          = shift;
+    my $meta_lookup_override = shift;
 
     my %exports;
+    my $current_meta_lookup;
 
     for my $package ( @{$packages} ) {
         my $args = $EXPORT_SPEC{$package}
             or die "The $package package does not use Moose::Exporter\n";
+
+        $current_meta_lookup = $meta_lookup_override || $args->{meta_lookup};
+        $meta_lookup_override = $current_meta_lookup;
+
+        my $meta_lookup = $current_meta_lookup
+                       || sub { Class::MOP::class_of(shift) };
 
         for my $name ( @{ $args->{with_meta} } ) {
             my $sub = $class->_sub_from_package( $package, $name )
@@ -218,7 +225,7 @@ sub _make_sub_exporter_params {
                 $sub,
                 $export_recorder,
                 $meta_lookup,
-            );
+            ) unless exists $exports{$name};
         }
 
         for my $name ( @{ $args->{with_caller} } ) {
@@ -231,7 +238,7 @@ sub _make_sub_exporter_params {
                 $fq_name,
                 $sub,
                 $export_recorder,
-            );
+            ) unless exists $exports{$name};
         }
 
         my @extra_exports = $class->_parse_trait_aliases(
@@ -260,7 +267,8 @@ sub _make_sub_exporter_params {
 
             $export_recorder->{$sub} = 1;
 
-            $exports{$coderef_name} = sub {$sub};
+            $exports{$coderef_name} = sub { $sub }
+                unless exists $exports{$coderef_name};
         }
     }
 
@@ -420,7 +428,7 @@ sub _make_import_sub {
         warnings->import;
 
         my $did_init_meta;
-        for my $c ( grep { $_->can('init_meta') } $class, reverse @{$exports_from} ) {
+        for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
 
             # init_meta can apply a role, which when loaded uses
             # Moose::Exporter, which in turn sets $CALLER, so we need
