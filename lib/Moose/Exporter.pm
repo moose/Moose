@@ -24,6 +24,10 @@ sub setup_import_methods {
     );
 }
 
+# A reminder to intreped Moose hackers
+# there may be more than one level of exporter
+# don't make doy cry. -- perigrin
+
 sub build_import_methods {
     my ( $class, %args ) = @_;
 
