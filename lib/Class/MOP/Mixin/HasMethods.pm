@@ -208,6 +208,7 @@ sub _full_method_map {
 my $overload_operators;
 sub overload_operators {
     $overload_operators ||= [map { split /\s+/ } values %overload::ops];
+    return @$overload_operators;
 }
 
 # XXX this could probably stand to be cached, but i figure it should be
@@ -218,7 +219,7 @@ sub _overload_map {
     return {} unless overload::Overloaded($self->name);
 
     my %map;
-    for my $op (@{ $self->overload_operators }) {
+    for my $op ($self->overload_operators) {
         my $body = overload::Method($self->name, $op);
         next unless defined $body;
         $map{$op} = $body;
@@ -252,7 +253,7 @@ sub get_overloaded_operator {
     return $self->_wrap_overload($op, $body);
 }
 
-sub add_overload {
+sub add_overloaded_operator {
     my $self = shift;
     my ($op, $body) = @_;
     $self->name->overload::OVERLOAD($op => $body);
