@@ -12,6 +12,8 @@ use Test::Fatal;
 {
     my $meta = Foo->meta;
 
+    ok(!$meta->is_overloaded);
+
     is_deeply([sort $meta->overload_operators],
               [sort map { split /\s+/ } values %overload::ops]);
 
@@ -37,6 +39,8 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
 
 {
     my $meta = Foo::Overloaded->meta;
+
+    ok($meta->is_overloaded);
 
     ok($meta->has_overloaded_operator('+'));
     ok(!$meta->has_overloaded_operator('-'));

@@ -211,12 +211,17 @@ sub overload_operators {
     return @$overload_operators;
 }
 
+sub is_overloaded {
+    my $self = shift;
+    return overload::Overloaded($self->name);
+}
+
 # XXX this could probably stand to be cached, but i figure it should be
 # uncommon enough to not particularly matter
 sub _overload_map {
     my $self = shift;
 
-    return {} unless overload::Overloaded($self->name);
+    return {} unless $self->is_overloaded;
 
     my %map;
     for my $op ($self->overload_operators) {
