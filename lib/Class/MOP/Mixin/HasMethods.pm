@@ -241,13 +241,13 @@ sub get_overloaded_operators {
 sub has_overloaded_operator {
     my $self = shift;
     my ($op) = @_;
-    return defined overload::Method($op);
+    return defined overload::Method($self->name, $op);
 }
 
 sub get_overloaded_operator {
     my $self = shift;
     my ($op) = @_;
-    my $body = overload::Method($op);
+    my $body = overload::Method($self->name, $op);
     return unless defined $body;
     return $self->_wrap_overload($op, $body);
 }
@@ -255,7 +255,7 @@ sub get_overloaded_operator {
 sub add_overload {
     my $self = shift;
     my ($op, $body) = @_;
-    overload->import($op => $body);
+    $self->name->overload::OVERLOAD($op => $body);
 }
 
 sub _wrap_overload {
