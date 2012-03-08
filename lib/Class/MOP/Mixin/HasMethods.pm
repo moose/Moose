@@ -225,7 +225,7 @@ sub _overload_map {
 
     my %map;
     for my $op ($self->overload_operators) {
-        my $body = overload::Method($self->name, $op);
+        my $body = $self->_get_overloaded_operator_body($op);
         next unless defined $body;
         $map{$op} = $body;
     }
@@ -247,13 +247,13 @@ sub get_overloaded_operators {
 sub has_overloaded_operator {
     my $self = shift;
     my ($op) = @_;
-    return defined overload::Method($self->name, $op);
+    return defined $self->_get_overloaded_operator_body($op);
 }
 
 sub get_overloaded_operator {
     my $self = shift;
     my ($op) = @_;
-    my $body = overload::Method($self->name, $op);
+    my $body = $self->_get_overloaded_operator_body($op);
     return unless defined $body;
     return $self->_wrap_overload($op, $body);
 }
@@ -262,6 +262,12 @@ sub add_overloaded_operator {
     my $self = shift;
     my ($op, $body) = @_;
     $self->name->overload::OVERLOAD($op => $body);
+}
+
+sub _get_overloaded_operator_body {
+    my $self = shift;
+    my ($op) = @_;
+    return overload::Method($self->name, $op);
 }
 
 sub _wrap_overload {
