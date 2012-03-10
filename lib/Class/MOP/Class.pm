@@ -1954,6 +1954,48 @@ default, this is L<Class::MOP::Attribute>.
 
 =back
 
+=head2 Overload introspection and creation
+
+These methods provide an API to the core L<overload> functionality.
+
+=over 4
+
+=item B<< $metaclass->is_overloaded >>
+
+Returns true if overloading is enabled for this class. Corresponds to
+L<overload::Overloaded|overload/Public Functions>.
+
+=item B<< $metaclass->get_overloaded_operator($op) >>
+
+Returns the L<Class::MOP::Method::Overload> object corresponding to the
+operator named C<$op>, if one exists for this class.
+
+=item B<< $metaclass->has_overloaded_operator($op) >>
+
+Returns whether or not the operator C<$op> is overloaded for this class.
+
+=item B<< $metaclass->get_overload_list >>
+
+Returns a list of operator names which have been overloaded (see
+L<overload/Overloadable Operations> for the list of valid operator names).
+
+=item B<< $metaclass->get_all_overloaded_operators >>
+
+Returns a list of L<Class::MOP::Method::Overload> objects corresponding to the
+operators that have been overloaded.
+
+=item B<< $metaclass->add_overloaded_operator($op, $impl) >>
+
+Overloads the operator C<$op> for this class, with the implementation C<$impl>.
+C<$impl> can be either a coderef or a method name. Corresponds to
+C<< use overload $op => $impl; >>
+
+=item B<< $metaclass->remove_overloaded_operator($op) >>
+
+Remove overloading for operator C<$op>. Corresponds to C<< no overload $op; >>
+
+=back
+
 =head2 Class Immutability
 
 Making a class immutable "freezes" the class definition. You can no

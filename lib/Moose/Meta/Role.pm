@@ -904,6 +904,31 @@ This is quite likely to change in the future.
 
 =back
 
+=head2 Overload introspection and creation
+
+The methods for dealing with a role's overloads are all identical in API
+and behavior to the same methods in L<Class::MOP::Class>. Note that these are
+not particularly useful (yet), because overloads do not participate in role
+composition.
+
+=over 4
+
+=item B<< $metarole->is_overloaded >>
+
+=item B<< $metarole->get_overloaded_operator($op) >>
+
+=item B<< $metarole->has_overloaded_operator($op) >>
+
+=item B<< $metarole->get_overload_list >>
+
+=item B<< $metarole->get_all_overloaded_operators >>
+
+=item B<< $metarole->add_overloaded_operator($op, $impl) >>
+
+=item B<< $metarole->remove_overloaded_operator($op) >>
+
+=back
+
 =head2 Required methods
 
 =over 4
