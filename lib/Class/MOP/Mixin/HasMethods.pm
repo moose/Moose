@@ -264,6 +264,14 @@ sub add_overloaded_operator {
     $self->name->overload::OVERLOAD($op => $body);
 }
 
+sub remove_overloaded_operator {
+    my $self = shift;
+    my ($op) = @_;
+    # ugh, overload.pm provides no api for this
+    $self->get_or_add_package_symbol('%OVERLOAD')->{dummy}++;
+    $self->remove_package_symbol('&(' . $op);
+}
+
 sub _get_overloaded_operator_body {
     my $self = shift;
     my ($op) = @_;

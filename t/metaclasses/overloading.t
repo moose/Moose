@@ -94,6 +94,11 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     is($minus, 0);
     is(Foo::Overloaded->new - Foo::Overloaded->new, "minus");
     is($minus, 1);
+
+    $meta->remove_overloaded_operator('-');
+
+    like(exception { Foo::Overloaded->new - Foo::Overloaded->new },
+         qr/Operation "-": no method found/);
 }
 
 done_testing;
