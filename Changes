@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [NEW FEATURES]
+
+  * Class::MOP::Class now has methods for introspecting and modifying the
+    overloaded operators for a class. (doy)
+
   [ENHANCEMENTS]
 
   * The cookbook recipes have all been renamed. Instead of numbered recipes
