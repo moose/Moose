@@ -20,9 +20,9 @@ use Test::Fatal;
     ok(!$meta->has_overloaded_operator('+'));
     ok(!$meta->has_overloaded_operator('-'));
 
-    is_deeply([$meta->get_overloaded_operators], []);
-
     is_deeply([$meta->get_overload_list], []);
+
+    is_deeply([$meta->get_all_overloaded_operators], []);
 
     is($meta->get_overloaded_operator('+'), undef);
     is($meta->get_overloaded_operator('-'), undef);
@@ -45,9 +45,9 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     ok($meta->has_overloaded_operator('+'));
     ok(!$meta->has_overloaded_operator('-'));
 
-    is_deeply([$meta->get_overloaded_operators], ['+']);
+    is_deeply([$meta->get_overload_list], ['+']);
 
-    my @overloads = $meta->get_overload_list;
+    my @overloads = $meta->get_all_overloaded_operators;
     is(scalar(@overloads), 1);
     my $plus_meth = $overloads[0];
     isa_ok($plus_meth, 'Class::MOP::Method::Overload');
@@ -79,9 +79,9 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
 
     ok($meta->has_overloaded_operator('-'));
 
-    is_deeply([sort $meta->get_overloaded_operators], ['+', '-']);
+    is_deeply([sort $meta->get_overload_list], ['+', '-']);
 
-    is(scalar($meta->get_overload_list), 2);
+    is(scalar($meta->get_all_overloaded_operators), 2);
 
     my $minus_meth = $meta->get_overloaded_operator('-');
     isa_ok($minus_meth, 'Class::MOP::Method::Overload');
