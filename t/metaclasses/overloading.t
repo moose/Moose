@@ -101,4 +101,76 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
          qr/Operation "-": no method found/);
 }
 
+my $times = 0;
+my $divided = 0;
+{
+    package Foo::OverloadedMethod;
+    use Moose;
+    use overload '*' => 'times';
+
+    sub times   { $times = 1;   "times" }
+    sub divided { $divided = 1; "divided" }
+}
+
+{
+    my $meta = Foo::OverloadedMethod->meta;
+
+    ok($meta->is_overloaded);
+
+    ok($meta->has_overloaded_operator('*'));
+    ok(!$meta->has_overloaded_operator('/'));
+
+    is_deeply([$meta->get_overload_list], ['*']);
+
+    my @overloads = $meta->get_all_overloaded_operators;
+    is(scalar(@overloads), 1);
+    my $times_meth = $overloads[0];
+    isa_ok($times_meth, 'Class::MOP::Method::Overload');
+    is($times_meth->operator, '*');
+    is($times_meth->name, '(*');
+    is($times_meth->body, $meta->get_method('times')->body);
+    is($times_meth->package_name, 'Foo::OverloadedMethod');
+    is($times_meth->associated_metaclass, $meta);
+
+    my $times_meth2 = $meta->get_overloaded_operator('*');
+    { local $TODO = "we don't cache these yet";
+    is($times_meth2, $times_meth);
+    }
+    is($times_meth2->operator, '*');
+    is($times_meth2->body, $meta->get_method('times')->body);
+    is($meta->get_overloaded_operator('/'), undef);
+
+    is($times, 0);
+    is(Foo::OverloadedMethod->new * Foo::OverloadedMethod->new, "times");
+    is($times, 1);
+
+    like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
+         qr{Operation "/": no method found});
+
+    $meta->add_overloaded_operator('/' => 'divided');
+
+    ok($meta->has_overloaded_operator('/'));
+
+    is_deeply([sort $meta->get_overload_list], ['*', '/']);
+
+    is(scalar($meta->get_all_overloaded_operators), 2);
+
+    my $divided_meth = $meta->get_overloaded_operator('/');
+    isa_ok($divided_meth, 'Class::MOP::Method::Overload');
+    is($divided_meth->operator, '/');
+    is($divided_meth->name, '(/');
+    is($divided_meth->body, $meta->get_method('divided')->body);
+    is($divided_meth->package_name, 'Foo::OverloadedMethod');
+    is($divided_meth->associated_metaclass, $meta);
+
+    is($divided, 0);
+    is(Foo::OverloadedMethod->new / Foo::OverloadedMethod->new, "divided");
+    is($divided, 1);
+
+    $meta->remove_overloaded_operator('/');
+
+    like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
+         qr{Operation "/": no method found});
+}
+
 done_testing;
