@@ -446,6 +446,18 @@ sub _make_import_sub {
             $did_init_meta = 1;
         }
 
+        {
+            # The metaroles will use Moose::Role, which in turn uses
+            # Moose::Exporter, which in turn sets $CALLER, so we need
+            # to protect against that.
+            local $CALLER = $CALLER;
+            _apply_metaroles(
+                $CALLER,
+                [$class, @$exports_from],
+                $meta_lookup
+            );
+        }
+
         if ( $did_init_meta && @{$traits} ) {
 
             # The traits will use Moose::Role, which in turn uses
@@ -510,6 +522,90 @@ sub _strip_meta_name {
     splice @_, $idx, 2;
 
     return ( $meta_name, @_ );
+}
+
+sub _apply_metaroles {
+    my ($class, $exports_from, $meta_lookup) = @_;
+
+    my $metaroles = _collect_metaroles($exports_from);
+    my $base_class_roles = delete $metaroles->{base_class_roles};
+
+    my $meta = $meta_lookup->($class);
+    # for instance, Moose.pm uses Moose::Util::TypeConstraints
+    return unless $meta;
+
+    Moose::Util::MetaRole::apply_metaroles(
+        for => $meta,
+        %$metaroles,
+    ) if keys %$metaroles;
+
+    Moose::Util::MetaRole::apply_base_class_roles(
+        for   => $meta,
+        roles => $base_class_roles,
+    ) if $meta->isa('Class::MOP::Class')
+      && $base_class_roles && @$base_class_roles;
+}
+
+sub _collect_metaroles {
+    my ($exports_from) = @_;
+
+    my @old_style_role_types = map { "${_}_roles" } qw(
+        metaclass
+        attribute_metaclass
+        method_metaclass
+        wrapped_method_metaclass
+        instance_metaclass
+        constructor_class
+        destructor_class
+        error_class
+    );
+
+    my %class_metaroles;
+    my %role_metaroles;
+    my @base_class_roles;
+    my %old_style_roles;
+
+    for my $exporter (@$exports_from) {
+        my $data = $EXPORT_SPEC{$exporter};
+
+        if (exists $data->{class_metaroles}) {
+            for my $type (keys %{ $data->{class_metaroles} }) {
+                push @{ $class_metaroles{$type} ||= [] },
+                     @{ $data->{class_metaroles}{$type} };
+            }
+        }
+
+        if (exists $data->{role_metaroles}) {
+            for my $type (keys %{ $data->{role_metaroles} }) {
+                push @{ $role_metaroles{$type} ||= [] },
+                     @{ $data->{role_metaroles}{$type} };
+            }
+        }
+
+        if (exists $data->{base_class_roles}) {
+            push @base_class_roles, @{ $data->{base_class_roles} };
+        }
+
+        for my $type (@old_style_role_types) {
+            if (exists $data->{$type}) {
+                push @{ $old_style_roles{$type} ||= [] },
+                     @{ $data->{$type} };
+            }
+        }
+    }
+
+    return {
+        (keys(%class_metaroles)
+            ? (class_metaroles  => \%class_metaroles)
+            : ()),
+        (keys(%role_metaroles)
+            ? (role_metaroles   => \%role_metaroles)
+            : ()),
+        (@base_class_roles
+            ? (base_class_roles => \@base_class_roles)
+            : ()),
+        %old_style_roles,
+    };
 }
 
 sub _apply_meta_traits {
@@ -605,6 +701,9 @@ sub _remove_keywords {
     }
 }
 
+# maintain this for now for backcompat
+# make sure to return a sub to install in the same circumstances as previously
+# but this functionality now happens at the end of ->import
 sub _make_init_meta {
     shift;
     my $class          = shift;
@@ -638,29 +737,7 @@ sub _make_init_meta {
 
     return unless %new_style_roles || %old_style_roles || %base_class_roles;
 
-    return sub {
-        shift;
-        my %options = @_;
-
-        return unless $meta_lookup->( $options{for_class} );
-
-        if ( %new_style_roles || %old_style_roles ) {
-            Moose::Util::MetaRole::apply_metaroles(
-                for => $options{for_class},
-                %new_style_roles,
-                %old_style_roles,
-            );
-        }
-
-        Moose::Util::MetaRole::apply_base_class_roles(
-            for_class => $options{for_class},
-            %base_class_roles,
-            )
-            if $meta_lookup->( $options{for_class} )
-                ->isa('Moose::Meta::Class');
-
-        return $meta_lookup->( $options{for_class} );
-    };
+    return sub { };
 }
 
 sub import {
