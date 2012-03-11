@@ -19,6 +19,15 @@ for, noteworthy changes.
     replacing the original constraint and ergo losing any coercions that were
     on the original constraint. Fixes RT #73289. (t0m)
 
+  * Moose::Exporter now calls init_meta methods in the correct order, when
+    multiple levels of 'also' parameters are specified. Reported by Rocco
+    Caputo. (doy, perigrin)
+
+  * Moose::Exporter no longer generates init_meta methods in order to apply
+    metaroles, since the metaclass itself isn't guaranteed to exist yet at that
+    point. Metaroles are now applied at the end of import, after all
+    user-defined init_meta methods have been called. Fixes RT #51561. (doy)
+
 2.0402 Sat, Feb 04, 2012
 
   [OTHER]
