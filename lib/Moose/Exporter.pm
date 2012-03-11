@@ -787,9 +787,8 @@ __END__
 =head1 DESCRIPTION
 
 This module encapsulates the exporting of sugar functions in a
-C<Moose.pm>-like manner. It does this by building custom C<import>,
-C<unimport>, and C<init_meta> methods for your module, based on a spec you
-provide.
+C<Moose.pm>-like manner. It does this by building custom C<import> and
+C<unimport> methods for your module, based on a spec you provide.
 
 It also lets you "stack" Moose-alike modules so you can export Moose's sugar
 as well as your own, along with sugar from any random C<MooseX> module, as
@@ -809,20 +808,19 @@ This module provides two public methods:
 
 =item  B<< Moose::Exporter->setup_import_methods(...) >>
 
-When you call this method, C<Moose::Exporter> builds custom C<import>,
-C<unimport>, and C<init_meta> methods for your module. The C<import> method
+When you call this method, C<Moose::Exporter> builds custom C<import> and
+C<unimport> methods for your module. The C<import> method
 will export the functions you specify, and can also re-export functions
-exported by some other module (like C<Moose.pm>).
+exported by some other module (like C<Moose.pm>). If you pass any parameters
+for L<Moose::Util::MetaRole>, the C<import> method will also call
+C<Moose::Util::MetaRole::apply_metaroles> and
+C<Moose::Util::MetaRole::apply_base_class_roles> as needed, after making
+sure the metaclass is initialized.
 
 The C<unimport> method cleans the caller's namespace of all the exported
 functions. This includes any functions you re-export from other
 packages. However, if the consumer of your package also imports those
 functions from the original package, they will I<not> be cleaned.
-
-If you pass any parameters for L<Moose::Util::MetaRole>, this method will
-generate an C<init_meta> for you as well (see below for details). This
-C<init_meta> will call C<Moose::Util::MetaRole::apply_metaroles> and
-C<Moose::Util::MetaRole::apply_base_class_roles> as needed.
 
 Note that if any of these methods already exist, they will not be
 overridden, you will have to use C<build_import_methods> to get the
@@ -896,15 +894,13 @@ are "class_metaroles", "role_metaroles", and "base_class_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
 
-Returns two or three code refs, one for C<import>, one for
-C<unimport>, and optionally one for C<init_meta>, if the appropriate
-options are passed in.
+Returns two code refs, one for C<import> and one for C<unimport>.
 
 Accepts the additional C<install> option, which accepts an arrayref of method
-names to install into your exporting package. The valid options are C<import>,
-C<unimport>, and C<init_meta>. Calling C<setup_import_methods> is equivalent
-to calling C<build_import_methods> with C<< install => [qw(import unimport
-init_meta)] >> except that it doesn't also return the methods.
+names to install into your exporting package. The valid options are C<import>
+and C<unimport>. Calling C<setup_import_methods> is equivalent
+to calling C<build_import_methods> with C<< install => [qw(import unimport)] >>
+except that it doesn't also return the methods.
 
 The C<import> method is built using L<Sub::Exporter>. This means that it can
 take a hashref of the form C<< { into => $package } >> to specify the package
@@ -931,38 +927,6 @@ Moose->init_meta >> to do the real work:
   sub init_meta {
       shift; # our class name
       return Moose->init_meta( @_, metaclass => 'My::Metaclass' );
-  }
-
-Keep in mind that C<build_import_methods> will return an C<init_meta>
-method for you, which you can also call from within your custom
-C<init_meta>:
-
-  my ( $import, $unimport, $init_meta )
-      = Moose::Exporter->build_import_methods(...);
-
-  sub import {
-      my $class = shift;
-
-      ...
-
-      # You can either pass an explicit package to import into ...
-      $class->$import( { into => scalar(caller) }, ... );
-
-      ...;
-  }
-
-  # ... or you can use 'goto' to provide the correct caller info to the
-  # generated method
-  sub unimport { goto &$unimport }
-
-  sub init_meta {
-      my $class = shift;
-
-      ...
-
-      $class->$init_meta(...);
-
-      ...
   }
 
 =head1 METACLASS TRAITS
