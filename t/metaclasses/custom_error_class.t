@@ -32,7 +32,7 @@ use Test::Requires {
 {
     package My::Error;
 
-    use parent qw( Moose::Error::Default );
+    use base qw( Moose::Error::Default );
 
     sub new {
         my ( $self, @args ) = @_;
