@@ -756,6 +756,8 @@ either a method name or a subroutine reference.
 
 =item B<< $attr->is_default_a_coderef >>
 
+=item B<< $attr->builder >>
+
 =item B<< $attr->default($instance) >>
 
 The C<$instance> argument is optional. If you don't pass it, the
