@@ -44,3 +44,32 @@ sub _new {
 }
 
 1;
+
+# ABSTRACT: Method Meta Object for methods which implement overloading
+
+__END__
+
+=pod
+
+=head1 DESCRIPTION
+
+This is a L<Class::MOP::Method> subclass which represents methods that
+implement overloading.
+
+=head1 METHODS
+
+=over 4
+
+=item B<< Class::MOP::Method::Overload->wrap($metamethod, %options) >>
+
+This is the constructor. The options accepted are identical to the ones
+accepted by L<Class::MOP::Method>, except that it also required an C<operator>
+parameter, which should be an operator as defined by the L<overload> pragma.
+
+=item B<< $metamethod->operator >>
+
+This returns the operator that was passed to new.
+
+=back
+
+=cut
