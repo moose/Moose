@@ -24,7 +24,7 @@ sub setup_import_methods {
     );
 }
 
-# A reminder to intreped Moose hackers
+# A reminder to intrepid Moose hackers
 # there may be more than one level of exporter
 # don't make doy cry. -- perigrin
 
