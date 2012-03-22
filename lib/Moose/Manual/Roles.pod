@@ -216,7 +216,7 @@ in the same order as the roles are used:
 
   with 'Breakable', 'ExplodesOnBreakage';
 
-Assuming that the new C<ExplodesOnBreakage> method I<also> has an
+Assuming that the new C<ExplodesOnBreakage> role I<also> has an
 C<after> modifier on C<break>, the C<after> modifiers will run one
 after the other. The modifier from C<Breakable> will run first, then
 the one from C<ExplodesOnBreakage>.
