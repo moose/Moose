@@ -61,7 +61,7 @@ read and write the value of that attribute for an object.
 
 By default, the accessor method has the same name as the attribute. If
 you declared your attribute as C<ro> then your accessor will be
-read-only. If you declared it read-write, you get a read-write
+read-only. If you declared it as C<rw>, you get a read-write
 accessor. Simple.
 
 Given our C<Person> example above, we now have a single C<first_name>
