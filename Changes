@@ -34,9 +34,9 @@ for, noteworthy changes.
     user-defined init_meta methods have been called. Fixes RT #51561. (doy)
 
   * Fixed a memory leak. This occurred when creating an anonymous
-    class. Immutabilizing an anonymous class still leaks memory, as the anon
-    class will never be destroyed in this case. Based on code and bug report
-    from Carlos Lima. RT #74650.
+    class. Immutabilizing an anonymous class still leaks memory due to a bug in
+    Eval::Closure (which should hopefully be fixed soon). Based on code and bug
+    report from Carlos Lima. RT #74650.
 
 2.0402 Sat, Feb 04, 2012
 

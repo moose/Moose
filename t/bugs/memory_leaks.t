@@ -72,8 +72,10 @@ no_leaks_ok(
 );
 
 {
-    local $TODO
-        = 'Until we eliminate meta objects from being closed over by the immutabilized methods, this will leak';
+    # fixing this leak currently triggers a bug in Carp
+    # we can un-TODO once that fix goes in allowing the leak
+    # in Eval::Closure to be fixed
+    local $TODO = 'Eval::Closure leaks a bit at the moment';
     no_leaks_ok(
         sub {
             my $meta = Moose::Meta::Class->create_anon_class;
