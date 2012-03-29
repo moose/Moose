@@ -38,6 +38,9 @@ for, noteworthy changes.
     Eval::Closure (which should hopefully be fixed soon). Based on code and bug
     report from Carlos Lima. RT #74650.
 
+  * Fix a segfault when adding a method to a class which was defined in a
+    package which was deleted. (doy)
+
 2.0402 Sat, Feb 04, 2012
 
   [OTHER]
