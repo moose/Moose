@@ -33,6 +33,11 @@ for, noteworthy changes.
     point. Metaroles are now applied at the end of import, after all
     user-defined init_meta methods have been called. Fixes RT #51561. (doy)
 
+  * Fixed a memory leak. This occurred when creating an anonymous
+    class. Immutabilizing an anonymous class still leaks memory, as the anon
+    class will never be destroyed in this case. Based on code and bug report
+    from Carlos Lima. RT #74650.
+
 2.0402 Sat, Feb 04, 2012
 
   [OTHER]
