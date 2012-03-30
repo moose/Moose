@@ -615,7 +615,8 @@ C<ArrayRef> or C<HashRef>.
 
 However, we recommend that you use L<Moose::Meta::Attribute::Native> traits
 for these types of attributes, which gives you much more control over how
-they are accessed and manipulated.
+they are accessed and manipulated. See also
+L<Moose::Manual::BestPractices#Use_Moose::Meta::Attribute::Native_traits_instead_of_auto_deref>.
 
 =head2 Initializer
 
