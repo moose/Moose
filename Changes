@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Avoid syntax errors on pre-5.14. (doy)
+
 2.0500 Tue, Apr 03, 2012
 
   [NEW FEATURES]

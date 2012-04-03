@@ -235,13 +235,13 @@ sub _overload_map {
 
 sub get_overload_list {
     my $self = shift;
-    return keys $self->_overload_map;
+    return keys %{ $self->_overload_map };
 }
 
 sub get_all_overloaded_operators {
     my $self = shift;
     my $map = $self->_overload_map;
-    return map { $self->_wrap_overload($_, $map->{$_}) } keys $map;
+    return map { $self->_wrap_overload($_, $map->{$_}) } keys %$map;
 }
 
 sub has_overloaded_operator {
