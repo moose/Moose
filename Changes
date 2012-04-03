@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0500 Tue, Apr 03, 2012
+
   [NEW FEATURES]
 
   * Class::MOP::Class now has methods for introspecting and modifying the
