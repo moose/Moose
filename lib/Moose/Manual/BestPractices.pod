@@ -105,7 +105,7 @@ public API bigger than it has to be.
 =head2 Avoid C<lazy_build>
 
 As described above, you rarely actually need a clearer or a predicate.
-C<lazy_build> adds both to your public API, which exposes you to usecases that
+C<lazy_build> adds both to your public API, which exposes you to use cases that
 you must now test for. It's much better to avoid adding them until you really
 need them - use explicit C<lazy> and C<builder> options instead.
 
