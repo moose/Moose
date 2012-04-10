@@ -14,7 +14,7 @@ use Test::Requires {
     'Test::DependentModules' => '0.09', # skip all if not installed
     'MetaCPAN::API' => '0.33',
 };
-use Test::DependentModules qw( test_all_dependents test_modules );
+use Test::DependentModules qw( test_module );
 
 use DateTime;
 use List::MoreUtils qw(any);
@@ -51,7 +51,12 @@ my $res = $mcpan->post(
     }
 );
 
-my %skip = map { $_ => 1 } grep { /\w/ } map { chomp; s/\s*#.*$//; $_ } <DATA>;
+my %skip_reasons = map {
+    chomp;
+    /^(\S*)\s*(?:#\s*(.*)\s*)?$/;
+    defined($1) && length($1) ? ($1 => $2) : ()
+} <DATA>;
+my %skip = map { $_ => 1 } keys %skip_reasons;
 my @skip_prefix = qw(Acme Task Bundle);
 my %name_fix = (
     'App-PipeFilter'                 => 'App::PipeFilter::Generic',
@@ -73,16 +78,22 @@ my %name_fix = (
 );
 my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
               sort
-              grep { !$skip{$_} }
               grep { my $dist = $_; !any { $dist =~ /^$_-/ } @skip_prefix }
               map  { $_->{fields}{distribution} }
               @{ $res->{hits}{hits} };
 
 plan tests => scalar @modules;
-test_modules(@modules);
-
-# Modules that are known to fail
-# PRANG - failing for quite some time (since before 2.0400)
+for my $module (@modules) {
+    if ($skip{$module}) {
+        my $reason = $skip_reasons{$module};
+        $reason = '???' unless defined $reason;
+        local $TODO = $reason;
+        test_module($module);
+    }
+    else {
+        test_module($module);
+    }
+}
 
 __DATA__
 # not in cpan index
