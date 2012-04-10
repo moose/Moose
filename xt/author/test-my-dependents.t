@@ -83,11 +83,12 @@ my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
               @{ $res->{hits}{hits} };
 
 plan tests => scalar @modules;
+Test::DependentModules::_make_logs();
 for my $module (@modules) {
     if ($skip{$module}) {
         my $reason = $skip_reasons{$module};
         $reason = '???' unless defined $reason;
-        local $TODO = $reason;
+        local $Test::DependentModules::TODO = $reason;
         test_module($module);
     }
     else {
