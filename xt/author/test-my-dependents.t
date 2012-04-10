@@ -89,10 +89,13 @@ for my $module (@modules) {
         my $reason = $skip_reasons{$module};
         $reason = '???' unless defined $reason;
         local $Test::DependentModules::TODO = $reason;
-        test_module($module);
+        local $TODO = $reason;
+        eval { test_module($module); 1 }
+            or fail("Died when testing $module: $@");
     }
     else {
-        test_module($module);
+        eval { test_module($module); 1 }
+            or fail("Died when testing $module: $@");
     }
 }
 
