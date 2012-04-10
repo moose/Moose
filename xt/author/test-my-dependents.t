@@ -51,13 +51,26 @@ my $res = $mcpan->post(
     }
 );
 
-my %skip_reasons = map {
+my %todo_reasons = map {
     chomp;
     /^(\S*)\s*(?:#\s*(.*)\s*)?$/;
     defined($1) && length($1) ? ($1 => $2) : ()
 } <DATA>;
-my %skip = map { $_ => 1 } keys %skip_reasons;
+my %todo = map { $_ => 1 } keys %todo_reasons;
+
 my @skip_prefix = qw(Acme Task Bundle);
+my %skip = map { $_ => 1 } (
+    'Dackup',                       # depends on running ssh
+    'Data-Collector',               # depends on running ssh
+    'Date-Biorhythm',               # Date::Business prompts in Makefile.PL
+    'helm',                         # depends on running ssh
+    'Net-SFTP-Foreign-Exceptional', # depends on running ssh
+    'POE-Component-OpenSSH',        # depends on running ssh
+    'Test-SFTP',                    # Term::ReadPassword prompts in tests
+    'WWW-Hashdb',                   # test hangs, pegging cpu
+    'Zucchini',                     # File::Rsync prompts in Makefile.PL
+);
+
 my %name_fix = (
     'App-PipeFilter'                 => 'App::PipeFilter::Generic',
     'Constructible'                  => 'Constructible::Maxima',
@@ -78,6 +91,7 @@ my %name_fix = (
 );
 my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
               sort
+              grep { !$skip{$_} }
               grep { my $dist = $_; !any { $dist =~ /^$_-/ } @skip_prefix }
               map  { $_->{fields}{distribution} }
               @{ $res->{hits}{hits} };
@@ -85,8 +99,9 @@ my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
 plan tests => scalar @modules;
 Test::DependentModules::_make_logs();
 for my $module (@modules) {
-    if ($skip{$module}) {
-        my $reason = $skip_reasons{$module};
+    diag($module);
+    if ($todo{$module}) {
+        my $reason = $todo_reasons{$module};
         $reason = '???' unless defined $reason;
         local $Test::DependentModules::TODO = $reason;
         local $TODO = $reason;
