@@ -97,13 +97,11 @@ my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
               @{ $res->{hits}{hits} };
 
 plan tests => scalar @modules;
-Test::DependentModules::_make_logs();
 for my $module (@modules) {
     diag($module);
     if ($todo{$module}) {
         my $reason = $todo_reasons{$module};
         $reason = '???' unless defined $reason;
-        local $Test::DependentModules::TODO = $reason;
         local $TODO = $reason;
         eval { test_module($module); 1 }
             or fail("Died when testing $module: $@");
