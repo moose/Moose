@@ -111,7 +111,7 @@ my @dists = sort
             map  { $_->{fields}{distribution} }
             @{ $res->{hits}{hits} };
 
-plan tests => scalar @modules;
+plan tests => scalar @dists;
 for my $dist (@dists) {
     note($dist);
     my $module = $dist;
