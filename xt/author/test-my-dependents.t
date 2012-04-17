@@ -189,6 +189,7 @@ XML-Ant-BuildFile                      # deps aren't installed correctly (???)
 AI-ExpertSystem-Advanced               # no tests
 API-Assembla                           # no tests
 App-mkfeyorm                           # no tests
+App-passmanager                        # no tests
 Bot-Applebot                           # no tests
 Catalyst-Authentication-Credential-Facebook-OAuth2 # no tests
 Catalyst-Authentication-Store-Fey-ORM  # no tests
