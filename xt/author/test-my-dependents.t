@@ -104,18 +104,19 @@ my %name_fix = (
     'X11-XCB'                        => 'X11::XCB::Connection',
     'XML-Ant-BuildFile'              => 'XML::Ant::BuildFile::Project',
 );
-my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
-              sort
-              grep { !$skip{$_} }
-              grep { my $dist = $_; !any { $dist =~ /^$_-/ } @skip_prefix }
-              map  { $_->{fields}{distribution} }
-              @{ $res->{hits}{hits} };
+my @dists = sort
+            grep { !$skip{$_} }
+            grep { my $dist = $_; !any { $dist =~ /^$_-/ } @skip_prefix }
+            map  { $_->{fields}{distribution} }
+            @{ $res->{hits}{hits} };
 
 plan tests => scalar @modules;
-for my $module (@modules) {
-    note($module);
-    if ($todo{$module}) {
-        my $reason = $todo_reasons{$module};
+for my $dist (@dists) {
+    note($dist);
+    my $module = $dist;
+    $module = $name_fix{$module} if exists $name_fix{$module};
+    if ($todo{$dist}) {
+        my $reason = $todo_reasons{$dist};
         $reason = '???' unless defined $reason;
         local $TODO = $reason;
         eval { test_module($module); 1 }
