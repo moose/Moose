@@ -62,6 +62,7 @@ my @skip_prefix = qw(Acme Task Bundle);
 my %skip = map { $_ => 1 } (
     'App-CPAN2Pkg',                 # tk tests are graphical
     'App-USBKeyCopyCon',            # gtk tests are graphical
+    'Bot-Backbone',                 # poe-loop-ev prompts
     'CatalystX-Restarter-GTK',      # gtk tests are graphical
     'CM-Permutation',               # OpenGL uses graphics in Makefile.PL
     'Dackup',                       # depends on running ssh
@@ -155,6 +156,7 @@ Erlang-Parser                          # deps aren't installed correctly (???)
 Foorum                                 # deps aren't installed correctly (???)
 Graphics-Primitive-Driver-CairoPango   # deps aren't installed correctly (???)
 Grimlock                               # deps aren't installed correctly (???)
+IM-Engine-Plugin-Dispatcher            # deps aren't installed correctly (???)
 IMS-CP-Manifest                        # deps aren't installed correctly (???)
 Locale-Handle-Pluggable                # deps aren't installed correctly (???)
 marc-moose                             # deps aren't installed correctly (???)
@@ -231,6 +233,7 @@ App-Mimosa                             # requires fastacmd
 App-PgCryobit                          # requires postgres installation
 Archive-RPM                            # requires cpio
 Catalyst-Engine-Stomp                  # depends on alien::activemq
+Catalyst-Plugin-Session-Store-Memcached # requires memcached
 Cave-Wrapper                           # requires cave to be installed
 CHI-Driver-Redis                       # requires redis server
 Crypt-Random-Source-Strong-Win32       # windows only
@@ -382,13 +385,13 @@ HTML-Grabber                           # pod::coverage fail
 HTML-TreeBuilderX-ASP_NET              # broken
 HTTP-Engine-Middleware                 # missing dep on yaml
 Image-Robohash                         # Graphics::Magick doesn't exist
-IM-Engine-Plugin-Dispatcher            # p::d::declarative changed dists
 JavaScript-Framework-jQuery            # coerce with no coercion
 Jifty                                  # Test::WWW::Selenium needs devel::repl
 JSORB                                  # broken
 Jungle                                 # broken
 Kamaitachi                             # pod::coverage fail
 KiokuDB-Backend-Files                  # broken
+LaTeX-TikZ                             # broken (with moose)
 Mail-Summary-Tools                     # DT::Format::DateManip is broken
 MediaWiki-USERINFO                     # broken
 Mildew                                 # depends on mxms
@@ -404,8 +407,10 @@ MooseX-Meta-Attribute-Lvalue           # old moose apis
 MooseX-Method-Signatures               # broken
 MooseX-Struct                          # ancient moose apis
 MooseX-Types-Parameterizable           # broken
+MouseX-Types                           # broken (with moose)
 MySQL-Util                             # pod-coverage fail
 Nagios-Passive                         # broken
+Net-APNS                               # broken (with moose)
 Net-FluidDB                            # broken
 Net-Fluidinfo                          # broken
 Net-Google-Blogger                     # broken
@@ -458,6 +463,7 @@ Tapper-MCP                             # sys::info::driver::linux is broken
 Tapper-Reports-API                     # sys::info::driver::linux is broken
 Tapper-Testplan                        # sys::info::driver::linux is broken
 Telephone-Mnemonic-US                  # rpm-build-perl is broken
+Template-Plugin-Heritable              # weird dep issues (not test::dm related)
 Test-A8N                               # broken
 Test-BDD-Cucumber                      # clone::fast is broken
 Test-Daily                             # configure errors
