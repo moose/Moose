@@ -88,20 +88,25 @@ my %skip = map { $_ => 1 } (
 );
 
 my %name_fix = (
+    'App-passmanager'                => 'App::PassManager',
     'App-PipeFilter'                 => 'App::PipeFilter::Generic',
     'Constructible'                  => 'Constructible::Maxima',
     'DCOLLINS-ANN-Locals'            => 'DCOLLINS::ANN::Robot',
     'Dist-Zilla-Deb'                 => 'Dist::Zilla::Plugin::Deb::VersionFromChangelog',
     'Dist-Zilla-Plugins-CJM'         => 'Dist::Zilla::Plugin::TemplateCJM',
     'Dist-Zilla-Plugin-TemplateFile' => 'Dist::Zilla::Plugin::TemplateFiles',
+    'Google-Directions'              => 'Google::Directions::Client',
     'helm'                           => 'Helm',
+    'HTML-Untemplate'                => 'HTML::Linear',
     'marc-moose'                     => 'MARC::Moose',
     'mobirc'                         => 'App::Mobirc',
     'OWL-Simple'                     => 'OWL::Simple::Class',
     'Patterns-ChainOfResponsibility' => 'Patterns::ChainOfResponsibility::Application',
     'Role-Identifiable'              => 'Role::Identifiable::HasIdent',
     'smokebrew'                      => 'App::SmokeBrew',
+    'Treex-Parser-MSTperl'           => 'Treex::Tool::Parser::MSTperl',
     'v6-alpha'                       => 'v6',
+    'WebService-LOC-CongRec'         => 'WebService::LOC::CongRec::Crawler',
     'X11-XCB'                        => 'X11::XCB::Connection',
     'XML-Ant-BuildFile'              => 'XML::Ant::BuildFile::Project',
 );
@@ -130,7 +135,12 @@ for my $dist (@dists) {
 }
 
 __DATA__
-# weird errors
+# indexing issues (test::dm bugs)
+Hopkins                                # couldn't find on cpan
+Pod-Elemental-Transformer-VimHTML      # couldn't find on cpan
+PostScript-Barcode                     # couldn't find on cpan
+
+# weird errors (test::dm bugs)
 Alice                                  # can't resolve distribution
 Config-Model-Backend-Augeas            # deps on Config::Model
 Config-Model                           # can't run tests
@@ -144,7 +154,7 @@ Pod-Weaver-Section-Extends             # ???
 TryCatch                               # can't run tests
 XML-Rabbit                             # can't run tests
 
-# Test::DM doesn't install deps properly (???)
+# doesn't install deps properly (test::dm bugs)
 App-Benchmark-Accessors                # deps aren't installed correctly (???)
 Bot-BasicBot-Pluggable                 # deps aren't installed correctly (???)
 Code-Statistics                        # deps aren't installed correctly (???)
@@ -348,6 +358,7 @@ CPAN-Digger                            # requires DBD::SQLite
 Data-AMF                               # missing dep on YAML
 Data-Apache-mod_status                 # invalid characters in type name
 Data-Edit                              # dist is missing some modules
+Data-Feed                              # broken (only sometimes?)
 Data-PackageName                       # broken
 Data-Pipeline                          # uses ancient moose apis
 Data-SCORM                             # pod coverage fail
