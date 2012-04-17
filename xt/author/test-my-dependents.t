@@ -71,6 +71,7 @@ my %skip = map { $_ => 1 } (
     'Games-Pandemic',               # tk tests are graphical
     'Games-RailRoad',               # tk tests are graphical
     'Games-Risk',                   # tk tests are graphical
+    'Gearman-Driver',               # spews tar errors
     'helm',                         # depends on running ssh
     'Log-Dispatch-Gtk2-Notify',     # gtk tests are graphical
     'LPDS',                         # gtk tests are graphical
@@ -112,7 +113,7 @@ my @modules = map  { exists $name_fix{$_} ? $name_fix{$_} : $_ }
 
 plan tests => scalar @modules;
 for my $module (@modules) {
-    diag($module);
+    note($module);
     if ($todo{$module}) {
         my $reason = $todo_reasons{$module};
         $reason = '???' unless defined $reason;
