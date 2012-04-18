@@ -79,11 +79,14 @@ my %skip = map { $_ => 1 } (
     'Net-SFTP-Foreign-Exceptional', # depends on running ssh
     'Periscope',                    # gtk tests are graphical
     'POE-Component-OpenSSH',        # depends on running ssh
+    'POE-Component-Server-SimpleHTTP-PreFork',  # ipc::shareable tests hang
     'RDF-TrineX-RuleEngine-Jena',   # prompts in Makefile.PL
     'Test-SFTP',                    # Term::ReadPassword prompts in tests
     'Tk-Role-Dialog',               # tk tests are graphical
     'Weaving-Tablet',               # tk tests are graphical
+    'WWW-Finances-Bovespa',         # tests rely on internet site
     'WWW-Hashdb',                   # test hangs, pegging cpu
+    'WWW-Vimeo-Download',           # tests rely on internet site
     'Zucchini',                     # File::Rsync prompts in Makefile.PL
 );
 
@@ -135,61 +138,33 @@ for my $dist (@dists) {
 }
 
 __DATA__
-# indexing issues (test::dm bugs)
+# indexing issues (test::dm bugs?)
+Alice                                  # couldn't find on cpan
 Hopkins                                # couldn't find on cpan
-Pod-Elemental-Transformer-VimHTML      # couldn't find on cpan
 PostScript-Barcode                     # couldn't find on cpan
 
-# weird errors (test::dm bugs)
-Alice                                  # can't resolve distribution
-Config-Model-Backend-Augeas            # deps on Config::Model
-Config-Model                           # can't run tests
-Config-Model-OpenSsh                   # deps on Config::Model
-CPAN-Patches                           # can't run tests
-CPAN-Patches-Plugin-Debian             # can't run tests
-KiokuDB-Backend-BDB                    # can't run tests
-Net-Azure-BlobService                  # ???
-Pod-Weaver-Section-Consumes            # ???
-Pod-Weaver-Section-Extends             # ???
-TryCatch                               # can't run tests
-XML-Rabbit                             # can't run tests
-
-# doesn't install deps properly (test::dm bugs)
-App-Benchmark-Accessors                # deps aren't installed correctly (???)
-Bot-BasicBot-Pluggable                 # deps aren't installed correctly (???)
-Code-Statistics                        # deps aren't installed correctly (???)
-Dist-Zilla-PluginBundle-Author-MELO    # deps aren't installed correctly (???)
-Dist-Zilla-PluginBundle-MITHALDU       # deps aren't installed correctly (???)
-Dist-Zilla-Util-FileGenerator          # deps aren't installed correctly (???)
-EBI-FGPT-FuzzyRecogniser               # deps aren't installed correctly (???)
-Erlang-Parser                          # deps aren't installed correctly (???)
-Foorum                                 # deps aren't installed correctly (???)
-Graphics-Primitive-Driver-CairoPango   # deps aren't installed correctly (???)
-Grimlock                               # deps aren't installed correctly (???)
-IM-Engine-Plugin-Dispatcher            # deps aren't installed correctly (???)
-IMS-CP-Manifest                        # deps aren't installed correctly (???)
-Locale-Handle-Pluggable                # deps aren't installed correctly (???)
-marc-moose                             # deps aren't installed correctly (???)
-Method-Signatures                      # deps aren't installed correctly (???)
-mobirc                                 # deps aren't installed correctly (???)
-MooseX-APIRole                         # deps aren't installed correctly (???)
-MooseX-MultiObject                     # deps aren't installed correctly (???)
-Net-Bamboo                             # deps aren't installed correctly (???)
-Net-Stripe                             # deps aren't installed correctly (???)
-Number-Phone-NANP-Vanity               # deps aren't installed correctly (???)
-Perl-Achievements                      # deps aren't installed correctly (???)
-Tatsumaki-Template-Markapl             # deps aren't installed correctly (???)
-Text-TEI-Collate                       # deps aren't installed correctly (???)
-Text-Tradition                         # deps aren't installed correctly (???)
-WebService-SOS                         # deps aren't installed correctly (???)
-WWW-Mechanize-Cached                   # deps aren't installed correctly (???)
-XML-Ant-BuildFile                      # deps aren't installed correctly (???)
+# doesn't install deps properly (test::dm bugs?)
+App-Benchmark-Accessors                # Mojo::Base isn't installed
+Bot-BasicBot-Pluggable                 # Crypt::SaltedHash isn't installed
+Code-Statistics                        # MooseX::HasDefaults::RO isn't installed
+Dist-Zilla-PluginBundle-MITHALDU       # List::AllUtils isn't installed
+Dist-Zilla-Util-FileGenerator          # MooseX::HasDefaults::RO isn't installed
+EBI-FGPT-FuzzyRecogniser               # GO::Parser isn't installed
+Erlang-Parser                          # Parse::Yapp::Driver isn't installed
+Foorum                                 # Sphinx::Search isn't installed
+Grimlock                               # DBIx::Class::EncodedColumn isn't installed
+Locale-Handle-Pluggable                # MooseX::Types::VariantTable::Declare isn't installed
+mobirc                                 # HTTP::Session::State::GUID isn't installed
+Net-Bamboo                             # XML::Tidy isn't installed
+Tatsumaki-Template-Markapl             # Tatsumaki::Template isn't installed
+Text-Tradition                         # Bio::Phylo::IO isn't installed
 
 # no tests
 AI-ExpertSystem-Advanced               # no tests
 API-Assembla                           # no tests
 App-mkfeyorm                           # no tests
 App-passmanager                        # no tests
+App-Scrobble                           # no tests
 Bot-Applebot                           # no tests
 Catalyst-Authentication-Credential-Facebook-OAuth2 # no tests
 Catalyst-Authentication-Store-Fey-ORM  # no tests
@@ -217,13 +192,16 @@ Kafka-Client                           # no tests
 LWP-UserAgent-OfflineCache             # no tests
 Markdown-Pod                           # no tests
 MooseX-Types-DateTimeX                 # no tests
+Net-Azure-BlobService                  # no tests
 Net-Dropbox                            # no tests
 Net-Flowdock                           # no tests
 Net-OpenStack-Attack                   # no tests
 Net-Ostrich                            # no tests
 Net-Recurly                            # no tests
 OpenDocument-Template                  # no tests
+Pod-Weaver-Section-Consumes            # no tests
 Pod-Weaver-Section-Encoding            # no tests
+Pod-Weaver-Section-Extends             # no tests
 POE-Component-Server-MySQL             # no tests
 Random-Quantum                         # no tests
 SchemaEvolution                        # no tests
@@ -236,7 +214,6 @@ WWW-MenuGrinder                        # no tests
 WWW-WuFoo                              # no tests
 
 # external dependencies
-Alien-ActiveMQ                         # requires activemq
 AnyEvent-ZeroMQ                        # requires zeromq installation
 AnyMQ-ZeroMQ                           # requires zeromq installation
 Apache2-HttpEquiv                      # requires apache (for mod_perl)
@@ -292,6 +269,10 @@ Template-JavaScript                    # requires v8
 ZeroMQ-PubSub                          # requires zmq
 ZMQ-Declare                            # requires zmq
 
+# flaky internet tests
+WWW-Finances-Bovespa                   # tests rely on internet site
+WWW-Vimeo-Download                     # tests rely on internet site
+
 # graphical
 App-CPAN2Pkg                           # tk tests are graphical
 App-USBKeyCopyCon                      # gtk tests are graphical
@@ -317,7 +298,6 @@ AnyMongo                               # doesn't compile
 App-ArchiveDevelCover                  # depends on nonexistent testdata::setup
 App-Dataninja                          # bad M::I install in inc/
 App-Fotagger                           # Imager doesn't compile
-App-HistHub                            # missing dep on JSON.pm
 App-Magpie                             # deps on URPM which doesn't exist
 App-MediaWiki2Git                      # git::repository is broken
 App-Munchies                           # depends on XML::DTD
@@ -325,12 +305,10 @@ App-TemplateServer                     # broken use of types
 App-TemplateServer-Provider-HTML-Template  # dep on app-templateserver
 App-TemplateServer-Provider-Mason      # dep on app-templateserver
 App-TemplateServer-Provider-TD         # dep on app-templateserver
-App-TimeTracker                        # git::repository is broken
 App-Twimap                             # dep on Web::oEmbed::Common
 App-Validation-Automation              # dep on Switch
 App-Wubot                              # broken
 Beagle                                 # depends on term::readline::perl
-Bio-MAGETAB                            # datetime-format-datemanip is broken
 Bot-Backbone                           # poe-loop-ev prompts
 Cache-Profile                          # broken
 Catalyst-Authentication-Store-LDAP-AD-Class  # pod coverage fail
@@ -338,20 +316,21 @@ Catalyst-Controller-Resources          # broken
 Catalyst-Controller-SOAP               # broken
 Catalyst-Model-Sedna                   # deps on Alien-Sedna which doesn't exist
 Catalyst-Plugin-Continuation           # undeclared dep
-Catalyst-Plugin-ErrorCatcher-ActiveMQ-Stomp  # pod coverage fail
 Catalyst-Plugin-Session-State-Cookie   # broken
 Catalyst-Plugin-Session-Store-TestMemcached # dep with corrupt archive
 Catalyst-Plugin-SwiffUploaderCookieHack  # undeclared dep
 Catalyst-TraitFor-Request-PerLanguageDomains # dep on ::State::Cookie
 CatalystX-I18N                         # dep on ::State::Cookie
 CatalystX-MooseComponent               # broken
-CatalystX-SimpleAPI                    # depends on mxms
 CatalystX-SimpleLogin                  # broken
 CatalystX-Usul                         # proc::processtable doesn't load
 Cheater                                # parse::randgen is broken
 Class-OWL                              # uses CMOP::Class without loading cmop
 CM-Permutation                         # OpenGL uses graphics in Makefile.PL
 Cogwheel                               # uses ancient moose apis
+Config-Model                           # broken
+Config-Model-Backend-Augeas            # deps on Config::Model
+Config-Model-OpenSsh                   # deps on Config::Model
 Constructible                          # GD::SVG is a broken dist
 Constructible-Maxima                   # GD::SVG is a broken dist
 Coro-Amazon-SimpleDB                   # amazon::simpledb::client doesn't exist
@@ -366,7 +345,6 @@ Data-SCORM                             # pod coverage fail
 Date-Biorhythm                         # Date::Business prompts in Makefile.PL
 DayDayUp                               # MojoX-Fixup-XHTML doesn't exist
 DBICx-Modeler-Generator                # broken (weirdly)
-DBIx-Class-Migration                   # missing dep on Log::Contextual
 DBIx-SchemaChecksum                    # broken
 Debian-Apt-PM                          # configure time failures
 Devel-Events                           # broken (role conflict)
@@ -375,19 +353,15 @@ Dist-Zilla-Plugin-ChangelogFromGit-Debian # git::repository is broken
 Dist-Zilla-Plugin-ProgCriticTests      # broken
 DustyDB                                # uses old moose apis
 Dwimmer                                # broken
-ELF-Extract-Sections                   # depends on mxms
-ETLp                                   # depends on mxms
 Facebook-Graph                         # broken
 Fedora-Bugzilla                        # deps on nonexistent things
 FFmpeg-Thumbnail                       # undeclared dep
 File-DataClass                         # XML::DTD is a broken dist
 File-Stat-Moose                        # old moose apis
-Finance-Bank-SentinelBenefits-Csv401kConverter  # depends on mxms
 Form-Factory                           # uses old moose apis
 FormValidator-Nested                   # broken
 Frost                                  # broken
 Gitalist                               # deps on mxms
-Git-CPAN-Patch                         # system::command is broken
 GOBO                                   # coerce with no coercion
 Google-Chart                           # recreating type constraints
 Google-Spreadsheet-Agent               # pod::coverage fail
@@ -404,9 +378,10 @@ Jungle                                 # broken
 Kamaitachi                             # pod::coverage fail
 KiokuDB-Backend-Files                  # broken
 LaTeX-TikZ                             # broken (with moose)
+marc-moose                             # broken (only sometimes?)
 Mail-Summary-Tools                     # DT::Format::DateManip is broken
 MediaWiki-USERINFO                     # broken
-Mildew                                 # depends on mxms
+Method-Signatures                      # doesn't like ANY_MOOSE=Moose
 mobirc                                 # http::engine broken
 MooseX-Attribute-Prototype             # uses old moose apis
 MooseX-DBIC-Scaffold                   # needs unreleased sql-translator
@@ -461,6 +436,7 @@ Reflexive-Stream-Filtering             # broken
 RPC-Any                                # broken
 Scene-Graph                            # has '+attr' in roles
 Server-Control                         # proc::processtable doesn't load
+Shipment                               # locale::subcountry is broken
 Silki                                  # image::magick is broken
 SilkiX-Converter-Kwiki                 # file::mimeinfo expects (?-xism:
 Sloth                                  # rest::utils is broken
@@ -471,13 +447,11 @@ Tail-Tool                              # Getopt::Alt doesn't exist
 Tapper-CLI                             # sys::info::driver::linux is broken
 Tapper-Installer                       # sys::info::driver::linux is broken
 Tapper-MCP-MessageReceiver             # sys::info::driver::linux is broken
-Tapper-MCP                             # sys::info::driver::linux is broken
 Tapper-Reports-API                     # sys::info::driver::linux is broken
 Tapper-Testplan                        # sys::info::driver::linux is broken
 Telephone-Mnemonic-US                  # rpm-build-perl is broken
 Template-Plugin-Heritable              # weird dep issues (not test::dm related)
 Test-A8N                               # broken
-Test-BDD-Cucumber                      # clone::fast is broken
 Test-Daily                             # configure errors
 Test-Pockito                           # broken
 Test-SFTP                              # Term::ReadPassword prompts in tests
@@ -489,7 +463,6 @@ Verby                                  # deps on poe::component::resourcepool
 Weather-TW                             # missing dep on Mojo::DOM
 Web-API-Mapper                         # broken
 WebNano-Controller-CRUD                # broken
-WebService-SlimTimer                   # depends on mxms
 WebService-Yes24                       # broken
 WiX3                                   # broken
 WWW-Alltop                             # XML::SimpleObject configure fail
@@ -497,6 +470,7 @@ WWW-DataWiki                           # depends on mxms
 WWW-Fandango                           # bad dist
 WWW-FMyLife                            # broken
 WWW-Hashdb                             # test hangs, pegging cpu
+WWW-Mechanize-Cached                   # tries to read from wrong build dir?
 WWW-Metalgate                          # Cache is broken
 WWW-Scramble                           # pod::coverage fail
 WWW-Sitemapper                         # broken
@@ -505,7 +479,6 @@ WWW-WebKit                             # missing configure_req on EU::PkgConfig
 WWW-Yahoo-Lyrics-JP                    # broken
 XIRCD                                  # undeclared deps
 XML-EPP                                # coerce without coercion
-XML-LibXSLT-Easy                       # missing dep on mx-getopt, deps on mxms
 XML-SRS                                # deps on prang
 Yukki                                  # git::repository is broken
 Zucchini                               # File::Rsync prompts in Makefile.PL
