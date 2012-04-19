@@ -84,6 +84,7 @@ my %skip = map { $_ => 1 } (
     'Test-SFTP',                    # Term::ReadPassword prompts in tests
     'Tk-Role-Dialog',               # tk tests are graphical
     'Weaving-Tablet',               # tk tests are graphical
+    'WWW-eNom',                     # tests rely on internet site
     'WWW-Finances-Bovespa',         # tests rely on internet site
     'WWW-Hashdb',                   # test hangs, pegging cpu
     'WWW-Vimeo-Download',           # tests rely on internet site
@@ -105,6 +106,7 @@ my %name_fix = (
     'mobirc'                         => 'App::Mobirc',
     'OWL-Simple'                     => 'OWL::Simple::Class',
     'Patterns-ChainOfResponsibility' => 'Patterns::ChainOfResponsibility::Application',
+    'Pod-Elemental-Transfomer-VimHTML' => 'Pod::Elemental::Transformer::VimHTML',
     'Role-Identifiable'              => 'Role::Identifiable::HasIdent',
     'smokebrew'                      => 'App::SmokeBrew',
     'Treex-Parser-MSTperl'           => 'Treex::Tool::Parser::MSTperl',
@@ -272,6 +274,7 @@ ZMQ-Declare                            # requires zmq
 # flaky internet tests
 WWW-Finances-Bovespa                   # tests rely on internet site
 WWW-Vimeo-Download                     # tests rely on internet site
+WWW-eNom                               # tests rely on internet site
 
 # graphical
 App-CPAN2Pkg                           # tk tests are graphical
@@ -358,6 +361,7 @@ Fedora-Bugzilla                        # deps on nonexistent things
 FFmpeg-Thumbnail                       # undeclared dep
 File-DataClass                         # XML::DTD is a broken dist
 File-Stat-Moose                        # old moose apis
+File-Tail-Dir                          # intermittent fails (i think)
 Form-Factory                           # uses old moose apis
 FormValidator-Nested                   # broken
 Frost                                  # broken
@@ -416,6 +420,7 @@ Pg-BulkCopy                            # hardcodes /usr/bin/perl
 Pinto-Common                           # broken
 Pinto-Server                           # deps on pinto::common
 Plack-Middleware-Image-Scale           # Image::Scale is broken
+Pod-Parser-I18N                        # missing dep on Data::Localize
 POE-Component-CPAN-Mirror-Multiplexer  # broken
 POE-Component-ResourcePool             # broken
 POE-Component-Server-PSGI              # broken deps
