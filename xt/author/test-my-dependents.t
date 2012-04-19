@@ -63,6 +63,7 @@ my %skip = map { $_ => 1 } (
     'App-CPAN2Pkg',                 # tk tests are graphical
     'App-USBKeyCopyCon',            # gtk tests are graphical
     'Bot-Backbone',                 # poe-loop-ev prompts
+    'Cache-Ehcache',                # hangs if server exists on port 8080
     'CatalystX-Restarter-GTK',      # gtk tests are graphical
     'CM-Permutation',               # OpenGL uses graphics in Makefile.PL
     'Dackup',                       # depends on running ssh
@@ -319,6 +320,7 @@ App-Validation-Automation              # dep on Switch
 App-Wubot                              # broken
 Beagle                                 # depends on term::readline::perl
 Bot-Backbone                           # poe-loop-ev prompts
+Cache-Ehcache                          # hangs if server exists on port 8080
 Cache-Profile                          # broken
 Catalyst-Authentication-Store-LDAP-AD-Class  # pod coverage fail
 Catalyst-Controller-Resources          # broken
