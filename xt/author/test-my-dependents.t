@@ -74,6 +74,7 @@ my %skip = map { $_ => 1 } (
     'Games-Risk',                   # tk tests are graphical
     'Gearman-Driver',               # spews tar errors
     'helm',                         # depends on running ssh
+    'iTransact-Lite',               # tests rely on internet site
     'Log-Dispatch-Gtk2-Notify',     # gtk tests are graphical
     'LPDS',                         # gtk tests are graphical
     'Net-SFTP-Foreign-Exceptional', # depends on running ssh
@@ -272,6 +273,7 @@ ZeroMQ-PubSub                          # requires zmq
 ZMQ-Declare                            # requires zmq
 
 # flaky internet tests
+iTransact-Lite                         # tests rely on internet site
 WWW-Finances-Bovespa                   # tests rely on internet site
 WWW-Vimeo-Download                     # tests rely on internet site
 WWW-eNom                               # tests rely on internet site
@@ -422,6 +424,8 @@ Pinto-Server                           # deps on pinto::common
 Plack-Middleware-Image-Scale           # Image::Scale is broken
 Pod-Parser-I18N                        # missing dep on Data::Localize
 POE-Component-CPAN-Mirror-Multiplexer  # broken
+POE-Component-DirWatch                 # intermittent failures
+POE-Component-DirWatch-Object          # intermittent failures
 POE-Component-ResourcePool             # broken
 POE-Component-Server-PSGI              # broken deps
 POE-Component-Server-SimpleHTTP-PreFork  # broken deps
