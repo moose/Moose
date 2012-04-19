@@ -84,11 +84,13 @@ my %skip = map { $_ => 1 } (
     'RDF-TrineX-RuleEngine-Jena',   # prompts in Makefile.PL
     'Test-SFTP',                    # Term::ReadPassword prompts in tests
     'Tk-Role-Dialog',               # tk tests are graphical
+    'Unicode-Emoji-E4U',            # tests rely on internet site
     'Weaving-Tablet',               # tk tests are graphical
     'WWW-eNom',                     # tests rely on internet site
     'WWW-Finances-Bovespa',         # tests rely on internet site
     'WWW-Hashdb',                   # test hangs, pegging cpu
     'WWW-Vimeo-Download',           # tests rely on internet site
+    'WWW-YouTube-Download-Channel', # tests rely on internet site
     'Zucchini',                     # File::Rsync prompts in Makefile.PL
 );
 
@@ -274,9 +276,11 @@ ZMQ-Declare                            # requires zmq
 
 # flaky internet tests
 iTransact-Lite                         # tests rely on internet site
+Unicode-Emoji-E4U                      # tests rely on internet site
+WWW-eNom                               # tests rely on internet site
 WWW-Finances-Bovespa                   # tests rely on internet site
 WWW-Vimeo-Download                     # tests rely on internet site
-WWW-eNom                               # tests rely on internet site
+WWW-YouTube-Download-Channel           # tests rely on internet site
 
 # graphical
 App-CPAN2Pkg                           # tk tests are graphical
