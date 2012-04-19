@@ -87,7 +87,15 @@ sub apply_methods {
 
                 # method conflicts between roles used to result in the method
                 # becoming a requirement but now are permitted just like
-                # for classes, hence no code in this branch anymore.
+                # for classes, unless shadowing is explicitly prohibited
+
+                if ( $self->is_shadowing_prohibited ) {
+
+                     $role2->add_conflicting_method(
+                         name  => $method_name,
+                         roles => [ $role1->name, $role2->name ],
+                     );
+                }
             }
             else {
                 $role2->add_method(

@@ -18,6 +18,13 @@ __PACKAGE__->meta->add_attribute('method_aliases' => (
     Class::MOP::_definition_context(),
 ));
 
+__PACKAGE__->meta->add_attribute('shadowing_prohibited' => (
+    init_arg => '-prohibit_shadowing',
+    reader => 'is_shadowing_prohibited',
+    default => sub { 0 },
+    Class::MOP::_definition_context(),
+));
+
 sub new {
     my ($class, %params) = @_;
     $class->_new(\%params);

@@ -162,7 +162,15 @@ sub apply_methods {
 
             my $class_method = $class->get_method($method_name);
 
-            next if $class_method && $class_method->body != $method->body;
+            if ( $class_method && $class_method->body != $method->body ) {
+
+                if ( $self->is_shadowing_prohibited ) {
+                    $class->throw_error(
+                        "Shadowing is prohibited but both ".$class->name." and ".$role->name." have a method ${method_name}"
+                    );
+                }
+                next;
+            }
 
             $class->add_method(
                 $method_name,
