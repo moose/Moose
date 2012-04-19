@@ -85,12 +85,9 @@ sub apply_methods {
             if (   $role2_method
                 && $role2_method->body != $method->body ) {
 
-                # method conflicts between roles result in the method becoming
-                # a requirement
-                $role2->add_conflicting_method(
-                    name  => $method_name,
-                    roles => [ $role1->name, $role2->name ],
-                );
+                # method conflicts between roles used to result in the method
+                # becoming a requirement but now are permitted just like
+                # for classes, hence no code in this branch anymore.
             }
             else {
                 $role2->add_method(

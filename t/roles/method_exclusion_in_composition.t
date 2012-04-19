@@ -37,7 +37,7 @@ ok(!My::Class->meta->has_method('bar'), '... but we excluded bar');
 ok(My::OtherRole->meta->has_method($_), "we have a $_ method") for qw(foo bar baz);
 
 ok(!My::OtherRole->meta->requires_method('foo'), '... and the &foo method is not required');
-ok(My::OtherRole->meta->requires_method('bar'), '... and the &bar method is required');
+ok(!My::OtherRole->meta->requires_method('bar'), '... and the &bar method is not required');
 
 {
     package Foo::Role;

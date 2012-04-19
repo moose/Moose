@@ -65,4 +65,26 @@ is($c->foo_gorch, 'Foo::gorch', '... got the right method');
 is($c->baz_foo, 'Baz::foo', '... got the right method');
 is($c->baz_bar, 'Baz::bar', '... got the right method');
 
+{
+    package Splunk;
+
+    use Moose::Role;
+
+    sub baz   { 'Splunk::baz'   }
+    sub gorch { 'Splunk::gorch' }
+
+    ::is(::exception { with 'Foo' }, undef, 'role to role application works');
+
+    package My::Class2;
+
+    use Moose;
+
+    ::is(::exception { with 'Splunk' }, undef, 'and the role can be consumed');
+}
+
+is(My::Class2->foo, 'Foo::foo', '... got the right method');
+is(My::Class2->bar, 'Foo::bar', '... got the right method');
+is(My::Class2->baz, 'Splunk::baz', '... got the right method');
+is(My::Class2->gorch, 'Splunk::gorch', '... got the right method');
+
 done_testing;

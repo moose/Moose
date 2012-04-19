@@ -48,38 +48,26 @@ is( Class::A->new->xxy, "Role::B::xxy",  "... got the right xxy method" );
 
 {
     # check that when a role is added to another role
-    # and they conflict and the method they conflict
-    # with is then required.
+    # that the consumer's method shadows just like for classes.
 
-    package Role::A::Conflict;
+    package Role::A::Shadow;
     use Moose::Role;
 
     with 'Role::A';
 
-    sub bar { 'Role::A::Conflict::bar' }
+    sub bar { 'Role::A::Shadow::bar' }
 
-    package Class::A::Conflict;
-    use Moose;
-
-    ::like( ::exception {
-        with 'Role::A::Conflict';
-    }, qr/Due to a method name conflict in roles 'Role::A' and 'Role::A::Conflict', the method 'bar' must be implemented or excluded by 'Class::A::Conflict'/, '... did not fufill the requirement of &bar method' );
-
-    package Class::A::Resolved;
+    package Class::A::Shadow;
     use Moose;
 
     ::is( ::exception {
-        with 'Role::A::Conflict';
+        with 'Role::A::Shadow';
     }, undef, '... did fufill the requirement of &bar method' );
-
-    sub bar { 'Class::A::Resolved::bar' }
 }
 
-ok(Role::A::Conflict->meta->requires_method('bar'), '... Role::A::Conflict created the bar requirement');
+can_ok( Class::A::Shadow->new, qw(bar) );
 
-can_ok( Class::A::Resolved->new, qw(bar) );
-
-is( Class::A::Resolved->new->bar, 'Class::A::Resolved::bar', "... got the right bar method" );
+is( Class::A::Shadow->new->bar, 'Role::A::Shadow::bar', "... got the right bar method" );
 
 {
     # check that when two roles are composed, they conflict
@@ -131,24 +119,23 @@ ok(!Role::F->meta->requires_method('foo'), '... Role::F fufilled the &foo requir
     # by a role, but also new ones can be
     # created just as easily ...
 
-    package Role::D::And::E::Conflict;
+    package Role::D::And::E::NoConflict;
     use Moose::Role;
 
     ::is( ::exception {
         with qw(Role::D Role::E); # conflict between 'foo's here
-    }, undef, "... define role Role::D::And::E::Conflict" );
+    }, undef, "... define role Role::D::And::E::NoConflict" );
 
-    sub foo { 'Role::D::And::E::Conflict::foo' }  # this overrides ...
+    sub foo { 'Role::D::And::E::NoConflict::foo' }  # this overrides ...
 
-    # but these conflict
-    sub xxy { 'Role::D::And::E::Conflict::xxy' }
-    sub bar { 'Role::D::And::E::Conflict::bar' }
+    sub xxy { 'Role::D::And::E::NoConflict::xxy' }  # and so do these ...
+    sub bar { 'Role::D::And::E::NoConflict::bar' }
 
 }
 
-ok(!Role::D::And::E::Conflict->meta->requires_method('foo'), '... Role::D::And::E::Conflict fufilled the &foo requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('xxy'), '... Role::D::And::E::Conflict adds the &xxy requirement');
-ok(Role::D::And::E::Conflict->meta->requires_method('bar'), '... Role::D::And::E::Conflict adds the &bar requirement');
+ok(!Role::D::And::E::NoConflict->meta->requires_method('foo'), '... Role::D::And::E::NoConflict fufilled the &foo requirement');
+ok(!Role::D::And::E::NoConflict->meta->requires_method('xxy'), '... Role::D::And::E::NoConflict fulfilled the &xxy requirement');
+ok(!Role::D::And::E::NoConflict->meta->requires_method('bar'), '... Role::D::And::E::NoConflict fulfilled the &bar requirement');
 
 {
     # conflict propagation
