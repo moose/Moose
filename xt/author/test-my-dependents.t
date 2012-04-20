@@ -69,6 +69,7 @@ my %skip = map { $_ => 1 } (
     'Dackup',                       # depends on running ssh
     'Data-Collector',               # depends on running ssh
     'Date-Biorhythm',               # Date::Business prompts in Makefile.PL
+    'DBIx-PgLink',                  # prompts for a postgres password
     'Forest-Tree-Viewer-Gtk2',      # gtk tests are graphical
     'Games-Pandemic',               # tk tests are graphical
     'Games-RailRoad',               # tk tests are graphical
