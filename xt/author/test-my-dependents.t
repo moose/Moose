@@ -221,17 +221,21 @@ WWW-MenuGrinder                        # no tests
 WWW-WuFoo                              # no tests
 
 # external dependencies
+AnyEvent-Multilog                      # requires multilog
+AnyEvent-Net-Curl-Queued               # requires libcurl
 AnyEvent-ZeroMQ                        # requires zeromq installation
 AnyMQ-ZeroMQ                           # requires zeromq installation
 Apache2-HttpEquiv                      # requires apache (for mod_perl)
 App-Mimosa                             # requires fastacmd
 App-PgCryobit                          # requires postgres installation
 Archive-RPM                            # requires cpio
+Bot-Jabbot                             # requires libidn
 Catalyst-Engine-Stomp                  # depends on alien::activemq
 Catalyst-Plugin-Session-Store-Memcached # requires memcached
 Cave-Wrapper                           # requires cave to be installed
 CHI-Driver-Redis                       # requires redis server
 Crypt-Random-Source-Strong-Win32       # windows only
+Curses-Toolkit                         # requires Curses which requires ncurses library
 Dackup                                 # requires ssh
 Data-Collector                         # requires ssh
 DBIx-PgLink                            # requires postgres installation
@@ -240,10 +244,12 @@ Dist-Zilla-Plugin-SVK                  # requires svn bindings
 Dist-Zilla-Plugin-SvnObtain            # requires svn bindings
 Fedora-App-MaintainerTools             # requires rpm to be installed
 Fedora-App-ReviewTool                  # requires koji to be installed
+Fuse-Template                          # requires libfuse
 Games-HotPotato                        # requires sdl
 Games-Tetris-Complete                  # requires threads
 helm                                   # requires ssh
 HTML-Barcode-QRCode                    # requires libqrencode
+IRC-RemoteControl                      # requires libssh2
 JavaScript-Sprockets                   # requires sprocketize
 JavaScript-V8x-TestMoreish             # requires v8
 Koha-Contrib-Tamil                     # requires yaz
@@ -254,7 +260,10 @@ Math-Lsoda                             # requires f77
 MongoDBI                               # requires mongo
 MongoDB                                # requires mongo
 MSWord-ToHTML                          # requires abiword to be installed
+Net-DBus-Skype                         # requires dbus
 Net-Route                              # requires route
+Net-UpYun                              # requires curl
+Net-ZooTool                            # requires curl
 Nginx-Control                          # requires nginx to be installed
 NLP-Service                            # requires javac
 Padre-Plugin-Moose                     # requires threaded perl
@@ -273,6 +282,10 @@ SimpleDB-Class                         # requires memcached
 SVN-Simple-Hook                        # requires svn
 SVN-Tree                               # requires svn
 Template-JavaScript                    # requires v8
+TheSchwartz-Moosified                  # requires DBI::Pg ?
+WebService-SendGrid                    # requires curl
+WebService-Tesco-API                   # requires curl
+WWW-Curl-Simple                        # requires curl
 ZeroMQ-PubSub                          # requires zmq
 ZMQ-Declare                            # requires zmq
 
@@ -422,6 +435,7 @@ Net-Journyx                            # broken
 Net-Mollom                             # broken
 Net-Parliament                         # broken
 Net-Plurk                              # broken
+Net-SSLeay-OO                          # broken
 Net-StackExchange                      # broken
 ODG-Record                             # Test::Benchmark broken
 Perlbal-Control                        # proc::processtable doesn't load
@@ -479,6 +493,7 @@ Verby                                  # deps on poe::component::resourcepool
 Weather-TW                             # missing dep on Mojo::DOM
 Web-API-Mapper                         # broken
 WebNano-Controller-CRUD                # broken
+WebService-Intermine                   # broken tests
 WebService-Yes24                       # broken
 WiX3                                   # broken
 WWW-Alltop                             # XML::SimpleObject configure fail
@@ -496,5 +511,6 @@ WWW-Yahoo-Lyrics-JP                    # broken
 XIRCD                                  # undeclared deps
 XML-EPP                                # coerce without coercion
 XML-SRS                                # deps on prang
+XML-Writer-Compiler                    # broken tests
 Yukki                                  # git::repository is broken
 Zucchini                               # File::Rsync prompts in Makefile.PL
