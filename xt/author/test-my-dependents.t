@@ -285,6 +285,7 @@ Template-JavaScript                    # requires v8
 TheSchwartz-Moosified                  # requires DBI::Pg ?
 WebService-SendGrid                    # requires curl
 WebService-Tesco-API                   # requires curl
+WWW-Contact                            # depends on curl
 WWW-Curl-Simple                        # requires curl
 ZeroMQ-PubSub                          # requires zmq
 ZMQ-Declare                            # requires zmq
@@ -493,7 +494,7 @@ Verby                                  # deps on poe::component::resourcepool
 Weather-TW                             # missing dep on Mojo::DOM
 Web-API-Mapper                         # broken
 WebNano-Controller-CRUD                # broken
-WebService-Intermine                   # broken tests
+Webservice-Intermine                   # broken tests
 WebService-Yes24                       # broken
 WiX3                                   # broken
 WWW-Alltop                             # XML::SimpleObject configure fail
