@@ -10,10 +10,11 @@ BEGIN {
 }
 
 use Test::Requires {
-    'Archive::Zip' => 0, # or else .zip dists won't be able to be installed
-    'Test::DependentModules' => '0.09', # skip all if not installed
-    'MetaCPAN::API' => '0.33',
+    'Archive::Zip' => 0,    # or else .zip dists won't be able to be installed
+    'Test::DependentModules' => '0.13',
+    'MetaCPAN::API'          => '0.33',
 };
+
 use Test::DependentModules qw( test_module );
 
 use DateTime;
