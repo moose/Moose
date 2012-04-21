@@ -120,11 +120,25 @@ my %name_fix = (
     'X11-XCB'                        => 'X11::XCB::Connection',
     'XML-Ant-BuildFile'              => 'XML::Ant::BuildFile::Project',
 );
+
 my @dists = sort
             grep { !$skip{$_} }
             grep { my $dist = $_; !any { $dist =~ /^$_-/ } @skip_prefix }
             map  { $_->{fields}{distribution} }
             @{ $res->{hits}{hits} };
+
+unless ( $ENV{MOOSE_TEST_MD} eq 'all' ) {
+    diag(
+        'Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all dependents'
+    );
+
+    my %indexes;
+    while ( keys %indexes < 200 ) {
+        $indexes{ int rand( scalar @dists ) } = 1;
+    }
+
+    @dists = @dists[ sort keys %indexes ];
+}
 
 plan tests => scalar @dists;
 for my $dist (@dists) {
