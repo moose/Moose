@@ -65,8 +65,10 @@ my %skip = map { $_ => 1 } (
     'App-USBKeyCopyCon',            # gtk tests are graphical
     'Bot-Backbone',                 # poe-loop-ev prompts
     'Cache-Ehcache',                # hangs if server exists on port 8080
+    'CatalystX-Imports',            # assumes it can write to /tmp/testapp
     'CatalystX-Restarter-GTK',      # gtk tests are graphical
     'CM-Permutation',               # OpenGL uses graphics in Makefile.PL
+    'CPAN-Source',                  # assumes it can write to /tmp/.cache
     'Dackup',                       # depends on running ssh
     'Data-Collector',               # depends on running ssh
     'Date-Biorhythm',               # Date::Business prompts in Makefile.PL
