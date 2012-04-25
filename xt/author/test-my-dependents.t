@@ -166,6 +166,7 @@ __DATA__
 Alice                                  # couldn't find on cpan
 Hopkins                                # couldn't find on cpan
 PostScript-Barcode                     # couldn't find on cpan
+WWW-Mechanize-Query                    # couldn't find on cpan
 
 # doesn't install deps properly (test::dm bugs?)
 App-Benchmark-Accessors                # Mojo::Base isn't installed
@@ -405,7 +406,8 @@ File-Tail-Dir                          # intermittent fails (i think)
 Form-Factory                           # uses old moose apis
 FormValidator-Nested                   # broken
 Frost                                  # broken
-Gitalist                               # deps on mxms
+Games-Dice-Loaded                      # flaky tests
+Gitalist                               # broken
 GOBO                                   # coerce with no coercion
 Google-Chart                           # recreating type constraints
 Google-Spreadsheet-Agent               # pod::coverage fail
@@ -435,7 +437,6 @@ MooseX-Error-Exception-Class           # metaclass compat breakage
 MooseX-Getopt-Usage                    # missing dep on Test::Class
 MooseX-Meta-Attribute-Index            # old moose apis
 MooseX-Meta-Attribute-Lvalue           # old moose apis
-MooseX-Method-Signatures               # broken
 MooseX-Struct                          # ancient moose apis
 MooseX-Types-Parameterizable           # broken
 MouseX-Types                           # broken (with moose)
@@ -468,6 +469,7 @@ POE-Component-DirWatch-Object          # intermittent failures
 POE-Component-ResourcePool             # broken
 POE-Component-Server-PSGI              # broken deps
 POE-Component-Server-SimpleHTTP-PreFork  # broken deps
+Poet                                   # missing dep on Log::Any::Adapter::Log4perl
 POEx-ProxySession                      # broken deps
 POEx-PubSub                            # broken deps
 POEx-WorkerPool                        # broken deps
@@ -488,6 +490,7 @@ Shipment                               # locale::subcountry is broken
 Silki                                  # image::magick is broken
 SilkiX-Converter-Kwiki                 # file::mimeinfo expects (?-xism:
 Sloth                                  # rest::utils is broken
+Sque                                   # couldn't fork server for testing
 SRS-EPP-Proxy                          # depends on xml::epp
 String-Blender                         # broken
 TAEB                                   # broken
@@ -515,7 +518,7 @@ Webservice-Intermine                   # broken tests
 WebService-Yes24                       # broken
 WiX3                                   # broken
 WWW-Alltop                             # XML::SimpleObject configure fail
-WWW-DataWiki                           # depends on mxms
+WWW-DataWiki                           # broken
 WWW-Fandango                           # bad dist
 WWW-FMyLife                            # broken
 WWW-Hashdb                             # test hangs, pegging cpu
