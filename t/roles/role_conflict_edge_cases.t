@@ -187,4 +187,39 @@ ok(My::Test::Class4->meta->has_attribute('foo'), '... have the attribute foo as 
 
 is(My::Test::Class4->new->foo, 'Role::Base::foo', '... got the right value from method');
 
+
+TODO:
+{
+    {
+        package Failing::Z;
+        use Moose::Role;
+    }
+    {
+        package Failing::A;
+        use Moose::Role;
+        sub foo { 'A' }
+    }
+    {
+        package Failing::B;
+        use Moose::Role;
+        with 'Failing::A';
+        sub foo { 'B' }
+    }
+    {
+        package Failing::C;
+        use Moose;
+
+        # this reports a conflict, as it should
+        #with 'B';
+
+        our $TODO;
+        local $TODO = 'the existence of an unrelated role is interfering somehow -- need to investigate';
+        ::like(
+            ::exception { with 'Failing::Z', 'Failing::B' },
+            qr/method name conflict/,
+            'these roles should not compose without conflicts',
+        );
+    }
+}
+
 done_testing;
