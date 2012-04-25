@@ -1,12 +1,9 @@
 use strict;
 use warnings;
 
-use Test::Requires {
-    'Test::LeakTrace'     => '0.01',
-    'Test::Memory::Cycle' => '0',
-};
-
 use Test::More;
+use Test::LeakTrace 0.01;
+use Test::Memory::Cycle;
 
 use Moose ();
 use Moose::Util qw( apply_all_roles );
