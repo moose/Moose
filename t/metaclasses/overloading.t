@@ -4,6 +4,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+my $quote = qr/['`"]/;
+
 {
     package Foo;
     use Moose;
@@ -73,7 +75,7 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     my $minus_impl = sub { $minus = 1; "minus" };
 
     like(exception { Foo::Overloaded->new - Foo::Overloaded->new },
-         qr/Operation "-": no method found/);
+         qr/Operation $quote-$quote: no method found/);
 
     $meta->add_overloaded_operator('-' => $minus_impl);
 
@@ -98,7 +100,7 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     $meta->remove_overloaded_operator('-');
 
     like(exception { Foo::Overloaded->new - Foo::Overloaded->new },
-         qr/Operation "-": no method found/);
+         qr/Operation $quote-$quote: no method found/);
 }
 
 my $times = 0;
@@ -145,7 +147,7 @@ my $divided = 0;
     is($times, 1);
 
     like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
-         qr{Operation "/": no method found});
+         qr{Operation $quote/$quote: no method found});
 
     $meta->add_overloaded_operator('/' => 'divided');
 
@@ -170,7 +172,7 @@ my $divided = 0;
     $meta->remove_overloaded_operator('/');
 
     like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
-         qr{Operation "/": no method found});
+         qr{Operation $quote/$quote: no method found});
 }
 
 done_testing;
