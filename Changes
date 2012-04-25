@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0502 Wed, Apr 25, 2012
+
   [OTHER]
 
   * The Test::DependentModules test now covers a much wider range of downstream
