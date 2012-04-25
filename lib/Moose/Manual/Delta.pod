@@ -19,7 +19,7 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
-=head1 2.0500
+=head1 2.0600
 
 =over 4
 
@@ -31,7 +31,7 @@ order to reorder them or delete one.
 
 =back
 
-=head1 2.0300
+=head1 2.0400
 
 =over 4
 
@@ -95,7 +95,7 @@ attribute's reference.
 
 =back
 
-=head1 2.0100
+=head1 2.0200
 
 =over 4
 
