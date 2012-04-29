@@ -28,7 +28,7 @@ C<-meta_name> option when you C<S<use Moose>>. For instance:
 
 =head2 Moose Keywords
 
-If you are using L<Moose> or L<Moose::Role> its best to avoid these
+If you are using L<Moose> or L<Moose::Role> it is best to avoid these
 keywords:
 
 =over 4
@@ -61,8 +61,8 @@ keywords:
 
 =head2 Moose::Util::TypeConstraints Keywords
 
-If you are using L<Moose::Util::TypeConstraints> its best to avoid
-these keywords
+If you are using L<Moose::Util::TypeConstraints> it is best to avoid
+these keywords:
 
 =over 4
 
@@ -106,7 +106,7 @@ these keywords
 
 =head3 Turning off Moose
 
-To remove the sugar functions L<Moose> exports just add C<S<no Moose>>
+To remove the sugar functions L<Moose> exports, just add C<S<no Moose>>
 at the bottom of your code:
 
   package Thing;
