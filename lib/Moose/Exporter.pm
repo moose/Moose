@@ -170,7 +170,7 @@ sub _make_exporter {
             $seen->{$package} = 1;
         }
 
-        return @also, map { _follow_also_real($_) } @also;
+        return map { $_, _follow_also_real($_) } @also;
     }
 }
 

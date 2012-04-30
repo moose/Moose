@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
+use Test::Moose;
 
 use Test::Requires {
     'Test::Output' => '0.01', # skip all if not installed
@@ -585,6 +586,96 @@ use Test::Requires {
         ::is(quux(), 4);
     }
     BEGIN { is_deeply(\@init_metas_called, [ 4, 3, 2, 1 ]) || diag(Dumper(\@init_metas_called)) }
+}
+
+# Using "also => [ 'MooseX::UsesAlsoMoose', 'MooseX::SomethingElse' ]" should
+# continue to work. The init_meta order needs to be MooseX::CurrentExporter,
+# MooseX::UsesAlsoMoose, Moose, MooseX::SomethingElse. This is a pretty ugly
+# and messed up use case, but necessary until we come up with a better way to
+# do it.
+
+{
+    my @init_metas_called;
+
+    BEGIN {
+        package AlsoTest::Role1;
+        use Moose::Role;
+
+        $INC{'AlsoTest/Role1.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package AlsoTest1;
+        use Moose::Exporter;
+
+        Moose::Exporter->setup_import_methods(
+            also => [ 'Moose' ],
+        );
+
+        sub init_meta {
+            shift;
+            my %opts = @_;
+            ::ok(!Class::MOP::class_of($opts{for_class}));
+            push @init_metas_called, 1;
+        }
+
+        $INC{'AlsoTest1.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package AlsoTest2;
+        use Moose::Exporter;
+        use Moose::Util::MetaRole ();
+
+        Moose::Exporter->setup_import_methods;
+
+        sub init_meta {
+            shift;
+            my %opts = @_;
+            ::ok(Class::MOP::class_of($opts{for_class}));
+            Moose::Util::MetaRole::apply_metaroles(
+                for => $opts{for_class},
+                class_metaroles => {
+                    class => ['AlsoTest::Role1'],
+                },
+            );
+            push @init_metas_called, 2;
+        }
+
+        $INC{'AlsoTest2.pm'} = __FILE__;
+    }
+
+    BEGIN {
+        package AlsoTest3;
+        use Moose::Exporter;
+
+        Moose::Exporter->setup_import_methods(
+            also => [ 'AlsoTest1', 'AlsoTest2' ],
+        );
+
+        sub init_meta {
+            shift;
+            my %opts = @_;
+            ::ok(!Class::MOP::class_of($opts{for_class}));
+            push @init_metas_called, 3;
+        }
+
+        $INC{'AlsoTest3.pm'} = __FILE__;
+    }
+
+    BEGIN { @init_metas_called = () }
+    {
+        package UsesAlsoTest3;
+        use AlsoTest3;
+    }
+    use Data::Dumper;
+    BEGIN {
+        is_deeply(\@init_metas_called, [ 3, 1, 2 ])
+            || diag(Dumper(\@init_metas_called));
+        isa_ok(Class::MOP::class_of('UsesAlsoTest3'), 'Moose::Meta::Class');
+        does_ok(Class::MOP::class_of('UsesAlsoTest3'), 'AlsoTest::Role1');
+    }
+
 }
 
 done_testing;
