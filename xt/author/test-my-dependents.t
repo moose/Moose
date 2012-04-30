@@ -130,7 +130,17 @@ my @dists = sort
             map  { $_->{fields}{distribution} }
             @{ $res->{hits}{hits} };
 
-unless ( $ENV{MOOSE_TEST_MD} eq 'all' ) {
+if ( $ENV{MOOSE_TEST_MD} eq 'all' ) {
+    # Do nothing; @dists is already the full list.
+    # Gosh, I hope there's no 'all' in @dist that someone wants to run in isolation
+} elsif ( any { $_ eq $ENV{MOOSE_TEST_MD} } @dists ) {
+    diag( "Based on MOOSE_TEST_MD value, testing only $ENV{MOOSE_TEST_MD}" );
+    @dists = $ENV{MOOSE_TEST_MD};
+    # Trying to figure out how to get here?
+        # Maybe you are setting MOOSE_TEST_MD=Foo-Bar-1.23 when
+        # you really want to do MOOSE_TEST_MD=Foo-Bar
+        # See also %name_fix above (you want the key from that hash, not the value).
+} else {
     diag(
         'Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all dependents'
     );
