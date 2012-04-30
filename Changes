@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Fix init_meta order when multiple also packages are specified (this matters
+    when one of them is being used to actually initalize the metaclass,
+    typically with also => 'Moose'). Reported by Randy Stauner. (doy)
+
 2.0600 Sun, Apr 29, 2012
 
   [OTHER]
