@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0601 Tue, May 01, 2012
+
   [BUG FIXES]
 
   * Fix init_meta order when multiple also packages are specified (this matters
