@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Ensure that the Moose::Exporter-generated init_meta returns the same value
+    that it did previously. This isn't really a bug, since the return value has
+    never been tested or documented, but since the generated init_meta is
+    nothing more than a compatibility shim at this point, there's no reason to
+    not make it as compatible as possible. Reported by Moritz Onken. (doy)
+
 2.0601 Tue, May 01, 2012
 
   [BUG FIXES]
