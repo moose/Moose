@@ -737,7 +737,11 @@ sub _make_init_meta {
 
     return unless %new_style_roles || %old_style_roles || %base_class_roles;
 
-    return sub { };
+    return sub {
+        shift;
+        my %opts = @_;
+        $meta_lookup->($opts{for_class});
+    };
 }
 
 sub import {
