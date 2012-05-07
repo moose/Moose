@@ -82,6 +82,7 @@ my %skip = map { $_ => 1 } (
     'iTransact-Lite',               # tests rely on internet site
     'Log-Dispatch-Gtk2-Notify',     # gtk tests are graphical
     'LPDS',                         # gtk tests are graphical
+    'Net-SSH-Mechanize',            # the mock-ssh script it runs seems to spin endlessly
     'Net-SFTP-Foreign-Exceptional', # depends on running ssh
     'Periscope',                    # gtk tests are graphical
     'POE-Component-OpenSSH',        # depends on running ssh
