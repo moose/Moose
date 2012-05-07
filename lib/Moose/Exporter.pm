@@ -133,44 +133,71 @@ sub _make_exporter {
     );
 }
 
-{
-    my $seen = {};
+sub _follow_also {
+    my $class             = shift;
+    my $exporting_package = shift;
 
-    sub _follow_also {
-        my $class             = shift;
-        my $exporting_package = shift;
+    _die_if_cycle_found_in_also_list_for_package($exporting_package);
 
-        local %$seen = ( $exporting_package => 1 );
+    return uniq( _follow_also_real($exporting_package) );
+}
 
-        return uniq( _follow_also_real($exporting_package) );
+sub _follow_also_real {
+    my $exporting_package = shift;
+    my @also              = _also_list_for_package($exporting_package);
+
+    return map { $_, _follow_also_real($_) } @also;
+}
+
+sub _also_list_for_package {
+    my $package = shift;
+
+    if ( !exists $EXPORT_SPEC{$package} ) {
+        my $loaded = is_class_loaded($package);
+
+        die "Package in also ($package) does not seem to "
+            . "use Moose::Exporter"
+            . ( $loaded ? "" : " (is it loaded?)" );
     }
 
-    sub _follow_also_real {
-        my $exporting_package = shift;
+    my $also = $EXPORT_SPEC{$package}{also};
 
-        if ( !exists $EXPORT_SPEC{$exporting_package} ) {
-            my $loaded = is_class_loaded($exporting_package);
+    return unless defined $also;
 
-            die "Package in also ($exporting_package) does not seem to "
-                . "use Moose::Exporter"
-                . ( $loaded ? "" : " (is it loaded?)" );
-        }
+    return ref $also ? @$also : $also;
+}
 
-        my $also = $EXPORT_SPEC{$exporting_package}{also};
+# this is no Tarjan algorithm, but for the list sizes expected,
+# brute force will probably be fine (and more maintainable)
+sub _die_if_cycle_found_in_also_list_for_package {
+    my $package = shift;
+    _die_if_also_list_cycles_back_to_existing_stack(
+        [ _also_list_for_package($package) ],
+        [$package],
+    );
+}
 
-        return unless defined $also;
+sub _die_if_also_list_cycles_back_to_existing_stack {
+    my ( $also_list, $existing_stack ) = @_;
 
-        my @also = ref $also ? @{$also} : $also;
+    return unless @$also_list && @$existing_stack;
 
-        for my $package (@also) {
+    for my $also_member (@$also_list) {
+        for my $stack_member (@$existing_stack) {
+            next unless $also_member eq $stack_member;
+
             die
-                "Circular reference in 'also' parameter to Moose::Exporter between $exporting_package and $package"
-                if $seen->{$package};
-
-            $seen->{$package} = 1;
+                "Circular reference in 'also' parameter to Moose::Exporter between "
+                . join(
+                ', ',
+                @$existing_stack
+                ) . " and $also_member";
         }
 
-        return map { $_, _follow_also_real($_) } @also;
+        _die_if_also_list_cycles_back_to_existing_stack(
+            [ _also_list_for_package($also_member) ],
+            [ $also_member, @$existing_stack ],
+        );
     }
 }
 
