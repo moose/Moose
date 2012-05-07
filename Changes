@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0602 Mon, May 07, 2012
+
   [BUG FIXES]
 
   * Ensure that the Moose::Exporter-generated init_meta returns the same value
