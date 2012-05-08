@@ -606,12 +606,13 @@ it.
 
 If your attribute is an array reference or hash reference, the
 C<auto_deref> option will make Moose dereference the value when it is
-returned from the reader method:
+returned from the reader method I<in list context>:
 
   my %map = $object->mapping;
 
 This option only works if your attribute is explicitly typed as an
-C<ArrayRef> or C<HashRef>.
+C<ArrayRef> or C<HashRef>.  When the reader is called in I<scalar> context,
+the reference itself is returned.
 
 However, we recommend that you use L<Moose::Meta::Attribute::Native> traits
 for these types of attributes, which gives you much more control over how
