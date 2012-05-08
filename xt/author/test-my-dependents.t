@@ -184,6 +184,7 @@ mobirc                                 # HTTP::Session::State::GUID isn't instal
 Net-Bamboo                             # XML::Tidy isn't installed
 Tatsumaki-Template-Markapl             # Tatsumaki::Template isn't installed
 Text-Tradition                         # Bio::Phylo::IO isn't installed
+WebService-Strava                      # Any::URI::Escape isn't installed
 
 # no tests
 AI-ExpertSystem-Advanced               # no tests
@@ -457,6 +458,7 @@ Net-Parliament                         # broken
 Net-Plurk                              # broken
 Net-SSLeay-OO                          # broken
 Net-StackExchange                      # broken
+Norma                                  # fails when trying to write to a read-only SQLite db file under jenkins, also fails when run manually
 ODG-Record                             # Test::Benchmark broken
 Perlbal-Control                        # proc::processtable doesn't load
 Pg-BulkCopy                            # hardcodes /usr/bin/perl
