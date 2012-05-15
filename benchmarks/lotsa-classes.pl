@@ -20,6 +20,11 @@ my %class_writer = (
         my $attrs = join '', map { "has '$_' => ( is => 'ro', isa => 'Str' );\n" } @_;
         return qq{package $name;\nuse Moose;\n$attrs\n1;\n__END__\n};
     },
+    'MooseImmutable' => sub {
+        my $name = shift;
+        my $attrs = join '', map { "has '$_' => ( is => 'ro', isa => 'Str' );\n" } @_;
+        return qq{package $name;\nuse Moose;\n$attrs\n__PACKAGE__->meta->make_immutable;\n1;\n__END__\n};
+    },
     'Moo' => sub {
         my $name = shift;
         my $attrs = join'', map { "has '$_' => ( is => 'ro', isa => 'Str' );\n" } @_;
