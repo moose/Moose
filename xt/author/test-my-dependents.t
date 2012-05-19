@@ -73,6 +73,7 @@ my %skip = map { $_ => 1 } (
     'Data-Collector',               # depends on running ssh
     'Date-Biorhythm',               # Date::Business prompts in Makefile.PL
     'DBIx-PgLink',                  # prompts for a postgres password
+    'Fedora-App-MaintainerTools',   # requires rpm
     'Forest-Tree-Viewer-Gtk2',      # gtk tests are graphical
     'Games-Pandemic',               # tk tests are graphical
     'Games-RailRoad',               # tk tests are graphical
