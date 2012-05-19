@@ -220,6 +220,7 @@ Kafka-Client                           # no tests
 LWP-UserAgent-OfflineCache             # no tests
 Markdown-Pod                           # no tests
 MooseX-Types-DateTimeX                 # no tests
+MooseX-Types-DateTime-MoreCoercions    # no tests unless DateTime::Format::DateManip is installed
 Net-Azure-BlobService                  # no tests
 Net-Dropbox                            # no tests
 Net-Flowdock                           # no tests
@@ -242,6 +243,7 @@ WWW-MenuGrinder                        # no tests
 WWW-WuFoo                              # no tests
 
 # external dependencies
+AnyEvent-MSN                           # requires Net::SSLeay (which requires libssl)
 AnyEvent-Multilog                      # requires multilog
 AnyEvent-Net-Curl-Queued               # requires libcurl
 AnyEvent-ZeroMQ                        # requires zeromq installation
