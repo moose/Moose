@@ -626,7 +626,7 @@ sub _inline_init_attr_from_constructor {
     );
 
     push @initial_value, (
-        '$attrs->[' . $idx . ']->set_initial_value(',
+        '$attrs[' . $idx . ']->set_initial_value(',
             '$instance,',
             $attr->_inline_instance_get('$instance'),
         ');',
@@ -645,7 +645,7 @@ sub _inline_init_attr_from_default {
     my @initial_value = $attr->_inline_set_value('$instance', $default);
 
     push @initial_value, (
-        '$attrs->[' . $idx . ']->set_initial_value(',
+        '$attrs[' . $idx . ']->set_initial_value(',
             '$instance,',
             $attr->_inline_instance_get('$instance'),
         ');',
@@ -666,10 +666,10 @@ sub _inline_default_value {
         # in which case we can just deal with them
         # in the code we eval.
         if ($attr->is_default_a_coderef) {
-            return '$defaults->[' . $index . ']->($instance)';
+            return '$defaults[' . $index . ']->($instance)';
         }
         else {
-            return '$defaults->[' . $index . ']';
+            return '$defaults[' . $index . ']';
         }
     }
     elsif ($attr->has_builder) {
@@ -701,10 +701,10 @@ sub _eval_environment {
 
     my @attrs = sort { $a->name cmp $b->name } $self->get_all_attributes;
 
-    my $defaults = [map { $_->default } @attrs];
+    my @defaults = map { $_->default } @attrs;
 
     return {
-        '$defaults' => \$defaults,
+        '@defaults' => \@defaults,
     };
 }
 

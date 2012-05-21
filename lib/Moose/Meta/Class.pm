@@ -397,7 +397,7 @@ sub _inline_init_attr_from_constructor {
     );
 
     push @initial_value, (
-        '$attrs->[' . $idx . ']->set_initial_value(',
+        '$attrs[' . $idx . ']->set_initial_value(',
             '$instance,',
             $attr->_inline_instance_get('$instance'),
         ');',
@@ -427,7 +427,7 @@ sub _inline_init_attr_from_default {
     );
 
     push @initial_value, (
-        '$attrs->[' . $idx . ']->set_initial_value(',
+        '$attrs[' . $idx . ']->set_initial_value(',
             '$instance,',
             $attr->_inline_instance_get('$instance'),
         ');',
@@ -459,7 +459,7 @@ sub _inline_triggers {
 
         push @trigger_calls,
             'if (exists $params->{\'' . $init_arg . '\'}) {',
-                '$triggers->[' . $i . ']->(',
+                '$triggers[' . $i . ']->(',
                     '$instance,',
                     $attr->_inline_instance_get('$instance') . ',',
                 ');',
@@ -488,10 +488,10 @@ sub _eval_environment {
 
     my @attrs = sort { $a->name cmp $b->name } $self->get_all_attributes;
 
-    my $triggers = [
+    my @triggers = (
         map { $_->can('has_trigger') && $_->has_trigger ? $_->trigger : undef }
             @attrs
-    ];
+    );
 
     # We need to check if the attribute ->can('type_constraint')
     # since we may be trying to immutabilize a Moose meta class,
@@ -525,9 +525,9 @@ sub _eval_environment {
     return {
         %{ $self->SUPER::_eval_environment },
         ((any { defined && $_->has_initializer } @attrs)
-            ? ('$attrs' => \[@attrs])
+            ? ('@attrs' => \@attrs)
             : ()),
-        '$triggers' => \$triggers,
+        '@triggers' => \@triggers,
         '@type_coercions' => \@type_coercions,
         '@type_constraint_bodies' => \@type_constraint_bodies,
         '@type_constraint_messages' => \@type_constraint_messages,
