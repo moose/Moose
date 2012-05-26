@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * The super() subroutine now carps if you pass it arguments. These arguments
+    are always ignored, but we used to ignore them silently. RT #77383.
+
   [BUG FIXES]
 
   * Fix false positive when checking for circular references for modules that
