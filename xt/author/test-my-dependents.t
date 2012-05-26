@@ -125,7 +125,10 @@ if ( $ENV{MOOSE_TEST_MD} eq 'MooseX' ) {
 }
 elsif ( $ENV{MOOSE_TEST_MD} ne 'all' ) {
     diag(
-        'Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all dependents'
+        <<'EOF'
+  Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all
+  dependents or MOOSE_TEST_MD=MooseX to test extension modules only.
+EOF
     );
 
     my %indexes;
