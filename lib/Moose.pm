@@ -5,9 +5,8 @@ use warnings;
 use 5.008;
 
 use Scalar::Util 'blessed';
-use Carp         'confess';
+use Carp         'carp', 'confess';
 use Class::Load  'is_class_loaded';
-
 
 use Moose::Deprecated;
 use Moose::Exporter;
@@ -90,6 +89,10 @@ our $SUPER_BODY;
 our @SUPER_ARGS;
 
 sub super {
+    if (@_) {
+        carp 'Arguments passed to super() are ignored';
+    }
+
     # This check avoids a recursion loop - see
     # t/bugs/super_recursion.t
     return if defined $SUPER_PACKAGE && $SUPER_PACKAGE ne caller();
