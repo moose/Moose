@@ -443,6 +443,7 @@ MooseX-Error-Exception-Class           # metaclass compat breakage
 MooseX-Getopt-Usage                    # missing dep on Test::Class
 MooseX-Meta-Attribute-Index            # old moose apis
 MooseX-Meta-Attribute-Lvalue           # old moose apis
+MooseX-Scaffold                        # broken
 MooseX-Struct                          # ancient moose apis
 MooseX-Types-Parameterizable           # broken
 MooseX-WithCache                       # broken
