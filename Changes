@@ -5,6 +5,10 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
+  * Fix false positive when checking for circular references for modules that
+    use the "also" parameter with Moose::Exporter. Reported by Jon
+    Swartz. Fixed by Matthew Wickline. RT #63818.
+
   * Ensure that the Moose::Exporter-generated init_meta returns the same value
     that it did previously. This isn't really a bug, since the return value has
     never been tested or documented, but since the generated init_meta is
