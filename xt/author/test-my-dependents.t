@@ -41,7 +41,7 @@ use Moose ();
 diag(     'Test run performed at: '
         . DateTime->now
         . ' with Moose '
-        . Moose->VERSION );
+        . (Moose->VERSION || 'git repo') );
 
 $ENV{PERL_TEST_DM_LOG_DIR} = abs_path('.');
 delete @ENV{ qw( AUTHOR_TESTING RELEASE_TESTING SMOKE_TESTING ) };
@@ -69,54 +69,25 @@ my $res = $mcpan->post(
     }
 );
 
-my %todo_reasons = map {
-    chomp;
-    /^(\S*)\s*(?:#\s*(.*)\s*)?$/;
-    defined($1) && length($1) ? ($1 => $2) : ()
-} <DATA>;
-my %todo = map { $_ => 1 } keys %todo_reasons;
-
 my @skip_prefix = qw(Acme Task Bundle);
-my %skip = map { $_ => 1 } (
-    'App-CPAN2Pkg',                 # tk tests are graphical
-    'App-USBKeyCopyCon',            # gtk tests are graphical
-    'Bot-Backbone',                 # poe-loop-ev prompts
-    'Cache-Ehcache',                # hangs if server exists on port 8080
-    'CatalystX-Imports',            # assumes it can write to /tmp/testapp
-    'CatalystX-Restarter-GTK',      # gtk tests are graphical
-    'CM-Permutation',               # OpenGL uses graphics in Makefile.PL
-    'CPAN-Source',                  # assumes it can write to /tmp/.cache
-    'Dackup',                       # depends on running ssh
-    'Data-Collector',               # depends on running ssh
-    'Date-Biorhythm',               # Date::Business prompts in Makefile.PL
-    'DBIx-PgLink',                  # prompts for a postgres password
-    'Fedora-App-MaintainerTools',   # requires rpm
-    'Forest-Tree-Viewer-Gtk2',      # gtk tests are graphical
-    'Games-Pandemic',               # tk tests are graphical
-    'Games-RailRoad',               # tk tests are graphical
-    'Games-Risk',                   # tk tests are graphical
-    'Gearman-Driver',               # spews tar errors
-    'helm',                         # depends on running ssh
-    'iTransact-Lite',               # tests rely on internet site
-    'Log-Dispatch-Gtk2-Notify',     # gtk tests are graphical
-    'LPDS',                         # gtk tests are graphical
-    'Net-SSH-Mechanize',            # the mock-ssh script it runs seems to spin endlessly
-    'Net-SFTP-Foreign-Exceptional', # depends on running ssh
-    'Periscope',                    # gtk tests are graphical
-    'POE-Component-OpenSSH',        # depends on running ssh
-    'POE-Component-Server-SimpleHTTP-PreFork',  # ipc::shareable tests hang
-    'RDF-TrineX-RuleEngine-Jena',   # prompts in Makefile.PL
-    'Test-SFTP',                    # Term::ReadPassword prompts in tests
-    'Tk-Role-Dialog',               # tk tests are graphical
-    'Unicode-Emoji-E4U',            # tests rely on internet site
-    'Weaving-Tablet',               # tk tests are graphical
-    'WWW-eNom',                     # tests rely on internet site
-    'WWW-Finances-Bovespa',         # tests rely on internet site
-    'WWW-Hashdb',                   # test hangs, pegging cpu
-    'WWW-Vimeo-Download',           # tests rely on internet site
-    'WWW-YouTube-Download-Channel', # tests rely on internet site
-    'Zucchini',                     # File::Rsync prompts in Makefile.PL
-);
+my %skip;
+my %todo;
+
+my $hash;
+for my $line (<DATA>) {
+    chomp $line;
+    next unless $line =~ /\S/;
+    if ( $line =~ /^# (\w+)/ ) {
+        die "Invalid action in DATA section ($1)"
+            unless $1 eq 'SKIP' || $1 eq 'TODO';
+        $hash = $1 eq 'SKIP' ? \%skip : \%todo;
+    }
+
+    my ( $dist, $reason ) = $line =~ /^(\S*)\s*(?:#\s*(.*)\s*)?$/;
+    next unless defined $dist && length $dist;
+
+    $hash->{$dist} = $reason;
+}
 
 my %name_fix = (
     'App-passmanager'                => 'App::PassManager',
@@ -171,7 +142,7 @@ for my $dist (@dists) {
     my $module = $dist;
     $module = $name_fix{$module} if exists $name_fix{$module};
     if ($todo{$dist}) {
-        my $reason = $todo_reasons{$dist};
+        my $reason = $todo{$dist};
         $reason = '???' unless defined $reason;
         local $TODO = $reason;
         eval { test_module($module); 1 }
@@ -184,13 +155,13 @@ for my $dist (@dists) {
 }
 
 __DATA__
-# indexing issues (test::dm bugs?)
+# SKIP: indexing issues (test::dm bugs?)
 Alice                                  # couldn't find on cpan
 Hopkins                                # couldn't find on cpan
 PostScript-Barcode                     # couldn't find on cpan
 WWW-Mechanize-Query                    # couldn't find on cpan
 
-# doesn't install deps properly (test::dm bugs?)
+# SKIP: doesn't install deps properly (test::dm bugs?)
 App-Benchmark-Accessors                # Mojo::Base isn't installed
 Bot-BasicBot-Pluggable                 # Crypt::SaltedHash isn't installed
 Code-Statistics                        # MooseX::HasDefaults::RO isn't installed
@@ -207,7 +178,7 @@ Tatsumaki-Template-Markapl             # Tatsumaki::Template isn't installed
 Text-Tradition                         # Bio::Phylo::IO isn't installed
 WebService-Strava                      # Any::URI::Escape isn't installed
 
-# no tests
+# SKIP: no tests
 AI-ExpertSystem-Advanced               # no tests
 API-Assembla                           # no tests
 App-mkfeyorm                           # no tests
@@ -262,7 +233,7 @@ WebService-CloudFlare-Host             # no tests
 WWW-MenuGrinder                        # no tests
 WWW-WuFoo                              # no tests
 
-# external dependencies
+# SKIP: external dependencies
 AnyEvent-MSN                           # requires Net::SSLeay (which requires libssl)
 AnyEvent-Multilog                      # requires multilog
 AnyEvent-Net-Curl-Queued               # requires libcurl
@@ -305,6 +276,7 @@ MongoDB                                # requires mongo
 MSWord-ToHTML                          # requires abiword to be installed
 Net-DBus-Skype                         # requires dbus
 Net-Route                              # requires route
+Net-SFTP-Foreign-Exceptional           # depends on running ssh
 Net-UpYun                              # requires curl
 Net-ZooTool                            # requires curl
 Nginx-Control                          # requires nginx to be installed
@@ -333,7 +305,7 @@ WWW-Curl-Simple                        # requires curl
 ZeroMQ-PubSub                          # requires zmq
 ZMQ-Declare                            # requires zmq
 
-# flaky internet tests
+# SKIP: flaky internet tests
 iTransact-Lite                         # tests rely on internet site
 Unicode-Emoji-E4U                      # tests rely on internet site
 WWW-eNom                               # tests rely on internet site
@@ -341,7 +313,7 @@ WWW-Finances-Bovespa                   # tests rely on internet site
 WWW-Vimeo-Download                     # tests rely on internet site
 WWW-YouTube-Download-Channel           # tests rely on internet site
 
-# graphical
+# SKIP: graphical
 App-CPAN2Pkg                           # tk tests are graphical
 App-USBKeyCopyCon                      # gtk tests are graphical
 CatalystX-Restarter-GTK                # gtk tests are graphical
@@ -355,7 +327,17 @@ Periscope                              # gtk tests are graphical
 Tk-Role-Dialog                         # tk tests are graphical
 Weaving-Tablet                         # tk tests are graphical
 
-# failing for a reason
+# SKIP: prompts (or a dep prompts) or does something else dumb
+Bot-Backbone                           # poe-loop-ev prompts
+Cache-Ehcache                          # hangs if server exists on port 8080
+CM-Permutation                         # OpenGL uses graphics in Makefile.PL
+Date-Biorhythm                         # Date::Business prompts in Makefile.PL
+Gearman-Driver                         # spews tar errors
+Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
+WWW-Hashdb                             # test hangs, pegging cpu
+Zucchini                               # File::Rsync prompts in Makefile.PL
+
+# TODO: failing for a reason
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
 AnyEvent-BitTorrent                    # broken
 AnyEvent-Cron                          # intermittent failures
@@ -377,8 +359,6 @@ App-Twimap                             # dep on Web::oEmbed::Common
 App-Validation-Automation              # dep on Switch
 App-Wubot                              # broken
 Beagle                                 # depends on term::readline::perl
-Bot-Backbone                           # poe-loop-ev prompts
-Cache-Ehcache                          # hangs if server exists on port 8080
 Cache-Profile                          # broken
 Catalyst-Authentication-Store-LDAP-AD-Class  # pod coverage fail
 Catalyst-Controller-Resources          # broken
@@ -395,7 +375,6 @@ CatalystX-SimpleLogin                  # broken
 CatalystX-Usul                         # proc::processtable doesn't load
 Cheater                                # parse::randgen is broken
 Class-OWL                              # uses CMOP::Class without loading cmop
-CM-Permutation                         # OpenGL uses graphics in Makefile.PL
 Cogwheel                               # uses ancient moose apis
 Config-Model                           # broken
 Config-Model-Backend-Augeas            # deps on Config::Model
@@ -411,7 +390,6 @@ Data-Feed                              # broken (only sometimes?)
 Data-PackageName                       # broken
 Data-Pipeline                          # uses ancient moose apis
 Data-SCORM                             # pod coverage fail
-Date-Biorhythm                         # Date::Business prompts in Makefile.PL
 DayDayUp                               # MojoX-Fixup-XHTML doesn't exist
 DBICx-Modeler-Generator                # broken (weirdly)
 DBIx-SchemaChecksum                    # broken
@@ -547,7 +525,6 @@ WWW-Alltop                             # XML::SimpleObject configure fail
 WWW-DataWiki                           # broken
 WWW-Fandango                           # bad dist
 WWW-FMyLife                            # broken
-WWW-Hashdb                             # test hangs, pegging cpu
 WWW-Mechanize-Cached                   # tries to read from wrong build dir?
 WWW-Metalgate                          # Cache is broken
 WWW-Scramble                           # pod::coverage fail
@@ -560,4 +537,3 @@ XML-EPP                                # coerce without coercion
 XML-SRS                                # deps on prang
 XML-Writer-Compiler                    # broken tests
 Yukki                                  # git::repository is broken
-Zucchini                               # File::Rsync prompts in Makefile.PL
