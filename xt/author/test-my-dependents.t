@@ -442,6 +442,7 @@ MooseX-Meta-Attribute-Index            # old moose apis
 MooseX-Meta-Attribute-Lvalue           # old moose apis
 MooseX-Struct                          # ancient moose apis
 MooseX-Types-Parameterizable           # broken
+MooseX-WithCache                       # broken
 MouseX-Types                           # broken (with moose)
 MySQL-Util                             # pod-coverage fail
 Nagios-Passive                         # broken
