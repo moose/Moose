@@ -245,6 +245,7 @@ AnyMQ-ZeroMQ                           # requires zeromq installation
 Apache2-HttpEquiv                      # requires apache (for mod_perl)
 App-Mimosa                             # requires fastacmd
 App-PgCryobit                          # requires postgres installation
+App-SimplenoteSync                     # requires File::ExtAttr which requires libattr
 Archive-RPM                            # requires cpio
 Bot-Jabbot                             # requires libidn
 Catalyst-Engine-Stomp                  # depends on alien::activemq
@@ -299,6 +300,7 @@ RDF-TrineX-RuleEngine-Jena             # requires Jena
 SimpleDB-Class                         # requires memcached
 SVN-Simple-Hook                        # requires svn
 SVN-Tree                               # requires svn
+Tapper-MCP                             # depends on everything under the sun - some of which is broken
 Template-JavaScript                    # requires v8
 TheSchwartz-Moosified                  # requires DBI::Pg ?
 WebService-SendGrid                    # requires curl
@@ -443,6 +445,7 @@ MooseX-Error-Exception-Class           # metaclass compat breakage
 MooseX-Getopt-Usage                    # missing dep on Test::Class
 MooseX-Meta-Attribute-Index            # old moose apis
 MooseX-Meta-Attribute-Lvalue           # old moose apis
+MooseX-Role-XMLRPC-Client              # requires LWP::Protocol::http which requires libssl
 MooseX-Scaffold                        # broken
 MooseX-Struct                          # ancient moose apis
 MooseX-Types-Parameterizable           # broken
@@ -458,6 +461,7 @@ Net-Google-FederatedLogin              # broken
 NetHack-Item                           # NH::Monster::Spoiler is broken
 NetHack-Monster-Spoiler                # broken (MX::CA issues)
 Net-HTTP-Factual                       # broken
+Net-Jabber-Bot                         # broken
 Net-Journyx                            # broken
 Net-Mollom                             # broken
 Net-Parliament                         # broken
