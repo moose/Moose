@@ -5,7 +5,24 @@ use Cwd qw( abs_path );
 use Test::More;
 
 BEGIN {
-    plan skip_all => 'This test will not run unless you set MOOSE_TEST_MD to a true value'
+    my $help = <<'EOF';
+
+
+  This test will not run unless you set MOOSE_TEST_MD to a true value.
+  Valid values are:
+
+     all     Test every distro which depends on Moose except those that we know
+             cannot be tested. This is a lot of distros (thousands).
+
+     MooseX  Test all Moose extension distros
+             (MooseX modules plus a few others).
+
+     $true   Any other true value runs the default tests. We pick 200 random
+             distros and test them.
+
+EOF
+
+    plan skip_all => $help
         unless $ENV{MOOSE_TEST_MD};
 }
 
@@ -132,7 +149,10 @@ my @dists = sort
             map  { $_->{fields}{distribution} }
             @{ $res->{hits}{hits} };
 
-unless ( $ENV{MOOSE_TEST_MD} eq 'all' ) {
+if ( $ENV{MOOSE_TEST_MD} eq 'MooseX' ) {
+    @dists = grep { /^(?:MooseX-|Fey-ORM)/ } @dists;
+}
+elsif ( $ENV{MOOSE_TEST_MD} ne 'all' ) {
     diag(
         'Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all dependents'
     );
