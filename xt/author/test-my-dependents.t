@@ -338,11 +338,13 @@ Bot-Backbone                           # poe-loop-ev prompts
 Cache-Ehcache                          # hangs if server exists on port 8080
 CM-Permutation                         # OpenGL uses graphics in Makefile.PL
 Date-Biorhythm                         # Date::Business prompts in Makefile.PL
+DBIx-VersionedDDL                      # runs a script with /usr/bin/perl in the shbang line
+File-Tail-Scribe                       # tests hang
 Gearman-Driver                         # spews tar errors
 Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
 WWW-Hashdb                             # test hangs, pegging cpu
 Zucchini                               # File::Rsync prompts in Makefile.PL
-DBIx-VersionedDDL                      # runs a script with /usr/bin/perl in the shbang line
+
 
 # TODO: failing for a reason
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
