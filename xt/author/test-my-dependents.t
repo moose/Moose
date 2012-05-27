@@ -406,6 +406,7 @@ Devel-Events                           # broken (role conflict)
 Dist-Zilla-Deb                         # pod coverage fail
 Dist-Zilla-Plugin-ChangelogFromGit-Debian # git::repository is broken
 Dist-Zilla-Plugin-CheckChangesHasContent  # broken
+Dist-Zilla-Plugin-PerlTidy             # expects to find dzil in the path
 Dist-Zilla-Plugin-ProgCriticTests      # broken
 Dist-Zilla-Plugin-Test-ReportPrereqs   # broken
 DustyDB                                # uses old moose apis
