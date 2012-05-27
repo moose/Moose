@@ -440,6 +440,7 @@ LaTeX-TikZ                             # broken (with moose)
 marc-moose                             # broken (only sometimes?)
 Mail-Summary-Tools                     # DT::Format::DateManip is broken
 MediaWiki-USERINFO                     # broken
+Metabase-Backend-MongoDB               # broken
 Method-Signatures                      # doesn't like ANY_MOOSE=Moose
 mobirc                                 # http::engine broken
 MooseX-Attribute-Prototype             # uses old moose apis
