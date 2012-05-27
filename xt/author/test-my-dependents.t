@@ -442,6 +442,7 @@ marc-moose                             # broken (only sometimes?)
 Mail-Summary-Tools                     # DT::Format::DateManip is broken
 MediaWiki-USERINFO                     # broken
 Metabase-Backend-MongoDB               # broken
+Metabase-Backend-SQL                   # broken (I think)
 Method-Signatures                      # doesn't like ANY_MOOSE=Moose
 mobirc                                 # http::engine broken
 MooseX-Attribute-Prototype             # uses old moose apis
