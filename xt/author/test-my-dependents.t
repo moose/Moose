@@ -285,6 +285,7 @@ Net-UpYun                              # requires curl
 Net-ZooTool                            # requires curl
 Nginx-Control                          # requires nginx to be installed
 NLP-Service                            # requires javac
+Padre-Plugin-Cookbook                  # requires Wx
 Padre-Plugin-Moose                     # requires threaded perl
 Padre-Plugin-PDL                       # requires threaded perl
 Padre-Plugin-Snippet                   # requires threaded perl
