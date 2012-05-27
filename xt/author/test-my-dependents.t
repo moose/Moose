@@ -342,6 +342,7 @@ Gearman-Driver                         # spews tar errors
 Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
 WWW-Hashdb                             # test hangs, pegging cpu
 Zucchini                               # File::Rsync prompts in Makefile.PL
+DBIx-VersionedDDL                      # runs a script with /usr/bin/perl in the shbang line
 
 # TODO: failing for a reason
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
