@@ -345,7 +345,6 @@ Net-SSH-Mechanize                      # the mock-ssh script it runs seems to sp
 WWW-Hashdb                             # test hangs, pegging cpu
 Zucchini                               # File::Rsync prompts in Makefile.PL
 
-
 # TODO: failing for a reason
 Algorithm-KernelKMeans                 # mx-types-common changes broke it
 AnyEvent-BitTorrent                    # broken
@@ -406,7 +405,9 @@ Debian-Apt-PM                          # configure time failures
 Devel-Events                           # broken (role conflict)
 Dist-Zilla-Deb                         # pod coverage fail
 Dist-Zilla-Plugin-ChangelogFromGit-Debian # git::repository is broken
+Dist-Zilla-Plugin-CheckChangesHasContent  # broken
 Dist-Zilla-Plugin-ProgCriticTests      # broken
+Dist-Zilla-Plugin-Test-ReportPrereqs   # broken
 DustyDB                                # uses old moose apis
 Dwimmer                                # broken
 Facebook-Graph                         # broken
