@@ -436,6 +436,7 @@ HTML-TreeBuilderX-ASP_NET              # broken
 HTTP-Engine-Middleware                 # missing dep on yaml
 Image-Robohash                         # Graphics::Magick doesn't exist
 JavaScript-Framework-jQuery            # coerce with no coercion
+Jenkins-NotificationListener           # missing dep on File::Read
 Jifty                                  # Test::WWW::Selenium needs devel::repl
 JSORB                                  # broken
 Jungle                                 # broken
