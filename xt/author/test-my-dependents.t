@@ -408,6 +408,7 @@ Devel-Events                           # broken (role conflict)
 Dist-Zilla-Deb                         # pod coverage fail
 Dist-Zilla-Plugin-ChangelogFromGit-Debian # git::repository is broken
 Dist-Zilla-Plugin-CheckChangesHasContent  # broken
+Dist-Zilla-Plugin-Git                  # tests fail when run in a temp dir
 Dist-Zilla-Plugin-PerlTidy             # expects to find dzil in the path
 Dist-Zilla-Plugin-Pinto-Add            # deps on Pinto::Common
 Dist-Zilla-Plugin-ProgCriticTests      # broken
@@ -457,6 +458,7 @@ MooseX-Documenter                      # broken
 MooseX-DOM                             # "no Moose" unimports confess
 MooseX-Error-Exception-Class           # metaclass compat breakage
 MooseX-Getopt-Usage                    # missing dep on Test::Class
+MooseX-GTIN                            # broken (under jenkins, at least)
 MooseX-Meta-Attribute-Index            # old moose apis
 MooseX-Meta-Attribute-Lvalue           # old moose apis
 MooseX-Role-XMLRPC-Client              # requires LWP::Protocol::http which requires libssl
@@ -547,6 +549,7 @@ Webservice-Intermine                   # broken tests
 WebService-Yes24                       # broken
 WiX3                                   # broken
 WWW-Alltop                             # XML::SimpleObject configure fail
+WWW-Comix                              # uses ancient Moose::Policy stuff
 WWW-DataWiki                           # broken
 WWW-Fandango                           # bad dist
 WWW-FMyLife                            # broken
