@@ -409,6 +409,7 @@ Dist-Zilla-Deb                         # pod coverage fail
 Dist-Zilla-Plugin-ChangelogFromGit-Debian # git::repository is broken
 Dist-Zilla-Plugin-CheckChangesHasContent  # broken
 Dist-Zilla-Plugin-PerlTidy             # expects to find dzil in the path
+Dist-Zilla-Plugin-Pinto-Add            # deps on Pinto::Common
 Dist-Zilla-Plugin-ProgCriticTests      # broken
 Dist-Zilla-Plugin-Test-ReportPrereqs   # broken
 DustyDB                                # uses old moose apis
@@ -486,7 +487,8 @@ ODG-Record                             # Test::Benchmark broken
 Perlbal-Control                        # proc::processtable doesn't load
 Pg-BulkCopy                            # hardcodes /usr/bin/perl
 Pinto-Common                           # broken
-Pinto-Server                           # deps on pinto::common
+Pinto-Remove                           # deps on Pinto::Common
+Pinto-Server                           # deps on Pinto::Common
 Plack-Middleware-Image-Scale           # Image::Scale is broken
 Pod-Parser-I18N                        # missing dep on Data::Localize
 POE-Component-CPAN-Mirror-Multiplexer  # broken
