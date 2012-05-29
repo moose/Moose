@@ -343,6 +343,7 @@ File-Tail-Scribe                       # tests hang
 Gearman-Driver                         # spews tar errors
 IPC-AnyEvent-Gearman                   # tests hang
 Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
+POE-Component-Server-SimpleHTTP-PreFork # tests hang
 WWW-Hashdb                             # test hangs, pegging cpu
 Zucchini                               # File::Rsync prompts in Makefile.PL
 
@@ -413,12 +414,14 @@ Dist-Zilla-Plugin-Test-ReportPrereqs   # broken
 DustyDB                                # uses old moose apis
 Dwimmer                                # broken
 Facebook-Graph                         # broken
+FCGI-Engine                            # runs scripts without using $^X
 Fedora-Bugzilla                        # deps on nonexistent things
 FFmpeg-Thumbnail                       # undeclared dep
 File-DataClass                         # XML::DTD is a broken dist
 File-Stat-Moose                        # old moose apis
 File-Tail-Dir                          # intermittent fails (i think)
 Form-Factory                           # uses old moose apis
+Form-Sensible                          # broken
 FormValidator-Nested                   # broken
 Frost                                  # broken
 Games-Dice-Loaded                      # flaky tests
@@ -530,6 +533,7 @@ Test-Pockito                           # broken
 Test-SFTP                              # Term::ReadPassword prompts in tests
 Test-WWW-Selenium-More                 # Test::WWW::Selenium needs devel::repl
 Text-Clevery                           # broken
+Text-Zilla                             # broken
 Thorium                                # depends on Hobocamp
 TryCatch-Error                         # broken
 Verby                                  # deps on poe::component::resourcepool
