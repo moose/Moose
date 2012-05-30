@@ -237,6 +237,7 @@ WWW-MenuGrinder                        # no tests
 WWW-WuFoo                              # no tests
 
 # SKIP: external dependencies
+Alien-Ditaa                            # runs java code
 AnyEvent-MSN                           # requires Net::SSLeay (which requires libssl)
 AnyEvent-Multilog                      # requires multilog
 AnyEvent-Net-Curl-Queued               # requires libcurl
