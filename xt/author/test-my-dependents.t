@@ -379,6 +379,7 @@ Catalyst-Plugin-Session-State-Cookie   # broken
 Catalyst-Plugin-Session-Store-TestMemcached # dep with corrupt archive
 Catalyst-Plugin-SwiffUploaderCookieHack  # undeclared dep
 Catalyst-TraitFor-Request-PerLanguageDomains # dep on ::State::Cookie
+CatalystX-ExtJS-Direct                 # broken
 CatalystX-I18N                         # dep on ::State::Cookie
 CatalystX-MooseComponent               # broken
 CatalystX-SimpleLogin                  # broken
