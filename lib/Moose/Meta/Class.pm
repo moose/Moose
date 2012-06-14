@@ -780,9 +780,9 @@ sub raise_error {
 }
 
 sub _inline_raise_error {
-    my ( $self, $message ) = @_;
+    my ( $self, $error ) = @_;
 
-    return 'die ' . $message;
+    return 'die ' . $error;
 }
 
 sub create_error {
