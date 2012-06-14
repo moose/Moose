@@ -765,82 +765,17 @@ our $error_level;
 
 sub throw_error {
     my ( $self, @args ) = @_;
-    local $error_level = ($error_level || 0) + 1;
-    $self->raise_error($self->create_error(@args));
+
+    Moose::Util::throw(@args);
 }
 
 sub _inline_throw_error {
-    my ( $self, @args ) = @_;
-    $self->_inline_raise_error($self->_inline_create_error(@args));
-}
-
-sub raise_error {
-    my ( $self, @args ) = @_;
-    die @args;
-}
-
-sub _inline_raise_error {
-    my ( $self, $error ) = @_;
-
-    return 'die ' . $error;
-}
-
-sub create_error {
-    my ( $self, @args ) = @_;
-
-    require Carp::Heavy;
-
-    local $error_level = ($error_level || 0 ) + 1;
-
-    if ( @args % 2 == 1 ) {
-        unshift @args, "message";
-    }
-
-    my %args = ( metaclass => $self, last_error => $@, @args );
-
-    $args{depth} += $error_level;
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    load_class($class);
-
-    $class->new(
-        Carp::caller_info($args{depth}),
-        %args
-    );
-}
-
-sub _inline_create_error {
     my ( $self, $msg, $args ) = @_;
-    # XXX ignore $args for now, nothing currently uses it anyway
 
-    require Carp::Heavy;
-
-    my %args = (
-        metaclass  => $self,
-        last_error => $@,
-        message    => $msg,
-    );
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    load_class($class);
-
-    # don't check inheritance here - the intention is that the class needs
-    # to provide a non-inherited inlining method, because falling back to
-    # the default inlining method is most likely going to be wrong
-    # yes, this is a huge hack, but so is the entire error system, so.
-    return
-          '$meta->create_error('
-        . $msg
-        . ( defined $args ? ', ' . $args : q{} ) . ');'
-        unless $class->meta->has_method('_inline_new');
-
-    $class->_inline_new(
-        # XXX ignore this for now too
-        # Carp::caller_info($args{depth}),
-        %args
-    );
+    return 'Moose::Util::throw(' .
+        'message => ' . $msg .
+        ($args ? (', ' . $args) : '')
+    . ');';
 }
 
 1;
