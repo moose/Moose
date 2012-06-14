@@ -70,7 +70,7 @@ sub throw_exception {
 sub extends {
     my $meta = shift;
 
-    Moose->throw_error("Must derive at least one class") unless @_;
+    Moose->throw_exception("Must derive at least one class") unless @_;
 
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
