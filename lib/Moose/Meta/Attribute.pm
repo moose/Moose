@@ -695,7 +695,10 @@ sub _inline_check_constraint {
                   . 'do { local $_ = ' . $value . '; '
                       . $message . '->(' . $value . ')'
                   . '}',
-                    'data => ' . $value
+                    'roles => ["Moose::Exception::TypeConstraint"]',
+                    'attribute_name => ' . $self->name,
+                    'type_name => ' . $self->type_constraint->name,
+                    'value => ' . $value,
                 ) . ';',
             '}',
         );
@@ -709,7 +712,10 @@ sub _inline_check_constraint {
                   . 'do { local $_ = ' . $value . '; '
                       . $message . '->(' . $value . ')'
                   . '}',
-                    'data => ' . $value
+                    'roles => ["Moose::Exception::TypeConstraint"]',
+                    'attribute_name => ' . $self->name,
+                    'type_name => ' . $self->type_constraint->name,
+                    'value => ' . $value,
                 ) . ';',
             '}',
         );
@@ -1255,10 +1261,16 @@ sub verify_against_type_constraint {
     my $type_constraint = $self->type_constraint;
 
     $type_constraint->check($val)
-        || $self->throw_error("Attribute ("
+        || $self->throw_error(
+                superclass => 'Moose::Exception::TypeConstraint',
+                message => "Attribute ("
                  . $self->name
                  . ") does not pass the type constraint because: "
-                 . $type_constraint->get_message($val), data => $val, @_);
+                 . $type_constraint->get_message($val),
+                 value => $val,
+                 attribute_name => $self->name,
+                 type_name => $type_constraint->name,
+                 @_);
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
