@@ -29,6 +29,7 @@ my @exports = qw[
     english_list
     meta_attribute_alias
     meta_class_alias
+    throw
 ];
 
 Sub::Exporter::setup_exporter({
@@ -469,6 +470,26 @@ sub _is_role_only_subclass {
 
     return 1;
 }
+
+sub throw {
+    my %args;
+    if (@_ == 1) {
+        $args{message} = shift;
+    }
+    else {
+        %args = @_;
+    }
+
+    my $roles = delete($args{roles});
+
+    my $metaclass = Moose::Meta::Class->create_anon_class(
+        superclasses => ['Throwable::Error'],
+        ($roles ? (roles => $roles) : ()),
+    );
+
+    $metaclass->name->throw(\%args);
+}
+
 
 1;
 

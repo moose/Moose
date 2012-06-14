@@ -46,31 +46,10 @@ sub throw_error {
     goto \&confess
 }
 
-sub throw_exception {
-    shift;
-
-    my %args;
-    if (@_ == 1) {
-        $args{message} = shift;
-    }
-    else {
-        %args = @_;
-    }
-
-    my $roles = delete($args{roles});
-
-    my $metaclass = Moose::Meta::Class->create_anon_class(
-        superclasses => ['Throwable::Error'],
-        ($roles ? (roles => $roles) : ()),
-    );
-
-    $metaclass->name->throw(\%args);
-}
-
 sub extends {
     my $meta = shift;
 
-    Moose->throw_exception("Must derive at least one class") unless @_;
+    Moose::Util::throw("Must derive at least one class") unless @_;
 
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
