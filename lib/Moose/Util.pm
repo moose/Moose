@@ -480,10 +480,11 @@ sub throw {
         %args = @_;
     }
 
+    my $superclasses = delete($args{superclasses}) || ['Throwable::Error'];
     my $roles = delete($args{roles});
 
     my $metaclass = Moose::Meta::Class->create_anon_class(
-        superclasses => ['Throwable::Error'],
+        superclasses => $superclasses,
         ($roles ? (roles => $roles) : ()),
     );
 
