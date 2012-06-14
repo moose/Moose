@@ -485,6 +485,8 @@ sub throw {
 
     my $metaclass;
 
+    load_class($superclass);
+
     if ($roles) {
         $metaclass = Moose::Meta::Class->create_anon_class(
             superclasses => [$superclass],
