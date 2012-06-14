@@ -1,5 +1,5 @@
 package Throwable::Error;
-use Moose 0.87;
+use Moose;
 with 'Throwable', 'StackTrace::Auto';
 # ABSTRACT: an easy-to-use class for error objects
 

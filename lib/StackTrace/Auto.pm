@@ -1,5 +1,5 @@
 package StackTrace::Auto;
-use Moose::Role 0.87;
+use Moose::Role;
 # ABSTRACT: a role for generating stack traces during instantiation
 
 =head1 SYNOPSIS

@@ -1,5 +1,5 @@
 package Throwable;
-use Moose::Role 0.87;
+use Moose::Role;
 # ABSTRACT: a role for classes that can be thrown
 
 =head1 SYNOPSIS
