@@ -358,30 +358,4 @@ close_over_ok('WithInitializer', 'foo');
 close_over_ok('WithInitializer', $_) for qw(new bar);
 }
 
-BEGIN {
-    package CustomErrorClass;
-    use Moose;
-    extends 'Moose::Error::Default';
-}
-
-{
-    package WithCustomErrorClass;
-    use metaclass (
-        metaclass => 'Moose::Meta::Class',
-        error_class => 'CustomErrorClass',
-    );
-    use Moose;
-
-    has foo => (
-        is  => 'ro',
-        isa => 'Str',
-    );
-
-    __PACKAGE__->meta->make_immutable;
-}
-
-{ local $TODO = "custom error classes still close over things";
-close_over_ok('WithCustomErrorClass', $_) for qw(new foo);
-}
-
 done_testing;
