@@ -3,8 +3,8 @@ use Moose;
 extends 'Throwable::Error';
 
 
-
-__PACKAGE__->meta->make_immutable;
+# can't inline constructor because of Throwable::Error's API
+__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 no Moose;
 1;
 
