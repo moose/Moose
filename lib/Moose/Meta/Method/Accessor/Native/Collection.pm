@@ -96,7 +96,8 @@ sub _inline_check_member_constraint {
     my $self = shift;
     my ($new_value) = @_;
 
-    my $attr_name = $self->associated_attribute->name;
+    my $attr_name = quotemeta($self->associated_attribute->name);
+    my $type_name = quotemeta($self->_tc_member_type->name);
 
     my $check
         = $self->_tc_member_type->can_be_inlined
@@ -110,7 +111,10 @@ sub _inline_check_member_constraint {
                     '"A new member value for ' . $attr_name
                   . ' does not pass its type constraint because: "' . ' . '
                   . 'do { local $_ = $new_val; $member_message->($new_val) }',
-                    'data => $new_val',
+                    'class => "Moose::Exception::TypeConstraint",' .
+                    'attribute_name => \'' . $attr_name . '\',' .
+                    'type_name => \'' . $type_name . '\',' .
+                    'value => ' . $new_value
                 ) . ';',
             '}',
         '}',
