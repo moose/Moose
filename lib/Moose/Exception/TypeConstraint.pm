@@ -1,6 +1,6 @@
 package Moose::Exception::TypeConstraint;
 use Moose;
-extends 'Throwable::Error';
+extends 'Moose::Exception';
 
 has attribute_name => (
     is  => 'ro',
