@@ -194,7 +194,7 @@ sub clone_and_inherit_options {
 
     my @found_illegal_options = grep { exists $options{$_} && exists $self->{$_} ? $_ : undef } @illegal_options;
     (scalar @found_illegal_options == 0)
-        || $self->throw_error(message => "Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
+        || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
 
     if ($options{isa}) {
         my $type_constraint;
@@ -204,7 +204,7 @@ sub clone_and_inherit_options {
         else {
             $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa}, { package_defined_in => $options{definition_context}->{package} });
             (defined $type_constraint)
-                || $self->throw_error(message => "Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
+                || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
         }
 
         $options{type_constraint} = $type_constraint;
@@ -218,7 +218,7 @@ sub clone_and_inherit_options {
         else {
             $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does}, { package_defined_in => $options{definition_context}->{package} });
             (defined $type_constraint)
-                || $self->throw_error(message => "Could not find the type constraint '" . $options{does} . "'", data => $options{does});
+                || $self->throw_error("Could not find the type constraint '" . $options{does} . "'", data => $options{does});
         }
 
         $options{type_constraint} = $type_constraint;
@@ -296,7 +296,7 @@ sub _process_is_option {
 
     if ( $options->{is} eq 'ro' ) {
         $class->throw_error(
-            message => "Cannot define an accessor name on a read-only attribute, accessors are read/write",
+            "Cannot define an accessor name on a read-only attribute, accessors are read/write",
             data => $options )
             if exists $options->{accessor};
         $options->{reader} ||= $name;
@@ -314,11 +314,9 @@ sub _process_is_option {
         # do nothing, but don't complain (later) about missing methods
     }
     else {
-        $class->throw_error(
-            message => "I do not understand this option (is => "
-                     . $options->{is}
-                     . ") on attribute ($name)", data => $options->{is}
-        );
+        $class->throw_error( "I do not understand this option (is => "
+                . $options->{is}
+                . ") on attribute ($name)", data => $options->{is} );
     }
 }
 
@@ -331,12 +329,12 @@ sub _process_isa_option {
         if ( try { $options->{isa}->can('does') } ) {
             ( $options->{isa}->does( $options->{does} ) )
                 || $class->throw_error(
-                message => "Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)",
+                "Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)",
                 data => $options );
         }
         else {
             $class->throw_error(
-                message => "Cannot have an isa option which cannot ->does() on attribute ($name)",
+                "Cannot have an isa option which cannot ->does() on attribute ($name)",
                 data => $options );
         }
     }
@@ -381,11 +379,11 @@ sub _process_coerce_option {
 
     ( exists $options->{type_constraint} )
         || $class->throw_error(
-        message => "You cannot have coercion without specifying a type constraint on attribute ($name)",
+        "You cannot have coercion without specifying a type constraint on attribute ($name)",
         data => $options );
 
     $class->throw_error(
-        message => "You cannot have a weak reference to a coerced value on attribute ($name)",
+        "You cannot have a weak reference to a coerced value on attribute ($name)",
         data => $options )
         if $options->{weak_ref};
 
@@ -406,7 +404,7 @@ sub _process_trigger_option {
     return unless exists $options->{trigger};
 
     ( 'CODE' eq ref $options->{trigger} )
-        || $class->throw_error(message => "Trigger must be a CODE ref on attribute ($name)", data => $options->{trigger});
+        || $class->throw_error("Trigger must be a CODE ref on attribute ($name)", data => $options->{trigger});
 }
 
 sub _process_auto_deref_option {
@@ -416,13 +414,13 @@ sub _process_auto_deref_option {
 
     ( exists $options->{type_constraint} )
         || $class->throw_error(
-        message => "You cannot auto-dereference without specifying a type constraint on attribute ($name)",
+        "You cannot auto-dereference without specifying a type constraint on attribute ($name)",
         data => $options );
 
     ( $options->{type_constraint}->is_a_type_of('ArrayRef')
       || $options->{type_constraint}->is_a_type_of('HashRef') )
         || $class->throw_error(
-        message => "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)",
+        "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)",
         data => $options );
 }
 
@@ -432,7 +430,7 @@ sub _process_lazy_build_option {
     return unless $options->{lazy_build};
 
     $class->throw_error(
-        message => "You can not use lazy_build and default for the same attribute ($name)",
+        "You can not use lazy_build and default for the same attribute ($name)",
         data => $options )
         if exists $options->{default};
 
@@ -456,7 +454,7 @@ sub _process_lazy_option {
 
     ( exists $options->{default} || defined $options->{builder} )
         || $class->throw_error(
-        message => "You cannot have a lazy attribute ($name) without specifying a default value for it",
+        "You cannot have a lazy attribute ($name) without specifying a default value for it",
         data => $options );
 }
 
@@ -472,7 +470,7 @@ sub _process_required_option {
         )
         ) {
         $class->throw_error(
-            message => "You cannot have a required attribute ($name) without a default, builder, or an init_arg",
+            "You cannot have a required attribute ($name) without a default, builder, or an init_arg",
             data => $options );
     }
 }
@@ -492,7 +490,7 @@ sub initialize_instance_slot {
         # skip it if it's lazy
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
-        $self->throw_error(message => "Attribute (" . $self->name . ") is required", object => $instance, data => $params)
+        $self->throw_error("Attribute (" . $self->name . ") is required", object => $instance, data => $params)
             if $self->is_required && !$self->has_default && !$self->has_builder;
 
         # if nothing was in the %params, we can use the
@@ -526,13 +524,12 @@ sub _call_builder {
     return $instance->$builder()
         if $instance->can( $self->builder );
 
-    $self->throw_error(
-            message => blessed($instance)
-                     . " does not support builder method '"
-                     . $self->builder
-                     . "' for attribute '"
-                     . $self->name
-                     . "'",
+    $self->throw_error(  blessed($instance)
+            . " does not support builder method '"
+            . $self->builder
+            . "' for attribute '"
+            . $self->name
+            . "'",
             object => $instance,
      );
 }
@@ -555,7 +552,7 @@ sub set_value {
     my $attr_name = quotemeta($self->name);
 
     if ($self->is_required and not @args) {
-        $self->throw_error(message => "Attribute ($attr_name) is required", object => $instance);
+        $self->throw_error("Attribute ($attr_name) is required", object => $instance);
     }
 
     $value = $self->_coerce_and_verify( $value, $instance );
@@ -841,7 +838,7 @@ sub get_value {
             return wantarray ? %{ $rv } : $rv;
         }
         else {
-            $self->throw_error(message => "Can not auto de-reference the type constraint '" . $type_constraint->name . "'", object => $instance, type_constraint => $type_constraint);
+            $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", object => $instance, type_constraint => $type_constraint);
         }
 
     }
@@ -887,7 +884,7 @@ sub _inline_init_from_default {
 
     if (!($self->has_default || $self->has_builder)) {
         $self->throw_error(
-            message => 'You cannot have a lazy attribute '
+            'You cannot have a lazy attribute '
           . '(' . $self->name . ') '
           . 'without specifying a default value for it',
             attr => $self,
@@ -939,7 +936,7 @@ sub _inline_generate_default {
     }
     else {
         $self->throw_error(
-            message => "Can't generate a default for " . $self->name
+            "Can't generate a default for " . $self->name
           . " since no default or builder was specified"
         );
     }
@@ -980,7 +977,7 @@ sub _auto_deref {
     }
     else {
         $self->throw_error(
-            message => 'Can not auto de-reference the type constraint \''
+            'Can not auto de-reference the type constraint \''
           . $type_constraint->name
           . '\'',
             type_constraint => $type_constraint,
@@ -1089,7 +1086,7 @@ sub install_delegation {
 
         if ( my $method = $associated_class->get_method($handle) ) {
             $self->throw_error(
-                message => "You cannot overwrite a locally defined method ($handle) with a delegation",
+                "You cannot overwrite a locally defined method ($handle) with a delegation",
                 method_name => $handle
             ) unless $method->is_stub;
         }
@@ -1137,7 +1134,7 @@ sub _canonicalize_handles {
         }
         elsif ($handle_type eq 'Regexp') {
             ($self->has_type_constraint)
-                || $self->throw_error(message => "Cannot delegate methods based on a Regexp without a type constraint (isa)", data => $handles);
+                || $self->throw_error("Cannot delegate methods based on a Regexp without a type constraint (isa)", data => $handles);
             return map  { ($_ => $_) }
                    grep { /$handles/ } $self->_get_delegate_method_list;
         }
@@ -1151,7 +1148,7 @@ sub _canonicalize_handles {
             $handles = $handles->role;
         }
         else {
-            $self->throw_error(message => "Unable to canonicalize the 'handles' option with $handles", data => $handles);
+            $self->throw_error("Unable to canonicalize the 'handles' option with $handles", data => $handles);
         }
     }
 
@@ -1159,7 +1156,7 @@ sub _canonicalize_handles {
     my $role_meta = Class::MOP::class_of($handles);
 
     (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
-        || $self->throw_error(message => "Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
+        || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
 
     return map { $_ => $_ }
         map { $_->name }
@@ -1181,7 +1178,7 @@ sub _get_delegate_method_list {
         return $meta->get_method_list;
     }
     else {
-        $self->throw_error(message => "Unable to recognize the delegate metaclass '$meta'", data => $meta);
+        $self->throw_error("Unable to recognize the delegate metaclass '$meta'", data => $meta);
     }
 }
 
@@ -1190,7 +1187,7 @@ sub _find_delegate_metaclass {
     if (my $class = $self->_isa_metadata) {
         unless ( is_class_loaded($class) ) {
             $self->throw_error(
-                message => sprintf(
+                sprintf(
                     'The %s attribute is trying to delegate to a class which has not been loaded - %s',
                     $self->name, $class
                 )
@@ -1204,7 +1201,7 @@ sub _find_delegate_metaclass {
     elsif (my $role = $self->_does_metadata) {
         unless ( is_class_loaded($class) ) {
             $self->throw_error(
-                message => sprintf(
+                sprintf(
                     'The %s attribute is trying to delegate to a role which has not been loaded - %s',
                     $self->name, $role
                 )
@@ -1214,7 +1211,7 @@ sub _find_delegate_metaclass {
         return Class::MOP::class_of($role);
     }
     else {
-        $self->throw_error(message => "Cannot find delegate metaclass for attribute " . $self->name);
+        $self->throw_error("Cannot find delegate metaclass for attribute " . $self->name);
     }
 }
 
