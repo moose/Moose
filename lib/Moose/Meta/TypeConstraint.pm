@@ -16,6 +16,7 @@ use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
+use Moose::Util ();
 
 use base qw(Class::MOP::Object);
 
@@ -235,8 +236,12 @@ sub assert_valid {
     my $error = $self->validate($value);
     return 1 if ! defined $error;
 
-    require Moose;
-    Moose->throw_error($error);
+    Moose::Util::throw(
+        message   => $error,
+        class     => 'Moose::Exception::TypeConstraint',
+        type_name => $self->name,
+        value     => $value,
+    );
 }
 
 sub get_message {
