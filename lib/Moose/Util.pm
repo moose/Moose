@@ -478,7 +478,7 @@ sub throw {
 
     my %args = @_;
 
-    my $superclass = delete($args{superclass}) || 'Throwable::Error';
+    my $superclass = delete($args{superclass}) || 'Moose::Exception';
     my $roles = delete($args{roles});
 
     my $metaclass;
