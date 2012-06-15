@@ -692,7 +692,7 @@ sub _inline_check_constraint {
                   . 'do { local $_ = ' . $value . '; '
                       . $message . '->(' . $value . ')'
                   . '}',
-                    'roles => ["Moose::Exception::TypeConstraint"]',
+                    'class => "Moose::Exception::TypeConstraint"',
                     'attribute_name => ' . $self->name,
                     'type_name => ' . $self->type_constraint->name,
                     'value => ' . $value,
@@ -709,7 +709,7 @@ sub _inline_check_constraint {
                   . 'do { local $_ = ' . $value . '; '
                       . $message . '->(' . $value . ')'
                   . '}',
-                    'roles => ["Moose::Exception::TypeConstraint"]',
+                    'class => "Moose::Exception::TypeConstraint"',
                     'attribute_name => ' . $self->name,
                     'type_name => ' . $self->type_constraint->name,
                     'value => ' . $value,
