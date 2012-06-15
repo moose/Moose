@@ -12,7 +12,7 @@ use Test::Requires {
 
     use Moose;
 
-    has error => (
+    has message => (
         is       => 'ro',
         isa      => 'Str',
         required => 1,
@@ -44,7 +44,7 @@ use Test::Requires {
         my ( $self, %params ) = @_;
 
         my $exception = My::Exception->new(
-            error   => $params{message},
+            message => $params{message},
             line    => $params{line},
             file    => $params{file},
             package => $params{pack},
@@ -99,7 +99,7 @@ use Test::Requires {
         'got exception object (immutable class)'
     );
     is(
-        $error->error, 'Attribute (test1) is required',
+        $error->message, 'Attribute (test1) is required',
         'got the right message (immutable class)'
     );
     is(
@@ -119,7 +119,7 @@ use Test::Requires {
 
     isa_ok( $error, 'My::Exception', 'got exception object (mutable class)' );
     is(
-        $error->error, 'Attribute (test1) is required',
+        $error->message, 'Attribute (test1) is required',
         'got the right message (mutable class)'
     );
 }
