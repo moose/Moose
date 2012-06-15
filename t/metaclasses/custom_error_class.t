@@ -97,7 +97,7 @@ use Test::Requires {
     isa_ok(
         $error, 'My::Exception',
         'got exception object (immutable class)'
-    );
+    ) or diag $error;
     is(
         $error->message, 'Attribute (test1) is required',
         'got the right message (immutable class)'
@@ -117,7 +117,10 @@ use Test::Requires {
     };
     my $error = $@;
 
-    isa_ok( $error, 'My::Exception', 'got exception object (mutable class)' );
+    isa_ok(
+        $error, 'My::Exception',
+        'got exception object (mutable class)'
+    ) or diag $error;
     is(
         $error->message, 'Attribute (test1) is required',
         'got the right message (mutable class)'
