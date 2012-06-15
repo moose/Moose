@@ -41,12 +41,6 @@ sub does {
     return $self->Moose::Object::does($name);
 }
 
-sub _error_thrower {
-    my $self = shift;
-    require Moose::Meta::Class;
-    ( ref $self && $self->associated_class ) || "Moose::Meta::Class";
-}
-
 sub throw_error {
     my $self = shift;
     Moose::Util::throw(@_);
@@ -55,11 +49,10 @@ sub throw_error {
 sub _inline_throw_error {
     my ( $self, $msg, $args ) = @_;
 
-    my $inv = $self->_error_thrower;
-    # XXX ugh
-    $inv = 'Moose::Meta::Class' unless $inv->can('_inline_throw_error');
-
-    return $inv->_inline_throw_error($msg, $args)
+    return 'Moose::Util::throw(' .
+        'message => ' . $msg .
+        ($args ? (', ' . $args) : '')
+    . ');';
 }
 
 sub new {
