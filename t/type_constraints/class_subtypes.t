@@ -134,7 +134,7 @@ class_type 'Negative' => message { "$_ is not a Negative Nancy" };
 
 like( exception {
     Quux::Ier->new(age => 3)
-}, qr/^Attribute \(age\) does not pass the type constraint because: 3 is not a Negative Nancy / );
+}, qr/^Attribute \(age\) does not pass the type constraint because: 3 is not a Negative Nancy/ );
 
 is( exception {
     Quux::Ier->new(age => (bless {}, 'Negative'))

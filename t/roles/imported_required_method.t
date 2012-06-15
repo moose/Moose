@@ -49,7 +49,7 @@ BEGIN {
 
     ::like(
         ::exception { with 'Bar' },
-        qr/^\Q'Bar' requires the method 'bar' to be implemented by 'Class' at/,
+        qr/^\Q'Bar' requires the method 'bar' to be implemented by 'Class'/,
         "requirement isn't imported, so don't give the extra info in the error"
     );
 }
