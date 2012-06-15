@@ -675,6 +675,7 @@ sub _inline_check_constraint {
     return unless $self->has_type_constraint;
 
     my $attr_name = quotemeta($self->name);
+    my $type_name = quotemeta($self->type_constraint->name);
 
     if ( $self->type_constraint->can_be_inlined ) {
         return (
@@ -686,8 +687,8 @@ sub _inline_check_constraint {
                       . $message . '->(' . $value . ')'
                   . '}',
                     'class => "Moose::Exception::TypeConstraint",' .
-                    'attribute_name => ' . $attr_name . ',' .
-                    'type_name => ' . $type_name . ',' .
+                    'attribute_name => \'' . $attr_name . '\',' .
+                    'type_name => \'' . $type_name . '\',' .
                     'value => ' . $value
                 ) . ';',
             '}',
@@ -703,8 +704,8 @@ sub _inline_check_constraint {
                       . $message . '->(' . $value . ')'
                   . '}',
                     'class => "Moose::Exception::TypeConstraint",' .
-                    'attribute_name => ' . $attr_name . ',' .
-                    'type_name => ' . $type_name . ',' .
+                    'attribute_name => \'' . $attr_name . '\',' .
+                    'type_name => \'' . $type_name . '\',' .
                     'value => ' . $value
                 ) . ';',
             '}',
