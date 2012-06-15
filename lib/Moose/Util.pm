@@ -472,13 +472,11 @@ sub _is_role_only_subclass {
 }
 
 sub throw {
-    my %args;
-    if (@_ == 1) {
-        $args{message} = shift;
+    if (@_ % 2) {
+        unshift @_, 'message';
     }
-    else {
-        %args = @_;
-    }
+
+    my %args = @_;
 
     my $superclass = delete($args{superclass}) || 'Throwable::Error';
     my $roles = delete($args{roles});
