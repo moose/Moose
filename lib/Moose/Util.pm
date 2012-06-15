@@ -478,21 +478,21 @@ sub throw {
 
     my %args = @_;
 
-    my $superclass = delete($args{superclass}) || 'Moose::Exception';
+    my $class = delete($args{class}) || 'Moose::Exception';
     my $roles = delete($args{roles});
 
     my $metaclass;
 
-    load_class($superclass);
+    load_class($class);
 
     if ($roles) {
         $metaclass = Moose::Meta::Class->create_anon_class(
-            superclasses => [$superclass],
+            superclasses => [$class],
             roles        => $roles,
         );
     }
     else {
-        $metaclass = Moose::Meta::Class->initialize($superclass);
+        $metaclass = Moose::Meta::Class->initialize($class);
     }
 
     $metaclass->name->throw(\%args);
