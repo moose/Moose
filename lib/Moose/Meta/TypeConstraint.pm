@@ -150,8 +150,7 @@ sub coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        require Moose;
-        Moose->throw_error("Cannot coerce without a type coercion");
+        Moose::Util::throw("Cannot coerce without a type coercion");
     }
 
     return $_[0] if $self->check($_[0]);
@@ -165,8 +164,7 @@ sub assert_coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        require Moose;
-        Moose->throw_error("Cannot coerce without a type coercion");
+        Moose::Util::throw("Cannot coerce without a type coercion");
     }
 
     return $_[0] if $self->check($_[0]);
@@ -208,8 +206,7 @@ sub _inline_check {
     my $self = shift;
 
     unless ( $self->can_be_inlined ) {
-        require Moose;
-        Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
+        Moose::Util::throw( 'Cannot inline a type constraint check for ' . $self->name );
     }
 
     if ( $self->has_parent && $self->constraint == $null_constraint ) {
@@ -324,8 +321,7 @@ sub _actually_compile_type_constraint {
 
     my $check = $self->constraint;
     unless ( defined $check ) {
-        require Moose;
-        Moose->throw_error( "Could not compile type constraint '"
+        Moose::Util::throw( "Could not compile type constraint '"
                 . $self->name
                 . "' because no constraint check" );
     }
@@ -342,8 +338,7 @@ sub _compile_hand_optimized_type_constraint {
     my $type_constraint = $self->hand_optimized_type_constraint;
 
     unless ( ref $type_constraint ) {
-        require Moose;
-        Moose->throw_error("Hand optimized type constraint is not a code reference");
+        Moose::Util::throw("Hand optimized type constraint is not a code reference");
     }
 
     return $type_constraint;

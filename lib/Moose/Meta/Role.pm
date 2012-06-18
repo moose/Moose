@@ -237,10 +237,10 @@ sub add_attribute {
 
     if (blessed $_[0] && ! $_[0]->isa('Moose::Meta::Role::Attribute') ) {
         my $class = ref $_[0];
-        Moose->throw_error( "Cannot add a $class as an attribute to a role" );
+        Moose::Util::throw( "Cannot add a $class as an attribute to a role" );
     }
     elsif (!blessed($_[0]) && defined($_[0]) && $_[0] =~ /^\+(.*)/) {
-        Moose->throw_error( "has '+attr' is not supported in roles" );
+        Moose::Util::throw( "has '+attr' is not supported in roles" );
     }
 
     return $self->SUPER::add_attribute(@_);
@@ -357,7 +357,7 @@ $META->add_attribute('override_method_modifiers' => (
 sub add_override_method_modifier {
     my ($self, $method_name, $method) = @_;
     (!$self->has_method($method_name))
-        || Moose->throw_error("Cannot add an override of method '$method_name' " .
+        || Moose::Util::throw("Cannot add an override of method '$method_name' " .
                    "because there is a local version of '$method_name'");
     $self->get_override_method_modifiers_map->{$method_name} = $method;
 }
@@ -397,7 +397,7 @@ $META->add_attribute('roles' => (
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || Moose->throw_error("Roles must be instances of Moose::Meta::Role");
+        || Moose::Util::throw("Roles must be instances of Moose::Meta::Role");
     push @{$self->get_roles} => $role;
     $self->reset_package_cache_flag;
 }
@@ -415,7 +415,7 @@ sub calculate_all_roles {
 sub does_role {
     my ($self, $role) = @_;
     (defined $role)
-        || Moose->throw_error("You must supply a role name to look for");
+        || Moose::Util::throw("You must supply a role name to look for");
     my $role_name = blessed $role ? $role->name : $role;
     # if we are it,.. then return true
     return 1 if $role_name eq $self->name;
@@ -436,7 +436,7 @@ sub apply {
     my ($self, $other, %args) = @_;
 
     (blessed($other))
-        || Moose->throw_error("You must pass in an blessed instance");
+        || Moose::Util::throw("You must pass in an blessed instance");
 
     my $application_class;
     if ($other->isa('Moose::Meta::Role')) {

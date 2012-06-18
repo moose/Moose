@@ -44,8 +44,7 @@ sub new {
     # the roles param is required ...
     foreach ( @{$params{roles}} ) {
         unless ( $_->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_");
+            Moose::Util::throw("The list of roles must be instances of Moose::Meta::Role, not $_");
         }
     }
 
@@ -76,7 +75,7 @@ sub add_method {
     my ($self, $method_name, $method) = @_;
 
     unless ( defined $method_name && $method_name ) {
-        Moose->throw_error("You must define a method name");
+        Moose::Util::throw("You must define a method name");
     }
 
     my $body;
@@ -133,7 +132,7 @@ sub apply_params {
 sub reinitialize {
     my ( $class, $old_meta, @args ) = @_;
 
-    Moose->throw_error(
+    Moose::Util::throw(
         'Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance'
         )
         if !blessed $old_meta

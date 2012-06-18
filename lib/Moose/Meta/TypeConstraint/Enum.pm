@@ -37,18 +37,15 @@ sub new {
     $args{inlined} = $inliner;
 
     if ( scalar @{ $args{values} } < 1 ) {
-        require Moose;
-        Moose->throw_error("You must have at least one value to enumerate through");
+        Moose::Util::throw("You must have at least one value to enumerate through");
     }
 
     for (@{ $args{values} }) {
         if (!defined($_)) {
-            require Moose;
-            Moose->throw_error("Enum values must be strings, not undef");
+            Moose::Util::throw("Enum values must be strings, not undef");
         }
         elsif (ref($_)) {
-            require Moose;
-            Moose->throw_error("Enum values must be strings, not '$_'");
+            Moose::Util::throw("Enum values must be strings, not '$_'");
         }
     }
 

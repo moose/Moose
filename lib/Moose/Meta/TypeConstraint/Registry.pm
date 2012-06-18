@@ -43,8 +43,7 @@ sub add_type_constraint {
     my ($self, $type) = @_;
 
     unless ( $type && blessed $type && $type->isa('Moose::Meta::TypeConstraint') ) {
-        require Moose;
-        Moose->throw_error("No type supplied / type is not a valid type constraint");
+        Moose::Util::throw("No type supplied / type is not a valid type constraint");
     }
 
     $self->type_constraints->{$type->name} = $type;

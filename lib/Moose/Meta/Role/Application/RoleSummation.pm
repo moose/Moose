@@ -78,8 +78,7 @@ sub check_role_exclusions {
 
             my @excluding = @{ $excluded_roles{$excluded} };
 
-            require Moose;
-            Moose->throw_error(sprintf "Conflict detected: Role%s %s exclude%s role '%s'", (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
+            Moose::Util::throw(sprintf "Conflict detected: Role%s %s exclude%s role '%s'", (@excluding == 1 ? '' : 's'), join(', ', @excluding), (@excluding == 1 ? 's' : ''), $excluded);
         }
     }
 
@@ -130,8 +129,7 @@ sub apply_attributes {
             my $role1 = $seen{$name}->associated_role->name;
             my $role2 = $attr->associated_role->name;
 
-            require Moose;
-            Moose->throw_error(
+            Moose::Util::throw(
                 "We have encountered an attribute conflict with '$name' "
                     . "during role composition. "
                     . " This attribute is defined in both $role1 and $role2."
@@ -215,15 +213,13 @@ sub apply_override_method_modifiers {
     my %seen;
     foreach my $override (@all_overrides) {
         if ( $c->has_method($override->{name}) ){
-            require Moose;
-            Moose->throw_error( "Role '" . $c->name . "' has encountered an 'override' method conflict " .
+            Moose::Util::throw( "Role '" . $c->name . "' has encountered an 'override' method conflict " .
                                 "during composition (A local method of the same name as been found). This " .
                                 "is fatal error." )
         }
         if (exists $seen{$override->{name}}) {
             if ( $seen{$override->{name}} != $override->{method} ) {
-                require Moose;
-                Moose->throw_error( "We have encountered an 'override' method conflict during " .
+                Moose::Util::throw( "We have encountered an 'override' method conflict during " .
                                     "composition (Two 'override' methods of the same name encountered). " .
                                     "This is fatal error.")
             }

@@ -210,7 +210,7 @@ sub _parse_trait_aliases {
         my $name;
         if (ref($alias)) {
             reftype($alias) eq 'ARRAY'
-                or Moose->throw_error(reftype($alias) . " references are not "
+                or Moose::Util::throw(reftype($alias) . " references are not "
                                     . "valid arguments to the 'trait_aliases' "
                                     . "option");
 
@@ -494,8 +494,7 @@ sub _make_import_sub {
             _apply_meta_traits( $CALLER, $traits, $meta_lookup );
         }
         elsif ( @{$traits} ) {
-            require Moose;
-            Moose->throw_error(
+            Moose::Util::throw(
                 "Cannot provide traits when $class does not have an init_meta() method"
             );
         }
@@ -643,7 +642,7 @@ sub _apply_meta_traits {
     my $meta = $meta_lookup->($class);
 
     my $type = ( split /::/, ref $meta )[-1]
-        or Moose->throw_error(
+        or Moose::Util::throw(
         'Cannot determine metaclass type for trait application . Meta isa '
             . ref $meta );
 

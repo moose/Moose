@@ -17,13 +17,11 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role1, $role2) = @_;
     if ( $role2->excludes_role($role1->name) ) {
-        require Moose;
-        Moose->throw_error("Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'");
+        Moose::Util::throw("Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'");
     }
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
-            require Moose;
-            Moose->throw_error("The role " . $role2->name . " does the excluded role '$excluded_role_name'");
+            Moose::Util::throw("The role " . $role2->name . " does the excluded role '$excluded_role_name'");
         }
         $role2->add_excluded_roles($excluded_role_name);
     }
@@ -55,8 +53,7 @@ sub apply_attributes {
 
             my $role2_name = $role2->name;
 
-            require Moose;
-            Moose->throw_error( "Role '"
+            Moose::Util::throw( "Role '"
                     . $role1->name
                     . "' has encountered an attribute conflict"
                     . " while being composed into '$role2_name'."
@@ -109,8 +106,7 @@ sub apply_methods {
         if (   $role2_method
             && $role2_method->body != $method->body ) {
 
-            require Moose;
-            Moose->throw_error(
+            Moose::Util::throw(
                 "Cannot create a method alias if a local method of the same name exists"
             );
         }
@@ -136,8 +132,7 @@ sub apply_override_method_modifiers {
             # we have a conflict here, because you cannot
             # combine an overridden method with a locally
             # defined one
-            require Moose;
-            Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
+            Moose::Util::throw("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
                     "during composition (A local method of the same name as been found). This " .
                     "is fatal error.");
         }
@@ -148,8 +143,7 @@ sub apply_override_method_modifiers {
             if ($role2->has_override_method_modifier($method_name) &&
                 $role2->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
 
-                require Moose;
-                Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
+                Moose::Util::throw("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
                         "during composition (Two 'override' methods of the same name encountered). " .
                         "This is fatal error.");
             }

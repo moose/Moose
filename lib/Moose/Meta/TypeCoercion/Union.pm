@@ -14,7 +14,7 @@ sub compile_type_coercion {
     my $type_constraint = $self->type_constraint;
 
     (blessed $type_constraint && $type_constraint->isa('Moose::Meta::TypeConstraint::Union'))
-     || Moose->throw_error("You can only create a Moose::Meta::TypeCoercion::Union for a " .
+     || Moose::Util::throw("You can only create a Moose::Meta::TypeCoercion::Union for a " .
                 "Moose::Meta::TypeConstraint::Union, not a $type_constraint");
 
     $self->_compiled_type_coercion(
@@ -35,8 +35,7 @@ sub compile_type_coercion {
 sub has_coercion_for_type { 0 }
 
 sub add_type_coercions {
-    require Moose;
-    Moose->throw_error("Cannot add additional type coercions to Union types");
+    Moose::Util::throw("Cannot add additional type coercions to Union types");
 }
 
 1;

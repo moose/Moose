@@ -40,15 +40,13 @@ sub compile_type_constraint {
     my $self = shift;
 
     unless ( $self->has_type_parameter ) {
-        require Moose;
-        Moose->throw_error("You cannot create a Higher Order type without a type parameter");
+        Moose::Util::throw("You cannot create a Higher Order type without a type parameter");
     }
 
     my $type_parameter = $self->type_parameter;
 
     unless ( blessed $type_parameter && $type_parameter->isa('Moose::Meta::TypeConstraint') ) {
-        require Moose;
-        Moose->throw_error("The type parameter must be a Moose meta type");
+        Moose::Util::throw("The type parameter must be a Moose meta type");
     }
 
     foreach my $type (Moose::Util::TypeConstraints::get_all_parameterizable_types()) {
@@ -60,8 +58,7 @@ sub compile_type_constraint {
 
     # if we get here, then we couldn't
     # find a way to parameterize this type
-    require Moose;
-    Moose->throw_error("The " . $self->name . " constraint cannot be used, because "
+    Moose::Util::throw("The " . $self->name . " constraint cannot be used, because "
           . $self->parent->name . " doesn't subtype or coerce from a parameterizable type.");
 }
 

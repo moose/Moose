@@ -11,7 +11,7 @@ for my $trait_name (@trait_names) {
     );
     if ($meta->find_method_by_name('register_implementation')) {
         my $class = $meta->name->register_implementation;
-        Moose->throw_error(
+        Moose::Util::throw(
             "An implementation for $trait_name already exists " .
             "(found '$class' when trying to register '$trait_class')"
         );

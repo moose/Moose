@@ -7,6 +7,7 @@ use metaclass;
 use base 'Moose::Meta::TypeConstraint';
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Util::TypeConstraints ();
+use Moose::Util ();
 
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
     accessor  => 'constraint_generator',
@@ -71,8 +72,7 @@ sub parameterize {
     if(my $parent = $self->parent) {
         if($parent->can('type_parameter')) {
             unless ( $contained_tc->is_a_type_of($parent->type_parameter) ) {
-                require Moose;
-                Moose->throw_error("$type_parameter is not a subtype of ".$parent->type_parameter);
+                Moose::Util::throw("$type_parameter is not a subtype of ".$parent->type_parameter);
             }
         }
     }
@@ -87,8 +87,7 @@ sub parameterize {
         );
     }
     else {
-        require Moose;
-        Moose->throw_error("The type parameter must be a Moose meta type");
+        Moose::Util::throw("The type parameter must be a Moose meta type");
     }
 }
 

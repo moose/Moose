@@ -100,17 +100,16 @@ sub init_meta {
     my $role = $args{for_class};
 
     unless ($role) {
-        require Moose;
-        Moose->throw_error("Cannot call init_meta without specifying a for_class");
+        Moose::Util::throw("Cannot call init_meta without specifying a for_class");
     }
 
     my $metaclass = $args{metaclass} || "Moose::Meta::Role";
     my $meta_name = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
-    Moose->throw_error("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
+    Moose::Util::throw("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
         unless is_class_loaded($metaclass);
 
-    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Role.")
+    Moose::Util::throw("The Metaclass $metaclass must be a subclass of Moose::Meta::Role.")
         unless $metaclass->isa('Moose::Meta::Role');
 
     # make a subtype for each Moose role
@@ -121,9 +120,9 @@ sub init_meta {
         unless ( $meta->isa("Moose::Meta::Role") ) {
             my $error_message = "$role already has a metaclass, but it does not inherit $metaclass ($meta).";
             if ( $meta->isa('Moose::Meta::Class') ) {
-                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+                Moose::Util::throw($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
             } else {
-                Moose->throw_error($error_message);
+                Moose::Util::throw($error_message);
             }
         }
     }

@@ -9,6 +9,7 @@ use Devel::GlobalDestruction ();
 use MRO::Compat ();
 use Scalar::Util ();
 use Try::Tiny ();
+use Moose::Util ();
 
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
