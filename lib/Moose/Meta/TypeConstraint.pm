@@ -10,7 +10,6 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              bool     => sub { 1 },
              fallback => 1;
 
-use Carp qw(confess);
 use Class::Load qw(load_class);
 use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
@@ -132,7 +131,7 @@ sub new {
 
     if ( exists $args{message}
       && (!ref($args{message}) || ref($args{message}) ne 'CODE') ) {
-        confess("The 'message' parameter must be a coderef");
+        Moose::Util::throw("The 'message' parameter must be a coderef");
     }
 
     my $self  = $class->_new(%args);

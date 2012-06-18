@@ -65,7 +65,7 @@ sub has {
     my $meta = shift;
     my $name = shift;
 
-    Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
+    Moose::Util::throw('Usage: has \'name\' => ( key => value, ... )')
         if @_ % 2 == 1;
 
     my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
@@ -138,15 +138,15 @@ sub init_meta {
     my %args = @_;
 
     my $class = $args{for_class}
-        or Moose->throw_error("Cannot call init_meta without specifying a for_class");
+        or Moose::Util::throw("Cannot call init_meta without specifying a for_class");
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
     my $meta_name  = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
-    Moose->throw_error("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
+    Moose::Util::throw("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
         unless is_class_loaded($metaclass);
 
-    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
+    Moose::Util::throw("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
         unless $metaclass->isa('Moose::Meta::Class');
 
     # make a subtype for each Moose class
@@ -159,9 +159,9 @@ sub init_meta {
         unless ( $meta->isa("Moose::Meta::Class") ) {
             my $error_message = "$class already has a metaclass, but it does not inherit $metaclass ($meta).";
             if ( $meta->isa('Moose::Meta::Role') ) {
-                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+                Moose::Util::throw($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
             } else {
-                Moose->throw_error($error_message);
+                Moose::Util::throw($error_message);
             }
         }
     } else {

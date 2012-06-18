@@ -3,8 +3,8 @@ package Moose::Meta::Method::Accessor::Native;
 use strict;
 use warnings;
 
-use Carp qw( confess );
 use Scalar::Util qw( blessed weaken );
+use Moose::Util;
 
 use Moose::Role;
 
@@ -16,7 +16,7 @@ around new => sub {
     $options{curried_arguments} = []
         unless exists $options{curried_arguments};
 
-    confess 'You must supply a curried_arguments which is an ARRAY reference'
+    Moose::Util::throw('You must supply a curried_arguments which is an ARRAY reference')
         unless $options{curried_arguments}
             && ref($options{curried_arguments}) eq 'ARRAY';
 

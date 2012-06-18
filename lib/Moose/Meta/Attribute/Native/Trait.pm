@@ -5,6 +5,7 @@ use Moose::Role;
 use Class::Load qw(load_class);
 use List::MoreUtils qw( any uniq );
 use Moose::Util::TypeConstraints;
+use Moose::Util;
 use Moose::Deprecated;
 
 requires '_helper_type';
@@ -91,8 +92,7 @@ sub _check_helper_type {
         $options->{isa} );
 
     ( $isa->is_a_type_of($type) )
-        || confess
-        "The type constraint for $name must be a subtype of $type but it's a $isa";
+        || Moose::Util::throw("The type constraint for $name must be a subtype of $type but it's a $isa");
 }
 
 before 'install_accessors' => sub { (shift)->_check_handles_values };
@@ -108,8 +108,7 @@ sub _check_handles_values {
         my $accessor_class = $self->_native_accessor_class_for($name);
 
         ( $accessor_class && $accessor_class->can('new') )
-            || confess
-            "$name is an unsupported method type - $accessor_class";
+            || Moose::Util::throw("$name is an unsupported method type - $accessor_class");
     }
 }
 

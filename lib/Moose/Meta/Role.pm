@@ -6,7 +6,6 @@ use metaclass;
 
 use Class::Load qw(load_class);
 use Scalar::Util 'blessed';
-use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
 
 use Moose::Meta::Class;
@@ -503,15 +502,15 @@ sub create {
     my %options = @args;
 
     (ref $options{attributes} eq 'HASH')
-        || confess "You must pass a HASH ref of attributes"
+        || Moose::Util::throw "You must pass a HASH ref of attributes"
             if exists $options{attributes};
 
     (ref $options{methods} eq 'HASH')
-        || confess "You must pass a HASH ref of methods"
+        || Moose::Util::throw "You must pass a HASH ref of methods"
             if exists $options{methods};
 
     (ref $options{roles} eq 'ARRAY')
-        || confess "You must pass an ARRAY ref of roles"
+        || Moose::Util::throw "You must pass an ARRAY ref of roles"
             if exists $options{roles};
 
     my $package      = delete $options{package};

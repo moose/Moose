@@ -3,7 +3,6 @@ package Moose::Meta::Role::Attribute;
 use strict;
 use warnings;
 
-use Carp 'confess';
 use List::MoreUtils 'all';
 use Scalar::Util 'blessed', 'weaken';
 
@@ -48,7 +47,7 @@ sub new {
     my ( $class, $name, %options ) = @_;
 
     (defined $name)
-        || confess "You must provide a name for the attribute";
+        || Moose::Util::throw "You must provide a name for the attribute";
 
     my $role = delete $options{_original_role};
 
@@ -64,7 +63,7 @@ sub attach_to_role {
     my ( $self, $role ) = @_;
 
     ( blessed($role) && $role->isa('Moose::Meta::Role') )
-        || confess
+        || Moose::Util::throw
         "You must pass a Moose::Meta::Role instance (or a subclass)";
 
     weaken( $self->{'associated_role'} = $role );

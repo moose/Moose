@@ -4,7 +4,7 @@ package Moose::Meta::Method::Delegation;
 use strict;
 use warnings;
 
-use Carp         'confess';
+use Moose::Util;
 use Scalar::Util 'blessed', 'weaken';
 
 use base 'Moose::Meta::Method',
@@ -16,20 +16,20 @@ sub new {
     my %options = @_;
 
     ( exists $options{attribute} )
-        || confess "You must supply an attribute to construct with";
+        || Moose::Util::throw "You must supply an attribute to construct with";
 
     ( blessed( $options{attribute} )
             && $options{attribute}->isa('Moose::Meta::Attribute') )
-        || confess
+        || Moose::Util::throw
         "You must supply an attribute which is a 'Moose::Meta::Attribute' instance";
 
     ( $options{package_name} && $options{name} )
-        || confess
+        || Moose::Util::throw
         "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
 
     ( $options{delegate_to_method} && ( !ref $options{delegate_to_method} )
             || ( 'CODE' eq ref $options{delegate_to_method} ) )
-        || confess
+        || Moose::Util::throw
         'You must supply a delegate_to_method which is a method name or a CODE reference';
 
     exists $options{curried_arguments}
@@ -37,7 +37,7 @@ sub new {
 
     ( $options{curried_arguments} &&
         ( 'ARRAY' eq ref $options{curried_arguments} ) )
-        || confess 'You must supply a curried_arguments which is an ARRAY reference';
+        || Moose::Util::throw 'You must supply a curried_arguments which is an ARRAY reference';
 
     my $self = $class->_new( \%options );
 

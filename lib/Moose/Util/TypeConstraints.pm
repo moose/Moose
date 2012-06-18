@@ -159,7 +159,7 @@ sub create_class_type_constraint {
 
     if (my $type = $REGISTRY->get_type_constraint($class)) {
         if (!($type->isa('Moose::Meta::TypeConstraint::Class') && $type->class eq $class)) {
-            _confess(
+            Moose::Util::throw(
                 "The type constraint '$class' has already been created in "
               . $type->_package_defined_in
               . " and cannot be created again in "
@@ -195,7 +195,7 @@ sub create_role_type_constraint {
 
     if (my $type = $REGISTRY->get_type_constraint($role)) {
         if (!($type->isa('Moose::Meta::TypeConstraint::Role') && $type->role eq $role)) {
-            _confess(
+            Moose::Util::throw(
                 "The type constraint '$role' has already been created in "
               . $type->_package_defined_in
               . " and cannot be created again in "
@@ -287,13 +287,6 @@ sub normalize_type_constraint_name {
     my $type_constraint_name = shift;
     $type_constraint_name =~ s/\s//g;
     return $type_constraint_name;
-}
-
-sub _confess {
-    my $error = shift;
-
-    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    Carp::confess($error);
 }
 
 ## --------------------------------------------------------
@@ -533,7 +526,7 @@ sub _create_type_constraint ($$$;$$) {
         my $type = $REGISTRY->get_type_constraint($name);
 
         ( $type->_package_defined_in eq $pkg_defined_in )
-            || _confess(
+            || Moose::Util::throw(
                   "The type constraint '$name' has already been created in "
                 . $type->_package_defined_in
                 . " and cannot be created again in "
