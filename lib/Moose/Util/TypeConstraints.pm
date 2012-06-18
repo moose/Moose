@@ -2,6 +2,7 @@
 package Moose::Util::TypeConstraints;
 
 use Carp ();
+use Moose::Util;
 use List::MoreUtils qw( all any );
 use Scalar::Util qw( blessed reftype );
 use Moose::Exporter;
@@ -92,12 +93,12 @@ sub _create_type_constraint_union {
     }
 
     ( scalar @type_constraint_names >= 2 )
-        || __PACKAGE__->_throw_error(
+        || Moose::Util::throw(
         "You must pass in at least 2 type names to make a union");
 
     my @type_constraints = map {
         find_or_parse_type_constraint($_)
-            || __PACKAGE__->_throw_error(
+            || Moose::Util::throw(
             "Could not locate type constraint ($_) for the union");
     } @type_constraint_names;
 
@@ -116,7 +117,7 @@ sub create_parameterized_type_constraint {
         = _parse_parameterized_type_constraint($type_constraint_name);
 
     ( defined $base_type && defined $type_parameter )
-        || __PACKAGE__->_throw_error(
+        || Moose::Util::throw(
         "Could not parse type name ($type_constraint_name) correctly");
 
     if ( $REGISTRY->has_type_constraint($base_type) ) {
@@ -127,7 +128,7 @@ sub create_parameterized_type_constraint {
         );
     }
     else {
-        __PACKAGE__->_throw_error(
+        Moose::Util::throw(
             "Could not locate the base type ($base_type)");
     }
 }
@@ -153,7 +154,7 @@ sub create_class_type_constraint {
 
 # too early for this check
 #find_type_constraint("ClassName")->check($class)
-#    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
+#    || Moose::Util::throw("Can't create a class type constraint because '$class' is not a class name");
 
     my $pkg_defined_in = $options->{package_defined_in} || scalar( caller(1) );
 
@@ -189,7 +190,7 @@ sub create_role_type_constraint {
 
 # too early for this check
 #find_type_constraint("ClassName")->check($class)
-#    || __PACKAGE__->_throw_error("Can't create a class type constraint because '$class' is not a class name");
+#    || Moose::Util::throw("Can't create a class type constraint because '$class' is not a class name");
 
     my $pkg_defined_in = $options->{package_defined_in} || scalar( caller(1) );
 
@@ -307,7 +308,7 @@ sub find_type_constraint {
 
 sub register_type_constraint {
     my $constraint = shift;
-    __PACKAGE__->_throw_error("can't register an unnamed type constraint")
+    Moose::Util::throw("can't register an unnamed type constraint")
         unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
@@ -328,7 +329,7 @@ sub type {
 
 sub subtype {
     if ( @_ == 1 && !ref $_[0] ) {
-        __PACKAGE__->_throw_error(
+        Moose::Util::throw(
             'A subtype cannot consist solely of a name, it must have a parent'
         );
     }
@@ -421,7 +422,7 @@ sub enum {
     # - SL
     if ( ref $type_name eq 'ARRAY' ) {
         @values == 0
-            || __PACKAGE__->_throw_error("enum called with an array reference and additional arguments. Did you mean to parenthesize the enum call's parameters?");
+            || Moose::Util::throw("enum called with an array reference and additional arguments. Did you mean to parenthesize the enum call's parameters?");
 
         @values    = @$type_name;
         $type_name = undef;
@@ -442,7 +443,7 @@ sub union {
   my ( $type_name, @constraints ) = @_;
   if ( ref $type_name eq 'ARRAY' ) {
     @constraints == 0
-      || __PACKAGE__->_throw_error("union called with an array reference and additional arguments.");
+      || Moose::Util::throw("union called with an array reference and additional arguments.");
     @constraints = @$type_name;
     $type_name   = undef;
   }
@@ -481,18 +482,18 @@ sub match_on_type {
     if (@cases % 2 != 0) {
         $default = pop @cases;
         (ref $default eq 'CODE')
-            || __PACKAGE__->_throw_error("Default case must be a CODE ref, not $default");
+            || Moose::Util::throw("Default case must be a CODE ref, not $default");
     }
     while (@cases) {
         my ($type, $action) = splice @cases, 0, 2;
 
         unless (blessed $type && $type->isa('Moose::Meta::TypeConstraint')) {
             $type = find_or_parse_type_constraint($type)
-                 || __PACKAGE__->_throw_error("Cannot find or parse the type '$type'")
+                 || Moose::Util::throw("Cannot find or parse the type '$type'")
         }
 
         (ref $action eq 'CODE')
-            || __PACKAGE__->_throw_error("Match action must be a CODE ref, not $action");
+            || Moose::Util::throw("Match action must be a CODE ref, not $action");
 
         if ($type->check($to_match)) {
             local $_ = $to_match;
@@ -500,7 +501,7 @@ sub match_on_type {
         }
     }
     (defined $default)
-        || __PACKAGE__->_throw_error("No cases matched for $to_match");
+        || Moose::Util::throw("No cases matched for $to_match");
     {
         local $_ = $to_match;
         return $default->($to_match);
@@ -572,7 +573,7 @@ sub _install_type_coercions ($$) {
     my ( $type_name, $coercion_map ) = @_;
     my $type = find_type_constraint($type_name);
     ( defined $type )
-        || __PACKAGE__->_throw_error(
+        || Moose::Util::throw(
         "Cannot find type '$type_name', perhaps you forgot to load it");
     if ( $type->has_coercion ) {
         $type->coercion->add_type_coercions(@$coercion_map);
@@ -669,7 +670,7 @@ sub _install_type_coercions ($$) {
             push @rv => $1;
         }
         ( pos($given) eq length($given) )
-            || __PACKAGE__->_throw_error( "'$given' didn't parse (parse-pos="
+            || Moose::Util::throw( "'$given' didn't parse (parse-pos="
                 . pos($given)
                 . " and str-length="
                 . length($given)
@@ -722,7 +723,7 @@ sub add_parameterizable_type {
     my $type = shift;
     ( blessed $type
             && $type->isa('Moose::Meta::TypeConstraint::Parameterizable') )
-        || __PACKAGE__->_throw_error(
+        || Moose::Util::throw(
         "Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type"
         );
     push @PARAMETERIZABLE_TYPES => $type;
@@ -735,13 +736,6 @@ sub add_parameterizable_type {
 {
     my @BUILTINS = list_all_type_constraints();
     sub list_all_builtin_type_constraints {@BUILTINS}
-}
-
-sub _throw_error {
-    shift;
-    require Moose;
-    unshift @_, 'Moose';
-    goto &Moose::throw_error;
 }
 
 1;

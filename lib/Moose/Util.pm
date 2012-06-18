@@ -99,8 +99,7 @@ sub _apply_all_roles {
     my $role_filter = shift;
 
     unless (@_) {
-        require Moose;
-        Moose->throw_error("Must specify at least one role to apply to $applicant");
+        Moose::Util::throw("Must specify at least one role to apply to $applicant");
     }
 
     # If @_ contains role meta objects, mkopt will think that they're values,
@@ -129,8 +128,7 @@ sub _apply_all_roles {
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error( "You can only consume roles, "
+            Moose::Util::throw( "You can only consume roles, "
                     . $role->[0]
                     . " is not a Moose role" );
         }
@@ -249,7 +247,7 @@ sub add_method_modifier {
             $meta->$add_modifier_method( $_, $code ) for @{$args->[0]};
         }
         else {
-            $meta->throw_error(
+            Moose::Util::throw(
                 sprintf(
                     "Methods passed to %s must be provided as a list, arrayref or regex, not %s",
                     $modifier_name,
