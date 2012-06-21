@@ -8,6 +8,9 @@ for, noteworthy changes.
   * The super() subroutine now carps if you pass it arguments. These arguments
     are always ignored, but we used to ignore them silently. RT #77383.
 
+  * Roles can now override methods from other roles they consume directly,
+    without needing to manually exclude them (just like classes can). (mst)
+
   [BUG FIXES]
 
   * Fix false positive when checking for circular references for modules that
