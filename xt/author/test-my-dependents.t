@@ -276,6 +276,7 @@ K                                      # requires kx
 Lighttpd-Control                       # requires lighttpd
 Lingua-TreeTagger                      # requires treetagger to be installed
 Math-Lsoda                             # requires f77
+Message-Passing-ZeroMQ                 # requires zeromq installation
 MongoDBI                               # requires mongo
 MongoDB                                # requires mongo
 MSWord-ToHTML                          # requires abiword to be installed
