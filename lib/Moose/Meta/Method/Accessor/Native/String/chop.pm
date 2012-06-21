@@ -5,15 +5,7 @@ use warnings;
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Writer' => {
-    -excludes => [
-        qw(
-            _maximum_arguments
-            _inline_optimized_set_new_value
-            _return_value
-            )
-    ]
-};
+with 'Moose::Meta::Method::Accessor::Native::Writer';
 
 sub _maximum_arguments { 0 }
 

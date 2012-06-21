@@ -5,11 +5,14 @@ use warnings;
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Writer' => {
-        -excludes => ['_inline_coerce_new_values'],
-    },
-    'Moose::Meta::Method::Accessor::Native::Array',
-    'Moose::Meta::Method::Accessor::Native::Collection';
+with 'Moose::Meta::Method::Accessor::Native::Writer',
+     'Moose::Meta::Method::Accessor::Native::Array',
+     'Moose::Meta::Method::Accessor::Native::Collection';
+
+sub _inline_coerce_new_values {
+    my $self = shift;
+    $self->Moose::Meta::Method::Accessor::Native::Collection::_inline_coerce_new_values(@_);
+}
 
 sub _new_members { '@_' }
 

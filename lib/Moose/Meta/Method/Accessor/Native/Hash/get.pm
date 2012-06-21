@@ -7,15 +7,8 @@ use Scalar::Util qw( looks_like_number );
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Reader' => {
-    -excludes => [
-        qw(
-            _minimum_arguments
-            _inline_check_arguments
-            )
-    ],
-    },
-    'Moose::Meta::Method::Accessor::Native::Hash';
+with 'Moose::Meta::Method::Accessor::Native::Reader',
+     'Moose::Meta::Method::Accessor::Native::Hash';
 
 sub _minimum_arguments { 1 }
 

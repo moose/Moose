@@ -2,8 +2,7 @@
 package Moose::Meta::Attribute::Native::Trait::Counter;
 use Moose::Role;
 
-with 'Moose::Meta::Attribute::Native::Trait' =>
-    { -excludes => ['_root_types'] };
+with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _default_default { 0 }
 sub _default_is { 'ro' }

@@ -7,15 +7,7 @@ use Params::Util ();
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
-    -excludes => [
-        qw(
-            _maximum_arguments
-            _inline_check_arguments
-            _return_value
-            )
-    ]
-};
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer';
 
 sub _maximum_arguments { 1 }
 

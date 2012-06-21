@@ -5,14 +5,7 @@ use warnings;
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
-    -excludes => [
-        qw(
-            _inline_optimized_set_new_value
-            _return_value
-            )
-    ]
-};
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer';
 
 sub _adds_members { 1 }
 

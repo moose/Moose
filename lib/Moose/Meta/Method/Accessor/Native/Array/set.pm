@@ -5,19 +5,7 @@ use warnings;
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Array::Writer' => {
-    -excludes => [
-        qw(
-            _minimum_arguments
-            _maximum_arguments
-            _inline_check_arguments
-            _inline_coerce_new_values
-            _new_members
-            _inline_optimized_set_new_value
-            _return_value
-            )
-    ]
-};
+with 'Moose::Meta::Method::Accessor::Native::Array::Writer';
 
 sub _minimum_arguments { 2 }
 

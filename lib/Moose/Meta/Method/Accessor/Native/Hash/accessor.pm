@@ -5,28 +5,28 @@ use warnings;
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Hash::set' => {
-    -excludes => [
-        qw(
-            _generate_method
-            _minimum_arguments
-            _maximum_arguments
-            )
-    ]
-    },
-    'Moose::Meta::Method::Accessor::Native::Hash::get' => {
-    -excludes => [
-        qw(
-            _generate_method
-            _minimum_arguments
-            _maximum_arguments
-            _inline_check_argument_count
-            _inline_check_arguments
-            _inline_process_arguments
-            _return_value
-            )
-    ]
-    };
+with 'Moose::Meta::Method::Accessor::Native::Hash::set',
+     'Moose::Meta::Method::Accessor::Native::Hash::get';
+
+sub _inline_process_arguments {
+    my $self = shift;
+    $self->Moose::Meta::Method::Accessor::Native::Hash::set::_inline_process_arguments(@_);
+}
+
+sub _inline_check_argument_count {
+    my $self = shift;
+    $self->Moose::Meta::Method::Accessor::Native::Hash::set::_inline_check_argument_count(@_);
+}
+
+sub _inline_check_arguments {
+    my $self = shift;
+    $self->Moose::Meta::Method::Accessor::Native::Hash::set::_inline_check_arguments(@_);
+}
+
+sub _return_value {
+    my $self = shift;
+    $self->Moose::Meta::Method::Accessor::Native::Hash::set::_return_value(@_);
+}
 
 sub _generate_method {
     my $self = shift;

@@ -7,30 +7,8 @@ use Moose::Util ();
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Reader' => {
-    -excludes => [
-        qw( _generate_method
-            _minimum_arguments
-            _maximum_arguments
-            _inline_process_arguments
-            _inline_check_arguments
-            _return_value
-            )
-    ]
-    },
-    'Moose::Meta::Method::Accessor::Native::Writer' => {
-    -excludes => [
-        qw(
-            _generate_method
-            _minimum_arguments
-            _maximum_arguments
-            _inline_process_arguments
-            _inline_check_arguments
-            _inline_optimized_set_new_value
-            _return_value
-            )
-    ]
-    };
+with 'Moose::Meta::Method::Accessor::Native::Reader',
+     'Moose::Meta::Method::Accessor::Native::Writer';
 
 sub _generate_method {
     my $self = shift;

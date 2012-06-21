@@ -7,14 +7,7 @@ use Params::Util ();
 
 use Moose::Role;
 
-with 'Moose::Meta::Method::Accessor::Native::Reader' => {
-    -excludes => [
-        qw(
-            _minimum_arguments
-            _maximum_arguments
-            )
-    ]
-};
+with 'Moose::Meta::Method::Accessor::Native::Reader';
 
 sub _minimum_arguments { 0 }
 
