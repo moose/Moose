@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Fix test failure in blead. RT #78085.
+
 2.0602 Mon, May 07, 2012
 
   [BUG FIXES]
