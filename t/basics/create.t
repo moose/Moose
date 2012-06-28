@@ -6,6 +6,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Class::Load 'is_class_loaded';
+
 {
     package Class;
     use Moose;
@@ -46,7 +48,7 @@ like( exception {
     );
 }, qr/You must pass an ARRAY ref of roles/ );
 
-ok !Made::Of::Fail->isa('UNIVERSAL'), "did not create Made::Of::Fail";
+ok !is_class_loaded('Made::Of::Fail'), "did not create Made::Of::Fail";
 
 isnt( exception {
     Moose::Meta::Class->create(
