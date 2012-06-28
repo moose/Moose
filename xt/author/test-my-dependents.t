@@ -199,6 +199,7 @@ Dist-Zilla-PluginBundle-ARODLAND       # no tests
 Dist-Zilla-PluginBundle-Author-OLIVER  # no tests
 Dist-Zilla-PluginBundle-NUFFIN         # no tests
 Dist-Zilla-Plugin-DualLife             # no tests
+Dist-Zilla-Plugin-Git-Describe         # no tests
 Dist-Zilla-Plugin-GitFlow              # no tests
 Dist-Zilla-Plugin-GitFmtChanges        # no tests
 Dist-Zilla-Plugin-MetaResourcesFromGit # no tests
@@ -257,6 +258,7 @@ Crypt-Random-Source-Strong-Win32       # windows only
 Curses-Toolkit                         # requires Curses which requires ncurses library
 Dackup                                 # requires ssh
 Data-Collector                         # requires ssh
+Data-Riak                              # requires riak
 DBIx-PgLink                            # requires postgres installation
 Dist-Zilla-Plugin-Subversion           # requires svn bindings
 Dist-Zilla-Plugin-SVK                  # requires svn bindings
@@ -344,6 +346,7 @@ DBIx-VersionedDDL                      # runs a script with /usr/bin/perl in the
 File-Tail-Scribe                       # tests hang
 Gearman-Driver                         # spews tar errors
 IPC-AnyEvent-Gearman                   # tests hang
+Lingua-YALI                            # runs scripts with /usr/bin/env perl in the shbang line
 Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
 POE-Component-Server-SimpleHTTP-PreFork # tests hang
 WWW-Hashdb                             # test hangs, pegging cpu
