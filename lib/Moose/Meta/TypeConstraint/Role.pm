@@ -92,7 +92,8 @@ sub is_subtype_of {
 
     if ( not ref $type_or_name_or_role ) {
         # it might be a role
-        return 1 if Class::MOP::class_of($self->role)->does_role( $type_or_name_or_role );
+        my $class = Class::MOP::class_of($self->role);
+        return 1 if defined($class) && $class->does_role( $type_or_name_or_role );
     }
 
     my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name_or_role);
@@ -102,7 +103,8 @@ sub is_subtype_of {
     if ( $type->isa(__PACKAGE__) ) {
         # if $type_or_name_or_role isn't a role, it might be the TC name of another ::Role type
         # or it could also just be a type object in this branch
-        return Class::MOP::class_of($self->role)->does_role( $type->role );
+        my $class = Class::MOP::class_of($self->role);
+        return defined($class) && $class->does_role( $type->role );
     } else {
         # the only other thing we are a subtype of is Object
         $self->SUPER::is_subtype_of($type);
