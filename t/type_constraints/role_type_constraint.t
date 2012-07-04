@@ -65,6 +65,7 @@ ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Role->new( name => "__ANON
     my $type;
     is( exception { $type = role_type 'MyExampleRole' }, undef, 'Make initial role_type' );
     is( exception { is(role_type('MyExampleRole'), $type, 're-running role_type gives same type') }, undef, 'No exception making duplicate role_type' );;
+    is( exception { ok( ! $type->is_subtype_of('Bar'), 'MyExampleRole is not a subtype of Bar' ) }, undef, 'No exception for is_subtype_of undefined role' );
 }
 
 done_testing;
