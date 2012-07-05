@@ -226,6 +226,7 @@ OpenDocument-Template                  # no tests
 Pod-Weaver-Section-Consumes            # no tests
 Pod-Weaver-Section-Encoding            # no tests
 Pod-Weaver-Section-Extends             # no tests
+P50Tools                               # no tests
 POE-Component-Server-MySQL             # no tests
 Random-Quantum                         # no tests
 SchemaEvolution                        # no tests
