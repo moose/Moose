@@ -648,8 +648,7 @@ sub _inline_check_required {
     return (
         'if (@_ < 2) {',
             $self->_inline_throw_error(
-                '"Attribute (' . $attr_name . ') is required, so cannot '
-              . 'be set to undef"' # defined $_[1] is not good enough
+                '"Attribute (' . $attr_name . ') is required"'
             ) . ';',
         '}',
     );
