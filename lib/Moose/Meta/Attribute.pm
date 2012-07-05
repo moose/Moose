@@ -1307,7 +1307,7 @@ L<Class::MOP::Attribute> and add Moose specific features.
 
 =over 4
 
-=item B<< Moose::Meta::Attribute->new(%options) >>
+=item B<< Moose::Meta::Attribute->new($name, %options) >>
 
 This method overrides the L<Class::MOP::Attribute> constructor.
 
