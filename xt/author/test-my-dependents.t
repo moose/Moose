@@ -124,7 +124,9 @@ my @dists = sort
             @{ $res->{hits}{hits} };
 
 if ( $ENV{MOOSE_TEST_MD} eq 'MooseX' ) {
-    @dists = grep { /^(?:MooseX-|Fey-ORM)/ } @dists;
+    @dists = grep {
+        /^(?:MooseX-|(?:Fey-ORM|KiokuDB|Bread-Board|Catalyst-Runtime|Reflex)$)/
+    } @dists;
 }
 elsif ( $ENV{MOOSE_TEST_MD} eq '1' ) {
     diag(
