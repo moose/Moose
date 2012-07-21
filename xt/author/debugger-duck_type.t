@@ -15,4 +15,4 @@ BEGIN {
     $DB::IN = $in;
 }
 
-require "$Bin/type_constraints/duck_types.t";
+require "$Bin/../../t/type_constraints/duck_types.t";
