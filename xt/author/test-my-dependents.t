@@ -6,9 +6,8 @@ use Test::More;
 
 BEGIN {
     my $help = <<'EOF';
+This test will not run unless you set MOOSE_TEST_MD to a true value.
 
-
-  This test will not run unless you set MOOSE_TEST_MD to a true value.
   Valid values are:
 
      all                  Test every dist which depends on Moose except those
