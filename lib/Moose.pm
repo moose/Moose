@@ -67,7 +67,10 @@ sub has {
     Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
         if @_ % 2 == 1;
 
-    my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
+    my %context = Moose::Util::_caller_info;
+    $context{context} = 'has declaration';
+    $context{type} = 'class';
+    my %options = ( definition_context => \%context, @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     $meta->add_attribute( $_, %options ) for @$attrs;
 }

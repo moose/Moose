@@ -94,7 +94,22 @@ sub new {
 
     if (@bad)
     {
-        Carp::cluck "Found unknown argument(s) passed to '$name' attribute constructor in '$class': @bad";
+        my $s = @bad > 1 ? 's' : '';
+        my $list = join "', '", @bad;
+
+        my $package = $options{definition_context}{package};
+        my $context = $options{definition_context}{context}
+                   || 'attribute constructor';
+        my $type = $options{definition_context}{type} || 'class';
+
+        my $location = '';
+        if (defined($package)) {
+            $location = " in ";
+            $location .= "$type " if $type;
+            $location .= $package;
+        }
+
+        Carp::cluck "Found unknown argument$s '$list' in the $context for '$name'$location";
     }
 
     return $class->SUPER::new($name, %options);

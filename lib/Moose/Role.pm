@@ -39,7 +39,10 @@ sub has {
     my $meta = shift;
     my $name = shift;
     croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
-    my %options = ( definition_context => Moose::Util::_caller_info(), @_ );
+    my %context = Moose::Util::_caller_info;
+    $context{context} = 'has declaration';
+    $context{type} = 'role';
+    my %options = ( definition_context => \%context, @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
     $meta->add_attribute( $_, %options ) for @$attrs;
 }
