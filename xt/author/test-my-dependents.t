@@ -11,14 +11,17 @@ BEGIN {
   This test will not run unless you set MOOSE_TEST_MD to a true value.
   Valid values are:
 
-     all     Test every distro which depends on Moose except those that we know
-             cannot be tested. This is a lot of distros (thousands).
+     all                  Test every dist which depends on Moose except those
+                          that we know cannot be tested. This is a lot of
+                          distros (thousands).
 
-     MooseX  Test all Moose extension distros
-             (MooseX modules plus a few others).
+     Dist::1,Dist::2,...  Test the individual dists listed.
 
-     $true   Any other true value runs the default tests. We pick 200 random
-             distros and test them.
+     MooseX               Test all Moose extension distros
+                          (MooseX modules plus a few others).
+
+     1                    Run the default tests. We pick 200 random dists and
+                          test them.
 
 EOF
 
@@ -123,7 +126,7 @@ my @dists = sort
 if ( $ENV{MOOSE_TEST_MD} eq 'MooseX' ) {
     @dists = grep { /^(?:MooseX-|Fey-ORM)/ } @dists;
 }
-elsif ( $ENV{MOOSE_TEST_MD} ne 'all' ) {
+elsif ( $ENV{MOOSE_TEST_MD} eq '1' ) {
     diag(
         <<'EOF'
   Picking 200 random dependents to test. Set MOOSE_TEST_MD=all to test all
@@ -137,6 +140,14 @@ EOF
     }
 
     @dists = @dists[ sort keys %indexes ];
+}
+elsif ( $ENV{MOOSE_TEST_MD} ne 'all' ) {
+    my @chosen = split /,/, $ENV{MOOSE_TEST_MD};
+    my %dists = map { $_ => 1 } @dists;
+    if (my @unknown = grep { !$dists{$_} } @chosen) {
+        die "Unknown dists: @unknown";
+    }
+    @dists = @chosen;
 }
 
 plan tests => scalar @dists;
