@@ -952,6 +952,31 @@ You can also visit us at C<#moose> on L<irc://irc.perl.org/#moose>
 This channel is quite active, and questions at all levels (on Moose-related
 topics ;) are welcome.
 
+=head1 WHAT DOES MOOSE STAND FOR?
+
+Moose doesn't stand for one thing in particular, however, if you want, here
+are a few of our favorites, feel free to contribute more.
+
+=over 4
+
+=item * Make Other Object Systems Envious
+
+=item * Makes Object Orientation So Easy
+
+=item * Makes Object Orientation Spiffy- Er (sorry ingy)
+
+=item * Most Other Object Systems Emasculate
+
+=item * Moose Often Ovulate Sorta Early
+
+=item * Moose Offers Often Super Extensions
+
+=item * Meta Object Obligates Salivary Excitation
+
+=item * Meta Object Orientation Syntax Extensions
+
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 =over 4
