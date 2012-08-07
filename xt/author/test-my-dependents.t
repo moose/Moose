@@ -358,6 +358,7 @@ Date-Biorhythm                         # Date::Business prompts in Makefile.PL
 DBIx-VersionedDDL                      # runs a script with /usr/bin/perl in the shbang line
 File-Tail-Scribe                       # tests hang
 Gearman-Driver                         # spews tar errors
+Gearman-SlotManager                    # tests hang
 IPC-AnyEvent-Gearman                   # tests hang
 Lingua-YALI                            # runs scripts with /usr/bin/env perl in the shbang line
 Net-SSH-Mechanize                      # the mock-ssh script it runs seems to spin endlessly
