@@ -64,15 +64,12 @@ sub has {
     my $meta = shift;
     my $name = shift;
 
-    Moose->throw_error('Usage: has \'name\' => ( key => value, ... )')
-        if @_ % 2 == 1;
-
     my %context = Moose::Util::_caller_info;
     $context{context} = 'has declaration';
     $context{type} = 'class';
-    my %options = ( definition_context => \%context, @_ );
+    my @options = ( definition_context => \%context, @_ );
     my $attrs = ( ref($name) eq 'ARRAY' ) ? $name : [ ($name) ];
-    $meta->add_attribute( $_, %options ) for @$attrs;
+    $meta->add_attribute( $_, @options ) for @$attrs;
 }
 
 sub before {
