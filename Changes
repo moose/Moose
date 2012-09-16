@@ -13,7 +13,8 @@ for, noteworthy changes.
 
   * The has() sub exported by Moose no longer checks whether it received an
     even number of arguments (after the name). Instead, this is checked by
-    Moose::Meta::Attribute->interpolate_class_and_new.
+    Moose::Meta::Attribute->interpolate_class_and_new. Based on a patch from
+    Peter Shangov. RT #79376.
 
   [BUG FIXES]
 
