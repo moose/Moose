@@ -260,13 +260,14 @@ ok(OutOfClassTest->meta->get_attribute('bar'), 'attr created from can');
 
 
 {
-    {
-        package Foo;
-        use Moose;
+    package Foo;
+    use Moose;
 
-        ::like( ::exception { has 'foo' => ( 'ro', isa => 'Str' ) }, qr/^Usage/, 'has throws error with odd number of attribute options' );
-    }
-
+    ::like(
+        ::exception{ has 'foo' => ( 'ro', isa => 'Str' ) },
+        qr/^Defining an attribute/,
+        'has throws error with odd number of attribute options'
+    );
 }
 
 done_testing;

@@ -116,8 +116,12 @@ sub new {
 }
 
 sub interpolate_class_and_new {
-    my ($class, $name, %args) = @_;
+    my ($class, $name, @args) = @_;
 
+    $class->throw_error('Defining an attribute requires a hash of options')
+        if @args % 2;
+
+    my %args = @args;
     my ( $new_class, @traits ) = $class->interpolate_class(\%args);
 
     $new_class->new($name, %args, ( scalar(@traits) ? ( traits => \@traits ) : () ) );
