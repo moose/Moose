@@ -294,9 +294,11 @@ This method accepts one or two arguments.
 =item * B<natatime($n, $code)>
 
 This method returns an iterator which, on each call, returns C<$n> more items
-from the array, in order, like C<natatime> from L<List::MoreUtils>. A coderef
-can optionally be provided; it will be called on each group of C<$n> elements
-in the array.
+from the array, in order, like C<natatime> from L<List::MoreUtils>.
+
+If you pass a coderef as the second argument, then this code ref will be
+called on each group of C<$n> elements in the array until the array is
+exhausted.
 
 This method accepts one or two arguments.
 
