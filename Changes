@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0604 Wed, Sep 19, 2012
+
   [BUG FIXES]
 
   * Fix nonsensical error message for inlined accessors of required attributes.
