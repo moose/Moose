@@ -955,7 +955,7 @@ topics ;) are welcome.
 =head1 WHAT DOES MOOSE STAND FOR?
 
 Moose doesn't stand for one thing in particular, however, if you want, here
-are a few of our favorites, feel free to contribute more.
+are a few of our favorites. Feel free to contribute more!
 
 =over 4
 
