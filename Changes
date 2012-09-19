@@ -3,6 +3,19 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * Fix nonsensical error message for inlined accessors of required attributes.
+    (doy)
+
+  * Stop trying to localize a lexical (blead now throws an error for this). RT
+    #79257, perl #114628. (sprout)
+
+  [OTHER]
+
+  * Depend on a version of Carp new enough to have caller_info. RT #79367.
+    (pshangov)
+
 2.0603 Thu, Jun 28, 2012
 
   [BUG FIXES]
