@@ -8,10 +8,10 @@ use metaclass;
 # meta classes
 {
     package Foo::Meta::Instance;
-    use base 'Class::MOP::Instance';
+    use parent 'Class::MOP::Instance';
 
     package Bar::Meta::Instance;
-    use base 'Class::MOP::Instance';
+    use parent 'Class::MOP::Instance';
 
     package FooBar::Meta::Instance;
     use base 'Foo::Meta::Instance', 'Bar::Meta::Instance';

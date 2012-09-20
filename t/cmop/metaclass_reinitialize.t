@@ -46,13 +46,13 @@ like( exception {
 
 {
     package Bar::Meta::Method;
-    use base 'Class::MOP::Method';
+    use parent 'Class::MOP::Method';
     __PACKAGE__->meta->add_attribute('test', accessor => 'test');
 }
 
 {
     package Bar::Meta::Attribute;
-    use base 'Class::MOP::Attribute';
+    use parent 'Class::MOP::Attribute';
     __PACKAGE__->meta->add_attribute('tset', accessor => 'tset');
 }
 
@@ -87,12 +87,12 @@ is(Bar->meta->get_attribute('bar')->tset, 'OOF');
 
 {
     package Baz::Meta::Attribute;
-    use base 'Class::MOP::Attribute';
+    use parent 'Class::MOP::Attribute';
 }
 
 {
     package Baz::Meta::Method;
-    use base 'Class::MOP::Method';
+    use parent 'Class::MOP::Method';
 }
 
 {
@@ -142,7 +142,7 @@ like( exception {
 
 {
     package Quuux::Meta::Attribute;
-    use base 'Class::MOP::Attribute';
+    use parent 'Class::MOP::Attribute';
 
     sub install_accessors {}
 }
@@ -168,14 +168,14 @@ ok(!$meta->has_method('bar'));
 
 {
     package Blah::Meta::Method;
-    use base 'Class::MOP::Method';
+    use parent 'Class::MOP::Method';
 
     __PACKAGE__->meta->add_attribute('foo', reader => 'foo', default => 'TEST');
 }
 
 {
     package Blah::Meta::Attribute;
-    use base 'Class::MOP::Attribute';
+    use parent 'Class::MOP::Attribute';
 
     __PACKAGE__->meta->add_attribute('oof', reader => 'oof', default => 'TSET');
 }

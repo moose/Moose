@@ -8,7 +8,7 @@ use Class::MOP;
 
 {
     package MyMeta;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
     sub initialize {
         my $class = shift;
         my ( $package, %options ) = @_;

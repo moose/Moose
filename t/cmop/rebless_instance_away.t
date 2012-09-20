@@ -8,7 +8,7 @@ my @calls;
 
 do {
     package My::Meta::Class;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     sub rebless_instance_away {
         push @calls, [@_];
