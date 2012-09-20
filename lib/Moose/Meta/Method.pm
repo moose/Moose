@@ -5,7 +5,7 @@ use warnings;
 
 use Class::MOP::MiniTrait;
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 

@@ -8,7 +8,7 @@ use metaclass;
 use overload '""'     => sub { shift->name },   # stringify to method name
              fallback => 1;
 
-use base qw(Class::MOP::Object);
+use parent 'Class::MOP::Object';
 
 # This is not a Moose::Meta::Role::Method because it has no implementation, it
 # is just a name

@@ -6,7 +6,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-use base 'Class::MOP::Mixin';
+use parent 'Class::MOP::Mixin';
 
 sub add_attribute {
     my $self = shift;

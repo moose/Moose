@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util 'blessed';
 
-use base 'Class::MOP::Mixin';
+use parent 'Class::MOP::Mixin';
 
 sub has_accessor        { defined $_[0]->{'accessor'} }
 sub has_reader          { defined $_[0]->{'reader'} }

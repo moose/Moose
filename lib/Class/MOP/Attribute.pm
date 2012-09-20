@@ -10,7 +10,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-use base 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
+use parent 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
 
 # NOTE: (meta-circularity)
 # This method will be replaced in the

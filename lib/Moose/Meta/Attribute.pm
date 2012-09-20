@@ -17,7 +17,7 @@ use Moose::Util ();
 use Moose::Util::TypeConstraints ();
 use Class::MOP::MiniTrait;
 
-use base 'Class::MOP::Attribute', 'Moose::Meta::Mixin::AttributeCore';
+use parent 'Class::MOP::Attribute', 'Moose::Meta::Mixin::AttributeCore';
 
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 

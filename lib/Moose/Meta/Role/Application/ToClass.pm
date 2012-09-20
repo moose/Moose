@@ -8,7 +8,7 @@ use List::MoreUtils 'firstval';
 use Moose::Util  'english_list';
 use Scalar::Util 'weaken', 'blessed';
 
-use base 'Moose::Meta::Role::Application';
+use parent 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',

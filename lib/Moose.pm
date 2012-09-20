@@ -399,8 +399,8 @@ on the current class.
 This function will set the superclass(es) for the current class. If the parent
 classes are not yet loaded, then C<extends> tries to load them.
 
-This approach is recommended instead of C<use base>, because C<use base>
-actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
+This approach is recommended instead of C<use L<base>>/C<use L<parent>>, because
+C<use base> actually C<push>es onto the class's C<@ISA>, whereas C<extends> will
 replace it. This is important to ensure that classes which do not have
 superclasses still properly inherit from L<Moose::Object>.
 

@@ -9,7 +9,7 @@ use Scalar::Util 'blessed', 'weaken';
 
 use constant DEBUG_NO_META => $ENV{DEBUG_NO_META} ? 1 : 0;
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 sub _is_caller_mop_internal {
     my $self = shift;

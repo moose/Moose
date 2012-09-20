@@ -8,7 +8,7 @@ use Devel::GlobalDestruction ();
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-use base 'Moose::Meta::Method',
+use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Inlined';
 
 sub new {

@@ -8,7 +8,7 @@ use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 
-use base 'Class::MOP::Method::Generated';
+use parent 'Class::MOP::Method::Generated';
 
 sub new {
     my $class   = shift;

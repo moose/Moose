@@ -10,7 +10,7 @@ use Devel::GlobalDestruction 'in_global_destruction';
 use Module::Runtime 'module_notional_filename';
 use Package::Stash;
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 # creation ...
 

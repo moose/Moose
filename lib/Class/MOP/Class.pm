@@ -17,7 +17,7 @@ use Sub::Name    'subname';
 use Try::Tiny;
 use List::MoreUtils 'all';
 
-use base 'Class::MOP::Module',
+use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
          'Class::MOP::Mixin::HasMethods';
 

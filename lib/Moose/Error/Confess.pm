@@ -3,7 +3,7 @@ package Moose::Error::Confess;
 use strict;
 use warnings;
 
-use base qw(Moose::Error::Default);
+use parent 'Moose::Error::Default';
 
 sub new {
     my ( $self, @args ) = @_;

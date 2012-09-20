@@ -9,7 +9,7 @@ use List::MoreUtils 'any';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 use Try::Tiny;
 
-use base 'Moose::Meta::Method',
+use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Constructor';
 
 sub new {

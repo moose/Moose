@@ -21,7 +21,7 @@ use Moose::Meta::Method::Meta;
 use Moose::Util;
 use Class::MOP::MiniTrait;
 
-use base 'Class::MOP::Class';
+use parent 'Class::MOP::Class';
 
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 

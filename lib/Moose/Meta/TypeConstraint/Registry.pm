@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute('parent_registry' => (
     reader    => 'get_parent_registry',

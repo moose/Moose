@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
 
-use base 'Moose::Meta::Role::Application';
+use parent 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('role_params' => (
     reader  => 'role_params',
