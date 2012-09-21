@@ -44,7 +44,7 @@ BEGIN {
     use strict;
     use warnings;
 
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 
     Bar->meta->add_attribute('baz' => (
         accessor  => 'baz',
@@ -75,7 +75,7 @@ BEGIN {
     use strict;
     use warnings;
 
-    use base 'Bar', 'Baz';
+    use parent -norequire => 'Bar', 'Baz';
 }
 
 my $foo = Foo->new();

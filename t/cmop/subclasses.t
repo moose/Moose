@@ -9,23 +9,23 @@ do {
 
     package Parent;
     use metaclass;
-    use base 'Grandparent';
+    use parent -norequire => 'Grandparent';
 
     package Uncle;
     use metaclass;
-    use base 'Grandparent';
+    use parent -norequire => 'Grandparent';
 
     package Son;
     use metaclass;
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 
     package Daughter;
     use metaclass;
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 
     package Cousin;
     use metaclass;
-    use base 'Uncle';
+    use parent -norequire => 'Uncle';
 };
 
 is_deeply([sort Grandparent->meta->subclasses], ['Cousin', 'Daughter', 'Parent', 'Son', 'Uncle']);

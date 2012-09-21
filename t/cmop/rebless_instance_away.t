@@ -22,7 +22,7 @@ do {
 
     package Child;
     use metaclass 'My::Meta::Class';
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 };
 
 my $person = Parent->meta->new_object;

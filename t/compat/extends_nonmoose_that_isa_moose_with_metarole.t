@@ -15,7 +15,7 @@ use Class::MOP ();
 
 {
     package SubClassUseBase;
-    use base qw/SomeClass/;
+    use parent -norequire => 'SomeClass';
 }
 
 {
@@ -46,7 +46,7 @@ Class::MOP::remove_metaclass_by_name('SubClassUseBase');
 
 {
     package OtherSubClassUseBase;
-    use base 'OtherClass';
+    use parent -norequire => 'OtherClass';
 }
 
 {

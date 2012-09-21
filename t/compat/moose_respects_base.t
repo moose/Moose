@@ -23,14 +23,14 @@ this test also demonstrates.
     sub foo { 'Foo::foo' }
 
     package Bar;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
     use Moose;
 
     sub new { (shift)->meta->new_object(@_) }
 
     package Baz;
     use Moose;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 my $bar = Bar->new;

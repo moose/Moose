@@ -45,7 +45,7 @@ use Class::MOP;
     use warnings;
     use metaclass;
 
-    use base 'BankAccount';
+    use parent -norequire => 'BankAccount';
 
     CheckingAccount->meta->add_attribute(
         'overdraft_account' => (

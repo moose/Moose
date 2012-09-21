@@ -275,7 +275,7 @@ use Class::MOP;
 {
     package DestructorChild;
 
-    use base 'ParentHasDestructor';
+    use parent -norequire => 'ParentHasDestructor';
 
     my $meta = Class::MOP::Class->initialize(__PACKAGE__);
 

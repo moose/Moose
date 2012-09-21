@@ -17,22 +17,22 @@ use Test::More;
 
 {
     package Foo::Sub;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 {
     package Foo::Sub2;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 {
     package Foo::Sub3;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 {
     package Foo::Sub4;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 ok(Foo::Sub->does('Foo::Role'), "class does Foo::Role");

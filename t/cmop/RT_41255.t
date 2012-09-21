@@ -13,7 +13,7 @@ use Class::MOP;
     sub m5 { 5 }
 
     package Derived;
-    use base qw(BaseClass);
+    use parent -norequire => 'BaseClass';
 
     sub m1;
     sub m2 ();

@@ -14,7 +14,7 @@ use metaclass;
     use parent 'Class::MOP::Class';
 
     package FooBar::Meta;
-    use base 'Foo::Meta', 'Bar::Meta';
+    use parent -norequire => 'Foo::Meta', 'Bar::Meta';
 }
 
 $@ = undef;

@@ -57,7 +57,7 @@ use Class::MOP;
     use warnings;
     use metaclass 'My::Meta';
 
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 
     __PACKAGE__->meta->add_attribute('bar');
 
