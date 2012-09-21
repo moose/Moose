@@ -7,7 +7,7 @@ use warnings;
 
 our $VERSION = '0.06';
 
-use base 'Class::MOP::Class';
+use parent 'Class::MOP::Class';
 
 sub initialize {
     (shift)->SUPER::initialize(@_,
@@ -42,7 +42,7 @@ use warnings;
 
 our $VERSION = '0.04';
 
-use base 'Class::MOP::Attribute';
+use parent 'Class::MOP::Attribute';
 
 # alter the way parameters are specified
 sub initialize_instance_slot {

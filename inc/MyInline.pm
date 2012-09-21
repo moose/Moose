@@ -6,7 +6,7 @@ use warnings;
 {
     package My::Extract;
 
-    use base 'Test::Inline::Extract';
+    use parent 'Test::Inline::Extract';
 
     use List::Util qw( first );
 
@@ -71,7 +71,7 @@ use warnings;
 {
     package My::Content;
 
-    use base 'Test::Inline::Content::Default';
+    use parent 'Test::Inline::Content::Default';
 
     sub process {
         my $self = shift;
