@@ -226,35 +226,8 @@ sub clone_and_inherit_options {
     (scalar @found_illegal_options == 0)
         || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
 
-    if ($options{isa}) {
-        my $type_constraint;
-        if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
-            $type_constraint = $options{isa};
-        }
-        elsif (blessed($options{isa}) && Moose::Util::does_role($options{isa}, 'Type::Constraint::Role::Interface')) {
-            $type_constraint = $options{isa};
-        }
-        else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa}, { package_defined_in => $options{definition_context}->{package} });
-            (defined $type_constraint)
-                || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
-        }
-        $options{type_constraint} = $type_constraint;
-    }
-
-    if ($options{does}) {
-        my $type_constraint;
-        if (blessed($options{does}) && $options{does}->isa('Moose::Meta::TypeConstraint')) {
-            $type_constraint = $options{does};
-        }
-        else {
-            $type_constraint = Moose::Util::TypeConstraints::find_or_create_does_type_constraint($options{does}, { package_defined_in => $options{definition_context}->{package} });
-            (defined $type_constraint)
-                || $self->throw_error("Could not find the type constraint '" . $options{does} . "'", data => $options{does});
-        }
-
-        $options{type_constraint} = $type_constraint;
-    }
+    $self->_process_isa_option( $self->name, \%options );
+    $self->_process_does_option( $self->name, \%options );
 
     # NOTE:
     # this doesn't apply to Class::MOP::Attributes,
