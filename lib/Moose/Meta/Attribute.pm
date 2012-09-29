@@ -231,12 +231,14 @@ sub clone_and_inherit_options {
         if (blessed($options{isa}) && $options{isa}->isa('Moose::Meta::TypeConstraint')) {
             $type_constraint = $options{isa};
         }
+        elsif (blessed($options{isa}) && Moose::Util::does_role($options{isa}, 'Type::Constraint::Role::Interface')) {
+            $type_constraint = $options{isa};
+        }
         else {
             $type_constraint = Moose::Util::TypeConstraints::find_or_create_isa_type_constraint($options{isa}, { package_defined_in => $options{definition_context}->{package} });
             (defined $type_constraint)
                 || $self->throw_error("Could not find the type constraint '" . $options{isa} . "'", data => $options{isa});
         }
-
         $options{type_constraint} = $type_constraint;
     }
 
@@ -372,6 +374,14 @@ sub _process_isa_option {
     # allow for anon-subtypes here ...
     if ( blessed( $options->{isa} )
         && $options->{isa}->isa('Moose::Meta::TypeConstraint') ) {
+        $options->{type_constraint} = $options->{isa};
+    }
+    elsif (
+        blessed( $options->{isa} )
+        && Moose::Util::does_role(
+            $options->{isa}, 'Type::Constraint::Role::Interface'
+        )
+        ) {
         $options->{type_constraint} = $options->{isa};
     }
     else {
