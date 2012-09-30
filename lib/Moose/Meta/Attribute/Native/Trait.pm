@@ -4,8 +4,9 @@ use Moose::Role;
 
 use Class::Load qw(load_class);
 use List::MoreUtils qw( any uniq );
-use Moose::Util::TypeConstraints;
 use Moose::Deprecated;
+use Moose::Util;
+use Moose::Util::TypeConstraints;
 
 requires '_helper_type';
 
@@ -87,12 +88,29 @@ sub _check_helper_type {
     $options->{isa} = $type
         unless exists $options->{isa};
 
-    my $isa = Moose::Util::TypeConstraints::find_or_create_type_constraint(
-        $options->{isa} );
+    my $isa;
+    my $isa_name;
 
-    ( $isa->is_a_type_of($type) )
-        || confess
-        "The type constraint for $name must be a subtype of $type but it's a $isa";
+    if (
+        Moose::Util::does_role(
+            $options->{isa}, 'Type::Constraint::Role::Interface'
+        )
+        ) {
+
+        $isa = $options->{isa};
+        require Type::Library::Builtins;
+        return if $isa->is_a_type_of( Type::Library::Builtins::t($type) );
+        $isa_name = $isa->name() || $isa->description();
+    }
+    else {
+        $isa = Moose::Util::TypeConstraints::find_or_create_type_constraint(
+            $options->{isa} );
+        return if $isa->is_a_type_of($type);
+        $isa_name = $isa->name();
+    }
+
+    confess
+        "The type constraint for $name must be a subtype of $type but it's a $isa_name";
 }
 
 before 'install_accessors' => sub { (shift)->_check_handles_values };
