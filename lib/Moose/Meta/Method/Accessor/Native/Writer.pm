@@ -79,9 +79,8 @@ sub _constraint_must_be_checked {
     my $attr = $self->associated_attribute;
 
     return $attr->has_type_constraint
-        && (!$self->_is_root_type( $attr->type_constraint )
-         || ( $attr->should_coerce && $attr->type_constraint->has_coercion)
-           );
+        && ( !$self->_is_root_type( $attr->type_constraint )
+        || ( $attr->should_coerce && $attr->type_constraint->has_coercion ) );
 }
 
 sub _is_root_type {
