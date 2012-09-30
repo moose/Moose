@@ -87,7 +87,8 @@ sub _check_new_members_only {
     # constraint, so we need to check the whole value, not just the members.
     return 1
         if $self->_is_root_type( $tc->parent )
-            && $tc->isa('Moose::Meta::TypeConstraint::Parameterized');
+            && ( $tc->isa('Moose::Meta::TypeConstraint::Parameterized')
+                 || $tc->isa('Type::Constraint::Parameterized') );
 
     return 0;
 }

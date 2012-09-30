@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use List::MoreUtils qw( any );
+use Moose::Util;
 
 use Moose::Role;
 
@@ -85,11 +86,20 @@ sub _constraint_must_be_checked {
 
 sub _is_root_type {
     my $self = shift;
-    my ($type) = @_;
+    my $type = shift;
 
-    my $name = $type->name;
-
-    return any { $name eq $_ } @{ $self->root_types };
+    if (
+        Moose::Util::does_role( $type, 'Type::Constraint::Role::Interface' ) )
+    {
+        require Type::Library::Builtins;
+        return
+            any { $type->is_same_type_as( Type::Library::Builtins::t($_) ) }
+        @{ $self->root_types };
+    }
+    else {
+        my $name = $type->name;
+        return any { $name eq $_ } @{ $self->root_types };
+    }
 }
 
 sub _inline_copy_native_value {
