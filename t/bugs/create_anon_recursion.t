@@ -4,6 +4,11 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+BEGIN {
+    plan skip_all => "preloading things makes this test meaningless"
+        if exists $INC{'Moose.pm'};
+}
+
 use Moose::Meta::Class;
 
 $SIG{__WARN__} = sub { die if shift =~ /recurs/ };

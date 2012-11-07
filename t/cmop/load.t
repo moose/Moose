@@ -1,6 +1,10 @@
 use strict;
 use warnings;
 
+# for instance, App::ForkProve
+my $preloaded;
+BEGIN { $preloaded = exists $INC{'Class/MOP.pm'} }
+
 use Test::More;
 
 use Class::Load qw(is_class_loaded);
@@ -71,71 +75,75 @@ for my $meta (values %METAS) {
     }
 }
 
-is_deeply(
-    {Class::MOP::get_all_metaclasses},
-    \%METAS,
-    '... got all the metaclasses'
-);
+SKIP: {
+    skip "this list may be incorrect if we preloaded things", 3 if $preloaded;
+    is_deeply(
+        {Class::MOP::get_all_metaclasses},
+        \%METAS,
+        '... got all the metaclasses'
+    );
 
-is_deeply(
-    [
-        sort { $a->name cmp $b->name } Class::MOP::get_all_metaclass_instances
-    ],
-    [
-        Class::MOP::Attribute->meta,
-        Class::MOP::Class->meta,
-        Class::MOP::Class::Immutable::Class::MOP::Class->meta,
-        Class::MOP::class_of('Class::MOP::Class::Immutable::Trait'),
-        Class::MOP::Instance->meta,
-        Class::MOP::Method->meta,
-        Class::MOP::Method::Accessor->meta,
-        Class::MOP::Method::Constructor->meta,
-        Class::MOP::Method::Generated->meta,
-        Class::MOP::Method::Inlined->meta,
-        Class::MOP::Method::Meta->meta,
-        Class::MOP::Method::Overload->meta,
-        Class::MOP::Method::Wrapped->meta,
-        Class::MOP::Mixin->meta,
-        Class::MOP::Mixin::AttributeCore->meta,
-        Class::MOP::Mixin::HasAttributes->meta,
-        Class::MOP::Mixin::HasMethods->meta,
-        Class::MOP::Module->meta,
-        Class::MOP::Object->meta,
-        Class::MOP::Package->meta,
-        Class::MOP::class_of('UNIVERSAL'),
-    ],
-    '... got all the metaclass instances'
-);
+    is_deeply(
+        [
+            sort { $a->name cmp $b->name }
+                 Class::MOP::get_all_metaclass_instances
+        ],
+        [
+            Class::MOP::Attribute->meta,
+            Class::MOP::Class->meta,
+            Class::MOP::Class::Immutable::Class::MOP::Class->meta,
+            Class::MOP::class_of('Class::MOP::Class::Immutable::Trait'),
+            Class::MOP::Instance->meta,
+            Class::MOP::Method->meta,
+            Class::MOP::Method::Accessor->meta,
+            Class::MOP::Method::Constructor->meta,
+            Class::MOP::Method::Generated->meta,
+            Class::MOP::Method::Inlined->meta,
+            Class::MOP::Method::Meta->meta,
+            Class::MOP::Method::Overload->meta,
+            Class::MOP::Method::Wrapped->meta,
+            Class::MOP::Mixin->meta,
+            Class::MOP::Mixin::AttributeCore->meta,
+            Class::MOP::Mixin::HasAttributes->meta,
+            Class::MOP::Mixin::HasMethods->meta,
+            Class::MOP::Module->meta,
+            Class::MOP::Object->meta,
+            Class::MOP::Package->meta,
+            Class::MOP::class_of('UNIVERSAL'),
+        ],
+        '... got all the metaclass instances'
+    );
 
-is_deeply(
-    [ sort { $a cmp $b } Class::MOP::get_all_metaclass_names() ],
-    [
-        sort qw/
-            Class::MOP::Attribute
-            Class::MOP::Class
-            Class::MOP::Class::Immutable::Class::MOP::Class
-            Class::MOP::Class::Immutable::Trait
-            Class::MOP::Mixin
-            Class::MOP::Mixin::AttributeCore
-            Class::MOP::Mixin::HasAttributes
-            Class::MOP::Mixin::HasMethods
-            Class::MOP::Instance
-            Class::MOP::Method
-            Class::MOP::Method::Accessor
-            Class::MOP::Method::Constructor
-            Class::MOP::Method::Generated
-            Class::MOP::Method::Inlined
-            Class::MOP::Method::Wrapped
-            Class::MOP::Method::Meta
-            Class::MOP::Method::Overload
-            Class::MOP::Module
-            Class::MOP::Object
-            Class::MOP::Package
-            UNIVERSAL
-            /,
-    ],
-    '... got all the metaclass names'
-);
+    is_deeply(
+        [ sort { $a cmp $b } Class::MOP::get_all_metaclass_names() ],
+        [
+            sort qw/
+                Class::MOP::Attribute
+                Class::MOP::Class
+                Class::MOP::Class::Immutable::Class::MOP::Class
+                Class::MOP::Class::Immutable::Trait
+                Class::MOP::Mixin
+                Class::MOP::Mixin::AttributeCore
+                Class::MOP::Mixin::HasAttributes
+                Class::MOP::Mixin::HasMethods
+                Class::MOP::Instance
+                Class::MOP::Method
+                Class::MOP::Method::Accessor
+                Class::MOP::Method::Constructor
+                Class::MOP::Method::Generated
+                Class::MOP::Method::Inlined
+                Class::MOP::Method::Wrapped
+                Class::MOP::Method::Meta
+                Class::MOP::Method::Overload
+                Class::MOP::Module
+                Class::MOP::Object
+                Class::MOP::Package
+                UNIVERSAL
+                /,
+        ],
+        '... got all the metaclass names'
+    );
+}
 
 # testing the meta-circularity of the system
 
