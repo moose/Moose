@@ -25,7 +25,7 @@ __PACKAGE__->meta->add_attribute('parameterized_from' => (
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    my $other = Moose::Util::TypeConstraints::find_or_create_type_constraint($type_or_name) or return;
 
     return unless $other->isa(__PACKAGE__);
 
