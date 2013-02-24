@@ -89,11 +89,11 @@ sub _is_root_type {
     my $type = shift;
 
     if (
-        Moose::Util::does_role( $type, 'Type::Constraint::Role::Interface' ) )
+        Moose::Util::does_role( $type, 'Specio::Constraint::Role::Interface' ) )
     {
-        require Type::Library::Builtins;
+        require Specio::Library::Builtins;
         return
-            any { $type->is_same_type_as( Type::Library::Builtins::t($_) ) }
+            any { $type->is_same_type_as( Specio::Library::Builtins::t($_) ) }
         @{ $self->root_types };
     }
     else {

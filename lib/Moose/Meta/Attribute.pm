@@ -352,7 +352,7 @@ sub _process_isa_option {
     elsif (
         blessed( $options->{isa} )
         && Moose::Util::does_role(
-            $options->{isa}, 'Type::Constraint::Role::Interface'
+            $options->{isa}, 'Specio::Constraint::Role::Interface'
         )
         ) {
         $options->{type_constraint} = $options->{isa};
