@@ -88,7 +88,7 @@ sub _check_new_members_only {
     return 1
         if $self->_is_root_type( $tc->parent )
             && ( $tc->isa('Moose::Meta::TypeConstraint::Parameterized')
-                 || $tc->isa('Type::Constraint::Parameterized') );
+                 || $tc->isa('Specio::Constraint::Parameterized') );
 
     return 0;
 }

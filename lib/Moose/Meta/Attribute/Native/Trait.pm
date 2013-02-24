@@ -93,13 +93,13 @@ sub _check_helper_type {
 
     if (
         Moose::Util::does_role(
-            $options->{isa}, 'Type::Constraint::Role::Interface'
+            $options->{isa}, 'Specio::Constraint::Role::Interface'
         )
         ) {
 
         $isa = $options->{isa};
-        require Type::Library::Builtins;
-        return if $isa->is_a_type_of( Type::Library::Builtins::t($type) );
+        require Specio::Library::Builtins;
+        return if $isa->is_a_type_of( Specio::Library::Builtins::t($type) );
         $isa_name = $isa->name() || $isa->description();
     }
     else {
