@@ -832,26 +832,26 @@ This module also provides a simple hierarchy for Perl 5 types, here is
 that hierarchy represented visually.
 
   Any
-  Item
-      Bool
-      Maybe[`a]
-      Undef
-      Defined
-          Value
-              Str
-                  Num
-                      Int
-                  ClassName
-                  RoleName
-          Ref
-              ScalarRef[`a]
-              ArrayRef[`a]
-              HashRef[`a]
-              CodeRef
-              RegexpRef
-              GlobRef
-              FileHandle
-              Object
+      Item
+          Bool
+          Maybe[`a]
+          Undef
+          Defined
+              Value
+                  Str
+                      Num
+                          Int
+                      ClassName
+                      RoleName
+              Ref
+                  ScalarRef[`a]
+                  ArrayRef[`a]
+                  HashRef[`a]
+                  CodeRef
+                  RegexpRef
+                  GlobRef
+                  FileHandle
+                  Object
 
 B<NOTE:> Any type followed by a type parameter C<[`a]> can be
 parameterized, this means you can say:

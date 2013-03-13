@@ -34,26 +34,26 @@ data, and it also contributes greatly to code maintainability.
 The basic Moose type hierarchy looks like this
 
   Any
-  Item
-      Bool
-      Maybe[`a]
-      Undef
-      Defined
-          Value
-              Str
-                  Num
-                      Int
-                  ClassName
-                  RoleName
-          Ref
-              ScalarRef[`a]
-              ArrayRef[`a]
-              HashRef[`a]
-              CodeRef
-              RegexpRef
-              GlobRef
+      Item
+          Bool
+          Maybe[`a]
+          Undef
+          Defined
+              Value
+                  Str
+                      Num
+                          Int
+                      ClassName
+                      RoleName
+              Ref
+                  ScalarRef[`a]
+                  ArrayRef[`a]
+                  HashRef[`a]
+                  CodeRef
+                  RegexpRef
+                  GlobRef
                   FileHandle
-              Object
+                  Object
 
 In practice, the only difference between C<Any> and C<Item> is
 conceptual. C<Item> is used as the top-level type in the hierarchy.
