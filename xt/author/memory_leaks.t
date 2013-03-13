@@ -7,6 +7,7 @@ use Test::Memory::Cycle;
 
 use Moose ();
 use Moose::Util qw( apply_all_roles );
+use Moose::Util::TypeConstraints;
 
 {
     package MyRole;
@@ -98,5 +99,14 @@ no_leaks_ok(
     my $anon_role = Moose::Meta::Role->create_anon_role;
     memory_cycle_ok($anon_role, 'anon role meta object is cycle-free' );
 }
+
+{
+    my $Str = find_type_constraint('Str');
+    my $Undef = find_type_constraint('Undef');
+    my $Str_or_Undef = Moose::Meta::TypeConstraint::Union->new(
+        type_constraints => [ $Str, $Undef ] );
+    memory_cycle_ok($Str_or_Undef, 'union types do not leak');
+}
+
 
 done_testing;

@@ -29,7 +29,7 @@ sub new {
         %options,
     );
 
-    $self->_set_constraint(sub { $self->check($_[0]) });
+    $self->_set_constraint( $self->_compiled_type_constraint );
 
     return $self;
 }

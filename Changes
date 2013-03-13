@@ -19,6 +19,8 @@ for, noteworthy changes.
 
   * Fix test failure in blead. RT #78085.
 
+  * Fix memory leak in type unions. (Karen Etheridge) RT#83929.
+
 2.0602 Mon, May 07, 2012
 
   [BUG FIXES]
