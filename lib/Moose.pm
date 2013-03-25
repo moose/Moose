@@ -1101,6 +1101,8 @@ Florian Ragwitz E<lt>rafl@debian.orgE<gt>
 
 Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
 
+Karen (ether) Etheridge E<lt>ether@cpan.orgE<gt>
+
 =head1 CONTRIBUTORS
 
 Moose is a community project, and as such, involves the work of many, many
