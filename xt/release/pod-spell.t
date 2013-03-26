@@ -24,6 +24,7 @@ Buels
 Clary
 Debolaz
 Deltac
+Etheridge
 Florian
 Goro
 Goulah
@@ -225,6 +226,7 @@ mixins
 mul
 munge
 namespace
+Namespace
 namespace's
 namespaced
 namespaces
