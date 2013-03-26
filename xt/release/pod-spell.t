@@ -79,6 +79,7 @@ rindolf
 rlb
 robkinyon
 sartak
+Sartak
 stevan
 tozt
 wreis
@@ -188,7 +189,9 @@ decrement
 definedness
 deinitialized
 deprecations
+Deprecations
 destructor
+Destructor
 destructors
 destructuring
 dev
@@ -197,6 +200,7 @@ env
 eval'ing
 extensibility
 hashrefs
+Hashrefs
 hotspots
 immutabilize
 immutabilized
@@ -230,6 +234,7 @@ ness
 optimizations
 overridable
 parameterizable
+Parameterizable
 parameterization
 parameterize
 parameterized
@@ -240,10 +245,12 @@ plugins
 polymorphism
 prechecking
 prepends
+Prepends
 pu
 rebase
 rebased
 rebasing
+Rebasing
 rebless
 reblesses
 reblessing
@@ -275,6 +282,7 @@ unsettable
 utils
 whitelisted
 workflow
+WORKFLOW
 
 ## other jargon
 bey
