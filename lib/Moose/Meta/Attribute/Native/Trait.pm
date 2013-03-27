@@ -169,13 +169,29 @@ sub _root_types {
     return $_[0]->_helper_type;
 }
 
+
+#
+# Foo::Bar::Baz::Quux::doo
+#
+# ^^^^^^^^^^^^^               - native accessor type prefix
+# ^^^^^^^^^^^^^^^^^^^         - native accessor method prefix
+# ^^^^^^^^^^^^^^^^^^^^^^^^    - native accessor methodclass for ( $suffix = doo )
+
+sub _native_accessor_type_prefix { 'Moose::Meta::Method::Accessor::Native' }
+
+sub _native_accessor_method_prefix {
+    my ( $self, ) = @_;
+    return $self->_native_accessor_type_prefix . '::' . $self->_native_type ;
+}
+sub _native_accessor_methodclass_for {
+    my ( $self, $suffix ) = @_;
+    return $self->_native_accessor_method_prefix . '::' . $suffix;
+}
+
 sub _native_accessor_class_for {
     my ( $self, $suffix ) = @_;
 
-    my $role
-        = 'Moose::Meta::Method::Accessor::Native::'
-        . $self->_native_type . '::'
-        . $suffix;
+    my $role = $self->_native_accessor_methodclass_for( $suffix );
 
     load_class($role);
     return Moose::Meta::Class->create_anon_class(
@@ -186,11 +202,15 @@ sub _native_accessor_class_for {
     )->name;
 }
 
+sub _native_type_matcher { qr/::Native::Trait::(\w+)$/ }
+
 sub _build_native_type {
     my $self = shift;
+    my $matcher = $self->_native_type_matcher;
 
     for my $role_name ( map { $_->name } $self->meta->calculate_all_roles ) {
-        return $1 if $role_name =~ /::Native::Trait::(\w+)$/;
+
+        return $1 if $role_name =~ $matcher
     }
 
     die "Cannot calculate native type for " . ref $self;
