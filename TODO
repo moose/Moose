@@ -1,3 +1,5 @@
+# vim: set ft=markdown :
+
 ## Uncontroversial Items
 
 These items are reasonably well thought out, and can go in any major release.
@@ -37,12 +39,12 @@ metaroles on the role's metaobjects as well.
 ### Deprecate old-style Moose extensions
 
 Moose extensions that work by calling `Moose->init_meta(metaclass =>
-'Some::Custom::Metaclass', ...)` during their own init_meta should be
+'Some::Custom::Metaclass', ...)` during their own `init_meta` should be
 deprecated, so they can be removed later (this should fix the issues with
 `init_meta` generation in Moose::Exporter, see RT51561)
 
 This needs to wait until the previous fix gets in, since it will hopefully
-eliminate the need to write custom init_meta methods entirely.
+eliminate the need to write custom `init_meta` methods entirely.
 
 ### Attributes in roles need to be able to participate in role composition
 
@@ -79,10 +81,10 @@ method by that name, so it'll depend on the previous fix going in (so "has foo
 There's no actual reason for this not to work, and it gets asked often enough
 that we really should just do it at some point.
 
-### use Sub::Identify instead of doing our own thing with get_code_info
+### use Sub::Identify instead of doing our own thing with `get_code_info`
 
 No idea why we stopped using Sub::Identify in the past, but there's no reason
-not to do this. We have a bug fix in our version (the isGV_with_GP thing), so
+not to do this. We have a bug fix in our version (the `isGV_with_GP` thing), so
 this should be submitted to Sub::Identify first.
 
 ## Needs Thought
@@ -94,8 +96,8 @@ These are things we think are good ideas, but they need more fleshing out.
 or at least, don't break existing overloading support
 
 This shouldn't treat the overloading stuff as actual methods, since that's just
-an implementation detail, but we should provide an API for add_overload,
-get_overload, get_overload_list, etc. In particular, this would allow
+an implementation detail, but we should provide an API for `add_overload`,
+`get_overload`, `get_overload_list`, etc. In particular, this would allow
 namespace::autoclean to not break things.
 
 Also, MooseX::Role::WithOverloading should probably be cored.
@@ -140,7 +142,7 @@ but something to think about.
 ### Rename a bunch of the public API methods
 
 Right now the public API is kind of a mess - we have things like `get_method`
-vs `find_method_by`_name (you almost always want to use the latter), there
+vs `find_method_by_name` (you almost always want to use the latter), there
 being no `has_method` equivalent that checks superclasses, `get_method_list`
 being public but only returning method names, while `_get_local_methods` is
 private (returning method objects), and yet neither of those looks at
@@ -156,9 +158,9 @@ Something like renaming `find_method_by_name` to `find_method`, and `get_method`
 
 There's a _lot_ of different conventions in here. Some things to consider:
 
-* new vs _new
+* `new` vs `_new`
 * allowing new( 'name', %args ) vs ( name => 'name', %args )
-* Method->wrap vs Method->new
+* `Method->wrap` vs `Method->new`
 
 ### Move method modifiers out to an external module
 
@@ -195,7 +197,7 @@ refactored so it's a thin sugar layer on top of the meta API. As it
 stands now, it does things like parse type names (and determine if
 they're valid), manage the registry, and much more.
 
-### Anything with a _(meta)?class method
+### Anything with a \_(meta)?class method
 
 Every method that returns a class name needs to become a rw attribute
 that can be set via the constructor.
@@ -216,7 +218,7 @@ merge the feature.
 ### Does applying metaroles really need to reinitialize the metaclass?
 
 Seems like the logic that's actually necessary is already contained in
-rebless_instance, and not reinitializing means that existing attributes and
+`rebless_instance`, and not reinitializing means that existing attributes and
 methods won't be blown away when metaroles are applied.
 
 ### Do we want to core namespace::autoclean behavior somehow?
@@ -346,7 +348,7 @@ Role attribute accessors don't satisfy requires from roles they consume.
 
 ### `t/todo_tests/role_insertion_order.t`
 
-Roles don't preserve attribute insertion_order.
+Roles don't preserve attribute `insertion_order`.
 
 ### `t/todo_tests/various_role_features.t`
 
@@ -359,7 +361,7 @@ Roles don't preserve attribute insertion_order.
   handles => 'Role'.
 * Delegating to a role doesn't make $class->does('Role') true.
 * Method modifier in a role doesn't create a method requirement.
-* Role->meta->has_method('attr_accessor') is false.
+* `Role->meta->has_method('attr_accessor')` is false.
 
 ### `t/type_constraints/type_names.t`
 
@@ -450,11 +452,11 @@ would allow custom metaclasses to provide roles to extend the sugar syntax with.
 
 The type checks can get expensive and some people have suggested that allowing
 the checks to be turned off would be helpful for deploying into performance
-intensive systems. Perhaps this can actually be done as an option to make_immutable?
+intensive systems. Perhaps this can actually be done as an option to `make_immutable`?
 
 ### misc. minor bits
 
-* make the errors for TCs use ->message
+* make the errors for TCs use `->message`
 * look into localizing the messages too
 * make ANON TCs be lazy, so they can possibly be subsituted for the real thing later
 * make ANON TCs more introspectable
@@ -467,7 +469,7 @@ intensive systems. Perhaps this can actually be done as an option to make_immuta
                 }
         on_fail { MyException->throw(value => $_[0], message => $_[1]) };
 
-fail() will just return false unless the call is made via $tc->check_or_fail($value);
+fail() will just return false unless the call is made via `$tc->check_or_fail($value);`
 
 * and then something like this:
 
@@ -496,7 +498,7 @@ fail() will just return false unless the call is made via $tc->check_or_fail($va
     [17:13]  <autarch> that's fine for me
     [17:13]  <stevan> k
 
-coerce_deeply => 1 # reads better
+`coerce_deeply => 1 # reads better`
 
 ### Moose::Meta::TypeConstraint::Parameter{izable,ized}
 
