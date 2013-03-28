@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * properly apply traits at compile time (error introduced in 2.0800,
+    RT#77974). (doy)
+
 2.0800 Wed, Mar 27, 2013
 
   [ENHANCEMENTS]
