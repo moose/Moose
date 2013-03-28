@@ -21,6 +21,8 @@ for, noteworthy changes.
 
   * Fix memory leak in type unions. (Karen Etheridge) RT#83929.
 
+  * Fix application of traits at compile time. (doy) RT#77974.
+
 2.0604 Wed, Sep 19, 2012
 
   [BUG FIXES]
