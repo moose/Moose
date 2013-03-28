@@ -642,7 +642,7 @@ sub _apply_meta_traits {
 
     my $meta = $meta_lookup->($class);
 
-    my $type = $meta->isa('Moose::Meta::Role') ? 'Trait'
+    my $type = $meta->isa('Moose::Meta::Role') ? 'Role'
              : $meta->isa('Class::MOP::Class') ? 'Class'
              : Moose->throw_error('Cannot determine metaclass type for '
                                 . 'trait application. Meta isa '
