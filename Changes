@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0800 Wed, Mar 27, 2013
+
   [ENHANCEMENTS]
 
   * The super() subroutine now carps if you pass it arguments. These arguments
