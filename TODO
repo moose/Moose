@@ -367,6 +367,15 @@ Roles don't preserve attribute `insertion_order`.
 
 Type constraint object constructors don't validate the type name provided.
 
+### MooseX::Aliases in core
+
+Is there any reason why this would be bad?  It would certainly make the
+implementation a little faster (it can be inlined better).
+
+### MooseX::MethodAttributes in core
+
+discuss
+
 ----
 
 ## Old todo
@@ -393,6 +402,7 @@ created
 ### type intersections
 
 Mostly just for Roles
+KENTNL is working on this
 
 ### inherited slot specs
 
