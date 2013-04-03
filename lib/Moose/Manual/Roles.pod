@@ -229,7 +229,7 @@ class is required to provide its I<own> method of the same name.
 
   package Breakdancer;
 
-  use Moose::Role
+  use Moose::Role;
 
   sub break {
 
