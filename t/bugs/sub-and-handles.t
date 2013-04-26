@@ -52,10 +52,36 @@ use Test::More;
    sub _bar { 'extended' }
 
    has '+_barrer' => ( is => 'rw' );
+
+   package D;
+
+   use Moose;
+   extends 'ConsumesDelegateToBar';
+
+   sub _bar { 'extended' }
+
+   has '+_barrer' => (
+      is => 'rw',
+      handles => { _baz => 'bar' },
+   );
+   package C;
+
+   use Moose;
+   extends 'ConsumesDelegateToBar';
+   with 'Does::OverrideDelegate';
+
+   has '+_barrer' => (
+      is => 'rw',
+      handles => { _baz => 'bar' },
+   );
 }
 
 is(A->new->_bar, 'extended', 'overriding delegate method with role works');
+is(D->new->_bar, 'extended', '... even when you specify other delegates in subclass');
+is(D->new->_baz, 'unextended!', '... and said other delegate still works');
 is(B->new->_bar, 'extended', 'overriding delegate method directly works');
+is(C->new->_bar, 'extended', '... even when you specify other delegates in subclass');
+is(C->new->_baz, 'unextended!', '... and said other delegate still works');
 
 done_testing;
 
