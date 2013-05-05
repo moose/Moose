@@ -40,28 +40,6 @@ As Moose has matured, some structure has emerged in the process.
 
 =over
 
-=item Contributors - people creating a topic or branch
-
-You.
-
-If you have commit access, you can create a topic on the main Moose.git
-repository.  If you don't have a commit bit, give us your SSH key or create your
-own clone of the L<git://git.moose.perl.org/Moose.git> repository.
-
-The relevant repository URIs are:
-
-=over
-
-=item Read-Only
-
-L<git://git.moose.perl.org/Moose.git>
-
-=item Read+Write
-
-gitmo@git.moose.perl.org:Moose.git
-
-=back
-
 =item Cabal - people who can release moose
 
 These people are the ones who have co-maint on Moose itself and can create a
@@ -71,6 +49,15 @@ to push to stable branches.
 
 Cabal members are listed in L<Moose> and can often be found on irc in the
 L<irc://irc.perl.org/#moose-dev> channel.
+
+=item Contributors - people creating a topic or branch
+
+You.
+
+The easiest way to submit a patch is to submit a pull request through Github.
+You can fork the Moose repository at C<git@github.com:moose/moose.git>. If you
+would prefer not to use Github, come talk to us at C<#moose> on C<irc.perl.org>
+and we can work something out.
 
 =back
 
