@@ -100,13 +100,14 @@ sub _generate_constructor_method_inline {
 
     warn join("\n", @source) if $self->options->{debug};
 
-    my $code = try {
+    my $RuNNeR; my $code = bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code(\@source);
     }
     catch {
         my $source = join("\n", @source);
         confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 
     return $code;
 }

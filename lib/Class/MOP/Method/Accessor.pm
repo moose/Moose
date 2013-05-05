@@ -102,7 +102,7 @@ sub _generate_accessor_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    return try {
+    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
@@ -115,6 +115,7 @@ sub _generate_accessor_method_inline {
     catch {
         confess "Could not generate inline accessor because : $_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 }
 
 sub _generate_reader_method {
@@ -132,7 +133,7 @@ sub _generate_reader_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    return try {
+    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
@@ -149,6 +150,7 @@ sub _generate_reader_method_inline {
     catch {
         confess "Could not generate inline reader because : $_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 }
 
 sub _inline_throw_error {
@@ -169,7 +171,7 @@ sub _generate_writer_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    return try {
+    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code([
             'sub {',
                 $attr->_inline_set_value('$_[0]', '$_[1]'),
@@ -179,6 +181,7 @@ sub _generate_writer_method_inline {
     catch {
         confess "Could not generate inline writer because : $_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 }
 
 sub _generate_predicate_method {
@@ -194,7 +197,7 @@ sub _generate_predicate_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    return try {
+    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code([
             'sub {',
                 $attr->_inline_has_value('$_[0]'),
@@ -204,6 +207,7 @@ sub _generate_predicate_method_inline {
     catch {
         confess "Could not generate inline predicate because : $_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 }
 
 sub _generate_clearer_method {
@@ -219,7 +223,7 @@ sub _generate_clearer_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
 
-    return try {
+    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
         $self->_compile_code([
             'sub {',
                 $attr->_inline_clear_value('$_[0]'),
@@ -229,6 +233,7 @@ sub _generate_clearer_method_inline {
     catch {
         confess "Could not generate inline clearer because : $_";
     };
+    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
 }
 
 1;

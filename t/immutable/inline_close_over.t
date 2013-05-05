@@ -46,6 +46,7 @@ my $can_partialdump = try {
     sub _is_okay_to_close_over {
         my $self = shift;
         my ($thing) = @_;
+        return 1 if ref($thing) eq 'RuNNeR';
 
         match_on_type $thing => (
             'RegexpRef'  => sub { 1 },
@@ -62,6 +63,7 @@ sub close_over_ok {
     my ($package, $method) = @_;
     my $visitor = Test::Visitor->new;
     my $code = $package->meta->find_method_by_name($method)->body;
+    $code = $code->(undef, $code) if ref($code) eq 'RuNNeR';
     $visitor->visit($code);
     if ($visitor->pass) {
         pass("${package}::${method} didn't close over anything complicated");
