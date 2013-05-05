@@ -150,9 +150,9 @@ This will add a C<before> modifier to each of the C<foo>, C<bar>,
 and C<baz> methods in the current class, just as though a separate
 call to C<before> was made for each of them. The list can be passed
 either as a bare list, or as an arrayref. Note that the name of the
-function being modified isn't passed in in any way; this syntax is
-only intended for cases where the function being modified doesn't
-actually matter. If the function name does matter, use something like this:
+function being modified isn't passed in any way; this syntax is only
+intended for cases where the function being modified doesn't actually
+matter. If the function name does matter, use something like this:
 
   for my $func (qw(foo bar baz)) {
       before $func => sub {

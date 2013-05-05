@@ -348,7 +348,7 @@ sub _compile_hand_optimized_type_constraint {
 sub _compile_subtype {
     my ($self, $check) = @_;
 
-    # gather all the parent constraintss in order
+    # gather all the parent constraints in order
     my @parents;
     my $optimized_parent;
     foreach my $parent ($self->_collect_all_parents) {

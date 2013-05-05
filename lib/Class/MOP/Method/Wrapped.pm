@@ -84,7 +84,7 @@ sub wrap {
     return $class->SUPER::wrap(
         sub { $modifier_table->{cache}->(@_) },
         # get these from the original
-        # unless explicitly overriden
+        # unless explicitly overridden
         package_name   => $params{package_name} || $code->package_name,
         name           => $params{name}         || $code->name,
         original_method => $code,
