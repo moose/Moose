@@ -8,5 +8,8 @@ install:
     - cpanm -q --notest Dist::Zilla
     - dzil authordeps --missing | cpanm -q --notest
     - dzil listdeps --author --missing | cpanm -q --notest
+    - cpanm -nq Devel::Cover::Report::Coveralls
 script:
     - dzil test --all
+after_success:
+    - dzil run "cover -test && cover -report coveralls"
