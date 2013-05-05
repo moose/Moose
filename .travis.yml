@@ -4,3 +4,9 @@ perl:
     - "5.14"
     - "5.12"
     - "5.10"
+install:
+    - cpanm -q --notest Dist::Zilla
+    - dzil authordeps --missing | cpanm -q --notest
+    - dzil listdeps --author --missing | cpanm -q --notest
+script:
+    - dzil test --all
