@@ -63,7 +63,10 @@ sub close_over_ok {
     my ($package, $method) = @_;
     my $visitor = Test::Visitor->new;
     my $code = $package->meta->find_method_by_name($method)->body;
-    $code = $code->(undef, $code) if ref($code) eq 'RuNNeR';
+    if (ref($code) eq 'RuNNeR') {
+        $code->(undef);
+        $code = $package->meta->find_method_by_name($method)->body;
+    }
     $visitor->visit($code);
     if ($visitor->pass) {
         pass("${package}::${method} didn't close over anything complicated");

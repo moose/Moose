@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'weaken';
+use Scalar::Util 'blessed', 'weaken', 'refaddr';
 use Try::Tiny;
 
 use base 'Class::MOP::Method::Generated';
@@ -98,12 +98,54 @@ sub _generate_accessor_method {
     };
 }
 
-sub _generate_accessor_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
+sub _generate_deferred_inline_method {
+    my ($self, $gen, $gen_type) = @_;
 
-    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code([
+    my $RuNNeR;
+    my $orig;
+    return $orig = bless sub {
+        # there are several situations to handle - mostly just think about
+        # what happens on inheritance, composition, overriding, monkey-patching,
+        # etc.  This should sync with the latest canonical database of record.
+        if (!defined($RuNNeR)) {
+            try {
+                $RuNNeR = $gen->($self, $self->associated_attribute);
+            }
+            catch {
+                confess "Could not generate inline $gen_type because : $_";
+            };
+            # update the body member unless something else has stomped on it
+            my $body = $self->{'body'};
+            if (refaddr($orig) != refaddr($body)) {
+                # we seem to be outdated... paranoid future-proofing, I think..
+                goto $RuNNeR = $body;
+            }
+            $self->{'body'} = $RuNNeR;
+            # update the symbol in the stash if it's currently immutable
+            # and it's still the original we set previously.
+            my $assoc_class = $self->associated_attribute->associated_class;
+            my $sigiled_name = '&'.$self->{'name'};
+            if ($assoc_class->is_immutable) {
+                my $stash = $assoc_class->_package_stash;
+                my $symbol_ref = $stash->get_symbol($sigiled_name);
+                if (!defined($symbol_ref)) {
+                    confess "A metaobject is corrupted";
+                }
+                if (refaddr($orig) != refaddr($symbol_ref)) {
+                    goto $RuNNeR = $symbol_ref;
+                }
+                $stash->add_symbol($sigiled_name, $RuNNeR);
+            }
+        };
+        return unless defined($_[0]);
+        goto $RuNNeR;
+    },'RuNNeR';
+}
+
+sub _generate_accessor_method_inline {
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
                     $attr->_inline_set_value('$_[0]', '$_[1]'),
@@ -111,11 +153,7 @@ sub _generate_accessor_method_inline {
                 $attr->_inline_get_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline accessor because : $_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
+    }, "accessor");
 }
 
 sub _generate_reader_method {
@@ -130,11 +168,9 @@ sub _generate_reader_method {
 }
 
 sub _generate_reader_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
                     # XXX: this is a hack, but our error stuff is terrible
@@ -146,11 +182,7 @@ sub _generate_reader_method_inline {
                 $attr->_inline_get_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline reader because : $_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
+    }, "reader");
 }
 
 sub _inline_throw_error {
@@ -168,20 +200,14 @@ sub _generate_writer_method {
 }
 
 sub _generate_writer_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_set_value('$_[0]', '$_[1]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline writer because : $_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
+    }, "writer");
 }
 
 sub _generate_predicate_method {
@@ -194,20 +220,14 @@ sub _generate_predicate_method {
 }
 
 sub _generate_predicate_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_has_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline predicate because : $_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
+    }, "predicate");
 }
 
 sub _generate_clearer_method {
@@ -220,20 +240,14 @@ sub _generate_clearer_method {
 }
 
 sub _generate_clearer_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    my $RuNNeR; return bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_clear_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline clearer because : $_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
+    }, "clearer");
 }
 
 1;
