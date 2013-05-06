@@ -70,7 +70,7 @@ sub new {
 
 # This is largely a copy of what's in Moose::Meta::Role (itself
 # largely a copy of Class::MOP::Class). However, we can't actually
-# call add_package_symbol, because there's no package to which which
+# call add_package_symbol, because there's no package into which to
 # add the symbol.
 sub add_method {
     my ($self, $method_name, $method) = @_;

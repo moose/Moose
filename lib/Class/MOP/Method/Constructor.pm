@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'weaken';
+use Scalar::Util 'blessed', 'weaken', 'refaddr';
 use Try::Tiny;
 
 use base 'Class::MOP::Method::Inlined';
@@ -100,16 +100,43 @@ sub _generate_constructor_method_inline {
 
     warn join("\n", @source) if $self->options->{debug};
 
-    my $RuNNeR; my $code = bless sub { if (!defined($RuNNeR)) { $RuNNeR = try {
-        $self->_compile_code(\@source);
-    }
-    catch {
-        my $source = join("\n", @source);
-        confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
-    };
-    return $RuNNeR if !defined($_[0]) && ref($_[1]) && ref($_[1]) eq 'RuNNeR'}; goto $RuNNeR},'RuNNeR';
-
-    return $code;
+    my $RuNNeR;
+    my $code;
+    return $code = bless sub {
+        if (!defined($RuNNeR)) {
+            $RuNNeR = try {
+                $self->_compile_code(\@source);
+            }
+            catch {
+                my $source = join("\n", @source);
+                confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
+            };
+            # update the body member unless something else has stomped on it
+            my $body = $self->{'body'};
+            if (refaddr($code) != refaddr($body)) {
+                # we seem to be outdated... paranoid future-proofing, I think..
+                goto $RuNNeR = $body;
+            }
+            $self->{'body'} = $RuNNeR;
+            # update the symbol in the stash if it's currently immutable
+            # and it's still the original we set previously.
+        #    my $assoc_class = $self->associated_metaclass;
+        #    my $sigiled_name = '&'.$self->{'name'};
+        #    if ($assoc_class->is_immutable) {
+        #        my $stash = $assoc_class->_package_stash;
+        #        my $symbol_ref = $stash->get_symbol($sigiled_name);
+        #        if (!defined($symbol_ref)) {
+        #            confess "A metaobject is corrupted";
+        #        }
+        #        if (refaddr($code) != refaddr($symbol_ref)) {
+        #            goto $RuNNeR = $symbol_ref;
+        #        }
+        #        $stash->add_symbol($sigiled_name, $RuNNeR);
+        #    }
+        };
+        return unless defined($_[0]);
+        goto $RuNNeR;
+    },'RuNNeR';
 }
 
 1;
