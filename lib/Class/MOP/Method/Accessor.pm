@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'weaken';
+use Scalar::Util 'blessed', 'weaken', 'refaddr';
 use Try::Tiny;
 
 use base 'Class::MOP::Method::Generated';
@@ -98,12 +98,54 @@ sub _generate_accessor_method {
     };
 }
 
-sub _generate_accessor_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
+sub _generate_deferred_inline_method {
+    my ($self, $gen, $gen_type) = @_;
 
-    return try {
-        $self->_compile_code([
+    my $new_coderef;
+    my $orig_addr; $orig_addr = refaddr(my $sub_gen = bless sub {
+        # there are several situations to handle - mostly just think about
+        # what happens on inheritance, composition, overriding, monkey-patching,
+        # etc.  This should sync with the latest canonical database of record.
+        if (!defined($new_coderef)) {
+            try {
+                $new_coderef = $gen->($self, $self->associated_attribute);
+            }
+            catch {
+                confess "Could not generate inline $gen_type because : $_";
+            };
+            # update the body member unless something else has stomped on it
+            my $body = $self->{'body'};
+            if ($orig_addr != refaddr($body)) {
+                # we seem to be outdated... paranoid future-proofing, I think..
+                goto $new_coderef = $body;
+            }
+            $self->{'body'} = $new_coderef;
+            # update the symbol in the stash if it's currently immutable
+            # and it's still the original we set previously.
+            my $assoc_class = $self->associated_attribute->associated_class;
+            my $sigiled_name = '&'.$self->{'name'};
+            if ($assoc_class->is_immutable) {
+                my $stash = $assoc_class->_package_stash;
+                my $symbol_ref = $stash->get_symbol($sigiled_name);
+                if (!defined($symbol_ref)) {
+                    confess "A metaobject is corrupted";
+                }
+                if ($orig_addr != refaddr($symbol_ref)) {
+                    goto $new_coderef = $symbol_ref;
+                }
+                $stash->add_symbol($sigiled_name, $new_coderef);
+            }
+        };
+        return unless defined($_[0]);
+        goto $new_coderef;
+    },'RuNNeR');
+    return $sub_gen;
+}
+
+sub _generate_accessor_method_inline {
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
                     $attr->_inline_set_value('$_[0]', '$_[1]'),
@@ -111,10 +153,7 @@ sub _generate_accessor_method_inline {
                 $attr->_inline_get_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline accessor because : $_";
-    };
+    }, "accessor");
 }
 
 sub _generate_reader_method {
@@ -129,11 +168,9 @@ sub _generate_reader_method {
 }
 
 sub _generate_reader_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    return try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
                     # XXX: this is a hack, but our error stuff is terrible
@@ -145,10 +182,7 @@ sub _generate_reader_method_inline {
                 $attr->_inline_get_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline reader because : $_";
-    };
+    }, "reader");
 }
 
 sub _inline_throw_error {
@@ -166,19 +200,14 @@ sub _generate_writer_method {
 }
 
 sub _generate_writer_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    return try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_set_value('$_[0]', '$_[1]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline writer because : $_";
-    };
+    }, "writer");
 }
 
 sub _generate_predicate_method {
@@ -191,19 +220,14 @@ sub _generate_predicate_method {
 }
 
 sub _generate_predicate_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    return try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_has_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline predicate because : $_";
-    };
+    }, "predicate");
 }
 
 sub _generate_clearer_method {
@@ -216,19 +240,14 @@ sub _generate_clearer_method {
 }
 
 sub _generate_clearer_method_inline {
-    my $self = shift;
-    my $attr = $self->associated_attribute;
-
-    return try {
-        $self->_compile_code([
+    return _generate_deferred_inline_method(shift, sub {
+        my ($self, $attr) = @_;
+        return $self->_compile_code([
             'sub {',
                 $attr->_inline_clear_value('$_[0]'),
             '}',
         ]);
-    }
-    catch {
-        confess "Could not generate inline clearer because : $_";
-    };
+    }, "clearer");
 }
 
 1;
