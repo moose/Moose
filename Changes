@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
   * fix incompatibilities with Test::Builder 1.005+ (Karen Etheridge)
+  * Moose::Manual::Contributing updated to reflect the change of primary
+    repository from git.moose.perl.org to github.com
 
 2.0801 Thu, Mar 28, 2013
 
