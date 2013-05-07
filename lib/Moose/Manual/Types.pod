@@ -304,7 +304,7 @@ C<FileHandle>:
 
   has 'output' => (
       is  => 'rw',
-      isa => 'Object | FileHandle',
+      isa => 'Object | FileHandle'
   );
 
 Moose actually parses that string and recognizes that you are creating
