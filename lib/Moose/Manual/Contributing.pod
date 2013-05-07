@@ -54,9 +54,9 @@ L<irc://irc.perl.org/#moose-dev> channel.
 
 You.
 
-The easiest way to submit a patch is to submit a pull request through Github.
+The easiest way to submit a patch is to submit a pull request through GitHub.
 You can fork the Moose repository at C<git@github.com:moose/moose.git>. If you
-would prefer not to use Github, come talk to us at C<#moose> on C<irc.perl.org>
+would prefer not to use GitHub, come talk to us at C<#moose> on C<irc.perl.org>
 and we can work something out.
 
 =back
