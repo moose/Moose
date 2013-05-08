@@ -142,7 +142,7 @@ __END__
 This class is a subclass of L<Class::MOP::Method::Inlined> that
 provides Moose-specific functionality for inlining destructors.
 
-To understand this class, you should read the the
+To understand this class, you should read the
 L<Class::MOP::Method::Inlined> documentation as well.
 
 =head1 INHERITANCE

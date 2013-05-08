@@ -88,7 +88,7 @@ sub _new {
 }
 
 # NOTE:
-# this is a primative (and kludgy) clone operation
+# this is a primitive (and kludgy) clone operation
 # for now, it will be replaced in the Class::MOP
 # bootstrap with a proper one, however we know
 # that this one will work fine for now.

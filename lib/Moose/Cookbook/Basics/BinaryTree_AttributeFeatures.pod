@@ -96,7 +96,7 @@ attribute), we want to make sure that we weaken the reference to avoid
 memory leaks. If C<weak_ref> is true, it alters the accessor function
 so that the reference is weakened when it is set.
 
-Finally, we have the the C<left> and C<right> attributes. They are
+Finally, we have the C<left> and C<right> attributes. They are
 essentially identical except for their names, so we'll just look at
 C<left>:
 
@@ -110,8 +110,8 @@ C<left>:
   );
 
 There are three new options here, C<lazy>, C<default>, and
-C<trigger>. The C<lazy> and C<default> options options are linked.  In
-fact, you cannot have a C<lazy> attribute unless it has a C<default>
+C<trigger>. The C<lazy> and C<default> options are linked.  In fact,
+you cannot have a C<lazy> attribute unless it has a C<default>
 (or a C<builder>, but we'll cover that later). If you try to make an
 attribute lazy without a default, class creation will fail with an
 exception. (2)
