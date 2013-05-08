@@ -833,7 +833,7 @@ details.
 
 By default, when given a trait name, Moose simply tries to load a
 class of the same name. If such a class does not exist, it then looks
-for for a class matching
+for a class matching
 B<Moose::Meta::$type::Custom::Trait::$trait_name>. The C<$type>
 variable here will be one of B<Attribute> or B<Class>, depending on
 what the trait is being applied to.

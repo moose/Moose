@@ -1000,9 +1000,9 @@ sub class_precedence_list {
     unless (Class::MOP::IS_RUNNING_ON_5_10()) {
         # NOTE:
         # We need to check for circular inheritance here
-        # if we are are not on 5.10, cause 5.8 detects it
-        # late. This will do nothing if all is well, and
-        # blow up otherwise. Yes, it's an ugly hack, better
+        # if we are not on 5.10, cause 5.8 detects it late.
+        # This will do nothing if all is well, and blow up
+        # otherwise. Yes, it's an ugly hack, better
         # suggestions are welcome.
         # - SL
         ($name || return)->isa('This is a test for circular inheritance')
@@ -1039,7 +1039,7 @@ sub _method_lookup_order {
         my $wrapped_metaclass = $self->wrapped_method_metaclass;
         # fetch it locally
         my $method = $self->get_method($method_name);
-        # if we dont have local ...
+        # if we don't have local ...
         unless ($method) {
             # try to find the next method
             $method = $self->find_next_method_by_name($method_name);

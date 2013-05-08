@@ -109,7 +109,7 @@ BEGIN {
 }
 
 # new does() methods will be created
-# as appropiate see Moose::Meta::Role
+# as appropriate see Moose::Meta::Role
 sub does {
     my ($self, $role_name) = @_;
     my $class = Scalar::Util::blessed($self) || $self;
@@ -176,7 +176,7 @@ This returns true if the object does the given role.
 
 =item B<< $object->DOES($class_or_role_name) >>
 
-This is a a Moose role-aware implementation of L<UNIVERSAL/DOES>.
+This is a Moose role-aware implementation of L<UNIVERSAL/DOES>.
 
 This is effectively the same as writing:
 

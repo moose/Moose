@@ -527,10 +527,10 @@ advantage of this.
 
 =item The composition_class_roles attribute in L<Moose::Meta::Role> is now a method
 
-This was done to make it possible for roles to alter the the list of
-composition class roles by applying a method modifiers. Previously, this was
-an attribute and MooseX modules override it. Since that no longer works, this
-was made a method.
+This was done to make it possible for roles to alter the list of composition
+class roles by applying a method modifiers. Previously, this was an attribute
+and MooseX modules override it. Since that no longer works, this was made a
+method.
 
 This I<should> be an attribute, so this may switch back to being an attribute
 in the future if we can figure out how to make this work.
