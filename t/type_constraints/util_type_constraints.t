@@ -188,4 +188,36 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
     like( exception { subtype 'Foo' }, qr/cannot consist solely of a name/, 'Cannot call subtype with a single string argument' );
 }
 
+{
+    my $subtype = subtype( { as => 'Num' } );
+    isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got a subtype' );
+
+    my @rejects = ( 'nan', 
+		    'inf',
+		    'infinity', 
+		    'Infinity',
+		    'NaN',
+		    'INF',
+		    '  1234  ', 
+		    '  123.44  ', 
+		    '   13e7  ', 
+		    'hello', 
+		    "1e3\n", 
+		    "52563\n", 
+		    "123.4\n",
+		    '0.',
+	);
+    my @accepts = ( '123', 
+		    '123.4367', 
+		    '3322', 
+		    '13e7',
+		    '0',
+		    '0.0',
+		    '.0'
+	);
+
+    ok( !$subtype->check($_), "constraint rejects $_" ) for @rejects;
+    ok( $subtype->check($_), "constraint accepts $_" ) for @accepts;
+}
+
 done_testing;
