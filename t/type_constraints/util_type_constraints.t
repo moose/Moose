@@ -206,6 +206,8 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
 		    "52563\n", 
 		    "123.4\n",
 		    '0.',
+		    "0 but true",
+		    undef
 	);
     my @accepts = ( '123', 
 		    '123.4367', 
@@ -213,7 +215,12 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
 		    '13e7',
 		    '0',
 		    '0.0',
-		    '.0'
+		    '.0',
+		    .0,
+		    0.0,
+		    123,
+		    13e6,
+		    123.4367
 	);
 
     ok( !$subtype->check($_), "constraint rejects $_" ) for @rejects;
