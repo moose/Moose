@@ -79,11 +79,24 @@ sub define_builtins {
     my $value_type = Moose::Util::TypeConstraints::find_type_constraint('Value');
     subtype 'Num'
         => as 'Str'
-        => where { Scalar::Util::looks_like_number($_) }
+        => where { 
+	    /\A[+-]?[0-9]+\z/ || 
+	    /\A(?:[+-]?)                #matches optional +- in the beginning
+	    (?:[0-9]|\.[0-9])           #matches previous +- only if there is something like 3 or .3
+	    [0-9]*                      #matches 0-9 zero or more times
+	    (?:\.[0-9]+)?               #matches optional .89 or nothing 
+	    (?:[Ee](?:[+-]?[0-9]+))?    #matches E1 or e1 or e-1 or e+1 etc
+	    \z/x }
         => inline_as {
             # the long Str tests are redundant here
             $value_type->_inline_check($_[1])
-            . ' && Scalar::Util::looks_like_number(' . $_[1] . ')'
+	    . ' && ( /\A[+-]?[0-9]+\z/ || '
+	    . ' /\A(?:[+-]?)               #matches optional +- in the beginning
+                (?:[0-9]|\.[0-9])         #matches previous +- only if there is something like 3 or .3
+                [0-9]*                    #matches 0-9 zero or more times
+                (?:\.[0-9]+)?             #matches optional .89 or nothing 
+                (?:[Ee](?:[+-]?[0-9]+))?  #matches E1 or e1 or e-1 or e+1 etc
+                \z/x ) ';
         };
 
     subtype 'Int'
