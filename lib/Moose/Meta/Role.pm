@@ -47,7 +47,7 @@ my $META = __PACKAGE__->meta;
 # time when it is applied to a class. This means
 # keeping a lot of things in hash maps, so we are
 # using a little of that meta-programmin' magic
-# here an saving lots of extra typin. And since
+# here and saving lots of extra typin. And since
 # many of these attributes above require similar
 # functionality to support them, so we again use
 # the wonders of meta-programmin' to deliver a
@@ -341,7 +341,7 @@ foreach my $modifier_type (qw[ before around after ]) {
 }
 
 ## ------------------------------------------------------------------
-## override method mofidiers
+## override method modifiers
 
 $META->add_attribute('override_method_modifiers' => (
     reader  => 'get_override_method_modifiers_map',

@@ -44,7 +44,7 @@ sub _new {
     return bless {
         # inherited from Class::MOP::Method
         body                 => $params->{body},
-        # associated_metaclass => $params->{associated_metaclass}, # overriden
+        # associated_metaclass => $params->{associated_metaclass}, # overridden
         package_name         => $params->{package_name},
         name                 => $params->{name},
         original_method      => $params->{original_method},

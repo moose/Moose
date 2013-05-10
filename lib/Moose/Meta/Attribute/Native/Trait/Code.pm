@@ -54,7 +54,7 @@ Calls the coderef with the given args.
 
 =item * B<execute_method(@args)>
 
-Calls the coderef with the the instance as invocant and given args.
+Calls the coderef with the instance as invocant and given args.
 
 =back
 
