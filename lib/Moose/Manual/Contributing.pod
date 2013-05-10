@@ -245,7 +245,7 @@ Moose releases fall into two categories, each with their own level of release
 preparation. A minor release is one which does not include any API changes,
 deprecations, and so on. In that case, it is sufficient to simply test the
 release candidate against a few different Perls. Testing should be done against
-at least two recent major version of Perl (5.8.8 and 5.10.1, for example). If
+at least two recent major versions of Perl (5.8.8 and 5.10.1, for example). If
 you have more versions available, you are encouraged to test them all. However,
 we do not put a lot of effort into supporting older 5.8.x releases.
 
