@@ -82,7 +82,7 @@ sub define_builtins {
         => where { 
 	    /\A[+-]?[0-9]+\z/ || 
 	    /\A(?:[+-]?)                #matches optional +- in the beginning
-	    (?:[0-9]|\.[0-9])           #matches previous +- only if there is something like 3 or .3
+	    (?=[0-9]|\.[0-9])           #matches previous +- only if there is something like 3 or .3
 	    [0-9]*                      #matches 0-9 zero or more times
 	    (?:\.[0-9]+)?               #matches optional .89 or nothing 
 	    (?:[Ee](?:[+-]?[0-9]+))?    #matches E1 or e1 or e-1 or e+1 etc
@@ -92,7 +92,7 @@ sub define_builtins {
             $value_type->_inline_check($_[1])
 	    . ' && ( /\A[+-]?[0-9]+\z/ || '
 	    . ' /\A(?:[+-]?)               #matches optional +- in the beginning
-                (?:[0-9]|\.[0-9])         #matches previous +- only if there is something like 3 or .3
+                (?=[0-9]|\.[0-9])         #matches previous +- only if there is something like 3 or .3
                 [0-9]*                    #matches 0-9 zero or more times
                 (?:\.[0-9]+)?             #matches optional .89 or nothing 
                 (?:[Ee](?:[+-]?[0-9]+))?  #matches E1 or e1 or e-1 or e+1 etc
