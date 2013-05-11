@@ -314,8 +314,6 @@ my %tests = (
             $NEG_INT,
             $NUM,
             $NEG_NUM,
-            $INT_WITH_NL1,
-            $INT_WITH_NL2,
         ],
         reject => [
             $EMPTY_STRING,
@@ -335,6 +333,8 @@ my %tests = (
             $FAKE_REGEX,
             $OBJECT,
             $UNDEF,
+            $INT_WITH_NL1,
+            $INT_WITH_NL2,
         ],
     },
     Int => {
