@@ -73,7 +73,7 @@ C<Maybe[`a]> accepts either C<`a> or C<undef>.
 
 =item
 
-C<Num> accepts anything that perl thinks looks like a number (see L<Scalar::Util/looks_like_number>).
+C<Num> accepts integers, floating point numbers (both in decimal notation and exponential notation), 0, .0, 0.0 etc. It doesn't accept numbers with whitespace, Inf, Infinity, "0 but true", NaN and other such strings.
 
 =item
 

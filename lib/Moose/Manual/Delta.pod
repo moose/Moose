@@ -19,6 +19,19 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.0803
+
+=over 4
+
+=item Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace, and other questionable strings
+
+Previously, C<Num> was using L<Scalar::Util/looks_like_number>, which accepts
+numbers with whitespace, Inf, NaN, Infinity, "1\n", "\n1", "0.", "0 but true" etc as valid Num. But now, 
+Num accepts only integers, floating point numbers (both in decimal notation and exponential 
+notation), 0, .0, 0.0 etc.
+
+=back
+
 =head1 2.0600
 
 =over 4
