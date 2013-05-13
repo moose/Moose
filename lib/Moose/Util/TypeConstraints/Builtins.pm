@@ -80,19 +80,23 @@ sub define_builtins {
     subtype 'Num'
         => as 'Str'
         => where { 
-	    /\A[+-]?[0-9]+\z/ || 
-	    /\A(?:[+-]?)                #matches optional +- in the beginning
-	    (?=[0-9]|\.[0-9])           #matches previous +- only if there is something like 3 or .3
-	    [0-9]*                      #matches 0-9 zero or more times
-	    (?:\.[0-9]+)?               #matches optional .89 or nothing 
-	    (?:[Ee](?:[+-]?[0-9]+))?    #matches E1 or e1 or e-1 or e+1 etc
-	    \z/x;
+	    my $val = $_;
+	    ($val =~ /\A[+-]?[0-9]+\z/) || 
+	    ( $val =~ /\A(?:[+-]?)                #matches optional +- in the beginning
+	    (?=[0-9]|\.[0-9])                     #matches previous +- only if there is something like 3 or .3
+	    [0-9]*                                #matches 0-9 zero or more times
+	    (?:\.[0-9]+)?                         #matches optional .89 or nothing 
+	    (?:[Ee](?:[+-]?[0-9]+))?              #matches E1 or e1 or e-1 or e+1 etc
+	    \z/x );
            }
         => inline_as {
             # the long Str tests are redundant here
-	    $value_type->_inline_check($_[1])
-	    .' && ( '.$_[1].'=~ /\A[+-]?[0-9]+\z/ || '
-	    . $_[1].' =~ /\A(?:[+-]?)                #matches optional +- in the beginning
+	    'my $val = '.$_[1].';'.                 #storing $_[1] in a temporary value, 
+		                                    #so that $_[1] won't get converted to a string for regex match
+		                                    #see t/attributes/numeric_defaults.t for more details
+	    $value_type->_inline_check('$val')
+	    .' && ( $val =~ /\A[+-]?[0-9]+\z/ || '
+	    . '$val =~ /\A(?:[+-]?)                  #matches optional +- in the beginning
                 (?=[0-9]|\.[0-9])                   #matches previous +- only if there is something like 3 or .3
                 [0-9]*                              #matches 0-9 zero or more times
                 (?:\.[0-9]+)?                       #matches optional .89 or nothing 
