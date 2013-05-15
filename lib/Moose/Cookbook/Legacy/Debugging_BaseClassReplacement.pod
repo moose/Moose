@@ -67,9 +67,13 @@ us in the first place.
 
 See the L<Moose::Exporter> docs for more details on its API.
 
-=for testing-SETUP use Test::Requires {
+=begin testing-SETUP
+
+use Test::Requires {
     'Test::Output' => '0',
 };
+
+=end testing-SETUP
 
 =head1 USING MyApp::UseMyBase
 
