@@ -68,4 +68,4 @@ as a metaclass trait
 L<Moose::Cookbook::Extending::Recipe2> - Acting like Moose.pm and
 providing sugar Moose-style
 
-=pod
+=cut
