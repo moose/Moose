@@ -121,6 +121,9 @@ with_immutable {
         my $b = B::svref_2object(\$val);
         my $flags = $b->FLAGS;
         ok($flags & B::SVf_NOK || $flags & B::SVp_NOK, "it's a num");
+        # it's making sure that the Num value doesn't get converted to a string for regex matching
+        # this is the reason for using a temporary variable, $val for regex matching,
+        # instead of $_[1] in Num implementation in lib/Moose/Util/TypeConstraints/Builtins.pm
         ok(!($flags & B::SVf_POK), "not a string");
     }
 } 'Baz2';
