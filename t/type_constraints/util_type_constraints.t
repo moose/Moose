@@ -226,7 +226,7 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
 
     for( @rejects )
     {
-	my $printable = defined $_ ? $_ : "(undef)";
+        my $printable = defined $_ ? $_ : "(undef)";
         ok( !$subtype->check($_), "constraint rejects $printable" ) 
     }
     ok( $subtype->check($_), "constraint accepts $_" ) for @accepts;
