@@ -79,28 +79,28 @@ sub define_builtins {
     my $value_type = Moose::Util::TypeConstraints::find_type_constraint('Value');
     subtype 'Num'
         => as 'Str'
-        => where { 
+        => where {
 	    my $val = $_;
-	    ($val =~ /\A[+-]?[0-9]+\z/) || 
+	    ($val =~ /\A[+-]?[0-9]+\z/) ||
 	    ( $val =~ /\A(?:[+-]?)                #matches optional +- in the beginning
 	    (?=[0-9]|\.[0-9])                     #matches previous +- only if there is something like 3 or .3
 	    [0-9]*                                #matches 0-9 zero or more times
-	    (?:\.[0-9]+)?                         #matches optional .89 or nothing 
-	    (?:[Ee](?:[+-]?[0-9]+))?              #matches E1 or e1 or e-1 or e+1 etc
+	    (?:\.[0-9]+)?                         #matches optional .89 or nothing
+            (?:[Ee](?:[+-]?[0-9]+))?              #matches E1 or e1 or e-1 or e+1 etc
 	    \z/x );
            }
         => inline_as {
             # the long Str tests are redundant here
-	    #storing $_[1] in a temporary value, 
+	    #storing $_[1] in a temporary value,
 	    #so that $_[1] won't get converted to a string for regex match
 	    #see t/attributes/numeric_defaults.t for more details
-	    'my $val = '.$_[1].';'.                 
+	    'my $val = '.$_[1].';'.
 	    $value_type->_inline_check('$val')
 	    .' && ( $val =~ /\A[+-]?[0-9]+\z/ || '
 	    . '$val =~ /\A(?:[+-]?)               #matches optional +- in the beginning
                 (?=[0-9]|\.[0-9])                 #matches previous +- only if there is something like 3 or .3
                 [0-9]*                            #matches 0-9 zero or more times
-                (?:\.[0-9]+)?                     #matches optional .89 or nothing 
+                (?:\.[0-9]+)?                     #matches optional .89 or nothing
                 (?:[Ee](?:[+-]?[0-9]+))?          #matches E1 or e1 or e-1 or e+1 etc
                 \z/x ); '
         };
