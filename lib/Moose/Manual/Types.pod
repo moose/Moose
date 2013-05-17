@@ -73,7 +73,9 @@ C<Maybe[`a]> accepts either C<`a> or C<undef>.
 
 =item
 
-C<Num> accepts integers, floating point numbers (both in decimal notation and exponential notation), 0, .0, 0.0 etc. It doesn't accept numbers with whitespace, Inf, Infinity, "0 but true", NaN and other such strings.
+C<Num> accepts integers, floating point numbers (both in decimal notation & 
+exponential notation), 0, .0, 0.0 etc. It doesn't accept numbers with 
+whitespace, Inf, Infinity, "0 but true", NaN & other such strings.
 
 =item
 
