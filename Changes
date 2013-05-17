@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [API CHANGES]
+
+  * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace, 
+    and other questionable strings. RT#70539 (Upasana Shukla)
+
 2.0802 Tue, May 07, 2013
   * fix incompatibilities with Test::Builder 1.005+ (Karen Etheridge)
   * Moose::Manual::Contributing updated to reflect the change of primary
