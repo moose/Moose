@@ -36,14 +36,14 @@ sub check_required_methods {
         my @methods = $role2->get_attribute($name)->_theoretically_associated_method_names;
         foreach my $method (@methods) {
             $satisfied_by_attributes{$method} = 1;
-        }            
+        }
     }
     METHOD: foreach my $required_method ($role1->get_required_method_list) {
         my $required_method_name = $required_method->name;
 
         next if $self->is_aliased_method($required_method_name);
         next if $satisfied_by_attributes{$required_method_name};
-        
+
         $role2->add_required_methods($required_method)
             unless $role2->find_method_by_name($required_method_name);
     }

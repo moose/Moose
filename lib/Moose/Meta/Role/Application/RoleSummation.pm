@@ -101,7 +101,7 @@ sub check_required_methods {
                 if $role->has_method($required)
                 || $self->is_aliased_method($role, $required);
         }
-        
+
         my @attrs = map $role->get_attribute($_), $role->get_attribute_list;
         foreach my $attr (@attrs) {
             foreach my $am ($attr->_theoretically_associated_method_names) {
