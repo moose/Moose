@@ -23,9 +23,7 @@ use Test::Fatal;
 {
     package Foo::Class;
     use Moose;
-    { our $TODO; local $TODO = "role accessors don't satisfy other role requires";
     ::is( ::exception { with 'Foo' }, undef, 'requirements are satisfied properly' );
-    }
 }
 
 {
@@ -50,9 +48,7 @@ use Test::Fatal;
     package BarBaz;
     use Moose;
 
-    { our $TODO; local $TODO = "role accessors don't satisfy other role requires";
     ::is( ::exception { with qw(Bar Baz) }, undef, 'requirements are satisfied properly' );
-    }
 }
 
 done_testing;
