@@ -1,4 +1,4 @@
-  
+
 package # hide the package from PAUSE
     ArrayBasedStorage::Instance;
 
@@ -82,35 +82,35 @@ __END__
 
 =head1 NAME
 
-ArrayBasedStorage - An example of an Array based instance storage 
+ArrayBasedStorage - An example of an Array based instance storage
 
 =head1 SYNOPSIS
 
   package Foo;
-  
+
   use metaclass (
     ':instance_metaclass'  => 'ArrayBasedStorage::Instance'
   );
-  
+
   __PACKAGE__->meta->add_attribute('foo' => (
       reader => 'get_foo',
       writer => 'set_foo'
-  ));    
-  
+  ));
+
   sub new  {
       my $class = shift;
       $class->meta->new_object(@_);
-  } 
-  
+  }
+
   # now you can just use the class as normal
 
 =head1 DESCRIPTION
 
-This is a proof of concept using the Instance sub-protocol 
-which uses ARRAY refs to store the instance data. 
+This is a proof of concept using the Instance sub-protocol
+which uses ARRAY refs to store the instance data.
 
-This is very similar now to the InsideOutClass example, and 
-in fact, they both share the exact same test suite, with 
+This is very similar now to the InsideOutClass example, and
+in fact, they both share the exact same test suite, with
 the only difference being the Instance metaclass they use.
 
 =head1 AUTHORS
@@ -128,6 +128,6 @@ Copyright 2006-2008 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

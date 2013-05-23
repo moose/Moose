@@ -2,13 +2,13 @@
 - name: Point classes
   classes:
   - 'MOP::Point'
-  - 'MOP::Point3D'  
-  - 'MOP::Immutable::Point'   
-  - 'MOP::Immutable::Point3D'   
-  - 'MOP::Installed::Point' 
-  - 'MOP::Installed::Point3D'      
+  - 'MOP::Point3D'
+  - 'MOP::Immutable::Point'
+  - 'MOP::Immutable::Point3D'
+  - 'MOP::Installed::Point'
+  - 'MOP::Installed::Point3D'
   - 'Plain::Point'
-  - 'Plain::Point3D'  
+  - 'Plain::Point3D'
   benchmarks:
     - class: 'Bench::Construct'
       name: object construction

@@ -47,7 +47,7 @@ longer released separately.
   [BUG FIXES]
 
   * The get_method_list and _get_local_methods methods blew up in the face
-    of subroutine stubs. (Goro Fuji)  
+    of subroutine stubs. (Goro Fuji)
 
 1.07 Tue, Aug 25, 2010
 
