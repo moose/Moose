@@ -12,6 +12,9 @@ for, noteworthy changes.
     (MooseX::Types::LaxNum contains the old behaviour.)
 
 2.0802 Tue, May 07, 2013
+
+  [ENHANCEMENTS]
+
   * fix incompatibilities with Test::Builder 1.005+ (Karen Etheridge)
   * Moose::Manual::Contributing updated to reflect the change of primary
     repository from git.moose.perl.org to github.com
