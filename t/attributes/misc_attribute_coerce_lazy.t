@@ -32,11 +32,11 @@ use Test::Fatal;
             => via { HTTPHeader->new(hash => $_[0]) };
 
     has 'headers'  => (
-	    is      => 'rw',
-	    isa     => 'Header',
-	    coerce  => 1,
-	    lazy    => 1,
-	    default => sub { [ 'content-type', 'text/html' ] }
+        is      => 'rw',
+        isa     => 'Header',
+        coerce  => 1,
+        lazy    => 1,
+        default => sub { [ 'content-type', 'text/html' ] }
     );
 }
 

@@ -16,7 +16,7 @@ InstanceCountingClass->meta->add_attribute('count' => (
 
 InstanceCountingClass->meta->add_before_method_modifier('_construct_instance' => sub {
     my ($class) = @_;
-    $class->{'count'}++;	
+    $class->{'count'}++;
 });
 
 1;

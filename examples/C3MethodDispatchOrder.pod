@@ -21,7 +21,7 @@ my $_find_method = sub {
 };
 
 C3MethodDispatchOrder->meta->add_around_method_modifier('initialize' => sub {
-	my $cont = shift;
+    my $cont = shift;
     my $meta = $cont->(@_);
 
     # we need to look at $AUTOLOAD in the package where the coderef belongs
@@ -45,7 +45,7 @@ C3MethodDispatchOrder->meta->add_around_method_modifier('initialize' => sub {
         $_find_method->($_[0]->meta, $_[1]);
     }) unless $meta->has_method('can');
 
-	return $meta;
+    return $meta;
 });
 
 sub superclasses {

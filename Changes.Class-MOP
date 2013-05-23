@@ -1616,16 +1616,16 @@ longer released separately.
         modifiers get named with Sub::Name
 
 0.23 Thurs. March 30, 2006
-	* Class::MOP::Class
-	  - fixed the way attribute defaults are handled
-	    during instance construction (bug found by chansen)
+    * Class::MOP::Class
+      - fixed the way attribute defaults are handled
+        during instance construction (bug found by chansen)
 
-	* Class::MOP::Attribute
-	  - read-only accessors ('reader') will now die if
-	    passed more than one argument (attempting to write
-	    to them basically)
-	      - added tests for this
-	      - adjusted all /example files to comply
+    * Class::MOP::Attribute
+      - read-only accessors ('reader') will now die if
+        passed more than one argument (attempting to write
+        to them basically)
+          - added tests for this
+          - adjusted all /example files to comply
 
 0.22 Mon. March 20, 2006
     * Class::MOP::Class

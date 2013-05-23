@@ -10,7 +10,7 @@ our $VERSION = '0.02';
 use base 'Class::MOP::Attribute';
 
 Perl6Attribute->meta->add_around_method_modifier('new' => sub {
-	my $cont = shift;
+    my $cont = shift;
     my ($class, $attribute_name, %options) = @_;
 
     # extract the sigil and accessor name

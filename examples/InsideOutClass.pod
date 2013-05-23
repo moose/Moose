@@ -101,18 +101,18 @@ use Scalar::Util 'refaddr';
 use base 'Class::MOP::Instance';
 
 sub create_instance {
-	my ($self, $class) = @_;
+    my ($self, $class) = @_;
         bless \(my $instance), $self->_class_name;
 }
 
 sub get_slot_value {
-	my ($self, $instance, $slot_name) = @_;
-	$self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance};
+    my ($self, $instance, $slot_name) = @_;
+    $self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance};
 }
 
 sub set_slot_value {
-	my ($self, $instance, $slot_name, $value) = @_;
-	$self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance} = $value;
+    my ($self, $instance, $slot_name, $value) = @_;
+    $self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance} = $value;
 }
 
 sub initialize_slot {
@@ -123,9 +123,9 @@ sub initialize_slot {
 }
 
 sub is_slot_initialized {
-	my ($self, $instance, $slot_name) = @_;
-	return 0 unless $self->associated_metaclass->has_package_symbol('%' . $slot_name);
-	return exists $self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance} ? 1 : 0;
+    my ($self, $instance, $slot_name) = @_;
+    return 0 unless $self->associated_metaclass->has_package_symbol('%' . $slot_name);
+    return exists $self->associated_metaclass->get_package_symbol('%' . $slot_name)->{refaddr $instance} ? 1 : 0;
 }
 
 1;

@@ -20,9 +20,9 @@ sub construct_instance {
     my ($class, %params) = @_;
 
     my $meta_instance = $class->get_meta_instance;
-	my $instance = $meta_instance->create_instance();
+    my $instance = $meta_instance->create_instance();
 
-	# initialize *ALL* attributes, including masked ones (as opposed to applicable)
+    # initialize *ALL* attributes, including masked ones (as opposed to applicable)
     foreach my $current_class ($class->class_precedence_list()) {
         my $meta = $current_class->meta;
         foreach my $attr_name ($meta->get_attribute_list()) {
@@ -31,7 +31,7 @@ sub construct_instance {
         }
     }
 
-	return $instance;
+    return $instance;
 }
 
 package # hide the package from PAUSE
@@ -51,7 +51,7 @@ sub initialize_instance_slot {
     # use the attributes name itself as the init_arg
     my $init_arg = $self->init_arg();
     # try to fetch the init arg from the %params ...
-	my $class = $self->associated_class;
+    my $class = $self->associated_class;
     my $val;
     $val = $params->{$class->name}->{$init_arg}
         if exists $params->{$class->name} &&

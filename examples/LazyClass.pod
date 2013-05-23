@@ -18,10 +18,10 @@ sub initialize_instance_slot {
     # use the attributes name itself as the init_arg
     my $init_arg = $self->init_arg();
 
-	if ( exists $params->{$init_arg} ) {
-		my $val = $params->{$init_arg};
-		$meta_instance->set_slot_value($instance, $self->name, $val);
-	}
+    if ( exists $params->{$init_arg} ) {
+        my $val = $params->{$init_arg};
+        $meta_instance->set_slot_value($instance, $self->name, $val);
+    }
 }
 
 sub accessor_metaclass { 'LazyClass::Method::Accessor' }
@@ -41,17 +41,17 @@ use base 'Class::MOP::Method::Accessor';
 sub _generate_accessor_method {
     my $attr = (shift)->associated_attribute;
 
-	my $attr_name = $attr->name;
-	my $meta_instance = $attr->associated_class->get_meta_instance;
+    my $attr_name = $attr->name;
+    my $meta_instance = $attr->associated_class->get_meta_instance;
 
     sub {
         if (scalar(@_) == 2) {
-			$meta_instance->set_slot_value($_[0], $attr_name, $_[1]);
+            $meta_instance->set_slot_value($_[0], $attr_name, $_[1]);
         }
         else {
-			unless ( $meta_instance->is_slot_initialized($_[0], $attr_name) ) {
-				my $value = $attr->has_default ? $attr->default($_[0]) : undef;
-				$meta_instance->set_slot_value($_[0], $attr_name, $value);
+            unless ( $meta_instance->is_slot_initialized($_[0], $attr_name) ) {
+                my $value = $attr->has_default ? $attr->default($_[0]) : undef;
+                $meta_instance->set_slot_value($_[0], $attr_name, $value);
             }
 
             $meta_instance->get_slot_value($_[0], $attr_name);
@@ -62,18 +62,18 @@ sub _generate_accessor_method {
 sub _generate_reader_method {
     my $attr = (shift)->associated_attribute;
 
-	my $attr_name = $attr->name;
-	my $meta_instance = $attr->associated_class->get_meta_instance;
+    my $attr_name = $attr->name;
+    my $meta_instance = $attr->associated_class->get_meta_instance;
 
     sub {
         confess "Cannot assign a value to a read-only accessor" if @_ > 1;
 
-		unless ( $meta_instance->is_slot_initialized($_[0], $attr_name) ) {
-			my $value = $attr->has_default ? $attr->default($_[0]) : undef;
-			$meta_instance->set_slot_value($_[0], $attr_name, $value);
-		}
+        unless ( $meta_instance->is_slot_initialized($_[0], $attr_name) ) {
+            my $value = $attr->has_default ? $attr->default($_[0]) : undef;
+            $meta_instance->set_slot_value($_[0], $attr_name, $value);
+        }
 
-		$meta_instance->get_slot_value($_[0], $attr_name);
+        $meta_instance->get_slot_value($_[0], $attr_name);
     };
 }
 
