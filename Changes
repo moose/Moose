@@ -3,8 +3,6 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-2.0803 Thu, May 23, 2013
-
   [API CHANGES]
 
   * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace,
