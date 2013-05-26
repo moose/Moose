@@ -3,12 +3,6 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-2.1002-TRIAL Thu, May 23, 2013
-
-  * re-release with -TRIAL flag, as is proper for 2.10* versions
-
-2.1000 Thu, May 23, 2013
-
   [API CHANGES]
 
   * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace,
