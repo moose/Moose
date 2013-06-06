@@ -9,12 +9,50 @@ __END__
 =head1 GETTING INVOLVED
 
 Moose is an open project, and we are always willing to accept bug fixes,
-more tests, and documentation patches. Commit bits are given out freely, and
-the L</STANDARD WORKFLOW> is very simple. The general gist is: clone the Git
-repository, create a new topic branch, hack away, then find a committer to
-review your changes.
+more tests, and documentation patches. Commit bits are given out freely and
+it's easy to get started!
 
-=head1 NEW FEATURES
+=head2 Get the Code
+
+If you just want to get your feet wet and check out the code, you can do so
+from the comfort of your web browser by going to the official repository on
+GitHub: L<https://github.com/moose/moose>.
+
+However, if you know how to use git and would rather have a local copy
+(because, why wouldn't you?!), then you can clone it:
+
+    git clone git@github.com:moose/moose.git
+
+If, at some point, you think you'd like to contribute a patch, please see
+L</Getting Started>.
+
+I<B<NOTE:> Your contribution is very important to us. If, for some reason,
+you would prefer not to use Git/GitHub, come talk to us at #moose on
+irc.perl.org and we can work something out.>
+
+=head2 People
+
+As Moose has matured, some structure has emerged in the process.
+
+=over
+
+=item Cabal - people who can release moose
+
+These people are the ones who have co-maint on Moose itself and can create a
+release. They're listed under L<Moose/CABAL> in the Moose documentation. They
+are responsible for reviewing branches, and are the only people who are
+allowed to push to stable branches.
+
+Cabal members are listed in L<Moose> and can often be found on irc in the
+L<irc://irc.perl.org/#moose-dev> channel.
+
+=item Contributors - people creating a topic or branch
+
+You!
+
+=back
+
+=head2 New Features
 
 Moose already has a fairly large feature set, and we are currently
 B<not> looking to add any major new features to it. If you have an
@@ -34,34 +72,7 @@ Moose was built from the ground up with the idea of being highly extensible,
 and quite often the feature requests we see can be implemented through small
 extensions. Try it, it's much easier than you might think.
 
-=head1 PEOPLE
-
-As Moose has matured, some structure has emerged in the process.
-
-=over
-
-=item Cabal - people who can release moose
-
-These people are the ones who have co-maint on Moose itself and can create a
-release. They're listed under L<Moose/CABAL> in the Moose documentation. They
-are responsible for reviewing branches, and are the only people who are allowed
-to push to stable branches.
-
-Cabal members are listed in L<Moose> and can often be found on irc in the
-L<irc://irc.perl.org/#moose-dev> channel.
-
-=item Contributors - people creating a topic or branch
-
-You.
-
-The easiest way to submit a patch is to submit a pull request through GitHub.
-You can fork the Moose repository at C<git@github.com:moose/moose.git>. If you
-would prefer not to use GitHub, come talk to us at C<#moose> on C<irc.perl.org>
-and we can work something out.
-
-=back
-
-=head1 BRANCH LAYOUT
+=head2 Branch Layout
 
 The repository is divided into several branches to make maintenance easier for
 everyone involved. The branches below are ordered by level of stability.
@@ -87,17 +98,19 @@ in the next major release. Commits which are judged to not break backwards
 compatibility may be backported into C<stable> to be included in the next minor
 release.
 
-=item rfc/*
-
-Topic branches that are completed and waiting on review. A Cabal member will
-look over branches in this namespace, and either merge them to C<master> if
-they are acceptable, or move them back to a different namespace otherwise.
-
 =item topic/*
 
 Small personal branches that are still in progress. They can be freely rebased.
 They contain targeted features that may span a handful of commits. Any change
 or bugfix should be created in a topic branch.
+
+=item rfc/*
+
+Topic branches that are completed and waiting on review. A Cabal member will
+look over branches in this namespace, and either merge them to C<master> if
+they are acceptable, or move them back to a different namespace otherwise.
+This namespace is being phased out now that we are using GitHub's pull
+requests in our L</Development Workflow>.
 
 =item attic/*
 
@@ -116,39 +129,148 @@ at the same level as master and stable). This may be appropriate if multiple
 people are intending to work on the branch. These branches should not be
 rebased without checking with other developers first.
 
-=head1 STANDARD WORKFLOW
+=head1 WORKFLOWS
 
-    # update your copy of master
+=head2 Getting Started
+
+So, you've cloned the main Moose repository to your local machine (see
+L</Get the Code>) and you're ready to do some hacking. We couldn't be
+happier to welcome you to our community!
+
+Of course, to ensure that your first experience is as productive and
+satisfying as possible, you should probably take some time to read over this
+entire POD document. Doing so will give you a full understanding of how Moose
+developers and maintainers work together and what they expect from one
+another. Done?  Great!
+
+Next, assuming you have a GitHub account, go to
+L<http://github.com/moose/moose> and B<fork the repository> (see
+L<https://help.github.com/articles/fork-a-repo>). This will put an exact
+replica of the Moose repository into your GitHub account, which will serve as
+a place to publish your patches for the Moose maintainers to review and
+incorporate.
+
+Once your fork has been created, switch to your local working repo directory
+and update your C<origin> remote's push URL. This allows you to use a single
+remote (C<origin>) to both pull in the latest code from GitHub and also push
+your work to your own fork:
+
+    # Replace YOUR_USERNAME below with your GitHub username
+    git remote set-url --push origin git@github.com:YOUR_USERNAME/moose.git
+
+You can verify your work:
+
+    $ git remote -v
+    origin  git@github.com:moose/moose.git (fetch)
+    origin  git@github.com:YOUR_USERNAME/moose.git (push)
+
+Now, you're ready for action!  From now on, you just follow the L</Development
+Workflow> to publish your work and B<submit pull requests> to the Moose Cabal.
+
+=head2 Development Workflow
+
+The general gist of the B<STANDARD WORKFLOW> is:
+
+=over 4
+
+=item 1. Update your local repo with the latest commits from the official repo
+
+=item 2. Create a new topic branch, based on the master branch
+
+=item 3. Hack away
+
+=item 4. Commit and push the topic branch to your forked repository
+
+=item 5. Submit a pull request through GitHub for that branch
+
+=back
+
+What follows is a more detailed rundown of that workflow. Please make sure to
+review and follow the steps in the previous section, L</Getting Started>, if
+you have not done so already.
+
+=head3 Update Your Repository
+
+Update your local copy of the master branch from the remote:
+
     git checkout master
     git pull --rebase
 
-    # create a new topic branch
+=head3 Create Your Topic Branch
+
+Now, create a new topic branch based on your master branch. It's useful to
+use concise, descriptive branchnames such as: pod-syntax-contrib,
+feat-autodelegation, patch-23-role-comp, etc. However, we'll just call ours
+C<my-feature> for demonstration purposes:
+
     git checkout -b topic/my-feature
 
-    # hack, commit, feel free to break fast forward
-    git commit --amend        # allowed
-    git rebase --interactive  # allowed
-    git push --force          # allowed
+=head3 Hack. Commit. Repeat.
 
-    # keep the branch rebased on top of master, for easy reviewing
-    git remote update
-    git rebase origin/master
+While you're hacking, the most important thing to remember is that your topic
+branch is yours to do with as you like. Nothing you do there will affect
+anyone else at this point. Commit as often as little or as often as you need
+to and don't let perfection get in the way of progress. However, don't try to
+do too much as the easiest changes to integrate are small and focused.
+
+If it's been a while since you created your topic branch, it's often a good
+idea to periodically rebase your branch off of the upstream master to reduce
+your work later on:
+
+    git fetch                   # or, git remote update
+    git rebase origin/master    # or, git pull --rebase origin master
+
+You should also feel free to publish (using C<push --force> if necessary) your
+branch to your GitHub fork if you simply need feedback from others. (Note:
+actual collaboration takes a bit more finesse and a lot less C<--force>
+however).
+
+=head3 Clean Up Your Branch
+
+Finally, when your development is done, it's time to prepare your branch for
+review. Even the smallest branches can often use a little bit of tidying up
+before they are unleashed on a reviewer. Clarifying/cleaning up commit
+messages, reordering commits, splitting large commits or those which contain
+different types of changes, squashing related or straggler commits are all
+B<highly> worthwhile activities to undertake on your topic branch.
+
+B<Remember:> Your topic branch is yours. Don't worry about rewriting its
+history or breaking fast-forward. Some useful commands are listed below but
+please make sure that you understand what they do as they can rewrite history:
+
+    - git commit --amend
+    - git rebase --interactive
+    - git cherry-pick
+
+Ultimately, your goal in cleaning up your branch is to craft a set of commits
+whose content and messages are as focused and understandable as possible.
+Doing so will greatly increase the chances of a speedy review and acceptance
+into the mainline development.
+
+=head3 Rebase on the Latest
+
+Before your final push and issuing a pull request, you need to ensure that
+your changes can be easily merged into the master branch of the upstream
+repository. This is done by once again rebasing your branch on the latest
+C<origin/master>.
+
+    git fetch                   # or, git remote update
+    git rebase origin/master    # or, git pull --rebase origin master
+
+=head3 Publish and Pull Request
+
+Now it's time to make your final push of the branch to your fork. The
+C<--force> flag is only necessary if you've pushed before and subsequently
+rewritting your history:
+
     git push --force
 
-    # when finished, move the branch to the rfc/ namespace
-    git branch -m rfc/my-feature
-    git push
-    git push origin :topic/my-feature
+After your branch is published, you can issue a pull request to the Moose
+Cabal. See <https://help.github.com/articles/using-pull-requests> for details.
 
-When your branch is completed, make sure it has been moved to the C<rfc/>
-namespace and is rebased on top of master, and ask for review/approval (see
-L</APPROVAL WORKFLOW>). If it is approved, the reviewer will merge it into
-C<master>.
+Congratulations! You're now a contributor!
 
-No actual merging (as in a human resolving conflicts) should be done when
-merging into C<master>, only from C<master> into other branches.
-
-=head1 APPROVAL WORKFLOW
+=head2 Approval Workflow
 
 Moose is an open project but it is also an increasingly important one. Many
 modules depend on Moose being stable. Therefore, we have a basic set of
@@ -157,10 +279,7 @@ guidelines that ensures all new code is properly vetted before it is merged to
 the master branch.
 
 It should be noted that if you want your specific branch to be approved, it is
-B<your> responsibility to follow this process and advocate for your branch. The
-preferred way is to send a request to the mailing list for review/approval;
-this allows us to better keep track of the branches awaiting approval and those
-which have been approved.
+B<your> responsibility to follow this process and advocate for your branch.
 
 =over 4
 
@@ -178,9 +297,9 @@ tested using the F<xt/author/test-my-dependents.t> test.
 New documentation is always welcome, but should also be reviewed by a cabal
 member for accuracy.
 
-TODO tests are basically feature requests, see our L</NEW FEATURES> section
+TODO tests are basically feature requests, see our L</New Features> section
 for more information on that. If your feature needs core support, create a
-C<topic/> branch using the L</STANDARD WORKFLOW> and start hacking away.
+C<topic/> branch using the L</Development Workflow> and start hacking away.
 
 Failing tests are basically bug reports. You should find a core contributor
 and/or cabal member to see if it is a real bug, then submit the bug and your
@@ -191,7 +310,7 @@ test to the RT queue. Source control is not a bug reporting tool.
 Anything that creates a new user-visible feature needs to be approved by
 B<more than one> cabal member.
 
-Make sure you have reviewed L</NEW FEATURES> to be sure that you are following
+Make sure you have reviewed L</New Features> to be sure that you are following
 the guidelines. Do not be surprised if a new feature is rejected for the core.
 
 =item New internals features.
@@ -216,7 +335,7 @@ defend your change.
 
 =back
 
-=head1 RELEASE WORKFLOW
+=head2 Release Workflow
 
     # major releases (including trial releases)
     git checkout master
@@ -231,7 +350,7 @@ defend your change.
     git commit # to add the actual release date
     git branch stable/X.YY # only for non-trial major releases
 
-=head2 Release How-To
+=head3 Release How-To
 
 Moose uses L<Dist::Zilla> to manage releases. Although the git repository comes
 with a C<Makefile.PL>, it is a very basic one just to allow the basic
@@ -265,7 +384,7 @@ fix the bug, it is okay to make a release.
 Regardless of whether or not a new module is available, any breakages should
 be noted in the conflicts list in the distribution's F<dist.ini>.
 
-=head1 EMERGENCY BUG WORKFLOW (for immediate release)
+=head2 Emergency Bug Workflow (for immediate release)
 
 The stable branch exists for easily making bug fix releases.
 
@@ -285,7 +404,7 @@ C<stable/X.YY>:
     git push
     # release
 
-=head1 PROJECT WORKFLOW
+=head2 Project Workflow
 
 For longer lasting branches, we use a subversion style branch layout, where
 master is routinely merged into the branch. Rebasing is allowed as long as all
