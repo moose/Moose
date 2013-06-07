@@ -127,23 +127,41 @@ something like
       push @{ $self->queue }, @items;
   }
 
-Moose includes the following traits for native delegation:
+Moose includes the following traits for native delegation, listed with the methods currently provided by each:
 
 =over 4
 
 =item * L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
+    count, is_empty, elements, get, pop, push, shift, unshift, splice, first,
+    first_index, grep, map, reduce, sort, sort, sort_in_place, sort_in_place,
+    shuffle, uniq, join, set, delete, insert, clear, accessor, accessor,
+    natatime, natatime, shallow_clone
+
 =item * L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
+
+    set, unset, toggle, not
 
 =item * L<Code|Moose::Meta::Attribute::Native::Trait::Code>
 
+    execute, execute_method
+
 =item * L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
+
+    set, inc, inc, dec, reset
 
 =item * L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
+    get, set, delete, keys, exists, defined, values, kv, elements, clear,
+    count, is_empty, accessor, accessor, shallow_clone, meta
+
 =item * L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
+    add, sub, mul, div, mod, abs
+
 =item * L<String|Moose::Meta::Attribute::Native::Trait::String>
+
+    inc, append, prepend, replace, match, chop, chomp, clear, length, substr
 
 =back
 
