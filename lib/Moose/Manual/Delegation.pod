@@ -127,23 +127,62 @@ something like
       push @{ $self->queue }, @items;
   }
 
-Moose includes the following traits for native delegation:
+Moose includes the following traits for native delegation. 
+
+As mentioned above, each trait provides a number of methods which are
+summarized below.  For more information about each of these provided 
+methods see the documentation for that specific trait.
 
 =over 4
 
 =item * L<Array|Moose::Meta::Attribute::Native::Trait::Array>
 
+The following methods are provided by the native Array trait:
+
+  count, is_empty, elements, get, pop, push, shift,
+  unshift, splice, first, first_index, grep, map,
+  reduce, sort, sort_in_place, shuffle, uniq, join,
+  set, delete, insert, clear, accessor, natatime,
+  shallow_clone
+
 =item * L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
+
+The following methods are provided by the native Bool trait:
+
+  set, unset, toggle, not
 
 =item * L<Code|Moose::Meta::Attribute::Native::Trait::Code>
 
+The following methods are provided by the native Code trait:
+
+  execute, execute_method
+
 =item * L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
+
+The following methods are provided by the native Counter trait:
+
+  set, inc, dec, reset
 
 =item * L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
 
+The following methods are provided by the native Hash trait:
+
+  get, set, delete, keys, exists, defined, values, 
+  kv, elements, clear, count, is_empty, accessor, 
+  shallow_clone
+
 =item * L<Number|Moose::Meta::Attribute::Native::Trait::Number>
 
+The following methods are provided by the native Number trait:
+
+  add, sub, mul, div, mod, abs
+
 =item * L<String|Moose::Meta::Attribute::Native::Trait::String>
+
+The following methods are provided by the native Number trait:
+
+  inc, append, prepend, replace, match, chop, chomp, 
+  clear, length, subtr
 
 =back
 
