@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * The with_immutable() sub from Test::Moose now passes a boolean value to
+    the code block containing tests indicating whether or not the classes have
+    been made immutable. This can make for nicer test descriptions.
+
 2.0900-TRIAL Sun, May 26, 2013
 
   [API CHANGES]

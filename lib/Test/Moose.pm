@@ -73,9 +73,9 @@ sub with_immutable (&@) {
     my $before = $Test->current_test;
     my $passing_before = (Test::Builder->VERSION < 1.005 ? 0 : $Test->history->pass_count) || 0;
 
-    $block->();
+    $block->(0);
     Class::MOP::class_of($_)->make_immutable for @_;
-    $block->();
+    $block->(1);
 
     my $num_tests = $Test->current_test - $before;
     my $all_passed = Test::Builder->VERSION < 1.005
@@ -128,6 +128,9 @@ does for the methods.
 
 Runs B<CODE> (which should contain normal tests) twice, and make each
 class in C<@class_names> immutable in between the two runs.
+
+The B<CODE> block is called with a single boolean argument indicating whether
+or not the classes have been made immutable yet.
 
 =back
 
