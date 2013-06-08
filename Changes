@@ -7,7 +7,13 @@ for, noteworthy changes.
 
   * The with_immutable() sub from Test::Moose now passes a boolean value to
     the code block containing tests indicating whether or not the classes have
-    been made immutable. This can make for nicer test descriptions.
+    been made immutable. This can make for nicer test descriptions. (Dave
+    Rolsky)
+
+  * You can now use Specio types instead of Moose builtins or
+    MooseX::Types. As a bonus, Specio types inline coercion. However, this
+    support is still experimental (as is Specio), so use it with care. (Dave
+    Rolsky)
 
 2.0900-TRIAL Sun, May 26, 2013
 
