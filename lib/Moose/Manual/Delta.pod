@@ -27,7 +27,8 @@ send us a patch.
 
 Previously, C<Num> was using L<Scalar::Util/looks_like_number>, which accepts
 numbers with whitespace, Inf, NaN, Infinity, "1\n", "\n1", "0.", "0 but true" etc as valid Num.
-But now, Num accepts only integers, floating point numbers (both in decimal notation and
+We believe that the type constraint should indicate "this is a number", not
+"this coerces to a number".  Therefore, now Num accepts only integers, floating point numbers (both in decimal notation and
 exponential notation), 0, .0, 0.0 etc.
 
 The old behaviour is still available via L<MooseX::Types::LaxNum>.
