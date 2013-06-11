@@ -137,4 +137,19 @@ can also provide your own immutabilization method. Doing so requires
 extending the Moose metaclasses, and is well beyond the scope of this
 manual.
 
+=head1 CONSUMING CLASSES
+
+When you're ready to consume your Moose classes, create them in your
+software in the regular Perl OO way by including a C<use> directive 
+at the top of your consuming file.
+
+  use Moose;
+  use Person;
+  
+  my $person = Person->new(
+    # attribute values at instantiation 
+    # go here
+    ssn => '123456789',
+  );
+
 =cut
