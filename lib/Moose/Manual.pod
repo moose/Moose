@@ -97,9 +97,9 @@ This is a I<complete and usable> class definition!
   no Moose;
   __PACKAGE__->meta->make_immutable;
   
-When ready to consume your class in an application, use it in the "traditional" Perl manner:
+When ready to instantiate your class in an application, use it in the
+"traditional" Perl manner:
 
-  use Moose;
   use User;
   
   my $user = User->new(
