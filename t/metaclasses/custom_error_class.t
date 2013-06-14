@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use Test::Fatal;
 use Test::More;
 
 use Test::Requires {
@@ -66,10 +67,16 @@ use Test::Requires {
         required => 1,
     );
 
-    ::stderr_is(
-        sub { __PACKAGE__->meta->make_immutable },
-        q{},
-        'no warnings when calling make_immutable with a custom error class'
+    ::is(
+        ::exception {
+            ::stderr_is(
+                sub { __PACKAGE__->meta->make_immutable },
+                q{},
+                'no warnings when calling make_immutable with a custom error class'
+            );
+        },
+        undef,
+        'no exception calling make_immutable'
     );
 }
 
