@@ -2,8 +2,6 @@
 # https://github.com/travis-ci/travis-cookbooks/blob/master/ci_environment/perlbrew/attributes/multi.rb
 language: perl
 perl:
-    - "5.19"
-    - "5.18"
     #- stable
     #- dev
     - "5.16"
