@@ -82,8 +82,6 @@ with_immutable {
     isa_ok( $e->{error}, "Baz::Error" );
     unlike( $e->{error}->message, qr/line $e->{line}/s,
         "no line info, just a message" );
-    isa_ok( $e->{error}->metaclass, "Moose::Meta::Class", "metaclass" );
-    is( $e->{error}->metaclass, Baz->meta, "metaclass value" );
     isa_ok( $e->{error}->attr, "Moose::Meta::Attribute", "attr" );
     is( $e->{error}->attr, Baz->meta->get_attribute("foo"), "attr value" );
     isa_ok( $e->{error}->method, "Moose::Meta::Method", "method" );
@@ -91,7 +89,6 @@ with_immutable {
     is( $e->{error}->line,   $e->{line},                   "line attr" );
     is( $e->{error}->file,   $e->{file},                   "file attr" );
     is_deeply( $e->{error}->data, [ $baz, 4 ], "captured args" );
-    like( $e->{error}->last_error, qr/Blah/, "last error preserved" );
 }
 } 'Foo', 'Bar', 'Baz';
 

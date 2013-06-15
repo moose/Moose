@@ -796,7 +796,7 @@ sub create_error {
         unshift @args, "message";
     }
 
-    my %args = ( metaclass => $self, last_error => $@, @args );
+    my %args = @args;
 
     $args{depth} += $error_level;
 
@@ -817,9 +817,7 @@ sub _inline_create_error {
     require Carp::Heavy;
 
     my %args = (
-        metaclass  => $self,
-        last_error => $@,
-        message    => $msg,
+        message => $msg,
     );
 
     my $class = ref $self ? $self->error_class : "Moose::Error::Default";
