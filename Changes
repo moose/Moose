@@ -10,6 +10,9 @@ for, noteworthy changes.
     broken anyway) nor do we pass the "metaclass" parameter. This will only
     affect those of you using custom error classes. (Dave Rolsky)
 
+  * The inlined constructor code's eval environment no longer includes the
+    $meta variable, which was the class's metaclass object. (Dave Rolsky)
+
 
 2.0900-TRIAL Sun, May 26, 2013
 

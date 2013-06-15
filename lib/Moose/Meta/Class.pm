@@ -4,6 +4,7 @@ package Moose::Meta::Class;
 use strict;
 use warnings;
 
+use B ();
 use Class::Load qw(load_class);
 use Class::MOP;
 use Carp qw( confess );
@@ -533,10 +534,6 @@ sub _eval_environment {
         '@type_constraint_messages' => \@type_constraint_messages,
         ( map { defined($_) ? %{ $_->inline_environment } : () }
               @type_constraints ),
-        # pretty sure this is only going to be closed over if you use a custom
-        # error class at this point, but we should still get rid of this
-        # at some point
-        '$meta'  => \$self,
     };
 }
 
@@ -820,25 +817,25 @@ sub _inline_create_error {
         message => $msg,
     );
 
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
+    my $error_class = ref $self ? $self->error_class : "Moose::Error::Default";
 
-    load_class($class);
+    load_class($error_class);
 
     # don't check inheritance here - the intention is that the class needs
     # to provide a non-inherited inlining method, because falling back to
     # the default inlining method is most likely going to be wrong
     # yes, this is a huge hack, but so is the entire error system, so.
-    return
-          '$meta->create_error('
-        . $msg
-        . ( defined $args ? ', ' . $args : q{} ) . ');'
-        unless $class->meta->has_method('_inline_new');
-
-    $class->_inline_new(
-        # XXX ignore this for now too
-        # Carp::caller_info($args{depth}),
-        %args
-    );
+    if ( $error_class->meta->has_method('_inline_new') ) {
+        return $error_class->_inline_new(%args);
+    }
+    else {
+        return
+              "$error_class->new("
+            . 'Carp::caller_info(0),'
+            . "message => $msg,"
+            . ( $args || q() )
+            . ')';
+    }
 }
 
 1;

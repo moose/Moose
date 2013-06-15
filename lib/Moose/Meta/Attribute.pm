@@ -807,10 +807,6 @@ sub _eval_environment {
     # XXX ugh, fix these
     $env->{'$attr'} = \$self
         if $self->has_initializer && $self->is_lazy;
-    # pretty sure this is only going to be closed over if you use a custom
-    # error class at this point, but we should still get rid of this
-    # at some point
-    $env->{'$meta'} = \($self->associated_class);
 
     return $env;
 }
