@@ -5,6 +5,7 @@ use warnings;
 use metaclass;
 
 use Class::Load qw(load_class);
+use List::MoreUtils qw( uniq );
 use Scalar::Util 'blessed';
 
 use base 'Moose::Meta::Role';
@@ -49,7 +50,7 @@ sub new {
         }
     }
 
-    my @composition_roles = map {
+    my @composition_roles = uniq map {
         $_->composition_class_roles
     } @{ $params{roles} };
 

@@ -4,14 +4,55 @@ use strict;
 use warnings;
 use metaclass;
 
-use Scalar::Util    'blessed';
+use Moose::Util::MetaRole;
+use Scalar::Util 'blessed';
 
 use base 'Moose::Meta::Role::Application';
 
 sub apply {
     my ($self, $role1, $role2) = @_;
+
+    $role2 = $self->apply_application_metaroles($role1, $role2);
+
     $self->SUPER::apply($role1, $role2);
     $role2->add_role($role1);
+}
+
+sub apply_application_metaroles {
+    my ($self, $role1, $role2) = @_;
+
+    my %metaroles;
+    if ( $role1->meta->can('roles') && @{ $role1->meta->roles } ) {
+        my @roles = grep {
+            !( $role2->meta->can('does_role') && $role2->meta->does_role($_) )
+        } map { $_->name } @{ $role1->meta->roles };
+
+        $metaroles{role} = \@roles if @roles;
+    }
+
+    my @classes
+        = qw( application_to_class application_to_role application_to_instance );
+    for my $class (@classes) {
+        my $method = $class . '_class';
+
+        if ( $role1->$method->meta->can('roles')
+            && @{ $role1->$method->meta->roles } ) {
+
+            $metaroles{$class}
+                = [ map { $_->name } @{ $role1->$method->meta->roles } ];
+        }
+    }
+
+    if ( keys %metaroles ) {
+        use Devel::Dwarn; Dwarn \%metaroles;
+        return Moose::Util::MetaRole::apply_metaroles(
+            for            => $role2,
+            role_metaroles => \%metaroles,
+        );
+    }
+    else {
+        return $role2;
+    }
 }
 
 sub check_role_exclusions {
@@ -173,7 +214,6 @@ sub apply_method_modifiers {
         ) foreach $role1->$get($method_name);
     }
 }
-
 
 1;
 
