@@ -12,7 +12,7 @@ perl:
     - "5.10"
 install:
     - cpanm -q --notest Dist::Zilla
-    - dzil authordeps --missing | cpanm -q --notest
+    - dzil authordeps --missing | grep -v '^inc::' | cpanm -q --notest
     - dzil listdeps --author --missing | cpanm -q --notest
 script:
     - dzil test --all
