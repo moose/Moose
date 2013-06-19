@@ -16,6 +16,14 @@ use Try::Tiny;
     	  } ,
     	  qr/Must derive at least one class/,
     	  "extends requires at least one argument" );
+
+    isa_ok( exception {
+	package SubClassNoSuperClass;
+	use Moose;
+    	extends;
+    	  }, 
+	    'Moose::Exception::ExtendsMissingArgs',
+	    "extends requires at least one argument");
 }
 
 done_testing;
