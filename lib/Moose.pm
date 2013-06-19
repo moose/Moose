@@ -49,8 +49,11 @@ sub throw_error {
 sub extends {
     my $meta = shift;
 
-    Moose->throw_error("Must derive at least one class") unless @_;
-
+    unless ( @_ )
+    {
+	require Moose::Exception::ExtendsMissingArgs;
+	die Moose::Exception::ExtendsMissingArgs->new;
+    }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
