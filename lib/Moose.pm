@@ -51,7 +51,8 @@ sub extends {
 
     unless ( @_ )
     {
-        throw_exception("ExtendsMissingArgs");
+	require Moose::Exception::ExtendsMissingArgs;
+	die Moose::Exception::ExtendsMissingArgs->new;
     }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
