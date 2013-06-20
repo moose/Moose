@@ -128,10 +128,8 @@ sub _apply_all_roles {
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error( "You can only consume roles, "
-                    . $role->[0]
-                    . " is not a Moose role" );
+            require Moose::Exception::CanOnlyConsumeRole;
+            die Moose::Exception::CanOnlyConsumeRole->new( role_name => $role->[0] );	    
         }
 
         push @role_metas, [ $meta, $role->[1] ];
