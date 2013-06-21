@@ -345,6 +345,13 @@ sub _process_isa_option {
     }
 
     # allow for anon-subtypes here ...
+    #
+    # Checking for Specio explicitly is completely revolting. At some point
+    # this needs to be refactored so that Moose core defines a standard type
+    # API that all types must implement. Unfortunately, the current core API
+    # is _not_ the right API, so we probably need to A) come up with the new
+    # API (Specio is a good start); B) refactor the core types to implement
+    # that API; C) do duck type checking on type objects.
     if ( blessed( $options->{isa} )
         && $options->{isa}->isa('Moose::Meta::TypeConstraint') ) {
         $options->{type_constraint} = $options->{isa};
