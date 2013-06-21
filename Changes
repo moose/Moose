@@ -20,8 +20,8 @@ for, noteworthy changes.
   [API CHANGES]
 
   * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace,
-    and other questionable strings. RT#70539 (Upasana Shukla)
-    (MooseX::Types::LaxNum contains the old behaviour.)
+    and other questionable strings. The MooseX::Types::LaxNum distro
+    implements the old behavior. RT#70539 (Upasana Shukla)
 
 2.0802 Tue, May 07, 2013
 
