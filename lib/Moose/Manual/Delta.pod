@@ -43,6 +43,8 @@ at least you can use Specio with Moose.
 
 =back
 
+=back
+
 =head1 2.0600
 
 =over 4

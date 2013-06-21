@@ -150,7 +150,7 @@ replica of the Moose repository into your GitHub account, which will serve as
 a place to publish your patches for the Moose maintainers to review and
 incorporate.
 
-Once your fork has been created, switch to your local working repo directory
+Once your fork has been created, switch to your local working repository directory
 and update your C<origin> remote's push URL. This allows you to use a single
 remote (C<origin>) to both pull in the latest code from GitHub and also push
 your work to your own fork:
@@ -173,7 +173,7 @@ The general gist of the B<STANDARD WORKFLOW> is:
 
 =over 4
 
-=item 1. Update your local repo with the latest commits from the official repo
+=item 1. Update your local repository with the latest commits from the official repository
 
 =item 2. Create a new topic branch, based on the master branch
 
@@ -199,7 +199,7 @@ Update your local copy of the master branch from the remote:
 =head3 Create Your Topic Branch
 
 Now, create a new topic branch based on your master branch. It's useful to
-use concise, descriptive branchnames such as: pod-syntax-contrib,
+use concise, descriptive branch names such as: pod-syntax-contrib,
 feat-autodelegation, patch-23-role-comp, etc. However, we'll just call ours
 C<my-feature> for demonstration purposes:
 
@@ -261,7 +261,7 @@ C<origin/master>.
 
 Now it's time to make your final push of the branch to your fork. The
 C<--force> flag is only necessary if you've pushed before and subsequently
-rewritting your history:
+rewriting your history:
 
     git push --force
 

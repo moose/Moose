@@ -117,6 +117,7 @@ OtherName
 PosInt
 PositiveInt
 RoleSummation
+Specio
 Str
 TypeContraints
 clearers
@@ -148,6 +149,7 @@ Coercions
 DUCKTYPE
 DWIM
 GitHub
+GitHub's
 Haskell
 IRC
 Immutabilization
@@ -175,6 +177,7 @@ YYZZ
 ZZ
 arity
 arrayrefs
+autodelegation
 blog
 clearers
 codebase
@@ -183,6 +186,7 @@ committer
 committers
 compat
 continutation
+contrib
 datetimes
 dec
 decrement
@@ -227,6 +231,7 @@ namespace's
 namespaced
 namespaces
 namespacing
+natatime
 # as in required-ness
 ness
 optimizations
@@ -277,6 +282,7 @@ unsettable
 utils
 whitelisted
 workflow
+workflows
 
 ## other jargon
 bey
