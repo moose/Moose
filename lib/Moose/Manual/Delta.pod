@@ -21,6 +21,17 @@ send us a patch.
 
 =head1 2.0100
 
+=item The Num type is now stricter
+
+The C<Num> type used to accept anything that fits Perl's notion of a number,
+which included Inf, NaN, and strings like C<" 1234 \n">. It is now much
+stricter and only accepts things that can actually be used like numbers. This
+is basically integers, decimal numbers, and numbers in scientific notation
+(1e10).
+
+If you want the old behavior you can use the C<LaxNum> type in
+L<MooseX::Types::LaxNum>.
+
 =item You can use L<Specio> instead of core Moose types
 
 The L<Specio> distribution is an experimental new type system intended to
