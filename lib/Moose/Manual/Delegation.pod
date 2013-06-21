@@ -183,9 +183,9 @@ add, sub, mul, div, mod, abs
 
 =item * L<String|Moose::Meta::Attribute::Native::Trait::String>
 
-The following methods are provided by the native Number trait:
+The following methods are provided by the native String trait:
 
-inc, append, prepend, replace, match, chop, chomp, clear, length, subtr
+inc, append, prepend, replace, match, chop, chomp, clear, length, substr
 
 =back
 
