@@ -24,10 +24,10 @@ send us a patch.
 =item The Num type is now stricter
 
 The C<Num> type used to accept anything that fits Perl's notion of a number,
-which included Inf, NaN, and strings like C<" 1234 \n">. It is now much
-stricter and only accepts things that can actually be used like numbers. This
-is basically integers, decimal numbers, and numbers in scientific notation
-(1e10).
+which included Inf, NaN, and strings like C<" 1234 \n">.  We believe that the
+type constraint should indicate "this is a number", not "this coerces to a
+number".  Therefore, now Num accepts only integers, floating point numbers
+(both in decimal notation and exponential notation), 0, .0, 0.0 etc.
 
 If you want the old behavior you can use the C<LaxNum> type in
 L<MooseX::Types::LaxNum>.
@@ -38,22 +38,6 @@ The L<Specio> distribution is an experimental new type system intended to
 eventually replace the core Moose types, but yet also work with things like
 L<Moo> and L<Mouse> and anything else. Right now this is all speculative, but
 at least you can use Specio with Moose.
-
-=head1 2.0803
-
-=over 4
-
-=item Fixed the Num to reject NaN, Inf, numbers with whitespace & other questionable strings
-
-Previously, C<Num> was using L<Scalar::Util/looks_like_number>, which accepts
-numbers with whitespace, Inf, NaN, Infinity, "1\n", "\n1", "0.", "0 but true" etc as valid Num.
-We believe that the type constraint should indicate "this is a number", not
-"this coerces to a number".  Therefore, now Num accepts only integers, floating point numbers (both in decimal notation and
-exponential notation), 0, .0, 0.0 etc.
-
-The old behaviour is still available via L<MooseX::Types::LaxNum>.
-
-=back
 
 =head1 2.0600
 
