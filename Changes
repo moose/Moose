@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.0901-TRIAL Fri, Jun 21, 2013
+
   [ENHANCEMENTS]
 
   * The with_immutable() sub from Test::Moose now passes a boolean value to
