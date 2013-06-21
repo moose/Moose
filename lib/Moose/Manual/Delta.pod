@@ -21,6 +21,8 @@ send us a patch.
 
 =head1 2.1000
 
+=over 4
+
 =item The Num type is now stricter
 
 The C<Num> type used to accept anything that fits Perl's notion of a number,
@@ -38,6 +40,8 @@ The L<Specio> distribution is an experimental new type system intended to
 eventually replace the core Moose types, but yet also work with things like
 L<Moo> and L<Mouse> and anything else. Right now this is all speculative, but
 at least you can use Specio with Moose.
+
+=cut
 
 =head1 2.0600
 
