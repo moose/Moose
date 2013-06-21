@@ -41,7 +41,7 @@ eventually replace the core Moose types, but yet also work with things like
 L<Moo> and L<Mouse> and anything else. Right now this is all speculative, but
 at least you can use Specio with Moose.
 
-=cut
+=back
 
 =head1 2.0600
 
