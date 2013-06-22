@@ -21,6 +21,13 @@ has 'message' => (
                      "It is lazy and has a default value 'Error'."
 );
 
+has 'message' => (
+    is      => 'ro',
+    isa     => 'Str',
+    builder => '_build_message',
+    lazy    => 1,
+);
+
 use overload
     '""' => sub {
         my $self = shift;
@@ -33,6 +40,10 @@ sub _build_trace {
         message => $self->message,
         indent  => 1,
     );
+}
+
+sub _build_message {
+    "Error";
 }
 
 sub BUILD {
