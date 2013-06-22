@@ -13,9 +13,8 @@ has 'role_name' => (
     required => 1,
 );
 
-sub message {
+sub _build_message {
     my $self = shift;
-    "You can only consume roles, ".$self->role_name." is not a Moose role";
+    "You can only consume roles, ".$self->role_name." is not a Moose role";     
 }
-
 1;
