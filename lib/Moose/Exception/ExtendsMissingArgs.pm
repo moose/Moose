@@ -6,7 +6,7 @@ use Devel::StackTrace;
 
 extends 'Moose::Exception';
 
-sub message {
+sub _build_message {
     "Must derive at least one class";
 }
 
