@@ -21,6 +21,13 @@ has 'message' => (
                      "It is lazy and has a default value 'Error'."
 );
 
+has 'message' => (
+    is      => 'ro',
+    isa     => 'Str',
+    builder => '_build_message',
+    lazy    => 1,
+);
+
 use overload
     '""' => sub {
         my $self = shift;
