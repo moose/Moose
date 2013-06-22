@@ -5,17 +5,13 @@ use Moose::Exception;
 use Devel::StackTrace;
 
 
-extends 'Moose::Exception'; #=> { message => };
+extends 'Moose::Exception';
 
 has 'role_name' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
 );
-
-# has '+message' => (
-#     default  => super( message => ),
-# );
 
 sub message {
     my $self = shift;
