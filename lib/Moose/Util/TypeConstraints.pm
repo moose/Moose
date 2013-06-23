@@ -552,9 +552,11 @@ sub _create_type_constraint ($$$;$) {
                 . $pkg_defined_in )
             if defined $type;
 
-        $name =~ /^[\w:\.]+$/
-            or die qq{$name contains invalid characters for a type name.}
-            . qq{ Names can contain alphanumeric character, ":", and "."\n};
+	if( $name !~ /^[\w:\.]+$/ ) {
+            require Moose::Exception::InvalidNameForType; 
+            die Moose::Exception::InvalidNameForType->new( name => $name ); 
+	}
+        
     }
 
     my %opts = (
