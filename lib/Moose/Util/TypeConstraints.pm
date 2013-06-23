@@ -554,10 +554,11 @@ sub _create_type_constraint ($$$;$) {
                 . $pkg_defined_in )
             if defined $type;
 
-        if( $name !~ /^[\w:\.]+$/ ) {
-	    throw_exception( InvalidNameForType => name => $name );
-        }
-
+	if( $name !~ /^[\w:\.]+$/ ) {
+            require Moose::Exception::InvalidNameForType; 
+            die Moose::Exception::InvalidNameForType->new( name => $name ); 
+	}
+        
     }
 
     my %opts = (
