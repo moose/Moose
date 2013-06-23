@@ -4,7 +4,6 @@ use Moose;
 use Moose::Exception;
 use Devel::StackTrace;
 
-
 extends 'Moose::Exception';
 
 has 'role_name' => (
