@@ -553,8 +553,7 @@ sub _create_type_constraint ($$$;$) {
             if defined $type;
 
         if( $name !~ /^[\w:\.]+$/ ) {
-            require Moose::Exception::InvalidNameForType; 
-            die Moose::Exception::InvalidNameForType->new( name => $name ); 
+	    Moose::throw_exception( InvalidNameForType => name => $name );
         }
         
     }

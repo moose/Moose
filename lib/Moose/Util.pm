@@ -128,8 +128,7 @@ sub _apply_all_roles {
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
-            require Moose::Exception::CanOnlyConsumeRole;
-            die Moose::Exception::CanOnlyConsumeRole->new( role_name => $role->[0] );	    
+            Moose::throw_exception( CanOnlyConsumeRole => role_name => $role->[0] );
         }
 
         push @role_metas, [ $meta, $role->[1] ];
