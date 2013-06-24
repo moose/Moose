@@ -8,6 +8,7 @@ use Test::Fatal;
 
 use Try::Tiny;
 
+# tests for extends without arguments
 {
     like(
         exception {
@@ -26,6 +27,7 @@ use Try::Tiny;
         "extends requires at least one argument");
 }
 
+# tests for class consuming a class, instead of role
 {
     like(
         exception {
@@ -62,6 +64,23 @@ use Try::Tiny;
             with sub {};
         }, qr/argument is not a module name/,
         "You can only consume a module");
+}
+
+# tests for type/subtype name contain invalid characters
+{
+    like(
+        exception {
+            use Moose::Util::TypeConstraints;            
+            subtype 'Foo-Baz' => as 'Item'
+        }, qr/contains invalid characters/,
+        "Type names cannot contain a dash (via subtype sugar)");
+
+    isa_ok(
+        exception {
+            use Moose::Util::TypeConstraints;
+            subtype 'Foo-Baz' => as 'Item';
+        }, "Moose::Exception::InvalidNameForType",
+        "Type names cannot contain a dash (via subtype sugar)");
 }
 
 done_testing;
