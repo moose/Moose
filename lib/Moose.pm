@@ -36,16 +36,9 @@ use Moose::Meta::Role::Application::ToRole;
 use Moose::Meta::Role::Application::ToInstance;
 
 use Moose::Util::TypeConstraints;
-use Moose::Util ();
+use Moose::Util 'throw_exception';
 
 use Moose::Meta::Attribute::Native;
-
-sub throw_exception {
-    my ($self, @args_to_exception) = @_;
-    my $class = "Moose::Exception::$self";
-    load_class( $class );
-    die $class->new( @args_to_exception );
-}
 
 sub throw_error {
     # FIXME This
@@ -58,7 +51,7 @@ sub extends {
 
     unless ( @_ )
     {
-        throw_exception( ExtendsMissingArgs => {} );
+        throw_exception("ExtendsMissingArgs");
     }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
