@@ -29,12 +29,20 @@ my @exports = qw[
     english_list
     meta_attribute_alias
     meta_class_alias
+    throw_exception
 ];
 
 Sub::Exporter::setup_exporter({
     exports => \@exports,
     groups  => { all => \@exports }
 });
+
+sub throw_exception {
+    my ($class_name, @args_to_exception) = @_;
+    my $class = "Moose::Exception::$class_name";
+    load_class( $class );
+    die $class->new( @args_to_exception );    
+}
 
 ## some utils for the utils ...
 
@@ -128,7 +136,7 @@ sub _apply_all_roles {
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
-            Moose::throw_exception( CanOnlyConsumeRole => role_name => $role->[0] );
+            throw_exception( CanOnlyConsumeRole => role_name => $role->[0] );
         }
 
         push @role_metas, [ $meta, $role->[1] ];
