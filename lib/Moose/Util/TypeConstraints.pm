@@ -35,6 +35,8 @@ use Moose::Meta::TypeCoercion;
 use Moose::Meta::TypeCoercion::Union;
 use Moose::Meta::TypeConstraint::Registry;
 
+use Moose::Util 'throw_exception';
+
 Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
@@ -553,7 +555,7 @@ sub _create_type_constraint ($$$;$) {
             if defined $type;
 
         if( $name !~ /^[\w:\.]+$/ ) {
-	    Moose::throw_exception( InvalidNameForType => name => $name );
+	    throw_exception( InvalidNameForType => name => $name );
         }
         
     }
