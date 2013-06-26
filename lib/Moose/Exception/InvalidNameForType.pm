@@ -13,6 +13,6 @@ has 'name' => (
 
 sub _build_message {
     my $self = shift;
-    $self->name." contains invalid characters for a type name. Names can contain alphanumeric character, ':', and '.'";     
+    $self->name." contains invalid characters for a type name. Names can contain alphanumeric character, ':', and '.'";
 }
 1;
