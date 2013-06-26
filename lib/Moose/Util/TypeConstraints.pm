@@ -557,7 +557,7 @@ sub _create_type_constraint ($$$;$) {
         if( $name !~ /^[\w:\.]+$/ ) {
 	    throw_exception( InvalidNameForType => name => $name );
         }
-        
+
     }
 
     my %opts = (
