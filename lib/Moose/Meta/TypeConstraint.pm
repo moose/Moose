@@ -138,7 +138,7 @@ sub coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        throw_exception( "CoercingWithoutCoercions" );
+        throw_exception( CoercingWithoutCoercions => type => $self );
     }
 
     return $_[0] if $self->check($_[0]);
