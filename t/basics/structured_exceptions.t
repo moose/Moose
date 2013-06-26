@@ -26,4 +26,24 @@ use Try::Tiny;
 	    "extends requires at least one argument");
 }
 
+# tests for type coercions
+{
+    use Moose;
+    use Moose::Util::TypeConstraints;
+    subtype 'HexNum' => as 'Int', where { /[a-f0-9]/i };
+    my $type_object = find_type_constraint 'HexNum';
+
+    like(
+        exception {
+            $type_object->coerce;
+        }, qr/Cannot coerce without a type coercion/,
+        "You cannot coerce a type unless coercion is supported by that type");
+
+    isa_ok(
+        exception {
+            $type_object->coerce;
+        }, "Moose::Exception::CoercingWithoutCoercions",
+        "You cannot coerce a type unless coercion is supported by that type");
+}
+
 done_testing;
