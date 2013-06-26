@@ -70,7 +70,7 @@ use Try::Tiny;
 {
     like(
         exception {
-            use Moose::Util::TypeConstraints;            
+            use Moose::Util::TypeConstraints;
             subtype 'Foo-Baz' => as 'Item'
         }, qr/contains invalid characters/,
         "Type names cannot contain a dash (via subtype sugar)");
