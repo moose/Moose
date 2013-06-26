@@ -20,6 +20,8 @@ use parent 'Class::MOP::Object';
 
 use Moose::Util 'throw_exception';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('name'       => (
     reader => 'name',
     Class::MOP::_definition_context(),
