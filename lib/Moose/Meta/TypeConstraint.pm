@@ -18,6 +18,8 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Object';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('name'       => (
     reader => 'name',
     Class::MOP::_definition_context(),
@@ -134,8 +136,7 @@ sub coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        require Moose;
-        Moose->throw_error("Cannot coerce without a type coercion");
+        throw_exception( "CoercingWithoutCoercions" );
     }
 
     return $_[0] if $self->check($_[0]);
