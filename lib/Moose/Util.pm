@@ -41,7 +41,7 @@ sub throw_exception {
     my ($class_name, @args_to_exception) = @_;
     my $class = "Moose::Exception::$class_name";
     load_class( $class );
-    die $class->new( @args_to_exception );    
+    die $class->new( @args_to_exception );
 }
 
 ## some utils for the utils ...
