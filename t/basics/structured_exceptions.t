@@ -90,16 +90,23 @@ use Try::Tiny;
     subtype 'HexNum' => as 'Int', where { /[a-f0-9]/i };
     my $type_object = find_type_constraint 'HexNum';
 
+    my $exception = exception {
+        $type_object->coerce;
+    };
+
     like(
-        exception {
-            $type_object->coerce;
-        }, qr/Cannot coerce without a type coercion/,
+        $exception,
+        qr/Cannot coerce without a type coercion/,
+        "You cannot coerce a type unless coercion is supported by that type");
+
+    like(
+        $exception->type->name,
+        qr/HexNum/,
         "You cannot coerce a type unless coercion is supported by that type");
 
     isa_ok(
-        exception {
-            $type_object->coerce;
-        }, "Moose::Exception::CoercingWithoutCoercions",
+        $exception,
+        "Moose::Exception::CoercingWithoutCoercions",
         "You cannot coerce a type unless coercion is supported by that type");
 }
 
