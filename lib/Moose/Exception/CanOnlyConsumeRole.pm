@@ -2,7 +2,6 @@ package Moose::Exception::CanOnlyConsumeRole;
 
 use Moose;
 use Moose::Exception;
-use Devel::StackTrace;
 
 extends 'Moose::Exception';
 
