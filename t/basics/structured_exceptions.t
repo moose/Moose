@@ -99,15 +99,43 @@ use Try::Tiny;
         qr/Cannot coerce without a type coercion/,
         "You cannot coerce a type unless coercion is supported by that type");
 
-    like(
+    is(
         $exception->type->name,
-        qr/HexNum/,
+        'HexNum',
         "You cannot coerce a type unless coercion is supported by that type");
 
     isa_ok(
         $exception,
         "Moose::Exception::CoercingWithoutCoercions",
         "You cannot coerce a type unless coercion is supported by that type");
+}
+
+# tests for AccessorMustReadWrite
+{
+    use Moose;
+
+    my $exception = exception {
+        has 'test' => (
+            is       => 'ro',
+            isa      => 'Int',
+            accessor => 'bar',
+        )
+    };
+
+    like(
+        $exception,
+        qr!Cannot define an accessor name on a read-only attribute, accessors are read/write!,
+        "Read-only attributes can't have accessor");
+
+    is(
+        $exception->attribute_name,
+        'test',
+        "Read-only attributes can't have accessor");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AccessorMustReadWrite",
+        "Read-only attributes can't have accessor");
 }
 
 done_testing;
