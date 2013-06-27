@@ -13,7 +13,7 @@ use overload     ();
 use Moose::Deprecated;
 use Moose::Meta::Method::Accessor;
 use Moose::Meta::Method::Delegation;
-use Moose::Util ();
+use Moose::Util 'throw_exception';
 use Moose::Util::TypeConstraints ();
 use Class::MOP::MiniTrait;
 
@@ -304,9 +304,7 @@ sub _process_is_option {
     ### -------------------------
 
     if ( $options->{is} eq 'ro' ) {
-        $class->throw_error(
-            "Cannot define an accessor name on a read-only attribute, accessors are read/write",
-            data => $options )
+        throw_exception("AccessorMustReadWrite" => attribute_name => $name )
             if exists $options->{accessor};
         $options->{reader} ||= $name;
     }
