@@ -138,6 +138,7 @@ use Try::Tiny;
         "Read-only attributes can't have accessor");
 }
 
+# tests for SingleParamsToNewMustBeHRef
 {
     {
         package Foo;
@@ -157,6 +158,30 @@ use Try::Tiny;
         $exception,
         "Moose::Exception::SingleParamsToNewMustBeHRef",
         "A single non-hashref arg to a constructor throws an error");
+}
+
+# tests for DoesRequiresRoleName
+{
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $foo = Foo->new;
+
+    my $exception = exception {
+        $foo->does;
+    };
+
+    like(
+        $exception,
+        qr/^\QYou must supply a role name to does()/,
+        "Cannot call does() without a role name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::DoesRequiresRoleName",
+        "Cannot call does() without a role name");
 }
 
 done_testing;
