@@ -138,4 +138,25 @@ use Try::Tiny;
         "Read-only attributes can't have accessor");
 }
 
+{
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        Foo->new("hello")
+    };
+
+    like(
+        $exception,
+        qr/^\QSingle parameters to new() must be a HASH ref/,
+        "A single non-hashref arg to a constructor throws an error");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::SingleParamsToNewMustBeHRef",
+        "A single non-hashref arg to a constructor throws an error");
+}
+
 done_testing;
