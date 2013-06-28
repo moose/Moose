@@ -184,4 +184,42 @@ use Try::Tiny;
         "Cannot call does() without a role name");
 }
 
+# tests for AttributeIsRequired
+{
+    {
+       package Foo;
+       use Moose;
+
+       has 'baz' => (
+            is       => 'ro',
+            isa      => 'Int',
+            required => 1,
+       );
+    }
+
+    my $exception = exception {
+       Foo->new;
+    };
+
+    like(
+        $exception,
+        qr/\QAttribute (baz) is required/,
+        "... must supply all the required attribute");
+
+    is(
+        $exception->attribute->name,
+        'baz',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception->instance,
+        'Foo',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+}
+
 done_testing;
