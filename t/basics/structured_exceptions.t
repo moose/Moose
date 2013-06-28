@@ -242,4 +242,55 @@ use Try::Tiny;
         "invalid value for is");
 }
 
+{
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        use Moose;
+        has 'bar' => (
+            is   => 'ro',
+            isa  => 'Foo',
+            does => 'Not::A::Role'
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QCannot have an isa option and a does option if the isa does not do the does on attribute (bar)/,
+        "isa option should does the role on the given attribute");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::IsaDoesNotDoTheRole',
+        "isa option should does the role on the given attribute");
+}
+
+{
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        has 'bar' => (
+            is   => 'ro',
+            isa  => 'Not::A::Class',
+            does => 'Not::A::Role',
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QCannot have an isa option which cannot ->does() on attribute (bar)/,
+        "isa option which is not a class cannot ->does the role specified in does");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::IsaLacksDoesMethod',
+        "isa option which is not a class cannot ->does the role specified in does");
+}
+
 done_testing;
