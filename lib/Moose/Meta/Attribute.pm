@@ -337,14 +337,14 @@ sub _process_isa_option {
     if ( exists $options->{does} ) {
         if ( try { $options->{isa}->can('does') } ) {
             ( $options->{isa}->does( $options->{does} ) )
-                || $class->throw_error(
-                "Cannot have an isa option and a does option if the isa does not do the does on attribute ($name)",
-                data => $options );
+                || throw_exception( IsaDoesNotDoTheRole => attribute_name => $name,
+                                                           params         => $options,
+                                  );
         }
         else {
-            $class->throw_error(
-                "Cannot have an isa option which cannot ->does() on attribute ($name)",
-                data => $options );
+            throw_exception( IsaLacksDoesMethod => attribute_name => $name,
+                                                   params         => $options,
+                           );
         }
     }
 
