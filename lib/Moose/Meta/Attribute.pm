@@ -511,7 +511,10 @@ sub initialize_instance_slot {
         # skip it if it's lazy
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
-        $self->throw_error("Attribute (" . $self->name . ") is required", object => $instance, data => $params)
+        throw_exception(AttributeIsRequired => attribute => $self,
+                                               instance  => $instance,
+                                               params    => $params
+                       )
             if $self->is_required && !$self->has_default && !$self->has_builder;
 
         # if nothing was in the %params, we can use the
