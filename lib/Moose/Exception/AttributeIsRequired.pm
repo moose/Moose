@@ -1,8 +1,6 @@
 package Moose::Exception::AttributeIsRequired;
 
 use Moose;
-use Moose::Exception;
-
 extends 'Moose::Exception';
 
 has 'attribute' => (
