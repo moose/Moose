@@ -222,4 +222,24 @@ use Try::Tiny;
         "... must supply all the required attribute");
 }
 
+# tests for invalid value for is
+{
+    my $exception = exception {
+        use Moose;
+        has 'foo' => (
+            is => 'bar',
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QI do not understand this option (is => bar) on attribute (foo)/,
+        "invalid value for is");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::InvalidValueForIs',
+        "invalid value for is");
+}
+
 done_testing;
