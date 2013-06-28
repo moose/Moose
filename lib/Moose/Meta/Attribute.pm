@@ -321,9 +321,9 @@ sub _process_is_option {
         # do nothing, but don't complain (later) about missing methods
     }
     else {
-        $class->throw_error( "I do not understand this option (is => "
-                . $options->{is}
-                . ") on attribute ($name)", data => $options->{is} );
+        throw_exception( InvalidValueForIs => attribute_name => $name,
+                                              params         => $options,
+                       );
     }
 }
 
