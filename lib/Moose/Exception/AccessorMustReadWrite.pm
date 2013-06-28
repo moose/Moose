@@ -2,12 +2,7 @@ package Moose::Exception::AccessorMustReadWrite;
 
 use Moose;
 extends 'Moose::Exception';
-
-has 'attribute_name' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
+with 'Moose::Exception::Role::InvalidAttributeOptions';
 
 sub _build_message {
     my $self = shift;
