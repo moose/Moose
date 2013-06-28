@@ -1,8 +1,6 @@
 package Moose::Exception::SingleParamsToNewMustBeHRef;
 
 use Moose;
-use Moose::Exception;
-
 extends 'Moose::Exception';
 
 sub _build_message {

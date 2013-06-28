@@ -1,8 +1,6 @@
 package Moose::Exception::CoercingWithoutCoercions;
 
 use Moose;
-use Moose::Exception;
-
 extends 'Moose::Exception';
 
 has 'type' => (
