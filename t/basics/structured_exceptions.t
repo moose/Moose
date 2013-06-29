@@ -293,4 +293,24 @@ use Try::Tiny;
         "isa option which is not a class cannot ->does the role specified in does");
 }
 
+{
+    my $exception = exception {
+        use Moose;
+        has 'bar' => (
+            is     => 'ro',
+            coerce => 'Str',
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QYou cannot have coercion without specifying a type constraint on attribute (bar)/,
+        "cannot coerce if type constraint i.e. isa option is not given");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CoercionNeedsTypeConstraint',
+        "cannot coerce if type constraint i.e. isa option is not given");
+}
+
 done_testing;
