@@ -402,9 +402,9 @@ sub _process_coerce_option {
     return unless $options->{coerce};
 
     ( exists $options->{type_constraint} )
-        || $class->throw_error(
-        "You cannot have coercion without specifying a type constraint on attribute ($name)",
-        data => $options );
+        || throw_exception( CoercionNeedsTypeConstraint => attribute_name => $name,
+                                                           params         => $options,
+                          );
 
     $class->throw_error(
         "You cannot have a weak reference to a coerced value on attribute ($name)",
