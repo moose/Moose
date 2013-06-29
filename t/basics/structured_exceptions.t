@@ -298,7 +298,7 @@ use Try::Tiny;
         use Moose;
         has 'bar' => (
             is     => 'ro',
-            coerce => 'Str',
+            coerce => 1,
         );
     };
 
