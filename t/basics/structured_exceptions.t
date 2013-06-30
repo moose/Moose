@@ -313,4 +313,46 @@ use Try::Tiny;
         "cannot coerce if type constraint i.e. isa option is not given");
 }
 
+{
+    my $exception = exception {
+        use Moose;
+        has 'bar' => (
+            is       => 'ro',
+            isa      => 'Int',
+            weak_ref => 1,
+            coerce   => 1,
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QYou cannot have a weak reference to a coerced value on attribute (bar)/,
+        "cannot coerce if attribute is a weak_ref");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotCoerceAWeakRef',
+        "cannot coerce if attribute is a weak_ref");
+}
+
+{
+    my $exception = exception {
+        use Moose;
+        has 'bar' => (
+            is       => 'ro',
+            isa      => 'Int',
+            trigger  => "foo",
+        );
+    };
+
+    like(
+        $exception,
+        qr/^\QTrigger must be a CODE ref on attribute (bar)/,
+        "Trigger must be a CODE ref");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::TriggerMustBeACodeRef',
+        "Trigger must be a CODE ref");
+}
 done_testing;
