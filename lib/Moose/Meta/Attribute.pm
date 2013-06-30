@@ -552,14 +552,9 @@ sub _call_builder {
     return $instance->$builder()
         if $instance->can( $self->builder );
 
-    $self->throw_error(  blessed($instance)
-            . " does not support builder method '"
-            . $self->builder
-            . "' for attribute '"
-            . $self->name
-            . "'",
-            object => $instance,
-     );
+    throw_exception( BuilderDoesNotExist => instance  => $instance,
+                                            attribute => $self,
+                   );
 }
 
 ## Slot management
