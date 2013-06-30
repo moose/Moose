@@ -406,9 +406,9 @@ sub _process_coerce_option {
                                                            params         => $options,
                           );
 
-    $class->throw_error(
-        "You cannot have a weak reference to a coerced value on attribute ($name)",
-        data => $options )
+    throw_exception( CannotCoerceAWeakRef => attribute_name => $name,
+                                             params         => $options,
+                   )
         if $options->{weak_ref};
 
     unless ( $options->{type_constraint}->has_coercion ) {
@@ -427,7 +427,9 @@ sub _process_trigger_option {
     return unless exists $options->{trigger};
 
     ( 'CODE' eq ref $options->{trigger} )
-        || $class->throw_error("Trigger must be a CODE ref on attribute ($name)", data => $options->{trigger});
+        || throw_exception( TriggerMustBeACodeRef => attribute_name => $name,
+                                                     params         => $options,
+                          );
 }
 
 sub _process_auto_deref_option {
