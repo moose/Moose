@@ -355,4 +355,46 @@ use Try::Tiny;
         'Moose::Exception::TriggerMustBeACodeRef',
         "Trigger must be a CODE ref");
 }
+
+{
+    {
+        package Foo;
+        use Moose;
+        has 'baz' => (
+            is       => 'ro',
+            isa      => 'Int',
+            builder  => "_build_baz",
+        );
+    }
+
+    my $exception = exception {
+	Foo->new;
+    };
+
+    like(
+        $exception,
+        qr/^\QFoo does not support builder method '_build_baz' for attribute 'baz'/,
+        "Correct error when a builder method is not present");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::BuilderDoesNotExist',
+        "Correct error when a builder method is not present");
+
+    isa_ok(
+        $exception->instance,
+	'Foo',
+        "Correct error when a builder method is not present");
+
+    is(
+	$exception->attribute->name,
+	'baz',
+        "Correct error when a builder method is not present");
+
+    is(
+        $exception->attribute->builder,
+        '_build_baz',
+        "Correct error when a builder method is not present");
+}
+
 done_testing;
