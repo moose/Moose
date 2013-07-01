@@ -18,7 +18,7 @@ use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 use Moose::Meta::Method::Meta;
-use Moose::Util;
+use Moose::Util 'throw_exception';
 use Class::MOP::MiniTrait;
 
 use parent 'Class::MOP::Class';
@@ -188,7 +188,7 @@ sub reinitialize {
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || $self->throw_error("Roles must be instances of Moose::Meta::Role", data => $role);
+        || throw_exception("AddRoleTakesAMooseMetaRoleInstance");
     push @{$self->roles} => $role;
 }
 
@@ -235,7 +235,7 @@ sub does_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || $self->throw_error("You must supply a role name to look for");
+        || throw_exception("DoesRoleTakesARoleName");
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
