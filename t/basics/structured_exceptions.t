@@ -397,4 +397,50 @@ use Try::Tiny;
         "Correct error when a builder method is not present");
 }
 
+{
+    use Moose::Meta::Class;
+
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        Foo->meta->does_role;
+    };
+
+    like(
+        $exception,
+        qr/You must supply a role name to look for/,
+        "Cannot call does_role without a role name");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::DoesRoleTakesARoleName',
+        "Cannot call does_role without a role name");
+}
+
+{
+    use Moose::Meta::Class;
+
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        Foo->meta->add_role('Bar');
+    };
+
+    like(
+        $exception,
+        qr/Roles must be instances of Moose::Meta::Role/,
+        "add_role takes an instance of Moose::Meta::Role");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::AddRoleTakesAMooseMetaRoleInstance',
+        "add_role takes an instance of Moose::Meta::Role");
+}
+
 done_testing;
