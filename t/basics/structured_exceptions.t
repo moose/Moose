@@ -397,6 +397,7 @@ use Try::Tiny;
         "Correct error when a builder method is not present");
 }
 
+# tests for Moose::Meta::Class::add_role
 {
     use Moose::Meta::Class;
 
@@ -416,7 +417,7 @@ use Try::Tiny;
 
     isa_ok(
         $exception,
-        'Moose::Exception::DoesRoleTakesARoleName',
+        'Moose::Exception::RoleNameRequired',
         "Cannot call does_role without a role name");
 }
 
