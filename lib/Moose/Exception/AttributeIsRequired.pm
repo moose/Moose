@@ -2,18 +2,7 @@ package Moose::Exception::AttributeIsRequired;
 
 use Moose;
 extends 'Moose::Exception';
-
-has 'attribute' => (
-    is       => 'ro',
-    isa      => 'Moose::Meta::Attribute',
-    required => 1,
-);
-
-has 'instance' => (
-    is       => 'ro',
-    isa      => 'Object',
-    required => 1,
-);
+with 'Moose::Exception::Role::Attribute', 'Moose::Exception::Role::Instance';
     
 has 'params' => (
     is       => 'ro',
