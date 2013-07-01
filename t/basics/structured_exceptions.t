@@ -444,4 +444,28 @@ use Try::Tiny;
         "add_role takes an instance of Moose::Meta::Role");
 }
 
+# tests for Moose::Meta::Class::excludes_role
+{
+    use Moose::Meta::Class;
+
+    {
+        package Foo;
+        use Moose;
+    }
+
+    my $exception = exception {
+        Foo->meta->excludes_role;
+    };
+
+    like(
+        $exception,
+        qr/You must supply a role name to look for/,
+        "Cannot call excludes_role without a role name");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::RoleNameRequired',
+        "Cannot call excludes_role without a role name");
+}
+
 done_testing;
