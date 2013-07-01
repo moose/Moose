@@ -235,7 +235,7 @@ sub does_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || throw_exception("DoesRoleTakesARoleName");
+        || throw_exception("RoleNameRequired");
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
@@ -255,7 +255,7 @@ sub excludes_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || $self->throw_error("You must supply a role name to look for");
+        || throw_exception("RoleNameRequired");
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
