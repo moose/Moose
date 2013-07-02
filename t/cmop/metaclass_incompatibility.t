@@ -6,28 +6,34 @@ use Test::Fatal;
 
 use metaclass;
 
-my %metaclass_attrs = (
-    'Instance'            => 'instance_metaclass',
-    'Attribute'           => 'attribute_metaclass',
-    'Method'              => 'method_metaclass',
-    'Method::Wrapped'     => 'wrapped_method_metaclass',
-    'Method::Constructor' => 'constructor_class',
-);
+my %metaclass_attrs;
+BEGIN {
+    %metaclass_attrs = (
+        'Instance'            => 'instance_metaclass',
+        'Attribute'           => 'attribute_metaclass',
+        'Method'              => 'method_metaclass',
+        'Method::Wrapped'     => 'wrapped_method_metaclass',
+        'Method::Constructor' => 'constructor_class',
+    );
 
-# meta classes
-for my $suffix ('Class', keys %metaclass_attrs) {
-    Class::MOP::Class->create(
-        "Foo::Meta::$suffix",
-        superclasses => ["Class::MOP::$suffix"]
-    );
-    Class::MOP::Class->create(
-        "Bar::Meta::$suffix",
-        superclasses => ["Class::MOP::$suffix"]
-    );
-    Class::MOP::Class->create(
-        "FooBar::Meta::$suffix",
-        superclasses => ["Foo::Meta::$suffix", "Bar::Meta::$suffix"]
-    );
+    # meta classes
+    for my $suffix ('Class', keys %metaclass_attrs) {
+        Class::MOP::Class->create(
+            "Foo::Meta::$suffix",
+            superclasses => ["Class::MOP::$suffix"]
+        );
+        $INC{"Foo/Meta/$suffix.pm"} = __FILE__;
+        Class::MOP::Class->create(
+            "Bar::Meta::$suffix",
+            superclasses => ["Class::MOP::$suffix"]
+        );
+        $INC{"Bar/Meta/$suffix.pm"} = __FILE__;
+        Class::MOP::Class->create(
+            "FooBar::Meta::$suffix",
+            superclasses => ["Foo::Meta::$suffix", "Bar::Meta::$suffix"]
+        );
+        $INC{"FooBar/Meta/$suffix.pm"} = __FILE__;
+    }
 }
 
 # checking...
@@ -130,7 +136,11 @@ ok(!Foo::NoMeta->can('meta'), "non-cmop superclass doesn't get methods installed
 isa_ok(Class::MOP::class_of('Foo::NoMeta2'), 'Class::MOP::Class');
 isa_ok(Foo::NoMeta2::Sub->meta, 'Foo::Meta::Class');
 
-Foo::Meta::Class->create('Foo::WithMeta');
+
+BEGIN {
+    Foo::Meta::Class->create('Foo::WithMeta');
+    $INC{'Foo/WithMeta.pm'} = __FILE__;
+}
 {
     package Foo::WithMeta::Sub;
     use base 'Foo::WithMeta';
@@ -144,7 +154,10 @@ isa_ok(Class::MOP::class_of('Foo::WithMeta'), 'Foo::Meta::Class');
 isa_ok(Class::MOP::class_of('Foo::WithMeta::Sub'), 'Foo::Meta::Class');
 isa_ok(Class::MOP::class_of('Foo::WithMeta::Sub::Sub'), 'Foo::Meta::Class');
 
-Foo::Meta::Class->create('Foo::WithMeta2');
+BEGIN {
+    Foo::Meta::Class->create('Foo::WithMeta2');
+    $INC{'Foo/WithMeta2.pm'} = __FILE__;
+}
 {
     package Foo::WithMeta2::Sub;
     use base 'Foo::WithMeta2';
