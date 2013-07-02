@@ -118,7 +118,7 @@ make the attribute required.
 
 =over
 
-=item L<Array|Moose::Meta::Attribute::Native::Trait::Array>
+=item Array (L<Moose::Meta::Attribute::Native::Trait::Array>)
 
     has 'queue' => (
         traits  => ['Array'],
@@ -132,7 +132,7 @@ make the attribute required.
         }
     );
 
-=item L<Bool|Moose::Meta::Attribute::Native::Trait::Bool>
+=item Bool (L<Moose::Meta::Attribute::Native::Trait::Bool>)
 
     has 'is_lit' => (
         traits  => ['Bool'],
@@ -148,7 +148,7 @@ make the attribute required.
         }
     );
 
-=item L<Code|Moose::Meta::Attribute::Native::Trait::Code>
+=item Code (L<Moose::Meta::Attribute::Native::Trait::Code>)
 
     has 'callback' => (
         traits  => ['Code'],
@@ -163,7 +163,7 @@ make the attribute required.
         }
     );
 
-=item L<Counter|Moose::Meta::Attribute::Native::Trait::Counter>
+=item Counter (L<Moose::Meta::Attribute::Native::Trait::Counter>)
 
     has 'counter' => (
         traits  => ['Counter'],
@@ -178,7 +178,7 @@ make the attribute required.
         }
     );
 
-=item L<Hash|Moose::Meta::Attribute::Native::Trait::Hash>
+=item Hash (L<Moose::Meta::Attribute::Native::Trait::Hash>)
 
     has 'options' => (
         traits  => ['Hash'],
@@ -193,7 +193,7 @@ make the attribute required.
         }
     );
 
-=item L<Number|Moose::Meta::Attribute::Native::Trait::Number>
+=item Number (L<Moose::Meta::Attribute::Native::Trait::Number>)
 
     has 'integer' => (
         traits  => ['Number'],
@@ -212,7 +212,7 @@ make the attribute required.
         }
     );
 
-=item L<String|Moose::Meta::Attribute::Native::Trait::String>
+=item String (L<Moose::Meta::Attribute::Native::Trait::String>)
 
     has 'text' => (
         traits  => ['String'],
