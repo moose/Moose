@@ -468,4 +468,32 @@ use Try::Tiny;
         "Cannot call excludes_role without a role name");
 }
 
+{
+    {
+        package Bar;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        package Foo;
+        use Moose;
+        extends 'Bar';
+    };
+
+    like(
+        $exception,
+        qr/^\QYou cannot inherit from a Moose Role (Bar)/,
+        "Class cannot extend a role");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CanExtendOnlyClasses',
+        "Class cannot extend a role");
+
+    is(
+	$exception->role->name,
+	'Bar',
+	"Class cannot extend a role");
+}
+
 done_testing;
