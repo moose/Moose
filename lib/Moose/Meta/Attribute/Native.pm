@@ -116,6 +116,9 @@ make the attribute required.
 
 =head1 TRAITS FOR NATIVE DELEGATIONS
 
+Below are some simple examples of each native trait. More features are
+available than what is shown here; this is just a quick synopsis.
+
 =over
 
 =item Array (L<Moose::Meta::Attribute::Native::Trait::Array>)
