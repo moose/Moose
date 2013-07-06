@@ -496,4 +496,45 @@ use Try::Tiny;
 	"Class cannot extend a role");
 }
 
+# tests for AttributeIsRequired for inline excpetions
+{
+    use Moose::Meta::Class;
+
+    {
+	package Foo;
+	use Moose;
+
+	has 'baz' => (
+	    is => 'ro',
+	    isa => 'Int',
+	    required => 1,
+	    );
+    }
+
+    __PACKAGE__->meta->make_immutable;
+    my $exception = exception {
+	my $test1 = Foo->new;
+    };
+
+    like(
+        $exception,
+        qr/\QAttribute (baz) is required/,
+        "... must supply all the required attribute");
+
+    is(
+        $exception->attribute->name,
+        'baz',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception->instance,
+        'Foo',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+}
+
 done_testing;
