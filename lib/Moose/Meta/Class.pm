@@ -786,6 +786,11 @@ sub _inline_throw_error {
     $self->_inline_raise_error($self->_inline_create_error(@args));
 }
 
+sub _inline_throw_exception {
+    my ( $self, $throw_args ) = @_;
+    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+}
+
 sub raise_error {
     my ( $self, @args ) = @_;
     die @args;
