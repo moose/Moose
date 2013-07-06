@@ -537,4 +537,26 @@ use Try::Tiny;
         "... must supply all the required attribute");
 }
 
+# tests for CannotDelegateWithoutIsa
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has 'bar' => (
+	    is      => 'ro',
+	    handles => qr/baz/,
+	);
+    };
+
+    like(
+        $exception,
+        qr/\QCannot delegate methods based on a Regexp without a type constraint (isa)/,
+        "isa is required while delegating methods based on a Regexp");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotDelegateWithoutIsa',
+        "isa is required while delegating methods based on a Regexp");
+}
+
 done_testing;
