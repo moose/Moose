@@ -382,9 +382,12 @@ sub _inline_check_required_attr {
 
     return (
         'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
-            $self->_inline_throw_error(
-                '"Attribute (' . quotemeta($attr->name) . ') is required"'
-            ) . ';',
+            $self->_inline_throw_exception(
+                'AttributeIsRequired => '.
+                'params    => $params, '.
+                'instance  => $instance, '.
+                'attribute => $meta->get_attribute("'.quotemeta($attr->name).'")'
+            ).';',
         '}',
     );
 }
