@@ -563,26 +563,29 @@ use Try::Tiny;
     my $exception = exception {
 	package Foo;
 	use Moose;
-	has bar => (
-	    is         => 'ro',
-	    auto_deref => 1,
-        );
+	sub foo {}
+	augment foo => sub {};
     };
 
     like(
         $exception,
-        qr/\QYou cannot auto-dereference without specifying a type constraint on attribute (bar)/,
-        "You cannot auto-dereference without specifying a type constraint on attribute");
+        qr/Cannot add an augment method if a local method is already present/,
+        "there is already a method named foo defined in the class");
 
     isa_ok(
         $exception,
-        'Moose::Exception::CannotAutoDerefWithoutIsa',
-        "You cannot auto-dereference without specifying a type constraint on attribute");
+        'Moose::Exception::CannotAugmentIfLocalMethodPresent',
+        "there is already a method named foo defined in the class");
 
     is(
-	$exception->attribute_name,
-	'bar',
-        "You cannot auto-dereference without specifying a type constraint on attribute");
+	$exception->class->name,
+	'Foo',
+        "there is already a method named foo defined in the class");
+
+    is(
+	$exception->method->name,
+	'foo',
+        "there is already a method named foo defined in the class");
 }
 
 done_testing;
