@@ -478,9 +478,9 @@ sub _process_lazy_option {
     return unless $options->{lazy};
 
     ( exists $options->{default} || defined $options->{builder} )
-        || $class->throw_error(
-        "You cannot have a lazy attribute ($name) without specifying a default value for it",
-        data => $options );
+        || throw_exception( LazyAttributeNeedsADefault => params         => $options,
+                                                          attribute_name => $name,
+                          );
 }
 
 sub _process_required_option {
