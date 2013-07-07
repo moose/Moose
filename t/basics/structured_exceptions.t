@@ -636,4 +636,25 @@ use Try::Tiny;
         "No default, builder or init_arg is given");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has 'bar' => (
+	    is   => 'ro',
+	    lazy => 1,
+	);
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot have a lazy attribute (bar) without specifying a default value for it/,
+        "No default for a lazy attribute is given");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::LazyAttributeNeedsADefault',
+        "No default for a lazy attribute is given");
+}
+
 done_testing;
