@@ -559,4 +559,30 @@ use Try::Tiny;
         "isa is required while delegating methods based on a Regexp");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has bar => (
+	    is         => 'ro',
+	    auto_deref => 1,
+        );
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot auto-dereference without specifying a type constraint on attribute (bar)/,
+        "You cannot auto-dereference without specifying a type constraint on attribute");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotAutoDerefWithoutIsa',
+        "You cannot auto-dereference without specifying a type constraint on attribute");
+
+    is(
+	$exception->attribute_name,
+	'bar',
+        "You cannot auto-dereference without specifying a type constraint on attribute");
+}
+
 done_testing;
