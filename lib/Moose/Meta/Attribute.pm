@@ -494,9 +494,9 @@ sub _process_required_option {
             || defined $options->{builder}
         )
         ) {
-        $class->throw_error(
-            "You cannot have a required attribute ($name) without a default, builder, or an init_arg",
-            data => $options );
+        throw_exception( RequiredAttributeNeedsADefault => params         => $options,
+                                                           attribute_name => $name,
+                       );
     }
 }
 
