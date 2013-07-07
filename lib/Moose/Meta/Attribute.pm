@@ -438,9 +438,9 @@ sub _process_auto_deref_option {
     return unless $options->{auto_deref};
 
     ( exists $options->{type_constraint} )
-        || $class->throw_error(
-        "You cannot auto-dereference without specifying a type constraint on attribute ($name)",
-        data => $options );
+        || throw_exception( CannotAutoDerefWithoutIsa => attribute_name => $name,
+                                                         params         => $options,
+                          );
 
     ( $options->{type_constraint}->is_a_type_of('ArrayRef')
       || $options->{type_constraint}->is_a_type_of('HashRef') )
