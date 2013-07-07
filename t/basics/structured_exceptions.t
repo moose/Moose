@@ -614,4 +614,26 @@ use Try::Tiny;
         "there is already a method named foo defined in the class");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has 'bar' => (
+	    is       => 'ro',
+	    required => 1,
+	    init_arg => undef,
+	);
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot have a required attribute (bar) without a default, builder, or an init_arg/,
+        "No default, builder or init_arg is given");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::RequiredAttributeNeedsADefault',
+        "No default, builder or init_arg is given");
+}
+
 done_testing;
