@@ -598,8 +598,11 @@ sub add_override_method_modifier {
 
 sub add_augment_method_modifier {
     my ($self, $name, $method) = @_;
-    (!$self->has_method($name))
-        || $self->throw_error("Cannot add an augment method if a local method is already present");
+    my $existing_method = $self->get_method($name);
+    throw_exception( CannotAugmentIfLocalMethodPresent => class  => $self,
+                                                          method => $existing_method,
+                   )
+	if( $existing_method );
 
     $self->add_method($name => Moose::Meta::Method::Augmented->new(
         method  => $method,
