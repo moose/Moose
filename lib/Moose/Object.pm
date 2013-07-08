@@ -28,7 +28,7 @@ sub BUILDARGS {
     my $class = shift;
     if ( scalar @_ == 1 ) {
         unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            throw_exception( "SingleParamsToNewMustBeHRef" );
+            throw_exception( "SingleParamsToNewMustBeHashRef" );
         }
         return { %{ $_[0] } };
     }
