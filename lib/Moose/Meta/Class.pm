@@ -86,7 +86,7 @@ sub create {
     my %options = @args;
 
     (ref $options{roles} eq 'ARRAY')
-        || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
+        || throw_exception( RolesInCreateTakesAnArrayRef => params => \%options )
             if exists $options{roles};
 
     my $package = delete $options{package};
@@ -200,8 +200,12 @@ sub role_applications {
 
 sub add_role_application {
     my ($self, $application) = @_;
+
     (blessed($application) && $application->isa('Moose::Meta::Role::Application::ToClass'))
-        || $self->throw_error("Role applications must be instances of Moose::Meta::Role::Application::ToClass", data => $application);
+        || throw_exception( InvalidRoleApplication => class       => $self,
+                                                      application => $application,
+                          );
+
     push @{$self->_get_role_applications} => $application;
 }
 
@@ -716,9 +720,13 @@ sub _process_new_attribute {
 
 sub _process_inherited_attribute {
     my ($self, $attr_name, %options) = @_;
+
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
-        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from in ${\$self->name}", data => $attr_name);
+        || throw_exception( NoAttributeFoundInSuperClass => class          => $self,
+                                                            attribute_name => $attr_name,
+                                                            params         => \%options
+                          );
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
         return $inherited_attr->clone_and_inherit_options(%options);
     }
