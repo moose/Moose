@@ -1092,19 +1092,19 @@ sub install_delegation {
     # to delagate to, see that method for details
     my %handles = $self->_canonicalize_handles;
 
-
     # install the delegation ...
     my $associated_class = $self->associated_class;
+    my $class_name = $associated_class->name;
+
     foreach my $handle (sort keys %handles) {
         my $method_to_call = $handles{$handle};
-        my $class_name = $associated_class->name;
         my $name = "${class_name}::${handle}";
 
         if ( my $method = $associated_class->get_method($handle) ) {
-            $self->throw_error(
-                "You cannot overwrite a locally defined method ($handle) with a delegation",
-                method_name => $handle
-            ) unless $method->is_stub;
+            throw_exception( CannotDelegateLocalMethodIsPresent => attribute => $self,
+                                                                   method    => $method,
+                           )
+		unless $method->is_stub;
         }
 
         # NOTE:
