@@ -454,9 +454,9 @@ sub _process_lazy_build_option {
 
     return unless $options->{lazy_build};
 
-    $class->throw_error(
-        "You can not use lazy_build and default for the same attribute ($name)",
-        data => $options )
+    throw_exception( CannotUseLazyBuildAndDefaultSimultaneously => attribute_name => $name,
+                                                                   params         => $options,
+                   )
         if exists $options->{default};
 
     $options->{lazy} = 1;
