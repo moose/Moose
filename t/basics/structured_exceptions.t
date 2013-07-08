@@ -701,4 +701,44 @@ use Try::Tiny;
         "An attribute can't use lazy_build & default simultaneously");
 }
 
+{
+    my $exception = exception {
+	package Delegator;
+	use Moose;
+
+	sub full { 1 }
+	sub stub;
+
+	has d1 => (
+	    isa     => 'X',
+	    handles => ['full'],
+        );
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot overwrite a locally defined method (full) with a delegation/,
+        'got an error when trying to declare a delegation method that overwrites a local method');
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotDelegateLocalMethodIsPresent',
+        "got an error when trying to declare a delegation method that overwrites a local method");
+
+    $exception = exception {
+	package Delegator;
+	use Moose;
+
+	has d2 => (
+	    isa     => 'X',
+	    handles => ['stub'],
+        );
+    };
+
+    is(
+	$exception,
+        undef,
+        'no error when trying to declare a delegation method that overwrites a stub method');
+}
+
 done_testing;
