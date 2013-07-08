@@ -1,4 +1,4 @@
-package Moose::Exception::SingleParamsToNewMustBeHRef;
+package Moose::Exception::SingleParamsToNewMustBeHashRef;
 
 use Moose;
 extends 'Moose::Exception';
