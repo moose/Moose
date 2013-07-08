@@ -334,9 +334,8 @@ sub _inline_BUILDARGS {
                 'my $params;',
                 'if (scalar @_ == 1) {',
                     'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
-                        $self->_inline_throw_error(
-                            '"Single parameters to new() must be a HASH ref"',
-                            'data => $_[0]',
+                        $self->_inline_throw_exception(
+			    '"SingleParamsToNewMustBeHashRef"'
                         ) . ';',
                     '}',
                     '$params = { %{ $_[0] } };',
