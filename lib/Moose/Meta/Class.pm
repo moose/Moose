@@ -585,9 +585,11 @@ sub add_attribute {
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
 
-    (!$self->has_method($name))
-        || $self->throw_error("Cannot add an override method if a local method is already present");
-
+    my $existing_method = $self->get_method($name);
+    (!$existing_method)
+        || throw_exception( CannotOverrideLocalMethodIsPresent => class  => $self,
+                                                                  method => $existing_method,
+                          );
     $self->add_method($name => Moose::Meta::Method::Overridden->new(
         method  => $method,
         class   => $self,
