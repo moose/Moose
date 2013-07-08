@@ -657,4 +657,26 @@ use Try::Tiny;
         "No default for a lazy attribute is given");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has 'bar' => (
+	    is         => 'ro',
+	    isa        => 'Int',
+	    auto_deref => 1,
+	);
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot auto-dereference anything other than a ArrayRef or HashRef on attribute (bar)/,
+        "auto_deref needs either HashRef or ArrayRef");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::AutoDeRefNeedsArrayRefOrHashRef',
+        "auto_deref needs either HashRef or ArrayRef");
+}
+
 done_testing;
