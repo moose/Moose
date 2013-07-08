@@ -101,7 +101,7 @@ use Try::Tiny;
         "Read-only attributes can't have accessor");
 }
 
-# tests for SingleParamsToNewMustBeHRef
+# tests for SingleParamsToNewMustBeHashRef
 {
     {
         package Foo;
@@ -119,7 +119,7 @@ use Try::Tiny;
 
     isa_ok(
         $exception,
-        "Moose::Exception::SingleParamsToNewMustBeHRef",
+        "Moose::Exception::SingleParamsToNewMustBeHashRef",
         "A single non-hashref arg to a constructor throws an error");
 }
 
@@ -731,6 +731,25 @@ use Try::Tiny;
 	$exception->method->name,
 	'foo',
         "there is already a method named foo defined in the class, so you can't override it");
+}
+
+{
+    my $exception = exception {
+        package Foo;
+        use Moose;
+	__PACKAGE__->meta->make_immutable;
+	Foo->new([])
+    };
+
+    like(
+        $exception,
+        qr/^\QSingle parameters to new() must be a HASH ref/,
+        "A single non-hashref arg to a constructor throws an error");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::SingleParamsToNewMustBeHashRef",
+        "A single non-hashref arg to a constructor throws an error");
 }
 
 done_testing;
