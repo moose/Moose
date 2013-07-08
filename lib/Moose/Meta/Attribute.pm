@@ -444,9 +444,9 @@ sub _process_auto_deref_option {
 
     ( $options->{type_constraint}->is_a_type_of('ArrayRef')
       || $options->{type_constraint}->is_a_type_of('HashRef') )
-        || $class->throw_error(
-        "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute ($name)",
-        data => $options );
+        || throw_exception( AutoDeRefNeedsArrayRefOrHashRef => attribute_name => $name,
+                                                               params         => $options,
+                          );
 }
 
 sub _process_lazy_build_option {
