@@ -679,4 +679,26 @@ use Try::Tiny;
         "auto_deref needs either HashRef or ArrayRef");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	has 'bar' => (
+	    is         => 'ro',
+	    lazy_build => 1,
+	    default    => 1,
+	);
+    };
+
+    like(
+        $exception,
+        qr/\QYou can not use lazy_build and default for the same attribute (bar)/,
+        "An attribute can't use lazy_build & default simultaneously");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotUseLazyBuildAndDefaultSimultaneously',
+        "An attribute can't use lazy_build & default simultaneously");
+}
+
 done_testing;
