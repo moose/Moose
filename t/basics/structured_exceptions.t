@@ -741,4 +741,33 @@ use Try::Tiny;
         'no error when trying to declare a delegation method that overwrites a stub method');
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	sub foo {}
+	override foo => sub {};
+    };
+
+    like(
+        $exception,
+        qr/Cannot add an override method if a local method is already present/,
+        "there is already a method named foo defined in the class, so you can't override it");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CannotOverrideLocalMethodIsPresent',
+        "there is already a method named foo defined in the class, so you can't override it");
+
+    is(
+	$exception->class->name,
+	'Foo',
+        "there is already a method named foo defined in the class, so you can't override it");
+
+    is(
+	$exception->method->name,
+	'foo',
+        "there is already a method named foo defined in the class, so you can't override it");
+}
+
 done_testing;
