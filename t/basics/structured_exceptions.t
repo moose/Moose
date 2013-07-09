@@ -851,4 +851,52 @@ use Try::Tiny;
 	"attribute 'bar' is not defined in the super class");
 }
 
+{
+    {
+	package Test;
+	use Moose;
+	has 'foo' => (
+            is        => 'rw',
+            clearer   => 'clear_foo',
+            predicate => 'foo',
+            accessor  => 'bar',
+        );
+    }
+
+    my $exception = exception {
+	package Test2;
+	use Moose;
+	extends 'Test';
+	has '+foo' => (
+	    clearer   => 'clear_foo1',
+	);
+    };
+
+    like(
+	$exception,
+	qr/\QIllegal inherited options => (clearer)/,
+	"Illegal inherited option is given");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::IllegalInheritedOptions",
+	"Illegal inherited option is given");
+
+    $exception = exception {
+	package Test3;
+	use Moose;
+	extends 'Test';
+	has '+foo' => (
+            clearer   => 'clear_foo1',
+            predicate => 'xyz',
+            accessor  => 'bar2',
+        );
+    };
+
+    like(
+	$exception,
+	qr/\QIllegal inherited options => (accessor, clearer, predicate)/,
+	"Illegal inherited option is given");
+}
+
 done_testing;
