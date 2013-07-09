@@ -827,4 +827,28 @@ use Try::Tiny;
 	"bar is not an instance of Moose::Meta::Role::Application::ToClass");
 }
 
+{
+    {
+	package Test;
+	use Moose;
+    }
+
+    my $exception = exception {
+	package Test2;
+	use Moose;
+	extends 'Test';
+	has '+bar' => ( default => 100 );
+    };
+
+    like(
+	$exception,
+	qr/Could not find an attribute by the name of 'bar' to inherit from in Test2/,
+	"attribute 'bar' is not defined in the super class");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::NoAttributeFoundInSuperClass",
+	"attribute 'bar' is not defined in the super class");
+}
+
 done_testing;
