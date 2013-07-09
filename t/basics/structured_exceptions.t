@@ -789,4 +789,24 @@ use Try::Tiny;
         "A single non-hashref arg to a constructor throws an error");
 }
 
+{
+    my $exception =  exception {
+	Moose::Meta::Class->create(
+	    'Made::Of::Fail',
+	    superclasses => ['Class'],
+	    roles        => 'Foo',
+	    );
+    };
+
+    like(
+        $exception,
+        qr/You must pass an ARRAY ref of roles/,
+        "create takes an Array of roles");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RolesInCreateTakesAnArrayRef",
+        "create takes an Array of roles");
+}
+
 done_testing;
