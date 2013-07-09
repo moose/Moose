@@ -809,4 +809,22 @@ use Try::Tiny;
         "create takes an Array of roles");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose;
+	Foo->meta->add_role_application();
+    };
+
+    like(
+	$exception,
+	qr/Role applications must be instances of Moose::Meta::Role::Application::ToClass/,
+	"bar is not an instance of Moose::Meta::Role::Application::ToClass");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::InvalidRoleApplication",
+	"bar is not an instance of Moose::Meta::Role::Application::ToClass");
+}
+
 done_testing;
