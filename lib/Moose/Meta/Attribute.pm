@@ -228,7 +228,9 @@ sub clone_and_inherit_options {
 
     my @found_illegal_options = grep { exists $options{$_} && exists $self->{$_} ? $_ : undef } @illegal_options;
     (scalar @found_illegal_options == 0)
-        || $self->throw_error("Illegal inherited options => (" . (join ', ' => @found_illegal_options) . ")", data => \%options);
+        || throw_exception( IllegalInheritedOptions => illegal_options => \@found_illegal_options,
+                                                       params          => \%options
+                          );
 
     $self->_process_isa_option( $self->name, \%options );
     $self->_process_does_option( $self->name, \%options );
