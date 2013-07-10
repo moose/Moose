@@ -899,4 +899,43 @@ use Try::Tiny;
 	"Illegal inherited option is given");
 }
 
+# tests for exception thrown is Moose::Meta::Attribute::set_value
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has 'bar' => (
+		is       => 'ro',
+		required => 1,
+	    );
+	}
+
+	my $instance = Foo1->new(bar => "test");
+	my $bar_attr = Foo1->meta->get_attribute('bar');
+	my $bar_writer = $bar_attr->get_write_method_ref;
+	$bar_writer->($instance);
+    };
+
+    like(
+        $exception,
+        qr/\QAttribute (bar) is required/,
+        "... must supply all the required attribute");
+
+    is(
+        $exception->attribute->name,
+        'bar',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception->instance,
+        'Foo1',
+        "... must supply all the required attribute");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+}
+
 done_testing;
