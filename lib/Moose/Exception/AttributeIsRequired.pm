@@ -7,7 +7,6 @@ with 'Moose::Exception::Role::Attribute', 'Moose::Exception::Role::Instance';
 has 'params' => (
     is       => 'ro',
     isa      => 'HashRef',
-    required => 1,
 );
 
 sub _build_message {
