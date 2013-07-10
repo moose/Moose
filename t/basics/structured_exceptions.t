@@ -938,4 +938,30 @@ use Try::Tiny;
         "... must supply all the required attribute");
 }
 
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has bar => (
+                is       => 'ro',
+                required => 1,
+                isa      => 'Int',
+	    );
+	}
+
+	Foo1->new(bar => "test");
+    };
+
+    like(
+	$exception,
+	qr/\QAttribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value test/,
+	"bar is an 'Int' and 'Str' is given");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::ValidationFailedForTypeConstraint",
+	"bar is an 'Int' and 'Str' is given");
+}
+
 done_testing;
