@@ -577,7 +577,9 @@ sub set_value {
     my $attr_name = quotemeta($self->name);
 
     if ($self->is_required and not @args) {
-        $self->throw_error("Attribute ($attr_name) is required", object => $instance);
+        throw_exception( AttributeIsRequired => attribute => $self,
+                                                instance  => $instance,
+                       );
     }
 
     $value = $self->_coerce_and_verify( $value, $instance );
