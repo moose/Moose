@@ -1278,10 +1278,10 @@ sub verify_against_type_constraint {
     my $type_constraint = $self->type_constraint;
 
     $type_constraint->check($val)
-        || $self->throw_error("Attribute ("
-                 . $self->name
-                 . ") does not pass the type constraint because: "
-                 . $type_constraint->get_message($val), data => $val, @_);
+        || throw_exception( ValidationFailedForTypeConstraint => type_constraint => $type_constraint,
+                                                                 value           => $val,
+                                                                 attribute       => $self,
+                          );
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
