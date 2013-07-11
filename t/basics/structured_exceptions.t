@@ -964,4 +964,53 @@ use Try::Tiny;
 	"bar is an 'Int' and 'Str' is given");
 }
 
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has 'bar' => (
+                is       => 'ro',
+                handles  => \*STDIN,
+	    );
+	}
+    };
+
+    my $handle = \*STDIN;
+
+    like(
+	$exception,
+	qr/\QUnable to canonicalize the 'handles' option with $handle/,
+	"handles doesn't take file handle");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::UnableToCanonicalizeHandles",
+	"handles doesn't take file handle");
+
+}
+
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has 'bar' => (
+                is       => 'ro',
+                handles  => 'Foo1',
+	    );
+	}
+    };
+
+    like(
+	$exception,
+	qr/\QUnable to canonicalize the 'handles' option with Foo1 because its metaclass is not a Moose::Meta::Role/,
+	"'Str' given to handles should be a metaclass of Moose::Meta::Role");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::UnableToCanonicalizeNonRolePackage",
+	"'Str' given to handles should be a metaclass of Moose::Meta::Role");
+}
+
 done_testing;
