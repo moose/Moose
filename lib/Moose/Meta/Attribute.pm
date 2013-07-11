@@ -1178,7 +1178,9 @@ sub _canonicalize_handles {
     my $role_meta = Class::MOP::class_of($handles);
 
     (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
-        || $self->throw_error("Unable to canonicalize the 'handles' option with $handles because its metaclass is not a Moose::Meta::Role", data => $handles);
+        || throw_exception( UnableToCanonicalizeNonRolePackage => attribute => $self,
+                                                                  handles   => $handles
+                          );
 
     return map { $_ => $_ }
         map { $_->name }
