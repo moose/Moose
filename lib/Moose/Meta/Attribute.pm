@@ -1168,7 +1168,9 @@ sub _canonicalize_handles {
             $handles = $handles->role;
         }
         else {
-            $self->throw_error("Unable to canonicalize the 'handles' option with $handles", data => $handles);
+            throw_exception( UnableToCanonicalizeHandles => attribute => $self,
+                                                            handles   => $handles
+                           );
         }
     }
 
