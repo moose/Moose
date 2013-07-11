@@ -1221,13 +1221,10 @@ sub _find_delegate_metaclass {
         return Class::MOP::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
-        unless (Moose::Util::_is_package_loaded($role)) {
-            $self->throw_error(
-                sprintf(
-                    'The %s attribute is trying to delegate to a role which has not been loaded - %s',
-                    $self->name, $role
-                )
-            );
+        unless ( is_class_loaded($class) ) {
+            throw_exception( DelegationToARoleWhichIsNotLoaded => attribute => $self,
+                                                                  role_name => $role
+                           );
         }
 
         return Class::MOP::class_of($role);
