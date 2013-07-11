@@ -1013,4 +1013,40 @@ use Try::Tiny;
 	"'Str' given to handles should be a metaclass of Moose::Meta::Role");
 }
 
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has 'bar' => (
+                is      => 'ro',
+                isa     => 'Not::Loaded',
+                handles => qr/xyz/,
+            );
+	}
+    };
+
+    like(
+	$exception,
+	qr/\QThe bar attribute is trying to delegate to a class which has not been loaded - Not::Loaded/,
+	"You cannot delegate to a class which has not yet loaded");
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::DelegationToAClassWhichIsNotLoaded",
+	"You cannot delegate to a class which has not yet loaded");
+
+    is(
+        $exception->attribute->name,
+	'bar',
+	"You cannot delegate to a class which has not yet loaded"
+    );
+
+    is(
+        $exception->class_name,
+	'Not::Loaded',
+	"You cannot delegate to a class which has not yet loaded"
+    );
+}
+
 done_testing;
