@@ -955,7 +955,7 @@ use Try::Tiny;
 
     like(
 	$exception,
-	qr/\QAttribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value test/,
+	qr/\QAttribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"/,
 	"bar is an 'Int' and 'Str' is given");
 
     isa_ok(
