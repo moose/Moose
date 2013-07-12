@@ -1085,4 +1085,72 @@ use Try::Tiny;
     );
 }
 
+
+{
+    my $exception = exception {
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
+                is      => 'ro',
+                isa     => 'Int',
+                handles => qr/xyz/,
+            );
+	}
+    };
+
+    like(
+        $exception,
+        qr/\QThe bar attribute is trying to delegate to a type (Int) that is not backed by a class/,
+        "Delegating to a type that is not backed by a class");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::DelegationToATypeWhichIsNotAClass",
+        "Delegating to a type that is not backed by a class");
+
+    is(
+        $exception->attribute->name,
+        'bar',
+        "Delegating to a type that is not backed by a class");
+
+    is(
+        $exception->attribute->type_constraint->name,
+        'Int',
+        "Delegating to a type that is not backed by a class");
+
+    $exception = exception {
+        {
+            package Foo1;
+            use Moose;
+            use Moose::Util::TypeConstraints;
+
+            subtype 'PositiveInt',
+            as 'Int',
+            where { $_ > 0 };
+
+            has 'bar' => (
+                is      => 'ro',
+                isa     => 'PositiveInt',
+                handles => qr/xyz/,
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QThe bar attribute is trying to delegate to a type (PositiveInt) that is not backed by a class/,
+        "Delegating to a type that is not backed by a class");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::DelegationToATypeWhichIsNotAClass",
+        "Delegating to a type that is not backed by a class");
+
+    is(
+        $exception->attribute->type_constraint->name,
+        'PositiveInt',
+        "Delegating to a type that is not backed by a class");
+}
+
 done_testing;
