@@ -1182,4 +1182,36 @@ use Try::Tiny;
         "no does or isa is given");
 }
 
+{
+    my $exception = exception {
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
+                is =>
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QUsage: has 'name' => ( key => value, ... )/,
+        "has takes a hash");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::BadHasProvided",
+        "has takes a hash");
+
+    is(
+        $exception->attribute_name,
+        'bar',
+        "has takes a hash");
+
+    is(
+        $exception->class->name,
+        'Foo1',
+        "has takes a hash");
+}
+
 done_testing;
