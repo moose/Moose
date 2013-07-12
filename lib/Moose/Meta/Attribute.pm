@@ -1209,7 +1209,16 @@ sub _get_delegate_method_list {
 
 sub _find_delegate_metaclass {
     my $self = shift;
-    if (my $class = $self->_isa_metadata) {
+    my $class = $self->_isa_metadata;
+    my $role = $self->_does_metadata;
+
+    if ( $class ) {
+	# make sure isa is actually a class
+	unless ( $self->type_constraint->isa("Moose::Meta::TypeConstraint::Class") ) {
+	    throw_exception( DelegationToATypeWhichIsNotAClass => attribute => $self );
+	}
+
+	# make sure the class is loaded
         unless ( is_class_loaded($class) ) {
             throw_exception( DelegationToAClassWhichIsNotLoaded => attribute  => $self,
                                                                    class_name => $class
@@ -1220,8 +1229,8 @@ sub _find_delegate_metaclass {
         # already a metaclass, it will be returned
         return Class::MOP::Class->initialize($class);
     }
-    elsif (my $role = $self->_does_metadata) {
-        unless ( is_class_loaded($class) ) {
+    elsif ( $role ) {
+        unless ( is_class_loaded($role) ) {
             throw_exception( DelegationToARoleWhichIsNotLoaded => attribute => $self,
                                                                   role_name => $role
                            );
