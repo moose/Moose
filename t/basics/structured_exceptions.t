@@ -1065,23 +1065,23 @@ use Try::Tiny;
     like(
 	$exception,
 	qr/\QThe bar attribute is trying to delegate to a role which has not been loaded - Role/,
-	"You cannot delegate to a class which has not yet loaded");
+	"You cannot delegate to a role which has not yet loaded");
 
     isa_ok(
 	$exception,
 	"Moose::Exception::DelegationToARoleWhichIsNotLoaded",
-	"You cannot delegate to a class which has not yet loaded");
+	"You cannot delegate to a role which has not yet loaded");
 
     is(
         $exception->attribute->name,
 	'bar',
-	"You cannot delegate to a class which has not yet loaded"
+	"You cannot delegate to a role which has not yet loaded"
     );
 
     is(
         $exception->role_name,
 	'Role',
-	"You cannot delegate to a class which has not yet loaded"
+	"You cannot delegate to a role which has not yet loaded"
     );
 }
 
