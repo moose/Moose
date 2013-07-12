@@ -3,7 +3,7 @@ package Moose::Exception::DelegationToAClassWhichIsNotLoaded;
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Attribute';
-    
+
 has 'class_name' => (
     is       => 'ro',
     isa      => 'Str',
