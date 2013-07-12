@@ -1153,4 +1153,33 @@ use Try::Tiny;
         "Delegating to a type that is not backed by a class");
 }
 
+{
+    my $exception = exception {
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
+                is      => 'ro',
+                does    => '',
+                handles => qr/xyz/,
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/Cannot find delegate metaclass for attribute bar/,
+        "no does or isa is given");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotFindDelegateMetaclass",
+        "no does or isa is given");
+
+    is(
+        $exception->attribute->name,
+        'bar',
+        "no does or isa is given");
+}
+
 done_testing;
