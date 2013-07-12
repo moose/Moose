@@ -3,7 +3,7 @@ package Moose::Exception::DelegationToARoleWhichIsNotLoaded;
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Attribute';
-    
+
 has 'role_name' => (
     is       => 'ro',
     isa      => 'Str',
