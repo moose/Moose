@@ -6,7 +6,7 @@ extends 'Moose::Exception';
 has 'illegal_options' => (
     is       => 'ro',
     traits   => ['Array'],
-    handles  => { 
+    handles  => {
 	_join_options => 'join',
     },
     required => 1,

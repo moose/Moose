@@ -2,7 +2,7 @@ package Moose::Exception::RolesInCreateTakesAnArrayRef;
 
 use Moose;
 extends 'Moose::Exception';
-   
+
 has 'params' => (
     is       => 'ro',
     isa      => 'HashRef',
