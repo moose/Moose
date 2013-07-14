@@ -1310,4 +1310,21 @@ use Try::Tiny;
 	"you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
 }
 
+{
+    my $exception = exception {
+        use Moose;
+        Moose->init_meta;
+    };
+
+    like(
+        $exception,
+        qr/Cannot call init_meta without specifying a for_class/,
+        "for_class is not given");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InitMetaRequiresClass",
+        "for_class is not given");
+}
+
 done_testing;
