@@ -1327,4 +1327,26 @@ use Try::Tiny;
         "for_class is not given");
 }
 
+{
+    my $exception = exception {
+        use Moose;
+        Moose->init_meta( (for_class => 'Foo2', metaclass => 'Foo2' ));
+    };
+
+    like(
+        $exception,
+        qr/\QThe Metaclass Foo2 must be loaded. (Perhaps you forgot to 'use Foo2'?)/,
+        "Foo2 is not loaded");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassNotLoaded",
+        "Foo2 is not loaded");
+
+    is(
+	$exception->class_name,
+	"Foo2",
+	"Foo2 is not loaded");
+}
+
 done_testing;
