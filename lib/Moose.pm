@@ -158,7 +158,7 @@ sub init_meta {
     throw_exception( MetaclassNotLoaded => class_name => $metaclass )
         unless is_class_loaded($metaclass);
 
-    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
+    throw_exception( MetaclassMustBeASubclassOfMooseMetaClass => class_name => $metaclass )
         unless $metaclass->isa('Moose::Meta::Class');
 
     # make a subtype for each Moose class
