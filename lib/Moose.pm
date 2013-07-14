@@ -149,7 +149,8 @@ sub init_meta {
     my %args = @_;
 
     my $class = $args{for_class}
-        or Moose->throw_error("Cannot call init_meta without specifying a for_class");
+        or throw_exception( InitMetaRequiresClass => args => \%args );
+
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
     my $meta_name  = exists $args{meta_name} ? $args{meta_name} : 'meta';
