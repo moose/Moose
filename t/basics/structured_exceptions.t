@@ -1284,8 +1284,8 @@ use Try::Tiny;
 	"you have given both, class & class_name");
 
     $exception = exception {
-	DoesClassRole->new( class_name => "Foo",
-			    class      => DoesClassRole->meta
+        DoesClassRole->new( class_name => "Foo",
+                            class      => DoesClassRole->meta,
                           );
     };
 
