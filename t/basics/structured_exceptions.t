@@ -1349,4 +1349,31 @@ use Try::Tiny;
 	"Foo2 is not loaded");
 }
 
+{
+    {
+	package Foo3;
+	use Moose::Role;
+    }
+
+    my $exception = exception {
+        use Moose;
+        Moose->init_meta( (for_class => 'Foo3', metaclass => 'Foo3' ));
+    };
+
+    like(
+        $exception,
+        qr/\QThe Metaclass Foo3 must be a subclass of Moose::Meta::Class./,
+        "Foo3 is a Moose::Role");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassMustBeASubclassOfMooseMetaClass",
+        "Foo3 is a Moose::Role");
+
+    is(
+	$exception->class_name,
+	"Foo3",
+	"Foo3 is not loaded");
+}
+
 done_testing;
