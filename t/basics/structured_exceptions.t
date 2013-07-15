@@ -1597,4 +1597,66 @@ use Try::Tiny;
         "Roles do not support 'augment'");
 }
 
+{
+    use Moose::Util 'apply_all_roles';
+
+    {
+        package TestClass;
+        use Moose;
+    }
+
+    my $test_object = TestClass->new;
+
+    my $exception = exception {
+        apply_all_roles( $test_object );
+    };
+
+    like(
+        $exception,
+        qr/\QMust specify at least one role to apply to $test_object/,
+        "apply_all_roles takes an object and a role to apply");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustSpecifyAtleastOneRoleToApplicant",
+        "apply_all_roles takes an object and a role to apply");
+
+    my $test_class = TestClass->meta;
+
+    $exception = exception {
+        apply_all_roles( $test_class );
+    };
+
+    like(
+        $exception,
+        qr/\QMust specify at least one role to apply to $test_class/,
+        "apply_all_roles takes a class and a role to apply");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustSpecifyAtleastOneRoleToApplicant",
+        "apply_all_roles takes a class and a role to apply");
+
+    {
+        package TestRole;
+        use Moose::Role;
+    }
+
+    my $test_role = TestRole->meta;
+
+    $exception = exception {
+        apply_all_roles( $test_role );
+    };
+
+    like(
+        $exception,
+        qr/\QMust specify at least one role to apply to $test_role/,
+        "apply_all_roles takes a role and a role to apply");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustSpecifyAtleastOneRoleToApplicant",
+        "apply_all_roles takes a role and a role to apply");
+}
+
 done_testing;
