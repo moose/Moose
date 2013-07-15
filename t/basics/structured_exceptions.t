@@ -182,6 +182,30 @@ use Try::Tiny;
         $exception,
         "Moose::Exception::DoesRequiresRoleName",
         "Cannot call does() without a role name");
+
+    is(
+        $exception->class->name,
+        "Foo",
+        "Cannot call does() without a role name");
+
+    $exception = exception {
+        Foo->does;
+    };
+
+    like(
+        $exception,
+        qr/^\QYou must supply a role name to does()/,
+        "Cannot call does() without a role name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::DoesRequiresRoleName",
+        "Cannot call does() without a role name");
+
+    is(
+        $exception->class->name,
+        "Foo",
+        "Cannot call does() without a role name");
 }
 
 # tests for AttributeIsRequired
