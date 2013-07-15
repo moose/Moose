@@ -1727,4 +1727,35 @@ use Try::Tiny;
         "Attribute Extension is not supported in roles");
 }
 
+{
+    my $exception = exception {
+        package JustATestRole;
+        use Moose::Role;
+
+        sub bar {}
+
+        override bar => sub {};
+    };
+
+    like(
+        $exception,
+        qr/\QCannot add an override of method 'bar' because there is a local version of 'bar'/,
+        "Cannot override bar, because it's a local method");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotOverrideALocalMethod",
+        "Cannot override bar, because it's a local method");
+
+    is(
+        $exception->role->name,
+        'JustATestRole',
+        "Cannot override bar, because it's a local method");
+
+    is(
+        $exception->method_name,
+        "bar",
+        "Cannot override bar, because it's a local method");
+}
+
 done_testing;
