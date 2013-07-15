@@ -1758,4 +1758,35 @@ use Try::Tiny;
         "Cannot override bar, because it's a local method");
 }
 
+{
+    {
+        package JustATestRole;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        JustATestRole->meta->add_role("xyz");
+    };
+
+    like(
+        $exception,
+        qr/\QRoles must be instances of Moose::Meta::Role/,
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AddRoleToARoleTakesAMooseMetaRole",
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
+
+    is(
+        $exception->role->name,
+        'JustATestRole',
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
+
+    is(
+        $exception->role_to_be_added,
+        "xyz",
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
+}
+
 done_testing;
