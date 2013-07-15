@@ -16,9 +16,8 @@ has 'role_name' => (
     isa       => 'Str',
     lazy      => 1,
     builder   => '_build_role_name',
-    predicate => 'is_role_name_set',    
+    predicate => 'is_role_name_set',
 );
-
 
 sub _build_role {
     my $self = $_[0];
