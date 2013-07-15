@@ -14,7 +14,7 @@ use Moose::Meta::Role::Method;
 use Moose::Meta::Role::Method::Required;
 use Moose::Meta::Role::Method::Conflicting;
 use Moose::Meta::Method::Meta;
-use Moose::Util qw( ensure_all_roles );
+use Moose::Util qw/throw_exception/;
 use Class::MOP::MiniTrait;
 
 use parent 'Class::MOP::Module',
@@ -237,7 +237,9 @@ sub add_attribute {
 
     if (blessed $_[0] && ! $_[0]->isa('Moose::Meta::Role::Attribute') ) {
         my $class = ref $_[0];
-        Moose->throw_error( "Cannot add a $class as an attribute to a role" );
+        throw_exception( CannotAddAsAnAttributeToARole => role            => $self,
+                                                          attribute_class => $class
+                       );
     }
     elsif (!blessed($_[0]) && defined($_[0]) && $_[0] =~ /^\+(.*)/) {
         Moose->throw_error( "has '+attr' is not supported in roles" );
