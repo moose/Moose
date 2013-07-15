@@ -10,14 +10,14 @@ use Module::Runtime 'module_notional_filename';
 use Sub::Exporter;
 
 use Moose       ();
-use Moose::Util ();
+use Moose::Util 'throw_exception';
 
 use Moose::Exporter;
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
 sub extends {
-    croak "Roles do not support 'extends' (you can use 'with' to specialize a role)";
+    throw_exception("RolesDoNotSupportExtends");
 }
 
 sub with {
