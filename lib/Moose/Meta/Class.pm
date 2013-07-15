@@ -188,7 +188,9 @@ sub reinitialize {
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || throw_exception("AddRoleTakesAMooseMetaRoleInstance");
+        || throw_exception( AddRoleTakesAMooseMetaRoleInstance => role_to_be_added => $role,
+                                                                  class            => $self
+                          );
     push @{$self->roles} => $role;
 }
 
