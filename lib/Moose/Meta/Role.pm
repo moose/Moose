@@ -361,8 +361,9 @@ $META->add_attribute('override_method_modifiers' => (
 sub add_override_method_modifier {
     my ($self, $method_name, $method) = @_;
     (!$self->has_method($method_name))
-        || Moose->throw_error("Cannot add an override of method '$method_name' " .
-                   "because there is a local version of '$method_name'");
+        || throw_exception( CannotOverrideALocalMethod => method_name => $method_name,
+                                                          role        => $self
+                          );
     $self->get_override_method_modifiers_map->{$method_name} = $method;
 }
 
