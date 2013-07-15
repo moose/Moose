@@ -1394,4 +1394,27 @@ use Try::Tiny;
         "Roles do not support extends");
 }
 
+{
+    my $exception = exception {
+        package Bar;
+        use Moose::Role;
+        requires;
+    };
+
+    like(
+        $exception,
+        qr/Must specify at least one method/,
+        "requires expects atleast one method name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustSpecifyAtleastOneMethod",
+        "requires expects atleast one method name");
+
+    is(
+        $exception->role->name,
+        'Bar',
+        'requires expects atleast one method name');
+}
+
 done_testing;
