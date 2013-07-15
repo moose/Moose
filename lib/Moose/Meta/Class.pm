@@ -241,7 +241,7 @@ sub does_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || throw_exception("RoleNameRequired");
+        || throw_exception( RoleNameRequired => class => $self );
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
@@ -261,7 +261,7 @@ sub excludes_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || throw_exception("RoleNameRequired");
+        || throw_exception( RoleNameRequired => class => $self );
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
