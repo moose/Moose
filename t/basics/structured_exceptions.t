@@ -1376,4 +1376,22 @@ use Try::Tiny;
 	"Foo3 is not loaded");
 }
 
+{
+    my $exception = exception {
+        package Bar;
+        use Moose::Role;
+        extends 'Foo';
+    };
+
+    like(
+        $exception,
+        qr/\QRoles do not support 'extends' (you can use 'with' to specialize a role)/,
+        "Roles do not support extends");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RolesDoNotSupportExtends",
+        "Roles do not support extends");
+}
+
 done_testing;
