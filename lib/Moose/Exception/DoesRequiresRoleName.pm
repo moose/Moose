@@ -3,9 +3,9 @@ package Moose::Exception::DoesRequiresRoleName;
 use Moose;
 extends 'Moose::Exception';
 
-has 'object' => (
+has 'class' => (
     is       => 'ro',
-    isa      => 'Moose::Object',
+    isa      => 'Moose::Meta::Class',
     required => 1,
 );
 
