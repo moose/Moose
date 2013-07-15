@@ -242,7 +242,9 @@ sub add_attribute {
                        );
     }
     elsif (!blessed($_[0]) && defined($_[0]) && $_[0] =~ /^\+(.*)/) {
-        Moose->throw_error( "has '+attr' is not supported in roles" );
+        throw_exception( AttributeExtensionIsNotSupportedInRoles => attribute_name => $_[0],
+                                                                    role           => $self
+                       );
     }
 
     return $self->SUPER::add_attribute(@_);
