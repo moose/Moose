@@ -1514,4 +1514,27 @@ use Try::Tiny;
         "you have given role_name as 'Foo' and role->name as 'JustATestRole'");
 }
 
+{
+    my $exception = exception {
+        package Bar;
+        use Moose::Role;
+        excludes;
+    };
+
+    like(
+        $exception,
+        qr/Must specify at least one role/,
+        "excludes expects atleast one role name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustSpecifyAtleastOneRole",
+        "excludes expects atleast one role name");
+
+    is(
+        $exception->role->name,
+        'Bar',
+        'excludes expects atleast one role name');
+}
+
 done_testing;
