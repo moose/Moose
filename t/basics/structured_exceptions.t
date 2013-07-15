@@ -1555,4 +1555,22 @@ use Try::Tiny;
         "Roles do not support 'inner'");
 }
 
+{
+    my $exception = exception {
+        package Bar;
+        use Moose::Role;
+        augment 'foo' => sub {};
+    };
+
+    like(
+        $exception,
+        qr/Roles cannot support 'augment'/,
+        "Roles do not support 'augment'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RolesDoNotSupportAugment",
+        "Roles do not support 'augment'");
+}
+
 done_testing;
