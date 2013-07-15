@@ -466,6 +466,16 @@ use Try::Tiny;
         $exception,
         'Moose::Exception::AddRoleTakesAMooseMetaRoleInstance',
         "add_role takes an instance of Moose::Meta::Role");
+
+    is(
+        $exception->class->name,
+        'Foo',
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
+
+    is(
+        $exception->role_to_be_added,
+        "Bar",
+        "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
 }
 
 # tests for Moose::Meta::Class::excludes_role
