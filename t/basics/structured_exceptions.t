@@ -1696,4 +1696,35 @@ use Try::Tiny;
         "Roles cannot have a class as an attribute");
 }
 
+{
+    my $exception = exception {
+        package JustATestRole;
+        use Moose::Role;
+
+        has '+attr' => (
+            is => 'ro',
+        );
+    };
+
+    like(
+        $exception,
+        qr/\Qhas '+attr' is not supported in roles/,
+        "Attribute Extension is not supported in roles");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeExtensionIsNotSupportedInRoles",
+        "Attribute Extension is not supported in roles");
+
+    is(
+        $exception->role->name,
+        'JustATestRole',
+        "Attribute Extension is not supported in roles");
+
+    is(
+        $exception->attribute_name,
+        "+attr",
+        "Attribute Extension is not supported in roles");
+}
+
 done_testing;
