@@ -1537,4 +1537,22 @@ use Try::Tiny;
         'excludes expects atleast one role name');
 }
 
+{
+    my $exception = exception {
+        package Bar;
+        use Moose::Role;
+        inner;
+    };
+
+    like(
+        $exception,
+        qr/Roles cannot support 'inner'/,
+        "Roles do not support 'inner'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RolesDoNotSupportInner",
+        "Roles do not support 'inner'");
+}
+
 done_testing;
