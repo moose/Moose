@@ -402,7 +402,9 @@ $META->add_attribute('roles' => (
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || Moose->throw_error("Roles must be instances of Moose::Meta::Role");
+        || throw_exception( AddRoleToARoleTakesAMooseMetaRole => role_to_be_added => $role,
+                                                                 role             => $self
+                          );
     push @{$self->get_roles} => $role;
     $self->reset_package_cache_flag;
 }
