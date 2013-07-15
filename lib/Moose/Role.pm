@@ -26,7 +26,7 @@ sub with {
 
 sub requires {
     my $meta = shift;
-    croak "Must specify at least one method" unless @_;
+    throw_exception( MustSpecifyAtleastOneMethod => role => $meta ) unless @_;
     $meta->add_required_methods(@_);
 }
 
