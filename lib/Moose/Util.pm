@@ -108,7 +108,7 @@ sub _apply_all_roles {
 
     unless (@_) {
         require Moose;
-        Moose->throw_error("Must specify at least one role to apply to $applicant");
+        throw_exception( MustSpecifyAtleastOneRoleToApplicant => applicant => $applicant );
     }
 
     # If @_ contains role meta objects, mkopt will think that they're values,
