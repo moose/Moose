@@ -1659,4 +1659,41 @@ use Try::Tiny;
         "apply_all_roles takes a role and a role to apply");
 }
 
+{
+    {
+        package JustATestRole;
+        use Moose::Role;
+    }
+
+    {
+        package JustATestClass;
+        use Moose;
+    }
+
+    my $class = JustATestClass->meta;
+    my $exception = exception {
+        JustATestRole->meta->add_attribute( $class );
+    };
+
+    like(
+        $exception,
+        qr/\QCannot add a Moose::Meta::Class as an attribute to a role/,
+        "Roles cannot have a class as an attribute");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotAddAsAnAttributeToARole",
+        "Roles cannot have a class as an attribute");
+
+    is(
+        $exception->role->name,
+        'JustATestRole',
+        "Roles cannot have a class as an attribute");
+
+    is(
+        $exception->attribute_class,
+        "Moose::Meta::Class",
+        "Roles cannot have a class as an attribute");
+}
+
 done_testing;
