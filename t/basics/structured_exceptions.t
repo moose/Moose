@@ -1835,4 +1835,35 @@ use Try::Tiny;
         "Cannot call does_role without a role name");
 }
 
+{
+    {
+        package Bar;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        Bar->meta->apply("xyz");
+    };
+
+    like(
+        $exception,
+        qr/You must pass in an blessed instance/,
+        "apply takes a blessed instance");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::ApplyTakesABlessedInstance',
+        "apply takes a blessed instance");
+
+    is(
+        $exception->role->name,
+        'Bar',
+        "apply takes a blessed instance");
+
+    is(
+        $exception->param,
+        'xyz',
+        "apply takes a blessed instance");
+}
+
 done_testing;

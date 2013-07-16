@@ -443,7 +443,9 @@ sub apply {
     my ($self, $other, %args) = @_;
 
     (blessed($other))
-        || Moose->throw_error("You must pass in an blessed instance");
+        || throw_exception( ApplyTakesABlessedInstance => param => $other,
+                                                          role  => $self
+                          );
 
     my $application_class;
     if ($other->isa('Moose::Meta::Role')) {
