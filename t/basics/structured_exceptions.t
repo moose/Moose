@@ -752,8 +752,8 @@ use Try::Tiny;
     my $exception = exception {
 	package Foo;
 	use Moose;
-	sub foo {}
-	override foo => sub {};
+	sub foo2 {}
+	override foo2 => sub {};
     };
 
     like(
@@ -773,7 +773,7 @@ use Try::Tiny;
 
     is(
 	$exception->method->name,
-	'foo',
+	'foo2',
         "there is already a method named foo defined in the class, so you can't override it");
 }
 
