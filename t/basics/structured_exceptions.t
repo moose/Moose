@@ -1809,4 +1809,30 @@ use Try::Tiny;
         "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
 }
 
+{
+    {
+        package Bar;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        Bar->meta->does_role;
+    };
+
+    like(
+        $exception,
+        qr/You must supply a role name to look for/,
+        "Cannot call does_role without a role name");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::RoleNameRequiredForMooseMetaRole',
+        "Cannot call does_role without a role name");
+
+    is(
+        $exception->role->name,
+        'Bar',
+        "Cannot call does_role without a role name");
+}
+
 done_testing;
