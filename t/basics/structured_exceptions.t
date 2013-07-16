@@ -1866,4 +1866,52 @@ use Try::Tiny;
         "apply takes a blessed instance");
 }
 
+{
+    my $exception = exception {
+        Moose::Meta::Role->create("TestRole", ( 'attributes' => 'bar'));
+    };
+
+    like(
+        $exception,
+        qr/You must pass a HASH ref of attributes/,
+        "create takes a HashRef of attributes");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CreateTakesHashRefOfAttributes",
+        "create takes a HashRef of attributes");
+}
+
+{
+    my $exception = exception {
+        Moose::Meta::Role->create("TestRole", ( 'methods' => 'bar'));
+    };
+
+    like(
+        $exception,
+        qr/You must pass a HASH ref of methods/,
+        "create takes a HashRef of methods");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CreateTakesHashRefOfMethods",
+        "create takes a HashRef of methods");
+}
+
+{
+    my $exception = exception {
+        Moose::Meta::Role->create("TestRole", ('roles', 'bar'));
+    };
+
+    like(
+        $exception,
+        qr/You must pass an ARRAY ref of roles/,
+        "create takes an ArrayRef of roles");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CreateTakesArrayRefOfRoles",
+        "create takes an ArrayRef of roles");
+}
+
 done_testing;
