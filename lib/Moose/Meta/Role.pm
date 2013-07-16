@@ -422,7 +422,7 @@ sub calculate_all_roles {
 sub does_role {
     my ($self, $role) = @_;
     (defined $role)
-        || Moose->throw_error("You must supply a role name to look for");
+        || throw_exception( RoleNameRequiredForMooseMetaRole => role => $self );
     my $role_name = blessed $role ? $role->name : $role;
     # if we are it,.. then return true
     return 1 if $role_name eq $self->name;
