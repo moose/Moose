@@ -511,15 +511,21 @@ sub create {
     my %options = @args;
 
     (ref $options{attributes} eq 'HASH')
-        || confess "You must pass a HASH ref of attributes"
+        || throw_exception( CreateTakesHashRefOfAttributes => params           => \%options,
+                                                              attribute_class  => $class
+                          )
             if exists $options{attributes};
 
     (ref $options{methods} eq 'HASH')
-        || confess "You must pass a HASH ref of methods"
+        || throw_exception( CreateTakesHashRefOfMethods => params           => \%options,
+                                                           attribute_class  => $class
+                          )
             if exists $options{methods};
 
     (ref $options{roles} eq 'ARRAY')
-        || confess "You must pass an ARRAY ref of roles"
+        || throw_exception( CreateTakesArrayRefOfRoles => params           => \%options,
+                                                          attribute_class  => $class
+                          )
             if exists $options{roles};
 
     my $package      = delete $options{package};
