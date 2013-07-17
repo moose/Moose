@@ -119,4 +119,76 @@ use Moose::Util::TypeConstraints;
 	"'Foo' is not a valid base type constraint name");
 }
 
+{
+    {
+	package Foo1;
+	use Moose::Role;
+    }
+
+    my $exception = exception {
+	Moose::Util::TypeConstraints::class_type("Foo1");
+    };
+
+    like(
+        $exception,
+        qr/\QThe type constraint 'Foo1' has already been created in Moose::Role and cannot be created again in main/,
+        "there is an already defined role of name 'Foo1'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::TypeConstraintIsAlreadyCreated",
+        "there is an already defined role of name 'Foo1'");
+
+    is(
+	$exception->type->name,
+	'Foo1',
+        "there is an already defined role of name 'Foo1'");
+
+    is(
+	$exception->type->_package_defined_in,
+	'Moose::Role',
+        "there is an already defined role of name 'Foo1'");
+
+    is(
+	$exception->package_defined_in,
+	'main',
+        "there is an already defined role of name 'Foo1'");
+}
+
+{
+    {
+	package Foo2;
+	use Moose;
+    }
+
+    my $exception = exception {
+	Moose::Util::TypeConstraints::role_type("Foo2");
+    };
+
+    like(
+        $exception,
+        qr/\QThe type constraint 'Foo2' has already been created in Moose and cannot be created again in main/,
+        "there is an already defined class of name 'Foo2'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::TypeConstraintIsAlreadyCreated",
+        "there is an already defined class of name 'Foo2'");
+
+    is(
+	$exception->type->name,
+	'Foo2',
+        "there is an already defined class of name 'Foo2'");
+
+    is(
+	$exception->type->_package_defined_in,
+	'Moose',
+        "there is an already defined class of name 'Foo2'");
+
+    is(
+	$exception->package_defined_in,
+	'main',
+        "there is an already defined class of name 'Foo1'");
+}
+
 done_testing;
