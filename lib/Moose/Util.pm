@@ -262,13 +262,10 @@ sub add_method_modifier {
             $meta->$add_modifier_method( $_, $code ) for @{$args->[0]};
         }
         else {
-            $meta->throw_error(
-                sprintf(
-                    "Methods passed to %s must be provided as a list, arrayref or regex, not %s",
-                    $modifier_name,
-                    $method_modifier_type,
-                )
-            );
+            throw_exception( IllegalMethodTypeToAddMethodModifier => class_or_object => $class_or_obj,
+                                                                     modifier_name   => $modifier_name,
+                                                                     params          => $args
+                           );
         }
     }
     else {
