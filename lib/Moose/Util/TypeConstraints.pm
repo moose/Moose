@@ -94,13 +94,11 @@ sub _create_type_constraint_union {
     }
 
     ( scalar @type_constraint_names >= 2 )
-        || __PACKAGE__->_throw_error(
-        "You must pass in at least 2 type names to make a union");
+        || throw_exception("UnionTakesAtleastTwoTypeNames");
 
     my @type_constraints = map {
         find_or_parse_type_constraint($_)
-            || __PACKAGE__->_throw_error(
-            "Could not locate type constraint ($_) for the union");
+            || throw_exception( CouldNotLocateTypeConstraintForUnion => type_name => $_ );
     } @type_constraint_names;
 
     my %options = (
