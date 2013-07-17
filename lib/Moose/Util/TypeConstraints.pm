@@ -116,8 +116,7 @@ sub create_parameterized_type_constraint {
         = _parse_parameterized_type_constraint($type_constraint_name);
 
     ( defined $base_type && defined $type_parameter )
-        || __PACKAGE__->_throw_error(
-        "Could not parse type name ($type_constraint_name) correctly");
+        || throw_exception( InvalidTypeGivenToCreateParameterizedTypeConstraint => type_name => $type_constraint_name );
 
     if ( $REGISTRY->has_type_constraint($base_type) ) {
         my $base_type_tc = $REGISTRY->get_type_constraint($base_type);
@@ -127,8 +126,7 @@ sub create_parameterized_type_constraint {
         );
     }
     else {
-        __PACKAGE__->_throw_error(
-            "Could not locate the base type ($base_type)");
+        throw_exception( InvalidBaseTypeGivenToCreateParameterizedTypeConstraint => type_name => $base_type );
     }
 }
 
