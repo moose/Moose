@@ -50,4 +50,41 @@ use Moose::Util::TypeConstraints;
         "You cannot coerce a type unless coercion is supported by that type");
 }
 
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::create_type_constraint_union();
+    };
+
+    like(
+        $exception,
+        qr/You must pass in at least 2 type names to make a union/,
+	"Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::UnionTakesAtleastTwoTypeNames",
+	"Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
+}
+
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::create_type_constraint_union('foo','bar');
+    };
+
+    like(
+        $exception,
+        qr/\QCould not locate type constraint (foo) for the union/,
+	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CouldNotLocateTypeConstraintForUnion",
+	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+
+    is(
+	$exception->type_name,
+	'foo',
+	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+}
+
 done_testing;
