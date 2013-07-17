@@ -2,12 +2,7 @@ package Moose::Exception::CouldNotLocateTypeConstraintForUnion;
 
 use Moose;
 extends 'Moose::Exception';
-
-has 'type_name' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
+with 'Moose::Exception::Role::TypeConstraint';
 
 sub _build_message {
     my $self = shift;
