@@ -87,4 +87,36 @@ use Moose::Util::TypeConstraints;
 	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
 }
 
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo");
+    };
+
+    like(
+        $exception,
+        qr/\QCould not parse type name (Foo) correctly/,
+	"'Foo' is not a valid type constraint name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InvalidTypeGivenToCreateParameterizedTypeConstraint",
+	"'Foo' is not a valid type constraint name");
+}
+
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo[Int]");
+    };
+
+    like(
+        $exception,
+        qr/\QCould not locate the base type (Foo)/,
+	"'Foo' is not a valid base type constraint name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InvalidBaseTypeGivenToCreateParameterizedTypeConstraint",
+	"'Foo' is not a valid base type constraint name");
+}
+
 done_testing;
