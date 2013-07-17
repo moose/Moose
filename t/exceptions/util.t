@@ -109,4 +109,40 @@ use Try::Tiny;
         "You can only consume a module");
 }
 
+{
+    {
+	package Foo;
+	use Moose;
+    }
+
+    my $exception = exception {
+	add_method_modifier(Foo->meta, "before", [{}, sub {"before";}]);
+    };
+
+    like(
+        $exception,
+        qr/\QMethods passed to before must be provided as a list, arrayref or regex, not HASH/,
+        "we gave a HashRef to before");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::IllegalMethodTypeToAddMethodModifier",
+        "we gave a HashRef to before");
+
+    is(
+	ref( $exception->params->[0] ),
+	"HASH",
+        "we gave a HashRef to before");
+
+    is(
+	$exception->modifier_name,
+	'before',
+        "we gave a HashRef to before");
+
+    is(
+	$exception->class_or_object->name,
+	"Foo",
+        "we gave a HashRef to before");
+}
+
 done_testing;
