@@ -244,4 +244,77 @@ use Moose::Util::TypeConstraints;
         "union expects either a name & an array or only an array");
 }
 
+{
+    {
+	package Foo3;
+	use Moose;
+    }
+
+    my $exception = exception {
+	Moose::Util::TypeConstraints::type("Foo3");
+    };
+
+    like(
+        $exception,
+        qr/\QThe type constraint 'Foo3' has already been created in Moose and cannot be created again in main/,
+        "there is an already defined class of name 'Foo3'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::TypeConstraintIsAlreadyCreated",
+        "there is an already defined class of name 'Foo3'");
+
+    is(
+	$exception->type->name,
+	'Foo3',
+        "there is an already defined class of name 'Foo3'");
+
+    is(
+	$exception->type->_package_defined_in,
+	'Moose',
+        "there is an already defined class of name 'Foo3'");
+
+    is(
+	$exception->package_defined_in,
+	'main',
+        "there is an already defined class of name 'Foo3'");
+}
+
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::coerce "Foo";
+    };
+
+    like(
+        $exception,
+        qr/Cannot find type 'Foo', perhaps you forgot to load it/,
+        "'Foo' is not a valid type");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotFindType",
+        "'Foo' is not a valid type");
+}
+
+{
+    my $exception = exception {
+	Moose::Util::TypeConstraints::add_parameterizable_type "Foo";
+    };
+
+    like(
+        $exception,
+        qr/Type must be a Moose::Meta::TypeConstraint::Parameterizable not Foo/,
+        "'Foo' is not a parameterizable type");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AddParameterizableTypeTakesParameterizableType",
+        "'Foo' is not a parameterizable type");
+
+    is(
+        $exception->type_name,
+        "Foo",
+        "'Foo' is not a parameterizable type");
+}
+
 done_testing;
