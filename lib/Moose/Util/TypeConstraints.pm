@@ -455,7 +455,9 @@ sub union {
   my ( $type_name, @constraints ) = @_;
   if ( ref $type_name eq 'ARRAY' ) {
     @constraints == 0
-      || __PACKAGE__->_throw_error("union called with an array reference and additional arguments.");
+      || throw_exception( UnionCalledWithAnArrayRefAndAdditionalArgs => array => $type_name,
+                                                                        args  => \@constraints
+                        );
     @constraints = @$type_name;
     $type_name   = undef;
   }
