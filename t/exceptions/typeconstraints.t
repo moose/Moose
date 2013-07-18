@@ -430,7 +430,7 @@ use Moose::Util::TypeConstraints;
     is(
 	$exception->package_defined_in,
 	'main',
-        "there is an already defined class of name 'Foo1'");
+        "there is an already defined class of name 'Foo2'");
 }
 
 done_testing;
