@@ -21,6 +21,8 @@ use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
          'Class::MOP::Mixin::HasMethods';
 
+use Moose::Util 'throw_exception';
+
 # Creation
 
 sub initialize {
@@ -36,8 +38,7 @@ sub initialize {
     }
 
     ($package_name && !ref($package_name))
-        || confess "You must pass a package name and it cannot be blessed";
-
+        || throw_exception( InitializeTakesUnBlessedPackageName => package_name => $package_name );
     return Class::MOP::get_metaclass_by_name($package_name)
         || $class->_construct_class_instance(package => $package_name, @_);
 }
