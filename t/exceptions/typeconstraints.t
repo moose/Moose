@@ -191,4 +191,25 @@ use Moose::Util::TypeConstraints;
         "there is an already defined class of name 'Foo2'");
 }
 
+{
+    my $exception = exception {
+	subtype 'Foo';
+    };
+
+    like(
+        $exception,
+        qr/A subtype cannot consist solely of a name, it must have a parent/,
+        "no parent given to subtype");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::NoParentGivenToSubtype",
+        "no parent given to subtype");
+
+    is(
+	$exception->name,
+	'Foo',
+        "no parent given to subtype");
+}
+
 done_testing;
