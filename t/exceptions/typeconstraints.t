@@ -228,4 +228,20 @@ use Moose::Util::TypeConstraints;
         "enum expects either a name & an array or only an array");
 }
 
+{
+    my $exception = exception {
+	union [1,2,3], "foo";
+    };
+
+    like(
+        $exception,
+        qr/union called with an array reference and additional arguments/,
+        "union expects either a name & an array or only an array");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::UnionCalledWithAnArrayRefAndAdditionalArgs",
+        "union expects either a name & an array or only an array");
+}
+
 done_testing;
