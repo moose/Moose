@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use Test::Fatal;
+
+use Try::Tiny;
+
+use Moose::Util::TypeConstraints;
+use Class::MOP::Class;
+
+{
+    my $exception =  exception {
+	my $class = Class::MOP::Class::initialize;
+    };
+
+    like(
+        $exception,
+        qr/You must pass a package name and it cannot be blessed/,
+        "no package name given to initialize");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InitializeTakesUnBlessedPackageName",
+        "no package name given to initialize");
+}
+
+done_testing;
