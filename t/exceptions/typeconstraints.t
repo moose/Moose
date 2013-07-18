@@ -212,4 +212,20 @@ use Moose::Util::TypeConstraints;
         "no parent given to subtype");
 }
 
+{
+    my $exception = exception {
+	enum [1,2,3], "foo";
+    };
+
+    like(
+        $exception,
+        qr/\Qenum called with an array reference and additional arguments. Did you mean to parenthesize the enum call's parameters?/,
+        "enum expects either a name & an array or only an array");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs",
+        "enum expects either a name & an array or only an array");
+}
+
 done_testing;
