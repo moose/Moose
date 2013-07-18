@@ -329,9 +329,7 @@ sub type {
 
 sub subtype {
     if ( @_ == 1 && !ref $_[0] ) {
-        __PACKAGE__->_throw_error(
-            'A subtype cannot consist solely of a name, it must have a parent'
-        );
+        throw_exception( NoParentGivenToSubtype => name => $_[0] );
     }
 
     # The blessed check is mostly to accommodate MooseX::Types, which
