@@ -96,7 +96,7 @@ use Try::Tiny;
             use Moose;
             use DateTime;
             with 'Not::A::Real::Package';
-        }, qr!Can't locate Not/A/Real/Package\.pm!,
+        }, qr!You can only consume roles, Not::A::Real::Package is not a Moose role!,
         "You can't consume a class which doesn't exist");
 
     like(
