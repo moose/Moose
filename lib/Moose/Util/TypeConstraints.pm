@@ -540,17 +540,14 @@ sub _create_type_constraint ($$$;$) {
         my $type = $REGISTRY->get_type_constraint($name);
 
         ( $type->_package_defined_in eq $pkg_defined_in )
-            || _confess(
-                  "The type constraint '$name' has already been created in "
-                . $type->_package_defined_in
-                . " and cannot be created again in "
-                . $pkg_defined_in )
+            || throw_exception( TypeConstraintIsAlreadyCreated => package_defined_in => $pkg_defined_in,
+                                                                  type               => $type
+                              )
             if defined $type;
 
         if( $name !~ /^[\w:\.]+$/ ) {
 	    throw_exception( InvalidNameForType => name => $name );
         }
-
     }
 
     my %opts = (
@@ -586,8 +583,8 @@ sub _install_type_coercions ($$) {
     my ( $type_name, $coercion_map ) = @_;
     my $type = find_type_constraint($type_name);
     ( defined $type )
-        || __PACKAGE__->_throw_error(
-        "Cannot find type '$type_name', perhaps you forgot to load it");
+        || throw_exception( CannotFindType => type_name => $type_name );
+
     if ( $type->has_coercion ) {
         $type->coercion->add_type_coercions(@$coercion_map);
     }
@@ -736,9 +733,8 @@ sub add_parameterizable_type {
     my $type = shift;
     ( blessed $type
             && $type->isa('Moose::Meta::TypeConstraint::Parameterizable') )
-        || __PACKAGE__->_throw_error(
-        "Type must be a Moose::Meta::TypeConstraint::Parameterizable not $type"
-        );
+        || throw_exception( AddParameterizableTypeTakesParameterizableType => type_name => $type );
+
     push @PARAMETERIZABLE_TYPES => $type;
 }
 
