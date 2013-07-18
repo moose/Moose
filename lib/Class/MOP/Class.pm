@@ -419,15 +419,21 @@ sub create {
     my %options = @args;
 
     (ref $options{superclasses} eq 'ARRAY')
-        || confess "You must pass an ARRAY ref of superclasses"
+        || throw_exception( CreateMOPClassTakesArrayRefOfSuperclasses => class  => $class,
+                                                                         params => \%options
+                          )
             if exists $options{superclasses};
 
     (ref $options{attributes} eq 'ARRAY')
-        || confess "You must pass an ARRAY ref of attributes"
+        || throw_exception( CreateMOPClassTakesArrayRefOfAttributes => class  => $class,
+                                                                       params => \%options
+                          )
             if exists $options{attributes};
 
     (ref $options{methods} eq 'HASH')
-        || confess "You must pass a HASH ref of methods"
+        || throw_exception( CreateMOPClassTakesHashRefOfMethods => class  => $class,
+                                                                   params => \%options
+                          )
             if exists $options{methods};
 
     my $package      = delete $options{package};
