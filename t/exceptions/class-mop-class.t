@@ -157,4 +157,32 @@ use Class::MOP::Class;
         "no method name given to find_next_method_by_name");
 }
 
+{
+    my $class = Class::MOP::Class->create("Foo");
+    my $foo = "foo";
+    my $exception =  exception {
+	$class->clone_object( $foo );
+    };
+
+    like(
+        $exception,
+        qr/\QYou must pass an instance of the metaclass (Foo), not ($foo)/,
+	"clone_object expects an instance of the metaclass");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CloneObjectExpectsAnInstanceOfMetaclass",
+	"clone_object expects an instance of the metaclass");
+
+    is(
+	$exception->class->name,
+	'Foo',
+	"clone_object expects an instance of the metaclass");
+
+   is(
+	$exception->instance,
+	'foo',
+	"clone_object expects an instance of the metaclass");
+}
+
 done_testing;
