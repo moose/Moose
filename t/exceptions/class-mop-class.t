@@ -91,4 +91,70 @@ use Class::MOP::Class;
         "a Hash is of methods is passed");
 }
 
+{
+    my $exception =  exception {
+        my $class = Class::MOP::Class->create("Foo");
+        $class->find_method_by_name;
+    };
+
+    like(
+        $exception,
+        qr/You must define a method name to find/,
+        "no method name given to find_method_by_name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameNotGiven",
+        "no method name given to find_method_by_name");
+
+    is(
+	$exception->class->name,
+	'Foo',
+        "no method name given to find_method_by_name");
+}
+
+{
+    my $exception =  exception {
+        my $class = Class::MOP::Class->create("Foo");
+        $class->find_all_methods_by_name;
+    };
+
+    like(
+        $exception,
+        qr/You must define a method name to find/,
+        "no method name given to find_all_methods_by_name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameNotGiven",
+        "no method name given to find_all_methods_by_name");
+
+    is(
+	$exception->class->name,
+	'Foo',
+        "no method name given to find_all_methods_by_name");
+}
+
+{
+    my $exception =  exception {
+        my $class = Class::MOP::Class->create("Foo");
+        $class->find_next_method_by_name;
+    };
+
+    like(
+        $exception,
+        qr/You must define a method name to find/,
+        "no method name given to find_next_method_by_name");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameNotGiven",
+        "no method name given to find_next_method_by_name");
+
+    is(
+	$exception->class->name,
+	'Foo',
+        "no method name given to find_next_method_by_name");
+}
+
 done_testing;
