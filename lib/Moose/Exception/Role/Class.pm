@@ -5,7 +5,7 @@ use Moose::Role;
 
 has 'class' => (
     is        => 'rw',
-    isa       => 'Moose::Meta::Class',
+    isa       => 'Class::MOP::Class',
     lazy      => 1,
     builder   => '_build_class',
     predicate => 'is_class_set',
