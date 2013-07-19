@@ -764,8 +764,9 @@ sub clone_object {
     my $class    = shift;
     my $instance = shift;
     (blessed($instance) && $instance->isa($class->name))
-        || confess "You must pass an instance of the metaclass (" . (ref $class ? $class->name : $class) . "), not ($instance)";
-
+        || throw_exception( CloneObjectExpectsAnInstanceOfMetaclass => class    => $class,
+                                                                       instance => $instance
+                          );
     # NOTE:
     # we need to protect the integrity of the
     # Class::MOP::Class singletons here, they
