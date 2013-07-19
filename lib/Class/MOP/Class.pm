@@ -1119,7 +1119,7 @@ sub _method_lookup_order {
 sub find_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || confess "You must define a method name to find";
+        || throw_exception( MethodNameNotGiven => class => $self );
     foreach my $class ($self->_method_lookup_order) {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);
         return $method if defined $method;
@@ -1148,7 +1148,7 @@ sub get_all_method_names {
 sub find_all_methods_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || confess "You must define a method name to find";
+        || throw_exception( MethodNameNotGiven => class => $self );
     my @methods;
     foreach my $class ($self->_method_lookup_order) {
         # fetch the meta-class ...
@@ -1165,7 +1165,7 @@ sub find_all_methods_by_name {
 sub find_next_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || confess "You must define a method name to find";
+        || throw_exception( MethodNameNotGiven => class => $self );
     my @cpl = ($self->_method_lookup_order);
     shift @cpl; # discard ourselves
     foreach my $class (@cpl) {
