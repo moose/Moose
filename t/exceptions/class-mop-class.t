@@ -330,4 +330,107 @@ use Class::MOP::Class;
 	"no method name passed to method modifier");
 }
 
+{
+    my $exception =  exception {
+	my $class = Class::MOP::Class->_construct_class_instance;
+    };
+
+    like(
+        $exception,
+        qr/You must pass a package name/,
+        "no package name given to _construct_class_instance");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ConstructClassInstanceTakesPackageName",
+        "no package name given to _construct_class_instance");
+}
+
+{
+    my $class = Class::MOP::Class->create("Foo");
+    my $exception =  exception {
+	$class->add_before_method_modifier("foo");
+    };
+
+    like(
+        $exception,
+        qr/The method 'foo' was not found in the inheritance hierarchy for Foo/,
+	'method "foo" is not defined in class "Foo"');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameNotFoundInInheritanceHierarchy",
+	'method "foo" is not defined in class "Foo"');
+
+    is(
+	$exception->class->name,
+	'Foo',
+	'method "foo" is not defined in class "Foo"');
+
+   is(
+	$exception->method_name,
+	'foo',
+	'method "foo" is not defined in class "Foo"');
+}
+
+{
+    {
+	package Bar;
+	use Moose;
+    }
+    my $bar = Bar->new;
+    my $class = Class::MOP::Class->create("Foo");
+    my $exception =  exception {
+	$class->new_object( ( __INSTANCE__ => $bar ) );
+    };
+
+    like(
+        $exception,
+        qr/\QObjects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but $bar is not a Foo/,
+	"__INSTANCE__ is not blessed correctly");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InstanceBlessedIntoWrongClass",
+	"__INSTANCE__ is not blessed correctly");
+
+    is(
+	$exception->class->name,
+	'Foo',
+	"__INSTANCE__ is not blessed correctly");
+
+   is(
+	$exception->instance,
+	$bar,
+	"__INSTANCE__ is not blessed correctly");
+}
+
+{
+    my $class = Class::MOP::Class->create("Foo");
+    my $array = [1,2,3];
+    my $exception =  exception {
+	$class->new_object( ( __INSTANCE__ => $array ) );
+    };
+
+    like(
+        $exception,
+        qr/\QThe __INSTANCE__ parameter must be a blessed reference, not $array/,
+	"__INSTANCE__ is not a blessed reference");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InstanceMustBeABlessedReference",
+	"__INSTANCE__ is not a blessed reference");
+
+    is(
+	$exception->class->name,
+	'Foo',
+	"__INSTANCE__ is not a blessed reference");
+
+   is(
+	$exception->instance,
+	$array,
+	"__INSTANCE__ is not a blessed reference");
+}
+
 done_testing;
