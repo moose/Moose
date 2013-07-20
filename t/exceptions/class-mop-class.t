@@ -433,4 +433,32 @@ use Class::MOP::Class;
 	"__INSTANCE__ is not a blessed reference");
 }
 
+{
+    my $array = [1, 2, 3];
+    my $class = Class::MOP::Class->create("Foo");
+    my $exception =  exception {
+	$class->_clone_instance($array);
+    };
+
+    like(
+        $exception,
+        qr/\QYou can only clone instances, ($array) is not a blessed instance/,
+	"array reference was passed to _clone_instance instead of a blessed instance");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::OnlyInstancesCanBeCloned",
+	"array reference was passed to _clone_instance instead of a blessed instance");
+
+    is(
+	$exception->class->name,
+	"Foo",
+	"array reference was passed to _clone_instance instead of a blessed instance");
+
+    is(
+	$exception->instance,
+	$array,
+	"array reference was passed to _clone_instance instead of a blessed instance");
+}
+
 done_testing;
