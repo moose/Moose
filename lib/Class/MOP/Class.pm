@@ -781,7 +781,10 @@ sub clone_object {
 sub _clone_instance {
     my ($class, $instance, %params) = @_;
     (blessed($instance))
-        || confess "You can only clone instances, ($instance) is not a blessed instance";
+        || throw_exception( OnlyInstancesCanBeCloned => class    => $class,
+                                                        instance => $instance,
+                                                        params   => \%params
+                          );
     my $meta_instance = $class->get_meta_instance();
     my $clone = $meta_instance->clone_instance($instance);
     foreach my $attr ($class->get_all_attributes()) {
