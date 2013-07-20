@@ -73,7 +73,7 @@ sub _construct_class_instance {
     my $options      = @_ == 1 ? $_[0] : {@_};
     my $package_name = $options->{package};
     (defined $package_name && $package_name)
-        || confess "You must pass a package name";
+        || throw_exception("ConstructClassInstanceTakesPackageName");
     # NOTE:
     # return the metaclass if we have it cached,
     # and it is still defined (it has not been
@@ -510,14 +510,17 @@ sub _construct_instance {
     my $instance;
     if (my $instance_class = blessed($params->{__INSTANCE__})) {
         ($instance_class eq $class->name)
-            || confess "Objects passed as the __INSTANCE__ parameter must "
-                     . "already be blessed into the correct class, but "
-                     . "$params->{__INSTANCE__} is not a " . $class->name;
+            || throw_exception( InstanceBlessedIntoWrongClass => class    => $class,
+                                                                 params   => $params,
+                                                                 instance => $params->{__INSTANCE__}
+                              );
         $instance = $params->{__INSTANCE__};
     }
     elsif (exists $params->{__INSTANCE__}) {
-        confess "The __INSTANCE__ parameter must be a blessed reference, not "
-              . $params->{__INSTANCE__};
+        throw_exception( InstanceMustBeABlessedReference => class    => $class,
+                                                            params   => $params,
+                                                            instance => $params->{__INSTANCE__}
+                       );
     }
     else {
         $instance = $meta_instance->create_instance();
@@ -1054,7 +1057,9 @@ sub _method_lookup_order {
             $method = $self->find_next_method_by_name($method_name);
             # die if it does not exist
             (defined $method)
-                || confess "The method '$method_name' was not found in the inheritance hierarchy for " . $self->name;
+                || throw_exception( MethodNameNotFoundInInheritanceHierarchy => class       => $self,
+                                                                                method_name => $method_name
+                                  );
             # and now make sure to wrap it
             # even if it is already wrapped
             # because we need a new sub ref
