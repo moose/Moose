@@ -185,4 +185,149 @@ use Class::MOP::Class;
 	"clone_object expects an instance of the metaclass");
 }
 
+{
+    {
+	package Foo;
+	use Moose;
+    }
+    {
+	package Foo2;
+	use Moose;
+    }
+    my $foo2 = Foo2->new;
+    my $exception =  exception {
+	Foo->meta->rebless_instance( $foo2 );
+    };
+
+    like(
+        $exception,
+        qr/\QYou may rebless only into a subclass of (Foo2), of which (Foo) isn't./,
+	"you can rebless only into subclass");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CanReblessOnlyIntoASubclass",
+	"you can rebless only into subclass");
+
+    is(
+	$exception->class->name,
+	'Foo',
+	"you can rebless only into subclass");
+
+   is(
+	$exception->instance,
+	$foo2,
+	"you can rebless only into subclass");
+}
+
+{
+    {
+	package Foo;
+	use Moose;
+    }
+    {
+	package Foo2;
+	use Moose;
+    }
+    my $foo = Foo->new;
+    my $exception =  exception {
+	Foo2->meta->rebless_instance_back( $foo );
+    };
+
+    like(
+        $exception,
+        qr/\QYou may rebless only into a superclass of (Foo), of which (Foo2) isn't./,
+	"you can rebless only into superclass");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CanReblessOnlyIntoASuperclass",
+	"you can rebless only into superclass");
+
+    is(
+	$exception->instance,
+	$foo,
+	"you can rebless only into superclass");
+
+   is(
+	$exception->class->name,
+	"Foo2",
+	"you can rebless only into superclass");
+}
+
+{
+    {
+	package Foo;
+	use Moose;
+    }
+    my $exception =  exception {
+	Foo->meta->add_before_method_modifier;
+    };
+
+    like(
+        $exception,
+        qr/You must pass in a method name/,
+	"no method name passed to method modifier");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodModifierNeedsMethodName",
+	"no method name passed to method modifier");
+
+    is(
+	$exception->class->name,
+	"Foo",
+	"no method name passed to method modifier");
+}
+
+{
+    {
+	package Foo;
+	use Moose;
+    }
+    my $exception =  exception {
+	Foo->meta->add_after_method_modifier;
+    };
+
+    like(
+        $exception,
+        qr/You must pass in a method name/,
+	"no method name passed to method modifier");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodModifierNeedsMethodName",
+	"no method name passed to method modifier");
+
+    is(
+	$exception->class->name,
+	"Foo",
+	"no method name passed to method modifier");
+}
+
+{
+    {
+	package Foo;
+	use Moose;
+    }
+    my $exception =  exception {
+	Foo->meta->add_around_method_modifier;
+    };
+
+    like(
+        $exception,
+        qr/You must pass in a method name/,
+	"no method name passed to method modifier");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodModifierNeedsMethodName",
+	"no method name passed to method modifier");
+
+    is(
+	$exception->class->name,
+	"Foo",
+	"no method name passed to method modifier");
+}
+
 done_testing;
