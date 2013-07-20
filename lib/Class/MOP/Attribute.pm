@@ -12,6 +12,8 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
 
+use Moose::Util 'throw_exception';
+
 # NOTE: (meta-circularity)
 # This method will be replaced in the
 # boostrap section of Class::MOP, by
@@ -30,7 +32,9 @@ sub new {
     my $name = $options{name};
 
     (defined $name)
-        || confess "You must provide a name for the attribute";
+        || throw_exception( MOPAttributeNewNeedsAttributeName => class  => $class,
+                                                                 params => \%options
+                          );
 
     $options{init_arg} = $name
         if not exists $options{init_arg};
