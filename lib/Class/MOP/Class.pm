@@ -822,7 +822,10 @@ sub rebless_instance {
 
     my $old_class = $old_metaclass ? $old_metaclass->name : blessed($instance);
     $self->name->isa($old_class)
-        || confess "You may rebless only into a subclass of ($old_class), of which (". $self->name .") isn't.";
+        || throw_exception( CanReblessOnlyIntoASubclass => class    => $self,
+                                                           instance => $instance,
+                                                           params   => \%params
+                          );
 
     $self->_force_rebless_instance($_[1], %params);
 
@@ -832,14 +835,12 @@ sub rebless_instance {
 sub rebless_instance_back {
     my ( $self, $instance ) = @_;
     my $old_metaclass = Class::MOP::class_of($instance);
-
     my $old_class
         = $old_metaclass ? $old_metaclass->name : blessed($instance);
     $old_class->isa( $self->name )
-        || confess
-        "You may rebless only into a superclass of ($old_class), of which ("
-        . $self->name
-        . ") isn't.";
+        || throw_exception( CanReblessOnlyIntoASuperclass => class    => $self,
+                                                             instance => $instance,
+                          );
 
     $self->_force_rebless_instance($_[1]);
 
@@ -1076,7 +1077,7 @@ sub _method_lookup_order {
     sub add_before_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || confess "You must pass in a method name";
+            || throw_exception( MethodModifierNeedsMethodName => class => $self );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_before_modifier(
             subname(':before' => $method_modifier)
@@ -1086,7 +1087,7 @@ sub _method_lookup_order {
     sub add_after_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || confess "You must pass in a method name";
+            || throw_exception( MethodModifierNeedsMethodName => class => $self );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_after_modifier(
             subname(':after' => $method_modifier)
@@ -1096,7 +1097,7 @@ sub _method_lookup_order {
     sub add_around_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || confess "You must pass in a method name";
+            || throw_exception( MethodModifierNeedsMethodName => class => $self );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_around_modifier(
             subname(':around' => $method_modifier)
