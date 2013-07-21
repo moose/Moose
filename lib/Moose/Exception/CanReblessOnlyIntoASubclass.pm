@@ -2,13 +2,7 @@ package Moose::Exception::CanReblessOnlyIntoASubclass;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::Class', 'Moose::Exception::Role::Instance';
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
-    required => 1,
-);
+with 'Moose::Exception::Role::ParamsHash', 'Moose::Exception::Role::Class', 'Moose::Exception::Role::Instance';
 
 sub _build_message {
     my $self = shift;

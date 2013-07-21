@@ -2,6 +2,7 @@ package Moose::Exception::IllegalInheritedOptions;
 
 use Moose;
 extends 'Moose::Exception';
+with 'Moose::Exception::Role::ParamsHash';
 
 has 'illegal_options' => (
     is       => 'ro',
@@ -9,12 +10,6 @@ has 'illegal_options' => (
     handles  => {
 	_join_options => 'join',
     },
-    required => 1,
-);
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
     required => 1,
 );
 
