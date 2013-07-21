@@ -2,12 +2,7 @@ package Moose::Exception::RolesInCreateTakesAnArrayRef;
 
 use Moose;
 extends 'Moose::Exception';
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
-    required => 1,
-);
+with 'Moose::Exception::Role::ParamsHash';
 
 sub _build_message {
     my $self = shift;
