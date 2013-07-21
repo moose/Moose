@@ -149,7 +149,7 @@ sub init_meta {
     my %args = @_;
 
     my $class = $args{for_class}
-        or throw_exception( InitMetaRequiresClass => args => \%args );
+        or throw_exception( InitMetaRequiresClass => params => \%args );
 
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
