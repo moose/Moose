@@ -49,12 +49,17 @@ sub new {
             if exists $options{default};
     } else {
         ($class->is_default_a_coderef(\%options))
-            || confess("References are not allowed as default values, you must ".
-                       "wrap the default of '$name' in a CODE reference (ex: sub { [] } and not [])")
+            || throw_exception( ReferencesAreNotAllowedAsDefault => class          => $class,
+                                                                    params         => \%options,
+                                                                    attribute_name => $options{name}
+                              )
                 if exists $options{default} && ref $options{default};
     }
+
     if( $options{required} and not( defined($options{builder}) || defined($options{init_arg}) || exists $options{default} ) ) {
-        confess("A required attribute must have either 'init_arg', 'builder', or 'default'");
+        throw_exception( RequiredAttributeLacksInitialization => class  => $class,
+                                                                 params => \%options
+                       );
     }
 
     $class->_new(\%options);
