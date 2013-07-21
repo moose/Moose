@@ -11,8 +11,8 @@ has 'class' => (
 );
 
 has 'attribute_name' => (
-    is        => 'ro',
-    isa       => 'Str',
+    is       => 'ro',
+    isa      => 'Str',
     required => 1
 );
 
