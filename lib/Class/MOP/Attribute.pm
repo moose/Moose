@@ -39,9 +39,13 @@ sub new {
     $options{init_arg} = $name
         if not exists $options{init_arg};
     if(exists $options{builder}){
-        confess("builder must be a defined scalar value which is a method name")
+        throw_exception( BuilderMustBeAMethodName => class  => $class,
+                                                     params => \%options
+                       )
             if ref $options{builder} || !(defined $options{builder});
-        confess("Setting both default and builder is not allowed.")
+        throw_exception( BothBuilderAndDefaultAreNotAllowed => class  => $class,
+                                                               params => \%options
+                       )
             if exists $options{default};
     } else {
         ($class->is_default_a_coderef(\%options))
