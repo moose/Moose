@@ -2,13 +2,7 @@ package Moose::Exception::InstanceMustBeABlessedReference;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::Class';
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
-    required => 1
-);
+with 'Moose::Exception::Role::ParamsHash', 'Moose::Exception::Role::Class';
 
 has 'instance' => (
     is       => 'ro',

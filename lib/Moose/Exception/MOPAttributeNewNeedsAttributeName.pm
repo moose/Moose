@@ -2,16 +2,11 @@ package Moose::Exception::MOPAttributeNewNeedsAttributeName;
 
 use Moose;
 extends 'Moose::Exception';
+with 'Moose::Exception::Role::ParamsHash';
 
 has 'class' => (
     is       => 'ro',
     isa      => 'Str',
-    required => 1
-);
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
     required => 1
 );
 

@@ -1,12 +1,7 @@
 package Moose::Exception::Role::RoleForCreateMOPClass;
 
 use Moose::Role;
-
-has 'params' => (
-    is       => 'ro',
-    isa      => 'HashRef',
-    required => 1,
-);
+with 'Moose::Exception::Role::ParamsHash';
 
 has 'class' => (
     is       => 'ro',
