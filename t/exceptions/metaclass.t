@@ -15,8 +15,8 @@ use Try::Tiny;
     }
 
     my $exception = exception {
-	require metaclass;
-	metaclass->import( ("Foo") );
+        require metaclass;
+        metaclass->import( ("Foo") );
     };
 
     like(
