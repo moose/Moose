@@ -11,6 +11,8 @@ use Try::Tiny;
 
 use Class::MOP;
 
+use Moose::Util 'throw_exception';
+
 sub import {
     my ( $class, @args ) = @_;
 
@@ -27,7 +29,7 @@ sub import {
     }
 
     ($metaclass->isa('Class::MOP::Class'))
-        || confess "The metaclass ($metaclass) must be derived from Class::MOP::Class";
+        || throw_exception( MetaclassMustBeDerivedFromClassMOPClass => class_name => $metaclass );
 
     # make sure the custom metaclasses get loaded
     foreach my $key (grep { /_(?:meta)?class$/ } keys %options) {
