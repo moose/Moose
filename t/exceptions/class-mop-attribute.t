@@ -6,10 +6,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Try::Tiny;
-
-use Moose::Util::TypeConstraints;
-use Class::MOP::Attribute;
+use Moose();
 
 {
     my $exception =  exception {
