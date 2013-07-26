@@ -144,7 +144,9 @@ sub initialize_instance_slot {
             );
         }
         else {
-            confess(ref($instance)." does not support builder method '". $self->{'builder'} ."' for attribute '" . $self->name . "'");
+            throw_exception( BuilderMethodNotSupportedForAttribute => attribute => $self,
+                                                                      instance  => $instance
+                           );
         }
     }
 }
@@ -245,7 +247,9 @@ sub slots { (shift)->name }
 sub attach_to_class {
     my ($self, $class) = @_;
     (blessed($class) && $class->isa('Class::MOP::Class'))
-        || confess "You must pass a Class::MOP::Class instance (or a subclass)";
+        || throw_exception( AttachToClassNeedsAClassMOPClassInstanceOrASubclass => attribute => $self,
+                                                                                   class     => $class
+                          );
     weaken($self->{'associated_class'} = $class);
 }
 
@@ -371,7 +375,11 @@ sub _process_accessors {
 
     if (ref($accessor)) {
         (ref($accessor) eq 'HASH')
-            || confess "bad accessor/reader/writer/predicate/clearer format, must be a HASH ref";
+            || throw_exception( BadOptionFormat => attribute    => $self,
+                                                   option_value => $accessor,
+                                                   option_name  => $type
+                              );
+
         my ($name, $method) = %{$accessor};
 
         $method_ctx->{description} = $self->_accessor_description($name, $type);
@@ -404,7 +412,11 @@ sub _process_accessors {
             );
         }
         catch {
-            confess "Could not create the '$type' method for " . $self->name . " because : $_";
+            throw_exception( CouldNotCreateMethod => attribute    => $self,
+                                                     option_value => $accessor,
+                                                     option_name  => $type,
+                                                     error        => $_
+                           );
         };
         $self->associate_method($method);
         return ($accessor, $method);
