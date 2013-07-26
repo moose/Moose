@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use Test::Fatal;
+
+use Try::Tiny;
+
+use Class::MOP::Attribute;
+

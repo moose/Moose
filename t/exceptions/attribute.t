@@ -6,8 +6,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Try::Tiny;
-
 # tests for AccessorMustReadWrite
 {
     use Moose;
