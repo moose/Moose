@@ -5,6 +5,8 @@ use warnings;
 
 use parent 'Moose::Meta::Method';
 
+use Moose::Util 'throw_exception';
+
 sub new {
     my ( $class, %args ) = @_;
 
@@ -19,7 +21,10 @@ sub new {
     my $super = $args{class}->find_next_method_by_name($name);
 
     (defined $super)
-        || $class->throw_error("You cannot override '$name' because it has no super method", data => $name);
+        || throw_exception( CannotOverrideNoSuperMethod => class       => $class,
+                                                           params      => \%args,
+                                                           method_name => $name
+                          );
 
     my $super_body = $super->body;
 
