@@ -6,8 +6,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Try::Tiny;
-
 use Moose::Meta::Role::Application;
 
 {

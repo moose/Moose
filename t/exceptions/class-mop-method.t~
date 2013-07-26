@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Test::More;
+use Test::Fatal;
+
+use Try::Tiny;
+
+use Class::MOP::Method;
+
+{
+    my $exception =  exception {
+	Class::MOP::Method->wrap( "foo", ( name => "Bar"));
+    };
+
+    like(
+        $exception,
+        qr/\QYou must supply a CODE reference to bless, not (foo)/,
+	"first argument to wrap should be a CODE ref");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::WrapTakesACodeRefToBless",
+	"first argument to wrap should be a CODE ref");
+}
+
+done_testing;

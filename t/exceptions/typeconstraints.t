@@ -6,7 +6,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Try::Tiny;
 use Moose::Util::TypeConstraints;
 
 # tests for type/subtype name contain invalid characters

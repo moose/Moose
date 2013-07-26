@@ -6,8 +6,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Try::Tiny;
-
 {
     my $exception = exception {
         package Bar;

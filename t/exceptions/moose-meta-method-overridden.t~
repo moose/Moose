@@ -6,6 +6,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Try::Tiny;
+
 {
     my $exception =  exception {
         package Foo;
@@ -25,14 +27,15 @@ use Test::Fatal;
         "Foo class is not extending any class");
 
     is(
-	$exception->class,
-	"Moose::Meta::Method::Overridden",
+	$exception->class->name,
+	"Foo",
         "Foo class is not extending any class");
-
+	
     is(
 	$exception->method_name,
 	"foo",
         "Foo class is not extending any class");
+	
 }
 
 done_testing;

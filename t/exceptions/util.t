@@ -8,8 +8,6 @@ use Test::Fatal;
 
 use Moose::Util qw/apply_all_roles add_method_modifier/;
 
-use Try::Tiny;
-
 {
     {
         package TestClass;
