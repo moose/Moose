@@ -9,6 +9,8 @@ use Scalar::Util 'weaken', 'reftype', 'blessed';
 
 use parent 'Class::MOP::Object';
 
+use Moose::Util 'throw_exception';
+
 # NOTE:
 # if poked in the right way,
 # they should act like CODE refs.
@@ -31,11 +33,17 @@ sub wrap {
         return $method;
     }
     elsif (!ref $code || 'CODE' ne reftype($code)) {
-        confess "You must supply a CODE reference to bless, not (" . ($code || 'undef') . ")";
+        throw_exception( WrapTakesACodeRefToBless => params => \%params,
+                                                     class  => $class,
+                                                     code   => $code
+                       );
     }
 
     ($params{package_name} && $params{name})
-        || confess "You must supply the package_name and name parameters";
+        || throw_exception( PackageNameAndNameParamsNotGivenToWrap => params => \%params,
+                                                                      class  => $class,
+                                                                      code   => $code
+                          );
 
     my $self = $class->_new(\%params);
 
