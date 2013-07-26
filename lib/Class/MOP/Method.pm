@@ -4,7 +4,6 @@ package Class::MOP::Method;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'weaken', 'reftype', 'blessed';
 
 use parent 'Class::MOP::Object';
