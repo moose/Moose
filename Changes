@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1004 Fri, Jul 26, 2013
+
   [BUG FIXES]
 
   * 2.1003 was released with some bad metadata, which caused the prereq test
