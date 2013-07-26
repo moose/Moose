@@ -4,7 +4,7 @@ use Moose::Role;
 
 has 'attribute' => (
     is       => 'ro',
-    isa      => 'Moose::Meta::Attribute',
+    isa      => 'Class::MOP::Attribute',
     required => 1,
 );
 
