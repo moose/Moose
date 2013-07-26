@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use metaclass;
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('method_exclusions' => (
     init_arg => '-excludes',
     reader   => 'get_method_exclusions',
@@ -59,14 +61,14 @@ sub apply {
     $self->apply_after_method_modifiers(@_);
 }
 
-sub check_role_exclusions           { Carp::croak "Abstract Method" }
-sub check_required_methods          { Carp::croak "Abstract Method" }
-sub check_required_attributes       { Carp::croak "Abstract Method" }
+sub check_role_exclusions           { throw_exception( "CannotCallAnAbstractMethod" ); }
+sub check_required_methods          { throw_exception( "CannotCallAnAbstractMethod" ); }
+sub check_required_attributes       { throw_exception( "CannotCallAnAbstractMethod" ); }
 
-sub apply_attributes                { Carp::croak "Abstract Method" }
-sub apply_methods                   { Carp::croak "Abstract Method" }
-sub apply_override_method_modifiers { Carp::croak "Abstract Method" }
-sub apply_method_modifiers          { Carp::croak "Abstract Method" }
+sub apply_attributes                { throw_exception( "CannotCallAnAbstractMethod" ); }
+sub apply_methods                   { throw_exception( "CannotCallAnAbstractMethod" ); }
+sub apply_override_method_modifiers { throw_exception( "CannotCallAnAbstractMethod" ); }
+sub apply_method_modifiers          { throw_exception( "CannotCallAnAbstractMethod" ); }
 
 sub apply_before_method_modifiers   { (shift)->apply_method_modifiers('before' => @_) }
 sub apply_around_method_modifiers   { (shift)->apply_method_modifiers('around' => @_) }
