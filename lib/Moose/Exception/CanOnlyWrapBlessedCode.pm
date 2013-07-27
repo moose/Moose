@@ -13,7 +13,7 @@ has 'class' => (
 has 'code' => (
     is       => 'ro',
     isa      => 'Any',
-    required => 1   
+    required => 1
 );
 
 sub _build_message {
