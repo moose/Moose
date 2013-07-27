@@ -13,8 +13,8 @@ use Moose::Util::TypeConstraints;
     as 'Int';
 
     my $exception = exception {
-        coerce 'typeInt', 
-	from 'xyz';
+        coerce 'typeInt',
+        from 'xyz';
     };
 
     like(
