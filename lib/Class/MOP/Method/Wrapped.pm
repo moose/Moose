@@ -4,7 +4,6 @@ package Class::MOP::Method::Wrapped;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Method';
