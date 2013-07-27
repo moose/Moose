@@ -8,8 +8,8 @@ use Test::Fatal;
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
 
     my $exception = exception {
