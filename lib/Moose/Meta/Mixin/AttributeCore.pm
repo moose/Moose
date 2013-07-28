@@ -106,9 +106,39 @@ __PACKAGE__->meta->add_attribute(
 
 sub _theoretically_associated_method_names {
     my $self = shift;
+
+    # An attribute attached to a class; should have all
+    # associated methods recorded in the associated_methods array.
+    if ($self->isa('Class::MOP::Attribute')) {
+        return map { $_->name } @{ $self->associated_methods };
+    }
+
+    # Moose role attribute with no traits; has predictable accessors.
+    if (ref($self) eq 'Moose::Meta::Role::Attribute'
+    and !@{ $self->original_options->{traits} || [] }) {
+        return $self->_default_associated_method_names(@_);
+    }
+
+    # Otherwise compose the attribute into an anonymous class and see
+    # what happens!
+    if ($self->isa('Moose::Meta::Role::Attribute')) {
+        my $anon_class = 'Moose::Meta::Class'->create_anon_class;
+        my $concrete   = $self->attribute_for_class($anon_class);
+        $anon_class->add_attribute($concrete);
+        return map { $_->name } @{ $concrete->associated_methods };
+    }
+
+    # We should never reach here (I ran through the Moose test suite
+    # with a die statement at this point and never hit it), but just
+    # in case, fall back to default behaviour.
+    return $self->_default_associated_method_names(@_);
+}
+
+sub _default_associated_method_names {
+    my $self = shift;
     my @methods;
 
-    if ($self->_is_metadata =~ /^r/) {
+    if ($self->_is_metadata ne 'bare') {
         push @methods, $self->name;
     }
 
