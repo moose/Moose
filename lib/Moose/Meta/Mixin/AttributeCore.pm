@@ -113,7 +113,7 @@ sub _theoretically_associated_method_names {
         return map { $_->name } @{ $self->associated_methods };
     }
 
-    # Otherwise compose the attribute into an anonymous class and see
+    # Role attribute: compose into an anonymous class and see
     # what happens!
     if ($self->isa('Moose::Meta::Role::Attribute')) {
         my $anon_class = 'Moose::Meta::Class'->create_anon_class;
