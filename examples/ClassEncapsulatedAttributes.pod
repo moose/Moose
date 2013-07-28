@@ -9,9 +9,9 @@ our $VERSION = '0.06';
 
 use base 'Class::MOP::Class';
 
-sub initialize { 
-    (shift)->SUPER::initialize(@_, 
-        # use the custom attribute metaclass here 
+sub initialize {
+    (shift)->SUPER::initialize(@_,
+        # use the custom attribute metaclass here
         'attribute_metaclass' => 'ClassEncapsulatedAttributes::Attribute',
     );
 }
@@ -20,18 +20,18 @@ sub construct_instance {
     my ($class, %params) = @_;
 
     my $meta_instance = $class->get_meta_instance;
-	my $instance = $meta_instance->create_instance();
+    my $instance = $meta_instance->create_instance();
 
-	# initialize *ALL* attributes, including masked ones (as opposed to applicable)
+    # initialize *ALL* attributes, including masked ones (as opposed to applicable)
     foreach my $current_class ($class->class_precedence_list()) {
         my $meta = $current_class->meta;
         foreach my $attr_name ($meta->get_attribute_list()) {
             my $attr = $meta->get_attribute($attr_name);
             $attr->initialize_instance_slot($meta_instance, $instance, \%params);
         }
-    }  
+    }
 
-	return $instance;
+    return $instance;
 }
 
 package # hide the package from PAUSE
@@ -51,15 +51,15 @@ sub initialize_instance_slot {
     # use the attributes name itself as the init_arg
     my $init_arg = $self->init_arg();
     # try to fetch the init arg from the %params ...
-	my $class = $self->associated_class;
+    my $class = $self->associated_class;
     my $val;
-    $val = $params->{$class->name}->{$init_arg} 
-        if exists $params->{$class->name} && 
+    $val = $params->{$class->name}->{$init_arg}
+        if exists $params->{$class->name} &&
            exists ${$params->{$class->name}}{$init_arg};
-    # if nothing was in the %params, we can use the 
+    # if nothing was in the %params, we can use the
     # attribute's default value (if it has one)
     if (!defined $val && $self->has_default) {
-        $val = $self->default($instance); 
+        $val = $self->default($instance);
     }
 
     # now add this to the instance structure
@@ -68,7 +68,7 @@ sub initialize_instance_slot {
 
 sub name {
     my $self = shift;
-    return ($self->associated_class->name . '::' . $self->SUPER::name)    
+    return ($self->associated_class->name . '::' . $self->SUPER::name)
 }
 
 1;
@@ -84,50 +84,50 @@ ClassEncapsulatedAttributes - A set of example metaclasses with class encapsulat
 =head1 SYNOPSIS
 
   package Foo;
-  
+
   use metaclass 'ClassEncapsulatedAttributes';
-  
+
   Foo->meta->add_attribute('foo' => (
       accessor  => 'Foo_foo',
       default   => 'init in FOO'
   ));
-  
+
   sub new  {
       my $class = shift;
       $class->meta->new_object(@_);
   }
-  
+
   package Bar;
   our @ISA = ('Foo');
-  
+
   # duplicate the attribute name here
   Bar->meta->add_attribute('foo' => (
       accessor  => 'Bar_foo',
-      default   => 'init in BAR'            
-  ));      
-  
+      default   => 'init in BAR'
+  ));
+
   # ... later in other code ...
-  
+
   my $bar = Bar->new();
   prints $bar->Bar_foo(); # init in BAR
-  prints $bar->Foo_foo(); # init in FOO  
-  
+  prints $bar->Foo_foo(); # init in FOO
+
   # and ...
-  
+
   my $bar = Bar->new(
       'Foo' => { 'foo' => 'Foo::foo' },
-      'Bar' => { 'foo' => 'Bar::foo' }        
-  );  
-  
+      'Bar' => { 'foo' => 'Bar::foo' }
+  );
+
   prints $bar->Bar_foo(); # Foo::foo
-  prints $bar->Foo_foo(); # Bar::foo  
-  
+  prints $bar->Foo_foo(); # Bar::foo
+
 =head1 DESCRIPTION
 
-This is an example metaclass which encapsulates a class's 
+This is an example metaclass which encapsulates a class's
 attributes on a per-class basis. This means that there is no
-possibility of name clashes with inherited attributes. This 
-is similar to how C++ handles its data members. 
+possibility of name clashes with inherited attributes. This
+is similar to how C++ handles its data members.
 
 =head1 ACKNOWLEDGEMENTS
 
@@ -146,6 +146,6 @@ Copyright 2006-2008 by Infinity Interactive, Inc.
 L<http://www.iinteractive.com>
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut

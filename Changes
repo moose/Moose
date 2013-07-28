@@ -3,10 +3,40 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1004 Fri, Jul 26, 2013
+
+  [BUG FIXES]
+
+  * 2.1003 was released with some bad metadata, which caused the prereq test
+    to fail.
+
+2.1003 Fri, Jul 26, 2013
+
+  [OTHER]
+
+  * Releasing 2.0901 as stable.
+
+2.0901-TRIAL Fri, Jun 21, 2013
+
+  [ENHANCEMENTS]
+
+  * The with_immutable() sub from Test::Moose now passes a boolean value to
+    the code block containing tests indicating whether or not the classes have
+    been made immutable. This can make for nicer test descriptions. (Dave
+    Rolsky)
+
+  * You can now use Specio types instead of Moose builtins or
+    MooseX::Types. As a bonus, Specio types inline coercion. However, this
+    support is still experimental (as is Specio), so use it with care. (Dave
+    Rolsky)
+
+2.0900-TRIAL Sun, May 26, 2013
+
   [API CHANGES]
 
-  * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace, 
-    and other questionable strings. RT#70539 (Upasana Shukla)
+  * Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace,
+    and other questionable strings. The MooseX::Types::LaxNum distro
+    implements the old behavior. RT#70539 (Upasana Shukla)
 
   [BUG FIXES]
 
@@ -16,6 +46,9 @@ for, noteworthy changes.
 
 
 2.0802 Tue, May 07, 2013
+
+  [ENHANCEMENTS]
+
   * fix incompatibilities with Test::Builder 1.005+ (Karen Etheridge)
   * Moose::Manual::Contributing updated to reflect the change of primary
     repository from git.moose.perl.org to github.com

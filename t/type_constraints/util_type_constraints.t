@@ -193,36 +193,36 @@ like( exception {$r->add_type_constraint(bless {}, 'SomeClass')}, qr/not a valid
     isa_ok( $subtype, 'Moose::Meta::TypeConstraint', 'got a subtype' );
 
     my @rejects = ( 'nan',
-		    'inf',
-		    'infinity',
-		    'Infinity',
-		    'NaN',
-		    'INF',
-		    '  1234  ',
-		    '  123.44  ',
-		    '   13e7  ',
-		    'hello',
-		    "1e3\n",
-		    "52563\n",
-		    "123.4\n",
-		    '0.',
-		    "0 but true",
-		    undef
-	);
+            'inf',
+            'infinity',
+            'Infinity',
+            'NaN',
+            'INF',
+            '  1234  ',
+            '  123.44  ',
+            '   13e7  ',
+            'hello',
+            "1e3\n",
+            "52563\n",
+            "123.4\n",
+            '0.',
+            "0 but true",
+            undef
+    );
     my @accepts = ( '123',
-		    '123.4367',
-		    '3322',
-		    '13e7',
-		    '0',
-		    '0.0',
-		    '.0',
-		    .0,
-		    0.0,
-		    123,
-		    13e6,
-		    123.4367,
-		    10.5
-	);
+            '123.4367',
+            '3322',
+            '13e7',
+            '0',
+            '0.0',
+            '.0',
+            .0,
+            0.0,
+            123,
+            13e6,
+            123.4367,
+            10.5
+    );
 
     for( @rejects )
     {

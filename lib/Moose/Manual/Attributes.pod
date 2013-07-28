@@ -350,6 +350,13 @@ some CPU time.
 We recommend that you make any attribute with a builder or non-trivial
 default C<lazy> as a matter of course.
 
+=head3 Lazy defaults and C<$_>
+
+Please note that a lazy default or builder can be called anywhere, even inside
+a C<map> or C<grep>. This means that if your default sub or builder changes
+C<$_>, something weird could happen. You can prevent this by adding C<local
+$_> inside your default or builder.
+
 =head2 Constructor parameters (C<init_arg>)
 
 By default, each attribute can be passed by name to the class's

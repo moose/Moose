@@ -234,7 +234,6 @@ BEGIN {
 }
 
 my $article_oid;
-my $article_ref;
 {
     my $article;
     is( exception {
@@ -274,7 +273,6 @@ my $article_ref;
     ok($article->oid, '... got a oid for the article');
 
     $article_oid = $article->oid;
-    $article_ref = "$article";
 
     is($article->headline,
        'Home Office Redecorated',
@@ -297,7 +295,6 @@ my $article_ref;
 MooseX::POOP::Meta::Instance->_reload_db();
 
 my $article2_oid;
-my $article2_ref;
 {
     my $article2;
     is( exception {
@@ -318,7 +315,6 @@ my $article2_ref;
     isa_ok($article2, 'MooseX::POOP::Object');
 
     $article2_oid = $article2->oid;
-    $article2_ref = "$article2";
 
     is($article2->headline,
        'Company wins Lottery',
@@ -347,7 +343,6 @@ my $article2_ref;
     isa_ok($article, 'MooseX::POOP::Object');
 
     is($article->oid, $article_oid, '... got a oid for the article');
-    isnt($article_ref, "$article", '... got a new article instance');
 
     is($article->headline,
        'Home Office Redecorated',
@@ -386,7 +381,6 @@ MooseX::POOP::Meta::Instance->_reload_db();
     isa_ok($article, 'MooseX::POOP::Object');
 
     is($article->oid, $article_oid, '... got a oid for the article');
-    isnt($article_ref, "$article", '... got a new article instance');
 
     is($article->headline,
        'Home Office Redecorated',
@@ -413,7 +407,6 @@ MooseX::POOP::Meta::Instance->_reload_db();
     isa_ok($article2, 'MooseX::POOP::Object');
 
     is($article2->oid, $article2_oid, '... got a oid for the article');
-    isnt($article2_ref, "$article2", '... got a new article instance');
 
     is($article2->headline,
        'Company wins Lottery',

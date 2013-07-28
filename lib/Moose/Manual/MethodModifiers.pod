@@ -171,7 +171,7 @@ methods to wrap, like so:
 
 This will match the regular expression against each method name
 returned by L<Class::MOP::Class/get_method_list>, and add a modifier
-to each one that matches. The same caveats apply as above. 
+to each one that matches. The same caveats apply as above.
 
 Using regular expressions to determine methods to wrap is quite a bit more
 powerful than the previous alternatives, but it's also quite a bit more
