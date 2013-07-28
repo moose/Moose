@@ -113,12 +113,6 @@ sub _theoretically_associated_method_names {
         return map { $_->name } @{ $self->associated_methods };
     }
 
-    # Moose role attribute with no traits; has predictable accessors.
-    if (ref($self) eq 'Moose::Meta::Role::Attribute'
-    and !@{ $self->original_options->{traits} || [] }) {
-        return $self->_default_associated_method_names(@_);
-    }
-
     # Otherwise compose the attribute into an anonymous class and see
     # what happens!
     if ($self->isa('Moose::Meta::Role::Attribute')) {
@@ -130,28 +124,19 @@ sub _theoretically_associated_method_names {
 
     # We should never reach here (I ran through the Moose test suite
     # with a die statement at this point and never hit it), but just
-    # in case, fall back to default behaviour.
-    return $self->_default_associated_method_names(@_);
-}
-
-sub _default_associated_method_names {
-    my $self = shift;
+    # in case, fall back to guessing.
     my @methods;
-
     if ($self->_is_metadata ne 'bare') {
         push @methods, $self->name;
     }
-
     foreach my $thing (qw/ accessor reader writer predicate clearer /) {
         my $name = $self->${\"has_$thing"} ? $self->$thing : next;
         push @methods, ref $name ? keys(%$name) : $name;
     }
-
     if ($self->has_handles) {
         my %delegation = $self->_canonicalize_handles;
         push @methods, keys %delegation;
     }
-
     return uniq(@methods);
 }
 
