@@ -48,7 +48,7 @@ use Moose();
 
     like(
         $exception,
-        qr/You must supply the package_name and name parameters /,
+        qr/You must supply the package_name and name parameters/,
         "package_name and name are not given");
 
     isa_ok(
@@ -77,10 +77,10 @@ use Moose();
 {
     my $attr = Moose::Meta::Attribute->new("foo");
     my $exception = exception {
-        Moose::Meta::Method::Delegation->new( attribute => $attr, 
-					      package_name => "Foo", 
-					      name => "Foo", 
-					      delegate_to_method => sub {}, 
+        Moose::Meta::Method::Delegation->new( attribute => $attr,
+					      package_name => "Foo",
+					      name => "Foo",
+					      delegate_to_method => sub {},
 					      curried_arguments => {} );
     };
 
