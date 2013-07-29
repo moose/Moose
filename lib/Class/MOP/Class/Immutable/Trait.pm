@@ -17,12 +17,12 @@ sub is_immutable { 1 }
 sub _immutable_metaclass { ref $_[1] }
 
 sub _immutable_read_only {
-    my $name = shift;
+    my $name = $_[1];
     confess "The '$name' method is read-only when called on an immutable instance";
 }
 
 sub _immutable_cannot_call {
-    my $name = shift;
+    my $name = $_[1];
     Carp::confess "The '$name' method cannot be called on an immutable instance";
 }
 
