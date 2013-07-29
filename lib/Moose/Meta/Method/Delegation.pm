@@ -10,34 +10,42 @@ use Scalar::Util 'blessed', 'weaken';
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Generated';
 
+use Moose::Util 'throw_exception';
 
 sub new {
     my $class   = shift;
     my %options = @_;
 
     ( exists $options{attribute} )
-        || confess "You must supply an attribute to construct with";
+        || throw_exception( MustSupplyAnAttributeToConstructWith => params => \%options,
+                                                                    class  => $class
+                          );
 
     ( blessed( $options{attribute} )
             && $options{attribute}->isa('Moose::Meta::Attribute') )
-        || confess
-        "You must supply an attribute which is a 'Moose::Meta::Attribute' instance";
+        || throw_exception( MustSupplyAMooseMetaAttributeInstance => params => \%options,
+                                                                     class  => $class
+                          );
 
     ( $options{package_name} && $options{name} )
-        || confess
-        "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     ( $options{delegate_to_method} && ( !ref $options{delegate_to_method} )
             || ( 'CODE' eq ref $options{delegate_to_method} ) )
-        || confess
-        'You must supply a delegate_to_method which is a method name or a CODE reference';
+        || throw_exception( MustSupplyADelegateToMethod => params => \%options,
+                                                           class  => $class
+                          );
 
     exists $options{curried_arguments}
         || ( $options{curried_arguments} = [] );
 
     ( $options{curried_arguments} &&
         ( 'ARRAY' eq ref $options{curried_arguments} ) )
-        || confess 'You must supply a curried_arguments which is an ARRAY reference';
+        || throw_exception( MustSupplyAnArrayRefAsCurriedArguments => params => \%options,
+                                                                      class  => $class
+                          );
 
     my $self = $class->_new( \%options );
 
