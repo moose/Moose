@@ -12,6 +12,8 @@ use Package::Stash;
 
 use parent 'Class::MOP::Object';
 
+use Moose::Util 'throw_exception';
+
 # creation ...
 
 sub initialize {
@@ -50,7 +52,9 @@ sub reinitialize {
 
     (defined $package_name && $package_name
       && (!blessed $package_name || $package_name->isa('Class::MOP::Package')))
-        || confess "You must pass a package name or an existing Class::MOP::Package instance";
+        || throw_exception( MustPassAPackageNameOrAnExistingClassMOPPackageInstance => params => \%options,
+                                                                                       class  => $class
+                          );
 
     $package_name = $package_name->name
         if blessed $package_name;
