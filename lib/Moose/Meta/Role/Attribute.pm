@@ -3,11 +3,12 @@ package Moose::Meta::Role::Attribute;
 use strict;
 use warnings;
 
-use Carp 'confess';
 use List::MoreUtils 'all';
 use Scalar::Util 'blessed', 'weaken';
 
 use parent 'Moose::Meta::Mixin::AttributeCore', 'Class::MOP::Object';
+
+use Moose::Util 'throw_exception';
 
 __PACKAGE__->meta->add_attribute(
     'metaclass' => (
@@ -48,7 +49,9 @@ sub new {
     my ( $class, $name, %options ) = @_;
 
     (defined $name)
-        || confess "You must provide a name for the attribute";
+        || throw_exception( MustProvideANameForTheAttribute => params => \%options,
+                                                               class  => $class
+                          );
 
     my $role = delete $options{_original_role};
 
@@ -64,8 +67,9 @@ sub attach_to_role {
     my ( $self, $role ) = @_;
 
     ( blessed($role) && $role->isa('Moose::Meta::Role') )
-        || confess
-        "You must pass a Moose::Meta::Role instance (or a subclass)";
+        || throw_exception( MustPassAMooseMetaRoleInstanceOrSubclass => class  => $self,
+                                                                        role   => $role
+                          );
 
     weaken( $self->{'associated_role'} = $role );
 }
