@@ -19,17 +19,17 @@ use Moose();
     like(
         $exception,
         qr/The 'superclasses' method is read-only when called on an immutable instance/,
-    	"calling 'foo' on an immutable instance");
+        "calling 'foo' on an immutable instance");
 
     isa_ok(
         $exception,
         "Moose::Exception::CallingReadOnlyMethodOnAnImmutableInstance",
-    	"calling 'foo' on an immutable instance");
+        "calling 'foo' on an immutable instance");
 
     is(
         $exception->method_name,
         "superclasses",
-    	"calling 'foo' on an immutable instance");	
+        "calling 'foo' on an immutable instance");
 }
 
 {
