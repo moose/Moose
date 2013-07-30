@@ -6,7 +6,7 @@ with 'Moose::Exception::Role::ParamsHash';
 
 has 'class' => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => 'Any',
     required => 1
 );
 
