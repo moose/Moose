@@ -8,6 +8,8 @@ use MRO::Compat;
 use Carp 'confess';
 use Scalar::Util 'blessed', 'weaken';
 
+use Moose::Util 'throw_exception';
+
 # the original class of the metaclass instance
 sub _get_mutable_metaclass_name { $_[0]{__immutable}{original_class} }
 
@@ -17,13 +19,13 @@ sub is_immutable { 1 }
 sub _immutable_metaclass { ref $_[1] }
 
 sub _immutable_read_only {
-    my $name = $_[1];
-    confess "The '$name' method is read-only when called on an immutable instance";
+    my $name = shift;
+    throw_exception( CallingReadOnlyMethodOnAnImmutableInstance => method_name => $name );
 }
 
 sub _immutable_cannot_call {
-    my $name = $_[1];
-    Carp::confess "The '$name' method cannot be called on an immutable instance";
+    my $name = shift;
+    throw_exception( CallingMethodOnAnImmutableInstance => method_name => $name );
 }
 
 for my $name (qw/superclasses/) {
