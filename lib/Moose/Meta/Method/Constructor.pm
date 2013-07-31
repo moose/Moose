@@ -12,6 +12,8 @@ use Try::Tiny;
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Constructor';
 
+use Moose::Util 'throw_exception';
+
 sub new {
     my $class   = shift;
     my %options = @_;
@@ -19,10 +21,14 @@ sub new {
     my $meta = $options{metaclass};
 
     (ref $options{options} eq 'HASH')
-        || $class->throw_error("You must pass a hash of options", data => $options{options});
+        || throw_exception( MustPassAHashOfOptions => params => \%options,
+                                                      class  => $class
+                          );
 
     ($options{package_name} && $options{name})
-        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     my $self = bless {
         'body'          => undef,
