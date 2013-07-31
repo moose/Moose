@@ -18,7 +18,7 @@ has 'old_meta' => (
 has 'args' => (
     is       => 'ro',
     isa      => 'ArrayRef',
-    required => 1    
+    required => 1
 );
 
 sub _build_message {
