@@ -5,6 +5,8 @@ use warnings;
 
 use parent 'Moose::Meta::Method';
 
+use Moose::Util 'throw_exception';
+
 sub new {
     my ( $class, %args ) = @_;
 
@@ -18,7 +20,10 @@ sub new {
     my $super = $meta->find_next_method_by_name($name);
 
     (defined $super)
-        || $meta->throw_error("You cannot augment '$name' because it has no super method", data => $name);
+        || throw_exception( CannotAugmentNoSuperMethod => params      => \%args,
+                                                          class       => $class,
+                                                          method_name => $name
+                          );
 
     my $_super_package = $super->package_name;
     # BUT!,... if this is an overridden method ....
