@@ -10,6 +10,8 @@ use Moose::Util;
 
 use parent 'Moose::Meta::Role';
 
+use Moose::Util 'throw_exception';
+
 # NOTE:
 # we need to override the ->name
 # method from Class::MOP::Package
@@ -45,8 +47,10 @@ sub new {
     # the roles param is required ...
     foreach ( @{$params{roles}} ) {
         unless ( $_->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error("The list of roles must be instances of Moose::Meta::Role, not $_");
+            throw_exception( RolesListMustBeInstancesOfMooseMetaRole => params => \%params,
+                                                                        role   => $_,
+                                                                        class  => $class
+                           );
         }
     }
 
@@ -77,7 +81,7 @@ sub add_method {
     my ($self, $method_name, $method) = @_;
 
     unless ( defined $method_name && $method_name ) {
-        Moose->throw_error("You must define a method name");
+        throw_exception( MustDefineAMethodName => instance => $self );
     }
 
     my $body;
@@ -134,9 +138,10 @@ sub apply_params {
 sub reinitialize {
     my ( $class, $old_meta, @args ) = @_;
 
-    Moose->throw_error(
-        'Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance'
-        )
+    throw_exception( CannotInitializeMooseMetaRoleComposite => old_meta       => $old_meta,
+                                                               args           => \@args,
+                                                               role_composite => $class
+                   )
         if !blessed $old_meta
             || !$old_meta->isa('Moose::Meta::Role::Composite');
 
