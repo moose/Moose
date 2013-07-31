@@ -18,7 +18,7 @@ has 'class' => (
 
 sub _build_message {
     my $self = shift;
-    "You must supply a CODE reference to bless, not (" . $self->code . ")";
+    "You must supply a CODE reference to bless, not (" . ( $self->code ? $self->code : 'undef' ) . ")";
 }
 
 1;
