@@ -165,7 +165,7 @@ you must be careful not to remove C<meta> when doing so:
 
 =item L<Moose::Role>
 
-=item L<Moose::Utils::TypeConstraints>
+=item L<Moose::Util::TypeConstraints>
 
 =item L<Sub::Exporter>
 
