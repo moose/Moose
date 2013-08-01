@@ -60,7 +60,7 @@ to check a value directly.
 
 =item L<Moose::Cookbook::Basics::Point_AttributesAndSubclassing>
 
-=item L<Moose::Utils::TypeConstraints>
+=item L<Moose::Util::TypeConstraints>
 
 =item L<Moose::Meta::Attribute>
 
