@@ -59,7 +59,7 @@ use Moose();
     is(
 	$exception->value,
 	$arrayRef,
-	"an array ref is given instead of a string");	
+	"an array ref is given instead of a string");
 }
 
 done_testing;
