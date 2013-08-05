@@ -95,6 +95,12 @@ is( $Foo->get_method('foo')->execute, 'Foo::foo',
     '... _method_foo->execute returns "Foo::foo"' );
 is( Foo->foo(), 'Foo::foo', '... Foo->foo() returns "Foo::foo"' );
 
+my $bork_blessed = bless sub { }, 'Non::Meta::Class';
+
+is( exception {
+  $Foo->add_method('bork', $bork_blessed);
+}, undef, 'can add blessed sub as method');
+
 # now check all our other items ...
 
 ok( $Foo->has_method('FOO_CONSTANT'),
@@ -141,6 +147,7 @@ for my $method_name (
     floob
     blah
     bang
+    bork
     evaled_foo
     FOO_CONSTANT/
     ) {
@@ -181,7 +188,7 @@ is( $Foo->get_method('not_a_real_method'), undef,
 
 is_deeply(
     [ sort $Foo->get_method_list ],
-    [qw(FOO_CONSTANT baaz bang bar baz blah cake evaled_foo floob foo pie)],
+    [qw(FOO_CONSTANT baaz bang bar baz blah bork cake evaled_foo floob foo pie)],
     '... got the right method list for Foo'
 );
 
@@ -203,6 +210,7 @@ is_deeply(
             bar
             baz
             blah
+            bork
             cake
             evaled_foo
             floob
@@ -221,7 +229,7 @@ isnt( exception { Foo->foo }, undef, '... cannot call Foo->foo because it is not
 
 is_deeply(
     [ sort $Foo->get_method_list ],
-    [qw(FOO_CONSTANT baaz bang bar baz blah cake evaled_foo floob pie)],
+    [qw(FOO_CONSTANT baaz bang bar baz blah bork cake evaled_foo floob pie)],
     '... got the right method list for Foo'
 );
 
@@ -276,6 +284,7 @@ is_deeply(
                     qw(
                     baz
                     blah
+                    bork
                     cake
                     evaled_foo
                     floob
