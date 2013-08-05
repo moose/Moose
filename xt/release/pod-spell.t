@@ -29,6 +29,7 @@ Florian
 Goro
 Goulah
 Hardison
+Inkster
 Kinyon
 Kinyon's
 Kogman

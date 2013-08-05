@@ -52,25 +52,16 @@ use Test::Fatal;
 
 # Roles providing attributes/methods should satisfy requires() of other
 # roles they consume.
-{
-    local $TODO = "role attributes don't satisfy method requirements";
-    is( exception { package My::Test1; use Moose; with 'My::Role2'; }, undef, 'role2(provides attribute) consumes role1' );
-}
+is( exception { package My::Test1; use Moose; with 'My::Role2'; }, undef, 'role2(provides attribute) consumes role1' );
 
 is( exception { package My::Test2; use Moose; with 'My::Role3'; }, undef, 'role3(provides method) consumes role1' );
 
 # As I understand the design, Roles composed in the same with() statement
 # should NOT demonstrate ordering dependency. Alter these tests if that
 # assumption is false. -Vince Veselosky
-{
-    local $TODO = "role attributes don't satisfy method requirements";
-    is( exception { package My::Test3; use Moose; with 'My::Role4', 'My::Role1'; }, undef, 'class consumes role4(provides attribute), role1' );
-}
+is( exception { package My::Test3; use Moose; with 'My::Role4', 'My::Role1'; }, undef, 'class consumes role4(provides attribute), role1' );
 
-{
-    local $TODO = "role attributes don't satisfy method requirements";
-    is( exception { package My::Test4; use Moose; with 'My::Role1', 'My::Role4'; }, undef, 'class consumes role1, role4(provides attribute)' );
-}
+is( exception { package My::Test4; use Moose; with 'My::Role1', 'My::Role4'; }, undef, 'class consumes role1, role4(provides attribute)' );
 
 is( exception { package My::Test5; use Moose; with 'My::Role5', 'My::Role1'; }, undef, 'class consumes role5(provides method), role1' );
 
