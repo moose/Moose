@@ -11,15 +11,21 @@ use Try::Tiny;
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Inlined';
 
+use Moose::Util 'throw_exception';
+
 sub new {
     my $class   = shift;
     my %options = @_;
 
     (ref $options{options} eq 'HASH')
-        || $class->throw_error("You must pass a hash of options", data => $options{options});
+        || throw_exception( MustPassAHashOfOptions => params => \%options,
+                                                      class  => $class
+                          );
 
     ($options{package_name} && $options{name})
-        || $class->throw_error("You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT");
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     my $self = bless {
         # from our superclass
@@ -53,8 +59,9 @@ sub is_needed {
     my $metaclass = shift;
 
     ( blessed $metaclass && $metaclass->isa('Class::MOP::Class') )
-        || $self->throw_error(
-        "The is_needed method expected a metaclass object as its arugment");
+        || throw_exception( MethodExpectedAMetaclassObject => metaclass => $metaclass,
+                                                              class     => $self
+                          );
 
     return $metaclass->find_method_by_name("DEMOLISHALL");
 }
