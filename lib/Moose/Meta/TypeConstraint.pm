@@ -119,7 +119,9 @@ sub new {
 
     if ( exists $args{message}
       && (!ref($args{message}) || ref($args{message}) ne 'CODE') ) {
-        confess("The 'message' parameter must be a coderef");
+        throw_exception( MessageParameterMustBeCodeRef => params => \%args,
+                                                          class  => $class
+                       );
     }
 
     my $self  = $class->_new(%args);
