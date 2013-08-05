@@ -48,7 +48,7 @@ sub new {
         if (!defined($_)) {
             throw_exception( EnumValuesMustBeString => params => \%args,
                                                        class  => $class,
-                                                       value  => $_		     
+                                                       value  => $_
                            );
         }
         elsif (ref($_)) {
