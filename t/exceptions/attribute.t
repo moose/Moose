@@ -755,6 +755,7 @@ use Test::Fatal;
 # tests for type coercions
 {
     use Moose;
+    use Moose::Util::TypeConstraints;
     subtype 'HexNum' => as 'Int', where { /[a-f0-9]/i };
     my $type_object = find_type_constraint 'HexNum';
 
