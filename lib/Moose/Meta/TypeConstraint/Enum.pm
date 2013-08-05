@@ -46,8 +46,9 @@ sub new {
 
     for (@{ $args{values} }) {
         if (!defined($_)) {
-            throw_exception( EnumValuesMustBeStringNotUndef => params => \%args,
-                                                               class  => $class
+            throw_exception( EnumValuesMustBeString => params => \%args,
+                                                       class  => $class,
+                                                       value  => $_		     
                            );
         }
         elsif (ref($_)) {
