@@ -752,4 +752,70 @@ use Test::Fatal;
         "no does or isa is given");
 }
 
+# tests for type coercions
+{
+    use Moose;
+    subtype 'HexNum' => as 'Int', where { /[a-f0-9]/i };
+    my $type_object = find_type_constraint 'HexNum';
+
+    my $exception = exception {
+        $type_object->coerce;
+    };
+
+    like(
+        $exception,
+        qr/Cannot coerce without a type coercion/,
+        "You cannot coerce a type unless coercion is supported by that type");
+
+    is(
+        $exception->type->name,
+        'HexNum',
+        "You cannot coerce a type unless coercion is supported by that type");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CoercingWithoutCoercions",
+        "You cannot coerce a type unless coercion is supported by that type");
+}
+
+{
+    {
+	package Parent;
+	use Moose;
+
+	has foo => (
+	    is      => 'rw',
+	    isa     => 'Num',
+	    default => 5.5,
+        );
+    }
+
+    {
+	package Child;
+	use Moose;
+	extends 'Parent';
+
+	has '+foo' => (
+	    isa     => 'Int',
+	    default => 100,
+       );
+    }
+
+    my $foo = Child->new;
+    my $exception = exception {
+	$foo->foo(10.5);
+    };
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        "10.5 is not an Int");
+
+    like(
+	$exception,
+	qr/\QAttribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5/,
+	"10.5 is not an Int");
+
+}
+
 done_testing;
