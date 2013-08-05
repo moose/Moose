@@ -12,7 +12,7 @@ use Moose();
     my $exception =  exception {
         package Foo;
         use Moose;
-    
+
         augment 'foo' => sub {};
     };
 
@@ -29,7 +29,7 @@ use Moose();
     is(
         $exception->method_name,
         'foo',
-        "'Foo' has no super class");	
+        "'Foo' has no super class");
 }
 
 done_testing;
