@@ -9,6 +9,8 @@ use Moose::Util::TypeConstraints ();
 
 use parent 'Moose::Meta::TypeConstraint';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',
     Class::MOP::_definition_context(),
@@ -37,18 +39,22 @@ sub new {
     $args{inlined} = $inliner;
 
     if ( scalar @{ $args{values} } < 1 ) {
-        require Moose;
-        Moose->throw_error("You must have at least one value to enumerate through");
+        throw_exception( MustHaveAtLeastOneValueToEnumerate => params => \%args,
+                                                               class  => $class
+                       );
     }
 
     for (@{ $args{values} }) {
         if (!defined($_)) {
-            require Moose;
-            Moose->throw_error("Enum values must be strings, not undef");
+            throw_exception( EnumValuesMustBeStringNotUndef => params => \%args,
+                                                               class  => $class
+                           );
         }
         elsif (ref($_)) {
-            require Moose;
-            Moose->throw_error("Enum values must be strings, not '$_'");
+            throw_exception( EnumValuesMustBeString => params => \%args,
+                                                       class  => $class,
+                                                       value  => $_
+                           );
         }
     }
 
