@@ -18,7 +18,7 @@ has 'value' => (
 
 sub _build_message {
     my $self = shift;
-    "Enum values must be strings, not '".( defined $self->value ? $self->value : "undef" )."'";
+    "Enum values must be strings, not ".( defined $self->value ? "'".$self->value."'" : "undef" );
 }
 
 1;
