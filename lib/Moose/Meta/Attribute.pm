@@ -77,6 +77,11 @@ sub _inline_throw_error {
     return $inv->_inline_throw_error($msg, $args)
 }
 
+sub _inline_throw_exception {
+    my ( $self, $throw_args ) = @_;
+    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+}
+
 sub new {
     my ($class, $name, %options) = @_;
     $class->_process_options($name, \%options) unless $options{__hack_no_process_options}; # used from clone()... YECHKKK FIXME ICKY YUCK GROSS
@@ -713,14 +718,15 @@ sub _inline_check_constraint {
     if ( $self->type_constraint->can_be_inlined ) {
         return (
             'if (! (' . $self->type_constraint->_inline_check($value) . ')) {',
-                $self->_inline_throw_error(
-                    '"Attribute (' . $attr_name . ') does not pass the type '
-                  . 'constraint because: " . '
-                  . 'do { local $_ = ' . $value . '; '
-                      . $message . '->(' . $value . ')'
-                  . '}',
-                    'data => ' . $value
-                ) . ';',
+                'my $msg = do { local $_ = ' . $value . '; '
+                . $message . '->(' . $value . ');'
+                . '};'.
+                $self->_inline_throw_exception( 'ValidationFailedForInlineTypeConstraint => '.
+                                                'type_constraint_message => $msg , '.
+                                                'class_name              => ref($_[0]), '.
+                                                'attribute_name          => "'.$attr_name.'",'.
+                                                'value                   => '.$value
+                ).';',
             '}',
         );
     }
