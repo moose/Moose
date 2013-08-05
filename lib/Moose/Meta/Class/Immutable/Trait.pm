@@ -8,6 +8,8 @@ use Scalar::Util qw( blessed );
 
 use parent 'Class::MOP::Class::Immutable::Trait';
 
+use Moose::Util 'throw_exception';
+
 sub add_role { $_[1]->_immutable_cannot_call }
 
 sub calculate_all_roles {
@@ -28,7 +30,7 @@ sub does_role {
     my $role = shift;
 
     (defined $role)
-        || $self->throw_error("You must supply a role name to look for");
+        || throw_exception( RoleNameRequired => class => $self );
 
     $self->{__immutable}{does_role} ||= { map { $_->name => 1 } $self->calculate_all_roles_with_inheritance };
 
