@@ -31,7 +31,7 @@ use Moose();
 
     like(
         $exception,
-        qr/Enum values must be strings, not 'undef'/,
+        qr/Enum values must be strings, not undef/,
         "undef is given to values");
 
     isa_ok(
