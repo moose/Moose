@@ -345,8 +345,8 @@ sub _role_differences {
         $_->isa('Moose::Meta::Role::Composite')
             ? (@{ $_->get_roles })
             : ($_)
-    } $super_meta_name->meta->can('roles_with_inheritance')
-        ? $super_meta_name->meta->roles_with_inheritance
+    } $super_meta_name->meta->can('_roles_with_inheritance')
+        ? $super_meta_name->meta->_roles_with_inheritance
     : $super_meta_name->meta->can('roles')
         ? @{ $super_meta_name->meta->roles }
     :     ();
@@ -354,8 +354,8 @@ sub _role_differences {
         $_->isa('Moose::Meta::Role::Composite')
             ? (@{ $_->get_roles })
             : ($_)
-    } $class_meta_name->meta->can('roles_with_inheritance')
-        ? $class_meta_name->meta->roles_with_inheritance
+    } $class_meta_name->meta->can('_roles_with_inheritance')
+        ? $class_meta_name->meta->_roles_with_inheritance
     : $class_meta_name->meta->can('roles')
         ? @{ $class_meta_name->meta->roles }
     :     ();

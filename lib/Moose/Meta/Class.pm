@@ -212,7 +212,7 @@ sub calculate_all_roles {
     grep { !$seen{$_->name}++ } map { $_->calculate_all_roles } @{ $self->roles };
 }
 
-sub roles_with_inheritance {
+sub _roles_with_inheritance {
     my $self = shift;
     my %seen;
     grep { !$seen{$_->name}++ }
@@ -941,11 +941,6 @@ This adds an C<override> method modifier to the package.
 =item B<< $metaclass->add_augment_method_modifier($name, $sub) >>
 
 This adds an C<augment> method modifier to the package.
-
-=item B<< $metaclass->roles_with_inheritance >>
-
-This will return a list of C<Moose::Meta::Role> instances which are directly
-consumed by this class or any class that it inherits from.
 
 =item B<< $metaclass->calculate_all_roles >>
 
