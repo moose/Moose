@@ -22,17 +22,14 @@ BEGIN {
             "Foo::Meta::$suffix",
             superclasses => ["Class::MOP::$suffix"]
         );
-        $INC{"Foo/Meta/$suffix.pm"} = __FILE__;
         Class::MOP::Class->create(
             "Bar::Meta::$suffix",
             superclasses => ["Class::MOP::$suffix"]
         );
-        $INC{"Bar/Meta/$suffix.pm"} = __FILE__;
         Class::MOP::Class->create(
             "FooBar::Meta::$suffix",
             superclasses => ["Foo::Meta::$suffix", "Bar::Meta::$suffix"]
         );
-        $INC{"FooBar/Meta/$suffix.pm"} = __FILE__;
     }
 }
 
@@ -139,7 +136,6 @@ isa_ok(Foo::NoMeta2::Sub->meta, 'Foo::Meta::Class');
 
 BEGIN {
     Foo::Meta::Class->create('Foo::WithMeta');
-    $INC{'Foo/WithMeta.pm'} = __FILE__;
 }
 {
     package Foo::WithMeta::Sub;
@@ -156,7 +152,6 @@ isa_ok(Class::MOP::class_of('Foo::WithMeta::Sub::Sub'), 'Foo::Meta::Class');
 
 BEGIN {
     Foo::Meta::Class->create('Foo::WithMeta2');
-    $INC{'Foo/WithMeta2.pm'} = __FILE__;
 }
 {
     package Foo::WithMeta2::Sub;
