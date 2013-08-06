@@ -65,7 +65,10 @@ sub create {
     my @args = @_;
 
     my $meta = $class->initialize(@args);
-    $INC{module_notional_filename($meta->name)} = __FILE__;
+    my $filename = module_notional_filename($meta->name);
+    $INC{$filename} = __FILE__
+        unless exists $INC{$filename};
+
     return $meta;
 }
 
