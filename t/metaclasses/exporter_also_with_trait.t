@@ -7,7 +7,6 @@ use Test::Moose;
 BEGIN {
     package My::Meta::Role;
     use Moose::Role;
-    $INC{'My/Meta/Role.pm'} = __FILE__;
 }
 
 BEGIN {
