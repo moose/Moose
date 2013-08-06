@@ -817,6 +817,118 @@ use Test::Fatal;
 	qr/\QAttribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5/,
 	"10.5 is not an Int");
 
+    is(
+	$exception->class_name,
+	"Child",
+	"10.5 is not an Int");
+}
+
+{
+    {
+	package Foo2;
+	use Moose;
+
+        has a4 => (
+            traits  => ['Array'],
+            is      => 'rw',
+            isa     => 'ArrayRef',
+            lazy    => 1,
+            default => 'invalid',
+            clearer => '_clear_a4',
+            handles => {
+                get_a4      => 'get',
+                push_a4     => 'push',
+                accessor_a4 => 'accessor',
+            },
+        );
+
+        has a5 => (
+            traits  => ['Array'],
+            is      => 'rw',
+            isa     => 'ArrayRef[Int]',
+            lazy    => 1,
+            default => sub { [] },
+            clearer => '_clear_a5',
+            handles => {
+                get_a5      => 'get',
+                push_a5     => 'push',
+                accessor_a5 => 'accessor',
+            },
+        );
+    }
+
+    my $foo = Foo2->new;
+
+    my $expect
+        = qr/\QAttribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value \E.*invalid.*/;
+
+    my $exception = exception { $foo->accessor_a4(0); };
+
+    like(
+        $exception,
+        $expect,
+        'invalid default is caught when trying to read via accessor');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        'invalid default is caught when trying to read via accessor');
+
+    is(
+        $exception->class_name,
+        "Foo2",
+        'invalid default is caught when trying to read via accessor');
+
+    $exception = exception { $foo->accessor_a4( 0 => 42 ); };
+
+    like(
+        $exception,
+        $expect,
+        'invalid default is caught when trying to write via accessor');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        'invalid default is caught when trying to write via accessor');
+
+    is(
+        $exception->class_name,
+        "Foo2",
+        'invalid default is caught when trying to write via accessor');
+
+    $exception = exception { $foo->push_a4(42); };
+
+    like(
+        $exception,
+        $expect,
+        'invalid default is caught when trying to push');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        'invalid default is caught when trying to push');
+
+    is(
+        $exception->class_name,
+        "Foo2",
+        'invalid default is caught when trying to push');
+
+    $exception = exception { $foo->get_a4(42); };
+
+    like(
+        $exception,
+        $expect,
+        'invalid default is caught when trying to get');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        'invalid default is caught when trying to get');
+
+    is(
+        $exception->class_name,
+        "Foo2",
+        'invalid default is caught when trying to get');
 }
 
 done_testing;
