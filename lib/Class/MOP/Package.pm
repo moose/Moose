@@ -7,6 +7,7 @@ use warnings;
 use Scalar::Util 'blessed', 'reftype', 'weaken';
 use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
+use Module::Runtime 'module_notional_filename';
 use Package::Stash;
 
 use base 'Class::MOP::Object';
@@ -63,7 +64,9 @@ sub create {
     my $class = shift;
     my @args = @_;
 
-    return $class->initialize(@args);
+    my $meta = $class->initialize(@args);
+    $INC{module_notional_filename($meta->name)} = __FILE__;
+    return $meta;
 }
 
 ## ANON packages
@@ -163,6 +166,8 @@ sub create {
         delete ${$first_fragments . '::'}{$last_fragment . '::'};
 
         Class::MOP::remove_metaclass_by_name($name);
+
+        delete $INC{module_notional_filename($name)};
     }
 
 }
