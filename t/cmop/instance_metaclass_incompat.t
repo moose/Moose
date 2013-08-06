@@ -20,6 +20,7 @@ use metaclass;
 $@ = undef;
 eval {
     package Foo;
+    BEGIN { $INC{'Foo.pm'} = __FILE__ }
     metaclass->import('instance_metaclass' => 'Foo::Meta::Instance');
 };
 ok(!$@, '... Foo.meta => Foo::Meta is compatible') || diag $@;
@@ -27,6 +28,7 @@ ok(!$@, '... Foo.meta => Foo::Meta is compatible') || diag $@;
 $@ = undef;
 eval {
     package Bar;
+    BEGIN { $INC{'Bar.pm'} = __FILE__ }
     metaclass->import('instance_metaclass' => 'Bar::Meta::Instance');
 };
 ok(!$@, '... Bar.meta => Bar::Meta is compatible') || diag $@;
