@@ -212,6 +212,16 @@ sub calculate_all_roles {
     grep { !$seen{$_->name}++ } map { $_->calculate_all_roles } @{ $self->roles };
 }
 
+sub _roles_with_inheritance {
+    my $self = shift;
+    my %seen;
+    grep { !$seen{$_->name}++ }
+         map { Class::MOP::class_of($_)->can('roles')
+                   ? @{ Class::MOP::class_of($_)->roles }
+                   : () }
+             $self->linearized_isa;
+}
+
 sub calculate_all_roles_with_inheritance {
     my $self = shift;
     my %seen;
