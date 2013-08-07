@@ -192,7 +192,7 @@ use Test::Fatal;
     is(
         $exception->class,
         $foo,
-        "Foo3 is a Class::MOP::Class, not a Moose::Meta::Class");
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Class");
 
     is(
         $exception->metaclass,
