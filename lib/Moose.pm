@@ -67,8 +67,8 @@ sub has {
     my $meta = shift;
     my $name = shift;
 
-    throw_exception( BadHasProvided => class           => $meta,
-                                       attribute_name  => $name
+    throw_exception( InvalidHasProvided => class           => $meta,
+                                           attribute_name  => $name
                    )
         if @_ % 2 == 1;
 
