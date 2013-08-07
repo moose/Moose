@@ -56,8 +56,9 @@ sub _add_method_modifier {
     my $meta = shift;
 
     if ( ref($_[0]) eq 'Regexp' ) {
-        croak "Roles do not currently support regex "
-            . " references for $type method modifiers";
+        throw_exception( RolesDoNotSupportRegexReferencesForMethodModifiers => modifier_type => $type,
+                                                                               role          => $meta
+                       );
     }
 
     Moose::Util::add_method_modifier($meta, $type, \@_);
