@@ -6,6 +6,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Moose();
+
 {
     my $exception = exception {
         package Bar;
@@ -136,6 +138,148 @@ use Test::Fatal;
         $exception->role->name,
         'Foo1',
         "has takes a hash");
+}
+
+{
+    my $exception = exception {
+        use Moose::Role;
+        Moose::Role->init_meta;
+    };
+
+    like(
+        $exception,
+        qr/Cannot call init_meta without specifying a for_class/,
+        "for_class is not given");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InitMetaRequiresClass",
+        "for_class is not given");
+}
+
+{
+    my $exception = exception {
+        use Moose::Role;
+        Moose::Role->init_meta( (for_class => 'Foo2', metaclass => 'Foo2' ));
+    };
+
+    like(
+        $exception,
+        qr/\QThe Metaclass Foo2 must be loaded. (Perhaps you forgot to 'use Foo2'?)/,
+        "Foo2 is not loaded");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassNotLoaded",
+        "Foo2 is not loaded");
+
+    is(
+        $exception->class_name,
+        "Foo2",
+        "Foo2 is not loaded");
+}
+
+{
+    {
+	package Foo3;
+	use Moose;
+    }
+
+    my $exception = exception {
+        use Moose::Role;
+        Moose::Role->init_meta( (for_class => 'Foo3', metaclass => 'Foo3' ));
+    };
+
+    like(
+        $exception,
+        qr/\QThe Metaclass Foo3 must be a subclass of Moose::Meta::Role./,
+        "Foo3 is a Moose::Role");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassMustBeASubclassOfMooseMetaRole",
+        "Foo3 is a Moose::Role");
+
+    is(
+        $exception->role_name,
+        "Foo3",
+        "Foo3 is a Moose::Role");
+}
+
+{
+    {
+	package Foo3;
+	use Moose;
+    }
+
+    my $exception = exception {
+        use Moose::Role;
+        Moose::Role->init_meta( (for_class => 'Foo3' ));
+    };
+
+    my $foo3 = Foo3->meta;
+
+    like(
+        $exception,
+        qr/\QFoo3 already has a metaclass, but it does not inherit Moose::Meta::Role ($foo3). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role./,
+        "Foo3 is a Moose class");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassIsAClassNotASubclassOfGivenMetaclass",
+        "Foo3 is a Moose class");
+
+    is(
+        $exception->class_name,
+        "Foo3",
+        "Foo3 is a Moose class");
+
+    is(
+        $exception->class,
+        Foo3->meta,
+        "Foo3 is a Moose class");
+
+    is(
+        $exception->metaclass,
+        "Moose::Meta::Role",
+        "Foo3 is a Moose class");
+}
+
+{
+    my $foo;
+    {
+        $foo = Class::MOP::Class->create("Foo4");
+    }
+
+    my $exception = exception {
+        use Moose::Role;
+        Moose::Role->init_meta( (for_class => 'Foo4' ));
+    };
+
+    like(
+        $exception,
+        qr/\QFoo4 already has a metaclass, but it does not inherit Moose::Meta::Role ($foo)./,
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MetaclassIsNotASubclassOfGivenMetaclass",
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
+
+    is(
+        $exception->class_name,
+        "Foo4",
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
+
+    is(
+        $exception->class,
+        $foo,
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
+
+    is(
+        $exception->metaclass,
+        "Moose::Meta::Role",
+        "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
 }
 
 done_testing;
