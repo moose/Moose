@@ -282,4 +282,38 @@ use Moose();
         "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
 }
 
+{
+    my $exception = exception {
+	package Foo;
+	use Moose::Role;
+
+	before qr/foo/;
+    };
+
+    like(
+        $exception,
+        qr/\QRoles do not currently support regex references for before method modifiers/,
+        "a regex reference is given to before");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RolesDoNotSupportRegexReferencesForMethodModifiers",
+        "a regex reference is given to before");
+
+    is(
+        $exception->role_name,
+        "Foo",
+        "a regex reference is given to before");
+
+    is(
+        $exception->role,
+        Foo->meta,
+        "a regex reference is given to before");
+
+    is(
+        $exception->modifier_type,
+        "before",
+        "a regex reference is given to before");
+}
+
 done_testing;
