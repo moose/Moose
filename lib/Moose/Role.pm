@@ -42,7 +42,7 @@ sub has {
     throw_exception( InvalidHasProvidedInARole => role            => $meta,
                                                   attribute_name  => $name
                    )
-    if @_ == 1;
+        if @_ == 1;
     my %context = Moose::Util::_caller_info;
     $context{context} = 'has declaration';
     $context{type} = 'role';
