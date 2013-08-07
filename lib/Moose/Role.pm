@@ -40,7 +40,7 @@ sub has {
     my $meta = shift;
     my $name = shift;
     throw_exception( InvalidHasProvidedInARole => role            => $meta,
-                                              attribute_name  => $name
+                                                  attribute_name  => $name
                    )
     if @_ == 1;
     my %context = Moose::Util::_caller_info;
