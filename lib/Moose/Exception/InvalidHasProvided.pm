@@ -1,4 +1,4 @@
-package Moose::Exception::BadHasProvided;
+package Moose::Exception::InvalidHasProvided;
 
 use Moose;
 extends 'Moose::Exception';
