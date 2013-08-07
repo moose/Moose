@@ -106,4 +106,36 @@ use Test::Fatal;
         "Roles do not support 'augment'");
 }
 
+{
+    my $exception = exception {
+        {
+            package Foo1;
+            use Moose::Role;
+            has 'bar' => (
+                is =>
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QUsage: has 'name' => ( key => value, ... )/,
+        "has takes a hash");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::InvalidHasProvidedInARole",
+        "has takes a hash");
+
+    is(
+        $exception->attribute_name,
+        'bar',
+        "has takes a hash");
+
+    is(
+        $exception->role->name,
+        'Foo1',
+        "has takes a hash");
+}
+
 done_testing;
