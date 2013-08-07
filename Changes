@@ -15,8 +15,8 @@ for, noteworthy changes.
     allowing methods in the metaclass roles to conflict. Now we resolve them
     as we should. (Jesse Luehrs, PR#27)
 
-  * Some edge cases with base.pm and non-existent module files are handled
-    more strictly (see also perl RT#118561) (Graham Knop, PR#25)
+  * Some edge cases in tests with base.pm and non-existent module files are
+    handled more strictly (see also perl RT#118561) (Graham Knop, PR#25)
 
 2.1004 Fri, Jul 26, 2013
 
