@@ -169,11 +169,16 @@ sub init_meta {
 
     if ( $meta = Class::MOP::get_metaclass_by_name($class) ) {
         unless ( $meta->isa("Moose::Meta::Class") ) {
-            my $error_message = "$class already has a metaclass, but it does not inherit $metaclass ($meta).";
             if ( $meta->isa('Moose::Meta::Role') ) {
-                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+                throw_exception( MetaclassIsARoleNotASubclassOfGivenMetaclass => role_name => $class,
+                                                                                 metaclass => $metaclass,
+                                                                                 role      => $meta
+                               );
             } else {
-                Moose->throw_error($error_message);
+                throw_exception( MetaclassIsNotASubclassOfGivenMetaclass => class_name => $class,
+                                                                            metaclass  => $metaclass,
+                                                                            class      => $meta
+                               );
             }
         }
     } else {
