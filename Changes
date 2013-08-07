@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1005 Tue, Aug 06, 2013
+
   [ENHANCEMENTS]
 
   * add_method now accepts blessed subs (Graham Knop, PR#28)
