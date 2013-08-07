@@ -43,7 +43,7 @@ use Test::Fatal;
 
     isa_ok(
         $exception,
-        "Moose::Exception::BadHasProvided",
+        "Moose::Exception::InvalidHasProvided",
         "has takes a hash");
 
     is(
