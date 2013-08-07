@@ -5,7 +5,7 @@ for, noteworthy changes.
 
   [ENHANCEMENTS]
 
-  * add_method now accepts blessed subs (Graham Knop, PR#27)
+  * add_method now accepts blessed subs (Graham Knop, PR#28)
 
   [BUG FIXES}
 
