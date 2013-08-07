@@ -39,7 +39,10 @@ sub excludes {
 sub has {
     my $meta = shift;
     my $name = shift;
-    croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+    throw_exception( InvalidHasProvidedInARole => role            => $meta,
+                                              attribute_name  => $name
+                   )
+    if @_ == 1;
     my %context = Moose::Util::_caller_info;
     $context{context} = 'has declaration';
     $context{type} = 'role';
