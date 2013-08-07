@@ -3,6 +3,21 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * add_method now accepts blessed subs (Graham Knop, PR#27)
+
+  [BUG FIXES}
+
+  * If a role consumed another role, we resolve method conflicts just like a
+    class consuming a role, but when metaclass compat tried to fix up
+    metaclass roles, we were putting all methods into one composite role and
+    allowing methods in the metaclass roles to conflict. Now we resolve them
+    as we should. (Jesse Luehrs, PR#27)
+
+  * Some edge cases with base.pm and non-existent module files are handled
+    more strictly (see also perl RT#118561) (Graham Knop, PR#25)
+
 2.1004 Fri, Jul 26, 2013
 
   [BUG FIXES]
