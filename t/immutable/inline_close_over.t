@@ -381,7 +381,7 @@ BEGIN {
 }
 
 { local $TODO = "custom error classes still close over things";
-close_over_ok('WithCustomErrorClass', $_) for qw(new foo);
+close_over_ok('WithCustomErrorClass', $_) for qw(foo);
 }
 
 done_testing;
