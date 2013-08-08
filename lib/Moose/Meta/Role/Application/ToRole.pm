@@ -8,6 +8,8 @@ use Scalar::Util    'blessed';
 
 use parent 'Moose::Meta::Role::Application';
 
+use Moose::Util 'throw_exception';
+
 sub apply {
     my ($self, $role1, $role2) = @_;
     $self->SUPER::apply($role1, $role2);
@@ -17,13 +19,15 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role1, $role2) = @_;
     if ( $role2->excludes_role($role1->name) ) {
-        require Moose;
-        Moose->throw_error("Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'");
+        throw_exception( ConflictDetectedInCheckRoleExclusions => role          => $role2,
+			                                          excluded_role => $role1
+                       );
     }
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
-            require Moose;
-            Moose->throw_error("The role " . $role2->name . " does the excluded role '$excluded_role_name'");
+            throw_exception( RoleDoesTheExcludedRole => role          => $role2,
+                                                        excluded_role => Class::MOP::class_of($excluded_role_name)
+                           );
         }
         $role2->add_excluded_roles($excluded_role_name);
     }
@@ -55,13 +59,10 @@ sub apply_attributes {
 
             my $role2_name = $role2->name;
 
-            require Moose;
-            Moose->throw_error( "Role '"
-                    . $role1->name
-                    . "' has encountered an attribute conflict"
-                    . " while being composed into '$role2_name'."
-                    . " This is a fatal error and cannot be disambiguated."
-                    . " The conflicting attribute is named '$attribute_name'." );
+            throw_exception( AttributeConflictInRoles => role           => $role1,
+                                                         second_role    => $role2,
+                                                         attribute_name => $attribute_name
+                           );
         }
         else {
             $role2->add_attribute(
