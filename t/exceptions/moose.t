@@ -118,9 +118,9 @@ use Test::Fatal;
         "Foo3 is a Moose::Role");
 
     is(
-	$exception->class_name,
-	"Foo3",
-	"Foo3 is not loaded");
+        $exception->class_name,
+        "Foo3",
+        "Foo3 is a Moose::Role");
 }
 
 {
