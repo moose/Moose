@@ -111,4 +111,60 @@ isnt( exception {
     );
 }, undef, '... this fails as expected' );
 
+{
+    {
+        package Foo;
+        use Moose::Role;
+
+        override test => sub { print "override test in Foo" };
+    }
+
+    my $exception = exception {
+        {
+            package Bar;
+            use Moose::Role;
+
+            override test => sub { print "override test in Bar" };
+            with 'Foo';
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QRole 'Foo' has encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error./,
+        "Foo & Bar, both roles are overriding test method");
+}
+
+{
+    {
+        package Role::A;
+        use Moose::Role;
+
+        override a_method => sub { "a method in A" };
+    }
+
+    {
+        package Role::B;
+        use Moose::Role;
+        with 'Role::A';
+    }
+
+    {
+        package Role::C;
+        use Moose::Role;
+        with 'Role::A'
+    }
+
+    my $exception = exception {
+        {
+            package Role::D;
+            use Moose::Role;
+            with 'Role::B';
+            with 'Role::C';
+        }
+    };
+
+    is( $exception, undef, "this works fine");
+}
+
 done_testing;
