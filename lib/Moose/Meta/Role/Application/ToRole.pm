@@ -135,10 +135,10 @@ sub apply_override_method_modifiers {
             # we have a conflict here, because you cannot
             # combine an overridden method with a locally
             # defined one
-            require Moose;
-            Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
-                    "during composition (A local method of the same name as been found). This " .
-                    "is fatal error.");
+            throw_exception( OverrideMethodConflictInRoleComposition => role               => $role2,
+                                                                        role_being_applied => $role1,
+                                                                        method_name        => $method_name
+                           );
         }
         else {
             # if we are a role, we need to make sure
