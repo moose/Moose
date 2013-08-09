@@ -107,10 +107,11 @@ sub apply_methods {
         if (   $role2_method
             && $role2_method->body != $method->body ) {
 
-            require Moose;
-            Moose->throw_error(
-                "Cannot create a method alias if a local method of the same name exists"
-            );
+            throw_exception( CannotCreateMethodAliasLocalMethodIsPresent => aliased_method_name => $aliased_method_name,
+                                                                            method              => $method,
+                                                                            role                => $role2,
+                                                                            role_being_applied  => $role1
+                           );
         }
 
         $role2->add_method(
