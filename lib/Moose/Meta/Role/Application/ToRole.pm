@@ -143,7 +143,7 @@ sub apply_override_method_modifiers {
             # we don't have a conflict with the role
             # we are composing into
             if ($role2->has_override_method_modifier($method_name) &&
-                $role2->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
+                $role1->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
 
                 require Moose;
                 Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
