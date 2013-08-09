@@ -230,4 +230,58 @@ use Moose();
         "Role Bar5 already has a method named foo_in_bar");
 }
 
+{
+    {
+        package Foo6;
+        use Moose::Role;
+
+        override foo6 => sub { "override foo6" };
+    }
+
+    my $exception = exception {
+        {
+            package Bar6;
+            use Moose::Role;
+            with 'Foo6';
+
+            sub foo6 { "test in foo6" }
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QRole 'Foo6' has encountered an 'override' method conflict during composition (A local method of the same name as been found). This is a fatal error./,
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::OverrideMethodConflictInRoleComposition",
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    is(
+        $exception->role_name,
+        "Bar6",
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    is(
+        $exception->role,
+        Bar6->meta,
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    is(
+        $exception->role_being_applied->name,
+        "Foo6",
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    is(
+        $exception->role_being_applied,
+        Foo6->meta,
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+
+    is(
+        $exception->method_name,
+        "foo6",
+        "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
+}
+
 done_testing;
