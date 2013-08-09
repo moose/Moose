@@ -52,7 +52,7 @@ use Moose();
     is(
         $exception->excluded_role,
         Bar->meta,
-        'Role Foo excludes Role Bar');   
+        'Role Foo excludes Role Bar');
 }
 
 {
@@ -96,7 +96,7 @@ use Moose();
         $exception->role,
         Bar2->meta,
         'Role Bar2 does Role Bar3');
-    
+
     is(
         $exception->excluded_role->name,
         "Bar3",
@@ -152,7 +152,7 @@ use Moose();
         $exception->role,
         Foo4->meta,
 	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
-    
+
     is(
         $exception->second_role->name,
         "Bar4",
