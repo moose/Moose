@@ -169,4 +169,65 @@ use Moose();
 	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 }
 
+{
+    {
+        package Foo5;
+        use Moose::Role;
+
+        sub foo5 { "foo" }
+    }
+
+    my $exception = exception {
+        {
+            package Bar5;
+            use Moose::Role;
+            with 'Foo5' => {
+                -alias    => { foo5 => 'foo_in_bar' }
+            };
+
+            sub foo_in_bar { "test in foo" }
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QCannot create a method alias if a local method of the same name exists/,
+        "Role Bar5 already has a method named foo_in_bar");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresent",
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role_name,
+        "Bar5",
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role,
+        Bar5->meta,
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role_being_applied->name,
+        "Foo5",
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role_being_applied,
+        Foo5->meta,
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->aliased_method_name,
+        "foo_in_bar",
+        "Role Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->method->name,
+        "foo5",
+        "Role Bar5 already has a method named foo_in_bar");
+}
+
 done_testing;
