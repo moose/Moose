@@ -48,7 +48,6 @@ sub check_role_exclusions {
                                                          excluded_role => Class::MOP::class_of($excluded_role_name),
                                                          class         => $class
                            );
-            $class->throw_error("The class " . $class->name . " does the excluded role '$excluded_role_name'");
         }
     }
 }
