@@ -10,6 +10,8 @@ use Scalar::Util 'weaken', 'blessed';
 
 use parent 'Moose::Meta::Role::Application';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
     Class::MOP::_definition_context(),
@@ -36,10 +38,16 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role, $class) = @_;
     if ($class->excludes_role($role->name)) {
-        $class->throw_error("Conflict detected: " . $class->name . " excludes role '" . $role->name . "'");
+        throw_exception( ConflictDetectedInCheckRoleExclusionsInToClass => class => $class,
+			                                                   role  => $role
+                       );
     }
     foreach my $excluded_role_name ($role->get_excluded_roles_list) {
         if ($class->does_role($excluded_role_name)) {
+            throw_exception( ClassDoesTheExcludedRole => role          => $role,
+                                                         excluded_role => Class::MOP::class_of($excluded_role_name),
+                                                         class         => $class
+                           );
             $class->throw_error("The class " . $class->name . " does the excluded role '$excluded_role_name'");
         }
     }
