@@ -88,13 +88,13 @@ use Moose();
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->role_name,
-        "Bar2",
+        $exception->second_role->name,
+        "Foo2",
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->role,
-        Bar2->meta,
+        $exception->second_role,
+        Foo2->meta,
         'Role Bar2 does Role Bar3');
 
     is(
@@ -105,6 +105,16 @@ use Moose();
     is(
         $exception->excluded_role,
         Bar3->meta,
+        'Role Bar2 does Role Bar3');
+
+    is(
+        $exception->role->name,
+        "Bar2",
+        'Role Bar2 does Role Bar3');
+
+    is(
+        $exception->role,
+        Bar2->meta,
         'Role Bar2 does Role Bar3');
 }
 
