@@ -184,9 +184,11 @@ sub apply_methods {
         my $class_method = $class->get_method($aliased_method_name);
 
         if ( $class_method && $class_method->body != $method->body ) {
-            $class->throw_error(
-                "Cannot create a method alias if a local method of the same name exists"
-            );
+            throw_exception( CannotCreateMethodAliasLocalMethodIsPresentInClass => aliased_method_name => $aliased_method_name,
+                                                                                   method              => $method,
+                                                                                   role                => $role,
+                                                                                   class               => $class
+                           );
         }
 
         $class->add_method(
