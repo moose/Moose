@@ -20,7 +20,7 @@ use Moose();
         excludes 'BarRole';
     }
 
-    my $exception = exception { 
+    my $exception = exception {
         {
             package FooClass;
             use Moose;
@@ -73,7 +73,7 @@ use Moose();
         use Moose::Role;
     }
 
-    my $exception = exception { 
+    my $exception = exception {
         {
             package FooClass2;
             use Moose;
