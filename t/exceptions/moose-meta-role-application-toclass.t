@@ -124,4 +124,65 @@ use Moose();
         'Class FooClass2 does Role ExcludedRole2');
 }
 
+{
+    {
+        package Foo5;
+        use Moose::Role;
+
+        sub foo5 { "foo" }
+    }
+
+    my $exception = exception {
+        {
+            package Bar5;
+            use Moose;
+            with 'Foo5' => {
+                -alias    => { foo5 => 'foo_in_bar' }
+            };
+
+            sub foo_in_bar { "test in foo" }
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QCannot create a method alias if a local method of the same name exists/,
+        "Class Bar5 already has a method named foo_in_bar");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresentInClass",
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role_name,
+        "Foo5",
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->role,
+        Foo5->meta,
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->class->name,
+        "Bar5",
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->class,
+        Bar5->meta,
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->aliased_method_name,
+        "foo_in_bar",
+        "Class Bar5 already has a method named foo_in_bar");
+
+    is(
+        $exception->method->name,
+        "foo5",
+        "Class Bar5 already has a method named foo_in_bar");
+}
+
 done_testing;
