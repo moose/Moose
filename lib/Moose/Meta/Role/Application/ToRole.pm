@@ -26,7 +26,8 @@ sub check_role_exclusions {
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
             throw_exception( RoleDoesTheExcludedRole => role          => $role2,
-                                                        excluded_role => Class::MOP::class_of($excluded_role_name)
+                                                        excluded_role => Class::MOP::class_of($excluded_role_name),
+                                                        second_role   => $role1
                            );
         }
         $role2->add_excluded_roles($excluded_role_name);
