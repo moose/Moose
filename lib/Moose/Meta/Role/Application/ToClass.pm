@@ -88,29 +88,9 @@ sub check_required_methods {
 
         my @same_role_conflicts = grep { $_->roles_as_english_list eq $roles } @conflicts;
 
-        if (@same_role_conflicts == 1) {
-            $error
-                .= "Due to a method name conflict in roles "
-                .  $roles
-                . ", the method '"
-                . $conflict->name
-                . "' must be implemented or excluded by '"
-                . $class->name
-                . q{'};
-        }
-        else {
-            my $methods
-                = Moose::Util::english_list( map { q{'} . $_->name . q{'} } @same_role_conflicts );
-
-            $error
-                .= "Due to method name conflicts in roles "
-                .  $roles
-                . ", the methods "
-                . $methods
-                . " must be implemented or excluded by '"
-                . $class->name
-                . q{'};
-        }
+        throw_exception( MethodNameConflictInRoles => conflict => \@same_role_conflicts,
+                                                      class    => $class
+                       );
     }
     elsif (@missing) {
         my $noun = @missing == 1 ? 'method' : 'methods';
