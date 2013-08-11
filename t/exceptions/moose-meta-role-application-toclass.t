@@ -185,4 +185,130 @@ use Moose();
         "Class Bar5 already has a method named foo_in_bar");
 }
 
+{
+    {
+        package Foo::Role;
+        use Moose::Role;
+
+        sub foo { 'Foo::Role::foo' }
+    }
+
+    {
+        package Bar::Role;
+        use Moose::Role;
+
+        sub foo { 'Bar::Role::foo' }
+    }
+
+    {
+        package Baz::Role;
+        use Moose::Role;
+
+        sub foo { 'Baz::Role::foo' }
+    }
+
+    my $exception = exception {
+        {
+            package My::Foo::Class::Broken;
+            use Moose;
+
+            with 'Foo::Role',
+                 'Bar::Role',
+                 'Baz::Role' => { -excludes => 'foo' };
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QDue to a method name conflict in roles 'Bar::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'/,
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameConflictInRoles",
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+
+    is(
+        $exception->class_name,
+        "My::Foo::Class::Broken",
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+
+    is(
+        $exception->class,
+        My::Foo::Class::Broken->meta,
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+
+    is(
+        $exception->get_method_at(0)->name,
+        "foo",
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+
+    is(
+        $exception->get_method_at(0)->roles_as_english_list,
+        "'Bar::Role' and 'Foo::Role'",
+        'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
+}
+
+{
+    {
+        package Foo2::Role;
+        use Moose::Role;
+
+        sub foo { 'Foo2::Role::foo' }
+        sub bar { 'Foo2::Role::bar' }
+    }
+
+    {
+        package Bar2::Role;
+        use Moose::Role;
+
+        sub foo { 'Bar2::Role::foo' }
+        sub bar { 'Bar2::Role::bar' }
+    }
+
+    {
+        package Baz2::Role;
+        use Moose::Role;
+
+        sub foo { 'Baz2::Role::foo' }
+        sub bar { 'Baz2::Role::bar' }
+    }
+
+    my $exception = exception {
+        {
+            package My::Foo::Class::Broken2;
+            use Moose;
+
+            with 'Foo2::Role',
+                 'Bar2::Role',
+                 'Baz2::Role';
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QDue to method name conflicts in roles 'Bar2::Role' and 'Foo2::Role', the methods 'bar' and 'foo' must be implemented or excluded by 'My::Foo::Class::Broken2'/,
+        'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MethodNameConflictInRoles",
+        'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
+
+    is(
+        $exception->class_name,
+        "My::Foo::Class::Broken2",
+        'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
+
+    is(
+        $exception->class,
+        My::Foo::Class::Broken2->meta,
+        'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
+
+    is(
+        $exception->get_method_at(0)->roles_as_english_list,
+        "'Bar2::Role' and 'Foo2::Role'",
+        'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
+}
+
 done_testing;
