@@ -1,4 +1,4 @@
-package Moose::Cookbook::Basics::Document_AugmentAndInner
+package Moose::Cookbook::Basics::Document_AugmentAndInner;
 
 # ABSTRACT: The augment modifier, which turns normal method overriding "inside-out"
 

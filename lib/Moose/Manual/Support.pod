@@ -1,4 +1,4 @@
-package Moose::Manual::Support
+package Moose::Manual::Support;
 
 # ABSTRACT: Policies regarding support, releases, and compatibility.
 

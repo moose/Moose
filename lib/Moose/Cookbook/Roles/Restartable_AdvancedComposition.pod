@@ -1,4 +1,4 @@
-package Moose::Cookbook::Roles::Restartable_AdvancedComposition
+package Moose::Cookbook::Roles::Restartable_AdvancedComposition;
 
 # ABSTRACT: Advanced Role Composition - method exclusion and aliasing
 
