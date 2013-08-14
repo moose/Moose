@@ -32,17 +32,17 @@ use Moose;
         'Moose::Exception::WrongTypeConstraintGiven',
         "isa is given as Int, but it should be ArrayRef");
 
-    is( 
+    is(
         $exception->required_type,
         "ArrayRef",
         "isa is given as Int, but it should be ArrayRef");
-        
-    is( 
+
+    is(
         $exception->given_type,
         "Int",
         "isa is given as Int, but it should be ArrayRef");
 
-    is( 
+    is(
         $exception->attribute_name,
         "foo",
         "isa is given as Int, but it should be ArrayRef");
@@ -73,7 +73,7 @@ use Moose;
         'Moose::Exception::HandlesMustBeAHashRef',
         "'bar' is given as handles");
 
-    is( 
+    is(
         $exception->given_handles,
         "bar",
         "'bar' is given as handles");
@@ -85,7 +85,7 @@ use Moose;
             package TraitTest;
             use Moose::Role;
             with 'Moose::Meta::Attribute::Native::Trait';
-    
+
             sub _helper_type { "ArrayRef" }
         }
 
@@ -139,7 +139,7 @@ use Moose;
         'Moose::Exception::InvalidHandleValue',
         "a Regexp is given to handles");
 
-    is( 
+    is(
         $exception->handle_value,
         $regex,
         "a Regexp is given to handles");
