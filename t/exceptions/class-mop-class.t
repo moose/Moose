@@ -458,4 +458,69 @@ use Moose();
 	"array reference was passed to _clone_instance instead of a blessed instance");
 }
 
+{
+    {
+        package My::Role;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        Class::MOP::Class->create("My::Class", superclasses => ["My::Role"]);
+    };
+
+    like(
+        $exception,
+        qr/\QThe metaclass of My::Class (Class::MOP::Class) is not compatible with the metaclass of its superclass, My::Role (Moose::Meta::Role) /,
+        "Trying to inherit a Role");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::IncompatibleMetaclassOfSuperclass",
+        "Trying to inherit a Role");
+
+    is(
+        $exception->class->name,
+        "My::Class",
+        "Trying to inherit a Role");
+
+    is(
+        $exception->superclass_name,
+        "My::Role",
+        "Trying to inherit a Role");
+
+    is(
+        $exception->superclass_meta_type,
+        "Moose::Meta::Role",
+        "Trying to inherit a Role");
+}
+
+{
+    {
+        package Super::Class;
+        use Moose;
+    }
+
+    my $class = Class::MOP::Class->create("TestClass", superclasses => ["Super::Class"]);
+    $class->immutable_trait(undef);
+    my $exception = exception {
+        $class->make_immutable( immutable_trait => '');
+    };
+
+    like(
+        $exception,
+        qr/\Qno immutable trait specified for $class/,
+        "immutable_trait set to undef");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::NoImmutableTraitSpecifiedForClass",
+        "immutable_trait set to undef");
+
+    is(
+        $exception->class->name,
+        "TestClass",
+        "immutable_trait set to undef");
+
+}
+
 done_testing;
