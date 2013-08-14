@@ -5,7 +5,6 @@ use warnings;
 
 use MRO::Compat;
 
-use Carp 'confess';
 use Scalar::Util 'blessed', 'weaken';
 
 use Moose::Util 'throw_exception';
