@@ -12,7 +12,7 @@ has 'given_handles' => (
 
 sub _build_message {
     my $self = shift;
-    "The 'handles' option must be a HASH reference, not ".$self->given_handles;    
+    "The 'handles' option must be a HASH reference, not ".$self->given_handles;
 }
 
 1;
