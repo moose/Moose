@@ -233,10 +233,10 @@ sub _check_class_metaclass_compatibility {
 
         my $super_meta_type = $super_meta->_real_ref_name;
 
-        confess "The metaclass of " . $self->name . " ("
-              . (ref($self)) . ")" .  " is not compatible with "
-              . "the metaclass of its superclass, "
-              . $superclass_name . " (" . ($super_meta_type) . ")";
+        throw_exception( IncompatibleMetaclassOfSuperclass => class                => $self,
+                                                              superclass_name      => $superclass_name,
+                                                              superclass_meta_type => $super_meta_type
+                       );
     }
 }
 
@@ -1336,7 +1336,9 @@ sub _immutable_metaclass {
     }
 
     my $trait = $args{immutable_trait} = $self->immutable_trait
-        || confess "no immutable trait specified for $self";
+        || throw_exception( NoImmutableTraitSpecifiedForClass => class  => $self,
+                                                                 params => \%args
+                          );
 
     my $meta      = $self->meta;
     my $meta_attr = $meta->find_attribute_by_name("immutable_trait");
