@@ -8,7 +8,7 @@ use 5.008003;
 
 use MRO::Compat;
 
-use Carp          'confess';
+use Class::Load 0.07 ();
 use Scalar::Util  'weaken', 'isweak', 'reftype', 'blessed';
 use Data::OptList;
 use Try::Tiny;

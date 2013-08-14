@@ -3,7 +3,6 @@ package Class::MOP::Method::Inlined;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
 use parent 'Class::MOP::Method::Generated';

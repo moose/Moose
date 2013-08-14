@@ -5,7 +5,6 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
 
 use Moose::Meta::Class;
