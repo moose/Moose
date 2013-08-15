@@ -88,6 +88,10 @@ sub DESTROY {
 
     local $?;
 
+    # < doy> if the destructor is being called because an exception is thrown, then $@ will be set
+    # < doy> but if DEMOLISH does an eval which succeeds, that will clear $@
+    # < doy> which is broken
+    # < doy> try::tiny implicitly localizes $@ in the try block, which fixes that
     Try::Tiny::try {
         $self->DEMOLISHALL(Devel::GlobalDestruction::in_global_destruction);
     }
