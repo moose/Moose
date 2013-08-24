@@ -17,7 +17,7 @@ use Moose();
 	isa     => 'Str',
 	traits  => ['String'],
 	handles => {
-            match   => 'match' 
+            match   => 'match'
 	},
 	required => 1
 	);
@@ -27,7 +27,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
 {
     my $arg = [12];
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->match( $arg );
     };
 
