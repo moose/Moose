@@ -311,4 +311,130 @@ use Moose();
         'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
 }
 
+{
+    {
+        package Foo3::Role;
+        use Moose::Role;
+        requires 'foo';
+    }
+
+    {
+        package Bar3::Role;
+        use Moose::Role;
+    }
+
+    {
+        package Baz3::Role;
+        use Moose::Role;
+    }
+
+    my $exception = exception {
+        {
+            package My::Foo::Class::Broken3;
+            use Moose;
+            with 'Foo3::Role',
+                 'Bar3::Role',
+                 'Baz3::Role';
+        }
+    };
+
+    like(
+        $exception,
+        qr/\Q'Foo3::Role|Bar3::Role|Baz3::Role' requires the method 'foo' to be implemented by 'My::Foo::Class::Broken3'/,
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RequiredMethodsNotImplementedByClass",
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    is(
+        $exception->class_name,
+        "My::Foo::Class::Broken3",
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    is(
+        $exception->class,
+        My::Foo::Class::Broken3->meta,
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    is(
+        $exception->role_name,
+        'Foo3::Role|Bar3::Role|Baz3::Role',
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    is(
+        $exception->role->name,
+        'Foo3::Role|Bar3::Role|Baz3::Role',
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+
+    is(
+        $exception->get_method_at(0)->name,
+        "foo",
+        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
+}
+
+{
+    BEGIN {
+        package ExportsFoo;
+        use Sub::Exporter -setup => {
+            exports => ['foo'],
+        };
+
+        sub foo { 'FOO' }
+
+        $INC{'ExportsFoo.pm'} = 1;
+    }
+
+    {
+        package Foo4::Role;
+        use Moose::Role;
+        requires 'foo';
+    }
+
+    my $exception = exception {
+        {
+            package Class;
+            use Moose;
+            use ExportsFoo 'foo';
+            with 'Foo4::Role';
+        }
+    };
+
+    like(
+        $exception,
+        qr/\Q'Foo4::Role' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \&foo)/,
+        "foo is required by Foo4::Role and imported by Class");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::RequiredMethodsImportedByClass",
+        "foo is required by Foo4::Role and imported by Class");
+
+    is(
+        $exception->class_name,
+        "Class",
+        "foo is required by Foo4::Role and imported by Class");
+
+    is(
+        $exception->class,
+        Class->meta,
+        "foo is required by Foo4::Role and imported by Class");
+
+    is(
+        $exception->role_name,
+        'Foo4::Role',
+        "foo is required by Foo4::Role and imported by Class");
+
+    is(
+        $exception->role->name,
+        'Foo4::Role',
+        "foo is required by Foo4::Role and imported by Class");
+
+    is(
+        $exception->get_method_at(0)->name,
+        "foo",
+        "foo is required by Foo4::Role and imported by Class");
+}
+
 done_testing;
