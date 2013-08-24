@@ -4,7 +4,6 @@ package Moose::Meta::Method::Delegation;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
 use parent 'Moose::Meta::Method',
@@ -93,21 +92,20 @@ sub _initialize_body {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
 
-        my $error
-            = !defined $proxy                 ? ' is not defined'
-            : ref($proxy) && !blessed($proxy) ? qq{ is not an object (got '$proxy')}
-            : undef;
-
-        if ($error) {
-            $self->throw_error(
-                "Cannot delegate $handle_name to $method_to_call because "
-                    . "the value of "
-                    . $self->associated_attribute->name
-                    . $error,
-                method_name => $method_to_call,
-                object      => $instance
-            );
+        if( !defined $proxy ) {
+            throw_exception( AttributeValueIsNotDefined => method     => $self,
+                                                           instance   => $instance,
+                                                           attribute  => $self->associated_attribute,
+                           );
         }
+        elsif( ref($proxy) && !blessed($proxy) ) {
+            throw_exception( AttributeValueIsNotAnObject => method      => $self,
+                                                            instance    => $instance,
+                                                            attribute   => $self->associated_attribute,
+                                                            given_value => $proxy
+                           );
+        }
+
         unshift @_, @{ $self->curried_arguments };
         $proxy->$method_to_call(@_);
     };
