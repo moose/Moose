@@ -10,7 +10,7 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              bool     => sub { 1 },
              fallback => 1;
 
-use Carp qw(confess);
+use Class::Load qw(load_class);
 use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
@@ -188,8 +188,7 @@ sub _inline_check {
     my $self = shift;
 
     unless ( $self->can_be_inlined ) {
-        require Moose;
-        Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
+        throw_exception( CannotInlineTypeConstraintCheck => type => $self );
     }
 
     if ( $self->has_parent && $self->constraint == $null_constraint ) {
@@ -295,10 +294,7 @@ sub _actually_compile_type_constraint {
 
     my $check = $self->constraint;
     unless ( defined $check ) {
-        require Moose;
-        Moose->throw_error( "Could not compile type constraint '"
-                . $self->name
-                . "' because no constraint check" );
+        throw_exception( NoConstraintCheckForTypeConstraint => type => $self );
     }
 
     return $self->_compile_subtype($check)
