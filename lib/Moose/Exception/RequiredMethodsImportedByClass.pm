@@ -28,7 +28,7 @@ sub _build_message {
     my $noun = $self->method_count == 1 ? 'method' : 'methods';
     my $list = Moose::Util::english_list( map { q{'} . $_ . q{'} } $self->get_all_methods );
 
-    my ($class, $role, $method) = ($self->class_name, 
+    my ($class, $role, $method) = ($self->class_name,
                                    $self->role->name,
                                    $self->imported_method);
 
