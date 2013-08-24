@@ -112,4 +112,32 @@ use Moose();
         "no method name is given");
 }
 
+{
+    {
+        package Bar::Role;
+        use Moose::Role;
+    }
+
+    my $meta = Bar::Role->meta;
+
+    my $exception = exception {
+        $meta->wrap_method_body;
+    };
+
+    like(
+        $exception,
+        qr/Your code block must be a CODE reference/,
+        "no arguments passed to wrap_method_body");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CodeBlockMustBeACodeRef",
+        "no arguments passed to wrap_method_body");
+
+    is(
+        $exception->instance,
+        $meta,
+        "no arguments passed to wrap_method_body");
+}
+
 done_testing;
