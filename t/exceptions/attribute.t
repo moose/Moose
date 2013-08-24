@@ -931,4 +931,123 @@ use Test::Fatal;
         'invalid default is caught when trying to get');
 }
 
+{
+    my $class = Moose::Meta::Class->create("RedundantClass");
+    my $attr = Moose::Meta::Attribute->new('foo', (auto_deref => 1,
+                                                   isa        => 'ArrayRef',
+                                                   is         => 'ro'
+                                                  )
+                                          );
+    my $attr2 = $attr->clone_and_inherit_options( isa => 'Int');
+
+    my $exception = exception {
+        $attr2->get_value($class);
+    };
+
+    like(
+        $exception,
+        qr/Can not auto de-reference the type constraint 'Int'/,
+        "Cannot auto-deref with 'Int'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotAutoDereferenceTypeConstraint",
+        "Cannot auto-deref with 'Int'");
+
+    is(
+        $exception->attribute->name,
+        "foo",
+        "Cannot auto-deref with 'Int'");
+
+    is(
+        $exception->type->name,
+        "Int",
+        "Cannot auto-deref with 'Int'");
+}
+
+{
+    {
+        my $parameterizable = subtype 'ParameterizableArrayRef', as 'ArrayRef';
+        my $int = find_type_constraint('Int');
+        my $from_parameterizable = $parameterizable->parameterize($int);
+
+	{
+            package Parameterizable;
+            use Moose;
+
+            has from_parameterizable => ( is => 'rw', isa => $from_parameterizable );
+	}
+    }
+
+    my $params = Parameterizable->new();
+    my $exception = exception {
+        $params->from_parameterizable( 'Hello' );
+    };
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        "'Hello' is a Str");
+
+    like(
+	$exception,
+	qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]' with value "Hello"/,
+        "'Hello' is a Str");
+
+    is(
+	$exception->class_name,
+	"Parameterizable",
+        "'Hello' is a Str");
+
+    is(
+        $exception->value,
+        "Hello",
+        "'Hello' is a Str");
+
+    is(
+        $exception->attribute_name,
+        "from_parameterizable",
+        "'Hello' is a Str");
+}
+
+{
+    {
+        package Test::LazyBuild::Attribute;
+        use Moose;
+
+        has 'fool' => ( lazy_build => 1, is => 'ro');
+    }
+
+    my $instance = Test::LazyBuild::Attribute->new;
+
+    my $exception = exception {
+        $instance->fool;
+    };
+
+    like(
+        $exception,
+        qr/\QTest::LazyBuild::Attribute does not support builder method '_build_fool' for attribute 'fool' /,
+        "builder method _build_fool doesn't exist");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::BuilderMethodNotSupportedForInlineAttribute",
+        "builder method _build_fool doesn't exist");
+
+    is(
+        $exception->attribute_name,
+        "fool",
+        "builder method _build_fool doesn't exist");
+
+    is(
+        $exception->builder,
+        "_build_fool",
+        "builder method _build_fool doesn't exist");
+
+    is(
+        $exception->class_name,
+        "Test::LazyBuild::Attribute",
+        "builder method _build_fool doesn't exist");
+}
+
 done_testing;
