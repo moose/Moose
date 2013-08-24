@@ -69,13 +69,9 @@ sub _inline_check_argument_count {
     if (my $min = $self->_minimum_arguments) {
         push @code, (
             'if (@_ < ' . $min . ') {',
-                $self->_inline_throw_error(
-                    sprintf(
-                        '"Cannot call %s without at least %s argument%s"',
-                        $self->delegate_to_method,
-                        $min,
-                        ($min == 1 ? '' : 's'),
-                    )
+                $self->_inline_throw_exception( "MethodExpectsMoreArgs => ".
+                                                'method_name           => "'.$self->delegate_to_method.'",'.
+                                                "minimum_args          => ".$min,
                 ) . ';',
             '}',
         );
@@ -84,13 +80,9 @@ sub _inline_check_argument_count {
     if (defined(my $max = $self->_maximum_arguments)) {
         push @code, (
             'if (@_ > ' . $max . ') {',
-                $self->_inline_throw_error(
-                    sprintf(
-                        '"Cannot call %s with %s argument%s"',
-                        $self->delegate_to_method,
-                        $max ? "more than $max" : 'any',
-                        ($max == 1 ? '' : 's'),
-                    )
+                $self->_inline_throw_exception( "MethodExpectsFewerArgs => ".
+                                                'method_name            => "'.$self->delegate_to_method.'",'.
+                                                'maximum_args           => '.$max,
                 ) . ';',
             '}',
         );
