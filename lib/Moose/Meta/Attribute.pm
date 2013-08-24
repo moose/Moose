@@ -733,14 +733,15 @@ sub _inline_check_constraint {
     else {
         return (
             'if (!' . $tc . '->(' . $value . ')) {',
-                $self->_inline_throw_error(
-                    '"Attribute (' . $attr_name . ') does not pass the type '
-                  . 'constraint because: " . '
-                  . 'do { local $_ = ' . $value . '; '
-                      . $message . '->(' . $value . ')'
-                  . '}',
-                    'data => ' . $value
-                ) . ';',
+                'my $msg = do { local $_ = ' . $value . '; '
+                . $message . '->(' . $value . ');'
+                . '};'.
+                $self->_inline_throw_exception( 'ValidationFailedForInlineTypeConstraint => '.
+                                                'type_constraint_message => $msg , '.
+                                                'class_name              => $class_name, '.
+                                                'attribute_name          => "'.$attr_name.'",'.
+                                                'value                   => '.$value
+                ).';',
             '}',
         );
     }
@@ -867,7 +868,10 @@ sub get_value {
             return wantarray ? %{ $rv } : $rv;
         }
         else {
-            $self->throw_error("Can not auto de-reference the type constraint '" . $type_constraint->name . "'", object => $instance, type_constraint => $type_constraint);
+            throw_exception( CannotAutoDereferenceTypeConstraint => type      => $type_constraint,
+                                                                    instance  => $instance,
+                                                                    attribute => $self
+                           );
         }
 
     }
@@ -912,12 +916,7 @@ sub _inline_init_from_default {
     my ($instance, $default, $tc, $coercion, $message, $for_lazy) = @_;
 
     if (!($self->has_default || $self->has_builder)) {
-        $self->throw_error(
-            'You cannot have a lazy attribute '
-          . '(' . $self->name . ') '
-          . 'without specifying a default value for it',
-            attr => $self,
-        );
+	throw_exception( LazyAttributeNeedsADefault => attribute => $self );
     }
 
     return (
@@ -955,10 +954,12 @@ sub _inline_generate_default {
             '}',
             'else {',
                 'my $class = ref(' . $instance . ') || ' . $instance . ';',
-                $self->_inline_throw_error(
-                    '"$class does not support builder method '
-                  . '\'' . $builder_str . '\' for attribute '
-                  . '\'' . $attr_name_str . '\'"'
+                $self->_inline_throw_exception(
+                    "BuilderMethodNotSupportedForInlineAttribute => ".
+                    'class_name     => $class,'.
+                    'attribute_name => "'.$attr_name_str.'",'.
+                    'instance       => '.$instance.','.
+                    'builder        => "'.$builder_str.'"'
                 ) . ';',
             '}',
         );
@@ -1294,9 +1295,9 @@ sub verify_against_type_constraint {
     my $type_constraint = $self->type_constraint;
 
     $type_constraint->check($val)
-        || throw_exception( ValidationFailedForTypeConstraint => type_constraint => $type_constraint,
-                                                                 value           => $val,
-                                                                 attribute       => $self,
+        || throw_exception( ValidationFailedForTypeConstraint => type      => $type_constraint,
+                                                                 value     => $val,
+                                                                 attribute => $self,
                           );
 }
 
