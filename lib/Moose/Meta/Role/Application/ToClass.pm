@@ -93,26 +93,20 @@ sub check_required_methods {
                        );
     }
     elsif (@missing) {
-        my $noun = @missing == 1 ? 'method' : 'methods';
-
-        my $list
-            = Moose::Util::english_list( map { q{'} . $_ . q{'} } @missing );
-
-        $error
-            .= q{'}
-            . $role->name
-            . "' requires the $noun $list "
-            . "to be implemented by '"
-            . $class->name . q{'};
-
         if (my $meth = firstval { $class->name->can($_) } @missing) {
-            $error .= ". If you imported functions intending to use them as "
-                    . "methods, you need to explicitly mark them as such, via "
-                    . $class->name . "->meta->add_method($meth => \\\&$meth)";
+            throw_exception( RequiredMethodsImportedByClass => class           => $class,
+                                                               role            => $role,
+                                                               missing_methods => \@missing,
+                                                               imported_method => $meth
+                           );
+        }
+        else {
+            throw_exception( RequiredMethodsNotImplementedByClass => class           => $class,
+                                                                     role            => $role,
+                                                                     missing_methods => \@missing,
+                           );
         }
     }
-
-    $class->throw_error($error);
 }
 
 sub check_required_attributes {
