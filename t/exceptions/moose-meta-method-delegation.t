@@ -95,4 +95,80 @@ use Moose();
 	"curried_arguments not given");
 }
 
+{
+    {
+        package BadClass;
+        use Moose;
+
+        has 'foo' => (
+            is      => 'ro',
+            handles => { get_count => 'count' }
+        );
+    }
+
+    my $object = BadClass->new;
+
+    my $exception = exception {
+        $object->get_count;
+    };
+
+    like(
+        $exception,
+        qr/Cannot delegate get_count to count because the value of foo is not defined/,
+        "foo is not set");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeValueIsNotDefined",
+        "foo is not set");
+
+    is(
+        $exception->instance,
+        $object,
+        "foo is not set");
+
+    is(
+        $exception->attribute->name,
+        "foo",
+        "foo is not set");
+}
+
+{
+    {
+        package BadClass2;
+        use Moose;
+
+        has 'foo' => (
+            is      => 'ro',
+            handles => { get_count => 'count' }
+        );
+    }
+
+    my $array = [12];
+    my $object = BadClass2->new( foo => $array );
+    my $exception = exception {
+        $object->get_count;
+    };
+
+    like(
+        $exception,
+        qr/\QCannot delegate get_count to count because the value of foo is not an object (got '$array')/,
+        "value of foo is an ARRAY ref");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeValueIsNotAnObject",
+        "value of foo is an ARRAY ref");
+
+    is(
+        $exception->given_value,
+        $array,
+        "value of foo is an ARRAY ref");
+
+    is(
+        $exception->attribute->name,
+        "foo",
+        "value of foo is an ARRAY ref");
+}
+
 done_testing;
