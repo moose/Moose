@@ -6,8 +6,7 @@ use warnings;
 use Class::MOP::Method::Meta;
 use Class::MOP::Method::Overload;
 
-use Scalar::Util 'blessed', 'reftype';
-use Carp         'confess';
+use Scalar::Util 'blessed';
 use Sub::Name    'subname';
 
 use overload ();
@@ -38,9 +37,10 @@ sub _add_meta_method {
 sub wrap_method_body {
     my ( $self, %args ) = @_;
 
-    ( 'CODE' eq reftype $args{body} )
-        || confess "Your code block must be a CODE reference";
-
+    ( 'CODE' eq ref $args{body} )
+        || throw_exception( CodeBlockMustBeACodeRef => instance => $self,
+                                                       params   => \%args
+                          );
     $self->method_metaclass->wrap(
         package_name => $self->name,
         %args,
