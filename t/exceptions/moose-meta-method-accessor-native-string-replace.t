@@ -27,7 +27,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
 {
     my $arg = [123];
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->replace($arg);
     };
 
@@ -69,7 +69,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
 {
     my $arg = [123];
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->replace('h', $arg);
     };
 
