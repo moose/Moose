@@ -26,7 +26,7 @@ use Moose();
 my $foo_obj = Foo->new( foo => 'hello' );
 
 {
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->substr(1.1);
     };
 
@@ -67,7 +67,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 }
 
 {
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->substr(1, 1.2);
     };
 
@@ -109,7 +109,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
 {
     my $arg = [122];
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->substr(1, 2, $arg);
     };
 
