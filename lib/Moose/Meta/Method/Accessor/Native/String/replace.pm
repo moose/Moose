@@ -19,15 +19,21 @@ sub _inline_check_arguments {
 
     return (
         'if (!Moose::Util::_STRINGLIKE0($_[0]) && !Params::Util::_REGEX($_[0])) {',
-            $self->_inline_throw_error(
-                '"The first argument passed to replace must be a string or '
-              . 'regexp reference"'
+            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+                                            'argument                => $_[0],'.
+                                            'method_name             => "replace",'.
+                                            'ordinal                 => "first",'.
+                                            'type_of_argument        => "string or regexp reference",'.
+                                            'type                    => "Str|RegexpRef"',
             ) . ';',
         '}',
         'if (!Moose::Util::_STRINGLIKE0($_[1]) && !Params::Util::_CODELIKE($_[1])) {',
-            $self->_inline_throw_error(
-                '"The second argument passed to replace must be a string or '
-              . 'code reference"'
+            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+                                            'argument                => $_[1],'.
+                                            'method_name             => "replace",'.
+                                            'ordinal                 => "second",'.
+                                            'type_of_argument        => "string or code reference",'.
+                                            'type                    => "Str|CodeRef"',
             ) . ';',
         '}',
     );
