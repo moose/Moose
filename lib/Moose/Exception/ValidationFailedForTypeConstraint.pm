@@ -2,13 +2,7 @@ package Moose::Exception::ValidationFailedForTypeConstraint;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::Attribute';
-
-has 'type_constraint' => (
-    is       => 'ro',
-    isa      => 'Moose::Meta::TypeConstraint',
-    required => 1,
-);
+with 'Moose::Exception::Role::Attribute', 'Moose::Exception::Role::TypeConstraint';
 
 has 'value' => (
     is       => 'ro',
@@ -18,7 +12,15 @@ has 'value' => (
 
 sub _build_message {
     my $self = shift;
-    "Attribute (". $self->attribute->name. ") does not pass the type constraint because: ".$self->type_constraint->get_message($self->value);
+
+    my $error_message = $self->type->get_message($self->value);
+
+    if( $self->is_attribute_set )
+    {
+        return "Attribute (". $self->attribute->name. ") does not pass the type constraint because: ".$error_message;
+    }
+
+    return $error_message;
 }
 
 1;
