@@ -215,8 +215,10 @@ sub assert_valid {
     my $error = $self->validate($value);
     return 1 if ! defined $error;
 
-    require Moose;
-    Moose->throw_error($error);
+    throw_exception( ValidationFailedForTypeConstraint => type          => $self,
+                                                          error_message => $error,
+                                                          value         => $value
+                   );
 }
 
 sub get_message {
