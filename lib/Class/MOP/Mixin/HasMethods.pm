@@ -77,9 +77,16 @@ sub add_method {
     subname($package_name . '::' . $method_name, $body)
         unless defined $current_name && $current_name !~ /^__ANON__/;
 
-    # If we are using the debugger, then make sure to supply extra parameters
-    # to add_package_symbol, to keep track of the method filename and line numbers
-    if ( ($^P & 0x10) && $DB::sub{$package_name . "::" . $method_name}) {
+    # If we are using the debugger, and there is debug info for this method, 
+    # and the method is a Class::MOP::Method, then supply extra parameters
+    # to add_package_symbol() to keep track of the method filename and line numbers.
+    # We only preserve the original debug info if the $method is 
+    # a Class::MOP::Method that is being restored/reinitialized.
+    if ( 
+        ($^P & 0x10) 
+        && $DB::sub{$package_name . "::" . $method_name}
+        && blessed($method) && $method->isa('Class::MOP::Method')
+    ) {
         my ( $debug_filename, $debug_startline, $debug_endline ) = $DB::sub{$package_name . "::" . $method_name} =~ /(.*):(\d+)-(\d+)/;
 
         $self->add_package_symbol("&$method_name", $body, (
