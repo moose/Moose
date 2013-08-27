@@ -77,7 +77,20 @@ sub add_method {
     subname($package_name . '::' . $method_name, $body)
         unless defined $current_name && $current_name !~ /^__ANON__/;
 
-    $self->add_package_symbol("&$method_name", $body);
+    # If we are using the debugger, then make sure to supply extra parameters
+    # to add_package_symbol, to keep track of the method filename and line numbers
+    if ( ($^P & 0x10) && $DB::sub{$package_name . "::" . $method_name}) {
+        my ( $debug_filename, $debug_startline, $debug_endline ) = $DB::sub{$package_name . "::" . $method_name} =~ /(.*):(\d+)-(\d+)/;
+
+        $self->add_package_symbol("&$method_name", $body, (
+            filename =>  $debug_filename,
+            first_line_num => $debug_startline + 0, 
+            last_line_num => $debug_endline + 0,
+        ));
+    }
+    else {
+        $self->add_package_symbol("&$method_name", $body);
+    }
 
     # we added the method to the method map too, so it's still valid
     $self->update_package_cache_flag;
