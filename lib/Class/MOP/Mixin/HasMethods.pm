@@ -77,27 +77,7 @@ sub add_method {
     subname($package_name . '::' . $method_name, $body)
         unless defined $current_name && $current_name !~ /^__ANON__/;
 
-    # If we are using the debugger, and there is debug info for this method, 
-    # and the method is a Class::MOP::Method, then supply extra parameters
-    # to add_package_symbol() to keep track of the method filename and line numbers.
-    # We only preserve the original debug info if the $method is 
-    # a Class::MOP::Method that is being restored/reinitialized.
-    if ( 
-        ($^P & 0x10) 
-        && $DB::sub{$package_name . "::" . $method_name}
-        && blessed($method) && $method->isa('Class::MOP::Method')
-    ) {
-        my ( $debug_filename, $debug_startline, $debug_endline ) = $DB::sub{$package_name . "::" . $method_name} =~ /(.*):(\d+)-(\d+)/;
-
-        $self->add_package_symbol("&$method_name", $body, (
-            filename =>  $debug_filename,
-            first_line_num => $debug_startline + 0, 
-            last_line_num => $debug_endline + 0,
-        ));
-    }
-    else {
-        $self->add_package_symbol("&$method_name", $body);
-    }
+    $self->add_package_symbol("&$method_name", $body);
 
     # we added the method to the method map too, so it's still valid
     $self->update_package_cache_flag;
@@ -190,9 +170,32 @@ sub _restore_metamethods_from {
     my $self = shift;
     my ($old_meta) = @_;
 
+    my $package_name = $self->name;
+
+    # Check if Perl debugger is enabled
+    my $debugger_enabled = ($^P & 0x10); 
+    my $debug_method_info;
+
     for my $method ($old_meta->_get_local_methods) {
+        my $method_name = $method->name;
+        
+        # Track DB::sub information for this method if debugger is enabled.
+        # This contains original method filename and line numbers.
+        $debug_method_info = '';
+        if ($debugger_enabled) {
+            $debug_method_info = $DB::sub{$package_name . "::" . $method_name} 
+        }
+        
         $method->_make_compatible_with($self->method_metaclass);
-        $self->add_method($method->name => $method);
+        $self->add_method($method_name => $method);
+
+        # Restore method debug information, which can be clobbered by add_method.
+        # Note that we handle this here instead of in add_method, because we
+        # only want to preserve the original debug info in cases where we are
+        # restoring a method, not overwriting a method.
+        if ($debugger_enabled && $debug_method_info) {
+            $DB::sub{$package_name . "::" . $method_name} = $debug_method_info;
+        }
     }
 }
 
