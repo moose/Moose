@@ -7,11 +7,11 @@ use Test::More;
 use Test::Fatal;
 use Class::MOP::Mixin::HasMethods;
 
-# When the Perl debugger is enabled, %DB::sub tracks method information 
-# (line numbers and originating file).  However, the reinitialize() 
+# When the Perl debugger is enabled, %DB::sub tracks method information
+# (line numbers and originating file).  However, the reinitialize()
 # functionality for classes and roles can sometimes clobber this information,
 # causing to reference internal MOP files/lines instead.
-# These tests check to make sure the the reinitialize() functionality 
+# These tests check to make sure the the reinitialize() functionality
 # preserves the correct debugging information when it (re)adds methods
 # back into a class or role.
 
@@ -105,7 +105,7 @@ like($DB::sub{"Bar::foo2"}, qr/(.*):(\d+)-(\d+)/, "Check for existence of Bar::f
 # Clobber Bar::foo by adding a method with the same name
 $bar_meta->add_method(
     'foo' => $bar_meta->method_metaclass->wrap(
-        package_name => $bar_meta->name, 
+        package_name => $bar_meta->name,
         name => 'foo',
         body => sub { return 'clobbered Bar::foo'; }
     )
@@ -132,7 +132,7 @@ like($DB::sub{"FooRole::foo_role"}, qr/add_method_debugmode\.t:($foo_role_start)
 # Clobber foo_role method
 $foorole_meta->add_method(
     'foo_role' => $foorole_meta->method_metaclass->wrap(
-        package_name => $foorole_meta->name, 
+        package_name => $foorole_meta->name,
         name => 'foo_role',
         body => sub { return 'clobbered FooRole::foo_role'; }
     )

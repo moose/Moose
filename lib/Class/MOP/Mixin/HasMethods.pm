@@ -173,19 +173,19 @@ sub _restore_metamethods_from {
     my $package_name = $self->name;
 
     # Check if Perl debugger is enabled
-    my $debugger_enabled = ($^P & 0x10); 
+    my $debugger_enabled = ($^P & 0x10);
     my $debug_method_info;
 
     for my $method ($old_meta->_get_local_methods) {
         my $method_name = $method->name;
-        
+
         # Track DB::sub information for this method if debugger is enabled.
         # This contains original method filename and line numbers.
         $debug_method_info = '';
         if ($debugger_enabled) {
-            $debug_method_info = $DB::sub{$package_name . "::" . $method_name} 
+            $debug_method_info = $DB::sub{$package_name . "::" . $method_name}
         }
-        
+
         $method->_make_compatible_with($self->method_metaclass);
         $self->add_method($method_name => $method);
 
