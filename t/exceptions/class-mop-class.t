@@ -520,7 +520,30 @@ use Moose();
         $exception->class->name,
         "TestClass",
         "immutable_trait set to undef");
+}
 
+{
+    my $exception = exception {
+        package NoDestructorClass;
+        use Moose;
+
+        __PACKAGE__->meta->make_immutable( destructor_class => undef, inline_destructor => 1 );
+    };
+
+    like(
+        $exception,
+        qr/The 'inline_destructor' option is present, but no destructor class was specified/,
+        "destructor_class is set to undef");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::NoDestructorClassSpecified",
+        "destructor_class is set to undef");
+
+    is(
+        $exception->class->name,
+        "NoDestructorClass",
+        "destructor_class is set to undef");
 }
 
 done_testing;
