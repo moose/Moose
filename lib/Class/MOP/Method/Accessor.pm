@@ -173,6 +173,11 @@ sub _inline_throw_error {
     return 'Carp::confess ' . $_[0];
 }
 
+sub _inline_throw_exception {
+    my ( $self, $throw_args ) = @_;
+    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+}
+
 sub _generate_writer_method {
     my $self = shift;
     my $attr = $self->associated_attribute;
