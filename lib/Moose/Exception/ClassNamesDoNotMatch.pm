@@ -11,7 +11,7 @@ has class_name => (
 
 has class => (
     is       => 'ro',
-    isa      => 'Moose::Meta::Class',
+    isa      => 'Class::MOP::Class',
     required => 1,
 );
 
