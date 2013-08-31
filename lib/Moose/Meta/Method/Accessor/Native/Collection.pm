@@ -107,11 +107,13 @@ sub _inline_check_member_constraint {
     return (
         'for my $new_val (' . $new_value . ') {',
             "if ($check) {",
-                $self->_inline_throw_error(
-                    '"A new member value for ' . $attr_name
-                  . ' does not pass its type constraint because: "' . ' . '
-                  . 'do { local $_ = $new_val; $member_message->($new_val) }',
-                    'data => $new_val',
+                'my $msg = do { local $_ = $new_val; $member_message->($new_val) };'.
+                $self->_inline_throw_exception( "ValidationFailedForInlineTypeConstraint => ".
+                                                "attribute_name          => '".$attr_name."',".
+                                                'type_constraint_message => $msg,'.
+                                                'class_name              => $class_name,'.
+                                                'value                   => $new_val,'.
+                                                'new_member              => 1',
                 ) . ';',
             '}',
         '}',
