@@ -18,8 +18,11 @@ sub _inline_check_arguments {
 
     return (
         'if (!Params::Util::_CODELIKE($_[0])) {',
-            $self->_inline_throw_error(
-                '"The argument passed to grep must be a code reference"',
+            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+                                            'argument                => $_[0],'.
+                                            'method_name             => "grep",'.
+                                            'type_of_argument        => "code reference",'.
+                                            'type                    => "CodeRef",',
             ) . ';',
         '}',
     );
