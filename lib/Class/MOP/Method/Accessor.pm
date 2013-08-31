@@ -144,15 +144,16 @@ sub _generate_reader_method {
 sub _generate_reader_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
+    my $attr_name = $attr->name;
 
     return try {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
-                    # XXX: this is a hack, but our error stuff is terrible
-                    $self->_inline_throw_error(
-                        '"Cannot assign a value to a read-only accessor"',
-                        'data => \@_'
+                    $self->_inline_throw_exception( "CannotAssignValueToReadOnlyAccessor => ".
+                                                    'class_name                          => ref $_[0],'.
+                                                    'value                               => $_[1],'.
+                                                    "attribute_name                      => '".$attr_name."'",
                     ) . ';',
                 '}',
                 $attr->_inline_get_value('$_[0]'),
