@@ -188,4 +188,47 @@ use Moose();
 	"can't call get_meta_instance on an undefined value");
 }
 
+{
+    {
+        package Foo::ReadOnlyAccessor;
+        use Moose;
+
+        has 'foo' => (
+            is       => 'ro',
+            isa      => 'Int',
+	);
+    }
+
+    my $foo = Foo::ReadOnlyAccessor->new;
+
+    my $exception = exception {
+        $foo->foo(120);
+    };
+
+    like(
+        $exception,
+        qr/Cannot assign a value to a read-only accessor/,
+        "foo is read only");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotAssignValueToReadOnlyAccessor",
+        "foo is read only");
+
+    is(
+        $exception->class_name,
+        "Foo::ReadOnlyAccessor",
+        "foo is read only");
+
+    is(
+        $exception->attribute_name,
+        "foo",
+        "foo is read only");
+
+    is(
+        $exception->value,
+        120,
+        "foo is read only");
+}
+
 done_testing;
