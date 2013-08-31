@@ -19,14 +19,21 @@ sub _inline_check_arguments {
 
     return (
         'if (!defined($_[0]) || $_[0] !~ /^\d+$/) {',
-            $self->_inline_throw_error(
-                '"The n value passed to natatime must be an integer"',
+            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+                                            'argument                => $_[0],'.
+                                            'method_name             => "natatime",'.
+                                            'type_of_argument        => "integer",'.
+                                            'type                    => "Int",'.
+                                            'argument_noun           => "n value"',
             ) . ';',
         '}',
         'if (@_ == 2 && !Params::Util::_CODELIKE($_[1])) {',
-            $self->_inline_throw_error(
-                '"The second argument passed to natatime must be a code '
-              . 'reference"',
+            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+                                            'argument                => $_[1],'.
+                                            'method_name             => "natatime",'.
+                                            'type_of_argument        => "code reference",'.
+                                            'type                    => "CodeRef",'.
+                                            'ordinal                 => "second"',
             ) . ';',
         '}',
     );
