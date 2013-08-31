@@ -1474,8 +1474,9 @@ sub _inline_destructor {
     my ( $self, %args ) = @_;
 
     ( exists $args{destructor_class} && defined $args{destructor_class} )
-        || confess "The 'inline_destructor' option is present, but "
-        . "no destructor class was specified";
+        || throw_exception( NoDestructorClassSpecified => class  => $self,
+                                                          params => \%args
+                          );
 
     if ( $self->has_method('DESTROY') && ! $args{replace_destructor} ) {
         my $class = $self->name;
