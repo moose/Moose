@@ -23,7 +23,7 @@ use Moose();
             grep          => 'grep',
             join          => 'join',
             map           => 'map',
-	    natatime      => 'natatime',
+            natatime      => 'natatime',
             reduce        => 'reduce',
             sort          => 'sort',
             sort_in_place => 'sort_in_place',
@@ -38,7 +38,7 @@ my $foo_obj;
 {
 
     my $foo_obj = Foo->new( foo => [1, 2, 3] );
-    my $exception = exception { 
+    my $exception = exception {
         $foo_obj->get(1.1);
     };
 
