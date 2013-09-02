@@ -38,7 +38,7 @@ use Moose();
 
     isa_ok(
         $exception,
-        'Moose::Exception::InvalidArgumentToMethod', 
+        'Moose::Exception::InvalidArgumentToMethod',
         "an undef is passed to exists");
 
     is(
