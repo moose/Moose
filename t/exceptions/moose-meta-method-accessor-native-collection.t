@@ -11,7 +11,7 @@ use Moose();
 {
     package Bar;
     use Moose;
-    
+
     has 'foo' => (
 	is      => 'rw',
 	isa     => 'ArrayRef[Int]',
