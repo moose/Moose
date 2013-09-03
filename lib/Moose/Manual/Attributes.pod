@@ -403,7 +403,7 @@ C<Scalar::Util::weaken> whenever the attribute is set:
 This is very useful when you're building objects that may contain
 circular references.
 
-When the object in a weak references goes out of scope, the attribute's value
+When the object in a weak reference goes out of scope, the attribute's value
 will become C<undef> "behind the scenes". This is done by the Perl interpreter
 directly, so Moose does not see this change. This means that triggers don't
 fire, coercions aren't applied, etc.
