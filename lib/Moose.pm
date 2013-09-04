@@ -333,7 +333,7 @@ features which interest you.
 
 The C<MooseX::> namespace is the official place to find Moose extensions.
 These extensions can be found on the CPAN.  The easiest way to find them
-is to search for them (L<http://search.cpan.org/search?query=MooseX::>),
+is to search for them (L<https://metacpan.org/search?q=MooseX::>),
 or to examine L<Task::Moose> which aims to keep an up-to-date, easily
 installable list of Moose extensions.
 
@@ -1000,7 +1000,7 @@ early ideas/feature-requests/encouragement/bug-finding.
 
 =over 4
 
-=item L<http://www.iinteractive.com/moose>
+=item L<http://moose.perl.org/>
 
 This is the official web home of Moose. It contains links to our public git
 repository, as well as links to a number of talks and articles on Moose and
@@ -1024,7 +1024,7 @@ Part 2 - L<http://www.stonehenge.com/merlyn/LinuxMag/col95.html>
 
 =item Several Moose extension modules in the C<MooseX::> namespace.
 
-See L<http://search.cpan.org/search?query=MooseX::> for extensions.
+See L<https://metacpan.org/search?q=MooseX::> for extensions.
 
 =back
 
