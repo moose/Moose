@@ -7,30 +7,43 @@ use lib 't/lib';
 use Moose ();
 use Module::Runtime 'module_notional_filename';
 
-{
-    ok(!exists $INC{module_notional_filename('Foo')});
-    my $meta = Moose::Meta::Class->create('Foo');
-    like($INC{module_notional_filename('Foo')}, qr{Class.MOP.Package\.pm$});
+sub inc_ok {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my ($class) = @_;
+    is($INC{module_notional_filename($class)}, '(set by Moose)');
 }
-like($INC{module_notional_filename('Foo')}, qr{Class.MOP.Package\.pm$});
+
+sub no_inc_ok {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my ($class) = @_;
+    ok(!exists $INC{module_notional_filename($class)});
+}
 
 {
+    no_inc_ok('Foo');
+    my $meta = Moose::Meta::Class->create('Foo');
+    inc_ok('Foo');
+}
+inc_ok('Foo');
+
+{
+    no_inc_ok('Bar');
     ok(!exists $INC{module_notional_filename('Bar')});
     my $meta = Class::MOP::Package->create('Bar');
-    like($INC{module_notional_filename('Bar')}, qr{Class.MOP.Package\.pm$});
+    inc_ok('Bar');
 }
-like($INC{module_notional_filename('Bar')}, qr{Class.MOP.Package\.pm$});
+inc_ok('Bar');
 
 my $anon_name;
 {
     my $meta = Moose::Meta::Class->create_anon_class;
     $anon_name = $meta->name;
-    like($INC{module_notional_filename($anon_name)}, qr{Class.MOP.Package\.pm$});
+    inc_ok($anon_name);
 }
-ok(!exists $INC{module_notional_filename($anon_name)});
+no_inc_ok($anon_name);
 
 {
-    ok(!exists $INC{module_notional_filename('Real::Package')});
+    no_inc_ok('Real::Package');
     require Real::Package;
     like($INC{module_notional_filename('Real::Package')}, qr{t.lib.Real.Package\.pm$});
     my $meta = Moose::Meta::Class->create('Real::Package');
@@ -38,19 +51,19 @@ ok(!exists $INC{module_notional_filename($anon_name)});
 }
 like($INC{module_notional_filename('Real::Package')}, qr{t.lib.Real.Package\.pm$});
 
-BEGIN { ok(!exists $INC{module_notional_filename('UseMoose')}) }
+BEGIN { no_inc_ok('UseMoose') }
 {
     package UseMoose;
     use Moose;
 }
-BEGIN { like($INC{module_notional_filename('UseMoose')}, qr{Moose\.pm$}) }
+BEGIN { inc_ok('UseMoose') }
 
-BEGIN { ok(!exists $INC{module_notional_filename('UseMooseRole')}) }
+BEGIN { no_inc_ok('UseMooseRole') }
 {
     package UseMooseRole;
     use Moose::Role;
 }
-BEGIN { like($INC{module_notional_filename('UseMooseRole')}, qr{Moose.Role\.pm$}) }
+BEGIN { inc_ok('UseMooseRole') }
 
 BEGIN {
     package My::Custom::Moose;
@@ -62,12 +75,12 @@ BEGIN {
     $INC{::module_notional_filename(__PACKAGE__)} = __FILE__;
 }
 
-BEGIN { ok(!exists $INC{module_notional_filename('UseMooseCustom')}) }
+BEGIN { no_inc_ok('UseMooseCustom') }
 {
     package UseMooseCustom;
     use My::Custom::Moose;
 }
-BEGIN { like($INC{module_notional_filename('UseMooseCustom')}, qr{Moose\.pm$}) }
+BEGIN { inc_ok('UseMooseCustom') }
 
 BEGIN {
     package My::Custom::Moose::Role;
@@ -79,11 +92,11 @@ BEGIN {
     $INC{::module_notional_filename(__PACKAGE__)} = __FILE__;
 }
 
-BEGIN { ok(!exists $INC{module_notional_filename('UseMooseCustomRole')}) }
+BEGIN { no_inc_ok('UseMooseCustomRole') }
 {
     package UseMooseCustomRole;
     use My::Custom::Moose::Role;
 }
-BEGIN { like($INC{module_notional_filename('UseMooseCustomRole')}, qr{Moose.Role\.pm$}) }
+BEGIN { inc_ok('UseMooseCustomRole') }
 
 done_testing;

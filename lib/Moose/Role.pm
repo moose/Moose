@@ -134,7 +134,7 @@ sub init_meta {
     else {
         $meta = $metaclass->initialize($role);
         my $filename = module_notional_filename($meta->name);
-        $INC{$filename} = __FILE__
+        $INC{$filename} = '(set by Moose)'
             unless exists $INC{$filename};
     }
 
