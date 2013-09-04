@@ -28,7 +28,6 @@ isnt ( exception {
     )
 }, undef, 'Class dies when attempting composition');
 
-{ local $TODO = "The second create_anon_class should die in the same way the first create_anon_class dies.";
 my $except;
 isnt ( $except = exception {
     $meta = Moose::Meta::Class->create_anon_class(
@@ -36,6 +35,5 @@ isnt ( $except = exception {
         roles        => [ 'Role::BreakOnLoad', ],
     );
 }, undef, 'Class continues to die when attempting composition');
-}
 
 done_testing;
