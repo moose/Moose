@@ -5,6 +5,7 @@ use warnings;
 use Scalar::Util 'blessed';
 use Carp         'croak';
 use Class::Load  'is_class_loaded';
+use Module::Runtime 'module_notional_filename';
 
 use Sub::Exporter;
 
@@ -132,6 +133,9 @@ sub init_meta {
     }
     else {
         $meta = $metaclass->initialize($role);
+        my $filename = module_notional_filename($meta->name);
+        $INC{$filename} = __FILE__
+            unless exists $INC{$filename};
     }
 
     if (defined $meta_name) {

@@ -7,6 +7,7 @@ use 5.008;
 use Scalar::Util 'blessed';
 use Carp         'carp', 'confess';
 use Class::Load  'is_class_loaded';
+use Module::Runtime 'module_notional_filename';
 
 use Moose::Deprecated;
 use Moose::Exporter;
@@ -191,6 +192,9 @@ sub init_meta {
         }
 
         $meta = $metaclass->initialize($class);
+        my $filename = module_notional_filename($meta->name);
+        $INC{$filename} = __FILE__
+            unless exists $INC{$filename};
     }
 
     if (defined $meta_name) {
