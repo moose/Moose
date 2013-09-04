@@ -10,75 +10,11 @@ use Moose::Util::TypeConstraints;
 
 requires '_helper_type';
 
-has _used_default_is => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
-);
-
 before '_process_options' => sub {
     my ( $self, $name, $options ) = @_;
 
     $self->_check_helper_type( $options, $name );
-
-    if ( !( any { exists $options->{$_} } qw( is reader writer accessor ) )
-        && $self->can('_default_is') ) {
-
-        $options->{is} = $self->_default_is;
-
-        $options->{_used_default_is} = 1;
-    }
-
-    if (
-        !(
-            $options->{required}
-            || any { exists $options->{$_} } qw( default builder lazy_build )
-        )
-        && $self->can('_default_default')
-        ) {
-
-        $options->{default} = $self->_default_default;
-
-        Moose::Deprecated::deprecated(
-            feature => 'default default for Native Trait',
-            message =>
-                'Allowing a native trait to automatically supply a default is deprecated.'
-                . ' You can avoid this warning by supplying a default, builder, or making the attribute required'
-        );
-    }
 };
-
-after 'install_accessors' => sub {
-    my $self = shift;
-
-    return unless $self->_used_default_is;
-
-    my @methods
-        = $self->_default_is eq 'rw'
-        ? qw( reader writer accessor )
-        : 'reader';
-
-    my $name = $self->name;
-    my $class = $self->associated_class->name;
-
-    for my $meth ( uniq grep {defined} map { $self->$_ } @methods ) {
-
-        my $message
-            = "The $meth method in the $class class was automatically created"
-            . " by the native delegation trait for the $name attribute."
-            . q{ This "default is" feature is deprecated.}
-            . q{ Explicitly set "is" or define accessor names to avoid this};
-
-        $self->associated_class->add_before_method_modifier(
-            $meth => sub {
-                Moose::Deprecated::deprecated(
-                    feature => 'default is for Native Trait',
-                    message =>$message,
-                );
-            }
-        );
-    }
-    };
 
 sub _check_helper_type {
     my ( $self, $options, $name ) = @_;

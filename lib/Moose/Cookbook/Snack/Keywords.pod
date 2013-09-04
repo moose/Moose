@@ -84,8 +84,6 @@ these keywords:
 
 =item message
 
-=item optimize_as
-
 =item inline_as
 
 =item coerce

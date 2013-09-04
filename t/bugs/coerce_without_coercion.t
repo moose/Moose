@@ -8,25 +8,19 @@ use Test::Moose;
 {
     package Foo;
 
-    use Moose::Deprecated -api_version => '1.07';
     use Moose;
 
-    has x => (
-        is     => 'rw',
-        isa    => 'HashRef',
-        coerce => 1,
+    ::like(
+        ::exception {
+            has x => (
+                is     => 'rw',
+                isa    => 'HashRef',
+                coerce => 1,
+            )
+        },
+        qr/You cannot coerce an attribute \(x\) unless its type \(HashRef\) has a coercion/,
+        "can't set coerce on an attribute whose type constraint has no coercion"
     );
 }
-
-with_immutable {
-    is( exception { Foo->new( x => {} ) }, undef, 'Setting coerce => 1 without a coercion on the type does not cause an error in the constructor' );
-
-    is( exception { Foo->new->x( {} ) }, undef, 'Setting coerce => 1 without a coercion on the type does not cause an error when setting the attribut' );
-
-    like( exception { Foo->new( x => 42 ) }, qr/\QAttribute (x) does not pass the type constraint because/, 'Attempting to provide an invalid value to the constructor for this attr still fails' );
-
-    like( exception { Foo->new->x(42) }, qr/\QAttribute (x) does not pass the type constraint because/, 'Attempting to provide an invalid value to the accessor for this attr still fails' );
-}
-'Foo';
 
 done_testing;

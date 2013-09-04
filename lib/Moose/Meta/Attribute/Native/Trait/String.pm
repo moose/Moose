@@ -3,8 +3,6 @@ use Moose::Role;
 
 with 'Moose::Meta::Attribute::Native::Trait';
 
-sub _default_default { q{} }
-sub _default_is { 'rw' }
 sub _helper_type { 'Str' }
 
 no Moose::Role;

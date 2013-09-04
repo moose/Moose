@@ -17,7 +17,6 @@ use Moose::Exporter;
 sub where (&);
 sub via (&);
 sub message (&);
-sub optimize_as (&);
 sub inline_as (&);
 
 ## --------------------------------------------------------
@@ -39,7 +38,7 @@ Moose::Exporter->setup_import_methods(
     as_is => [
         qw(
             type subtype class_type role_type maybe_type duck_type
-            as where message optimize_as inline_as
+            as where message inline_as
             coerce from via
             enum union
             find_type_constraint
@@ -329,7 +328,7 @@ sub type {
 
     return _create_type_constraint(
         $name, undef, $p{where}, $p{message},
-        $p{optimize_as}, $p{inline_as},
+        $p{inline_as},
     );
 }
 
@@ -354,7 +353,7 @@ sub subtype {
 
     return _create_type_constraint(
         $name, $p{as}, $p{where}, $p{message},
-        $p{optimize_as}, $p{inline_as},
+        $p{inline_as},
     );
 }
 
@@ -413,7 +412,6 @@ sub coerce {
 sub as { { as => shift }, @_ }
 sub where (&)       { { where       => $_[0] } }
 sub message (&)     { { message     => $_[0] } }
-sub optimize_as (&) { { optimize_as => $_[0] } }
 sub inline_as (&)   { { inline_as   => $_[0] } }
 
 sub from    {@_}
@@ -519,12 +517,11 @@ sub match_on_type {
 ## desugaring functions ...
 ## --------------------------------------------------------
 
-sub _create_type_constraint ($$$;$$) {
+sub _create_type_constraint ($$$;$) {
     my $name      = shift;
     my $parent    = shift;
     my $check     = shift;
     my $message   = shift;
-    my $optimized = shift;
     my $inlined   = shift;
 
     my $pkg_defined_in = scalar( caller(1) );
@@ -551,7 +548,6 @@ sub _create_type_constraint ($$$;$$) {
 
         ( $check     ? ( constraint => $check )     : () ),
         ( $message   ? ( message    => $message )   : () ),
-        ( $optimized ? ( optimized  => $optimized ) : () ),
         ( $inlined   ? ( inlined    => $inlined )   : () ),
     );
 
@@ -970,7 +966,7 @@ name and a hashref of parameters:
  subtype( 'Foo', { where => ..., message => ... } );
 
 The valid hashref keys are C<as> (the parent), C<where>, C<message>,
-and C<optimize_as>.
+and C<inline_as>.
 
 =item B<< subtype as 'Parent', where { } ... >>
 
@@ -1130,18 +1126,6 @@ C<Value> type, which is a subtype of C<Defined>:
         $_[0]->parent()->_inline_check($_[1])
         . ' && !ref(' . $_[1] . ')'
     }
-
-=item B<optimize_as { ... }>
-
-B<This feature is deprecated, use C<inline_as> instead.>
-
-This can be used to define a "hand optimized" version of your
-type constraint which can be used to avoid traversing a subtype
-constraint hierarchy.
-
-B<NOTE:> You should only use this if you know what you are doing.
-All the built in types use this, so your subtypes (assuming they
-are shallow) will not likely need to use this.
 
 =item B<< type 'Name', where { } ... >>
 

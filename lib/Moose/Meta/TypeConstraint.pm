@@ -75,13 +75,6 @@ __PACKAGE__->meta->add_attribute('coercion'   => (
     Class::MOP::_definition_context(),
 ));
 
-__PACKAGE__->meta->add_attribute('hand_optimized_type_constraint' => (
-    init_arg  => 'optimized',
-    accessor  => 'hand_optimized_type_constraint',
-    predicate => 'has_hand_optimized_type_constraint',
-    Class::MOP::_definition_context(),
-));
-
 __PACKAGE__->meta->add_attribute('inlined' => (
     init_arg  => 'inlined',
     accessor  => 'inlined',
@@ -119,15 +112,6 @@ sub new {
     my ($first, @rest) = @_;
     my %args = ref $first ? %$first : $first ? ($first, @rest) : ();
     $args{name} = $args{name} ? "$args{name}" : "__ANON__";
-
-    if ( $args{optimized} ) {
-        Moose::Deprecated::deprecated(
-            feature => 'optimized type constraint sub ref',
-            message =>
-                'Providing an optimized subroutine ref for type constraints is deprecated.'
-                . ' Use the inlining feature (inline_as) instead.'
-        );
-    }
 
     if ( exists $args{message}
       && (!ref($args{message}) || ref($args{message}) ne 'CODE') ) {
@@ -248,10 +232,6 @@ sub equals {
 
     return 1 if $self == $other;
 
-    if ( $self->has_hand_optimized_type_constraint and $other->has_hand_optimized_type_constraint ) {
-        return 1 if $self->hand_optimized_type_constraint == $other->hand_optimized_type_constraint;
-    }
-
     return unless $self->constraint == $other->constraint;
 
     if ( $self->has_parent ) {
@@ -299,9 +279,6 @@ sub compile_type_constraint {
 sub _actually_compile_type_constraint {
     my $self = shift;
 
-    return $self->_compile_hand_optimized_type_constraint
-        if $self->has_hand_optimized_type_constraint;
-
     if ( $self->can_be_inlined ) {
         return eval_closure(
             source      => 'sub { ' . $self->_inline_check('$_[0]') . ' }',
@@ -323,54 +300,19 @@ sub _actually_compile_type_constraint {
     return $self->_compile_type($check);
 }
 
-sub _compile_hand_optimized_type_constraint {
-    my $self = shift;
-
-    my $type_constraint = $self->hand_optimized_type_constraint;
-
-    unless ( ref $type_constraint ) {
-        require Moose;
-        Moose->throw_error("Hand optimized type constraint is not a code reference");
-    }
-
-    return $type_constraint;
-}
-
 sub _compile_subtype {
     my ($self, $check) = @_;
 
     # gather all the parent constraints in order
     my @parents;
-    my $optimized_parent;
     foreach my $parent ($self->_collect_all_parents) {
-        # if a parent is optimized, the optimized constraint already includes
-        # all of its parents tcs, so we can break the loop
-        if ($parent->has_hand_optimized_type_constraint) {
-            push @parents => $optimized_parent = $parent->hand_optimized_type_constraint;
-            last;
-        }
-        else {
-            push @parents => $parent->constraint;
-        }
+        push @parents => $parent->constraint;
     }
 
     @parents = grep { $_ != $null_constraint } reverse @parents;
 
     unless ( @parents ) {
         return $self->_compile_type($check);
-    } elsif( $optimized_parent and @parents == 1 ) {
-        # the case of just one optimized parent is optimized to prevent
-        # looping and the unnecessary localization
-        if ( $check == $null_constraint ) {
-            return $optimized_parent;
-        } else {
-            return subname($self->name, sub {
-                return undef unless $optimized_parent->($_[0]);
-                my (@args) = @_;
-                local $_ = $args[0];
-                $check->(@args);
-            });
-        }
     } else {
         # general case, check all the constraints, from the first parent to ourselves
         my @checks = @parents;
@@ -485,15 +427,6 @@ This is optional.
 A hash reference of variables to close over. The keys are variables names, and
 the values are I<references> to the variables.
 
-=item * optimized
-
-B<This option is deprecated.>
-
-This is a variant of the C<constraint> parameter that is somehow
-optimized. Typically, this means incorporating both the type's
-constraint and all of its parents' constraints into a single
-subroutine reference.
-
 =back
 
 =item B<< $constraint->equals($type_name_or_object) >>
@@ -590,19 +523,6 @@ Returns true if the type has a coercion.
 Returns true if this type constraint can be inlined. A type constraint which
 subtypes an inlinable constraint and does not add an additional constraint
 "inherits" its parent type's inlining.
-
-=item B<< $constraint->hand_optimized_type_constraint >>
-
-B<This method is deprecated.>
-
-Returns the type's hand optimized constraint, as provided to the
-constructor via the C<optimized> option.
-
-=item B<< $constraint->has_hand_optimized_type_constraint >>
-
-B<This method is deprecated.>
-
-Returns true if the type has an optimized constraint.
 
 =item B<< $constraint->create_child_type(%options) >>
 

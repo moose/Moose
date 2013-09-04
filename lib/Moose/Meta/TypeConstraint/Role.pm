@@ -37,18 +37,9 @@ sub new {
 
     my $self = $class->SUPER::new( \%args );
 
-    $self->_create_hand_optimized_type_constraint;
     $self->compile_type_constraint();
 
     return $self;
-}
-
-sub _create_hand_optimized_type_constraint {
-    my $self = shift;
-    my $role = $self->role;
-    $self->hand_optimized_type_constraint(
-        sub { Moose::Util::does_role($_[0], $role) }
-    );
 }
 
 sub parents {

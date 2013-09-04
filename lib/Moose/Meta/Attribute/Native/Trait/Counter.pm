@@ -4,8 +4,6 @@ use Moose::Role;
 
 with 'Moose::Meta::Attribute::Native::Trait';
 
-sub _default_default { 0 }
-sub _default_is { 'ro' }
 sub _helper_type { 'Num' }
 sub _root_types { 'Num', 'Int' }
 

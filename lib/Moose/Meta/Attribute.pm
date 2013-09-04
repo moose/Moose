@@ -414,10 +414,9 @@ sub _process_coerce_option {
     unless ( $options->{type_constraint}->has_coercion ) {
         my $type = $options->{type_constraint}->name;
 
-        Moose::Deprecated::deprecated(
-            feature => 'coerce without coercion',
-            message =>
-                "You cannot coerce an attribute ($name) unless its type ($type) has a coercion"
+        $class->throw_error(
+            "You cannot coerce an attribute ($name) unless its type ($type) has a coercion",
+            data => $options,
         );
     }
 }
@@ -1339,7 +1338,7 @@ name as the attribute, and a C<writer> with the name you provided.
 
 Use 'bare' when you are deliberately not installing any methods
 (accessor, reader, etc.) associated with this attribute; otherwise,
-Moose will issue a deprecation warning when this attribute is added to a
+Moose will issue a warning when this attribute is added to a
 metaclass.
 
 =item * isa => $type

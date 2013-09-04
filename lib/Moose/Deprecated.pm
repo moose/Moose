@@ -4,10 +4,6 @@ use strict;
 use warnings;
 
 use Package::DeprecationManager 0.07 -deprecations => {
-    'optimized type constraint sub ref' => '2.0000',
-    'default is for Native Trait'       => '1.14',
-    'default default for Native Trait'  => '1.14',
-    'coerce without coercion'           => '1.08',
     },
     -ignore => [qr/^(?:Class::MOP|Moose)(?:::)?/],
     ;

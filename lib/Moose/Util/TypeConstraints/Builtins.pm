@@ -11,7 +11,6 @@ sub type { goto &Moose::Util::TypeConstraints::type }
 sub subtype { goto &Moose::Util::TypeConstraints::subtype }
 sub as { goto &Moose::Util::TypeConstraints::as }
 sub where (&) { goto &Moose::Util::TypeConstraints::where }
-sub optimize_as (&) { goto &Moose::Util::TypeConstraints::optimize_as }
 sub inline_as (&) { goto &Moose::Util::TypeConstraints::inline_as }
 
 sub define_builtins {

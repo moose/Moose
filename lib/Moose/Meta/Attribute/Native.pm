@@ -101,19 +101,6 @@ delegation.
 
 See the docs for each native trait for details on what methods are available.
 
-=head2 is
-
-Some traits provide a default C<is> for historical reasons. This behavior is
-deprecated, and you are strongly encouraged to provide a value. If you don't
-plan to read and write the attribute value directly, not passing the C<is>
-option will prevent standard accessor generation.
-
-=head2 default or builder
-
-Some traits provide a default C<default> for historical reasons. This behavior
-is deprecated, and you are strongly encouraged to provide a default value or
-make the attribute required.
-
 =head1 TRAITS FOR NATIVE DELEGATIONS
 
 Below are some simple examples of each native trait. More features are

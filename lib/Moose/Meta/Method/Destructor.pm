@@ -59,12 +59,6 @@ sub is_needed {
     return $metaclass->find_method_by_name("DEMOLISHALL");
 }
 
-sub initialize_body {
-    Carp::cluck('The initialize_body method has been made private.'
-        . " The public version is deprecated and will be removed in a future release.\n");
-    shift->_initialize_body;
-}
-
 sub _initialize_body {
     my $self = shift;
     # TODO:
