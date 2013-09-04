@@ -2,10 +2,10 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal qw{dies_ok};
+use Test::Fatal;
 use Moose ();
 
-use lib 't/lib/Role';
+use lib 't/lib';
 
 {
     package t::bugs::Bar;
@@ -19,28 +19,26 @@ use lib 't/lib/Role';
     1;
 }
 
-TODO:
 {
     local $TODO = "The second create_anon_class should die in the same way
         the first create_anon_class dies.";
 
     my $meta;
-    dies_ok
-        {
-            $meta = Moose::Meta::Class->create_anon_class(
-                superclasses => [ 't::bugs::Bar', ], # any old class will work
-                roles        => [ 'Role::BreakOnLoad', ],
-            )
-        }
-        'Class dies when attempting composition';
+    use Data::Dumper;
+    isnt ( exception {
+        $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => [ 't::bugs::Bar', ], # any old class will work
+            roles        => [ 'Role::BreakOnLoad', ],
+        )
+    }, undef, 'Class dies when attempting composition');
 
-        {
-            $meta = Moose::Meta::Class->create_anon_class(
-                superclasses => [ 't::bugs::Bar', ],
-                roles        => [ 'Role::BreakOnLoad', ],
-            );
-        }
-        'Class continues to die when attempting composition';
+    my $except;
+    isnt ( $except = exception {
+        $meta = Moose::Meta::Class->create_anon_class(
+            superclasses => [ 't::bugs::Bar', ],
+            roles        => [ 'Role::BreakOnLoad', ],
+        );
+    }, undef, 'Class continues to die when attempting composition');
 }
 
 done_testing;
