@@ -79,10 +79,9 @@ of the Perl install process these warnings may be easy to miss.
 
 =head1 BACKWARDS COMPATIBILITY
 
-We try to ensure compatibility by having a extensive test suite (last
-count just over around 5123 tests), as well as testing a number of
-packages (currently just under 100 packages) that depend on Moose before
-any release.
+We try to ensure compatibility by having a extensive test suite (last count
+over 18000 tests), as well as testing a number of packages (currently just
+under 100 packages) that depend on Moose before any release.
 
 The current list of downstream dependencies that are tested is in
 C<xt/author/test-my-dependents.t>.
