@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Class::Load 0.07 qw(load_class load_first_existing_class);
+use Module::Runtime 'use_package_optimistically';
 use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
@@ -123,7 +123,7 @@ sub _apply_all_roles {
             $meta = $role->[0];
         }
         else {
-            load_class( $role->[0] , $role->[1] );
+            _load_user_class( $role->[0] , $role->[1] );
             $meta = find_meta( $role->[0] );
         }
 
@@ -143,7 +143,7 @@ sub _apply_all_roles {
 
     return unless @role_metas;
 
-    load_class($applicant)
+    _load_user_class($applicant)
         unless blessed($applicant)
             || Class::MOP::class_of($applicant);
 
@@ -216,15 +216,23 @@ sub _build_alias_package_name {
             $type, $metaclass_name, $options{trait}
         );
 
-        my $loaded_class = load_first_existing_class(
-            $possible_full_name,
-            $metaclass_name
-        );
+        my @possible = ($possible_full_name, $metaclass_name);
+        for my $package (@possible) {
+            use_package_optimistically($package);
+            if ($package->can('register_implementation')) {
+                return $cache{$cache_key}{$metaclass_name} =
+                    $package->register_implementation;
+            }
+            elsif (find_meta($package)) {
+                return $cache{$cache_key}{$metaclass_name} = $package;
+            }
+        }
 
-        return $cache{$cache_key}{$metaclass_name}
-            = $loaded_class->can('register_implementation')
-            ? $loaded_class->register_implementation
-            : $loaded_class;
+        require Moose;
+        Moose->throw_error(
+            "Can't locate " . _or_list(@possible) . " in \@INC "
+        . "(\@INC contains: @INC)."
+        );
     }
 }
 
@@ -304,6 +312,27 @@ sub meta_class_alias {
     my $meta = Class::MOP::class_of($from);
     my $trait = $meta->isa('Moose::Meta::Role');
     _create_alias('Class', $to, $trait, $from);
+}
+
+sub _load_user_class {
+    my ($class, $opts) = @_;
+    use_package_optimistically(
+        $class,
+        $opts ? $opts->{-version} : ()
+    );
+}
+
+sub _or_list {
+    return $_[0] if @_ == 1;
+
+    return join ' or ', @_ if @_ ==2;
+
+    my $last = pop;
+
+    my $list = join ', ', @_;
+    $list .= ', or ' . $last;
+
+    return $list;
 }
 
 # XXX - this should be added to Params::Util

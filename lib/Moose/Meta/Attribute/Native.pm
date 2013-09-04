@@ -1,6 +1,6 @@
 package Moose::Meta::Attribute::Native;
 
-use Class::Load qw(load_class);
+use Module::Runtime 'require_module';
 
 my @trait_names = qw(Bool Counter Number String Array Hash Code);
 
@@ -19,7 +19,7 @@ for my $trait_name (@trait_names) {
     $meta->add_method(register_implementation => sub {
         # resolve_metatrait_alias will load classes anyway, but throws away
         # their error message; we WANT to die if there's a problem
-        load_class($trait_class);
+        require_module($trait_class);
         return $trait_class;
     });
 }

@@ -3,7 +3,7 @@ package oose;
 use strict;
 use warnings;
 
-use Class::Load qw(load_class);
+use Moose::Util ();
 
 BEGIN {
     my $package;
@@ -11,7 +11,7 @@ BEGIN {
         $package = $_[1] || 'Class';
         if ($package =~ /^\+/) {
             $package =~ s/^\+//;
-            load_class($package);
+            Moose::Util::_load_user_class($package);
         }
     }
     use Filter::Simple sub { s/^/package $package;\nuse Moose;use Moose::Util::TypeConstraints;\n/; }

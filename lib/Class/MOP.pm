@@ -9,7 +9,6 @@ use 5.008;
 use MRO::Compat;
 
 use Carp          'confess';
-use Class::Load 0.07 ();
 use Scalar::Util  'weaken', 'isweak', 'reftype', 'blessed';
 use Data::OptList;
 use Try::Tiny;
@@ -68,14 +67,17 @@ XSLoader::load(
 }
 
 sub load_class {
+    require Class::Load;
     goto &Class::Load::load_class;
 }
 
 sub load_first_existing_class {
+    require Class::Load;
     goto &Class::Load::load_first_existing_class;
 }
 
 sub is_class_loaded {
+    require Class::Load;
     goto &Class::Load::is_class_loaded;
 }
 

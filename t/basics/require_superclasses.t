@@ -36,7 +36,10 @@ use Test::Fatal;
     package Bling;
     use Moose;
 
-    ::like( ::exception { extends 'No::Class' }, qr{Can't locate No/Class\.pm in \@INC}, 'correct error when superclass could not be found' );
+    my $warnings = '';
+    local $SIG{__WARN__} = sub { $warnings .= $_[0] };
+    ::is( ::exception { extends 'No::Class' }, undef, "extending an empty package is a valid thing to do" );
+    ::like( $warnings, qr/^Can't locate package No::Class for \@Bling::ISA/, "but it does give a warning" );
 }
 
 {

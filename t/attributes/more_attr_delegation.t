@@ -69,6 +69,8 @@ do not fail at compile time.
     sub child_f_method_1 { "f1" }
     sub child_f_method_2 { "f2" }
 
+    $INC{'ChildF.pm'} = __FILE__;
+
     package ChildG;
     use Moose;
 

@@ -4,8 +4,9 @@ use strict;
 use warnings;
 use metaclass;
 
-use Class::Load qw(load_class);
 use Scalar::Util 'blessed';
+
+use Moose::Util;
 
 use base 'Moose::Meta::Role';
 
@@ -121,7 +122,7 @@ sub get_method {
 
 sub apply_params {
     my ($self, $role_params) = @_;
-    load_class($self->application_role_summation_class);
+    Moose::Util::_load_user_class($self->application_role_summation_class);
 
     $self->application_role_summation_class->new(
         role_params => $role_params,

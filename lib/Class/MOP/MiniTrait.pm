@@ -3,13 +3,13 @@ package Class::MOP::MiniTrait;
 use strict;
 use warnings;
 
-use Class::Load qw(load_class);
+use Module::Runtime 'use_package_optimistically';
 
 sub apply {
     my ( $to_class, $trait ) = @_;
 
     for ( grep { !ref } $to_class, $trait ) {
-        load_class($_);
+        use_package_optimistically($_);
         $_ = Class::MOP::Class->initialize($_);
     }
 

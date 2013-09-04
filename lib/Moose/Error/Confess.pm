@@ -20,6 +20,11 @@ sub _inline_new {
   . ')';
 }
 
+__PACKAGE__->meta->make_immutable(
+    inline_constructor => 0,
+    inline_accessors   => 0,
+);
+
 1;
 
 # ABSTRACT: Prefer C<confess>

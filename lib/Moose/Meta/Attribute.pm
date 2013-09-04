@@ -5,7 +5,6 @@ use strict;
 use warnings;
 
 use B ();
-use Class::Load qw(is_class_loaded load_class);
 use Scalar::Util 'blessed', 'weaken';
 use List::MoreUtils 'any';
 use Try::Tiny;
@@ -1170,7 +1169,7 @@ sub _canonicalize_handles {
         }
     }
 
-    load_class($handles);
+    Moose::Util::_load_user_class($handles);
     my $role_meta = Class::MOP::class_of($handles);
 
     (blessed $role_meta && $role_meta->isa('Moose::Meta::Role'))
@@ -1203,7 +1202,7 @@ sub _get_delegate_method_list {
 sub _find_delegate_metaclass {
     my $self = shift;
     if (my $class = $self->_isa_metadata) {
-        unless ( is_class_loaded($class) ) {
+        unless ($INC{module_notional_filename($class)}) {
             $self->throw_error(
                 sprintf(
                     'The %s attribute is trying to delegate to a class which has not been loaded - %s',
@@ -1217,7 +1216,7 @@ sub _find_delegate_metaclass {
         return Class::MOP::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
-        unless ( is_class_loaded($class) ) {
+        unless ($INC{module_notional_filename($role)}) {
             $self->throw_error(
                 sprintf(
                     'The %s attribute is trying to delegate to a role which has not been loaded - %s',

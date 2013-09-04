@@ -12,6 +12,8 @@ use Test::Fatal;
     }
 
     sub a { 'Foo::a' }
+
+    $INC{'Foo.pm'} = __FILE__;
 }
 
 {

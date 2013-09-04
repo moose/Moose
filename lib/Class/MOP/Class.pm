@@ -11,7 +11,7 @@ use Class::MOP::Method::Constructor;
 use Class::MOP::MiniTrait;
 
 use Carp         'confess';
-use Class::Load  'is_class_loaded', 'load_class';
+use Module::Runtime 'use_package_optimistically';
 use Scalar::Util 'blessed', 'reftype', 'weaken';
 use Sub::Name    'subname';
 use Try::Tiny;
@@ -1337,7 +1337,7 @@ sub _immutable_metaclass {
     }
 
     return $class_name
-        if is_class_loaded($class_name);
+        if Class::MOP::does_metaclass_exist($class_name);
 
     # If the metaclass is a subclass of CMOP::Class which has had
     # metaclass roles applied (via Moose), then we want to make sure
@@ -1427,7 +1427,10 @@ sub _inline_constructor {
 
     my $constructor_class = $args{constructor_class};
 
-    load_class($constructor_class);
+    {
+        local $@;
+        use_package_optimistically($constructor_class);
+    }
 
     my $constructor = $constructor_class->new(
         options      => \%args,
@@ -1464,7 +1467,10 @@ sub _inline_destructor {
 
     my $destructor_class = $args{destructor_class};
 
-    load_class($destructor_class);
+    {
+        local $@;
+        use_package_optimistically($destructor_class);
+    }
 
     return unless $destructor_class->is_needed($self);
 

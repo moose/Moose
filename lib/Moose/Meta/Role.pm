@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Class::Load qw(load_class);
 use Scalar::Util 'blessed';
 use Carp         'confess';
 use Devel::GlobalDestruction 'in_global_destruction';
@@ -450,7 +449,7 @@ sub apply {
         $application_class = $self->application_to_instance_class;
     }
 
-    load_class($application_class);
+    Moose::Util::_load_user_class($application_class);
 
     if ( exists $args{'-excludes'} ) {
         # I wish we had coercion here :)

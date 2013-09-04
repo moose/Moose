@@ -45,6 +45,11 @@ sub create_error_confess {
     return Moose::Error::Util::create_error_confess(@args);
 }
 
+__PACKAGE__->meta->make_immutable(
+    inline_constructor => 0,
+    inline_accessors   => 0,
+);
+
 1;
 
 # ABSTRACT: L<Carp> based error generation for Moose.

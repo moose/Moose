@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Class::Load  'load_class';
+use Module::Runtime 'use_package_optimistically';
 use Scalar::Util 'blessed';
 use Try::Tiny;
 
@@ -23,7 +23,7 @@ sub import {
     unless ( defined $metaclass ) {
         $metaclass = "Class::MOP::Class";
     } else {
-        load_class($metaclass);
+        use_package_optimistically($metaclass);
     }
 
     ($metaclass->isa('Class::MOP::Class'))
@@ -32,7 +32,7 @@ sub import {
     # make sure the custom metaclasses get loaded
     foreach my $key (grep { /_(?:meta)?class$/ } keys %options) {
         unless ( ref( my $class = $options{$key} ) ) {
-            load_class($class)
+            use_package_optimistically($class)
         }
     }
 
