@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Module::Runtime 'use_package_optimistically';
+use Module::Runtime 'use_package_optimistically', 'module_notional_filename';
 use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
@@ -501,6 +501,11 @@ sub _is_role_only_subclass {
     }
 
     return 1;
+}
+
+sub _is_package_loaded {
+    my ($package) = @_;
+    defined $INC{module_notional_filename($package)};
 }
 
 1;

@@ -1202,7 +1202,7 @@ sub _get_delegate_method_list {
 sub _find_delegate_metaclass {
     my $self = shift;
     if (my $class = $self->_isa_metadata) {
-        unless ($INC{module_notional_filename($class)}) {
+        unless (Moose::Util::_is_package_loaded($class)) {
             $self->throw_error(
                 sprintf(
                     'The %s attribute is trying to delegate to a class which has not been loaded - %s',
@@ -1216,7 +1216,7 @@ sub _find_delegate_metaclass {
         return Class::MOP::Class->initialize($class);
     }
     elsif (my $role = $self->_does_metadata) {
-        unless ($INC{module_notional_filename($role)}) {
+        unless (Moose::Util::_is_package_loaded($role)) {
             $self->throw_error(
                 sprintf(
                     'The %s attribute is trying to delegate to a role which has not been loaded - %s',
