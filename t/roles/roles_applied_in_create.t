@@ -8,7 +8,7 @@ use Test::Fatal;
 use Moose::Meta::Class;
 use Moose::Util;
 
-use lib 't/lib', 'lib';
+use lib 't/lib';
 
 
 # Note that this test passed (pre svn #5543) if we inlined the role
