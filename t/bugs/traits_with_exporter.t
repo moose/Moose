@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 use lib "t/lib";
 use strict;
 use warnings;

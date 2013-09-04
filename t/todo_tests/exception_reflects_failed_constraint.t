@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 # In the case where a child type constraint's parent constraint fails,
 # the exception should reference the parent type constraint that actually
 # failed instead of always referencing the child'd type constraint
