@@ -1057,7 +1057,8 @@ All complex software has bugs lurking in it, and this module is no
 exception.
 
 Please report any bugs to C<bug-moose@rt.cpan.org>, or through the web
-interface at L<http://rt.cpan.org>.
+interface at L<http://rt.cpan.org>. You can also submit a C<TODO> test as a
+pull request at L<https://github.com/moose/moose>.
 
 You can also discuss feature requests or possible bugs on the Moose mailing
 list (moose@perl.org) or on IRC at L<irc://irc.perl.org/#moose>.
