@@ -1082,25 +1082,7 @@ can contribute.
 There are only a few people with the rights to release a new version
 of Moose. The Moose Cabal are the people to go to with questions regarding
 the wider purview of Moose. They help maintain not just the code
-but the community as well.
-
-Stevan (stevan) Little E<lt>stevan@iinteractive.comE<gt>
-
-Jesse (doy) Luehrs E<lt>doy at tozt dot netE<gt>
-
-Yuval (nothingmuch) Kogman
-
-Shawn (sartak) Moore E<lt>sartak@bestpractical.comE<gt>
-
-Hans Dieter (confound) Pearcey E<lt>hdp@pobox.comE<gt>
-
-Chris (perigrin) Prather
-
-Florian Ragwitz E<lt>rafl@debian.orgE<gt>
-
-Dave (autarch) Rolsky E<lt>autarch@urth.orgE<gt>
-
-Karen (ether) Etheridge E<lt>ether@cpan.orgE<gt>
+but the community as well. See the list below under C<AUTHORS>.
 
 =head1 CONTRIBUTORS
 
