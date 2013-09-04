@@ -230,7 +230,7 @@ sub _build_alias_package_name {
 
         require Moose;
         Moose->throw_error(
-            "Can't locate " . _or_list(@possible) . " in \@INC "
+            "Can't locate " . _english_list_or(@possible) . " in \@INC "
         . "(\@INC contains: @INC)."
         );
     }
@@ -271,14 +271,28 @@ sub add_method_modifier {
 }
 
 sub english_list {
-    my @items = sort @_;
+    _english_list_and(@_);
+}
+
+sub _english_list_and {
+    _english_list('and', \@_);
+}
+
+sub _english_list_or {
+    _english_list('or', \@_);
+}
+
+sub _english_list {
+    my ($conjunction, $items) = @_;
+
+    my @items = sort @$items;
 
     return $items[0] if @items == 1;
-    return "$items[0] and $items[1]" if @items == 2;
+    return "$items[0] $conjunction $items[1]" if @items == 2;
 
     my $tail = pop @items;
     my $list = join ', ', @items;
-    $list .= ', and ' . $tail;
+    $list .= ", $conjunction " . $tail;
 
     return $list;
 }
@@ -320,19 +334,6 @@ sub _load_user_class {
         $class,
         $opts ? $opts->{-version} : ()
     );
-}
-
-sub _or_list {
-    return $_[0] if @_ == 1;
-
-    return join ' or ', @_ if @_ ==2;
-
-    my $last = pop;
-
-    my $list = join ', ', @_;
-    $list .= ', or ' . $last;
-
-    return $list;
 }
 
 # XXX - this should be added to Params::Util
