@@ -12,6 +12,13 @@ for, noteworthy changes.
     details. Note that this is slightly backwards-incompatible in some edge
     cases.
 
+  * Moose now uses Module::Runtime instead of Class::Load to load classes. This
+    means that there are no more issues with the weird heuristics that
+    Class::Load does to determine if a class was previously loaded (inheriting
+    from an empty package is now possible, for instance). See
+    Moose::Manual::Delta for more details. This is also slightly
+    backwards-incompatible in some edge cases.
+
 2.1005 Tue, Aug 06, 2013
 
   [ENHANCEMENTS]

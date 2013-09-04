@@ -41,6 +41,47 @@ If you're using the MOP, this behavior will occur when the C<create> (or
 C<create_anon_class>) method is used, but not when the C<initialize> method
 is used.
 
+=item Moose now uses L<Module::Runtime> instead of L<Class::Load> to load classes
+
+Class::Load has always had some weird issues with the ways that it tries to
+figure out if a class is loaded. For instance, extending an empty package was
+previously impossible, because Class::Load would think that the class failed to
+load, even though that is a perfectly valid thing to do. It was also difficult
+to deal with modules like L<IO::Handle>, which partially populate several other
+packages when they are loaded (so calling C<load_class> on C<'IO::Handle'>
+followed by C<'IO::File'> could end up with a broken C<IO::File>, in some
+cases).
+
+Now, Moose uses the same mechanisms as perl itself to figure out if a class is
+loaded. A class is considered to be loaded if its entry in C<%INC> is set. Perl
+sets the C<%INC> entry for you automatically whenever a file is loaded via
+C<use> or C<require>. Also, as mentioned above, Moose also now sets the C<%INC>
+entry for any classes defined with it, even if they aren't loaded from a
+separate file. This does however mean that if you are trying to use Moose with
+non-Moose classes defined in the same file, then you will need to set C<%INC>
+manually now, where it may have worked in the past. For instance:
+
+  {
+      package My::NonMoose;
+
+      sub new { bless {}, shift }
+
+      $INC{'My/NonMoose.pm'} = __FILE__;
+      # alternatively:
+      # use Module::Runtime 'module_notional_filename';
+      # $INC{module_notional_filename(__PACKAGE__)} = __FILE__;
+  }
+
+  {
+      package My::Moose;
+      use Moose;
+
+      extends 'My::NonMoose';
+  }
+
+If you don't do this, you will get an error message about not being able to
+locate C<My::NonMoose> in C<@INC>. We hope that this case will be fairly rare.
+
 =back
 
 =head1 2.1000
