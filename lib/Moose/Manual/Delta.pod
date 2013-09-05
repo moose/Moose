@@ -101,7 +101,7 @@ anonymous enum types), and it makes error checking more difficult (since you
 can't tell just by looking whether C<enum('Foo', 'Bar', 'Baz')> was intended to
 be a type named C<Foo> with elements of C<Bar> and C<Baz>, or if this was
 actually a mistake where someone got the syntax for an anonymous enum type
-wrong. This all also applies to C<duck_type>.
+wrong). This all also applies to C<duck_type>.
 
 Calling C<enum> and C<duck_type> with a list of arguments as described above
 has been undocumented since version 0.93, and is now deprecated. You should
