@@ -10,6 +10,12 @@ for, noteworthy changes.
     equivalents in Class::Load instead (or better, just use Module::Runtime
     directly).
 
+  * Many deprecated features have now been removed:
+    - optimize_as for type constraints
+    - the "default is" and "default default" features for native delegations
+    - setting coerce => 1 on an attribute whose type constraint has no coercion
+    - the public version of Moose::Meta::Method::Destructor::initialize_body
+
   [ENHANCEMENTS]
 
   * Creating classes with Moose now always sets the appropriate entry in %INC,
@@ -25,14 +31,6 @@ for, noteworthy changes.
     from an empty package is now possible, for instance). See
     Moose::Manual::Delta for more details. This is also slightly
     backwards-incompatible in some edge cases.
-
-  [OTHER]
-
-  * Many deprecated features have now been removed:
-    - optimize_as for type constraints
-    - the "default is" and "default default" features for native delegations
-    - setting coerce => 1 on an attribute whose type constraint has no coercion
-    - the public version of Moose::Meta::Method::Destructor::initialize_body
 
 2.1005 Tue, Aug 06, 2013
 
