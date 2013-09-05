@@ -6,14 +6,6 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Moose::Cookbook::Extending::Recipe3 - Providing an alternate base object class
-
-=head1 VERSION
-
-version 2.0402
-
 =head1 SYNOPSIS
 
   package MyApp::Base;
