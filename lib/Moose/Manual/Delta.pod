@@ -82,6 +82,14 @@ manually now, where it may have worked in the past. For instance:
 If you don't do this, you will get an error message about not being able to
 locate C<My::NonMoose> in C<@INC>. We hope that this case will be fairly rare.
 
+=item The Class::Load wrapper functions in Class::MOP have been deprecated
+
+C<Class::MOP::load_class>, C<Class::MOP::is_class_loaded>, and
+C<Class::MOP::load_first_existing_class> have been deprecated. They have been
+undocumented and discouraged since version 2.0200. You should replace their use
+with the corresponding functions in L<Class::Load>, or just use
+L<Module::Runtime> directly.
+
 =item The non-arrayref forms of C<enum> and C<duck_type> have been deprecated
 
 Originally, C<enum> could be called like this:

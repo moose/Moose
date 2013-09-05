@@ -6,9 +6,8 @@ for, noteworthy changes.
   [DEPRECATIONS]
 
   * Class::MOP::load_class, Class::MOP::is_class_loaded, and
-    Class::MOP::load_first_existing_class are now deprecated. Use their
-    equivalents in Class::Load instead (or better, just use Module::Runtime
-    directly).
+    Class::MOP::load_first_existing_class are now deprecated. See
+    Moose::Manual::Delta for details.
 
   * The non-arrayref forms of enum and duck_type have been deprecated. See
     Moose::Manual::Delta for details.
