@@ -11,7 +11,7 @@ for, noteworthy changes.
     directly).
 
   * The non-arrayref forms of enum and duck_type have been deprecated. See
-    Moose::Manual::Delta for details. (doy)
+    Moose::Manual::Delta for details.
 
   * Many deprecated features have now been removed:
     - optimize_as for type constraints
