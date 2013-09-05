@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DEPRECATIONS]
+
+  * Class::MOP::load_class, Class::MOP::is_class_loaded, and
+    Class::MOP::load_first_existing_class are now deprecated. Use their
+    equivalents in Class::Load instead (or better, just use Module::Runtime
+    directly).
+
   [ENHANCEMENTS]
 
   * Creating classes with Moose now always sets the appropriate entry in %INC,
