@@ -67,16 +67,28 @@ XSLoader::load(
 }
 
 sub load_class {
+    Class::MOP::Deprecated::deprecated(
+        message => 'Class::MOP::load_class is deprecated',
+        feature => 'Class::Load wrapper functions',
+    );
     require Class::Load;
     goto &Class::Load::load_class;
 }
 
 sub load_first_existing_class {
+    Class::MOP::Deprecated::deprecated(
+        message => 'Class::MOP::load_first_existing_class is deprecated',
+        feature => 'Class::Load wrapper functions',
+    );
     require Class::Load;
     goto &Class::Load::load_first_existing_class;
 }
 
 sub is_class_loaded {
+    Class::MOP::Deprecated::deprecated(
+        message => 'Class::MOP::is_class_loaded is deprecated',
+        feature => 'Class::Load wrapper functions',
+    );
     require Class::Load;
     goto &Class::Load::is_class_loaded;
 }

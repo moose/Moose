@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Package::DeprecationManager -deprecations => {
+    'Class::Load wrapper functions' => '2.1200',
 };
 
 1;
