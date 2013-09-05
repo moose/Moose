@@ -4,8 +4,8 @@ use strict;
 use warnings;
 
 use Package::DeprecationManager 0.07 -deprecations => {
-    'non-arrayref form of enum'         => '2.1200',
-    'non-arrayref form of duck_type'    => '2.1200',
+    'non-arrayref form of enum'         => '2.1100',
+    'non-arrayref form of duck_type'    => '2.1100',
     },
     -ignore => [qr/^(?:Class::MOP|Moose)(?:::)?/],
     ;
