@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1100-TRIAL Sat, Sep 07, 2013
+
   [DEPRECATIONS]
 
   * Class::MOP::load_class, Class::MOP::is_class_loaded, and
