@@ -16,12 +16,12 @@ it's easy to get started!
 
 If you just want to get your feet wet and check out the code, you can do so
 from the comfort of your web browser by going to the official repository on
-GitHub: L<https://github.com/moose/moose>.
+GitHub: L<https://github.com/moose/Moose>.
 
 However, if you know how to use git and would rather have a local copy
 (because, why wouldn't you?!), then you can clone it:
 
-    git clone git@github.com:moose/moose.git
+    git clone git@github.com:moose/Moose.git
 
 If, at some point, you think you'd like to contribute a patch, please see
 L</Getting Started>.
@@ -144,7 +144,7 @@ developers and maintainers work together and what they expect from one
 another. Done?  Great!
 
 Next, assuming you have a GitHub account, go to
-L<http://github.com/moose/moose> and B<fork the repository> (see
+L<http://github.com/moose/Moose> and B<fork the repository> (see
 L<https://help.github.com/articles/fork-a-repo>). This will put an exact
 replica of the Moose repository into your GitHub account, which will serve as
 a place to publish your patches for the Moose maintainers to review and
@@ -161,7 +161,7 @@ your work to your own fork:
 You can verify your work:
 
     $ git remote -v
-    origin  git@github.com:moose/moose.git (fetch)
+    origin  git@github.com:moose/Moose.git (fetch)
     origin  git@github.com:YOUR_USERNAME/moose.git (push)
 
 Now, you're ready for action!  From now on, you just follow the L</Development
