@@ -9,7 +9,7 @@ for, noteworthy changes.
 
   * add_method now accepts blessed subs (Graham Knop, PR#28)
 
-  [BUG FIXES}
+  [BUG FIXES]
 
   * If a role consumed another role, we resolve method conflicts just like a
     class consuming a role, but when metaclass compat tried to fix up
