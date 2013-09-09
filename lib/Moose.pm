@@ -2,7 +2,7 @@ package Moose;
 use strict;
 use warnings;
 
-use 5.008;
+use 5.008003;
 
 use Scalar::Util 'blessed';
 use Carp         'carp', 'confess';
