@@ -12,7 +12,7 @@ use Sub::Name    'subname';
 
 use overload ();
 
-use base 'Class::MOP::Mixin';
+use parent 'Class::MOP::Mixin';
 
 sub _meta_method_class { 'Class::MOP::Method::Meta' }
 

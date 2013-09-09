@@ -8,7 +8,7 @@ use Scalar::Util 'blessed';
 
 use Moose::Util;
 
-use base 'Moose::Meta::Role';
+use parent 'Moose::Meta::Role';
 
 # NOTE:
 # we need to override the ->name

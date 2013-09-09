@@ -11,7 +11,7 @@ use Carp 'confess';
 our $VERSION = '0.01';
 my $unbound = \'empty-slot-value';
 
-use base 'Class::MOP::Instance';
+use parent 'Class::MOP::Instance';
 
 sub new {
     my ($class, $meta, @attrs) = @_;

@@ -6,11 +6,11 @@ use warnings;
 }
 {
     package SomeClass;
-    use base 'ParentClass';
+    use parent -norequire => 'ParentClass';
 }
 {
     package SubClassUseBase;
-    use base qw/SomeClass/;
+    use parent -norequire => 'SomeClass';
     use Moose;
 }
 
@@ -19,6 +19,6 @@ use Test::Fatal;
 
 is( exception {
     Moose->init_meta(for_class => 'SomeClass');
-}, undef, 'Moose class => use base => Moose Class, then Moose->init_meta on middle class ok' );
+}, undef, 'Moose class => use parent => Moose Class, then Moose->init_meta on middle class ok' );
 
 done_testing;

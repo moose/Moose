@@ -6,7 +6,7 @@ use warnings;
 
 use Moose::Util;
 
-use base qw(Moose::Meta::Role::Method::Required);
+use parent 'Moose::Meta::Role::Method::Required';
 
 __PACKAGE__->meta->add_attribute('roles' => (
     reader   => 'roles',

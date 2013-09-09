@@ -4,7 +4,7 @@ package Moose::Meta::Role::Method;
 use strict;
 use warnings;
 
-use base 'Moose::Meta::Method';
+use parent 'Moose::Meta::Method';
 
 sub _make_compatible_with {
     my $self = shift;

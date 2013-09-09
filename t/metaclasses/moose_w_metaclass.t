@@ -22,7 +22,7 @@ in order to work.
     use strict;
     use warnings;
 
-    use base 'Moose::Meta::Class';
+    use parent 'Moose::Meta::Class';
 
     package Foo;
     use strict;
@@ -38,7 +38,7 @@ isa_ok(Foo->meta, 'Foo::Meta');
     use strict;
     use warnings;
 
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     package Bar;
     use strict;

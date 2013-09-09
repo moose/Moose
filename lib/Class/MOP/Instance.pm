@@ -6,7 +6,7 @@ use warnings;
 
 use Scalar::Util 'isweak', 'weaken', 'blessed';
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 # make this not a valid method name, to avoid (most) attribute conflicts
 my $RESERVED_MOP_SLOT = '<<MOP>>';

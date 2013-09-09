@@ -8,7 +8,7 @@ my @calls;
 
 do {
     package My::Meta::Class;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     sub rebless_instance_away {
         push @calls, [@_];
@@ -22,7 +22,7 @@ do {
 
     package Child;
     use metaclass 'My::Meta::Class';
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 };
 
 my $person = Parent->meta->new_object;

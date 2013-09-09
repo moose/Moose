@@ -50,10 +50,10 @@ use Test::Fatal;
     sub foo { }
 
     package Custom::Meta1;
-    use base qw(Moose::Meta::Class);
+    use parent 'Moose::Meta::Class';
 
     package Custom::Meta2;
-    use base qw(Moose::Meta::Class);
+    use parent 'Moose::Meta::Class';
 
     package SubClass1;
     use metaclass 'Custom::Meta1';

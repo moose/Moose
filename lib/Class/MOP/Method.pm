@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'weaken', 'reftype', 'blessed';
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 # NOTE:
 # if poked in the right way,

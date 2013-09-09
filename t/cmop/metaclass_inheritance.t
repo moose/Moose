@@ -18,10 +18,10 @@ the same metaclass type, but produce different metaclasses.
     use metaclass;
 
     package Bar;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 
     package Baz;
-    use base 'Bar';
+    use parent -norequire => 'Bar';
 }
 
 my $foo_meta = Foo->meta;

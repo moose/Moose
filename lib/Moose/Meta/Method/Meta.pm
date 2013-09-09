@@ -4,7 +4,7 @@ package Moose::Meta::Method::Meta;
 use strict;
 use warnings;
 
-use base 'Moose::Meta::Method',
+use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Meta';
 
 sub _is_caller_mop_internal {

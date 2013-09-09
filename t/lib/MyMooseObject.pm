@@ -2,6 +2,6 @@ package MyMooseObject;
 
 use strict;
 use warnings;
-use base 'Moose::Object';
+use parent 'Moose::Object';
 
 1;

@@ -11,7 +11,7 @@ use Class::MOP;
     use strict;
     use warnings;
 
-    use base 'Package::Stash';
+    use parent 'Package::Stash';
 
     use metaclass;
 
@@ -46,7 +46,7 @@ use Class::MOP;
     use strict;
     use warnings;
 
-    use base 'Class::MOP::Package';
+    use parent 'Class::MOP::Package';
 
     sub _package_stash {
         $_[0]->{_package_stash} ||= My::Package::Stash->new($_[0]->name);

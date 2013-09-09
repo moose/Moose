@@ -6,7 +6,7 @@ use metaclass;
 
 use Scalar::Util    'blessed';
 
-use base 'Moose::Meta::Role::Application';
+use parent 'Moose::Meta::Role::Application';
 
 sub apply {
     my ($self, $role1, $role2) = @_;

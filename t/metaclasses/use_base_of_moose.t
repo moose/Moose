@@ -22,7 +22,7 @@ use Test::More;
 
 {
     package Child;
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 }
 
 is(Child->meta->name, 'Child', "correct metaclass name");

@@ -16,7 +16,7 @@ use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
 
-use base qw(Class::MOP::Object);
+use parent 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute('name'       => (
     reader => 'name',

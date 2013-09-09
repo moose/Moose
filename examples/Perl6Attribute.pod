@@ -7,7 +7,7 @@ use warnings;
 
 our $VERSION = '0.02';
 
-use base 'Class::MOP::Attribute';
+use parent 'Class::MOP::Attribute';
 
 Perl6Attribute->meta->add_around_method_modifier('new' => sub {
     my $cont = shift;

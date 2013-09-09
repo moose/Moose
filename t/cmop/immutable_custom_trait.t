@@ -13,7 +13,7 @@ use Class::MOP;
     use strict;
     use warnings;
 
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     sub initialize {
         shift->SUPER::initialize(
@@ -27,7 +27,7 @@ use Class::MOP;
     package My::Meta::Class::Immutable::Trait;
 
     use MRO::Compat;
-    use base 'Class::MOP::Class::Immutable::Trait';
+    use parent 'Class::MOP::Class::Immutable::Trait';
 
     sub another_method { 42 }
 
@@ -57,7 +57,7 @@ use Class::MOP;
     use warnings;
     use metaclass 'My::Meta';
 
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 
     __PACKAGE__->meta->add_attribute('bar');
 

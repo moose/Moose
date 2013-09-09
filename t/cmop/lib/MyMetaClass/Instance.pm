@@ -4,6 +4,6 @@ package MyMetaClass::Instance;
 use strict;
 use warnings;
 
-use base 'Class::MOP::Instance';
+use parent 'Class::MOP::Instance';
 
 1;

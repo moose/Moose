@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'confess';
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 sub wrap {
     my $class = shift;

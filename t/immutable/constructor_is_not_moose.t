@@ -77,7 +77,7 @@ is(
 
 {
     package My::Constructor;
-    use base 'Moose::Meta::Method::Constructor';
+    use parent 'Moose::Meta::Method::Constructor';
 }
 
 {

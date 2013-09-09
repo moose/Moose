@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 # NOTE:
 # this ugly beast is the result of trying

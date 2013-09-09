@@ -3,7 +3,7 @@ package Moose::Meta::Mixin::AttributeCore;
 use strict;
 use warnings;
 
-use base 'Class::MOP::Mixin::AttributeCore';
+use parent 'Class::MOP::Mixin::AttributeCore';
 
 __PACKAGE__->meta->add_attribute(
     'isa' => (

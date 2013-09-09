@@ -63,7 +63,7 @@ ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Class->new( name => "__ANO
 
 {
     package Child;
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 }
 
 {

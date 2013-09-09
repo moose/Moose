@@ -15,7 +15,7 @@ use Scalar::Util 'blessed';
 
         package Child;
         use metaclass;
-        use base qw/Parent/;
+        use parent -norequire => 'Parent';
 
         sub whoami { "child" }
         sub child  { "child" }

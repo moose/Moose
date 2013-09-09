@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 
-use base 'Moose::Meta::TypeCoercion';
+use parent 'Moose::Meta::TypeCoercion';
 
 sub compile_type_coercion {
     my $self            = shift;

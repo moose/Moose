@@ -15,7 +15,7 @@ use Class::MOP;
 
     package Bar;
     use metaclass;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
     Bar->meta->add_attribute('baz' => (reader => 'baz', default => 'BAZ'));
 }
 

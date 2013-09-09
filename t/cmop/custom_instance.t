@@ -21,7 +21,7 @@ my $instance;
 
 {
     package Foo::Sub;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
     use metaclass;
 
     sub new {
@@ -94,7 +94,7 @@ is( exception {
 
 {
     package BadFoo::Sub;
-    use base 'BadFoo';
+    use parent -norequire => 'BadFoo';
     use metaclass;
 
     sub new {

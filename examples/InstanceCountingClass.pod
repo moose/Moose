@@ -7,7 +7,7 @@ use warnings;
 
 our $VERSION = '0.03';
 
-use base 'Class::MOP::Class';
+use parent 'Class::MOP::Class';
 
 InstanceCountingClass->meta->add_attribute('count' => (
     reader  => 'get_count',

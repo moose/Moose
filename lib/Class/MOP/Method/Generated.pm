@@ -7,7 +7,7 @@ use warnings;
 use Carp 'confess';
 use Eval::Closure;
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 ## accessors
 

@@ -10,7 +10,7 @@ use Algorithm::C3;
 
 our $VERSION = '0.03';
 
-use base 'Class::MOP::Class';
+use parent 'Class::MOP::Class';
 
 my $_find_method = sub {
     my ($class, $method) = @_;

@@ -6,7 +6,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
 
-use base 'Class::MOP::Method::Generated';
+use parent 'Class::MOP::Method::Generated';
 
 sub _uninlined_body {
     my $self = shift;

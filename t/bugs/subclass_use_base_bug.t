@@ -18,7 +18,7 @@ a metaclass initialized for it correctly.
     use strict;
     use warnings;
 
-    use base 'Foo';
+    use parent -norequire => 'Foo';
 }
 
 my $bar = Bar->new;

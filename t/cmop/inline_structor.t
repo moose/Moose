@@ -34,7 +34,7 @@ use Class::MOP;
 {
     package My::Constructor;
 
-    use base 'Class::MOP::Method::Constructor';
+    use parent 'Class::MOP::Method::Constructor';
 
     sub _expected_method_class { 'Base::Class' }
 }
@@ -46,7 +46,7 @@ use Class::MOP;
 {
     package My::Constructor2;
 
-    use base 'Class::MOP::Method::Constructor';
+    use parent 'Class::MOP::Method::Constructor';
 
     sub _expected_method_class { 'No::Constructor' }
 }
@@ -138,7 +138,7 @@ use Class::MOP;
 {
     package My::Constructor3;
 
-    use base 'Class::MOP::Method::Constructor';
+    use parent 'Class::MOP::Method::Constructor';
 }
 
 {
@@ -185,7 +185,7 @@ use Class::MOP;
 {
     package My::Destructor;
 
-    use base 'Class::MOP::Method::Inlined';
+    use parent 'Class::MOP::Method::Inlined';
 
     sub new {
         my $class   = shift;
@@ -275,7 +275,7 @@ use Class::MOP;
 {
     package DestructorChild;
 
-    use base 'ParentHasDestructor';
+    use parent -norequire => 'ParentHasDestructor';
 
     my $meta = Class::MOP::Class->initialize(__PACKAGE__);
 

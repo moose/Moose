@@ -92,8 +92,8 @@ superclass, we use the Moose keyword C<extends>:
 
   extends 'Point';
 
-The C<extends> keyword works much like C<use base>. First, it will
-attempt to load your class if needed. However, unlike C<base>, the
+The C<extends> keyword works much like C<use base>/C<use parent>. First,
+it will attempt to load your class if needed. However, unlike C<base>, the
 C<extends> keyword will I<overwrite> any previous values in your
 package's C<@ISA>, where C<use base> will C<push> values onto the
 package's C<@ISA>.
