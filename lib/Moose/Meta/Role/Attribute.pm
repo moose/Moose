@@ -7,7 +7,7 @@ use Carp 'confess';
 use List::MoreUtils 'all';
 use Scalar::Util 'blessed', 'weaken';
 
-use base 'Moose::Meta::Mixin::AttributeCore', 'Class::MOP::Object';
+use parent 'Moose::Meta::Mixin::AttributeCore', 'Class::MOP::Object';
 
 __PACKAGE__->meta->add_attribute(
     'metaclass' => (

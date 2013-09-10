@@ -8,7 +8,7 @@ do {
     sub new { bless {}, shift }
 
     package With::Overloading;
-    use base 'Without::Overloading';
+    use parent -norequire => 'Without::Overloading';
     use overload q{""} => sub { "overloaded" };
 };
 

@@ -3,7 +3,7 @@ package Moose::Meta::Method::Overridden;
 use strict;
 use warnings;
 
-use base 'Moose::Meta::Method';
+use parent 'Moose::Meta::Method';
 
 sub new {
     my ( $class, %args ) = @_;

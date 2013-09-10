@@ -7,7 +7,7 @@ use metaclass;
 
 {
     package FooMeta;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     package Foo;
     use metaclass 'FooMeta';
@@ -19,13 +19,13 @@ isa_ok(Foo->meta, 'Class::MOP::Class');
 
 {
     package BarMeta;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     package BarMeta::Attribute;
-    use base 'Class::MOP::Attribute';
+    use parent 'Class::MOP::Attribute';
 
     package BarMeta::Method;
-    use base 'Class::MOP::Method';
+    use parent 'Class::MOP::Method';
 
     package Bar;
     use metaclass 'BarMeta' => (

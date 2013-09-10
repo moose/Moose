@@ -242,7 +242,7 @@ Now let's see User:
   use Email::Valid;
   use Scalar::Util qw( blessed );
 
-  use base 'Person';
+  use parent 'Person';
 
   sub new {
       my $class = shift;

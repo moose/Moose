@@ -10,7 +10,7 @@ use Moose::Meta::TypeCoercion::Union;
 use List::MoreUtils qw(all);
 use List::Util qw(first);
 
-use base 'Moose::Meta::TypeConstraint';
+use parent 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('type_constraints' => (
     accessor  => 'type_constraints',

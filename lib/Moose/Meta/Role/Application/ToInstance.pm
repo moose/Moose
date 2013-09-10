@@ -7,7 +7,7 @@ use metaclass;
 use Scalar::Util 'blessed';
 use List::MoreUtils 'all';
 
-use base 'Moose::Meta::Role::Application';
+use parent 'Moose::Meta::Role::Application';
 
 __PACKAGE__->meta->add_attribute('rebless_params' => (
     reader  => 'rebless_params',

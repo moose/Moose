@@ -4,6 +4,6 @@ package MyMetaClass::Attribute;
 use strict;
 use warnings;
 
-use base 'Class::MOP::Attribute';
+use parent 'Class::MOP::Attribute';
 
 1;

@@ -7,7 +7,7 @@ use metaclass;
 use B;
 use Moose::Util::TypeConstraints ();
 
-use base 'Moose::Meta::TypeConstraint';
+use parent 'Moose::Meta::TypeConstraint';
 
 __PACKAGE__->meta->add_attribute('values' => (
     accessor => 'values',

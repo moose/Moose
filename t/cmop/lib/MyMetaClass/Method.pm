@@ -4,6 +4,6 @@ package MyMetaClass::Method;
 use strict;
 use warnings;
 
-use base 'Class::MOP::Method';
+use parent 'Class::MOP::Method';
 
 1;

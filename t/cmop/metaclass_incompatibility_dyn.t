@@ -8,13 +8,13 @@ use metaclass;
 # meta classes
 {
     package Foo::Meta;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     package Bar::Meta;
-    use base 'Class::MOP::Class';
+    use parent 'Class::MOP::Class';
 
     package FooBar::Meta;
-    use base 'Foo::Meta', 'Bar::Meta';
+    use parent -norequire => 'Foo::Meta', 'Bar::Meta';
 }
 
 $@ = undef;

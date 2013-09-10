@@ -43,7 +43,7 @@ can_ok( "Class::MOP::Instance", $_ ) for qw/
 
         package Bar;
         use metaclass;
-        use base qw/Foo/;
+        use parent -norequire => 'Foo';
 
         Bar->meta->add_attribute('elken');
 }

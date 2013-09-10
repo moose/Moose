@@ -8,7 +8,7 @@ use Class::MOP::MiniTrait;
 
 use Moose::Error::Util;
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 

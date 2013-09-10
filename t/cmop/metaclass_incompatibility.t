@@ -139,7 +139,7 @@ BEGIN {
 }
 {
     package Foo::WithMeta::Sub;
-    use base 'Foo::WithMeta';
+    use parent -norequire => 'Foo::WithMeta';
 }
 Class::MOP::Class->create(
     'Foo::WithMeta::Sub::Sub',
@@ -155,11 +155,11 @@ BEGIN {
 }
 {
     package Foo::WithMeta2::Sub;
-    use base 'Foo::WithMeta2';
+    use parent -norequire => 'Foo::WithMeta2';
 }
 {
     package Foo::WithMeta2::Sub::Sub;
-    use base 'Foo::WithMeta2::Sub';
+    use parent -norequire => 'Foo::WithMeta2::Sub';
 }
 Class::MOP::Class->create(
     'Foo::WithMeta2::Sub::Sub::Sub',
@@ -175,7 +175,7 @@ Class::MOP::Class->create(
     'Foo::Reverse::Sub::Sub',
     superclasses => ['Foo::Reverse::Sub'],
 );
-eval "package Foo::Reverse::Sub; use base 'Foo::Reverse';";
+eval "package Foo::Reverse::Sub; use parent -norequire => 'Foo::Reverse';";
 Foo::Meta::Class->create(
     'Foo::Reverse',
 );

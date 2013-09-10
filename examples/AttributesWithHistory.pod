@@ -7,7 +7,7 @@ use warnings;
 
 our $VERSION = '0.05';
 
-use base 'Class::MOP::Attribute';
+use parent 'Class::MOP::Attribute';
 
 # this is for an extra attribute constructor
 # option, which is to be able to create a
@@ -43,7 +43,7 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use base 'Class::MOP::Method::Accessor';
+use parent 'Class::MOP::Method::Accessor';
 
 # generate the methods
 

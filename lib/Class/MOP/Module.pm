@@ -7,7 +7,7 @@ use warnings;
 use Carp         'confess';
 use Scalar::Util 'blessed';
 
-use base 'Class::MOP::Package';
+use parent 'Class::MOP::Package';
 
 sub _new {
     my $class = shift;

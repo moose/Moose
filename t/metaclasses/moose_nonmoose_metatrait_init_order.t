@@ -10,11 +10,11 @@ use warnings;
 }
 {
     package SubClassUseBase;
-    use base qw/SomeClass/;
+    use parent -norequire => 'SomeClass';
 }
 {
     package SubSubClassUseBase;
-    use base qw/SubClassUseBase/;
+    use parent -norequire => 'SubClassUseBase';
 }
 
 use Test::More;

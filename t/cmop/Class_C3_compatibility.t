@@ -23,19 +23,19 @@ use Class::MOP;
 {
     package Diamond_B;
     use mro 'c3';
-    use base 'Diamond_A';
+    use parent -norequire => 'Diamond_A';
 }
 {
     package Diamond_C;
     use mro 'c3';
-    use base 'Diamond_A';
+    use parent -norequire => 'Diamond_A';
 
     sub hello { 'Diamond_C::hello' }
 }
 {
     package Diamond_D;
     use mro 'c3';
-    use base ('Diamond_B', 'Diamond_C');
+    use parent -norequire => 'Diamond_B', 'Diamond_C';
 }
 
 # we have to manually initialize

@@ -6,7 +6,7 @@ use warnings;
 
 use Try::Tiny;
 
-use base 'Moose::Meta::Method',
+use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
 # multiple inheritance is terrible

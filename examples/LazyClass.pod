@@ -9,7 +9,7 @@ use Carp 'confess';
 
 our $VERSION = '0.05';
 
-use base 'Class::MOP::Attribute';
+use parent 'Class::MOP::Attribute';
 
 sub initialize_instance_slot {
     my ($self, $meta_instance, $instance, $params) = @_;
@@ -36,7 +36,7 @@ use Carp 'confess';
 
 our $VERSION = '0.01';
 
-use base 'Class::MOP::Method::Accessor';
+use parent 'Class::MOP::Method::Accessor';
 
 sub _generate_accessor_method {
     my $attr = (shift)->associated_attribute;
@@ -85,7 +85,7 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use base 'Class::MOP::Instance';
+use parent 'Class::MOP::Instance';
 
 sub initialize_all_slots {}
 

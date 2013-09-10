@@ -25,7 +25,7 @@ my @calls;
     use warnings;
     use metaclass;
 
-    use base 'Parent';
+    use parent -norequire => 'Parent';
 
     Child->meta->add_around_method_modifier(
         'method' => sub {

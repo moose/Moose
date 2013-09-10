@@ -8,13 +8,13 @@ use metaclass;
 # meta classes
 {
     package Foo::Meta::Instance;
-    use base 'Class::MOP::Instance';
+    use parent 'Class::MOP::Instance';
 
     package Bar::Meta::Instance;
-    use base 'Class::MOP::Instance';
+    use parent 'Class::MOP::Instance';
 
     package FooBar::Meta::Instance;
-    use base 'Foo::Meta::Instance', 'Bar::Meta::Instance';
+    use parent -norequire => 'Foo::Meta::Instance', 'Bar::Meta::Instance';
 }
 
 $@ = undef;
@@ -36,7 +36,7 @@ ok(!$@, '... Bar.meta => Bar::Meta is compatible') || diag $@;
 $@ = undef;
 eval {
     package Foo::Foo;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
     metaclass->import('instance_metaclass' => 'Bar::Meta::Instance');
 };
 ok($@, '... Foo::Foo.meta => Bar::Meta is not compatible') || diag $@;
@@ -44,7 +44,7 @@ ok($@, '... Foo::Foo.meta => Bar::Meta is not compatible') || diag $@;
 $@ = undef;
 eval {
     package Bar::Bar;
-    use base 'Bar';
+    use parent -norequire => 'Bar';
     metaclass->import('instance_metaclass' => 'Foo::Meta::Instance');
 };
 ok($@, '... Bar::Bar.meta => Foo::Meta is not compatible') || diag $@;
@@ -52,7 +52,7 @@ ok($@, '... Bar::Bar.meta => Foo::Meta is not compatible') || diag $@;
 $@ = undef;
 eval {
     package FooBar;
-    use base 'Foo';
+    use parent -norequire => 'Foo';
     metaclass->import('instance_metaclass' => 'FooBar::Meta::Instance');
 };
 ok(!$@, '... FooBar.meta => FooBar::Meta is compatible') || diag $@;
@@ -60,7 +60,7 @@ ok(!$@, '... FooBar.meta => FooBar::Meta is compatible') || diag $@;
 $@ = undef;
 eval {
     package FooBar2;
-    use base 'Bar';
+    use parent -norequire => 'Bar';
     metaclass->import('instance_metaclass' => 'FooBar::Meta::Instance');
 };
 ok(!$@, '... FooBar2.meta => FooBar::Meta is compatible') || diag $@;
