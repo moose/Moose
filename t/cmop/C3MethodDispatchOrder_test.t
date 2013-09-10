@@ -1,17 +1,20 @@
 use strict;
 use warnings;
 
+use FindBin;
+use File::Spec::Functions;
+
 use Test::More;
-use File::Spec;
+
+use lib catdir($FindBin::Bin, 'lib');
+
 use Class::MOP;
 
 use Test::Requires {
     'Algorithm::C3' => '0.01', # skip all if not installed
 };
 
-BEGIN {
-    require_ok(File::Spec->catfile('examples', 'C3MethodDispatchOrder.pod'));
-}
+use C3MethodDispatchOrder;
 
 {
     package Diamond_A;

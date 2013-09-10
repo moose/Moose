@@ -1,13 +1,16 @@
 use strict;
 use warnings;
 
+use FindBin;
+use File::Spec::Functions;
+
 use Test::More;
-use File::Spec;
+
+use lib catdir($FindBin::Bin, 'lib');
+
 use Scalar::Util 'reftype';
 
-BEGIN {use Class::MOP;
-    require_ok(File::Spec->catfile('examples', 'InsideOutClass.pod'));
-}
+use InsideOutClass;
 
 {
     package Foo;
