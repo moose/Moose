@@ -28,7 +28,7 @@ use Class::MOP;
 {
     my $warnings;
     local $SIG{__WARN__} = sub { $warnings .= $_[0] };
-    is(Class::MOP::load_first_existing_class('Foo', 'MyMetaClass'), 'MyMetaClass');
+    is(Class::MOP::load_first_existing_class('this::class::probably::doesnt::exist', 'MyMetaClass'), 'MyMetaClass');
     like($warnings, qr/^Class::MOP::load_first_existing_class is deprecated/);
 }
 
