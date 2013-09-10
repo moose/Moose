@@ -7,21 +7,6 @@ __END__
 
 =pod
 
-=begin testing-SETUP
-
-{
-    package My::Meta::Instance;
-    use Moose;
-
-    # This needs to be in a BEGIN block so to avoid a metaclass
-    # incompatibility error from Moose. In normal usage,
-    # My::Meta::Instance would be in a separate file from MyApp::User,
-    # and this would be a non-issue.
-    BEGIN { extends 'Moose::Meta::Instance' }
-}
-
-=end testing-SETUP
-
 =head1 SYNOPSIS
 
   package My::Meta::Instance;
@@ -29,8 +14,7 @@ __END__
   use Scalar::Util qw( weaken );
   use Symbol qw( gensym );
 
-  use Moose;
-  extends 'Moose::Meta::Instance';
+  use Moose::Role;
 
   sub create_instance {
       my $self = shift;
@@ -84,10 +68,13 @@ __END__
 
   package MyApp::User;
 
-  use metaclass 'Moose::Meta::Class' =>
-      ( instance_metaclass => 'My::Meta::Instance' );
-
   use Moose;
+  Moose::Util::MetaRole::apply_metaroles(
+      for => __PACKAGE__,
+      class_metaroles => {
+          instance => ['My::Meta::Instance'],
+      },
+  );
 
   has 'name' => (
       is  => 'rw',
@@ -109,8 +96,8 @@ In this example, we're creating a meta-instance that is based on a
 glob reference rather than a hash reference. This example is largely
 based on the Piotr Roszatycki's L<MooseX::GlobRef> module.
 
-Our class is a subclass of L<Moose::Meta::Instance>, which creates
-hash reference based objects. We need to override all the methods
+Our extension is a role which will be applied to L<Moose::Meta::Instance>,
+which creates hash reference based objects. We need to override all the methods
 which make assumptions about the object's data structure.
 
 The first method we override is C<create_instance>:
@@ -160,12 +147,16 @@ get C<eval>'d once per attribute.
 
 Finally, we use this meta-instance in our C<MyApp::User> class:
 
-  use metaclass 'Moose::Meta::Class' =>
-      ( instance_metaclass => 'My::Meta::Instance' );
+  Moose::Util::MetaRole::apply_metaroles(
+      for => __PACKAGE__,
+      class_metaroles => {
+          instance => ['My::Meta::Instance'],
+      },
+  );
 
-We actually don't recommend the use of L<metaclass> in most
-cases. However, the other ways of using alternate metaclasses are more
-complex, and would complicate our example code unnecessarily.
+We actually don't recommend the use of L<Moose::Util::MetaRole> directly in
+your class in most cases. Typically, this would be provided by a
+L<Moose::Exporter>-based module which handles applying the role for you.
 
 =head1 CONCLUSION
 
