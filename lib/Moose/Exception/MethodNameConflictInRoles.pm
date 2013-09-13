@@ -8,7 +8,6 @@ has 'conflict' => (
     traits     => ['Array'],
     is         => 'ro',
     isa        => 'ArrayRef[Moose::Meta::Role::Method::Conflicting]',
-    auto_deref => 1,
     handles    => { conflict_methods_count => 'count',
 		    get_method_at          => 'get',
 		    get_all_methods        => 'elements',
