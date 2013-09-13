@@ -4,17 +4,21 @@ use Moose;
 use Devel::StackTrace;
 
 has 'trace' => (
-    is      => 'ro',
-    isa     => 'Devel::StackTrace',
-    builder => '_build_trace',
-    lazy    => 1,
+    is            => 'ro',
+    isa           => 'Devel::StackTrace',
+    builder       => '_build_trace',
+    lazy          => 1,
+    documentation => "This attribute is read-only and isa L<Devel::StackTrace>. ".
+                     'It is lazy & dependent on $exception->message.'
 );
 
 has 'message' => (
-    is      => 'ro',
-    isa     => 'Str',
-    builder => '_build_message',
-    lazy    => 1,
+    is            => 'ro',
+    isa           => 'Str',
+    builder       => '_build_message',
+    lazy          => 1,
+    documentation => "This attribute is read-only and isa Str. ".
+                     "It is lazy and has a default value 'Error'."
 );
 
 use overload
