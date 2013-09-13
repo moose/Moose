@@ -4,7 +4,6 @@ package Class::MOP::Object;
 use strict;
 use warnings;
 
-use Carp qw(confess);
 use Scalar::Util 'blessed';
 
 # introspection
@@ -58,8 +57,12 @@ sub _make_compatible_with {
 
     my $new_metaclass = $self->_get_compatible_metaclass($other_name);
 
-    confess "Can't make $self compatible with metaclass $other_name"
-        unless defined $new_metaclass;
+    unless ( defined $new_metaclass ) {
+        require Moose::Util;
+        Moose::Util::throw_exception( CannotMakeMetaclassCompatible => superclass_name => $other_name,
+                                                                       class           => $self,
+                                    );
+    }
 
     # can't use rebless_instance here, because it might not be an actual
     # subclass in the case of, e.g. moose role reconciliation
