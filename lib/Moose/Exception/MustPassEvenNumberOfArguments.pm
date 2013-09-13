@@ -6,7 +6,6 @@ extends 'Moose::Exception';
 has 'args' => (
     is         => 'ro',
     isa        => 'ArrayRef',
-    auto_deref => 1,
     required   => 1
 );
 
