@@ -665,8 +665,9 @@ sub _inline_check_required {
 
     return (
         'if (@_ < 2) {',
-            $self->_inline_throw_error(
-                '"Attribute (' . $attr_name . ') is required"'
+            $self->_inline_throw_exception( "AttributeIsRequired => ".
+                                            'attribute_name      => "'.$attr_name.'",'.
+                                            'class_name          => $class_name'
             ) . ';',
         '}',
     );
