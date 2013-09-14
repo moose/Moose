@@ -26,7 +26,7 @@ sub _build_message {
     my $error = $self->error;
     my $source = $self->source;
 
-    return "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$error";    
+    return "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$error";
 }
 
 1;
