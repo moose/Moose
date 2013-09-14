@@ -11,6 +11,8 @@ use Scalar::Util qw(reftype);
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
 
+use Moose::Util 'throw_exception';
+
 my %EXPORT_SPEC;
 
 sub setup_import_methods {
@@ -155,9 +157,9 @@ sub _also_list_for_package {
     if ( !exists $EXPORT_SPEC{$package} ) {
         my $loaded = is_class_loaded($package);
 
-        die "Package in also ($package) does not seem to "
-            . "use Moose::Exporter"
-            . ( $loaded ? "" : " (is it loaded?)" );
+        throw_exception( PackageDoesNotUseMooseExporter => package   => $package,
+                                                           is_loaded => $loaded
+                       );
     }
 
     my $also = $EXPORT_SPEC{$package}{also};
