@@ -38,24 +38,24 @@ use Moose::Util::TypeConstraints;
     as 'Int';
 
     my $exception = exception {
-	coerce 'typeInt', from 'Int', via  { "123" };
-	coerce 'typeInt', from 'Int', via  { 12 };
+        coerce 'typeInt', from 'Int', via  { "123" };
+        coerce 'typeInt', from 'Int', via  { 12 };
     };
 
     like(
         $exception,
         qr/\QA coercion action already exists for 'Int'/,
-	"coercion already exists");
+        "coercion already exists");
 
     isa_ok(
         $exception,
         "Moose::Exception::CoercionAlreadyExists",
-	"coercion already exists");
+        "coercion already exists");
 
     is(
-	$exception->constraint_name,
-	"Int",
-	"coercion already exists");
+        $exception->constraint_name,
+        "Int",
+        "coercion already exists");
 }
 
 done_testing;
