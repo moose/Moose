@@ -35,8 +35,7 @@ use Moose::Util 'throw_exception';
         "please give either class or class_name");
 
     $exception = exception {
-        throw_exception( AttributeIsRequired => class_name => 'TestClass' )
-                                     
+        throw_exception( AttributeIsRequired => class_name => 'TestClass' );
     };
 
     like(
@@ -97,7 +96,7 @@ use Moose::Util 'throw_exception';
 
     is(
         $exception->attribute->name,
-    	"foo",
+        "foo",
         "since, attribute is given, so we should get AttributeIsRequired");
 
     is(
@@ -143,13 +142,13 @@ use Moose::Util 'throw_exception';
         "class names do not match");
 
     is(
-    	$exception->class_name,
-    	"TestClass1",
+        $exception->class_name,
+        "TestClass1",
         "class names do not match");
 
     is(
-    	$exception->class,
-    	TestClass->meta,
+        $exception->class,
+        TestClass->meta,
         "class names do not match");
 }
 
