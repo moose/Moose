@@ -294,4 +294,57 @@ use Moose();
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 }
 
+{
+    {
+        package Foo7;
+        use Moose::Role;
+
+        override foo7 => sub { "override foo7" };
+    }
+
+    my $exception = exception {
+        {
+            package Bar7;
+            use Moose::Role;
+            override foo7 => sub { "override foo7 in Bar7" };
+            with 'Foo7';
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QRole 'Foo7' has encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error./,
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::OverrideConflictInComposition",
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    is(
+        $exception->role_name,
+        "Bar7",
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    is(
+        $exception->role,
+        Bar7->meta,
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    is(
+        $exception->role_being_applied->name,
+        "Foo7",
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    is(
+        $exception->role_being_applied,
+        Foo7->meta,
+        "Roles Foo7 & Bar7, both have override foo7");
+
+    is(
+        $exception->method_name,
+        "foo7",
+        "Roles Foo7 & Bar7, both have override foo7");
+}
+
 done_testing;
