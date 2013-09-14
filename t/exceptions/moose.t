@@ -8,20 +8,20 @@ use Test::Fatal;
 
 # tests for extends without arguments
 {
-    like(
-        exception {
+    my $exception = exception {
             package SubClassNoSuperClass;
             use Moose;
             extends;
-        }, qr/Must derive at least one class/,
+    };
+
+    like(
+        $exception,
+        qr/Must derive at least one class/,
         "extends requires at least one argument");
 
     isa_ok(
-        exception {
-            package SubClassNoSuperClass;
-            use Moose;
-            extends;
-        }, 'Moose::Exception::ExtendsMissingArgs',
+        $exception,
+        'Moose::Exception::ExtendsMissingArgs',
         "extends requires at least one argument");
 }
 
@@ -140,6 +140,7 @@ use Test::Fatal;
         $exception,
         qr/\QFoo3 already has a metaclass, but it does not inherit Moose::Meta::Class ($foo3). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role./,
         "Foo3 is a Moose::Role");
+        #Foo3 already has a metaclass, but it does not inherit Moose::Meta::Class (Moose::Meta::Role=HASH(0x29d3c78)). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.
 
     isa_ok(
         $exception,
@@ -178,6 +179,7 @@ use Test::Fatal;
         $exception,
         qr/\QFoo4 already has a metaclass, but it does not inherit Moose::Meta::Class ($foo)./,
         "Foo4 is a Class::MOP::Class, not a Moose::Meta::Class");
+        #Foo4 already has a metaclass, but it does not inherit Moose::Meta::Class (Class::MOP::Class=HASH(0x278a4a0)).
 
     isa_ok(
         $exception,

@@ -10,16 +10,18 @@ use Moose::Util::TypeConstraints;
 
 # tests for type/subtype name contain invalid characters
 {
+    my $exception = exception {
+        subtype 'Foo-Baz' => as 'Item'
+    };
+
     like(
-        exception {
-            subtype 'Foo-Baz' => as 'Item'
-        }, qr/contains invalid characters/,
+        $exception,
+        qr/contains invalid characters/,
         "Type names cannot contain a dash (via subtype sugar)");
 
     isa_ok(
-        exception {
-            subtype 'Foo-Baz' => as 'Item';
-        }, "Moose::Exception::InvalidNameForType",
+        $exception,
+        "Moose::Exception::InvalidNameForType",
         "Type names cannot contain a dash (via subtype sugar)");
 }
 

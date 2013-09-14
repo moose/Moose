@@ -28,6 +28,7 @@ use Test::Fatal;
         $exception,
         qr/\Q$message/,
         "$foo is an object, not a class");
+        #When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed Foo=HASH(0x16adb58), and we resolved this to a Foo object.
 
     isa_ok(
         $exception,
@@ -57,6 +58,7 @@ use Test::Fatal;
         $exception,
         qr/\Q$message/,
         "an Array ref is passed to apply_metaroles");
+        #When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed ARRAY(0x21eb868), and this did not resolve to a metaclass or metarole. Maybe you need to call Moose->init_meta to initialize the metaclass first?
 
     isa_ok(
         $exception,
@@ -85,6 +87,7 @@ use Test::Fatal;
         $exception,
         qr/\Q$message/,
         "undef passed to apply_metaroles");
+        #When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed undef, and this did not resolve to a metaclass or metarole. Maybe you need to call Moose->init_meta to initialize the metaclass first?
 
     isa_ok(
         $exception,

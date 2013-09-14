@@ -133,6 +133,7 @@ use Moose;
         $exception,
         qr/\QAll values passed to handles must be strings or ARRAY references, not $regex/,
         "a Regexp is given to handles");
+        #All values passed to handles must be strings or ARRAY references, not (?^:bar)
 
     isa_ok(
         $exception,
