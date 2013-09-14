@@ -15,7 +15,7 @@ sub _build_message {
     my $type_constraint = $self->type;
 
     return "You can only create a Moose::Meta::TypeCoercion::Union for a " .
-           "Moose::Meta::TypeConstraint::Union, not a $type_constraint"    
+           "Moose::Meta::TypeConstraint::Union, not a $type_constraint"
 }
 
 1;
