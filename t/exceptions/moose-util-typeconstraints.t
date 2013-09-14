@@ -23,6 +23,7 @@ my $x = "123";
         $exception,
         qr/\QDefault case must be a CODE ref, not $default/,
         "an ArrayRef is passed as a default");
+        #Default case must be a CODE ref, not ARRAY(0x14f6fc8)
 
     isa_ok(
         $exception,
@@ -33,7 +34,7 @@ my $x = "123";
         $exception->default_action,
         $default,
         "an ArrayRef is passed as a default");
-        
+
     is(
         $exception->to_match,
         $x,
@@ -59,7 +60,7 @@ my $x = "123";
         $exception->type,
         "doesNotExist",
         "doesNotExist is not a valid type");
-        
+
     is(
         $exception->to_match,
         $x,
@@ -76,6 +77,7 @@ my $x = "123";
         $exception,
         qr/\QMatch action must be a CODE ref, not $action/,
         "an ArrayRef is given as action");
+        #Match action must be a CODE ref, not ARRAY(0x27a0748)
 
     isa_ok(
         $exception,
@@ -86,7 +88,7 @@ my $x = "123";
         $exception->type,
         "Int",
         "an ArrayRef is given as action");
-        
+
     is(
         $exception->to_match,
         $x,
@@ -107,6 +109,7 @@ my $x = "123";
         $exception,
         qr/\QNo cases matched for $x/,
         "$x is not an ArrayRef");
+        #No cases matched for 123
 
     isa_ok(
         $exception,
