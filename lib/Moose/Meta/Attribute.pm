@@ -523,9 +523,9 @@ sub initialize_instance_slot {
         # skip it if it's lazy
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
-        throw_exception(AttributeIsRequired => attribute => $self,
-                                               instance  => $instance,
-                                               params    => $params
+        throw_exception(AttributeIsRequired => attribute  => $self,
+                                               class_name => ref( $instance ),
+                                               params     => $params
                        )
             if $self->is_required && !$self->has_default && !$self->has_builder;
 
@@ -583,8 +583,8 @@ sub set_value {
     my $attr_name = quotemeta($self->name);
 
     if ($self->is_required and not @args) {
-        throw_exception( AttributeIsRequired => attribute => $self,
-                                                instance  => $instance,
+        throw_exception( AttributeIsRequired => attribute  => $self,
+                                                class_name => ref( $instance ),
                        );
     }
 
