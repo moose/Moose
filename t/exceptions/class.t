@@ -179,19 +179,19 @@ use Test::Fatal;
         qr/\QAttribute (baz) is required/,
         "... must supply all the required attribute");
 
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+
     is(
         $exception->attribute->name,
         'baz',
         "... must supply all the required attribute");
 
     isa_ok(
-        $exception->instance,
+        $exception->class_name,
         'Foo2',
-        "... must supply all the required attribute");
-
-    isa_ok(
-        $exception,
-        "Moose::Exception::AttributeIsRequired",
         "... must supply all the required attribute");
 }
 
