@@ -308,7 +308,7 @@ sub find_type_constraint {
 
 sub register_type_constraint {
     my $constraint = shift;
-    __PACKAGE__->_throw_error("can't register an unnamed type constraint")
+    throw_exception( CannotRegisterAnUnnamedTypeConstraint => type => $constraint )
         unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
@@ -496,18 +496,27 @@ sub match_on_type {
     if (@cases % 2 != 0) {
         $default = pop @cases;
         (ref $default eq 'CODE')
-            || __PACKAGE__->_throw_error("Default case must be a CODE ref, not $default");
+            || throw_exception( DefaultToMatchOnTypeMustBeCodeRef => to_match            => $to_match,
+                                                                     default_action      => $default,
+                                                                     cases_to_be_matched => \@cases
+                              );
     }
     while (@cases) {
         my ($type, $action) = splice @cases, 0, 2;
 
         unless (blessed $type && $type->isa('Moose::Meta::TypeConstraint')) {
             $type = find_or_parse_type_constraint($type)
-                 || __PACKAGE__->_throw_error("Cannot find or parse the type '$type'")
+                 || throw_exception( CannotFindTypeGivenToMatchOnType => type     => $type,
+                                                                         to_match => $to_match,
+                                                                         action   => $action
+                                   );
         }
 
         (ref $action eq 'CODE')
-            || __PACKAGE__->_throw_error("Match action must be a CODE ref, not $action");
+            || throw_exception( MatchActionMustBeACodeRef => type     => $type,
+                                                             action   => $action,
+                                                             to_match => $to_match
+                              );
 
         if ($type->check($to_match)) {
             local $_ = $to_match;
@@ -515,7 +524,9 @@ sub match_on_type {
         }
     }
     (defined $default)
-        || __PACKAGE__->_throw_error("No cases matched for $to_match");
+        || throw_exception( NoCasesMatched => to_match            => $to_match,
+                                              cases_to_be_matched => \@cases
+                          );
     {
         local $_ = $to_match;
         return $default->($to_match);
