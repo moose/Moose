@@ -23,14 +23,14 @@ use Test::Fatal;
         qr!Cannot define an accessor name on a read-only attribute, accessors are read/write!,
         "Read-only attributes can't have accessor");
 
-    is(
-        $exception->attribute_name,
-        'test',
-        "Read-only attributes can't have accessor");
-
     isa_ok(
         $exception,
         "Moose::Exception::AccessorMustReadWrite",
+        "Read-only attributes can't have accessor");
+
+    is(
+        $exception->attribute_name,
+        'test',
         "Read-only attributes can't have accessor");
 }
 
@@ -246,6 +246,7 @@ use Test::Fatal;
         '_build_baz',
         "Correct error when a builder method is not present");
 }
+
 # tests for CannotDelegateWithoutIsa
 {
     my $exception = exception {
@@ -527,6 +528,7 @@ use Test::Fatal;
 	$exception,
 	qr/^Attribute \(bar\) does not pass the type constraint because: Validation failed for 'Int' with value "?test"?/,
 	"bar is an 'Int' and 'Str' is given");
+        #Attribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"
 
     isa_ok(
 	$exception,
@@ -552,6 +554,7 @@ use Test::Fatal;
 	$exception,
 	qr/\QUnable to canonicalize the 'handles' option with $handle/,
 	"handles doesn't take file handle");
+        #Unable to canonicalize the 'handles' option with GLOB(0x109d0b0)
 
     isa_ok(
 	$exception,
@@ -768,14 +771,14 @@ use Test::Fatal;
         qr/Cannot coerce without a type coercion/,
         "You cannot coerce a type unless coercion is supported by that type");
 
-    is(
-        $exception->type->name,
-        'HexNum',
-        "You cannot coerce a type unless coercion is supported by that type");
-
     isa_ok(
         $exception,
         "Moose::Exception::CoercingWithoutCoercions",
+        "You cannot coerce a type unless coercion is supported by that type");
+
+    is(
+        $exception->type->name,
+        'HexNum',
         "You cannot coerce a type unless coercion is supported by that type");
 }
 
@@ -807,15 +810,15 @@ use Test::Fatal;
 	$foo->foo(10.5);
     };
 
-    isa_ok(
-        $exception,
-        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
-        "10.5 is not an Int");
-
     like(
 	$exception,
 	qr/\QAttribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5/,
 	"10.5 is not an Int");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
+        "10.5 is not an Int");
 
     is(
 	$exception->class_name,
@@ -868,6 +871,7 @@ use Test::Fatal;
         $exception,
         $expect,
         'invalid default is caught when trying to read via accessor');
+        #Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
 
     isa_ok(
         $exception,
@@ -885,6 +889,7 @@ use Test::Fatal;
         $exception,
         $expect,
         'invalid default is caught when trying to write via accessor');
+        #Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
 
     isa_ok(
         $exception,
@@ -902,6 +907,7 @@ use Test::Fatal;
         $exception,
         $expect,
         'invalid default is caught when trying to push');
+        #Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
 
     isa_ok(
         $exception,
@@ -919,6 +925,7 @@ use Test::Fatal;
         $exception,
         $expect,
         'invalid default is caught when trying to get');
+        #Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
 
     isa_ok(
         $exception,
@@ -984,14 +991,14 @@ use Test::Fatal;
         $params->from_parameterizable( 'Hello' );
     };
 
-    isa_ok(
-        $exception,
-        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
-        "'Hello' is a Str");
-
     like(
 	$exception,
 	qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]' with value "Hello"/,
+        "'Hello' is a Str");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::ValidationFailedForInlineTypeConstraint",
         "'Hello' is a Str");
 
     is(

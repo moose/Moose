@@ -223,6 +223,7 @@ use Moose();
         $exception,
         qr/\QFoo3 already has a metaclass, but it does not inherit Moose::Meta::Role ($foo3). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role./,
         "Foo3 is a Moose class");
+        #Foo3 already has a metaclass, but it does not inherit Moose::Meta::Role (Moose::Meta::Class=HASH(0x2d5d160)). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.
 
     isa_ok(
         $exception,
@@ -260,6 +261,7 @@ use Moose();
         $exception,
         qr/\QFoo4 already has a metaclass, but it does not inherit Moose::Meta::Role ($foo)./,
         "Foo4 is a Class::MOP::Class, not a Moose::Meta::Role");
+        #Foo4 already has a metaclass, but it does not inherit Moose::Meta::Role (Class::MOP::Class=HASH(0x2c385a8)).
 
     isa_ok(
         $exception,

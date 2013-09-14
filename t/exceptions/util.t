@@ -24,6 +24,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         $exception,
         qr/\QMust specify at least one role to apply to $test_object/,
         "apply_all_roles takes an object and a role to apply");
+        #Must specify at least one role to apply to TestClass=HASH(0x2bee290)
 
     isa_ok(
         $exception,
@@ -40,6 +41,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         $exception,
         qr/\QMust specify at least one role to apply to $test_class/,
         "apply_all_roles takes a class and a role to apply");
+        #Must specify at least one role to apply to Moose::Meta::Class=HASH(0x1a1f818)
 
     isa_ok(
         $exception,
@@ -61,6 +63,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         $exception,
         qr/\QMust specify at least one role to apply to $test_role/,
         "apply_all_roles takes a role and a role to apply");
+        #Must specify at least one role to apply to Moose::Meta::Role=HASH(0x1f22d40)
 
     isa_ok(
         $exception,
@@ -70,40 +73,45 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
 
 # tests for class consuming a class, instead of role
 {
+    my $exception = exception {
+        package ClassConsumingClass;
+        use Moose;
+        use DateTime;
+        with 'DateTime';
+    };
+
     like(
-        exception {
-            package ClassConsumingClass;
-            use Moose;
-            use DateTime;
-            with 'DateTime';
-        }, qr/You can only consume roles, DateTime is not a Moose role/,
+        $exception,
+        qr/You can only consume roles, DateTime is not a Moose role/,
         "You can't consume a class");
 
     isa_ok(
-        exception {
-            package ClassConsumingClass;
-            use Moose;
-            use DateTime;
-            with 'DateTime';
-        }, 'Moose::Exception::CanOnlyConsumeRole',
+         $exception,
+        'Moose::Exception::CanOnlyConsumeRole',
         "You can't consume a class");
 
-    like(
-        exception {
-            package foo;
-            use Moose;
-            use DateTime;
-            with 'Not::A::Real::Package';
-        }, qr!You can only consume roles, Not::A::Real::Package is not a Moose role!,
-        "You can't consume a class which doesn't exist");
+    $exception = exception {
+        package foo;
+        use Moose;
+        use DateTime;
+        with 'Not::A::Real::Package';
+    };
 
     like(
-        exception {
-            package foo;
-            use Moose;
-            use DateTime;
-            with sub {};
-        }, qr/argument is not a module name/,
+        $exception,
+        qr!You can only consume roles, Not::A::Real::Package is not a Moose role!,
+        "You can't consume a class which doesn't exist");
+
+    $exception = exception {
+        package foo;
+        use Moose;
+        use DateTime;
+        with sub {};
+    };
+
+    like(
+        $exception,
+        qr/argument is not a module name/,
         "You can only consume a module");
 }
 
