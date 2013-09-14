@@ -154,6 +154,7 @@ use Moose();
         $exception,
         qr/\QCannot delegate get_count to count because the value of foo is not an object (got '$array')/,
         "value of foo is an ARRAY ref");
+        #Cannot delegate get_count to count because the value of foo is not an object (got 'ARRAY(0x223f578)')
 
     isa_ok(
         $exception,
