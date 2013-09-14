@@ -163,8 +163,8 @@ use Test::Fatal;
         use Moose;
 
         has 'baz' => (
-	    is => 'ro',
-	    isa => 'Int',
+	    is       => 'ro',
+	    isa      => 'Int',
 	    required => 1,
         );
         __PACKAGE__->meta->make_immutable;
