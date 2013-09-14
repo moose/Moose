@@ -303,6 +303,18 @@ sub _actually_compile_type_constraint {
     return $self->_compile_type($check);
 }
 
+sub _compile_hand_optimized_type_constraint {
+    my $self = shift;
+
+    my $type_constraint = $self->hand_optimized_type_constraint;
+
+    unless ( ref $type_constraint ) {
+        throw_exception( HandOptimizedTypeConstraintIsNotCodeRef => type => $self );
+    }
+
+    return $type_constraint;
+}
+
 sub _compile_subtype {
     my ($self, $check) = @_;
 
