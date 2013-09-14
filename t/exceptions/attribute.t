@@ -56,20 +56,21 @@ use Test::Fatal;
         qr/\QAttribute (baz) is required/,
         "... must supply all the required attribute");
 
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+
     is(
         $exception->attribute->name,
         'baz',
         "... must supply all the required attribute");
 
     isa_ok(
-        $exception->instance,
+        $exception->class_name,
         'Foo',
         "... must supply all the required attribute");
 
-    isa_ok(
-        $exception,
-        "Moose::Exception::AttributeIsRequired",
-        "... must supply all the required attribute");
 }
 
 # tests for invalid value for is
@@ -493,19 +494,19 @@ use Test::Fatal;
         qr/\QAttribute (bar) is required/,
         "... must supply all the required attribute");
 
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "... must supply all the required attribute");
+
     is(
         $exception->attribute->name,
         'bar',
         "... must supply all the required attribute");
 
     isa_ok(
-        $exception->instance,
+        $exception->class_name,
         'Foo1',
-        "... must supply all the required attribute");
-
-    isa_ok(
-        $exception,
-        "Moose::Exception::AttributeIsRequired",
         "... must supply all the required attribute");
 }
 
