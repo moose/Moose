@@ -163,7 +163,7 @@ use Moose();
 
     like(
         $exception,
-        qr/\QYou must pass an instance of the metaclass (Foo), not ($foo)/,
+        qr/\QYou must pass an instance of the metaclass (Foo), not (foo)/,
 	"clone_object expects an instance of the metaclass");
 
     isa_ok(
@@ -385,6 +385,7 @@ use Moose();
         $exception,
         qr/\QObjects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but $bar is not a Foo/,
 	"__INSTANCE__ is not blessed correctly");
+        #Objects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but Bar=HASH(0x2d77528) is not a Foo
 
     isa_ok(
         $exception,
@@ -413,6 +414,7 @@ use Moose();
         $exception,
         qr/\QThe __INSTANCE__ parameter must be a blessed reference, not $array/,
 	"__INSTANCE__ is not a blessed reference");
+        #The __INSTANCE__ parameter must be a blessed reference, not ARRAY(0x1d75d40)
 
     isa_ok(
         $exception,
@@ -441,6 +443,7 @@ use Moose();
         $exception,
         qr/\QYou can only clone instances, ($array) is not a blessed instance/,
 	"array reference was passed to _clone_instance instead of a blessed instance");
+        #You can only clone instances, (ARRAY(0x2162350)) is not a blessed instance
 
     isa_ok(
         $exception,
@@ -510,6 +513,7 @@ use Moose();
         $exception,
         qr/\Qno immutable trait specified for $class/,
         "immutable_trait set to undef");
+        #no immutable trait specified for Moose::Meta::Class=HASH(0x19a2280)
 
     isa_ok(
         $exception,
