@@ -46,7 +46,7 @@ sub _build_message {
 
     my @roles = @{$self->get_role_names};
     my $role_names = join "|", @roles;
-    
+
     if( $self->two_overrides_found ) {
         return "We have encountered an 'override' method conflict ".
                "during composition (Two 'override' methods of the same name encountered). ".
