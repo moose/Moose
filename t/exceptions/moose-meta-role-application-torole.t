@@ -265,7 +265,7 @@ use Moose();
 
     isa_ok(
         $exception,
-        "Moose::Exception::OverrideMethodConflictInRoleComposition",
+        "Moose::Exception::OverrideConflictInComposition",
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 
     is(
