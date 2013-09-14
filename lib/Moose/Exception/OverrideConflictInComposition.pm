@@ -1,4 +1,4 @@
-package Moose::Exception::OverrideMethodConflictInRoleComposition;
+package Moose::Exception::OverrideConflictInComposition;
 
 use Moose;
 extends 'Moose::Exception';
