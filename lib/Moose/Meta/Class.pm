@@ -389,9 +389,9 @@ sub _inline_check_required_attr {
         'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
             $self->_inline_throw_exception(
                 'AttributeIsRequired => '.
-                'params    => $params, '.
-                'instance  => $instance, '.
-                'attribute => $meta->get_attribute("'.quotemeta($attr->name).'")'
+                'params         => $params, '.
+                'class_name     => $class_name, '.
+                'attribute_name => "'.quotemeta($attr->name).'"'
             ).';',
         '}',
     );
