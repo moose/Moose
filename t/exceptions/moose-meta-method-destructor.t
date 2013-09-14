@@ -61,4 +61,36 @@ use Moose();
 	"'foo' is not a metaclass");
 }
 
+{
+    {
+        package TestClass;
+        use Moose;
+    }
+
+    {
+        package SubClassDestructor;
+        use Moose;
+        extends 'Moose::Meta::Method::Destructor';
+
+        sub _generate_DEMOLISHALL {
+            return "print 'xyz";
+        }
+    }
+
+    my $methodDestructor;
+    my $exception = exception {
+        $methodDestructor = SubClassDestructor->new( name => "xyz", package_name => "Xyz", options => {}, metaclass => TestClass->meta);
+    };
+
+    like(
+        $exception,
+        qr/Could not eval the destructor/,
+        "syntax error in the return value of _generate_DEMOLISHALL");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CouldNotEvalTheDestructor",
+        "syntax error in the return value of _generate_DEMOLISHALL");
+}
+
 done_testing;
