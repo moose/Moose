@@ -70,7 +70,6 @@ use Test::Fatal;
         $exception->class_name,
         'Foo',
         "... must supply all the required attribute");
-
 }
 
 # tests for invalid value for is
@@ -1058,4 +1057,42 @@ use Test::Fatal;
         "builder method _build_fool doesn't exist");
 }
 
+{
+    {
+        package Foo::Required;
+        use Moose;
+
+        has 'foo_required' => (
+            reader   => 'get_foo_required',
+            writer   => 'set_foo_required',
+            required => 1,
+        );
+    }
+
+    my $foo = Foo::Required->new(foo_required => "required");
+
+    my $exception = exception {
+        $foo->set_foo_required();
+    };
+
+    like(
+        $exception,
+        qr/\QAttribute (foo_required) is required/,
+        "passing no value to set_foo_required");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::AttributeIsRequired",
+        "passing no value to set_foo_required");
+
+    is(
+        $exception->attribute->name,
+        'foo_required',
+        "passing no value to set_foo_required");
+
+    isa_ok(
+        $exception->class_name,
+        'Foo::Required',
+        "passing no value to set_foo_required");
+}
 done_testing;
