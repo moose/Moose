@@ -233,10 +233,9 @@ sub _check_class_metaclass_compatibility {
 
         my $super_meta_type = $super_meta->_real_ref_name;
 
-        throw_exception( IncompatibleMetaclassOfSuperclass => class                => $self,
-                                                              superclass_name      => $superclass_name,
-                                                              superclass_meta_type => $super_meta_type
-                       );
+        throw_exception( CannotMakeMetaclassCompatible => class           => $self,
+                                                          superclass_name => $superclass_name,
+                        );
     }
 }
 
