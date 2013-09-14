@@ -50,6 +50,7 @@ use Moose();
         $exception,
         qr/\QEnum values must be strings, not '$arrayRef'/,
 	"an array ref is given instead of a string");
+        #Enum values must be strings, not 'ARRAY(0x191d1b8)'
 
     isa_ok(
         $exception,
