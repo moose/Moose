@@ -93,11 +93,10 @@ sub _initialize_body {
     }
     catch {
         my $source = join("\n", @source);
-        $self->throw_error(
-            "Could not eval the destructor :\n\n$source\n\nbecause :\n\n$_",
-            error => $_,
-            data  => $source,
-        );
+        throw_exception( CouldNotEvalTheDestructor => method_destructor_object => $self,
+                                                      source                   => $source,
+                                                      error                    => $_
+                       );
     };
 
     $self->{'body'} = $code;
