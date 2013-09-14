@@ -29,15 +29,20 @@ sub _build_class_name {
     $self->class->name;
 }
 
+sub _has_class_or_class_name {
+    my $self = shift;
+
+    return ( $self->is_class_name_set || $self->is_class_set );
+}
+
 after "BUILD" => sub {
     my $self = $_[0];
-    if( !( $self->is_class_name_set) && !( $self->is_class_set) )
+
+    if( !$self->_has_class_or_class_name() )
     {
 	throw_exception("NeitherClassNorClassNameIsGiven");
     }
-
-    if( $self->is_class_name_set &&
-	$self->is_class_set &&
+    elsif( $self->is_class_set && $self->is_class_name_set &&
 	( $self->class->name ne $self->class_name ) )
     {
         throw_exception( ClassNamesDoNotMatch => class_name => $self->class_name,
