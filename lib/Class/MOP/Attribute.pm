@@ -110,6 +110,11 @@ sub clone {
     my %options = @_;
     (blessed($self))
         || confess "Can only clone an instance";
+    # this implementation is overwritten by the bootstrap process,
+    # so this exception will never trigger. If it ever does occur,
+    # it indicates a gigantic problem with the most internal parts
+    # of Moose, so we wouldn't want a Moose-based exception object anyway
+
     return bless { %{$self}, %options } => ref($self);
 }
 
