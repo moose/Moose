@@ -11,12 +11,12 @@ has 'role_application' => (
 
 has 'roles' => (
     traits   => ['Array'],
-    is       => 'ro',
+    is       => 'bare',
     isa      => 'ArrayRef[Moose::Meta::Role]',
     handles  => {
-        get      => 'get',
-        elements => 'elements',
-        join     => 'join',
+        get_roles  => 'get',
+        roles      => 'elements',
+        join_roles => 'join',
     },
     required => 1
 );
@@ -34,17 +34,17 @@ has 'two_overrides_found' => (
     default  => 0
 );
 
-sub get_role_names {
+sub role_names {
     my $self = shift;
-    my @roles = $self->elements;
+    my @roles = $self->roles;
     my @role_names = map { $_->name } @roles;
-    return \@role_names;
+    return @role_names;
 }
 
 sub _build_message {
     my $self = shift;
 
-    my @roles = @{$self->get_role_names};
+    my @roles = $self->role_names;
     my $role_names = join "|", @roles;
 
     if( $self->two_overrides_found ) {
