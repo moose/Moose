@@ -2,6 +2,7 @@ package Moose::Exception::LazyAttributeNeedsADefault;
 
 use Moose;
 extends 'Moose::Exception';
+with 'Moose::Exception::Role::EitherAttributeOrAttributeName';
 
 use Moose::Util 'throw_exception';
 
