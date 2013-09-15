@@ -42,8 +42,8 @@ sub new {
 
     ( $options{curried_arguments} &&
         ( 'ARRAY' eq ref $options{curried_arguments} ) )
-        || throw_exception( MustSupplyAnArrayRefAsCurriedArguments => params => \%options,
-                                                                      class  => $class
+        || throw_exception( MustSupplyArrayRefAsCurriedArguments => params     => \%options,
+                                                                    class_name => $class
                           );
 
     my $self = $class->_new( \%options );
