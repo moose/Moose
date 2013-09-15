@@ -157,7 +157,7 @@ use Moose();
         "Moose::Exception::OverrideConflictInSummation",
         "role Foo3 has a local method 'foo' & role Bar3 is overriding that same method");
 
-    my @role_names = @{$exception->get_role_names};
+    my @role_names = $exception->role_names;
     my $role_names = join "|", @role_names;
     is(
         $role_names,
@@ -201,7 +201,7 @@ use Moose();
         "Moose::Exception::OverrideConflictInSummation",
         "role Foo4 & Bar4, both are overriding the same method 'foo'");
 
-    my @role_names = @{$exception->get_role_names};
+    my @role_names = $exception->role_names;
     my $role_names = join "|", @role_names;
     is(
         $role_names,
