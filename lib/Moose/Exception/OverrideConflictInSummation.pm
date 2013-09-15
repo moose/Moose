@@ -14,9 +14,7 @@ has 'roles' => (
     is       => 'bare',
     isa      => 'ArrayRef[Moose::Meta::Role]',
     handles  => {
-        get_roles  => 'get',
         roles      => 'elements',
-        join_roles => 'join',
     },
     required => 1
 );
