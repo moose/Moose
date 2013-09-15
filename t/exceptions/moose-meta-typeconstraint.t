@@ -138,25 +138,4 @@ use Moose();
         "-123 is not valid for OnlyPositiveInts");
 }
 
-{
-    my $exception = exception {
-        Moose::Meta::TypeConstraint->new(name => "OptimizedTypeConstraint", optimized => [12,3])
-    };
-
-    like(
-        $exception,
-        qr/Hand optimized type constraint is not a code reference/,
-        "optimized should be a CodeRef");
-
-    isa_ok(
-        $exception,
-        "Moose::Exception::HandOptimizedTypeConstraintIsNotCodeRef",
-        "optimized should be a CodeRef");
-
-    is(
-        $exception->type_name,
-        "OptimizedTypeConstraint",
-        "optimized should be a CodeRef");
-}
-
 done_testing;
