@@ -15,7 +15,7 @@ use Moose::Util 'throw_exception';
     has 'foo' => (
         is => 'ro'
     );
-    
+
     has 'bar' => (
         is => 'ro'
     );
