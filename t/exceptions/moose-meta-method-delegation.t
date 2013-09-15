@@ -87,12 +87,12 @@ use Moose();
     like(
         $exception,
         qr/You must supply a curried_arguments which is an ARRAY reference/,
-	"curried_arguments not given");
+        "curried_arguments not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustSupplyArrayRefAsCurriedArguments",
-	"curried_arguments not given");
+        "curried_arguments not given");
 }
 
 {
