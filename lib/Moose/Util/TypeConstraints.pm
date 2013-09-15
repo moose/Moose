@@ -308,7 +308,7 @@ sub find_type_constraint {
 
 sub register_type_constraint {
     my $constraint = shift;
-    throw_exception( CannotRegisterAnUnnamedTypeConstraint => type => $constraint )
+    throw_exception( CannotRegisterUnnamedTypeConstraint => type => $constraint )
         unless defined $constraint->name;
     $REGISTRY->add_type_constraint($constraint);
     return $constraint;
