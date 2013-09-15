@@ -89,7 +89,7 @@ use Moose();
 
     isa_ok(
         $exception,
-        "Moose::Exception::CouldNotEvalTheDestructor",
+        "Moose::Exception::CouldNotEvalDestructor",
         "syntax error in the return value of _generate_DEMOLISHALL");
 }
 
