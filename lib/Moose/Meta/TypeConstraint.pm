@@ -309,7 +309,8 @@ sub _compile_hand_optimized_type_constraint {
     my $type_constraint = $self->hand_optimized_type_constraint;
 
     unless ( ref $type_constraint ) {
-        throw_exception( HandOptimizedTypeConstraintIsNotCodeRef => type => $self );
+        require Moose;
+        Moose->throw_error("Hand optimized type constraint is not a code reference");
     }
 
     return $type_constraint;
