@@ -93,9 +93,9 @@ sub _initialize_body {
     }
     catch {
         my $source = join("\n", @source);
-        throw_exception( CouldNotEvalTheDestructor => method_destructor_object => $self,
-                                                      source                   => $source,
-                                                      error                    => $_
+        throw_exception( CouldNotEvalDestructor => method_destructor_object => $self,
+                                                   source                   => $source,
+                                                   error                    => $_
                        );
     };
 
