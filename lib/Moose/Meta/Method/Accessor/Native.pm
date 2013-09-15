@@ -18,8 +18,8 @@ around new => sub {
     $options{curried_arguments} = []
         unless exists $options{curried_arguments};
 
-    throw_exception( MustSupplyAnArrayRefAsCurriedArguments => params     => \%options,
-                                                               class_name => $class
+    throw_exception( MustSupplyArrayRefAsCurriedArguments => params     => \%options,
+                                                             class_name => $class
                    )
         unless $options{curried_arguments}
             && ref($options{curried_arguments}) eq 'ARRAY';
