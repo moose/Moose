@@ -36,17 +36,17 @@ use Moose::Util 'throw_exception';
     isa_ok(
         $exception,
         "Moose::Exception::AttributeNamesDoNotMatch",
-	"you have given attribute_name as 'foo' and attribute->name as 'bar'");
+        "you have given attribute_name as 'foo' and attribute->name as 'bar'");
 
     is(
-	$exception->attribute_name,
-	"foo",
-	"you have given attribute_name as 'foo' and attribute->name as 'bar'");
+        $exception->attribute_name,
+        "foo",
+        "you have given attribute_name as 'foo' and attribute->name as 'bar'");
 
     is(
-	$exception->attribute->name,
-	"bar",
-	"you have given attribute_name as 'foo' and attribute->name as 'bar'");
+        $exception->attribute->name,
+        "bar",
+        "you have given attribute_name as 'foo' and attribute->name as 'bar'");
 }
 
 {
@@ -57,7 +57,7 @@ use Moose::Util 'throw_exception';
     like(
         $exception,
         qr/\QYou need to give attribute or attribute_name or both/,
-	"please give either attribute or attribute_name");
+        "please give either attribute or attribute_name");
 
     isa_ok(
         $exception,
