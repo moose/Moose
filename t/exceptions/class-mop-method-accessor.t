@@ -231,4 +231,51 @@ use Moose();
         "foo is read only");
 }
 
+{
+    {
+        package Point;
+        use metaclass;
+
+        Point->meta->add_attribute('x' => (
+            reader   => 'x',
+            init_arg => 'x'
+        ));
+
+        sub new {
+            my $class = shift;
+            bless $class->meta->new_object(@_) => $class;
+        }
+    }
+
+    my $point = Point->new();
+
+    my $exception = exception {
+        $point->x(120);
+    };
+
+    like(
+        $exception,
+        qr/Cannot assign a value to a read-only accessor/,
+        "x is read only");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotAssignValueToReadOnlyAccessor",
+        "x is read only");
+
+    is(
+        $exception->class_name,
+        "Point",
+        "x is read only");
+
+    is(
+        $exception->attribute_name,
+        "x",
+        "x is read only");
+
+    is(
+        $exception->value,
+        120,
+        "x is read only");
+}
 done_testing;
