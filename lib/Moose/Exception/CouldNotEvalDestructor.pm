@@ -1,4 +1,4 @@
-package Moose::Exception::CouldNotEvalTheDestructor;
+package Moose::Exception::CouldNotEvalDestructor;
 
 use Moose;
 extends 'Moose::Exception';
