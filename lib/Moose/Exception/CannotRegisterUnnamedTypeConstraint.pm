@@ -1,4 +1,4 @@
-package Moose::Exception::CannotRegisterAnUnnamedTypeConstraint;
+package Moose::Exception::CannotRegisterUnnamedTypeConstraint;
 
 use Moose;
 extends 'Moose::Exception';

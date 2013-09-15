@@ -145,7 +145,7 @@ my $x = "123";
 
     isa_ok(
         $exception,
-        'Moose::Exception::CannotRegisterAnUnnamedTypeConstraint',
+        'Moose::Exception::CannotRegisterUnnamedTypeConstraint',
         "name has been set to undef for TestType");
 }
 
