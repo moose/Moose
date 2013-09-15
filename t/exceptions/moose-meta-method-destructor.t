@@ -73,7 +73,7 @@ use Moose();
         extends 'Moose::Meta::Method::Destructor';
 
         sub _generate_DEMOLISHALL {
-            return "print 'xyz";
+            return "print 'xyz"; # this is an intentional syntax error
         }
     }
 
