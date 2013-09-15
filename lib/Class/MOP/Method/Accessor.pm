@@ -133,9 +133,13 @@ sub _generate_accessor_method_inline {
 sub _generate_reader_method {
     my $self = shift;
     my $attr = $self->associated_attribute;
+    my $class = $attr->associated_class;
 
     return sub {
-        confess "Cannot assign a value to a read-only accessor"
+        throw_exception( CannotAssignValueToReadOnlyAccessor => class     => $class,
+                                                                value     => $_[1],
+                                                                attribute => $attr
+                       )
             if @_ > 1;
         $attr->get_value($_[0]);
     };
