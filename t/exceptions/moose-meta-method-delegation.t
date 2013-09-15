@@ -91,7 +91,7 @@ use Moose();
 
     isa_ok(
         $exception,
-        "Moose::Exception::MustSupplyAnArrayRefAsCurriedArguments",
+        "Moose::Exception::MustSupplyArrayRefAsCurriedArguments",
 	"curried_arguments not given");
 }
 
