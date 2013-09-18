@@ -1213,7 +1213,9 @@ sub _get_delegate_method_list {
         return $meta->get_method_list;
     }
     else {
-        $self->throw_error("Unable to recognize the delegate metaclass '$meta'", data => $meta);
+        throw_exception( UnableToRecognizeDelegateMetaclass => attribute          => $self,
+                                                               delegate_metaclass => $meta
+                       );
     }
 }
 
