@@ -545,4 +545,143 @@ use Moose();
         "destructor_class is set to undef");
 }
 
+{
+    {
+        package Foo9::Meta::Role;
+        use Moose::Role;
+    }
+
+    {
+        package Foo9::SuperClass::WithMetaRole;
+        use Moose -traits =>'Foo9::Meta::Role';
+    }
+
+    {
+        package Foo9::Meta::OtherRole;
+        use Moose::Role;
+    }
+
+    {
+        package Foo9::SuperClass::After::Attribute;
+        use Moose -traits =>'Foo9::Meta::OtherRole';
+    }
+
+    my $exception = exception {
+        {
+            package Foo9;
+            use Moose;
+            my @superclasses = ('Foo9::SuperClass::WithMetaRole');
+            extends @superclasses;
+
+            has an_attribute_generating_methods => ( is => 'ro' );
+
+            push(@superclasses, 'Foo9::SuperClass::After::Attribute');
+
+            extends @superclasses;
+	}
+    };
+
+    like(
+        $exception,
+        qr/\QCan't fix metaclass incompatibility for Foo9 because it is not pristine./,
+        "cannot make metaclass compatible");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotFixMetaclassCompatibility",
+        "cannot make metaclass compatible");
+
+    is(
+        $exception->class->name,
+        "Foo9",
+        "cannot make metaclass compatible");
+}
+
+{
+    Class::MOP::Class->create( "Foo::Meta::Attribute",
+                               superclasses => ["Class::MOP::Attribute"]
+                             );
+
+    Class::MOP::Class->create( "Bar::Meta::Attribute",
+                               superclasses => ["Class::MOP::Attribute"]
+                             );
+
+    Class::MOP::Class->create( "Foo::Meta::Class",
+                               superclasses => ["Class::MOP::Class"]
+                             );
+
+    Foo::Meta::Class->create(
+        'Foo::All',
+        attribute_metaclass => "Foo::Meta::Attribute",
+    );
+
+    {
+        Class::MOP::Class->create(
+            'Foo::Unsafe',
+            attribute_metaclass => 'Foo::Meta::Attribute',
+        );
+
+        my $meta = Class::MOP::Class->create(
+            'Foo::Unsafe::Sub',
+        );
+
+        $meta->add_attribute(foo => reader => 'foo');
+
+        my $exception = exception {
+            $meta->superclasses('Foo::Unsafe');
+        };
+
+        like(
+            $exception,
+            qr/\QCan't fix metaclass incompatibility for Foo::Unsafe::Sub because it is not pristine./,
+            "cannot make metaclass compatible");
+
+        isa_ok(
+            $exception,
+            "Moose::Exception::CannotFixMetaclassCompatibility",
+            "cannot make metaclass compatible");
+
+        is(
+            $exception->class->name,
+            "Foo::Unsafe::Sub",
+            "cannot make metaclass compatible");
+    }
+
+    {
+        my $exception = exception {
+            Foo::Meta::Class->create(
+                "Foo::All::Sub::Attribute",
+                superclasses        => ['Foo::All'],
+                attribute_metaclass => "Foo::Meta::Attribute",
+                attribute_metaclass => "Bar::Meta::Attribute",
+            )
+	};
+
+        like(
+            $exception,
+            qr/\QThe attribute_metaclass metaclass for Foo::All::Sub::Attribute (Bar::Meta::Attribute) is not compatible with the attribute metaclass of its superclass, Foo::All (Foo::Meta::Attribute)/,
+            "incompatible attribute_metaclass");
+
+        isa_ok(
+            $exception,
+            "Moose::Exception::MetaclassTypeIncompatible",
+            "incompatible attribute_metaclass");
+
+        is(
+            $exception->class->name,
+            "Foo::All::Sub::Attribute",
+            "incompatible attribute_metaclass");
+
+        is(
+            $exception->superclass_name,
+            "Foo::All",
+            "incompatible attribute_metaclass");
+
+        is(
+            $exception->metaclass_type,
+            "attribute_metaclass",
+            "incompatible attribute_metaclass");
+    }
+}
+
 done_testing;
