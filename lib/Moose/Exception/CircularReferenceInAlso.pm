@@ -12,7 +12,7 @@ has 'also_parameter' => (
 has 'stack' => (
     is       => 'ro',
     isa      => 'ArrayRef',
-    required => 1    
+    required => 1
 );
 
 sub _build_message {
