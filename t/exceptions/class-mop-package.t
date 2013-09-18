@@ -24,4 +24,20 @@ use Moose();
         "no package name is given");
 }
 
+{
+    my $exception = exception {
+        Class::MOP::Package->create_anon(cache => 1);
+    };
+
+    like(
+        $exception,
+        qr/Packages are not cacheable/,
+        "can't cache anon packages");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::PackagesAndModulesAreNotCachable",
+        "can't cache anon packages");
+}
+
 done_testing;
