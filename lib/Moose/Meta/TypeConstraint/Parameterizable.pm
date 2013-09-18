@@ -94,8 +94,7 @@ sub parameterize {
         );
     }
     else {
-        require Moose;
-        Moose->throw_error("The type parameter must be a Moose meta type");
+        confess("The type parameter must be a Moose meta type");
     }
 }
 
