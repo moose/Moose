@@ -188,12 +188,9 @@ sub _die_if_also_list_cycles_back_to_existing_stack {
         for my $stack_member (@$existing_stack) {
             next unless $also_member eq $stack_member;
 
-            die
-                "Circular reference in 'also' parameter to Moose::Exporter between "
-                . join(
-                ', ',
-                @$existing_stack
-                ) . " and $also_member";
+            throw_exception( CircularReferenceInAlso => also_parameter => $also_member,
+                                                        stack          => $existing_stack
+                           );
         }
 
         _die_if_also_list_cycles_back_to_existing_stack(
@@ -212,10 +209,10 @@ sub _parse_trait_aliases {
         my $name;
         if (ref($alias)) {
             reftype($alias) eq 'ARRAY'
-                or Moose->throw_error(reftype($alias) . " references are not "
-                                    . "valid arguments to the 'trait_aliases' "
-                                    . "option");
-
+                or throw_exception( InvalidArgumentsToTraitAliases => class_name   => $class,
+                                                                      package_name => $package,
+                                                                      alias        => $alias
+                                  );
             ($alias, $name) = @$alias;
         }
         else {
@@ -496,10 +493,9 @@ sub _make_import_sub {
             _apply_meta_traits( $CALLER, $traits, $meta_lookup );
         }
         elsif ( @{$traits} ) {
-            require Moose;
-            Moose->throw_error(
-                "Cannot provide traits when $class does not have an init_meta() method"
-            );
+            throw_exception( ClassDoesNotHaveInitMeta => class_name => $class,
+                                                         traits     => $traits
+                           );
         }
 
         my ( undef, @args ) = @_;
