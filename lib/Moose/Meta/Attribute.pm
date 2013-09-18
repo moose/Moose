@@ -1007,11 +1007,10 @@ sub _auto_deref {
         $sigil = '%';
     }
     else {
-        $self->throw_error(
+        confess(
             'Can not auto de-reference the type constraint \''
           . $type_constraint->name
-          . '\'',
-            type_constraint => $type_constraint,
+          . '\''
         );
     }
 
