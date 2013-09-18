@@ -1095,4 +1095,42 @@ use Test::Fatal;
         'Foo::Required',
         "passing no value to set_foo_required");
 }
+
+{
+    use Moose::Util::TypeConstraints;
+
+    my $exception = exception {
+        {
+            package BadMetaClass;
+            use Moose;
+
+            has 'foo' => (
+                is      => 'ro',
+                isa     => "Moose::Util::TypeConstraints",
+                handles => qr/hello/
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/Unable to recognize the delegate metaclass 'Class::MOP::Package/,
+        "unable to recognize metaclass of Moose::Util::TypeConstraints");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::UnableToRecognizeDelegateMetaclass",
+        "unable to recognize metaclass of Moose::Util::TypeConstraints");
+
+    is(
+        $exception->attribute->name,
+        'foo',
+        "unable to recognize metaclass of Moose::Util::TypeConstraints");
+
+    is(
+        $exception->delegate_metaclass->name,
+        'Moose::Util::TypeConstraints',
+        "unable to recognize metaclass of Moose::Util::TypeConstraints");
+}
+
 done_testing;
