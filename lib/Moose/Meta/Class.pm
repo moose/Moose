@@ -652,9 +652,9 @@ sub _fix_class_metaclass_incompatibility {
 
     if ($self->_class_metaclass_can_be_made_compatible($super_meta)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class      => $self,
+                                                                   superclass => $super_meta
+                              );
         my $super_meta_name = $super_meta->_real_ref_name;
         my $class_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
         my $new_self = $class_meta_subclass_meta_name->reinitialize(
@@ -673,9 +673,10 @@ sub _fix_single_metaclass_incompatibility {
 
     if ($self->_single_metaclass_can_be_made_compatible($super_meta, $metaclass_type)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class          => $self,
+                                                                   superclass     => $super_meta,
+                                                                   metaclass_type => $metaclass_type
+                              );
         my $super_meta_name = $super_meta->_real_ref_name;
         my $class_specific_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
