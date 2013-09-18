@@ -149,4 +149,25 @@ my $x = "123";
         "name has been set to undef for TestType");
 }
 
+{
+    my $exception = exception {
+        union 'StrUndef', 'Str | Undef |';
+    };
+
+    like(
+        $exception,
+        qr/\Q'Str | Undef |' didn't parse (parse-pos=11 and str-length=13)/,
+        "cannot parse 'Str| Undef |'");
+
+    isa_ok(
+        $exception,
+        'Moose::Exception::CouldNotParseType',
+        "cannot parse 'Str| Undef |'");
+
+    is(
+        $exception->type,
+        'Str | Undef |',
+        "cannot parse 'Str| Undef |'");
+}
+
 done_testing;
