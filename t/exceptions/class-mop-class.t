@@ -473,12 +473,12 @@ use Moose();
 
     like(
         $exception,
-        qr/\QCan't make My::Class compatible with metaclass My::Role/,
+        qr/\QThe metaclass of My::Class (Class::MOP::Class) is not compatible with the metaclass of its superclass, My::Role (Moose::Meta::Role) /,
         "Trying to inherit a Role");
 
     isa_ok(
         $exception,
-        "Moose::Exception::CannotMakeMetaclassCompatible",
+        "Moose::Exception::IncompatibleMetaclassOfSuperclass",
         "Trying to inherit a Role");
 
     is(
