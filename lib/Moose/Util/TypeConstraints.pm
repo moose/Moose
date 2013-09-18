@@ -691,11 +691,9 @@ sub _install_type_coercions ($$) {
             push @rv => $1;
         }
         ( pos($given) eq length($given) )
-            || __PACKAGE__->_throw_error( "'$given' didn't parse (parse-pos="
-                . pos($given)
-                . " and str-length="
-                . length($given)
-                . ")" );
+            || throw_exception( CouldNotParseType => type     => $given,
+                                                     position => pos($given)
+                              );
         @rv;
     }
 
