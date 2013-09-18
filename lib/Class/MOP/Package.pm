@@ -131,7 +131,14 @@ sub create {
         return $meta;
     }
 
-    sub _anon_cache_key { confess "Packages are not cacheable" }
+    sub _anon_cache_key {
+        my $class = shift;
+        my %options = @_;
+        throw_exception( PackagesAndModulesAreNotCachable => class_name        => $class,
+                                                             params            => \%options,
+                                                             package_or_module => 'Packages'
+                       );
+    }
 
     sub DESTROY {
         my $self = shift;
