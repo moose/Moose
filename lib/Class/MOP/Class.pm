@@ -261,12 +261,11 @@ sub _check_single_metaclass_compatibility {
         my $metaclass_type_name = $metaclass_type;
         $metaclass_type_name =~ s/_(?:meta)?class$//;
         $metaclass_type_name =~ s/_/ /g;
-        confess "The $metaclass_type_name metaclass for "
-              . $self->name . " (" . ($self->$metaclass_type)
-              . ")" . " is not compatible with the "
-              . "$metaclass_type_name metaclass of its "
-              . "superclass, $superclass_name ("
-              . ($super_meta->$metaclass_type) . ")";
+
+        throw_exception( MetaclassTypeIncompatible => class           => $self,
+                                                      superclass_name => $superclass_name,
+                                                      metaclass_type  => $metaclass_type
+                       );
     }
 }
 
@@ -366,9 +365,9 @@ sub _fix_class_metaclass_incompatibility {
 
     if ($self->_class_metaclass_can_be_made_compatible($super_meta)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class      => $self,
+                                                                   superclass => $super_meta
+                              );
 
         my $super_meta_name = $super_meta->_real_ref_name;
 
@@ -382,9 +381,10 @@ sub _fix_single_metaclass_incompatibility {
 
     if ($self->_single_metaclass_can_be_made_compatible($super_meta, $metaclass_type)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class          => $self,
+                                                                   superclass     => $super_meta,
+                                                                   metaclass_type => $metaclass_type
+                              );
 
         my $new_metaclass = $self->$metaclass_type
             ? $self->$metaclass_type->_get_compatible_metaclass($super_meta->$metaclass_type)
