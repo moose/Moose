@@ -21,7 +21,7 @@ use Moose();
     isa_ok(
         $exception,
         "Moose::Exception::PackagesAndModulesAreNotCachable",
-        "can't cache anon packages");         
+        "can't cache anon packages");
 }
 
 done_testing;
