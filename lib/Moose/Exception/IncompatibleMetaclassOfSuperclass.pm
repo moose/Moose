@@ -18,7 +18,7 @@ sub _build_message {
     my $superclass_name = $self->superclass_name;
     my $supermeta_type = $self->superclass_meta_type;
 
-    return "The metaclass of $class_name ($ref_class)" .  
+    return "The metaclass of $class_name ($ref_class)" .
            " is not compatible with the metaclass of its superclass, " .
            "$superclass_name ($supermeta_type)";
 }

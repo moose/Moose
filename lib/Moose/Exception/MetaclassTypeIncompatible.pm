@@ -14,7 +14,7 @@ sub _build_message {
     my $self = shift;
     my $class_name = $self->class_name;
     my $superclass_name = $self->superclass_name;
-    my $metaclass_type = $self->metaclass_type;    
+    my $metaclass_type = $self->metaclass_type;
 
     my $metaclass_type_name = $metaclass_type;
     $metaclass_type_name =~ s/_(?:meta)?class$//;
