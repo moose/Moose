@@ -20,6 +20,8 @@ use Class::MOP::MiniTrait;
 
 use parent 'Class::MOP::Attribute', 'Moose::Meta::Mixin::AttributeCore';
 
+use Carp 'confess';
+
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 
 __PACKAGE__->meta->add_attribute('traits' => (
@@ -966,7 +968,7 @@ sub _inline_generate_default {
         );
     }
     else {
-        $self->throw_error(
+        confess(
             "Can't generate a default for " . $self->name
           . " since no default or builder was specified"
         );
