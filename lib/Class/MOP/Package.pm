@@ -24,7 +24,6 @@ sub initialize {
     my %options = @args;
     my $package_name = delete $options{package};
 
-
     # we hand-construct the class until we can bootstrap it
     if ( my $meta = Class::MOP::get_metaclass_by_name($package_name) ) {
         return $meta;
