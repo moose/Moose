@@ -73,9 +73,9 @@ sub _anon_package_prefix { 'Class::MOP::Module::__ANON__::SERIAL::' }
 sub _anon_cache_key {
     my $class = shift;
     my %options = @_;
-    throw_exception( PackagesAndModulesAreNotCachable => class_name        => $class,
-                                                         params            => \%options,
-                                                         package_or_module => 'Modules'
+    throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
+                                                         params     => \%options,
+                                                         is_module  => 1
                    );
 }
 
