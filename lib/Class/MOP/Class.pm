@@ -258,9 +258,6 @@ sub _check_single_metaclass_compatibility {
 
     if (!$self->_single_metaclass_is_compatible($metaclass_type, $superclass_name)) {
         my $super_meta = Class::MOP::get_metaclass_by_name($superclass_name);
-        my $metaclass_type_name = $metaclass_type;
-        $metaclass_type_name =~ s/_(?:meta)?class$//;
-        $metaclass_type_name =~ s/_/ /g;
 
         throw_exception( MetaclassTypeIncompatible => class           => $self,
                                                       superclass_name => $superclass_name,
