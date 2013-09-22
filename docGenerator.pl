@@ -13,7 +13,7 @@ opendir( $dir, $path) or die $!;
 
 my $number = 0;
 
-while( my $file = readdir($dir) ) 
+while( my $file = readdir($dir) )
 {
     my $exceptionsToMsgHashRef = getExceptionsToMessages();
 
@@ -21,7 +21,7 @@ while( my $file = readdir($dir) )
 
     my ($exception, $description, $attributesText, $superclasses, $consumedRoles, $exceptionMessages);
     my (@attributes, @roles, @superClasses, @rolesNames, @superClassNames);
-    if( !(-d 'lib/Moose/Exception/'.$file) ) 
+    if( !(-d 'lib/Moose/Exception/'.$file) )
     {
         $file =~ s/\.pm//i;
 
@@ -36,7 +36,7 @@ while( my $file = readdir($dir) )
 
         my $fileHandle;
 
-        @rolesNames = map { 
+        @rolesNames = map {
             my $name = $_->name;
             if( $name =~ /\|/ ) {
                 undef;
@@ -53,7 +53,7 @@ while( my $file = readdir($dir) )
             my $attribute = $_;
             my $name = $attribute->name;
             my $traits; # = $attribute->has_applied_traits;
-	    
+
             if( $attribute->has_applied_traits ) {
                 my @traitsArray = @{$attribute->applied_traits};
 
@@ -216,9 +216,9 @@ sub getExceptionsToMessages {
     my $testPath = 't/exceptions/';
 
     my %hash;
-    
+
     opendir( $testDir, $testPath ) or die $!;
-    
+
     my $file;
     while( $file = readdir( $testDir ) ) {
         my $fileHandle;
@@ -237,7 +237,7 @@ sub getExceptionsToMessages {
                     }
                     $message =~ s!^\s*qr(/|\!)(\^)?(\\Q)?!!;
                     $message =~ s!(/|\!),$!!;
-                } 
+                }
             } elsif( /isa_ok\($/ ) {
                 my $exceptionVar = <$fileHandle>;
                 if( $exceptionVar =~ /\$exception,$/ ) {
