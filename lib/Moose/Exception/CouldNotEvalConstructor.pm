@@ -1,0 +1,32 @@
+package Moose::Exception::CouldNotEvalConstructor;
+
+use Moose;
+extends 'Moose::Exception';
+
+has 'method_constructor_object' => (
+    is       => 'ro',
+    isa      => 'Class::MOP::Method::Constructor',
+    required => 1
+);
+
+has 'source' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1
+);
+
+has 'error' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1
+);
+
+sub _build_message {
+    my $self = shift;
+    my $error = $self->error;
+    my $source = $self->source;
+
+    return "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$error";
+}
+
+1;
