@@ -110,7 +110,10 @@ sub _generate_constructor_method_inline {
     }
     catch {
         my $source = join("\n", @source);
-        confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
+        throw_exception( CouldNotEvalConstructor => method_constructor_object => $self,
+                                                    source                    => $source,
+                                                    error                     => $_
+                       );
     };
 
     return $code;
