@@ -40,4 +40,38 @@ use Moose();
 	"no package_name and name is given");
 }
 
+{
+    BEGIN
+    {
+        {
+            package NewMetaClass;
+            use Moose;
+            extends 'Moose::Meta::Class';
+
+            sub _inline_new_object {
+                return 'print "xyz';
+            }
+        }
+    };
+
+    {
+        package BadConstructorClass;
+        use Moose -metaclass => 'NewMetaClass';
+    }
+
+    my $exception = exception {
+        BadConstructorClass->meta->make_immutable();
+    };
+
+    like(
+        $exception,
+        qr/Could not eval the constructor :/,
+        "syntax error in _inline_new_object");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CouldNotEvalConstructor",
+        "syntax error in _inline_new_object");
+}
+
 done_testing;
