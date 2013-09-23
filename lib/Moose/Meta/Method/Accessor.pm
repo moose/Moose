@@ -9,6 +9,8 @@ use Try::Tiny;
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Accessor';
 
+use Moose::Util 'throw_exception';
+
 # multiple inheritance is terrible
 sub new {
     goto &Class::MOP::Method::Accessor::new;
@@ -32,12 +34,11 @@ sub _compile_code {
         $self->SUPER::_compile_code(@args);
     }
     catch {
-        $self->throw_error(
-            'Could not create writer for '
-          . "'" . $self->associated_attribute->name . "' "
-          . 'because ' . $_,
-            error => $_,
-        );
+        throw_exception( CouldNotCreateWriter => attribute_name => $self->associated_attribute->name,
+                                                 attribute      => $self->associated_attribute,
+                                                 error          => $_,
+                                                 instance       => $self
+                       );
     };
 }
 
