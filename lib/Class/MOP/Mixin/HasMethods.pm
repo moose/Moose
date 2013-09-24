@@ -37,7 +37,7 @@ sub _add_meta_method {
 sub wrap_method_body {
     my ( $self, %args ) = @_;
 
-    ( 'CODE' eq ref $args{body} )
+    ( $args{body} && 'CODE' eq reftype $args{body} )
         || throw_exception( CodeBlockMustBeACodeRef => instance => $self,
                                                        params   => \%args
                           );
