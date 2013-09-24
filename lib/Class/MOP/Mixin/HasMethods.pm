@@ -6,7 +6,7 @@ use warnings;
 use Class::MOP::Method::Meta;
 use Class::MOP::Method::Overload;
 
-use Scalar::Util 'blessed';
+use Scalar::Util 'blessed', 'reftype';
 use Sub::Name    'subname';
 
 use overload ();
