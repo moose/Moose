@@ -1041,7 +1041,7 @@ foreach my $type_name (qw(Str Num Int ClassName RoleName))
 
 {
     note 'Combined Union Test';
-    my $union = union( [ 'Int', enum( [qw[ red green blue ]] ) ] );
+    my $union = union( [ 'Int', enum( [["red", "green", "blue"]] ) ] );
 
     test_constraint(
         $union, {
