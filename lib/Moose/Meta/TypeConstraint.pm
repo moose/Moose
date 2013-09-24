@@ -16,9 +16,7 @@ use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
 
-use parent 'Class::MOP::Object';
-
-use Moose::Util 'throw_exception';
+use base 'Class::MOP::Object';
 
 use Moose::Util 'throw_exception';
 
@@ -301,19 +299,6 @@ sub _actually_compile_type_constraint {
         if $self->has_parent;
 
     return $self->_compile_type($check);
-}
-
-sub _compile_hand_optimized_type_constraint {
-    my $self = shift;
-
-    my $type_constraint = $self->hand_optimized_type_constraint;
-
-    unless ( ref $type_constraint ) {
-        require Moose;
-        Moose->throw_error("Hand optimized type constraint is not a code reference");
-    }
-
-    return $type_constraint;
 }
 
 sub _compile_subtype {
