@@ -126,7 +126,9 @@ sub interpolate_class_and_new {
     my $class = shift;
     my $name  = shift;
 
-    $class->throw_error('You must pass an even number of attribute options')
+    throw_exception( MustPassEvenNumberOfAttributeOptions => attribute_name => $name,
+                                                             options        => \@_
+                   )
         if @_ % 2 == 1;
 
     my %args = @_;
@@ -424,10 +426,10 @@ sub _process_coerce_option {
     unless ( $options->{type_constraint}->has_coercion ) {
         my $type = $options->{type_constraint}->name;
 
-        $class->throw_error(
-            "You cannot coerce an attribute ($name) unless its type ($type) has a coercion",
-            data => $options,
-        );
+        throw_exception( CannotCoerceAttributeWhichHasNoCoercion => attribute_name => $name,
+                                                                    type_name      => $type,
+                                                                    params         => $options
+                       );
     }
 }
 
