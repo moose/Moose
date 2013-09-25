@@ -151,4 +151,38 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         "we gave a HashRef to before");
 }
 
+{
+    use Moose::Util;
+    use Moose::Util::TypeConstraints;
+
+    my $exception = exception {
+        Moose::Util::resolve_metaclass_alias(find_type_constraint('Int'), 'Xyz');
+    };
+
+    like(
+        $exception,
+        qr/^Can't locate Moose::Meta::Int::Custom::Xyz or Xyz in \@INC \(\@INC contains:/,
+        "Cannot locate 'Xyz'");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotLocatePackageInINC",
+        "Cannot locate 'Xyz'");
+
+    is(
+	$exception->type_name,
+	"Int",
+        "Cannot locate 'Xyz'");
+
+    is(
+	$exception->possible_packages,
+	'Moose::Meta::Int::Custom::Xyz or Xyz',
+        "Cannot locate 'Xyz'");
+
+    is(
+	$exception->metaclass_name,
+	"Xyz",
+        "Cannot locate 'Xyz'");
+}
+
 done_testing;
