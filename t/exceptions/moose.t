@@ -27,38 +27,6 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-        {
-            package Foo1;
-            use Moose;
-            has 'bar' => (
-                is =>
-            );
-        }
-    };
-
-    like(
-        $exception,
-        qr/\QUsage: has 'name' => ( key => value, ... )/,
-        "has takes a hash");
-
-    isa_ok(
-        $exception,
-        "Moose::Exception::InvalidHasProvided",
-        "has takes a hash");
-
-    is(
-        $exception->attribute_name,
-        'bar',
-        "has takes a hash");
-
-    is(
-        $exception->class->name,
-        'Foo1',
-        "has takes a hash");
-}
-
-{
-    my $exception = exception {
         use Moose;
         Moose->init_meta;
     };
