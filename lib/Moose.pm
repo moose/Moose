@@ -67,11 +67,6 @@ sub has {
     my $meta = shift;
     my $name = shift;
 
-    throw_exception( InvalidHasProvided => class           => $meta,
-                                           attribute_name  => $name
-                   )
-        if @_ % 2 == 1;
-
     my %context = Moose::Util::_caller_info;
     $context{context} = 'has declaration';
     $context{type} = 'class';
