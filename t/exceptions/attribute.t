@@ -1133,4 +1133,64 @@ use Test::Fatal;
         "unable to recognize metaclass of Moose::Util::TypeConstraints");
 }
 
+{
+    my $exception = exception {
+        package Foo::CannotCoerce::WithoutCoercion;
+        use Moose;
+
+        has 'foo' => (
+            is     => 'ro',
+            isa    => 'Str',
+            coerce => 1
+        )
+    };
+
+    like(
+        $exception,
+        qr/\QYou cannot coerce an attribute (foo) unless its type (Str) has a coercion/,
+        "has throws error with odd number of attribute options");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotCoerceAttributeWhichHasNoCoercion",
+        "has throws error with odd number of attribute options");
+
+    is(
+        $exception->attribute_name,
+        'foo',
+        "has throws error with odd number of attribute options");
+
+    is(
+        $exception->type_name,
+        'Str',
+        "has throws error with odd number of attribute options");
+}
+
+{
+    my $exception = exception {
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
+                is =>
+            );
+        }
+    };
+
+    like(
+        $exception,
+        qr/\QYou must pass an even number of attribute options/,
+        'has throws exception with odd number of attribute options');
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::MustPassEvenNumberOfAttributeOptions",
+        'has throws exception with odd number of attribute options');
+
+    is(
+        $exception->attribute_name,
+        'bar',
+        'has throws exception with odd number of attribute options');
+}
+
 done_testing;
