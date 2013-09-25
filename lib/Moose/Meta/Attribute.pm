@@ -4,7 +4,6 @@ package Moose::Meta::Attribute;
 use strict;
 use warnings;
 
-use Class::Load qw(is_class_loaded);
 use B ();
 use Scalar::Util 'blessed', 'weaken';
 use List::MoreUtils 'any';
@@ -1234,7 +1233,7 @@ sub _find_delegate_metaclass {
 	}
 
 	# make sure the class is loaded
-        unless ( is_class_loaded($class) ) {
+        unless ( Moose::Util::_is_package_loaded($class) ) {
             throw_exception( DelegationToAClassWhichIsNotLoaded => attribute  => $self,
                                                                    class_name => $class
                            );
@@ -1245,7 +1244,7 @@ sub _find_delegate_metaclass {
         return Class::MOP::Class->initialize($class);
     }
     elsif ( $role ) {
-        unless ( is_class_loaded($role) ) {
+        unless ( Moose::Util::_is_package_loaded($role) ) {
             throw_exception( DelegationToARoleWhichIsNotLoaded => attribute => $self,
                                                                   role_name => $role
                            );
