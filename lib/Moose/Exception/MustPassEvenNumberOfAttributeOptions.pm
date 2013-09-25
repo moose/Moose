@@ -1,8 +1,13 @@
-package Moose::Exception::InvalidHasProvided;
+package Moose::Exception::MustPassEvenNumberOfAttributeOptions;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::Class';
+
+has 'options' => (
+    is       => 'ro',
+    isa      => 'ArrayRef',
+    required => 1
+);
 
 has 'attribute_name' => (
     is       => 'ro',
@@ -11,7 +16,7 @@ has 'attribute_name' => (
 );
 
 sub _build_message {
-    "Usage: has 'name' => ( key => value, ... )";
+    return 'You must pass an even number of attribute options';
 }
 
 1;
