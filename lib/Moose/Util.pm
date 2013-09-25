@@ -233,11 +233,12 @@ sub _build_alias_package_name {
             }
         }
 
-        require Moose;
-        Moose->throw_error(
-            "Can't locate " . _english_list_or(@possible) . " in \@INC "
-        . "(\@INC contains: @INC)."
-        );
+        throw_exception( CannotLocatePackageInINC => possible_packages => _english_list_or(@possible),
+                                                     INC               => \@INC,
+                                                     type              => $type,
+                                                     metaclass_name    => $metaclass_name,
+                                                     params            => \%options
+                       );
     }
 }
 
