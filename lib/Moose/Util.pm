@@ -40,7 +40,7 @@ Sub::Exporter::setup_exporter({
 sub throw_exception {
     my ($class_name, @args_to_exception) = @_;
     my $class = "Moose::Exception::$class_name";
-    load_class( $class );
+    _load_user_class( $class );
     die $class->new( @args_to_exception );
 }
 
