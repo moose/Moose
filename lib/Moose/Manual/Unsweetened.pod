@@ -306,7 +306,7 @@ much. We could probably simplify this by defining some sort of
       }
   );
 
-Then we could define a base class that would accept such a definition,
+Then we could define a base class that would accept such a definition
 and do the right thing. Keep that sort of thing up and we're well on
 our way to writing a half-assed version of Moose!
 
@@ -319,6 +319,6 @@ replace or extend a piece of built-in functionality.
 
 Moose is a complete OO package in and of itself, and is part of a rich
 ecosystem of extensions. It also has an enthusiastic community of
-users, and is being actively maintained and developed.
+users and is being actively maintained and developed.
 
 =cut
