@@ -49,7 +49,7 @@ use Moose();
             extends 'Moose::Meta::Class';
 
             sub _inline_new_object {
-                return 'print "xyz';
+                return 'print "xyz'; # this is a intentional syntax error,
             }
         }
     };
