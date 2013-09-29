@@ -3,7 +3,7 @@ package Moose::Exception::CouldNotEvalConstructor;
 use Moose;
 extends 'Moose::Exception';
 
-has 'method_constructor_object' => (
+has 'constructor_method' => (
     is       => 'ro',
     isa      => 'Class::MOP::Method::Constructor',
     required => 1
