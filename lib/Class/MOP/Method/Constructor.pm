@@ -110,9 +110,9 @@ sub _generate_constructor_method_inline {
     }
     catch {
         my $source = join("\n", @source);
-        throw_exception( CouldNotEvalConstructor => method_constructor_object => $self,
-                                                    source                    => $source,
-                                                    error                     => $_
+        throw_exception( CouldNotEvalConstructor => constructor_method => $self,
+                                                    source             => $source,
+                                                    error              => $_
                        );
     };
 
