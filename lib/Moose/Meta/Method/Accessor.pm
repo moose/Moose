@@ -34,8 +34,7 @@ sub _compile_code {
         $self->SUPER::_compile_code(@args);
     }
     catch {
-        throw_exception( CouldNotCreateWriter => attribute_name => $self->associated_attribute->name,
-                                                 attribute      => $self->associated_attribute,
+        throw_exception( CouldNotCreateWriter => attribute      => $self->associated_attribute,
                                                  error          => $_,
                                                  instance       => $self
                        );
