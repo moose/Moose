@@ -51,7 +51,7 @@ sub extends {
 
     unless ( @_ )
     {
-        throw_exception("ExtendsMissingArgs");
+        throw_exception( ExtendsMissingArgs => class => $meta );
     }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
