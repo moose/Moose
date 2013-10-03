@@ -756,13 +756,6 @@ sub add_parameterizable_type {
     sub list_all_builtin_type_constraints {@BUILTINS}
 }
 
-sub _throw_error {
-    shift;
-    require Moose;
-    unshift @_, 'Moose';
-    goto &Moose::throw_error;
-}
-
 1;
 
 # ABSTRACT: Type constraint system for Moose

@@ -642,9 +642,9 @@ sub _apply_meta_traits {
 
     my $type = $meta->isa('Moose::Meta::Role') ? 'Role'
              : $meta->isa('Class::MOP::Class') ? 'Class'
-             : Moose->throw_error('Cannot determine metaclass type for '
-                                . 'trait application. Meta isa '
-                                . ref $meta);
+             : confess('Cannot determine metaclass type for '
+                           . 'trait application. Meta isa '
+                           . ref $meta);
 
     my @resolved_traits = map {
         ref $_
