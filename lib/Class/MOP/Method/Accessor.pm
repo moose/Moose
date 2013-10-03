@@ -172,11 +172,6 @@ sub _generate_reader_method_inline {
     };
 }
 
-sub _inline_throw_error {
-    my $self = shift;
-    return 'Carp::confess ' . $_[0];
-}
-
 sub _inline_throw_exception {
     my ( $self, $throw_args ) = @_;
     return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';

@@ -791,89 +791,9 @@ sub _fixup_attributes_after_rebless {
 
 our $error_level;
 
-sub throw_error {
-    my ( $self, @args ) = @_;
-    local $error_level = ($error_level || 0) + 1;
-    $self->raise_error($self->create_error(@args));
-}
-
-sub _inline_throw_error {
-    my ( $self, @args ) = @_;
-    $self->_inline_raise_error($self->_inline_create_error(@args));
-}
-
 sub _inline_throw_exception {
     my ( $self, $throw_args ) = @_;
     return 'Moose::Util::throw_exception('.$throw_args.')';
-}
-
-sub raise_error {
-    my ( $self, @args ) = @_;
-    die @args;
-}
-
-sub _inline_raise_error {
-    my ( $self, $message ) = @_;
-
-    return 'die ' . $message;
-}
-
-sub create_error {
-    my ( $self, @args ) = @_;
-
-    require Carp::Heavy;
-
-    local $error_level = ($error_level || 0 ) + 1;
-
-    if ( @args % 2 == 1 ) {
-        unshift @args, "message";
-    }
-
-    my %args = ( metaclass => $self, last_error => $@, @args );
-
-    $args{depth} += $error_level;
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    Moose::Util::_load_user_class($class);
-
-    $class->new(
-        Carp::caller_info($args{depth}),
-        %args
-    );
-}
-
-sub _inline_create_error {
-    my ( $self, $msg, $args ) = @_;
-    # XXX ignore $args for now, nothing currently uses it anyway
-
-    require Carp::Heavy;
-
-    my %args = (
-        metaclass  => $self,
-        last_error => $@,
-        message    => $msg,
-    );
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    Moose::Util::_load_user_class($class);
-
-    # don't check inheritance here - the intention is that the class needs
-    # to provide a non-inherited inlining method, because falling back to
-    # the default inlining method is most likely going to be wrong
-    # yes, this is a huge hack, but so is the entire error system, so.
-    return
-          '$meta->create_error('
-        . $msg
-        . ( defined $args ? ', ' . $args : q{} ) . ');'
-        unless $class->meta->has_method('_inline_new');
-
-    $class->_inline_new(
-        # XXX ignore this for now too
-        # Carp::caller_info($args{depth}),
-        %args
-    );
 }
 
 1;
@@ -1022,10 +942,6 @@ read-write, so you can use them to change the class name.
 The name of the class used to throw errors. This defaults to
 L<Moose::Error::Default>, which generates an error with a stacktrace
 just like C<Carp::confess>.
-
-=item B<< $metaclass->throw_error($message, %extra) >>
-
-Throws the error created by C<create_error> using C<raise_error>
 
 =back
 

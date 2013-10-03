@@ -40,12 +40,6 @@ use Moose::Util 'throw_exception';
 
 use Moose::Meta::Attribute::Native;
 
-sub throw_error {
-    # FIXME This
-    shift;
-    goto \&confess
-}
-
 sub extends {
     my $meta = shift;
 
