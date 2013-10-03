@@ -106,7 +106,9 @@ while( my $file = readdir($dir) )
 		}
             } else {
                 $exceptionMessages .= ":\n\n";
-                $exceptionMessages .= "    ".$exceptions{$file};
+                if( $exceptions{$file} ) {
+                    $exceptionMessages .= "    ".$exceptions{$file};
+                }
             }
 
             $exceptionMessages .= "\n=over 4\n\n=back\n\n=cut\n\n";
@@ -240,7 +242,7 @@ sub getExceptionsToMessages {
                 }
             } elsif( /isa_ok\($/ ) {
                 my $exceptionVar = <$fileHandle>;
-                if( $exceptionVar =~ /\$exception,$/ ) {
+                if( $exceptionVar =~ /\$exception(->error)?,$/ ) {
                     $exception = <$fileHandle>;
                     if( $exception =~ /Moose::Exception::(\w+)/ ) {
                         $exception = $1;
