@@ -34,13 +34,13 @@ use Moose();
         "cannot generate writer");
 
     isa_ok(
-        $exception,
-        "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
+        $exception->error,
+        "Moose::Exception::CouldNotCreateWriter",
         "cannot generate writer");
 
     isa_ok(
-        $exception->error,
-        "Moose::Exception::CouldNotCreateWriter",
+        $exception,
+        "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
         "cannot generate writer");
 
     is(
