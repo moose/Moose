@@ -627,6 +627,11 @@ Given a list of scalars, turns them into a proper list in English
 ("one and two", "one, two, three, and four"). This is used to help us
 make nicer error messages.
 
+=item B<throw_exception( $class_name, %arguments_to_exception)>
+
+Calls die with an object of Moose::Exception::$class_name, with
+%arguments_to_exception passed as arguments.
+
 =back
 
 =head1 TODO
