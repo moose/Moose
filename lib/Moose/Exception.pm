@@ -52,3 +52,33 @@ sub BUILD {
 }
 
 1;
+
+# ABSTRACT: Superclass of all Moose exceptions
+
+__END__
+
+=pod
+
+=head1 DESCRIPTION
+
+This class contains attributes which are comon to all Moose exceptions
+classes.
+
+=head1 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute contains the stack trace for the given exception. It
+is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute contains the exception message. It is read-only and isa Str.
+It is lazy and has a default value 'Error'.
+
+=back
+
+=cut
