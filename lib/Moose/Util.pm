@@ -12,7 +12,6 @@ use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use overload ();
 use Try::Tiny;
-use Class::Load 0.07 qw(load_class);
 
 my @exports = qw[
     find_meta
