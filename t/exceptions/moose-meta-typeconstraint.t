@@ -123,7 +123,7 @@ use Moose();
         "-123 is not valid for OnlyPositiveInts");
 
     is(
-        $exception->type_name,
+        $exception->type->name,
         "OnlyPositiveInts",
         "-123 is not valid for OnlyPositiveInts");
 
