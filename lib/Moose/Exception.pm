@@ -54,7 +54,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This class contains attributes which are comon to all Moose exceptions
+This class contains attributes which are common to all Moose exceptions
 classes.
 
 =head1 ATTRIBUTES
@@ -70,7 +70,8 @@ on $exception->message.
 =item B<< $exception->message >>
 
 This attribute contains the exception message. It is read-only and isa Str.
-It is lazy and has a default value 'Error'.
+It is lazy and has a default value 'Error'. Every subclass of L<Moose::Exception>
+is expected to override _build_message method.
 
 =back
 
