@@ -514,33 +514,6 @@ use Test::Fatal;
 	{
 	    package Foo1;
 	    use Moose;
-	    has bar => (
-                is       => 'ro',
-                required => 1,
-                isa      => 'Int',
-	    );
-	}
-
-	Foo1->new(bar => "test");
-    };
-
-    like(
-	$exception,
-	qr/^Attribute \(bar\) does not pass the type constraint because: Validation failed for 'Int' with value "?test"?/,
-	"bar is an 'Int' and 'Str' is given");
-        #Attribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"
-
-    isa_ok(
-	$exception,
-	"Moose::Exception::ValidationFailedForTypeConstraint",
-	"bar is an 'Int' and 'Str' is given");
-}
-
-{
-    my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
 	    has 'bar' => (
                 is       => 'ro',
                 handles  => \*STDIN,
@@ -1191,6 +1164,33 @@ use Test::Fatal;
         $exception->attribute_name,
         'bar',
         'has throws exception with odd number of attribute options');
+}
+
+{
+    my $exception = exception {
+	{
+	    package Foo1;
+	    use Moose;
+	    has bar => (
+                is       => 'ro',
+                required => 1,
+                isa      => 'Int',
+	    );
+	}
+
+	Foo1->new(bar => "test");
+    };
+
+    like(
+	$exception,
+	qr/^Attribute \(bar\) does not pass the type constraint because: Validation failed for 'Int' with value "?test"?/,
+	"bar is an 'Int' and 'Str' is given");
+        #Attribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"
+
+    isa_ok(
+	$exception,
+	"Moose::Exception::ValidationFailedForTypeConstraint",
+	"bar is an 'Int' and 'Str' is given");
 }
 
 done_testing;
