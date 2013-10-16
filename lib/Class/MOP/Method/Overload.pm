@@ -8,6 +8,8 @@ use Carp 'confess';
 
 use parent 'Class::MOP::Method';
 
+use Moose::Util 'throw_exception';
+
 sub wrap {
     my $class = shift;
     my (@args) = @_;
