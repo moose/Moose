@@ -8,17 +8,16 @@ use Carp 'confess';
 
 use parent 'Class::MOP::Method';
 
-use Moose::Util 'throw_exception';
-
 sub wrap {
     my $class = shift;
     my (@args) = @_;
     unshift @args, 'body' if @args % 2 == 1;
     my %params = @args;
 
-    throw_exception( OperatorIsRequired => params => \%params,
-                                           class  => $class
-                   )
+    require Moose::Util;
+    Moose::Util::throw_exception( OperatorIsRequired => params => \%params,
+                                                        class  => $class
+                                )
         unless exists $params{operator};
 
     return $class->SUPER::wrap(

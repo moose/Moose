@@ -11,8 +11,6 @@ use constant DEBUG_NO_META => $ENV{DEBUG_NO_META} ? 1 : 0;
 
 use parent 'Class::MOP::Method';
 
-use Moose::Util 'throw_exception';
-
 sub _is_caller_mop_internal {
     my $self = shift;
     my ($caller) = @_;
@@ -50,9 +48,10 @@ sub wrap {
 
     unshift @args, 'body' if @args % 2 == 1;
     my %params = @args;
-    throw_exception( CannotOverrideBodyOfMetaMethods => params => \%params,
-                                                        class  => $class
-                   )
+    require Moose::Util;
+    Moose::Util::throw_exception( CannotOverrideBodyOfMetaMethods => params => \%params,
+                                                                     class  => $class
+                                )
         if $params{body};
 
     my $metaclass_class = $params{associated_metaclass}->meta;
