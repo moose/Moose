@@ -156,7 +156,8 @@ sub fixLineLength {
 
     my $str;
     foreach( @tokens ) {
-        $str .= (shortenToEighty($_)."\n");
+        my $string = shortenToEighty($_);
+        $str .= ($string."\n");
     }
     return $str."\n";
 }
@@ -168,10 +169,16 @@ sub shortenToEighty {
         my $s2 = substr($str, 80);
         my $substr1 = substr($s1, length($s1) - 1 );
         my $substr2 = substr($s2, 0, 1);
+        $s1 =~ s/[\s]+$//g;
+        $s2 =~ s/[\s]+$//g;
         if( ( $substr1 =~ /[\(\)\[\w:,'"<>\]\$]/ ) && ( $substr2 =~ /[\$'"\(\)\[<>\w:,\]]/ ) ) {
             if( $s1 =~ s/\s([\(\)\[<:\w+>,"'\]\$]+)$// ) {
+		$s1 =~ s/[\s]+$//g;
                 $s2 = $1.$s2;
+		$s2 =~ s/[\s]+$//g;
                 my $s3 = shortenToEighty( $s2 );
+		$s3 =~ s/[\s]+$//g;
+		$s2 =~ s/[\s]+$//g;
                 if( $s2 ne $s3 ) {
                     return "$s1\n$s3";
                 } else {
