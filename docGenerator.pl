@@ -13,6 +13,8 @@ opendir( $dir, $path) or die $!;
 
 my $number = 0;
 
+print "package Moose::Manual::Exceptions::Manifest;\n";
+
 while( my $file = readdir($dir) )
 {
     my $exceptionsToMsgHashRef = getExceptionsToMessages();
@@ -111,7 +113,7 @@ while( my $file = readdir($dir) )
                 }
             }
 
-            $exceptionMessages .= "\n=over 4\n\n=back\n\n=cut\n\n";
+            $exceptionMessages .= "\n";
 
             $attributesText .= "=item B<< \$exception->$name >>\n\n";
             if( $attribute->has_documentation ) {
@@ -126,21 +128,13 @@ while( my $file = readdir($dir) )
         }
         my $roleVerb = "consume".( $#roles == 0 ? 's role' : ' roles' );
 
-        my $text = "# ABSTRACT: $file class
-
-__END__
-
-=pod
-
-=head1 DESCRIPTION
+        my $text = "=head1 Moose::Exception::$file
 
 This class is a subclass of $superclasses".
 ( defined $consumedRoles ? " and $roleVerb $consumedRoles.": '.' ).
 "
 
-=head1 ATTRIBUTES
-
-=over 4
+=head2 ATTRIBUTES
 
 ".
 ( defined $attributesText ? "$attributesText" : '' );
@@ -152,6 +146,8 @@ This class is a subclass of $superclasses".
     print "\n$text\n";
     }
 }
+
+print "\n=cut\n";
 
 sub fixLineLength {
     my $doc = shift;
