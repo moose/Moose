@@ -1,0 +1,162 @@
+package Moose::Manual::Exceptions;
+ 
+# ABSTRACT: Moose's exceptions
+ 
+__END__
+ 
+=pod
+ 
+=head1 Exceptions in Moose
+ 
+Moose will throw an instance of C<Moose::Exception> when it encounters an error condition.
+There are many specific subclasses of L<Moose::Exception>, each designed specifically for
+its particular error condition. These subclasses have attributes that contain
+relevant information, such as a stack trace, related metaclass objects, etc.
+ 
+=head1 Handling Moose Exceptions
+ 
+Because Moose's exceptions use the standard C<die> mechanism, you are free to catch and handle
+errors however you like. You could use Perl's builtin C<eval> to catch Moose exceptions.
+However due to the subtle problems C<eval> can introduce into
+your programs, the Moose team strongly recommends using L<Try::Tiny> instead. Please refer
+to L<Try::Tiny>'s documentation for a discussion of how C<eval> is dangerous.
+ 
+The following example demonstrates how to catch and inspect a L<Moose::Exception>. For the
+sake of simplicity, we will cause a very simple error. The C<extends> keywords expects a list
+of superclass names. If we pass no superclass names, Moose will throw an instance of
+L<Moose::Exception::ExtendsMissingArgs>.
+ 
+=head2 Catching with Try::Tiny
+ 
+    use warnings;
+    use strict;
+    use Try::Tiny;
+ 
+    try {
+        package Example::Exception;
+        use Moose;
+        extends; # <-- error!
+    } catch {
+        # $_ contains the instance of the exception thrown by the above try block
+        # $_ may get clobbered, so we should copy its value to another variable
+        my $exception = $_;
+ 
+        # exception objects are not ubiquitous in Perl, so we must check whether $exception is blessed
+        # we also need to ensure that $exception is actually the kind of exception we were expecting
+        if ( blessed $exception && $exception->isa("Moose::Exception::ExtendsMissingArgs") ) {
+            # fetch attributes from the $exception object and display a friendly error to the user
+            my $class_name = $exception->class_name;
+            warn "You forgot to specify the superclass of $class_name, dummy!";
+        } else {
+            # you've got some other kind of exception, so just print it
+            # note: all Moose::Exception objects will stringify to a useful error message
+            warn "$exception\n";
+        }
+    }
+ 
+=head2 Example of catching ValidationFailedForTypeConstraint
+
+    use warnings;
+    use strict;
+    use Try::Tiny;
+
+    {
+        package Person;
+        use Moose;
+        use Moose::Util::TypeConstraints;
+
+        subtype 'NameStr',
+        as 'Str',
+        where { $_ =~ /^[a-zA-Z]+$/; };
+
+        has 'age' => (
+            is       => 'ro',
+            isa      => 'Int',
+            required => 1
+        );
+
+        has 'name' => (
+            is       => 'ro',
+            isa      => 'NameStr',
+            required => 1
+        );
+    }
+
+    my $person;
+    while( !$person ) {
+        try {
+            print "Enter your age : ";
+            my $age = <STDIN>;
+            chomp $age;
+            print "Enter your name : ";
+            my $name = <STDIN>;
+            chomp $name;
+            $person = Person->new( age  => $age,
+                                   name => $name
+                                 );
+            my $person_name = $person->name;
+            my $person_age  = $person->age;
+            print "$person_name is $person_age years old\n";
+        } catch {
+            my $exception = $_;
+
+            if ( blessed $exception && $exception->isa("Moose::Exception::ValidationFailedForTypeConstraint") ) {
+
+                # fetch attributes from the $exception object and display a friendly error to the user
+                my $attribute_name = $exception->attribute->name;
+                my $type_name = $exception->type->name;
+                my $value = $exception->value;
+
+                warn "You entered $value for $attribute_name, which is not $type_name!";
+            } else {
+
+                # you've got some other kind of exception, so just print it
+                # note: all Moose::Exception objects will stringify to a useful error message
+                warn "$exception\n";
+            }
+        }
+    }
+
+=head2 Example of catching AttributeIsRequired
+
+    use warnings;
+    use strict;
+    use Try::Tiny;
+
+    {
+        package Example::RequiredAttribute;
+        use Moose;
+
+        has 'required_attribute' => (
+            is       => 'ro',
+            isa      => 'Int',
+            required => 1
+        );
+    }
+
+    try {
+        # we're not passing required_attribute, so it'll throw an exception
+        my $object = Example::RequiredAttribute->new();
+    } catch {
+        my $exception = $_;
+        if ( blessed $exception && $exception->isa("Moose::Exception::AttributeIsRequired") ) {
+
+            # fetch attributes from the $exception object and display only
+            # the topmost frame of the stack trace
+            my $attribute_name = $exception->attribute->name;
+            my $trace = $exception->trace;
+
+            my $frame = $trace->frame(0);
+
+            my $message = $exception->message;
+            my $file    = $frame->{filename};
+            my $line    = $frame->{line};
+
+            warn "$message at $file $line\n";
+        } else {
+
+            # you've got some other kind of exception, so just print it
+            # note: all Moose::Exception objects will stringify to a useful error message
+            warn "$exception\n";
+        }
+    };
