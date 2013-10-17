@@ -5,14 +5,14 @@ extends 'Moose::Exception';
 with 'Moose::Exception::Role::Class', 'Moose::Exception::Role::Role';
 
 has 'missing_methods' => (
-    traits     => ['Array'],
-    is         => 'ro',
-    isa        => 'ArrayRef[Moose::Meta::Role::Method::Required]',
-    handles    => { method_count    => 'count',
-                    get_method_at   => 'get',
-                    get_all_methods => 'elements',
+    traits   => ['Array'],
+    is       => 'ro',
+    isa      => 'ArrayRef[Moose::Meta::Role::Method::Required]',
+    handles  => { method_count    => 'count',
+                  get_method_at   => 'get',
+                  get_all_methods => 'elements',
     },
-    required   => 1
+    required => 1
 );
 
 has 'imported_method' => (
