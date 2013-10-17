@@ -132,11 +132,7 @@ while( my $file = readdir($dir) )
 
 This class is a subclass of $superclasses".
 ( defined $consumedRoles ? " and $roleVerb $consumedRoles.": '.' ).
-"
-
-=head2 ATTRIBUTES
-
-".
+"\n\n=over 4\n\n=back\n\n=head2 ATTRIBUTES\n\n=over 4\n\n".
 ( defined $attributesText ? "$attributesText" : '' );
 
     $text = fixLineLength( $text );
