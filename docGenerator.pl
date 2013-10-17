@@ -15,10 +15,10 @@ my $number = 0;
 
 print "package Moose::Manual::Exceptions::Manifest;\n";
 
+my $exceptionsToMsgHashRef = getExceptionsToMessages();
+
 while( my $file = readdir($dir) )
 {
-    my $exceptionsToMsgHashRef = getExceptionsToMessages();
-
     my %exceptions = %$exceptionsToMsgHashRef;
 
     my ($exception, $description, $attributesText, $superclasses, $consumedRoles, $exceptionMessages);
