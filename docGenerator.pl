@@ -50,11 +50,11 @@ while( my $file = readdir($dir) )
         $superclasses = placeCommasAndAnd( @superClasses );
         $consumedRoles = placeCommasAndAnd( @rolesNames );
 
-        foreach( @attributes ) 
+        foreach( @attributes )
         {
             my $attribute = $_;
             my $name = $attribute->name;
-            my $traits; # = $attribute->has_applied_traits;
+            my $traits;
 
             if( $attribute->has_applied_traits ) {
                 my @traitsArray = @{$attribute->applied_traits};

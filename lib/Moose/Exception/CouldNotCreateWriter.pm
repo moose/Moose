@@ -16,7 +16,7 @@ sub _build_message {
     my $attribute_name = $self->attribute_name;
 
     return "Could not create writer for '$attribute_name' "
-	. "because $error";
+        . "because $error";
 }
 
 1;

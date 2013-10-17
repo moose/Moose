@@ -34,12 +34,11 @@ sub _build_message {
     my ($class_quoted, $role_quoted) = ("'".$class."'","'".$role."'");
 
     "$role_quoted requires the $noun $list "
-	. "to be implemented by $class_quoted. "
+        . "to be implemented by $class_quoted. "
         . "If you imported functions intending to use them as "
         . "methods, you need to explicitly mark them as such, via "
         . "$class->meta->add_method($method"
         . " => \\&$method)";
-
 }
 
 1;

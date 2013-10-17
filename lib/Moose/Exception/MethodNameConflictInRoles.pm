@@ -9,8 +9,8 @@ has 'conflict' => (
     is         => 'ro',
     isa        => 'ArrayRef[Moose::Meta::Role::Method::Conflicting]',
     handles    => { conflict_methods_count => 'count',
-		    get_method_at          => 'get',
-		    get_all_methods        => 'elements',
+                    get_method_at          => 'get',
+                    get_all_methods        => 'elements',
     },
     required   => 1
 );
@@ -19,8 +19,8 @@ sub _get_method_names {
     my $self = shift;
 
     return ( $self->conflict_methods_count == 1 ?
-      "'".$self->get_method_at(0)->name."'":
-      Moose::Util::english_list( map { q{'} . $_->name . q{'} } $self->get_all_methods ) );
+        "'".$self->get_method_at(0)->name."'":
+        Moose::Util::english_list( map { q{'} . $_->name . q{'} } $self->get_all_methods ) );
 }
 
 sub _build_message {

@@ -2,7 +2,7 @@ package Moose::Exception::InitializeTakesUnBlessedPackageName;
 
 use Moose;
 extends 'Moose::Exception';
-    
+
 has 'package_name' => (
     is       => 'ro',
     isa      => 'Any',

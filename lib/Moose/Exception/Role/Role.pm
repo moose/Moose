@@ -33,12 +33,12 @@ after "BUILD" => sub {
     my $self = $_[0];
     if( !( $self->is_role_name_set) && !( $self->is_role_set) )
     {
-	throw_exception("NeitherRoleNorRoleNameIsGiven");
+        throw_exception("NeitherRoleNorRoleNameIsGiven");
     }
 
     if( $self->is_role_name_set &&
-	$self->is_role_set &&
-	( $self->role->name ne $self->role_name ) )
+        $self->is_role_set &&
+        ( $self->role->name ne $self->role_name ) )
     {
         throw_exception( RoleNamesDoNotMatch => role_name => $self->role_name,
                                                 role      => $self->role,

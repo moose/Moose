@@ -341,7 +341,7 @@ sub _inline_BUILDARGS {
                 'if (scalar @_ == 1) {',
                     'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
                         $self->_inline_throw_exception(
-			    '"SingleParamsToNewMustBeHashRef"'
+                            '"SingleParamsToNewMustBeHashRef"'
                         ) . ';',
                     '}',
                     '$params = { %{ $_[0] } };',
