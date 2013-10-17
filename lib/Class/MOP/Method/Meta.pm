@@ -11,6 +11,8 @@ use constant DEBUG_NO_META => $ENV{DEBUG_NO_META} ? 1 : 0;
 
 use parent 'Class::MOP::Method';
 
+use Moose::Util 'throw_exception';
+
 sub _is_caller_mop_internal {
     my $self = shift;
     my ($caller) = @_;
