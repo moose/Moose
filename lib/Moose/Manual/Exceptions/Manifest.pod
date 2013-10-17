@@ -4,7 +4,13 @@ package Moose::Manual::Exceptions::Manifest;
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->cases_to_be_matched >>
 
@@ -35,15 +41,13 @@ This attribute is read-only, isa Any and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -54,6 +58,14 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -66,12 +78,28 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->attribute_name >>
 
@@ -81,16 +109,6 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =back
 
@@ -103,11 +121,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -123,6 +143,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only, isa Str and is required.
 
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
 =back
 
 =head4 Sample Error Message:
@@ -133,11 +157,13 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -148,6 +174,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
 
 =back
 
@@ -161,11 +191,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -176,6 +208,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->attribute_name >>
 
@@ -191,15 +227,25 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
 
 =item B<< $exception->action >>
 
 This attribute is read-only, isa Any and is required.
 
-=item B<< $exception->type >>
+=item B<< $exception->to_match >>
 
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->trace >>
 
@@ -210,10 +256,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->to_match >>
-
-This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -227,7 +269,21 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->message >>
 
@@ -238,14 +294,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -258,11 +306,17 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->instance >>
+=over 4
 
-This attribute is read-only, isa Any and is required.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -274,19 +328,19 @@ C<is_class_set> and is optional.
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->params >>
+=item B<< $exception->instance >>
 
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -300,7 +354,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreate> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->params >>
 
@@ -311,14 +371,14 @@ This attribute is read-only, isa HashRef and is required.
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->attribute_class >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->attribute_class >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -330,25 +390,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->method_name >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->maximum_args >>
+
+This attribute is read-only, isa Int and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->maximum_args >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Int and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -362,7 +428,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->params >>
 
@@ -392,7 +464,13 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->type >>
 
@@ -403,15 +481,15 @@ This attribute is read-only, isa Any and is required.
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint::Registry> and is
  required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -423,7 +501,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->also_parameter >>
 
@@ -453,17 +537,23 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -476,17 +566,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->params >>
 
@@ -495,6 +581,16 @@ This attribute is read-only, isa HashRef and is required.
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -506,17 +602,23 @@ This attribute is read-only, isa Any and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -529,7 +631,17 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->message >>
 
@@ -540,10 +652,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -557,7 +665,17 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -573,10 +691,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
-
 =back
 
 =head4 Sample Error Message:
@@ -588,31 +702,37 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->superclass_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
+=item B<< $exception->superclass_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -624,45 +744,51 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Role>, L<Moose::Exception::Role::Method> and
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
-
-=item B<< $exception->method >>
-
-This attribute is read-only, isa L<Moose::Meta::Method> and is required.
-
-=item B<< $exception->aliased_method_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->aliased_method_name >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->role >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =back
 
@@ -676,25 +802,31 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreateMOPClass> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
 
-=item B<< $exception->trace >>
+=item B<< $exception->class >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -707,7 +839,18 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
 
 =item B<< $exception->type_name >>
 
@@ -724,11 +867,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
-
 =back
 
 =head4 Sample Error Message:
@@ -739,9 +877,19 @@ This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
+=over 4
+
 =item B<< $exception->array >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->args >>
 
 This attribute is read-only, isa ArrayRef and is required.
 
@@ -749,10 +897,6 @@ This attribute is read-only, isa ArrayRef and is required.
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->args >>
-
-This attribute is read-only, isa ArrayRef and is required.
 
 =item B<< $exception->message >>
 
@@ -770,25 +914,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->constraint_name >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->constraint_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -802,7 +952,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->attribute_name >>
 
@@ -812,15 +968,15 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa HashRef and is required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -833,25 +989,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->params >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -864,25 +1026,31 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->method_name >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -899,19 +1067,21 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->code >>
-
-This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
@@ -922,6 +1092,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->code >>
+
+This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -934,35 +1108,41 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::AttributeName>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
-
-=item B<< $exception->second_role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->role_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->second_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
 
 =back
 
@@ -974,7 +1154,13 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -996,18 +1182,25 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->argument >>
+=over 4
 
-This attribute is read-only, isa Any and is required.
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->argument_noun >>
 
 This attribute is read-only, isa Str, has a default value "argument" and is
 optional.
 
-=item B<< $exception->type >>
+=item B<< $exception->type_of_argument >>
 
 This attribute is read-only, isa Str and is required.
 
@@ -1020,19 +1213,18 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->trace >>
+=item B<< $exception->argument >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->type_of_argument >>
-
-This attribute is read-only, isa Str and is required.
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->ordinal >>
 
 This attribute is read-only, isa Str, has a predicate C<is_ordinal_set> and is
 optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -1063,7 +1255,13 @@ optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -1089,17 +1287,27 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->role_composite >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa L<Moose::Meta::Role::Composite> and is required.
 
 =item B<< $exception->args >>
 
@@ -1108,10 +1316,6 @@ This attribute is read-only, isa ArrayRef and is required.
 =item B<< $exception->old_meta >>
 
 This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->role_composite >>
-
-This attribute is read-only, isa L<Moose::Meta::Role::Composite> and is required.
 
 =back
 
@@ -1124,31 +1328,37 @@ This attribute is read-only, isa L<Moose::Meta::Role::Composite> and is required
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->excluded_role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -1162,12 +1372,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Attribute>, L<Moose::Exception::Role::Instance> and
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -1183,15 +1394,20 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only, isa Object and is required.
 
-=item B<< $exception->type_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
-
 =item B<< $exception->attribute >>
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<is_attribute_set> and is optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =back
 
@@ -1204,15 +1420,18 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
+=over 4
 
-This attribute is read-only, isa Str and is required.
+=item B<< $exception->trace >>
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
@@ -1223,10 +1442,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->trace >>
+=item B<< $exception->class >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -1239,17 +1461,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -1260,6 +1478,16 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -1272,20 +1500,22 @@ C<is_role_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->trace >>
 
@@ -1295,6 +1525,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -1307,27 +1541,33 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type_name >>
+=over 4
 
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
+=item B<< $exception->message >>
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->type >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =back
 
@@ -1340,25 +1580,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->params >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -1371,32 +1617,38 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::EitherAttributeOrAttributeName>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
 optional.
 
-=item B<< $exception->attribute >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<has_attribute> and is optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->attribute_name >>
 
 This attribute is read-only, isa Str, has a predicate C<has_attribute_name> and
 is optional.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<has_attribute> and is optional.
 
 =back
 
@@ -1409,26 +1661,32 @@ is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute >>
+=over 4
 
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
+=item B<< $exception->trace >>
 
-=item B<< $exception->delegate_metaclass >>
-
-This attribute is read-only, isa Any and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->delegate_metaclass >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =back
 
@@ -1441,12 +1699,18 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
+=over 4
 
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->class_name >>
 
@@ -1457,15 +1721,15 @@ is optional.
 
 This attribute is read-only, isa Any and is required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =item B<< $exception->params >>
 
@@ -1482,17 +1746,23 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Method>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->method >>
 
@@ -1514,26 +1784,32 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->attribute >>
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<is_attribute_set> and is optional.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -1547,21 +1823,27 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
+=over 4
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->params >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->attribute_name >>
 
@@ -1577,16 +1859,22 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
@@ -1604,11 +1892,23 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->roles >>
+=over 4
 
-This attribute is read-only, isa ArrayRef and is required.
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->role >>
 
@@ -1620,15 +1920,9 @@ C<is_role_set> and is optional.
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
 
-=item B<< $exception->trace >>
+=item B<< $exception->roles >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa ArrayRef and is required.
 
 =back
 
@@ -1642,7 +1936,18 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->instance >>
 
@@ -1652,11 +1957,6 @@ This attribute is read-only, isa Object and is required.
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
 
 =back
 
@@ -1669,21 +1969,22 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Method>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->method >>
-
-This attribute is read-only, isa L<Moose::Meta::Method> and is required.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
 
 =item B<< $exception->message >>
 
@@ -1694,6 +1995,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =back
 
@@ -1706,12 +2012,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
@@ -1722,11 +2029,6 @@ C<is_class_set> and is optional.
 
 This attribute is read-only, isa Object and is required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
@@ -1735,6 +2037,16 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 =item B<< $exception->metaclass_type >>
 
 This attribute is read-only, isa Str and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =back
 
@@ -1748,7 +2060,17 @@ This attribute is read-only, isa Str and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
 
 =item B<< $exception->trace >>
 
@@ -1759,10 +2081,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
 
 =back
 
@@ -1777,35 +2095,41 @@ L<Moose::Exception::Role::Class>,
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
+=over 4
 
-This attribute is read-only, isa HashRef and is required.
+=item B<< $exception->attribute_name >>
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->attribute_name >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -1818,11 +2142,25 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->code >>
+
+This attribute is read-only, isa CodeRef and is required.
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->message >>
 
@@ -1833,14 +2171,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->code >>
-
-This attribute is read-only, isa CodeRef and is required.
 
 =back
 
@@ -1853,27 +2183,33 @@ This attribute is read-only, isa CodeRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =item B<< $exception->type >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
  C<is_type_set> and is optional.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type_name >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -1886,27 +2222,33 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
+=over 4
 
 =item B<< $exception->type >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
  C<is_type_set> and is optional.
 
-=item B<< $exception->trace >>
+=item B<< $exception->type_name >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -1918,25 +2260,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
 =item B<< $exception->metaclass >>
 
 This attribute is read-only, isa Any and is required.
 
-=item B<< $exception->class >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -1948,7 +2296,13 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -1972,17 +2326,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreateMOPClass> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->params >>
 
@@ -1991,6 +2341,16 @@ This attribute is read-only, isa HashRef and is required.
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -2003,26 +2363,32 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->handles >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->attribute >>
-
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
 
 =back
 
@@ -2034,21 +2400,13 @@ C<is_attribute_set> and is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->source >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->constructor_method >>
 
@@ -2056,6 +2414,20 @@ This attribute is read-only, isa L<Class::MOP::Method::Constructor> and is
 required.
 
 =item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->source >>
 
 This attribute is read-only, isa Str and is required.
 
@@ -2070,12 +2442,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -2086,6 +2459,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
 
 =item B<< $exception->type_name >>
 
@@ -2103,11 +2481,13 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->code >>
 
@@ -2127,6 +2507,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only, isa HashRef and is required.
 
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
 =back
 
 =head4 Sample Error Message:
@@ -2137,17 +2521,23 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -2160,9 +2550,19 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
+=over 4
+
 =item B<< $exception->metaclass_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->superclass_name >>
 
 This attribute is read-only, isa Str and is required.
 
@@ -2171,24 +2571,20 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->superclass_name >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
 
 =back
 
@@ -2201,17 +2597,22 @@ is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
-=item B<< $exception->class_name >>
+=item B<< $exception->params >>
 
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->message >>
 
@@ -2223,9 +2624,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->params >>
+=item B<< $exception->class_name >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =back
 
@@ -2238,44 +2640,50 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->new_member >>
+=item B<< $exception->class_name >>
 
-This attribute is read-only, isa Bool, has a predicate C<is_a_new_member>, has a
- default value 0 and is optional.
-
-=item B<< $exception->type_constraint_message >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->value >>
-
-This attribute is read-only, isa Any and is required.
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->new_member >>
+
+This attribute is read-only, isa Bool, has a predicate C<is_a_new_member>, has a
+ default value 0 and is optional.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->type_constraint_message >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -2293,11 +2701,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -2308,6 +2718,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -2322,7 +2736,27 @@ L<Moose::Exception::Role::InvalidAttributeOptions>,
 L<Moose::Exception::Role::ParamsHash> and
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->attribute_name >>
 
@@ -2333,24 +2767,10 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->type >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
  C<is_type_set> and is optional.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -2363,11 +2783,21 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->trace >>
 
@@ -2378,10 +2808,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -2393,25 +2819,31 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
+=over 4
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=item B<< $exception->minimum_args >>
+
+This attribute is read-only, isa Int and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->method_name >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->minimum_args >>
-
-This attribute is read-only, isa Int and is required.
 
 =back
 
@@ -2424,31 +2856,37 @@ This attribute is read-only, isa Int and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
 
-=item B<< $exception->metaclass >>
+=item B<< $exception->role_name >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =back
 
@@ -2461,7 +2899,21 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->constraint_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
 
 =item B<< $exception->trace >>
 
@@ -2472,14 +2924,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->constraint_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
 
 =back
 
@@ -2491,7 +2935,17 @@ This attribute is read-only, isa Object and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->is_loaded >>
+
+This attribute is read-only, isa Bool and is required.
 
 =item B<< $exception->message >>
 
@@ -2502,10 +2956,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->is_loaded >>
-
-This attribute is read-only, isa Bool and is required.
 
 =item B<< $exception->package >>
 
@@ -2522,25 +2972,31 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->value >>
 
 This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -2558,7 +3014,18 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
 
 =item B<< $exception->type_name >>
 
@@ -2575,11 +3042,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
-
 =back
 
 =head4 Sample Error Message:
@@ -2592,26 +3054,42 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and
 L<Moose::Exception::Role::EitherAttributeOrAttributeName>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
+=over 4
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->value >>
 
 This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
-optional.
 
 =item B<< $exception->attribute_name >>
 
@@ -2622,16 +3100,6 @@ is optional.
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<has_attribute> and is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
 
 =back
 
@@ -2644,17 +3112,13 @@ is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::Method>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -2666,17 +3130,27 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
 
-=item B<< $exception->role_being_applied >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->method >>
 
 This attribute is read-only, isa L<Moose::Meta::Method> and is required.
 
+=item B<< $exception->role_being_applied >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
 =item B<< $exception->aliased_method_name >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =back
 
@@ -2689,27 +3163,33 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->illegal_options >>
+=over 4
 
-This attribute is read-only, isa ArrayRef and is required.
+=item B<< $exception->message >>
 
-This attribute has handles as follows:
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->illegal_options >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+This attribute has handles as follows:
 
 =back
 
@@ -2721,21 +3201,27 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa Any and is required.
+
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->class >>
 
@@ -2751,7 +3237,22 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method_destructor_object >>
+
+This attribute is read-only, isa L<Moose::Meta::Method::Destructor> and is
+required.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
@@ -2762,15 +3263,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->error >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->method_destructor_object >>
-
-This attribute is read-only, isa L<Moose::Meta::Method::Destructor> and is
-required.
 
 =item B<< $exception->source >>
 
@@ -2788,7 +3280,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->params >>
 
@@ -2819,36 +3317,42 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
-
-=item B<< $exception->parameterizable_type_object >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint::Parameterizable>
- and is required.
-
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->value >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->parameterizable_type_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint::Parameterizable>
+ and is required.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =back
 
@@ -2861,21 +3365,18 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
-
-=item B<< $exception->alias >>
-
-This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->package_name >>
 
@@ -2886,10 +3387,19 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->alias >>
+
+This attribute is read-only, isa Any and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =back
 
@@ -2902,31 +3412,37 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=over 4
 
 =item B<< $exception->role_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
 
-=item B<< $exception->method_name >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -2939,30 +3455,36 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->error >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->option_value >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->attribute >>
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<is_attribute_set> and is optional.
 
-=item B<< $exception->message >>
+=item B<< $exception->error >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->option_value >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->option_name >>
 
@@ -2979,7 +3501,17 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -2994,10 +3526,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -3010,26 +3538,13 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->superclass_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->superclass_meta_type >>
 
@@ -3039,6 +3554,25 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->superclass_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -3050,21 +3584,27 @@ C<is_class_set> and is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->method_name >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -3077,11 +3617,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -3092,6 +3634,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->attribute >>
 
@@ -3109,35 +3655,41 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute >>
-
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
-
-=item B<< $exception->method >>
-
-This attribute is read-only, isa L<Moose::Meta::Method::Delegation> and is
-required.
-
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
-
-=item B<< $exception->given_value >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->given_value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method::Delegation> and is
+required.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =back
 
@@ -3150,11 +3702,21 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->message >>
 
@@ -3166,10 +3728,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
 =back
 
 =head4 Sample Error Message:
@@ -3180,7 +3738,13 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->argument >>
 
@@ -3209,27 +3773,33 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =item B<< $exception->type >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
  C<is_type_set> and is optional.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type_name >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -3242,7 +3812,18 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =item B<< $exception->conflict >>
 
@@ -3253,11 +3834,6 @@ This attribute has handles as follows:
     get_all_methods          => elements
     conflict_methods_count   => count
     get_method_at            => get
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
 
 =item B<< $exception->class_name >>
 
@@ -3285,21 +3861,27 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->package_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -3312,7 +3894,25 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->message >>
 
@@ -3323,18 +3923,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -3347,32 +3935,38 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->type_name >>
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
 
 =item B<< $exception->type_coercion_union_object >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeCoercion::Union> and is
 required.
 
-=item B<< $exception->type_name >>
+=item B<< $exception->type >>
 
-This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
- optional.
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -3385,31 +3979,37 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->role_to_be_added >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->role_to_be_added >>
+
+This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -3423,11 +4023,18 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreate> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
+=over 4
 
-This attribute is read-only, isa HashRef and is required.
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->attribute_class >>
 
@@ -3438,10 +4045,9 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -3453,23 +4059,22 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->roles >>
-
-This attribute is read-only, isa ArrayRef[Moose::Meta::Role] and is required.
-
-This attribute has handles as follows:
-    roles                    => elements
+=over 4
 
 =item B<< $exception->method_name >>
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->role_application >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa
-L<Moose::Meta::Role::Application::RoleSummation> and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->two_overrides_found >>
 
@@ -3480,10 +4085,17 @@ This attribute is read-only, isa Bool, has a default value 0 and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->role_application >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa
+L<Moose::Meta::Role::Application::RoleSummation> and is required.
+
+=item B<< $exception->roles >>
+
+This attribute is read-only, isa ArrayRef[Moose::Meta::Role] and is required.
+
+This attribute has handles as follows:
+    roles                    => elements
 
 =back
 
@@ -3497,29 +4109,35 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->option >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->option >>
+
+This attribute is read-only, isa Str and is required.
+
 =item B<< $exception->error >>
 
 This attribute is read-only, isa L<Moose::Exception|Str> and is required.
-
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
 
 =back
 
@@ -3536,7 +4154,13 @@ This attribute is read-only, isa Object and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->attribute >>
 
@@ -3547,6 +4171,10 @@ C<is_attribute_set> and is optional.
 
 This attribute is read-only, isa Any and is required.
 
+=item B<< $exception->option_name >>
+
+This attribute is read-only, isa Str and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
@@ -3556,10 +4184,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->option_name >>
-
-This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -3572,22 +4196,28 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->class >>
 
@@ -3605,31 +4235,37 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->attribute >>
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =item B<< $exception->method >>
 
 This attribute is read-only, isa L<Moose::Meta::Method::Delegation> and is
 required.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
 
-=item B<< $exception->attribute >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -3642,7 +4278,13 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->attribute >>
 
@@ -3674,35 +4316,41 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->is_module >>
+=item B<< $exception->class_name >>
 
-This attribute is read-only, isa Bool and is required.
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->is_module >>
+
+This attribute is read-only, isa Bool and is required.
 
 =back
 
@@ -3715,7 +4363,21 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->action >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->to_match >>
 
@@ -3731,14 +4393,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->action >>
-
-This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->type >>
-
-This attribute is read-only, isa Any and is required.
-
 =back
 
 =head4 Sample Error Message:
@@ -3750,7 +4404,17 @@ This attribute is read-only, isa Any and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->trace >>
 
@@ -3761,10 +4425,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -3776,17 +4436,23 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -3798,11 +4464,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->args >>
-
-This attribute is read-only, isa ArrayRef and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -3818,6 +4486,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only, isa ArrayRef and is required.
 
+=item B<< $exception->args >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
 =back
 
 =head4 Sample Error Message:
@@ -3829,26 +4501,32 @@ This attribute is read-only, isa ArrayRef and is required.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class_name >>
+=item B<< $exception->params >>
 
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -3866,25 +4544,31 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->params >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -3896,7 +4580,13 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -3919,7 +4609,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -3947,21 +4643,27 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Any and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->attribute >>
 
@@ -3979,25 +4681,31 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->handle_value >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Any and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->handle_value >>
+
+This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -4011,11 +4719,13 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -4031,6 +4741,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only, isa HashRef and is required.
 
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
 =back
 
 =head4 Sample Error Message:
@@ -4041,11 +4755,13 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->applicant >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -4056,6 +4772,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->applicant >>
+
+This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -4070,27 +4790,33 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->type_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
 
-=item B<< $exception->message >>
+=item B<< $exception->type >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -4104,17 +4830,23 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->params >>
 
@@ -4135,17 +4867,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -4159,6 +4887,16 @@ This attribute is read-only, isa Str and is required.
 =item B<< $exception->second_role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->role >>
 
@@ -4177,21 +4915,27 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreateMOPClass> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
+=over 4
 
-This attribute is read-only, isa HashRef and is required.
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -4208,22 +4952,23 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->type_parameter >>
 
@@ -4233,6 +4978,11 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
 
 =back
 
@@ -4245,22 +4995,48 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
+=over 4
 
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->imported_method >>
+
+This attribute is read-only, isa L<Moose::Meta::Role::Method::Required> and is
+required.
+
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =item B<< $exception->missing_methods >>
 
@@ -4268,29 +5044,9 @@ This attribute is read-only, isa ArrayRef[Moose::Meta::Role::Method::Required]
 and is required.
 
 This attribute has handles as follows:
-    method_count             => count
-    get_method_at            => get
     get_all_methods          => elements
-
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
-
-=item B<< $exception->imported_method >>
-
-This attribute is read-only, isa L<Moose::Meta::Role::Method::Required> and is
-required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+    get_method_at            => get
+    method_count             => count
 
 =back
 
@@ -4304,35 +5060,41 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash>, L<Moose::Exception::Role::Class> and
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -4345,7 +5107,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->class >>
 
@@ -4355,15 +5123,15 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa HashRef and is required.
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -4375,21 +5143,27 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->name >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -4401,17 +5175,23 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -4423,21 +5203,27 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->package_name >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -4450,26 +5236,32 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->instance >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->class >>
 
@@ -4487,39 +5279,45 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
+=over 4
 
 =item B<< $exception->attribute_name >>
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->class >>
+=item B<< $exception->builder >>
 
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->builder >>
-
-This attribute is read-only, isa Str and is required.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =back
 
@@ -4533,25 +5331,31 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
+=over 4
 
-This attribute is read-only, isa HashRef and is required.
+=item B<< $exception->attribute_name >>
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->attribute_name >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -4564,22 +5368,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
-optional.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->attribute_name >>
 
@@ -4591,15 +5386,30 @@ is optional.
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<has_attribute> and is optional.
 
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -4616,7 +5426,13 @@ is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -4645,11 +5461,27 @@ C<is_attribute_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role_being_applied >>
+=over 4
 
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->two_overrides_found >>
+
+This attribute is read-only, isa Bool, has a default value 0 and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->role >>
 
@@ -4665,19 +5497,9 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->two_overrides_found >>
+=item B<< $exception->role_being_applied >>
 
-This attribute is read-only, isa Bool, has a default value 0 and is required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
 
 =back
 
@@ -4690,16 +5512,18 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->method_name >>
-
-This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
@@ -4709,6 +5533,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 =item B<< $exception->hash_keys >>
 
 This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -4721,31 +5549,37 @@ This attribute is read-only, isa ArrayRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
-
-=item B<< $exception->role_to_be_added >>
-
-This attribute is read-only, isa Any and is required.
+=over 4
 
 =item B<< $exception->role_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->role_to_be_added >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Any and is required.
 
 =back
 
@@ -4758,7 +5592,17 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Method>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
 
 =item B<< $exception->class >>
 
@@ -4770,19 +5614,15 @@ C<is_class_set> and is optional.
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->method >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =back
 
@@ -4794,21 +5634,27 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->type >>
 
 This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -4821,26 +5667,32 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->attribute >>
-
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->attribute >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =back
 
@@ -4853,7 +5705,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -4865,15 +5723,15 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -4885,7 +5743,13 @@ C<is_role_set> and is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->package_name >>
 
@@ -4912,12 +5776,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
@@ -4928,6 +5793,11 @@ C<is_class_set> and is optional.
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->trace >>
 
@@ -4944,7 +5814,21 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_or_object >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->modifier_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -4960,14 +5844,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->modifier_name >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->class_or_object >>
-
-This attribute is read-only, isa Any and is required.
-
 =back
 
 =head4 Sample Error Message:
@@ -4979,12 +5855,13 @@ This attribute is read-only, isa Any and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -5001,6 +5878,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
 =back
 
 =head4 Sample Error Message:
@@ -5012,7 +5894,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -5043,7 +5931,23 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->trace >>
 
@@ -5059,16 +5963,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only, isa Any and is required.
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
 =back
 
 =head4 Sample Error Message:
@@ -5079,17 +5973,23 @@ is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->type_name >>
 
@@ -5106,12 +6006,22 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->attribute >>
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<is_attribute_set> and is optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Util::TypeConstraints> and is required.
 
 =item B<< $exception->value >>
 
@@ -5127,10 +6037,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Util::TypeConstraints> and is required.
-
 =back
 
 =head4 Sample Error Messages:
@@ -5143,22 +6049,18 @@ This attribute is read-only, isa L<Moose::Util::TypeConstraints> and is required
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
 
 =item B<< $exception->class_name >>
 
@@ -5168,6 +6070,16 @@ is optional.
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =back
 
@@ -5179,16 +6091,17 @@ This attribute is read-only, isa Object and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->args >>
 
 This attribute is read-only, isa ArrayRef and is required.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =item B<< $exception->method_name >>
 
@@ -5198,6 +6111,11 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -5209,12 +6127,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->method_name >>
 
@@ -5224,6 +6143,11 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -5235,7 +6159,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->type_name >>
 
@@ -5266,11 +6196,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -5285,6 +6217,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -5297,11 +6233,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -5312,6 +6250,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -5329,30 +6271,27 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::TypeConstraint> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
+=over 4
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->type >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->metaclass_name >>
-
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->INC >>
 
@@ -5363,7 +6302,16 @@ This attribute is read-only, isa ArrayRef and is required.
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
 
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
 =item B<< $exception->possible_packages >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->metaclass_name >>
 
 This attribute is read-only, isa Str and is required.
 
@@ -5378,12 +6326,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->attribute_class >>
 
@@ -5394,15 +6343,20 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =back
 
@@ -5415,12 +6369,28 @@ C<is_role_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->class >>
 
@@ -5430,16 +6400,6 @@ C<is_class_set> and is optional.
 =item B<< $exception->method_name >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =back
 
@@ -5452,41 +6412,47 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
-
-=item B<< $exception->excluded_role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+=over 4
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
+
+=item B<< $exception->excluded_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =back
 
@@ -5499,7 +6465,27 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->trace >>
 
@@ -5510,20 +6496,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->metaclass >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
 
 =back
 
@@ -5538,7 +6510,23 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->handles >>
 
@@ -5548,16 +6536,6 @@ This attribute is read-only, isa Any and is required.
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<is_attribute_set> and is optional.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
 
 =back
 
@@ -5570,12 +6548,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -5586,6 +6565,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
 
 =item B<< $exception->params >>
 
@@ -5607,25 +6591,31 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->given_handles >>
+
+This attribute is read-only, isa Any and is required.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->given_handles >>
-
-This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->instance >>
-
-This attribute is read-only, isa Object and is required.
 
 =back
 
@@ -5638,17 +6628,13 @@ This attribute is read-only, isa Object and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -5659,10 +6645,20 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 
 This attribute is read-only, isa Str and is required.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -5675,12 +6671,18 @@ C<is_role_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
+=over 4
 
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =item B<< $exception->excluded_role >>
 
@@ -5690,20 +6692,20 @@ This attribute is read-only, isa L<Moose::Meta::Role> and is required.
 
 This attribute is read-only, isa L<Moose::Meta::Role> and is required.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->role >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -5716,12 +6718,23 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->role_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
  optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->param >>
 
@@ -5731,11 +6744,6 @@ This attribute is read-only, isa Any and is required.
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
 
 =item B<< $exception->role >>
 
@@ -5754,25 +6762,31 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::InvalidAttributeOptions> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->attribute_name >>
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->message >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->params >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -5785,25 +6799,31 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->params >>
+=item B<< $exception->message >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
@@ -5816,7 +6836,13 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->role_name >>
 
@@ -5828,15 +6854,15 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
 =item B<< $exception->role >>
 
 This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
 C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->modifier_type >>
 
@@ -5853,21 +6879,23 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->package_defined_in >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->type >>
 
@@ -5878,6 +6906,10 @@ This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
 
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
+
+=item B<< $exception->package_defined_in >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -5895,7 +6927,23 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->traits >>
 
@@ -5906,20 +6954,10 @@ This attribute is read-only, isa ArrayRef and is required.
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
 
 =back
 
@@ -5931,7 +6969,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -5954,7 +6998,38 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->role_name >>
 
@@ -5967,34 +7042,9 @@ This attribute is read-only, isa ArrayRef[Moose::Meta::Role::Method::Required]
 and is required.
 
 This attribute has handles as follows:
-    method_count             => count
-    get_method_at            => get
     get_all_methods          => elements
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
-
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
+    get_method_at            => get
+    method_count             => count
 
 =back
 
@@ -6007,12 +7057,13 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::TypeConstraint>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->type >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
- C<is_type_set> and is optional.
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -6029,6 +7080,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
  optional.
 
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
 =back
 
 =head4 Sample Error Message:
@@ -6040,11 +7096,27 @@ This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->params >>
 
 This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->trace >>
 
@@ -6056,16 +7128,6 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
-
 =back
 
 =head4 Sample Error Message:
@@ -6076,7 +7138,13 @@ C<is_class_set> and is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -6099,27 +7167,33 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->class_name >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =back
 
@@ -6133,12 +7207,17 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::RoleForCreate> and
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
+=over 4
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->attribute_class >>
 
@@ -6149,9 +7228,10 @@ This attribute is read-only, isa Str and is required.
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->params >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =back
 
@@ -6164,25 +7244,31 @@ This attribute is read-only, isa HashRef and is required.
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =back
 
@@ -6194,29 +7280,35 @@ This attribute is read-only, isa Object and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->default_action >>
-
-This attribute is read-only, isa Any and is required.
-
-=item B<< $exception->cases_to_be_matched >>
-
-This attribute is read-only, isa ArrayRef and is required.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->default_action >>
+
+This attribute is read-only, isa Any and is required.
+
 =item B<< $exception->to_match >>
 
 This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->cases_to_be_matched >>
+
+This attribute is read-only, isa ArrayRef and is required.
 
 =back
 
@@ -6229,7 +7321,13 @@ This attribute is read-only, isa Any and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->application >>
 
@@ -6240,15 +7338,15 @@ This attribute is read-only, isa Any and is required.
 This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
 C<is_class_set> and is optional.
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->message >>
 
@@ -6266,12 +7364,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Attribute>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->attribute >>
-
-This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
-C<is_attribute_set> and is optional.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -6282,6 +7381,11 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
 
 =back
 
@@ -6294,7 +7398,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -6306,19 +7416,19 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class >>
+=item B<< $exception->metaclass >>
 
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->metaclass >>
+=item B<< $exception->class >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =back
 
@@ -6331,7 +7441,17 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -6347,10 +7467,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->class >>
-
-This attribute is read-only, isa Str and is required.
-
 =back
 
 =head4 Sample Error Message:
@@ -6361,7 +7477,18 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_coercion_union_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeCoercion::Union> and is
+required.
 
 =item B<< $exception->message >>
 
@@ -6372,11 +7499,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->type_coercion_union_object >>
-
-This attribute is read-only, isa L<Moose::Meta::TypeCoercion::Union> and is
-required.
 
 =back
 
@@ -6389,27 +7511,33 @@ required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =back
 
@@ -6422,25 +7550,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
+=over 4
 
-This attribute is read-only, isa Str and is required.
+=item B<< $exception->trace >>
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -6452,7 +7586,17 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->message >>
 
@@ -6463,10 +7607,6 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
-
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -6479,12 +7619,13 @@ This attribute is read-only, isa Str and is required.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
-is optional.
+=over 4
 
 =item B<< $exception->class >>
 
@@ -6495,6 +7636,11 @@ C<is_class_set> and is optional.
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
 
 =item B<< $exception->trace >>
 
@@ -6512,27 +7658,33 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->trace >>
+=over 4
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
 =item B<< $exception->class_name >>
 
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
-
-=item B<< $exception->class >>
-
-This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
-C<is_class_set> and is optional.
 
 =back
 
@@ -6545,7 +7697,13 @@ C<is_class_set> and is optional.
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->given_type >>
 
@@ -6555,19 +7713,19 @@ This attribute is read-only, isa Str and is required.
 
 This attribute is read-only, isa Str and is required.
 
-=item B<< $exception->required_type >>
+=item B<< $exception->trace >>
 
-This attribute is read-only, isa Str and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->required_type >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->params >>
 
@@ -6583,25 +7741,31 @@ This attribute is read-only, isa HashRef and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->class >>
 
 This attribute is read-only, isa L<Class::MOP::Class> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->message >>
+=item B<< $exception->class_name >>
 
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -6614,7 +7778,13 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->message >>
 
@@ -6645,17 +7815,23 @@ This attribute is read-only, isa L<Class::MOP::Attribute> and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->class >>
 
@@ -6671,25 +7847,31 @@ This attribute is read-only, isa L<Moose::Meta::Class> and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role> and is required.
-
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str and is required.
+=over 4
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -6702,7 +7884,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Class>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->class >>
 
@@ -6736,11 +7924,36 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::EitherAttributeOrAttributeName> and
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =item B<< $exception->instance >>
 
 This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
 
 =item B<< $exception->attribute_name >>
 
@@ -6751,25 +7964,6 @@ is optional.
 
 This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
 C<has_attribute> and is optional.
-
-=item B<< $exception->error >>
-
-This attribute is read-only, isa Str and is required.
-
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
-optional.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
 
 =back
 
@@ -6782,25 +7976,31 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->class >>
+=over 4
 
-This attribute is read-only, isa Str and is required.
+=item B<< $exception->trace >>
 
-=item B<< $exception->params >>
-
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
 
 =item B<< $exception->message >>
 
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
-=item B<< $exception->trace >>
+=item B<< $exception->params >>
 
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
 
 =back
 
@@ -6813,7 +8013,13 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::ParamsHash>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
+
+=over 4
 
 =item B<< $exception->trace >>
 
@@ -6843,11 +8049,13 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->position >>
-
-This attribute is read-only, isa Int and is required.
+=over 4
 
 =item B<< $exception->type >>
 
@@ -6863,6 +8071,10 @@ This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
 This attribute is read-only and isa Str. It is lazy and has a default value
 'Error'.
 
+=item B<< $exception->position >>
+
+This attribute is read-only, isa Int and is required.
+
 =back
 
 =head4 Sample Error Message:
@@ -6875,11 +8087,17 @@ This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::ParamsHash>, L<Moose::Exception::Role::Class> and
 L<Moose::Exception::Role::Instance>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->instance >>
+=over 4
 
-This attribute is read-only, isa Object and is required.
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
 
 =item B<< $exception->class >>
 
@@ -6891,9 +8109,9 @@ C<is_class_set> and is optional.
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
-=item B<< $exception->params >>
+=item B<< $exception->instance >>
 
-This attribute is read-only, isa HashRef and is required.
+This attribute is read-only, isa Object and is required.
 
 =item B<< $exception->trace >>
 
@@ -6916,12 +8134,18 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This class is a subclass of L<Moose::Exception> and consumes role
 L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role >>
+=over 4
 
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
 
 =item B<< $exception->message >>
 
@@ -6933,10 +8157,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
 
-=item B<< $exception->role_name >>
+=item B<< $exception->role >>
 
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
 
 =back
 
@@ -6949,27 +8173,13 @@ This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
 This class is a subclass of L<Moose::Exception> and consume roles
 L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->role_name >>
-
-This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
- optional.
-
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
-
-=item B<< $exception->trace >>
-
-This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
- on $exception->message.
-
-=item B<< $exception->role >>
-
-This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
-C<is_role_set> and is optional.
+=over 4
 
 =item B<< $exception->class >>
 
@@ -6981,6 +8191,26 @@ C<is_class_set> and is optional.
 This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
 is optional.
 
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
 =back
 
 =head4 Sample Error Message:
@@ -6991,11 +8221,13 @@ is optional.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->options >>
-
-This attribute is read-only, isa ArrayRef and is required.
+=over 4
 
 =item B<< $exception->message >>
 
@@ -7006,6 +8238,10 @@ This attribute is read-only and isa Str. It is lazy and has a default value
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->options >>
+
+This attribute is read-only, isa ArrayRef and is required.
 
 =item B<< $exception->attribute_name >>
 
@@ -7021,17 +8257,23 @@ This attribute is read-only, isa Str and is required.
 
 This class is a subclass of L<Moose::Exception>.
 
+=over 4
+
+=back
+
 =head2 ATTRIBUTES
 
-=item B<< $exception->message >>
-
-This attribute is read-only and isa Str. It is lazy and has a default value
-'Error'.
+=over 4
 
 =item B<< $exception->trace >>
 
 This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
  on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
 
 =back
 
