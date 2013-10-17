@@ -610,7 +610,7 @@ sub add_augment_method_modifier {
     throw_exception( CannotAugmentIfLocalMethodPresent => class  => $self,
                                                           method => $existing_method,
                    )
-	if( $existing_method );
+        if( $existing_method );
 
     $self->add_method($name => Moose::Meta::Method::Augmented->new(
         method  => $method,
