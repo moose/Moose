@@ -7,7 +7,7 @@ use 5.008003;
 use Scalar::Util 'blessed';
 use Carp         'carp', 'confess';
 use Module::Runtime 'module_notional_filename';
-use Class::Load  'is_class_loaded', 'load_class';
+use Class::Load  'is_class_loaded';
 
 use Moose::Deprecated;
 use Moose::Exporter;

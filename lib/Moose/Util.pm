@@ -12,7 +12,7 @@ use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use overload ();
 use Try::Tiny;
-use Class::Load 0.07 qw(load_class);
+use Class::MOP;
 
 my @exports = qw[
     find_meta
@@ -46,7 +46,7 @@ sub throw_exception {
 
 ## some utils for the utils ...
 
-sub find_meta { require Class::MOP; Class::MOP::class_of(@_) }
+sub find_meta { Class::MOP::class_of(@_) }
 
 ## the functions ...
 

@@ -8,8 +8,6 @@ use Scalar::Util 'weaken', 'reftype', 'blessed';
 
 use parent 'Class::MOP::Object';
 
-use Moose::Util 'throw_exception';
-
 # NOTE:
 # if poked in the right way,
 # they should act like CODE refs.

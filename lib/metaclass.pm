@@ -5,7 +5,6 @@ use strict;
 use warnings;
 
 use Module::Runtime 'use_package_optimistically';
-use Class::Load  'load_class';
 use Scalar::Util 'blessed';
 use Try::Tiny;
 
