@@ -16,6 +16,7 @@ my @modules
 plan tests => scalar @modules;
 
 my %trustme = (
+    'Moose::Exception' => [ "BUILD" ],
     'Class::MOP' => [
         'DEBUG_NO_META',
         'HAVE_ISAREV',
