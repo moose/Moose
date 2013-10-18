@@ -1,0 +1,8280 @@
+package Moose::Manual::Exceptions::Manifest;
+
+=head1 Moose::Exception::NoCasesMatched
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->to_match >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->cases_to_be_matched >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    No cases matched for 123
+
+=head1 Moose::Exception::MessageParameterMustBeCodeRef
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    The 'message' parameter must be a coderef
+
+=head1 Moose::Exception::InvalidHasProvidedInARole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Usage: has 'name' => ( key => value, ... )
+
+=head1 Moose::Exception::MustSupplyADelegateToMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a delegate_to_method which is a method name or a CODE reference
+
+=head1 Moose::Exception::CanExtendOnlyClasses
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot inherit from a Moose Role (Bar)
+
+=head1 Moose::Exception::CoercionNeedsTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot have coercion without specifying a type constraint on attribute (bar)
+
+=head1 Moose::Exception::MatchActionMustBeACodeRef
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->action >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
+
+=item B<< $exception->to_match >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Match action must be a CODE ref, not ARRAY(0x27a0748)
+
+=head1 Moose::Exception::IsaDoesNotDoTheRole
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot have an isa option and a does option if the isa does not do the does on attribute (bar)
+
+=head1 Moose::Exception::OnlyInstancesCanBeCloned
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You can only clone instances, (ARRAY(0x2162350)) is not a blessed instance
+
+=head1 Moose::Exception::CreateTakesArrayRefOfRoles
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreate> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->attribute_class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an ARRAY ref of roles
+
+=head1 Moose::Exception::MethodExpectsFewerArgs
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->maximum_args >>
+
+This attribute is read-only, isa Int and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot call substr with more than 3 arguments
+
+=head1 Moose::Exception::CannotUseLazyBuildAndDefaultSimultaneously
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You can not use lazy_build and default for the same attribute (bar)
+
+=head1 Moose::Exception::InvalidTypeConstraint
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->registry_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint::Registry> and is
+ required.
+
+=back
+
+=head4 Sample Error Message:
+
+    No type supplied / type is not a valid type constraint
+
+=head1 Moose::Exception::CircularReferenceInAlso
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->also_parameter >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->stack >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Circular reference in 'also' parameter to Moose::Exporter between MooseX::CircularAlso and MooseX::CircularAlso
+
+=head1 Moose::Exception::SingleParamsToNewMustBeHashRef
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Single parameters to new() must be a HASH ref
+
+=head1 Moose::Exception::MustPassAPackageNameOrAnExistingClassMOPPackageInstance
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a package name or an existing Class::MOP::Package instance
+
+=head1 Moose::Exception::NeitherTypeNorTypeNameIsGiven
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You need to give type or type_name or both
+
+=head1 Moose::Exception::RolesInCreateTakesAnArrayRef
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an ARRAY ref of roles
+
+=head1 Moose::Exception::CannotAutoDerefWithoutIsa
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot auto-dereference without specifying a type constraint on attribute (bar)
+
+=head1 Moose::Exception::CannotMakeMetaclassCompatible
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->superclass_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+=head1 Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresentInClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Role>, L<Moose::Exception::Role::Method> and
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=item B<< $exception->aliased_method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot create a method alias if a local method of the same name exists
+
+=head1 Moose::Exception::CreateMOPClassTakesHashRefOfMethods
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreateMOPClass> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an HASH ref of methods
+
+=head1 Moose::Exception::CouldNotLocateTypeConstraintForUnion
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not locate type constraint (foo) for the union
+
+=head1 Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->array >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->args >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    enum called with an array reference and additional arguments. Did you mean to parenthesize the enum call's parameters?
+
+=head1 Moose::Exception::CoercionAlreadyExists
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->constraint_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    A coercion action already exists for 'Int'
+
+=head1 Moose::Exception::AccessorMustReadWrite
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot define an accessor name on a read-only attribute, accessors are read/write
+
+=head1 Moose::Exception::MustPassAHashOfOptions
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a hash of options
+
+=head1 Moose::Exception::CannotAugmentNoSuperMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot augment 'foo' because it has no super method
+
+=head1 Moose::Exception::WrapTakesACodeRefToBless
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->code >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a CODE reference to bless, not (foo)
+
+=head1 Moose::Exception::AttributeConflictInSummation
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::AttributeName>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->second_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    We have encountered an attribute conflict with 'foo' during role composition.  This attribute is defined in both Foo2 and Bar2. This is a fatal error and cannot be disambiguated.
+
+=head1 Moose::Exception::RolesDoNotSupportAugment
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles cannot support 'augment'
+
+=head1 Moose::Exception::InvalidArgumentToMethod
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->argument >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->ordinal >>
+
+This attribute is read-only, isa Str, has a predicate C<is_ordinal_set> and is
+optional.
+
+=item B<< $exception->argument_noun >>
+
+This attribute is read-only, isa Str, has a default value "argument" and is
+optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->type_of_argument >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    The argument passed to grep must be a code reference
+    The argument passed to match must be a string or regexp reference
+    The index passed to get must be an integer
+    The argument passed to first must be a code reference
+    The argument passed to first_index must be a code reference
+    The argument passed to grep must be a code reference
+    The argument passed to join must be a string
+    The argument passed to map must be a code reference
+    The n value passed to natatime must be an integer
+    The second argument passed to natatime must be a code reference
+    The argument passed to reduce must be a code reference
+    The argument passed to sort must be a code reference
+    The argument passed to sort_in_place must be a code reference
+    The length argument passed to splice must be an integer
+    The key passed to exists must be a defined value
+    The first argument passed to substr must be an integer
+    The second argument passed to substr must be an integer
+    The third argument passed to substr must be a string
+    The first argument passed to replace must be a string or regexp reference
+    The second argument passed to replace must be a string or code reference
+
+=head1 Moose::Exception::NoParentGivenToSubtype
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    A subtype cannot consist solely of a name, it must have a parent
+
+=head1 Moose::Exception::CannotInitializeMooseMetaRoleComposite
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->args >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->old_meta >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_composite >>
+
+This attribute is read-only, isa L<Moose::Meta::Role::Composite> and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance
+
+=head1 Moose::Exception::ConflictDetectedInCheckRoleExclusions
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->excluded_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Conflict detected: Foo excludes role 'Bar'
+
+=head1 Moose::Exception::CannotAutoDereferenceTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Attribute>, L<Moose::Exception::Role::Instance> and
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Can not auto de-reference the type constraint 'Int'
+
+=head1 Moose::Exception::CannotOverrideNoSuperMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot override 'foo' because it has no super method
+
+=head1 Moose::Exception::RoleNameRequiredForMooseMetaRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a role name to look for
+
+=head1 Moose::Exception::RolesListMustBeInstancesOfMooseMetaRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    The list of roles must be instances of Moose::Meta::Role, not foo
+
+=head1 Moose::Exception::CannotRegisterUnnamedTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    can't register an unnamed type constraint
+
+=head1 Moose::Exception::CannotOverrideBodyOfMetaMethods
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Overriding the body of meta methods is not allowed
+
+=head1 Moose::Exception::LazyAttributeNeedsADefault
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::EitherAttributeOrAttributeName>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<has_attribute> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str, has a predicate C<has_attribute_name> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot have a lazy attribute (bar) without specifying a default value for it
+
+=head1 Moose::Exception::UnableToRecognizeDelegateMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->delegate_metaclass >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Unable to recognize the delegate metaclass 'Class::MOP::Package
+
+=head1 Moose::Exception::InstanceMustBeABlessedReference
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The __INSTANCE__ parameter must be a blessed reference, not ARRAY(0x1d75d40)
+
+=head1 Moose::Exception::CannotDelegateLocalMethodIsPresent
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Method>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot overwrite a locally defined method (full) with a delegation
+
+=head1 Moose::Exception::BuilderMethodNotSupportedForAttribute
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Class::MOP::Attribute does not support builder method 'foo' for attribute 'bar'
+
+=head1 Moose::Exception::InvalidValueForIs
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    I do not understand this option (is => bar) on attribute (foo)
+
+=head1 Moose::Exception::MetaclassMustBeDerivedFromClassMOPClass
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The metaclass (Foo) must be derived from Class::MOP::Class
+
+=head1 Moose::Exception::RoleExclusionConflict
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->roles >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Conflict detected: Role Foo1 excludes role 'Bar1'
+    Conflict detected: Roles Foo1, Baz1 exclude role 'Bar1'
+
+=head1 Moose::Exception::CannotCalculateNativeType
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot calculate native type for Moose::Meta::Class::__ANON__::SERIAL::
+
+=head1 Moose::Exception::CannotAugmentIfLocalMethodPresent
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Method>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot add an augment method if a local method is already present
+
+=head1 Moose::Exception::CannotFixMetaclassCompatibility
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->superclass >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->metaclass_type >>
+
+This attribute is read-only, isa Str and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Can't fix metaclass incompatibility for Foo9 because it is not pristine.
+    Can't fix metaclass incompatibility for Foo::Unsafe::Sub because it is not pristine.
+
+=head1 Moose::Exception::MustDefineAMethodName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must define a method name
+
+=head1 Moose::Exception::NoAttributeFoundInSuperClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class>,
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not find an attribute by the name of 'bar' to inherit from in Test2
+
+=head1 Moose::Exception::PackageNameAndNameParamsNotGivenToWrap
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->code >>
+
+This attribute is read-only, isa CodeRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply the package_name and name parameters
+
+=head1 Moose::Exception::InvalidBaseTypeGivenToCreateParameterizedTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not locate the base type (Foo)
+
+=head1 Moose::Exception::InvalidTypeGivenToCreateParameterizedTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not parse type name (Foo) correctly
+
+=head1 Moose::Exception::MethodExpectedAMetaclassObject
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The is_needed method expected a metaclass object as its arugment
+
+=head1 Moose::Exception::NeitherClassNorClassNameIsGiven
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You need to give class or class_name or both
+
+=head1 Moose::Exception::CreateMOPClassTakesArrayRefOfSuperclasses
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreateMOPClass> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an ARRAY ref of superclasses
+
+=head1 Moose::Exception::UnableToCanonicalizeNonRolePackage
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->handles >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Unable to canonicalize the 'handles' option with Foo1 because its metaclass is not a Moose::Meta::Role
+
+=head1 Moose::Exception::CouldNotEvalConstructor
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->source >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->constructor_method >>
+
+This attribute is read-only, isa L<Class::MOP::Method::Constructor> and is
+required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not eval the constructor :
+
+=head1 Moose::Exception::TypeParameterMustBeMooseMetaType
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The type parameter must be a Moose meta type
+
+=head1 Moose::Exception::CanOnlyWrapBlessedCode
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->code >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Can only wrap blessed CODE
+
+=head1 Moose::Exception::RolesDoNotSupportInner
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles cannot support 'inner'
+
+=head1 Moose::Exception::MetaclassTypeIncompatible
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->superclass_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->metaclass_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The attribute_metaclass metaclass for Foo::All::Sub::Attribute (Bar::Meta::Attribute) is not compatible with the attribute metaclass of its superclass, Foo::All (Foo::Meta::Attribute)
+
+=head1 Moose::Exception::NoImmutableTraitSpecifiedForClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    no immutable trait specified for Moose::Meta::Class=HASH(0x19a2280)
+
+=head1 Moose::Exception::ValidationFailedForInlineTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->new_member >>
+
+This attribute is read-only, isa Bool, has a predicate C<is_a_new_member>, has a
+ default value 0 and is optional.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->type_constraint_message >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Attribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5
+    Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
+    Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
+    Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
+    Attribute (a4) does not pass the type constraint because: Validation failed for 'ArrayRef' with value "invalid"
+    Attribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]' with value "Hello"
+    A new member value for foo does not pass its type constraint because: Validation failed for 'Int' with value 1.2
+
+=head1 Moose::Exception::AddParameterizableTypeTakesParameterizableType
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Type must be a Moose::Meta::TypeConstraint::Parameterizable not Foo
+
+=head1 Moose::Exception::CannotCoerceAttributeWhichHasNoCoercion
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions>,
+L<Moose::Exception::Role::ParamsHash> and
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot coerce an attribute (foo) unless its type (Str) has a coercion
+
+=head1 Moose::Exception::BothBuilderAndDefaultAreNotAllowed
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Setting both default and builder is not allowed.
+
+=head1 Moose::Exception::MethodExpectsMoreArgs
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->minimum_args >>
+
+This attribute is read-only, isa Int and is required.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot call substr without at least 1 argument
+
+=head1 Moose::Exception::MetaclassIsARoleNotASubclassOfGivenMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Foo3 already has a metaclass, but it does not inherit Moose::Meta::Class (Moose::Meta::Role=HASH(0x29d3c78)). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.
+
+=head1 Moose::Exception::CouldNotFindTypeConstraintToCoerceFrom
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->constraint_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not find the type constraint (xyz) to coerce from
+
+=head1 Moose::Exception::PackageDoesNotUseMooseExporter
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->package >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->is_loaded >>
+
+This attribute is read-only, isa Bool and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Package in also (NoSuchThing) does not seem to use Moose::Exporter (is it loaded?)
+
+=head1 Moose::Exception::EnumValuesMustBeString
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Enum values must be strings, not undef
+    Enum values must be strings, not 'ARRAY(0x191d1b8)'
+
+=head1 Moose::Exception::CannotInlineTypeConstraintCheck
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot inline a type constraint check for NotInlinable
+
+=head1 Moose::Exception::CannotAssignValueToReadOnlyAccessor
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and
+L<Moose::Exception::Role::EitherAttributeOrAttributeName>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str, has a predicate C<has_attribute_name> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<has_attribute> and is optional.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot assign a value to a read-only accessor
+
+=head1 Moose::Exception::CannotCreateMethodAliasLocalMethodIsPresent
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::Method>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role_being_applied >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=item B<< $exception->aliased_method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot create a method alias if a local method of the same name exists
+
+=head1 Moose::Exception::IllegalInheritedOptions
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->illegal_options >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+This attribute has handles as follows:
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Illegal inherited options => (clearer)
+
+=head1 Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a Moose::Meta::Role instance (or a subclass)
+
+=head1 Moose::Exception::CouldNotEvalDestructor
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->source >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method_destructor_object >>
+
+This attribute is read-only, isa L<Moose::Meta::Method::Destructor> and is
+required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not eval the destructor
+
+=head1 Moose::Exception::CannotCoerceAWeakRef
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot have a weak reference to a coerced value on attribute (bar)
+
+=head1 Moose::Exception::CannotGenerateInlineConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->parameterizable_type_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint::Parameterizable>
+ and is required.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Can't generate an inline constraint for Int, since none was defined
+
+=head1 Moose::Exception::InvalidArgumentsToTraitAliases
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->alias >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    HASH references are not valid arguments to the 'trait_aliases' option
+
+=head1 Moose::Exception::CannotOverrideALocalMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot add an override of method 'bar' because there is a local version of 'bar'
+
+=head1 Moose::Exception::CouldNotCreateMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->option_value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->option_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not create the 'predicate' method for bar because : Can't call method "name" on an undefined value
+
+=head1 Moose::Exception::MustProvideANameForTheAttribute
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must provide a name for the attribute
+
+=head1 Moose::Exception::IncompatibleMetaclassOfSuperclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->superclass_meta_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->superclass_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    The metaclass of My::Class (Class::MOP::Class) is not compatible with the metaclass of its superclass, My::Role (Moose::Meta::Role)
+
+=head1 Moose::Exception::CallingReadOnlyMethodOnAnImmutableInstance
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The 'superclasses' method is read-only when called on an immutable instance
+
+=head1 Moose::Exception::DelegationToARoleWhichIsNotLoaded
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    The bar attribute is trying to delegate to a role which has not been loaded - Role
+
+=head1 Moose::Exception::AttributeValueIsNotAnObject
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method::Delegation> and is
+required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->given_value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot delegate get_count to count because the value of foo is not an object (got 'ARRAY(0x223f578)')
+
+=head1 Moose::Exception::MustSupplyAMooseMetaAttributeInstance
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply an attribute which is a 'Moose::Meta::Attribute' instance
+
+=head1 Moose::Exception::InvalidArgPassedToMooseUtilMetaRole
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->argument >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed Foo=HASH(0x16adb58), and we resolved this to a Foo object.
+    When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed ARRAY(0x21eb868), and this did not resolve to a metaclass or metarole. Maybe you need to call Moose->init_meta to initialize the metaclass first?
+    When using Moose::Util::MetaRole, you must pass a Moose class name, role name, metaclass object, or metarole object. You passed undef, and this did not resolve to a metaclass or metarole. Maybe you need to call Moose->init_meta to initialize the metaclass first?
+
+=head1 Moose::Exception::TypeConstraintCannotBeUsedForAParameterizableType
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The Int[Xyz] constraint cannot be used, because Int doesn't subtype or coerce from a parameterizable type.
+
+=head1 Moose::Exception::MethodNameConflictInRoles
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->conflict >>
+
+This attribute is read-only, isa
+ArrayRef[Moose::Meta::Role::Method::Conflicting] and is required.
+
+This attribute has handles as follows:
+    get_method_at            => get
+    conflict_methods_count   => count
+    get_all_methods          => elements
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Due to a method name conflict in roles 'Bar::Role' and 'Foo::Role', the method 'foo' must be implemented or excluded by 'My::Foo::Class::Broken'
+    Due to method name conflicts in roles 'Bar2::Role' and 'Foo2::Role', the methods 'bar' and 'foo' must be implemented or excluded by 'My::Foo::Class::Broken2'
+
+=head1 Moose::Exception::NoBodyToInitializeInAnAbstractBaseClass
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    No body to initialize, Class::MOP::Method::Generated is an abstract base class
+
+=head1 Moose::Exception::ReferencesAreNotAllowedAsDefault
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    References are not allowed as default values, you must wrap the default of 'foo' in a CODE reference (ex: sub { [] } and not [])
+
+=head1 Moose::Exception::NeedsTypeConstraintUnionForTypeCoercionUnion
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->type_coercion_union_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeCoercion::Union> and is
+required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You can only create a Moose::Meta::TypeCoercion::Union for a Moose::Meta::TypeConstraint::Union, not a Str
+
+=head1 Moose::Exception::AddRoleTakesAMooseMetaRoleInstance
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_to_be_added >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles must be instances of Moose::Meta::Role
+
+=head1 Moose::Exception::CreateTakesHashRefOfAttributes
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreate> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->attribute_class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a HASH ref of attributes
+
+=head1 Moose::Exception::OverrideConflictInSummation
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->two_overrides_found >>
+
+This attribute is read-only, isa Bool, has a default value 0 and is required.
+
+=item B<< $exception->role_application >>
+
+This attribute is read-only, isa
+L<Moose::Meta::Role::Application::RoleSummation> and is required.
+
+=item B<< $exception->roles >>
+
+This attribute is read-only, isa ArrayRef[Moose::Meta::Role] and is required.
+
+This attribute has handles as follows:
+    roles                    => elements
+
+=back
+
+=head4 Sample Error Messages:
+
+    Role 'Foo3|Bar3' has encountered an 'override' method conflict during composition (A local method of the same name has been found). This is a fatal error.
+    We have encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error.
+
+=head1 Moose::Exception::CouldNotGenerateInlineAttributeMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->option >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa L<Moose::Exception|Str> and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Could not generate inline accessor because : Can't call method "get_meta_instance" on an undefined value
+    Could not generate inline reader because : Can't call method "get_meta_instance" on an undefined value
+    Could not generate inline writer because : Can't call method "get_meta_instance" on an undefined value
+    Could not generate inline predicate because : Can't call method "get_meta_instance" on an undefined value
+    Could not generate inline clearer because : Can't call method "get_meta_instance" on an undefined value
+
+=head1 Moose::Exception::BadOptionFormat
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->option_value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->option_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    bad accessor/reader/writer/predicate/clearer format, must be a HASH ref
+
+=head1 Moose::Exception::MethodModifierNeedsMethodName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass in a method name
+
+=head1 Moose::Exception::AttributeValueIsNotDefined
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method::Delegation> and is
+required.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot delegate get_count to count because the value of foo is not defined
+
+=head1 Moose::Exception::BuilderDoesNotExist
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Attribute> and L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Foo does not support builder method '_build_baz' for attribute 'baz'
+
+=head1 Moose::Exception::PackagesAndModulesAreNotCachable
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->is_module >>
+
+This attribute is read-only, isa Bool and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Modules are not cacheable
+    Packages are not cacheable
+
+=head1 Moose::Exception::CannotFindTypeGivenToMatchOnType
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->action >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->to_match >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot find or parse the type 'doesNotExist'
+
+=head1 Moose::Exception::InitMetaRequiresClass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot call init_meta without specifying a for_class
+
+=head1 Moose::Exception::NeitherAttributeNorAttributeNameIsGiven
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You need to give attribute or attribute_name or both
+
+=head1 Moose::Exception::UnionCalledWithAnArrayRefAndAdditionalArgs
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->args >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->array >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    union called with an array reference and additional arguments
+
+=head1 Moose::Exception::MustSupplyArrayRefAsCurriedArguments
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a curried_arguments which is an ARRAY reference
+
+=head1 Moose::Exception::RequiredAttributeLacksInitialization
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    A required attribute must have either 'init_arg', 'builder', or 'default'
+
+=head1 Moose::Exception::ConstructClassInstanceTakesPackageName
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a package name
+
+=head1 Moose::Exception::CannotDelegateWithoutIsa
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot delegate methods based on a Regexp without a type constraint (isa)
+
+=head1 Moose::Exception::AttachToClassNeedsAClassMOPClassInstanceOrASubclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a Class::MOP::Class instance (or a subclass)
+
+=head1 Moose::Exception::InvalidHandleValue
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->handle_value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    All values passed to handles must be strings or ARRAY references, not (?^:bar)
+
+=head1 Moose::Exception::IsaLacksDoesMethod
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot have an isa option which cannot ->does() on attribute (bar)
+
+=head1 Moose::Exception::MustSpecifyAtleastOneRoleToApplicant
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->applicant >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Must specify at least one role to apply to TestClass=HASH(0x2bee290)
+    Must specify at least one role to apply to Moose::Meta::Class=HASH(0x1a1f818)
+    Must specify at least one role to apply to Moose::Meta::Role=HASH(0x1f22d40)
+
+=head1 Moose::Exception::NoConstraintCheckForTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not compile type constraint 'FooTypeConstraint' because no constraint check
+
+=head1 Moose::Exception::RequiredAttributeNeedsADefault
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot have a required attribute (bar) without a default, builder, or an init_arg
+
+=head1 Moose::Exception::AttributeConflictInRoles
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->second_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Role 'Foo4' has encountered an attribute conflict while being composed into 'Bar4'. This is a fatal error and cannot be disambiguated. The conflicting attribute is named 'foo'.
+
+=head1 Moose::Exception::CreateMOPClassTakesArrayRefOfAttributes
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreateMOPClass> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an ARRAY ref of attributes
+
+=head1 Moose::Exception::ParameterIsNotSubtypeOfParent
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_parameter >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Int is not a subtype of Float
+
+=head1 Moose::Exception::RequiredMethodsImportedByClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->missing_methods >>
+
+This attribute is read-only, isa ArrayRef[Moose::Meta::Role::Method::Required]
+and is required.
+
+This attribute has handles as follows:
+    method_count             => count
+    get_method_at            => get
+    get_all_methods          => elements
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->imported_method >>
+
+This attribute is read-only, isa L<Moose::Meta::Role::Method::Required> and is
+required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    'Foo4::Role' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \&foo)
+
+=head1 Moose::Exception::CanReblessOnlyIntoASubclass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash>, L<Moose::Exception::Role::Class> and
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You may rebless only into a subclass of (Foo2), of which (Foo) isn't.
+
+=head1 Moose::Exception::MOPAttributeNewNeedsAttributeName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must provide a name for the attribute
+
+=head1 Moose::Exception::InvalidNameForType
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    contains invalid characters
+
+=head1 Moose::Exception::CannotCallAnAbstractMethod
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Abstract method
+
+=head1 Moose::Exception::InitializeTakesUnBlessedPackageName
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a package name and it cannot be blessed
+
+=head1 Moose::Exception::CloneObjectExpectsAnInstanceOfMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an instance of the metaclass (Foo), not (foo)
+
+=head1 Moose::Exception::BuilderMethodNotSupportedForInlineAttribute
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Instance> and L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->builder >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Test::LazyBuild::Attribute does not support builder method '_build_fool' for attribute 'fool'
+
+=head1 Moose::Exception::AutoDeRefNeedsArrayRefOrHashRef
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute (bar)
+
+=head1 Moose::Exception::AttributeIsRequired
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<has_attribute> and is optional.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str, has a predicate C<has_attribute_name> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Attribute (baz) is required
+    Attribute (bar) is required
+    Attribute (foo_required) is required
+    Attribute (foo) is required
+    Attribute (baz) is required
+
+=head1 Moose::Exception::DelegationToATypeWhichIsNotAClass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    The bar attribute is trying to delegate to a type (Int) that is not backed by a class
+    The bar attribute is trying to delegate to a type (PositiveInt) that is not backed by a class
+
+=head1 Moose::Exception::OverrideConflictInComposition
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_being_applied >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->two_overrides_found >>
+
+This attribute is read-only, isa Bool, has a default value 0 and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Role 'Foo6' has encountered an 'override' method conflict during composition (A local method of the same name as been found). This is a fatal error.
+    Role 'Foo7' has encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error.
+
+=head1 Moose::Exception::UndefinedHashKeysPassedToMethod
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->hash_keys >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Hash keys passed to set must be defined
+
+=head1 Moose::Exception::AddRoleToARoleTakesAMooseMetaRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role_to_be_added >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles must be instances of Moose::Meta::Role
+
+=head1 Moose::Exception::CannotOverrideLocalMethodIsPresent
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Method>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method >>
+
+This attribute is read-only, isa L<Moose::Meta::Method> and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot add an override method if a local method is already present
+
+=head1 Moose::Exception::CoercingWithoutCoercions
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot coerce without a type coercion
+
+=head1 Moose::Exception::DelegationToAClassWhichIsNotLoaded
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The bar attribute is trying to delegate to a class which has not been loaded - Not::Loaded
+
+=head1 Moose::Exception::MetaclassMustBeASubclassOfMooseMetaRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The Metaclass Foo3 must be a subclass of Moose::Meta::Role.
+
+=head1 Moose::Exception::CannotCallAnAbstractBaseMethod
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->package_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Class::MOP::Method::Generated is an abstract base class, you must provide a constructor.
+
+=head1 Moose::Exception::MetaclassMustBeASubclassOfMooseMetaClass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The Metaclass Foo3 must be a subclass of Moose::Meta::Class.
+
+=head1 Moose::Exception::IllegalMethodTypeToAddMethodModifier
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->modifier_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->class_or_object >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Methods passed to before must be provided as a list, arrayref or regex, not HASH
+
+=head1 Moose::Exception::MustSpecifyAtleastOneMethod
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Must specify at least one method
+
+=head1 Moose::Exception::MustSupplyAClassMOPAttributeInstance
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply an attribute which is a 'Class::MOP::Attribute' instance
+
+=head1 Moose::Exception::AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Your attribute must be an instance of Class::MOP::Mixin::AttributeCore (or a subclass)
+
+=head1 Moose::Exception::CannotFindType
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot find type 'Foo', perhaps you forgot to load it
+
+=head1 Moose::Exception::ValidationFailedForTypeConstraint
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Util::TypeConstraints> and is required.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->value >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Attribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"
+    Validation failed for 'OnlyPositiveInts' with value -123
+
+=head1 Moose::Exception::CanReblessOnlyIntoASuperclass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You may rebless only into a superclass of (Foo), of which (Foo2) isn't.
+
+=head1 Moose::Exception::MustPassEvenNumberOfArguments
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->args >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an even number of arguments to set
+
+=head1 Moose::Exception::CallingMethodOnAnImmutableInstance
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    The 'add_method' method cannot be called on an immutable instance
+
+=head1 Moose::Exception::TypeNamesDoNotMatch
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint> and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    type_name (foo) does not match type->name (bar)
+
+=head1 Moose::Exception::MustSupplyAMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a metaclass instance if you want to inline
+
+=head1 Moose::Exception::MustSupplyAnAccessorTypeToConstructWith
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply an accessor_type to construct with
+
+=head1 Moose::Exception::CannotLocatePackageInINC
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::TypeConstraint> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->metaclass_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->INC >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->possible_packages >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Can't locate Moose::Meta::Int::Custom::Xyz or Xyz in \@INC \(\@INC contains:
+
+=head1 Moose::Exception::CannotAddAsAnAttributeToARole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->attribute_class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot add a Moose::Meta::Class as an attribute to a role
+
+=head1 Moose::Exception::MethodNameNotFoundInInheritanceHierarchy
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->method_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The method 'foo' was not found in the inheritance hierarchy for Foo
+
+=head1 Moose::Exception::ClassDoesTheExcludedRole
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Role> and L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->excluded_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    The class FooClass2 does the excluded role 'ExcludedRole2'
+
+=head1 Moose::Exception::MetaclassIsNotASubclassOfGivenMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Messages:
+
+    Foo4 already has a metaclass, but it does not inherit Moose::Meta::Class (Class::MOP::Class=HASH(0x278a4a0)).
+    Foo4 already has a metaclass, but it does not inherit Moose::Meta::Role (Class::MOP::Class=HASH(0x2c385a8)).
+
+=head1 Moose::Exception::UnableToCanonicalizeHandles
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->handles >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Unable to canonicalize the 'handles' option with GLOB(0x109d0b0)
+
+=head1 Moose::Exception::CannotApplyBaseClassRolesToRole
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You can only apply base class roles to a Moose class, not a role.
+
+=head1 Moose::Exception::HandlesMustBeAHashRef
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->given_handles >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    The 'handles' option must be a HASH reference, not bar
+
+=head1 Moose::Exception::AttributeExtensionIsNotSupportedInRoles
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    has '+attr' is not supported in roles
+
+=head1 Moose::Exception::RoleDoesTheExcludedRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->excluded_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->second_role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The role Bar2 does the excluded role 'Bar3'
+
+=head1 Moose::Exception::ApplyTakesABlessedInstance
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->param >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass in an blessed instance
+
+=head1 Moose::Exception::TriggerMustBeACodeRef
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::InvalidAttributeOptions> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Trigger must be a CODE ref on attribute (bar)
+
+=head1 Moose::Exception::MustHaveAtLeastOneValueToEnumerate
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must have at least one value to enumerate through
+
+=head1 Moose::Exception::RolesDoNotSupportRegexReferencesForMethodModifiers
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->modifier_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles do not currently support regex references for before method modifiers
+
+=head1 Moose::Exception::TypeConstraintIsAlreadyCreated
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->package_defined_in >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    The type constraint 'Foo1' has already been created in Moose::Role and cannot be created again in main
+    The type constraint 'Foo2' has already been created in Moose and cannot be created again in main
+    The type constraint 'Foo3' has already been created in Moose and cannot be created again in main
+
+=head1 Moose::Exception::ClassDoesNotHaveInitMeta
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->traits >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot provide traits when Moose::Util::TypeConstraints does not have an init_meta() method
+
+=head1 Moose::Exception::NeitherRoleNorRoleNameIsGiven
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You need to give role or role_name or both
+
+=head1 Moose::Exception::RequiredMethodsNotImplementedByClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->missing_methods >>
+
+This attribute is read-only, isa ArrayRef[Moose::Meta::Role::Method::Required]
+and is required.
+
+This attribute has handles as follows:
+    get_all_methods          => elements
+    method_count             => count
+    get_method_at            => get
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    'Foo3::Role|Bar3::Role|Baz3::Role' requires the method 'foo' to be implemented by 'My::Foo::Class::Broken3'
+
+=head1 Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::TypeConstraint>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeConstraint>, has a predicate
+ C<is_type_set> and is optional.
+
+=item B<< $exception->type_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_type_name_set> and is
+ optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You cannot create a Higher Order type without a type parameter
+
+=head1 Moose::Exception::NoDestructorClassSpecified
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    The 'inline_destructor' option is present, but no destructor class was specified
+
+=head1 Moose::Exception::RolesDoNotSupportExtends
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Roles do not support 'extends' (you can use 'with' to specialize a role)
+
+=head1 Moose::Exception::ExtendsMissingArgs
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Must derive at least one class
+
+=head1 Moose::Exception::CreateTakesHashRefOfMethods
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::RoleForCreate> and
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute_class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass a HASH ref of methods
+
+=head1 Moose::Exception::CodeBlockMustBeACodeRef
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash> and L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Your code block must be a CODE reference
+
+=head1 Moose::Exception::DefaultToMatchOnTypeMustBeCodeRef
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->default_action >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->cases_to_be_matched >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->to_match >>
+
+This attribute is read-only, isa Any and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Default case must be a CODE ref, not ARRAY(0x14f6fc8)
+
+=head1 Moose::Exception::InvalidRoleApplication
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->application >>
+
+This attribute is read-only, isa Any and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Role applications must be instances of Moose::Meta::Role::Application::ToClass
+
+=head1 Moose::Exception::CannotFindDelegateMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Attribute>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<is_attribute_set> and is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot find delegate metaclass for attribute bar
+
+=head1 Moose::Exception::MetaclassIsAClassNotASubclassOfGivenMetaclass
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->metaclass >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Foo3 already has a metaclass, but it does not inherit Moose::Meta::Role (Moose::Meta::Class=HASH(0x2d5d160)). You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.
+
+=head1 Moose::Exception::BuilderMustBeAMethodName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    builder must be a defined scalar value which is a method name
+
+=head1 Moose::Exception::CannotAddAdditionalTypeCoercionsToUnion
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->type_coercion_union_object >>
+
+This attribute is read-only, isa L<Moose::Meta::TypeCoercion::Union> and is
+required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Cannot add additional type coercions to Union types
+
+=head1 Moose::Exception::RoleNameRequired
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a role name to look for
+
+=head1 Moose::Exception::MustSupplyPackageNameAndName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply the package_name and name parameters
+
+=head1 Moose::Exception::CanOnlyConsumeRole
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    You can only consume roles, DateTime is not a Moose role
+
+=head1 Moose::Exception::MetaclassNotLoaded
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    The Metaclass Foo2 must be loaded. (Perhaps you forgot to 'use Foo2'?)
+
+=head1 Moose::Exception::MethodNameNotGiven
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must define a method name to find
+
+=head1 Moose::Exception::WrongTypeConstraintGiven
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->given_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->required_type >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    The type constraint for foo must be a subtype of ArrayRef but it's a Int
+
+=head1 Moose::Exception::ClassNamesDoNotMatch
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class> and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Messages:
+
+    class_name (TestClass1) does not match class->name (TestClass)
+    class_name (Foo) does not match class->name (DoesClassRole)
+
+=head1 Moose::Exception::AttributeNamesDoNotMatch
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute> and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Messages:
+
+    attribute_name (foo1) does not match attribute->name (foo)
+    attribute_name (foo) does not match attribute->name (bar)
+
+=head1 Moose::Exception::DoesRequiresRoleName
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Moose::Meta::Class> and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply a role name to does()
+
+=head1 Moose::Exception::RoleNamesDoNotMatch
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role> and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    role_name (Foo) does not match role->name (JustATestRole)
+
+=head1 Moose::Exception::MustDefineAnAttributeName
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Class>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must define an attribute name
+
+=head1 Moose::Exception::CouldNotCreateWriter
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::EitherAttributeOrAttributeName> and
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str, has a predicate C<has_attribute_name> and
+is optional.
+
+=item B<< $exception->error >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->attribute >>
+
+This attribute is read-only, isa L<Class::MOP::Attribute>, has a predicate
+C<has_attribute> and is optional.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef, has a predicate C<has_params> and is
+optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    Could not generate inline writer because : Could not create writer for 'bar' because Can't locate object method "_eval_environment" via package "Class::MOP::Attribute"
+
+=head1 Moose::Exception::OperatorIsRequired
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    operator is required
+
+=head1 Moose::Exception::MustSupplyAnAttributeToConstructWith
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::ParamsHash>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must supply an attribute to construct with
+
+=head1 Moose::Exception::CouldNotParseType
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->position >>
+
+This attribute is read-only, isa Int and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->type >>
+
+This attribute is read-only, isa Str and is required.
+
+=back
+
+=head4 Sample Error Message:
+
+    'Str | Undef |' didn't parse (parse-pos=11 and str-length=13)
+
+=head1 Moose::Exception::InstanceBlessedIntoWrongClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::ParamsHash>, L<Moose::Exception::Role::Class> and
+L<Moose::Exception::Role::Instance>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->instance >>
+
+This attribute is read-only, isa Object and is required.
+
+=item B<< $exception->params >>
+
+This attribute is read-only, isa HashRef and is required.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Objects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but Bar=HASH(0x2d77528) is not a Foo
+
+=head1 Moose::Exception::MustSpecifyAtleastOneRole
+
+This class is a subclass of L<Moose::Exception> and consumes role
+L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    Must specify at least one role
+
+=head1 Moose::Exception::ConflictDetectedInCheckRoleExclusionsInToClass
+
+This class is a subclass of L<Moose::Exception> and consume roles
+L<Moose::Exception::Role::Class> and L<Moose::Exception::Role::Role>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=item B<< $exception->role_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_role_name_set> and is
+ optional.
+
+=item B<< $exception->role >>
+
+This attribute is read-only, isa L<Moose::Meta::Role>, has a predicate
+C<is_role_set> and is optional.
+
+=item B<< $exception->class >>
+
+This attribute is read-only, isa L<Class::MOP::Class>, has a predicate
+C<is_class_set> and is optional.
+
+=item B<< $exception->class_name >>
+
+This attribute is read-only, isa Str, has a predicate C<is_class_name_set> and
+is optional.
+
+=back
+
+=head4 Sample Error Message:
+
+    Conflict detected: FooClass excludes role 'BarRole'
+
+=head1 Moose::Exception::MustPassEvenNumberOfAttributeOptions
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->options >>
+
+This attribute is read-only, isa ArrayRef and is required.
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->attribute_name >>
+
+This attribute is read-only, isa Str and is required.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass an even number of attribute options
+
+=head1 Moose::Exception::UnionTakesAtleastTwoTypeNames
+
+This class is a subclass of L<Moose::Exception>.
+
+=over 4
+
+=back
+
+=head2 ATTRIBUTES
+
+=over 4
+
+=item B<< $exception->trace >>
+
+This attribute is read-only and isa L<Devel::StackTrace>. It is lazy & dependent
+ on $exception->message.
+
+=item B<< $exception->message >>
+
+This attribute is read-only and isa Str. It is lazy and has a default value
+'Error'.
+
+=back
+
+=head4 Sample Error Message:
+
+    You must pass in at least 2 type names to make a union
+
+=cut

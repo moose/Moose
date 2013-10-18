@@ -4,7 +4,6 @@ package Class::MOP::Method;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'weaken', 'reftype', 'blessed';
 
 use parent 'Class::MOP::Object';
@@ -24,6 +23,7 @@ sub wrap {
     my %params = @args;
     my $code = $params{body};
 
+    require Moose::Util;
     if (blessed($code) && $code->isa(__PACKAGE__)) {
         my $method = $code->clone;
         delete $params{body};
@@ -31,11 +31,17 @@ sub wrap {
         return $method;
     }
     elsif (!ref $code || 'CODE' ne reftype($code)) {
-        confess "You must supply a CODE reference to bless, not (" . ($code || 'undef') . ")";
+        Moose::Util::throw_exception( WrapTakesACodeRefToBless => params => \%params,
+                                                                  class  => $class,
+                                                                  code   => $code
+                                    );
     }
 
     ($params{package_name} && $params{name})
-        || confess "You must supply the package_name and name parameters";
+        || Moose::Util::throw_exception( PackageNameAndNameParamsNotGivenToWrap => params => \%params,
+                                                                                   class  => $class,
+                                                                                   code   => $code
+                                       );
 
     my $self = $class->_new(\%params);
 

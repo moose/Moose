@@ -4,40 +4,47 @@ package Moose::Meta::Method::Delegation;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Generated';
 
+use Moose::Util 'throw_exception';
 
 sub new {
     my $class   = shift;
     my %options = @_;
 
     ( exists $options{attribute} )
-        || confess "You must supply an attribute to construct with";
+        || throw_exception( MustSupplyAnAttributeToConstructWith => params => \%options,
+                                                                    class  => $class
+                          );
 
     ( blessed( $options{attribute} )
             && $options{attribute}->isa('Moose::Meta::Attribute') )
-        || confess
-        "You must supply an attribute which is a 'Moose::Meta::Attribute' instance";
+        || throw_exception( MustSupplyAMooseMetaAttributeInstance => params => \%options,
+                                                                     class  => $class
+                          );
 
     ( $options{package_name} && $options{name} )
-        || confess
-        "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     ( $options{delegate_to_method} && ( !ref $options{delegate_to_method} )
             || ( 'CODE' eq ref $options{delegate_to_method} ) )
-        || confess
-        'You must supply a delegate_to_method which is a method name or a CODE reference';
+        || throw_exception( MustSupplyADelegateToMethod => params => \%options,
+                                                           class  => $class
+                          );
 
     exists $options{curried_arguments}
         || ( $options{curried_arguments} = [] );
 
     ( $options{curried_arguments} &&
         ( 'ARRAY' eq ref $options{curried_arguments} ) )
-        || confess 'You must supply a curried_arguments which is an ARRAY reference';
+        || throw_exception( MustSupplyArrayRefAsCurriedArguments => params     => \%options,
+                                                                    class_name => $class
+                          );
 
     my $self = $class->_new( \%options );
 
@@ -85,21 +92,20 @@ sub _initialize_body {
         my $instance = shift;
         my $proxy    = $instance->$accessor();
 
-        my $error
-            = !defined $proxy                 ? ' is not defined'
-            : ref($proxy) && !blessed($proxy) ? qq{ is not an object (got '$proxy')}
-            : undef;
-
-        if ($error) {
-            $self->throw_error(
-                "Cannot delegate $handle_name to $method_to_call because "
-                    . "the value of "
-                    . $self->associated_attribute->name
-                    . $error,
-                method_name => $method_to_call,
-                object      => $instance
-            );
+        if( !defined $proxy ) {
+            throw_exception( AttributeValueIsNotDefined => method     => $self,
+                                                           instance   => $instance,
+                                                           attribute  => $self->associated_attribute,
+                           );
         }
+        elsif( ref($proxy) && !blessed($proxy) ) {
+            throw_exception( AttributeValueIsNotAnObject => method      => $self,
+                                                            instance    => $instance,
+                                                            attribute   => $self->associated_attribute,
+                                                            given_value => $proxy
+                           );
+        }
+
         unshift @_, @{ $self->curried_arguments };
         $proxy->$method_to_call(@_);
     };

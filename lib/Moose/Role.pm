@@ -10,14 +10,14 @@ use Module::Runtime 'module_notional_filename';
 use Sub::Exporter;
 
 use Moose       ();
-use Moose::Util ();
+use Moose::Util 'throw_exception';
 
 use Moose::Exporter;
 use Moose::Meta::Role;
 use Moose::Util::TypeConstraints;
 
 sub extends {
-    croak "Roles do not support 'extends' (you can use 'with' to specialize a role)";
+    throw_exception("RolesDoNotSupportExtends");
 }
 
 sub with {
@@ -26,20 +26,23 @@ sub with {
 
 sub requires {
     my $meta = shift;
-    croak "Must specify at least one method" unless @_;
+    throw_exception( MustSpecifyAtleastOneMethod => role => $meta ) unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
     my $meta = shift;
-    croak "Must specify at least one role" unless @_;
+    throw_exception( MustSpecifyAtleastOneRole => role => $meta ) unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
     my $meta = shift;
     my $name = shift;
-    croak 'Usage: has \'name\' => ( key => value, ... )' if @_ == 1;
+    throw_exception( InvalidHasProvidedInARole => role            => $meta,
+                                                  attribute_name  => $name
+                   )
+        if @_ == 1;
     my %context = Moose::Util::_caller_info;
     $context{context} = 'has declaration';
     $context{type} = 'role';
@@ -53,8 +56,9 @@ sub _add_method_modifier {
     my $meta = shift;
 
     if ( ref($_[0]) eq 'Regexp' ) {
-        croak "Roles do not currently support regex "
-            . " references for $type method modifiers";
+        throw_exception( RolesDoNotSupportRegexReferencesForMethodModifiers => modifier_type => $type,
+                                                                               role          => $meta
+                       );
     }
 
     Moose::Util::add_method_modifier($meta, $type, \@_);
@@ -79,11 +83,11 @@ sub override {
 }
 
 sub inner {
-    croak "Roles cannot support 'inner'";
+    throw_exception("RolesDoNotSupportInner");
 }
 
 sub augment {
-    croak "Roles cannot support 'augment'";
+    throw_exception("RolesDoNotSupportAugment");
 }
 
 Moose::Exporter->setup_import_methods(
@@ -105,16 +109,16 @@ sub init_meta {
 
     unless ($role) {
         require Moose;
-        Moose->throw_error("Cannot call init_meta without specifying a for_class");
+        throw_exception( InitMetaRequiresClass => params => \%args );
     }
 
     my $metaclass = $args{metaclass} || "Moose::Meta::Role";
     my $meta_name = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
-    Moose->throw_error("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
+    throw_exception( MetaclassNotLoaded => class_name => $metaclass )
         unless is_class_loaded($metaclass);
 
-    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Role.")
+    throw_exception( MetaclassMustBeASubclassOfMooseMetaRole => role_name => $metaclass )
         unless $metaclass->isa('Moose::Meta::Role');
 
     # make a subtype for each Moose role
@@ -123,11 +127,16 @@ sub init_meta {
     my $meta;
     if ( $meta = Class::MOP::get_metaclass_by_name($role) ) {
         unless ( $meta->isa("Moose::Meta::Role") ) {
-            my $error_message = "$role already has a metaclass, but it does not inherit $metaclass ($meta).";
             if ( $meta->isa('Moose::Meta::Class') ) {
-                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+                throw_exception( MetaclassIsAClassNotASubclassOfGivenMetaclass => class_name => $role,
+                                                                                  metaclass  => $metaclass,
+                                                                                  class      => $meta
+                               );
             } else {
-                Moose->throw_error($error_message);
+                throw_exception( MetaclassIsNotASubclassOfGivenMetaclass => class_name => $role,
+                                                                            metaclass  => $metaclass,
+                                                                            class      => $meta
+                               );
             }
         }
     }

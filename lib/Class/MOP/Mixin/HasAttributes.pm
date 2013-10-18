@@ -3,10 +3,11 @@ package Class::MOP::Mixin::HasAttributes;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Mixin';
+
+use Moose::Util 'throw_exception';
 
 sub add_attribute {
     my $self = shift;
@@ -15,8 +16,9 @@ sub add_attribute {
         = blessed( $_[0] ) ? $_[0] : $self->attribute_metaclass->new(@_);
 
     ( $attribute->isa('Class::MOP::Mixin::AttributeCore') )
-        || confess
-        "Your attribute must be an instance of Class::MOP::Mixin::AttributeCore (or a subclass)";
+        || throw_exception( AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass => attribute => $attribute,
+                                                                                     class     => $self
+                          );
 
     $self->_attach_attribute($attribute);
 
@@ -45,7 +47,7 @@ sub has_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || confess "You must define an attribute name";
+        || throw_exception( MustDefineAnAttributeName => class => $self );
 
     exists $self->_attribute_map->{$attribute_name};
 }
@@ -54,7 +56,7 @@ sub get_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || confess "You must define an attribute name";
+        || throw_exception( MustDefineAnAttributeName => class => $self );
 
     return $self->_attribute_map->{$attribute_name};
 }
@@ -63,7 +65,7 @@ sub remove_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || confess "You must define an attribute name";
+        || throw_exception( MustDefineAnAttributeName => class => $self );
 
     my $removed_attribute = $self->_attribute_map->{$attribute_name};
     return unless defined $removed_attribute;

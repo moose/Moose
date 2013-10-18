@@ -4,10 +4,11 @@ package Class::MOP::Method::Wrapped;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Method';
+
+use Moose::Util 'throw_exception';
 
 # NOTE:
 # this ugly beast is the result of trying
@@ -68,7 +69,10 @@ sub wrap {
     my ( $class, $code, %params ) = @_;
 
     (blessed($code) && $code->isa('Class::MOP::Method'))
-        || confess "Can only wrap blessed CODE";
+        || throw_exception( CanOnlyWrapBlessedCode => params => \%params,
+                                                      class  => $class,
+                                                      code   => $code
+                          );
 
     my $modifier_table = {
         cache  => undef,

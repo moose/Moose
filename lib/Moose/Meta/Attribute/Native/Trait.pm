@@ -8,6 +8,8 @@ use Moose::Deprecated;
 use Moose::Util;
 use Moose::Util::TypeConstraints;
 
+use Moose::Util 'throw_exception';
+
 requires '_helper_type';
 
 before '_process_options' => sub {
@@ -45,8 +47,11 @@ sub _check_helper_type {
         $isa_name = $isa->name();
     }
 
-    confess
-        "The type constraint for $name must be a subtype of $type but it's a $isa_name";
+    throw_exception( WrongTypeConstraintGiven => required_type  => $type,
+                                                 given_type     => $isa_name,
+                                                 attribute_name => $name,
+                                                 params         => $options
+                   );
 }
 
 before 'install_accessors' => sub { (shift)->_check_handles_values };
@@ -75,8 +80,9 @@ around '_canonicalize_handles' => sub {
     return unless $handles;
 
     unless ( 'HASH' eq ref $handles ) {
-        $self->throw_error(
-            "The 'handles' option must be a HASH reference, not $handles");
+       throw_exception( HandlesMustBeAHashRef => instance      => $self,
+                                                 given_handles => $handles
+                      );
     }
 
     return
@@ -89,9 +95,9 @@ sub _canonicalize_handles_value {
     my $value = shift;
 
     if ( ref $value && 'ARRAY' ne ref $value ) {
-        $self->throw_error(
-            "All values passed to handles must be strings or ARRAY references, not $value"
-        );
+        throw_exception( InvalidHandleValue => instance     => $self,
+                                               handle_value => $value
+                       );
     }
 
     return ref $value ? $value : [$value];
@@ -147,7 +153,7 @@ sub _build_native_type {
         return $1 if $role_name =~ /::Native::Trait::(\w+)$/;
     }
 
-    die "Cannot calculate native type for " . ref $self;
+    throw_exception( CannotCalculateNativeType => instance => $self );
 }
 
 has '_native_type' => (

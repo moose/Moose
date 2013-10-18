@@ -12,10 +12,11 @@ use Test::Requires {
 # This is a stripped down version of all_pod_coverage_ok which lets us
 # vary the trustme parameter per module.
 my @modules
-    = grep { !/Accessor::Native.*$/ && !/::Conflicts$/ } all_modules();
+    = grep { !/Accessor::Native.*$/ && !/::Conflicts$/ && !/^Moose::Exception::/ } all_modules();
 plan tests => scalar @modules;
 
 my %trustme = (
+    'Moose::Exception' => [ "BUILD" ],
     'Class::MOP' => [
         'DEBUG_NO_META',
         'HAVE_ISAREV',

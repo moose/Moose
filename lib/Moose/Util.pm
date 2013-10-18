@@ -29,12 +29,20 @@ my @exports = qw[
     english_list
     meta_attribute_alias
     meta_class_alias
+    throw_exception
 ];
 
 Sub::Exporter::setup_exporter({
     exports => \@exports,
     groups  => { all => \@exports }
 });
+
+sub throw_exception {
+    my ($class_name, @args_to_exception) = @_;
+    my $class = "Moose::Exception::$class_name";
+    _load_user_class( $class );
+    die $class->new( @args_to_exception );
+}
 
 ## some utils for the utils ...
 
@@ -99,7 +107,7 @@ sub _apply_all_roles {
 
     unless (@_) {
         require Moose;
-        Moose->throw_error("Must specify at least one role to apply to $applicant");
+        throw_exception( MustSpecifyAtleastOneRoleToApplicant => applicant => $applicant );
     }
 
     # If @_ contains role meta objects, mkopt will think that they're values,
@@ -128,10 +136,7 @@ sub _apply_all_roles {
         }
 
         unless ($meta && $meta->isa('Moose::Meta::Role') ) {
-            require Moose;
-            Moose->throw_error( "You can only consume roles, "
-                    . $role->[0]
-                    . " is not a Moose role" );
+            throw_exception( CanOnlyConsumeRole => role_name => $role->[0] );
         }
 
         push @role_metas, [ $meta, $role->[1] ];
@@ -228,11 +233,12 @@ sub _build_alias_package_name {
             }
         }
 
-        require Moose;
-        Moose->throw_error(
-            "Can't locate " . _english_list_or(@possible) . " in \@INC "
-        . "(\@INC contains: @INC)."
-        );
+        throw_exception( CannotLocatePackageInINC => possible_packages => _english_list_or(@possible),
+                                                     INC               => \@INC,
+                                                     type              => $type,
+                                                     metaclass_name    => $metaclass_name,
+                                                     params            => \%options
+                       );
     }
 }
 
@@ -256,13 +262,10 @@ sub add_method_modifier {
             $meta->$add_modifier_method( $_, $code ) for @{$args->[0]};
         }
         else {
-            $meta->throw_error(
-                sprintf(
-                    "Methods passed to %s must be provided as a list, arrayref or regex, not %s",
-                    $modifier_name,
-                    $method_modifier_type,
-                )
-            );
+            throw_exception( IllegalMethodTypeToAddMethodModifier => class_or_object => $class_or_obj,
+                                                                     modifier_name   => $modifier_name,
+                                                                     params          => $args
+                           );
         }
     }
     else {
@@ -624,6 +627,11 @@ L<Moose/Metaclass and Trait Name Resolution> works properly.
 Given a list of scalars, turns them into a proper list in English
 ("one and two", "one, two, three, and four"). This is used to help us
 make nicer error messages.
+
+=item B<throw_exception( $class_name, %arguments_to_exception)>
+
+Calls die with an object of Moose::Exception::$class_name, with
+%arguments_to_exception passed as arguments.
 
 =back
 

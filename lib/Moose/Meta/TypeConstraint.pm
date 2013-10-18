@@ -10,13 +10,15 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              bool     => sub { 1 },
              fallback => 1;
 
-use Carp qw(confess);
+use Class::Load qw(load_class);
 use Eval::Closure;
 use Scalar::Util qw(blessed refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
 
-use parent 'Class::MOP::Object';
+use base 'Class::MOP::Object';
+
+use Moose::Util 'throw_exception';
 
 __PACKAGE__->meta->add_attribute('name'       => (
     reader => 'name',
@@ -115,7 +117,9 @@ sub new {
 
     if ( exists $args{message}
       && (!ref($args{message}) || ref($args{message}) ne 'CODE') ) {
-        confess("The 'message' parameter must be a coderef");
+        throw_exception( MessageParameterMustBeCodeRef => params => \%args,
+                                                          class  => $class
+                       );
     }
 
     my $self  = $class->_new(%args);
@@ -134,8 +138,7 @@ sub coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        require Moose;
-        Moose->throw_error("Cannot coerce without a type coercion");
+        throw_exception( CoercingWithoutCoercions => type => $self );
     }
 
     return $_[0] if $self->check($_[0]);
@@ -183,8 +186,7 @@ sub _inline_check {
     my $self = shift;
 
     unless ( $self->can_be_inlined ) {
-        require Moose;
-        Moose->throw_error( 'Cannot inline a type constraint check for ' . $self->name );
+        throw_exception( CannotInlineTypeConstraintCheck => type => $self );
     }
 
     if ( $self->has_parent && $self->constraint == $null_constraint ) {
@@ -210,8 +212,10 @@ sub assert_valid {
     my $error = $self->validate($value);
     return 1 if ! defined $error;
 
-    require Moose;
-    Moose->throw_error($error);
+    throw_exception( ValidationFailedForTypeConstraint => type          => $self,
+                                                          error_message => $error,
+                                                          value         => $value
+                   );
 }
 
 sub get_message {
@@ -288,10 +292,7 @@ sub _actually_compile_type_constraint {
 
     my $check = $self->constraint;
     unless ( defined $check ) {
-        require Moose;
-        Moose->throw_error( "Could not compile type constraint '"
-                . $self->name
-                . "' because no constraint check" );
+        throw_exception( NoConstraintCheckForTypeConstraint => type => $self );
     }
 
     return $self->_compile_subtype($check)

@@ -12,6 +12,8 @@ use Package::Stash;
 
 use parent 'Class::MOP::Object';
 
+use Moose::Util 'throw_exception';
+
 # creation ...
 
 sub initialize {
@@ -21,7 +23,6 @@ sub initialize {
 
     my %options = @args;
     my $package_name = delete $options{package};
-
 
     # we hand-construct the class until we can bootstrap it
     if ( my $meta = Class::MOP::get_metaclass_by_name($package_name) ) {
@@ -50,7 +51,9 @@ sub reinitialize {
 
     (defined $package_name && $package_name
       && (!blessed $package_name || $package_name->isa('Class::MOP::Package')))
-        || confess "You must pass a package name or an existing Class::MOP::Package instance";
+        || throw_exception( MustPassAPackageNameOrAnExistingClassMOPPackageInstance => params => \%options,
+                                                                                       class  => $class
+                          );
 
     $package_name = $package_name->name
         if blessed $package_name;
@@ -127,7 +130,14 @@ sub create {
         return $meta;
     }
 
-    sub _anon_cache_key { confess "Packages are not cacheable" }
+    sub _anon_cache_key {
+        my $class = shift;
+        my %options = @_;
+        throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
+                                                             params     => \%options,
+                                                             is_module  => 0
+                       );
+    }
 
     sub DESTROY {
         my $self = shift;

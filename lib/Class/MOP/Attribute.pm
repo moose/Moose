@@ -12,6 +12,8 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
 
+use Moose::Util 'throw_exception';
+
 # NOTE: (meta-circularity)
 # This method will be replaced in the
 # boostrap section of Class::MOP, by
@@ -30,23 +32,34 @@ sub new {
     my $name = $options{name};
 
     (defined $name)
-        || confess "You must provide a name for the attribute";
+        || throw_exception( MOPAttributeNewNeedsAttributeName => class  => $class,
+                                                                 params => \%options
+                          );
 
     $options{init_arg} = $name
         if not exists $options{init_arg};
     if(exists $options{builder}){
-        confess("builder must be a defined scalar value which is a method name")
+        throw_exception( BuilderMustBeAMethodName => class  => $class,
+                                                     params => \%options
+                       )
             if ref $options{builder} || !(defined $options{builder});
-        confess("Setting both default and builder is not allowed.")
+        throw_exception( BothBuilderAndDefaultAreNotAllowed => class  => $class,
+                                                               params => \%options
+                       )
             if exists $options{default};
     } else {
         ($class->is_default_a_coderef(\%options))
-            || confess("References are not allowed as default values, you must ".
-                       "wrap the default of '$name' in a CODE reference (ex: sub { [] } and not [])")
+            || throw_exception( ReferencesAreNotAllowedAsDefault => class          => $class,
+                                                                    params         => \%options,
+                                                                    attribute_name => $options{name}
+                              )
                 if exists $options{default} && ref $options{default};
     }
+
     if( $options{required} and not( defined($options{builder}) || defined($options{init_arg}) || exists $options{default} ) ) {
-        confess("A required attribute must have either 'init_arg', 'builder', or 'default'");
+        throw_exception( RequiredAttributeLacksInitialization => class  => $class,
+                                                                 params => \%options
+                       );
     }
 
     $class->_new(\%options);
@@ -97,6 +110,11 @@ sub clone {
     my %options = @_;
     (blessed($self))
         || confess "Can only clone an instance";
+    # this implementation is overwritten by the bootstrap process,
+    # so this exception will never trigger. If it ever does occur,
+    # it indicates a gigantic problem with the most internal parts
+    # of Moose, so we wouldn't want a Moose-based exception object anyway
+
     return bless { %{$self}, %options } => ref($self);
 }
 
@@ -131,7 +149,9 @@ sub initialize_instance_slot {
             );
         }
         else {
-            confess(ref($instance)." does not support builder method '". $self->{'builder'} ."' for attribute '" . $self->name . "'");
+            throw_exception( BuilderMethodNotSupportedForAttribute => attribute => $self,
+                                                                      instance  => $instance
+                           );
         }
     }
 }
@@ -232,7 +252,9 @@ sub slots { (shift)->name }
 sub attach_to_class {
     my ($self, $class) = @_;
     (blessed($class) && $class->isa('Class::MOP::Class'))
-        || confess "You must pass a Class::MOP::Class instance (or a subclass)";
+        || throw_exception( AttachToClassNeedsAClassMOPClassInstanceOrASubclass => attribute => $self,
+                                                                                   class     => $class
+                          );
     weaken($self->{'associated_class'} = $class);
 }
 
@@ -358,7 +380,11 @@ sub _process_accessors {
 
     if (ref($accessor)) {
         (ref($accessor) eq 'HASH')
-            || confess "bad accessor/reader/writer/predicate/clearer format, must be a HASH ref";
+            || throw_exception( BadOptionFormat => attribute    => $self,
+                                                   option_value => $accessor,
+                                                   option_name  => $type
+                              );
+
         my ($name, $method) = %{$accessor};
 
         $method_ctx->{description} = $self->_accessor_description($name, $type);
@@ -391,7 +417,11 @@ sub _process_accessors {
             );
         }
         catch {
-            confess "Could not create the '$type' method for " . $self->name . " because : $_";
+            throw_exception( CouldNotCreateMethod => attribute    => $self,
+                                                     option_value => $accessor,
+                                                     option_name  => $type,
+                                                     error        => $_
+                           );
         };
         $self->associate_method($method);
         return ($accessor, $method);

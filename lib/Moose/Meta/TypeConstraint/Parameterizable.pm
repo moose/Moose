@@ -8,6 +8,8 @@ use parent 'Moose::Meta::TypeConstraint';
 use Moose::Meta::TypeConstraint::Parameterized;
 use Moose::Util::TypeConstraints ();
 
+use Moose::Util 'throw_exception';
+
 use Carp 'confess';
 
 __PACKAGE__->meta->add_attribute('constraint_generator' => (
@@ -50,8 +52,10 @@ sub _can_coerce_constraint_from {
 sub generate_inline_for {
     my ($self, $type, $val) = @_;
 
-    confess "Can't generate an inline constraint for $type, since none "
-          . "was defined"
+    throw_exception( CannotGenerateInlineConstraint => parameterizable_type_object => $self,
+                                                       type                        => $type,
+                                                       value                       => $val
+                   )
         unless $self->has_inline_generator;
 
     return '( do { ' . $self->inline_generator->( $self, $type, $val ) . ' } )';
@@ -73,8 +77,9 @@ sub parameterize {
     if(my $parent = $self->parent) {
         if($parent->can('type_parameter')) {
             unless ( $contained_tc->is_a_type_of($parent->type_parameter) ) {
-                require Moose;
-                Moose->throw_error("$type_parameter is not a subtype of ".$parent->type_parameter);
+                throw_exception( ParameterIsNotSubtypeOfParent => type_parameter => $type_parameter,
+                                                                  type           => $self
+                               );
             }
         }
     }
@@ -89,8 +94,7 @@ sub parameterize {
         );
     }
     else {
-        require Moose;
-        Moose->throw_error("The type parameter must be a Moose meta type");
+        confess("The type parameter must be a Moose meta type");
     }
 }
 

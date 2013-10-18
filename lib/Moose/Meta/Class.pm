@@ -18,7 +18,7 @@ use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
 use Moose::Meta::Method::Meta;
-use Moose::Util;
+use Moose::Util 'throw_exception';
 use Class::MOP::MiniTrait;
 
 use parent 'Class::MOP::Class';
@@ -86,7 +86,7 @@ sub create {
     my %options = @args;
 
     (ref $options{roles} eq 'ARRAY')
-        || $class->throw_error("You must pass an ARRAY ref of roles", data => $options{roles})
+        || throw_exception( RolesInCreateTakesAnArrayRef => params => \%options )
             if exists $options{roles};
 
     my $package = delete $options{package};
@@ -188,7 +188,9 @@ sub reinitialize {
 sub add_role {
     my ($self, $role) = @_;
     (blessed($role) && $role->isa('Moose::Meta::Role'))
-        || $self->throw_error("Roles must be instances of Moose::Meta::Role", data => $role);
+        || throw_exception( AddRoleTakesAMooseMetaRoleInstance => role_to_be_added => $role,
+                                                                  class            => $self
+                          );
     push @{$self->roles} => $role;
 }
 
@@ -200,8 +202,12 @@ sub role_applications {
 
 sub add_role_application {
     my ($self, $application) = @_;
+
     (blessed($application) && $application->isa('Moose::Meta::Role::Application::ToClass'))
-        || $self->throw_error("Role applications must be instances of Moose::Meta::Role::Application::ToClass", data => $application);
+        || throw_exception( InvalidRoleApplication => class       => $self,
+                                                      application => $application,
+                          );
+
     push @{$self->_get_role_applications} => $application;
 }
 
@@ -235,7 +241,7 @@ sub does_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || $self->throw_error("You must supply a role name to look for");
+        || throw_exception( RoleNameRequired => class => $self );
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
@@ -255,7 +261,7 @@ sub excludes_role {
     my ($self, $role_name) = @_;
 
     (defined $role_name)
-        || $self->throw_error("You must supply a role name to look for");
+        || throw_exception( RoleNameRequired => class => $self );
 
     foreach my $class ($self->class_precedence_list) {
         my $meta = Class::MOP::class_of($class);
@@ -334,9 +340,8 @@ sub _inline_BUILDARGS {
                 'my $params;',
                 'if (scalar @_ == 1) {',
                     'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
-                        $self->_inline_throw_error(
-                            '"Single parameters to new() must be a HASH ref"',
-                            'data => $_[0]',
+                        $self->_inline_throw_exception(
+                            '"SingleParamsToNewMustBeHashRef"'
                         ) . ';',
                     '}',
                     '$params = { %{ $_[0] } };',
@@ -382,9 +387,12 @@ sub _inline_check_required_attr {
 
     return (
         'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
-            $self->_inline_throw_error(
-                '"Attribute (' . quotemeta($attr->name) . ') is required"'
-            ) . ';',
+            $self->_inline_throw_exception(
+                'AttributeIsRequired => '.
+                'params         => $params, '.
+                'class_name     => $class_name, '.
+                'attribute_name => "'.quotemeta($attr->name).'"'
+            ).';',
         '}',
     );
 }
@@ -546,6 +554,7 @@ sub _eval_environment {
         # error class at this point, but we should still get rid of this
         # at some point
         '$meta'  => \$self,
+        '$class_name' => \($self->name),
     };
 }
 
@@ -556,7 +565,7 @@ sub superclasses {
         my ($name, $opts) = @{ $super };
         Moose::Util::_load_user_class($name, $opts);
         my $meta = Class::MOP::class_of($name);
-        $self->throw_error("You cannot inherit from a Moose Role ($name)")
+        throw_exception( CanExtendOnlyClasses => role => $meta )
             if $meta && $meta->isa('Moose::Meta::Role')
     }
     return $self->SUPER::superclasses(map { $_->[0] } @{ $supers });
@@ -582,9 +591,11 @@ sub add_attribute {
 sub add_override_method_modifier {
     my ($self, $name, $method, $_super_package) = @_;
 
-    (!$self->has_method($name))
-        || $self->throw_error("Cannot add an override method if a local method is already present");
-
+    my $existing_method = $self->get_method($name);
+    (!$existing_method)
+        || throw_exception( CannotOverrideLocalMethodIsPresent => class  => $self,
+                                                                  method => $existing_method,
+                          );
     $self->add_method($name => Moose::Meta::Method::Overridden->new(
         method  => $method,
         class   => $self,
@@ -595,8 +606,11 @@ sub add_override_method_modifier {
 
 sub add_augment_method_modifier {
     my ($self, $name, $method) = @_;
-    (!$self->has_method($name))
-        || $self->throw_error("Cannot add an augment method if a local method is already present");
+    my $existing_method = $self->get_method($name);
+    throw_exception( CannotAugmentIfLocalMethodPresent => class  => $self,
+                                                          method => $existing_method,
+                   )
+        if( $existing_method );
 
     $self->add_method($name => Moose::Meta::Method::Augmented->new(
         method  => $method,
@@ -638,9 +652,9 @@ sub _fix_class_metaclass_incompatibility {
 
     if ($self->_class_metaclass_can_be_made_compatible($super_meta)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class      => $self,
+                                                                   superclass => $super_meta
+                              );
         my $super_meta_name = $super_meta->_real_ref_name;
         my $class_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass(blessed($self), $super_meta_name);
         my $new_self = $class_meta_subclass_meta_name->reinitialize(
@@ -659,9 +673,10 @@ sub _fix_single_metaclass_incompatibility {
 
     if ($self->_single_metaclass_can_be_made_compatible($super_meta, $metaclass_type)) {
         ($self->is_pristine)
-            || confess "Can't fix metaclass incompatibility for "
-                     . $self->name
-                     . " because it is not pristine.";
+            || throw_exception( CannotFixMetaclassCompatibility => class          => $self,
+                                                                   superclass     => $super_meta,
+                                                                   metaclass_type => $metaclass_type
+                              );
         my $super_meta_name = $super_meta->_real_ref_name;
         my $class_specific_meta_subclass_meta_name = Moose::Util::_reconcile_roles_for_metaclass($self->$metaclass_type, $super_meta->$metaclass_type);
         my $new_self = $super_meta->reinitialize(
@@ -709,9 +724,13 @@ sub _process_new_attribute {
 
 sub _process_inherited_attribute {
     my ($self, $attr_name, %options) = @_;
+
     my $inherited_attr = $self->find_attribute_by_name($attr_name);
     (defined $inherited_attr)
-        || $self->throw_error("Could not find an attribute by the name of '$attr_name' to inherit from in ${\$self->name}", data => $attr_name);
+        || throw_exception( NoAttributeFoundInSuperClass => class          => $self,
+                                                            attribute_name => $attr_name,
+                                                            params         => \%options
+                          );
     if ($inherited_attr->isa('Moose::Meta::Attribute')) {
         return $inherited_attr->clone_and_inherit_options(%options);
     }
@@ -772,84 +791,9 @@ sub _fixup_attributes_after_rebless {
 
 our $error_level;
 
-sub throw_error {
-    my ( $self, @args ) = @_;
-    local $error_level = ($error_level || 0) + 1;
-    $self->raise_error($self->create_error(@args));
-}
-
-sub _inline_throw_error {
-    my ( $self, @args ) = @_;
-    $self->_inline_raise_error($self->_inline_create_error(@args));
-}
-
-sub raise_error {
-    my ( $self, @args ) = @_;
-    die @args;
-}
-
-sub _inline_raise_error {
-    my ( $self, $message ) = @_;
-
-    return 'die ' . $message;
-}
-
-sub create_error {
-    my ( $self, @args ) = @_;
-
-    require Carp::Heavy;
-
-    local $error_level = ($error_level || 0 ) + 1;
-
-    if ( @args % 2 == 1 ) {
-        unshift @args, "message";
-    }
-
-    my %args = ( metaclass => $self, last_error => $@, @args );
-
-    $args{depth} += $error_level;
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    Moose::Util::_load_user_class($class);
-
-    $class->new(
-        Carp::caller_info($args{depth}),
-        %args
-    );
-}
-
-sub _inline_create_error {
-    my ( $self, $msg, $args ) = @_;
-    # XXX ignore $args for now, nothing currently uses it anyway
-
-    require Carp::Heavy;
-
-    my %args = (
-        metaclass  => $self,
-        last_error => $@,
-        message    => $msg,
-    );
-
-    my $class = ref $self ? $self->error_class : "Moose::Error::Default";
-
-    Moose::Util::_load_user_class($class);
-
-    # don't check inheritance here - the intention is that the class needs
-    # to provide a non-inherited inlining method, because falling back to
-    # the default inlining method is most likely going to be wrong
-    # yes, this is a huge hack, but so is the entire error system, so.
-    return
-          '$meta->create_error('
-        . $msg
-        . ( defined $args ? ', ' . $args : q{} ) . ');'
-        unless $class->meta->has_method('_inline_new');
-
-    $class->_inline_new(
-        # XXX ignore this for now too
-        # Carp::caller_info($args{depth}),
-        %args
-    );
+sub _inline_throw_exception {
+    my ( $self, $throw_args ) = @_;
+    return 'Moose::Util::throw_exception('.$throw_args.')';
 }
 
 1;
@@ -998,10 +942,6 @@ read-write, so you can use them to change the class name.
 The name of the class used to throw errors. This defaults to
 L<Moose::Error::Default>, which generates an error with a stacktrace
 just like C<Carp::confess>.
-
-=item B<< $metaclass->throw_error($message, %extra) >>
-
-Throws the error created by C<create_error> using C<raise_error>
 
 =back
 

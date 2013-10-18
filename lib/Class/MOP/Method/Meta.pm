@@ -48,7 +48,10 @@ sub wrap {
 
     unshift @args, 'body' if @args % 2 == 1;
     my %params = @args;
-    confess "Overriding the body of meta methods is not allowed"
+    require Moose::Util;
+    Moose::Util::throw_exception( CannotOverrideBodyOfMetaMethods => params => \%params,
+                                                                     class  => $class
+                                )
         if $params{body};
 
     my $metaclass_class = $params{associated_metaclass}->meta;

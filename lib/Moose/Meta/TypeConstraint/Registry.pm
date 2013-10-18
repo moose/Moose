@@ -9,6 +9,8 @@ use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Object';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('parent_registry' => (
     reader    => 'get_parent_registry',
     writer    => 'set_parent_registry',
@@ -43,8 +45,9 @@ sub add_type_constraint {
     my ($self, $type) = @_;
 
     unless ( $type && blessed $type && $type->isa('Moose::Meta::TypeConstraint') ) {
-        require Moose;
-        Moose->throw_error("No type supplied / type is not a valid type constraint");
+        throw_exception( InvalidTypeConstraint => registry_object => $self,
+                                                  type            => $type
+                       );
     }
 
     $self->type_constraints->{$type->name} = $type;

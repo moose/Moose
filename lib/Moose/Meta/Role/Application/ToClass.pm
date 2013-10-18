@@ -10,6 +10,8 @@ use Scalar::Util 'weaken', 'blessed';
 
 use parent 'Moose::Meta::Role::Application';
 
+use Moose::Util 'throw_exception';
+
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
     Class::MOP::_definition_context(),
@@ -36,11 +38,16 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role, $class) = @_;
     if ($class->excludes_role($role->name)) {
-        $class->throw_error("Conflict detected: " . $class->name . " excludes role '" . $role->name . "'");
+        throw_exception( ConflictDetectedInCheckRoleExclusionsInToClass => class => $class,
+                                                                           role  => $role
+                       );
     }
     foreach my $excluded_role_name ($role->get_excluded_roles_list) {
         if ($class->does_role($excluded_role_name)) {
-            $class->throw_error("The class " . $class->name . " does the excluded role '$excluded_role_name'");
+            throw_exception( ClassDoesTheExcludedRole => role          => $role,
+                                                         excluded_role => Class::MOP::class_of($excluded_role_name),
+                                                         class         => $class
+                           );
         }
     }
 }
@@ -81,51 +88,25 @@ sub check_required_methods {
 
         my @same_role_conflicts = grep { $_->roles_as_english_list eq $roles } @conflicts;
 
-        if (@same_role_conflicts == 1) {
-            $error
-                .= "Due to a method name conflict in roles "
-                .  $roles
-                . ", the method '"
-                . $conflict->name
-                . "' must be implemented or excluded by '"
-                . $class->name
-                . q{'};
-        }
-        else {
-            my $methods
-                = Moose::Util::english_list( map { q{'} . $_->name . q{'} } @same_role_conflicts );
-
-            $error
-                .= "Due to method name conflicts in roles "
-                .  $roles
-                . ", the methods "
-                . $methods
-                . " must be implemented or excluded by '"
-                . $class->name
-                . q{'};
-        }
+        throw_exception( MethodNameConflictInRoles => conflict => \@same_role_conflicts,
+                                                      class    => $class
+                       );
     }
     elsif (@missing) {
-        my $noun = @missing == 1 ? 'method' : 'methods';
-
-        my $list
-            = Moose::Util::english_list( map { q{'} . $_ . q{'} } @missing );
-
-        $error
-            .= q{'}
-            . $role->name
-            . "' requires the $noun $list "
-            . "to be implemented by '"
-            . $class->name . q{'};
-
         if (my $meth = firstval { $class->name->can($_) } @missing) {
-            $error .= ". If you imported functions intending to use them as "
-                    . "methods, you need to explicitly mark them as such, via "
-                    . $class->name . "->meta->add_method($meth => \\\&$meth)";
+            throw_exception( RequiredMethodsImportedByClass => class           => $class,
+                                                               role            => $role,
+                                                               missing_methods => \@missing,
+                                                               imported_method => $meth
+                           );
+        }
+        else {
+            throw_exception( RequiredMethodsNotImplementedByClass => class           => $class,
+                                                                     role            => $role,
+                                                                     missing_methods => \@missing,
+                           );
         }
     }
-
-    $class->throw_error($error);
 }
 
 sub check_required_attributes {
@@ -177,9 +158,11 @@ sub apply_methods {
         my $class_method = $class->get_method($aliased_method_name);
 
         if ( $class_method && $class_method->body != $method->body ) {
-            $class->throw_error(
-                "Cannot create a method alias if a local method of the same name exists"
-            );
+            throw_exception( CannotCreateMethodAliasLocalMethodIsPresentInClass => aliased_method_name => $aliased_method_name,
+                                                                                   method              => $method,
+                                                                                   role                => $role,
+                                                                                   class               => $class
+                           );
         }
 
         $class->add_method(

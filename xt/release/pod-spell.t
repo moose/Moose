@@ -139,6 +139,8 @@ mixins
 oose
 ro
 rw
+AttributeIsRequired
+ValidationFailedForTypeConstraint
 
 ## computerese
 API
@@ -334,3 +336,9 @@ unintrusive
 ## misspelt on purpose
 emali
 uniq
+
+#docgenerator
+fixLineLength
+getExceptionsToMessages
+placeCommasAndAnd
+shortenToEighty
