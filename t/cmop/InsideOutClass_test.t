@@ -10,7 +10,7 @@ use lib catdir($FindBin::Bin, 'lib');
 
 use Scalar::Util 'reftype';
 
-use InsideOutClass;
+require InsideOutClass;
 
 {
     package Foo;

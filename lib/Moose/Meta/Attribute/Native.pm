@@ -9,12 +9,11 @@ for my $trait_name (@trait_names) {
     my $meta = Class::MOP::Class->initialize(
         "Moose::Meta::Attribute::Custom::Trait::$trait_name"
     );
+
     if ($meta->find_method_by_name('register_implementation')) {
         my $class = $meta->name->register_implementation;
-        Moose->throw_error(
-            "An implementation for $trait_name already exists " .
+        die "An implementation for $trait_name already exists " .
             "(found '$class' when trying to register '$trait_class')"
-        );
     }
     $meta->add_method(register_implementation => sub {
         # resolve_metatrait_alias will load classes anyway, but throws away

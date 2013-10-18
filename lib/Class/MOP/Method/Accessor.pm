@@ -10,21 +10,31 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Method::Generated';
 
+use Moose::Util 'throw_exception';
+
 sub new {
     my $class   = shift;
     my %options = @_;
 
     (exists $options{attribute})
-        || confess "You must supply an attribute to construct with";
+        || throw_exception( MustSupplyAnAttributeToConstructWith => params => \%options,
+                                                                    class  => $class,
+                          );
 
     (exists $options{accessor_type})
-        || confess "You must supply an accessor_type to construct with";
+        || throw_exception( MustSupplyAnAccessorTypeToConstructWith => params => \%options,
+                                                                       class  => $class,
+                          );
 
     (blessed($options{attribute}) && $options{attribute}->isa('Class::MOP::Attribute'))
-        || confess "You must supply an attribute which is a 'Class::MOP::Attribute' instance";
+        || throw_exception( MustSupplyAClassMOPAttributeInstance => params => \%options,
+                                                                    class  => $class
+                          );
 
     ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     my $self = $class->_new(\%options);
 
@@ -113,16 +123,23 @@ sub _generate_accessor_method_inline {
         ]);
     }
     catch {
-        confess "Could not generate inline accessor because : $_";
+        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+                                                                  error    => $_,
+                                                                  option   => "accessor"
+                       );
     };
 }
 
 sub _generate_reader_method {
     my $self = shift;
     my $attr = $self->associated_attribute;
+    my $class = $attr->associated_class;
 
     return sub {
-        confess "Cannot assign a value to a read-only accessor"
+        throw_exception( CannotAssignValueToReadOnlyAccessor => class     => $class,
+                                                                value     => $_[1],
+                                                                attribute => $attr
+                       )
             if @_ > 1;
         $attr->get_value($_[0]);
     };
@@ -131,15 +148,16 @@ sub _generate_reader_method {
 sub _generate_reader_method_inline {
     my $self = shift;
     my $attr = $self->associated_attribute;
+    my $attr_name = $attr->name;
 
     return try {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
-                    # XXX: this is a hack, but our error stuff is terrible
-                    $self->_inline_throw_error(
-                        '"Cannot assign a value to a read-only accessor"',
-                        'data => \@_'
+                    $self->_inline_throw_exception( "CannotAssignValueToReadOnlyAccessor => ".
+                                                    'class_name                          => ref $_[0],'.
+                                                    'value                               => $_[1],'.
+                                                    "attribute_name                      => '".$attr_name."'",
                     ) . ';',
                 '}',
                 $attr->_inline_get_value('$_[0]'),
@@ -147,13 +165,16 @@ sub _generate_reader_method_inline {
         ]);
     }
     catch {
-        confess "Could not generate inline reader because : $_";
+        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+                                                                  error    => $_,
+                                                                  option   => "reader"
+                       );
     };
 }
 
-sub _inline_throw_error {
-    my $self = shift;
-    return 'Carp::confess ' . $_[0];
+sub _inline_throw_exception {
+    my ( $self, $throw_args ) = @_;
+    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
 }
 
 sub _generate_writer_method {
@@ -177,7 +198,10 @@ sub _generate_writer_method_inline {
         ]);
     }
     catch {
-        confess "Could not generate inline writer because : $_";
+        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+                                                                  error    => $_,
+                                                                  option   => "writer"
+                       );
     };
 }
 
@@ -202,7 +226,10 @@ sub _generate_predicate_method_inline {
         ]);
     }
     catch {
-        confess "Could not generate inline predicate because : $_";
+        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+                                                                  error    => $_,
+                                                                  option   => "predicate"
+                       );
     };
 }
 
@@ -227,7 +254,10 @@ sub _generate_clearer_method_inline {
         ]);
     }
     catch {
-        confess "Could not generate inline clearer because : $_";
+        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+                                                                  error    => $_,
+                                                                  option   => "clearer"
+                       );
     };
 }
 

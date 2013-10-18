@@ -6,8 +6,8 @@ use 5.008003;
 
 use Scalar::Util 'blessed';
 use Carp         'carp', 'confess';
-use Class::Load  'is_class_loaded';
 use Module::Runtime 'module_notional_filename';
+use Class::Load  'is_class_loaded';
 
 use Moose::Deprecated;
 use Moose::Exporter;
@@ -36,21 +36,17 @@ use Moose::Meta::Role::Application::ToRole;
 use Moose::Meta::Role::Application::ToInstance;
 
 use Moose::Util::TypeConstraints;
-use Moose::Util ();
+use Moose::Util 'throw_exception';
 
 use Moose::Meta::Attribute::Native;
-
-sub throw_error {
-    # FIXME This
-    shift;
-    goto \&confess
-}
 
 sub extends {
     my $meta = shift;
 
-    Moose->throw_error("Must derive at least one class") unless @_;
-
+    unless ( @_ )
+    {
+        throw_exception( ExtendsMissingArgs => class => $meta );
+    }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out
     # of sync when the classes are being built
@@ -142,15 +138,16 @@ sub init_meta {
     my %args = @_;
 
     my $class = $args{for_class}
-        or Moose->throw_error("Cannot call init_meta without specifying a for_class");
+        or throw_exception( InitMetaRequiresClass => params => \%args );
+
     my $base_class = $args{base_class} || 'Moose::Object';
     my $metaclass  = $args{metaclass}  || 'Moose::Meta::Class';
     my $meta_name  = exists $args{meta_name} ? $args{meta_name} : 'meta';
 
-    Moose->throw_error("The Metaclass $metaclass must be loaded. (Perhaps you forgot to 'use $metaclass'?)")
+    throw_exception( MetaclassNotLoaded => class_name => $metaclass )
         unless is_class_loaded($metaclass);
 
-    Moose->throw_error("The Metaclass $metaclass must be a subclass of Moose::Meta::Class.")
+    throw_exception( MetaclassMustBeASubclassOfMooseMetaClass => class_name => $metaclass )
         unless $metaclass->isa('Moose::Meta::Class');
 
     # make a subtype for each Moose class
@@ -161,11 +158,16 @@ sub init_meta {
 
     if ( $meta = Class::MOP::get_metaclass_by_name($class) ) {
         unless ( $meta->isa("Moose::Meta::Class") ) {
-            my $error_message = "$class already has a metaclass, but it does not inherit $metaclass ($meta).";
             if ( $meta->isa('Moose::Meta::Role') ) {
-                Moose->throw_error($error_message . ' You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.');
+                throw_exception( MetaclassIsARoleNotASubclassOfGivenMetaclass => role_name => $class,
+                                                                                 metaclass => $metaclass,
+                                                                                 role      => $meta
+                               );
             } else {
-                Moose->throw_error($error_message);
+                throw_exception( MetaclassIsNotASubclassOfGivenMetaclass => class_name => $class,
+                                                                            metaclass  => $metaclass,
+                                                                            class      => $meta
+                               );
             }
         }
     } else {

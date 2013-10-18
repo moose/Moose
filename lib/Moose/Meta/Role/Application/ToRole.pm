@@ -8,6 +8,8 @@ use Scalar::Util    'blessed';
 
 use parent 'Moose::Meta::Role::Application';
 
+use Moose::Util 'throw_exception';
+
 sub apply {
     my ($self, $role1, $role2) = @_;
     $self->SUPER::apply($role1, $role2);
@@ -17,13 +19,16 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role1, $role2) = @_;
     if ( $role2->excludes_role($role1->name) ) {
-        require Moose;
-        Moose->throw_error("Conflict detected: " . $role2->name . " excludes role '" . $role1->name . "'");
+        throw_exception( ConflictDetectedInCheckRoleExclusions => role          => $role2,
+                                                                  excluded_role => $role1
+                       );
     }
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
-            require Moose;
-            Moose->throw_error("The role " . $role2->name . " does the excluded role '$excluded_role_name'");
+            throw_exception( RoleDoesTheExcludedRole => role          => $role2,
+                                                        excluded_role => Class::MOP::class_of($excluded_role_name),
+                                                        second_role   => $role1
+                           );
         }
         $role2->add_excluded_roles($excluded_role_name);
     }
@@ -55,13 +60,10 @@ sub apply_attributes {
 
             my $role2_name = $role2->name;
 
-            require Moose;
-            Moose->throw_error( "Role '"
-                    . $role1->name
-                    . "' has encountered an attribute conflict"
-                    . " while being composed into '$role2_name'."
-                    . " This is a fatal error and cannot be disambiguated."
-                    . " The conflicting attribute is named '$attribute_name'." );
+            throw_exception( AttributeConflictInRoles => role           => $role1,
+                                                         second_role    => $role2,
+                                                         attribute_name => $attribute_name
+                           );
         }
         else {
             $role2->add_attribute(
@@ -106,10 +108,11 @@ sub apply_methods {
         if (   $role2_method
             && $role2_method->body != $method->body ) {
 
-            require Moose;
-            Moose->throw_error(
-                "Cannot create a method alias if a local method of the same name exists"
-            );
+            throw_exception( CannotCreateMethodAliasLocalMethodIsPresent => aliased_method_name => $aliased_method_name,
+                                                                            method              => $method,
+                                                                            role                => $role2,
+                                                                            role_being_applied  => $role1
+                           );
         }
 
         $role2->add_method(
@@ -133,10 +136,10 @@ sub apply_override_method_modifiers {
             # we have a conflict here, because you cannot
             # combine an overridden method with a locally
             # defined one
-            require Moose;
-            Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
-                    "during composition (A local method of the same name as been found). This " .
-                    "is fatal error.");
+            throw_exception( OverrideConflictInComposition => role               => $role2,
+                                                              role_being_applied => $role1,
+                                                              method_name        => $method_name
+                           );
         }
         else {
             # if we are a role, we need to make sure
@@ -145,10 +148,11 @@ sub apply_override_method_modifiers {
             if ($role2->has_override_method_modifier($method_name) &&
                 $role1->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
 
-                require Moose;
-                Moose->throw_error("Role '" . $role1->name . "' has encountered an 'override' method conflict " .
-                        "during composition (Two 'override' methods of the same name encountered). " .
-                        "This is fatal error.");
+                throw_exception( OverrideConflictInComposition => role                => $role2,
+                                                                  role_being_applied  => $role1,
+                                                                  method_name         => $method_name,
+                                                                  two_overrides_found => 1
+                               );
             }
             else {
                 # if there is no conflict,

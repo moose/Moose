@@ -4,19 +4,20 @@ package Class::MOP::Method::Generated;
 use strict;
 use warnings;
 
-use Carp 'confess';
 use Eval::Closure;
 
 use parent 'Class::MOP::Method';
 
+use Moose::Util 'throw_exception';
+
 ## accessors
 
 sub new {
-    confess __PACKAGE__ . " is an abstract base class, you must provide a constructor.";
+    throw_exception( CannotCallAnAbstractBaseMethod => package_name => __PACKAGE__ );
 }
 
 sub _initialize_body {
-    confess "No body to initialize, " . __PACKAGE__ . " is an abstract base class";
+    throw_exception( NoBodyToInitializeInAnAbstractBaseClass => package_name => __PACKAGE__ );
 }
 
 sub _generate_description {

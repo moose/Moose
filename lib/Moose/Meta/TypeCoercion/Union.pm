@@ -9,13 +9,16 @@ use Scalar::Util 'blessed';
 
 use parent 'Moose::Meta::TypeCoercion';
 
+use Moose::Util 'throw_exception';
+
 sub compile_type_coercion {
     my $self            = shift;
     my $type_constraint = $self->type_constraint;
 
     (blessed $type_constraint && $type_constraint->isa('Moose::Meta::TypeConstraint::Union'))
-     || Moose->throw_error("You can only create a Moose::Meta::TypeCoercion::Union for a " .
-                "Moose::Meta::TypeConstraint::Union, not a $type_constraint");
+     || throw_exception( NeedsTypeConstraintUnionForTypeCoercionUnion => type_coercion_union_object => $self,
+                                                                         type_name                  => $type_constraint
+                       );
 
     $self->_compiled_type_coercion(
         sub {
@@ -35,8 +38,8 @@ sub compile_type_coercion {
 sub has_coercion_for_type { 0 }
 
 sub add_type_coercions {
-    require Moose;
-    Moose->throw_error("Cannot add additional type coercions to Union types");
+    my $self = shift;
+    throw_exception( CannotAddAdditionalTypeCoercionsToUnion => type_coercion_union_object => $self );
 }
 
 1;

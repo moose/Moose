@@ -10,16 +10,21 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Method::Inlined';
 
+use Moose::Util 'throw_exception';
 sub new {
     my $class   = shift;
     my %options = @_;
 
     (blessed $options{metaclass} && $options{metaclass}->isa('Class::MOP::Class'))
-        || confess "You must pass a metaclass instance if you want to inline"
+        || throw_exception( MustSupplyAMetaclass => params => \%options,
+                                                    class  => $class
+                          )
             if $options{is_inline};
 
     ($options{package_name} && $options{name})
-        || confess "You must supply the package_name and name parameters $Class::MOP::Method::UPGRADE_ERROR_TEXT";
+        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+                                                            class  => $class
+                          );
 
     my $self = $class->_new(\%options);
 
@@ -105,7 +110,10 @@ sub _generate_constructor_method_inline {
     }
     catch {
         my $source = join("\n", @source);
-        confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
+        throw_exception( CouldNotEvalConstructor => constructor_method => $self,
+                                                    source             => $source,
+                                                    error              => $_
+                       );
     };
 
     return $code;

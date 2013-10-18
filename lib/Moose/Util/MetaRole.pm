@@ -4,11 +4,12 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-use Carp qw( croak );
 use List::MoreUtils qw( all );
 use List::Util qw( first );
 use Moose::Deprecated;
 use Scalar::Util qw( blessed );
+
+use Moose::Util 'throw_exception';
 
 sub apply_metaroles {
     my %args = @_;
@@ -39,28 +40,7 @@ sub _metathing_for {
 
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
 
-    my $error_start
-        = 'When using Moose::Util::MetaRole, you must pass a Moose class name,'
-        . ' role name, metaclass object, or metarole object.';
-
-    if ( defined $found && blessed $found ) {
-        croak $error_start
-            . " You passed $passed, and we resolved this to a "
-            . ( blessed $found )
-            . ' object.';
-    }
-
-    if ( defined $passed && !defined $found ) {
-        croak $error_start
-            . " You passed $passed, and this did not resolve to a metaclass or metarole."
-            . ' Maybe you need to call Moose->init_meta to initialize the metaclass first?';
-    }
-
-    if ( !defined $passed ) {
-        croak $error_start
-            . " You passed an undef."
-            . ' Maybe you need to call Moose->init_meta to initialize the metaclass first?';
-    }
+    throw_exception( InvalidArgPassedToMooseUtilMetaRole => argument => $passed );
 }
 
 sub _make_new_metaclass {
@@ -99,7 +79,9 @@ sub apply_base_class_roles {
     my %args = @_;
 
     my $meta = _metathing_for( $args{for} || $args{for_class} );
-    croak 'You can only apply base class roles to a Moose class, not a role.'
+    throw_exception( CannotApplyBaseClassRolesToRole => params => \%args,
+                                                        role   => $meta
+                   )
         if $meta->isa('Moose::Meta::Role');
 
     my $new_base = _make_new_class(
