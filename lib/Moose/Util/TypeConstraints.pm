@@ -429,7 +429,7 @@ sub enum {
             || throw_exception( EnumCalledWithAnArrayRefAndAdditionalArgs => array => $type_name,
                                                                              args  => \@values
                               );
-        @values    = @$type_name;
+        @values    = ($type_name);
         $type_name = undef;
     }
     if ( @values == 1 && ref $values[0] eq 'ARRAY' ) {

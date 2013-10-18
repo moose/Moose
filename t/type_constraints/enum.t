@@ -41,7 +41,7 @@ ok(!Metacharacter($_), "'$_' is not a metacharacter")
 
 # check anon enums
 
-my $anon_enum = enum [\@valid_languages];
+my $anon_enum = enum \@valid_languages;
 isa_ok($anon_enum, 'Moose::Meta::TypeConstraint');
 
 is($anon_enum->name, '__ANON__', '... got the right name');
@@ -50,9 +50,9 @@ is($anon_enum->parent->name, 'Str', '... got the right parent name');
 ok($anon_enum->check($_), "'$_' is a language") for @valid_languages;
 
 
-ok( !$anon_enum->equals( enum [["foo", "bar"]] ), "doesn't equal a diff enum" );
+ok( !$anon_enum->equals( enum [qw(foo bar)] ), "doesn't equal a diff enum" );
 ok( $anon_enum->equals( $anon_enum ), "equals itself" );
-ok( $anon_enum->equals( enum [\@valid_languages] ), "equals duplicate" );
+ok( $anon_enum->equals( enum \@valid_languages ), "equals duplicate" );
 
 ok( !$anon_enum->is_subtype_of('Object'), 'enum not a subtype of Object');
 ok( !$anon_enum->is_a_type_of('Object'), 'enum not type of Object');

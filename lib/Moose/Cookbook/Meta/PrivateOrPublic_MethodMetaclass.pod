@@ -18,7 +18,7 @@ __END__
 
   has '_policy' => (
       is       => 'ro',
-      isa      => enum( [ ["public", "private" ] ]),
+      isa      => enum( [ qw( public private ) ] ),
       default  => 'public',
       init_arg => 'policy',
   );
