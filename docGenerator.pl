@@ -15,10 +15,10 @@ my $number = 0;
 
 print "package Moose::Manual::Exceptions::Manifest;\n";
 
+my $exceptionsToMsgHashRef = getExceptionsToMessages();
+
 while( my $file = readdir($dir) )
 {
-    my $exceptionsToMsgHashRef = getExceptionsToMessages();
-
     my %exceptions = %$exceptionsToMsgHashRef;
 
     my ($exception, $description, $attributesText, $superclasses, $consumedRoles, $exceptionMessages);
@@ -50,11 +50,11 @@ while( my $file = readdir($dir) )
         $superclasses = placeCommasAndAnd( @superClasses );
         $consumedRoles = placeCommasAndAnd( @rolesNames );
 
-        foreach( @attributes ) 
+        foreach( @attributes )
         {
             my $attribute = $_;
             my $name = $attribute->name;
-            my $traits; # = $attribute->has_applied_traits;
+            my $traits;
 
             if( $attribute->has_applied_traits ) {
                 my @traitsArray = @{$attribute->applied_traits};
@@ -132,11 +132,7 @@ while( my $file = readdir($dir) )
 
 This class is a subclass of $superclasses".
 ( defined $consumedRoles ? " and $roleVerb $consumedRoles.": '.' ).
-"
-
-=head2 ATTRIBUTES
-
-".
+"\n\n=over 4\n\n=back\n\n=head2 ATTRIBUTES\n\n=over 4\n\n".
 ( defined $attributesText ? "$attributesText" : '' );
 
     $text = fixLineLength( $text );
