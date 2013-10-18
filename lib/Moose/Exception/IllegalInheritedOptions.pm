@@ -8,7 +8,7 @@ has 'illegal_options' => (
     is       => 'ro',
     traits   => ['Array'],
     handles  => {
-	_join_options => 'join',
+        _join_options => 'join',
     },
     required => 1,
 );

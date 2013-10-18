@@ -39,7 +39,7 @@ sub check_role_exclusions {
     my ($self, $role, $class) = @_;
     if ($class->excludes_role($role->name)) {
         throw_exception( ConflictDetectedInCheckRoleExclusionsInToClass => class => $class,
-			                                                   role  => $role
+                                                                           role  => $role
                        );
     }
     foreach my $excluded_role_name ($role->get_excluded_roles_list) {

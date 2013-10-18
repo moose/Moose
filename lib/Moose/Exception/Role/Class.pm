@@ -40,10 +40,10 @@ after "BUILD" => sub {
 
     if( !$self->_has_class_or_class_name() )
     {
-	throw_exception("NeitherClassNorClassNameIsGiven");
+        throw_exception("NeitherClassNorClassNameIsGiven");
     }
     elsif( $self->is_class_set && $self->is_class_name_set &&
-	( $self->class->name ne $self->class_name ) )
+           ( $self->class->name ne $self->class_name ) )
     {
         throw_exception( ClassNamesDoNotMatch => class_name => $self->class_name,
                                                  class      => $self->class,

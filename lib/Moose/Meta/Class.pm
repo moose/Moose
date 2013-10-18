@@ -341,7 +341,7 @@ sub _inline_BUILDARGS {
                 'if (scalar @_ == 1) {',
                     'if (!defined($_[0]) || ref($_[0]) ne \'HASH\') {',
                         $self->_inline_throw_exception(
-			    '"SingleParamsToNewMustBeHashRef"'
+                            '"SingleParamsToNewMustBeHashRef"'
                         ) . ';',
                     '}',
                     '$params = { %{ $_[0] } };',
@@ -610,7 +610,7 @@ sub add_augment_method_modifier {
     throw_exception( CannotAugmentIfLocalMethodPresent => class  => $self,
                                                           method => $existing_method,
                    )
-	if( $existing_method );
+        if( $existing_method );
 
     $self->add_method($name => Moose::Meta::Method::Augmented->new(
         method  => $method,

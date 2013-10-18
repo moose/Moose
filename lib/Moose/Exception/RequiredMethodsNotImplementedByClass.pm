@@ -9,8 +9,8 @@ has 'missing_methods' => (
     is         => 'ro',
     isa        => 'ArrayRef[Moose::Meta::Role::Method::Required]',
     handles    => { method_count    => 'count',
-		    get_method_at   => 'get',
-		    get_all_methods => 'elements',
+                    get_method_at   => 'get',
+                    get_all_methods => 'elements',
     },
     required   => 1
 );
