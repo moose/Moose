@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Carp         'confess';
-use Scalar::Util 'blessed', 'weaken';
+use Scalar::Util 'blessed', 'weaken', 'refaddr', 'readonly';
 use Try::Tiny;
 
 use parent 'Class::MOP::Method::Inlined';
@@ -100,15 +100,31 @@ sub _generate_constructor_method_inline {
 
     warn join("\n", @source) if $self->options->{debug};
 
-    my $code = try {
-        $self->_compile_code(\@source);
-    }
-    catch {
-        my $source = join("\n", @source);
-        confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
-    };
-
-    return $code;
+    my $new_coderef;
+    my $self_ref = \$self;
+    weaken($self);
+    my $orig_addr; $orig_addr = refaddr(my $sub_gen = bless sub {
+        my $self = ${$self_ref};
+        if (!defined($new_coderef)) {
+            $new_coderef = try {
+                $self->_compile_code(\@source);
+            }
+            catch {
+                my $source = join("\n", @source);
+                confess "Could not eval the constructor :\n\n$source\n\nbecause :\n\n$_";
+            };
+            # update the body member unless something else has stomped on it
+            my $body = $self->{'body'};
+            if ($orig_addr != refaddr($body)) {
+                # we seem to be outdated... paranoid future-proofing, I think..
+                goto $new_coderef = $body;
+            }
+            $self->{'body'} = $new_coderef;
+        };
+        return unless defined($_[0]);
+        goto $new_coderef;
+    },'RuNNeR');
+    return $sub_gen;
 }
 
 1;
