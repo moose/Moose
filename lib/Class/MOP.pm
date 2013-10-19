@@ -945,6 +945,9 @@ This will return the metaclass of the given instance or class name.  If the
 class lacks a metaclass, no metaclass will be initialized, and C<undef> will be
 returned.
 
+You should almost certainly be using
+L<C<Moose::Util::find_meta>|Moose::Util/find_meta> instead.
+
 =back
 
 =head2 Metaclass cache functions
