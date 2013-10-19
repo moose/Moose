@@ -730,7 +730,7 @@ for, noteworthy changes.
     1.9904)
 
 
-1.24 Tue, Feb 24, 2011
+1.24 Tue, Feb 22, 2011
 
   [BUG FIXES]
 
@@ -1023,7 +1023,7 @@ for, noteworthy changes.
 
   * Optimizations that should help speed up compilation time (Dave Rolsky).
 
-1.09 Tue, Jul 25, 2010
+1.09 Sun, Jul 25, 2010
 
   [API CHANGES]
 
@@ -1177,7 +1177,7 @@ for, noteworthy changes.
 
   * Record the Sartak/doy debt properly in Changes (perigrin)
 
-1.00 Tue, Mar 25, 2010
+1.00 Thu, Mar 25, 2010
 
   [BUG FIXES]
 
@@ -1908,7 +1908,7 @@ for, noteworthy changes.
       - Moose::Meta::Role
         - alias_method is deprecated. Use add_method
 
-0.73 Fri, March 29, 2009
+0.73 Fri, March 27, 2009
     * No changes from 0.72_01.
 
 0.72_01 Thu, March 26, 2009
@@ -2743,11 +2743,11 @@ for, noteworthy changes.
         (not yet fixed)
       - Some null_constraint optimizations
 
-0.50 Thurs. Jun 11, 2008
+0.50 Thu. Jun 12, 2008
     - Fixed a version number issue by bumping all modules
       to 0.50.
 
-0.49 Thurs. Jun 11, 2008
+0.49 Thu. Jun 12, 2008
     !! This version now approx. 20-25% !!
     !! faster with new Class::MOP 0.59 !!
 
@@ -3606,7 +3606,7 @@ for, noteworthy changes.
         having it die cause undef is not a HASH.
         - added tests for this
 
-0.21 Thursday, May 2nd, 2007
+0.21 Thursday, May 3, 2007
     * Moose
       - added SUPER_SLOT and INNER_SLOT class hashes to support unimport
       - modified unimport to remove super and inner along with the rest
@@ -3862,7 +3862,7 @@ for, noteworthy changes.
         only require version 1.17 for Win32 and cygwin.
         (thanks Adam Kennedy)
 
-0.12 Sat. Sept. 1, 2006
+0.12 Fri. Sept. 1, 2006
     * Moose::Cookbook
       - Recipe5 (subtypes & coercion) has been written
 
