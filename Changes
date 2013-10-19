@@ -3,7 +3,7 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-2.1100-TRIAL Sat, Sep 07, 2013
+2.1100-TRIAL   2013-09-07
 
   [DEPRECATIONS]
 
@@ -36,7 +36,7 @@ for, noteworthy changes.
     Moose::Manual::Delta for more details. This is also slightly
     backwards-incompatible in some edge cases.
 
-2.1005 Tue, Aug 06, 2013
+2.1005   2013-08-06
 
   [ENHANCEMENTS]
 
@@ -53,20 +53,20 @@ for, noteworthy changes.
   * Some edge cases in tests with base.pm and non-existent module files are
     handled more strictly (see also perl RT#118561) (Graham Knop, PR#25)
 
-2.1004 Fri, Jul 26, 2013
+2.1004   2013-07-26
 
   [BUG FIXES]
 
   * 2.1003 was released with some bad metadata, which caused the prereq test
     to fail.
 
-2.1003 Fri, Jul 26, 2013
+2.1003   2013-07-26
 
   [OTHER]
 
   * Releasing 2.0901 as stable.
 
-2.0901-TRIAL Fri, Jun 21, 2013
+2.0901-TRIAL   2013-06-21
 
   [ENHANCEMENTS]
 
@@ -80,7 +80,7 @@ for, noteworthy changes.
     support is still experimental (as is Specio), so use it with care. (Dave
     Rolsky)
 
-2.0900-TRIAL Sun, May 26, 2013
+2.0900-TRIAL   2013-05-26
 
   [API CHANGES]
 
@@ -88,7 +88,7 @@ for, noteworthy changes.
     and other questionable strings. The MooseX::Types::LaxNum distro
     implements the old behavior. RT#70539 (Upasana Shukla)
 
-2.0802 Tue, May 07, 2013
+2.0802   2013-05-07
 
   [ENHANCEMENTS]
 
@@ -96,14 +96,14 @@ for, noteworthy changes.
   * Moose::Manual::Contributing updated to reflect the change of primary
     repository from git.moose.perl.org to github.com
 
-2.0801 Thu, Mar 28, 2013
+2.0801   2013-03-28
 
   [BUG FIXES]
 
   * properly apply traits at compile time (error introduced in 2.0800,
     RT#77974). (doy)
 
-2.0800 Wed, Mar 27, 2013
+2.0800   2013-03-27
 
   [ENHANCEMENTS]
 
@@ -123,7 +123,7 @@ for, noteworthy changes.
 
   * Fix application of traits at compile time. (doy) RT#77974.
 
-2.0604 Wed, Sep 19, 2012
+2.0604   2012-09-19
 
   [BUG FIXES]
 
@@ -138,13 +138,13 @@ for, noteworthy changes.
   * Depend on a version of Carp new enough to have caller_info. RT #79367.
     (pshangov)
 
-2.0603 Thu, Jun 28, 2012
+2.0603   2012-06-28
 
   [BUG FIXES]
 
   * Fix test failure in blead. RT #78085.
 
-2.0602 Mon, May 07, 2012
+2.0602   2012-05-07
 
   [BUG FIXES]
 
@@ -154,7 +154,7 @@ for, noteworthy changes.
     nothing more than a compatibility shim at this point, there's no reason to
     not make it as compatible as possible. Reported by Moritz Onken. (doy)
 
-2.0601 Tue, May 01, 2012
+2.0601   2012-05-01
 
   [BUG FIXES]
 
@@ -162,13 +162,13 @@ for, noteworthy changes.
     when one of them is being used to actually initalize the metaclass,
     typically with also => 'Moose'). Reported by Randy Stauner. (doy)
 
-2.0600 Sun, Apr 29, 2012
+2.0600   2012-04-29
 
   [OTHER]
 
   * Releasing 2.0502 as stable.
 
-2.0502-TRIAL Wed, Apr 25, 2012
+2.0502-TRIAL   2012-04-25
 
   [OTHER]
 
@@ -179,13 +179,13 @@ for, noteworthy changes.
 
   * A few test tweaks to avoid spurious failures. (doy)
 
-2.0501-TRIAL Tue, Apr 03, 2012
+2.0501-TRIAL   2012-04-03
 
   [BUG FIXES]
 
   * Avoid syntax errors on pre-5.14. (doy)
 
-2.0500-TRIAL Tue, Apr 03, 2012
+2.0500-TRIAL   2012-04-03
 
   [NEW FEATURES]
 
@@ -225,13 +225,13 @@ for, noteworthy changes.
   * Fix a segfault when adding a method to a class which was defined in a
     package which was deleted. (doy)
 
-2.0403 Tue, Apr 03, 2012
+2.0403   2012-04-03
 
   [OTHER]
 
     * No changes, reupload to fix indexing.
 
-2.0402 Sat, Feb 04, 2012
+2.0402   2012-02-04
 
   [OTHER]
 
@@ -240,20 +240,20 @@ for, noteworthy changes.
   * Fix test failure on blead (test was unnecessarily strict). Reported by
     Nicholas Clark. (doy)
 
-2.0401 Thu, Nov 17, 2011
+2.0401   2011-11-17
 
   [BUG FIXES]
 
   * Attributes with weak_ref now weaken their associated slot when they are
     initialized through a lazy default or builder. Reported by tome. (doy)
 
-2.0400 Tue, Nov 15, 2011
+2.0400   2011-11-15
 
   [OTHER]
 
   * No changes from 2.0302 (other than a few minor documentation tweaks).
 
-2.0302-TRIAL Wed, Nov 02, 2011
+2.0302-TRIAL   2011-11-02
 
   [BUG FIXES]
 
@@ -262,7 +262,7 @@ for, noteworthy changes.
   * Make make_immutable return value consistent and document it to be true.
     (mst)
 
-2.0301-TRIAL Fri, Oct 21, 2011
+2.0301-TRIAL   2011-10-21
 
   [BUG FIXES]
 
@@ -276,7 +276,7 @@ for, noteworthy changes.
   * The enum type will now allow single value enumerations. Previously, two or
     more values were required. (rjbs)
 
-2.0300-TRIAL Fri, Sep 23, 2011
+2.0300-TRIAL   2011-09-23
 
   [DEPRECATIONS]
 
@@ -349,7 +349,7 @@ for, noteworthy changes.
     future. Moose now uses Class::Load to provide this functionality, and you
     should as well. (Dave Rolsky)
 
-2.0205 Tue, Sep 06, 2011
+2.0205   2011-09-06
 
   [NEW FEATURES]
 
@@ -373,7 +373,7 @@ for, noteworthy changes.
   * Allow regexp objects in duck_type constraints (to bring this in line with
     the Object constraint).
 
-2.0204 Thu, Aug 25, 2011
+2.0204   2011-08-25
 
   [BUG FIXES]
 
@@ -385,7 +385,7 @@ for, noteworthy changes.
 
   * Loosen the dependency on ExtUtils::ParseXS.
 
-2.0203 Tue, Aug 23, 2011
+2.0203   2011-08-23
 
   [BUG FIXES]
 
@@ -394,13 +394,13 @@ for, noteworthy changes.
 
   * Fix XS compilation under blead.
 
-2.0202 Tue, Jul 26, 2011
+2.0202   2011-07-26
 
   [BUG FIXES]
 
   * Be more consistent about how type constraint messages are handled.
 
-2.0201 Fri, Jul 22, 2011
+2.0201   2011-07-22
 
   [BUG FIXES]
 
@@ -414,25 +414,25 @@ for, noteworthy changes.
   * Make Dist::CheckConflicts a runtime requirement, so moose-outdated always
     works.
 
-2.0200 Mon, Jul 18, 2011
+2.0200   2011-07-18
 
   [OTHER]
 
   * No changes from 2.0105 (other than a few minor documentation tweaks).
 
-2.0105-TRIAL Mon, Jun 27, 2011
+2.0105-TRIAL   2011-06-27
 
   [ENHANCEMENTS]
 
   * Moose::Util::does_role now respects overridden ->does methods. (doy)
 
-2.0104-TRIAL Mon, Jun 20, 2011
+2.0104-TRIAL   2011-06-20
 
   [OTHER]
 
   * Include changes from 2.0010.
 
-2.0103-TRIAL Mon, Jun 20, 2011
+2.0103-TRIAL   2011-06-20
 
   [DEPRECATIONS]
 
@@ -450,7 +450,7 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0009.
 
-2.0102-TRIAL Sat, Jun 18, 2011
+2.0102-TRIAL   2011-06-18
 
   [ENHANCEMENTS]
 
@@ -463,13 +463,13 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0008.
 
-2.0101-TRIAL Mon, Jun 06, 2011
+2.0101-TRIAL   2011-06-06
 
   [OTHER]
 
   * Various packaging issues.
 
-2.0100-TRIAL Mon, Jun 06, 2011
+2.0100-TRIAL   2011-06-06
 
   [DEPRECATIONS]
 
@@ -489,14 +489,14 @@ for, noteworthy changes.
     Most simple cases should now only close over simple data types and
     coderefs. This should make deparsing simpler.
 
-2.0010 Mon, Jun 20, 2011
+2.0010   2011-06-20
 
   [BUG FIXES]
 
   * Fix regression in 2.0009 and 2.0103 when applying roles during init_meta in
     an exporter that also re-exports Moose or Moose::Role. (t0m, ilmari)
 
-2.0009 Sun, Jun 19, 2011
+2.0009   2011-06-19
 
   [BUG FIXES]
 
@@ -514,7 +514,7 @@ for, noteworthy changes.
   * Better error message if Moose->init_meta is called with a 'metaclass'
     option when that metaclass hasn't been loaded. (jasonmay)
 
-2.0008 Thu, Jun 16, 2011
+2.0008   2011-06-16
 
   [BUG FIXES]
 
@@ -525,26 +525,26 @@ for, noteworthy changes.
 
   * Various generated methods have more useful context information. (doy)
 
-2.0007 Sun, May 15, 2011
+2.0007   2011-05-15
 
   [BUG FIXES]
 
   * Make sure weak attributes remain weak when cloning. (doy, rafl)
 
-2.0006 Mon, May 09, 2011
+2.0006   2011-05-09
 
   [BUG FIXES]
 
   * Revert the List::MoreUtils version bump, as it breaks backwards
     compatibility. The dependency will be bumped with Moose 2.0200.
 
-2.0005 Mon, May 09, 2011
+2.0005   2011-05-09
 
   [BUG FIXES]
 
   * Only sort the alias keys when determining caching.
 
-2.0004 Mon, May 09, 2011
+2.0004   2011-05-09
 
   [BUG FIXES]
 
@@ -553,7 +553,7 @@ for, noteworthy changes.
   * Sort the list of roles and the alias and excludes parameters when
     determining caching, since their order doesn't matter.
 
-2.0003 Mon, May 09, 2011
+2.0003   2011-05-09
 
   [BUG FIXES]
 
@@ -566,7 +566,7 @@ for, noteworthy changes.
     caching (instead of just not weakening) when parameters are given will
     begin warning in Moose 2.0200. (doy, autarch)
 
-2.0002 Thu, Apr 28, 2011
+2.0002   2011-04-28
 
   [ENHANCEMENTS]
 
@@ -585,7 +585,7 @@ for, noteworthy changes.
   * The 'reset' native delegation for Counter attributes will now also respect
     builders (previously, it only respected defaults).
 
-2.0001 Fri, Apr 22, 2011
+2.0001   2011-04-22
 
   [ENHANCEMENTS]
 
@@ -604,7 +604,7 @@ for, noteworthy changes.
   * Depend on Eval::Closure 0.04, which fixes some issues in mod_perl
     environments. (doy, mateu)
 
-2.0000 Mon, Apr 11, 2011
+2.0000   2011-04-11
 
   [API CHANGES]
 
@@ -618,14 +618,14 @@ for, noteworthy changes.
   * Moose::Manual::Support now explicitly states when major releases are
     allowed to happen (January, April, July, or October).
 
-1.9906-TRIAL Mon, Apr 04, 2011
+1.9906-TRIAL   2011-04-04
 
   [OTHER]
 
   * Update conflicts list.
   * Minor pod updates.
 
-1.9905-TRIAL Mon, Mar 28, 2011
+1.9905-TRIAL   2011-03-28
 
   [NEW FEATURES]
 
@@ -648,7 +648,7 @@ for, noteworthy changes.
     with the applied_attribute metaclass of the role which originally defined
     them. (Dave Rolsky)
 
-1.9904-TRIAL Fri, Mar 04, 2011
+1.9904-TRIAL   2011-03-04
 
   [BUG FIXES]
 
@@ -658,7 +658,7 @@ for, noteworthy changes.
   * The Int type constraint now rejects integers with trailing newlines.
     (Matthew Horsfall)
 
-1.9903-TRIAL Mon, Feb 28, 2011
+1.9903-TRIAL   2011-02-28
 
   [BUG FIXES]
 
@@ -674,7 +674,7 @@ for, noteworthy changes.
     preserve roles and role applications. This led to weird bugs. Many MooseX
     modules end up reinitializing your class or role. (Dave Rolsky)
 
-1.9902-TRIAL Mon, Jan 03, 2011
+1.9902-TRIAL   2011-01-03
 
   [OTHER]
 
@@ -682,7 +682,7 @@ for, noteworthy changes.
 
   * Add a bit more Dist::Zilla functionality.
 
-1.9901-TRIAL Mon, Jan 03, 2011
+1.9901-TRIAL   2011-01-03
 
   [OTHER]
 
@@ -690,7 +690,7 @@ for, noteworthy changes.
 
   * Fix a few issues with the conflict checking stuff.
 
-1.9900-TRIAL Sat, Jan 01, 2011
+1.9900-TRIAL   2011-01-01
 
   [OTHER]
 
@@ -721,7 +721,7 @@ for, noteworthy changes.
     speeds up the compilation time for Moose itself. (doy)
 
 
-1.25 Fri, Apr 1, 2011
+1.25   2011-04-01
 
   [BUG FIXES]
 
@@ -730,7 +730,7 @@ for, noteworthy changes.
     1.9904)
 
 
-1.24 Tue, Feb 22, 2011
+1.24   2011-02-22
 
   [BUG FIXES]
 
@@ -740,14 +740,14 @@ for, noteworthy changes.
     There are also now tests for this. (perigrin) (backported from 1.9903)
 
 
-1.23 Sun, Feb 13, 2011
+1.23   2011-02-13
 
   [PACKAGING FIX]
 
   * The 1.22 release had a bad MANIFEST. This has been fixed.
 
 
-1.22 Sun, Feb 13, 2011
+1.22   2011-02-13
 
   [BUG FIXES]
 
@@ -756,7 +756,7 @@ for, noteworthy changes.
     modules end up reinitializing your class or role. (Dave Rolsky) (backported
     from 1.9903)
 
-1.21 Wed, Nov 24, 2010
+1.21   2010-11-24
 
   [ENHANCEMENTS]
 
@@ -775,7 +775,7 @@ for, noteworthy changes.
   * The lazy_build feature was accidentally removed from all the docs. Now
     it's listed in Moose.pm again. (Chris Prather)
 
-1.20 Fri, Nov 19, 2010
+1.20   2010-11-19
 
   [BUG FIXES]
 
@@ -785,7 +785,7 @@ for, noteworthy changes.
     based on the failed type constraint. Reported by t0m. RT #63113. (Dave
     Rolsky)
 
-1.19 Tue, Nov 2, 2010
+1.19   2010-11-02
 
   [BUG FIXES]
 
@@ -793,7 +793,7 @@ for, noteworthy changes.
     instead of Test::Fatal. (Karen Etheridge)
 
 
-1.18 Sun, Oct 31, 2010
+1.18   2010-10-31
 
   [ENHANCEMENTS]
 
@@ -831,7 +831,7 @@ for, noteworthy changes.
   * The Moose test suite now uses Test::Fatal instead of
     Test::Exception. (rjbs)
 
-1.17 Tue, Oct 19, 2010
+1.17   2010-10-19
 
   [BUG FIXES]
 
@@ -839,7 +839,7 @@ for, noteworthy changes.
     access is an do {} block, like Kioku. This fixes the use of native
     delegations together with Kioku. (Scott, doy)
 
-1.16 Mon, Oct 18, 2010
+1.16   2010-10-18
 
   [ENHANCEMENTS]
 
@@ -899,7 +899,7 @@ for, noteworthy changes.
     or lazy_build options for the attribute. Reported by Kent Fredric. RT
     #59613. (Dave Rolsky)
 
-1.15 Tue, Oct 5, 2010
+1.15   2010-10-05
 
   [API CHANGES]
 
@@ -945,7 +945,7 @@ for, noteworthy changes.
   * t/040_type_constraints/036_match_type_operator.t failed on 5.13.5+. Fixed
     based on a patch from Andreas Koenig.
 
-1.14 Tue, Sep 21, 2010
+1.14   2010-09-21
 
   [BUG FIXES]
 
@@ -953,7 +953,7 @@ for, noteworthy changes.
     a weird error when defining the same union type twice, but only when using
     MooseX::Types. Reported by Curtis Jewell. RT #61001. (Dave Rolsky)
 
-1.13 Mon, Sep 13, 2010
+1.13   2010-09-13
 
   [API CHANGES]
 
@@ -970,13 +970,13 @@ for, noteworthy changes.
     much faster version that simply looks role names up in a hash. Code which
     uses lots of role-based type constraints should be faster. (Dave Rolsky)
 
-1.12 Sat, Aug 28, 2010
+1.12   2010-08-28
 
   [BUG FIXES]
 
   * Fix the MANIFEST. Fixes RT #60831, reported by Alberto Simões.
 
-1.11 Fri, Aug 27, 2010
+1.11   2010-08-27
 
   [API CHANGES]
 
@@ -1002,7 +1002,7 @@ for, noteworthy changes.
     the value returned by the coercion is the original value that we attempted
     to coerce. (Dave Rolsky).
 
-1.10 Sun, Aug 22, 2010
+1.10   2010-08-22
 
   [API CHANGES]
 
@@ -1023,7 +1023,7 @@ for, noteworthy changes.
 
   * Optimizations that should help speed up compilation time (Dave Rolsky).
 
-1.09 Sun, Jul 25, 2010
+1.09   2010-07-25
 
   [API CHANGES]
 
@@ -1075,21 +1075,21 @@ for, noteworthy changes.
   * Bump our required perl version to 5.8.3, since earlier versions fail tests
     and aren't easily installable/testable.
 
-1.08 Tue, Jun 15, 2010
+1.08   2010-06-15
 
   [ENHANCEMENTS]
 
   * Refactored a small amount of Moose::Meta::Method::Constructor to allow it
     to be overridden more easily (doy).
 
-1.07 Sat, Jun 05, 2010
+1.07   2010-06-05
 
   [BUG FIXES]
 
   * Fixed a minor metaclass compatibility fixing bug dealing with immutable
     classes and non-class metaclass traits (doy, dougdude).
 
-1.06 Tue, Jun 01, 2010
+1.06   2010-06-01
 
   [NEW FEATURES]
 
@@ -1097,7 +1097,7 @@ for, noteworthy changes.
     more uniformly compare type constraints between 'classic' Moose type
     constraints and MooseX::Types based type constraints.
 
-1.05 Thu, May 20, 2010
+1.05   2010-05-20
 
   [API CHANGES]
 
@@ -1133,19 +1133,19 @@ for, noteworthy changes.
   * Metaclass compatibility fixing has been completely rewritten, and should
     be much more robust. (doy)
 
-1.04 Thu, May 20, 2010
+1.04   2010-05-20
 
   * This release was broken and has been deleted from CPAN shortly after its
     upload.
 
-1.03 Thu, May 06, 2010
+1.03   2010-05-06
 
   [NEW FEATURES]
 
   * Allow specifying required versions when setting superclasses or applying
     roles (Florian Ragwitz).
 
-1.02 Sat, May 01, 2010
+1.02   2010-05-01
 
   [BUG FIXES]
 
@@ -1166,7 +1166,7 @@ for, noteworthy changes.
 
   * Pass role arguments along when applying roles to instances. (doy, lsm)
 
-1.01 Fri, Mar 26, 2010
+1.01   2010-03-26
 
   [NEW FEATURES]
 
@@ -1177,7 +1177,7 @@ for, noteworthy changes.
 
   * Record the Sartak/doy debt properly in Changes (perigrin)
 
-1.00 Thu, Mar 25, 2010
+1.00   2010-03-25
 
   [BUG FIXES]
 
@@ -1191,9 +1191,9 @@ for, noteworthy changes.
 
   [OTHER]
 
-  * Paid the $10 debt to doy from 0.80 Sat, Jun 6, 2009 (Sartak)
+  * Paid the $10 debt to doy from 0.80   2009-06-06 (Sartak)
 
-0.99 Mon, Mar 8, 2010
+0.99   2010-03-08
 
   [NEW FEATURES]
 
@@ -1210,7 +1210,7 @@ for, noteworthy changes.
   * Added Moose::Manual::Support that defines the support, compatiblity, and
     release policies for Moose. (Chris Prather)
 
-0.98 Wed, Feb 10, 2010
+0.98   2010-02-10
 
   [BUG FIXES]
 
@@ -1219,7 +1219,7 @@ for, noteworthy changes.
     instances of the same class. (Rafael Kitover)
 
 
-0.97 Tue, Feb 9, 2010
+0.97   2010-02-09
 
   [BUG FIXES]
 
@@ -1228,7 +1228,7 @@ for, noteworthy changes.
     unexpectedly. This could easily happen at a distance by applying a
     metarole to an anonymous class. (Dave Rolsky).
 
-0.96 Sat, Feb 6, 2010
+0.96   2010-02-06
 
   [NEW FEATURES]
 
@@ -1241,7 +1241,7 @@ for, noteworthy changes.
   * ScalarRef now accepts references to other references. (Closes RT#50934)
     (Michael G. Schwern)
 
-0.95 Thu, Feb 4, 2010
+0.95   2010-02-04
 
   [NEW FEATURES]
 
@@ -1259,7 +1259,7 @@ for, noteworthy changes.
     with the same behavior as lists. Types other than arrayref and regexp
     result in an error.  (Dylan Hardison)
 
-0.94 Mon, Jan 18, 2010
+0.94   2010-01-18
 
   [API CHANGES]
 
@@ -1286,7 +1286,7 @@ for, noteworthy changes.
     method names. Reported by Doug Treder. RT #53731. (Dave Rolsky)
 
 
-0.93_03 Tue, Jan 5, 2010
+0.93_03   2010-01-05
 
   [BUG FIXES]
 
@@ -1294,7 +1294,7 @@ for, noteworthy changes.
     C++. Fixes RT #53391. Reported by Taro Nishino. (rafl)
 
 
-0.93_02 Tue, Jan 5, 2010
+0.93_02   2010-01-05
 
  [BUG FIXES]
 
@@ -1302,7 +1302,7 @@ for, noteworthy changes.
     testers. (Dave Rolsky)
 
 
-0.93_01 Mon, Jan 4, 2010
+0.93_01   2010-01-04
 
   [API CHANGES]
 
@@ -1352,7 +1352,7 @@ for, noteworthy changes.
     #51791. (Amir E. Aharoni)
 
 
-0.93 Thu, Nov 19, 2009
+0.93   2009-11-19
     * Moose::Object
       - Calling $object->new() is no longer deprecated, and no longer
         warns. (doy)
@@ -1387,7 +1387,7 @@ for, noteworthy changes.
     * Moose::Meta::Attribute::Native::Trait::Code
       - Fix passing arguments to code execute helpers. (doy)
 
-0.92 Tue, Sep 22, 2009
+0.92   2009-09-22
     * Moose::Util::TypeConstraints
       - added the match_on_type operator (Stevan)
         - added tests and docs for this (Stevan)
@@ -1399,7 +1399,7 @@ for, noteworthy changes.
     * Moose::Meta::Attribute
       - Add tests for set_raw_value and get_raw_value. (nothingmuch)
 
-0.91 Thu, Sep 17, 2009
+0.91   2009-09-17
     * Moose::Object
       - Don't import any functions, in order to avoid polluting our namespace
         with things that can look like methods (blessed, try, etc)
@@ -1411,7 +1411,7 @@ for, noteworthy changes.
         an indirect method call. This broke Search::GIN, which in turn broke
         KiokuDB. (nothingmuch)
 
-0.90 Tue, Sep 15, 2009
+0.90   2009-09-15
     * Moose::Meta::Attribute::Native::Trait::Counter
     * Moose::Meta::Attribute::Native::Trait::String
       - For these two traits, an attribute which did not explicitly provide
@@ -1453,7 +1453,7 @@ for, noteworthy changes.
         we found so many exceptions to this that doing this properly became
         quite problematic.
 
-0.89_02 Thu, Sep 10, 2009
+0.89_02   2009-09-10
     * Moose::Meta::Attribute::Native
       - Fix Hash, which still had 'empty' instead of 'is_empty'. (hdp)
 
@@ -1481,7 +1481,7 @@ for, noteworthy changes.
         aliased name, make sure to also exclue the original name. (Dave
         Rolsky)
 
-0.89_01 Wed Sep 2, 2009
+0.89_01   2009-09-02
     * Moose::Meta::Attribute
       - Added the currying syntax for delegation from AttributeHelpers to the
         existing delegation API. (hdp)
@@ -1511,7 +1511,7 @@ for, noteworthy changes.
       - Moose now warns if you call C<make_immutable> for a class with mutable
         ancestors. (doy)
 
-0.89 Thu Aug 13, 2009
+0.89   2009-08-13
     * Moose::Manual::Attributes
       - Clarify "is", include discussion of "bare". (Sartak)
 
@@ -1550,7 +1550,7 @@ for, noteworthy changes.
       - Rename alias and excludes to -alias and -excludes (but keep the old
         names for now, for backcompat) (doy)
 
-0.88 Fri Jul 24, 2009
+0.88   2009-07-24
     * Moose::Manual::Contributing
       - Re-write the Moose::Manual::Contributing document to reflect
         the new layout and methods of work for the Git repository. All
@@ -1574,12 +1574,12 @@ for, noteworthy changes.
       - No longer uses inline_slot_access in accessors, to support
         non-lvalue-based meta instances. (sorear)
 
-0.87 Tue Jul 7, 2009
+0.87   2009-07-07
     * Moose::Meta::Method::Delegation
       - Once again allow class names as well as objects for
         delegation. This was changed in 0.86.
 
-0.86 Fri Jul 3, 2009
+0.86   2009-07-03
     * Moose::Meta::Class::Immutable::Trait
       - Fixes to work with the latest Class::MOP.
 
@@ -1588,14 +1588,14 @@ for, noteworthy changes.
         attribute's accessor returns something defined but
         unblessed. (hdp)
 
-0.85 Fri, Jun 26, 2009
+0.85   2009-06-26
     * Moose::Meta::Attribute
       - The warning for 'no associated methods' is now split out into
         the _check_associated_methods method, so that extensions can
         safely call 'after install_accessors => ...'. This fixes a
         warning from MooseX::AttributeHelpers. (hdp)
 
-0.84 Fri, Jun 26, 2009
+0.84   2009-06-26
     * Moose::Role
       - has now sets definition_context for attributes defined in
         roles. (doy)
@@ -1631,12 +1631,12 @@ for, noteworthy changes.
       - The get_*_method_modifiers methods would die if the role had
         no modifiers of the given type (Robert Buels).
 
-0.83 Tue, Jun 23, 2009
+0.83   2009-06-23
     * Moose::Meta::Class
       - Fix _construct_instance not setting the special __MOP__ object
         key in instances of anon classes. (doy)
 
-0.82 Sun, Jun 21, 2009
+0.82   2009-06-21
     * Moose::Manual::Types
       - Mention MooseX::Types early to avoid users falling down the
         string parsing rathole (mst)
@@ -1645,11 +1645,11 @@ for, noteworthy changes.
       - Add warnings about class-level extensions and mention considering
         using plain objects instead
 
-0.81 Sun, Jun 7, 2009
+0.81   2009-06-07
     * Bumped our Class::MOP prereq to the latest version (0.85), since
       that's what we need.
 
-0.80 Sat, Jun 6, 2009
+0.80   2009-06-06
     * Moose::Manual::FAQ
       - Add FAQ about the coercion change from 0.76 because it came up
         three times today (perigrin)
@@ -1681,7 +1681,7 @@ for, noteworthy changes.
       - Add TODO test for infinite recursion in Moose::Meta::Class
         (groditi)
 
-0.79 Wed, May 13, 2009
+0.79   2009-05-13
     * Tests
       - More fixes for Win32 problems. Reported by Robert Krimen.
 
@@ -1699,7 +1699,7 @@ for, noteworthy changes.
       - When your ->meta method does not return a Moose::Meta::Class,
         the error message gave the wrong output (Sartak)
 
-0.78 Tue, May 12, 2009
+0.78   2009-05-12
     * Moose::Cookbook::FAQ and Moose::Cookbook::WTF
       - Merged these documents into what is now Moose::Manual::FAQ
 
@@ -1734,7 +1734,7 @@ for, noteworthy changes.
       - Some tests were failing on Win32 because they explicit checked
         warning output for newlines. Reported by Nickolay Platonov.
 
-0.77 Sat, May 2, 2009
+0.77   2009-05-02
     * Moose::Meta::Role
       - Add explicit use of Devel::GlobalDestruction and Sub::Name
         (perigrin)
@@ -1752,7 +1752,7 @@ for, noteworthy changes.
     * Makefile.PL
       - Depend on Class::MOP 0.83 instead of 0.82_01.
 
-0.76 Mon, April 27, 2009
+0.76   2009-04-27
     * Moose::Meta::TypeConstraint
       - Do not run coercions in coerce() if the value already passes the type
         constraint (hdp)
@@ -1770,7 +1770,7 @@ for, noteworthy changes.
       - Make Test::Output optional again, since it's only used in a few files
         (Sartak)
 
-0.75_01 Thu, April 23, 2009
+0.75_01   2009-04-23
     * Moose::Meta::Role::Application::ToClass
       - Moose now warns about each class overriding methods from roles it
         consumes (Sartak)
@@ -1782,7 +1782,7 @@ for, noteworthy changes.
     * Moose::Meta::Class
       - Changes to immutabilization to work with Class::MOP 0.82_01+.
 
-0.75 Mon, April 20, 2009
+0.75   2009-04-20
     * Moose
     * Moose::Meta::Class
       - Move validation of not inheriting from roles from Moose::extends to
@@ -1800,7 +1800,7 @@ for, noteworthy changes.
       - Make method_metaclass an attr so that it can accept a metarole
         application.  (jdv)
 
-0.74 Tue, April 7, 2009
+0.74   2009-04-07
     * Moose::Meta::Role
     * Moose::Meta::Method::Destructor
       - Include stack traces in the deprecation warnings.
@@ -1813,7 +1813,7 @@ for, noteworthy changes.
       - Removed the long-deprecated union method.
 
 
-0.73_02 Mon, April 6, 2009
+0.73_02   2009-04-06
     * More deprecations and renamings
       - Moose::Meta::Method::Constructor
         - initialize_body => _initialize_body (this is always called
@@ -1832,7 +1832,7 @@ for, noteworthy changes.
     * Moose::Util
       - Bold the word 'not' in the POD for find_meta (t0m)
 
-0.73_01 Sun, April 5, 2009
+0.73_01   2009-04-05
     * Moose::*
       - Call user_class->meta in fewer places, with the eventual goal
         of allowing the user to rename or exclude ->meta
@@ -1908,10 +1908,10 @@ for, noteworthy changes.
       - Moose::Meta::Role
         - alias_method is deprecated. Use add_method
 
-0.73 Fri, March 27, 2009
+0.73   2009-03-27
     * No changes from 0.72_01.
 
-0.72_01 Thu, March 26, 2009
+0.72_01   2009-03-26
     * Everything
       - Almost every module has complete API documentation. A few
         methods (and even whole classes) have been intentionally
@@ -1969,7 +1969,7 @@ for, noteworthy changes.
       - Changes to the internals of how make_immutable works to match
         changes in latest Class::MOP.
 
-0.72 Mon, February 23, 2009
+0.72   2009-02-23
     * Moose::Object
     * Moose::Meta::Method::Constructor
       - A mutable class accepted Foo->new(undef) without complaint,
@@ -1977,7 +1977,7 @@ for, noteworthy changes.
         error. Now, in both cases we throw a helpful error
         instead. Reported by doy.
 
-0.71_01 Sun, February 22, 2009
+0.71_01   2009-02-22
     * Moose::Cookbook
       - Hopefully fixed some POD errors in a few recipes that caused
         them to display weird on search.cpan.org.
@@ -1998,7 +1998,7 @@ for, noteworthy changes.
         Moose->throw_error. This wasn't normally an issue, but could
         bite you in weird cases.
 
-0.71 Thu, February 19, 2009
+0.71   2009-02-19
     * Moose::Cookbook::Basics::Recipe11
       - A new recipe which demonstrates the use of BUILDARGS and
         BUILD. (Dave Rolsky)
@@ -2022,7 +2022,7 @@ for, noteworthy changes.
       - Just use Class::MOP for the optimized ClassName check. (Dave
         Rolsky)
 
-0.70 Sat, February 14, 2009
+0.70   2009-02-14
     * Moose::Util::TypeConstraints
       - Added the RoleName type (stevan)
         - added tests for this (stevan)
@@ -2058,7 +2058,7 @@ for, noteworthy changes.
         elsewhere. These were based on feedback from various
         users, too many to list here. (Dave Rolsky)
 
-0.69 Thu, February 12, 2009
+0.69   2009-02-12
     * Moose
       - Make some keyword errors use throw_error instead of croak
         since Moose::Exporter wraps keywords now (Sartak)
@@ -2074,7 +2074,7 @@ for, noteworthy changes.
         error message did not specify the attribute name
         properly. (doy)
 
-0.68 Wed, February 4, 2009
+0.68   2009-02-04
     * POD
       - Many spelling, typo, and formatting fixes by daxim.
 
@@ -2086,14 +2086,14 @@ for, noteworthy changes.
       - Now properly spelled as Overridden. Thanks to daxim for
         noticing this.
 
-0.67 Tue, February 3, 2009
+0.67   2009-02-03
     * Moose::Manual::*
       - Lots of little typo fixes and a few clarifications. Several
         pages didn't have proper titles, and so weren't actually
         visible on search.cpan.org. Thanks to hanekomu for a variety
         of fixes and formatting improvements.
 
-0.66 Tue, February 3, 2009
+0.66   2009-02-03
     * Moose::Manual
       - This is a brand new, extensive manual for Moose. This aims to
         provide a complete introduction to all of Moose's
@@ -2123,7 +2123,7 @@ for, noteworthy changes.
         vetting on names created via the sugar functions, so that they
         can only contain alphanumerics, ":", and ".". (Dave Rolsky)
 
-0.65 Thu, January 22, 2009
+0.65   2009-01-22
     * Moose and Moose::Meta::Method::Overridden
       - If an overridden method called super(), and then the
         superclass's method (not overridden) _also_ called super(),
@@ -2154,7 +2154,7 @@ for, noteworthy changes.
         file as being in your class, as opposed to in Moose
         guts. (nothingmuch).
 
-0.64 Wed, December 31, 2008
+0.64   2008-12-31
     * Moose::Meta::Method::Accessor
       - Always inline predicate and clearer methods (Sartak)
 
@@ -2170,12 +2170,12 @@ for, noteworthy changes.
       - Require Class::MOP 0.75+, which has the side effect of making
         sure we work on Win32. (Dave Rolsky)
 
-0.63 Mon, December 8, 2008
+0.63   2008-12-08
     * Moose::Unsweetened
       - Some small grammar tweaks and bug fixes in non-Moose example
         code. (Dave Rolsky)
 
-0.62_02 Fri, December 5, 2008
+0.62_02   2008-12-05
     * Moose::Meta::Role::Application::ToClass
       - When a class does not provide all of a role's required
         methods, the error thrown now mentions all of the missing
@@ -2193,7 +2193,7 @@ for, noteworthy changes.
         contained a single quote ('). Now we use quotemeta to escape
         anything potentially dangerous in the defaults. (Dave Rolsky)
 
-0.62_01 Wed, December 3, 2008
+0.62_01   2008-12-03
     * Moose::Object
       - use the method->execute API for BUILDALL
         and DEMOLISHALL (Sartak)
@@ -2203,7 +2203,7 @@ for, noteworthy changes.
         before creating the default types provided by Moose. This
         should make loading Moose a little faster. (Dave Rolsky)
 
-0.62 Wed November 26, 2008
+0.62   2008-11-26
     * Moose::Meta::Role::Application::ToClass
       Moose::Meta::Role::Application::ToRole
       - fixed issues where excluding and aliasing the
@@ -2251,7 +2251,7 @@ for, noteworthy changes.
       - attempt to explain why a role that just requires
         methods is useful (Sartak)
 
-0.61 Fri November 7, 2008
+0.61   2008-11-07
     * Moose::Meta::Attribute
       - When passing a role to handles, it will be loaded if necessary
         (perigrin)
@@ -2274,7 +2274,7 @@ for, noteworthy changes.
         opposed to a totally empty line. According to RT #40432, this
         confuses POD parsers. (Dave Rolsky)
 
-0.60 Fri October 24, 2008
+0.60   2008-10-24
     * Moose::Exporter
       - Passing "-traits" when loading Moose caused the Moose.pm
         exports to be broken. Reported by t0m. (Dave Rolsky)
@@ -2311,7 +2311,7 @@ for, noteworthy changes.
         type. (jnapiorkowski)
         - added tests (jnapiorkowski)
 
-0.59 Tue October 14, 2008
+0.59   2008-10-14
     * Moose
       - Add abridged documentation for builder/default/initializer/
         predicate, and link to more details sections in
@@ -2356,7 +2356,7 @@ for, noteworthy changes.
         supported in a slightly different way via MooseX::Types some
         time in the future. (Dave Rolsky)
 
-0.58 Sat September 20, 2008
+0.58   2008-09-20
     !! This release has an incompatible change regarding !!
     !! how roles add methods to a class !!
 
@@ -2459,7 +2459,7 @@ for, noteworthy changes.
         The default C<error_class> behaves like C<Carp::confess>, so
         the behavior is not visibly different for end users.
 
-0.57 Wed September 3, 2008
+0.57   2008-09-03
     * Moose::Intro
       - A new bit of doc intended to introduce folks familiar with
         "standard" Perl 5 OO to Moose concepts. (Dave Rolsky)
@@ -2479,7 +2479,7 @@ for, noteworthy changes.
       - If Sub::Name was not present, unimporting failed to actually
         remove some sugar subs, causing test failures (Dave Rolsky)
 
-0.56 Mon September 1, 2008
+0.56   2008-09-01
     For those not following the series of dev releases, there are
     several major changes in this release of Moose.
       ! Moose::init_meta should now be called as a method. See the
@@ -2500,7 +2500,7 @@ for, noteworthy changes.
 
     * Require Class::MOP 0.65.
 
-0.55_04 Sat August 30, 2008
+0.55_04   2008-08-30
     * Moose::Util::MetaRole
     * Moose::Cookbook::Extending::Recipe2
       - This simplifies the application of roles to any meta class, as
@@ -2516,11 +2516,11 @@ for, noteworthy changes.
       - These used to be Extending::Recipe1 and Extending::Recipe2,
         respectively.
 
-0.55_03 Fri August 29, 2008
+0.55_03   2008-08-29
     * No changes from 0.55_02 except increasing the Class::MOP
       dependency to 0.64_07.
 
-0.55_02 Fri August 29, 2008
+0.55_02   2008-08-29
     * Makefile.PL and Moose.pm
       - explicitly require Perl 5.8.0+ (Dave Rolsky)
 
@@ -2550,7 +2550,7 @@ for, noteworthy changes.
         composed at the same time. (Dave Rolsky)
         - test and bug finding (tokuhirom)
 
-0.55_01 Wed August 20, 2008
+0.55_01   2008-08-20
 
     !! Calling Moose::init_meta as a function is now         !!
     !! deprecated. Please see the Moose.pm docs for details. !!
@@ -2614,7 +2614,7 @@ for, noteworthy changes.
         refs, making many more classes immutable, and making
         constructors immutable. (nothingmuch)
 
-0.55 Sun August 3, 2008
+0.55   2008-08-03
     * Moose::Meta::Attribute
       - breaking down the way 'handles' methods are
         created so that the process can be more easily
@@ -2655,7 +2655,7 @@ for, noteworthy changes.
       - Tons of fixes, both syntactical and grammatical (Dave
         Rolsky, Paul Fenwick)
 
-0.54 Thurs. July 3, 2008
+0.54   2008-07-03
     ... this is not my day today ...
 
     * Moose::Meta::Attribute
@@ -2665,14 +2665,14 @@ for, noteworthy changes.
         does not break MooseX::AttributeHelpers
         (stevan)
 
-0.53 Thurs. July 3, 2008
+0.53   2008-07-03
     * Whoops, I guess I should run 'make manifest' before
       actually releasing the module. No actual changes
       in this release, except the fact that it includes
       the changes that I didn't include in the last
       release. (stevan--)
 
-0.52 Thurs. July 3, 2008
+0.52   2008-07-03
     * Moose
       - added "FEATURE REQUESTS" section to the Moose docs
         to properly direct people (stevan) (RT #34333)
@@ -2702,7 +2702,7 @@ for, noteworthy changes.
     * t/
       - added more BUILDARGS tests (stevan)
 
-0.51 Thurs. Jun 26, 2008
+0.51   2008-06-26
     * Moose::Role
       - add unimport so "no Moose::Role" actually does
         something (sartak)
@@ -2743,11 +2743,11 @@ for, noteworthy changes.
         (not yet fixed)
       - Some null_constraint optimizations
 
-0.50 Thu. Jun 12, 2008
+0.50   2008-06-12
     - Fixed a version number issue by bumping all modules
       to 0.50.
 
-0.49 Thu. Jun 12, 2008
+0.49   2008-06-12
     !! This version now approx. 20-25% !!
     !! faster with new Class::MOP 0.59 !!
 
@@ -2787,19 +2787,19 @@ for, noteworthy changes.
     * Moose::Cookbook::Recipe11
       - add tests for this (thanks to tokuhirom)
 
-0.48 Thurs. May 29, 2008
+0.48   2008-05-29
     (early morning release engineering)--
 
     - fixing the version in Moose::Meta::Method::Destructor
       which was causing the indexer to choke
 
-0.47 Thurs. May 29, 2008
+0.47   2008-05-29
     (late night release engineering)--
 
     - fixing the version is META.yml, no functional
       changes in this release
 
-0.46 Wed. May 28, 2008
+0.46   2008-05-28
     !! This version now approx. 20-25% !!
     !! faster with new Class::MOP 0.57 !!
 
@@ -2825,7 +2825,7 @@ for, noteworthy changes.
         keep people from wasting time tracking an error
         that is easily fixed by upgrading.
 
-0.45 Saturday, May 24, 2008
+0.45   2008-05-24
     * Moose
       - Because of work in Class::MOP 0.57, all
         XS based functionality is now optional
@@ -2898,7 +2898,7 @@ for, noteworthy changes.
       - renamed the t/000_recipe/*.t tests to be
         more descriptive (thanks to Sartak)
 
-0.44 Sat. May 10, 2008
+0.44   2008-05-10
     * Moose
       - made make_immutable warning cluck to
         show where the error is (thanks mst)
@@ -2932,7 +2932,7 @@ for, noteworthy changes.
     ~ removed Build.PL and Module::Build compat
       since Module::Install has done that.
 
-0.43 Wed. April, 30, 2008
+0.43   2008-04-30
     * NOTE TO SELF:
         drink more coffee before
         doing release engineering
@@ -2941,7 +2941,7 @@ for, noteworthy changes.
       and we broke some of the custom meta-attr
       modules. This fixes that.
 
-0.42 Mon. April 28, 2008
+0.42   2008-04-28
     - some bad tests slipped by, nothing else
       changed in this release (cpantesters++)
 
@@ -2949,7 +2949,7 @@ for, noteworthy changes.
       since we have tests which need the C3
       support
 
-0.41 Mon. April 28, 2008
+0.41   2008-04-28
     ~~ numerous documentation updates ~~
 
     - Changed all usage of die to Carp::croak for better
@@ -3049,10 +3049,10 @@ for, noteworthy changes.
       - Added &resolve_metaclass_alias, a helper function for finding an actual
         class for a short name (e.g. in the traits list)
 
-0.40 Fri. March 14, 2008
+0.40   2008-03-14
     - I hate Pod::Coverage
 
-0.39 Fri. March 14, 2008
+0.39   2008-03-14
     * Moose
       - documenting the use of '+name' with attributes
         that come from recently composed roles. It makes
@@ -3113,7 +3113,7 @@ for, noteworthy changes.
       - made ->does a little more forgiving when it is
         passed Class::MOP era metaclasses.
 
-0.38 Fri. Feb. 15, 2008
+0.38   2008-02-15
     * Moose::Meta::Attribute
       - fixed initializer to correctly do
         type checking and coercion in the
@@ -3123,7 +3123,7 @@ for, noteworthy changes.
     * t/
       - fixed some finicky tests (thanks to konobi)
 
-0.37 Thurs. Feb. 14, 2008
+0.37   2008-02-14
     * Moose
       - fixed some details in Moose::init_meta
         and its superclass handling (thanks thepler)
@@ -3169,7 +3169,7 @@ for, noteworthy changes.
       - added &get_all_init_args and &get_all_attribute_values
         (thanks to Sartak and nothingmuch)
 
-0.36 Sat. Jan. 26, 2008
+0.36   2008-01-26
     * Moose::Role
       Moose::Meta::Attribute
       - role type tests now support when roles are
@@ -3186,7 +3186,7 @@ for, noteworthy changes.
         case correctly
         - added test for this
 
-0.35 Tues. Jan. 22, 2008
+0.35   2008-01-22
     * Moose::Meta::Method::Constructor
       - fix to make sure even Class::MOP attributes
         are handled correctly (Thanks to Dave Rolsky)
@@ -3198,7 +3198,7 @@ for, noteworthy changes.
         and you shouldnt have been using a _ prefixed
         method in the first place ;)
 
-0.34 Mon. Jan. 21, 2008
+0.34   2008-01-21
     ~~~ more misc. doc. fixes ~~~
     ~~ updated copyright dates ~~
 
@@ -3261,7 +3261,7 @@ for, noteworthy changes.
     * t/
       - shortened some file names for better VMS support (RT #32381)
 
-0.33 Fri. Dec. 14, 2007
+0.33   2007-12-14
     !! Moose now loads 2 x faster !!
     !!  with new Class::MOP 0.49  !!
 
@@ -3291,7 +3291,7 @@ for, noteworthy changes.
       - allow subclasses to decide whether we need
         to copy the value into a new variable (sartak)
 
-0.32 Tues. Dec. 4, 2007
+0.32   2007-12-04
     * Moose::Util::TypeConstraints
       - fixing how subtype aliases of unions work
         they should inherit the parent's coercion
@@ -3313,7 +3313,7 @@ for, noteworthy changes.
         new features above (although you cannot add
         more type coercions for Union types)
 
-0.31 Mon. Nov. 26, 2007
+0.31   2007-11-26
     * Moose::Meta::Attribute
       - made the +attr syntax handle extending types with
         parameters. So "has '+foo' => (isa => 'ArrayRef[Int]')"
@@ -3332,7 +3332,7 @@ for, noteworthy changes.
         instead it will just return undef.
         - added docs for this
 
-0.30 Fri. Nov. 23, 2007
+0.30   2007-11-23
     * Moose::Meta::Method::Constructor
       -builder related bug in inlined constructor. (groditi)
 
@@ -3356,7 +3356,7 @@ for, noteworthy changes.
         attribute had a builder, no value and was not lazy the
         builder default was not getting run, oops. (groditi)
 
-0.29 Tues. Nov. 13, 2007
+0.29   2007-11-13
     * Moose::Meta::Attribute
       - Fix error message on missing builder method (groditi)
 
@@ -3367,10 +3367,10 @@ for, noteworthy changes.
       - Add test to check for the correct error message when
         builder method is missing (groditi)
 
-0.28 Tues. Nov. 13, 2007
+0.28   2007-11-13
     - 0.27 packaged incorrectly (groditi)
 
-0.27 Tues. Nov. 13, 2007
+0.27   2007-11-13
     * Moose::Meta::Attribute
       - Added support for the new builder option (groditi)
       - Added support for lazy_build option (groditi)
@@ -3404,7 +3404,7 @@ for, noteworthy changes.
         this one out.)
         - added more tests for this
 
-0.26 Thurs. Sept. 27, 2007
+0.26   2007-09-27
     == New Features ==
 
     * Parameterized Types
@@ -3507,7 +3507,7 @@ for, noteworthy changes.
     * Moose::Meta::TypeConstraint::Registry
       - added this class to keep track of type constraints
 
-0.25 Mon. Aug. 13, 2007
+0.25   2007-08-13
     * Moose
       - Documentation update to reference Moose::Util::TypeConstraints
         under 'isa' in 'has' for how to define a new type
@@ -3555,7 +3555,7 @@ for, noteworthy changes.
       - This contains Moose specific test functions
         - added tests for these
 
-0.24 Tues. July 3, 2007
+0.24   2007-07-03
     ~ Some doc updates/cleanup ~
 
     * Moose::Meta::Attribute
@@ -3572,7 +3572,7 @@ for, noteworthy changes.
         so that required methods can come from superclasses
         - adjusted tests for this
 
-0.23 Mon. June 18, 2007
+0.23   2007-06-18
     * Moose::Meta::Method::Constructor
       - fix inlined constructor for hierarchy with multiple BUILD methods (mst)
     * Moose::Meta::Class
@@ -3582,7 +3582,7 @@ for, noteworthy changes.
       - Fix handles to use goto() so that caller() comes out properly on
         the other side (perigrin)
 
-0.22 Thurs. May 31, 2007
+0.22   2007-05-31
     * Moose::Util::TypeConstraints
       - fix for prototype undeclared issue when Moose::Util::TypeConstraints
         loaded before consumers (e.g. Moose::Meta::Attribute) by predeclaring
@@ -3606,7 +3606,7 @@ for, noteworthy changes.
         having it die cause undef is not a HASH.
         - added tests for this
 
-0.21 Thursday, May 3, 2007
+0.21   2007-05-03
     * Moose
       - added SUPER_SLOT and INNER_SLOT class hashes to support unimport
       - modified unimport to remove super and inner along with the rest
@@ -3632,7 +3632,7 @@ for, noteworthy changes.
     ~~ lots of spelling and grammer fixes in the docs,
        many many thanks to rlb3 and Aankhen for these :)
 
-0.20 Friday, April 6th, 2007
+0.20   2007-04-06
     >> I messed up the SKIP logic in one test
        so this release is just to fix that.
 
@@ -3642,7 +3642,7 @@ for, noteworthy changes.
         (thanks to konobi for this)
          - added tests and docs
 
-0.19 Thurs. April 5th, 2007
+0.19   2007-04-05
     ~~ More documentation updates ~~
 
     * Moose::Util::TypeConstraints
@@ -3683,7 +3683,7 @@ for, noteworthy changes.
         test, ask Rob Kinyon why.
         - *cough* DBM::Deep 1.0 backwards compatibility sucks *cough* ;)
 
-0.18 Sat. March 10, 2007
+0.18   2007-03-10
     ~~ Many, many documentation updates ~~
 
     * misc.
@@ -3693,7 +3693,7 @@ for, noteworthy changes.
         working with Declare::Constraints::Simple
         and Test::Deep as constraint engines.
 
-0.18_001
+0.18_001   2006-11-26
     !! You must have Class::MOP 0.37_001  !!
     !! for this developer release to work !!
 
@@ -3715,13 +3715,13 @@ for, noteworthy changes.
     truely interested in what was changed, please do
     a diff :)
 
-0.17 Tues. Nov. 14, 2006
+0.17   2006-11-14
     * Moose::Meta::Method::Accessor
       - bugfix for read-only accessors which
         are have a type constraint and lazy.
         Thanks to chansen for finding it.
 
-0.16 Tues. Nov. 14, 2006
+0.16   2006-11-14
     ++ NOTE ++
     There are some speed improvements in this release,
     but they are only the begining, so stay tuned.
@@ -3742,7 +3742,7 @@ for, noteworthy changes.
       - Any internally created type constraints
         now provide an optimized version as well.
 
-0.15 Sun. Nov. 5, 2006
+0.15   2006-11-05
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.36 in order
     to work correctly. A number of small internal tweaks have
@@ -3795,7 +3795,7 @@ for, noteworthy changes.
     * Moose::Meta::TypeConstraint::Union
       - moved this from Moose::Meta::TypeConstraint
 
-0.14 Mon. Oct. 9, 2006
+0.14   2006-10-09
 
     * Moose::Meta::Attribute
       - fixed lazy attributes which were not getting
@@ -3806,7 +3806,7 @@ for, noteworthy changes.
         broke predicates in an ugly way.
         - removed tests for this
 
-0.13 Sat. Sept. 30, 2006
+0.13   2006-09-30
     ++ NOTE ++
     This version of Moose *must* have Class::MOP 0.35 in order
     to work correctly. A number of small internal tweaks have
@@ -3862,7 +3862,7 @@ for, noteworthy changes.
         only require version 1.17 for Win32 and cygwin.
         (thanks Adam Kennedy)
 
-0.12 Fri. Sept. 1, 2006
+0.12   2006-09-01
     * Moose::Cookbook
       - Recipe5 (subtypes & coercion) has been written
 
@@ -3889,7 +3889,7 @@ for, noteworthy changes.
         creates the _role_meta ugliness of before.
         - fixed tests to reflect this change
 
-0.11 Wed. July 12, 2006
+0.11   2006-07-12
     * Moose
       - added an &unimport method to remove all the keywords
         that Moose will import, simply add 'no Moose' to the
@@ -3899,7 +3899,7 @@ for, noteworthy changes.
       - fixed some test failures caused by a forgotten test
         dependency.
 
-0.10 Thurs. July 6, 2006
+0.10   2006-07-06
     * Moose
       - improved error message when loading modules so
         it is less confusing when you load a role.
@@ -3911,7 +3911,7 @@ for, noteworthy changes.
     but it does not yet utilize the optimizations
     it makes available. Stay tuned for that ;)
 
-0.09_03 Fri. June 23, 2006
+0.09_03   2006-06-23
     ++ DEVELOPER RELEASE ++
     * Moose
       - 'use strict' and 'use warnings' are no longer
@@ -3931,7 +3931,7 @@ for, noteworthy changes.
         - added tests for this
       - added some more edge case tests
 
-0.09_02 Tues. May 16, 2006
+0.09_02   2006-05-16
     ++ DEVELOPER RELEASE ++
     * Moose
       - added prototypes to the exported subs
@@ -3945,7 +3945,7 @@ for, noteworthy changes.
       - cleaned up prototypes for the subs
       - updated docs
 
-0.09_01 Fri. May 12, 2006
+0.09_01   2006-05-12
     ++ DEVELOPER RELEASE ++
       - This release works in combination with
         Class::MOP 0.29_01, it is a developer
@@ -4004,7 +4004,7 @@ for, noteworthy changes.
         - added several tests for this
         - no docs for this yet
 
-0.05 Thurs. April 27, 2006
+0.05   2006-04-27
     * Moose
       - keywords are now exported with Sub::Exporter
         thanks to chansen for this commit
@@ -4044,7 +4044,7 @@ for, noteworthy changes.
       - added the is_subtype_of predicate method
         - added tests for this
 
-0.04 Sun. April 16th, 2006
+0.04   2006-04-16
     * Moose::Role
       - Roles can now consume other roles
         - added tests for this
@@ -4088,7 +4088,7 @@ for, noteworthy changes.
         you need it, it properly loads the metaclass class now
         - added test for this
 
-0.03_02 Wed. April 12, 2006
+0.03_02   2006-04-12
     * Moose
       - you must now explictly use Moose::Util::TypeConstraints
         it no longer gets exported for you automatically
@@ -4108,7 +4108,7 @@ for, noteworthy changes.
         which tests the class's hierarchy for roles
         - added tests for this
 
-0.03_01 Mon. April 10, 2006
+0.03_01   2006-04-10
     * Moose::Cookbook
       - added new Role recipe (no content yet, only code)
 
@@ -4144,7 +4144,7 @@ for, noteworthy changes.
         validate method
         - added tests and docs for this
 
-0.03 Thurs. March 30, 2006
+0.03   2006-03-30
     * Moose::Cookbook
       - added the Moose::Cookbook with 5 recipes,
         describing all the stuff Moose can do.
@@ -4175,7 +4175,7 @@ for, noteworthy changes.
         read-only-ness (this corrected in Class::MOP as
         well)
 
-0.02 Tues. March 21, 2006
+0.02   2006-03-21
     * Moose
       - many more tests, fixing some bugs and
         edge cases
@@ -4219,5 +4219,5 @@ for, noteworthy changes.
           - type constraints and coercions are now
             full fledges meta-objects
 
-0.01 Wed. March 15, 2006
+0.01   2006-03-15
     - Moooooooooooooooooose!!!
