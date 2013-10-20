@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  * Moose string exceptions have been replaced by Moose::Exception objects. See
+    Moose::Manual::Delta for details.
+
 2.1100-TRIAL   2013-09-07
 
   [DEPRECATIONS]
