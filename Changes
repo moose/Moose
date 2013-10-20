@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * die if a role to consume can't be found (doy)
+  * fix test to accomodate Devel::PartialDump possibly not being installed
+    (Upasana Shukla)
+
 2.1101-TRIAL  2013-10-20
 
   [ENHANCEMENTS]
