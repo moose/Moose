@@ -118,7 +118,7 @@ in your code with
 =item Moose string exceptions have been replaced by Moose exception objects
 
 Previously, Moose threw string exceptions on error conditions, which were not
-so verbose. All those string exceptions have now been coverted to exception
+so verbose. All those string exceptions have now been converted to exception
 objects, which provide very detailed information about the exceptions.
 
 For learning about the usage of Moose exception objects, read
