@@ -966,7 +966,7 @@ use Test::Fatal;
 
     like(
 	$exception,
-	qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]' with value "Hello"/,
+	qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]'\E with value "?Hello"?/,
         "'Hello' is a Str");
 
     isa_ok(
