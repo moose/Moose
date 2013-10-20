@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1101-TRIAL  2013-10-20
+
   [ENHANCEMENTS]
 
   * Moose string exceptions have been replaced by Moose::Exception objects. See
