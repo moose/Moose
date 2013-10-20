@@ -5,7 +5,8 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  * die if a role to consume can't be found (doy)
+  * die if a role to consume can't be found -- this restores behaviour as in
+    2.1005 (doy)
   * fix test to accomodate Devel::PartialDump possibly not being installed
     (Upasana)
 
