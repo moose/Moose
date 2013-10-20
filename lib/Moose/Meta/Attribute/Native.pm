@@ -1,4 +1,6 @@
 package Moose::Meta::Attribute::Native;
+use strict;
+use warnings;
 
 use Module::Runtime 'require_module';
 
