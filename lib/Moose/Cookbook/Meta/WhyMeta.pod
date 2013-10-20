@@ -1,4 +1,6 @@
 package Moose::Cookbook::Meta::WhyMeta;
+use strict;
+use warnings;
 
 # ABSTRACT: Welcome to the meta world (Why Go Meta?)
 

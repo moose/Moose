@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD;
+use strict;
+use warnings;
 
 # ABSTRACT: Using BUILDARGS and BUILD to hook into object construction
 

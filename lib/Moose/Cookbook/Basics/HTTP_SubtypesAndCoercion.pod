@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion;
+use strict;
+use warnings;
 
 # ABSTRACT: Demonstrates subtypes and coercion use HTTP-related classes (Request, Protocol, etc.)
 

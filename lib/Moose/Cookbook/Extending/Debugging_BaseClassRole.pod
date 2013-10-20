@@ -1,4 +1,6 @@
 package Moose::Cookbook::Extending::Debugging_BaseClassRole;
+use strict;
+use warnings;
 
 # ABSTRACT: Providing a role for the base object class
 

@@ -1,4 +1,6 @@
 package Moose::Manual::Concepts;
+use strict;
+use warnings;
 
 # ABSTRACT: Moose OO concepts
 

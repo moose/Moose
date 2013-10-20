@@ -1,4 +1,6 @@
 package Moose::Manual::Exceptions;
+use strict;
+use warnings;
  
 # ABSTRACT: Moose's exceptions
  

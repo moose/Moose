@@ -1,4 +1,6 @@
 package Moose::Cookbook::Style;
+use strict;
+use warnings;
 
 # ABSTRACT: Expanded into Moose::Manual::BestPractices, so go read that
 

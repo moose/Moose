@@ -1,4 +1,6 @@
 package Moose::Manual::Classes;
+use strict;
+use warnings;
 
 # ABSTRACT: Making your classes use Moose (and subclassing)
 

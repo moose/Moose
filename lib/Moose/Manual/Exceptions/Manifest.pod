@@ -1,4 +1,6 @@
 package Moose::Manual::Exceptions::Manifest;
+use strict;
+use warnings;
 
 =head1 Moose::Exception::NoCasesMatched
 

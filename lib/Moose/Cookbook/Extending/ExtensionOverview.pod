@@ -1,4 +1,6 @@
 package Moose::Cookbook::Extending::ExtensionOverview;
+use strict;
+use warnings;
 
 # ABSTRACT: Moose extension overview
 

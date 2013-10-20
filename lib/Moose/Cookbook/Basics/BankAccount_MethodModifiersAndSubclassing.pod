@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing;
+use strict;
+use warnings;
 
 # ABSTRACT: Demonstrates the use of method modifiers in a subclass
 

@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild;
+use strict;
+use warnings;
 
 # ABSTRACT: Builder methods and lazy_build
 

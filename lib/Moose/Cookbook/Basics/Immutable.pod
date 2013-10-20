@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::Immutable;
+use strict;
+use warnings;
 
 # ABSTRACT: Making Moose fast by making your class immutable
 

@@ -1,4 +1,6 @@
 package Moose::Manual::MooseX;
+use strict;
+use warnings;
 
 # ABSTRACT: Recommended Moose extensions
 

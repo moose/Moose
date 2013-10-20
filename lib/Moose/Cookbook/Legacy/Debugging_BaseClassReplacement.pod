@@ -1,4 +1,6 @@
 package Moose::Cookbook::Legacy::Debugging_BaseClassReplacement;
+use strict;
+use warnings;
 
 # ABSTRACT: Providing an alternate base object class
 

@@ -1,4 +1,6 @@
 package Moose::Spec::Role;
+use strict;
+use warnings;
 
 # ABSTRACT: Formal spec for Role behavior
 

@@ -1,4 +1,6 @@
 package Moose::Cookbook::Extending::Mooseish_MooseSugar;
+use strict;
+use warnings;
 
 # ABSTRACT: Acting like Moose.pm and providing sugar Moose-style
 

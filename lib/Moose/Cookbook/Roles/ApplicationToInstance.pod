@@ -1,4 +1,6 @@
 package Moose::Cookbook::Roles::ApplicationToInstance;
+use strict;
+use warnings;
 
 # ABSTRACT: Applying a role to an object instance
 

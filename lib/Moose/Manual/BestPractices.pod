@@ -1,4 +1,6 @@
 package Moose::Manual::BestPractices;
+use strict;
+use warnings;
 
 # ABSTRACT: Get the most out of Moose
 

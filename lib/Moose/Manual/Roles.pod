@@ -1,4 +1,6 @@
 package Moose::Manual::Roles;
+use strict;
+use warnings;
 
 # ABSTRACT: Roles, an alternative to deep hierarchies and base classes
 

@@ -1,4 +1,6 @@
 package Moose::Manual;
+use strict;
+use warnings;
 
 # ABSTRACT: What is Moose, and how do I use it?
 

@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::Company_Subtypes;
+use strict;
+use warnings;
 
 # ABSTRACT: Demonstrates the use of subtypes and how to model classes related to companies, people, employees, etc.
 

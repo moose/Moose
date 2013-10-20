@@ -1,4 +1,6 @@
 package Moose::Cookbook::Snack::Types;
+use strict;
+use warnings;
 
 # ABSTRACT: Snippets of code for using Types and Type Constraints
 

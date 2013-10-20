@@ -1,4 +1,6 @@
 package Moose::Cookbook::Snack::Keywords;
+use strict;
+use warnings;
 
 # ABSTRACT: Restricted "keywords" in Moose
 

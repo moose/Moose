@@ -1,4 +1,6 @@
 package Moose::Cookbook::Meta::Table_ClassMetaclass;
+use strict;
+use warnings;
 
 # ABSTRACT: Adding a "table" attribute to the metaclass
 

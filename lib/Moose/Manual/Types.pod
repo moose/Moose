@@ -1,4 +1,6 @@
 package Moose::Manual::Types;
+use strict;
+use warnings;
 
 # ABSTRACT: Moose's type system
 

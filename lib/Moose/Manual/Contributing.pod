@@ -1,4 +1,6 @@
 package Moose::Manual::Contributing;
+use strict;
+use warnings;
 
 # ABSTRACT: How to get involved in Moose
 

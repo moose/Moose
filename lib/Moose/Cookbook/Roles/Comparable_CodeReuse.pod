@@ -1,4 +1,6 @@
 package Moose::Cookbook::Roles::Comparable_CodeReuse;
+use strict;
+use warnings;
 
 # ABSTRACT: Using roles for code reuse
 

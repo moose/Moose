@@ -1,4 +1,6 @@
 package Moose::Cookbook::Meta::GlobRef_InstanceMetaclass;
+use strict;
+use warnings;
 
 # ABSTRACT: Creating a glob reference meta-instance class
 

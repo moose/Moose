@@ -1,4 +1,6 @@
 package Moose::Cookbook::Meta::Labeled_AttributeMetaclass;
+use strict;
+use warnings;
 
 # ABSTRACT: A meta-attribute, attributes with labels
 

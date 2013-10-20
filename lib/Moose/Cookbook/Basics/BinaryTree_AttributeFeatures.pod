@@ -1,4 +1,6 @@
 package Moose::Cookbook::Basics::BinaryTree_AttributeFeatures;
+use strict;
+use warnings;
 
 # ABSTRACT: Demonstrates various attribute features including lazy, predicates, weak refs, and more
 

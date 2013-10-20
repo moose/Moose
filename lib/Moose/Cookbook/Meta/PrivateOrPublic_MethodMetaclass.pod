@@ -1,4 +1,6 @@
 package Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass;
+use strict;
+use warnings;
 
 # ABSTRACT: A method metaclass for marking methods public or private
 
@@ -137,6 +139,8 @@ tool like L<Devel::Declare> to create full-blown new keywords in Perl.
 =begin testing
 
 package main;
+use strict;
+use warnings;
 
 use Test::Fatal;
 

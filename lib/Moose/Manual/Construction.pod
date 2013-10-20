@@ -1,4 +1,6 @@
 package Moose::Manual::Construction;
+use strict;
+use warnings;
 
 # ABSTRACT: Object construction (and destruction) with Moose
 

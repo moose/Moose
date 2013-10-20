@@ -1,4 +1,6 @@
 package Moose::Intro;
+use strict;
+use warnings;
 
 # ABSTRACT: Expanded into Moose::Manual, so go read that
 

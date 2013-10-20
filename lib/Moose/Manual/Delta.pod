@@ -1,4 +1,6 @@
 package Moose::Manual::Delta;
+use strict;
+use warnings;
 
 # ABSTRACT: Important Changes in Moose
 

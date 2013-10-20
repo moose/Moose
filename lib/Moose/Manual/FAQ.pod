@@ -1,4 +1,6 @@
 package Moose::Manual::FAQ;
+use strict;
+use warnings;
 
 # ABSTRACT: Frequently asked questions about Moose
 

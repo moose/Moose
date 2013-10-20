@@ -1,4 +1,6 @@
 package Moose::Manual::Delegation;
+use strict;
+use warnings;
 
 # ABSTRACT: Attribute delegation
 

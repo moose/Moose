@@ -1,4 +1,6 @@
 package Moose::Manual::Attributes;
+use strict;
+use warnings;
 
 # ABSTRACT: Object attributes with Moose
 
