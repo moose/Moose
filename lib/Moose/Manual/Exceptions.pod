@@ -162,3 +162,7 @@ L<Moose::Exception::ExtendsMissingArgs>.
             warn "$exception\n";
         }
     };
+
+=head1 Moose Exception Types
+
+These are documented in L<Moose::Manual::Exceptions::Manifest>.

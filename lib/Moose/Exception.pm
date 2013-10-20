@@ -75,4 +75,12 @@ is expected to override _build_message method.
 
 =back
 
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<Moose::Manual::Exceptions>
+
+=back
+
 =cut
