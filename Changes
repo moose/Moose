@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1102-TRIAL  2013-10-20
+
   [BUG FIXES]
 
   * die if a role to consume can't be found -- this restores behaviour as in
