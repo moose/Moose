@@ -99,7 +99,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
 
     like(
         $exception,
-        qr!You can only consume roles, Not::A::Real::Package is not a Moose role!,
+        qr!Can't locate Not/A/Real/Package\.pm in \@INC!,
         "You can't consume a class which doesn't exist");
 
     $exception = exception {
