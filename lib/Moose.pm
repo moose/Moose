@@ -57,6 +57,11 @@ sub with {
     Moose::Util::apply_all_roles(shift, @_);
 }
 
+sub throw_error {
+    shift;
+    Class::MOP::Object->throw_error(@_);
+}
+
 sub has {
     my $meta = shift;
     my $name = shift;
