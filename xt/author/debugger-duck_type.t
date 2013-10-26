@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 
 use FindBin qw/ $Bin /;
 
