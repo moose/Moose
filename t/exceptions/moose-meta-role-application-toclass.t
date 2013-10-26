@@ -401,10 +401,13 @@ use Moose();
         }
     };
 
+    my $methodName = "\\&foo";
+
     like(
         $exception,
-        qr/\Q'Foo4::Role' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \&foo)/,
+        qr/\Q'Foo4::Role' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => $methodName)/,
         "foo is required by Foo4::Role and imported by Class");
+        #'Foo4::Role' requires the method 'foo' to be implemented by 'Class'. If you imported functions intending to use them as methods, you need to explicitly mark them as such, via Class->meta->add_method(foo => \&foo)
 
     isa_ok(
         $exception,

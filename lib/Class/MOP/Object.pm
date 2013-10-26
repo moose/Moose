@@ -8,6 +8,12 @@ use Scalar::Util 'blessed';
 
 # introspection
 
+sub throw_error {
+    shift;
+    require Moose::Util;
+    Moose::Util::throw_exception( Legacy => message => @_ );
+}
+
 sub meta {
     require Class::MOP::Class;
     Class::MOP::Class->initialize(blessed($_[0]) || $_[0]);
@@ -121,6 +127,11 @@ This returns a L<Class::MOP::Class> object.
 This method uses L<Data::Dumper> to dump the object. You can pass an
 optional maximum depth, which will set C<$Data::Dumper::Maxdepth>. The
 default maximum depth is 1.
+
+=item B<< $metaclass->throw_error($message) >>
+
+This method calls L<Moose::Util::throw_exception> internally, with an object
+of class Moose::Exception::Legacy.
 
 =back
 

@@ -13,7 +13,6 @@ use Scalar::Util 'blessed';
 
 use Moose::Meta::Method::Overridden;
 use Moose::Meta::Method::Augmented;
-use Moose::Error::Default;
 use Moose::Meta::Class::Immutable::Trait;
 use Moose::Meta::Method::Constructor;
 use Moose::Meta::Method::Destructor;
@@ -54,12 +53,6 @@ __PACKAGE__->meta->add_attribute('constructor_class' => (
 __PACKAGE__->meta->add_attribute('destructor_class' => (
     accessor => 'destructor_class',
     default  => 'Moose::Meta::Method::Destructor',
-    Class::MOP::_definition_context(),
-));
-
-__PACKAGE__->meta->add_attribute('error_class' => (
-    accessor => 'error_class',
-    default  => 'Moose::Error::Default',
     Class::MOP::_definition_context(),
 ));
 
@@ -174,7 +167,6 @@ sub reinitialize {
             instance_metaclass
             constructor_class
             destructor_class
-            error_class
         );
     }
 
@@ -640,7 +632,6 @@ sub _base_metaclasses {
     }
     return (
         %metaclasses,
-        error_class => 'Moose::Error::Default',
     );
 }
 
@@ -936,12 +927,6 @@ These are the names of classes used when making a class immutable. These
 default to L<Moose::Meta::Method::Constructor> and
 L<Moose::Meta::Method::Destructor> respectively. These accessors are
 read-write, so you can use them to change the class name.
-
-=item B<< $metaclass->error_class($class_name) >>
-
-The name of the class used to throw errors. This defaults to
-L<Moose::Error::Default>, which generates an error with a stacktrace
-just like C<Carp::confess>.
 
 =back
 
