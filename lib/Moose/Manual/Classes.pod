@@ -141,4 +141,18 @@ can also provide your own immutabilization method. Doing so requires
 extending the Moose metaclasses, and is well beyond the scope of this
 manual.
 
+=head1 INSTANTIATING CLASSES
+
+When you're ready to use Moose classes in an application, import them in
+your code in the regular Perl OO way by including a C<use> directive 
+at the top of the file where the objects should be created.
+
+  use Person;
+  
+  my $person = Person->new(
+    # attribute values at instantiation 
+    # go here
+    ssn => '123456789',
+  );
+
 =cut
