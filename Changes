@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1103-TRIAL  2013-10-25
+
   [BUG FIXES]
 
   * fix errors in last trial release relating to Moose::Error::Default,
