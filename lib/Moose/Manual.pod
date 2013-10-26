@@ -98,12 +98,12 @@ This is a I<complete and usable> class definition!
 
   no Moose;
   __PACKAGE__->meta->make_immutable;
-  
+
 When ready to instantiate your class in an application, use it in the
 "traditional" Perl manner:
 
   use User;
-  
+
   my $user = User->new(
     first_name => 'Example',
     last_name  => 'User',
@@ -111,7 +111,7 @@ When ready to instantiate your class in an application, use it in the
   );
 
   $user->login('letmein');
-  
+
   say $user->date_of_last_login;
 
 We'll leave the line-by-line explanation of this code to other
