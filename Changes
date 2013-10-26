@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * fix errors in last trial release relating to Moose::Error::Default,
+    Moose::Util::throw_error (Upasana)
+
 2.1102-TRIAL  2013-10-20
 
   [BUG FIXES]
