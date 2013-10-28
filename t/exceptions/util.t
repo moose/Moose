@@ -75,13 +75,13 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
     my $exception = exception {
         package ClassConsumingClass;
         use Moose;
-        use DateTime;
-        with 'DateTime';
+        use Module::Runtime;
+        with 'Module::Runtime';
     };
 
     like(
         $exception,
-        qr/You can only consume roles, DateTime is not a Moose role/,
+        qr/You can only consume roles, Module::Runtime is not a Moose role/,
         "You can't consume a class");
 
     isa_ok(
@@ -92,7 +92,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
     $exception = exception {
         package foo;
         use Moose;
-        use DateTime;
+        use Module::Runtime;
         with 'Not::A::Real::Package';
     };
 
@@ -104,7 +104,7 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
     $exception = exception {
         package foo;
         use Moose;
-        use DateTime;
+        use Module::Runtime;
         with sub {};
     };
 
