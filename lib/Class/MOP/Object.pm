@@ -14,6 +14,11 @@ sub throw_error {
     Moose::Util::throw_exception( Legacy => message => @_ );
 }
 
+sub _inline_throw_error {
+    my ( $self, $message ) = @_;
+    return 'Moose->throw_error('.$message.')';
+}
+
 sub meta {
     require Class::MOP::Class;
     Class::MOP::Class->initialize(blessed($_[0]) || $_[0]);
