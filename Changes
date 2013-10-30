@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1104-TRIAL  2013-10-29
+
   [BUG FIXES]
 
   * Class::MOP::Object::_inline_throw_error is back, used by some MooseX
