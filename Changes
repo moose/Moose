@@ -3,28 +3,28 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-2.1105-TRIAL  2013-10-30
+2.1105   2013-10-30 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   * legacy throw_error now takes multiple arguments, like confess does
     (Karen Etheridge)
 
-2.1104-TRIAL  2013-10-29
+2.1104   2013-10-29 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   * Class::MOP::Object::_inline_throw_error is back, used by some MooseX
     modules (Upasana)
 
-2.1103-TRIAL  2013-10-25
+2.1103   2013-10-25 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   * fix errors in last trial release relating to Moose::Error::Default,
     Moose::Util::throw_error (Upasana)
 
-2.1102-TRIAL  2013-10-20
+2.1102   2013-10-20 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -33,14 +33,14 @@ for, noteworthy changes.
   * fix test to accomodate Devel::PartialDump possibly not being installed
     (Upasana)
 
-2.1101-TRIAL  2013-10-20
+2.1101   2013-10-20 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
   * Moose string exceptions have been replaced by Moose::Exception objects. See
     Moose::Manual::Delta for details.
 
-2.1100-TRIAL   2013-09-07
+2.1100   2013-09-07 (TRIAL RELEASE)
 
   [DEPRECATIONS]
 
@@ -103,7 +103,7 @@ for, noteworthy changes.
 
   * Releasing 2.0901 as stable.
 
-2.0901-TRIAL   2013-06-21
+2.0901   2013-06-21 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
@@ -117,7 +117,7 @@ for, noteworthy changes.
     support is still experimental (as is Specio), so use it with care. (Dave
     Rolsky)
 
-2.0900-TRIAL   2013-05-26
+2.0900   2013-05-26 (TRIAL RELEASE)
 
   [API CHANGES]
 
@@ -205,7 +205,7 @@ for, noteworthy changes.
 
   * Releasing 2.0502 as stable.
 
-2.0502-TRIAL   2012-04-25
+2.0502   2012-04-25 (TRIAL RELEASE)
 
   [OTHER]
 
@@ -216,13 +216,13 @@ for, noteworthy changes.
 
   * A few test tweaks to avoid spurious failures. (doy)
 
-2.0501-TRIAL   2012-04-03
+2.0501   2012-04-03 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   * Avoid syntax errors on pre-5.14. (doy)
 
-2.0500-TRIAL   2012-04-03
+2.0500   2012-04-03 (TRIAL RELEASE)
 
   [NEW FEATURES]
 
@@ -290,7 +290,7 @@ for, noteworthy changes.
 
   * No changes from 2.0302 (other than a few minor documentation tweaks).
 
-2.0302-TRIAL   2011-11-02
+2.0302   2011-11-02 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -299,7 +299,7 @@ for, noteworthy changes.
   * Make make_immutable return value consistent and document it to be true.
     (mst)
 
-2.0301-TRIAL   2011-10-21
+2.0301   2011-10-21 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -313,7 +313,7 @@ for, noteworthy changes.
   * The enum type will now allow single value enumerations. Previously, two or
     more values were required. (rjbs)
 
-2.0300-TRIAL   2011-09-23
+2.0300   2011-09-23 (TRIAL RELEASE)
 
   [DEPRECATIONS]
 
@@ -457,19 +457,19 @@ for, noteworthy changes.
 
   * No changes from 2.0105 (other than a few minor documentation tweaks).
 
-2.0105-TRIAL   2011-06-27
+2.0105   2011-06-27 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
   * Moose::Util::does_role now respects overridden ->does methods. (doy)
 
-2.0104-TRIAL   2011-06-20
+2.0104   2011-06-20 (TRIAL RELEASE)
 
   [OTHER]
 
   * Include changes from 2.0010.
 
-2.0103-TRIAL   2011-06-20
+2.0103   2011-06-20 (TRIAL RELEASE)
 
   [DEPRECATIONS]
 
@@ -487,7 +487,7 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0009.
 
-2.0102-TRIAL   2011-06-18
+2.0102   2011-06-18 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
@@ -500,13 +500,13 @@ for, noteworthy changes.
 
   * Include changes from Moose 2.0008.
 
-2.0101-TRIAL   2011-06-06
+2.0101   2011-06-06 (TRIAL RELEASE)
 
   [OTHER]
 
   * Various packaging issues.
 
-2.0100-TRIAL   2011-06-06
+2.0100   2011-06-06 (TRIAL RELEASE)
 
   [DEPRECATIONS]
 
@@ -655,14 +655,14 @@ for, noteworthy changes.
   * Moose::Manual::Support now explicitly states when major releases are
     allowed to happen (January, April, July, or October).
 
-1.9906-TRIAL   2011-04-04
+1.9906   2011-04-04 (TRIAL RELEASE)
 
   [OTHER]
 
   * Update conflicts list.
   * Minor pod updates.
 
-1.9905-TRIAL   2011-03-28
+1.9905   2011-03-28 (TRIAL RELEASE)
 
   [NEW FEATURES]
 
@@ -685,7 +685,7 @@ for, noteworthy changes.
     with the applied_attribute metaclass of the role which originally defined
     them. (Dave Rolsky)
 
-1.9904-TRIAL   2011-03-04
+1.9904   2011-03-04 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -695,7 +695,7 @@ for, noteworthy changes.
   * The Int type constraint now rejects integers with trailing newlines.
     (Matthew Horsfall)
 
-1.9903-TRIAL   2011-02-28
+1.9903   2011-02-28 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -711,7 +711,7 @@ for, noteworthy changes.
     preserve roles and role applications. This led to weird bugs. Many MooseX
     modules end up reinitializing your class or role. (Dave Rolsky)
 
-1.9902-TRIAL   2011-01-03
+1.9902   2011-01-03 (TRIAL RELEASE)
 
   [OTHER]
 
@@ -719,7 +719,7 @@ for, noteworthy changes.
 
   * Add a bit more Dist::Zilla functionality.
 
-1.9901-TRIAL   2011-01-03
+1.9901   2011-01-03 (TRIAL RELEASE)
 
   [OTHER]
 
@@ -727,7 +727,7 @@ for, noteworthy changes.
 
   * Fix a few issues with the conflict checking stuff.
 
-1.9900-TRIAL   2011-01-01
+1.9900   2011-01-01 (TRIAL RELEASE)
 
   [OTHER]
 
