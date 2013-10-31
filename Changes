@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * legacy throw_error now takes multiple arguments, like confess does
+    (Karen Etheridge)
+
 2.1104-TRIAL  2013-10-29
 
   [BUG FIXES]

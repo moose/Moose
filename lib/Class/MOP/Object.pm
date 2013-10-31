@@ -11,7 +11,7 @@ use Scalar::Util 'blessed';
 sub throw_error {
     shift;
     require Moose::Util;
-    Moose::Util::throw_exception( Legacy => message => @_ );
+    Moose::Util::throw_exception( Legacy => message => join('', @_) );
 }
 
 sub _inline_throw_error {
