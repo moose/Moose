@@ -10,10 +10,10 @@ use MRO::Compat ();
 use Scalar::Util ();
 use Try::Tiny ();
 
+use Moose::Util ();
+
 use if ( not our $__mx_is_compiled ), 'Moose::Meta::Class';
 use if ( not our $__mx_is_compiled ), metaclass => 'Moose::Meta::Class';
-
-use Moose::Util 'throw_exception';
 
 sub new {
     my $class = shift;
@@ -28,7 +28,7 @@ sub BUILDARGS {
     my $class = shift;
     if ( scalar @_ == 1 ) {
         unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            throw_exception( "SingleParamsToNewMustBeHashRef" );
+            Moose::Util::throw_exception( "SingleParamsToNewMustBeHashRef" );
         }
         return { %{ $_[0] } };
     }
@@ -119,7 +119,7 @@ sub does {
     my $class = Scalar::Util::blessed($self) || $self;
     my $meta = Class::MOP::Class->initialize($class);
     (defined $role_name)
-        || throw_exception( DoesRequiresRoleName => class => $meta );
+        || Moose::Util::throw_exception( DoesRequiresRoleName => class => $meta );
     return 1 if $meta->can('does_role') && $meta->does_role($role_name);
     return 0;
 }
