@@ -1302,7 +1302,7 @@ L<Moose::Meta::TypeConstraint::Union> object.
 
 Given a C<$type_name> in the form of C<'BaseType[ContainerType]'>,
 this will create a new L<Moose::Meta::TypeConstraint::Parameterized>
-object. The C<BaseType> must exist already exist as a parameterizable
+object. The C<BaseType> must already exist as a parameterizable
 type.
 
 =item B<create_class_type_constraint($class, $options)>
