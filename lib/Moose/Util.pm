@@ -12,7 +12,7 @@ use List::Util qw(first);
 use List::MoreUtils qw(any all);
 use overload ();
 use Try::Tiny;
-use Class::MOP;
+
 
 my @exports = qw[
     find_meta
@@ -36,6 +36,10 @@ Sub::Exporter::setup_exporter({
     exports => \@exports,
     groups  => { all => \@exports }
 });
+
+# Things that need to ->import from Moose::Util
+# should be loaded after Moose::Util defines ->import
+require Class::MOP;
 
 sub throw_exception {
     my ($class_name, @args_to_exception) = @_;
