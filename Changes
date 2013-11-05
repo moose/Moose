@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1106   2013-11-05 (TRIAL RELEASE)
+
   [BUG FIXES]
 
   * throw_error import cleaned from Moose::Object after use (doy)
