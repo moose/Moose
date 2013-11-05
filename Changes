@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  * throw_error import cleaned from Moose::Object after use (doy)
+  * resolved new circular load issue between Moose::Util and Class::MOP (Kent
+    Fredric, RT#89713 and PR#42)
+
 2.1105   2013-10-30 (TRIAL RELEASE)
 
   [BUG FIXES]
