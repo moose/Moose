@@ -21,4 +21,9 @@ sub before_build {
         $self->log("Removing existing META.yml file");
         unlink('META.yml');
     }
+
+    if ( -e 'lib/Moose/Manual/Exceptions/Manifest.pod') {
+        $self->log('Removing existing Moose::Manual::Exceptions::Manifest');
+        unlink('lib/Moose/Manual/Exceptions/Manifest.pod');
+    }
 }
