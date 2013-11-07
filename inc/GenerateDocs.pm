@@ -1,6 +1,6 @@
 package inc::GenerateDocs;
 
-use Moose;
+use Moose 2.1106;
 with 'Dist::Zilla::Role::FileGatherer', 'Dist::Zilla::Role::FileInjector';
 
 use Class::Load 0.07 qw(load_class);
@@ -25,7 +25,7 @@ sub generate_docs {
     opendir( $dir, $path) or die $!;
 
     my $number = 0;
-    my $text = "package Moose::Manual::Exceptions::Manifest;\n\n"; 
+    my $text = "package Moose::Manual::Exceptions::Manifest;\n\n";
 
     my $exceptions_to_msg_hashref = get_exceptions_to_messages();
 
@@ -140,21 +140,20 @@ sub generate_docs {
             }
             my $role_verb = "consume".( $#roles == 0 ? 's role' : ' roles' );
 
-            $text .= "=head1 Moose::Exception::$file
-
-This class is a subclass of $superclasses".
+            $text .= "=head1 Moose::Exception::$file\n\nThis class is a subclass of $superclasses".
 ( defined $consumed_roles ? " and $role_verb $consumed_roles.": '.' ).
 "\n\n=over 4\n\n=back\n\n=head2 ATTRIBUTES\n\n=over 4\n\n".
-( defined $attributes_text ? "$attributes_text" : '' );
+( defined $attributes_text ? "$attributes_text\n\n" : '' );
 
             $text = fix_line_length( $text );
             $text .= $exception_messages;
             $number++;
             $text =~ s/\s+$//;
+            $text .= "\n\n";
         }
     }
 
-    $text .= "\n=cut\n";
+    $text .= "=cut\n";
     return $text;
 }
 
