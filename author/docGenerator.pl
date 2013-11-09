@@ -1,8 +1,11 @@
+use blib;
 use Moose;
 use Class::Load 0.07 qw(load_class);
 
 my $text = generate_docs();
-print $text;
+my $pod_file;
+open $pod_file, "> lib/Moose/Manual/Exceptions/Manifest.pod" or die $!;
+print $pod_file $text;
 
 sub generate_docs {
     my $dir;
