@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 
+use blib;   # must always run from local copy
 use Moose;
 use Class::Load 0.07 qw(load_class);
 
