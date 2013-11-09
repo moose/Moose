@@ -4,6 +4,7 @@ use Class::Load 0.07 qw(load_class);
 
 my $text = generate_docs();
 my $pod_file;
+mkdir 'lib/Moose/Manual/Exceptions/';
 open $pod_file, "> lib/Moose/Manual/Exceptions/Manifest.pod" or die $!;
 print $pod_file $text;
 
