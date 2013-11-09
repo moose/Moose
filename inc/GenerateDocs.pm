@@ -16,7 +16,7 @@ sub after_build {
     die "no blib; failed to build properly?" unless -d 'blib';
   }
 
-  system($^X, 'docGenerator.pl');
+  system($^X, 'author/docGenerator.pl');
 }
 
 1;
