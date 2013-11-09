@@ -17,6 +17,11 @@ sub after_build {
   }
 
   system($^X, 'author/docGenerator.pl');
+  my $file_obj = Dist::Zilla::File::OnDisk->new(
+    name    => "lib/Moose/Manual/Exceptions/Manifest.pod",
+  );
+
+  $self->add_file($file_obj);
 }
 
 1;
