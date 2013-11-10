@@ -37,9 +37,9 @@ sub generate_docs {
             load_class( $exception );
             my $metaclass = Class::MOP::class_of( $exception );
 
-            my @super_classes = $metaclass->superclasses;
-            my @roles = $metaclass->calculate_all_roles;
-            my @attributes = $metaclass->get_all_attributes;
+            my @super_classes = sort { $a->name cmp $b->name } $metaclass->superclasses;
+            my @roles = sort { $a->name cmp $b->name } $metaclass->calculate_all_roles;
+            my @attributes = sort { $a->name cmp $b->name } $metaclass->get_all_attributes;
 
             my $file_handle;
 
@@ -55,9 +55,8 @@ sub generate_docs {
             $superclasses = place_commas_and_and( @super_classes );
             $consumed_roles = place_commas_and_and( @roles_names );
 
-            foreach( @attributes )
+            foreach my $attribute ( @attributes )
             {
-                my $attribute = $_;
                 my $name = $attribute->name;
                 my $traits;
 
@@ -92,12 +91,12 @@ sub generate_docs {
                 my $handles_text;
                 if( $attribute->has_handles ) {
                     my %handles = %{$attribute->handles};
-                    my @keys = keys( %handles );
+                    my @keys = sort keys( %handles );
                     $handles_text = "This attribute has handles as follows:";
-                    for( my $i = 0; $i <= $#keys; $i++ ) {
+                    foreach my $key ( @keys ) {
                         next
-                            if( $keys[$i] =~ /^_/  );
-                        my $str_text = sprintf("\n    %-25s=> %s", $keys[$i], $handles{$keys[$i]});
+                            if( $key =~ /^_/  );
+                        my $str_text = sprintf("\n    %-25s=> %s", $key, $handles{$key});
                         $handles_text .= $str_text;
                     }
                 }
@@ -173,12 +172,12 @@ sub shorten_to_eighty {
         $s2 =~ s/[\s]+$//g;
         if( ( $substr1 =~ /[\(\)\[\w:,'"<>\]\$]/ ) && ( $substr2 =~ /[\$'"\(\)\[<>\w:,\]]/ ) ) {
             if( $s1 =~ s/\s([\(\)\[<:\w+>,"'\]\$]+)$// ) {
-		$s1 =~ s/[\s]+$//g;
+                $s1 =~ s/[\s]+$//g;
                 $s2 = $1.$s2;
-		$s2 =~ s/[\s]+$//g;
+                $s2 =~ s/[\s]+$//g;
                 my $s3 = shorten_to_eighty( $s2 );
-		$s3 =~ s/[\s]+$//g;
-		$s2 =~ s/[\s]+$//g;
+                $s3 =~ s/[\s]+$//g;
+                $s2 =~ s/[\s]+$//g;
                 if( $s2 ne $s3 ) {
                     return "$s1\n$s3";
                 } else {
