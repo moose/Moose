@@ -30,7 +30,6 @@ sub after_build {
     $author_info .= "\n=cut\n";
 
     $text .= $author_info;
-    print STDERR "text = ".$text."\n";
 
     mkdir 'lib/Moose/Manual/Exceptions/';
     my $pod_file;
