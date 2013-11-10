@@ -15,10 +15,15 @@ sub generate_docs {
     my $version = $ARGV[0];
 
     my $number = 0;
-    my $text = "package Moose::Manual::Exceptions::Manifest;\nuse strict;\nuse warnings;\n\n";
-    $text .= "# ABSTRACT: Moose's Exception Types\n\n__END__\n\n=pod\n\n=head1 NAME\n\n";
-    $text .= "Moose::Manual::Exceptions::Manifest - Moose's Exception Types\n\n";
-    $text .= "=head1 VERSION\n\nversion $version\n\n";
+    my $text = <<'END_POD';
+package Moose::Manual::Exceptions::Manifest;
+use strict;
+use warnings;
+
+# ABSTRACT: Moose's Exception Types
+__END__
+
+END_POD
 
     my $exceptions_to_msg_hashref = get_exceptions_to_messages();
 
