@@ -3,21 +3,7 @@ use Moose;
 use Class::Load 0.07 qw(load_class);
 
 my $text = generate_docs();
-$text .= "=head1 AUTHORS\n\n=over 4\n\n=item *\n\nStevan Little <stevan.little\@iinteractive.com>\n\n";
-$text .= "=item *\n\nDave Rolsky <autarch\@urth.org>\n\n=item *\n\nJesse Luehrs <doy\@tozt.net>\n\n";
-$text .= "=item *\n\nShawn M Moore <code\@sartak.org>\n\n=item *\n\nYuval Kogman <nothingmuch\@woobling.org>";
-$text .= "\n\n=item *\n\nKaren Etheridge <ether\@cpan.org>\n\n=item *\n\nFlorian Ragwitz <rafl\@debian.org>";
-$text .= "\n\n=item *\n\nHans Dieter Pearcey <hdp\@weftsoar.net>\n\n=item *\n\nChris Prather <chris\@prather.org>";
-$text .= "\n\n=item *\n\nMatt S Trout <mst\@shadowcat.co.uk>\n\n=back\n\n=head1 COPYRIGHT AND LICENSE\n\n";
-$text .= "This software is copyright (c) 2006 by Infinity Interactive, Inc..\n\n";
-$text .= "This is free software; you can redistribute it and/or modify it under\n\n";
-$text .= "the same terms as the Perl 5 programming language system itself.\n\n";
-$text .= "=cut\n";
-
-my $pod_file;
-mkdir 'lib/Moose/Manual/Exceptions/';
-open $pod_file, "> lib/Moose/Manual/Exceptions/Manifest.pod" or die $!;
-print $pod_file $text;
+print $text;
 
 sub generate_docs {
     my $dir;
@@ -26,11 +12,13 @@ sub generate_docs {
 
     opendir( $dir, $path) or die $!;
 
+    my $version = $ARGV[0];
+
     my $number = 0;
     my $text = "package Moose::Manual::Exceptions::Manifest;\nuse strict;\nuse warnings;\n\n";
     $text .= "# ABSTRACT: Moose's Exception Types\n\n__END__\n\n=pod\n\n=head1 NAME\n\n";
     $text .= "Moose::Manual::Exceptions::Manifest - Moose's Exception Types\n\n";
-    $text .= "=head1 VERSION\n\nversion $Moose::VERSION\n\n";
+    $text .= "=head1 VERSION\n\nversion $version\n\n";
 
     my $exceptions_to_msg_hashref = get_exceptions_to_messages();
 
