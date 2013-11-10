@@ -3,6 +3,7 @@ package inc::GenerateDocs;
 use Moose;
 with 'Dist::Zilla::Role::AfterBuild', 'Dist::Zilla::Role::FileInjector';
 use Class::Load 0.07 qw(load_class);
+use IPC::System::Simple qw(system);
 
 sub after_build {
   my ($self, $opts) = @_;
