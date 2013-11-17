@@ -1,164 +1,172 @@
-#!/usr/bin/env perl
-
-use strict;
-use warnings;
-
+use blib;
 use Moose;
 use Class::Load 0.07 qw(load_class);
 
-my $dir;
-my $path = 'lib/Moose/Exception/';
+my $text = generate_docs();
+print $text;
 
-opendir( $dir, $path) or die $!;
+sub generate_docs {
+    my $dir;
+    my $path = 'lib/Moose/Exception/';
+    my $pod_file;
 
-my $number = 0;
+    opendir( $dir, $path) or die $!;
 
-print "package Moose::Manual::Exceptions::Manifest;\n";
+    my $version = $ARGV[0];
 
-my $exceptionsToMsgHashRef = getExceptionsToMessages();
+    my $number = 0;
+    my $text = <<'END_POD';
+package Moose::Manual::Exceptions::Manifest;
+use strict;
+use warnings;
 
-while( my $file = readdir($dir) )
-{
-    my %exceptions = %$exceptionsToMsgHashRef;
+# ABSTRACT: Moose's Exception Types
+__END__
 
-    my ($exception, $description, $attributesText, $superclasses, $consumedRoles, $exceptionMessages);
-    my (@attributes, @roles, @superClasses, @rolesNames, @superClassNames);
-    if( !(-d 'lib/Moose/Exception/'.$file) )
+END_POD
+
+    my $exceptions_to_msg_hashref = get_exceptions_to_messages();
+
+    while( my $file = readdir($dir) )
     {
-        $file =~ s/\.pm//i;
+        my %exceptions = %$exceptions_to_msg_hashref;
 
-        $exception = "Moose::Exception::".$file;
-
-	load_class( $exception );
-        my $metaClass = Class::MOP::class_of( $exception );
-
-        my @superClasses = $metaClass->superclasses;
-        my @roles = $metaClass->calculate_all_roles;
-        my @attributes = $metaClass->get_all_attributes;
-
-        my $fileHandle;
-
-        @rolesNames = map {
-            my $name = $_->name;
-            if( $name =~ /\|/ ) {
-                undef;
-            } else {
-                $name;
-            }
-        } @roles;
-
-        $superclasses = placeCommasAndAnd( @superClasses );
-        $consumedRoles = placeCommasAndAnd( @rolesNames );
-
-        foreach( @attributes )
+        my ($exception, $description, $attributes_text, $superclasses, $consumed_roles, $exception_messages);
+        my (@attributes, @roles, @super_classes, @roles_names, @super_class_names);
+        if( !(-d 'lib/Moose/Exception/'.$file) )
         {
-            my $attribute = $_;
-            my $name = $attribute->name;
-            my $traits;
+            $file =~ s/\.pm//i;
 
-            if( $attribute->has_applied_traits ) {
-                my @traitsArray = @{$attribute->applied_traits};
+            $exception = "Moose::Exception::".$file;
 
-                $traits = "has traits of ";
-                my $traitsStr = placeCommasAndAnd( @traitsArray );
-                $traits .= $traitsStr;
-            }
+            load_class( $exception );
+            my $metaclass = Class::MOP::class_of( $exception );
 
-            my ( $tc, $type_constraint ) = ( $attribute->type_constraint->name, "isa " );
-            if( $tc =~ /::/ && !(defined $traits) ) {
-                $type_constraint .= "L<".$tc.">";
-            } else {
-                $type_constraint .= $tc;
-	    }
-            my $readOrWrite = ( $attribute->has_writer ? 'is read-write' : 'is read-only' );
-            my $required = ( $attribute->is_required ? 'is required' : 'is optional' );
-            my $predicate = ( $attribute->has_predicate ? 'has a predicate C<'.$attribute->predicate.'>': undef );
+            my @super_classes = sort { $a->name cmp $b->name } $metaclass->superclasses;
+            my @roles = sort { $a->name cmp $b->name } $metaclass->calculate_all_roles;
+            my @attributes = sort { $a->name cmp $b->name } $metaclass->get_all_attributes;
 
-            my $default;
-            if( $attribute->has_default ) {
-                if( $tc eq "Str" ) {
-                    $default = 'has a default value "'.$attribute->default.'"';
+            my $file_handle;
+
+            @roles_names = map {
+                my $name = $_->name;
+                if( $name =~ /\|/ ) {
+                    undef;
+                } else {
+                    $name;
                 }
-                else {
-                    $default = 'has a default value '.$attribute->default;
+            } @roles;
+
+            $superclasses = place_commas_and_and( @super_classes );
+            $consumed_roles = place_commas_and_and( @roles_names );
+
+            foreach my $attribute ( @attributes )
+            {
+                my $name = $attribute->name;
+                my $traits;
+
+                if( $attribute->has_applied_traits ) {
+                    my @traits_array = @{$attribute->applied_traits};
+
+                    $traits = "has traits of ";
+                    my $traits_str = place_commas_and_and( @traits_array );
+                    $traits .= $traits_str;
+                }
+
+                my ( $tc, $type_constraint ) = ( $attribute->type_constraint->name, "isa " );
+                if( $tc =~ /::/ && !(defined $traits) ) {
+                    $type_constraint .= "L<".$tc.">";
+                } else {
+                    $type_constraint .= $tc;
+                }
+                my $read_or_write = ( $attribute->has_writer ? 'is read-write' : 'is read-only' );
+                my $required = ( $attribute->is_required ? 'is required' : 'is optional' );
+                my $predicate = ( $attribute->has_predicate ? 'has a predicate C<'.$attribute->predicate.'>': undef );
+
+                my $default;
+                if( $attribute->has_default ) {
+                    if( $tc eq "Str" ) {
+                        $default = 'has a default value "'.$attribute->default.'"';
+                    }
+                    else {
+                        $default = 'has a default value '.$attribute->default;
+                    }
+                }
+
+                my $handles_text;
+                if( $attribute->has_handles ) {
+                    my %handles = %{$attribute->handles};
+                    my @keys = sort keys( %handles );
+                    $handles_text = "This attribute has handles as follows:";
+                    foreach my $key ( @keys ) {
+                        next
+                            if( $key =~ /^_/  );
+                        my $str_text = sprintf("\n    %-25s=> %s", $key, $handles{$key});
+                        $handles_text .= $str_text;
+                    }
+                }
+
+                $exception_messages = "=back\n\n=head4 Sample Error Message";
+
+                my $msg_or_msg_ref = $exceptions{$file};
+                if( ref $msg_or_msg_ref eq "ARRAY" ) {
+                    $exception_messages .= "s:\n\n";
+                    my @array = @$msg_or_msg_ref;
+                    foreach( @array ) {
+                        $exception_messages .= "    $_";
+                    }
+                } else {
+                    $exception_messages .= ":\n\n";
+                    if( $exceptions{$file} ) {
+                        $exception_messages .= "    ".$exceptions{$file};
+                    }
+                }
+
+                $exception_messages .= "\n";
+
+                $attributes_text .= "=item B<< \$exception->$name >>\n\n";
+                if( $attribute->has_documentation ) {
+                    $attributes_text .= $attribute->documentation."\n\n";
+                } else {
+                    $attributes_text .= "This attribute $read_or_write, $type_constraint".
+                        ( defined $predicate ? ", $predicate" : '' ).
+                        ( defined $default ? ", $default" : '').
+                        " and $required.".
+                        ( defined $handles_text &&  ( $handles_text ne "This attribute has handles as follows:\n" ) ? "\n\n$handles_text" : '' )."\n\n";
                 }
             }
+            my $role_verb = "consume".( $#roles == 0 ? 's role' : ' roles' );
 
-            my $handlesText;
-            if( $attribute->has_handles ) {
-                my %handles = %{$attribute->handles};
-                my @keys = keys( %handles );
-                $handlesText = "This attribute has handles as follows:";
-                for( my $i = 0; $i <= $#keys; $i++ ) {
-                    next
-                        if( $keys[$i] =~ /^_/  );
-                    my $strText = sprintf("\n    %-25s=> %s", $keys[$i], $handles{$keys[$i]});
-                    $handlesText .= $strText;
-                }
-            }
-
-            $exceptionMessages = "=back\n\n=head4 Sample Error Message";
-
-            my $msgOrMsgRef = $exceptions{$file};
-            if( ref $msgOrMsgRef eq "ARRAY" ) {
-                $exceptionMessages .= "s:\n\n";
-                my @array = @$msgOrMsgRef;
-                foreach( @array ) {
-                    $exceptionMessages .= "    $_";
-		}
-            } else {
-                $exceptionMessages .= ":\n\n";
-                if( $exceptions{$file} ) {
-                    $exceptionMessages .= "    ".$exceptions{$file};
-                }
-            }
-
-            $exceptionMessages .= "\n";
-
-            $attributesText .= "=item B<< \$exception->$name >>\n\n";
-            if( $attribute->has_documentation ) {
-                $attributesText .= $attribute->documentation."\n\n";
-            } else {
-                $attributesText .= "This attribute $readOrWrite, $type_constraint".
-                    ( defined $predicate ? ", $predicate" : '' ).
-                    ( defined $default ? ", $default" : '').
-                    " and $required.".
-                    ( defined $handlesText &&  ( $handlesText ne "This attribute has handles as follows:\n" ) ? "\n\n$handlesText" : '' )."\n\n";
-            }
-        }
-        my $roleVerb = "consume".( $#roles == 0 ? 's role' : ' roles' );
-
-        my $text = "=head1 Moose::Exception::$file
-
-This class is a subclass of $superclasses".
-( defined $consumedRoles ? " and $roleVerb $consumedRoles.": '.' ).
+            $text .= "=head1 Moose::Exception::$file\n\nThis class is a subclass of $superclasses".
+( defined $consumed_roles ? " and $role_verb $consumed_roles.": '.' ).
 "\n\n=over 4\n\n=back\n\n=head2 ATTRIBUTES\n\n=over 4\n\n".
-( defined $attributesText ? "$attributesText" : '' );
+( defined $attributes_text ? "$attributes_text\n\n" : '' );
 
-    $text = fixLineLength( $text );
-    $text .= $exceptionMessages;
-    $number++;
-    $text =~ s/\s+$//;
-    print "\n$text\n";
+            $text = fix_line_length( $text );
+            $text .= $exception_messages;
+            $number++;
+            $text =~ s/\s+$//;
+            $text .= "\n\n";
+        }
     }
+
+    return $text;
 }
 
-print "\n=cut\n";
-
-sub fixLineLength {
+sub fix_line_length {
     my $doc = shift;
 
     my @tokens = split /\n/, $doc;
 
     my $str;
     foreach( @tokens ) {
-        my $string = shortenToEighty($_);
+        my $string = shorten_to_eighty($_);
         $str .= ($string."\n");
     }
     return $str."\n";
 }
 
-sub shortenToEighty {
+sub shorten_to_eighty {
     my ($str) = @_;
     if( length $str > 80 && length $str != 81 ) {
         my $s1 = substr($str, 0, 80);
@@ -169,12 +177,12 @@ sub shortenToEighty {
         $s2 =~ s/[\s]+$//g;
         if( ( $substr1 =~ /[\(\)\[\w:,'"<>\]\$]/ ) && ( $substr2 =~ /[\$'"\(\)\[<>\w:,\]]/ ) ) {
             if( $s1 =~ s/\s([\(\)\[<:\w+>,"'\]\$]+)$// ) {
-		$s1 =~ s/[\s]+$//g;
+                $s1 =~ s/[\s]+$//g;
                 $s2 = $1.$s2;
-		$s2 =~ s/[\s]+$//g;
-                my $s3 = shortenToEighty( $s2 );
-		$s3 =~ s/[\s]+$//g;
-		$s2 =~ s/[\s]+$//g;
+                $s2 =~ s/[\s]+$//g;
+                my $s3 = shorten_to_eighty( $s2 );
+                $s3 =~ s/[\s]+$//g;
+                $s2 =~ s/[\s]+$//g;
                 if( $s2 ne $s3 ) {
                     return "$s1\n$s3";
                 } else {
@@ -190,59 +198,59 @@ sub shortenToEighty {
     }
 }
 
-sub placeCommasAndAnd {
+sub place_commas_and_and {
     my @array = @_;
-    my ($str, $lastUndef);
+    my ($str, $last_undef);
 
     for( my $i = 0; $i <= $#array; $i++ ) {
         my $element = $array[$i];
         if( !(defined $element ) ) {
-            $lastUndef = 1;
+            $last_undef = 1;
             next;
         }
-        if ( $i == 0 || ( $lastUndef && $i == 1 ) ) {
+        if ( $i == 0 || ( $last_undef && $i == 1 ) ) {
             $str .= "L<$element>";
         } elsif( $i == $#array ) {
             $str .= " and L<$element>";
         } else {
             $str .= ", L<$element>";
         }
-        $lastUndef = 0;
+        $last_undef = 0;
     }
     return $str;
 }
 
-sub getExceptionsToMessages {
-    my $testDir;
-    my $testPath = 't/exceptions/';
+sub get_exceptions_to_messages {
+    my $test_dir;
+    my $test_path = 't/exceptions/';
 
     my %hash;
 
-    opendir( $testDir, $testPath ) or die $!;
+    opendir( $test_dir, $test_path ) or die $!;
 
     my $file;
-    while( $file = readdir( $testDir ) ) {
-        my $fileHandle;
+    while( $file = readdir( $test_dir ) ) {
+        my $file_handle;
 
-        open( $fileHandle, "t/exceptions/$file" ) or die $!;
+        open( $file_handle, "t/exceptions/$file" ) or die $!;
         my ($message, $exception);
-        while( <$fileHandle> ) {
+        while( <$file_handle> ) {
             if( /like\($/ ) {
-                my $exceptionVar = <$fileHandle>;
-                if( $exceptionVar =~ /\$exception,$/ ) {
-                    $message = <$fileHandle>;
+                my $exception_var = <$file_handle>;
+                if( $exception_var =~ /\$exception,$/ ) {
+                    $message = <$file_handle>;
                     if( $message =~ q/\$\w+/ || ( $message =~ /\\\(\w+\\\)/) ) {
-                        my $garbage = <$fileHandle>;
-                        $message = <$fileHandle>;
+                        my $garbage = <$file_handle>;
+                        $message = <$file_handle>;
                         $message =~ s/^\s+#//;
                     }
                     $message =~ s!^\s*qr(/|\!)(\^)?(\\Q)?!!;
                     $message =~ s!(/|\!),$!!;
                 }
             } elsif( /isa_ok\($/ ) {
-                my $exceptionVar = <$fileHandle>;
-                if( $exceptionVar =~ /\$exception(->error)?,$/ ) {
-                    $exception = <$fileHandle>;
+                my $exception_var = <$file_handle>;
+                if( $exception_var =~ /\$exception(->error)?,$/ ) {
+                    $exception = <$file_handle>;
                     if( $exception =~ /Moose::Exception::(\w+)/ ) {
                         $exception = $1;
                     }
@@ -258,8 +266,8 @@ sub getExceptionsToMessages {
                 } elsif( exists $hash{$exception} &&
                          ( $hash{$exception} ne $message ) ) {
                     my $msg = $hash{$exception};
-                    my $arrayRef = [ $msg, $message ];
-                    $hash{$exception} = $arrayRef;
+                    my $array_ref = [ $msg, $message ];
+                    $hash{$exception} = $array_ref;
                 } else {
                     $hash{$exception} = $message;
                 }
@@ -267,8 +275,9 @@ sub getExceptionsToMessages {
                 $message = undef;
             }
         }
-        close $fileHandle;
+        close $file_handle;
     }
 
     return \%hash;
 }
+
