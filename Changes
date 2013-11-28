@@ -7,6 +7,8 @@ for, noteworthy changes.
 
   - many additions to the list of conflicting modules (those that require
     updates after installing Moose), reflecting recent API changes
+  - now failing early at build time, with a useful error message, if a
+    compiler is not available
 
 2.1106   2013-11-05 (TRIAL RELEASE)
 
