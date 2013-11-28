@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - many additions to the list of conflicting modules (those that require
+    updates after installing Moose), reflecting recent API changes
+
 2.1106   2013-11-05 (TRIAL RELEASE)
 
   [BUG FIXES]
