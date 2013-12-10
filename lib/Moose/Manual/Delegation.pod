@@ -136,6 +136,34 @@ something like
       push @{ $self->queue }, @items;
   }
 
+For example, you might use Array helpers to add C<add_task> and
+C<add_appointment> methods to a Calendar class:
+
+  has 'tasks' => (
+      traits => ['Array'],
+      isa => 'ArrayRef[Task]',
+      default => sub { [ ] },
+      handles => {
+          add_task  => 'push',
+          next_task => 'shift',
+      },
+  );
+
+  has 'appointments' => (
+      traits  => ['Array'],
+      isa => 'ArrayRef[Appointment]',
+      default => sub { [ ] },
+      handles => {
+          add_appointment  => 'push',
+          next_appointment => 'shift',
+      },
+  );
+
+Which you would call as:
+
+  $calendar->add_task( $task_obj );
+  $calendar->add_appointment( $appointment_obj );
+
 Moose includes the following traits for native delegation.
 
 As mentioned above, each trait provides a number of methods which are
