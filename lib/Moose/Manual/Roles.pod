@@ -106,6 +106,16 @@ We could use this same role in a C<Bone> class:
 
 See also L<Moose::Cookbook::Roles::Comparable_CodeReuse> for an example.
 
+It's possible to compose existing roles into new roles. For
+example, we can have a C<HandleWithCare> class which applies both
+the C<Breakable> and C<Fragile> roles to any class which consumes it:
+
+  package HandleWithCare;
+
+  use Moose::Role;
+
+  with 'Breakable', 'Fragile';
+
 =head1 REQUIRED METHODS
 
 As mentioned previously, a role can require that consuming classes
