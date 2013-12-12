@@ -127,6 +127,8 @@ For learning about the usage of Moose exception objects, read
 L<Moose::Manual::Exceptions>. Individual exceptions are documented in
 L<Moose::Manual::Exceptions::Manifest>.
 
+This work was funded as part of the GNOME Outreach Program for Women.
+
 =back
 
 =head1 2.1000
