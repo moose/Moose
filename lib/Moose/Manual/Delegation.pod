@@ -164,11 +164,11 @@ Which you would call as:
   $calendar->add_task( $task_obj );
   $calendar->add_appointment( $appointment_obj );
 
-Moose includes the following traits for native delegation.
-
 As mentioned above, each trait provides a number of methods which are
 summarized below. For more information about each of these provided methods
 see the documentation for that specific trait.
+
+Moose includes the following traits for native delegation.
 
 =over 4
 
