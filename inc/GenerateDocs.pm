@@ -30,6 +30,9 @@ sub after_build {
         die "no blib; failed to build properly?" unless -d 'blib';
     }
 
+    # this must be run as a separate process because we need to use the new
+    # Moose we just generated, in order to introspect all the exception classes
+    $self->log('running author/docGenerator.pl...');
     my $text = capturex($^X, "author/docGenerator.pl");
 
     my $file_obj = first { $_->name eq 'lib/Moose/Manual/Exceptions/Manifest.pod' } @{$self->zilla->files};
