@@ -1,8 +1,6 @@
 package inc::CheckDelta;
 use Moose;
 
-use Path::Class;
-
 with 'Dist::Zilla::Role::AfterBuild';
 
 sub after_build {
