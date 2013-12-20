@@ -1,9 +1,21 @@
 package inc::GenerateDocs;
 
 use Moose;
-with 'Dist::Zilla::Role::AfterBuild', 'Dist::Zilla::Role::FileInjector';
+with 'Dist::Zilla::Role::FileGatherer',
+    'Dist::Zilla::Role::AfterBuild',
+    'Dist::Zilla::Role::FileInjector';
 use IPC::System::Simple qw(capturex);
 use Path::Tiny;
+use List::Util 'first';
+
+sub gather_files {
+    my ($self, $arg) = @_;
+
+    $self->add_file(Dist::Zilla::File::InMemory->new(
+        name    => 'lib/Moose/Manual/Exceptions/Manifest.pod',
+        content => '',  # to fill in later
+    ));
+}
 
 sub after_build {
     my ($self, $opts) = @_;
@@ -19,10 +31,8 @@ sub after_build {
 
     my $text = capturex($^X, "author/docGenerator.pl");
 
-    my $file_obj = Dist::Zilla::File::InMemory->new(
-        name    => "lib/Moose/Manual/Exceptions/Manifest.pod",
-        content => $text,
-    );
+    my $file_obj = first { $_->name eq 'lib/Moose/Manual/Exceptions/Manifest.pod' } @{$self->zilla->files};
+    $file_obj->content($text);
 
     my $weaver = $self->zilla->plugin_named('SurgicalPodWeaver');
 
@@ -30,8 +40,6 @@ sub after_build {
 
     mkdir 'lib/Moose/Manual/Exceptions';
     path($file_obj->name)->spew_raw($file_obj->encoded_content);
-
-    $self->add_file($file_obj);
 }
 
 1;
