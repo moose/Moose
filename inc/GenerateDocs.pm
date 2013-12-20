@@ -5,6 +5,7 @@ with 'Dist::Zilla::Role::FileGatherer',
     'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::FileInjector';
 use IPC::System::Simple qw(capturex);
+use File::pushd;
 use Path::Tiny;
 use List::Util 'first';
 
