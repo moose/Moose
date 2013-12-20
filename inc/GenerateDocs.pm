@@ -9,11 +9,13 @@ use File::pushd;
 use Path::Tiny;
 use List::Util 'first';
 
+my $filename = path(qw(lib Moose Manual Exceptions Manifest.pod));
+
 sub gather_files {
     my ($self, $arg) = @_;
 
     $self->add_file(Dist::Zilla::File::InMemory->new(
-        name    => 'lib/Moose/Manual/Exceptions/Manifest.pod',
+        name    => $filename->stringify,
         content => '',  # to fill in later
     ));
 }
@@ -35,15 +37,13 @@ sub after_build {
     $self->log('running author/docGenerator.pl...');
     my $text = capturex($^X, "author/docGenerator.pl");
 
-    my $file_obj = first { $_->name eq 'lib/Moose/Manual/Exceptions/Manifest.pod' } @{$self->zilla->files};
+    my $file_obj = first { $_->name eq $filename } @{$self->zilla->files};
     $file_obj->content($text);
 
-    my $weaver = $self->zilla->plugin_named('SurgicalPodWeaver');
+    $self->zilla->plugin_named('SurgicalPodWeaver')->munge_file($file_obj);
 
-    $weaver->munge_file($file_obj);
-
-    mkdir 'lib/Moose/Manual/Exceptions';
-    path($file_obj->name)->spew_raw($file_obj->encoded_content);
+    $filename->touchpath;
+    $filename->spew_raw($file_obj->encoded_content);
 }
 
 1;
