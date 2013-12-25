@@ -97,11 +97,15 @@ END_POD
                 if( $attribute->has_handles ) {
                     my %handles = %{$attribute->handles};
                     my @keys = sort keys( %handles );
-                    $handles_text = "This attribute has handles as follows:";
+                    my $first_element_inserted = 1;
                     foreach my $key ( @keys ) {
                         next
                             if( $key =~ /^_/  );
                         my $str_text = sprintf("\n    %-25s=> %s", $key, $handles{$key});
+                        if( $first_element_inserted == 1 ) {
+                            $handles_text = "This attribute has handles as follows:";
+                            $first_element_inserted = 0;
+                        }
                         $handles_text .= $str_text;
                     }
                 }
