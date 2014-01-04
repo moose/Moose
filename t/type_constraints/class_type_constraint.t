@@ -20,7 +20,7 @@ use Moose::Util::TypeConstraints;
 
 }
 
-is( exception { class_type 'Beep' }, undef, 'class_type keywork works' );
+is( exception { class_type 'Beep' }, undef, 'class_type keyword works' );
 is( exception { class_type('Boop', message { "${_} is not a Boop" }) }, undef, 'class_type keywork works with message' );
 
 my $type = find_type_constraint("Foo");
