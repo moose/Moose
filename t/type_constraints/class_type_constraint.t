@@ -58,6 +58,14 @@ is( exception { class_type('Boop', message { "${_} is not a Boop" }) }, undef, '
     ok( $type->is_subtype_of(Moose::Meta::TypeConstraint::Class->new( name => "__ANON__", class => "Bar" )), "subtype of other anon constraint" );
 }
 
+{
+    is( exception { class_type 'FooType', { class => 'Foo' } }, undef, 'class_type keyword with custom type name' );
+    my $type = find_type_constraint('FooType');
+    is( $type->class, 'Foo', "class attribute" );
+    ok( !$type->is_subtype_of('Foo'), "FooType is not subtype of Foo" );
+    ok( !$type->is_subtype_of($type), '$foo_type is not subtype of $foo_type' );
+}
+
 
 {
     package Parent;

@@ -170,7 +170,7 @@ sub create_class_type_constraint {
         class              => $class,
         name               => $class,
         package_defined_in => $pkg_defined_in,
-        %{ $options || {} },
+        %{ $options || {} },    # overrides options from above
     );
 
     $options{name} ||= "__ANON__";
