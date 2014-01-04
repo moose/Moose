@@ -984,6 +984,8 @@ are a few of our favorites. Feel free to contribute more!
 
 =item * Meta Object Orientation Syntax Extensions
 
+=item * Moo, Only Overengineered, Slow, and Execrable (blame rjbs!)
+
 =back
 
 =head1 ACKNOWLEDGEMENTS
