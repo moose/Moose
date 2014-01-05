@@ -77,6 +77,7 @@ perigrin
 phaylon
 rafl
 rindolf
+rjbs
 rlb
 robkinyon
 sartak
@@ -162,6 +163,7 @@ O'Caml
 OO
 OOP
 ORM
+Overengineered
 ROLETYPE
 SUBCLASSES
 SUBTYPES
