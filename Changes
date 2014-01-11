@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1201   2014-01-11
+
   [OTHER]
 
   - re-release to index pod files (Moose::Cookbook::*, Moose::Manual::* etc).
