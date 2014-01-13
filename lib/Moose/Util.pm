@@ -135,7 +135,7 @@ sub _apply_all_roles {
             $meta = $role->[0];
         }
         else {
-            use_module($role->[0], $role->[1] ? $role->[1]{-version} : ());
+            _load_user_class( $role->[0] , $role->[1] );
             $meta = find_meta( $role->[0] );
         }
 
