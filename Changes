@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES}
+
+  - A role generated on the fly (as opposed to one in a file on disk) could
+    not be used as a trait. Fixed by Aaron Cohen. (RT#92089, PR#47).
+
   [ENHANCEMENTS]
 
   - When a required attribute's init_arg differs from the attribute's name, we

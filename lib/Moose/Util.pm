@@ -4,7 +4,7 @@ our $VERSION = '2.1806';
 use strict;
 use warnings;
 
-use Module::Runtime 0.014 'use_package_optimistically', 'use_module', 'module_notional_filename';
+use Module::Runtime 0.014 'use_package_optimistically', 'module_notional_filename';
 use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
@@ -144,7 +144,7 @@ sub _apply_all_roles {
             $meta = $role->[0];
         }
         else {
-            &use_module($role->[0], $role->[1] && $role->[1]{-version} ? $role->[1]{-version} : ());
+            _load_user_class( $role->[0] , $role->[1] );
             $meta = find_meta( $role->[0] );
         }
 
