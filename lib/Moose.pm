@@ -1,6 +1,6 @@
-package Moose;
 use strict;
 use warnings;
+package Moose;
 
 use 5.008003;
 

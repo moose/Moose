@@ -1,7 +1,6 @@
-
 package Moose::Meta::Attribute::Native::Trait;
-use Moose::Role;
 
+use Moose::Role;
 use Module::Runtime 'require_module';
 use List::MoreUtils qw( any uniq );
 use Moose::Deprecated;

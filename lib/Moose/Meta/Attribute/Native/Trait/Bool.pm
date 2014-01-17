@@ -1,6 +1,6 @@
 package Moose::Meta::Attribute::Native::Trait::Bool;
-use Moose::Role;
 
+use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
 
 sub _helper_type { 'Bool' }

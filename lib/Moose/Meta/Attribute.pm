@@ -1,8 +1,6 @@
-
-package Moose::Meta::Attribute;
-
 use strict;
 use warnings;
+package Moose::Meta::Attribute;
 
 use B ();
 use Scalar::Util 'blessed', 'weaken';
@@ -1271,8 +1269,8 @@ sub verify_against_type_constraint {
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
-sub register_implementation { 'Moose::Meta::Attribute' }
 
+sub register_implementation { 'Moose::Meta::Attribute' }
 1;
 
 # ABSTRACT: The Moose attribute metaclass
