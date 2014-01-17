@@ -24,8 +24,10 @@ has 'message' => (
 use overload
     '""' => sub {
         my $self = shift;
-        return $self->trace->as_string;
-};
+        return $self->trace->as_string,
+    },
+    fallback => 1,
+;
 
 sub _build_trace {
     my $self = shift;

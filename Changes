@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - string comparisons are now possible with Moose exceptions (#92232)
+
 2.1201   2014-01-11
 
   [OTHER]
