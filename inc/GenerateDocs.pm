@@ -16,7 +16,16 @@ sub gather_files {
 
     $self->add_file(Dist::Zilla::File::InMemory->new(
         name    => $filename->stringify,
-        content => '',  # to fill in later
+        # more to fill in later
+        content => <<'END_POD',
+package Moose::Manual::Exceptions::Manifest;
+use strict;
+use warnings;
+
+# ABSTRACT: Moose's Exception Types
+__END__
+
+END_POD
     ));
 }
 

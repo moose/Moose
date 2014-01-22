@@ -15,15 +15,7 @@ sub generate_docs {
     my $version = $ARGV[0];
 
     my $number = 0;
-    my $text = <<'END_POD';
-package Moose::Manual::Exceptions::Manifest;
-use strict;
-use warnings;
-
-# ABSTRACT: Moose's Exception Types
-__END__
-
-END_POD
+    my $text = '';
 
     my $exceptions_to_msg_hashref = get_exceptions_to_messages();
 
