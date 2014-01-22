@@ -138,7 +138,9 @@ $self->SUPER::DEMOLISH >>. Moose will arrange for all of the
 C<DEMOLISH> methods in your hierarchy to be called, from most to least
 specific.
 
-Each C<DEMOLISH> method is called with a single argument.
+Each C<DEMOLISH> method is called with a single argument. This is a boolean
+value indicating whether or not this method was called as part of the global
+destruction process (when the Perl interpreter exits).
 
 In most cases, Perl's built-in garbage collection is sufficient, and
 you won't need to provide a C<DEMOLISH> method.
