@@ -1,4 +1,3 @@
-
 package Moose::Util::TypeConstraints;
 
 use Carp ();
@@ -787,7 +786,7 @@ __END__
 
   enum 'RGBColors', [qw(red green blue)];
 
-  union 'StringOrArray', [qw( String Array )];
+  union 'StringOrArray', [qw( String ArrayRef )];
 
   no Moose::Util::TypeConstraints;
 
