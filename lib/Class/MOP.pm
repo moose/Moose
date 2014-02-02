@@ -831,11 +831,11 @@ incompatibility; upwards and downwards.
 
 Upwards metaclass compatibility means that the metaclass of a
 given class is either the same as (or a subclass of) all of the
-class's ancestors.
+metaclasses of the class's ancestors.
 
 Downward metaclass compatibility means that the metaclasses of a
 given class's ancestors are all the same as (or a subclass of) that
-metaclass.
+class's metaclass.
 
 Here is a diagram showing a set of two classes (C<A> and C<B>) and
 two metaclasses (C<Meta::A> and C<Meta::B>) which have correct
