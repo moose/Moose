@@ -947,7 +947,7 @@ and by metaclass instances.
 
 =item B<< $attr->associated_class >>
 
-This returns the C<Class::MOP::Class> with which this attribute is
+This returns the L<Class::MOP::Class> with which this attribute is
 associated, if any.
 
 =item B<< $attr->attach_to_class($metaclass) >>
@@ -1038,5 +1038,3 @@ metaclass.
 =back
 
 =cut
-
-
