@@ -843,8 +843,8 @@ C<unimport> methods for your module. The C<import> method
 will export the functions you specify, and can also re-export functions
 exported by some other module (like C<Moose.pm>). If you pass any parameters
 for L<Moose::Util::MetaRole>, the C<import> method will also call
-C<Moose::Util::MetaRole::apply_metaroles> and
-C<Moose::Util::MetaRole::apply_base_class_roles> as needed, after making
+L<Moose::Util::MetaRole::apply_metaroles|Moose::Util::MetaRole/apply_metaroles> and
+L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles> as needed, after making
 sure the metaclass is initialized.
 
 The C<unimport> method cleans the caller's namespace of all the exported
@@ -918,8 +918,8 @@ Accordingly, this function is expected to return a metaclass.
 
 =back
 
-You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>
-and C<Moose::Util::MetaRole::apply_base_class_roles>. Specifically, valid parameters
+You can also provide parameters for L<Moose::Util::MetaRole::apply_metaroles|Moose::Util::MetaRole/apply_metaroles>
+and L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>. Specifically, valid parameters
 are "class_metaroles", "role_metaroles", and "base_class_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
