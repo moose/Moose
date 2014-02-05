@@ -924,7 +924,8 @@ are "class_metaroles", "role_metaroles", and "base_class_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
 
-Returns two code refs, one for C<import> and one for C<unimport>.
+Returns three code refs, one for C<import>, one for C<unimport> and one for
+C<init_meta>.
 
 Accepts the additional C<install> option, which accepts an arrayref of method
 names to install into your exporting package. The valid options are C<import>
