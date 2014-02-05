@@ -317,11 +317,17 @@ Creates a new anonymous package. Valid keys for C<%options> are:
 
 =over 4
 
+=item C<cache>
+
+If this will be C<true> (the default is C<false>), the instance will be cached
+in C<Class::MOP>'s metaclass cache.
+
 =item C<weaken>
 
-If this is true (the default), the instance stored in C<Class::MOP>'s metaclass
-cache will be weakened, so that the anonymous package will be garbage collected
-when the returned instance goes out of scope.
+If this is C<true> (the default C<true> when L<cache> is C<false>), the instance
+stored in C<Class::MOP>'s metaclass cache will be weakened, so that the
+anonymous package will be garbage collected when the returned instance goes out
+of scope.
 
 =back
 
