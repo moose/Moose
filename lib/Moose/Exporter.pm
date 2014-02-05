@@ -919,7 +919,7 @@ Accordingly, this function is expected to return a metaclass.
 =back
 
 You can also provide parameters for C<Moose::Util::MetaRole::apply_metaroles>
-and C<Moose::Util::MetaRole::base_class_roles>. Specifically, valid parameters
+and C<Moose::Util::MetaRole::apply_base_class_roles>. Specifically, valid parameters
 are "class_metaroles", "role_metaroles", and "base_class_roles".
 
 =item B<< Moose::Exporter->build_import_methods(...) >>
