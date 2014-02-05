@@ -143,7 +143,7 @@ __END__
       Moose::Util::MetaRole::apply_metaroles(
           for             => $args{for_class},
           class_metaroles => {
-              class => => ['MyApp::Role::Meta::Class'],
+              class       => ['MyApp::Role::Meta::Class'],
               constructor => ['MyApp::Role::Meta::Method::Constructor'],
           },
       );
