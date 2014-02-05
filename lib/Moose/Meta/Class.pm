@@ -835,7 +835,7 @@ that the class does, each optionally followed by a hashref of options
 This overrides the parent's method to accept a C<roles> option, just
 as C<create> does.
 
-It also accepts a C<cache> option. If this is true, then the anonymous
+It also accepts a C<cache> option. If this is C<true>, then the anonymous
 class will be cached based on its superclasses and roles. If an
 existing anonymous class in the cache has the same superclasses and
 roles, it will be reused.
