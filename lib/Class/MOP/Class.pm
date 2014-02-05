@@ -1637,8 +1637,12 @@ that name is a unique name generated internally by this module.
 It accepts the same C<superclasses>, C<methods>, and C<attributes>
 parameters that C<create> accepts.
 
-Anonymous classes default to C<< weaken => 1 >>, although this can be
-overridden.
+It also accepts a C<cache> option. If this is C<true>, then the anonymous class
+will be cached based on its superclasses and roles. If an existing anonymous
+class in the cache has the same superclasses and roles, it will be reused.
+
+Anonymous classes default to C<< weaken => 1 >> if cache is C<false>, although
+this can be overridden.
 
 =item B<< Class::MOP::Class->initialize($package_name, %options) >>
 
