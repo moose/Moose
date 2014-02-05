@@ -878,12 +878,12 @@ This adds an C<augment> method modifier to the package.
 
 =item B<< $metaclass->calculate_all_roles >>
 
-This will return a unique array of C<Moose::Meta::Role> instances
+This will return a unique array of L<Moose::Meta::Role> instances
 which are attached to this class.
 
 =item B<< $metaclass->calculate_all_roles_with_inheritance >>
 
-This will return a unique array of C<Moose::Meta::Role> instances
+This will return a unique array of L<Moose::Meta::Role> instances
 which are attached to this class, and each of this class's ancestors.
 
 =item B<< $metaclass->add_role($role) >>
@@ -935,4 +935,3 @@ read-write, so you can use them to change the class name.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

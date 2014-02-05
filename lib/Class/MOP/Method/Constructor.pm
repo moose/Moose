@@ -143,7 +143,7 @@ __END__
 
 =head1 DESCRIPTION
 
-This is a subclass of C<Class::MOP::Method> which generates
+This is a subclass of L<Class::MOP::Method> which generates
 constructor methods.
 
 =head1 METHODS
@@ -188,4 +188,3 @@ This returns the L<Class::MOP::Class> object for the method.
 =back
 
 =cut
-
