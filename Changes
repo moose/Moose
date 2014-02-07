@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - bump minimum prereq needed for optional test using MooseX::NonMoose (which
+    broke with new Module::Runtime, see 2.1203), so users can install Moose
+    and pass tests before updating MooseX::NonMoose.
+
 2.1203   2014-02-06
 
   [BUG FIXES]
