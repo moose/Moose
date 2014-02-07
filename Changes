@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1203   2014-02-06
+
   [BUG FIXES]
 
   - bump prereq on Module::Runtime to properly detect when a module fails to
