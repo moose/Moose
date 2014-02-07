@@ -3,7 +3,7 @@ package Moose::Util;
 use strict;
 use warnings;
 
-use Module::Runtime 'use_package_optimistically', 'use_module', 'module_notional_filename';
+use Module::Runtime 0.014 'use_package_optimistically', 'use_module', 'module_notional_filename';
 use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
@@ -135,7 +135,7 @@ sub _apply_all_roles {
             $meta = $role->[0];
         }
         else {
-            use_module($role->[0], $role->[1] ? $role->[1]{-version} : ());
+            &use_module($role->[0], $role->[1] && $role->[1]{-version} ? $role->[1]{-version} : ());
             $meta = find_meta( $role->[0] );
         }
 
@@ -337,9 +337,9 @@ sub meta_class_alias {
 
 sub _load_user_class {
     my ($class, $opts) = @_;
-    use_package_optimistically(
+    &use_package_optimistically(
         $class,
-        $opts ? $opts->{-version} : ()
+        $opts && $opts->{-version} ? $opts->{-version} : ()
     );
 }
 

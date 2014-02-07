@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - bump prereq on Module::Runtime to properly detect when a module fails to
+    load, and fix how we call these subs (Zefram, RT#92770, RT#86394, RT#92791)
+
 2.1202   2014-01-19
 
   [BUG FIXES]
