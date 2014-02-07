@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1204   2014-02-06
+
   [BUG FIXES]
 
   - bump minimum prereq needed for optional test using MooseX::NonMoose (which
