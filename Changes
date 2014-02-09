@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - new test added, to run last, which runs `moose-outdated` as a possibly
+    more visible mechanism to provide important information to the user
+    (re RT#92780)
+
 2.1204   2014-02-06
 
   [BUG FIXES]
