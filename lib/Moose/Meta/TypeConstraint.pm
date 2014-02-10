@@ -138,7 +138,7 @@ sub coerce {
     my $coercion = $self->coercion;
 
     unless ($coercion) {
-        throw_exception( CoercingWithoutCoercions => type => $self );
+        throw_exception( CoercingWithoutCoercions => type_name => $self->name );
     }
 
     return $_[0] if $self->check($_[0]);
@@ -186,7 +186,7 @@ sub _inline_check {
     my $self = shift;
 
     unless ( $self->can_be_inlined ) {
-        throw_exception( CannotInlineTypeConstraintCheck => type => $self );
+        throw_exception( CannotInlineTypeConstraintCheck => type_name => $self->name );
     }
 
     if ( $self->has_parent && $self->constraint == $null_constraint ) {
@@ -292,7 +292,7 @@ sub _actually_compile_type_constraint {
 
     my $check = $self->constraint;
     unless ( defined $check ) {
-        throw_exception( NoConstraintCheckForTypeConstraint => type => $self );
+        throw_exception( NoConstraintCheckForTypeConstraint => type_name => $self->name );
     }
 
     return $self->_compile_subtype($check)

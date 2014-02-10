@@ -3,20 +3,24 @@ package Moose::Exception::OverrideConflictInSummation;
 use Moose;
 extends 'Moose::Exception';
 
+use Moose::Util 'find_meta';
+
 has 'role_application' => (
     is       => 'ro',
     isa      => 'Moose::Meta::Role::Application::RoleSummation',
     required => 1
 );
 
-has 'roles' => (
+has 'role_names' => (
     traits   => ['Array'],
     is       => 'bare',
-    isa      => 'ArrayRef[Moose::Meta::Role]',
+    isa      => 'ArrayRef[Str]',
     handles  => {
-        roles      => 'elements',
+        role_names      => 'elements',
     },
-    required => 1
+    required => 1,
+    documentation => "This attribute is an ArrayRef containing role names, if you want metaobjects\n".
+                     "associated with these role names, then call method roles on the exception object.\n",
 );
 
 has 'method_name' => (
@@ -32,11 +36,11 @@ has 'two_overrides_found' => (
     default  => 0
 );
 
-sub role_names {
+sub roles {
     my $self = shift;
-    my @roles = $self->roles;
-    my @role_names = map { $_->name } @roles;
-    return @role_names;
+    my @role_names = $self->role_names;
+    my @roles = map { find_meta($_) } @role_names;
+    return @roles;
 }
 
 sub _build_message {
