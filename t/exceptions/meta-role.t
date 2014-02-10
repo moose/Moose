@@ -32,7 +32,7 @@ use Test::Fatal;
         "Roles cannot have a class as an attribute");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'JustATestRole',
         "Roles cannot have a class as an attribute");
 
@@ -63,7 +63,7 @@ use Test::Fatal;
         "Attribute Extension is not supported in roles");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'JustATestRole',
         "Attribute Extension is not supported in roles");
 
@@ -94,7 +94,7 @@ use Test::Fatal;
         "Cannot override bar, because it's a local method");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'JustATestRole',
         "Cannot override bar, because it's a local method");
 
@@ -125,7 +125,7 @@ use Test::Fatal;
         "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'JustATestRole',
         "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
 
@@ -156,7 +156,7 @@ use Test::Fatal;
         "Cannot call does_role without a role name");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'Bar',
         "Cannot call does_role without a role name");
 }
@@ -182,7 +182,7 @@ use Test::Fatal;
         "apply takes a blessed instance");
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         'Bar',
         "apply takes a blessed instance");
 

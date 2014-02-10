@@ -136,9 +136,9 @@ sub _generate_reader_method {
     my $class = $attr->associated_class;
 
     return sub {
-        throw_exception( CannotAssignValueToReadOnlyAccessor => class     => $class,
-                                                                value     => $_[1],
-                                                                attribute => $attr
+        throw_exception( CannotAssignValueToReadOnlyAccessor => class_name => $class->name,
+                                                                value      => $_[1],
+                                                                attribute  => $attr
                        )
             if @_ > 1;
         $attr->get_value($_[0]);
