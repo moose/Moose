@@ -12,7 +12,7 @@ has 'method_name' => (
 
 sub _build_message {
     my $self = shift;
-    "The method '".$self->method_name."' was not found in the inheritance hierarchy for ".$self->class->name;
+    "The method '".$self->method_name."' was not found in the inheritance hierarchy for ".$self->class_name;
 }
 
 1;
