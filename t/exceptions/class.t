@@ -155,8 +155,6 @@ use Test::Fatal;
 
 # tests for AttributeIsRequired for inline excpetions
 {
-    use Moose::Meta::Class;
-
     {
         package Foo2;
         use Moose;
