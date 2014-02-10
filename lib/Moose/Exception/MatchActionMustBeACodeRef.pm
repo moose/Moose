@@ -2,22 +2,17 @@ package Moose::Exception::MatchActionMustBeACodeRef;
 
 use Moose;
 extends 'Moose::Exception';
+with 'Moose::Exception::Role::TypeConstraint';
 
 has 'to_match' => (
     is       => 'ro',
     isa      => 'Any',
-    required => 1
+    required => 1,
 );
 
 has 'action' => (
     is       => 'ro',
     isa      => 'Any',
-    required => 1
-);
-
-has 'type' => (
-    is       => 'ro',
-    isa      => 'Moose::Meta::TypeConstraint',
     required => 1
 );
 

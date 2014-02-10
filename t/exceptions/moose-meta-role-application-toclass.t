@@ -7,6 +7,8 @@ use Test::Fatal;
 
 use Moose();
 
+use Moose::Util 'find_meta';
+
 {
     {
         package BarRole;
@@ -45,7 +47,7 @@ use Moose();
         'class FooClass excludes Role BarRole');
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         FooClass->meta,
         'class FooClass excludes Role BarRole');
 
@@ -55,7 +57,7 @@ use Moose();
         'class FooClass excludes Role BarRole');
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         BarRole->meta,
         'class FooClass excludes Role BarRole');
 }
@@ -98,17 +100,17 @@ use Moose();
         'Class FooClass2 does Role ExcludedRole2');
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         BarRole2->meta,
         'Class FooClass2 does Role ExcludedRole2');
 
     is(
-        $exception->excluded_role->name,
+        $exception->excluded_role_name,
         "ExcludedRole2",
         'Class FooClass2 does Role ExcludedRole2');
 
     is(
-        $exception->excluded_role,
+        find_meta($exception->excluded_role_name),
         ExcludedRole2->meta,
         'Class FooClass2 does Role ExcludedRole2');
 
@@ -118,7 +120,7 @@ use Moose();
         'Class FooClass2 does Role ExcludedRole2');
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         FooClass2->meta,
         'Class FooClass2 does Role ExcludedRole2');
 }
@@ -159,17 +161,17 @@ use Moose();
         "Class Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Foo5->meta,
         "Class Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "Bar5",
         "Class Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         Bar5->meta,
         "Class Bar5 already has a method named foo_in_bar");
 
@@ -233,7 +235,7 @@ use Moose();
         'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         My::Foo::Class::Broken->meta,
         'Foo::Role, Bar::Role & Baz::Role, all three has a method named foo');
 
@@ -300,7 +302,7 @@ use Moose();
         'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         My::Foo::Class::Broken2->meta,
         'Foo2::Role, Bar2::Role & Baz2::Role, all three has a methods named foo & bar');
 
@@ -353,17 +355,12 @@ use Moose();
         "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         My::Foo::Class::Broken3->meta,
         "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
 
     is(
         $exception->role_name,
-        'Foo3::Role|Bar3::Role|Baz3::Role',
-        "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
-
-    is(
-        $exception->role->name,
         'Foo3::Role|Bar3::Role|Baz3::Role',
         "foo is required by Foo3::Role, but it's not implemented by My::Foo::Class::Broken3");
 
@@ -418,17 +415,12 @@ use Moose();
         "foo is required by Foo4::Role and imported by Class");
 
     is(
-        $exception->class,
+        find_meta($exception->class_name),
         Class->meta,
         "foo is required by Foo4::Role and imported by Class");
 
     is(
         $exception->role_name,
-        'Foo4::Role',
-        "foo is required by Foo4::Role and imported by Class");
-
-    is(
-        $exception->role->name,
         'Foo4::Role',
         "foo is required by Foo4::Role and imported by Class");
 

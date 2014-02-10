@@ -26,21 +26,21 @@ sub with {
 
 sub requires {
     my $meta = shift;
-    throw_exception( MustSpecifyAtleastOneMethod => role => $meta ) unless @_;
+    throw_exception( MustSpecifyAtleastOneMethod => role_name => $meta->name ) unless @_;
     $meta->add_required_methods(@_);
 }
 
 sub excludes {
     my $meta = shift;
-    throw_exception( MustSpecifyAtleastOneRole => role => $meta ) unless @_;
+    throw_exception( MustSpecifyAtleastOneRole => role_name => $meta->name ) unless @_;
     $meta->add_excluded_roles(@_);
 }
 
 sub has {
     my $meta = shift;
     my $name = shift;
-    throw_exception( InvalidHasProvidedInARole => role            => $meta,
-                                                  attribute_name  => $name
+    throw_exception( InvalidHasProvidedInARole => role_name       => $meta->name,
+                                                  attribute_name  => $name,
                    )
         if @_ == 1;
     my %context = Moose::Util::_caller_info;
@@ -57,7 +57,7 @@ sub _add_method_modifier {
 
     if ( ref($_[0]) eq 'Regexp' ) {
         throw_exception( RolesDoNotSupportRegexReferencesForMethodModifiers => modifier_type => $type,
-                                                                               role          => $meta
+                                                                               role_name     => $meta->name,
                        );
     }
 
@@ -130,12 +130,10 @@ sub init_meta {
             if ( $meta->isa('Moose::Meta::Class') ) {
                 throw_exception( MetaclassIsAClassNotASubclassOfGivenMetaclass => class_name => $role,
                                                                                   metaclass  => $metaclass,
-                                                                                  class      => $meta
                                );
             } else {
                 throw_exception( MetaclassIsNotASubclassOfGivenMetaclass => class_name => $role,
                                                                             metaclass  => $metaclass,
-                                                                            class      => $meta
                                );
             }
         }

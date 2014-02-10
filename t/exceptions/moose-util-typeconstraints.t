@@ -84,7 +84,7 @@ my $x = "123";
         "an ArrayRef is given as action");
 
     is(
-        $exception->type,
+        $exception->type_name,
         "Int",
         "an ArrayRef is given as action");
 
