@@ -5,6 +5,8 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+use Moose::Util 'find_meta';
+
 use Moose();
 
 {
@@ -39,17 +41,17 @@ use Moose();
         'Role Foo excludes Role Bar');
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Foo->meta,
         'Role Foo excludes Role Bar');
 
     is(
-        $exception->excluded_role->name,
+        $exception->excluded_role_name,
         "Bar",
         'Role Foo excludes Role Bar');
 
     is(
-        $exception->excluded_role,
+        find_meta($exception->excluded_role_name),
         Bar->meta,
         'Role Foo excludes Role Bar');
 }
@@ -87,32 +89,32 @@ use Moose();
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->second_role->name,
+        $exception->second_role_name,
         "Foo2",
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->second_role,
+        find_meta($exception->second_role_name),
         Foo2->meta,
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->excluded_role->name,
+        $exception->excluded_role_name,
         "Bar3",
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->excluded_role,
+        find_meta($exception->excluded_role_name),
         Bar3->meta,
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->role->name,
+        $exception->role_name,
         "Bar2",
         'Role Bar2 does Role Bar3');
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Bar2->meta,
         'Role Bar2 does Role Bar3');
 }
@@ -158,17 +160,17 @@ use Moose();
         'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Foo4->meta,
         'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
-        $exception->second_role->name,
+        $exception->second_role_name,
         "Bar4",
         'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
-        $exception->second_role,
+        find_meta($exception->second_role_name),
         Bar4->meta,
         'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
@@ -214,17 +216,17 @@ use Moose();
         "Role Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Bar5->meta,
         "Role Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->role_being_applied->name,
+        $exception->role_being_applied_name,
         "Foo5",
         "Role Bar5 already has a method named foo_in_bar");
 
     is(
-        $exception->role_being_applied,
+        find_meta($exception->role_being_applied_name),
         Foo5->meta,
         "Role Bar5 already has a method named foo_in_bar");
 
@@ -273,17 +275,17 @@ use Moose();
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Bar6->meta,
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 
     is(
-        $exception->role_being_applied->name,
+        $exception->role_being_applied_name,
         "Foo6",
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 
     is(
-        $exception->role_being_applied,
+        find_meta($exception->role_being_applied_name),
         Foo6->meta,
         "Role Foo6 is overriding a method named foo6, which is a local method in Bar6");
 
@@ -326,17 +328,17 @@ use Moose();
         "Roles Foo7 & Bar7, both have override foo7");
 
     is(
-        $exception->role,
+        find_meta($exception->role_name),
         Bar7->meta,
         "Roles Foo7 & Bar7, both have override foo7");
 
     is(
-        $exception->role_being_applied->name,
+        $exception->role_being_applied_name,
         "Foo7",
         "Roles Foo7 & Bar7, both have override foo7");
 
     is(
-        $exception->role_being_applied,
+        find_meta($exception->role_being_applied_name),
         Foo7->meta,
         "Roles Foo7 & Bar7, both have override foo7");
 

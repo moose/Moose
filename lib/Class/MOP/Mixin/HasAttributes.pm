@@ -16,8 +16,8 @@ sub add_attribute {
         = blessed( $_[0] ) ? $_[0] : $self->attribute_metaclass->new(@_);
 
     ( $attribute->isa('Class::MOP::Mixin::AttributeCore') )
-        || throw_exception( AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass => attribute => $attribute,
-                                                                                     class     => $self
+        || throw_exception( AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass => attribute  => $attribute,
+                                                                                     class_name => $self->name,
                           );
 
     $self->_attach_attribute($attribute);
@@ -47,7 +47,7 @@ sub has_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || throw_exception( MustDefineAnAttributeName => class => $self );
+        || throw_exception( MustDefineAnAttributeName => class_name => $self->name );
 
     exists $self->_attribute_map->{$attribute_name};
 }
@@ -56,7 +56,7 @@ sub get_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || throw_exception( MustDefineAnAttributeName => class => $self );
+        || throw_exception( MustDefineAnAttributeName => class_name => $self->name );
 
     return $self->_attribute_map->{$attribute_name};
 }
@@ -65,7 +65,7 @@ sub remove_attribute {
     my ( $self, $attribute_name ) = @_;
 
     ( defined $attribute_name )
-        || throw_exception( MustDefineAnAttributeName => class => $self );
+        || throw_exception( MustDefineAnAttributeName => class_name => $self->name );
 
     my $removed_attribute = $self->_attribute_map->{$attribute_name};
     return unless defined $removed_attribute;

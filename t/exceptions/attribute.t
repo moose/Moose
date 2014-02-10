@@ -61,7 +61,7 @@ use Test::Fatal;
         "... must supply all the required attribute");
 
     is(
-        $exception->attribute->name,
+        $exception->attribute_name,
         'baz',
         "... must supply all the required attribute");
 
@@ -498,7 +498,7 @@ use Test::Fatal;
         "... must supply all the required attribute");
 
     is(
-        $exception->attribute->name,
+        $exception->attribute_name,
         'bar',
         "... must supply all the required attribute");
 
@@ -749,7 +749,7 @@ use Test::Fatal;
         "You cannot coerce a type unless coercion is supported by that type");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         'HexNum',
         "You cannot coerce a type unless coercion is supported by that type");
 }
@@ -939,7 +939,7 @@ use Test::Fatal;
         "Cannot auto-deref with 'Int'");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         "Int",
         "Cannot auto-deref with 'Int'");
 }
@@ -1058,7 +1058,7 @@ use Test::Fatal;
         "passing no value to set_foo_required");
 
     is(
-        $exception->attribute->name,
+        $exception->attribute_name,
         'foo_required',
         "passing no value to set_foo_required");
 

@@ -23,7 +23,7 @@ use Moose();
         "You cannot coerce a type unless coercion is supported by that type");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         'HexNum',
         "You cannot coerce a type unless coercion is supported by that type");
 
@@ -75,7 +75,7 @@ use Moose();
         "cannot inline NotInlinable");
 
     is(
-        $exception->type,
+        find_type_constraint( $exception->type_name ),
         $not_inlinable,
         "cannot inline NotInlinable");
 }

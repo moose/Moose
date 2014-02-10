@@ -104,8 +104,8 @@ use Moose();
         "no method name given to find_method_by_name");
 
     is(
-        $exception->class->name,
-        'Foo',
+	$exception->class_name,
+	'Foo',
         "no method name given to find_method_by_name");
 }
 
@@ -126,8 +126,8 @@ use Moose();
         "no method name given to find_all_methods_by_name");
 
     is(
-        $exception->class->name,
-        'Foo',
+	$exception->class_name,
+	'Foo',
         "no method name given to find_all_methods_by_name");
 }
 
@@ -148,8 +148,8 @@ use Moose();
         "no method name given to find_next_method_by_name");
 
     is(
-        $exception->class->name,
-        'Foo',
+	$exception->class_name,
+	'Foo',
         "no method name given to find_next_method_by_name");
 }
 
@@ -171,9 +171,9 @@ use Moose();
         "clone_object expects an instance of the metaclass");
 
     is(
-        $exception->class->name,
-        'Foo',
-        "clone_object expects an instance of the metaclass");
+	$exception->class_name,
+	'Foo',
+	"clone_object expects an instance of the metaclass");
 
    is(
         $exception->instance,
@@ -206,9 +206,9 @@ use Moose();
         "you can rebless only into subclass");
 
     is(
-        $exception->class->name,
-        'Foo',
-        "you can rebless only into subclass");
+	$exception->class_name,
+	'Foo',
+	"you can rebless only into subclass");
 
    is(
         $exception->instance,
@@ -246,9 +246,9 @@ use Moose();
         "you can rebless only into superclass");
 
    is(
-        $exception->class->name,
-        "Foo2",
-        "you can rebless only into superclass");
+	$exception->class_name,
+	"Foo2",
+	"you can rebless only into superclass");
 }
 
 {
@@ -271,9 +271,9 @@ use Moose();
         "no method name passed to method modifier");
 
     is(
-        $exception->class->name,
-        "Foo",
-        "no method name passed to method modifier");
+	$exception->class_name,
+	"Foo",
+	"no method name passed to method modifier");
 }
 
 {
@@ -296,9 +296,9 @@ use Moose();
         "no method name passed to method modifier");
 
     is(
-        $exception->class->name,
-        "Foo",
-        "no method name passed to method modifier");
+	$exception->class_name,
+	"Foo",
+	"no method name passed to method modifier");
 }
 
 {
@@ -321,9 +321,9 @@ use Moose();
         "no method name passed to method modifier");
 
     is(
-        $exception->class->name,
-        "Foo",
-        "no method name passed to method modifier");
+	$exception->class_name,
+	"Foo",
+	"no method name passed to method modifier");
 }
 
 {
@@ -359,9 +359,9 @@ use Moose();
         'method "foo" is not defined in class "Foo"');
 
     is(
-        $exception->class->name,
-        'Foo',
-        'method "foo" is not defined in class "Foo"');
+	$exception->class_name,
+	'Foo',
+	'method "foo" is not defined in class "Foo"');
 
    is(
         $exception->method_name,
@@ -392,9 +392,9 @@ use Moose();
         "__INSTANCE__ is not blessed correctly");
 
     is(
-        $exception->class->name,
-        'Foo',
-        "__INSTANCE__ is not blessed correctly");
+	$exception->class_name,
+	'Foo',
+	"__INSTANCE__ is not blessed correctly");
 
    is(
         $exception->instance,
@@ -421,9 +421,9 @@ use Moose();
         "__INSTANCE__ is not a blessed reference");
 
     is(
-        $exception->class->name,
-        'Foo',
-        "__INSTANCE__ is not a blessed reference");
+	$exception->class_name,
+	'Foo',
+	"__INSTANCE__ is not a blessed reference");
 
    is(
         $exception->instance,
@@ -450,9 +450,9 @@ use Moose();
         "array reference was passed to _clone_instance instead of a blessed instance");
 
     is(
-        $exception->class->name,
-        "Foo",
-        "array reference was passed to _clone_instance instead of a blessed instance");
+	$exception->class_name,
+	"Foo",
+	"array reference was passed to _clone_instance instead of a blessed instance");
 
     is(
         $exception->instance,
@@ -481,7 +481,7 @@ use Moose();
         "Trying to inherit a Role");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "My::Class",
         "Trying to inherit a Role");
 
@@ -515,7 +515,7 @@ use Moose();
         "immutable_trait set to undef");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "TestClass",
         "immutable_trait set to undef");
 }
@@ -539,7 +539,7 @@ use Moose();
         "destructor_class is set to undef");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "NoDestructorClass",
         "destructor_class is set to undef");
 }
@@ -591,7 +591,7 @@ use Moose();
         "cannot make metaclass compatible");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "Foo9",
         "cannot make metaclass compatible");
 }
@@ -641,7 +641,7 @@ use Moose();
             "cannot make metaclass compatible");
 
         is(
-            $exception->class->name,
+            $exception->class_name,
             "Foo::Unsafe::Sub",
             "cannot make metaclass compatible");
     }
@@ -667,7 +667,7 @@ use Moose();
             "incompatible attribute_metaclass");
 
         is(
-            $exception->class->name,
+            $exception->class_name,
             "Foo::All::Sub::Attribute",
             "incompatible attribute_metaclass");
 

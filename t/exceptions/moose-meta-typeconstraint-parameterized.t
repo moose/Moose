@@ -74,6 +74,11 @@ use Test::Fatal;
         $exception->type_name,
         "Int[Xyz]",
         "invalid isa given to foo");
+
+    is(
+        $exception->parent_type_name,
+        'Int',
+        "invalid isa given to foo");
 }
 
 done_testing;
