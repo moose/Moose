@@ -1,7 +1,6 @@
-package Moose::Manual::Exceptions;
 use strict;
 use warnings;
-
+package Moose::Manual::Exceptions;
 # ABSTRACT: Moose's exceptions
 
 __END__

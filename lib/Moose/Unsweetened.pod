@@ -1,7 +1,6 @@
-package Moose::Unsweetened;
 use strict;
 use warnings;
-
+package Moose::Unsweetened;
 # ABSTRACT: Moved to Moose::Manual::Unsweetened, so go read that
 
 __END__

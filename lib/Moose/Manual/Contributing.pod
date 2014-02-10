@@ -1,7 +1,6 @@
-package Moose::Manual::Contributing;
 use strict;
 use warnings;
-
+package Moose::Manual::Contributing;
 # ABSTRACT: How to get involved in Moose
 
 __END__

@@ -1,11 +1,9 @@
-package Moose::Cookbook::Meta::Table_ClassMetaclass;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Meta::Table_ClassMetaclass;
 # ABSTRACT: Adding a "table" attribute to the metaclass
 
 __END__
-
 
 =pod
 

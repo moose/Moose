@@ -1,11 +1,9 @@
-package Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild;
 # ABSTRACT: Builder methods and lazy_build
 
 __END__
-
 
 =pod
 

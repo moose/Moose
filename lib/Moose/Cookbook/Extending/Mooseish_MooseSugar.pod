@@ -1,11 +1,9 @@
-package Moose::Cookbook::Extending::Mooseish_MooseSugar;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Extending::Mooseish_MooseSugar;
 # ABSTRACT: Acting like Moose.pm and providing sugar Moose-style
 
 __END__
-
 
 =pod
 

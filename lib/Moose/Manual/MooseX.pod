@@ -1,7 +1,6 @@
-package Moose::Manual::MooseX;
 use strict;
 use warnings;
-
+package Moose::Manual::MooseX;
 # ABSTRACT: Recommended Moose extensions
 
 __END__

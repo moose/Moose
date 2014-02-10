@@ -1,7 +1,6 @@
-package Moose::Manual::BestPractices;
 use strict;
 use warnings;
-
+package Moose::Manual::BestPractices;
 # ABSTRACT: Get the most out of Moose
 
 __END__

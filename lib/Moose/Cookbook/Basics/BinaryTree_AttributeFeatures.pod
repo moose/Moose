@@ -1,11 +1,9 @@
-package Moose::Cookbook::Basics::BinaryTree_AttributeFeatures;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Basics::BinaryTree_AttributeFeatures;
 # ABSTRACT: Demonstrates various attribute features including lazy, predicates, weak refs, and more
 
 __END__
-
 
 =pod
 

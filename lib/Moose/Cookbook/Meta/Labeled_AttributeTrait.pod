@@ -1,11 +1,9 @@
-package Moose::Cookbook::Meta::Labeled_AttributeTrait;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Meta::Labeled_AttributeTrait;
 # ABSTRACT: Labels implemented via attribute traits
 
 __END__
-
 
 =pod
 

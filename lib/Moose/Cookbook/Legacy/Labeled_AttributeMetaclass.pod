@@ -1,11 +1,9 @@
-package Moose::Cookbook::Meta::Labeled_AttributeMetaclass;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Meta::Labeled_AttributeMetaclass;
 # ABSTRACT: A meta-attribute, attributes with labels
 
 __END__
-
 
 =pod
 

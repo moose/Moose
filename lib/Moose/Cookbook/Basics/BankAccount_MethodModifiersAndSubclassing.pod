@@ -1,11 +1,9 @@
-package Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing;
 # ABSTRACT: Demonstrates the use of method modifiers in a subclass
 
 __END__
-
 
 =pod
 

@@ -1,11 +1,9 @@
-package Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent;
 # ABSTRACT: Extending a non-Moose parent class
 
 __END__
-
 
 =pod
 

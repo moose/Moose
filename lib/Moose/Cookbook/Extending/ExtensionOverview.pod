@@ -1,11 +1,9 @@
-package Moose::Cookbook::Extending::ExtensionOverview;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Extending::ExtensionOverview;
 # ABSTRACT: Moose extension overview
 
 __END__
-
 
 =pod
 

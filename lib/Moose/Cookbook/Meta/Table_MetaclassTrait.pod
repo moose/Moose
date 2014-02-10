@@ -1,11 +1,9 @@
-package Moose::Cookbook::Meta::Table_MetaclassTrait;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Meta::Table_MetaclassTrait;
 # ABSTRACT: Adding a "table" attribute as a metaclass trait
 
 __END__
-
 
 =pod
 

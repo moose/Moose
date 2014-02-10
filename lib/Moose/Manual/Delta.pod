@@ -1,7 +1,6 @@
-package Moose::Manual::Delta;
 use strict;
 use warnings;
-
+package Moose::Manual::Delta;
 # ABSTRACT: Important Changes in Moose
 
 __END__

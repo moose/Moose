@@ -1,7 +1,6 @@
-package Moose::Manual::MOP;
 use strict;
 use warnings;
-
+package Moose::Manual::MOP;
 # ABSTRACT: The Moose (and Class::MOP) meta API
 
 __END__

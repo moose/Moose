@@ -1,7 +1,6 @@
-package Moose::Manual::MethodModifiers;
 use strict;
 use warnings;
-
+package Moose::Manual::MethodModifiers;
 # ABSTRACT: Moose's method modifiers
 
 __END__

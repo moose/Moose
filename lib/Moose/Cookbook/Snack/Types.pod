@@ -1,11 +1,9 @@
-package Moose::Cookbook::Snack::Types;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Snack::Types;
 # ABSTRACT: Snippets of code for using Types and Type Constraints
 
 __END__
-
 
 =pod
 

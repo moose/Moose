@@ -1,11 +1,9 @@
-package Moose::Cookbook;
 use strict;
 use warnings;
-
+package Moose::Cookbook;
 # ABSTRACT: How to cook a Moose
 
 __END__
-
 
 =pod
 

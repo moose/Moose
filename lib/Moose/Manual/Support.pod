@@ -1,7 +1,6 @@
-package Moose::Manual::Support;
 use strict;
 use warnings;
-
+package Moose::Manual::Support;
 # ABSTRACT: Policies regarding support, releases, and compatibility.
 
 __END__

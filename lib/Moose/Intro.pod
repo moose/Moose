@@ -1,7 +1,6 @@
-package Moose::Intro;
 use strict;
 use warnings;
-
+package Moose::Intro;
 # ABSTRACT: Expanded into Moose::Manual, so go read that
 
 __END__

@@ -1,7 +1,6 @@
-package Moose::Manual::Construction;
 use strict;
 use warnings;
-
+package Moose::Manual::Construction;
 # ABSTRACT: Object construction (and destruction) with Moose
 
 __END__

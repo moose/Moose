@@ -1,7 +1,6 @@
-package Moose::Cookbook::Style;
 use strict;
 use warnings;
-
+package Moose::Cookbook::Style;
 # ABSTRACT: Expanded into Moose::Manual::BestPractices, so go read that
 
 __END__

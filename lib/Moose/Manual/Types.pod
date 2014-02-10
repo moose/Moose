@@ -1,7 +1,6 @@
-package Moose::Manual::Types;
 use strict;
 use warnings;
-
+package Moose::Manual::Types;
 # ABSTRACT: Moose's type system
 
 __END__

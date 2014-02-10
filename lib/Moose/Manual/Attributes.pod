@@ -1,7 +1,6 @@
-package Moose::Manual::Attributes;
 use strict;
 use warnings;
-
+package Moose::Manual::Attributes;
 # ABSTRACT: Object attributes with Moose
 
 __END__
