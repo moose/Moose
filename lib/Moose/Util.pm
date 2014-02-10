@@ -248,7 +248,7 @@ sub _build_alias_package_name {
 
         throw_exception( CannotLocatePackageInINC => possible_packages => _english_list_or(@possible),
                                                      INC               => \@INC,
-                                                     type              => $type,
+                                                     type_name         => $type->name,
                                                      metaclass_name    => $metaclass_name,
                                                      params            => \%options
                        );

@@ -119,7 +119,7 @@ sub does {
     my $class = Scalar::Util::blessed($self) || $self;
     my $meta = Class::MOP::Class->initialize($class);
     (defined $role_name)
-        || Moose::Util::throw_exception( DoesRequiresRoleName => class => $meta );
+        || Moose::Util::throw_exception( DoesRequiresRoleName => class_name => $meta->name );
     return 1 if $meta->can('does_role') && $meta->does_role($role_name);
     return 0;
 }
