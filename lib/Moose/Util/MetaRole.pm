@@ -79,8 +79,8 @@ sub apply_base_class_roles {
     my %args = @_;
 
     my $meta = _metathing_for( $args{for} || $args{for_class} );
-    throw_exception( CannotApplyBaseClassRolesToRole => params => \%args,
-                                                        role   => $meta
+    throw_exception( CannotApplyBaseClassRolesToRole => params    => \%args,
+                                                        role_name => $meta->name,
                    )
         if $meta->isa('Moose::Meta::Role');
 

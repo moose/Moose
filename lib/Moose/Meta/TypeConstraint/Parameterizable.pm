@@ -52,9 +52,9 @@ sub _can_coerce_constraint_from {
 sub generate_inline_for {
     my ($self, $type, $val) = @_;
 
-    throw_exception( CannotGenerateInlineConstraint => parameterizable_type_object => $self,
-                                                       type                        => $type,
-                                                       value                       => $val
+    throw_exception( CannotGenerateInlineConstraint => parameterizable_type_object_name => $self->name,
+                                                       type_name                        => $type->name,
+                                                       value                            => $val,
                    )
         unless $self->has_inline_generator;
 
@@ -78,7 +78,7 @@ sub parameterize {
         if($parent->can('type_parameter')) {
             unless ( $contained_tc->is_a_type_of($parent->type_parameter) ) {
                 throw_exception( ParameterIsNotSubtypeOfParent => type_parameter => $type_parameter,
-                                                                  type           => $self
+                                                                  type_name      => $self->name,
                                );
             }
         }

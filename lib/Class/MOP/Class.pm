@@ -233,7 +233,8 @@ sub _check_class_metaclass_compatibility {
 
         my $super_meta_type = $super_meta->_real_ref_name;
 
-        throw_exception( IncompatibleMetaclassOfSuperclass => class                => $self,
+        throw_exception( IncompatibleMetaclassOfSuperclass => class_name           => $self->name,
+                                                              class_meta_type      => ref( $self ),
                                                               superclass_name      => $superclass_name,
                                                               superclass_meta_type => $super_meta_type
                        );
@@ -259,7 +260,7 @@ sub _check_single_metaclass_compatibility {
     if (!$self->_single_metaclass_is_compatible($metaclass_type, $superclass_name)) {
         my $super_meta = Class::MOP::get_metaclass_by_name($superclass_name);
 
-        throw_exception( MetaclassTypeIncompatible => class           => $self,
+        throw_exception( MetaclassTypeIncompatible => class_name      => $self->name,
                                                       superclass_name => $superclass_name,
                                                       metaclass_type  => $metaclass_type
                        );
@@ -362,7 +363,7 @@ sub _fix_class_metaclass_incompatibility {
 
     if ($self->_class_metaclass_can_be_made_compatible($super_meta)) {
         ($self->is_pristine)
-            || throw_exception( CannotFixMetaclassCompatibility => class      => $self,
+            || throw_exception( CannotFixMetaclassCompatibility => class_name => $self->name,
                                                                    superclass => $super_meta
                               );
 
@@ -378,7 +379,7 @@ sub _fix_single_metaclass_incompatibility {
 
     if ($self->_single_metaclass_can_be_made_compatible($super_meta, $metaclass_type)) {
         ($self->is_pristine)
-            || throw_exception( CannotFixMetaclassCompatibility => class          => $self,
+            || throw_exception( CannotFixMetaclassCompatibility => class_name     => $self->name,
                                                                    superclass     => $super_meta,
                                                                    metaclass_type => $metaclass_type
                               );
@@ -507,16 +508,16 @@ sub _construct_instance {
     my $instance;
     if (my $instance_class = blessed($params->{__INSTANCE__})) {
         ($instance_class eq $class->name)
-            || throw_exception( InstanceBlessedIntoWrongClass => class    => $class,
-                                                                 params   => $params,
-                                                                 instance => $params->{__INSTANCE__}
+            || throw_exception( InstanceBlessedIntoWrongClass => class_name => $class->name,
+                                                                 params     => $params,
+                                                                 instance   => $params->{__INSTANCE__}
                               );
         $instance = $params->{__INSTANCE__};
     }
     elsif (exists $params->{__INSTANCE__}) {
-        throw_exception( InstanceMustBeABlessedReference => class    => $class,
-                                                            params   => $params,
-                                                            instance => $params->{__INSTANCE__}
+        throw_exception( InstanceMustBeABlessedReference => class_name => $class->name,
+                                                            params     => $params,
+                                                            instance   => $params->{__INSTANCE__}
                        );
     }
     else {
@@ -764,8 +765,8 @@ sub clone_object {
     my $class    = shift;
     my $instance = shift;
     (blessed($instance) && $instance->isa($class->name))
-        || throw_exception( CloneObjectExpectsAnInstanceOfMetaclass => class    => $class,
-                                                                       instance => $instance
+        || throw_exception( CloneObjectExpectsAnInstanceOfMetaclass => class_name => $class->name,
+                                                                       instance   => $instance,
                           );
     # NOTE:
     # we need to protect the integrity of the
@@ -778,9 +779,9 @@ sub clone_object {
 sub _clone_instance {
     my ($class, $instance, %params) = @_;
     (blessed($instance))
-        || throw_exception( OnlyInstancesCanBeCloned => class    => $class,
-                                                        instance => $instance,
-                                                        params   => \%params
+        || throw_exception( OnlyInstancesCanBeCloned => class_name => $class->name,
+                                                        instance   => $instance,
+                                                        params     => \%params
                           );
     my $meta_instance = $class->get_meta_instance();
     my $clone = $meta_instance->clone_instance($instance);
@@ -1059,7 +1060,7 @@ sub _method_lookup_order {
             $method = $self->find_next_method_by_name($method_name);
             # die if it does not exist
             (defined $method)
-                || throw_exception( MethodNameNotFoundInInheritanceHierarchy => class       => $self,
+                || throw_exception( MethodNameNotFoundInInheritanceHierarchy => class_name  => $self->name,
                                                                                 method_name => $method_name
                                   );
             # and now make sure to wrap it
@@ -1084,7 +1085,7 @@ sub _method_lookup_order {
     sub add_before_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || throw_exception( MethodModifierNeedsMethodName => class => $self );
+            || throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_before_modifier(
             subname(':before' => $method_modifier)
@@ -1094,7 +1095,7 @@ sub _method_lookup_order {
     sub add_after_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || throw_exception( MethodModifierNeedsMethodName => class => $self );
+            || throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_after_modifier(
             subname(':after' => $method_modifier)
@@ -1104,7 +1105,7 @@ sub _method_lookup_order {
     sub add_around_method_modifier {
         my ($self, $method_name, $method_modifier) = @_;
         (defined $method_name && length $method_name)
-            || throw_exception( MethodModifierNeedsMethodName => class => $self );
+            || throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_around_modifier(
             subname(':around' => $method_modifier)
@@ -1128,7 +1129,7 @@ sub _method_lookup_order {
 sub find_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || throw_exception( MethodNameNotGiven => class => $self );
+        || throw_exception( MethodNameNotGiven => class_name => $self->name );
     foreach my $class ($self->_method_lookup_order) {
         my $method = Class::MOP::Class->initialize($class)->get_method($method_name);
         return $method if defined $method;
@@ -1157,7 +1158,7 @@ sub get_all_method_names {
 sub find_all_methods_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || throw_exception( MethodNameNotGiven => class => $self );
+        || throw_exception( MethodNameNotGiven => class_name => $self->name );
     my @methods;
     foreach my $class ($self->_method_lookup_order) {
         # fetch the meta-class ...
@@ -1174,7 +1175,7 @@ sub find_all_methods_by_name {
 sub find_next_method_by_name {
     my ($self, $method_name) = @_;
     (defined $method_name && length $method_name)
-        || throw_exception( MethodNameNotGiven => class => $self );
+        || throw_exception( MethodNameNotGiven => class_name => $self->name );
     my @cpl = ($self->_method_lookup_order);
     shift @cpl; # discard ourselves
     foreach my $class (@cpl) {
@@ -1335,8 +1336,8 @@ sub _immutable_metaclass {
     }
 
     my $trait = $args{immutable_trait} = $self->immutable_trait
-        || throw_exception( NoImmutableTraitSpecifiedForClass => class  => $self,
-                                                                 params => \%args
+        || throw_exception( NoImmutableTraitSpecifiedForClass => class_name => $self->name,
+                                                                 params     => \%args
                           );
 
     my $meta      = $self->meta;
@@ -1473,8 +1474,8 @@ sub _inline_destructor {
     my ( $self, %args ) = @_;
 
     ( exists $args{destructor_class} && defined $args{destructor_class} )
-        || throw_exception( NoDestructorClassSpecified => class  => $self,
-                                                          params => \%args
+        || throw_exception( NoDestructorClassSpecified => class_name => $self->name,
+                                                          params     => \%args,
                           );
 
     if ( $self->has_method('DESTROY') && ! $args{replace_destructor} ) {
