@@ -133,9 +133,9 @@ sub apply_attributes {
             my $role1 = $seen{$name}->associated_role->name;
             my $role2 = $attr->associated_role->name;
 
-            throw_exception( AttributeConflictInSummation => attribute_name => $name,
-                                                             role_name      => $role1,
-                                                             second_role    => Class::MOP::class_of($role2)
+            throw_exception( AttributeConflictInSummation => attribute_name   => $name,
+                                                             role_name        => $role1,
+                                                             second_role_name => $role2,
                            );
         }
 
@@ -215,15 +215,16 @@ sub apply_override_method_modifiers {
 
     my %seen;
     foreach my $override (@all_overrides) {
+        my @role_names = map { $_->name } @{$c->get_roles};
         if ( $c->has_method($override->{name}) ){
-            throw_exception( OverrideConflictInSummation => roles            => $c->get_roles,
+            throw_exception( OverrideConflictInSummation => role_names       => \@role_names,
                                                             role_application => $self,
                                                             method_name      => $override->{name}
                            );
         }
         if (exists $seen{$override->{name}}) {
             if ( $seen{$override->{name}} != $override->{method} ) {
-                throw_exception( OverrideConflictInSummation => roles               => $c->get_roles,
+                throw_exception( OverrideConflictInSummation => role_names          => \@role_names,
                                                                 role_application    => $self,
                                                                 method_name         => $override->{name},
                                                                 two_overrides_found => 1

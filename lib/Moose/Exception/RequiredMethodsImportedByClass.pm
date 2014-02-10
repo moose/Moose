@@ -28,7 +28,7 @@ sub _build_message {
     my $list = Moose::Util::english_list( map { q{'} . $_ . q{'} } $self->get_all_methods );
 
     my ($class, $role, $method) = ($self->class_name,
-                                   $self->role->name,
+                                   $self->role_name,
                                    $self->imported_method);
 
     my ($class_quoted, $role_quoted) = ("'".$class."'","'".$role."'");
