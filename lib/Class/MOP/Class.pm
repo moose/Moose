@@ -825,9 +825,10 @@ sub rebless_instance {
 
     my $old_class = $old_metaclass ? $old_metaclass->name : blessed($instance);
     $self->name->isa($old_class)
-        || throw_exception( CanReblessOnlyIntoASubclass => class    => $self,
-                                                           instance => $instance,
-                                                           params   => \%params
+        || throw_exception( CanReblessOnlyIntoASubclass => class_name     => $self->name,
+                                                           instance       => $instance,
+                                                           instance_class => blessed( $instance ),
+                                                           params         => \%params,
                           );
 
     $self->_force_rebless_instance($_[1], %params);
@@ -841,8 +842,9 @@ sub rebless_instance_back {
     my $old_class
         = $old_metaclass ? $old_metaclass->name : blessed($instance);
     $old_class->isa( $self->name )
-        || throw_exception( CanReblessOnlyIntoASuperclass => class    => $self,
-                                                             instance => $instance,
+        || throw_exception( CanReblessOnlyIntoASuperclass => class_name     => $self->name,
+                                                             instance       => $instance,
+                                                             instance_class => blessed( $instance ),
                           );
 
     $self->_force_rebless_instance($_[1]);
