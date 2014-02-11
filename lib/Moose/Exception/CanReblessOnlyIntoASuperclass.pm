@@ -2,7 +2,7 @@ package Moose::Exception::CanReblessOnlyIntoASuperclass;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::Class', 'Moose::Exception::Role::Instance';
+with 'Moose::Exception::Role::Class', 'Moose::Exception::Role::Instance', 'Moose::Exception::Role::InstanceClass';
 
 sub _build_message {
     my $self = shift;
