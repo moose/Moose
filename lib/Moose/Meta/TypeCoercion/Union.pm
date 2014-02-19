@@ -54,6 +54,7 @@ __END__
 
 This is a subclass of L<Moose::Meta::TypeCoercion> that is used for
 L<Moose::Meta::TypeConstraint::Union> objects.
+
 =head1 METHODS
 
 =over 4
