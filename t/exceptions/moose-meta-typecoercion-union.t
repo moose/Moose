@@ -10,7 +10,7 @@ use Moose::Util::TypeConstraints;
 
 {
     my $exception = exception {
-        Moose::Meta::TypeCoercion::Union->new( type_constraint => "Str" );
+        Moose::Meta::TypeCoercion::Union->new( type_constraint => find_type_constraint("Str") );
     };
 
     like(
