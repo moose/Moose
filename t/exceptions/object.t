@@ -51,7 +51,7 @@ use Test::Fatal;
         "Cannot call does() without a role name");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "Foo",
         "Cannot call does() without a role name");
 
@@ -70,7 +70,7 @@ use Test::Fatal;
         "Cannot call does() without a role name");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         "Foo",
         "Cannot call does() without a role name");
 }

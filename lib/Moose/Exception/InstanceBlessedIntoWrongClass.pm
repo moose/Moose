@@ -6,7 +6,7 @@ with 'Moose::Exception::Role::ParamsHash', 'Moose::Exception::Role::Class', 'Moo
 
 sub _build_message {
     my $self = shift;
-    "Objects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but ".$self->instance." is not a " . $self->class->name;
+    "Objects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but ".$self->instance." is not a " . $self->class_name;
 }
 
 1;

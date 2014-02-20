@@ -27,13 +27,13 @@ use Moose::Util::TypeConstraints;
         "no inline constraint was defined for xyz");
 
     is(
-        $exception->type,
-        $intType,
+        $exception->type_name,
+        "Int",
         "no inline constraint was defined for xyz");
 
     is(
-        $exception->parameterizable_type_object,
-        $type,
+        $exception->parameterizable_type_object_name,
+        $type->name,
         "no inline constraint was defined for xyz");
 }
 
@@ -55,7 +55,7 @@ use Moose::Util::TypeConstraints;
         "Int is not a subtype of Float");
 
     is(
-        $exception->type,
+        $exception->type_name,
         $parameterizable,
         "Int is not a subtype of Float");
 

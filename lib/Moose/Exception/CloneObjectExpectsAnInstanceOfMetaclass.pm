@@ -12,7 +12,7 @@ has 'instance' => (
 
 sub _build_message {
     my $self = shift;
-    "You must pass an instance of the metaclass (" .$self->class->name. "), not (".$self->instance.")";
+    "You must pass an instance of the metaclass (" .$self->class_name. "), not (".$self->instance.")";
 }
 
 1;

@@ -488,9 +488,10 @@ sub initialize_instance_slot {
         # skip it if it's lazy
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
-        throw_exception(AttributeIsRequired => attribute  => $self,
-                                               class_name => blessed( $instance ),
-                                               params     => $params
+        my $class_name = blessed( $instance );
+        throw_exception(AttributeIsRequired => attribute_name => $self->name,
+                                               class_name     => $class_name,
+                                               params         => $params,
                        )
             if $self->is_required && !$self->has_default && !$self->has_builder;
 
@@ -547,9 +548,10 @@ sub set_value {
 
     my $attr_name = quotemeta($self->name);
 
+    my $class_name = blessed( $instance );
     if ($self->is_required and not @args) {
-        throw_exception( AttributeIsRequired => attribute  => $self,
-                                                class_name => blessed( $instance ),
+        throw_exception( AttributeIsRequired => attribute_name => $self->name,
+                                                class_name     => $class_name,
                        );
     }
 
@@ -834,7 +836,7 @@ sub get_value {
             return wantarray ? %{ $rv } : $rv;
         }
         else {
-            throw_exception( CannotAutoDereferenceTypeConstraint => type      => $type_constraint,
+            throw_exception( CannotAutoDereferenceTypeConstraint => type_name => $type_constraint->name,
                                                                     instance  => $instance,
                                                                     attribute => $self
                            );

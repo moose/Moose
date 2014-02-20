@@ -30,7 +30,7 @@ sub does_role {
     my $role = shift;
 
     (defined $role)
-        || throw_exception( RoleNameRequired => class => $self );
+        || throw_exception( RoleNameRequired => class_name => $self->name );
 
     $self->{__immutable}{does_role} ||= { map { $_->name => 1 } $self->calculate_all_roles_with_inheritance };
 
