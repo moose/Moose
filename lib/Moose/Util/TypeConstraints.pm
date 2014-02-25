@@ -21,7 +21,6 @@ sub inline_as (&);
 
 ## --------------------------------------------------------
 
-use Moose::Deprecated;
 use Moose::Meta::TypeConstraint;
 use Moose::Meta::TypeConstraint::Union;
 use Moose::Meta::TypeConstraint::Parameterized;
