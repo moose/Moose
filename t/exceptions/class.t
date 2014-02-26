@@ -48,7 +48,7 @@ use Test::Fatal;
         "add_role takes an instance of Moose::Meta::Role");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         'Foo',
         "add_role to Moose::Meta::Role takes instances of Moose::Meta::Role");
 
@@ -100,7 +100,7 @@ use Test::Fatal;
         "Cannot call does_role without a role name");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         'Foo',
         "Cannot call does_role without a role name");
 }
@@ -129,7 +129,7 @@ use Test::Fatal;
         "Cannot call excludes_role without a role name");
 
     is(
-        $exception->class->name,
+        $exception->class_name,
         'Foo',
         "Cannot call excludes_role without a role name");
 }
@@ -155,8 +155,6 @@ use Test::Fatal;
 
 # tests for AttributeIsRequired for inline excpetions
 {
-    use Moose::Meta::Class;
-
     {
         package Foo2;
         use Moose;
@@ -184,7 +182,7 @@ use Test::Fatal;
         "... must supply all the required attribute");
 
     is(
-        $exception->attribute->name,
+        $exception->attribute_name,
         'baz',
         "... must supply all the required attribute");
 
@@ -217,7 +215,7 @@ use Test::Fatal;
         "Class cannot extend a role");
 
     is(
-	$exception->role->name,
+	$exception->role_name,
 	'Bar',
 	"Class cannot extend a role");
 }
@@ -241,7 +239,7 @@ use Test::Fatal;
         "there is already a method named foo2 defined in the class, so you can't override it");
 
     is(
-	$exception->class->name,
+	$exception->class_name,
 	'Foo',
         "there is already a method named foo2 defined in the class, so you can't override it");
 
@@ -270,7 +268,7 @@ use Test::Fatal;
         "there is already a method named foo defined in the class");
 
     is(
-	$exception->class->name,
+	$exception->class_name,
 	'Foo',
         "there is already a method named foo defined in the class");
 
