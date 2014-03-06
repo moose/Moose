@@ -200,7 +200,7 @@ This returns a reference to the method's subroutine.
 
 =item B<< $metamethod->name >>
 
-This returns the method's name
+This returns the method's name.
 
 =item B<< $metamethod->package_name >>
 
