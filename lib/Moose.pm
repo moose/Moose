@@ -986,6 +986,8 @@ are a few of our favorites. Feel free to contribute more!
 
 =item * Moo, Only Overengineered, Slow, and Execrable (blame rjbs!)
 
+=item * Massive Object-Oriented Stacktrace Emitter
+
 =back
 
 =head1 ACKNOWLEDGEMENTS
