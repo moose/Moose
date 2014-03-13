@@ -127,6 +127,8 @@ A version number, to be installed in the C<$VERSION> package global variable.
 
 An authority, to be installed in the C<$AUTHORITY> package global variable.
 
+This is a legacy field and its use is not recommended.
+
 =back
 
 =item B<< $metamodule->version >>

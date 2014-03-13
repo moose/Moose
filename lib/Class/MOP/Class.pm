@@ -1591,6 +1591,7 @@ An optional version number for the newly created package.
 =item * authority
 
 An optional authority for the newly created package.
+See L<Class::MOP::Module/authority> for more details.
 
 =item * superclasses
 
