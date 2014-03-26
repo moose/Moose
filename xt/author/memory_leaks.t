@@ -15,6 +15,61 @@ use Moose::Util::TypeConstraints;
     sub myname { "I'm a role" }
 }
 
+{
+    package Fake::DateTime;
+    use Moose;
+
+    has 'string_repr' => ( is => 'ro' );
+
+    package Mortgage;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    coerce 'Fake::DateTime' => from 'Str' =>
+        via { Fake::DateTime->new( string_repr => $_ ) };
+
+    has 'closing_date' => (
+        is      => 'rw',
+        isa     => 'Fake::DateTime',
+        coerce  => 1,
+        trigger => sub {
+            my ( $self, $val ) = @_;
+            ::pass('... trigger is being called');
+            ::isa_ok( $self->closing_date, 'Fake::DateTime' );
+            ::isa_ok( $val,                'Fake::DateTime' );
+        }
+    );
+}
+
+{
+    package Man;
+    use Moose;
+
+    my @actions;
+
+    sub live {
+        push @actions, 'live';
+    }
+
+    sub create {
+        push @actions, 'create';
+    }
+
+    sub breathe {
+        push @actions, 'breathe';
+    }
+
+    package Earth;
+    use Moose;
+    use Moose::Util::TypeConstraints;
+
+    has man => (
+        isa     => 'Man',
+        handles => [qw( live create breathe )],
+    );
+}
+
+
 no_leaks_ok(
     sub {
         Moose::Meta::Class->create_anon_class->new_object;
@@ -108,5 +163,69 @@ no_leaks_ok(
     memory_cycle_ok($Str_or_Undef, 'union types do not leak');
 }
 
+{
+    my $mtg = Mortgage->new( closing_date => 'yesterday' );
+    $mtg->closing_date;
+    Mortgage->meta->make_immutable;
+
+    memory_cycle_ok($mtg->meta, 'meta (triggers/coerce) is cycle-free');
+}
+
+{
+    local $TODO = 'meta cycles exist at the moment';
+    memory_cycle_ok(Earth->new->meta, 'meta (handles) is cycle-free');
+    memory_cycle_ok(Earth->meta,      'meta (class) is cycle-free');
+}
+
+{
+    my $Point = Class::MOP::Class->create('Point' => (
+        version    => '0.01',
+        attributes => [
+            Class::MOP::Attribute->new('x' => (
+                reader   => 'x',
+                init_arg => 'x'
+            )),
+            Class::MOP::Attribute->new('y' => (
+                accessor => 'y',
+                init_arg => 'y'
+            )),
+        ],
+        methods => {
+            'new' => sub {
+                my $class = shift;
+                my $instance = $class->meta->new_object(@_);
+                bless $instance => $class;
+            },
+            'clear' => sub {
+                my $self = shift;
+                $self->{'x'} = 0;
+                $self->{'y'} = 0;
+            }
+        }
+    ));
+
+    my $Point3D = Class::MOP::Class->create('Point3D' => (
+        version      => '0.01',
+        superclasses => [ 'Point' ],
+        attributes => [
+            Class::MOP::Attribute->new('z' => (
+                default  => 123
+            )),
+        ],
+        methods => {
+            'clear' => sub {
+                my $self = shift;
+                $self->{'z'} = 0;
+                $self->SUPER::clear();
+            }
+        }
+    ));
+
+    local $TODO = 'CMOP cycles exist at the moment';
+    memory_cycle_ok($Point3D,       'Point3D is cycle-free');
+    memory_cycle_ok($Point,         'Point is cycle-free');
+    memory_cycle_ok($Point3D->meta, 'Point3D meta is cycle-free');
+    memory_cycle_ok($Point->meta,   'Point meta is cycle-free');
+}
 
 done_testing;
