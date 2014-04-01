@@ -16,6 +16,7 @@ use Try::Tiny;
 
 my @exports = qw[
     find_meta
+    is_role
     does_role
     search_class_by_role
     ensure_all_roles
@@ -53,6 +54,14 @@ sub throw_exception {
 sub find_meta { Class::MOP::class_of(@_) }
 
 ## the functions ...
+
+sub is_role {
+    my $package_or_obj = shift;
+
+    my $meta = find_meta($package_or_obj);
+    return if not $meta;
+    return $meta->isa('Moose::Meta::Role');
+}
 
 sub does_role {
     my ($class_or_obj, $role) = @_;
@@ -552,6 +561,10 @@ some of them may be useful for use in your own code.
 This method takes a class name or object and attempts to find a
 metaclass for the class, if one exists. It will B<not> create one if it
 does not yet exist.
+
+=item B<is_role($package_or_obj)>
+
+Returns true if the provided package name or object is a L<Moose::Role>.
 
 =item B<does_role($class_or_obj, $role_or_obj)>
 

@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - new utility interface: Moose::Util::is_role
+
   [OTHER]
 
   - new test added, to run last, which runs `moose-outdated` as a possibly
