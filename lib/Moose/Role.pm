@@ -263,6 +263,10 @@ this, your class's C<meta> object will have the specified traits
 applied to it. See L<Moose/Metaclass and Trait Name Resolution> for more
 details.
 
+All role metaclasses (note, not the role class itself) extend
+L<Moose::Meta::Role>.  You can test if a class is a role class or not using
+L<Moose::Util/is_role>.
+
 =head1 APPLYING ROLES
 
 In addition to being applied to a class using the 'with' syntax (see
