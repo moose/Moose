@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Basics::Point_AttributesAndSubclassing;
+# PODNAME: Moose::Cookbook::Basics::Point_AttributesAndSubclassing
 # ABSTRACT: Point and Point3D classes, showing basic attributes and subclassing.
 
 __END__

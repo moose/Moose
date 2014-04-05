@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Unsweetened;
+# PODNAME: Moose::Manual::Unsweetened
 # ABSTRACT: Moose idioms in plain old Perl 5 without the sugar
 
 __END__

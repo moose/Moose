@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Roles;
+# PODNAME: Moose::Manual::Roles
 # ABSTRACT: Roles, an alternative to deep hierarchies and base classes
 
 __END__

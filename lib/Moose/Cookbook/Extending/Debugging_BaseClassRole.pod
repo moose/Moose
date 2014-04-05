@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Extending::Debugging_BaseClassRole;
+# PODNAME: Moose::Cookbook::Extending::Debugging_BaseClassRole
 # ABSTRACT: Providing a role for the base object class
 
 __END__

@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Extending::ExtensionOverview;
+# PODNAME: Moose::Cookbook::Extending::ExtensionOverview
 # ABSTRACT: Moose extension overview
 
 __END__

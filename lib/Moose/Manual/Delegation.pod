@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Delegation;
+# PODNAME: Moose::Manual::Delegation
 # ABSTRACT: Attribute delegation
 
 __END__

@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::FAQ;
+# PODNAME: Moose::Manual::FAQ
 # ABSTRACT: Frequently asked questions about Moose
 
 __END__

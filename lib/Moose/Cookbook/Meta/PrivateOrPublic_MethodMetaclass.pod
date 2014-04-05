@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass;
+# PODNAME: Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass
 # ABSTRACT: A method metaclass for marking methods public or private
 
 __END__

@@ -1,7 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion;
-
+# PODNAME: Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion
 # ABSTRACT: Operator overloading, subtypes, and coercion
 
 __END__

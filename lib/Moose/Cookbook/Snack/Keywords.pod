@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Snack::Keywords;
+# PODNAME: Moose::Cookbook::Snack::Keywords
 # ABSTRACT: Restricted "keywords" in Moose
 
 __END__

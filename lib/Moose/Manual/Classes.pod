@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Classes;
+# PODNAME: Moose::Manual::Classes
 # ABSTRACT: Making your classes use Moose (and subclassing)
 
 __END__

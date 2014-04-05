@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Construction;
+# PODNAME: Moose::Manual::Construction
 # ABSTRACT: Object construction (and destruction) with Moose
 
 __END__

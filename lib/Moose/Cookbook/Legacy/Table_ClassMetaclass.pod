@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Legacy::Table_ClassMetaclass;
+# PODNAME: Moose::Cookbook::Legacy::Table_ClassMetaclass
 # ABSTRACT: Adding a "table" attribute to the metaclass
 
 __END__

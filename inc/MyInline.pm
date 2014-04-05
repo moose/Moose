@@ -19,7 +19,11 @@ use warnings;
             package\s+                            # A package
             [^\W\d]\w*(?:(?:\'|::)[^\W\d]\w*)*    # ... with a name
             \s*;                                  # And a statement terminator
-                |
+        |                                  # OR
+            \#\s*PODNAME:\s+                      # A PODNAME comment
+            [^\W\d]\w*(?:(?:\'|::)[^\W\d]\w*)*    # ... with a name
+            (?:\s+|$)                             # And a name terminator
+        |
                         =head1[ \t]+SYNOPSIS\n
                         .*?
                         (?=\n=)
@@ -59,6 +63,13 @@ use warnings;
         # If we have just one element it's a SYNOPSIS, so there's no
         # tests.
         return unless @elements > 2;
+
+        if ( @elements && $self->{source} =~ /# PODNAME: (Moose::Cookbook\S+)(?:\s|$)/ ) {
+            foreach my $element (@elements)
+            {
+                $element = "package $1;" if $element =~ /# PODNAME: (Moose::Cookbook\S+)(?:\s+|$)/;
+            }
+        }
 
         if ( @elements && $self->{source} =~ /=head1 NAME\n\n(Moose::Cookbook\S+)/ ) {
             unshift @elements, 'package ' . $1 . ';';

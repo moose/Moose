@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::MOP;
+# PODNAME: Moose::Manual::MOP
 # ABSTRACT: The Moose (and Class::MOP) meta API
 
 __END__

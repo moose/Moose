@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Contributing;
+# PODNAME: Moose::Manual::Contributing
 # ABSTRACT: How to get involved in Moose
 
 __END__

@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Roles::ApplicationToInstance;
+# PODNAME: Moose::Cookbook::Roles::ApplicationToInstance
 # ABSTRACT: Applying a role to an object instance
 
 __END__

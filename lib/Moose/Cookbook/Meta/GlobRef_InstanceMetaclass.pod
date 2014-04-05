@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Meta::GlobRef_InstanceMetaclass;
+# PODNAME: Moose::Cookbook::Meta::GlobRef_InstanceMetaclass
 # ABSTRACT: Creating a glob reference meta-instance class
 
 __END__

@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Extending::Mooseish_MooseSugar;
+# PODNAME: Moose::Cookbook::Extending::Mooseish_MooseSugar
 # ABSTRACT: Acting like Moose.pm and providing sugar Moose-style
 
 __END__

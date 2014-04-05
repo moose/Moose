@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::MooseX;
+# PODNAME: Moose::Manual::MooseX
 # ABSTRACT: Recommended Moose extensions
 
 __END__

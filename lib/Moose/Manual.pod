@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual;
+# PODNAME: Moose::Manual
 # ABSTRACT: What is Moose, and how do I use it?
 
 __END__

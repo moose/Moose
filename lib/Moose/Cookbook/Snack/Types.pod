@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Snack::Types;
+# PODNAME: Moose::Cookbook::Snack::Types
 # ABSTRACT: Snippets of code for using Types and Type Constraints
 
 __END__

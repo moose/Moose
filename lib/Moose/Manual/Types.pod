@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Types;
+# PODNAME: Moose::Manual::Types
 # ABSTRACT: Moose's type system
 
 __END__

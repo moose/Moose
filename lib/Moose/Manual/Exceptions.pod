@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Exceptions;
+# PODNAME: Moose::Manual::Exceptions
 # ABSTRACT: Moose's exceptions
 
 __END__

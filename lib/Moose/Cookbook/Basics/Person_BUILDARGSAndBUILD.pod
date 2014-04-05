@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD;
+# PODNAME: Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD
 # ABSTRACT: Using BUILDARGS and BUILD to hook into object construction
 
 __END__

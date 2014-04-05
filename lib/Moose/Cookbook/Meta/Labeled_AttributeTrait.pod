@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Meta::Labeled_AttributeTrait;
+# PODNAME: Moose::Cookbook::Meta::Labeled_AttributeTrait
 # ABSTRACT: Labels implemented via attribute traits
 
 __END__

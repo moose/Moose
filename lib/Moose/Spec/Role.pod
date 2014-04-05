@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Spec::Role;
+# PODNAME: Moose::Spec::Role
 # ABSTRACT: Formal spec for Role behavior
 
 __END__

@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook::Style;
+# PODNAME: Moose::Cookbook::Style
 # ABSTRACT: Expanded into Moose::Manual::BestPractices, so go read that
 
 __END__

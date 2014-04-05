@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Delta;
+# PODNAME: Moose::Manual::Delta
 # ABSTRACT: Important Changes in Moose
 
 __END__

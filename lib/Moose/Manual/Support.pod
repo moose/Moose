@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Manual::Support;
+# PODNAME: Moose::Manual::Support
 # ABSTRACT: Policies regarding support, releases, and compatibility.
 
 __END__

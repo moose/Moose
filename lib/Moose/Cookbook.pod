@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-package Moose::Cookbook;
+# PODNAME: Moose::Cookbook
 # ABSTRACT: How to cook a Moose
 
 __END__
