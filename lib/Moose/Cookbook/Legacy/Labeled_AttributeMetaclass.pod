@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Moose::Cookbook::Meta::Labeled_AttributeMetaclass;
+package Moose::Cookbook::Legacy::Labeled_AttributeMetaclass;
 # ABSTRACT: A meta-attribute, attributes with labels
 
 __END__
