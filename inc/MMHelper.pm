@@ -4,8 +4,6 @@ use strict;
 use warnings;
 
 use Config;
-use Cwd qw( abs_path );
-use File::Basename qw( dirname );
 
 sub ccflags_dyn {
     my $is_dev = shift;

@@ -4,10 +4,7 @@ use Moose;
 
 with 'Dist::Zilla::Role::FileGatherer';
 
-use File::Basename qw( basename );
 use File::Find::Rule;
-use File::Spec;
-use File::Temp qw( tempdir );
 use inc::MyInline;
 use Test::Inline;
 

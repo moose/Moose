@@ -4,7 +4,6 @@ use Class::Load qw(load_class);
 use Moose;
 
 use CPAN::Meta::Requirements;
-use Try::Tiny;
 
 with 'Dist::Zilla::Role::BeforeRelease';
 
