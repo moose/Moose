@@ -45,7 +45,10 @@ sub extends {
 
     unless ( @_ )
     {
-        throw_exception( ExtendsMissingArgs => class_name => $meta->name );
+        require Moose::ExceptionFormatter::FullTrace;
+        throw_exception( ExtendsMissingArgs => class_name => $meta->name,
+                         formatter => Moose::ExceptionFormatter::FullTrace->new(),
+                       );
     }
     # this checks the metaclass to make sure
     # it is correct, sometimes it can get out

@@ -21,10 +21,18 @@ has 'message' => (
                      "It is lazy and has a default value 'Error'."
 );
 
+has 'formatter' => (
+    is            => 'rw',
+    does          => 'Moose::ExceptionFormatter',
+    documentation => 'TODO',
+    required      => 1,
+);
+
 use overload
     '""' => sub {
         my $self = shift;
-        return $self->trace->as_string,
+        $self->formatter->format_exception( $self );
+        # return $self->trace->as_string,
     },
     fallback => 1,
 ;
