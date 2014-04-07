@@ -15,5 +15,6 @@ install:
     - cpanm -q --notest Dist::Zilla || (cat /home/travis/.cpanm/build.log; false)
     - dzil authordeps --missing | grep -v '^inc::' | cpanm -q --notest || (cat /home/travis/.cpanm/build.log; false)
     - dzil listdeps --author --missing | cpanm -q --notest || (cat /home/travis/.cpanm/build.log; false)
+    - cpanm http://cpan.metacpan.org/authors/id/E/ET/ETHER/Dist-Zilla-Plugin-Conflicts-0.13001.tar.gz
 script:
     - dzil test --all
