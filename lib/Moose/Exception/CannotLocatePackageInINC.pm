@@ -2,7 +2,7 @@ package Moose::Exception::CannotLocatePackageInINC;
 
 use Moose;
 extends 'Moose::Exception';
-with 'Moose::Exception::Role::TypeConstraint', 'Moose::Exception::Role::ParamsHash';
+with 'Moose::Exception::Role::ParamsHash';
 
 has 'INC' => (
     is       => 'ro',
@@ -20,6 +20,12 @@ has 'metaclass_name' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1
+);
+
+has 'type' => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
 );
 
 sub _build_message {
