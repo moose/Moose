@@ -7,6 +7,11 @@ for, noteworthy changes.
 
   - new utility interface: Moose::Util::is_role
 
+  [BUG FIXES]
+
+  - better error message provided when trying to load a trait class that does
+    not exist in @INC (Upasana, RT#94731)
+
   [OTHER]
 
   - new test added, to run last, which runs `moose-outdated` as a possibly
