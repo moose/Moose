@@ -151,16 +151,18 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
 }
 
 {
-    use Moose::Util;
-    use Moose::Util::TypeConstraints;
-
     my $exception = exception {
-        Moose::Util::resolve_metaclass_alias(find_type_constraint('Int'), 'Xyz');
+        package My::Class;
+        use Moose;
+        has 'attr' => (
+            is     => 'ro',
+            traits => [qw( Xyz )],
+        );
     };
 
     like(
         $exception,
-        qr/^Can't locate Moose::Meta::Int::Custom::Xyz or Xyz in \@INC \(\@INC contains:/,
+        qr/^Can't locate Moose::Meta::Attribute::Custom::Trait::Xyz or Xyz in \@INC \(\@INC contains:/,
         "Cannot locate 'Xyz'");
 
     isa_ok(
@@ -169,13 +171,13 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         "Cannot locate 'Xyz'");
 
     is(
-	$exception->type_name,
-	"Int",
+	$exception->type,
+	"Attribute",
         "Cannot locate 'Xyz'");
 
     is(
 	$exception->possible_packages,
-	'Moose::Meta::Int::Custom::Xyz or Xyz',
+	'Moose::Meta::Attribute::Custom::Trait::Xyz or Xyz',
         "Cannot locate 'Xyz'");
 
     is(
