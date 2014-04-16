@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1205   2014-04-15
+
   [ENHANCEMENTS]
 
   - new utility interface: Moose::Util::is_role
